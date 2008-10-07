@@ -20,6 +20,7 @@ import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.RenderInformation;
+import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 
@@ -657,6 +658,7 @@ public class IOrderedLayout extends Panel implements Container,
      * Furthermore, enable/disable fixed mode
      */
     public void setWidth(String newWidth) {
+        super.setWidth(newWidth);
 
         if (newWidth == null || newWidth.equals("")) {
             width = null;
@@ -1589,17 +1591,17 @@ public class IOrderedLayout extends Panel implements Container,
 
     }
 
-    public Size getAllocatedSpace(Widget child) {
+    public RenderSpace getAllocatedSpace(Widget child) {
         final int index = childWidgets.indexOf(child);
         if (index >= 0) {
             WidgetWrapper wrapper = childWidgetWrappers.get(index);
             int w = wrapper.getAllocatedWidth();
             int h = wrapper.getAllocatedHeight();
 
-            return new Size(w, h);
+            return new RenderSpace(w, h);
 
+        } else {
+            return new RenderSpace();
         }
-
-        return new Size(0, 0);
     }
 }

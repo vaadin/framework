@@ -19,8 +19,8 @@ import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.ICaptionWrapper;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
+import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
-import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 
 /**
  * Custom Layout implements complex layout defined with HTML template.
@@ -478,7 +478,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
         return false;
     }
 
-    public Size getAllocatedSpace(Widget child) {
+    public RenderSpace getAllocatedSpace(Widget child) {
         // TODO Auto-generated method stub
         return null;
     }

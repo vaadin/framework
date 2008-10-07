@@ -18,8 +18,8 @@ import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
+import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
-import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 
 public class ICoordinateLayout extends ComplexPanel implements Container,
         ContainerResizedListener {
@@ -868,8 +868,8 @@ public class ICoordinateLayout extends ComplexPanel implements Container,
      * @return
      */
     protected native String getMargin(Element e, String CSSProp)/*-{
-                                                                                                                                                                                                                                                                                                                                                                                                                                                    return $wnd.getComputedStyle(e,null).getPropertyValue(CSSProp);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                    }-*/;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                        return $wnd.getComputedStyle(e,null).getPropertyValue(CSSProp);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                        }-*/;
 
     /**
      * Retrieves margin info in IE
@@ -878,8 +878,8 @@ public class ICoordinateLayout extends ComplexPanel implements Container,
      * @return
      */
     protected native String getIEMargin(Element e)/*-{ 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                    return e.currentStyle.margin;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                    }-*/;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                        return e.currentStyle.margin;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                        }-*/;
 
     /**
      * @return all components that are not captions
@@ -898,12 +898,13 @@ public class ICoordinateLayout extends ComplexPanel implements Container,
         return true;
     }
 
-    public Size getAllocatedSpace(Widget child) {
+    public RenderSpace getAllocatedSpace(Widget child) {
         Element area = componentToArea.get(child);
         if (area != null) {
-            return new Size(area.getOffsetWidth(), area.getOffsetHeight());
+            return new RenderSpace(area.getOffsetWidth(), area
+                    .getOffsetHeight());
         } else {
-            return new Size(layout[WIDTH], layout[HEIGHT]);
+            return new RenderSpace(layout[WIDTH], layout[HEIGHT]);
         }
     }
 

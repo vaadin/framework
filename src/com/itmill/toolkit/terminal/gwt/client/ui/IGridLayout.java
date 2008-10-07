@@ -26,9 +26,9 @@ import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.ICaptionWrapper;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
+import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.StyleConstants;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
-import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 
 public class IGridLayout extends SimplePanel implements Paintable, Container,
         ContainerResizedListener {
@@ -295,7 +295,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container,
             return false;
         }
 
-        public Size getAllocatedSpace(Widget child) {
+        public RenderSpace getAllocatedSpace(Widget child) {
             // TODO Auto-generated method stub
             return null;
         }
@@ -327,7 +327,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container,
         return false;
     }
 
-    public Size getAllocatedSpace(Widget child) {
+    public RenderSpace getAllocatedSpace(Widget child) {
         // TODO Auto-generated method stub
         return null;
     }

@@ -11,6 +11,7 @@ import java.util.Set;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class Util {
@@ -25,18 +26,6 @@ public class Util {
     /*-{
         if($wnd.console)
             debugger;
-    }-*/;
-
-    /**
-     * Nulls oncontextmenu function on given element. We need to manually clear
-     * context menu events due bad browsers memory leaks, since GWT don't
-     * support them.
-     * 
-     * @param el
-     */
-    public native static void removeContextMenuEvent(Element el)
-    /*-{
-      	el.oncontextmenu = null;
     }-*/;
 
     /**
@@ -231,6 +220,26 @@ public class Util {
 
         }
 
+    }
+
+    private static int detectedScrollbarSize = -1;
+
+    public static int getNativeScrollbarSize() {
+        if (detectedScrollbarSize < 0) {
+            Element scroller = DOM.createDiv();
+            scroller.getStyle().setProperty("width", "50px");
+            scroller.getStyle().setProperty("height", "50px");
+            scroller.getStyle().setProperty("overflow", "scroll");
+            scroller.getStyle().setProperty("position", "absolute");
+            scroller.getStyle().setProperty("marginLeft", "-5000px");
+            RootPanel.getBodyElement().appendChild(scroller);
+            detectedScrollbarSize = scroller.getOffsetWidth()
+                    - scroller.getPropertyInt("clientWidth");
+            assert detectedScrollbarSize != 0;
+            RootPanel.getBodyElement().removeChild(scroller);
+
+        }
+        return detectedScrollbarSize;
     }
 
 }

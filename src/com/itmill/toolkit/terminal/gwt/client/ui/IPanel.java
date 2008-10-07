@@ -6,22 +6,24 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.Set;
 
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
-import com.itmill.toolkit.terminal.gwt.client.ClientExceptionHandler;
 import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.IErrorMessage;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.RenderInformation;
+import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
-import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 
 public class IPanel extends SimplePanel implements Container,
         ContainerResizedListener {
@@ -62,7 +64,9 @@ public class IPanel extends SimplePanel implements Container,
 
     private RenderInformation renderInformation = new RenderInformation();
 
-    private int borderPaddingHorizontal = 0;
+    private int borderPaddingHorizontal = -1;
+
+    private int borderPaddingVertical = -1;
 
     public IPanel() {
         super();
@@ -278,74 +282,6 @@ public class IPanel extends SimplePanel implements Container,
 
         }
 
-        if (height != null && height != "") {
-            final boolean hasChildren = getWidget() != null;
-            Element contentEl = null;
-            String origPositioning = null;
-
-            if (hasChildren) {
-                // Remove children temporary form normal flow to detect proper
-                // size
-                contentEl = getWidget().getElement();
-                origPositioning = DOM.getStyleAttribute(contentEl, "position");
-                DOM.setStyleAttribute(contentEl, "position", "absolute");
-            }
-
-            // Set defaults
-            DOM.setStyleAttribute(contentNode, "overflow", "hidden");
-            DOM.setStyleAttribute(contentNode, "height", "");
-
-            // Calculate target height
-            super.setHeight(height);
-            final int targetHeight = getOffsetHeight();
-
-            // Calculate used height
-            super.setHeight("");
-            if (BrowserInfo.get().isIE() && !hasChildren) {
-                DOM.setStyleAttribute(contentNode, "height", "0px");
-            }
-
-            final int bottomTop = DOM.getElementPropertyInt(bottomDecoration,
-                    "offsetTop");
-            final int bottomHeight = DOM.getElementPropertyInt(
-                    bottomDecoration, "offsetHeight");
-            final int elementTop = DOM.getElementPropertyInt(getElement(),
-                    "offsetTop");
-
-            final int usedHeight = bottomTop + bottomHeight - elementTop;
-
-            // Calculate content area height (don't allow negative values)
-            int contentAreaHeight = targetHeight - usedHeight;
-            if (contentAreaHeight < 0) {
-                contentAreaHeight = 0;
-            }
-
-            renderInformation.setContentAreaHeight(contentAreaHeight);
-
-            // Set proper values for content element
-            DOM.setStyleAttribute(contentNode, "height", contentAreaHeight
-                    + "px");
-            DOM.setStyleAttribute(contentNode, "overflow", "auto");
-
-            // Restore content to flow
-            if (hasChildren) {
-                DOM.setStyleAttribute(contentEl, "position", origPositioning);
-            }
-
-            // restore scroll position
-            DOM.setElementPropertyInt(contentNode, "scrollTop", scrollTop);
-            DOM.setElementPropertyInt(contentNode, "scrollLeft", scrollLeft);
-
-        } else {
-            DOM.setStyleAttribute(contentNode, "height", "");
-        }
-
-        if (width != null && !width.equals("")) {
-            renderInformation.setContentAreaWidth(renderInformation
-                    .getRenderedSize().getWidth()
-                    - borderPaddingHorizontal);
-        }
-
         if (runGeckoFix && BrowserInfo.get().isGecko()) {
             // workaround for #1764
             if (width == null || width.equals("")) {
@@ -368,6 +304,22 @@ public class IPanel extends SimplePanel implements Container,
                     DOM.setStyleAttribute(captionNode, "width", "");
                 }
             }
+        }
+
+        if (BrowserInfo.get().getWebkitVersion() > 0) {
+            DeferredCommand.addCommand(new Command() {
+                public void execute() {
+                    // Dough, safari scoll auto means actually just a moped
+                    contentNode.getStyle().setProperty("overflow", "hidden");
+                    (new Timer() {
+                        @Override
+                        public void run() {
+                            contentNode.getStyle().setProperty("overflow",
+                                    "auto");
+                        }
+                    }).schedule(1);
+                }
+            });
         }
 
         client.runDescendentsLayout(this);
@@ -394,7 +346,7 @@ public class IPanel extends SimplePanel implements Container,
                 client.updateVariable(id, "scrollLeft", scrollLeft, false);
             }
         } else if (errorIndicatorElement != null
-                && DOM.compare(target, errorIndicatorElement)) {
+                && target == errorIndicatorElement) {
             switch (type) {
             case Event.ONMOUSEOVER:
                 if (errorMessage != null) {
@@ -416,36 +368,58 @@ public class IPanel extends SimplePanel implements Container,
         }
     }
 
-    /**
-     * Panel handles dimensions by itself.
-     */
     @Override
     public void setHeight(String height) {
         this.height = height;
+        super.setHeight(height);
+        if (height != null && height != "") {
+            final int targetHeight = getOffsetHeight();
+            int containerHeight = targetHeight - captionNode.getOffsetHeight()
+                    - bottomDecoration.getOffsetHeight()
+                    - getContainerBorderHeight();
+            if (containerHeight < 0) {
+                containerHeight = 0;
+            }
+            DOM
+                    .setStyleAttribute(contentNode, "height", containerHeight
+                            + "px");
+        } else {
+            DOM.setStyleAttribute(contentNode, "height", "");
+        }
     }
 
-    /**
-     * Panel handles dimensions by itself.
-     */
+    private int getContainerBorderHeight() {
+        if (borderPaddingVertical < 0) {
+            detectContainerBorders();
+        }
+        return borderPaddingVertical;
+    }
+
     @Override
     public void setWidth(String width) {
         this.width = width;
 
         super.setWidth(width);
 
-        if (width.endsWith("px")) {
-            try {
-                // FIXME: More sane implementation
-                borderPaddingHorizontal = Util.measureHorizontalPadding(
-                        contentNode, -2);
-                if (borderPaddingHorizontal < 0) {
-                    borderPaddingHorizontal = -borderPaddingHorizontal;
-                }
-            } catch (Exception e) {
-                ClientExceptionHandler.displayError(e);
-            }
-        }
+    }
 
+    private int getContainerBorderWidth() {
+        if (borderPaddingHorizontal < 0) {
+            detectContainerBorders();
+        }
+        return borderPaddingHorizontal;
+    }
+
+    private void detectContainerBorders() {
+        DOM.setStyleAttribute(contentNode, "overflow", "hidden");
+        borderPaddingHorizontal = contentNode.getOffsetWidth()
+                - contentNode.getPropertyInt("clientWidth");
+        assert borderPaddingHorizontal >= 0;
+        borderPaddingVertical = contentNode.getOffsetHeight()
+                - contentNode.getPropertyInt("clientHeight");
+        assert borderPaddingVertical >= 0;
+
+        DOM.setStyleAttribute(contentNode, "overflow", "auto");
     }
 
     public boolean hasChildComponent(Widget component) {
@@ -460,31 +434,47 @@ public class IPanel extends SimplePanel implements Container,
         // TODO
     }
 
-    public Size getAllocatedSpace(Widget child) {
-        return renderInformation.getContentAreaSize();
+    private RenderSpace contentNodeSize;
+
+    public RenderSpace getAllocatedSpace(Widget child) {
+        if (contentNodeSize == null) {
+            contentNodeSize = new RenderSpace(-1, -1) {
+
+                @Override
+                public int getHeight() {
+                    return contentNode.getOffsetHeight()
+                            - getContainerBorderHeight();
+                }
+
+                @Override
+                public int getWidth() {
+                    return contentNode.getOffsetWidth()
+                            - getContainerBorderWidth();
+                }
+
+                @Override
+                public int getScrollbarSize() {
+                    return Util.getNativeScrollbarSize();
+                }
+
+            };
+        }
+        return contentNodeSize;
     }
 
     public boolean requestLayout(Set<Paintable> child) {
-
         if (height != null && width != null) {
             /*
              * If the height and width has been specified the child components
              * cannot make the size of the layout change
              */
-
             return true;
         }
-
-        if (renderInformation.updateSize(getElement())) {
-            return false;
-        } else {
-            return true;
-        }
-
+        return !renderInformation.updateSize(getElement());
     }
 
     public void updateCaption(Paintable component, UIDL uidl) {
-        // TODO
+        // NOP: layouts caption, errors etc not rendered in Panel
     }
 
 }

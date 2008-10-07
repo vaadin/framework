@@ -10,6 +10,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -18,8 +19,8 @@ import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
+import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
-import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 
 public class IAccordion extends ITabsheetBase implements
         ContainerResizedListener {
@@ -33,6 +34,8 @@ public class IAccordion extends ITabsheetBase implements
     private String height;
 
     private HashMap lazyUpdateMap = new HashMap();
+
+    private RenderSpace renderSpace = new RenderSpace(0, 0, true);
 
     public IAccordion() {
         super(CLASSNAME);
@@ -157,6 +160,25 @@ public class IAccordion extends ITabsheetBase implements
         }
 
         client.runDescendentsLayout(item);
+
+        if (BrowserInfo.get().getWebkitVersion() > 0) {
+            final Element selectedTabContent = getSelectedStack()
+                    .getContainerElement();
+            DeferredCommand.addCommand(new Command() {
+                public void execute() {
+                    // Dough, safari scoll auto means actually just a moped
+                    selectedTabContent.getStyle().setProperty("overflow",
+                            "hidden");
+                    (new Timer() {
+                        @Override
+                        public void run() {
+                            selectedTabContent.getStyle().setProperty(
+                                    "overflow", "auto");
+                        }
+                    }).schedule(1);
+                }
+            });
+        }
     }
 
     /**
@@ -177,6 +199,8 @@ public class IAccordion extends ITabsheetBase implements
                 fixContentNodeSize(contentSpace);
             } else {
                 DOM.setStyleAttribute(content, "height", "");
+                renderSpace.setHeight(0);
+                renderSpace.setWidth(content.getOffsetWidth());
             }
         }
 
@@ -187,6 +211,10 @@ public class IAccordion extends ITabsheetBase implements
                 DOM
                         .setStyleAttribute(content, "width", getOffsetWidth()
                                 + "px");
+            } else {
+                // update render information
+                renderSpace.setHeight(contentHeight);
+                renderSpace.setWidth(content.getOffsetWidth());
             }
         }
 
@@ -335,9 +363,8 @@ public class IAccordion extends ITabsheetBase implements
         return false;
     }
 
-    public Size getAllocatedSpace(Widget child) {
-        // TODO Auto-generated method stub
-        return null;
+    public RenderSpace getAllocatedSpace(Widget child) {
+        return renderSpace;
     }
 
 }

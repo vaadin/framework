@@ -17,8 +17,8 @@ import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.IErrorMessage;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.RenderInformation;
+import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
-import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 
 public class IForm extends ComplexPanel implements Container,
         ContainerResizedListener {
@@ -167,7 +167,7 @@ public class IForm extends ComplexPanel implements Container,
         client.runDescendentsLayout(this);
     }
 
-    public Size getAllocatedSpace(Widget child) {
+    public RenderSpace getAllocatedSpace(Widget child) {
         return renderInformation.getContentAreaSize();
     }
 

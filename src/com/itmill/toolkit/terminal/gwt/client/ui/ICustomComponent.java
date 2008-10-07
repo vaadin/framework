@@ -11,8 +11,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
+import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
-import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 
 public class ICustomComponent extends SimplePanel implements Container {
 
@@ -69,11 +69,9 @@ public class ICustomComponent extends SimplePanel implements Container {
         return false;
     }
 
-    public Size getAllocatedSpace(Widget child) {
-        Size space = new Size(getElement().getOffsetWidth(), getElement()
+    public RenderSpace getAllocatedSpace(Widget child) {
+        return new RenderSpace(getElement().getOffsetWidth(), getElement()
                 .getOffsetHeight());
-
-        return space;
     }
 
 }

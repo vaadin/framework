@@ -24,9 +24,9 @@ import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.RenderInformation;
+import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.StyleConstants;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
-import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 
 /**
  * @author IT Mill Ltd
@@ -848,7 +848,7 @@ public class IExpandLayout extends ComplexPanel implements
 
     }
 
-    public Size getAllocatedSpace(Widget child) {
+    public RenderSpace getAllocatedSpace(Widget child) {
         int width = 0, height = 0;
 
         if (orientationMode == ORIENTATION_HORIZONTAL) {
@@ -869,7 +869,7 @@ public class IExpandLayout extends ComplexPanel implements
             }
         }
 
-        return new Size(width, height);
+        return new RenderSpace(width, height, child == expandedWidget);
     }
 
 }

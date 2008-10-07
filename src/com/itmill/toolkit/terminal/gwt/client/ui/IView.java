@@ -26,10 +26,9 @@ import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.Focusable;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
-import com.itmill.toolkit.terminal.gwt.client.RenderInformation;
+import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
-import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 
 /**
  * 
@@ -64,8 +63,6 @@ public class IView extends SimplePanel implements Container,
      * (scrollbars).
      */
     private Timer resizeTimer;
-
-    private RenderInformation renderInformation = new RenderInformation();
 
     public IView(String elementId) {
         super();
@@ -186,8 +183,6 @@ public class IView extends SimplePanel implements Container,
             layout = lo;
         }
 
-        updateContentAreaSize();
-
         layout.updateFromUIDL(childUidl, client);
 
         // Update subwindows
@@ -289,14 +284,6 @@ public class IView extends SimplePanel implements Container,
 
     }
 
-    private void updateContentAreaSize() {
-        renderInformation.setContentAreaWidth(getElement().getOffsetWidth());
-
-        // For some reason IView has a 1 pixel padding
-        renderInformation
-                .setContentAreaHeight(getElement().getOffsetHeight() - 1);
-    }
-
     @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
@@ -331,8 +318,6 @@ public class IView extends SimplePanel implements Container,
                                     "window h" + IView.this.height);
                         }
                         if (changed) {
-                            updateContentAreaSize();
-
                             ApplicationConnection
                                     .getConsole()
                                     .log(
@@ -363,7 +348,6 @@ public class IView extends SimplePanel implements Container,
             ApplicationConnection.getConsole().log(
                     "Running layout functions due window resize");
 
-            updateContentAreaSize();
             connection.runDescendentsLayout(this);
 
             DOM.setStyleAttribute(getElement(), "overflow", overflow);
@@ -387,17 +371,54 @@ public class IView extends SimplePanel implements Container,
         connection.sendPendingVariableChangesSync();
     }
 
-    private static native void focusElement(Element e)
-    /*-{ 
-       e.focus();
-    }-*/;
-
     public String onWindowClosing() {
         return null;
     }
 
-    public Size getAllocatedSpace(Widget child) {
-        return renderInformation.getContentAreaSize();
+    private final RenderSpace myRenderSpace = new RenderSpace() {
+        private int excessHeight = -1;
+        private int excessWidth = -1;
+
+        @Override
+        public int getHeight() {
+            return getElement().getOffsetHeight() - getExcessHeight();
+        }
+
+        private int getExcessHeight() {
+            if (excessHeight < 0) {
+                detetExessSize();
+            }
+            return excessHeight;
+        }
+
+        private void detetExessSize() {
+            getElement().getStyle().setProperty("overflow", "hidden");
+            excessHeight = getElement().getOffsetHeight()
+                    - getElement().getPropertyInt("clientHeight");
+            excessWidth = getElement().getOffsetWidth()
+                    - getElement().getPropertyInt("clientWidth");
+        }
+
+        @Override
+        public int getWidth() {
+            return getElement().getOffsetWidth() - getExcessWidth();
+        }
+
+        private int getExcessWidth() {
+            if (excessWidth < 0) {
+                detetExessSize();
+            }
+            return excessWidth;
+        }
+
+        @Override
+        public int getScrollbarSize() {
+            return Util.getNativeScrollbarSize();
+        }
+    };
+
+    public RenderSpace getAllocatedSpace(Widget child) {
+        return myRenderSpace;
     }
 
     public boolean hasChildComponent(Widget component) {

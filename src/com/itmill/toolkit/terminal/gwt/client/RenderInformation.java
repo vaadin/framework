@@ -10,7 +10,7 @@ import com.google.gwt.user.client.Element;
  */
 public class RenderInformation {
 
-    private Size contentArea = new Size(0, 0);
+    private RenderSpace contentArea = new RenderSpace();
     private Size renderedSize = new Size(-1, -1);
 
     public void setContentAreaWidth(int w) {
@@ -21,7 +21,7 @@ public class RenderInformation {
         contentArea.setHeight(h);
     }
 
-    public Size getContentAreaSize() {
+    public RenderSpace getContentAreaSize() {
         return contentArea;
 
     }
@@ -90,6 +90,9 @@ public class RenderInformation {
         public boolean equals(Object obj) {
             Size other = (Size) obj;
             return other.width == width && other.height == height;
+        }
+
+        public Size() {
         }
 
         public Size(int width, int height) {

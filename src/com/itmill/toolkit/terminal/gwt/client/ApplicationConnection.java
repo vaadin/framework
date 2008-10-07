@@ -101,8 +101,8 @@ public class ApplicationConnection {
      * 
      * Used in JSNI functions
      * 
-     * @SuppressWarnings
      */
+    @SuppressWarnings("unused")
     private final JavaScriptObject ttClientWrapper = null;
 
     private int activeRequests = 0;
@@ -203,6 +203,7 @@ public class ApplicationConnection {
     /**
      * Helper for tt initialization
      */
+    @SuppressWarnings("unused")
     private JavaScriptObject getVersionInfo() {
         return configuration.getVersionInfoJSObject();
     }
@@ -288,7 +289,7 @@ public class ApplicationConnection {
                         endRequest();
                         if (!applicationRunning) {
                             // start failed, let's try to start the next app
-                            configuration.startNextApplication();
+                            ApplicationConfiguration.startNextApplication();
                         }
                     }
 
@@ -299,7 +300,7 @@ public class ApplicationConnection {
                         } else {
                             applicationRunning = true;
                             handleWhenCSSLoaded(response);
-                            configuration.startNextApplication();
+                            ApplicationConfiguration.startNextApplication();
                         }
                     }
 
@@ -998,6 +999,14 @@ public class ApplicationConnection {
         float relativeWidth = Util.parseRelativeSize(w);
         float relativeHeight = Util.parseRelativeSize(h);
 
+        // first set absolute sizes
+        if (relativeHeight < 0.0) {
+            component.setHeight(h);
+        }
+        if (relativeWidth < 0.0) {
+            component.setWidth(w);
+        }
+
         if (relativeHeight >= 0.0 || relativeWidth >= 0.0) {
             // One or both is relative
             FloatSize relativeSize = new FloatSize(relativeWidth,
@@ -1009,12 +1018,6 @@ public class ApplicationConnection {
             componentRelativeSizes.remove(component);
         }
 
-        if (relativeHeight < 0.0) {
-            component.setHeight(h);
-        }
-        if (relativeWidth < 0.0) {
-            component.setWidth(w);
-        }
     }
 
     /**
@@ -1054,46 +1057,86 @@ public class ApplicationConnection {
             return;
         }
 
-        Size availPixels = Util.getLayout(widget).getAllocatedSpace(widget);
-        if (relativeSize.getWidth() >= 0) {
+        boolean horizontalScrollBar = false;
+        boolean verticalScrollBar = false;
 
-            if (availPixels != null) {
+        RenderSpace renderSpace = Util.getLayout(widget).getAllocatedSpace(
+                widget);
 
-                int width = availPixels.getWidth();
-                width *= relativeSize.getWidth() / 100.0;
+        if (relativeSize.getHeight() >= 0) {
+            if (renderSpace != null) {
 
-                if (width >= 0) {
-                    // getConsole().log(
-                    // "Widget " + widget.getClass().getName() + "/"
-                    // + widget.hashCode() + " relative width "
-                    // + relativeSize.getWidth() + "%: " + width
-                    // + "px");
-                    widget.setWidth(width + "px");
+                if (renderSpace.getScrollbarSize() > 0) {
+                    if (relativeSize.getWidth() > 100) {
+                        horizontalScrollBar = true;
+                    } else if (relativeSize.getWidth() < 0
+                            && renderSpace.getWidth() > 0) {
+                        int offsetWidth = widget.getOffsetWidth();
+                        int width = renderSpace.getWidth();
+                        if (offsetWidth > width) {
+                            horizontalScrollBar = true;
+                        }
+                    }
                 }
+
+                int height = renderSpace.getHeight();
+                if (horizontalScrollBar) {
+                    height -= renderSpace.getScrollbarSize();
+                }
+                height = (int) (height * relativeSize.getHeight() / 100.0);
+
+                if (height < 0) {
+                    height = 0;
+                }
+                // getConsole().log(
+                // "Widget " + widget.getClass().getName() + "/"
+                // + widget.hashCode() + " relative height "
+                // + relativeSize.getHeight() + "%: " + height
+                // + "px");
+                widget.setHeight(height + "px");
             } else {
-                widget.setWidth(relativeSize.getWidth() + "%");
+                widget.setHeight(relativeSize.getHeight() + "%");
                 ApplicationConnection.getConsole().error(
                         Util.getLayout(widget).getClass().getName()
                                 + " did not produce allocatedSpace for "
                                 + widget.getClass().getName());
             }
         }
-        if (relativeSize.getHeight() >= 0) {
-            if (availPixels != null) {
 
-                int height = availPixels.getHeight();
-                height *= relativeSize.getHeight() / 100.0;
+        if (relativeSize.getWidth() >= 0) {
 
-                if (height >= 0) {
-                    // getConsole().log(
-                    // "Widget " + widget.getClass().getName() + "/"
-                    // + widget.hashCode() + " relative height "
-                    // + relativeSize.getHeight() + "%: " + height
-                    // + "px");
-                    widget.setHeight(height + "px");
+            if (renderSpace != null) {
+
+                int width = renderSpace.getWidth();
+
+                if (renderSpace.getScrollbarSize() > 0) {
+                    if (relativeSize.getHeight() > 100) {
+                        verticalScrollBar = true;
+                    } else if (relativeSize.getHeight() < 0
+                            && renderSpace.getHeight() > 0
+                            && widget.getOffsetHeight() > renderSpace
+                                    .getHeight()) {
+                        verticalScrollBar = true;
+                    }
                 }
+
+                if (verticalScrollBar) {
+                    width -= renderSpace.getScrollbarSize();
+                }
+                width = (int) (width * relativeSize.getWidth() / 100.0);
+
+                if (width < 0) {
+                    width = 0;
+                }
+
+                // getConsole().log(
+                // "Widget " + widget.getClass().getName() + "/"
+                // + widget.hashCode() + " relative width "
+                // + relativeSize.getWidth() + "%: " + width
+                // + "px");
+                widget.setWidth(width + "px");
             } else {
-                widget.setHeight(relativeSize.getHeight() + "%");
+                widget.setWidth(relativeSize.getWidth() + "%");
                 ApplicationConnection.getConsole().error(
                         Util.getLayout(widget).getClass().getName()
                                 + " did not produce allocatedSpace for "

@@ -20,9 +20,9 @@ import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.RenderInformation;
+import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
-import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 
 public class ISplitPanel extends ComplexPanel implements Container,
         ContainerResizedListener {
@@ -70,8 +70,10 @@ public class ISplitPanel extends ComplexPanel implements Container,
 
     private String height = null;
 
-    private RenderInformation renderInformationFirst = new RenderInformation();
-    private RenderInformation renderInformationSecond = new RenderInformation();
+    private RenderSpace firstRenderSpace = new RenderSpace(0, 0, true);
+    private RenderSpace secondRenderSpace = new RenderSpace(0, 0, true);
+
+    RenderInformation renderInformation = new RenderInformation();
 
     public ISplitPanel() {
         this(ORIENTATION_HORIZONTAL);
@@ -114,7 +116,7 @@ public class ISplitPanel extends ComplexPanel implements Container,
 
         DOM.setStyleAttribute(firstContainer, "overflow", "auto");
         DOM.setStyleAttribute(secondContainer, "overflow", "auto");
-        if (Util.isIE7()) {
+        if (BrowserInfo.get().isIE7()) {
             /*
              * Part I of IE7 weirdness hack, will be set to auto in layout phase
              * 
@@ -151,7 +153,7 @@ public class ISplitPanel extends ComplexPanel implements Container,
             return;
         }
 
-        renderInformationFirst.updateSize(getElement());
+        renderInformation.updateSize(getElement());
 
         setSplitPosition(uidl.getStringAttribute("position"));
 
@@ -211,7 +213,7 @@ public class ISplitPanel extends ComplexPanel implements Container,
             return;
         }
 
-        renderInformationFirst.updateSize(getElement());
+        renderInformation.updateSize(getElement());
 
         int wholeSize;
         int pixelPosition;
@@ -249,12 +251,11 @@ public class ISplitPanel extends ComplexPanel implements Container,
             DOM.setStyleAttribute(secondContainer, "left",
                     (pixelPosition + getSplitterSize()) + "px");
 
-            int contentHeight = renderInformationFirst.getRenderedSize()
-                    .getHeight();
-            renderInformationFirst.setContentAreaHeight(contentHeight);
-            renderInformationFirst.setContentAreaWidth(pixelPosition);
-            renderInformationSecond.setContentAreaHeight(contentHeight);
-            renderInformationSecond.setContentAreaWidth(secondContainerWidth);
+            int contentHeight = renderInformation.getRenderedSize().getHeight();
+            firstRenderSpace.setHeight(contentHeight);
+            firstRenderSpace.setWidth(pixelPosition);
+            secondRenderSpace.setHeight(contentHeight);
+            secondRenderSpace.setWidth(secondContainerWidth);
 
             break;
         case ORIENTATION_VERTICAL:
@@ -283,12 +284,11 @@ public class ISplitPanel extends ComplexPanel implements Container,
             DOM.setStyleAttribute(secondContainer, "top",
                     (pixelPosition + getSplitterSize()) + "px");
 
-            int contentWidth = renderInformationFirst.getRenderedSize()
-                    .getWidth();
-            renderInformationFirst.setContentAreaHeight(pixelPosition);
-            renderInformationFirst.setContentAreaWidth(contentWidth);
-            renderInformationSecond.setContentAreaHeight(secondContainerHeight);
-            renderInformationSecond.setContentAreaWidth(contentWidth);
+            int contentWidth = renderInformation.getRenderedSize().getWidth();
+            firstRenderSpace.setHeight(pixelPosition);
+            firstRenderSpace.setWidth(contentWidth);
+            secondRenderSpace.setHeight(secondContainerHeight);
+            secondRenderSpace.setWidth(contentWidth);
 
             break;
         }
@@ -310,7 +310,7 @@ public class ISplitPanel extends ComplexPanel implements Container,
             }
         }
 
-        renderInformationFirst.updateSize(getElement());
+        renderInformation.updateSize(getElement());
 
     }
 
@@ -480,11 +480,11 @@ public class ISplitPanel extends ComplexPanel implements Container,
         super.setWidth(width);
     }
 
-    public Size getAllocatedSpace(Widget child) {
+    public RenderSpace getAllocatedSpace(Widget child) {
         if (child == firstChild) {
-            return renderInformationFirst.getContentAreaSize();
+            return firstRenderSpace;
         } else if (child == secondChild) {
-            return renderInformationSecond.getContentAreaSize();
+            return secondRenderSpace;
         }
 
         return null;
@@ -508,7 +508,7 @@ public class ISplitPanel extends ComplexPanel implements Container,
             return true;
         }
 
-        if (renderInformationFirst.updateSize(getElement())) {
+        if (renderInformation.updateSize(getElement())) {
             return false;
         } else {
             return true;

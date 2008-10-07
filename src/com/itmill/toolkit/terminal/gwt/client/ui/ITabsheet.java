@@ -13,17 +13,19 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.RenderInformation;
+import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
-import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 
 public class ITabsheet extends ITabsheetBase implements
         ContainerResizedListener {
@@ -115,8 +117,8 @@ public class ITabsheet extends ITabsheetBase implements
     private final Element scrollerPrev; // tab-scroller prev button element
     private int scrollerIndex = 0;
 
-    private final TabBar tb;
-    private final ITabsheetPanel tp;
+    private final TabBar tb = new TabBar();
+    private final ITabsheetPanel tp = new ITabsheetPanel();
     private final Element contentNode, deco;
 
     private final HashMap captions = new HashMap();
@@ -183,8 +185,6 @@ public class ITabsheet extends ITabsheetBase implements
         DOM.appendChild(getElement(), tabs);
 
         // Tabs
-        tb = new TabBar();
-        tp = new ITabsheetPanel();
         tp.setStyleName(CLASSNAME + "-tabsheetpanel");
         contentNode = DOM.createDiv();
 
@@ -216,8 +216,7 @@ public class ITabsheet extends ITabsheetBase implements
     public void onBrowserEvent(Event event) {
 
         // Tab scrolling
-        if (isScrolledTabs()
-                && DOM.compare(DOM.eventGetTarget(event), scrollerPrev)) {
+        if (isScrolledTabs() && DOM.eventGetTarget(event) == scrollerPrev) {
             if (scrollerIndex > 0) {
                 scrollerIndex--;
                 DOM.setStyleAttribute(DOM.getChild(DOM.getFirstChild(DOM
@@ -225,8 +224,7 @@ public class ITabsheet extends ITabsheetBase implements
                         "display", "");
                 updateTabScroller();
             }
-        } else if (isClippedTabs()
-                && DOM.compare(DOM.eventGetTarget(event), scrollerNext)) {
+        } else if (isClippedTabs() && DOM.eventGetTarget(event) == scrollerNext) {
             int tabs = tb.getTabCount();
             if (scrollerIndex + 1 <= tabs) {
                 DOM.setStyleAttribute(DOM.getChild(DOM.getFirstChild(DOM
@@ -351,67 +349,66 @@ public class ITabsheet extends ITabsheetBase implements
     }
 
     public void setHeight(String height) {
-        if (this.height == null && height == null) {
-            return;
-        }
-        String oldHeight = this.height;
+        super.setHeight(height);
         this.height = height;
-        if ((this.height != null && height == null)
-                || (this.height == null && height != null)
-                || !height.equals(oldHeight)) {
-            iLayout();
-        }
-    }
-
-    public void setWidth(String width) {
-        String oldWidth = this.width;
-        this.width = width;
-        if ("100%".equals(width)) {
-            // Allow browser to calculate width
-            super.setWidth("");
-        } else {
-            super.setWidth(width);
-        }
-        if ((this.width != null && width == null)
-                || (this.width == null && width != null)
-                || !width.equals(oldWidth)) {
-            // Run descendant layout functions
-            client.runDescendentsLayout(this);
-        }
-    }
-
-    public void iLayout() {
-        renderInformation.updateSize(getElement());
-
-        if (height != null && height != "") {
-            super.setHeight(height);
-
+        if (height != null && !"".equals(height)) {
             int contentHeight = getOffsetHeight()
                     - DOM.getElementPropertyInt(deco, "offsetHeight")
-                    - tb.getOffsetHeight();
+                    - tb.getOffsetHeight() - 5;
             if (contentHeight < 0) {
                 contentHeight = 0;
             }
 
             // Set proper values for content element
             DOM.setStyleAttribute(contentNode, "height", contentHeight + "px");
+            renderSpace.setHeight(contentHeight);
             DOM.setStyleAttribute(contentNode, "overflow", "auto");
-            tp.setHeight("100%");
-
         } else {
             DOM.setStyleAttribute(contentNode, "height", "");
             DOM.setStyleAttribute(contentNode, "overflow", "");
+            renderSpace.setHeight(0);
         }
+        iLayout();
+    }
+
+    public void setWidth(String width) {
+        super.setWidth(width);
+        this.width = width;
+        if ("".equals(width)) {
+            renderSpace.setWidth(0);
+            contentNode.getStyle().setProperty("width", "");
+        } else {
+            int contentWidth = getOffsetWidth() - getContentAreaBorderWidth();
+            contentNode.getStyle().setProperty("width", contentWidth + "px");
+            renderSpace.setWidth(contentWidth);
+        }
+        iLayout();
+    }
+
+    public void iLayout() {
+        renderInformation.updateSize(getElement());
 
         if (client != null) {
             client.runDescendentsLayout(this);
         }
 
-        renderInformation.setContentAreaWidth(tp.getElement().getOffsetWidth());
-        renderInformation.setContentAreaHeight(tp.getElement()
-                .getOffsetHeight());
-
         updateTabScroller();
+
+        if (BrowserInfo.get().getWebkitVersion() > 0) {
+            DeferredCommand.addCommand(new Command() {
+                public void execute() {
+                    // Dough, safari scoll auto means actually just a moped
+                    contentNode.getStyle().setProperty("overflow", "hidden");
+                    (new Timer() {
+                        @Override
+                        public void run() {
+                            contentNode.getStyle().setProperty("overflow",
+                                    "auto");
+                        }
+                    }).schedule(100);
+                }
+            });
+        }
 
     }
 
@@ -517,9 +514,27 @@ public class ITabsheet extends ITabsheetBase implements
 
     }
 
-    public Size getAllocatedSpace(Widget child) {
-        // All tabs have equal amount of space allocated
+    private int borderW = -1;
 
-        return renderInformation.getContentAreaSize();
+    private void detectBorder() {
+        String property = contentNode.getStyle().getProperty("overflow");
+        contentNode.getStyle().setProperty("overflow", "hidden");
+        borderW = contentNode.getOffsetWidth()
+                - contentNode.getPropertyInt("clientWidth");
+        contentNode.getStyle().setProperty("overflow", property);
+    }
+
+    private int getContentAreaBorderWidth() {
+        if (borderW < 0) {
+            detectBorder();
+        }
+        return borderW;
+    }
+
+    private RenderSpace renderSpace = new RenderSpace(0, 0, true);
+
+    public RenderSpace getAllocatedSpace(Widget child) {
+        // All tabs have equal amount of space allocated
+        return renderSpace;
     }
 }

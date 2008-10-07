@@ -7,7 +7,6 @@ package com.itmill.toolkit.terminal.gwt.client;
 import java.util.Set;
 
 import com.google.gwt.user.client.ui.Widget;
-import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 
 public interface Container extends Paintable {
 
@@ -69,6 +68,6 @@ public interface Container extends Paintable {
      * @param child
      * @return
      */
-    Size getAllocatedSpace(Widget child);
+    RenderSpace getAllocatedSpace(Widget child);
 
 }

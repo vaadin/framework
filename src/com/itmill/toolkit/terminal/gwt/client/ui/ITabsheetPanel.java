@@ -21,7 +21,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class ITabsheetPanel extends ComplexPanel {
 
     private Widget visibleWidget;
-    private boolean fullheight = false;
+    private int contentHeight;
 
     /**
      * Creates an empty tabsheet panel.
@@ -44,9 +44,6 @@ public class ITabsheetPanel extends ComplexPanel {
 
     private Element createContainerElement() {
         Element el = DOM.createDiv();
-        if (fullheight) {
-            DOM.setStyleAttribute(el, "height", "100%");
-        }
         hide(el);
         return el;
     }
@@ -109,33 +106,9 @@ public class ITabsheetPanel extends ComplexPanel {
         }
     }
 
-    /*
-     * Gets only called with 100% or ""
-     */
-    public void setHeight(String height) {
-        super.setHeight(height);
-        if ("100%".equals(height)) {
-            if (!fullheight) {
-                int childCount = DOM.getChildCount(getElement());
-                for (int i = 0; i < childCount; i++) {
-                    DOM.setStyleAttribute(DOM.getChild(getElement(), i),
-                            "height", "100%");
-                }
-                fullheight = true;
-            }
-        } else if (fullheight) {
-            int childCount = DOM.getChildCount(getElement());
-            for (int i = 0; i < childCount; i++) {
-                DOM.setStyleAttribute(DOM.getChild(getElement(), i), "height",
-                        "");
-            }
-            fullheight = false;
-        }
-    }
-
     private void hide(Element e) {
-        DOM.setStyleAttribute(e, "width", getOffsetWidth() + "px");
-        DOM.setStyleAttribute(e, "height", getOffsetHeight() + "px");
+        DOM.setStyleAttribute(e, "width", "0px");
+        DOM.setStyleAttribute(e, "height", "0px");
         DOM.setStyleAttribute(e, "overflow", "hidden");
         DOM.setStyleAttribute(e, "visibility", "hidden");
         DOM.setStyleAttribute(e, "position", "absolute");
@@ -144,17 +117,16 @@ public class ITabsheetPanel extends ComplexPanel {
     }
 
     private void unHide(Element e) {
+        DOM.setStyleAttribute(e, "marginLeft", "0px");
+        DOM.setStyleAttribute(e, "marginTop", "0px");
         DOM.setStyleAttribute(e, "position", "");
         DOM.setStyleAttribute(e, "top", "");
         DOM.setStyleAttribute(e, "left", "");
         DOM.setStyleAttribute(e, "visibility", "");
         DOM.setStyleAttribute(e, "width", "");
-        if (fullheight) {
-            DOM.setStyleAttribute(e, "height", "100%");
-        } else {
-            DOM.setStyleAttribute(e, "height", "");
-        }
+        DOM.setStyleAttribute(e, "height", "");
         DOM.setStyleAttribute(e, "overflow", "");
 
     }
+
 }

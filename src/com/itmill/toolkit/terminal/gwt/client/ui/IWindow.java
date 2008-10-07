@@ -5,6 +5,7 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.Iterator;
+import java.util.Set;
 import java.util.Vector;
 
 import com.google.gwt.user.client.Command;
@@ -20,7 +21,9 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
+import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
+import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
 
@@ -31,7 +34,7 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
  * 
  * @author IT Mill Ltd
  */
-public class IWindow extends IToolkitOverlay implements Paintable,
+public class IWindow extends IToolkitOverlay implements Container,
         ScrollListener {
 
     private static final int MIN_HEIGHT = 60;
@@ -329,6 +332,7 @@ public class IWindow extends IToolkitOverlay implements Paintable,
             }
         } else if (!showingUrl) {
             contentPanel.setWidget((Widget) lo);
+            layout = lo;
         }
         lo.updateFromUIDL(childUidl, client);
 
@@ -772,6 +776,50 @@ public class IWindow extends IToolkitOverlay implements Paintable,
         final int windowWidth = DOM.getElementPropertyInt(getElement(),
                 "offsetWidth");
         borderWidthHorizontal = windowWidth - contentWidth;
+    }
+
+    public RenderSpace getAllocatedSpace(Widget child) {
+        if (child == layout) {
+            return new RenderSpace() {
+                @Override
+                public int getHeight() {
+                    return contentPanel.getOffsetHeight();
+                }
+
+                @Override
+                public int getWidth() {
+                    return contentPanel.getOffsetWidth();
+                }
+
+                @Override
+                public int getScrollbarSize() {
+                    return Util.getNativeScrollbarSize();
+                }
+            };
+        } else {
+            // Exception ??
+            return null;
+        }
+    }
+
+    public boolean hasChildComponent(Widget component) {
+        if (component == layout) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
+        contentPanel.setWidget(newComponent);
+    }
+
+    public boolean requestLayout(Set<Paintable> child) {
+        return true;
+    }
+
+    public void updateCaption(Paintable component, UIDL uidl) {
+        // NOP, window has own caption, layout captio not rendered
     }
 
 }

@@ -286,7 +286,9 @@ public class IAbsoluteGrid extends Composite implements
                 cell.render();
                 cell.vAling();
             }
-            client.runDescendentsLayout(ap);
+            if (client != null) {
+                client.runDescendentsLayout(ap);
+            }
         }
     }
 
