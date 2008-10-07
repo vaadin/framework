@@ -169,11 +169,12 @@ public class IPopupView extends HTML implements Paintable {
         windowBottom = windowTop + RootPanel.get().getOffsetHeight();
     }
 
-    public static native void nativeBlur(Element e) /*-{ 
-                                                       if(e.focus) {
-                                                       e.blur();
-                                                       }
-                                                       }-*/;
+    private static native void nativeBlur(Element e)
+    /*-{ 
+        if(e.focus) {
+            e.blur();
+        }
+    }-*/;
 
     private class CustomPopup extends IToolkitOverlay implements Container {
 
