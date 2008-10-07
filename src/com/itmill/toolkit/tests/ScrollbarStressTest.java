@@ -77,33 +77,36 @@ public class ScrollbarStressTest extends Application {
     }
 
     private void drawInPanel() {
+        main.removeAllComponents();
         OrderedLayout ol = new OrderedLayout();
-        ol.setSizeFull();
-        main.setLayout(ol);
-        ol.addComponent(panel);
+        panel.setLayout(ol);
 
         ol = new OrderedLayout();
-        ol.setSizeFull();
         panel.setSizeFull();
         panel.setLayout(ol);
 
+        ol.setSizeFull();
+        ol.setWidth((String) width.getValue());
+        ol.setHeight((String) height.getValue());
+
         Label l = new Label("Label");
-        l.setWidth((String) width.getValue());
-        l.setHeight((String) height.getValue());
         l.setStyleName("no-padding");
+        l.setSizeFull();
 
         ol.addComponent(l);
+        main.addComponent(panel);
         main.removeWindow(subwindow);
     }
 
     private void drawInSubwindow() {
         main.removeAllComponents();
         OrderedLayout ol = new OrderedLayout();
-        ol.setSizeFull();
+        ol.setWidth((String) width.getValue());
+        ol.setHeight((String) height.getValue());
+
         Label l = new Label("Label");
-        l.setWidth((String) width.getValue());
-        l.setHeight((String) height.getValue());
         l.setStyleName("no-padding");
+        l.setSizeFull();
 
         ol.addComponent(l);
         subwindow.setLayout(ol);
@@ -111,14 +114,15 @@ public class ScrollbarStressTest extends Application {
     }
 
     private void drawInMainWindow() {
+        main.removeAllComponents();
         OrderedLayout ol = new OrderedLayout();
-        ol.setSizeFull();
         main.setLayout(ol);
+        ol.setWidth((String) width.getValue());
+        ol.setHeight((String) height.getValue());
 
         Label l = new Label("Label");
-        l.setWidth((String) width.getValue());
-        l.setHeight((String) height.getValue());
         l.setStyleName("no-padding");
+        l.setSizeFull();
 
         ol.addComponent(l);
         main.removeWindow(subwindow);
