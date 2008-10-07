@@ -11,7 +11,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
-import com.itmill.toolkit.terminal.gwt.client.ClientExceptionHandler;
 import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.IErrorMessage;
@@ -41,6 +40,8 @@ public class IForm extends ComplexPanel implements Container,
 
     private Element footerContainer = DOM.createDiv();
 
+    private Element fieldSet = DOM.createFieldSet();
+
     private Container footer;
 
     private ApplicationConnection client;
@@ -52,25 +53,30 @@ public class IForm extends ComplexPanel implements Container,
     private int borderPaddingVertical;
 
     public IForm() {
-        setElement(DOM.createFieldSet());
+        setElement(DOM.createDiv());
+        DOM.appendChild(getElement(), fieldSet);
         setStyleName(CLASSNAME);
-        DOM.appendChild(getElement(), legend);
+        DOM.appendChild(fieldSet, legend);
         DOM.appendChild(legend, caption);
         DOM.setElementProperty(errorIndicatorElement, "className",
                 "i-errorindicator");
         DOM.setStyleAttribute(errorIndicatorElement, "display", "none");
         DOM.setInnerText(errorIndicatorElement, " "); // needed for IE
         DOM.setElementProperty(desc, "className", "i-form-description");
-        DOM.appendChild(getElement(), desc);
-        DOM.appendChild(getElement(), fieldContainer);
+        DOM.appendChild(fieldSet, desc);
+        DOM.appendChild(fieldSet, fieldContainer);
         errorMessage.setVisible(false);
         errorMessage.setStyleName(CLASSNAME + "-errormessage");
-        DOM.appendChild(getElement(), errorMessage.getElement());
-        DOM.appendChild(getElement(), footerContainer);
+        DOM.appendChild(fieldSet, errorMessage.getElement());
+        DOM.appendChild(fieldSet, footerContainer);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        this.client = client;
+        if (this.client == null) {
+            this.client = client;
+            borderPaddingVertical = getOffsetHeight();
+            borderPaddingHorizontal = getOffsetWidth() - desc.getOffsetWidth();
+        }
 
         if (client.updateComponent(this, uidl, false)) {
             return;
@@ -168,7 +174,24 @@ public class IForm extends ComplexPanel implements Container,
     }
 
     public RenderSpace getAllocatedSpace(Widget child) {
-        return renderInformation.getContentAreaSize();
+        if (child == lo) {
+            int hPixels = 0;
+            if (!"".equals(height)) {
+                hPixels = getOffsetHeight();
+                hPixels -= borderPaddingVertical;
+                hPixels -= footerContainer.getOffsetHeight();
+                hPixels -= errorMessage.getOffsetHeight();
+                hPixels -= desc.getOffsetHeight();
+
+            }
+            return new RenderSpace(fieldContainer.getOffsetWidth(), 0);
+        } else if (child == footer) {
+            return new RenderSpace(footerContainer.getOffsetWidth(), 0);
+        } else {
+            ApplicationConnection.getConsole().error(
+                    "Invalid child requested RenderSpace information");
+            return null;
+        }
     }
 
     public boolean hasChildComponent(Widget component) {
@@ -207,35 +230,13 @@ public class IForm extends ComplexPanel implements Container,
     @Override
     public void setHeight(String height) {
         this.height = height;
-
         super.setHeight(height);
-
-        if (height.endsWith("px")) {
-            try {
-                borderPaddingVertical = getElement().getOffsetHeight()
-                        - Integer.parseInt(height.substring(0,
-                                height.length() - 2));
-            } catch (Exception e) {
-                ClientExceptionHandler.displayError(e);
-            }
-        }
 
     }
 
     @Override
     public void setWidth(String width) {
         this.width = width;
-
         super.setWidth(width);
-
-        if (width.endsWith("px")) {
-            try {
-                borderPaddingHorizontal = getElement().getOffsetWidth()
-                        - Integer.parseInt(width.substring(0,
-                                width.length() - 2));
-            } catch (Exception e) {
-                ClientExceptionHandler.displayError(e);
-            }
-        }
     }
 }
