@@ -310,8 +310,9 @@ public class IFormLayout extends FlexTable implements Container {
     }
 
     public RenderSpace getAllocatedSpace(Widget child) {
-        // TODO Auto-generated method stub
-        return null;
+        com.google.gwt.dom.client.Element pe = child.getElement()
+                .getParentElement();
+        return new RenderSpace(pe.getOffsetWidth(), pe.getOffsetHeight(), false);
     }
 
 }
