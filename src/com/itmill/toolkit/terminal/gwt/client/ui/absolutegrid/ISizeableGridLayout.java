@@ -28,7 +28,7 @@ public class ISizeableGridLayout extends IAbsoluteGrid implements Paintable,
         Container {
     public static final String CLASSNAME = "i-gridlayout";
     private int spacing;
-    private HashMap paintableToCellMap = new HashMap();
+    private HashMap<Paintable, IAbsoluteGridCell> paintableToCellMap = new HashMap<Paintable, IAbsoluteGridCell>();
     private MarginPixels mp;
     private String oldStyleString = "";
 
@@ -183,8 +183,7 @@ public class ISizeableGridLayout extends IAbsoluteGrid implements Paintable,
     }
 
     public void updateCaption(Paintable component, UIDL uidl) {
-        IAbsoluteGridCell cell = (IAbsoluteGridCell) paintableToCellMap
-                .get(component);
+        IAbsoluteGridCell cell = paintableToCellMap.get(component);
         ICaption c = cell.getCaption();
         if (c == null) {
             c = new ICaption(component, client);
@@ -251,13 +250,22 @@ public class ISizeableGridLayout extends IAbsoluteGrid implements Paintable,
     }
 
     public boolean requestLayout(Set<Paintable> child) {
-        // TODO Auto-generated method stub
-        return false;
+        for (Iterator iterator = child.iterator(); iterator.hasNext();) {
+            Paintable paintable = (Paintable) iterator.next();
+            if (hasChildComponent((Widget) paintable)) {
+                IAbsoluteGridCell absoluteGridCell = paintableToCellMap
+                        .get(paintable);
+                absoluteGridCell.vAling();
+            }
+        }
+        // always has size, never change due child change
+        return true;
     }
 
     public RenderSpace getAllocatedSpace(Widget child) {
-        // TODO Auto-generated method stub
-        return null;
+        com.google.gwt.dom.client.Element e = child.getElement()
+                .getParentElement();
+        return new RenderSpace(e.getOffsetWidth(), e.getOffsetHeight());
     }
 
 }
