@@ -36,6 +36,7 @@ public class ITabsheetPanel extends ComplexPanel {
      * @param w
      *            the widget to be added
      */
+    @Override
     public void add(Widget w) {
         Element el = createContainerElement();
         DOM.appendChild(getElement(), el);
@@ -73,6 +74,7 @@ public class ITabsheetPanel extends ComplexPanel {
         super.insert(w, el, beforeIndex, false);
     }
 
+    @Override
     public boolean remove(Widget w) {
         final int index = getWidgetIndex(w);
         final boolean removed = super.remove(w);
@@ -112,7 +114,7 @@ public class ITabsheetPanel extends ComplexPanel {
         DOM.setStyleAttribute(e, "overflow", "hidden");
         DOM.setStyleAttribute(e, "visibility", "hidden");
         DOM.setStyleAttribute(e, "position", "absolute");
-        DOM.setStyleAttribute(e, "top", "0px");
+        DOM.setStyleAttribute(e, "top", "-100000px"); // Fixes FF2 caret bug
         DOM.setStyleAttribute(e, "left", "0px");
     }
 
