@@ -241,6 +241,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
             }
         }
 
+        @Override
         public void onBrowserEvent(Event event) {
             final Element target = DOM.eventGetTarget(event);
             if (DOM.compare(target, up)
@@ -437,6 +438,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
     private final FlowPanel panel = new FlowPanel();
 
     private final TextBox tb = new TextBox() {
+        @Override
         public void onBrowserEvent(Event event) {
             super.onBrowserEvent(event);
             if (client != null) {
@@ -619,11 +621,17 @@ public class IFilterSelect extends Composite implements Paintable, Field,
 
         // Calculate minumum textarea width
         final int minw = minWidth(captions);
-        final Element spacer = DOM.createDiv();
-        DOM.setStyleAttribute(spacer, "width", minw + "px");
-        DOM.setStyleAttribute(spacer, "height", "0");
-        DOM.setStyleAttribute(spacer, "overflow", "hidden");
-        DOM.appendChild(panel.getElement(), spacer);
+        Element lastChild = DOM.getChild(panel.getElement(), DOM
+                .getChildCount(panel.getElement()) - 1);
+        if (DOM.getElementProperty(lastChild, "className") != null
+                && DOM.getElementProperty(lastChild, "className") != "") {
+            final Element spacer = DOM.createDiv();
+            DOM.setStyleAttribute(spacer, "height", "0");
+            DOM.setStyleAttribute(spacer, "overflow", "hidden");
+            DOM.appendChild(panel.getElement(), spacer);
+            lastChild = spacer;
+        }
+        DOM.setStyleAttribute(lastChild, "width", minw + "px");
 
         popupOpenerClicked = false;
 
