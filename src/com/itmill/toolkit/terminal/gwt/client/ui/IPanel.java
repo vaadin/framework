@@ -6,12 +6,9 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.Set;
 
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
@@ -306,23 +303,10 @@ public class IPanel extends SimplePanel implements Container,
             }
         }
 
-        if (BrowserInfo.get().getWebkitVersion() > 0) {
-            DeferredCommand.addCommand(new Command() {
-                public void execute() {
-                    // Dough, safari scoll auto means actually just a moped
-                    contentNode.getStyle().setProperty("overflow", "hidden");
-                    (new Timer() {
-                        @Override
-                        public void run() {
-                            contentNode.getStyle().setProperty("overflow",
-                                    "auto");
-                        }
-                    }).schedule(1);
-                }
-            });
-        }
-
         client.runDescendentsLayout(this);
+
+        Util.runWebkitOverflowAutoFix(contentNode);
+
     }
 
     @Override

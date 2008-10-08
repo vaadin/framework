@@ -312,6 +312,10 @@ public class ISplitPanel extends ComplexPanel implements Container,
 
         renderInformation.updateSize(getElement());
 
+        // fixes scrollbars sometimes seen on webkit 528.5, but not in Safari
+        // 3.1
+        Util.runWebkitOverflowAutoFix(secondContainer);
+
     }
 
     private void setFirstWidget(Widget w) {

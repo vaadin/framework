@@ -13,19 +13,18 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
-import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.RenderInformation;
 import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.Util;
 
 public class ITabsheet extends ITabsheetBase implements
         ContainerResizedListener {
@@ -394,21 +393,7 @@ public class ITabsheet extends ITabsheetBase implements
 
         updateTabScroller();
 
-        if (BrowserInfo.get().getWebkitVersion() > 0) {
-            DeferredCommand.addCommand(new Command() {
-                public void execute() {
-                    // Dough, safari scoll auto means actually just a moped
-                    contentNode.getStyle().setProperty("overflow", "hidden");
-                    (new Timer() {
-                        @Override
-                        public void run() {
-                            contentNode.getStyle().setProperty("overflow",
-                                    "auto");
-                        }
-                    }).schedule(100);
-                }
-            });
-        }
+        Util.runWebkitOverflowAutoFix(contentNode);
 
     }
 
