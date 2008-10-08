@@ -591,6 +591,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
                     selectedOptionKey = "" + suggestion.getOptionKey();
                 }
                 currentSuggestion = suggestion;
+                setSelectedItemIcon(suggestion.getIconUri());
             }
 
             // Collect captions so we can calculate minimum width for textarea
