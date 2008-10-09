@@ -5,9 +5,11 @@
 package com.itmill.toolkit.ui;
 
 import java.util.Iterator;
+import java.util.Map;
 
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
+import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 
 /**
  * SplitPanel.
@@ -75,6 +77,7 @@ public class SplitPanel extends AbstractLayout {
      * 
      * @return the Component UIDL tag as string.
      */
+    @Override
     public String getTag() {
         if (orientation == ORIENTATION_HORIZONTAL) {
             return "hsplitpanel";
@@ -90,6 +93,7 @@ public class SplitPanel extends AbstractLayout {
      * @param c
      *            the component to be added.
      */
+    @Override
     public void addComponent(Component c) {
         if (firstComponent == null) {
             firstComponent = c;
@@ -127,6 +131,7 @@ public class SplitPanel extends AbstractLayout {
      * @param c
      *            the component to be removed.
      */
+    @Override
     public void removeComponent(Component c) {
         super.removeComponent(c);
         if (c == firstComponent) {
@@ -192,6 +197,7 @@ public class SplitPanel extends AbstractLayout {
      * @throws PaintException
      *             if the paint operation failed.
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
 
@@ -295,6 +301,24 @@ public class SplitPanel extends AbstractLayout {
      */
     public boolean isLocked() {
         return locked;
+    }
+
+    /*
+     * Invoked when a variable of the component changes. Don't add a JavaDoc
+     * comment here, we use the default documentation from implemented
+     * interface.
+     */
+    @Override
+    public void changeVariables(Object source, Map variables) {
+
+        super.changeVariables(source, variables);
+
+        if (variables.containsKey("position") && !isLocked()) {
+            Integer newPos = (Integer) variables.get("position");
+            // Client always sends pixel values
+            setSplitPosition(newPos, UNITS_PIXELS);
+        }
+
     }
 
 }

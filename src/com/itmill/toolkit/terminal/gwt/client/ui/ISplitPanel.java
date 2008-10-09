@@ -75,6 +75,10 @@ public class ISplitPanel extends ComplexPanel implements Container,
 
     RenderInformation renderInformation = new RenderInformation();
 
+    private String id;
+
+    private boolean immediate;
+
     public ISplitPanel() {
         this(ORIENTATION_HORIZONTAL);
     }
@@ -148,6 +152,9 @@ public class ISplitPanel extends ComplexPanel implements Container,
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         this.client = client;
+        id = uidl.getId();
+
+        immediate = uidl.hasAttribute("immediate");
 
         if (client.updateComponent(this, uidl, true)) {
             return;
@@ -334,6 +341,7 @@ public class ISplitPanel extends ComplexPanel implements Container,
         secondChild = w;
     }
 
+    @Override
     public void onBrowserEvent(Event event) {
         switch (DOM.eventGetType(event)) {
         case Event.ONMOUSEMOVE:
@@ -400,6 +408,7 @@ public class ISplitPanel extends ComplexPanel implements Container,
             newX = getOffsetWidth() - getSplitterSize();
         }
         DOM.setStyleAttribute(splitter, "left", newX + "px");
+        updateSplitPosition(newX);
     }
 
     private void onVerticalMouseMove(int y) {
@@ -412,6 +421,7 @@ public class ISplitPanel extends ComplexPanel implements Container,
             newY = getOffsetHeight() - getSplitterSize();
         }
         DOM.setStyleAttribute(splitter, "top", newY + "px");
+        updateSplitPosition(newY);
     }
 
     public void onMouseUp(Event event) {
@@ -523,6 +533,17 @@ public class ISplitPanel extends ComplexPanel implements Container,
     public void updateCaption(Paintable component, UIDL uidl) {
         // TODO Auto-generated method stub
 
+    }
+
+    /**
+     * Updates the new split position back to server.
+     * 
+     * @param pos
+     *            The new position of the split handle.
+     */
+    private void updateSplitPosition(int pos) {
+        // We always send pixel values to server
+        client.updateVariable(id, "position", pos, immediate);
     }
 
 }
