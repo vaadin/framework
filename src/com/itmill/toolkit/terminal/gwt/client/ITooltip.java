@@ -21,12 +21,18 @@ public class ITooltip extends IToolkitOverlay {
             | Event.ONMOUSEOVER | Event.ONMOUSEOUT | Event.ONMOUSEMOVE
             | Event.ONCLICK;
     protected static final int MAX_WIDTH = 500;
+    private static final int QUICK_OPEN_TIMEOUT = 1000;
+    private static final int CLOSE_TIMEOUT = 300;
+    private static final int OPEN_DELAY = 1700;
+    private static final int QUICK_OPEN_DELAY = 100;
     IErrorMessage em = new IErrorMessage();
     Element description = DOM.createDiv();
     private Paintable tooltipOwner;
     private boolean closing = false;
     private boolean opening = false;
     private ApplicationConnection ac;
+    // Open next tooltip faster. Disabled after 2 sec of showTooltip-silence.
+    private boolean justClosed = false;
 
     public ITooltip(ApplicationConnection client) {
         super(false, false, true);
@@ -90,36 +96,63 @@ public class ITooltip extends IToolkitOverlay {
 
     public void showTooltip(Paintable owner, Event event) {
         if (closing && tooltipOwner == owner) {
+            // return to same tooltip, cancel closing
             closeTimer.cancel();
             closing = false;
+            justClosedTimer.cancel();
+            justClosed = false;
             return;
         }
+
+        if (closing) {
+            closeNow();
+        }
+
         updatePosition(event);
 
         if (opening) {
             showTimer.cancel();
         }
         tooltipOwner = owner;
-        showTimer.schedule(1000);
+        if (justClosed) {
+            showTimer.schedule(QUICK_OPEN_DELAY);
+        } else {
+            showTimer.schedule(OPEN_DELAY);
+        }
         opening = true;
+    }
 
+    private void closeNow() {
+        if (closing) {
+            hide();
+            tooltipOwner = null;
+            setWidth("");
+            closing = false;
+        }
     }
 
     private Timer showTimer = new Timer() {
+        @Override
         public void run() {
             TooltipInfo info = ac.getTitleInfo(tooltipOwner);
             show(info);
             opening = false;
-
         }
     };
 
     private Timer closeTimer = new Timer() {
+        @Override
         public void run() {
-            hide();
-            closing = false;
-            tooltipOwner = null;
-            setWidth("");
+            closeNow();
+            justClosedTimer.schedule(2000);
+            justClosed = true;
+        }
+    };
+
+    private Timer justClosedTimer = new Timer() {
+        @Override
+        public void run() {
+            justClosed = false;
         }
     };
 
@@ -136,8 +169,11 @@ public class ITooltip extends IToolkitOverlay {
             // already about to close
             return;
         }
-        closeTimer.schedule(300);
+        closeTimer.schedule(CLOSE_TIMEOUT);
         closing = true;
+        justClosed = true;
+        justClosedTimer.schedule(QUICK_OPEN_TIMEOUT);
+
     }
 
     private int tooltipEventMouseX;
@@ -165,6 +201,7 @@ public class ITooltip extends IToolkitOverlay {
         }
     }
 
+    @Override
     public void onBrowserEvent(Event event) {
         final int type = DOM.eventGetType(event);
         // cancel closing event if tooltip is mouseovered; the user might want
