@@ -149,6 +149,7 @@ public class IView extends SimplePanel implements Container,
         int childIndex = 0;
 
         // Open URL:s
+        boolean isClosed = false; // was this window closed?
         while (childIndex < uidl.getChildCount()
                 && "open".equals(uidl.getChildUIDL(childIndex).getTag())) {
             final UIDL open = uidl.getChildUIDL(childIndex);
@@ -157,6 +158,7 @@ public class IView extends SimplePanel implements Container,
             if (target == null) {
                 // This window is closing. Send close event before
                 // going to the new url
+                isClosed = true;
                 onWindowClosed();
                 goTo(url);
             } else {
@@ -164,6 +166,10 @@ public class IView extends SimplePanel implements Container,
                 Window.open(url, target != null ? target : null, "");
             }
             childIndex++;
+        }
+        if (isClosed) {
+            // don't render the content
+            return;
         }
 
         // Draw this application level window
