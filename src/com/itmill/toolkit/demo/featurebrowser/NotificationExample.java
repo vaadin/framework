@@ -4,8 +4,6 @@
 
 package com.itmill.toolkit.demo.featurebrowser;
 
-import java.util.Date;
-
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.ui.AbstractSelect;
 import com.itmill.toolkit.ui.Button;
@@ -86,7 +84,6 @@ public class NotificationExample extends CustomComponent {
                 getWindow().showNotification((String) caption.getValue(),
                         (String) message.getValue(),
                         ((Integer) type.getValue()).intValue());
-                getWindow().setCaption(new Date().toString());
             }
         });
         main.addComponent(b);
