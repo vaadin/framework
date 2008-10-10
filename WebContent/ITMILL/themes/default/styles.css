@@ -818,43 +818,70 @@ input.i-modified,
 
 .i-Notification {
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
-	background-color: #999999;
+	background-color: #818e92;
 	color: #ffffff;
-	padding: 0.3em;
+	padding: 9px 12px;
 	cursor: pointer;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
+	overflow: hidden;
 }
-.i-Notification H1,
+.i-Notification h1,
 .i-Notification p,
-.i-Notification.error H1,
+.i-Notification.error h1,
 .i-Notification.error p,
-.i-Notification.warning H1,
+.i-Notification.warning h1,
 .i-Notification.warning p {
 	display: inline;
-	padding: 0.1em;
-}
-.i-Notification.tray H1,
-.i-Notification.tray p {
-	display: block;
-	font-size: 1em;
-	line-height: 0.5em;
+	font-weight: normal;
+	white-space: nowrap;
+	margin: 0 10px 0 0;
 }
 
 .i-Notification.warning {
-	background: #f14c1a;
+	background: #fff1e4;
+	color: #dd3400;
+	border: 2px solid #ffaa90;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	opacity: 1;
 }
 
 .i-Notification.error {
-	background-color: #ff0a0a;
-	/*background-image: url(notification/img/notification-error.png);*/ /* FIXME where is this image? */
-	background-repeat: no-repeat;
-	background-position: center right;
+	background: #f23d00 url(notification/img/close-error.png) no-repeat right 5px;
 	padding-right: 30px;
+	border: 3px solid #c30000;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
 }
-.i-Notification.tray {
 
+
+.i-Notification.tray {
+	background: #575e60;
+	padding: 0.5em;
+	margin: 0 5px 5px 0;
+}
+.i-Notification.tray h1 {
+	display: block;
+	font-weight: bold;
+	font-size: 0.9em;
+	line-height: 1.1;
+	background: #3b4245;
+	padding: 4px 10px;
+	margin: 0;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+}
+.i-Notification.tray p {
+	display: block;
+	font-size: 0.9em;
+	line-height: 1.1;
+	margin: 8px 10px 5px 10px;
+	color: #e4e7ea;
 }
 
 .i-Notification.system {
@@ -862,9 +889,9 @@ input.i-modified,
 	opacity: 0.7;
 	filter: alpha(opacity=70);
 }
-.i-Notification.system H1 {
+.i-Notification.system h1 {
 	display: block;
-	margin: 0px;
+	margin: 0;
 }
 .i-Notification.system p {
 	white-space: nowrap;
@@ -1748,11 +1775,12 @@ input.i-modified,
 /* ...but not for datefield textarea */
 .i-table-cell-content .i-datefield .i-textfield {
 	width: auto;
-	margin: 0;
+	
 }
 /* datefield button is too high for table cell */
 .i-table-cell-content .i-datefield-button {
 	height: 25px;
+	margin: -2px 0;
 }
 
 
@@ -1814,11 +1842,9 @@ input.i-modified,
 }
 
 
-/* rowe in column selector */
+/* row in column selector */
 .i-on div {
-	background-image: url(table/img/check.gif);
-	background-repeat: no-repeat;
-	background-position: 2px center;
+	background: transparent url(table/img/check.gif) no-repeat 2px 50%;
 	text-indent: 6px;
 }
 .i-off div {
@@ -1832,6 +1858,7 @@ input.i-modified,
 	/* 
 	AlphaImageLoader uses src attribute relative to host page, not CSS
 	We need multiple different filters because we cannot be sure how host page is served compared to theme resources
+	TODO: This actually does not work as expected, since only the last filter is applied.
 	 */
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/themes/default/table/img/scroll-position-bg.png", sizingMethod="scale");
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/themes/default/table/img/scroll-position-bg.png", sizingMethod="scale");

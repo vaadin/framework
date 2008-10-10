@@ -125,11 +125,12 @@
 /* ...but not for datefield textarea */
 .i-table-cell-content .i-datefield .i-textfield {
 	width: auto;
-	margin: 0;
+	
 }
 /* datefield button is too high for table cell */
 .i-table-cell-content .i-datefield-button {
 	height: 25px;
+	margin: -2px 0;
 }
 
 
@@ -191,11 +192,9 @@
 }
 
 
-/* rowe in column selector */
+/* row in column selector */
 .i-on div {
-	background-image: url(img/check.gif);
-	background-repeat: no-repeat;
-	background-position: 2px center;
+	background: transparent url(img/check.gif) no-repeat 2px 50%;
 	text-indent: 6px;
 }
 .i-off div {
@@ -209,6 +208,7 @@
 	/* 
 	AlphaImageLoader uses src attribute relative to host page, not CSS
 	We need multiple different filters because we cannot be sure how host page is served compared to theme resources
+	TODO: This actually does not work as expected, since only the last filter is applied.
 	 */
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/themes/default/table/img/scroll-position-bg.png", sizingMethod="scale");
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/themes/default/table/img/scroll-position-bg.png", sizingMethod="scale");
