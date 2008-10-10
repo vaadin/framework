@@ -1486,7 +1486,8 @@ public class ApplicationServlet extends HttpServlet {
         }
 
         // Main window as the URI is empty
-        if (path == null || path.length() == 0 || path.equals("/")) {
+        if (path == null || path.length() == 0 || path.equals("/")
+                || path.startsWith("/APP/")) {
             window = application.getMainWindow();
         } else {
             String windowName = null;
