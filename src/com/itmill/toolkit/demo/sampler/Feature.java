@@ -17,10 +17,13 @@ abstract public class Feature {
 
     protected Example example = null;
 
+    public String getPathName() {
+        return getClass().getSimpleName();
+    }
+
     /** Get the name of the feature. Override if needed. */
     public String getName() {
-        String[] cn = this.getClass().getName().split("\\.");
-        return cn[cn.length - 1];
+        return getClass().getSimpleName();
     }
 
     abstract public String getDescription();

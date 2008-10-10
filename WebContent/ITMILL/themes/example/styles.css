@@ -43,3 +43,49 @@
     text-align: right;
 }
 
+/******************************************************************************
+ * For Sampler
+ ******************************************************************************/
+#sampler {
+	background-color: white;
+}
+#sampler .i-expandlayout-topbar {
+	border-bottom: 1px solid #999;
+}
+
+#sampler .feature-info {
+	background-color: #999;
+	color: white;
+	padding: 20px;
+	line-height: 30px;
+}
+#sampler .feature-name {
+	font-size: 18px;
+	font-weight: bold;
+}
+.i-customcomponent-ModeSwitch .i-button {
+	height: 28px;
+	border: none;
+	border-right: 1px solid #736a60;
+	margin: 0px;
+}
+.i-customcomponent-ModeSwitch .i-button-first-on {
+	background: transparent url(sampler/left-on.gif) no-repeat;
+}
+.i-customcomponent-ModeSwitch .i-button-first {
+	background: transparent url(sampler/left.gif) no-repeat;
+}
+.i-customcomponent-ModeSwitch .i-button-mid-on {
+	background: transparent url(sampler/mid-on.gif) no-repeat;
+}
+.i-customcomponent-ModeSwitch .i-button-mid {
+	background: transparent url(sampler/mid.gif) no-repeat;
+}
+.i-customcomponent-ModeSwitch .i-button-last-on {
+	border: none;
+	background: transparent url(sampler/right-on.gif) no-repeat right top;
+}
+.i-customcomponent-ModeSwitch .i-button-last {
+	border: none;
+	background: transparent url(sampler/right.gif) no-repeat right top;
+}
