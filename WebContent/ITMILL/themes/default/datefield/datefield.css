@@ -11,6 +11,7 @@
 	border: none;
 	background: transparent url(img/open-button.png) no-repeat right 0;
 	vertical-align: top;
+	cursor: pointer;
 }
 
 .i-datefield-popup {
