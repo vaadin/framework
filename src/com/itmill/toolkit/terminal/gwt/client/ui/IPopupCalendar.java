@@ -32,7 +32,7 @@ public class IPopupCalendar extends ITextualDate implements Paintable, Field,
 
         calendarToggle = new Button();
         calendarToggle.setStyleName(CLASSNAME + "-button");
-        calendarToggle.setText("...");
+        calendarToggle.setText("");
         calendarToggle.addClickListener(this);
         add(calendarToggle);
 

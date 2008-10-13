@@ -1,12 +1,16 @@
+.i-datefield-textfield {
+	vertical-align: top;
+}
+
 .i-datefield-button {
 	font-size:13px;
 	width: 22px;
-	height: 25px;
+	height: 24px;
 	padding: 0;
 	overflow: hidden;
 	border: none;
-	background: transparent url(img/open-button.png) no-repeat right 1px;
-	text-indent: -90000px;
+	background: transparent url(img/open-button.png) no-repeat right 0;
+	vertical-align: top;
 }
 
 .i-datefield-popup {
@@ -191,6 +195,17 @@
 
 .i-datefield-rendererror .i-textfield {
 	background: #ff9999;
+}
+
+
+
+
+/* IE specific styles */
+
+*+html .i-datefield-button {
+	background-position: right 1px;
+	height: 25px;
+	margin: 0;
 }
 
 /* IE somehow loses generic i-disabled alpha. See #1960 */
