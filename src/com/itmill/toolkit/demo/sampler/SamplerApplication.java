@@ -426,7 +426,6 @@ public class SamplerApplication extends Application {
             }
         }
 
-        @Override
         public void setFeatureContainer(HierarchicalContainer c) {
             removeAllComponents();
             Collection features = c.getItemIds();
@@ -554,22 +553,18 @@ public class SamplerApplication extends Application {
             }
         }
 
-        @Override
         public String getDescription() {
             return desc;
         }
 
-        @Override
         public String getPathName() {
             return pathname;
         }
 
-        @Override
         public String getName() {
             return name;
         }
 
-        @Override
         public String getIconName() {
             return icon;
         }
