@@ -158,6 +158,9 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             return;
         }
 
+        // we may have pending cache row fetch, cancel it. See #2136
+        rowRequestHandler.cancel();
+
         enabled = !uidl.hasAttribute("disabled");
 
         this.client = client;
@@ -622,18 +625,14 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             // Do we need cache rows
             if (tBody.getLastRendered() + 1 < firstRowInViewPort + pageLength
                     + CACHE_REACT_RATE * pageLength) {
-                DeferredCommand.addCommand(new Command() {
-                    public void execute() {
-                        if (totalRows - 1 > tBody.getLastRendered()) {
-                            // fetch cache rows
-                            rowRequestHandler.setReqFirstRow(tBody
-                                    .getLastRendered() + 1);
-                            rowRequestHandler
-                                    .setReqRows((int) (pageLength * CACHE_RATE));
-                            rowRequestHandler.deferRowFetch(1);
-                        }
-                    }
-                });
+                if (totalRows - 1 > tBody.getLastRendered()) {
+                    // fetch cache rows
+                    rowRequestHandler
+                            .setReqFirstRow(tBody.getLastRendered() + 1);
+                    rowRequestHandler
+                            .setReqRows((int) (pageLength * CACHE_RATE));
+                    rowRequestHandler.deferRowFetch(1);
+                }
             }
         }
         initializedAndAttached = true;
@@ -808,45 +807,55 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         }
 
         public void run() {
-            ApplicationConnection.getConsole().log(
-                    "Getting " + reqRows + " rows from " + reqFirstRow);
+            if (client.hasActiveRequest()) {
+                // if client connection is busy, don't bother loading it more
+                schedule(250);
+                ApplicationConnection.getConsole().log(
+                        "Table: AC is busy, deferring cache row fetch..");
 
-            int firstToBeRendered = tBody.firstRendered;
-            if (reqFirstRow < firstToBeRendered) {
-                firstToBeRendered = reqFirstRow;
-            } else if (firstRowInViewPort - (int) (CACHE_RATE * pageLength) > firstToBeRendered) {
-                firstToBeRendered = firstRowInViewPort
-                        - (int) (CACHE_RATE * pageLength);
-                if (firstToBeRendered < 0) {
-                    firstToBeRendered = 0;
+            } else {
+                ApplicationConnection.getConsole().log(
+                        "Getting " + reqRows + " rows from " + reqFirstRow);
+
+                int firstToBeRendered = tBody.firstRendered;
+                if (reqFirstRow < firstToBeRendered) {
+                    firstToBeRendered = reqFirstRow;
+                } else if (firstRowInViewPort - (int) (CACHE_RATE * pageLength) > firstToBeRendered) {
+                    firstToBeRendered = firstRowInViewPort
+                            - (int) (CACHE_RATE * pageLength);
+                    if (firstToBeRendered < 0) {
+                        firstToBeRendered = 0;
+                    }
                 }
-            }
 
-            int lastToBeRendered = tBody.lastRendered;
+                int lastToBeRendered = tBody.lastRendered;
 
-            if (reqFirstRow + reqRows - 1 > lastToBeRendered) {
-                lastToBeRendered = reqFirstRow + reqRows - 1;
-            } else if (firstRowInViewPort + pageLength + pageLength
-                    * CACHE_RATE < lastToBeRendered) {
-                lastToBeRendered = (firstRowInViewPort + pageLength + (int) (pageLength * CACHE_RATE));
-                if (lastToBeRendered >= totalRows) {
-                    lastToBeRendered = totalRows - 1;
+                if (reqFirstRow + reqRows - 1 > lastToBeRendered) {
+                    lastToBeRendered = reqFirstRow + reqRows - 1;
+                } else if (firstRowInViewPort + pageLength + pageLength
+                        * CACHE_RATE < lastToBeRendered) {
+                    lastToBeRendered = (firstRowInViewPort + pageLength + (int) (pageLength * CACHE_RATE));
+                    if (lastToBeRendered >= totalRows) {
+                        lastToBeRendered = totalRows - 1;
+                    }
                 }
+
+                client.updateVariable(paintableId, "firstToBeRendered",
+                        firstToBeRendered, false);
+
+                client.updateVariable(paintableId, "lastToBeRendered",
+                        lastToBeRendered, false);
+                // remember which firstvisible we requested, in case the server
+                // has
+                // a differing opinion
+                lastRequestedFirstvisible = firstRowInViewPort;
+                client.updateVariable(paintableId, "firstvisible",
+                        firstRowInViewPort, false);
+                client.updateVariable(paintableId, "reqfirstrow", reqFirstRow,
+                        false);
+                client.updateVariable(paintableId, "reqrows", reqRows, true);
+
             }
-
-            client.updateVariable(paintableId, "firstToBeRendered",
-                    firstToBeRendered, false);
-
-            client.updateVariable(paintableId, "lastToBeRendered",
-                    lastToBeRendered, false);
-            // remember which firstvisible we requested, in case the server has
-            // a differing opinion
-            lastRequestedFirstvisible = firstRowInViewPort;
-            client.updateVariable(paintableId, "firstvisible",
-                    firstRowInViewPort, false);
-            client.updateVariable(paintableId, "reqfirstrow", reqFirstRow,
-                    false);
-            client.updateVariable(paintableId, "reqrows", reqRows, true);
         }
 
         public int getReqFirstRow() {
