@@ -87,4 +87,8 @@ abstract public class Feature {
         return getClass().getSimpleName();
     }
 
+    protected static final String getThemeBase() {
+        return SamplerApplication.THEME_BASE;
+    }
+
 }

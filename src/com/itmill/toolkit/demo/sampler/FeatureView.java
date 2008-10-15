@@ -12,28 +12,28 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
 
 public class FeatureView extends CustomLayout {
 
-    OrderedLayout controls;
+    private static final String MSG_SHOW_SRC = "Show java source";
+    private static final String MSG_HIDE_SRC = "Hide java source";
 
-    Label sourceCode;
+    private OrderedLayout controls;
+
+    private Label sourceCode;
+    private Button showCode;
+
+    private Feature currentFeature;
 
     public FeatureView() {
-        super("sampler/featureview");
+        super("featureview");
 
         controls = new OrderedLayout();
-
-        controls.addComponent(new Label("Live example"));
-        Button b = new Button("Show java source", new Button.ClickListener() {
+        controls.setCaption("Live example");
+        showCode = new Button(MSG_SHOW_SRC, new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
-                // toggle source code
-                sourceCode.setVisible(!sourceCode.isVisible());
-                event.getButton().setCaption(
-                        (sourceCode.isVisible() ? "Hide java source"
-                                : "Show java source"));
-
+                toggleSource();
             }
         });
-        b.setStyleName(Button.STYLE_LINK);
-        controls.addComponent(b);
+        showCode.setStyleName(Button.STYLE_LINK);
+        controls.addComponent(showCode);
 
         sourceCode = new Label();
         sourceCode.setVisible(false);
@@ -41,67 +41,79 @@ public class FeatureView extends CustomLayout {
         controls.addComponent(sourceCode);
     }
 
+    private void toggleSource() {
+        showSource(!sourceCode.isVisible());
+    }
+
+    private void showSource(boolean show) {
+        showCode.setCaption((show ? MSG_HIDE_SRC : MSG_SHOW_SRC));
+        sourceCode.setVisible(show);
+    }
+
     public void setFeature(Feature feature) {
-        removeAllComponents();
+        if (feature != currentFeature) {
+            removeAllComponents();
+            showSource(false);
 
-        addComponent(controls, "feature-controls");
+            addComponent(controls, "feature-controls");
 
-        addComponent(feature.getExample(), "feature-example");
+            addComponent(feature.getExample(), "feature-example");
 
-        Label l = new Label(feature.getName());
-        addComponent(l, "feature-name");
+            Label l = new Label(feature.getName());
+            addComponent(l, "feature-name");
 
-        l = new Label(feature.getDescription());
-        l.setContentMode(Label.CONTENT_XHTML);
-        addComponent(l, "feature-desc");
+            l = new Label(feature.getDescription());
+            l.setContentMode(Label.CONTENT_XHTML);
+            addComponent(l, "feature-desc");
 
-        StringBuffer src = new StringBuffer();
-        BufferedReader srcbr = feature.getSource();
-        try {
-            for (String line = srcbr.readLine(); null != line; line = srcbr
-                    .readLine()) {
-                src.append(line);
-                src.append("\n");
+            StringBuffer src = new StringBuffer();
+            BufferedReader srcbr = feature.getSource();
+            try {
+                for (String line = srcbr.readLine(); null != line; line = srcbr
+                        .readLine()) {
+                    src.append(line);
+                    src.append("\n");
+                }
+            } catch (Exception e) {
+                src = new StringBuffer("Sorry, no source available right now.");
             }
-        } catch (Exception e) {
-            src = new StringBuffer("Sorry, no source available right now.");
-        }
-        sourceCode.setValue(src.toString());
+            sourceCode.setValue(src.toString());
 
-        NamedExternalResource[] resources = feature.getRelatedResources();
-        if (resources != null) {
-            OrderedLayout res = new OrderedLayout();
-            res.setCaption("Resources");
-            for (NamedExternalResource r : resources) {
-                res.addComponent(new Link(r.getName(), r));
+            NamedExternalResource[] resources = feature.getRelatedResources();
+            if (resources != null) {
+                OrderedLayout res = new OrderedLayout();
+                res.setCaption("Additional resources");
+                for (NamedExternalResource r : resources) {
+                    res.addComponent(new Link(r.getName(), r));
+                }
+                addComponent(res, "feature-res");
             }
-            addComponent(res, "feature-res");
-        }
 
-        APIResource[] apis = feature.getRelatedAPI();
-        if (apis != null) {
-            OrderedLayout api = new OrderedLayout();
-            api.setCaption("Related Samples");
-            addComponent(api, "feature-api");
-            for (APIResource r : apis) {
-                api.addComponent(new Link(r.getName(), r));
-            }
-        }
-
-        Class[] features = feature.getRelatedFeatures();
-        if (features != null) {
-            OrderedLayout rel = new OrderedLayout();
-            rel.setCaption("Related Samples");
-            for (Class c : features) {
-                Feature f = SamplerApplication.getFeatureFor(c);
-                if (f != null) {
-                    String path = SamplerApplication.getPathFor(f);
-                    rel.addComponent(new Link(f.getName(),
-                            new ExternalResource(getApplication().getURL()
-                                    + path)));
+            APIResource[] apis = feature.getRelatedAPI();
+            if (apis != null) {
+                OrderedLayout api = new OrderedLayout();
+                api.setCaption("API documentation");
+                addComponent(api, "feature-api");
+                for (APIResource r : apis) {
+                    api.addComponent(new Link(r.getName(), r));
                 }
             }
-            addComponent(rel, "feature-rel");
+
+            Class[] features = feature.getRelatedFeatures();
+            if (features != null) {
+                OrderedLayout rel = new OrderedLayout();
+                rel.setCaption("Related Samples");
+                for (Class c : features) {
+                    Feature f = SamplerApplication.getFeatureFor(c);
+                    if (f != null) {
+                        String path = SamplerApplication.getPathFor(f);
+                        rel.addComponent(new Link(f.getName(),
+                                new ExternalResource(getApplication().getURL()
+                                        + path)));
+                    }
+                }
+                addComponent(rel, "feature-rel");
+            }
         }
 
     }

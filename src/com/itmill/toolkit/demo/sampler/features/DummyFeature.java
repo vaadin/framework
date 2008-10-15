@@ -31,7 +31,7 @@ public class DummyFeature extends Feature {
     public NamedExternalResource[] getRelatedResources() {
         return new NamedExternalResource[] {
         //
-        new NamedExternalResource("CSS", "../ITMILL/themes/example/styles.css")
+        new NamedExternalResource("CSS", getThemeBase() + "dummy/styles.css")
         //
         };
     }

@@ -29,7 +29,7 @@ public class DummyFeature2 extends Feature {
     public NamedExternalResource[] getRelatedResources() {
         return new NamedExternalResource[] {
         //
-        new NamedExternalResource("CSS", "../ITMILL/themes/example/styles.css")
+        new NamedExternalResource("CSS", getThemeBase() + "dummy/styles.css")
         //
         };
     }

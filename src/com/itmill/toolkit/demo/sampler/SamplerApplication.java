@@ -35,6 +35,7 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
 import com.itmill.toolkit.ui.Button.ClickListener;
 
 public class SamplerApplication extends Application {
+    public static final String THEME_BASE = "/ITMILL/themes/sampler/";
 
     // Main structure, root is always a FeatureSet that is not shown
     private static final FeatureSet features = new FeatureSet("All",
@@ -91,7 +92,7 @@ public class SamplerApplication extends Application {
             .getContainer(true);
 
     public void init() {
-        setTheme("example");
+        setTheme("sampler");
         setMainWindow(new SamplerWindow());
     }
 
