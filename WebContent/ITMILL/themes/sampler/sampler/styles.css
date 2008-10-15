@@ -1,0 +1,51 @@
+/******************************************************************************
+ * Sampler styles
+ ******************************************************************************/
+#sampler {
+	background-color: white;
+}
+#sampler .i-expandlayout-topbar {
+	border-bottom: 1px solid #999;
+}
+#sampler .feature-main {
+	padding: 20px;
+}
+#sampler .feature-controls {
+	margin-bottom: 20px;
+}
+#sampler .feature-info {
+	background-color: #999;
+	color: white;
+	padding: 20px;
+	line-height: 30px;
+}
+#sampler .feature-name {
+	font-size: 18px;
+	font-weight: bold;
+}
+.i-customcomponent-ModeSwitch .i-button {
+	height: 28px;
+	border: none;
+	border-right: 1px solid #736a60;
+	margin: 0px;
+}
+.i-customcomponent-ModeSwitch .i-button-first-on {
+	background: transparent url(left-on.gif) no-repeat;
+}
+.i-customcomponent-ModeSwitch .i-button-first {
+	background: transparent url(left.gif) no-repeat;
+}
+.i-customcomponent-ModeSwitch .i-button-mid-on {
+	background: transparent url(mid-on.gif) no-repeat;
+}
+.i-customcomponent-ModeSwitch .i-button-mid {
+	background: transparent url(mid.gif) no-repeat;
+}
+.i-customcomponent-ModeSwitch .i-button-last-on {
+	border: none;
+	background: transparent url(right-on.gif) no-repeat right top;
+}
+.i-customcomponent-ModeSwitch .i-button-last {
+	border: none;
+	background: transparent url(right.gif) no-repeat right top;
+}
