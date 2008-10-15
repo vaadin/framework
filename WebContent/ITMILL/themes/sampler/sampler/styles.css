@@ -13,6 +13,10 @@
 #sampler .feature-controls {
 	margin-bottom: 20px;
 }
+#sampler .feature-controls .i-caption {
+	font-weight: bold;
+	font-size: 16px;
+}
 #sampler .feature-info {
 	background-color: #999;
 	color: white;
@@ -20,9 +24,15 @@
 	line-height: 30px;
 }
 #sampler .feature-name {
-	font-size: 18px;
+	font-size: 22px;
 	font-weight: bold;
 }
+
+#sampler .feature-info .i-caption {
+	font-weight: bold;
+	font-size: 16px;
+}
+
 .i-customcomponent-ModeSwitch .i-button {
 	height: 28px;
 	border: none;
