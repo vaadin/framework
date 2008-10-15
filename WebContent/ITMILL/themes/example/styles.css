@@ -52,7 +52,12 @@
 #sampler .i-expandlayout-topbar {
 	border-bottom: 1px solid #999;
 }
-
+#sampler .feature-main {
+	padding: 20px;
+}
+#sampler .feature-controls {
+	margin-bottom: 20px;
+}
 #sampler .feature-info {
 	background-color: #999;
 	color: white;
