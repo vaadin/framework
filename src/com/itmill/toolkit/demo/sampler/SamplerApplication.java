@@ -14,6 +14,7 @@ import com.itmill.toolkit.data.util.HierarchicalContainer;
 import com.itmill.toolkit.data.util.ObjectProperty;
 import com.itmill.toolkit.demo.sampler.ModeSwitch.ModeSwitchEvent;
 import com.itmill.toolkit.demo.sampler.features.DummyFeature;
+import com.itmill.toolkit.demo.sampler.features.DummyFeature2;
 import com.itmill.toolkit.terminal.ClassResource;
 import com.itmill.toolkit.terminal.DownloadStream;
 import com.itmill.toolkit.terminal.ExternalResource;
@@ -42,18 +43,18 @@ public class SamplerApplication extends Application {
                     new FeatureSet("Patterns", new Feature[] {
                     // Patterns
                             new DummyFeature(), //
-                            new DummyFeature(), //
+                            new DummyFeature2(), //
 
                             new FeatureSet("c", new Feature[] {
                             // some group of patterns
                                     new DummyFeature(), //
-                                    new DummyFeature(), //
+                                    new DummyFeature2(), //
                             }),
 
                             new FeatureSet("d", new Feature[] {
                             // another group of patterns
                                     new DummyFeature(), //
-                                    new DummyFeature(), //
+                                    new DummyFeature2(), //
                             }),
 
                     }),
@@ -63,20 +64,22 @@ public class SamplerApplication extends Application {
                             new FeatureSet("öö", new Feature[] {
                             // some group of patterns
                                     new DummyFeature(), //
-                                    new DummyFeature(), //
-                            }), new DummyFeature(), //
+                                    new DummyFeature2(), //
+                            }),
+
                             new DummyFeature(), //
+                            new DummyFeature2(), //
 
                             new FeatureSet("c", new Feature[] {
                             // some group of patterns
                                     new DummyFeature(), //
-                                    new DummyFeature(), //
+                                    new DummyFeature2(), //
                             }),
 
                             new FeatureSet("d", new Feature[] {
                             // another group of patterns
                                     new DummyFeature(), //
-                                    new DummyFeature(), //
+                                    new DummyFeature2(), //
                             }),
 
                     }),
@@ -94,17 +97,21 @@ public class SamplerApplication extends Application {
 
     // Supports multiple browser windows
     public Window getWindow(String name) {
-        Window w = super.getWindow(name);
-        if (w == null) {
-            w = new SamplerWindow();
-            w.setName(name);
-            addWindow(w);
-            // secondary windows will support normal reload if this is
-            // enabled, but the url gets ugly:
-            // w.open(new ExternalResource(w.getURL()));
+        if (features.getFeatureByPath(name) != null) {
+            return null;
+        } else {
+            Window w = super.getWindow(name);
+            if (w == null) {
+                w = new SamplerWindow();
+                w.setName(name);
+                addWindow(w);
+                // secondary windows will support normal reload if this is
+                // enabled, but the url gets ugly:
+                // w.open(new ExternalResource(w.getURL()));
 
+            }
+            return w;
         }
-        return w;
     }
 
     /**
@@ -114,14 +121,25 @@ public class SamplerApplication extends Application {
      *            the Feature whose path to get, of null if not found
      * @return the path of the Feature
      */
-    String getPathFor(Feature f) {
+    public static String getPathFor(Feature f) {
         if (allFeatures.containsId(f)) {
             String path = f.getPathName();
             f = (Feature) allFeatures.getParent(f);
             while (f != null) {
                 path = f.getPathName() + "/" + path;
+                f = (Feature) allFeatures.getParent(f);
             }
             return path;
+        }
+        return null;
+    }
+
+    public static Feature getFeatureFor(Class clazz) {
+        for (Iterator it = allFeatures.getItemIds().iterator(); it.hasNext();) {
+            Feature f = (Feature) it.next();
+            if (f.getClass() == clazz) {
+                return f;
+            }
         }
         return null;
     }
@@ -567,6 +585,24 @@ public class SamplerApplication extends Application {
 
         public String getIconName() {
             return icon;
+        }
+
+        @Override
+        public APIResource[] getRelatedAPI() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public Class[] getRelatedFeatures() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public NamedExternalResource[] getRelatedResources() {
+            // TODO Auto-generated method stub
+            return null;
         }
 
     }

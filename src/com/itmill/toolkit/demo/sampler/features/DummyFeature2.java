@@ -3,28 +3,26 @@ package com.itmill.toolkit.demo.sampler.features;
 import com.itmill.toolkit.demo.sampler.APIResource;
 import com.itmill.toolkit.demo.sampler.Feature;
 import com.itmill.toolkit.demo.sampler.NamedExternalResource;
-import com.itmill.toolkit.ui.Button;
-import com.itmill.toolkit.ui.Panel;
+import com.itmill.toolkit.ui.Component;
 
-public class DummyFeature extends Feature {
+public class DummyFeature2 extends Feature {
 
     public String getName() {
-        return "A placeholder feature";
+        return "A second placeholder feature";
     }
 
     public String getDescription() {
-        return "A description";
+        return "A second description";
     }
 
     @Override
     public APIResource[] getRelatedAPI() {
-        return new APIResource[] { new APIResource(Panel.class),
-                new APIResource(Button.class) };
+        return null;
     }
 
     @Override
     public Class[] getRelatedFeatures() {
-        return new Class[] { DummyFeature2.class };
+        return new Class[] { DummyFeature.class };
     }
 
     @Override
@@ -34,6 +32,12 @@ public class DummyFeature extends Feature {
         new NamedExternalResource("CSS", "../ITMILL/themes/example/styles.css")
         //
         };
+    }
+
+    public Component getExample() {
+
+        return new DummyFeatureExample();
+
     }
 
 }
