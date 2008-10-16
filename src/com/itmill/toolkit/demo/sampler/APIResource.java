@@ -18,7 +18,7 @@ public class APIResource extends NamedExternalResource {
     }
 
     public APIResource(String baseUrl, Class clazz) {
-        super(clazz.getSimpleName(), getJavadocUrl(baseUrl, clazz));
+        super(resolveName(clazz), getJavadocUrl(baseUrl, clazz));
     }
 
     private static String getJavadocUrl(String baseUrl, Class clazz) {
@@ -26,6 +26,7 @@ public class APIResource extends NamedExternalResource {
             baseUrl += "/";
         }
         String path = clazz.getName().replaceAll("\\.", "/");
+        path = path.replaceAll("\\$", ".");
         return baseUrl + path + ".html";
     }
 
@@ -48,4 +49,9 @@ public class APIResource extends NamedExternalResource {
         return ITMILL_BASE;
     }
 
+    private static String resolveName(Class clazz) {
+        Class ec = clazz.getEnclosingClass();
+        return (ec != null ? ec.getSimpleName() + "." : "")
+                + clazz.getSimpleName();
+    }
 }

@@ -6,6 +6,7 @@ import javax.servlet.ServletContext;
 import com.itmill.toolkit.demo.sampler.APIResource;
 import com.itmill.toolkit.demo.sampler.Feature;
 import com.itmill.toolkit.demo.sampler.NamedExternalResource;
+import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Component;
 
 public class DummyFeature2 extends Feature {
@@ -22,7 +23,8 @@ public class DummyFeature2 extends Feature {
     public APIResource[] getRelatedAPI() {
         return new APIResource[] { new APIResource(String.class),
                 new APIResource(PortletContext.class),
-                new APIResource(ServletContext.class) };
+                new APIResource(ServletContext.class),
+                new APIResource(Button.ClickListener.class) };
     }
 
     @Override

@@ -1,7 +1,5 @@
 package com.itmill.toolkit.demo.sampler;
 
-import java.io.BufferedReader;
-
 import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CustomLayout;
@@ -66,18 +64,7 @@ public class FeatureView extends CustomLayout {
             l.setContentMode(Label.CONTENT_XHTML);
             addComponent(l, "feature-desc");
 
-            StringBuffer src = new StringBuffer();
-            BufferedReader srcbr = feature.getSource();
-            try {
-                for (String line = srcbr.readLine(); null != line; line = srcbr
-                        .readLine()) {
-                    src.append(line);
-                    src.append("\n");
-                }
-            } catch (Exception e) {
-                src = new StringBuffer("Sorry, no source available right now.");
-            }
-            sourceCode.setValue(src.toString());
+            sourceCode.setValue(feature.getSource());
 
             NamedExternalResource[] resources = feature.getRelatedResources();
             if (resources != null) {
