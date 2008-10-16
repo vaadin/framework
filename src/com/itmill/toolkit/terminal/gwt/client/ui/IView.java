@@ -392,17 +392,21 @@ public class IView extends SimplePanel implements Container,
 
         private int getExcessHeight() {
             if (excessHeight < 0) {
-                detetExessSize();
+                detectExcessSize();
             }
             return excessHeight;
         }
 
-        private void detetExessSize() {
+        private void detectExcessSize() {
+            final String overflow = getElement().getStyle().getProperty(
+                    "overflow");
             getElement().getStyle().setProperty("overflow", "hidden");
             excessHeight = getElement().getOffsetHeight()
                     - getElement().getPropertyInt("clientHeight");
             excessWidth = getElement().getOffsetWidth()
                     - getElement().getPropertyInt("clientWidth");
+
+            getElement().getStyle().setProperty("overflow", overflow);
         }
 
         @Override
@@ -412,7 +416,7 @@ public class IView extends SimplePanel implements Container,
 
         private int getExcessWidth() {
             if (excessWidth < 0) {
-                detetExessSize();
+                detectExcessSize();
             }
             return excessWidth;
         }
