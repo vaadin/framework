@@ -23,14 +23,37 @@ abstract public class Feature {
     }
 
     /**
-     * Gets the description for this feature. May contain HTML.
+     * Gets the description for this feature. Should describe what the example
+     * intends to showcase. May contain HTML.
      * 
-     * @return
+     * @return the description
      */
     abstract public String getDescription();
 
+    /**
+     * Gets related resources, i.e links to resources related to the example.
+     * <p>
+     * Good candidates are resources used to make the example (CSS, images,
+     * custom layouts), documentation links (reference manual), articles (e.g.
+     * pattern description, usability discussion).
+     * </p>
+     * <p>
+     * Can return null, if the example has no related resources.
+     * </p>
+     * <p>
+     * The name of the NamedExternalResource will be shown in the UI. <br/> Note
+     * that Javadoc should be referenced via {@link #getRelatedAPI()}.
+     * </p>
+     * 
+     * @return related external stuff
+     */
     abstract public NamedExternalResource[] getRelatedResources();
 
+    /**
+     * Gets related API resources, i.e
+     * 
+     * @return
+     */
     abstract public APIResource[] getRelatedAPI();
 
     abstract public Class[] getRelatedFeatures();

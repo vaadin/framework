@@ -1,5 +1,8 @@
 package com.itmill.toolkit.demo.sampler.features;
 
+import javax.portlet.PortletContext;
+import javax.servlet.ServletContext;
+
 import com.itmill.toolkit.demo.sampler.APIResource;
 import com.itmill.toolkit.demo.sampler.Feature;
 import com.itmill.toolkit.demo.sampler.NamedExternalResource;
@@ -17,7 +20,9 @@ public class DummyFeature2 extends Feature {
 
     @Override
     public APIResource[] getRelatedAPI() {
-        return null;
+        return new APIResource[] { new APIResource(String.class),
+                new APIResource(PortletContext.class),
+                new APIResource(ServletContext.class) };
     }
 
     @Override
