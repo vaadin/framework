@@ -46,10 +46,16 @@ public class IWindow extends IToolkitOverlay implements Container,
     public static final String CLASSNAME = "i-window";
 
     /**
-     * pixels used by inner borders and paddings horizontally (calculated on
-     * attach)
+     * Pixels used by inner borders and paddings horizontally (calculated only
+     * once)
      */
-    private int borderWidthHorizontal = 0;
+    private int borderWidth = -1;
+
+    /**
+     * Pixels used by inner borders and paddings vertically (calculated only
+     * once)
+     */
+    private int borderHeight = -1;
 
     private static final int STACKING_OFFSET_PIXELS = 15;
 
@@ -208,16 +214,21 @@ public class IWindow extends IToolkitOverlay implements Container,
         DOM.setElementProperty(closeBox, "id", id + "_window_close");
 
         if (uidl.hasAttribute("invisible")) {
-            this.hide();
+            hide();
             return;
+        }
+
+        if (!uidl.hasAttribute("cached")) {
+            if (uidl.getBooleanAttribute("modal") != modal) {
+                setModal(!modal);
+            }
+            if (!isAttached()) {
+                show();
+            }
         }
 
         if (client.updateComponent(this, uidl, false)) {
             return;
-        }
-
-        if (uidl.getBooleanAttribute("modal") != modal) {
-            setModal(!modal);
         }
 
         if (uidl.getBooleanAttribute("resizable") != resizable) {
@@ -238,56 +249,6 @@ public class IWindow extends IToolkitOverlay implements Container,
         } catch (final IllegalArgumentException e) {
             // Silently ignored as positionx and positiony are not required
             // parameters
-        }
-
-        if (!isAttached()) {
-            show();
-        }
-
-        // Initialize the size from UIDL
-        /*
-         * FIXME non-pixel size is set as "outer size", pixels are applied for
-         * content area. This is due history as earlier only pixels where
-         * allowed.
-         */
-        if (uidl.hasAttribute("width")) {
-            final String width = uidl.getStringAttribute("width");
-            if (width.indexOf("px") < 0) {
-                /*
-                 * Only using non-pixel size for initial size measurement. Then
-                 * fix content area with pixels.
-                 */
-                DOM.setStyleAttribute(getElement(), "width", width);
-                int elementPropertyInt = DOM.getElementPropertyInt(
-                        getElement(), "offsetWidth");
-                DOM.setStyleAttribute(getElement(), "width", "");
-                elementPropertyInt -= (DOM.getElementPropertyInt(getElement(),
-                        "offsetWidth") - DOM.getElementPropertyInt(contents,
-                        "offsetWidth"));
-                setWidth(elementPropertyInt + "px");
-            } else {
-                setWidth(width);
-            }
-        }
-
-        // Height set after show so we can detect space used by decorations
-        if (uidl.hasAttribute("height")) {
-            final String height = uidl.getStringAttribute("height");
-            if (height.indexOf("%") > 0) {
-                int winHeight = Window.getClientHeight();
-                float percent = Float.parseFloat(height.substring(0, height
-                        .indexOf("%"))) / 100.0f;
-                int contentPixels = (int) (winHeight * percent);
-                contentPixels -= (DOM.getElementPropertyInt(getElement(),
-                        "offsetHeight") - DOM.getElementPropertyInt(contents,
-                        "offsetHeight"));
-                // FIXME hardcoded contents elements border size
-                contentPixels -= 1;
-
-                setHeight(contentPixels + "px");
-            } else {
-                setHeight(height);
-            }
         }
 
         if (uidl.hasAttribute("caption")) {
@@ -335,6 +296,13 @@ public class IWindow extends IToolkitOverlay implements Container,
             layout = lo;
         }
         lo.updateFromUIDL(childUidl, client);
+
+        // If no explicit width is specified, calculate natural width for window
+        // and set it explicitly
+        if (!uidl.hasAttribute("width")) {
+            final int naturalWidth = getElement().getOffsetWidth();
+            setWidth(naturalWidth + "px");
+        }
 
         // we may have actions and notifications
         if (uidl.getChildCount() > 1) {
@@ -601,15 +569,15 @@ public class IWindow extends IToolkitOverlay implements Container,
 
         if (resizing || resizeBox == target) {
             onResizeEvent(event);
-            DOM.eventCancelBubble(event, true);
+            event.cancelBubble(true);
         } else if (target == closeBox) {
             if (type == Event.ONCLICK) {
                 onCloseClick();
-                DOM.eventCancelBubble(event, true);
+                event.cancelBubble(true);
             }
         } else if (dragging || !DOM.isOrHasChild(contents, target)) {
             onDragEvent(event);
-            DOM.eventCancelBubble(event, true);
+            event.cancelBubble(true);
         } else if (type == Event.ONCLICK) {
             // clicked inside window, ensure to be on top
             if (!isActive()) {
@@ -624,59 +592,70 @@ public class IWindow extends IToolkitOverlay implements Container,
 
     private void onResizeEvent(Event event) {
         if (resizable) {
-            switch (DOM.eventGetType(event)) {
+            switch (event.getTypeInt()) {
             case Event.ONMOUSEDOWN:
                 if (!isActive()) {
                     bringToFront();
                 }
                 showDraggingCurtain(true);
+                if (BrowserInfo.get().isIE()) {
+                    DOM.setStyleAttribute(resizeBox, "visibility", "hidden");
+                }
                 resizing = true;
-                startX = DOM.eventGetScreenX(event);
-                startY = DOM.eventGetScreenY(event);
-                origW = getWidget().getOffsetWidth();
-                origH = getWidget().getOffsetHeight();
+                startX = event.getScreenX();
+                startY = event.getScreenY();
+                origW = getElement().getOffsetWidth();
+                origH = getElement().getOffsetHeight();
                 DOM.setCapture(getElement());
-                DOM.eventPreventDefault(event);
+                event.preventDefault();
                 break;
             case Event.ONMOUSEUP:
                 showDraggingCurtain(false);
+                if (BrowserInfo.get().isIE()) {
+                    DOM.setStyleAttribute(resizeBox, "visibility", "");
+                }
                 resizing = false;
                 DOM.releaseCapture(getElement());
                 setSize(event, true);
                 break;
             case Event.ONLOSECAPTURE:
                 showDraggingCurtain(false);
+                if (BrowserInfo.get().isIE()) {
+                    DOM.setStyleAttribute(resizeBox, "visibility", "");
+                }
                 resizing = false;
             case Event.ONMOUSEMOVE:
                 if (resizing) {
                     setSize(event, false);
-                    DOM.eventPreventDefault(event);
+                    event.preventDefault();
                 }
                 break;
             default:
-                DOM.eventPreventDefault(event);
+                event.preventDefault();
                 break;
             }
         }
     }
 
-    public void setSize(Event event, boolean updateVariables) {
-        int w = DOM.eventGetScreenX(event) - startX + origW;
+    private void setSize(Event event, boolean updateVariables) {
+        int w = event.getScreenX() - startX + origW;
         if (w < MIN_WIDTH) {
             w = MIN_WIDTH;
         }
-        int h = DOM.eventGetScreenY(event) - startY + origH;
+
+        int h = event.getScreenY() - startY + origH;
         if (h < MIN_HEIGHT) {
             h = MIN_HEIGHT;
         }
+
         setWidth(w + "px");
         setHeight(h + "px");
+
         if (updateVariables) {
             // sending width back always as pixels, no need for unit
             client.updateVariable(id, "width", w, false);
             client.updateVariable(id, "height", h, false);
         }
-        // Update shadow size & position
 
         // Update child widget dimensions
         if (client != null) {
@@ -685,17 +664,73 @@ public class IWindow extends IToolkitOverlay implements Container,
     }
 
     @Override
+    /*
+     * Width is set to the out-most element (i-window).
+     * 
+     * This function should never be called with percentage values (it will
+     * throw an exception)
+     */
     public void setWidth(String width) {
-        if (!"".equals(width)) {
-            DOM
-                    .setStyleAttribute(
-                            getElement(),
-                            "width",
-                            (Integer.parseInt(width.substring(0,
-                                    width.length() - 2)) + borderWidthHorizontal)
-                                    + "px");
+        if (!isAttached()) {
+            return;
         }
-        updateShadowSizeAndPosition();
+        if (!"".equals(width)) {
+            // Convert non-pixel values to pixels
+            if (width.indexOf("px") < 0) {
+                DOM.setStyleAttribute(getElement(), "width", width);
+                width = getElement().getOffsetWidth() + "px";
+            }
+
+            DOM.setStyleAttribute(getElement(), "width", width);
+
+            // IE6 needs the actual inner content width on the content element,
+            // otherwise it won't wrap the content properly (no scrollbars
+            // appear, content flows out of window)
+            if (BrowserInfo.get().isIE6()) {
+                int contentWidth = (Integer.parseInt(width.substring(0, width
+                        .length() - 2)) - borderWidth);
+                if (contentWidth < 0) {
+                    contentWidth = 0;
+                }
+                DOM.setStyleAttribute(contentPanel.getElement(), "width",
+                        contentWidth + "px");
+            }
+            updateShadowSizeAndPosition();
+        }
+    }
+
+    @Override
+    /*
+     * Height is set to the out-most element (i-window).
+     * 
+     * This function should never be called with percentage values (it will
+     * throw an exception)
+     */
+    public void setHeight(String height) {
+        if (!isAttached()) {
+            return;
+        }
+        if (!"".equals(height)) {
+            // Convert non-pixel values to pixels
+            if (height.indexOf("px") < 0) {
+                DOM.setStyleAttribute(getElement(), "height", height);
+                height = getElement().getOffsetHeight() + "px";
+            }
+
+            DOM.setStyleAttribute(contentPanel.getElement(), "position",
+                    "absolute");
+            final int usedHeight = getElement().getOffsetHeight();
+            DOM.setStyleAttribute(contentPanel.getElement(), "position",
+                    "relative");
+
+            height = (Integer
+                    .parseInt(height.substring(0, height.length() - 2)) - usedHeight)
+                    + "px";
+
+            DOM.setStyleAttribute(contentPanel.getElement(), "height", height);
+
+            updateShadowSizeAndPosition();
+        }
     }
 
     private void onDragEvent(Event event) {
@@ -769,13 +804,36 @@ public class IWindow extends IToolkitOverlay implements Container,
     @Override
     protected void onAttach() {
         super.onAttach();
+
         // Calculate space required by window borders, so we can accurately
         // calculate space for content
-        final int contentWidth = DOM.getElementPropertyInt(contentPanel
-                .getElement(), "offsetWidth");
-        final int windowWidth = DOM.getElementPropertyInt(getElement(),
-                "offsetWidth");
-        borderWidthHorizontal = windowWidth - contentWidth;
+
+        // IE (IE6 especially) requires some magic tricks to pull the border
+        // size correctly (remember that we want to accomodate for paddings as
+        // well)
+        if (BrowserInfo.get().isIE()) {
+            DOM.setStyleAttribute(contents, "width", "7000px");
+            DOM.setStyleAttribute(contentPanel.getElement(), "width", "7000px");
+            int contentWidth = DOM.getElementPropertyInt(contentPanel
+                    .getElement(), "offsetWidth");
+            contentWidth = DOM.getElementPropertyInt(contentPanel.getElement(),
+                    "offsetWidth");
+            final int windowWidth = DOM.getElementPropertyInt(getElement(),
+                    "offsetWidth");
+            DOM.setStyleAttribute(contentPanel.getElement(), "width", "");
+            DOM.setStyleAttribute(contents, "width", "");
+
+            borderWidth = windowWidth - contentWidth;
+        }
+
+        // Standards based browsers get away with it a little easier :)
+        else {
+            final int contentWidth = DOM.getElementPropertyInt(contentPanel
+                    .getElement(), "offsetWidth");
+            final int windowWidth = DOM.getElementPropertyInt(getElement(),
+                    "offsetWidth");
+            borderWidth = windowWidth - contentWidth;
+        }
     }
 
     public RenderSpace getAllocatedSpace(Widget child) {

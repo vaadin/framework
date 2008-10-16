@@ -161,6 +161,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      *             indicate that "style" should not be used to switch client
      *             side implementation, only to style the component.
      */
+    @Deprecated
     public String getStyle() {
         return getStyleName();
     }
@@ -177,6 +178,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      *             indicate that "style" should not be used to switch client
      *             side implementation, only to style the component.
      */
+    @Deprecated
     public void setStyle(String style) {
         setStyleName(style);
     }

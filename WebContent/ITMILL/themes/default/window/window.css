@@ -1,5 +1,6 @@
 .i-window {
 	color: #464f52;
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	font-size: 13px;
 	line-height: 18px;
 	background: transparent url(img/bottom-left.png) no-repeat left bottom;
@@ -7,13 +8,6 @@
 
 .i-window-wrap {
 	background: transparent url(img/top-left.png) no-repeat;
-	/* Somehow this won't inherit from .i-window */
-	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
-	zoom: 1; /* For IE, otherwise it won't render properly (width will be out of control) */
-}
-
-.i-window-wrap2 {
-	zoom: 1; /* For IE, otherwise it won't render properly (width will be out of control) */
 }
 
 .i-window-outerheader {
@@ -33,8 +27,11 @@
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	overflow: hidden;
-	width: 100%;
 	text-shadow: 0 1px 0 #fff;
+}
+
+* html .i-window-header {
+	width: 100%;
 }
 
 .i-window-header .i-icon {
@@ -49,7 +46,7 @@
 }
 
 /* Partial fix for bug #1106 */
-/* Target Firefox 2 (somehow this will force almost all window borders on top of a flash object) */
+/* Target Firefox 2 (somehow this will force almost all window borders on top of a Flash object) */
 .i-window-contents, x:-moz-any-link {
 	overflow: hidden;
 }
@@ -65,11 +62,13 @@
 }
 
 .i-window-resizebox {
-	position: absolute;
-	bottom: 4px;
-	right: 4px;
+	position: relative; /* Needed to position the element over ScrollPanel, which is also relatively positioned */
+	display: inline; /* fix IE6 double float margin bug */
+	float: right;
 	width: 10px;
 	height: 10px;
+	margin-right: 5px;
+	margin-top: -7px;
 	cursor: se-resize;
 	background: transparent url(img/resize.png);
 	overflow: hidden;
@@ -108,15 +107,13 @@
 /* IE6 workaround for position:fixed; */
 * html .i-window-modalitycurtain { 
 	position: absolute;
-	top: expression((ignoreMe = document.documentElement.scrollTop) + "px"); 
+	top: expression(document.documentElement.scrollTop + "px"); 
 }
 
 /* IE specific styles */
 
 * html .i-window {
 	width: 0; /* min-size for IE6 */
-	overflow: hidden;
-	zoom: 1;
 }
 
 
@@ -214,7 +211,7 @@
 
 * html .i-shadow-window {
 	background: #000;
-	filter: progid:DXImageTransform.Microsoft.Blur(pixelRadius=6) alpha(opacity=20);
-	margin-top: -4px;
-	margin-left: -6px;
+	filter: progid:DXImageTransform.Microsoft.Blur(pixelRadius=5) alpha(opacity=20);
+	margin-top: 2px;
+	margin-left: 2px;
 }

@@ -313,6 +313,7 @@ public class ApplicationConnection {
                         if (heightOfLoadElement == 0
                                 && cssWaits < MAX_CSS_WAITS) {
                             (new Timer() {
+                                @Override
                                 public void run() {
                                     handleWhenCSSLoaded(response);
                                 }
@@ -363,6 +364,7 @@ public class ApplicationConnection {
         // show initial throbber
         if (loadTimer == null) {
             loadTimer = new Timer() {
+                @Override
                 public void run() {
                     showLoadingIndicator();
                 }
@@ -443,6 +445,7 @@ public class ApplicationConnection {
         DOM.setStyleAttribute(loadElement, "top", updatedY + "px");
         // Initialize other timers
         loadTimer2 = new Timer() {
+            @Override
             public void run() {
                 DOM.setElementProperty(loadElement, "className",
                         "i-loading-indicator-delay");
@@ -452,6 +455,7 @@ public class ApplicationConnection {
         loadTimer2.schedule(1200);
 
         loadTimer3 = new Timer() {
+            @Override
             public void run() {
                 DOM.setElementProperty(loadElement, "className",
                         "i-loading-indicator-wait");
@@ -530,6 +534,7 @@ public class ApplicationConnection {
                 final JSONObject timedRedirect = meta.get("timedRedirect")
                         .isObject();
                 redirectTimer = new Timer() {
+                    @Override
                     public void run() {
                         redirect(timedRedirect.get("url").isString()
                                 .stringValue());
@@ -1060,9 +1065,17 @@ public class ApplicationConnection {
         boolean horizontalScrollBar = false;
         boolean verticalScrollBar = false;
 
-        RenderSpace renderSpace = Util.getLayout(widget).getAllocatedSpace(
-                widget);
+        Container parent = Util.getLayout(widget);
+        RenderSpace renderSpace;
 
+        // Parent-less components (like sub-windows) are relative to browser
+        // window.
+        if (parent == null) {
+            renderSpace = new RenderSpace(Window.getClientWidth(), Window
+                    .getClientHeight());
+        } else {
+            renderSpace = parent.getAllocatedSpace(widget);
+        }
         if (relativeSize.getHeight() >= 0) {
             if (renderSpace != null) {
 
@@ -1293,6 +1306,7 @@ public class ApplicationConnection {
 
         private boolean isPending = false;
 
+        @Override
         public void schedule(int delayMillis) {
             if (!isPending) {
                 super.schedule(delayMillis);
@@ -1300,6 +1314,7 @@ public class ApplicationConnection {
             }
         }
 
+        @Override
         public void run() {
             getConsole().log(
                     "Running re-layout of " + view.getClass().getName());
