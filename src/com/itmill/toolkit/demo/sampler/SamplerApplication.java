@@ -170,6 +170,8 @@ public class SamplerApplication extends Application {
             nav.setHeight("40px");
             nav.setWidth("100%");
             nav.setStyleName("topbar");
+            nav.setSpacing(true);
+            nav.setMargin(false, true, false, true);
 
             // Upper left logo
             Component logo = createLogo();
