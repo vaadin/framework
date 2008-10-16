@@ -6,17 +6,25 @@ import java.io.InputStreamReader;
 
 import com.itmill.toolkit.ui.Component;
 
+/**
+ * Represents one feature or sample, with associated example.
+ * <p>
+ * 
+ * </p>
+ * 
+ */
 abstract public class Feature {
 
     public static final Object PROPERTY_ICON = "Icon";
     public static final Object PROPERTY_NAME = "Name";
     public static final Object PROPERTY_DESCRIPTION = "Description";
 
+    private static final Object MUTEX = new Object();
     private String javaSource = null;
 
     /**
      * Gets the name of this feature. Defaults to class simplename, override if
-     * needed.
+     * needed. Try not to exceed 25 characters too much.
      * 
      * @return
      */
@@ -26,7 +34,8 @@ abstract public class Feature {
 
     /**
      * Gets the description for this feature. Should describe what the example
-     * intends to showcase. May contain HTML.
+     * intends to showcase. May contain HTML. 100 words should be enough, and
+     * about 7 rows...
      * 
      * @return the description
      */
@@ -116,7 +125,7 @@ abstract public class Feature {
     public String getSource() {
 
         // TODO get's .txt for now, change to .java!
-        synchronized (this) {
+        synchronized (MUTEX) {
             if (javaSource == null) {
                 StringBuffer src = new StringBuffer();
                 try {
@@ -161,7 +170,7 @@ abstract public class Feature {
      * @return
      */
     protected static final String getThemeBase() {
-        return SamplerApplication.THEME_BASE;
+        return SamplerApplication.getThemeBase();
     }
 
     public String toString() {

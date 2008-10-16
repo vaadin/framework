@@ -1,5 +1,6 @@
 package com.itmill.toolkit.demo.sampler;
 
+import java.net.URI;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
@@ -35,8 +36,6 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
 import com.itmill.toolkit.ui.Button.ClickListener;
 
 public class SamplerApplication extends Application {
-    public static final String THEME_BASE = "/ITMILL/themes/sampler/";
-
     // Main structure, root is always a FeatureSet that is not shown
     private static final FeatureSet features = new FeatureSet("All",
             new Feature[] {
@@ -91,9 +90,33 @@ public class SamplerApplication extends Application {
     private static final HierarchicalContainer allFeatures = features
             .getContainer(true);
 
+    // init() inits
+    private static final String THEME_NAME = "sampler";
+
+    // used when trying to guess theme location
+    private static String APP_URL = null;
+
     public void init() {
         setTheme("sampler");
         setMainWindow(new SamplerWindow());
+        if (APP_URL == null) {
+            APP_URL = getURL().toString();
+        }
+    }
+
+    /**
+     * Tries to guess theme location.
+     * 
+     * @return
+     */
+    public static String getThemeBase() {
+        try {
+            URI uri = new URI(APP_URL + "../ITMILL/themes/" + THEME_NAME + "/");
+            return uri.normalize().toString();
+        } catch (Exception e) {
+            System.err.println("Theme location could not be resolved:" + e);
+        }
+        return "/ITMILL/themes/" + THEME_NAME + "/";
     }
 
     // Supports multiple browser windows
@@ -135,6 +158,12 @@ public class SamplerApplication extends Application {
         return null;
     }
 
+    /**
+     * Gets the instance for the given Feature class, e.g DummyFeature.class.
+     * 
+     * @param clazz
+     * @return
+     */
     public static Feature getFeatureFor(Class clazz) {
         for (Iterator it = allFeatures.getItemIds().iterator(); it.hasNext();) {
             Feature f = (Feature) it.next();
