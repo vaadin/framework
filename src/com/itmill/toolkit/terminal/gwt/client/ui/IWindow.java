@@ -873,6 +873,7 @@ public class IWindow extends IToolkitOverlay implements Container,
     }
 
     public boolean requestLayout(Set<Paintable> child) {
+        updateShadowSizeAndPosition();
         return true;
     }
 
