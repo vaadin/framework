@@ -1,7 +1,10 @@
 package com.itmill.toolkit.demo.sampler;
 
+import java.util.HashMap;
+
 import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.ui.Button;
+import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.CustomLayout;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Link;
@@ -17,6 +20,8 @@ public class FeatureView extends CustomLayout {
 
     private Label sourceCode;
     private Button showCode;
+
+    private HashMap exampleCache = new HashMap();
 
     private Feature currentFeature;
 
@@ -55,7 +60,7 @@ public class FeatureView extends CustomLayout {
 
             addComponent(controls, "feature-controls");
 
-            addComponent(feature.getExample(), "feature-example");
+            addComponent(getExampleFor(feature), "feature-example");
 
             Label l = new Label(feature.getName());
             addComponent(l, "feature-name");
@@ -103,6 +108,16 @@ public class FeatureView extends CustomLayout {
             }
         }
 
+    }
+
+    private Component getExampleFor(Feature f) {
+
+        Component ex = (Component) exampleCache.get(f);
+        if (ex == null) {
+            ex = f.getExample();
+            exampleCache.put(f, ex);
+        }
+        return ex;
     }
 
 }

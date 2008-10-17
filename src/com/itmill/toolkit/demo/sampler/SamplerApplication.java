@@ -22,6 +22,7 @@ import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.terminal.Resource;
 import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.ui.Button;
+import com.itmill.toolkit.ui.ComboBox;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.Embedded;
@@ -40,47 +41,21 @@ public class SamplerApplication extends Application {
     private static final FeatureSet features = new FeatureSet("All",
             new Feature[] {
             // Main sets
+
                     new FeatureSet("Patterns", new Feature[] {
                     // Patterns
-                            new DummyFeature(), //
-                            new DummyFeature2(), //
 
-                            new FeatureSet("c", new Feature[] {
-                            // some group of patterns
-                                    new DummyFeature(), //
-                                    new DummyFeature2(), //
                             }),
-
-                            new FeatureSet("d", new Feature[] {
-                            // another group of patterns
-                                    new DummyFeature(), //
-                                    new DummyFeature2(), //
-                            }),
-
-                    }),
 
                     new FeatureSet("Components", new Feature[] {
-                    // Patterns
-                            new FeatureSet("öö", new Feature[] {
-                            // some group of patterns
-                                    new DummyFeature(), //
-                                    new DummyFeature2(), //
+                    // Components
+
                             }),
 
+                    new FeatureSet("Unsorted", new Feature[] {
+                    // Patterns
                             new DummyFeature(), //
                             new DummyFeature2(), //
-
-                            new FeatureSet("c", new Feature[] {
-                            // some group of patterns
-                                    new DummyFeature(), //
-                                    new DummyFeature2(), //
-                            }),
-
-                            new FeatureSet("d", new Feature[] {
-                            // another group of patterns
-                                    new DummyFeature(), //
-                                    new DummyFeature2(), //
-                            }),
 
                     }),
 
@@ -186,6 +161,9 @@ public class SamplerApplication extends Application {
 
         private MainArea mainArea = new MainArea();
 
+        private SplitPanel mainSplit;
+        private Tree navigationTree;
+
         SamplerWindow() {
             // Main top/expanded-bottom layout
             ExpandLayout mainExpand = new ExpandLayout();
@@ -220,19 +198,29 @@ public class SamplerApplication extends Application {
             nav.setComponentAlignment(b, ExpandLayout.ALIGNMENT_LEFT,
                     ExpandLayout.ALIGNMENT_VERTICAL_CENTER);
 
+            Component search = createSearch();
+            nav.addComponent(search);
+            nav.setComponentAlignment(search, ExpandLayout.ALIGNMENT_LEFT,
+                    ExpandLayout.ALIGNMENT_VERTICAL_CENTER);
+
             // Main left/right split; hidden menu tree
-            SplitPanel split = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
-            split.setSizeFull();
-            split.setSplitPosition(0, SplitPanel.UNITS_PIXELS);
-            mainExpand.addComponent(split);
-            mainExpand.expand(split);
+            mainSplit = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
+            mainSplit.setSizeFull();
+            mainExpand.addComponent(mainSplit);
+            mainExpand.expand(mainSplit);
 
             // Menu tree, initially hidden
-            Tree tree = createMenuTree();
-            split.addComponent(tree);
+            navigationTree = createMenuTree();
+            mainSplit.addComponent(navigationTree);
 
             // Main Area
-            split.addComponent(mainArea);
+            mainSplit.addComponent(mainArea);
+
+            // Show / hide tree
+            Component treeSwitch = createTreeSwitch();
+            nav.addComponent(treeSwitch);
+            nav.setComponentAlignment(treeSwitch, ExpandLayout.ALIGNMENT_LEFT,
+                    ExpandLayout.ALIGNMENT_VERTICAL_CENTER);
 
             // List/grid/coverflow
             Component mode = createModeSwitch();
@@ -278,6 +266,27 @@ public class SamplerApplication extends Application {
          * SamplerWindow helpers
          */
 
+        private Component createSearch() {
+            ComboBox search = new ComboBox();
+            search.setWidth("120px");
+            search.setNewItemsAllowed(false);
+            search.setFilteringMode(ComboBox.FILTERINGMODE_CONTAINS);
+            search.setNullSelectionAllowed(true);
+            search.setImmediate(true);
+            search.setContainerDataSource(allFeatures);
+            search.addListener(new ComboBox.ValueChangeListener() {
+                public void valueChange(ValueChangeEvent event) {
+                    Feature f = (Feature) event.getProperty().getValue();
+                    if (f != null) {
+                        SamplerWindow.this.setFeature(f);
+                        event.getProperty().setValue(null);
+                    }
+
+                }
+            });
+            return search;
+        }
+
         private Component createLogo() {
             Button logo = new Button("", new Button.ClickListener() {
                 public void buttonClick(ClickEvent event) {
@@ -319,6 +328,31 @@ public class SamplerApplication extends Application {
             });
             b.setStyleName(Button.STYLE_LINK);
             return b;
+        }
+
+        private Component createTreeSwitch() {
+            ModeSwitch m = new ModeSwitch();
+            m.addMode(1, "", "Hide navigation", new ThemeResource(
+                    "sampler/hidetree.gif"));
+            m.addMode(2, "", "Show navigation", new ThemeResource(
+                    "sampler/showtree.gif"));
+            m.addListener(new ModeSwitch.ModeSwitchListener() {
+                public void componentEvent(Event event) {
+                    if (event instanceof ModeSwitchEvent) {
+                        if (((ModeSwitchEvent) event).getMode().equals(1)) {
+                            mainSplit.setSplitPosition(0);
+                            navigationTree.setVisible(false);
+                            mainSplit.setLocked(true);
+                        } else {
+                            mainSplit.setSplitPosition(20);
+                            mainSplit.setLocked(false);
+                            navigationTree.setVisible(true);
+                        }
+                    }
+                }
+            });
+            m.setMode(1);
+            return m;
         }
 
         private Component createModeSwitch() {
