@@ -180,16 +180,22 @@ public class OrderedLayout extends AbstractLayout implements
         }
 
         final String[] alignmentsArray = new String[components.size()];
-        final Float[] expandRatioArray = new Float[components.size()];
+        final Integer[] expandRatioArray = new Integer[components.size()];
         float sum = getExpandRatioSum();
-        boolean equallyDevided = false;
-        if (sum == 0) {
-            equallyDevided = true;
+        boolean equallyDivided = false;
+        int realSum = 0;
+        if (sum == 0 && components.size() > 0) {
+            // no component has been expanded, all components have same expand
+            // rate
+            equallyDivided = true;
             float equalSize = 1 / components.size();
+            int myRatio = Math.round(equalSize * 1000);
             for (int i = 0; i < expandRatioArray.length; i++) {
-                expandRatioArray[i] = equalSize;
+                expandRatioArray[i] = myRatio;
             }
+            realSum = myRatio * components.size();
         }
+
         // Adds all items in all the locations
         int index = 0;
         for (final Iterator i = components.iterator(); i.hasNext();) {
@@ -199,13 +205,17 @@ public class OrderedLayout extends AbstractLayout implements
                 c.paint(target);
                 alignmentsArray[index] = String
                         .valueOf(getComponentAlignment(c));
-                if (!equallyDevided) {
-                    float myRatio = getExpandRatio(c);
-                    expandRatioArray[index] = myRatio / sum;
+                if (!equallyDivided) {
+                    int myRatio = Math.round((getExpandRatio(c) / sum) * 1000);
+                    expandRatioArray[index] = myRatio;
+                    realSum += myRatio;
                 }
                 index++;
             }
         }
+
+        // correct possible rounding error
+        expandRatioArray[0] -= realSum - 1000;
 
         // Add child component alignment info to layout tag
         target.addAttribute("alignments", alignmentsArray);
