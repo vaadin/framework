@@ -279,6 +279,7 @@ public class SplitPanel extends AbstractLayout {
     public void setSplitPosition(int pos, int unit) {
         this.pos = pos;
         posUnit = unit;
+        requestRepaint();
     }
 
     /**
