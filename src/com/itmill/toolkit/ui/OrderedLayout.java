@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
@@ -51,6 +52,8 @@ public class OrderedLayout extends AbstractLayout implements
      * Mapping from components to alignments (horizontal + vertical).
      */
     private final Map componentToAlignment = new HashMap();
+
+    private final Map<Component, Float> componentToExpandRatio = new HashMap<Component, Float>();
 
     /**
      * Orientation of the layout.
@@ -177,6 +180,16 @@ public class OrderedLayout extends AbstractLayout implements
         }
 
         final String[] alignmentsArray = new String[components.size()];
+        final Float[] expandRatioArray = new Float[components.size()];
+        float sum = getExpandRatioSum();
+        boolean equallyDevided = false;
+        if (sum == 0) {
+            equallyDevided = true;
+            float equalSize = 1 / components.size();
+            for (int i = 0; i < expandRatioArray.length; i++) {
+                expandRatioArray[i] = equalSize;
+            }
+        }
         // Adds all items in all the locations
         int index = 0;
         for (final Iterator i = components.iterator(); i.hasNext();) {
@@ -184,13 +197,28 @@ public class OrderedLayout extends AbstractLayout implements
             if (c != null) {
                 // Paint child component UIDL
                 c.paint(target);
-                alignmentsArray[index++] = String
+                alignmentsArray[index] = String
                         .valueOf(getComponentAlignment(c));
+                if (!equallyDevided) {
+                    float myRatio = getExpandRatio(c);
+                    expandRatioArray[index] = myRatio / sum;
+                }
+                index++;
             }
         }
 
         // Add child component alignment info to layout tag
         target.addAttribute("alignments", alignmentsArray);
+        target.addAttribute("expandRatios", expandRatioArray);
+    }
+
+    private float getExpandRatioSum() {
+        float sum = 0;
+        for (Iterator<Entry<Component, Float>> iterator = componentToExpandRatio
+                .entrySet().iterator(); iterator.hasNext();) {
+            sum += iterator.next().getValue();
+        }
+        return sum;
     }
 
     /**
@@ -314,4 +342,26 @@ public class OrderedLayout extends AbstractLayout implements
     public boolean isSpacingEnabled() {
         return spacing;
     }
+
+    /**
+     * TODO
+     * 
+     * @param component
+     * @param ratio
+     */
+    public void setExpandRatio(Component component, float ratio) {
+        componentToExpandRatio.put(component, ratio);
+    };
+
+    /**
+     * TODO
+     * 
+     * @param component
+     * @return
+     */
+    public float getExpandRatio(Component component) {
+        Float ratio = componentToExpandRatio.get(component);
+        return (ratio == null) ? 0 : ratio.floatValue();
+    }
+
 }
