@@ -107,6 +107,17 @@ public class OrderedLayout extends AbstractLayout implements
     }
 
     /**
+     * TODO
+     * 
+     * @param c
+     * @param expandRatio
+     */
+    public void addComponent(Component c, float expandRatio) {
+        addComponent(c);
+        setExpandRatio(c, expandRatio);
+    }
+
+    /**
      * Adds a component into this container. The component is added to the left
      * or on top of the other components.
      * 
@@ -144,6 +155,7 @@ public class OrderedLayout extends AbstractLayout implements
         super.removeComponent(c);
         components.remove(c);
         componentToAlignment.remove(c);
+        componentToExpandRatio.remove(c);
         requestRepaint();
     }
 
