@@ -188,7 +188,7 @@ public class OrderedLayout extends AbstractLayout implements
             // no component has been expanded, all components have same expand
             // rate
             equallyDivided = true;
-            float equalSize = 1 / components.size();
+            float equalSize = 1 / (float) components.size();
             int myRatio = Math.round(equalSize * 1000);
             for (int i = 0; i < expandRatioArray.length; i++) {
                 expandRatioArray[i] = myRatio;
