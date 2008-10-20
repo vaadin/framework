@@ -174,19 +174,21 @@ public class IOrderedLayout extends CellBasedLayout {
     }
 
     private void recalculateLayout() {
+
         /* Calculate space for relative size components */
         int spaceForExpansion = calculateLayoutDimensions();
 
-        /* Divide expansion space between component containers */
-        expandComponentContainers(spaceForExpansion);
+        if (!widgetToComponentContainer.isEmpty()) {
+            /* Divide expansion space between component containers */
+            expandComponentContainers(spaceForExpansion);
 
-        /* Update container sizes */
-        calculateContainerSize();
+            /* Update container sizes */
+            calculateContainerSize();
+        }
 
     }
 
     private void expandComponentContainers(int spaceForExpansion) {
-
         int remaining = spaceForExpansion;
         for (ChildComponentContainer childComponentContainer : widgetToComponentContainer
                 .values()) {

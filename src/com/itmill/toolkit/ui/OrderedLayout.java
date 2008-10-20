@@ -227,7 +227,9 @@ public class OrderedLayout extends AbstractLayout implements
         }
 
         // correct possible rounding error
-        expandRatioArray[0] -= realSum - 1000;
+        if (expandRatioArray.length > 0) {
+            expandRatioArray[0] -= realSum - 1000;
+        }
 
         // Add child component alignment info to layout tag
         target.addAttribute("alignments", alignmentsArray);
