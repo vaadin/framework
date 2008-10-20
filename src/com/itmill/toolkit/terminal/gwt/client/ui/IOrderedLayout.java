@@ -31,9 +31,6 @@ public class IOrderedLayout extends CellBasedLayout {
      */
     private Size activeLayoutSize = new Size(0, 0);
 
-    // private int spaceForExpansion = 0;
-    private int spaceNobodyWantedToUse = 0;
-
     private boolean isRendering = false;
 
     @Override
@@ -100,10 +97,12 @@ public class IOrderedLayout extends CellBasedLayout {
              * the layout are rendered later when it is clear how much space
              * they can use
              */
-            FloatSize relativeSize = Util.parseRelativeSize(childUIDL);
-            childComponentContainer.setRelativeSize(relativeSize);
+            if (!Util.isCached(childUIDL)) {
+                FloatSize relativeSize = Util.parseRelativeSize(childUIDL);
+                childComponentContainer.setRelativeSize(relativeSize);
+            }
 
-            if (hasRelativeSize(relativeSize, orientation)) {
+            if (childComponentContainer.isComponentRelativeSized(orientation)) {
                 relativeSizeComponents.add(childComponentContainer);
                 relativeSizeComponentUIDL.add(childUIDL);
                 relativeSizeWidgets.add(widget);
@@ -330,6 +329,8 @@ public class IOrderedLayout extends CellBasedLayout {
             remainingSpace = 0;
         }
 
+        // ApplicationConnection.getConsole().log(
+        // "Layout size: " + activeLayoutSize);
         return remainingSpace;
     }
 

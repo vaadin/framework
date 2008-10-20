@@ -290,24 +290,41 @@ public class Util {
 
     }
 
+    /**
+     * Parses the UIDL parameter and fetches the relative size of the component.
+     * If a dimension is not specified as relative it will return -1. If the
+     * UIDL does not contain width or height specifications this will return
+     * null.
+     * 
+     * @param uidl
+     * @return
+     */
     public static FloatSize parseRelativeSize(UIDL uidl) {
-        String w = uidl.hasAttribute("width") ? uidl
-                .getStringAttribute("width") : "";
+        boolean hasAttribute = false;
+        String w = "";
+        String h = "";
+        if (uidl.hasAttribute("width")) {
+            hasAttribute = true;
+            w = uidl.getStringAttribute("width");
+        }
+        if (uidl.hasAttribute("height")) {
+            hasAttribute = true;
+            h = uidl.getStringAttribute("height");
+        }
 
-        String h = uidl.hasAttribute("height") ? uidl
-                .getStringAttribute("height") : "";
+        if (!hasAttribute) {
+            return null;
+        }
 
         float relativeWidth = Util.parseRelativeSize(w);
         float relativeHeight = Util.parseRelativeSize(h);
 
-        if (relativeHeight >= 0.0 || relativeWidth >= 0.0) {
-            // One or both is relative
-            FloatSize relativeSize = new FloatSize(relativeWidth,
-                    relativeHeight);
-            return relativeSize;
-        } else {
-            return null;
-        }
+        FloatSize relativeSize = new FloatSize(relativeWidth, relativeHeight);
+        return relativeSize;
 
+    }
+
+    public static boolean isCached(UIDL uidl) {
+        return uidl.getBooleanAttribute("cached");
     }
 }
