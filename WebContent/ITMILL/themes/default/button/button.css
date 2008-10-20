@@ -1,6 +1,7 @@
 .i-button {
 	cursor: pointer;
 	font-size: 13px;
+	white-space: nowrap;
 }
 
 .i-button img {
