@@ -152,7 +152,7 @@ public class IPanel extends SimplePanel implements Container,
         }
 
         // Height adjustment
-        iLayout(false);
+        // iLayout(false);
 
         // Render content
         final UIDL layoutUidl = uidl.getChildUIDL(0);
@@ -164,8 +164,13 @@ public class IPanel extends SimplePanel implements Container,
             setWidget((Widget) newLayout);
             layout = newLayout;
         }
-        (layout).updateFromUIDL(layoutUidl, client);
+        layout.updateFromUIDL(layoutUidl, client);
 
+
+        if (BrowserInfo.get().isIE7()) {
+        	// IE is not able to make the offsetWidth for contentNode correct for some reason...
+            iLayout(false);
+        }
         // We may have actions attached to this panel
         if (uidl.getChildCount() > 1) {
             final int cnt = uidl.getChildCount();
@@ -277,6 +282,25 @@ public class IPanel extends SimplePanel implements Container,
             Util.setWidthExcludingPadding(contentNode,
                     parentWidthExcludingPadding - contentMarginLeft, 2);
 
+        }
+
+        if (BrowserInfo.get().isIE7() && (width == null || width.equals(""))) {
+        //FIXME This won't work if the panel's content gets narrower later on...
+            int captionMarginLeft = captionNode.getAbsoluteLeft()
+                    - getElement().getAbsoluteLeft();
+            int captionWidth = captionNode.getOffsetWidth() + captionMarginLeft;
+            int contentWidth = contentNode.getOffsetWidth();
+            int layoutWidth = ((Widget) layout).getOffsetWidth()
+                    + getContainerBorderWidth();
+            int width = contentWidth;
+            if (captionWidth > width) {
+                width = captionWidth;
+            }
+            if (layoutWidth > width) {
+                width = layoutWidth;
+            }
+
+            super.setWidth(width + "px");
         }
 
         if (runGeckoFix && BrowserInfo.get().isGecko()) {
@@ -447,7 +471,7 @@ public class IPanel extends SimplePanel implements Container,
     }
 
     public boolean requestLayout(Set<Paintable> child) {
-        if (height != null && width != null) {
+        if (height != null && height != "" && width != null && width != "") {
             /*
              * If the height and width has been specified the child components
              * cannot make the size of the layout change

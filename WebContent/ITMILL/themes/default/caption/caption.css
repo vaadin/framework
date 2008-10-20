@@ -7,10 +7,9 @@
 }
 
 .i-errorindicator {
-	width: 10px;
+	width: 12px;
 	height: 16px;
-	padding-right:13px;
-	display: inline;
+	float: left;
 	background: transparent url(../icons/16/error.png) no-repeat top right;
 }
 
@@ -22,7 +21,6 @@
 *+html .i-errorindicator {
 	margin-left:-3px;
 }
-	
 .i-caption .i-icon {
 	padding-right: 2px;
 	vertical-align: middle;

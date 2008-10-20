@@ -68,16 +68,13 @@
 
 .i-filterselect {
 	height: 23px;
-	background: transparent url(img/bg-left-filter.png) no-repeat;
-	margin-right: 1px;
 	white-space: nowrap;
 	text-align: left /* Force default alignment */
 }
 
 .i-filterselect-input {
-	width: 99%;
+	background: transparent url(img/bg-left-filter.png) no-repeat;
 	border: none;
-	background: transparent;
 	height: 20px;
 	margin: 0;
 	padding: 3px 0 0 4px;
@@ -90,7 +87,7 @@
 
 .i-filterselect-button {
 	float: right;
-	margin: -23px -1px 0 0;
+	margin-left: -23px;
 	width: 25px;
 	height: 23px;
 	cursor: pointer;

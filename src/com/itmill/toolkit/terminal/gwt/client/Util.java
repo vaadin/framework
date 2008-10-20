@@ -16,6 +16,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.itmill.toolkit.terminal.gwt.client.RenderInformation.FloatSize;
 
 public class Util {
 
@@ -195,9 +196,9 @@ public class Util {
     public static int measureHorizontalPadding(Element element, int paddingGuess) {
         String originalWidth = DOM.getStyleAttribute(element, "width");
         int originalOffsetWidth = element.getOffsetWidth();
-        int widthGuess = (originalOffsetWidth + paddingGuess);
+        int widthGuess = (originalOffsetWidth - paddingGuess);
         DOM.setStyleAttribute(element, "width", widthGuess + "px");
-        int padding = widthGuess - element.getOffsetWidth();
+        int padding = element.getOffsetWidth() - widthGuess;
 
         DOM.setStyleAttribute(element, "width", originalWidth);
         return padding;
@@ -223,6 +224,23 @@ public class Util {
 
         }
 
+    }
+
+    public static String getSimpleName(Widget widget) {
+        if (widget == null) {
+            return "(null)";
+        }
+
+        String name = widget.getClass().getName();
+        return name.substring(name.lastIndexOf('.') + 1);
+    }
+
+    public static void setFloat(Element element, String value) {
+        if (BrowserInfo.get().isIE()) {
+            DOM.setStyleAttribute(element, "styleFloat", value);
+        } else {
+            DOM.setStyleAttribute(element, "cssFloat", value);
+        }
     }
 
     private static int detectedScrollbarSize = -1;
@@ -272,4 +290,24 @@ public class Util {
 
     }
 
+    public static FloatSize parseRelativeSize(UIDL uidl) {
+        String w = uidl.hasAttribute("width") ? uidl
+                .getStringAttribute("width") : "";
+
+        String h = uidl.hasAttribute("height") ? uidl
+                .getStringAttribute("height") : "";
+
+        float relativeWidth = Util.parseRelativeSize(w);
+        float relativeHeight = Util.parseRelativeSize(h);
+
+        if (relativeHeight >= 0.0 || relativeWidth >= 0.0) {
+            // One or both is relative
+            FloatSize relativeSize = new FloatSize(relativeWidth,
+                    relativeHeight);
+            return relativeSize;
+        } else {
+            return null;
+        }
+
+    }
 }

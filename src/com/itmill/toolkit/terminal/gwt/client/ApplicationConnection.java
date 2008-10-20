@@ -4,6 +4,7 @@
 
 package com.itmill.toolkit.terminal.gwt.client;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -118,6 +119,8 @@ public class ApplicationConnection {
 
     /** redirectTimer scheduling interval in seconds */
     private int sessionExpirationInterval;
+
+    private ArrayList<Widget> relativeSizeChanges = new ArrayList<Widget>();;
 
     public ApplicationConnection(WidgetSet widgetSet,
             ApplicationConfiguration cnf) {
@@ -552,6 +555,7 @@ public class ApplicationConnection {
                 .get("changes");
 
         Vector<Widget> updatedWidgets = new Vector<Widget>();
+        relativeSizeChanges.clear();
 
         for (int i = 0; i < changes.size(); i++) {
             try {
@@ -591,6 +595,8 @@ public class ApplicationConnection {
         // Check which widgets' size has been updated
         Set<Widget> sizeUpdatedWidgets = new HashSet<Widget>();
 
+        updatedWidgets.addAll(relativeSizeChanges);
+
         for (Widget widget : updatedWidgets) {
             Size oldSize = componentOffsetSizes.get(widget);
             Size newSize = new Size(widget.getOffsetWidth(), widget
@@ -624,7 +630,7 @@ public class ApplicationConnection {
                 }
 
                 if (html.length() != 0) {
-                    INotification n = new INotification(1000 * 60 * 45); //45min
+                    INotification n = new INotification(1000 * 60 * 45); // 45min
                     n.addEventListener(new NotificationRedirect(url));
                     n.show(html, INotification.CENTERED_TOP,
                             INotification.STYLE_SYSTEM);
@@ -1016,11 +1022,17 @@ public class ApplicationConnection {
             // One or both is relative
             FloatSize relativeSize = new FloatSize(relativeWidth,
                     relativeHeight);
-            componentRelativeSizes.put(component, relativeSize);
+            if (componentRelativeSizes.put(component, relativeSize) == null) {
+                // The component has changed from absolute size to relative size
+                relativeSizeChanges.add(component);
+            }
             handleComponentRelativeSize(component);
         } else if (relativeHeight < 0.0 && relativeWidth < 0.0) {
-            // No relative sizes
-            componentRelativeSizes.remove(component);
+
+            if (componentRelativeSizes.remove(component) != null) {
+                // The component has changed from relative size to absolute size
+                relativeSizeChanges.add(component);
+            }
         }
 
     }
@@ -1042,24 +1054,36 @@ public class ApplicationConnection {
             final Widget child = (Widget) childWidgets.next();
 
             if (child instanceof Paintable) {
-                handleComponentRelativeSize(child);
-            }
 
-            if (child instanceof ContainerResizedListener) {
-                ((ContainerResizedListener) child).iLayout();
-            } else if (child instanceof HasWidgets) {
-                final HasWidgets childContainer = (HasWidgets) child;
-                runDescendentsLayout(childContainer);
+                if (handleComponentRelativeSize(child)) {
+                    /*
+                     * Only need to propagate event if "child" has a relative
+                     * size
+                     */
+
+                    if (child instanceof ContainerResizedListener) {
+                        ((ContainerResizedListener) child).iLayout();
+                    } else if (child instanceof HasWidgets) {
+                        final HasWidgets childContainer = (HasWidgets) child;
+                        runDescendentsLayout(childContainer);
+                    }
+                }
             }
 
         }
     }
 
-    public void handleComponentRelativeSize(Widget child) {
+    /**
+     * Converts relative sizes into pixel sizes.
+     * 
+     * @param child
+     * @return true if the child has a relative size
+     */
+    public boolean handleComponentRelativeSize(Widget child) {
         Widget widget = child;
-        FloatSize relativeSize = componentRelativeSizes.get(widget);
+        FloatSize relativeSize = getRelativeSize(child);
         if (relativeSize == null) {
-            return;
+            return false;
         }
 
         boolean horizontalScrollBar = false;
@@ -1104,8 +1128,10 @@ public class ApplicationConnection {
                 // getConsole().log(
                 // "Widget " + widget.getClass().getName() + "/"
                 // + widget.hashCode() + " relative height "
-                // + relativeSize.getHeight() + "%: " + height
-                // + "px");
+                // + relativeSize.getHeight() + "% of "
+                // + renderSpace.getHeight() + "px ("
+                // + renderSpace.getReservedHeight()
+                // + "px reserved): " + height + "px");
                 widget.setHeight(height + "px");
             } else {
                 widget.setHeight(relativeSize.getHeight() + "%");
@@ -1145,8 +1171,10 @@ public class ApplicationConnection {
                 // getConsole().log(
                 // "Widget " + widget.getClass().getName() + "/"
                 // + widget.hashCode() + " relative width "
-                // + relativeSize.getWidth() + "%: " + width
-                // + "px");
+                // + relativeSize.getWidth() + "% of "
+                // + renderSpace.getWidth() + "px ("
+                // + renderSpace.getReservedWidth()
+                // + "px reserved): " + width + "px");
                 widget.setWidth(width + "px");
             } else {
                 widget.setWidth(relativeSize.getWidth() + "%");
@@ -1157,6 +1185,12 @@ public class ApplicationConnection {
             }
         }
 
+        return true;
+
+    }
+
+    private FloatSize getRelativeSize(Widget widget) {
+        return componentRelativeSizes.get(widget);
     }
 
     /**

@@ -55,12 +55,12 @@ public interface Container extends Paintable {
      * Called when a child components size has been updated in the rendering
      * phase.
      * 
-     * @param child
+     * @param children
      *            Set of child widgets whose size have changed
      * @return true if the size of the Container remains the same, false if the
      *         event need to be propagated to the Containers parent
      */
-    boolean requestLayout(Set<Paintable> child);
+    boolean requestLayout(Set<Paintable> children);
 
     /**
      * Returns the size currently allocated for the child component.

@@ -812,4 +812,14 @@ public class IFilterSelect extends Composite implements Paintable, Field,
     public void focus() {
         tb.setFocus(true);
     }
+
+    @Override
+    public void setWidth(String width) {
+        super.setWidth(width);
+
+        int padding = Util.measureHorizontalPadding(tb.getElement(), 4);
+        tb.setWidth((getOffsetWidth() - padding - popupOpener.getOffsetWidth())
+                + "px");
+
+    }
 }
