@@ -305,7 +305,7 @@ public class IOrderedLayout extends CellBasedLayout {
                     widgetWidth = captionWidth;
                 }
             }
-            
+
             int widgetHeight = s.getHeight()
                     + childComponentContainer.getCaptionHeightAboveComponent();
 
@@ -467,7 +467,7 @@ public class IOrderedLayout extends CellBasedLayout {
 
         } else {
             // Vertical
-            if (isDynamicHeight()) {
+            if (isDynamicWidth()) {
                 activeLayoutWidth = maxComponentWidth;
                 setOuterLayoutWidth(maxComponentWidth);
             } else {
