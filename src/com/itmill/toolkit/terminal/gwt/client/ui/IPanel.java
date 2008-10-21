@@ -453,32 +453,19 @@ public class IPanel extends SimplePanel implements Container,
         // TODO
     }
 
-    private RenderSpace contentNodeSize;
-
     public RenderSpace getAllocatedSpace(Widget child) {
-        if (contentNodeSize == null) {
-            contentNodeSize = new RenderSpace(-1, -1) {
+        int w = 0;
+        int h = 0;
 
-                @Override
-                public int getHeight() {
-                    return contentNode.getOffsetHeight()
-                            - getContainerBorderHeight();
-                }
-
-                @Override
-                public int getWidth() {
-                    return contentNode.getOffsetWidth()
-                            - getContainerBorderWidth();
-                }
-
-                @Override
-                public int getScrollbarSize() {
-                    return Util.getNativeScrollbarSize();
-                }
-
-            };
+        if (width != null && !width.equals("")) {
+            w = getOffsetWidth() - getContainerBorderWidth();
         }
-        return contentNodeSize;
+
+        if (height != null && !height.equals("")) {
+            w = getOffsetHeight() - getContainerBorderHeight();
+        }
+
+        return new RenderSpace(w, h);
     }
 
     public boolean requestLayout(Set<Paintable> child) {
@@ -495,6 +482,12 @@ public class IPanel extends SimplePanel implements Container,
 
     public void updateCaption(Paintable component, UIDL uidl) {
         // NOP: layouts caption, errors etc not rendered in Panel
+    }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+        detectContainerBorders();
     }
 
 }
