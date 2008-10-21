@@ -308,6 +308,10 @@ public class ICaption extends HTML {
                 availableWidth -= errorIndicatorElement.getOffsetWidth();
             }
 
+            if (availableWidth < 0) {
+                availableWidth = 0;
+            }
+
             if (icon != null) {
                 if (availableWidth > icon.getOffsetWidth()) {
                     // ApplicationConnection.getConsole().log(
