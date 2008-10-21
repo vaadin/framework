@@ -362,6 +362,7 @@ public class ITabsheet extends ITabsheetBase implements
             DOM.setStyleAttribute(contentNode, "height", contentHeight + "px");
             renderSpace.setHeight(contentHeight);
             DOM.setStyleAttribute(contentNode, "overflow", "auto");
+            contentNode.getStyle().setProperty("position", "relative");
         } else {
             DOM.setStyleAttribute(contentNode, "height", "");
             DOM.setStyleAttribute(contentNode, "overflow", "");

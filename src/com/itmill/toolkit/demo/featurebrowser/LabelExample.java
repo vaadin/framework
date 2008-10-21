@@ -4,10 +4,10 @@
 
 package com.itmill.toolkit.demo.featurebrowser;
 
+import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.Label;
-import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 
 /**
@@ -28,68 +28,61 @@ public class LabelExample extends CustomComponent {
             + "       This is an indented row. \n       Same indentation here.";
 
     public LabelExample() {
-
-        final OrderedLayout main = new OrderedLayout();
-        main.setSizeFull();
-        main.setMargin(true);
-        setSizeFull();
-        setCompositionRoot(main);
-
         final GridLayout g = new GridLayout(2, 4);
-        g.setSizeFull();
-        main.addComponent(g);
+        g.setMargin(true);
+        setCompositionRoot(g);
+        g.setWidth("100%");
+
         // plain w/o caption
-        Panel p = new Panel("Plain");
-        p.setWidth("100%");
-        p.getLayout().setWidth("100%");
-        p.setStyleName(Panel.STYLE_LIGHT);
+        Panel p = getExpamplePanel("Plain");
         Label l = new Label("A plain label without caption.");
         p.addComponent(l);
         g.addComponent(p);
         // plain w/ caption
-        p = new Panel("Plain w/ caption + tooltip");
-        p.setWidth("100%");
-        p.getLayout().setWidth("100%");
-        p.setStyleName(Panel.STYLE_LIGHT);
+        p = getExpamplePanel("Plain w/ caption + tooltip");
         l = new Label("A plain label with caption.");
         l.setCaption("Label caption");
         l.setDescription("This is a description (tooltip) for the label.");
         p.addComponent(l);
         g.addComponent(p);
         // plain w/ xhtml
-        p = new Panel("Plain w/ XHTML content");
-        p.setWidth("100%");
-        p.getLayout().setWidth("100%");
-        p.setStyleName(Panel.STYLE_LIGHT);
+        p = getExpamplePanel("Plain w/ XHTML content");
         l = new Label(xhtml);
         p.addComponent(l);
         g.addComponent(p);
         // xhtml w/ xhtml
-        p = new Panel("XHTML-mode w/ XHTML content");
-        p.setWidth("100%");
-        p.getLayout().setWidth("100%");
-        p.setStyleName(Panel.STYLE_LIGHT);
+        p = getExpamplePanel("XHTML-mode w/ XHTML content");
         l = new Label(xhtml);
         l.setContentMode(Label.CONTENT_XHTML);
         p.addComponent(l);
         g.addComponent(p);
         // plain w/ preformatted
-        p = new Panel("Plain w/ preformatted content");
-        p.setWidth("100%");
-        p.getLayout().setWidth("100%");
-        p.setStyleName(Panel.STYLE_LIGHT);
+        p = getExpamplePanel("Plain w/ preformatted content");
         l = new Label(pre);
         p.addComponent(l);
         g.addComponent(p);
         // preformatted w/ preformatted
-        p = new Panel("Preformatted-mode w/ preformatted content");
-        p.setWidth("100%");
-        p.getLayout().setWidth("100%");
-        p.setStyleName(Panel.STYLE_LIGHT);
+        p = getExpamplePanel("Preformatted-mode w/ preformatted content");
         l = new Label(pre);
         l.setContentMode(Label.CONTENT_PREFORMATTED);
         p.addComponent(l);
         g.addComponent(p);
 
+    }
+
+    private Panel getExpamplePanel(String caption) {
+        Panel p = new Panel(caption) {
+
+            @Override
+            public void addComponent(Component c) {
+                c.setWidth("100%");
+                super.addComponent(c);
+            }
+
+        };
+        p.addStyleName(Panel.STYLE_LIGHT);
+        p.setWidth("100%");
+        p.getLayout().setWidth("100%");
+        return p;
     }
 }

@@ -246,7 +246,7 @@ public class IAccordion extends ITabsheetBase implements
 
         public void open() {
             open = true;
-            DOM.setStyleAttribute(content, "position", "");
+            DOM.setStyleAttribute(content, "position", "relative");
             DOM.setStyleAttribute(content, "top", "");
             DOM.setStyleAttribute(content, "left", "");
             DOM.setStyleAttribute(content, "visibility", "");

@@ -86,6 +86,7 @@ public class IPanel extends SimplePanel implements Container,
                 + "-deco");
         DOM.sinkEvents(getElement(), Event.ONKEYDOWN);
         DOM.sinkEvents(contentNode, Event.ONSCROLL);
+        contentNode.getStyle().setProperty("position", "relative");
     }
 
     @Override
@@ -94,7 +95,7 @@ public class IPanel extends SimplePanel implements Container,
     }
 
     private void setCaption(String text) {
-        DOM.setInnerText(captionText, text);
+        DOM.setInnerHTML(captionText, text);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {

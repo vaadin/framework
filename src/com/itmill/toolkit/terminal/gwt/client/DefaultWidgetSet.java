@@ -210,14 +210,7 @@ public class DefaultWidgetSet implements WidgetSet {
         } else if ("link".equals(tag)) {
             return "com.itmill.toolkit.terminal.gwt.client.ui.ILink";
         } else if ("gridlayout".equals(tag)) {
-            if (uidl.hasAttribute("height")) {
-                // height needs to be set to use sizeable grid layout, with
-                // width only or no size at all it fails to render properly.
-                return "com.itmill.toolkit.terminal.gwt.client.ui.absolutegrid.ISizeableGridLayout";
-            } else {
-                // Fall back to GWT FlexTable based implementation.
-                return "com.itmill.toolkit.terminal.gwt.client.ui.IGridLayout";
-            }
+            return "com.itmill.toolkit.terminal.gwt.client.ui.IGridLayout";
         } else if ("tree".equals(tag)) {
             return "com.itmill.toolkit.terminal.gwt.client.ui.ITree";
         } else if ("select".equals(tag)) {

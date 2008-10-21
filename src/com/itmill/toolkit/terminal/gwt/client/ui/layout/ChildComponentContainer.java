@@ -239,7 +239,7 @@ public class ChildComponentContainer extends Panel {
         return getCaptionHeight();
     }
 
-    public int calculateVerticalAlignmentTopOffset(int emptySpace) {
+    private int calculateVerticalAlignmentTopOffset(int emptySpace) {
         if (alignment.isTop()) {
             return 0;
         }
