@@ -659,6 +659,7 @@ public class IWindow extends IToolkitOverlay implements Container,
 
         // Update child widget dimensions
         if (client != null) {
+            client.handleComponentRelativeSize((Widget) layout);
             client.runDescendentsLayout(this);
         }
     }
