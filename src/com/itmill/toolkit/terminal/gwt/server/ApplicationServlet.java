@@ -39,6 +39,7 @@ import com.itmill.toolkit.external.org.apache.commons.fileupload.servlet.Servlet
 import com.itmill.toolkit.service.FileTypeResolver;
 import com.itmill.toolkit.terminal.DownloadStream;
 import com.itmill.toolkit.terminal.ParameterHandler;
+import com.itmill.toolkit.terminal.Terminal;
 import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.terminal.URIHandler;
 import com.itmill.toolkit.ui.Window;
@@ -538,6 +539,11 @@ public class ApplicationServlet extends HttpServlet {
                 criticalNotification(request, response, ci
                         .getInternalErrorCaption(), ci
                         .getInternalErrorMessage(), ci.getInternalErrorURL());
+                if (application != null) {
+                    application.terminalError(new RequestError(e));
+                } else {
+                    throw new ServletException(e);
+                }
             } else {
                 // Re-throw other exceptions
                 throw new ServletException(e);
@@ -1669,6 +1675,20 @@ public class ApplicationServlet extends HttpServlet {
             }
         }
         return resultPath;
+    }
+
+    public class RequestError implements Terminal.ErrorEvent {
+
+        private final Throwable throwable;
+
+        public RequestError(Throwable throwable) {
+            this.throwable = throwable;
+        }
+
+        public Throwable getThrowable() {
+            return throwable;
+        }
+
     }
 
 }
