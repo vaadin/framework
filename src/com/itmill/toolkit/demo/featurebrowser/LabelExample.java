@@ -30,20 +30,26 @@ public class LabelExample extends CustomComponent {
     public LabelExample() {
 
         final OrderedLayout main = new OrderedLayout();
+        main.setSizeFull();
         main.setMargin(true);
+        setSizeFull();
         setCompositionRoot(main);
 
         final GridLayout g = new GridLayout(2, 4);
+        g.setSizeFull();
         main.addComponent(g);
-
         // plain w/o caption
         Panel p = new Panel("Plain");
+        p.setWidth("100%");
+        p.getLayout().setWidth("100%");
         p.setStyleName(Panel.STYLE_LIGHT);
         Label l = new Label("A plain label without caption.");
         p.addComponent(l);
         g.addComponent(p);
         // plain w/ caption
         p = new Panel("Plain w/ caption + tooltip");
+        p.setWidth("100%");
+        p.getLayout().setWidth("100%");
         p.setStyleName(Panel.STYLE_LIGHT);
         l = new Label("A plain label with caption.");
         l.setCaption("Label caption");
@@ -52,12 +58,16 @@ public class LabelExample extends CustomComponent {
         g.addComponent(p);
         // plain w/ xhtml
         p = new Panel("Plain w/ XHTML content");
+        p.setWidth("100%");
+        p.getLayout().setWidth("100%");
         p.setStyleName(Panel.STYLE_LIGHT);
         l = new Label(xhtml);
         p.addComponent(l);
         g.addComponent(p);
         // xhtml w/ xhtml
         p = new Panel("XHTML-mode w/ XHTML content");
+        p.setWidth("100%");
+        p.getLayout().setWidth("100%");
         p.setStyleName(Panel.STYLE_LIGHT);
         l = new Label(xhtml);
         l.setContentMode(Label.CONTENT_XHTML);
@@ -65,12 +75,16 @@ public class LabelExample extends CustomComponent {
         g.addComponent(p);
         // plain w/ preformatted
         p = new Panel("Plain w/ preformatted content");
+        p.setWidth("100%");
+        p.getLayout().setWidth("100%");
         p.setStyleName(Panel.STYLE_LIGHT);
         l = new Label(pre);
         p.addComponent(l);
         g.addComponent(p);
         // preformatted w/ preformatted
         p = new Panel("Preformatted-mode w/ preformatted content");
+        p.setWidth("100%");
+        p.getLayout().setWidth("100%");
         p.setStyleName(Panel.STYLE_LIGHT);
         l = new Label(pre);
         l.setContentMode(Label.CONTENT_PREFORMATTED);
