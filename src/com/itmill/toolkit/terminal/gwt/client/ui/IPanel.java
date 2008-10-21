@@ -65,6 +65,10 @@ public class IPanel extends SimplePanel implements Container,
 
     private int borderPaddingVertical = -1;
 
+    private int captionPaddingHorizontal = -1;
+
+    private int captionMarginLeft = -1;
+
     public IPanel() {
         super();
         DOM.appendChild(getElement(), captionNode);
@@ -166,9 +170,9 @@ public class IPanel extends SimplePanel implements Container,
         }
         layout.updateFromUIDL(layoutUidl, client);
 
-
-        if (BrowserInfo.get().isIE7()) {
-        	// IE is not able to make the offsetWidth for contentNode correct for some reason...
+        if (BrowserInfo.get().isIE()) {
+            // IE is not able to make the offsetWidth for contentNode correct
+            // for some reason...
             iLayout(false);
         }
         // We may have actions attached to this panel
@@ -249,8 +253,6 @@ public class IPanel extends SimplePanel implements Container,
     }
 
     public void iLayout(boolean runGeckoFix) {
-        renderInformation.updateSize(getElement());
-
         if (BrowserInfo.get().isIE6() && width != null && !width.equals("")) {
             /*
              * IE6 requires overflow-hidden elements to have a width specified
@@ -271,10 +273,8 @@ public class IPanel extends SimplePanel implements Container,
             int parentWidthExcludingPadding = getElement().getOffsetWidth()
                     - parentPadding;
 
-            int captionMarginLeft = captionNode.getAbsoluteLeft()
-                    - getElement().getAbsoluteLeft();
             Util.setWidthExcludingPadding(captionNode,
-                    parentWidthExcludingPadding - captionMarginLeft, 26);
+                    parentWidthExcludingPadding - getCaptionMarginLeft(), 26);
 
             int contentMarginLeft = contentNode.getAbsoluteLeft()
                     - getElement().getAbsoluteLeft();
@@ -284,20 +284,14 @@ public class IPanel extends SimplePanel implements Container,
 
         }
 
-        if (BrowserInfo.get().isIE7() && (width == null || width.equals(""))) {
-        //FIXME This won't work if the panel's content gets narrower later on...
-            int captionMarginLeft = captionNode.getAbsoluteLeft()
-                    - getElement().getAbsoluteLeft();
-            int captionWidth = captionNode.getOffsetWidth() + captionMarginLeft;
-            int contentWidth = contentNode.getOffsetWidth();
+        if (BrowserInfo.get().isIE() && (width == null || width.equals(""))) {
+            int captionWidth = captionText.getOffsetWidth()
+                    + getCaptionMarginLeft() + getCaptionPaddingHorizontal();
             int layoutWidth = ((Widget) layout).getOffsetWidth()
                     + getContainerBorderWidth();
-            int width = contentWidth;
+            int width = layoutWidth;
             if (captionWidth > width) {
                 width = captionWidth;
-            }
-            if (layoutWidth > width) {
-                width = layoutWidth;
             }
 
             super.setWidth(width + "px");
@@ -396,6 +390,20 @@ public class IPanel extends SimplePanel implements Container,
         }
     }
 
+    private int getCaptionMarginLeft() {
+        if (captionMarginLeft < 0) {
+            detectContainerBorders();
+        }
+        return captionMarginLeft;
+    }
+
+    private int getCaptionPaddingHorizontal() {
+        if (captionPaddingHorizontal < 0) {
+            detectContainerBorders();
+        }
+        return captionPaddingHorizontal;
+    }
+
     private int getContainerBorderHeight() {
         if (borderPaddingVertical < 0) {
             detectContainerBorders();
@@ -420,14 +428,17 @@ public class IPanel extends SimplePanel implements Container,
 
     private void detectContainerBorders() {
         DOM.setStyleAttribute(contentNode, "overflow", "hidden");
-        borderPaddingHorizontal = contentNode.getOffsetWidth()
-                - contentNode.getPropertyInt("clientWidth");
-        assert borderPaddingHorizontal >= 0;
-        borderPaddingVertical = contentNode.getOffsetHeight()
-                - contentNode.getPropertyInt("clientHeight");
-        assert borderPaddingVertical >= 0;
+
+        borderPaddingHorizontal = Util.measureHorizontalBorder(contentNode);
+        borderPaddingVertical = Util.measureVerticalBorder(contentNode);
 
         DOM.setStyleAttribute(contentNode, "overflow", "auto");
+
+        captionPaddingHorizontal = Util.measureHorizontalPadding(captionNode,
+                26);
+
+        captionMarginLeft = Util.measureMarginLeft(captionNode);
+
     }
 
     public boolean hasChildComponent(Widget component) {
@@ -478,6 +489,7 @@ public class IPanel extends SimplePanel implements Container,
              */
             return true;
         }
+        iLayout(false);
         return !renderInformation.updateSize(getElement());
     }
 

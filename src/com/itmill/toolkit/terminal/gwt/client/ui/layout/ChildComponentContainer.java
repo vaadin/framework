@@ -29,6 +29,10 @@ public class ChildComponentContainer extends Panel {
      * Size of the widget inside the container DIV
      */
     private Size widgetSize = new Size(0, 0);
+    /**
+     * Size of the caption
+     */
+    private Size captionSize = new Size(0, 0);
 
     /**
      * Padding added to the container when it is larger than the component.
@@ -208,7 +212,7 @@ public class ChildComponentContainer extends Panel {
             return 0;
         }
 
-        return caption.getWidth();
+        return captionSize.getWidth();
     }
 
     public int getCaptionHeight() {
@@ -216,7 +220,7 @@ public class ChildComponentContainer extends Panel {
             return 0;
         }
 
-        return caption.getHeight();
+        return captionSize.getHeight();
     }
 
     public int getCaptionWidthAfterComponent() {
@@ -224,7 +228,7 @@ public class ChildComponentContainer extends Panel {
             return 0;
         }
 
-        return caption.getWidth();
+        return getCaptionWidth();
     }
 
     public int getCaptionHeightAboveComponent() {
@@ -232,7 +236,7 @@ public class ChildComponentContainer extends Panel {
             return 0;
         }
 
-        return caption.getHeight();
+        return getCaptionHeight();
     }
 
     public int calculateVerticalAlignmentTopOffset(int emptySpace) {
@@ -250,7 +254,7 @@ public class ChildComponentContainer extends Panel {
                         .getHeight());
             } else {
                 emptySpace -= widgetSize.getHeight();
-                emptySpace -= caption.getHeight();
+                emptySpace -= getCaptionHeight();
             }
         } else {
             /*
@@ -293,14 +297,14 @@ public class ChildComponentContainer extends Panel {
                  */
                 captionSpace = 0;
                 widgetSpace -= widgetSize.getWidth();
-                widgetSpace -= caption.getWidth();
+                widgetSpace -= getCaptionWidth();
             } else {
                 /*
                  * The caption is above the component. Caption and widget needs
                  * separate alignment offsets.
                  */
                 widgetSpace -= widgetSize.getWidth();
-                captionSpace -= caption.getWidth();
+                captionSpace -= getCaptionWidth();
             }
         } else {
             /*
@@ -361,6 +365,16 @@ public class ChildComponentContainer extends Panel {
 
         }
 
+        int w = 0;
+        int h = 0;
+
+        if (caption != null) {
+            w = caption.getWidth();
+            h = caption.getHeight();
+        }
+
+        captionSize.setWidth(w);
+        captionSize.setHeight(h);
     }
 
     private void setCaption(ICaption newCaption) {
@@ -501,6 +515,22 @@ public class ChildComponentContainer extends Panel {
         return widget;
     }
 
+    /**
+     * Return true if the size of the widget has been specified in the selected
+     * orientation.
+     * 
+     * @return
+     */
+    public boolean widgetHasSizeSpecified(int orientation) {
+        String size;
+        if (orientation == CellBasedLayout.ORIENTATION_HORIZONTAL) {
+            size = widget.getElement().getStyle().getProperty("width");
+        } else {
+            size = widget.getElement().getStyle().getProperty("height");
+        }
+        return (size != null && !size.equals(""));
+    }
+
     public boolean isComponentRelativeSized(int orientation) {
         if (relativeSize == null) {
             return false;
@@ -606,6 +636,8 @@ public class ChildComponentContainer extends Panel {
         // Also update caption max width
         if (caption != null) {
             caption.setMaxWidth(width);
+
+            captionSize.setWidth(caption.getWidth());
         }
 
     }

@@ -9,7 +9,6 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Container;
-import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.ui.MarginInfo;
 
@@ -89,11 +88,6 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
     public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
         // TODO: Must support
         throw new UnsupportedOperationException();
-    }
-
-    public void updateCaption(Paintable component, UIDL uidl) {
-        ChildComponentContainer componentContainer = getComponentContainer((Widget) component);
-        componentContainer.updateCaption(uidl, client);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -253,8 +247,8 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
         spacingFromCSS.vSpacing = measurement.getOffsetHeight() - 1;
         spacingFromCSS.hSpacing = measurement.getOffsetWidth() - 1;
 
-        ApplicationConnection.getConsole().log("Margins: " + marginsFromCSS);
-        ApplicationConnection.getConsole().log("Spacing: " + spacingFromCSS);
+        // ApplicationConnection.getConsole().log("Margins: " + marginsFromCSS);
+        // ApplicationConnection.getConsole().log("Spacing: " + spacingFromCSS);
 
         root.removeChild(measurement);
 

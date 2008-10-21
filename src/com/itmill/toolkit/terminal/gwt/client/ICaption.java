@@ -227,17 +227,33 @@ public class ICaption extends HTML {
 
     public int getWidth() {
         int width = 0;
+
         if (icon != null) {
             width += icon.getOffsetWidth();
         }
-        if (captionText != null) {
-            width += captionText.getOffsetWidth();
-        }
-        if (requiredFieldIndicator != null) {
-            width += requiredFieldIndicator.getOffsetWidth();
-        }
-        if (errorIndicatorElement != null) {
-            width += errorIndicatorElement.getOffsetWidth();
+
+        if (maxWidth >= 0) {
+            if (captionText != null) {
+                width += captionText.getOffsetWidth();
+            }
+            if (requiredFieldIndicator != null) {
+                width += requiredFieldIndicator.getOffsetWidth();
+            }
+            if (errorIndicatorElement != null) {
+                width += errorIndicatorElement.getOffsetWidth();
+            }
+
+        } else {
+            if (captionText != null) {
+                width += captionText.getScrollWidth();
+            }
+            if (requiredFieldIndicator != null) {
+                width += requiredFieldIndicator.getScrollWidth();
+            }
+            if (errorIndicatorElement != null) {
+                width += errorIndicatorElement.getScrollWidth();
+            }
+
         }
 
         return width;

@@ -128,6 +128,7 @@ public class IOrderedLayout extends CellBasedLayout {
 
         /* Fetch alignments and expand ratio from UIDL */
         updateAlignmentsAndExpandRatios(uidl, uidlWidgets);
+        // w.mark("Alignments and expand ratios updated");
 
         /* Fetch widget sizes from rendered components */
         for (ChildComponentContainer childComponentContainer : widgetToComponentContainer
@@ -138,8 +139,12 @@ public class IOrderedLayout extends CellBasedLayout {
              */
             childComponentContainer.updateWidgetSize();
         }
+        // w.mark("Widget sizes updated");
 
         recalculateLayout();
+        // w.mark("Layout size calculated (" + activeLayoutSize +
+        // ") offsetSize: "
+        // + getOffsetWidth() + "," + getOffsetHeight());
 
         /* Render relative size components */
         for (int i = 0; i < relativeSizeComponents.size(); i++) {
@@ -151,6 +156,9 @@ public class IOrderedLayout extends CellBasedLayout {
             // childComponentContainer.updateWidgetSize();
         }
 
+        // w.mark("Rendering of " + (relativeSizeComponents.size())
+        // + " relative size components done");
+
         /* Fetch widget sizes for relative size components */
         for (ChildComponentContainer childComponentContainer : widgetToComponentContainer
                 .values()) {
@@ -159,8 +167,10 @@ public class IOrderedLayout extends CellBasedLayout {
             childComponentContainer.updateWidgetSize();
         }
 
-        // w.mark("Rendering of " + (relativeSizeComponents.size())
-        // + " relative size components done");
+        // w.mark("Widget sizes updated");
+
+        /* Update component spacing */
+        updateContainerMargins();
 
         /* Recalculate component sizes and alignments */
         recalculateComponentSizesAndAlignments();
@@ -241,8 +251,6 @@ public class IOrderedLayout extends CellBasedLayout {
             return;
         }
 
-        updateContainerMargins();
-
         /*
          * Update the height of relative height components in a horizontal
          * layout or the width for relative width components in a vertical
@@ -286,17 +294,18 @@ public class IOrderedLayout extends CellBasedLayout {
             int widgetWidth = s.getWidth()
                     + childComponentContainer.getCaptionWidthAfterComponent();
 
-            if (isDynamicWidth()) {
-                /*
-                 * For a dynamic width layout the max of caption/widget defines
-                 * the required size
-                 */
+            /*
+             * If the component does not have a specified size in the main
+             * direction the caption may determine the space used by the
+             * component
+             */
+            if (!childComponentContainer.widgetHasSizeSpecified(orientation)) {
                 int captionWidth = childComponentContainer.getCaptionWidth();
                 if (captionWidth > widgetWidth) {
                     widgetWidth = captionWidth;
                 }
             }
-
+            
             int widgetHeight = s.getHeight()
                     + childComponentContainer.getCaptionHeightAboveComponent();
 
@@ -383,10 +392,19 @@ public class IOrderedLayout extends CellBasedLayout {
                     width = childComponentContainer.getWidgetSize().getWidth()
                             + childComponentContainer
                                     .getCaptionWidthAfterComponent();
-                    int captionWidth = childComponentContainer
-                            .getCaptionWidth();
-                    if (captionWidth > width) {
-                        width = captionWidth;
+
+                    /*
+                     * If the component does not have a specified size in the
+                     * main direction the caption may determine the space used
+                     * by the component
+                     */
+                    if (!childComponentContainer
+                            .widgetHasSizeSpecified(orientation)) {
+                        int captionWidth = childComponentContainer
+                                .getCaptionWidth();
+                        if (captionWidth > width) {
+                            width = captionWidth;
+                        }
                     }
                 } else {
                     width = 0;
@@ -484,6 +502,10 @@ public class IOrderedLayout extends CellBasedLayout {
 
     }
 
+    /**
+     * Updates the spacing between components. Needs to be done only when
+     * components are added/removed.
+     */
     private void updateContainerMargins() {
         ChildComponentContainer firstChildComponent = getFirstChildComponentContainer();
 
@@ -633,6 +655,18 @@ public class IOrderedLayout extends CellBasedLayout {
 
             // Update expand ratio
             container.setExpandRatio(expandRatios[i]);
+        }
+    }
+
+    public void updateCaption(Paintable component, UIDL uidl) {
+        ChildComponentContainer componentContainer = getComponentContainer((Widget) component);
+        componentContainer.updateCaption(uidl, client);
+        if (!isRendering) {
+            /*
+             * This was a component-only update and the possible size change
+             * must be propagated to the layout
+             */
+            client.captionSizeUpdated((Widget) component);
         }
     }
 

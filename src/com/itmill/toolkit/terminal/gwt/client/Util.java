@@ -46,6 +46,8 @@ public class Util {
         Map<Container, Set<Paintable>> childWidgets = new HashMap<Container, Set<Paintable>>();
 
         for (Widget widget : widgets) {
+//            ApplicationConnection.getConsole().log(
+//                    "Widget " + Util.getSimpleName(widget) + " size updated");
             Widget parent = widget.getParent();
             while (parent != null && !(parent instanceof Container)) {
                 parent = parent.getParent();
@@ -202,6 +204,37 @@ public class Util {
 
         DOM.setStyleAttribute(element, "width", originalWidth);
         return padding;
+    }
+
+    public static int measureHorizontalBorder(Element element) {
+        int borders;
+        if (BrowserInfo.get().isIE6()) {
+            String originalWidth = DOM.getStyleAttribute(element, "width");
+            int originalOffsetWidth = element.getOffsetWidth();
+            DOM.setStyleAttribute(element, "width", originalOffsetWidth + "px");
+            borders = element.getOffsetWidth()
+                    - element.getPropertyInt("clientWidth");
+
+            DOM.setStyleAttribute(element, "width", originalWidth);
+        } else {
+            borders = element.getOffsetWidth()
+                    - element.getPropertyInt("clientWidth");
+        }
+        assert borders >= 0;
+
+        return borders;
+    }
+
+    public static int measureVerticalBorder(Element element) {
+        int borders = element.getOffsetHeight()
+                - element.getPropertyInt("clientHeight");
+        assert borders >= 0;
+        return borders;
+    }
+
+    public static int measureMarginLeft(Element element) {
+        return element.getAbsoluteLeft()
+                - element.getParentElement().getAbsoluteLeft();
     }
 
     public static void setWidthExcludingPadding(Element element,

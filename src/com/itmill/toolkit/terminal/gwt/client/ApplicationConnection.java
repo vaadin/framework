@@ -121,6 +121,7 @@ public class ApplicationConnection {
     private int sessionExpirationInterval;
 
     private ArrayList<Widget> relativeSizeChanges = new ArrayList<Widget>();;
+    private ArrayList<Widget> captionSizeChanges = new ArrayList<Widget>();;
 
     public ApplicationConnection(WidgetSet widgetSet,
             ApplicationConfiguration cnf) {
@@ -556,6 +557,7 @@ public class ApplicationConnection {
 
         Vector<Widget> updatedWidgets = new Vector<Widget>();
         relativeSizeChanges.clear();
+        captionSizeChanges.clear();
 
         for (int i = 0; i < changes.size(); i++) {
             try {
@@ -596,6 +598,7 @@ public class ApplicationConnection {
         Set<Widget> sizeUpdatedWidgets = new HashSet<Widget>();
 
         updatedWidgets.addAll(relativeSizeChanges);
+        sizeUpdatedWidgets.addAll(captionSizeChanges);
 
         for (Widget widget : updatedWidgets) {
             Size oldSize = componentOffsetSizes.get(widget);
@@ -1377,5 +1380,9 @@ public class ApplicationConnection {
      */
     public void setWindowName(String newName) {
         windowName = newName;
+    }
+
+    public void captionSizeUpdated(Widget component) {
+        captionSizeChanges.add(component);
     }
 }
