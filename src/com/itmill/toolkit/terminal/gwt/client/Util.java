@@ -46,8 +46,8 @@ public class Util {
         Map<Container, Set<Paintable>> childWidgets = new HashMap<Container, Set<Paintable>>();
 
         for (Widget widget : widgets) {
-//            ApplicationConnection.getConsole().log(
-//                    "Widget " + Util.getSimpleName(widget) + " size updated");
+            // ApplicationConnection.getConsole().log(
+            // "Widget " + Util.getSimpleName(widget) + " size updated");
             Widget parent = widget.getParent();
             while (parent != null && !(parent instanceof Container)) {
                 parent = parent.getParent();
@@ -199,6 +199,9 @@ public class Util {
         String originalWidth = DOM.getStyleAttribute(element, "width");
         int originalOffsetWidth = element.getOffsetWidth();
         int widthGuess = (originalOffsetWidth - paddingGuess);
+        if (widthGuess < 1) {
+            widthGuess = 1;
+        }
         DOM.setStyleAttribute(element, "width", widthGuess + "px");
         int padding = element.getOffsetWidth() - widthGuess;
 
@@ -211,9 +214,13 @@ public class Util {
         if (BrowserInfo.get().isIE6()) {
             String originalWidth = DOM.getStyleAttribute(element, "width");
             int originalOffsetWidth = element.getOffsetWidth();
+            if (originalOffsetWidth < 1) {
+                originalOffsetWidth = 10;
+            }
+
             DOM.setStyleAttribute(element, "width", originalOffsetWidth + "px");
-            borders = element.getOffsetWidth()
-                    - element.getPropertyInt("clientWidth");
+            int cw = element.getPropertyInt("clientWidth");
+            borders = element.getOffsetWidth() - cw;
 
             DOM.setStyleAttribute(element, "width", originalWidth);
         } else {

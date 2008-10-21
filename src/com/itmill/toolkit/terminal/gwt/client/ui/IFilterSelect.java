@@ -482,6 +482,8 @@ public class IFilterSelect extends Composite implements Paintable, Field,
     // This handles the special case where are not filtering yet and the
     // selected value has changed on the server-side. See #2119
     private boolean popupOpenerClicked;
+    private String width = null;
+    private int elementPadding = -1;
     private static final String CLASSNAME_EMPTY = "empty";
     private static final String ATTR_EMPTYTEXT = "emptytext";
 
@@ -635,6 +637,15 @@ public class IFilterSelect extends Composite implements Paintable, Field,
 
         popupOpenerClicked = false;
 
+        if (width == null) {
+            /*
+             * When the width is not specified we must specify width for root
+             * div so the popupopener won't wrap to the next line and also so
+             * the size of the combobox won't change over time.
+             */
+            int w = tb.getOffsetWidth() + popupOpener.getOffsetWidth();
+            super.setWidth(w + "px");
+        }
     }
 
     public void onSuggestionSelected(FilterSelectSuggestion suggestion) {
@@ -815,11 +826,32 @@ public class IFilterSelect extends Composite implements Paintable, Field,
 
     @Override
     public void setWidth(String width) {
+        if (width == null || width.equals("")) {
+            this.width = null;
+        } else {
+            this.width = width;
+        }
+
         super.setWidth(width);
 
-        int padding = Util.measureHorizontalPadding(tb.getElement(), 4);
-        tb.setWidth((getOffsetWidth() - padding - popupOpener.getOffsetWidth())
-                + "px");
+        if (this.width != null) {
+            /*
+             * When the width is specified we also want to explicitly specify
+             * widths for textbox and popupopener
+             */
+            int textboxWidth = getOffsetWidth() - getElementPadding()
+                    - popupOpener.getOffsetWidth();
+            if (textboxWidth < 0) {
+                textboxWidth = 0;
+            }
+            tb.setWidth(textboxWidth + "px");
+        }
+    }
 
+    public int getElementPadding() {
+        if (elementPadding < 0) {
+            elementPadding = Util.measureHorizontalPadding(tb.getElement(), 4);
+        }
+        return elementPadding;
     }
 }

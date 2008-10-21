@@ -74,9 +74,10 @@
 
 .i-filterselect-input {
 	background: transparent url(img/bg-left-filter.png) no-repeat;
+	float: left;
 	border: none;
 	height: 20px;
-	margin: 0;
+	margin: 0px;
 	padding: 3px 0 0 4px;
 	font-size: 13px;
 }
@@ -87,12 +88,10 @@
 
 .i-filterselect-button {
 	float: right;
-	margin-left: -23px;
 	width: 25px;
 	height: 23px;
 	cursor: pointer;
 	background: transparent url(img/bg-right-filter.png);
-	position: relative;
 }
 .i-filterselect-button:hover {
 	background-position: bottom left;
@@ -220,20 +219,14 @@
 * html .i-filterselect {
 
 }
-* html .i-filterselect-input {
-	margin-top: -1px;
-}
 
 *+html .i-filterselect-input {
 	margin-top: -1px;
 }
-* html .i-filterselect-button {
-	position: static;
-	margin-top: -24px;
-}
+
+
 *+html .i-filterselect-button {
-	position: static;
-	margin-top: -24px;
+		margin-top: -1px;
 }
 
 
