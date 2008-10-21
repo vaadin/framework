@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.Focusable;
 import com.itmill.toolkit.terminal.gwt.client.ITooltip;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
@@ -839,8 +840,19 @@ public class IFilterSelect extends Composite implements Paintable, Field,
              * When the width is specified we also want to explicitly specify
              * widths for textbox and popupopener
              */
-            int textboxWidth = getOffsetWidth() - getElementPadding()
-                    - popupOpener.getOffsetWidth();
+            int offsetWidth;
+            if (BrowserInfo.get().isIE6()) {
+                // Required in IE6 when textfield is wider than this.width
+                DOM.setStyleAttribute(getElement(), "overflow", "hidden");
+                offsetWidth = getOffsetWidth();
+                DOM.setStyleAttribute(getElement(), "overflow", "");
+
+            } else {
+                offsetWidth = getOffsetWidth();
+            }
+            int padding = getElementPadding();
+            int popupOpenerWidth = popupOpener.getOffsetWidth();
+            int textboxWidth = offsetWidth - padding - popupOpenerWidth;
             if (textboxWidth < 0) {
                 textboxWidth = 0;
             }
