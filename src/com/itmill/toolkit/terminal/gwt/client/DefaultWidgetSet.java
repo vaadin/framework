@@ -13,12 +13,10 @@ import com.itmill.toolkit.terminal.gwt.client.ui.ICustomComponent;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICustomLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IDateFieldCalendar;
 import com.itmill.toolkit.terminal.gwt.client.ui.IEmbedded;
-import com.itmill.toolkit.terminal.gwt.client.ui.IExpandLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IFilterSelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.IForm;
 import com.itmill.toolkit.terminal.gwt.client.ui.IFormLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IGridLayout;
-import com.itmill.toolkit.terminal.gwt.client.ui.IHorizontalExpandLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.ILabel;
 import com.itmill.toolkit.terminal.gwt.client.ui.ILink;
 import com.itmill.toolkit.terminal.gwt.client.ui.IListSelect;
@@ -167,12 +165,6 @@ public class DefaultWidgetSet implements WidgetSet {
         } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IProgressIndicator"
                 .equals(className)) {
             return new IProgressIndicator();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IExpandLayout"
-                .equals(className)) {
-            return new IExpandLayout();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IHorizontalExpandLayout"
-                .equals(className)) {
-            return new IHorizontalExpandLayout();
         } else if ("com.itmill.toolkit.terminal.gwt.client.ui.richtextarea.IRichTextArea"
                 .equals(className)) {
             return new IRichTextArea();
@@ -302,12 +294,6 @@ public class DefaultWidgetSet implements WidgetSet {
             return "com.itmill.toolkit.terminal.gwt.client.ui.ISplitPanelVertical";
         } else if ("progressindicator".equals(tag)) {
             return "com.itmill.toolkit.terminal.gwt.client.ui.IProgressIndicator";
-        } else if ("expandlayout".equals(tag)) {
-            if ("horizontal".equals(uidl.getStringAttribute("orientation"))) {
-                return "com.itmill.toolkit.terminal.gwt.client.ui.IHorizontalExpandLayout";
-            } else {
-                return "com.itmill.toolkit.terminal.gwt.client.ui.IExpandLayout";
-            }
         } else if ("menubar".equals(tag)) {
             return "com.itmill.toolkit.terminal.gwt.client.ui.IMenuBar";
         } else if ("popupview".equals(tag)) {
