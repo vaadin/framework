@@ -426,7 +426,9 @@ public class ChildComponentContainer extends Panel {
             containerDIV.removeChild(caption.getElement());
             caption = null;
         } else {
-            containerDIV.removeChild(widget.getElement());
+            if (widget.isAttached()) {
+                containerDIV.removeChild(widget.getElement());
+            }
             widget = null;
         }
 
