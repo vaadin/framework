@@ -508,20 +508,21 @@ public class IOrderedLayout extends CellBasedLayout {
      */
     private void updateContainerMargins() {
         ChildComponentContainer firstChildComponent = getFirstChildComponentContainer();
+        if (firstChildComponent != null) {
+            firstChildComponent.setMarginLeft(0);
+            firstChildComponent.setMarginTop(0);
 
-        firstChildComponent.setMarginLeft(0);
-        firstChildComponent.setMarginTop(0);
+            for (ChildComponentContainer childComponent : widgetToComponentContainer
+                    .values()) {
+                if (childComponent == firstChildComponent) {
+                    continue;
+                }
 
-        for (ChildComponentContainer childComponent : widgetToComponentContainer
-                .values()) {
-            if (childComponent == firstChildComponent) {
-                continue;
-            }
-
-            if (isHorizontal()) {
-                childComponent.setMarginLeft(activeSpacing.hSpacing);
-            } else {
-                childComponent.setMarginTop(activeSpacing.vSpacing);
+                if (isHorizontal()) {
+                    childComponent.setMarginLeft(activeSpacing.hSpacing);
+                } else {
+                    childComponent.setMarginTop(activeSpacing.vSpacing);
+                }
             }
         }
     }
