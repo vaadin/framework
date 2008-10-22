@@ -9,7 +9,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -60,9 +59,10 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
 
     private boolean rendering;
 
+    private HashMap<Widget, ChildComponentContainer> nonRenderedWidgets;
+
     public IGridLayout() {
         super();
-        getElement().getStyle().setProperty("overflow", "hidden");
         getElement().appendChild(margin);
         setStyleName(CLASSNAME);
         setWidget(canvas);
@@ -79,6 +79,15 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
         if (client.updateComponent(this, uidl, true)) {
             rendering = false;
             return;
+        }
+
+        boolean mightToggleVScrollBar = "".equals(height) && !"".equals(width);
+        boolean mightToggleHScrollBar = "".equals(width) && !"".equals(height);
+        int wBeforeRender = 0;
+        int hBeforeRender = 0;
+        if (mightToggleHScrollBar || mightToggleVScrollBar) {
+            wBeforeRender = canvas.getOffsetWidth();
+            hBeforeRender = getOffsetHeight();
         }
 
         handleMargins(uidl);
@@ -109,13 +118,11 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
             }
         }
 
-        HashMap<Widget, ChildComponentContainer> nonRenderedWidgets = (HashMap<Widget, ChildComponentContainer>) widgetToComponentContainer
+        nonRenderedWidgets = (HashMap<Widget, ChildComponentContainer>) widgetToComponentContainer
                 .clone();
 
         final int[] alignments = uidl.getIntArrayAttribute("alignments");
         int alignmentIndex = 0;
-        int column;
-        int row = 0;
 
         LinkedList<Cell> pendingCells = new LinkedList<Cell>();
 
@@ -124,7 +131,6 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
         for (final Iterator i = uidl.getChildIterator(); i.hasNext();) {
             final UIDL r = (UIDL) i.next();
             if ("gr".equals(r.getTag())) {
-                column = 0;
                 for (final Iterator j = r.getChildIterator(); j.hasNext();) {
                     final UIDL c = (UIDL) j.next();
                     if ("gc".equals(c.getTag())) {
@@ -132,7 +138,6 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                         if (cell.hasContent()) {
                             boolean rendered = cell.renderIfNoRelativeWidth();
                             cell.alignment = alignments[alignmentIndex++];
-                            column += cell.colspan;
                             if (!rendered) {
                                 pendingCells.add(cell);
                             }
@@ -152,7 +157,6 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                         }
                     }
                 }
-                row++;
             }
         }
 
@@ -179,13 +183,29 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
 
         layoutCells();
 
-        for (Entry cc : nonRenderedWidgets.entrySet()) {
-            // TODO remove components
+        // clean non rendered components
+        for (Widget w : nonRenderedWidgets.keySet()) {
+            ChildComponentContainer childComponentContainer = widgetToComponentContainer
+                    .get(w);
+            paintableToCell.remove(w);
+            widgetToComponentContainer.remove(w);
+            childComponentContainer.removeFromParent();
+            client.unregisterPaintable((Paintable) w);
         }
+        nonRenderedWidgets = null;
 
         rendering = false;
+        boolean needsRelativeSizeCheck = false;
 
-        // canvas.add(uidl.print_r());
+        if (mightToggleHScrollBar && wBeforeRender != canvas.getOffsetWidth()) {
+            needsRelativeSizeCheck = true;
+        }
+        if (mightToggleVScrollBar && hBeforeRender != getOffsetHeight()) {
+            needsRelativeSizeCheck = true;
+        }
+        if (needsRelativeSizeCheck) {
+            client.handleComponentRelativeSize(this);
+        }
     }
 
     private static int[] cloneArray(int[] toBeCloned) {
@@ -225,20 +245,30 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
     @Override
     public void setHeight(String height) {
         super.setHeight(height);
-        this.height = height;
-        if (!rendering) {
-            expandRows();
-            layoutCells();
+        if (!height.equals(this.height)) {
+            this.height = height;
+            if (!rendering) {
+                expandRows();
+                layoutCells();
+                for (Paintable c : paintableToCell.keySet()) {
+                    client.handleComponentRelativeSize((Widget) c);
+                }
+            }
         }
     }
 
     @Override
     public void setWidth(String width) {
         super.setWidth(width);
-        this.width = width;
-        if (!rendering) {
-            expandColumns();
-            layoutCells();
+        if (!width.equals(this.width)) {
+            this.width = width;
+            if (!rendering) {
+                expandColumns();
+                layoutCells();
+                for (Paintable c : paintableToCell.keySet()) {
+                    client.handleComponentRelativeSize((Widget) c);
+                }
+            }
         }
     }
 
@@ -551,13 +581,9 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
      */
     private class Cell {
         public Cell(UIDL c) {
-            // Set cell width
-            colspan = c.hasAttribute("w") ? c.getIntAttribute("w") : 1;
-            // Set cell height
-            rowspan = c.hasAttribute("h") ? c.getIntAttribute("h") : 1;
             row = c.getIntAttribute("y");
             col = c.getIntAttribute("x");
-            childUidl = c.getChildUIDL(0);
+            setUidl(c);
         }
 
         public boolean hasRelativeHeight() {
@@ -605,12 +631,14 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                 canvas.setWidgetPosition(cc, x, y);
                 cc.setContainerSize(getAvailableWidth(), getAvailableHeight());
                 cc.setAlignment(new AlignmentInfo(alignment));
+                cc.updateAlignments(getAvailableWidth(), getAvailableHeight());
             }
         }
 
         public int getWidth() {
             if (cc != null) {
-                return cc.getOffsetWidth();
+                int w = cc.getElement().getScrollWidth();
+                return w;
             } else {
                 return 0;
             }
@@ -618,7 +646,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
 
         public int getHeight() {
             if (cc != null) {
-                return cc.getOffsetHeight();
+                return cc.getElement().getScrollHeight();
             } else {
                 return 0;
             }
@@ -647,29 +675,85 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
         }
 
         protected void render() {
+            assert childUidl != null;
+
             Paintable paintable = client.getPaintable(childUidl);
-            if (cc == null) {
-                cc = new ChildComponentContainer((Widget) paintable,
-                        CellBasedLayout.ORIENTATION_HORIZONTAL);
-                cc.setHeight("");
-                canvas.add(cc);
+            assert paintable != null;
+            if (cc == null || cc.getWidget() != paintable) {
+                if (cc != null) {
+                    // TODO add old cc to "orphaned" list
+                    Object j = null;
+                    j = j;
+                }
+                if (widgetToComponentContainer.containsKey(paintable)) {
+                    cc = widgetToComponentContainer.get(paintable);
+                    cc.setWidth("");
+                    cc.setHeight("");
+                } else {
+                    cc = new ChildComponentContainer((Widget) paintable,
+                            CellBasedLayout.ORIENTATION_VERTICAL);
+                    widgetToComponentContainer.put((Widget) paintable, cc);
+                    paintableToCell.put(paintable, this);
+                    cc.setWidth("");
+                    canvas.add(cc, 0, 0);
+                }
             }
-            widgetToComponentContainer.put((Widget) paintable, cc);
-            paintableToCell.put(paintable, this);
             cc.renderChild(childUidl, client);
+            cc.updateWidgetSize();
+            nonRenderedWidgets.remove(paintable);
         }
 
         public UIDL getChildUIDL() {
             return childUidl;
         }
 
-        int row;
-        int col;
+        final int row;
+        final int col;
         int colspan = 1;
         int rowspan = 1;
         UIDL childUidl;
         int alignment;
         ChildComponentContainer cc;
+
+        public void setUidl(UIDL c) {
+            // Set cell width
+            colspan = c.hasAttribute("w") ? c.getIntAttribute("w") : 1;
+            // Set cell height
+            rowspan = c.hasAttribute("h") ? c.getIntAttribute("h") : 1;
+            // ensure we will lose reference to old cells, now overlapped by
+            // this cell
+            for (int i = 0; i < colspan; i++) {
+                for (int j = 0; j < rowspan; j++) {
+                    if (i > 0 || j > 0) {
+                        cells[col + i][row + j] = null;
+                    }
+                }
+            }
+
+            c = c.getChildUIDL(0); // we are interested about childUidl
+            if (childUidl != null) {
+                if (c == null) {
+                    // content has vanished, old content will be removed from
+                    // canvas
+                    // later durin render phase
+                    cc = null;
+                } else if (cc != null
+                        && cc.getWidget() != client.getPaintable(c)) {
+                    // content has changed
+                    cc = null;
+                    if (widgetToComponentContainer.containsKey(client
+                            .getPaintable(c))) {
+                        // cc exist for this component (moved) use that for this
+                        // cell
+                        cc = widgetToComponentContainer.get(client
+                                .getPaintable(c));
+                        cc.setWidth("");
+                        cc.setHeight("");
+                    }
+                }
+            }
+            childUidl = c;
+        }
     }
 
     private Cell getCell(UIDL c) {
@@ -679,6 +763,8 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
         if (cell == null) {
             cell = new Cell(c);
             cells[col][row] = cell;
+        } else {
+            cell.setUidl(c);
         }
         return cell;
     }
