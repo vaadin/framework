@@ -460,13 +460,19 @@ public class IPanel extends SimplePanel implements Container,
 
         if (width != null && !width.equals("")) {
             w = getOffsetWidth() - getContainerBorderWidth();
+            if (w < 0) {
+                w = 0;
+            }
         }
 
         if (height != null && !height.equals("")) {
-            w = getOffsetHeight() - getContainerBorderHeight();
+            h = contentNode.getOffsetHeight() - getContainerBorderHeight();
+            if (h < 0) {
+                h = 0;
+            }
         }
 
-        return new RenderSpace(w, h);
+        return new RenderSpace(w, h, true);
     }
 
     public boolean requestLayout(Set<Paintable> child) {
