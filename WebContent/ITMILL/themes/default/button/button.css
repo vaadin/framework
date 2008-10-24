@@ -2,6 +2,7 @@
 	cursor: pointer;
 	font-size: 13px;
 	white-space: nowrap;
+	margin: 0px;
 }
 
 .i-button img {
