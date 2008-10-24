@@ -988,6 +988,20 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     }
 
     /**
+     * Sets the visibleProperties.
+     * 
+     * @param visibleProperties
+     *            the visibleProperties to set.
+     */
+    public void setVisibleItemProperties(Object[] visibleProperties) {
+        LinkedList v = new LinkedList();
+        for (int i = 0; i < visibleProperties.length; i++) {
+            v.add(visibleProperties[i]);
+        }
+        setVisibleItemProperties(v);
+    }
+
+    /**
      * Focuses the first field in the form.
      * 
      * @see com.itmill.toolkit.ui.Component.Focusable#focus()
