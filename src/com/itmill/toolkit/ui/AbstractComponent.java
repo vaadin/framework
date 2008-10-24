@@ -1075,8 +1075,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @see com.itmill.toolkit.terminal.Sizeable#setHeight(float)
      */
     public void setHeight(float height) {
-        this.height = height;
-        requestRepaint();
+        setHeight(height, getHeightUnits());
     }
 
     /*
@@ -1085,8 +1084,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @see com.itmill.toolkit.terminal.Sizeable#setHeightUnits(int)
      */
     public void setHeightUnits(int unit) {
-        heightUnit = unit;
-        requestRepaint();
+        setHeight(getHeight(), unit);
     }
 
     /*
@@ -1132,8 +1130,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @see com.itmill.toolkit.terminal.Sizeable#setWidth(float)
      */
     public void setWidth(float width) {
-        this.width = width;
-        requestRepaint();
+        setWidth(width, getWidthUnits());
     }
 
     /*
@@ -1142,8 +1139,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @see com.itmill.toolkit.terminal.Sizeable#setWidthUnits(int)
      */
     public void setWidthUnits(int unit) {
-        widthUnit = unit;
-        requestRepaint();
+        setWidth(getWidth(), unit);
     }
 
     /*
@@ -1164,9 +1160,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      */
     public void setWidth(String width) {
         float[] p = parseStringSize(width);
-        this.width = p[0];
-        widthUnit = (int) p[1];
-        requestRepaint();
+        setWidth(p[0], (int) p[1]);
     }
 
     /*
@@ -1176,9 +1170,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      */
     public void setHeight(String height) {
         float[] p = parseStringSize(height);
-        this.height = p[0];
-        heightUnit = (int) p[1];
-        requestRepaint();
+        setHeight(p[0], (int) p[1]);
     }
 
     /*
