@@ -200,10 +200,17 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
 
                     validationError = field.getErrorMessage();
                     if (validationError != null) {
-                        // Skip empty errors
+                        // Show caption as error for fields with empty errors
                         if ("".equals(validationError.toString())) {
-                            continue;
+                            validationError = new Validator.InvalidValueException(
+                                    field.getCaption());
                         }
+                        break;
+                    } else if (f instanceof Field && !((Field) f).isValid()) {
+                        // Something is wring with the field, but no proper
+                        // error is given. Generate one.
+                        validationError = new Validator.InvalidValueException(
+                                field.getCaption());
                         break;
                     }
                 }
