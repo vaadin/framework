@@ -69,6 +69,8 @@ public class IPanel extends SimplePanel implements Container,
 
     private int captionMarginLeft = -1;
 
+    private int contentMarginLeft = -1;
+
     public IPanel() {
         super();
         DOM.appendChild(getElement(), captionNode);
@@ -87,6 +89,7 @@ public class IPanel extends SimplePanel implements Container,
         DOM.sinkEvents(getElement(), Event.ONKEYDOWN);
         DOM.sinkEvents(contentNode, Event.ONSCROLL);
         contentNode.getStyle().setProperty("position", "relative");
+        DOM.setStyleAttribute(getElement(), "overflow", "hidden");
     }
 
     @Override
@@ -258,6 +261,8 @@ public class IPanel extends SimplePanel implements Container,
         if (BrowserInfo.get().isIE6() && width != null && !width.equals("")) {
             /*
              * IE6 requires overflow-hidden elements to have a width specified
+             * so we calculate the width of the content and caption nodes when
+             * no width has been specified.
              */
             /*
              * Fixes #1923 IPanel: Horizontal scrollbar does not appear in IE6
@@ -278,8 +283,7 @@ public class IPanel extends SimplePanel implements Container,
             Util.setWidthExcludingPadding(captionNode,
                     parentWidthExcludingPadding - getCaptionMarginLeft(), 26);
 
-            int contentMarginLeft = contentNode.getAbsoluteLeft()
-                    - getElement().getAbsoluteLeft();
+            int contentMarginLeft = getContentMarginLeft();
 
             Util.setWidthExcludingPadding(contentNode,
                     parentWidthExcludingPadding - contentMarginLeft, 2);
@@ -288,6 +292,10 @@ public class IPanel extends SimplePanel implements Container,
 
         if ((BrowserInfo.get().isIE() || BrowserInfo.get().isFF2())
                 && (width == null || width.equals(""))) {
+            /*
+             * IE and FF2 needs width to be specified for the root DIV so we
+             * calculate that from the sizes of the caption and layout
+             */
             int captionWidth = captionText.getOffsetWidth()
                     + getCaptionMarginLeft() + getCaptionPaddingHorizontal();
             int layoutWidth = ((Widget) layout).getOffsetWidth()
@@ -400,6 +408,13 @@ public class IPanel extends SimplePanel implements Container,
         return captionMarginLeft;
     }
 
+    private int getContentMarginLeft() {
+        if (contentMarginLeft < 0) {
+            detectContainerBorders();
+        }
+        return contentMarginLeft;
+    }
+
     private int getCaptionPaddingHorizontal() {
         if (captionPaddingHorizontal < 0) {
             detectContainerBorders();
@@ -441,6 +456,7 @@ public class IPanel extends SimplePanel implements Container,
                 26);
 
         captionMarginLeft = Util.measureMarginLeft(captionNode);
+        contentMarginLeft = Util.measureMarginLeft(contentNode);
 
     }
 
