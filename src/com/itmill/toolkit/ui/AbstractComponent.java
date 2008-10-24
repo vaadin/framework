@@ -1104,11 +1104,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @see com.itmill.toolkit.terminal.Sizeable#setSizeFull()
      */
     public void setSizeFull() {
-        height = 100;
-        width = 100;
-        heightUnit = UNITS_PERCENTAGE;
-        widthUnit = UNITS_PERCENTAGE;
-        requestRepaint();
+        setWidth(100, UNITS_PERCENTAGE);
+        setHeight(100, UNITS_PERCENTAGE);
     }
 
     /*
@@ -1117,11 +1114,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @see com.itmill.toolkit.terminal.Sizeable#setSizeUndefined()
      */
     public void setSizeUndefined() {
-        height = -1;
-        width = -1;
-        heightUnit = UNITS_PIXELS;
-        widthUnit = UNITS_PIXELS;
-        requestRepaint();
+        setWidth(-1, UNITS_PIXELS);
+        setHeight(-1, UNITS_PIXELS);
     }
 
     /*
