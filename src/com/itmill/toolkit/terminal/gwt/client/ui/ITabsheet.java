@@ -292,6 +292,12 @@ public class ITabsheet extends ITabsheetBase implements
             tb.addTab(c);
         }
         c.updateCaption(tabUidl);
+
+        /*
+         * Force the width of the caption container so the content will not wrap
+         * and tabs won't be too narrow in certain browsers
+         */
+        c.setWidth(c.getWidth() + "px");
         captions.put("" + index, c);
         if (selected) {
             renderContent(tabUidl.getChildUIDL(0));
