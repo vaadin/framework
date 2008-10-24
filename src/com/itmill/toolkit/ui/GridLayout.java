@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
@@ -86,6 +87,9 @@ public class GridLayout extends AbstractLayout implements
      * the last paint operation.
      */
     private boolean structuralChange = false;
+
+    private Map<Integer, Float> columnExpandRatio = new HashMap<Integer, Float>();
+    private Map<Integer, Float> rowExpandRatio = new HashMap<Integer, Float>();
 
     /**
      * Constructor for grid of given size (number of cells). Note that grid's
@@ -402,12 +406,58 @@ public class GridLayout extends AbstractLayout implements
         int emptyCells = 0;
 
         final String[] alignmentsArray = new String[components.size()];
+        final Integer[] columnExpandRatioArray = new Integer[cols];
+        final Integer[] rowExpandRatioArray = new Integer[rows];
+
+        boolean equallyDividedCols = false;
+        int realColExpandRatioSum = 0;
+        float colSum = getExpandRatioSum(columnExpandRatio);
+        if (colSum == 0 && components.size() > 0) {
+            // no columns has been expanded, all cols have same expand
+            // rate
+            equallyDividedCols = true;
+            float equalSize = 1 / (float) cols;
+            int myRatio = Math.round(equalSize * 1000);
+            for (int i = 0; i < cols; i++) {
+                columnExpandRatioArray[i] = myRatio;
+            }
+            realColExpandRatioSum = myRatio * cols;
+        } else {
+            for (int i = 0; i < cols; i++) {
+                int myRatio = Math
+                        .round((getColumnExpandRatio(i) / colSum) * 1000);
+                columnExpandRatioArray[i] = myRatio;
+                realColExpandRatioSum += myRatio;
+            }
+        }
+
+        boolean equallyDividedRows = false;
+        int realRowExpandRatioSum = 0;
+        float rowSum = getExpandRatioSum(rowExpandRatio);
+        if (rowSum == 0 && components.size() > 0) {
+            // no rows have been expanded
+            equallyDividedRows = true;
+            float equalSize = 1 / (float) rows;
+            int myRatio = Math.round(equalSize * 1000);
+            for (int i = 0; i < rows; i++) {
+                rowExpandRatioArray[i] = myRatio;
+            }
+            realRowExpandRatioSum = myRatio * rows;
+        }
+
         int index = 0;
 
         // Iterates every applicable row
         for (int cury = 0; cury < rows; cury++) {
             target.startTag("gr");
 
+            if (!equallyDividedRows) {
+                int myRatio = Math
+                        .round((getRowExpandRatio(cury) / rowSum) * 1000);
+                rowExpandRatioArray[index] = myRatio;
+                realRowExpandRatioSum += myRatio;
+
+            }
             // Iterates every applicable column
             for (int curx = 0; curx < cols; curx++) {
 
@@ -533,9 +583,29 @@ public class GridLayout extends AbstractLayout implements
 
         // Last row handled
 
+        // correct possible rounding error
+        if (rowExpandRatioArray.length > 0) {
+            rowExpandRatioArray[0] -= realRowExpandRatioSum - 1000;
+        }
+        if (columnExpandRatioArray.length > 0) {
+            columnExpandRatioArray[0] -= realColExpandRatioSum - 1000;
+        }
+
+        target.addAttribute("colExpand", columnExpandRatioArray);
+        target.addAttribute("rowExpand", rowExpandRatioArray);
+
         // Add child component alignment info to layout tag
         target.addAttribute("alignments", alignmentsArray);
 
+    }
+
+    private float getExpandRatioSum(Map<Integer, Float> ratioMap) {
+        float sum = 0;
+        for (Iterator<Entry<Integer, Float>> iterator = ratioMap.entrySet()
+                .iterator(); iterator.hasNext();) {
+            sum += iterator.next().getValue();
+        }
+        return sum;
     }
 
     /*
@@ -1083,6 +1153,48 @@ public class GridLayout extends AbstractLayout implements
         structuralChange = true;
         requestRepaint();
 
+    }
+
+    /**
+     * TODO
+     * 
+     * @param columnIndex
+     * @param ratio
+     */
+    public void setColumnExpandRatio(int columnIndex, float ratio) {
+        columnExpandRatio.put(columnIndex, ratio);
+    }
+
+    /**
+     * TODO
+     * 
+     * @param columnIndex
+     * @return
+     */
+    public float getColumnExpandRatio(int columnIndex) {
+        Float r = columnExpandRatio.get(columnIndex);
+        return r == null ? 0 : r.floatValue();
+    }
+
+    /**
+     * TODO
+     * 
+     * @param rowIndex
+     * @param ratio
+     */
+    public void setRowExpandRatio(int rowIndex, float ratio) {
+        rowExpandRatio.put(rowIndex, ratio);
+    }
+
+    /**
+     * TODO
+     * 
+     * @param rowIndex
+     * @return
+     */
+    public float getRowExpandRatio(int rowIndex) {
+        Float r = rowExpandRatio.get(rowIndex);
+        return r == null ? 0 : r.floatValue();
     }
 
 }
