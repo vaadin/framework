@@ -91,7 +91,44 @@ public class BaseFieldFactory implements FieldFactory {
             final Field f = createField(item.getItemProperty(propertyId),
                     uiContext);
             if (f instanceof AbstractComponent) {
-                ((AbstractComponent) f).setCaption(propertyId.toString());
+                String name = propertyId.toString();
+                if (name.length() > 0) {
+
+                    // If name follows method naming conventions, convert the
+                    // name to spaced uppercased text. For example, convert
+                    // "firstName" to "First Name"
+                    if (name.indexOf(' ') < 0
+                            && name.charAt(0) == Character.toLowerCase(name
+                                    .charAt(0))
+                            && name.charAt(0) != Character.toUpperCase(name
+                                    .charAt(0))) {
+                        StringBuffer out = new StringBuffer();
+                        out.append(Character.toUpperCase(name.charAt(0)));
+                        int i = 1;
+
+                        while (i < name.length()) {
+                            int j = i;
+                            for (; j < name.length(); j++) {
+                                char c = name.charAt(j);
+                                if (Character.toLowerCase(c) != c
+                                        && Character.toUpperCase(c) == c) {
+                                    break;
+                                }
+                            }
+                            if (j == name.length()) {
+                                out.append(name.substring(i));
+                            } else {
+                                out.append(name.substring(i, j));
+                                out.append(" " + name.charAt(j));
+                            }
+                            i = j + 1;
+                        }
+
+                        name = out.toString();
+                    }
+
+                    ((AbstractComponent) f).setCaption(name);
+                }
             }
             return f;
         } else {
