@@ -171,8 +171,9 @@ public class IPanel extends SimplePanel implements Container,
         }
         layout.updateFromUIDL(layoutUidl, client);
 
-        if (BrowserInfo.get().isIE()) {
-            // IE is not able to make the offsetWidth for contentNode correct
+        if (BrowserInfo.get().isIE() || BrowserInfo.get().isFF2()) {
+            // IE/FF2 is not able to make the offsetWidth for contentNode
+            // correct
             // for some reason...
             iLayout(false);
         }
@@ -285,7 +286,8 @@ public class IPanel extends SimplePanel implements Container,
 
         }
 
-        if (BrowserInfo.get().isIE() && (width == null || width.equals(""))) {
+        if ((BrowserInfo.get().isIE() || BrowserInfo.get().isFF2())
+                && (width == null || width.equals(""))) {
             int captionWidth = captionText.getOffsetWidth()
                     + getCaptionMarginLeft() + getCaptionPaddingHorizontal();
             int layoutWidth = ((Widget) layout).getOffsetWidth()
