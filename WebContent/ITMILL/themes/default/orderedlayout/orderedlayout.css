@@ -1,12 +1,19 @@
+.i-orderedlayout {
+	overflow: hidden;
+}
+
 .i-orderedlayout-margin-top {
 	padding-top: 15px;
 }
+
 .i-orderedlayout-margin-right {
 	padding-right: 18px;
 }
+
 .i-orderedlayout-margin-bottom {
 	padding-bottom: 15px;
 }
+
 .i-orderedlayout-margin-left {
 	padding-left: 18px;
 }
@@ -14,21 +21,7 @@
 .i-orderedlayout-vspacing {
 	padding-top: 8px;
 }
+
 .i-orderedlayout-hspacing {
 	padding-left: 8px;
 }
-
-/* Placing error indicator right after the widget with empty caption */
-.i-orderedlayout-c * { float:left;}
-.i-orderedlayout-w-e { float:left;}
-* html .i-orderedlayout-c, * html .i-orderedlayout-w { height: 1%; }
-.i-orderedlayout-c { float:left; display: block;}
-.i-orderedlayout-w:after, .i-orderedlayout-c:after  {
-  	content: ".";
-	display: block;
-	height: 0;
-    clear: both;
-    visibility: hidden;
-}
-*+ html .i-orderedlayout-c { float:none; }
-* html .i-orderedlayout-c { float:none; }
