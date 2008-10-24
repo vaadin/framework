@@ -877,7 +877,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
     /**
      * Sends a value change event to all registered listeners.
      */
-    private void fireValueChange() {
+    public void fireValueChange() {
         if (valueChangeListeners != null) {
             final Object[] l = valueChangeListeners.toArray();
             final Property.ValueChangeEvent event = new MethodProperty.ValueChangeEvent(
