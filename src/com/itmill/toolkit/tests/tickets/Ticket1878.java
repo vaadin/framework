@@ -29,12 +29,10 @@ public class Ticket1878 extends Application {
 
     private Layout orderedLayout;
     private Layout gridLayout;
-    private Layout expandLayout;
     private Layout formLayout;
     private GridLayout mainLayout;
     private Button switchToGridButton;
     private Button switchToOrderedButton;
-    private Button switchToExpandButton;
     private Button switchToFormsButton;
 
     public void init() {
@@ -46,7 +44,6 @@ public class Ticket1878 extends Application {
         w.setLayout(mainLayout);
         orderedLayout = createOL();
         gridLayout = createGL();
-        expandLayout = createEL();
         formLayout = createForms();
 
         switchToGridButton = new Button("Switch to GridLayout",
@@ -66,14 +63,6 @@ public class Ticket1878 extends Application {
 
                 });
         switchToOrderedButton.setEnabled(false);
-        switchToExpandButton = new Button("Switch to ExpandLayout",
-                new ClickListener() {
-
-                    public void buttonClick(ClickEvent event) {
-                        changeLayout(switchToExpandButton, expandLayout);
-                    }
-
-                });
 
         switchToFormsButton = new Button("Switch to Form", new ClickListener() {
 
@@ -87,7 +76,6 @@ public class Ticket1878 extends Application {
                 OrderedLayout.ORIENTATION_HORIZONTAL);
         buttonLayout.addComponent(switchToOrderedButton);
         buttonLayout.addComponent(switchToGridButton);
-        buttonLayout.addComponent(switchToExpandButton);
         buttonLayout.addComponent(switchToFormsButton);
 
         mainLayout.addComponent(buttonLayout);
@@ -142,34 +130,6 @@ public class Ticket1878 extends Application {
         createLayout(l2, new GridLayout(1, 8), "100px", "500px", true);
         createLayout(l2, new GridLayout(1, 8), "100px", "500px", "100%", null,
                 true);
-        layout.addComponent(l1);
-        layout.addComponent(l2);
-
-        return layout;
-    }
-
-    private static Layout createEL() {
-        GridLayout layout = new GridLayout(1, 5);
-
-        GridLayout l1 = new GridLayout(1, 3);
-        createLayout(l1, new ExpandLayout(ExpandLayout.ORIENTATION_HORIZONTAL),
-                "1000px", "150px", "100px", null, true);
-        createLayout(l1, new ExpandLayout(ExpandLayout.ORIENTATION_HORIZONTAL),
-                "1000px", "150px", "50px", null, false);
-
-        GridLayout l2 = new GridLayout(6, 1);
-        createLayout(l2, new ExpandLayout(ExpandLayout.ORIENTATION_VERTICAL),
-                "200px", "500px", true);
-        createLayout(l2, new ExpandLayout(ExpandLayout.ORIENTATION_VERTICAL),
-                "200px", "500px", "100%", null, true);
-        createLayout(l2, new ExpandLayout(ExpandLayout.ORIENTATION_VERTICAL),
-                "150px", "500px", true);
-        createLayout(l2, new ExpandLayout(ExpandLayout.ORIENTATION_VERTICAL),
-                "150px", "500px", "100%", null, true);
-        createLayout(l2, new ExpandLayout(ExpandLayout.ORIENTATION_VERTICAL),
-                "100px", "500px", true);
-        createLayout(l2, new ExpandLayout(ExpandLayout.ORIENTATION_VERTICAL),
-                "100px", "500px", "100%", null, true);
         layout.addComponent(l1);
         layout.addComponent(l2);
 
@@ -283,7 +243,6 @@ public class Ticket1878 extends Application {
     protected void changeLayout(Button b, Layout newLayout) {
         switchToOrderedButton.setEnabled(true);
         switchToGridButton.setEnabled(true);
-        switchToExpandButton.setEnabled(true);
         switchToFormsButton.setEnabled(true);
 
         b.setEnabled(false);
