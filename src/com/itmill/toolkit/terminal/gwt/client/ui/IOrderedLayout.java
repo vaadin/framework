@@ -33,6 +33,8 @@ public class IOrderedLayout extends CellBasedLayout {
 
     private boolean isRendering = false;
 
+    private String width = null;
+
     @Override
     public void setStyleName(String styleName) {
         super.setStyleName(styleName);
@@ -54,6 +56,7 @@ public class IOrderedLayout extends CellBasedLayout {
 
     public IOrderedLayout() {
         setStyleName(CLASSNAME);
+        // DOM.setStyleAttribute(getElement(), "overflow", "hidden");
     }
 
     @Override
@@ -168,6 +171,16 @@ public class IOrderedLayout extends CellBasedLayout {
         }
 
         // w.mark("Widget sizes updated");
+
+        /*
+         * Components with relative size in main direction may affect the layout
+         * size in the other direction
+         */
+        if ((isHorizontal() && isDynamicHeight())
+                || (isVertical() && isDynamicWidth())) {
+            calculateLayoutDimensions();
+        }
+        // w.mark("Layout dimensions updated");
 
         /* Update component spacing */
         updateContainerMargins();
@@ -286,31 +299,18 @@ public class IOrderedLayout extends CellBasedLayout {
         for (ChildComponentContainer childComponentContainer : widgetToComponentContainer
                 .values()) {
 
+            int widgetHeight = 0;
+            int widgetWidth = 0;
             if (childComponentContainer.isComponentRelativeSized(orientation)) {
-                continue;
-            }
-
-            Size s = childComponentContainer.getWidgetSize();
-            int widgetWidth = s.getWidth()
-                    + childComponentContainer.getCaptionWidthAfterComponent();
-
-            /*
-             * If the component does not have a specified size in the main
-             * direction the caption may determine the space used by the
-             * component
-             */
-            if (!childComponentContainer.widgetHasSizeSpecified(orientation)) {
-                int captionWidth = childComponentContainer.getCaptionWidth();
-                if (captionWidth > widgetWidth) {
-                    widgetWidth = captionWidth;
+                if (orientation == ORIENTATION_HORIZONTAL) {
+                    widgetHeight = getWidgetHeight(childComponentContainer);
+                } else {
+                    widgetWidth = getWidgetWidth(childComponentContainer);
                 }
+            } else {
+                widgetWidth = getWidgetWidth(childComponentContainer);
+                widgetHeight = getWidgetHeight(childComponentContainer);
             }
-
-            int widgetHeight = s.getHeight()
-                    + childComponentContainer.getCaptionHeightAboveComponent();
-
-            // ApplicationConnection.getConsole().log(
-            // "Container width: " + widgetWidth);
 
             summedWidgetWidth += widgetWidth;
             summedWidgetHeight += widgetHeight;
@@ -343,6 +343,31 @@ public class IOrderedLayout extends CellBasedLayout {
         // ApplicationConnection.getConsole().log(
         // "Layout size: " + activeLayoutSize);
         return remainingSpace;
+    }
+
+    private int getWidgetHeight(ChildComponentContainer childComponentContainer) {
+        Size s = childComponentContainer.getWidgetSize();
+        return s.getHeight()
+                + childComponentContainer.getCaptionHeightAboveComponent();
+    }
+
+    private int getWidgetWidth(ChildComponentContainer childComponentContainer) {
+        Size s = childComponentContainer.getWidgetSize();
+        int widgetWidth = s.getWidth()
+                + childComponentContainer.getCaptionWidthAfterComponent();
+
+        /*
+         * If the component does not have a specified size in the main direction
+         * the caption may determine the space used by the component
+         */
+        if (!childComponentContainer.widgetHasSizeSpecified(orientation)) {
+            int captionWidth = childComponentContainer.getCaptionWidth();
+            if (captionWidth > widgetWidth) {
+                widgetWidth = captionWidth;
+            }
+        }
+
+        return widgetWidth;
     }
 
     private void calculateAlignments() {
@@ -442,6 +467,11 @@ public class IOrderedLayout extends CellBasedLayout {
             int totalComponentHeight, int maxComponentWidth,
             int maxComponentHeight) {
 
+        /* Only need to calculate dynamic dimensions */
+        if (!isDynamicHeight() && !isDynamicWidth()) {
+            return activeLayoutSize;
+        }
+
         int activeLayoutWidth = 0;
         int activeLayoutHeight = 0;
 
@@ -450,42 +480,32 @@ public class IOrderedLayout extends CellBasedLayout {
             // Horizontal
             if (isDynamicWidth()) {
                 activeLayoutWidth = totalComponentWidth;
-                setOuterLayoutWidth(activeLayoutWidth);
-            } else {
-                activeLayoutWidth = getOffsetWidth()
-                        - activeMargins.getHorizontal();
             }
 
             if (isDynamicHeight()) {
                 activeLayoutHeight = maxComponentHeight;
-                setOuterLayoutHeight(maxComponentHeight);
-            } else {
-                activeLayoutHeight = getOffsetHeight()
-                        - activeMargins.getVertical();
-
             }
 
         } else {
             // Vertical
             if (isDynamicWidth()) {
                 activeLayoutWidth = maxComponentWidth;
-                setOuterLayoutWidth(maxComponentWidth);
-            } else {
-                activeLayoutWidth = getOffsetWidth()
-                        - activeMargins.getHorizontal();
             }
 
             if (isDynamicHeight()) {
                 activeLayoutHeight = totalComponentHeight;
-                setOuterLayoutHeight(totalComponentHeight);
-            } else {
-                activeLayoutHeight = getOffsetHeight()
-                        - activeMargins.getVertical();
             }
         }
 
-        activeLayoutSize.setWidth(activeLayoutWidth);
-        activeLayoutSize.setHeight(activeLayoutHeight);
+        if (isDynamicWidth()) {
+            setOuterLayoutWidth(activeLayoutWidth);
+            activeLayoutSize.setWidth(activeLayoutWidth);
+        }
+
+        if (isDynamicHeight()) {
+            activeLayoutSize.setHeight(activeLayoutHeight);
+            setOuterLayoutHeight(activeLayoutHeight);
+        }
 
         return activeLayoutSize;
     }
@@ -610,6 +630,9 @@ public class IOrderedLayout extends CellBasedLayout {
     public void setHeight(String height) {
         super.setHeight(height);
 
+        activeLayoutSize.setHeight(getOffsetHeight()
+                - activeMargins.getVertical());
+
         if (!isRendering) {
             if (recalculateLayoutAndComponentSizes()) {
                 /* Must inform child components about possible size updates */
@@ -621,6 +644,10 @@ public class IOrderedLayout extends CellBasedLayout {
     @Override
     public void setWidth(String width) {
         super.setWidth(width);
+        this.width = width;
+
+        activeLayoutSize.setWidth(getOffsetWidth()
+                - activeMargins.getHorizontal());
 
         if (!isRendering) {
             if (recalculateLayoutAndComponentSizes()) {
