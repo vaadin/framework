@@ -105,7 +105,8 @@ public interface Validator {
          * @return True iff the paint method does not paint anything visible.
          */
         public boolean isInvisible() {
-            if (getMessage() != null) {
+            String msg = getMessage();
+            if (msg != null && msg.length() > 0) {
                 return false;
             }
             if (causes != null) {

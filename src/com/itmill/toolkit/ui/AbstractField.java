@@ -143,6 +143,12 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         if (isRequired()) {
             target.addAttribute("required", true);
         }
+
+        // Hide the error indicator if needed
+        if (isRequired() && isEmpty() && getComponentError() == null
+                && getErrorMessage() != null) {
+            target.addAttribute("hideErrors", true);
+        }
     }
 
     /*
@@ -757,7 +763,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         // required fields, as in those cases user is aware of the problem.
         // Furthermore, non-required empty fields are obviously correct.
         ErrorMessage validationError = null;
-        if (isValidationVisible() && !isEmpty()) {
+        if (isValidationVisible() && !(isEmpty() && !isRequired())) {
 
             try {
                 validate();

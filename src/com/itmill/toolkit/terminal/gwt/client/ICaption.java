@@ -137,7 +137,8 @@ public class ICaption extends HTML {
             }
         }
 
-        if (uidl.hasAttribute("error")) {
+        if (uidl.hasAttribute("error")
+                && !uidl.getBooleanAttribute("hideErrors")) {
             isEmpty = false;
             if (errorIndicatorElement == null) {
                 errorIndicatorElement = DOM.createDiv();
