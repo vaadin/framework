@@ -39,6 +39,7 @@
 	cursor: pointer;
 	font-size: 13px;
 	white-space: nowrap;
+	margin: 0px;
 }
 
 .i-button img {
@@ -412,6 +413,10 @@ input.i-modified,
 	margin-bottom: 0px;
 	margin-left: 0px;
 }
+.i-datefield {
+	white-space: nowrap;
+}
+
 .i-datefield-textfield {
 	vertical-align: top;
 }
@@ -869,15 +874,22 @@ input.i-modified,
 .i-Notification.system p {
 	white-space: nowrap;
 }
+.i-orderedlayout {
+	overflow: hidden;
+}
+
 .i-orderedlayout-margin-top {
 	padding-top: 15px;
 }
+
 .i-orderedlayout-margin-right {
 	padding-right: 18px;
 }
+
 .i-orderedlayout-margin-bottom {
 	padding-bottom: 15px;
 }
+
 .i-orderedlayout-margin-left {
 	padding-left: 18px;
 }
@@ -885,24 +897,10 @@ input.i-modified,
 .i-orderedlayout-vspacing {
 	padding-top: 8px;
 }
+
 .i-orderedlayout-hspacing {
 	padding-left: 8px;
 }
-
-/* Placing error indicator right after the widget with empty caption */
-.i-orderedlayout-c * { float:left;}
-.i-orderedlayout-w-e { float:left;}
-* html .i-orderedlayout-c, * html .i-orderedlayout-w { height: 1%; }
-.i-orderedlayout-c { float:left; display: block;}
-.i-orderedlayout-w:after, .i-orderedlayout-c:after  {
-  	content: ".";
-	display: block;
-	height: 0;
-    clear: both;
-    visibility: hidden;
-}
-*+ html .i-orderedlayout-c { float:none; }
-* html .i-orderedlayout-c { float:none; }
 .i-panel,
 .i-panel-caption,
 .i-panel-content,
@@ -1327,16 +1325,6 @@ input.i-modified,
 * html .i-filterselect {
 
 }
-
-*+html .i-filterselect-input {
-	margin-top: -1px;
-}
-
-
-*+html .i-filterselect-button {
-		margin-top: -1px;
-}
-
 
 .i-shadow {
 	position: absolute;
