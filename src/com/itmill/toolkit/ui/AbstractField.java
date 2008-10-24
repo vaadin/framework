@@ -628,6 +628,10 @@ public abstract class AbstractField extends AbstractComponent implements Field,
             if (isEmpty()) {
                 return false;
             }
+        } else {
+            if (isEmpty()) {
+                return true;
+            }
         }
 
         if (validators == null) {
@@ -751,13 +755,14 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         // Check validation errors only if automatic validation is enabled.
         // As an exception, no validation messages are shown for empty
         // required fields, as in those cases user is aware of the problem.
+        // Furthermore, non-required empty fields are obviously correct.
         ErrorMessage validationError = null;
-        if (isValidationVisible()) {
+        if (isValidationVisible() && !isEmpty()) {
+
             try {
                 validate();
             } catch (Validator.InvalidValueException e) {
-                String msg = e.getMessage();
-                if (msg != null && !"".equals(msg)) {
+                if (!e.isInvisible()) {
                     validationError = e;
                 }
             }

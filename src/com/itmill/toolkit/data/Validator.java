@@ -95,7 +95,27 @@ public interface Validator {
                 throw new NullPointerException(
                         "Possible causes array must not be null");
             }
+
             this.causes = causes;
+        }
+
+        /**
+         * See if the error message doesn't paint anything visible.
+         * 
+         * @return True iff the paint method does not paint anything visible.
+         */
+        public boolean isInvisible() {
+            if (getMessage() != null) {
+                return false;
+            }
+            if (causes != null) {
+                for (int i = 0; i < causes.length; i++) {
+                    if (!causes[i].isInvisible()) {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
 
         public final int getErrorLevel() {
