@@ -1,3 +1,7 @@
+.i-datefield {
+	white-space: nowrap;
+}
+
 .i-datefield-textfield {
 	vertical-align: top;
 }
