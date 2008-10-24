@@ -2057,6 +2057,7 @@ input.i-modified,
 	background: #babfc0;
 	overflow: hidden;
 	margin: 0;
+	width: 100%;
 }
 .i-textfield {
 	background: #fff url(textfield/img/bg.png) repeat-x;
