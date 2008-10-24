@@ -31,6 +31,7 @@
 	outline: none;
 	margin-top:-1px;
 	border-top:1px solid transparent;
+	position:relative;
 }
 
 
@@ -228,8 +229,8 @@ input.i-modified,
  * Label has tiny paddings to include contents margins.
  */
 .i-label {
-	padding-top:1px;
-	padding-bottom: 1px;
+/*	padding-top:1px;
+	padding-bottom: 1px;*/
 }
 
 /* Loading indicator states
