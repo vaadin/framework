@@ -1,6 +1,6 @@
 package com.itmill.toolkit.demo.featurebrowser;
 
-import com.itmill.toolkit.data.Container;
+import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Validator;
 import com.itmill.toolkit.data.util.BeanItem;
 import com.itmill.toolkit.ui.BaseFieldFactory;
@@ -84,7 +84,7 @@ public class FormExample extends CustomComponent {
 
             // Ensure that the fields are shown in correct order as the
             // datamodel does not force any specific order.
-            setVisibleItemProperties(new String[] { "name", "address",
+            setVisibleItemProperties(new String[] { "name", "streetAddress",
                     "postalCode", "city" });
 
             // For examples sake, customize some of the form fields directly
@@ -92,9 +92,8 @@ public class FormExample extends CustomComponent {
             // above.
             getField("name").setRequired(true);
             getField("name").setRequiredError("Name is missing");
-            getField("address").setRequired(true); // No error message
+            getField("streetAddress").setRequired(true); // No error message
             replaceWithSelect("city", cities, cities).setNewItemsAllowed(true);
-            getField("address").setCaption("Street Address");
 
             // Set the form to act immediately on user input. This is
             // automatically transports data between the client and the server
@@ -114,17 +113,17 @@ public class FormExample extends CustomComponent {
      */
     static class MyFieldFactory extends BaseFieldFactory {
 
-        public Field createField(Container container, Object itemId,
-                Object propertyId, Component uiContext) {
+        public Field createField(Item item, Object propertyId,
+                Component uiContext) {
+
+            Field field = super.createField(item, propertyId, uiContext);
 
             if ("postalCode".equals(propertyId)) {
-                TextField postalCode = new TextField("Postal Code");
-                postalCode.setColumns(5);
-                postalCode.addValidator(new PostalCodeValidator());
-                return postalCode;
+                ((TextField) field).setColumns(5);
+                field.addValidator(new PostalCodeValidator());
             }
 
-            return super.createField(container, itemId, propertyId, uiContext);
+            return field;
         }
 
     }
@@ -158,12 +157,12 @@ public class FormExample extends CustomComponent {
      */
     public static class Address {
         String name = "";
-        String address = "";
+        String streetAddress = "";
         String postalCode = "";
         String city;
 
         public String getAddressAsText() {
-            return name + "\n" + address + "\n" + postalCode + " "
+            return name + "\n" + streetAddress + "\n" + postalCode + " "
                     + (city == null ? "" : city);
         }
 
@@ -175,12 +174,12 @@ public class FormExample extends CustomComponent {
             return name;
         }
 
-        public void setAddress(String address) {
-            this.address = address;
+        public void setStreetAddress(String address) {
+            streetAddress = address;
         }
 
-        public String getAddress() {
-            return address;
+        public String getStreetAddress() {
+            return streetAddress;
         }
 
         public void setPostalCode(String postalCode) {
