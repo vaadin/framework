@@ -86,19 +86,26 @@ public class ITwinColSelect extends IOptionGroupBase {
                         optionUidl.getStringAttribute("key"));
             }
         }
+
+        int cols = -1;
         if (getColumns() > 0) {
-            options.setWidth(getColumns() + "em");
-            selections.setWidth(getColumns() + "em");
-            optionsContainer.setWidth((getColumns() * 2 + 3) + "em");
+            cols = getColumns();
         } else if (!widthSet) {
-            options.setWidth(DEFAULT_COLUMN_COUNT + "em");
-            selections.setWidth(DEFAULT_COLUMN_COUNT + "em");
-            optionsContainer.setWidth((DEFAULT_COLUMN_COUNT * 2 + 2) + "em");
+            cols = DEFAULT_COLUMN_COUNT;
+        }
+
+        if (cols >= 0) {
+            options.setWidth(cols + "em");
+            selections.setWidth(cols + "em");
+            buttons.setWidth("3.5em");
+            optionsContainer.setWidth((2 * cols + 4) + "em");
         }
         if (getRows() > 0) {
             options.setVisibleItemCount(getRows());
             selections.setVisibleItemCount(getRows());
+
         }
+
     }
 
     protected Object[] getSelectedItems() {
