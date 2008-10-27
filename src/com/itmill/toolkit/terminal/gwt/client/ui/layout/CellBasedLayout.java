@@ -32,21 +32,11 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
     protected final Spacing spacingFromCSS = new Spacing(12, 12);
     protected final Spacing activeSpacing = new Spacing(0, 0);
 
-    private Widget clearWidget;
-
     private boolean dynamicWidth;
 
     private boolean dynamicHeight;
 
-    private static class ClearWidget extends Widget {
-        public ClearWidget() {
-            Element clearElement = DOM.createDiv();
-            DOM.setStyleAttribute(clearElement, "clear", "both");
-            DOM.setStyleAttribute(clearElement, "width", "0px");
-            DOM.setStyleAttribute(clearElement, "height", "0px");
-            setElement(clearElement);
-        }
-    }
+    private Element clearElement;
 
     public static class Spacing {
 
@@ -76,8 +66,13 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
         DOM.setStyleAttribute(root, "width", "500%");
         getElement().appendChild(root);
 
-        clearWidget = new ClearWidget();
-        add(clearWidget, root);
+        clearElement = DOM.createDiv();
+        DOM.setStyleAttribute(clearElement, "width", "0px");
+        DOM.setStyleAttribute(clearElement, "height", "0px");
+        DOM.setStyleAttribute(clearElement, "clear", "both");
+        DOM.setStyleAttribute(clearElement, "overflow", "hidden");
+
+        DOM.appendChild(getElement(), clearElement);
 
     }
 
@@ -98,14 +93,19 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
             return;
         }
 
-        // This call should be made first. Ensure correct implementation,
-        // and don't let the containing coordinateLayout manage caption, etc.
+        /*
+         * This must be called before size so that setWidth/setHeight is aware
+         * of the margins in use.
+         */
+        handleMarginsAndSpacing(uidl);
 
+        /*
+         * This call should be made first. Ensure correct implementation, handle
+         * size etc.
+         */
         if (client.updateComponent(this, uidl, true)) {
             return;
         }
-
-        handleMarginsAndSpacing(uidl);
 
         handleDynamicDimensions(uidl);
 
