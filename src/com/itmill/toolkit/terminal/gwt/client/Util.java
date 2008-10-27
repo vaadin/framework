@@ -176,7 +176,8 @@ public class Util {
             el.src =blankImageUrl;
             el.style.height = h+"px";
             el.style.width = w+"px";
-            el.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+src+"', sizingMethod='crop');";  
+            el.style.padding = "0px";
+            el.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+src+"', sizingMethod='crop')";  
         },false);
     }-*/;
 
