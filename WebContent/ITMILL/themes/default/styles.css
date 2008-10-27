@@ -127,6 +127,15 @@
 .i-caption .i-icon {
 	padding-right: 2px;
 	vertical-align: middle;
+	float: left;
+}
+.i-caption .i-captiontext {
+	float: left;
+	overflow: hidden;
+}
+
+.i-caption .i-required-field-indicator {
+	float: left;
 }
 /* body tag created by servlet */
 .i-generated-body {

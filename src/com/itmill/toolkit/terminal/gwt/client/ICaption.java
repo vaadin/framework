@@ -4,10 +4,14 @@
 
 package com.itmill.toolkit.terminal.gwt.client;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.Icon;
 
 //TODO Move styles to CSS
@@ -30,8 +34,16 @@ public class ICaption extends HTML {
     private final ApplicationConnection client;
 
     private boolean placedAfterComponent = false;
+    private boolean iconOnloadHandled = false;
 
     private int maxWidth = -1;
+
+    private static String ATTRIBUTE_ICON = "icon";
+    private static String ATTRIBUTE_CAPTION = "caption";
+    private static String ATTRIBUTE_DESCRIPTION = "description";
+    private static String ATTRIBUTE_REQUIRED = "required";
+    private static String ATTRIBUTE_ERROR = "error";
+    private static String ATTRIBUTE_HIDEERRORS = "hideErrors";
 
     /**
      * 
@@ -69,36 +81,37 @@ public class ICaption extends HTML {
 
         placedAfterComponent = true;
 
-        if (uidl.hasAttribute("icon")) {
+        if (uidl.hasAttribute(ATTRIBUTE_ICON)) {
             if (icon == null) {
                 icon = new Icon(client);
-                DOM.sinkEvents(icon.getElement(), Event.ONLOAD);
 
-                Util.setFloat(icon.getElement(), "left");
-                placedAfterComponent = false;
-                DOM.insertChild(getElement(), icon.getElement(), 0);
+                DOM.sinkEvents(icon.getElement(), Event.ONLOAD);
+                DOM.insertChild(getElement(), icon.getElement(),
+                        getInsertPosition(ATTRIBUTE_ICON));
             }
-            icon.setUri(uidl.getStringAttribute("icon"));
+            placedAfterComponent = false;
+
+            icon.setUri(uidl.getStringAttribute(ATTRIBUTE_ICON));
+            iconOnloadHandled = false;
+
             isEmpty = false;
-        } else {
-            if (icon != null) {
-                DOM.removeChild(getElement(), icon.getElement());
-                icon = null;
-            }
+        } else if (icon != null) {
+            // Remove existing
+            DOM.removeChild(getElement(), icon.getElement());
+            icon = null;
         }
 
-        if (uidl.hasAttribute("caption")) {
+        if (uidl.hasAttribute(ATTRIBUTE_CAPTION)) {
             if (captionText == null) {
                 captionText = DOM.createDiv();
-                Util.setFloat(captionText, "left");
-                DOM.setStyleAttribute(captionText, "overflow", "hidden");
-                // DOM.setStyleAttribute(captionText, "textOverflow",
-                // "ellipsis");
-                DOM
-                        .insertChild(getElement(), captionText,
-                                icon == null ? 0 : 1);
+                captionText.setClassName("i-captiontext");
+
+                DOM.insertChild(getElement(), captionText,
+                        getInsertPosition(ATTRIBUTE_CAPTION));
             }
-            String c = uidl.getStringAttribute("caption");
+
+            // Update caption text
+            String c = uidl.getStringAttribute(ATTRIBUTE_CAPTION);
             if (c == null) {
                 c = "";
             } else {
@@ -106,11 +119,13 @@ public class ICaption extends HTML {
                 placedAfterComponent = false;
             }
             DOM.setInnerText(captionText, c);
-        } else {
-            // TODO should element also be removed
+        } else if (captionText != null) {
+            // Remove existing
+            DOM.removeChild(getElement(), captionText);
+            captionText = null;
         }
 
-        if (uidl.hasAttribute("description")) {
+        if (uidl.hasAttribute(ATTRIBUTE_DESCRIPTION)) {
             if (captionText != null) {
                 addStyleDependentName("hasdescription");
             } else {
@@ -118,36 +133,37 @@ public class ICaption extends HTML {
             }
         }
 
-        if (uidl.getBooleanAttribute("required")) {
+        if (uidl.getBooleanAttribute(ATTRIBUTE_REQUIRED)) {
             isEmpty = false;
             if (requiredFieldIndicator == null) {
                 requiredFieldIndicator = DOM.createDiv();
-                Util.setFloat(requiredFieldIndicator, "left");
+                requiredFieldIndicator
+                        .setClassName("i-required-field-indicator");
                 DOM.setInnerText(requiredFieldIndicator, "*");
-                DOM.setElementProperty(requiredFieldIndicator, "className",
-                        "i-required-field-indicator");
 
-                // TODO Insert before if errorIndicatorElement exists
-                DOM.appendChild(getElement(), requiredFieldIndicator);
+                DOM.insertChild(getElement(), requiredFieldIndicator,
+                        getInsertPosition(ATTRIBUTE_REQUIRED));
             }
-        } else {
-            if (requiredFieldIndicator != null) {
-                DOM.removeChild(getElement(), requiredFieldIndicator);
-                requiredFieldIndicator = null;
-            }
+        } else if (requiredFieldIndicator != null) {
+            // Remove existing
+            DOM.removeChild(getElement(), requiredFieldIndicator);
+            requiredFieldIndicator = null;
         }
 
-        if (uidl.hasAttribute("error")
-                && !uidl.getBooleanAttribute("hideErrors")) {
+        if (uidl.hasAttribute(ATTRIBUTE_ERROR)
+                && !uidl.getBooleanAttribute(ATTRIBUTE_HIDEERRORS)) {
             isEmpty = false;
             if (errorIndicatorElement == null) {
                 errorIndicatorElement = DOM.createDiv();
                 DOM.setInnerHTML(errorIndicatorElement, "&nbsp;");
                 DOM.setElementProperty(errorIndicatorElement, "className",
                         "i-errorindicator");
-                DOM.appendChild(getElement(), errorIndicatorElement);
+
+                DOM.insertChild(getElement(), errorIndicatorElement,
+                        getInsertPosition(ATTRIBUTE_ERROR));
             }
         } else if (errorIndicatorElement != null) {
+            // Remove existing
             DOM.removeChild(getElement(), errorIndicatorElement);
             errorIndicatorElement = null;
         }
@@ -160,21 +176,38 @@ public class ICaption extends HTML {
             DOM.setStyleAttribute(clearElement, "overflow", "hidden");
             DOM.appendChild(getElement(), clearElement);
         }
-        // Workaround for IE weirdness, sometimes returns bad height in some
-        // circumstances when Caption is empty. See #1444
-        // IE7 bugs more often. I wonder what happens when IE8 arrives...
-        if (Util.isIE()) {
-            if (isEmpty) {
-                setHeight("0px");
-                DOM.setStyleAttribute(getElement(), "overflow", "hidden");
-            } else {
-                setHeight("");
-                DOM.setStyleAttribute(getElement(), "overflow", "");
-            }
-
-        }
 
         return (wasPlacedAfterComponent != placedAfterComponent);
+    }
+
+    private int getInsertPosition(String element) {
+        int pos = 0;
+        if (element.equals(ATTRIBUTE_ICON)) {
+            return pos;
+        }
+        if (icon != null) {
+            pos++;
+        }
+
+        if (element.equals(ATTRIBUTE_CAPTION)) {
+            return pos;
+        }
+
+        if (captionText != null) {
+            pos++;
+        }
+
+        if (element.equals(ATTRIBUTE_REQUIRED)) {
+            return pos;
+        }
+        if (requiredFieldIndicator != null) {
+            pos++;
+        }
+
+        // if (element.equals(ATTRIBUTE_ERROR)) {
+        // }
+        return pos;
+
     }
 
     public void onBrowserEvent(Event event) {
@@ -184,29 +217,38 @@ public class ICaption extends HTML {
             client.handleTooltipEvent(event, owner);
         }
 
-        if (DOM.eventGetType(event) == Event.ONLOAD) {
+        if (DOM.eventGetType(event) == Event.ONLOAD
+                && icon.getElement() == target && !iconOnloadHandled) {
+            /*
+             * IE6 pngFix causes two onload events to be fired and we want to
+             * react only to the first one
+             */
+            iconOnloadHandled = true;
+
             setMaxWidth(maxWidth);
 
-            // TODO: What if the caption's height changes drastically. Should we
-            // send the size updated message?
-            // Set<Widget> w = new HashSet<Widget>();
-            // w.add(this);
-            // Util.componentSizeUpdated(w);
+            /*
+             * The size of the icon might affect the size of the component so we
+             * must report the size change to the parent
+             */
+            Set<Widget> w = new HashSet<Widget>();
+            w.add((Widget) owner);
+            Util.componentSizeUpdated(w);
         }
 
     }
 
     public static boolean isNeeded(UIDL uidl) {
-        if (uidl.getStringAttribute("caption") != null) {
+        if (uidl.getStringAttribute(ATTRIBUTE_CAPTION) != null) {
             return true;
         }
-        if (uidl.hasAttribute("error")) {
+        if (uidl.hasAttribute(ATTRIBUTE_ERROR)) {
             return true;
         }
-        if (uidl.hasAttribute("icon")) {
+        if (uidl.hasAttribute(ATTRIBUTE_ICON)) {
             return true;
         }
-        if (uidl.hasAttribute("required")) {
+        if (uidl.hasAttribute(ATTRIBUTE_REQUIRED)) {
             return true;
         }
 
@@ -226,35 +268,41 @@ public class ICaption extends HTML {
         return placedAfterComponent;
     }
 
-    public int getWidth() {
+    public int getRenderedWidth() {
         int width = 0;
 
         if (icon != null) {
             width += icon.getOffsetWidth();
         }
 
-        if (maxWidth >= 0) {
-            if (captionText != null) {
-                width += captionText.getOffsetWidth();
-            }
-            if (requiredFieldIndicator != null) {
-                width += requiredFieldIndicator.getOffsetWidth();
-            }
-            if (errorIndicatorElement != null) {
-                width += errorIndicatorElement.getOffsetWidth();
-            }
+        if (captionText != null) {
+            width += captionText.getOffsetWidth();
+        }
+        if (requiredFieldIndicator != null) {
+            width += requiredFieldIndicator.getOffsetWidth();
+        }
+        if (errorIndicatorElement != null) {
+            width += errorIndicatorElement.getOffsetWidth();
+        }
 
-        } else {
-            if (captionText != null) {
-                width += captionText.getScrollWidth();
-            }
-            if (requiredFieldIndicator != null) {
-                width += requiredFieldIndicator.getScrollWidth();
-            }
-            if (errorIndicatorElement != null) {
-                width += errorIndicatorElement.getScrollWidth();
-            }
+        return width;
 
+    }
+
+    public int getRequiredWidth() {
+        int width = 0;
+
+        if (icon != null) {
+            width += icon.getOffsetWidth();
+        }
+        if (captionText != null) {
+            width += captionText.getScrollWidth();
+        }
+        if (requiredFieldIndicator != null) {
+            width += requiredFieldIndicator.getScrollWidth();
+        }
+        if (errorIndicatorElement != null) {
+            width += errorIndicatorElement.getScrollWidth();
         }
 
         return width;
@@ -262,7 +310,15 @@ public class ICaption extends HTML {
     }
 
     public int getHeight() {
-        return clearElement.getOffsetTop() - getElement().getOffsetTop();
+        int height = clearElement.getOffsetTop() - getElement().getOffsetTop();
+        if (icon != null) {
+            int iconHeight = icon.getOffsetHeight();
+            ApplicationConnection.getConsole().log(
+                    "Caption height: " + height + ", icon height: "
+                            + iconHeight);
+        }
+
+        return height;
     }
 
     public void setAlignment(String alignment) {
@@ -270,9 +326,8 @@ public class ICaption extends HTML {
     }
 
     public void setMaxWidth(int maxWidth) {
-
         this.maxWidth = maxWidth;
-        DOM.setStyleAttribute(getElement(), "width", "");
+        DOM.setStyleAttribute(getElement(), "width", maxWidth + "px");
 
         if (icon != null) {
             DOM.setStyleAttribute(icon.getElement(), "width", "");
@@ -282,19 +337,16 @@ public class ICaption extends HTML {
             DOM.setStyleAttribute(captionText, "width", "");
         }
 
-        if (maxWidth < 0) {
-            return;
-        }
-
-        int currentWidth = getWidth();
-        if (currentWidth > maxWidth) {
+        int requiredWidth = getRequiredWidth();
+        /*
+         * ApplicationConnection.getConsole().log( "Caption maxWidth: " +
+         * maxWidth + ", requiredWidth: " + requiredWidth);
+         */
+        if (requiredWidth > maxWidth) {
             // Needs to truncate and clip
             int availableWidth = maxWidth;
 
-            // ApplicationConnection.getConsole().log(
-            // "Caption maxWidth: " + maxWidth);
-
-            DOM.setStyleAttribute(getElement(), "width", maxWidth + "px");
+            // DOM.setStyleAttribute(getElement(), "width", maxWidth + "px");
             if (requiredFieldIndicator != null) {
                 // ApplicationConnection.getConsole().log(
                 // "requiredFieldIndicator width: "

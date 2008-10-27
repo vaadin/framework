@@ -32,7 +32,9 @@ public class ChildComponentContainer extends Panel {
     /**
      * Size of the caption
      */
-    private Size captionSize = new Size(0, 0);
+    private int captionRequiredWidth = 0;
+    private int captionWidth = 0;
+    private int captionHeight = 0;
 
     /**
      * Padding added to the container when it is larger than the component.
@@ -207,12 +209,20 @@ public class ChildComponentContainer extends Panel {
                 alignmentLeftOffsetForWidget + "px");
     }
 
+    public int getCaptionRequiredWidth() {
+        if (caption == null) {
+            return 0;
+        }
+
+        return captionRequiredWidth;
+    }
+
     public int getCaptionWidth() {
         if (caption == null) {
             return 0;
         }
 
-        return captionSize.getWidth();
+        return captionWidth;
     }
 
     public int getCaptionHeight() {
@@ -220,7 +230,7 @@ public class ChildComponentContainer extends Panel {
             return 0;
         }
 
-        return captionSize.getHeight();
+        return captionHeight;
     }
 
     public int getCaptionWidthAfterComponent() {
@@ -365,16 +375,26 @@ public class ChildComponentContainer extends Panel {
 
         }
 
-        int w = 0;
-        int h = 0;
+        updateCaptionSize();
+    }
+
+    public void updateCaptionSize() {
+        captionWidth = 0;
+        captionHeight = 0;
 
         if (caption != null) {
-            w = caption.getWidth();
-            h = caption.getHeight();
+            captionWidth = caption.getRenderedWidth();
+            captionHeight = caption.getHeight();
+            captionRequiredWidth = caption.getRequiredWidth();
+
+            /*
+             * ApplicationConnection.getConsole().log(
+             * "Caption rendered width: " + captionWidth +
+             * ", caption required width: " + captionRequiredWidth +
+             * ", caption height: " + captionHeight);
+             */
         }
 
-        captionSize.setWidth(w);
-        captionSize.setHeight(h);
     }
 
     private void setCaption(ICaption newCaption) {
@@ -638,8 +658,7 @@ public class ChildComponentContainer extends Panel {
         // Also update caption max width
         if (caption != null) {
             caption.setMaxWidth(width);
-
-            captionSize.setWidth(caption.getWidth());
+            captionWidth = caption.getRenderedWidth();
         }
 
     }

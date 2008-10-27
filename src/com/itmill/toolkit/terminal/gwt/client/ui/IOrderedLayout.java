@@ -340,8 +340,8 @@ public class IOrderedLayout extends CellBasedLayout {
             remainingSpace = 0;
         }
 
-        // ApplicationConnection.getConsole().log(
-        // "Layout size: " + activeLayoutSize);
+        ApplicationConnection.getConsole().log(
+                "Layout size: " + activeLayoutSize);
         return remainingSpace;
     }
 
@@ -361,7 +361,9 @@ public class IOrderedLayout extends CellBasedLayout {
          * the caption may determine the space used by the component
          */
         if (!childComponentContainer.widgetHasSizeSpecified(orientation)) {
-            int captionWidth = childComponentContainer.getCaptionWidth();
+            int captionWidth = childComponentContainer
+                    .getCaptionRequiredWidth();
+
             if (captionWidth > widgetWidth) {
                 widgetWidth = captionWidth;
             }
@@ -426,7 +428,10 @@ public class IOrderedLayout extends CellBasedLayout {
                     if (!childComponentContainer
                             .widgetHasSizeSpecified(orientation)) {
                         int captionWidth = childComponentContainer
-                                .getCaptionWidth();
+                                .getCaptionRequiredWidth();
+                        // ApplicationConnection.getConsole().log(
+                        // "Component width: " + width
+                        // + ", caption width: " + captionWidth);
                         if (captionWidth > width) {
                             width = captionWidth;
                         }
@@ -612,7 +617,14 @@ public class IOrderedLayout extends CellBasedLayout {
     public boolean requestLayout(Set<Paintable> children) {
         for (Paintable p : children) {
             /* Update widget size from DOM */
-            getComponentContainer((Widget) p).updateWidgetSize();
+            ChildComponentContainer componentContainer = getComponentContainer((Widget) p);
+            componentContainer.updateWidgetSize();
+
+            /*
+             * If this is the result of an caption icon onload event the caption
+             * size may have changed
+             */
+            componentContainer.updateCaptionSize();
         }
 
         boolean sameSize = recalculateLayoutAndComponentSizes();
