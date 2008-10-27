@@ -103,12 +103,21 @@
     </init-param>
   </servlet>
   
-<servlet>
+  <servlet>
     <servlet-name>FeatureBrowser</servlet-name>
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
       <param-value>com.itmill.toolkit.demo.featurebrowser.FeatureBrowser</param-value>
+    </init-param>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>Sampler</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.sampler.SamplerApplication</param-value>
     </init-param>
   </servlet>
   
@@ -523,9 +532,15 @@
     <!-- portlet -->
   </servlet-mapping>
 
- <servlet-mapping>
+  <servlet-mapping>
     <servlet-name>FeatureBrowser</servlet-name>
     <url-pattern>/FeatureBrowser/*</url-pattern>
+    <!-- portlet style=height:650px -->
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>Sampler</servlet-name>
+    <url-pattern>/sampler/*</url-pattern>
     <!-- portlet style=height:650px -->
   </servlet-mapping>
 
