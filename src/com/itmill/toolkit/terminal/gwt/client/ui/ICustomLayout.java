@@ -383,6 +383,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
     }
 
     /** Removes given widget from the layout */
+    @Override
     public boolean remove(Widget w) {
         client.unregisterPaintable((Paintable) w);
         final String location = getLocation(w);
@@ -401,11 +402,13 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
     }
 
     /** Adding widget without specifying location is not supported */
+    @Override
     public void add(Widget w) {
         throw new UnsupportedOperationException();
     }
 
     /** Clear all widgets from the layout */
+    @Override
     public void clear() {
         super.clear();
         locationToWidget.clear();
@@ -427,7 +430,9 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
         client.runDescendentsLayout(this);
     }
 
+    @Override
     public void onDetach() {
+        super.onDetach();
         detachResizedFunction(DOM.getFirstChild(getElement()));
     }
 
