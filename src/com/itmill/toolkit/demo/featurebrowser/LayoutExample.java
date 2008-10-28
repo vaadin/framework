@@ -25,6 +25,7 @@ public class LayoutExample extends CustomComponent {
         setCompositionRoot(main);
 
         final GridLayout g = new GridLayout(2, 5);
+        g.setWidth("100%");
         main.addComponent(g);
 
         // panel
