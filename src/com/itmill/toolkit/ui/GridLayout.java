@@ -412,7 +412,7 @@ public class GridLayout extends AbstractLayout implements
         boolean equallyDividedCols = false;
         int realColExpandRatioSum = 0;
         float colSum = getExpandRatioSum(columnExpandRatio);
-        if (colSum == 0 && components.size() > 0) {
+        if (colSum == 0) {
             // no columns has been expanded, all cols have same expand
             // rate
             equallyDividedCols = true;
@@ -434,7 +434,7 @@ public class GridLayout extends AbstractLayout implements
         boolean equallyDividedRows = false;
         int realRowExpandRatioSum = 0;
         float rowSum = getExpandRatioSum(rowExpandRatio);
-        if (rowSum == 0 && components.size() > 0) {
+        if (rowSum == 0) {
             // no rows have been expanded
             equallyDividedRows = true;
             float equalSize = 1 / (float) rows;
