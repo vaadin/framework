@@ -207,7 +207,7 @@ public class SamplerApplication extends Application {
             mainSplit = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
             mainSplit.setSizeFull();
             mainExpand.addComponent(mainSplit);
-            mainExpand.expand(mainSplit);
+            mainExpand.setExpandRatio(mainSplit, 1);
 
             // Menu tree, initially hidden
             navigationTree = createMenuTree();
