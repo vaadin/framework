@@ -6,13 +6,12 @@ import java.util.Iterator;
 import com.itmill.toolkit.terminal.Resource;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CustomComponent;
-import com.itmill.toolkit.ui.OrderedLayout;
+import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
 public class ModeSwitch extends CustomComponent {
 
-    OrderedLayout layout = new OrderedLayout(
-            OrderedLayout.ORIENTATION_HORIZONTAL);
+    GridLayout layout = new GridLayout(3, 1);
 
     HashMap idToButton = new HashMap();
     Object mode = null;
