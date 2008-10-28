@@ -71,30 +71,6 @@
   </servlet>
   
 <servlet>
-        <servlet-name>iWork</servlet-name>
-        <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-        <init-param>
-            <param-name>application</param-name>
-            <param-value>com.itmill.iwork.IWork</param-value>
-        </init-param>
-        <init-param>
-      <param-name>widgetset</param-name>
-      <param-value>com.itmill.iwork.gwt.WidgetSet</param-value>
-    </init-param>	    	
-    </servlet>
-    
-    <!--
-<servlet>
-    <servlet-name>iWork</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.iwork.IWork</param-value>
-    </init-param>
-  </servlet>
-  -->
-  
-<servlet>
     <servlet-name>TestSplitPanel</servlet-name>
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
@@ -452,11 +428,6 @@
     <url-pattern>/TestForNativeWindowing/*</url-pattern>
   </servlet-mapping>
   
-  
-       <servlet-mapping>
-    <servlet-name>iWork</servlet-name>
-    <url-pattern>/iWork/*</url-pattern>
-  </servlet-mapping>
   
     <servlet-mapping>
     <servlet-name>RobustnessSimple</servlet-name>
