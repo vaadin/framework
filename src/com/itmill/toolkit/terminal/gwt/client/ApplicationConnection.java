@@ -633,7 +633,7 @@ public class ApplicationConnection {
                 }
 
                 if (html.length() != 0) {
-                    INotification n = new INotification(1000 * 60 * 45); // 45min
+                    INotification n = new INotification(1000 * 60 * 45); //45min
                     n.addEventListener(new NotificationRedirect(url));
                     n.show(html, INotification.CENTERED_TOP,
                             INotification.STYLE_SYSTEM);
@@ -1041,7 +1041,7 @@ public class ApplicationConnection {
     }
 
     /**
-     * Traverses recursively ancestors until ContainerResizedListener child
+     * Traverses recursively child widgets until ContainerResizedListener child
      * widget is found. They will delegate it further if needed.
      * 
      * @param container
@@ -1071,6 +1071,9 @@ public class ApplicationConnection {
                         runDescendentsLayout(childContainer);
                     }
                 }
+            } else if (child instanceof HasWidgets) {
+                // propagate over non Paintable HasWidgets
+                runDescendentsLayout((HasWidgets) child);
             }
 
         }
