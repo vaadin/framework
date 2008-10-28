@@ -523,9 +523,6 @@ public class SamplerApplication extends Application {
                     }
                 } else {
                     Button b = new Button();
-                    b.setWidth("130px");
-                    b.setHeight("130px");
-                    b.setSizeFull();
                     b.setStyleName(Button.STYLE_LINK);
                     b.setIcon(new ClassResource(f.getClass(), f.getIconName(),
                             SamplerApplication.this));
