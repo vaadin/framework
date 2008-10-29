@@ -288,6 +288,9 @@ public class IView extends SimplePanel implements Container,
         // functions
         // client.runDescendentsLayout(this);
 
+        if (BrowserInfo.get().isSafari()) {
+            Util.runWebkitOverflowAutoFix(getElement());
+        }
     }
 
     @Override
