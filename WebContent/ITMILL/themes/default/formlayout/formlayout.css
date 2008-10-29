@@ -56,3 +56,7 @@
 	margin: 0;
 	padding: 0;
 }
+
+.i-form .i-caption .i-required-field-indicator {
+	float: none;
+}

@@ -705,6 +705,10 @@ input.i-modified,
 	margin: 0;
 	padding: 0;
 }
+
+.i-form .i-caption .i-required-field-indicator {
+	float: none;
+}
 .i-gridlayout-margin-top {
 	padding-top: 15px;
 }
