@@ -173,29 +173,25 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
 
     }
 
-    private void updateMargins(MarginInfo newMargins) {
-        if (newMargins.equals(activeMarginsInfo)) {
-            return;
-        }
-
+    private void updateMargins(MarginInfo newMarginInfo) {
         // Update active margins
-        activeMarginsInfo = newMargins;
-        if (newMargins.hasTop()) {
+        activeMarginsInfo = newMarginInfo;
+        if (newMarginInfo.hasTop()) {
             activeMargins.setMarginTop(marginsFromCSS.getMarginTop());
         } else {
             activeMargins.setMarginTop(0);
         }
-        if (newMargins.hasBottom()) {
+        if (newMarginInfo.hasBottom()) {
             activeMargins.setMarginBottom(marginsFromCSS.getMarginBottom());
         } else {
             activeMargins.setMarginBottom(0);
         }
-        if (newMargins.hasLeft()) {
+        if (newMarginInfo.hasLeft()) {
             activeMargins.setMarginLeft(marginsFromCSS.getMarginLeft());
         } else {
             activeMargins.setMarginLeft(0);
         }
-        if (newMargins.hasRight()) {
+        if (newMarginInfo.hasRight()) {
             activeMargins.setMarginRight(marginsFromCSS.getMarginRight());
         } else {
             activeMargins.setMarginRight(0);
@@ -211,7 +207,7 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
         DOM.setStyleAttribute(root, "marginBottom", activeMargins
                 .getMarginBottom()
                 + "px");
-
+                
     }
 
     protected boolean measureMarginsAndSpacing(String styleName,
@@ -252,6 +248,7 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
 
         root.removeChild(measurement);
 
+        updateMargins(activeMarginsInfo);
         return true;
     }
 
