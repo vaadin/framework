@@ -1,11 +1,13 @@
 .i-progressindicator {
 	background: #dfe2e4 url(img/base.gif);
-	height: 9px;
-	border: 1px solid #b6bbbc;
 	overflow: hidden; /* for IE6 */
 	width: 150px;
 }
-
+.i-progressindicator-wrapper {
+	border: 1px solid #b6bbbc;
+	overflow: hidden; /* for IE6 */
+	height: 9px;
+}
 .i-progressindicator-disabled {
 	background: #dfe2e4 url(img/disabled.gif);
 	height: 9px;
@@ -13,7 +15,7 @@
 	overflow: hidden; /* for IE6 */
 }
 
-.i-progressindicator div {
+.i-progressindicator-indicator {
 	background: #f7f9f9 url(img/progress.png);
 	height: 9px;
 	overflow: hidden; /* for IE6 */

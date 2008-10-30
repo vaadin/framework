@@ -23,9 +23,12 @@ public class IProgressIndicator extends Widget implements Paintable {
     private boolean pollerSuspendedDueDetach;
 
     public IProgressIndicator() {
-        setElement(wrapper);
+        setElement(DOM.createDiv());
+        getElement().appendChild(wrapper);
         setStyleName(CLASSNAME);
-        DOM.appendChild(wrapper, indicator);
+        wrapper.appendChild(indicator);
+        indicator.setClassName(CLASSNAME + "-indicator");
+        wrapper.setClassName(CLASSNAME + "-wrapper");
         poller = new Poller();
     }
 
