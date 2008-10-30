@@ -68,6 +68,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
         setWidget(canvas);
     }
 
+    @Override
     protected Element getContainerElement() {
         return margin;
     }
@@ -534,22 +535,75 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
     }
 
     public boolean requestLayout(Set<Paintable> child) {
-        boolean mayNeedLayout = false;
+        boolean needsLayout = false;
         int offsetHeight = canvas.getOffsetHeight();
         int offsetWidth = canvas.getOffsetWidth();
         if ("".equals(width) || "".equals(height)) {
-            mayNeedLayout = true;
-        } else {
-            for (Paintable paintable : child) {
-                Cell cell = paintableToCell.get(paintable);
-                if (!cell.hasRelativeHeight() || !cell.hasRelativeWidth()) {
-                    // cell sizes will only stay still if only relatively sized
-                    // components
-                    mayNeedLayout = true;
+            needsLayout = true;
+        }
+        for (Paintable paintable : child) {
+            Cell cell = paintableToCell.get(paintable);
+            if (!cell.hasRelativeHeight() || !cell.hasRelativeWidth()) {
+                // cell sizes will only stay still if only relatively sized
+                // components
+                // check if changed child affects min col widths
+                int width = cell.getWidth();
+                int allocated = columnWidths[cell.col];
+                for (int i = 1; i < cell.colspan; i++) {
+                    allocated += spacingPixels + columnWidths[cell.col + i];
                 }
+                if (allocated < width) {
+                    needsLayout = true;
+                    // columnWidths needs to be expanded due colspanned cell
+                    int neededExtraSpace = width - allocated;
+                    int spaceForColunms = neededExtraSpace / cell.colspan;
+                    for (int i = 0; i < cell.colspan; i++) {
+                        int col = cell.col + i;
+                        columnWidths[col] += spaceForColunms;
+                        neededExtraSpace -= spaceForColunms;
+                    }
+                    if (neededExtraSpace > 0) {
+                        for (int i = 0; i < cell.colspan; i++) {
+                            int col = cell.col + i;
+                            columnWidths[col] += 1;
+                            neededExtraSpace -= 1;
+                            if (neededExtraSpace == 0) {
+                                break;
+                            }
+                        }
+                    }
+                }
+                // check if changed child affects min row heights
+                int height = cell.getHeight();
+                allocated = rowHeights[cell.row];
+                for (int i = 1; i < cell.rowspan; i++) {
+                    allocated += spacingPixels + rowHeights[cell.row + i];
+                }
+                if (allocated < height) {
+                    needsLayout = true;
+                    // columnWidths needs to be expanded due colspanned cell
+                    int neededExtraSpace = height - allocated;
+                    int spaceForColunms = neededExtraSpace / cell.rowspan;
+                    for (int i = 0; i < cell.rowspan; i++) {
+                        int row = cell.row + i;
+                        rowHeights[row] += spaceForColunms;
+                        neededExtraSpace -= spaceForColunms;
+                    }
+                    if (neededExtraSpace > 0) {
+                        for (int i = 0; i < cell.rowspan; i++) {
+                            int row = cell.row + i;
+                            rowHeights[row] += 1;
+                            neededExtraSpace -= 1;
+                            if (neededExtraSpace == 0) {
+                                break;
+                            }
+                        }
+                    }
+                }
+
             }
         }
-        if (mayNeedLayout) {
+        if (needsLayout) {
             expandColumns();
             expandRows();
             layoutCells();
