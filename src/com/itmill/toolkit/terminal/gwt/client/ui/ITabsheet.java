@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
@@ -163,6 +164,10 @@ public class ITabsheet extends ITabsheetBase implements
         }
     }
 
+    private boolean isDynamicWidth() {
+        return width == null || width.equals("");
+    }
+
     public ITabsheet() {
         super(CLASSNAME);
 
@@ -271,7 +276,7 @@ public class ITabsheet extends ITabsheetBase implements
         }
 
         // tabs; push or not
-        if (uidl.hasAttribute("width")) {
+        if (!isDynamicWidth()) {
             // update width later, in updateTabScroller();
             DOM.setStyleAttribute(tabs, "width", "1px");
             DOM.setStyleAttribute(tabs, "overflow", "hidden");
@@ -279,10 +284,50 @@ public class ITabsheet extends ITabsheetBase implements
             showAllTabs();
             DOM.setStyleAttribute(tabs, "width", "");
             DOM.setStyleAttribute(tabs, "overflow", "visible");
+            updateDynamicWidth();
         }
 
         updateTabScroller();
         waitingForResponse = false;
+    }
+
+    private void updateDynamicWidth() {
+        // Find tab width
+        int tabsWidth = 0;
+
+        int count = tb.getTabCount();
+        for (int i = 0; i < count; i++) {
+            Element tabTd = tb.getTab(i).getElement().getParentElement().cast();
+            tabsWidth += tabTd.getOffsetWidth();
+        }
+
+        // Find content width
+        Style style = tp.getElement().getStyle();
+        String overflow = style.getProperty("overflow");
+        style.setProperty("overflow", "hidden");
+        String width = style.getProperty("width");
+        style.setProperty("width", tabsWidth + "px");
+        // Get content width from actual widget
+        int contentWidth = tp.getWidget(tp.getVisibleWidget()).getOffsetWidth();
+        style.setProperty("width", width);
+        style.setProperty("overflow", overflow);
+
+        // Set widths to max(tabs,content)
+        if (tabsWidth < contentWidth) {
+            tabsWidth = contentWidth;
+        }
+
+        tabs.getStyle().setPropertyPx("width", tabsWidth);
+
+        /*
+         * tb width includes the spacerTd width so the content area will be as
+         * wide as the tab bar
+         */
+        int realWidth = tb.getOffsetWidth();
+        contentWidth = realWidth - getContentAreaBorderWidth();
+
+        contentNode.getStyle().setPropertyPx("width", contentWidth);
+        super.setWidth(realWidth + "px");
     }
 
     protected void renderTab(final UIDL tabUidl, int index, boolean selected) {
@@ -379,12 +424,18 @@ public class ITabsheet extends ITabsheetBase implements
 
     public void setWidth(String width) {
         super.setWidth(width);
+        if (width.equals("")) {
+            width = null;
+        }
         this.width = width;
-        if ("".equals(width)) {
+        if (width == null) {
             renderSpace.setWidth(0);
             contentNode.getStyle().setProperty("width", "");
         } else {
             int contentWidth = getOffsetWidth() - getContentAreaBorderWidth();
+            if (contentWidth < 0) {
+                contentWidth = 0;
+            }
             contentNode.getStyle().setProperty("width", contentWidth + "px");
             renderSpace.setWidth(contentWidth);
         }
@@ -508,17 +559,9 @@ public class ITabsheet extends ITabsheetBase implements
 
     private int borderW = -1;
 
-    private void detectBorder() {
-        String property = contentNode.getStyle().getProperty("overflow");
-        contentNode.getStyle().setProperty("overflow", "hidden");
-        borderW = contentNode.getOffsetWidth()
-                - contentNode.getPropertyInt("clientWidth");
-        contentNode.getStyle().setProperty("overflow", property);
-    }
-
     private int getContentAreaBorderWidth() {
         if (borderW < 0) {
-            detectBorder();
+            borderW = Util.measureHorizontalBorder(contentNode);
         }
         return borderW;
     }

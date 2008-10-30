@@ -212,18 +212,30 @@ public class Util {
 
     public static int measureHorizontalBorder(Element element) {
         int borders;
-        if (BrowserInfo.get().isIE6()) {
-            String originalWidth = DOM.getStyleAttribute(element, "width");
-            int originalOffsetWidth = element.getOffsetWidth();
-            if (originalOffsetWidth < 1) {
-                originalOffsetWidth = 10;
+        if (BrowserInfo.get().isIE()) {
+            String width = element.getStyle().getProperty("width");
+            String height = element.getStyle().getProperty("height");
+
+            int offsetWidth = element.getOffsetWidth();
+            int offsetHeight = element.getOffsetHeight();
+            if (BrowserInfo.get().isIE6()) {
+                if (offsetHeight < 1) {
+                    offsetHeight = 1;
+                }
+                if (offsetWidth < 1) {
+                    offsetWidth = 10;
+                }
+                element.getStyle().setPropertyPx("height", offsetHeight);
             }
+            element.getStyle().setPropertyPx("width", offsetWidth);
 
-            DOM.setStyleAttribute(element, "width", originalOffsetWidth + "px");
-            int cw = element.getPropertyInt("clientWidth");
-            borders = element.getOffsetWidth() - cw;
+            borders = element.getOffsetWidth()
+                    - element.getPropertyInt("clientWidth");
 
-            DOM.setStyleAttribute(element, "width", originalWidth);
+            element.getStyle().setProperty("width", width);
+            if (BrowserInfo.get().isIE6()) {
+                element.getStyle().setProperty("height", height);
+            }
         } else {
             borders = element.getOffsetWidth()
                     - element.getPropertyInt("clientWidth");
