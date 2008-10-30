@@ -96,7 +96,7 @@ abstract public class Feature {
      * @return
      */
     public String getIconName() {
-        String icon = getClass().getSimpleName() + ".gif";
+        String icon = getClass().getSimpleName() + ".png";
         return icon;
     }
 

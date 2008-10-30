@@ -16,6 +16,13 @@ import com.itmill.toolkit.data.util.ObjectProperty;
 import com.itmill.toolkit.demo.sampler.ModeSwitch.ModeSwitchEvent;
 import com.itmill.toolkit.demo.sampler.features.DummyFeature;
 import com.itmill.toolkit.demo.sampler.features.DummyFeature2;
+import com.itmill.toolkit.demo.sampler.features.blueprints.ProminentPrimaryAction;
+import com.itmill.toolkit.demo.sampler.features.buttons.ButtonLink;
+import com.itmill.toolkit.demo.sampler.features.buttons.ButtonPush;
+import com.itmill.toolkit.demo.sampler.features.buttons.ButtonSwitch;
+import com.itmill.toolkit.demo.sampler.features.link.LinkCurrentWindow;
+import com.itmill.toolkit.demo.sampler.features.link.LinkNoDecorations;
+import com.itmill.toolkit.demo.sampler.features.link.LinkSizedWindow;
 import com.itmill.toolkit.terminal.ClassResource;
 import com.itmill.toolkit.terminal.DownloadStream;
 import com.itmill.toolkit.terminal.ExternalResource;
@@ -40,17 +47,31 @@ public class SamplerApplication extends Application {
     // Main structure, root is always a FeatureSet that is not shown
     private static final FeatureSet features = new FeatureSet("All",
             new Feature[] {
-            // Main sets
+                    // Main sets
 
-                    new FeatureSet("Patterns", new Feature[] {
-                    // Patterns
+                    new FeatureSet("Blueprints", new Feature[] {
+                    // Blueprints
+                            new ProminentPrimaryAction(), //
 
                             }),
 
                     new FeatureSet("Components", new Feature[] {
-                    // Components
+                            // Components
+                            new FeatureSet("Buttons", new Feature[] {
+                                    new ButtonPush(), // basic
+                                    new ButtonLink(), // link
+                                    new ButtonSwitch(), // switch/checkbox
 
                             }),
+
+                            new FeatureSet("Links", new Feature[] {
+                                    new LinkCurrentWindow(), // basic
+                                    new LinkNoDecorations(), // new win
+                                    new LinkSizedWindow(), // new win
+
+                            }),
+
+                    }),
 
                     new FeatureSet("Unsorted", new Feature[] {
                     // Patterns
@@ -484,6 +505,20 @@ public class SamplerApplication extends Application {
                 }
 
             });
+
+            setCellStyleGenerator(new CellStyleGenerator() {
+                public String getStyle(Object itemId, Object propertyId) {
+                    if (propertyId == null && itemId instanceof FeatureSet) {
+                        if (allFeatures.isRoot(itemId)) {
+                            return "section";
+                        } else {
+                            return "subsection";
+                        }
+
+                    }
+                    return null;
+                }
+            });
         }
 
         public void setFeatureContainer(HierarchicalContainer c) {
@@ -502,12 +537,15 @@ public class SamplerApplication extends Application {
         FeatureGrid() {
             super(5, 1);
             setWidth("100%");
+            setMargin(true);
+            setSpacing(true);
         }
 
         private void newRow() {
             while (getCursorX() > 0) {
                 space();
             }
+            setRows(getRows() + 1);
         }
 
         public void setFeatureContainer(HierarchicalContainer c) {
@@ -517,15 +555,29 @@ public class SamplerApplication extends Application {
                 final Feature f = (Feature) it.next();
                 if (f instanceof FeatureSet) {
                     newRow();
-                    addComponent(new Label(f.getName()));
+                    Label title = new Label(f.getName());
+                    title.setWidth("100%");
+                    title
+                            .setStyleName((c.isRoot(f) ? "section"
+                                    : "subsection"));
+
                     if (c.isRoot(f)) {
-                        newRow();
+                        // newRow();
+                        addComponent(title, 0, getCursorY(), getColumns() - 1,
+                                getCursorY());
+                    } else {
+                        addComponent(title);
                     }
+                    setComponentAlignment(title, ALIGNMENT_LEFT,
+                            ALIGNMENT_VERTICAL_CENTER);
                 } else {
                     Button b = new Button();
                     b.setStyleName(Button.STYLE_LINK);
+                    b.addStyleName("screenshot");
                     b.setIcon(new ClassResource(f.getClass(), f.getIconName(),
                             SamplerApplication.this));
+                    b.setWidth("120px");
+                    b.setHeight("120px");
                     b.setDescription("<h3>" + f.getName() + "</h3>"
                             + f.getDescription());
                     b.addListener(new Button.ClickListener() {
@@ -550,7 +602,7 @@ public class SamplerApplication extends Application {
 
         private String desc;
 
-        private String icon = "FeatureSet.png";
+        private String icon = "folder.gif";
 
         private Feature[] content;
 
