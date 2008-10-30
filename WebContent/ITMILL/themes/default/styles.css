@@ -1090,6 +1090,7 @@ input.i-modified,
 	height: 9px;
 	border: 1px solid #b6bbbc;
 	overflow: hidden; /* for IE6 */
+	width: 150px;
 }
 
 .i-progressindicator-disabled {
