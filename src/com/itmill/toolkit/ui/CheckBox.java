@@ -25,9 +25,7 @@ public class CheckBox extends Button {
      *            the initial state of the switch button
      */
     public CheckBox(String caption, boolean initialState) {
-        setCaption(caption);
-        setValue(new Boolean(initialState));
-        setSwitchMode(true);
+        super(caption, initialState);
     }
 
     /**
@@ -39,8 +37,7 @@ public class CheckBox extends Button {
      *            the click listener
      */
     public CheckBox(String caption, ClickListener listener) {
-        setCaption(caption);
-        addListener(listener);
+        super(caption, listener);
         setSwitchMode(true);
     }
 
@@ -62,8 +59,7 @@ public class CheckBox extends Button {
      *            click events.
      */
     public CheckBox(String caption, Object target, String methodName) {
-        setCaption(caption);
-        addListener(ClickEvent.class, target, methodName);
+        super(caption, target, methodName);
         setSwitchMode(true);
     }
 
@@ -75,8 +71,7 @@ public class CheckBox extends Button {
      * @param dataSource
      */
     public CheckBox(String caption, Property dataSource) {
-        setCaption(caption);
-        setPropertyDataSource(dataSource);
+        super(caption, dataSource);
         setSwitchMode(true);
     }
 
@@ -91,8 +86,7 @@ public class CheckBox extends Button {
      */
 
     public CheckBox(String caption) {
-        setCaption(caption);
-        setSwitchMode(true);
+        super(caption, false);
     }
 
     public void setSwitchMode(boolean switchMode)
@@ -101,7 +95,7 @@ public class CheckBox extends Button {
             throw new UnsupportedOperationException(
                     "CheckBox is always in switch mode (consider using a Button)");
         }
-        this.switchMode = true;
+        super.setSwitchMode(true);
     }
 
 }

@@ -32,6 +32,7 @@ public class Button extends AbstractField {
      * 
      */
     public Button() {
+        setValue(new Boolean(false));
         setSwitchMode(false);
     }
 
@@ -45,8 +46,8 @@ public class Button extends AbstractField {
      *            the Button caption.
      */
     public Button(String caption) {
+        this();
         setCaption(caption);
-        setSwitchMode(false);
     }
 
     /**
@@ -134,14 +135,7 @@ public class Button extends AbstractField {
         if (isSwitchMode()) {
             target.addAttribute("type", "switch");
         }
-        boolean state;
-        try {
-            state = ((Boolean) getValue()).booleanValue();
-        } catch (final NullPointerException e) {
-            state = false;
-        }
-        target.addVariable(this, "state", state);
-
+        target.addVariable(this, "state", booleanValue());
     }
 
     /**
@@ -203,7 +197,9 @@ public class Button extends AbstractField {
         this.switchMode = switchMode;
         if (!switchMode) {
             setImmediate(true);
-            setValue(new Boolean(false));
+            if (booleanValue()) {
+                setValue(new Boolean(false));
+            }
         }
     }
 
@@ -213,7 +209,13 @@ public class Button extends AbstractField {
      * @return True iff the button is pressed down or checked.
      */
     public boolean booleanValue() {
-        return ((Boolean) getValue()).booleanValue();
+        boolean state;
+        try {
+            state = ((Boolean) getValue()).booleanValue();
+        } catch (final NullPointerException e) {
+            state = false;
+        }
+        return state;
     }
 
     /**
