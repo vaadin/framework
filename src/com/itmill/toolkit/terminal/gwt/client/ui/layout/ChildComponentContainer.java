@@ -163,6 +163,8 @@ public class ChildComponentContainer extends Panel {
         int w = widget.getOffsetWidth();
         int h = widget.getOffsetHeight();
 
+//        ApplicationConnection.getConsole().log(
+//               Util.getSimpleName(widget) + " size is " + w + "," + h);
         widgetSize.setHeight(h);
         widgetSize.setWidth(w);
     }
@@ -619,9 +621,9 @@ public class ChildComponentContainer extends Panel {
         int containerHeight = widgetAndCaptionHeight;
         containerHeight += containerExpansion.getHeight();
 
-        ApplicationConnection.getConsole().log(
-                "Setting container size for " + Util.getSimpleName(widget)
-                        + " to " + containerWidth + "," + containerHeight);
+        // ApplicationConnection.getConsole().log(
+        // "Setting container size for " + Util.getSimpleName(widget)
+        // + " to " + containerWidth + "," + containerHeight);
 
         if (containerWidth < 0) {
             ApplicationConnection.getConsole().error(

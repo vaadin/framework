@@ -340,8 +340,8 @@ public class IOrderedLayout extends CellBasedLayout {
             remainingSpace = 0;
         }
 
-        ApplicationConnection.getConsole().log(
-                "Layout size: " + activeLayoutSize);
+        // ApplicationConnection.getConsole().log(
+        // "Layout size: " + activeLayoutSize);
         return remainingSpace;
     }
 
@@ -642,8 +642,10 @@ public class IOrderedLayout extends CellBasedLayout {
     public void setHeight(String height) {
         super.setHeight(height);
 
-        activeLayoutSize.setHeight(getOffsetHeight()
-                - activeMargins.getVertical());
+        if (height != null && !height.equals("")) {
+            activeLayoutSize.setHeight(getOffsetHeight()
+                    - activeMargins.getVertical());
+        }
 
         if (!isRendering) {
             if (recalculateLayoutAndComponentSizes()) {
@@ -658,8 +660,10 @@ public class IOrderedLayout extends CellBasedLayout {
         super.setWidth(width);
         this.width = width;
 
-        activeLayoutSize.setWidth(getOffsetWidth()
-                - activeMargins.getHorizontal());
+        if (width != null && !width.equals("")) {
+            activeLayoutSize.setWidth(getOffsetWidth()
+                    - activeMargins.getHorizontal());
+        }
 
         if (!isRendering) {
             if (recalculateLayoutAndComponentSizes()) {
