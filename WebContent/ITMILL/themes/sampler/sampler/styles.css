@@ -7,6 +7,34 @@
 #sampler .i-expandlayout-topbar {
 	border-bottom: 1px solid #999;
 }
+
+#sampler .i-label-section {
+	font-size: 18px;
+	font-weight: bold;
+	border-bottom: 1px solid black;
+	line-height: 35px;
+}
+#sampler .i-label-subsection {
+	font-size: 16px;
+	font-weight: bold;
+	color: #666666;
+	text-indent: 7px;
+}
+
+#sampler .i-button-screenshot {
+	border: 3px solid #eeeeee;
+}
+
+#sampler tr.i-table-row-section {
+	color: #333366;
+	font-size: 18px;
+	font-weight: bold;
+}
+#sampler tr.i-table-row-subsection {
+	font-size: 16px;
+	font-weight: bold;
+}
+
 #sampler .feature-main {
 	padding: 20px;
 }
@@ -21,16 +49,19 @@
 	background-color: #999;
 	color: white;
 	padding: 20px;
-	line-height: 30px;
+	line-height: 20px;
 }
 #sampler .feature-name {
 	font-size: 22px;
 	font-weight: bold;
+	line-height: 35px;
 }
 
 #sampler .feature-info .i-caption {
 	font-weight: bold;
 	font-size: 16px;
+	line-height: 30px;
+	margin-top: 10px;
 }
 
 .i-customcomponent-ModeSwitch .i-button {
