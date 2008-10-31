@@ -527,6 +527,10 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
         if (cc != null) {
             cc.updateCaption(uidl, client);
         }
+        if (!rendering) {
+            // ensure rel size details are updated
+            paintableToCell.get(component).updateRelSizeStatus(uidl);
+        }
     }
 
     public boolean requestLayout(final Set<Paintable> changedChildren) {
@@ -673,7 +677,9 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
             for (int i = 0; i < cells.length; i++) {
                 for (int j = 0; j < cells[i].length; j++) {
                     Cell cell = cells[i][j];
-                    if (cell.hasRelativeHeight() || cell.hasRelativeWidth()) {
+                    if (cell != null
+                            && (cell.hasRelativeHeight() || cell
+                                    .hasRelativeWidth())) {
                         client.handleComponentRelativeSize(cell.cc.getWidget());
                     }
                 }
@@ -699,6 +705,9 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
      * Private helper class.
      */
     private class Cell {
+        private boolean relHeight = false;
+        private boolean relWidth = false;
+
         public Cell(UIDL c) {
             row = c.getIntAttribute("y");
             col = c.getIntAttribute("x");
@@ -706,13 +715,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
         }
 
         public boolean hasRelativeHeight() {
-            if (childUidl != null && childUidl.hasAttribute("height")) {
-                String w = childUidl.getStringAttribute("height");
-                if (w.contains("%")) {
-                    return true;
-                }
-            }
-            return false;
+            return relHeight;
         }
 
         public RenderSpace getAllocatedSpace() {
@@ -783,14 +786,8 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
             }
         }
 
-        private boolean hasRelativeWidth() {
-            if (childUidl != null && childUidl.hasAttribute("width")) {
-                String w = childUidl.getStringAttribute("width");
-                if (w.contains("%")) {
-                    return true;
-                }
-            }
-            return false;
+        protected boolean hasRelativeWidth() {
+            return relWidth;
         }
 
         protected void render() {
@@ -867,6 +864,24 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                 }
             }
             childUidl = c;
+            updateRelSizeStatus(c);
+        }
+
+        protected void updateRelSizeStatus(UIDL uidl) {
+            if (uidl != null && !uidl.getBooleanAttribute("cached")) {
+                if (uidl.hasAttribute("height")
+                        && uidl.getStringAttribute("height").contains("%")) {
+                    relHeight = true;
+                } else {
+                    relHeight = false;
+                }
+                if (uidl.hasAttribute("width")
+                        && uidl.getStringAttribute("width").contains("%")) {
+                    relWidth = true;
+                } else {
+                    relWidth = false;
+                }
+            }
         }
     }
 
