@@ -23,6 +23,11 @@ import com.itmill.toolkit.demo.sampler.features.buttons.ButtonSwitch;
 import com.itmill.toolkit.demo.sampler.features.link.LinkCurrentWindow;
 import com.itmill.toolkit.demo.sampler.features.link.LinkNoDecorations;
 import com.itmill.toolkit.demo.sampler.features.link.LinkSizedWindow;
+import com.itmill.toolkit.demo.sampler.features.notifications.NotificationCustom;
+import com.itmill.toolkit.demo.sampler.features.notifications.NotificationError;
+import com.itmill.toolkit.demo.sampler.features.notifications.NotificationHumanized;
+import com.itmill.toolkit.demo.sampler.features.notifications.NotificationTray;
+import com.itmill.toolkit.demo.sampler.features.notifications.NotificationWarning;
 import com.itmill.toolkit.terminal.ClassResource;
 import com.itmill.toolkit.terminal.DownloadStream;
 import com.itmill.toolkit.terminal.ExternalResource;
@@ -69,6 +74,14 @@ public class SamplerApplication extends Application {
                                     new LinkNoDecorations(), // new win
                                     new LinkSizedWindow(), // new win
 
+                            }),
+
+                            new FeatureSet("Notifications", new Feature[] {
+                                    new NotificationHumanized(), // humanized
+                                    new NotificationWarning(), // warning
+                                    new NotificationTray(), // tray
+                                    new NotificationError(), // error
+                                    new NotificationCustom(), // error
                             }),
 
                     }),
@@ -556,21 +569,21 @@ public class SamplerApplication extends Application {
                 if (f instanceof FeatureSet) {
                     newRow();
                     Label title = new Label(f.getName());
-                    title.setWidth("100%");
-                    title
-                            .setStyleName((c.isRoot(f) ? "section"
-                                    : "subsection"));
-
                     if (c.isRoot(f)) {
-                        // newRow();
+                        title.setWidth("100%");
+                        title.setStyleName("section");
                         addComponent(title, 0, getCursorY(), getColumns() - 1,
                                 getCursorY());
                     } else {
+                        title.setStyleName("subsection");
                         addComponent(title);
                     }
                     setComponentAlignment(title, ALIGNMENT_LEFT,
                             ALIGNMENT_VERTICAL_CENTER);
                 } else {
+                    if (getCursorX() == 0) {
+                        space();
+                    }
                     Button b = new Button();
                     b.setStyleName(Button.STYLE_LINK);
                     b.addStyleName("screenshot");

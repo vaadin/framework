@@ -44,6 +44,6 @@ public class ProminentPrimaryActionExample extends OrderedLayout implements
      */
     public void buttonClick(ClickEvent event) {
         getWindow().showNotification(
-                event.getButton().getCaption() + " clicked");
+                "\"" + event.getButton().getCaption() + "\" clicked");
     }
 }
