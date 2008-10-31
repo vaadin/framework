@@ -4,6 +4,7 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -27,8 +28,6 @@ import com.itmill.toolkit.terminal.gwt.client.ui.layout.ChildComponentContainer;
 public class IGridLayout extends SimplePanel implements Paintable, Container {
 
     public static final String CLASSNAME = "i-gridlayout";
-
-    private boolean needsLayout = false;
 
     private Element margin = DOM.createDiv();
 
@@ -103,7 +102,6 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
         if (cells == null) {
             cells = new Cell[cols][rows];
         } else if (cells.length != cols || cells[0].length != rows) {
-            LinkedList<Cell> orphaned = new LinkedList<Cell>();
             Cell[][] newCells = new Cell[cols][rows];
             for (int i = 0; i < cells.length; i++) {
                 for (int j = 0; j < cells[i].length; j++) {
@@ -113,10 +111,6 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                 }
             }
             cells = newCells;
-            // TODO clean orphaned list
-            for (Iterator iterator = orphaned.iterator(); iterator.hasNext();) {
-                Cell cell = (Cell) iterator.next();
-            }
         }
 
         nonRenderedWidgets = (HashMap<Widget, ChildComponentContainer>) widgetToComponentContainer
@@ -172,7 +166,6 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
 
         detectRowHeights();
 
-        minRowHeights = cloneArray(rowHeights);
         expandRows();
 
         renderRemainingComponents(pendingCells);
@@ -212,7 +205,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
     private static int[] cloneArray(int[] toBeCloned) {
         int[] clone = new int[toBeCloned.length];
         for (int i = 0; i < clone.length; i++) {
-            clone[i] = toBeCloned[i];
+            clone[i] = toBeCloned[i] * 1;
         }
         return clone;
     }
@@ -341,8 +334,10 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                 }
             }
         }
+
         distributeRowSpanHeights();
 
+        minRowHeights = cloneArray(rowHeights);
     }
 
     private void storeRowSpannedCell(Cell cell) {
@@ -534,27 +529,38 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
         }
     }
 
-    public boolean requestLayout(Set<Paintable> child) {
+    public boolean requestLayout(final Set<Paintable> changedChildren) {
+        ApplicationConnection.getConsole().log("IGridLayout.requestLayout()");
         boolean needsLayout = false;
         int offsetHeight = canvas.getOffsetHeight();
         int offsetWidth = canvas.getOffsetWidth();
         if ("".equals(width) || "".equals(height)) {
             needsLayout = true;
         }
-        for (Paintable paintable : child) {
+        ArrayList<Integer> dirtyColumns = new ArrayList<Integer>();
+        ArrayList<Integer> dirtyRows = new ArrayList<Integer>();
+        for (Paintable paintable : changedChildren) {
+
             Cell cell = paintableToCell.get(paintable);
             if (!cell.hasRelativeHeight() || !cell.hasRelativeWidth()) {
-                // cell sizes will only stay still if only relatively sized
+                // cell sizes will only stay still if only relatively
+                // sized
                 // components
                 // check if changed child affects min col widths
-                int width = cell.getWidth();
+                cell.cc.setWidth("");
+                cell.cc.setHeight("");
+
+                cell.cc.updateWidgetSize();
+                int width = cell.cc.getWidgetSize().getWidth()
+                        + cell.cc.getCaptionWidthAfterComponent();
                 int allocated = columnWidths[cell.col];
                 for (int i = 1; i < cell.colspan; i++) {
                     allocated += spacingPixels + columnWidths[cell.col + i];
                 }
                 if (allocated < width) {
                     needsLayout = true;
-                    // columnWidths needs to be expanded due colspanned cell
+                    // columnWidths needs to be expanded due colspanned
+                    // cell
                     int neededExtraSpace = width - allocated;
                     int spaceForColunms = neededExtraSpace / cell.colspan;
                     for (int i = 0; i < cell.colspan; i++) {
@@ -572,16 +578,23 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                             }
                         }
                     }
+                } else if (allocated != width) {
+                    // size is smaller thant allocated, column might
+                    // shrink
+                    dirtyColumns.add(cell.col);
                 }
-                // check if changed child affects min row heights
-                int height = cell.getHeight();
+
+                int height = cell.cc.getWidgetSize().getHeight()
+                        + cell.cc.getCaptionHeightAboveComponent();
+
                 allocated = rowHeights[cell.row];
                 for (int i = 1; i < cell.rowspan; i++) {
                     allocated += spacingPixels + rowHeights[cell.row + i];
                 }
                 if (allocated < height) {
                     needsLayout = true;
-                    // columnWidths needs to be expanded due colspanned cell
+                    // columnWidths needs to be expanded due colspanned
+                    // cell
                     int neededExtraSpace = height - allocated;
                     int spaceForColunms = neededExtraSpace / cell.rowspan;
                     for (int i = 0; i < cell.rowspan; i++) {
@@ -599,18 +612,70 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                             }
                         }
                     }
+                } else if (allocated != height) {
+                    // size is smaller than allocated, row might shrink
+                    dirtyRows.add(cell.row);
                 }
-
             }
         }
+
+        if (dirtyColumns.size() > 0) {
+            for (Integer colIndex : dirtyColumns) {
+                int colW = 0;
+                for (int i = 0; i < rowHeights.length; i++) {
+                    Cell cell = cells[colIndex][i];
+                    if (cell != null && cell.getChildUIDL() != null
+                            && !cell.hasRelativeWidth()) {
+                        int width = cell.cc.getWidgetSize().getWidth()
+                                + cell.cc.getCaptionWidthAfterComponent();
+                        if (width > colW) {
+                            colW = width;
+                        }
+                    }
+                }
+                minColumnWidths[colIndex] = colW;
+            }
+            needsLayout = true;
+            // ensure colspanned columns have enough space
+            columnWidths = cloneArray(minColumnWidths);
+            distributeColSpanWidths();
+        }
+
+        if (dirtyRows.size() > 0) {
+            needsLayout = true;
+            for (Integer rowIndex : dirtyRows) {
+                // recalculate min row height
+                int rowH = minRowHeights[rowIndex] = 0;
+                // loop all columns on row rowIndex
+                for (int i = 0; i < columnWidths.length; i++) {
+                    Cell cell = cells[i][rowIndex];
+                    if (cell != null && cell.getChildUIDL() != null
+                            && !cell.hasRelativeHeight()) {
+                        int h = cell.cc.getWidgetSize().getHeight()
+                                + cell.cc.getCaptionHeightAboveComponent();
+                        if (h > rowH) {
+                            rowH = h;
+                        }
+                    }
+                }
+                minRowHeights[rowIndex] = rowH;
+            }
+            // TODO could check only some row spans
+            rowHeights = cloneArray(minRowHeights);
+            distributeRowSpanHeights();
+        }
+
         if (needsLayout) {
             expandColumns();
             expandRows();
             layoutCells();
-            for (Paintable paintable : child) {
-                Cell cell = paintableToCell.get(paintable);
-                if (cell.hasRelativeHeight() || cell.hasRelativeWidth()) {
-                    client.handleComponentRelativeSize((Widget) paintable);
+            // loop all relative sized components and update their size
+            for (int i = 0; i < cells.length; i++) {
+                for (int j = 0; j < cells[i].length; j++) {
+                    Cell cell = cells[i][j];
+                    if (cell.hasRelativeHeight() || cell.hasRelativeWidth()) {
+                        client.handleComponentRelativeSize(cell.cc.getWidget());
+                    }
                 }
             }
         }
@@ -641,7 +706,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
         }
 
         public boolean hasRelativeHeight() {
-            if (childUidl.hasAttribute("height")) {
+            if (childUidl != null && childUidl.hasAttribute("height")) {
                 String w = childUidl.getStringAttribute("height");
                 if (w.contains("%")) {
                     return true;
@@ -719,7 +784,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
         }
 
         private boolean hasRelativeWidth() {
-            if (childUidl.hasAttribute("width")) {
+            if (childUidl != null && childUidl.hasAttribute("width")) {
                 String w = childUidl.getStringAttribute("width");
                 if (w.contains("%")) {
                     return true;
@@ -734,11 +799,6 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
             Paintable paintable = client.getPaintable(childUidl);
             assert paintable != null;
             if (cc == null || cc.getWidget() != paintable) {
-                if (cc != null) {
-                    // TODO add old cc to "orphaned" list
-                    Object j = null;
-                    j = j;
-                }
                 if (widgetToComponentContainer.containsKey(paintable)) {
                     cc = widgetToComponentContainer.get(paintable);
                     cc.setWidth("");
