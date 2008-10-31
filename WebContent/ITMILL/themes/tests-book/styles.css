@@ -146,7 +146,7 @@ table.i-gridlayout-spacingexample {
 }
 
 .i-gridlayout-spacingexample td {
-    background: white;
+   background: white;
 }
 
 /*****************************************************************************/
@@ -165,3 +165,10 @@ table.i-gridlayout-spacingexample {
 .i-orderedlayout-marginexample1 { background: #d0d0ff; border: 1px;}
 .i-orderedlayout-marginexample2 { background: #ffd0d0; border: 1px;}
 .i-orderedlayout-marginexample table { background: white; }
+
+/*****************************************************************************/
+/* For example_RichTextArea()                                                */
+/*****************************************************************************/
+.i-richtextarea-richtextexample .gwt-ToggleButton .gwt-Image {
+  background-image: url(img/richtextarea-toolbar-fi.png) !important;
+}

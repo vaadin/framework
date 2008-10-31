@@ -227,7 +227,7 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
             } else if (example.equals("print")) {
                 example_Print(main, param);
             } else if (example.equals("richtextfield")) {
-                example_RichTextField(main, param);
+                example_RichTextArea(main, param);
             } else if (example.equals("querycontainer")) {
                 example_QueryContainer(main, param);
             } else if (example.equals("menubar")) {
@@ -1414,12 +1414,16 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
         //main.addComponent(new Label("<p>Print this!</p>\n<script type='text/javascript'>print();</script>", Label.CONTENT_XHTML));
     }
 
-    void example_RichTextField(final Window main, String param) {
-        // Create the rich text area
+    void example_RichTextArea(final Window main, String param) {
+        main.setLayout(new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL));
+        
+        // Create a rich text area
         final RichTextArea rtarea = new RichTextArea();
+        rtarea.addStyleName("richtextexample");
+        //rtarea.setCaption("My Rich Text Area");
         
         // Set initial content as HTML
-        rtarea.setValue("<h1>Hello</h1>\n<p>This contains some text.</p>");
+        rtarea.setValue("<h1>Hello</h1>\n<p>This rich text area contains some text.</p>");
         
         // Show the text edited in the rich text area as HTML.
         final Button show = new Button("Show HTML");
@@ -1430,9 +1434,15 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
             }
         });
 
-        main.addComponent(rtarea);
-        main.addComponent(show);
-        main.addComponent(html);
+        Panel rtPanel = new Panel("Rich Text Area");
+        rtPanel.addComponent(rtarea);
+        rtPanel.addComponent(show);
+
+        Panel valuePanel = new Panel("Value");
+        valuePanel.addComponent(html);
+        
+        main.addComponent(rtPanel);
+        main.addComponent(valuePanel);
     }
 
     void example_QueryContainer(final Window main, String param) {
