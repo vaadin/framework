@@ -1025,7 +1025,8 @@ public class ApplicationConnection {
             // One or both is relative
             FloatSize relativeSize = new FloatSize(relativeWidth,
                     relativeHeight);
-            if (componentRelativeSizes.put(component, relativeSize) == null) {
+            if (componentRelativeSizes.put(component, relativeSize) == null
+                    && componentOffsetSizes.containsKey(component)) {
                 // The component has changed from absolute size to relative size
                 relativeSizeChanges.add(component);
             }
