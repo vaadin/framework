@@ -349,17 +349,10 @@ public class IView extends SimplePanel implements Container,
             IView.this.width = Window.getClientWidth();
             IView.this.height = Window.getClientHeight();
 
-            // temporary set overflow hidden, not to let scrollbars disturb
-            // layout functions
-            final String overflow = DOM.getStyleAttribute(getElement(),
-                    "overflow");
-            DOM.setStyleAttribute(getElement(), "overflow", "hidden");
             ApplicationConnection.getConsole().log(
                     "Running layout functions due window resize");
 
             connection.runDescendentsLayout(this);
-
-            DOM.setStyleAttribute(getElement(), "overflow", overflow);
 
         }
 
