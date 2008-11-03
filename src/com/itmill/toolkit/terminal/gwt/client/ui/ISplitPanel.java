@@ -118,18 +118,6 @@ public class ISplitPanel extends ComplexPanel implements Container,
         DOM.setStyleAttribute(splitter, "position", "absolute");
         DOM.setStyleAttribute(secondContainer, "position", "absolute");
 
-        DOM.setStyleAttribute(firstContainer, "overflow", "auto");
-        DOM.setStyleAttribute(secondContainer, "overflow", "auto");
-        if (BrowserInfo.get().isIE7()) {
-            /*
-             * Part I of IE7 weirdness hack, will be set to auto in layout phase
-             * 
-             * With IE7 one will sometimes get scrollbars with overflow auto
-             * even though there is nothing to scroll (content fits into area).
-             */
-            DOM.setStyleAttribute(firstContainer, "overflow", "hidden");
-            DOM.setStyleAttribute(secondContainer, "overflow", "hidden");
-        }
     }
 
     private void setOrientation(int orientation) {
@@ -225,11 +213,6 @@ public class ISplitPanel extends ComplexPanel implements Container,
         int wholeSize;
         int pixelPosition;
 
-        if (!(resizing && BrowserInfo.get().isGecko())) {
-            DOM.setStyleAttribute(firstContainer, "overflow", "hidden");
-            DOM.setStyleAttribute(secondContainer, "overflow", "hidden");
-        }
-
         switch (orientation) {
         case ORIENTATION_HORIZONTAL:
             wholeSize = DOM.getElementPropertyInt(wrapper, "clientWidth");
@@ -300,22 +283,7 @@ public class ISplitPanel extends ComplexPanel implements Container,
             break;
         }
 
-        if (Util.isIE7()) {
-            // Part I of IE7 weirdness hack, will be set to auto in layout phase
-            client.runDescendentsLayout(this);
-            DeferredCommand.addCommand(new Command() {
-                public void execute() {
-                    DOM.setStyleAttribute(firstContainer, "overflow", "auto");
-                    DOM.setStyleAttribute(secondContainer, "overflow", "auto");
-                }
-            });
-        } else {
-            client.runDescendentsLayout(this);
-            if (!(resizing && BrowserInfo.get().isGecko())) {
-                DOM.setStyleAttribute(firstContainer, "overflow", "auto");
-                DOM.setStyleAttribute(secondContainer, "overflow", "auto");
-            }
-        }
+        client.runDescendentsLayout(this);
 
         renderInformation.updateSize(getElement());
 
