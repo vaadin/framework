@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
@@ -154,8 +155,8 @@ public class ITabsheet extends ITabsheetBase implements
             DeferredCommand.addCommand(new Command() {
                 public void execute() {
                     previousVisibleWidget = tp.getWidget(tp.getVisibleWidget());
-                    DOM.setStyleAttribute(previousVisibleWidget.getElement(),
-                            "visibility", "hidden");
+                    DOM.setStyleAttribute(DOM.getParent(previousVisibleWidget
+                            .getElement()), "visibility", "hidden");
                     client.updateVariable(id, "selected", tabKeys.get(tabIndex)
                             .toString(), true);
                 }
@@ -166,6 +167,10 @@ public class ITabsheet extends ITabsheetBase implements
 
     private boolean isDynamicWidth() {
         return width == null || width.equals("");
+    }
+
+    private boolean isDynamicHeight() {
+        return height == null || height.equals("");
     }
 
     public ITabsheet() {
@@ -277,6 +282,8 @@ public class ITabsheet extends ITabsheetBase implements
 
         // tabs; push or not
         if (!isDynamicWidth()) {
+            // FIXME: This makes tab sheet tabs go to 1px width on every update
+            // and then back to original width
             // update width later, in updateTabScroller();
             DOM.setStyleAttribute(tabs, "width", "1px");
             DOM.setStyleAttribute(tabs, "overflow", "hidden");
@@ -412,11 +419,9 @@ public class ITabsheet extends ITabsheetBase implements
             // Set proper values for content element
             DOM.setStyleAttribute(contentNode, "height", contentHeight + "px");
             renderSpace.setHeight(contentHeight);
-            DOM.setStyleAttribute(contentNode, "overflow", "auto");
             contentNode.getStyle().setProperty("position", "relative");
         } else {
             DOM.setStyleAttribute(contentNode, "height", "");
-            DOM.setStyleAttribute(contentNode, "overflow", "");
             renderSpace.setHeight(0);
         }
         iLayout();
@@ -443,6 +448,21 @@ public class ITabsheet extends ITabsheetBase implements
     }
 
     public void iLayout() {
+        if (isDynamicHeight()) {
+            if (tp.getVisibleWidget() >= 0) {
+                Widget widget = tp.getWidget(tp.getVisibleWidget());
+                int widgetHeight = widget.getOffsetHeight();
+                DOM.setStyleAttribute(tp.getElement(), "height", widgetHeight
+                        + "px");
+                if (BrowserInfo.get().isIE6()) {
+                    // 100% height is not good enough for IE6...
+                    tp.setVisibleWidgetHeight(widgetHeight);
+                }
+            }
+        } else {
+            DOM.setStyleAttribute(tp.getElement(), "height", "");
+        }
+
         renderInformation.updateSize(getElement());
 
         if (client != null) {
@@ -451,8 +471,10 @@ public class ITabsheet extends ITabsheetBase implements
 
         updateTabScroller();
 
-        Util.runWebkitOverflowAutoFix(contentNode);
-
+        if (tp.getVisibleWidget() >= 0) {
+            Util.runWebkitOverflowAutoFix(DOM.getParent(tp.getWidget(
+                    tp.getVisibleWidget()).getElement()));
+        }
     }
 
     /**

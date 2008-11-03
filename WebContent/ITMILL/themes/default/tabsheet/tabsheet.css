@@ -163,21 +163,13 @@
 
 /* Progress indication */
 
-.i-tabsheet-loading .i-tabsheet-tabs .i-tabsheet-tabitem-selected span {
+.i-tabsheet-loading .i-tabsheet-tabs .i-tabsheet-tabitem-selected .i-caption .i-captiontext {
 	background: transparent url(../common/img/ajax-loader.gif) no-repeat;
-	display: block;
 	margin-left: -10px;
 	padding-left: 10px;
 	margin-top: -12px;
 	padding-top: 12px;
 }
-
-.i-tabsheet-loading .i-tabsheet-content * {
-	visibility: hidden;
-	overflow: hidden;
-}
-
-
 
 
 /* IE specific styles */

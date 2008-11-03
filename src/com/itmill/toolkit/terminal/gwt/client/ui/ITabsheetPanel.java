@@ -45,6 +45,10 @@ public class ITabsheetPanel extends ComplexPanel {
 
     private Element createContainerElement() {
         Element el = DOM.createDiv();
+        DOM.setStyleAttribute(el, "position", "absolute");
+        DOM.setStyleAttribute(el, "overflow", "auto");
+        DOM.setStyleAttribute(el, "width", "100%");
+        DOM.setStyleAttribute(el, "height", "100%");
         hide(el);
         return el;
     }
@@ -84,7 +88,6 @@ public class ITabsheetPanel extends ComplexPanel {
             }
             Element child = DOM.getChild(getElement(), index);
             DOM.removeChild(getElement(), child);
-            unHide(child);
         }
         return removed;
     }
@@ -109,25 +112,21 @@ public class ITabsheetPanel extends ComplexPanel {
     }
 
     private void hide(Element e) {
-        DOM.setStyleAttribute(e, "width", "0px");
-        DOM.setStyleAttribute(e, "height", "0px");
-        DOM.setStyleAttribute(e, "overflow", "hidden");
         DOM.setStyleAttribute(e, "visibility", "hidden");
-        DOM.setStyleAttribute(e, "position", "absolute");
-        DOM.setStyleAttribute(e, "top", "-100000px"); // Fixes FF2 caret bug
-        DOM.setStyleAttribute(e, "left", "0px");
+        DOM.setStyleAttribute(e, "top", "-100000px");
+        DOM.setStyleAttribute(e, "left", "-100000px");
     }
 
     private void unHide(Element e) {
-        DOM.setStyleAttribute(e, "marginLeft", "0px");
-        DOM.setStyleAttribute(e, "marginTop", "0px");
-        DOM.setStyleAttribute(e, "position", "");
         DOM.setStyleAttribute(e, "top", "");
         DOM.setStyleAttribute(e, "left", "");
         DOM.setStyleAttribute(e, "visibility", "");
-        DOM.setStyleAttribute(e, "width", "");
-        DOM.setStyleAttribute(e, "height", "");
-        DOM.setStyleAttribute(e, "overflow", "");
+
+    }
+
+    public void setVisibleWidgetHeight(int widgetHeight) {
+        DOM.setStyleAttribute(DOM.getParent(visibleWidget.getElement()),
+                "height", widgetHeight + "px");
 
     }
 
