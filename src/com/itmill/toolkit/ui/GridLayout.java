@@ -97,9 +97,9 @@ public class GridLayout extends AbstractLayout implements
      * if you add components outside the grid's area.
      * 
      * @param columns
-     *                Number of columns in the grid.
+     *            Number of columns in the grid.
      * @param rows
-     *                Number of rows in the grid.
+     *            Number of rows in the grid.
      */
     public GridLayout(int columns, int rows) {
         setColumns(columns);
@@ -127,24 +127,24 @@ public class GridLayout extends AbstractLayout implements
      * </p>
      * 
      * @param c
-     *                the component to be added.
+     *            the component to be added.
      * @param column1
-     *                the column of the upper left corner of the area
-     *                <code>c</code> is supposed to occupy.
+     *            the column of the upper left corner of the area <code>c</code>
+     *            is supposed to occupy.
      * @param row1
-     *                the row of the upper left corner of the area
-     *                <code>c</code> is supposed to occupy.
+     *            the row of the upper left corner of the area <code>c</code> is
+     *            supposed to occupy.
      * @param column2
-     *                the column of the lower right corner of the area
-     *                <code>c</code> is supposed to occupy.
+     *            the column of the lower right corner of the area
+     *            <code>c</code> is supposed to occupy.
      * @param row2
-     *                the row of the lower right corner of the area
-     *                <code>c</code> is supposed to occupy.
+     *            the row of the lower right corner of the area <code>c</code>
+     *            is supposed to occupy.
      * @throws OverlapsException
-     *                 if the new component overlaps with any of the components
-     *                 already in the grid.
+     *             if the new component overlaps with any of the components
+     *             already in the grid.
      * @throws OutOfBoundsException
-     *                 if the cells are outside of the grid area.
+     *             if the cells are outside of the grid area.
      */
     public void addComponent(Component component, int column1, int row1,
             int column2, int row2) throws OverlapsException,
@@ -220,9 +220,9 @@ public class GridLayout extends AbstractLayout implements
      * grid.
      * 
      * @param area
-     *                the Area to be checked for overlapping.
+     *            the Area to be checked for overlapping.
      * @throws OverlapsException
-     *                 if <code>area</code> overlaps with any existing area.
+     *             if <code>area</code> overlaps with any existing area.
      */
     private void checkExistingOverlaps(Area area) throws OverlapsException {
         for (final Iterator i = areas.iterator(); i.hasNext();) {
@@ -240,11 +240,11 @@ public class GridLayout extends AbstractLayout implements
      * the same as column1,row1. Component width and height is 1.
      * 
      * @param c
-     *                the component to be added.
+     *            the component to be added.
      * @param column
-     *                the column index.
+     *            the column index.
      * @param row
-     *                the row index.
+     *            the row index.
      */
     public void addComponent(Component c, int column, int row) {
         this.addComponent(c, column, row, column, row);
@@ -283,7 +283,7 @@ public class GridLayout extends AbstractLayout implements
      * grid is automatically extended.
      * 
      * @param c
-     *                the component to be added.
+     *            the component to be added.
      */
     @Override
     public void addComponent(Component component) {
@@ -312,7 +312,7 @@ public class GridLayout extends AbstractLayout implements
      * Removes the given component from this container.
      * 
      * @param c
-     *                the component to be removed.
+     *            the component to be removed.
      */
     @Override
     public void removeComponent(Component component) {
@@ -346,9 +346,9 @@ public class GridLayout extends AbstractLayout implements
      * Removes the component specified with it's cell index.
      * 
      * @param column
-     *                the Component's column.
+     *            the Component's column.
      * @param row
-     *                the Component's row.
+     *            the Component's row.
      */
     public void removeComponent(int column, int row) {
 
@@ -376,9 +376,9 @@ public class GridLayout extends AbstractLayout implements
      * Paints the contents of this component.
      * 
      * @param target
-     *                the Paint Event.
+     *            the Paint Event.
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
@@ -412,13 +412,11 @@ public class GridLayout extends AbstractLayout implements
         final Integer[] columnExpandRatioArray = new Integer[cols];
         final Integer[] rowExpandRatioArray = new Integer[rows];
 
-        boolean equallyDividedCols = false;
         int realColExpandRatioSum = 0;
         float colSum = getExpandRatioSum(columnExpandRatio);
         if (colSum == 0) {
             // no columns has been expanded, all cols have same expand
             // rate
-            equallyDividedCols = true;
             float equalSize = 1 / (float) cols;
             int myRatio = Math.round(equalSize * 1000);
             for (int i = 0; i < cols; i++) {
@@ -614,8 +612,9 @@ public class GridLayout extends AbstractLayout implements
     /*
      * (non-Javadoc)
      * 
-     * @see com.itmill.toolkit.ui.Layout.AlignmentHandler#getComponentAlignment(com
-     *      .itmill.toolkit.ui.Component)
+     * @see
+     * com.itmill.toolkit.ui.Layout.AlignmentHandler#getComponentAlignment(com
+     * .itmill.toolkit.ui.Component)
      */
     public int getComponentAlignment(Component childComponent) {
         final Integer bitMask = (Integer) componentToAlignment
@@ -681,22 +680,22 @@ public class GridLayout extends AbstractLayout implements
          * </p>
          * 
          * @param component
-         *                the component connected to the area.
+         *            the component connected to the area.
          * @param column1
-         *                The column of the upper left corner cell of the area
-         *                <code>c</code> is supposed to occupy.
+         *            The column of the upper left corner cell of the area
+         *            <code>c</code> is supposed to occupy.
          * @param row1
-         *                The row of the upper left corner cell of the area
-         *                <code>c</code> is supposed to occupy.
+         *            The row of the upper left corner cell of the area
+         *            <code>c</code> is supposed to occupy.
          * @param column2
-         *                The column of the lower right corner cell of the area
-         *                <code>c</code> is supposed to occupy.
+         *            The column of the lower right corner cell of the area
+         *            <code>c</code> is supposed to occupy.
          * @param row2
-         *                The row of the lower right corner cell of the area
-         *                <code>c</code> is supposed to occupy.
+         *            The row of the lower right corner cell of the area
+         *            <code>c</code> is supposed to occupy.
          * @throws OverlapsException
-         *                 if the new component overlaps with any of the
-         *                 components already in the grid
+         *             if the new component overlaps with any of the components
+         *             already in the grid
          */
         public Area(Component component, int column1, int row1, int column2,
                 int row2) {
@@ -711,10 +710,10 @@ public class GridLayout extends AbstractLayout implements
          * Tests if the given Area overlaps with an another Area.
          * 
          * @param other
-         *                the Another Area that's to be tested for overlap with
-         *                this area.
-         * @return <code>true</code> if <code>other</code> overlaps with
-         *         this area, <code>false</code> if it doesn't.
+         *            the Another Area that's to be tested for overlap with this
+         *            area.
+         * @return <code>true</code> if <code>other</code> overlaps with this
+         *         area, <code>false</code> if it doesn't.
          */
         public boolean overlaps(Area other) {
             return column1 <= other.getColumn2() && row1 <= other.getRow2()
@@ -740,7 +739,7 @@ public class GridLayout extends AbstractLayout implements
          * </p>
          * 
          * @param newComponent
-         *                the new connected overriding the existing one.
+         *            the new connected overriding the existing one.
          */
         protected void setComponent(Component newComponent) {
             component = newComponent;
@@ -862,8 +861,8 @@ public class GridLayout extends AbstractLayout implements
     }
 
     /**
-     * An <code>Exception</code> object which is thrown when an area exceeds
-     * the bounds of the grid.
+     * An <code>Exception</code> object which is thrown when an area exceeds the
+     * bounds of the grid.
      * 
      * @author IT Mill Ltd.
      * @version
@@ -904,7 +903,7 @@ public class GridLayout extends AbstractLayout implements
      * reduced if there are any areas that would be outside of the shrunk grid.
      * 
      * @param columns
-     *                the new number of columns in the grid.
+     *            the new number of columns in the grid.
      */
     public void setColumns(int columns) {
 
@@ -948,7 +947,7 @@ public class GridLayout extends AbstractLayout implements
      * reduced if there are any areas that would be outside of the shrunk grid.
      * 
      * @param rows
-     *                the new number of rows in the grid.
+     *            the new number of rows in the grid.
      */
     public void setRows(int rows) {
 
@@ -1057,8 +1056,9 @@ public class GridLayout extends AbstractLayout implements
     /*
      * (non-Javadoc)
      * 
-     * @see com.itmill.toolkit.ui.Layout.AlignmentHandler#setComponentAlignment(com
-     *      .itmill.toolkit.ui.Component, int, int)
+     * @see
+     * com.itmill.toolkit.ui.Layout.AlignmentHandler#setComponentAlignment(com
+     * .itmill.toolkit.ui.Component, int, int)
      */
     public void setComponentAlignment(Component childComponent,
             int horizontalAlignment, int verticalAlignment) {
@@ -1090,7 +1090,7 @@ public class GridLayout extends AbstractLayout implements
      * Inserts an empty row at the chosen position in the grid.
      * 
      * @param row
-     *                Number of the row the new row will be inserted before
+     *            Number of the row the new row will be inserted before
      */
     public void insertRow(int row) {
         if (row > rows) {
@@ -1127,7 +1127,7 @@ public class GridLayout extends AbstractLayout implements
      * row.
      * 
      * @param row
-     *                The row number to remove
+     *            The row number to remove
      */
     public void removeRow(int row) {
         if (row >= rows) {
