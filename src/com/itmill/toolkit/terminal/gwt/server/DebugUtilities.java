@@ -5,6 +5,7 @@ import java.util.Iterator;
 import com.itmill.toolkit.terminal.Sizeable;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.ComponentContainer;
+import com.itmill.toolkit.ui.CustomLayout;
 import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
@@ -35,7 +36,8 @@ public class DebugUtilities {
                     } else {
                         // valid situation, other components defined width
                     }
-                } else if (!(parent instanceof GridLayout)) {
+                } else if (!(parent instanceof GridLayout)
+                        && !(parent instanceof CustomLayout)) {
                     // TODO make grid layout check (each col should have at
                     // least one non relatively sized component)
 
