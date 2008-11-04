@@ -40,7 +40,7 @@ public class ILink extends HTML implements Paintable, ClickListener {
 
     private Element errorIndicatorElement;
 
-    private final Element captionElement = DOM.createSpan();
+    private final Element captionElement = DOM.createAnchor();
 
     private Icon icon;
 
@@ -69,9 +69,11 @@ public class ILink extends HTML implements Paintable, ClickListener {
 
         if (uidl.hasAttribute("name")) {
             target = uidl.getStringAttribute("name");
+            captionElement.setAttribute("target", target);
         }
         if (uidl.hasAttribute("src")) {
             src = client.translateToolkitUri(uidl.getStringAttribute("src"));
+            captionElement.setAttribute("href", src);
         }
 
         if (uidl.hasAttribute("border")) {
@@ -142,7 +144,16 @@ public class ILink extends HTML implements Paintable, ClickListener {
                         + targetHeight;
             }
 
-            Window.open(src, target, features);
+            if (features.length() > 0) {
+                // if 'special features' are set, use window.open(), unless
+                // a modifier key is held (ctrl to open in new tab etc)
+                Event e = DOM.eventGetCurrentEvent();
+                if (!e.getCtrlKey() && !e.getAltKey() && !e.getShiftKey()
+                        && !e.getMetaKey()) {
+                    Window.open(src, target, features);
+                    e.preventDefault();
+                }
+            }
         }
     }
 

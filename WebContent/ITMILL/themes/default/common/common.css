@@ -219,10 +219,10 @@ input.i-modified,
  * Link component styles 
  * (useless to move into a separate file)
  */
-
-.i-link span {
-	text-decoration: underline;
-	cursor:pointer;
+.i-link a {
+	font-size: 13px;
+	line-height: 18px;
+	color: #464f52;
 }
 
 /**
