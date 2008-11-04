@@ -7,7 +7,7 @@ package com.itmill.toolkit.demo.featurebrowser;
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.ui.Embedded;
-import com.itmill.toolkit.ui.ExpandLayout;
+import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Select;
 
 /**
@@ -17,7 +17,7 @@ import com.itmill.toolkit.ui.Select;
  * @author IT Mill Ltd.
  * @see com.itmill.toolkit.ui.Window
  */
-public class EmbeddedBrowserExample extends ExpandLayout implements
+public class EmbeddedBrowserExample extends OrderedLayout implements
         Select.ValueChangeListener {
 
     // Default URL to open.
@@ -54,11 +54,14 @@ public class EmbeddedBrowserExample extends ExpandLayout implements
         select.addListener(this);
         select.setValue(urls[0]);
 
+        select.setWidth("100%");
+
         // configure the embedded and add to layout
         emb.setType(Embedded.TYPE_BROWSER);
+        emb.setSizeFull();
         addComponent(emb);
         // make the embedded as large as possible
-        expand(emb);
+        setExpandRatio(emb, 1);
 
     }
 
