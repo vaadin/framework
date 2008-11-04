@@ -38,9 +38,9 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
 public class IWindow extends IToolkitOverlay implements Container,
         ScrollListener {
 
-    private static final int MIN_HEIGHT = 60;
+    private static final int MIN_HEIGHT = 100;
 
-    private static final int MIN_WIDTH = 80;
+    private static final int MIN_WIDTH = 150;
 
     private static Vector<IWindow> windowOrder = new Vector<IWindow>();
 
@@ -115,7 +115,8 @@ public class IWindow extends IToolkitOverlay implements Container,
 
     private boolean readonly;
 
-    private RenderSpace renderSpace = new RenderSpace(0, 0, true);
+    private RenderSpace renderSpace = new RenderSpace(MIN_WIDTH, MIN_HEIGHT,
+            true);
 
     private String width;
 
@@ -372,6 +373,14 @@ public class IWindow extends IToolkitOverlay implements Container,
         }
 
         updateShadowSizeAndPosition();
+
+        // ensure window is not larger than browser window
+        if (getOffsetWidth() > Window.getClientWidth()) {
+            setWidth(Window.getClientWidth() + "px");
+        }
+        if (getOffsetHeight() > Window.getClientHeight()) {
+            setHeight(Window.getClientHeight() + "px");
+        }
     }
 
     private void setReadOnly(boolean readonly) {
@@ -560,35 +569,37 @@ public class IWindow extends IToolkitOverlay implements Container,
 
     @Override
     public void onBrowserEvent(final Event event) {
-        final int type = event.getTypeInt();
+        if (event != null) {
+            final int type = event.getTypeInt();
 
-        if (type == Event.ONKEYDOWN && shortcutHandler != null) {
-            shortcutHandler.handleKeyboardEvent(event);
-            return;
-        }
-
-        final Element target = DOM.eventGetTarget(event);
-
-        // Handle window caption tooltips
-        if (client != null && DOM.isOrHasChild(header, target)) {
-            client.handleTooltipEvent(event, this);
-        }
-
-        if (resizing || resizeBox == target) {
-            onResizeEvent(event);
-            event.cancelBubble(true);
-        } else if (target == closeBox) {
-            if (type == Event.ONCLICK) {
-                onCloseClick();
-                event.cancelBubble(true);
+            if (type == Event.ONKEYDOWN && shortcutHandler != null) {
+                shortcutHandler.handleKeyboardEvent(event);
+                return;
             }
-        } else if (dragging || !DOM.isOrHasChild(contents, target)) {
-            onDragEvent(event);
-            event.cancelBubble(true);
-        } else if (type == Event.ONCLICK) {
-            // clicked inside window, ensure to be on top
-            if (!isActive()) {
-                bringToFront();
+
+            final Element target = DOM.eventGetTarget(event);
+
+            // Handle window caption tooltips
+            if (client != null && DOM.isOrHasChild(header, target)) {
+                client.handleTooltipEvent(event, this);
+            }
+
+            if (resizing || resizeBox == target) {
+                onResizeEvent(event);
+                event.cancelBubble(true);
+            } else if (target == closeBox) {
+                if (type == Event.ONCLICK) {
+                    onCloseClick();
+                    event.cancelBubble(true);
+                }
+            } else if (dragging || !DOM.isOrHasChild(contents, target)) {
+                onDragEvent(event);
+                event.cancelBubble(true);
+            } else if (type == Event.ONCLICK) {
+                // clicked inside window, ensure to be on top
+                if (!isActive()) {
+                    bringToFront();
+                }
             }
         }
     }
@@ -646,13 +657,13 @@ public class IWindow extends IToolkitOverlay implements Container,
 
     private void setSize(Event event, boolean updateVariables) {
         int w = event.getScreenX() - startX + origW;
-        if (w < MIN_WIDTH) {
-            w = MIN_WIDTH;
+        if (w < MIN_WIDTH + borderWidth) {
+            w = MIN_WIDTH + borderWidth;
         }
 
         int h = event.getScreenY() - startY + origH;
-        if (h < MIN_HEIGHT) {
-            h = MIN_HEIGHT;
+        if (h < MIN_HEIGHT + getExtraHeight()) {
+            h = MIN_HEIGHT + getExtraHeight();
         }
 
         setWidth(w + "px");
@@ -697,6 +708,9 @@ public class IWindow extends IToolkitOverlay implements Container,
             getElement().getStyle().setProperty("width", width);
 
             pixelWidth = getElement().getOffsetWidth() - borderWidth;
+            if (pixelWidth < MIN_WIDTH) {
+                pixelWidth = MIN_WIDTH;
+            }
 
             renderSpace.setWidth(pixelWidth);
 
@@ -726,8 +740,8 @@ public class IWindow extends IToolkitOverlay implements Container,
         if (height != null && !"".equals(height)) {
             DOM.setStyleAttribute(getElement(), "height", height);
             int pixels = getElement().getOffsetHeight() - getExtraHeight();
-            if (pixels < 0) {
-                pixels = 0;
+            if (pixels < MIN_HEIGHT) {
+                pixels = MIN_HEIGHT;
             }
             renderSpace.setHeight(pixels);
             height = pixels + "px";
