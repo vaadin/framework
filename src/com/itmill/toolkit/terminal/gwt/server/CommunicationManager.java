@@ -327,6 +327,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
 
         outWriter.print("\"changes\":[");
 
+        ArrayList<Paintable> paintables = null;
+
         // If the browser-window has been closed - we do not need to paint it at
         // all
         if (!window.getName().equals(closingWindowName)) {
@@ -343,9 +345,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                     !repaintAll);
 
             // Paints components
-            ArrayList paintables;
             if (repaintAll) {
-                paintables = new ArrayList();
+                paintables = new ArrayList<Paintable>();
                 paintables.add(window);
 
                 // Reset sent locales
@@ -547,6 +548,16 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
         }
         outWriter.flush();
         outWriter.close();
+
+        if (applicationServlet.isDebugMode()) {
+            if (paintables != null) {
+                for (Paintable paintable : paintables) {
+                    DebugUtilities
+                            .validateComponentRelativeSizes((Component) paintable);
+                }
+            }
+        }
+
     }
 
     /**
