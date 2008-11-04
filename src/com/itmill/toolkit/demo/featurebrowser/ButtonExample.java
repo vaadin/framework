@@ -31,6 +31,7 @@ public class ButtonExample extends CustomComponent implements
 
         final OrderedLayout horiz = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
+        horiz.setWidth("100%");
         main.addComponent(horiz);
         final Panel basic = new Panel("Basic buttons");
         basic.setStyleName(Panel.STYLE_LIGHT);
