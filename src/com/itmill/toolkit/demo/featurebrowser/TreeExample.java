@@ -39,6 +39,7 @@ public class TreeExample extends CustomComponent implements Action.Handler,
     public TreeExample() {
         final OrderedLayout main = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
+        main.setWidth("100%");
         main.setMargin(true);
         setCompositionRoot(main);
 
@@ -79,6 +80,7 @@ public class TreeExample extends CustomComponent implements Action.Handler,
         editor.setColumns(15);
         p.addComponent(editor);
         main.addComponent(p);
+        main.setExpandRatio(p, 1);
     }
 
     public Action[] getActions(Object target, Object sender) {
