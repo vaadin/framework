@@ -18,7 +18,6 @@ import com.itmill.toolkit.ui.AbstractSelect;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.Embedded;
-import com.itmill.toolkit.ui.ExpandLayout;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Layout;
 import com.itmill.toolkit.ui.OrderedLayout;
@@ -166,8 +165,9 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         tree.expandItemsRecursively(rootId);
         for (Iterator i = container.getItemIds().iterator(); i.hasNext();) {
             Object id = i.next();
-            if (container.getChildren(id) == null)
+            if (container.getChildren(id) == null) {
                 tree.setChildrenAllowed(id, false);
+            }
         }
 
         split.addComponent(tree);
@@ -196,7 +196,8 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         table.setImmediate(true);
         split2.addComponent(table);
 
-        final ExpandLayout exp = new ExpandLayout();
+        final OrderedLayout exp = new OrderedLayout();
+        exp.setSizeFull();
         exp.setMargin(true);
         split2.addComponent(exp);
 
@@ -208,13 +209,13 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
                         .next();
                 String caption = ts.getTabCaption(component);
                 try {
-                    component = (Component) component.getClass().newInstance();
+                    component = component.getClass().newInstance();
                 } catch (Exception e) {
                     // Could not create
                     return;
                 }
                 Window w = new Window(caption);
-                w.setWidth(640);
+                w.setWidth("640px");
                 if (Layout.class.isAssignableFrom(component.getClass())) {
                     w.setLayout((Layout) component);
                 } else {
@@ -234,8 +235,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
                 Window w = getWindow(caption);
                 if (w == null) {
                     try {
-                        component = (Component) component.getClass()
-                                .newInstance();
+                        component = component.getClass().newInstance();
                     } catch (final Exception e) {
                         // Could not create
                         return;
@@ -264,7 +264,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         ts.setSizeFull();
         ts.addTab(new Label(""), "Choose example", null);
         exp.addComponent(ts);
-        exp.expand(ts);
+        exp.setExpandRatio(ts, 1);
 
         final Label status = new Label(
                 "<a href=\"http://www.itmill.com/developers/\">Developer Area</a>"
@@ -309,8 +309,9 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
     public void valueChange(ValueChangeEvent event) {
         if (event.getProperty() == tree) {
             final Object id = tree.getValue();
-            if (id == null)
+            if (id == null) {
                 return;
+            }
             final Item item = tree.getItem(id);
             //
             String newSection;
