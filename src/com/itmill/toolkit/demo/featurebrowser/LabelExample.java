@@ -4,7 +4,6 @@
 
 package com.itmill.toolkit.demo.featurebrowser;
 
-import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.Label;
@@ -71,15 +70,7 @@ public class LabelExample extends CustomComponent {
     }
 
     private Panel getExpamplePanel(String caption) {
-        Panel p = new Panel(caption) {
-
-            @Override
-            public void addComponent(Component c) {
-                c.setWidth("100%");
-                super.addComponent(c);
-            }
-
-        };
+        Panel p = new Panel(caption);
         p.addStyleName(Panel.STYLE_LIGHT);
         return p;
     }
