@@ -149,7 +149,7 @@ public class ApplicationServlet extends HttpServlet {
 
     private String resourcePath = null;
 
-    private String debugMode = "";
+    private boolean debugMode = false;
 
     // Is this servlet application runner
     boolean isApplicationRunnerServlet = false;
@@ -211,17 +211,11 @@ public class ApplicationServlet extends HttpServlet {
                     .getInitParameter(name));
         }
 
-        // Gets the debug window parameter
-        final String debug = getApplicationOrSystemProperty(PARAMETER_DEBUG, "")
-                .toLowerCase();
-
-        // Enables application specific debug
-        if (!"".equals(debug) && !"true".equals(debug)
-                && !"false".equals(debug)) {
-            throw new ServletException(
-                    "If debug parameter is given for an application, it must be 'true' or 'false'");
+        // check if application is in debug mode
+        if (getApplicationOrSystemProperty(PARAMETER_DEBUG, "false").equals(
+                "true")) {
+            debugMode = true;
         }
-        debugMode = debug;
 
         // Gets Testing Tools parameters if feature is activated
         if (getApplicationOrSystemProperty("testingToolsActive", "false")
@@ -872,6 +866,10 @@ public class ApplicationServlet extends HttpServlet {
                     + "itmill.toolkitConfigurations = {};\n"
                     + "itmill.themesLoaded = {}};\n");
 
+            if (isDebugMode()) {
+                page.write("itmill.debug = true;\n");
+            }
+
             page.write("itmill.toolkitConfigurations[\"" + appId + "\"] = {");
             page.write("appUri:'" + appUrl + "', ");
             page.write("pathInfo: '" + pathInfo + "', ");
@@ -912,6 +910,9 @@ public class ApplicationServlet extends HttpServlet {
                     + "if(!itmill) { var itmill = {}} \n"
                     + "itmill.toolkitConfigurations = {};\n"
                     + "itmill.themesLoaded = {};\n");
+            if (isDebugMode()) {
+                page.write("itmill.debug = true;\n");
+            }
             page
                     .write("document.write('<iframe tabIndex=\"-1\" id=\"__gwt_historyFrame\" "
                             + "style=\"width:0;height:0;border:0;overflow:"
@@ -1543,25 +1544,6 @@ public class ApplicationServlet extends HttpServlet {
     }
 
     /**
-     * Checks if web adapter is in debug mode. Extra output is generated to log
-     * when debug mode is enabled.
-     * 
-     * @param parameters
-     * @return <code>true</code> if the web adapter is in debug mode. otherwise
-     *         <code>false</code>.
-     */
-    public boolean isDebugMode(Map parameters) {
-        if (parameters != null) {
-            final Object[] debug = (Object[]) parameters.get("debug");
-            if (debug != null && !"false".equals(debug[0].toString())
-                    && !"false".equals(debugMode)) {
-                return true;
-            }
-        }
-        return "true".equals(debugMode);
-    }
-
-    /**
      * Implementation of ParameterHandler.ErrorEvent interface.
      */
     public class ParameterHandlerErrorImpl implements
@@ -1689,6 +1671,14 @@ public class ApplicationServlet extends HttpServlet {
             return throwable;
         }
 
+    }
+
+    /**
+     * 
+     * @return true if debug mode parameter is defined as "true" in web.xml
+     */
+    public boolean isDebugMode() {
+        return debugMode;
     }
 
 }

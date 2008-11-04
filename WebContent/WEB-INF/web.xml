@@ -9,7 +9,13 @@
   <description>
      IT Mill Toolkit examples
   </description>
-
+    
+  <context-param>
+  	<param-name>Debug</param-name>
+  	<param-value>true</param-value>
+  	<description>IT Mill Toolkit debug mode</description>
+  </context-param>
+    
   <!-- Permit use of IT Mill Testing Tools for this servlet continer -->
   <context-param>
   	<param-name>testingToolsActive</param-name>

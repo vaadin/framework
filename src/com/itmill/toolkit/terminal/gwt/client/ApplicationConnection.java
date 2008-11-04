@@ -248,9 +248,13 @@ public class ApplicationConnection {
 
     private native static boolean isDebugMode()
     /*-{
-     var uri = $wnd.location;
-     var re = /debug[^\/]*$/;
-     return re.test(uri);
+        if($wnd.itmill.debug) {
+            var uri = $wnd.location;
+            var re = /debug[^\/]*$/;
+            return re.test(uri);
+        } else {
+            return false;
+        }
      }-*/;
 
     private native static boolean isQuietDebugMode()
@@ -633,7 +637,7 @@ public class ApplicationConnection {
                 }
 
                 if (html.length() != 0) {
-                    INotification n = new INotification(1000 * 60 * 45); //45min
+                    INotification n = new INotification(1000 * 60 * 45); // 45min
                     n.addEventListener(new NotificationRedirect(url));
                     n.show(html, INotification.CENTERED_TOP,
                             INotification.STYLE_SYSTEM);
