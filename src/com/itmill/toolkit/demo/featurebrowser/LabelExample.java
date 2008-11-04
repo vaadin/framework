@@ -80,11 +80,7 @@ public class LabelExample extends CustomComponent {
             }
 
         };
-        // FIXME orderedlayout currently breaks panels in grid very oddly
-        p.setLayout(new GridLayout());
         p.addStyleName(Panel.STYLE_LIGHT);
-        p.setWidth("100%");
-        p.getLayout().setWidth("100%");
         return p;
     }
 }
