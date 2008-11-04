@@ -14,7 +14,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.Container;
-import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.IErrorMessage;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.RenderInformation;
@@ -22,8 +21,7 @@ import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
 
-public class IPanel extends SimplePanel implements Container,
-        ContainerResizedListener {
+public class IPanel extends SimplePanel implements Container {
 
     public static final String CLASSNAME = "i-panel";
 
@@ -69,6 +67,8 @@ public class IPanel extends SimplePanel implements Container,
 
     private int captionMarginLeft = -1;
 
+    private boolean rendering;
+
     private int contentMarginLeft = -1;
 
     public IPanel() {
@@ -102,8 +102,10 @@ public class IPanel extends SimplePanel implements Container,
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        rendering = true;
         // Ensure correct implementation
         if (client.updateComponent(this, uidl, false)) {
+            rendering = false;
             return;
         }
 
@@ -178,7 +180,7 @@ public class IPanel extends SimplePanel implements Container,
             // IE/FF2 is not able to make the offsetWidth for contentNode
             // correct
             // for some reason...
-            iLayout(false);
+            runHacks(false);
         }
         // We may have actions attached to this panel
         if (uidl.getChildCount() > 1) {
@@ -205,6 +207,8 @@ public class IPanel extends SimplePanel implements Container,
             scrollLeft = uidl.getIntVariable("scrollLeft");
             DOM.setElementPropertyInt(contentNode, "scrollLeft", scrollLeft);
         }
+
+        rendering = false;
 
     }
 
@@ -253,11 +257,7 @@ public class IPanel extends SimplePanel implements Container,
         }
     }
 
-    public void iLayout() {
-        iLayout(true);
-    }
-
-    public void iLayout(boolean runGeckoFix) {
+    public void runHacks(boolean runGeckoFix) {
         if (BrowserInfo.get().isIE6() && width != null && !width.equals("")) {
             /*
              * IE6 requires overflow-hidden elements to have a width specified
@@ -399,6 +399,9 @@ public class IPanel extends SimplePanel implements Container,
         } else {
             DOM.setStyleAttribute(contentNode, "height", "");
         }
+        if (!rendering) {
+            runHacks(true);
+        }
     }
 
     private int getCaptionMarginLeft() {
@@ -432,9 +435,10 @@ public class IPanel extends SimplePanel implements Container,
     @Override
     public void setWidth(String width) {
         this.width = width;
-
         super.setWidth(width);
-
+        if (!rendering) {
+            runHacks(true);
+        }
     }
 
     private int getContainerBorderWidth() {
@@ -501,7 +505,7 @@ public class IPanel extends SimplePanel implements Container,
              */
             return true;
         }
-        iLayout(false);
+        runHacks(false);
         return !renderInformation.updateSize(getElement());
     }
 
