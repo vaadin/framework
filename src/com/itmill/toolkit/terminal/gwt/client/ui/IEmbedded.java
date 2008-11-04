@@ -116,17 +116,11 @@ public class IEmbedded extends HTML implements Paintable {
     }
 
     public void setWidth(String width) {
-        if (width == null || width.equals("")) {
-            width = "100%";
-        }
         this.width = width;
-        super.setHeight(width);
+        super.setWidth(width);
     }
 
     public void setHeight(String height) {
-        if (height == null || height.equals("")) {
-            height = "100%";
-        }
         heigth = height;
         super.setHeight(height);
     }
