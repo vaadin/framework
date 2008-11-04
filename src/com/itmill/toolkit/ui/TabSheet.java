@@ -50,6 +50,8 @@ public class TabSheet extends AbstractComponentContainer implements
      */
     public TabSheet() {
         super();
+        // expand horizontally by default
+        setWidth(100, UNITS_PERCENTAGE);
         setImmediate(true);
     }
 

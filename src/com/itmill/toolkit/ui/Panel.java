@@ -62,7 +62,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * Creates a new empty panel. Ordered layout is used.
      */
     public Panel() {
-        setLayout(null);
+        this((Layout) null);
     }
 
     /**
@@ -72,6 +72,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      *            the layout used in the panel.
      */
     public Panel(Layout layout) {
+        setWidth(100, UNITS_PERCENTAGE);
         setLayout(layout);
     }
 

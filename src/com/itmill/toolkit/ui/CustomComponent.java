@@ -45,6 +45,8 @@ public class CustomComponent extends AbstractComponentContainer {
      * </p>
      */
     public CustomComponent() {
+        // expand horizontally by default
+        setWidth(100, UNITS_PERCENTAGE);
     }
 
     /**
@@ -60,6 +62,7 @@ public class CustomComponent extends AbstractComponentContainer {
      *            the root of the composition component tree.
      */
     public CustomComponent(Component compositionRoot) {
+        this();
         setCompositionRoot(compositionRoot);
     }
 

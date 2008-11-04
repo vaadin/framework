@@ -174,6 +174,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     public Window(String caption, Layout layout) {
         super(caption, layout);
         setScrollable(true);
+        setSizeUndefined();
     }
 
     /**
