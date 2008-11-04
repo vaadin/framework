@@ -15,6 +15,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Frame;
+import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollListener;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -113,6 +114,12 @@ public class IWindow extends IToolkitOverlay implements Container,
     private Element headerText;
 
     private boolean readonly;
+
+    private RenderSpace renderSpace = new RenderSpace(0, 0, true);
+
+    private String width;
+
+    private String height;
 
     public IWindow() {
         super(false, false, true); // no autohide, not modal, shadow
@@ -660,7 +667,7 @@ public class IWindow extends IToolkitOverlay implements Container,
         // Update child widget dimensions
         if (client != null) {
             client.handleComponentRelativeSize((Widget) layout);
-            client.runDescendentsLayout(this);
+            client.runDescendentsLayout((HasWidgets) layout);
         }
     }
 
@@ -672,29 +679,33 @@ public class IWindow extends IToolkitOverlay implements Container,
      * throw an exception)
      */
     public void setWidth(String width) {
+        this.width = width;
         if (!isAttached()) {
             return;
         }
-        if (!"".equals(width)) {
+        if (width != null && !"".equals(width)) {
+            int pixelWidth;
             // Convert non-pixel values to pixels
             if (width.indexOf("px") < 0) {
                 DOM.setStyleAttribute(getElement(), "width", width);
-                width = getElement().getOffsetWidth() + "px";
+                pixelWidth = getElement().getOffsetWidth();
+                width = pixelWidth + "px";
             }
+            if (BrowserInfo.get().isIE6()) {
+                getElement().getStyle().setProperty("overflow", "hidden");
+            }
+            getElement().getStyle().setProperty("width", width);
 
-            DOM.setStyleAttribute(getElement(), "width", width);
+            pixelWidth = getElement().getOffsetWidth() - borderWidth;
+
+            renderSpace.setWidth(pixelWidth);
 
             // IE6 needs the actual inner content width on the content element,
             // otherwise it won't wrap the content properly (no scrollbars
             // appear, content flows out of window)
             if (BrowserInfo.get().isIE6()) {
-                int contentWidth = (Integer.parseInt(width.substring(0, width
-                        .length() - 2)) - borderWidth);
-                if (contentWidth < 0) {
-                    contentWidth = 0;
-                }
                 DOM.setStyleAttribute(contentPanel.getElement(), "width",
-                        contentWidth + "px");
+                        pixelWidth + "px");
             }
             updateShadowSizeAndPosition();
         }
@@ -708,30 +719,29 @@ public class IWindow extends IToolkitOverlay implements Container,
      * throw an exception)
      */
     public void setHeight(String height) {
+        this.height = height;
         if (!isAttached()) {
             return;
         }
-        if (!"".equals(height)) {
-            // Convert non-pixel values to pixels
-            if (height.indexOf("px") < 0) {
-                DOM.setStyleAttribute(getElement(), "height", height);
-                height = getElement().getOffsetHeight() + "px";
+        if (height != null && !"".equals(height)) {
+            DOM.setStyleAttribute(getElement(), "height", height);
+            int pixels = getElement().getOffsetHeight() - getExtraHeight();
+            if (pixels < 0) {
+                pixels = 0;
             }
-
-            DOM.setStyleAttribute(contentPanel.getElement(), "position",
-                    "absolute");
-            final int usedHeight = getElement().getOffsetHeight();
-            DOM.setStyleAttribute(contentPanel.getElement(), "position",
-                    "relative");
-
-            height = (Integer
-                    .parseInt(height.substring(0, height.length() - 2)) - usedHeight)
-                    + "px";
-
-            DOM.setStyleAttribute(contentPanel.getElement(), "height", height);
-
+            renderSpace.setHeight(pixels);
+            height = pixels + "px";
+            contentPanel.getElement().getStyle().setProperty("height", height);
             updateShadowSizeAndPosition();
+
         }
+    }
+
+    private int extraH = 0;
+
+    private int getExtraHeight() {
+        extraH = header.getOffsetHeight() + footer.getOffsetHeight();
+        return extraH;
     }
 
     private void onDragEvent(Event event) {
@@ -835,26 +845,15 @@ public class IWindow extends IToolkitOverlay implements Container,
                     "offsetWidth");
             borderWidth = windowWidth - contentWidth;
         }
+
+        setWidth(width);
+        setHeight(height);
+
     }
 
     public RenderSpace getAllocatedSpace(Widget child) {
         if (child == layout) {
-            return new RenderSpace() {
-                @Override
-                public int getHeight() {
-                    return contentPanel.getOffsetHeight();
-                }
-
-                @Override
-                public int getWidth() {
-                    return contentPanel.getOffsetWidth();
-                }
-
-                @Override
-                public int getScrollbarSize() {
-                    return Util.getNativeScrollbarSize();
-                }
-            };
+            return renderSpace;
         } else {
             // Exception ??
             return null;
