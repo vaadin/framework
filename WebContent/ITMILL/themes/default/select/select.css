@@ -12,6 +12,8 @@
 .i-select-optiongroup .i-select-option {
 	display: block;
 	white-space: nowrap;
+	/* really mean block for IE */
+	zoom: 1;
 }
 
 .i-select-select {
