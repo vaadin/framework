@@ -246,9 +246,38 @@ public class Util {
     }
 
     public static int measureVerticalBorder(Element element) {
-        int borders = element.getOffsetHeight()
-                - element.getPropertyInt("clientHeight");
+        int borders;
+        if (BrowserInfo.get().isIE()) {
+            String width = element.getStyle().getProperty("width");
+            String height = element.getStyle().getProperty("height");
+
+            int offsetWidth = element.getOffsetWidth();
+            int offsetHeight = element.getOffsetHeight();
+            // if (BrowserInfo.get().isIE6()) {
+            if (offsetHeight < 1) {
+                offsetHeight = 1;
+            }
+            if (offsetWidth < 1) {
+                offsetWidth = 10;
+            }
+            element.getStyle().setPropertyPx("width", offsetWidth);
+            // }
+
+            element.getStyle().setPropertyPx("height", offsetHeight);
+
+            borders = element.getOffsetHeight()
+                    - element.getPropertyInt("clientHeight");
+
+            element.getStyle().setProperty("height", height);
+            // if (BrowserInfo.get().isIE6()) {
+            element.getStyle().setProperty("width", width);
+            // }
+        } else {
+            borders = element.getOffsetHeight()
+                    - element.getPropertyInt("clientHeight");
+        }
         assert borders >= 0;
+
         return borders;
     }
 
@@ -279,7 +308,7 @@ public class Util {
 
     }
 
-    public static String getSimpleName(Widget widget) {
+    public static String getSimpleName(Object widget) {
         if (widget == null) {
             return "(null)";
         }
