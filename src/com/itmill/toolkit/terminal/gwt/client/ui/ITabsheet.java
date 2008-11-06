@@ -19,7 +19,6 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
-import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
@@ -295,6 +294,9 @@ public class ITabsheet extends ITabsheetBase implements
         }
 
         updateTabScroller();
+
+        renderInformation.updateSize(getElement());
+
         waitingForResponse = false;
     }
 
@@ -397,6 +399,7 @@ public class ITabsheet extends ITabsheetBase implements
 
         ITabsheet.this.iLayout();
         (content).updateFromUIDL(contentUIDL, client);
+        fixHeight();
         ITabsheet.this.removeStyleDependentName("loading");
         if (previousVisibleWidget != null) {
             DOM.setStyleAttribute(previousVisibleWidget.getElement(),
@@ -423,6 +426,7 @@ public class ITabsheet extends ITabsheetBase implements
         } else {
             DOM.setStyleAttribute(contentNode, "height", "");
             renderSpace.setHeight(0);
+            fixHeight();
         }
         iLayout();
     }
@@ -448,23 +452,6 @@ public class ITabsheet extends ITabsheetBase implements
     }
 
     public void iLayout() {
-        if (isDynamicHeight()) {
-            if (tp.getVisibleWidget() >= 0) {
-                Widget widget = tp.getWidget(tp.getVisibleWidget());
-                int widgetHeight = widget.getOffsetHeight();
-                DOM.setStyleAttribute(tp.getElement(), "height", widgetHeight
-                        + "px");
-                if (BrowserInfo.get().isIE6()) {
-                    // 100% height is not good enough for IE6...
-                    tp.setVisibleWidgetHeight(widgetHeight);
-                }
-            }
-        } else {
-            DOM.setStyleAttribute(tp.getElement(), "height", "");
-        }
-
-        renderInformation.updateSize(getElement());
-
         if (client != null) {
             client.runDescendentsLayout(this);
         }
@@ -475,6 +462,21 @@ public class ITabsheet extends ITabsheetBase implements
             Util.runWebkitOverflowAutoFix(DOM.getParent(tp.getWidget(
                     tp.getVisibleWidget()).getElement()));
         }
+    }
+
+    private void fixHeight() {
+        if (isDynamicHeight()) {
+            if (tp.getVisibleWidget() >= 0) {
+                Widget widget = tp.getWidget(tp.getVisibleWidget());
+                int widgetHeight = widget.getOffsetHeight();
+                DOM.setStyleAttribute(tp.getElement(), "height", widgetHeight
+                        + "px");
+                tp.setVisibleWidgetHeight(widgetHeight);
+            }
+        } else {
+            DOM.setStyleAttribute(tp.getElement(), "height", "");
+        }
+
     }
 
     /**
@@ -566,6 +568,7 @@ public class ITabsheet extends ITabsheetBase implements
              * Size has changed so we let the child components know about the
              * new size.
              */
+            fixHeight();
             iLayout();
 
             return false;

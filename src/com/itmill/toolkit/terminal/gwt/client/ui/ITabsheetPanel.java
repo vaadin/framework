@@ -47,8 +47,6 @@ public class ITabsheetPanel extends ComplexPanel {
         Element el = DOM.createDiv();
         DOM.setStyleAttribute(el, "position", "absolute");
         DOM.setStyleAttribute(el, "overflow", "auto");
-        DOM.setStyleAttribute(el, "width", "100%");
-        DOM.setStyleAttribute(el, "height", "100%");
         hide(el);
         return el;
     }
