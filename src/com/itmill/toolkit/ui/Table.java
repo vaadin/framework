@@ -1282,6 +1282,9 @@ public class Table extends AbstractSelect implements Action.Container,
 
                 if (cols > 0) {
                     for (int j = 0; j < cols; j++) {
+                        if (isColumnCollapsed(colids[j])) {
+                            continue;
+                        }
                         Property p = null;
                         Object value = "";
                         boolean isGenerated = columnGenerators
