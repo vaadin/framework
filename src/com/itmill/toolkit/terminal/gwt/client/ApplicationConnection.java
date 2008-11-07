@@ -899,7 +899,20 @@ public class ApplicationConnection {
 
         // Visibility
         boolean visible = !uidl.getBooleanAttribute("invisible");
+        boolean wasVisible = component.isVisible();
         component.setVisible(visible);
+        if (wasVisible != visible) {
+            // Changed invisibile <-> visible
+            if (wasVisible && manageCaption) {
+                // Must hide caption when component is hidden
+                final Container parent = Util.getLayout(component);
+                if (parent != null) {
+                    parent.updateCaption((Paintable) component, uidl);
+                }
+
+            }
+        }
+
         if (!visible) {
             return true;
         }
