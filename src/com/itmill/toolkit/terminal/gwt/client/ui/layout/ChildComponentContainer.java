@@ -86,7 +86,7 @@ public class ChildComponentContainer extends Panel {
 
     }
 
-    private void setWidget(Widget w) {
+    public void setWidget(Widget w) {
         // Validate
         if (w == widget) {
             return;
@@ -163,8 +163,8 @@ public class ChildComponentContainer extends Panel {
         int w = widget.getOffsetWidth();
         int h = widget.getOffsetHeight();
 
-//        ApplicationConnection.getConsole().log(
-//               Util.getSimpleName(widget) + " size is " + w + "," + h);
+        // ApplicationConnection.getConsole().log(
+        // Util.getSimpleName(widget) + " size is " + w + "," + h);
         widgetSize.setHeight(h);
         widgetSize.setWidth(w);
     }
@@ -445,12 +445,10 @@ public class ChildComponentContainer extends Panel {
 
         // Physical && Logical Detach
         if (child == caption) {
-            containerDIV.removeChild(caption.getElement());
+            containerDIV.removeChild(child.getElement());
             caption = null;
         } else {
-            if (widget.isAttached()) {
-                containerDIV.removeChild(widget.getElement());
-            }
+            widgetDIV.removeChild(child.getElement());
             widget = null;
         }
 

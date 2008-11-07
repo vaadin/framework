@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Container;
+import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.ui.MarginInfo;
 
@@ -78,11 +79,6 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
 
     public boolean hasChildComponent(Widget component) {
         return widgetToComponentContainer.containsKey(component);
-    }
-
-    public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
-        // TODO: Must support
-        throw new UnsupportedOperationException();
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -273,6 +269,18 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
             remove(child);
         }
 
+    }
+
+    public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
+        ChildComponentContainer componentContainer = widgetToComponentContainer
+                .remove(oldComponent);
+        if (componentContainer == null) {
+            return;
+        }
+
+        componentContainer.setWidget(newComponent);
+        client.unregisterPaintable((Paintable) oldComponent);
+        widgetToComponentContainer.put(newComponent, componentContainer);
     }
 
 }
