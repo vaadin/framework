@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
@@ -27,8 +28,10 @@ import com.google.gwt.user.client.ui.ScrollListener;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.MouseEventDetails;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
+import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.IScrollTableRow;
 
@@ -119,11 +122,6 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
     /** flag to indicate that table body has changed */
     private boolean isNewBody = true;
 
-    /**
-     * Stores old height for IE, that sometimes fails to return correct height
-     * for container element. Then this value is used as a fallback.
-     */
-    private int oldAvailPixels;
     private boolean emitClickEvents;
 
     /*
@@ -140,10 +138,6 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
     public IScrollTable() {
         bodyContainer.addScrollListener(this);
         bodyContainer.setStyleName(CLASSNAME + "-body");
-
-        // GWT 1.5 ScrollPanel applies position:relative to fix some IE bug, but
-        // this of course breaks IE
-        DOM.setStyleAttribute(bodyContainer.getElement(), "position", "");
 
         setStyleName(CLASSNAME);
         add(tHead);
@@ -993,7 +987,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
          * Handle column reordering.
          */
         public void onBrowserEvent(Event event) {
-            if (enabled) {
+            if (enabled && event != null) {
                 if (isResizing || event.getTarget() == colResizeWidget) {
                     onResizeEvent(event);
                 } else {
@@ -1148,6 +1142,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             case Event.ONMOUSEUP:
                 isResizing = false;
                 DOM.releaseCapture(getElement());
+                tBody.reLayoutComponents();
                 break;
             case Event.ONMOUSEMOVE:
                 if (isResizing) {
@@ -1898,6 +1893,15 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             }
         }
 
+        private void reLayoutComponents() {
+            for (Widget w : this) {
+                IScrollTableRow r = (IScrollTableRow) w;
+                for (Widget widget : r) {
+                    client.handleComponentRelativeSize(widget);
+                }
+            }
+        }
+
         public int getLastRendered() {
             return lastRendered;
         }
@@ -1922,11 +1926,13 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
 
         }
 
-        public class IScrollTableRow extends Panel implements ActionOwner {
+        public class IScrollTableRow extends Panel implements ActionOwner,
+                Container {
 
             Vector childWidgets = new Vector();
             private boolean selected = false;
             private final int rowKey;
+            private List<UIDL> pendingComponentPaints;
 
             private String[] actionKeys = null;
 
@@ -1935,6 +1941,28 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                 setElement(DOM.createElement("tr"));
                 DOM.sinkEvents(getElement(), Event.ONCLICK | Event.ONDBLCLICK
                         | Event.ONCONTEXTMENU);
+            }
+
+            private void paintComponent(Paintable p, UIDL uidl) {
+                if (isAttached()) {
+                    p.updateFromUIDL(uidl, client);
+                } else {
+                    if (pendingComponentPaints == null) {
+                        pendingComponentPaints = new LinkedList<UIDL>();
+                    }
+                    pendingComponentPaints.add(uidl);
+                }
+            }
+
+            @Override
+            protected void onAttach() {
+                super.onAttach();
+                if (pendingComponentPaints != null) {
+                    for (UIDL uidl : pendingComponentPaints) {
+                        Paintable paintable = client.getPaintable(uidl);
+                        paintable.updateFromUIDL(uidl, client);
+                    }
+                }
             }
 
             public String getKey() {
@@ -1974,7 +2002,6 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                     } else {
                         final Paintable cellContent = client
                                 .getPaintable((UIDL) cell);
-                        (cellContent).updateFromUIDL((UIDL) cell, client);
                         String style = "";
                         if (uidl.hasAttribute("style-"
                                 + (showRowHeaders ? col - 1 : col))) {
@@ -1982,6 +2009,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                                     + (showRowHeaders ? col - 1 : col));
                         }
                         addCell((Widget) cellContent, aligns[col++], style);
+                        paintComponent(cellContent, (UIDL) cell);
                     }
                 }
                 if (uidl.hasAttribute("selected") && !isSelected()) {
@@ -2186,6 +2214,54 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
 
             public String getPaintableId() {
                 return paintableId;
+            }
+
+            public RenderSpace getAllocatedSpace(Widget child) {
+                int w = 0;
+                int i = childWidgets.indexOf(child);
+                if (showRowHeaders) {
+                    i++;
+                }
+                HeaderCell headerCell = tHead.getHeaderCell(i);
+                if (headerCell != null) {
+                    if (initializedAndAttached) {
+                        w = headerCell.getWidth() - CELL_EXTRA_WIDTH
+                                - CELL_CONTENT_PADDING;
+                    } else {
+                        // header offset width is not absolutely correct value,
+                        // but
+                        // a best guess (expecting similar content in all
+                        // columns ->
+                        // if one component is relative width so are others)
+                        w = headerCell.getOffsetWidth();
+                    }
+                }
+                return new RenderSpace(w, getRowHeight());
+            }
+
+            public boolean hasChildComponent(Widget component) {
+                return childWidgets.contains(component);
+            }
+
+            public void replaceChildComponent(Widget oldComponent,
+                    Widget newComponent) {
+                // Will no work in table
+            }
+
+            public boolean requestLayout(Set<Paintable> children) {
+                // row size should never change and system wouldn't event
+                // survive as this is a kind of fake paitable
+                return true;
+            }
+
+            public void updateCaption(Paintable component, UIDL uidl) {
+                // NOP, not rendered
+            }
+
+            public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+                // Should never be called,
+                // Component container interface faked here to get layouts
+                // render properly
             }
         }
     }
