@@ -42,7 +42,7 @@ public class NotificationCustomExample extends OrderedLayout {
         initPositionItems(position);
 
         final NativeSelect style = new NativeSelect("Style");
-        position.setNullSelectionAllowed(false);
+        style.setNullSelectionAllowed(false);
         horiz.addComponent(style);
         initTypeItems(style);
 

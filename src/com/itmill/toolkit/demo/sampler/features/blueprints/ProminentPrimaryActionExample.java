@@ -10,32 +10,46 @@ public class ProminentPrimaryActionExample extends OrderedLayout implements
     public ProminentPrimaryActionExample() {
         setSpacing(true);
 
-        OrderedLayout horiz = new OrderedLayout(ORIENTATION_HORIZONTAL);
-        horiz.setSpacing(true);
-        addComponent(horiz);
-        Button primary = new Button("Save", this);
-        horiz.addComponent(primary);
-        Button secondary = new Button("Cancel", this);
-        secondary.setStyleName(Button.STYLE_LINK);
-        horiz.addComponent(secondary);
+        { // Cancel / Save
+            OrderedLayout horiz = new OrderedLayout(ORIENTATION_HORIZONTAL);
+            horiz.setSpacing(true);
+            horiz.setMargin(true);
+            addComponent(horiz);
+            Button secondary = new Button("Cancel", this);
+            secondary.setStyleName(Button.STYLE_LINK);
+            horiz.addComponent(secondary);
+            Button primary = new Button("Save", this);
+            horiz.addComponent(primary);
+        }
 
-        horiz = new OrderedLayout(ORIENTATION_HORIZONTAL);
-        horiz.setSpacing(true);
-        addComponent(horiz);
-        primary = new Button("Sign up", this);
-        horiz.addComponent(primary);
-        secondary = new Button("or Sign in", this);
-        secondary.setStyleName(Button.STYLE_LINK);
-        horiz.addComponent(secondary);
+        { // Sign up / Sign in
+            OrderedLayout horiz = new OrderedLayout(ORIENTATION_HORIZONTAL);
+            horiz.setSpacing(true);
+            horiz.setMargin(true);
+            addComponent(horiz);
+            Button primary = new Button("Sign up", this);
+            primary.addStyleName("primary");
+            horiz.addComponent(primary);
+            Button secondary = new Button("or Sign in", this);
+            secondary.setStyleName(Button.STYLE_LINK);
+            horiz.setComponentAlignment(secondary, ALIGNMENT_LEFT,
+                    ALIGNMENT_VERTICAL_CENTER);
+            horiz.addComponent(secondary);
+        }
 
-        horiz = new OrderedLayout(ORIENTATION_HORIZONTAL);
-        horiz.setSpacing(true);
-        addComponent(horiz);
-        primary = new Button("Login", this);
-        horiz.addComponent(primary);
-        secondary = new Button("Forgot your password?", this);
-        secondary.setStyleName(Button.STYLE_LINK);
-        horiz.addComponent(secondary);
+        { // Login / Forgot password?
+            OrderedLayout vert = new OrderedLayout();
+            vert.setSpacing(true);
+            vert.setMargin(true);
+            addComponent(vert);
+            Button primary = new Button("Login", this);
+            vert.addComponent(primary);
+            vert.setComponentAlignment(primary, OrderedLayout.ALIGNMENT_RIGHT,
+                    OrderedLayout.ALIGNMENT_BOTTOM);
+            Button secondary = new Button("Forgot your password?", this);
+            secondary.setStyleName(Button.STYLE_LINK);
+            vert.addComponent(secondary);
+        }
 
     }
 

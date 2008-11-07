@@ -4,7 +4,7 @@
 #sampler {
 	background-color: white;
 }
-#sampler .i-expandlayout-topbar {
+#sampler .i-orderedlayout-topbar {
 	border-bottom: 1px solid #999;
 }
 
@@ -23,6 +23,11 @@
 
 #sampler .i-button-screenshot {
 	border: 3px solid #eeeeee;
+	overflow: hidden;
+}
+#sampler .i-button-screenshot img {
+	margin-top: -2px;
+	margin-left: -3px;
 }
 
 #sampler tr.i-table-row-section {
@@ -33,6 +38,10 @@
 #sampler tr.i-table-row-subsection {
 	font-size: 16px;
 	font-weight: bold;
+}
+
+#sampler .i-panel-content-light {
+	border-top: 0px;
 }
 
 #sampler .feature-main {
@@ -49,6 +58,10 @@
 	background-color: #999;
 	color: white;
 	padding: 20px;
+	line-height: 20px;
+}
+#sampler .feature-info div.i-link a {
+	color: white;
 	line-height: 20px;
 }
 #sampler .feature-name {

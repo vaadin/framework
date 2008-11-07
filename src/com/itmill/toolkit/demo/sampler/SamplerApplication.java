@@ -20,6 +20,7 @@ import com.itmill.toolkit.demo.sampler.features.blueprints.ProminentPrimaryActio
 import com.itmill.toolkit.demo.sampler.features.buttons.ButtonLink;
 import com.itmill.toolkit.demo.sampler.features.buttons.ButtonPush;
 import com.itmill.toolkit.demo.sampler.features.buttons.ButtonSwitch;
+import com.itmill.toolkit.demo.sampler.features.commons.Tooltips;
 import com.itmill.toolkit.demo.sampler.features.link.LinkCurrentWindow;
 import com.itmill.toolkit.demo.sampler.features.link.LinkNoDecorations;
 import com.itmill.toolkit.demo.sampler.features.link.LinkSizedWindow;
@@ -41,6 +42,7 @@ import com.itmill.toolkit.ui.Embedded;
 import com.itmill.toolkit.ui.ExpandLayout;
 import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.SplitPanel;
 import com.itmill.toolkit.ui.Table;
 import com.itmill.toolkit.ui.Tree;
@@ -62,6 +64,12 @@ public class SamplerApplication extends Application {
 
                     new FeatureSet("Components", new Feature[] {
                             // Components
+
+                            new FeatureSet("Commons",
+                                    new Feature[] { new Tooltips(), // tooltips
+
+                                    }),
+
                             new FeatureSet("Buttons", new Feature[] {
                                     new ButtonPush(), // basic
                                     new ButtonLink(), // link
@@ -288,6 +296,7 @@ public class SamplerApplication extends Application {
 
         // Handle REST -style urls
         public DownloadStream handleURI(URL context, String relativeUri) {
+
             Feature f = features.getFeatureByPath(relativeUri);
             if (f != null) {
                 setFeature(f);
@@ -457,6 +466,7 @@ public class SamplerApplication extends Application {
 
         public void show(Component c) {
             if (getCompositionRoot() != c) {
+                c.setSizeFull();
                 setCompositionRoot(c);
             }
         }
@@ -545,24 +555,28 @@ public class SamplerApplication extends Application {
 
     }
 
-    private class FeatureGrid extends GridLayout implements FeatureList {
+    private class FeatureGrid extends Panel implements FeatureList {
+
+        GridLayout grid = new GridLayout(5, 1);
 
         FeatureGrid() {
-            super(5, 1);
-            setWidth("100%");
-            setMargin(true);
-            setSpacing(true);
+            setSizeFull();
+            getLayout().setWidth("100%");
+            grid.setWidth("100%");
+            grid.setSpacing(true);
+            addComponent(grid);
+            setStyleName(Panel.STYLE_LIGHT);
         }
 
         private void newRow() {
-            while (getCursorX() > 0) {
-                space();
+            while (grid.getCursorX() > 0) {
+                grid.space();
             }
-            setRows(getRows() + 1);
+            grid.setRows(grid.getRows() + 1);
         }
 
         public void setFeatureContainer(HierarchicalContainer c) {
-            removeAllComponents();
+            grid.removeAllComponents();
             Collection features = c.getItemIds();
             for (Iterator it = features.iterator(); it.hasNext();) {
                 final Feature f = (Feature) it.next();
@@ -572,17 +586,18 @@ public class SamplerApplication extends Application {
                     if (c.isRoot(f)) {
                         title.setWidth("100%");
                         title.setStyleName("section");
-                        addComponent(title, 0, getCursorY(), getColumns() - 1,
-                                getCursorY());
+                        grid.addComponent(title, 0, grid.getCursorY(), grid
+                                .getColumns() - 1, grid.getCursorY());
                     } else {
                         title.setStyleName("subsection");
-                        addComponent(title);
+                        grid.addComponent(title);
                     }
-                    setComponentAlignment(title, ALIGNMENT_LEFT,
-                            ALIGNMENT_VERTICAL_CENTER);
+                    grid.setComponentAlignment(title,
+                            GridLayout.ALIGNMENT_LEFT,
+                            GridLayout.ALIGNMENT_VERTICAL_CENTER);
                 } else {
-                    if (getCursorX() == 0) {
-                        space();
+                    if (grid.getCursorX() == 0) {
+                        grid.space();
                     }
                     Button b = new Button();
                     b.setStyleName(Button.STYLE_LINK);
@@ -598,7 +613,7 @@ public class SamplerApplication extends Application {
                             ((SamplerWindow) getWindow()).setFeature(f);
                         }
                     });
-                    addComponent(b);
+                    grid.addComponent(b);
                 }
             }
         }
@@ -651,7 +666,7 @@ public class SamplerApplication extends Application {
                 f = null; // break while if no new found
                 String part = parts.remove(0);
                 for (int i = 0; i < fs.length; i++) {
-                    if (fs[i].getPathName().equals(part)) {
+                    if (fs[i].getPathName().equalsIgnoreCase(part)) {
                         if (parts.isEmpty()) {
                             return fs[i];
                         } else if (fs[i] instanceof FeatureSet) {

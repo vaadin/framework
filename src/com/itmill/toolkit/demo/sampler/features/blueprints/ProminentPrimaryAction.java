@@ -35,12 +35,15 @@ public class ProminentPrimaryAction extends Feature {
     @Override
     public NamedExternalResource[] getRelatedResources() {
         return new NamedExternalResource[] {
+
+                new NamedExternalResource("CSS used", getThemeBase()
+                        + "prominentprimaryaction/styles.css"),
+
                 new NamedExternalResource(
-                        "LukeW: Primary & Secondary Actions in Web Forms",
+                        "Article: Primary & Secondary Actions in Web Forms (LukeW)",
                         "http://www.lukew.com/resources/articles/psactions.asp"),
                 new NamedExternalResource(
-                        "UI Pattern Factory: Primary & Secondary Actions",
+                        "Article: Primary & Secondary Actions (UI Pattern Factory)",
                         "http://uipatternfactory.com/p=primary-and-secondary-actions/") };
     }
-
 }
