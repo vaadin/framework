@@ -7,6 +7,7 @@ package com.itmill.toolkit.terminal.gwt.client;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventPreview;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Button;
@@ -139,6 +140,14 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
         }
     }
 
+    private EventPreview dragpreview = new EventPreview() {
+
+        public boolean onEventPreview(Event event) {
+            onBrowserEvent(event);
+            return false;
+        }
+    };
+
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         switch (DOM.eventGetType(event)) {
@@ -152,6 +161,7 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
                 initialH = IDebugConsole.this.getOffsetHeight();
                 DOM.eventCancelBubble(event, true);
                 DOM.eventPreventDefault(event);
+                DOM.addEventPreview(dragpreview);
             } else if (DOM.eventGetTarget(event) == caption) {
                 moving = true;
                 startX = DOM.eventGetScreenX(event);
@@ -160,6 +170,7 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
                 origLeft = getAbsoluteLeft();
                 DOM.eventCancelBubble(event, true);
                 DOM.eventPreventDefault(event);
+                DOM.addEventPreview(dragpreview);
             }
 
             break;
@@ -203,6 +214,7 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
                 DOM.releaseCapture(getElement());
                 moving = false;
             }
+            DOM.removeEventPreview(dragpreview);
             break;
         case Event.ONDBLCLICK:
             if (DOM.eventGetTarget(event) == caption) {
@@ -223,8 +235,9 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
     }
 
     private void minimize() {
-        setPixelSize(200, 100);
-        setPopupPosition(Window.getClientWidth() - 210, 0);
+        setPixelSize(400, 150);
+        setPopupPosition(Window.getClientWidth() - 410, Window
+                .getClientHeight() - 160);
     }
 
     public void setPixelSize(int width, int height) {
