@@ -20,6 +20,7 @@ import com.itmill.toolkit.demo.sampler.features.blueprints.ProminentPrimaryActio
 import com.itmill.toolkit.demo.sampler.features.buttons.ButtonLink;
 import com.itmill.toolkit.demo.sampler.features.buttons.ButtonPush;
 import com.itmill.toolkit.demo.sampler.features.buttons.ButtonSwitch;
+import com.itmill.toolkit.demo.sampler.features.commons.Icons;
 import com.itmill.toolkit.demo.sampler.features.commons.Tooltips;
 import com.itmill.toolkit.demo.sampler.features.link.LinkCurrentWindow;
 import com.itmill.toolkit.demo.sampler.features.link.LinkNoDecorations;
@@ -65,10 +66,11 @@ public class SamplerApplication extends Application {
                     new FeatureSet("Components", new Feature[] {
                             // Components
 
-                            new FeatureSet("Commons",
-                                    new Feature[] { new Tooltips(), // tooltips
+                            new FeatureSet("Commons", new Feature[] {
+                                    new Tooltips(), // tooltips
+                                    new Icons(), // icons
 
-                                    }),
+                            }),
 
                             new FeatureSet("Buttons", new Feature[] {
                                     new ButtonPush(), // basic
