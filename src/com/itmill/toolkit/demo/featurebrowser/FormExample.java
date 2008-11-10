@@ -52,6 +52,8 @@ public class FormExample extends CustomComponent {
 
         // Layout the example
         OrderedLayout root = new OrderedLayout();
+        root.setMargin(true);
+        root.setSpacing(true);
         root.addComponent(form);
         root.addComponent(peekDataModelState);
         setCompositionRoot(root);
