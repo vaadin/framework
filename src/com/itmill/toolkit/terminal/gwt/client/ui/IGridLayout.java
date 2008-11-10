@@ -519,7 +519,18 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
     }
 
     public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
-        // TODO
+        ChildComponentContainer componentContainer = widgetToComponentContainer
+                .remove(oldComponent);
+        if (componentContainer == null) {
+            return;
+        }
+
+        componentContainer.setWidget(newComponent);
+        client.unregisterPaintable((Paintable) oldComponent);
+        widgetToComponentContainer.put(newComponent, componentContainer);
+
+        paintableToCell.put((Paintable) newComponent, paintableToCell
+                .get(oldComponent));
     }
 
     public void updateCaption(Paintable component, UIDL uidl) {
