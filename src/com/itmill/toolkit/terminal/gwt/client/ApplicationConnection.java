@@ -577,11 +577,11 @@ public class ApplicationConnection {
                 final UIDL uidl = change.getChildUIDL(0);
                 final Paintable paintable = getPaintable(uidl.getId());
                 if (paintable != null) {
-                    Widget widget = (Widget) paintable;
-
                     paintable.updateFromUIDL(uidl, this);
-
-                    updatedWidgets.add(widget);
+                    // paintable may have changed during render to another
+                    // implementation, use the new one for updated widgets map
+                    updatedWidgets
+                            .add((Widget) idToPaintable.get(uidl.getId()));
                 } else {
                     if (!uidl.getTag().equals("window")) {
                         ClientExceptionHandler
