@@ -95,6 +95,7 @@ public class FormExample extends CustomComponent {
             getField("name").setRequired(true);
             getField("name").setRequiredError("Name is missing");
             getField("streetAddress").setRequired(true); // No error message
+            getField("postalCode").setRequired(true); // No error message
             replaceWithSelect("city", cities, cities).setNewItemsAllowed(true);
 
             // Set the form to act immediately on user input. This is
