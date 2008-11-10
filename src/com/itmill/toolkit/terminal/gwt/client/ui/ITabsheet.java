@@ -425,8 +425,8 @@ public class ITabsheet extends ITabsheetBase implements
         } else {
             DOM.setStyleAttribute(contentNode, "height", "");
             renderSpace.setHeight(0);
-            fixVisibleTabSize();
         }
+        fixVisibleTabSize();
         iLayout();
     }
 
@@ -447,6 +447,7 @@ public class ITabsheet extends ITabsheetBase implements
             contentNode.getStyle().setProperty("width", contentWidth + "px");
             renderSpace.setWidth(contentWidth);
         }
+        fixVisibleTabSize();
         iLayout();
     }
 

@@ -22,7 +22,6 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
 public class ITabsheetPanel extends ComplexPanel {
 
     private Widget visibleWidget;
-    private int contentHeight;
 
     /**
      * Creates an empty tabsheet panel.
