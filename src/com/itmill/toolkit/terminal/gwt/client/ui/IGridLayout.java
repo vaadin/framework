@@ -547,6 +547,8 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
     public boolean requestLayout(final Set<Paintable> changedChildren) {
         ApplicationConnection.getConsole().log("IGridLayout.requestLayout()");
         boolean needsLayout = false;
+        boolean reDistributeColSpanWidths = false;
+        boolean reDistributeRowSpanHeights = false;
         int offsetHeight = canvas.getOffsetHeight();
         int offsetWidth = canvas.getOffsetWidth();
         if ("".equals(width) || "".equals(height)) {
@@ -574,24 +576,12 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                 }
                 if (allocated < width) {
                     needsLayout = true;
-                    // columnWidths needs to be expanded due colspanned
-                    // cell
-                    int neededExtraSpace = width - allocated;
-                    int spaceForColunms = neededExtraSpace / cell.colspan;
-                    for (int i = 0; i < cell.colspan; i++) {
-                        int col = cell.col + i;
-                        columnWidths[col] += spaceForColunms;
-                        neededExtraSpace -= spaceForColunms;
-                    }
-                    if (neededExtraSpace > 0) {
-                        for (int i = 0; i < cell.colspan; i++) {
-                            int col = cell.col + i;
-                            columnWidths[col] += 1;
-                            neededExtraSpace -= 1;
-                            if (neededExtraSpace == 0) {
-                                break;
-                            }
-                        }
+                    if (cell.colspan == 1) {
+                        // do simple column width expansion
+                        columnWidths[cell.col] = minColumnWidths[cell.col] = width;
+                    } else {
+                        // mark that col span expansion is needed
+                        reDistributeColSpanWidths = true;
                     }
                 } else if (allocated != width) {
                     // size is smaller thant allocated, column might
@@ -608,24 +598,12 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                 }
                 if (allocated < height) {
                     needsLayout = true;
-                    // columnWidths needs to be expanded due colspanned
-                    // cell
-                    int neededExtraSpace = height - allocated;
-                    int spaceForColunms = neededExtraSpace / cell.rowspan;
-                    for (int i = 0; i < cell.rowspan; i++) {
-                        int row = cell.row + i;
-                        rowHeights[row] += spaceForColunms;
-                        neededExtraSpace -= spaceForColunms;
-                    }
-                    if (neededExtraSpace > 0) {
-                        for (int i = 0; i < cell.rowspan; i++) {
-                            int row = cell.row + i;
-                            rowHeights[row] += 1;
-                            neededExtraSpace -= 1;
-                            if (neededExtraSpace == 0) {
-                                break;
-                            }
-                        }
+                    if (cell.rowspan == 1) {
+                        // do simple row expansion
+                        rowHeights[cell.row] = minRowHeights[cell.row] = height;
+                    } else {
+                        // mark that row span expansion is needed
+                        reDistributeRowSpanHeights = true;
                     }
                 } else if (allocated != height) {
                     // size is smaller than allocated, row might shrink
@@ -654,6 +632,11 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
             // ensure colspanned columns have enough space
             columnWidths = cloneArray(minColumnWidths);
             distributeColSpanWidths();
+            reDistributeColSpanWidths = false;
+        }
+
+        if (reDistributeColSpanWidths) {
+            distributeColSpanWidths();
         }
 
         if (dirtyRows.size() > 0) {
@@ -677,6 +660,11 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
             }
             // TODO could check only some row spans
             rowHeights = cloneArray(minRowHeights);
+            distributeRowSpanHeights();
+            reDistributeRowSpanHeights = false;
+        }
+
+        if (reDistributeRowSpanHeights) {
             distributeRowSpanHeights();
         }
 
