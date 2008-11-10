@@ -68,6 +68,7 @@ public class ITMillToolkitWebMode {
         // Assign default values for some arguments
         assignDefault(serverArgs, "webroot", "WebContent");
         assignDefault(serverArgs, "httpPort", serverPort);
+        assignDefault(serverArgs, "context", "");
 
         try {
             final Server server = new Server();
@@ -78,7 +79,7 @@ public class ITMillToolkitWebMode {
             server.setConnectors(new Connector[] { connector });
 
             final WebAppContext webappcontext = new WebAppContext();
-            webappcontext.setContextPath("");
+            webappcontext.setContextPath(serverArgs.get("context").toString());
             webappcontext.setWar(serverArgs.get("webroot").toString());
 
             server.setHandler(webappcontext);
@@ -89,7 +90,8 @@ public class ITMillToolkitWebMode {
             return null;
         }
 
-        return "http://localhost:" + serverArgs.get("httpPort");
+        return "http://localhost:" + serverArgs.get("httpPort")
+                + serverArgs.get("context");
     }
 
     /**
