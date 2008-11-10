@@ -35,8 +35,8 @@ public class FeatureWindow extends Feature implements Window.CloseListener {
 
         demoWindow = new Window("Feature Test Window");
         demoWindow.addListener(this);
-        demoWindow.setWidth(400);
-        demoWindow.setHeight(200);
+        demoWindow.setWidth("400px");
+        demoWindow.setHeight("200px");
         demoWindow.setTheme("default");
 
         layoutUpper.addComponent(addButton);
