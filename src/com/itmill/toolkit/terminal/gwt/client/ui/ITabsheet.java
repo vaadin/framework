@@ -399,7 +399,7 @@ public class ITabsheet extends ITabsheetBase implements
 
         ITabsheet.this.iLayout();
         (content).updateFromUIDL(contentUIDL, client);
-        fixHeight();
+        fixVisibleTabSize();
         ITabsheet.this.removeStyleDependentName("loading");
         if (previousVisibleWidget != null) {
             DOM.setStyleAttribute(previousVisibleWidget.getElement(),
@@ -422,11 +422,10 @@ public class ITabsheet extends ITabsheetBase implements
             // Set proper values for content element
             DOM.setStyleAttribute(contentNode, "height", contentHeight + "px");
             renderSpace.setHeight(contentHeight);
-            contentNode.getStyle().setProperty("position", "relative");
         } else {
             DOM.setStyleAttribute(contentNode, "height", "");
             renderSpace.setHeight(0);
-            fixHeight();
+            fixVisibleTabSize();
         }
         iLayout();
     }
@@ -458,24 +457,28 @@ public class ITabsheet extends ITabsheetBase implements
 
         updateTabScroller();
 
-        if (tp.getVisibleWidget() >= 0) {
-            Util.runWebkitOverflowAutoFix(DOM.getParent(tp.getWidget(
-                    tp.getVisibleWidget()).getElement()));
-        }
+        tp.runWebkitOverflowAutoFix();
     }
 
-    private void fixHeight() {
-        if (isDynamicHeight()) {
-            if (tp.getVisibleWidget() >= 0) {
-                Widget widget = tp.getWidget(tp.getVisibleWidget());
-                int widgetHeight = widget.getOffsetHeight();
-                DOM.setStyleAttribute(tp.getElement(), "height", widgetHeight
-                        + "px");
-                tp.setVisibleWidgetHeight(widgetHeight);
-            }
-        } else {
-            DOM.setStyleAttribute(tp.getElement(), "height", "");
+    /**
+     * Sets the size of the visible tab (component). As the tab is set to
+     * position: absolute (to work around a firefox flickering bug) we must keep
+     * this up-to-date by hand.
+     */
+    private void fixVisibleTabSize() {
+        /*
+         * The overflow=auto element must have a height specified, otherwise it
+         * will be just as high as the contents and no scrollbars will appear
+         */
+        int height = -1;
+        int width = -1;
+        if (!isDynamicHeight()) {
+            height = renderSpace.getHeight();
         }
+        if (!isDynamicWidth()) {
+            width = renderSpace.getWidth();
+        }
+        tp.fixVisibleTabSize(width, height);
 
     }
 
@@ -568,7 +571,7 @@ public class ITabsheet extends ITabsheetBase implements
              * Size has changed so we let the child components know about the
              * new size.
              */
-            fixHeight();
+            fixVisibleTabSize();
             iLayout();
 
             return false;

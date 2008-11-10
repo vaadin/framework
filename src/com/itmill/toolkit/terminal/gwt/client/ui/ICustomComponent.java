@@ -22,6 +22,7 @@ public class ICustomComponent extends SimplePanel implements Container {
     private Paintable component;
     private boolean rendering;
     private String width;
+    private RenderSpace renderSpace = new RenderSpace();
 
     public ICustomComponent() {
         super();
@@ -49,6 +50,10 @@ public class ICustomComponent extends SimplePanel implements Container {
             }
             p.updateFromUIDL(child, client);
         }
+
+        renderSpace.setWidth(getElement().getOffsetWidth());
+        renderSpace.setHeight(getElement().getOffsetHeight());
+
         rendering = false;
     }
 
@@ -79,13 +84,14 @@ public class ICustomComponent extends SimplePanel implements Container {
     }
 
     public RenderSpace getAllocatedSpace(Widget child) {
-        return new RenderSpace(getElement().getOffsetWidth(), getElement()
-                .getOffsetHeight());
+        return renderSpace;
     }
 
     @Override
     public void setHeight(String height) {
         super.setHeight(height);
+        renderSpace.setHeight(getElement().getOffsetHeight());
+
         if (!height.equals(this.height)) {
             this.height = height;
             if (!rendering) {
@@ -97,6 +103,8 @@ public class ICustomComponent extends SimplePanel implements Container {
     @Override
     public void setWidth(String width) {
         super.setWidth(width);
+        renderSpace.setWidth(getElement().getOffsetWidth());
+
         if (!width.equals(this.width)) {
             this.width = width;
             if (!rendering) {

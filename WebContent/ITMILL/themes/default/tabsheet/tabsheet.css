@@ -138,6 +138,7 @@
 	background-color: #fff;
 	border-bottom: 1px solid #dee2e3;
 	border-top: none;
+	position: relative;
 }
 
 .i-tabsheet-hidetabs .i-tabsheet-content {

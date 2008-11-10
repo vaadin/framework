@@ -8,6 +8,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.itmill.toolkit.terminal.gwt.client.Util;
 
 /**
  * A panel that displays all of its child widgets in a 'deck', where only one
@@ -116,16 +117,38 @@ public class ITabsheetPanel extends ComplexPanel {
     }
 
     private void unHide(Element e) {
-        DOM.setStyleAttribute(e, "top", "");
-        DOM.setStyleAttribute(e, "left", "");
+        DOM.setStyleAttribute(e, "top", "0px");
+        DOM.setStyleAttribute(e, "left", "0px");
         DOM.setStyleAttribute(e, "visibility", "");
-
     }
 
-    public void setVisibleWidgetHeight(int widgetHeight) {
-        DOM.setStyleAttribute(DOM.getParent(visibleWidget.getElement()),
-                "height", widgetHeight + "px");
+    public void fixVisibleTabSize(int width, int height) {
+        if (visibleWidget == null) {
+            return;
+        }
 
+        if (height < 0) {
+            height = visibleWidget.getOffsetHeight();
+        }
+        if (width < 0) {
+            width = visibleWidget.getOffsetWidth();
+        }
+
+        // i-tabsheet-tabsheetpanel height
+        getElement().getStyle().setPropertyPx("height", height);
+        getElement().getStyle().setPropertyPx("width", width);
+
+        // widget wrapper height
+        Element wrapperDiv = DOM.getParent(visibleWidget.getElement());
+        wrapperDiv.getStyle().setPropertyPx("height", height);
+        wrapperDiv.getStyle().setPropertyPx("width", width);
     }
 
+    public void runWebkitOverflowAutoFix() {
+        if (visibleWidget != null) {
+            Util.runWebkitOverflowAutoFix(DOM.getParent(visibleWidget
+                    .getElement()));
+        }
+
+    }
 }
