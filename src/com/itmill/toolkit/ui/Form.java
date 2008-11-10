@@ -160,7 +160,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
         setLayout(formLayout);
         setFieldFactory(fieldFactory);
         setValidationVisible(false);
-
+        setWidth(100, UNITS_PERCENTAGE);
     }
 
     /* Documented in interface */
