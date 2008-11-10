@@ -1,76 +1,76 @@
 /******************************************************************************
  * Sampler styles
  ******************************************************************************/
-#sampler {
+.i-app-SamplerApplication {
 	background-color: white;
 }
-#sampler .i-orderedlayout-topbar {
+.i-app-SamplerApplication .i-orderedlayout-topbar {
 	border-bottom: 1px solid #999;
 }
 
-#sampler .i-label-section {
+.i-app-SamplerApplication .i-label-section {
 	font-size: 18px;
 	font-weight: bold;
 	border-bottom: 1px solid black;
 	line-height: 35px;
 }
-#sampler .i-label-subsection {
+.i-app-SamplerApplication .i-label-subsection {
 	font-size: 16px;
 	font-weight: bold;
 	color: #666666;
 	text-indent: 7px;
 }
 
-#sampler .i-button-screenshot {
+.i-app-SamplerApplication .i-button-screenshot {
 	border: 3px solid #eeeeee;
 	overflow: hidden;
 }
-#sampler .i-button-screenshot img {
+.i-app-SamplerApplication .i-button-screenshot img {
 	margin-top: -2px;
 	margin-left: -3px;
 }
 
-#sampler tr.i-table-row-section {
+.i-app-SamplerApplication tr.i-table-row-section {
 	color: #333366;
 	font-size: 18px;
 	font-weight: bold;
 }
-#sampler tr.i-table-row-subsection {
+.i-app-SamplerApplication tr.i-table-row-subsection {
 	font-size: 16px;
 	font-weight: bold;
 }
 
-#sampler .i-panel-content-light {
+.i-app-SamplerApplication .i-panel-content-light {
 	border-top: 0px;
 }
 
-#sampler .feature-main {
+.i-app-SamplerApplication .feature-main {
 	padding: 20px;
 }
-#sampler .feature-controls {
+.i-app-SamplerApplication .feature-controls {
 	margin-bottom: 20px;
 }
-#sampler .feature-controls .i-caption {
+.i-app-SamplerApplication .feature-controls .i-caption {
 	font-weight: bold;
 	font-size: 16px;
 }
-#sampler .feature-info {
+.i-app-SamplerApplication .feature-info {
 	background-color: #999;
 	color: white;
 	padding: 20px;
 	line-height: 20px;
 }
-#sampler .feature-info div.i-link a {
+.i-app-SamplerApplication .feature-info div.i-link a {
 	color: white;
 	line-height: 20px;
 }
-#sampler .feature-name {
+.i-app-SamplerApplication .feature-name {
 	font-size: 22px;
 	font-weight: bold;
 	line-height: 35px;
 }
 
-#sampler .feature-info .i-caption {
+.i-app-SamplerApplication .feature-info .i-caption {
 	font-weight: bold;
 	font-size: 16px;
 	line-height: 30px;

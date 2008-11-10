@@ -527,16 +527,15 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      *            the new theme for this application.
      */
     public void setTheme(String theme) {
-
         // Collect list of windows not having the current or future theme
         final LinkedList toBeUpdated = new LinkedList();
-        final String myTheme = getTheme();
+        final String oldAppTheme = getTheme();
         for (final Iterator i = getWindows().iterator(); i.hasNext();) {
             final Window w = (Window) i.next();
             final String windowTheme = w.getTheme();
             if ((windowTheme == null)
-                    || (!theme.equals(windowTheme) && windowTheme
-                            .equals(myTheme))) {
+                    || (!windowTheme.equals(theme) && windowTheme
+                            .equals(oldAppTheme))) {
                 toBeUpdated.add(w);
             }
         }

@@ -1,14 +1,14 @@
 @import url(../default/styles.css);
 
 /* Reservr styles */
-#Reservr {
+.i-app-ReservationApplication {
 	background-color: #E9ECED;
 	background-image: url(bmw.jpg);
 	background-repeat: no-repeat;
 	background-position: top right;
 }
 
-#Reservr .i-label-logo {
+.i-app-ReservationApplication .i-label-logo {
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	padding-left: 13px;
 	padding-bottom: 10px;
@@ -16,7 +16,7 @@
 	font-size: 22px;
 	letter-spacing: -0.03em;
 }
-#Reservr .i-label-slogan {
+.i-app-ReservationApplication .i-label-slogan {
 	color: black;
 	padding-left: 15px;
 	padding-bottom: 10px;
@@ -45,7 +45,7 @@
 	font-weight: bold;
 }
 
-#Reservr .i-button-selected-link {
+.i-app-ReservationApplication .i-button-selected-link {
 	border: 0px;
 	text-align: left;
 	text-decoration: none;

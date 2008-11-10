@@ -844,6 +844,9 @@ public class ApplicationServlet extends HttpServlet {
             appId = "ROOT";
         }
         appId = appId.replaceAll("[^a-zA-Z0-9]", "");
+        // Add hashCode to the end, so that it is still (sort of) predictable,
+        // but indicates that it should not be used in CSS and such:
+        appId = appId + appId.hashCode();
 
         if (isGecko17(request)) {
             // special start page for gecko 1.7 versions. Firefox 1.0 is not
@@ -961,7 +964,16 @@ public class ApplicationServlet extends HttpServlet {
         if (reqParam != null) {
             style = "style=\"" + reqParam + "\"";
         }
-        page.write("<div id=\"" + appId + "\" class=\"i-app i-app-loading\" "
+        /*- Add classnames; 
+         *      .i-app 
+         *      .i-app-loading
+         *      .i-app-<simpleName for app class> 
+         *      .i-theme-<themeName, remove non-alphanum>
+         */
+        page.write("<div id=\"" + appId
+                + "\" class=\"i-app i-app-loading i-theme-"
+                + themeName.replaceAll("[^a-zA-Z0-9]", "") + " i-app-"
+                + applicationClass.getSimpleName() + "\" "
                 + (style != null ? style : "") + "></div>\n");
 
         if (!fragment) {
