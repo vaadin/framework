@@ -118,6 +118,9 @@ public class ISplitPanel extends ComplexPanel implements Container,
         DOM.setStyleAttribute(splitter, "position", "absolute");
         DOM.setStyleAttribute(secondContainer, "position", "absolute");
 
+        DOM.setStyleAttribute(firstContainer, "overflow", "auto");
+        DOM.setStyleAttribute(secondContainer, "overflow", "auto");
+
     }
 
     private void setOrientation(int orientation) {
