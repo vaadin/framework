@@ -25,6 +25,7 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
@@ -59,6 +60,8 @@ public class ApplicationConnection {
     public static final String VAR_FIELD_SEPARATOR = "\u001f";
 
     public static final String VAR_BURST_SEPARATOR = "\u001d";
+
+    public static final String UIDL_SECURITY_COOKIE_NAME = "com.itmill.toolkit.seckey";
 
     private final HashMap resourcesMap = new HashMap();
 
@@ -275,6 +278,10 @@ public class ApplicationConnection {
     private void makeUidlRequest(String requestData, boolean repaintAll,
             boolean forceSync) {
         startRequest();
+
+        // cookie double submission pattern
+        requestData = Cookies.getCookie(UIDL_SECURITY_COOKIE_NAME)
+                + VAR_BURST_SEPARATOR + requestData;
 
         console.log("Making UIDL Request with params: " + requestData);
         String uri = getAppUri() + "UIDL" + configuration.getPathInfo();
@@ -637,7 +644,7 @@ public class ApplicationConnection {
                 }
 
                 if (html.length() != 0) {
-                    INotification n = new INotification(1000 * 60 * 45); // 45min
+                    INotification n = new INotification(1000 * 60 * 45); //45min
                     n.addEventListener(new NotificationRedirect(url));
                     n.show(html, INotification.CENTERED_TOP,
                             INotification.STYLE_SYSTEM);

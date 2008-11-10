@@ -14,6 +14,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.GeneralSecurityException;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -216,7 +217,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
      */
     public void handleUidlRequest(HttpServletRequest request,
             HttpServletResponse response, ApplicationServlet applicationServlet)
-            throws IOException, ServletException {
+            throws IOException, ServletException,
+            InvalidUIDLSecurityKeyException {
 
         // repaint requested or session has timed out and new one is created
         boolean repaintAll = (request.getParameter(GET_PARAM_REPAINT_ALL) != null)
@@ -572,7 +574,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
      */
     private boolean handleVariables(HttpServletRequest request,
             HttpServletResponse response, Application application2,
-            Window window) throws IOException {
+            Window window) throws IOException, InvalidUIDLSecurityKeyException {
         boolean success = true;
 
         if (request.getContentLength() > 0) {
@@ -591,7 +593,13 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
             // Manage bursts one by one
             final String[] bursts = changes.split(VAR_BURST_SEPARATOR);
 
-            for (int bi = 0; bi < bursts.length; bi++) {
+            // check security key (==sessionid, double cookie submission
+            if (!request.getSession().getId().equals(bursts[0])) {
+                throw new InvalidUIDLSecurityKeyException(
+                        "Invalid UIDL security key");
+            }
+
+            for (int bi = 1; bi < bursts.length; bi++) {
 
                 // extract variables to two dim string array
                 final String[] tmp = bursts[bi].split(VAR_RECORD_SEPARATOR);
@@ -614,8 +622,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                                 && variable[VAR_PID]
                                         .equals(nextVariable[VAR_PID])) {
                             // we have more than one value changes in row for
-                            // one
-                            // variable owner, collect em in HashMap
+                            // one variable owner, collect em in HashMap
                             m = new HashMap();
                             m.put(variable[VAR_NAME], convertVariableValue(
                                     variable[VAR_TYPE].charAt(0),
@@ -645,9 +652,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                         try {
                             owner.changeVariables(request, m);
 
-                            // Special-case of closing browser-level
-                            // windows: track browser-windows currently open in
-                            // client
+                            // Special-case of closing browser-level windows:
+                            // track browser-windows currently open in client
                             if (owner instanceof Window
                                     && ((Window) owner).getParent() == null) {
                                 final Boolean close = (Boolean) m.get("close");
@@ -694,8 +700,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                 // not interested in sending any UIDL changes back to client.
                 // Still we must clear component tree between bursts to ensure
                 // that no removed components are updated. The painting after
-                // the
-                // last burst is handled normally by the calling method.
+                // the last burst is handled normally by the calling method.
                 if (bi < bursts.length - 1) {
 
                     // We will be discarding all changes
@@ -1014,8 +1019,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
         if (logoutUrl == null) {
             logoutUrl = application.getURL().toString();
         }
-        // clients JS app is still running, send a special json file to
-        // tell client that application has quit and where to point browser now
+        // clients JS app is still running, send a special json file to tell
+        // client that application has quit and where to point browser now
         // Set the response type
         response.setContentType("application/json; charset=UTF-8");
         final ServletOutputStream out = response.getOutputStream();
@@ -1067,11 +1072,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
         final ArrayList resultset = new ArrayList(dirtyPaintabletSet);
 
         // The following algorithm removes any components that would be painted
-        // as
-        // a direct descendant of other components from the dirty components
-        // list.
-        // The result is that each component should be painted exactly once and
-        // any unmodified components will be painted as "cached=true".
+        // as a direct descendant of other components from the dirty components
+        // list. The result is that each component should be painted exactly
+        // once and any unmodified components will be painted as "cached=true".
 
         for (final Iterator i = dirtyPaintabletSet.iterator(); i.hasNext();) {
             final Paintable p = (Paintable) i.next();
@@ -1299,4 +1302,12 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
         return false;
     }
 
+    private class InvalidUIDLSecurityKeyException extends
+            GeneralSecurityException {
+
+        InvalidUIDLSecurityKeyException(String message) {
+            super(message);
+        }
+
+    }
 }
