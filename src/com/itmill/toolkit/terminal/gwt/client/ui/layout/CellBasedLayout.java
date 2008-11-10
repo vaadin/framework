@@ -203,7 +203,7 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
         DOM.setStyleAttribute(root, "marginBottom", activeMargins
                 .getMarginBottom()
                 + "px");
-                
+
     }
 
     protected boolean measureMarginsAndSpacing(String styleName,
@@ -261,7 +261,7 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
         // Remove all children after position "pos" but leave the clear element
         // in place
 
-        int toRemove = getChildren().size() - pos - 1;
+        int toRemove = getChildren().size() - pos;
         while (toRemove-- > 0) {
             ChildComponentContainer child = (ChildComponentContainer) getChildren()
                     .get(pos);
