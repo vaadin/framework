@@ -33,8 +33,6 @@ public class IOrderedLayout extends CellBasedLayout {
 
     private boolean isRendering = false;
 
-    private String width = null;
-
     @Override
     public void setStyleName(String styleName) {
         super.setStyleName(styleName);
@@ -56,7 +54,6 @@ public class IOrderedLayout extends CellBasedLayout {
 
     public IOrderedLayout() {
         setStyleName(CLASSNAME);
-        // DOM.setStyleAttribute(getElement(), "overflow", "hidden");
     }
 
     @Override
@@ -66,6 +63,7 @@ public class IOrderedLayout extends CellBasedLayout {
 
         // Only non-cached UIDL:s can introduce changes
         if (uidl.getBooleanAttribute("cached")) {
+            isRendering = false;
             return;
         }
 
@@ -228,18 +226,6 @@ public class IOrderedLayout extends CellBasedLayout {
 
         }
 
-    }
-
-    private static boolean hasRelativeSize(FloatSize relativeSize,
-            int orientation) {
-        if (relativeSize == null) {
-            return false;
-        }
-        if (orientation == ORIENTATION_HORIZONTAL) {
-            return relativeSize.getWidth() >= 0;
-        } else {
-            return relativeSize.getHeight() >= 0;
-        }
     }
 
     private void handleOrientationUpdate(UIDL uidl) {
@@ -658,7 +644,6 @@ public class IOrderedLayout extends CellBasedLayout {
     @Override
     public void setWidth(String width) {
         super.setWidth(width);
-        this.width = width;
 
         if (width != null && !width.equals("")) {
             activeLayoutSize.setWidth(getOffsetWidth()
