@@ -655,6 +655,15 @@ input.i-modified,
 }
 .i-formlayout-captioncell {
 	text-align:right;
+	white-space: nowrap;
+}
+
+.i-formlayout-contentcell {
+	width:100%;
+}
+
+.i-formlayout-error-indicator {
+	width: 12px;
 }
 
 .i-formlayout-spacing .i-formlayout-row .i-formlayout-captioncell, 

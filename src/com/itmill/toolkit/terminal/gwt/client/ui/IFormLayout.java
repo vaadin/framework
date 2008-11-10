@@ -270,7 +270,8 @@ public class IFormLayout extends FlexTable implements Container {
     }
 
     private class ErrorFlag extends HTML {
-        private static final String CLASSNAME = ".i-form-layout-error-indicator";
+        private static final String CLASSNAME = IFormLayout.CLASSNAME
+                + "-error-indicator";
         Element errorIndicatorElement;
         private Paintable owner;
 

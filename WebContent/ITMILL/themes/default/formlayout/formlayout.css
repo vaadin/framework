@@ -6,6 +6,16 @@
 }
 .i-formlayout-captioncell {
 	text-align:right;
+	white-space: nowrap;
+}
+
+.i-formlayout-contentcell {
+	width:100%;
+}
+
+.i-formlayout-error-indicator {
+	/* fix width so layout is not jumpy when error disapear */
+	width: 12px;
 }
 
 .i-formlayout-spacing .i-formlayout-row .i-formlayout-captioncell, 
