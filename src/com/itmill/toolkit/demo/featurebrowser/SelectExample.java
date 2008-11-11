@@ -37,6 +37,7 @@ public class SelectExample extends CustomComponent {
 
         final OrderedLayout horiz = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
+        horiz.setWidth("100%");
         main.addComponent(horiz);
         final Panel single = new Panel("Single selects");
         single.setStyleName(Panel.STYLE_LIGHT);
