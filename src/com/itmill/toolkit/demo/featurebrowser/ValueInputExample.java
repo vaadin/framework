@@ -125,6 +125,7 @@ public class ValueInputExample extends CustomComponent {
         left.addComponent(slider);
         // double slider
         slider = new Slider(0.0, 1.0, 1);
+        slider.setOrientation(Slider.ORIENTATION_VERTICAL);
         slider.setImmediate(true);
         slider.addListener(new Slider.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
