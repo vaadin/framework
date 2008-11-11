@@ -186,8 +186,13 @@ public class ApplicationConnection {
      */
     private native static boolean checkTestingMode()
     /*-{
-        @com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::testingMode = $wnd.top.itmill && $wnd.top.itmill.registerToTT ? true : false;
-        return @com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::testingMode;
+        try {
+            @com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::testingMode = $wnd.top.itmill && $wnd.top.itmill.registerToTT ? true : false;
+            return @com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::testingMode;
+        } catch(e) {
+            // if run in iframe SOP may cause exception, return false then
+            return false;
+        }
     }-*/;
 
     private native void initializeTestingTools()
@@ -644,7 +649,7 @@ public class ApplicationConnection {
                 }
 
                 if (html.length() != 0) {
-                    INotification n = new INotification(1000 * 60 * 45); //45min
+                    INotification n = new INotification(1000 * 60 * 45); // 45min
                     n.addEventListener(new NotificationRedirect(url));
                     n.show(html, INotification.CENTERED_TOP,
                             INotification.STYLE_SYSTEM);
