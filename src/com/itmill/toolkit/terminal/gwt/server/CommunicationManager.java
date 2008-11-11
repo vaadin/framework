@@ -593,8 +593,22 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
             // Manage bursts one by one
             final String[] bursts = changes.split(VAR_BURST_SEPARATOR);
 
-            // check security key (==sessionid, double cookie submission
-            if (!request.getSession().getId().equals(bursts[0])) {
+            boolean nocheck = "true".equals(application2
+                    .getProperty("disable-xsrf-protection"));
+            // Security: double cookie submission pattern
+            if (!nocheck && bursts.length == 1 && "undefined".equals(bursts[0])) {
+                // No seckey, but no variables: initial request
+                /*- don't set key, we're using JSESSIONID
+                Cookie secCookie = new Cookie(
+                        ApplicationConnection.UIDL_SECURITY_COOKIE_NAME,
+                        request.getSession().getId());
+                secCookie.setPath("/");
+                response.addCookie(secCookie);
+                -*/
+                return true;
+
+            } else if (!nocheck
+                    && !request.getSession().getId().equals(bursts[0])) {
                 throw new InvalidUIDLSecurityKeyException(
                         "Invalid UIDL security key");
             }

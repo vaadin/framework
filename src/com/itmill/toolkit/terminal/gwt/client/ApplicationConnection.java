@@ -61,7 +61,7 @@ public class ApplicationConnection {
 
     public static final String VAR_BURST_SEPARATOR = "\u001d";
 
-    public static final String UIDL_SECURITY_COOKIE_NAME = "com.itmill.toolkit.seckey";
+    public static final String UIDL_SECURITY_COOKIE_NAME = "JSESSIONID";
 
     private final HashMap resourcesMap = new HashMap();
 

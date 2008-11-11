@@ -27,7 +27,6 @@ import java.util.Properties;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,7 +43,6 @@ import com.itmill.toolkit.terminal.ParameterHandler;
 import com.itmill.toolkit.terminal.Terminal;
 import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.terminal.URIHandler;
-import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.ui.Window;
 
 /**
@@ -531,7 +529,7 @@ public class ApplicationServlet extends HttpServlet {
 
         } catch (final GeneralSecurityException e) {
             // TODO handle differently?
-            // Invalid security key, show session expired message for now
+            // Invalid security key, show session expired message for now.
             try {
                 Application.SystemMessages ci = getSystemMessages();
                 if (!UIDLrequest) {
@@ -771,12 +769,6 @@ public class ApplicationServlet extends HttpServlet {
     private void writeAjaxPage(HttpServletRequest request,
             HttpServletResponse response, Window window, String themeName,
             Application application) throws IOException, MalformedURLException {
-
-        // Security: double cookie submission pattern
-        Cookie secCookie = new Cookie(
-                ApplicationConnection.UIDL_SECURITY_COOKIE_NAME, request
-                        .getSession().getId());
-        response.addCookie(secCookie);
 
         // e.g portlets only want a html fragment
         boolean fragment = (request.getAttribute(REQUEST_FRAGMENT) != null);
