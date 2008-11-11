@@ -39,6 +39,7 @@ public class ValueInputExample extends CustomComponent {
         // TextField
         OrderedLayout horiz = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
+        horiz.setWidth("100%");
         main.addComponent(horiz);
         Panel left = new Panel("TextField");
         left.setStyleName(Panel.STYLE_LIGHT);
@@ -62,6 +63,7 @@ public class ValueInputExample extends CustomComponent {
 
         // DateFields
         horiz = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+        horiz.setWidth("100%");
         main.addComponent(horiz);
         left = new Panel("DateField");
         left.setStyleName(Panel.STYLE_LIGHT);
