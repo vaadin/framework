@@ -56,6 +56,10 @@ public class ITextualDate extends IDateField implements Paintable, Field,
             // force recreating format string
             formatStr = null;
         }
+        if (uidl.hasAttribute("format")) {
+            formatStr = uidl.getStringAttribute("format");
+        }
+
         buildDate();
         // not a FocusWidget -> needs own tabindex handling
         if (uidl.hasAttribute("tabindex")) {

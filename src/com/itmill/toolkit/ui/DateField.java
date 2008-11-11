@@ -102,6 +102,11 @@ public class DateField extends AbstractField {
      */
     private Calendar calendar;
 
+    /**
+     * Overridden format string
+     */
+    private String dateFormat;
+
     /* Constructors */
 
     /**
@@ -181,6 +186,10 @@ public class DateField extends AbstractField {
         final Locale l = getLocale();
         if (l != null) {
             target.addAttribute("locale", l.toString());
+        }
+
+        if (getDateFormat() != null) {
+            target.addAttribute("format", dateFormat);
         }
 
         target.addAttribute("type", type);
@@ -433,4 +442,32 @@ public class DateField extends AbstractField {
 
         return newCal;
     }
+
+    /**
+     * Sets formatting used by some component implementations. See
+     * {@link SimpleDateFormat} for format details.
+     * 
+     * By default it is encouraged to used default formatting defined by Locale,
+     * but due some JVM bugs it is sometimes necessary to use this method to
+     * override formatting. See Toolkit issue #2200.
+     * 
+     * @param dateFormat
+     *            the dateFormat to set
+     * 
+     * @see com.itmill.toolkit.ui.AbstractComponent#setLocale(Locale))
+     */
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat;
+    }
+
+    /**
+     * Reterns a format string used to format date value on client side or null
+     * if default formatting from {@link Component#getLocale()} is used.
+     * 
+     * @return the dateFormat
+     */
+    public String getDateFormat() {
+        return dateFormat;
+    }
+
 }
