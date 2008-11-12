@@ -312,7 +312,35 @@ public class ICaption extends HTML {
     }
 
     public int getHeight() {
-        int height = clearElement.getOffsetTop() - getElement().getOffsetTop();
+        int height = 0;
+        int h;
+
+        if (icon != null) {
+            h = icon.getOffsetHeight();
+            if (h > height) {
+                height = h;
+            }
+        }
+
+        if (captionText != null) {
+            h = captionText.getOffsetHeight();
+            if (h > height) {
+                height = h;
+            }
+        }
+        if (requiredFieldIndicator != null) {
+            h = requiredFieldIndicator.getOffsetHeight();
+            if (h > height) {
+                height = h;
+            }
+        }
+        if (errorIndicatorElement != null) {
+            h = errorIndicatorElement.getOffsetHeight();
+            if (h > height) {
+                height = h;
+            }
+        }
+
         return height;
     }
 

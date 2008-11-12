@@ -557,7 +557,6 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
     }
 
     public boolean requestLayout(final Set<Paintable> changedChildren) {
-        ApplicationConnection.getConsole().log("IGridLayout.requestLayout()");
         boolean needsLayout = false;
         boolean reDistributeColSpanWidths = false;
         boolean reDistributeRowSpanHeights = false;
@@ -580,8 +579,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                 cell.cc.setHeight("");
 
                 cell.cc.updateWidgetSize();
-                int width = cell.cc.getWidgetSize().getWidth()
-                        + cell.cc.getCaptionWidthAfterComponent();
+                int width = cell.getWidth();
                 int allocated = columnWidths[cell.col];
                 for (int i = 1; i < cell.colspan; i++) {
                     allocated += spacingPixels + columnWidths[cell.col + i];
@@ -601,8 +599,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                     dirtyColumns.add(cell.col);
                 }
 
-                int height = cell.cc.getWidgetSize().getHeight()
-                        + cell.cc.getCaptionHeightAboveComponent();
+                int height = cell.getHeight();
 
                 allocated = rowHeights[cell.row];
                 for (int i = 1; i < cell.rowspan; i++) {
@@ -631,8 +628,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                     Cell cell = cells[colIndex][i];
                     if (cell != null && cell.getChildUIDL() != null
                             && !cell.hasRelativeWidth()) {
-                        int width = cell.cc.getWidgetSize().getWidth()
-                                + cell.cc.getCaptionWidthAfterComponent();
+                        int width = cell.getWidth();
                         if (width > colW) {
                             colW = width;
                         }
@@ -661,8 +657,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                     Cell cell = cells[i][rowIndex];
                     if (cell != null && cell.getChildUIDL() != null
                             && !cell.hasRelativeHeight()) {
-                        int h = cell.cc.getWidgetSize().getHeight()
-                                + cell.cc.getCaptionHeightAboveComponent();
+                        int h = cell.getHeight();
                         if (h > rowH) {
                             rowH = h;
                         }
@@ -772,7 +767,8 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
 
         public int getWidth() {
             if (cc != null) {
-                int w = cc.getElement().getScrollWidth();
+                int w = cc.getWidgetSize().getWidth()
+                        + cc.getCaptionWidthAfterComponent();
                 return w;
             } else {
                 return 0;
@@ -781,7 +777,8 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
 
         public int getHeight() {
             if (cc != null) {
-                return cc.getElement().getScrollHeight();
+                return cc.getWidgetSize().getHeight()
+                        + cc.getCaptionHeightAboveComponent();
             } else {
                 return 0;
             }
