@@ -9,7 +9,7 @@ import com.itmill.toolkit.terminal.PaintTarget;
 
 /**
  * 
- * A component for displaying a two different views to data. The minmized view
+ * A component for displaying a two different views to data. The minimized view
  * is normally used to render the component, and when it is clicked the full
  * view is displayed on a popup. The inner class {@link PopupView.Content} is
  * used to deliver contents to this component.
@@ -56,9 +56,9 @@ public class PopupView extends AbstractComponentContainer {
      */
     public PopupView(PopupView.Content content) {
         super();
-        setContent(content);
         popupVisible = false;
         componentList = new ArrayList<Component>(1);
+        setContent(content);
     }
 
     /**
@@ -111,7 +111,7 @@ public class PopupView extends AbstractComponentContainer {
      * 
      * @see com.itmill.toolkit.ui.ComponentContainer#getComponentIterator()
      */
-    public Iterator getComponentIterator() {
+    public Iterator<Component> getComponentIterator() {
         return componentList.iterator();
 
     }

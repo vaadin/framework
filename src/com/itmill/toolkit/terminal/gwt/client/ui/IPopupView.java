@@ -74,6 +74,7 @@ public class IPopupView extends HTML implements Paintable {
         });
 
         popup.setAnimationEnabled(true);
+
     }
 
     /**
@@ -106,8 +107,10 @@ public class IPopupView extends HTML implements Paintable {
         if (hostPopupVisible) {
             UIDL popupUIDL = uidl.getChildUIDL(0);
 
+            // showPopupOnTop(popup, hostReference);
+            preparePopup(popup, hostReference);
             popup.updateFromUIDL(popupUIDL, client);
-            showPopupOnTop(popup, hostReference);
+            showPopup(popup, hostReference);
 
             // The popup isn't visible so we should remove its child. The popup
             // handles hiding so we don't need to hide it here.
@@ -128,6 +131,37 @@ public class IPopupView extends HTML implements Paintable {
         }
     }
 
+    private void preparePopup(final CustomPopup popup, final Widget host) {
+        popup.setVisible(false);
+        popup.show();
+    }
+
+    private void showPopup(final CustomPopup popup, final Widget host) {
+        int offsetWidth = popup.getOffsetWidth();
+        int offsetHeight = popup.getOffsetHeight();
+
+        int hostHorizontalCenter = host.getAbsoluteLeft()
+                + host.getOffsetWidth() / 2;
+        int hostVerticalCenter = host.getAbsoluteTop() + host.getOffsetHeight()
+                / 2;
+
+        int left = hostHorizontalCenter - offsetWidth / 2;
+        int top = hostVerticalCenter - offsetHeight / 2;
+
+        // Superclass takes care of top and left
+        if ((left + offsetWidth) > windowRight) {
+            left -= (left + offsetWidth) - windowRight;
+        }
+
+        if ((top + offsetHeight) > windowBottom) {
+            top -= (top + offsetHeight) - windowBottom;
+        }
+
+        popup.setPopupPosition(left, top);
+
+        setVisible(true);
+    }
+
     /**
      * This shows the popup on top of the widget below. This function allows us
      * to position the popup before making it visible.
@@ -137,31 +171,30 @@ public class IPopupView extends HTML implements Paintable {
      * @param host
      *            the widget to draw the popup on
      */
-    private void showPopupOnTop(final CustomPopup popup, final Widget host) {
-        popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
-            public void setPosition(int offsetWidth, int offsetHeight) {
-                int hostHorizontalCenter = host.getAbsoluteLeft()
-                        + host.getOffsetWidth() / 2;
-                int hostVerticalCenter = host.getAbsoluteTop()
-                        + host.getOffsetHeight() / 2;
-
-                int left = hostHorizontalCenter - offsetWidth / 2;
-                int top = hostVerticalCenter - offsetHeight / 2;
-
-                // Superclass takes care of top and left
-                if ((left + offsetWidth) > windowRight) {
-                    left -= (left + offsetWidth) - windowRight;
-                }
-
-                if ((top + offsetHeight) > windowBottom) {
-                    top -= (top + offsetHeight) - windowBottom;
-                }
-
-                popup.setPopupPosition(left, top);
-            }
-        });
-    }
-
+    // private void showPopupOnTop(final CustomPopup popup, final Widget host) {
+    // popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+    // public void setPosition(int offsetWidth, int offsetHeight) {
+    // int hostHorizontalCenter = host.getAbsoluteLeft()
+    // + host.getOffsetWidth() / 2;
+    // int hostVerticalCenter = host.getAbsoluteTop()
+    // + host.getOffsetHeight() / 2;
+    //
+    // int left = hostHorizontalCenter - offsetWidth / 2;
+    // int top = hostVerticalCenter - offsetHeight / 2;
+    //
+    // // Superclass takes care of top and left
+    // if ((left + offsetWidth) > windowRight) {
+    // left -= (left + offsetWidth) - windowRight;
+    // }
+    //
+    // if ((top + offsetHeight) > windowBottom) {
+    // top -= (top + offsetHeight) - windowBottom;
+    // }
+    //
+    // popup.setPopupPosition(left, top);
+    // }
+    // });
+    // }
     public void updateWindowSize() {
         windowTop = RootPanel.get().getAbsoluteTop();
         windowLeft = RootPanel.get().getAbsoluteLeft();
@@ -313,13 +346,11 @@ public class IPopupView extends HTML implements Paintable {
         }
 
         public boolean requestLayout(Set<Paintable> child) {
-            // TODO Auto-generated method stub
-            return false;
+            return true;
         }
 
         public RenderSpace getAllocatedSpace(Widget child) {
-            // TODO Auto-generated method stub
-            return null;
+            return new RenderSpace(windowRight, windowBottom);
         }
 
     }// class CustomPopup
