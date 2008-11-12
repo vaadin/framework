@@ -109,6 +109,11 @@
 	text-align: left /* Force default alignment */
 }
 
+.i-caption {
+	overflow: hidden;
+	white-space: nowrap;
+}
+
 .i-errorindicator {
 	width: 12px;
 	height: 16px;
