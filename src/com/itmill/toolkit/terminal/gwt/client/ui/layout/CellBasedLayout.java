@@ -73,7 +73,7 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
         DOM.setStyleAttribute(clearElement, "clear", "both");
         DOM.setStyleAttribute(clearElement, "overflow", "hidden");
 
-        DOM.appendChild(getElement(), clearElement);
+        DOM.appendChild(root, clearElement);
 
     }
 
