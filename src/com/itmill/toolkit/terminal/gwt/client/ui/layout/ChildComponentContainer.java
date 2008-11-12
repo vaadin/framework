@@ -361,6 +361,8 @@ public class ChildComponentContainer extends Panel {
 
             if (newCaption == null) {
                 newCaption = new ICaption((Paintable) widget, client);
+                // Set initial height to avoid Safari flicker
+                newCaption.setHeight("18px");
             }
 
             boolean positionChanged = newCaption.updateCaption(uidl);
@@ -663,6 +665,9 @@ public class ChildComponentContainer extends Panel {
                 caption.setMaxWidth(width);
             }
             captionWidth = caption.getRenderedWidth();
+
+            // Remove initial height
+            caption.setHeight("");
         }
 
     }
