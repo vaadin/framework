@@ -305,6 +305,11 @@ public class IPanel extends SimplePanel implements Container {
                 width = captionWidth;
             }
 
+            if (BrowserInfo.get().isIE7()) {
+                Util.setWidthExcludingPadding(captionNode, width
+                        - getCaptionMarginLeft(), 26);
+            }
+
             super.setWidth(width + "px");
         }
 
