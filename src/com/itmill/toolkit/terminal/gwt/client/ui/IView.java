@@ -64,11 +64,19 @@ public class IView extends SimplePanel implements Container,
      */
     private Timer resizeTimer;
 
+    private int scrollTop;
+
+    private int scrollLeft;
+
+    private boolean rendering;
+
+    private boolean scrollable;
+
     public IView(String elementId) {
         super();
         setStyleName(CLASSNAME);
 
-        DOM.sinkEvents(getElement(), Event.ONKEYDOWN);
+        DOM.sinkEvents(getElement(), Event.ONKEYDOWN | Event.ONSCROLL);
 
         // iview is focused when created so element needs tabIndex
         // 1 due 0 is at the end of natural tabbing order
@@ -121,6 +129,7 @@ public class IView extends SimplePanel implements Container,
      }-*/;
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        rendering = true;
 
         id = uidl.getId();
         boolean firstPaint = connection == null;
@@ -169,6 +178,7 @@ public class IView extends SimplePanel implements Container,
         }
         if (isClosed) {
             // don't render the content
+            rendering = false;
             return;
         }
 
@@ -284,21 +294,52 @@ public class IView extends SimplePanel implements Container,
         }
 
         onWindowResized(Window.getClientWidth(), Window.getClientHeight());
-        // IE somehow fails some layout on first run, force layout
-        // functions
-        // client.runDescendentsLayout(this);
 
         if (BrowserInfo.get().isSafari()) {
             Util.runWebkitOverflowAutoFix(getElement());
         }
+
+        // finally set scroll position from UIDL
+        if (uidl.hasVariable("scrollTop")) {
+            scrollable = true;
+            scrollTop = uidl.getIntVariable("scrollTop");
+            DOM.setElementPropertyInt(getElement(), "scrollTop", scrollTop);
+            scrollLeft = uidl.getIntVariable("scrollLeft");
+            DOM.setElementPropertyInt(getElement(), "scrollLeft", scrollLeft);
+        } else {
+            scrollable = false;
+        }
+
+        rendering = false;
     }
 
     @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
-        if (DOM.eventGetType(event) == Event.ONKEYDOWN && actionHandler != null) {
+        int type = DOM.eventGetType(event);
+        if (type == Event.ONKEYDOWN && actionHandler != null) {
             actionHandler.handleKeyboardEvent(event);
             return;
+        } else if (scrollable && type == Event.ONSCROLL) {
+            updateScrollPosition();
+        }
+    }
+
+    /**
+     * Updates scroll position from DOM and saves variables to server.
+     */
+    private void updateScrollPosition() {
+        int oldTop = scrollTop;
+        int oldLeft = scrollLeft;
+        scrollTop = DOM.getElementPropertyInt(getElement(), "scrollTop");
+        scrollLeft = DOM.getElementPropertyInt(getElement(), "scrollLeft");
+        if (connection != null && !rendering) {
+            if (oldTop != scrollTop) {
+                connection.updateVariable(id, "scrollTop", scrollTop, false);
+            }
+            if (oldLeft != scrollLeft) {
+                connection.updateVariable(id, "scrollLeft", scrollLeft, false);
+            }
         }
     }
 
