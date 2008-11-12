@@ -103,6 +103,10 @@ public class IPopupView extends HTML implements Paintable {
             setTitle(uidl.getStringAttribute("description"));
         }
 
+        if (uidl.hasAttribute("hideOnMouseOut")) {
+            popup.setHideOnMouseOut(uidl.getBooleanAttribute("hideOnMouseOut"));
+        }
+
         // Render the popup if visible and show it.
         if (hostPopupVisible) {
             UIDL popupUIDL = uidl.getChildUIDL(0);
@@ -171,30 +175,7 @@ public class IPopupView extends HTML implements Paintable {
      * @param host
      *            the widget to draw the popup on
      */
-    // private void showPopupOnTop(final CustomPopup popup, final Widget host) {
-    // popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
-    // public void setPosition(int offsetWidth, int offsetHeight) {
-    // int hostHorizontalCenter = host.getAbsoluteLeft()
-    // + host.getOffsetWidth() / 2;
-    // int hostVerticalCenter = host.getAbsoluteTop()
-    // + host.getOffsetHeight() / 2;
-    //
-    // int left = hostHorizontalCenter - offsetWidth / 2;
-    // int top = hostVerticalCenter - offsetHeight / 2;
-    //
-    // // Superclass takes care of top and left
-    // if ((left + offsetWidth) > windowRight) {
-    // left -= (left + offsetWidth) - windowRight;
-    // }
-    //
-    // if ((top + offsetHeight) > windowBottom) {
-    // top -= (top + offsetHeight) - windowBottom;
-    // }
-    //
-    // popup.setPopupPosition(left, top);
-    // }
-    // });
-    // }
+
     public void updateWindowSize() {
         windowTop = RootPanel.get().getAbsoluteTop();
         windowLeft = RootPanel.get().getAbsoluteLeft();
@@ -216,6 +197,7 @@ public class IPopupView extends HTML implements Paintable {
         private ICaptionWrapper captionWrapper = null;
 
         private boolean hasHadMouseOver = false;
+        private boolean hideOnMouseOut = true;
         private final Set<Element> activeChildren;
 
         public CustomPopup() {
@@ -242,9 +224,9 @@ public class IPopupView extends HTML implements Paintable {
             }
 
             if (!eventTargetsPopup & type == Event.ONMOUSEMOVE) {
-                if (hasHadMouseOver) {
+
+                if (hasHadMouseOver && hideOnMouseOut) {
                     hide();
-                    hasHadMouseOver = false;
                     return true;
                 }
             }
@@ -265,6 +247,7 @@ public class IPopupView extends HTML implements Paintable {
             }
             activeChildren.clear();
             remove(popupComponentWidget);
+            hasHadMouseOver = false;
             super.hide();
         }
 
@@ -351,6 +334,14 @@ public class IPopupView extends HTML implements Paintable {
 
         public RenderSpace getAllocatedSpace(Widget child) {
             return new RenderSpace(windowRight, windowBottom);
+        }
+
+        public boolean isHideOnMouseOut() {
+            return hideOnMouseOut;
+        }
+
+        public void setHideOnMouseOut(boolean hideOnMouseOut) {
+            this.hideOnMouseOut = hideOnMouseOut;
         }
 
     }// class CustomPopup

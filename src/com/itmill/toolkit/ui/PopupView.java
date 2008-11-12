@@ -20,6 +20,7 @@ public class PopupView extends AbstractComponentContainer {
 
     private Content content;
     private boolean popupVisible;
+    private boolean hideOnMouseOut;
     private final ArrayList<Component> componentList;
 
     /* Constructors */
@@ -57,6 +58,7 @@ public class PopupView extends AbstractComponentContainer {
     public PopupView(PopupView.Content content) {
         super();
         popupVisible = false;
+        hideOnMouseOut = true;
         componentList = new ArrayList<Component>(1);
         setContent(content);
     }
@@ -99,6 +101,28 @@ public class PopupView extends AbstractComponentContainer {
      */
     public boolean getPopupVisibility() {
         return popupVisible;
+    }
+
+    /**
+     * Check if this popup will be hidden when the user takes the mouse cursor
+     * out of the popup area.
+     * 
+     * @return true if the popup is hidden on mouse out, false otherwise
+     */
+    public boolean isHideOnMouseOut() {
+        return hideOnMouseOut;
+    }
+
+    /**
+     * Should the popup automaticly hide when the user takes the mouse cursor
+     * out of the popup area? If this is false, the user must click outside the
+     * popup to close it. The default is true.
+     * 
+     * @param hideOnMouseOut
+     * 
+     */
+    public void setHideOnMouseOut(boolean hideOnMouseOut) {
+        this.hideOnMouseOut = hideOnMouseOut;
     }
 
     /*
@@ -199,6 +223,7 @@ public class PopupView extends AbstractComponentContainer {
                     "Recieved null when trying to paint minimized value.");
         }
         target.addAttribute("html", content.getMinimizedValueAsHTML());
+        target.addAttribute("hideOnMouseOut", hideOnMouseOut);
 
         // Only paint component to client if we know that the popup is showing
         if (popupVisible) {
