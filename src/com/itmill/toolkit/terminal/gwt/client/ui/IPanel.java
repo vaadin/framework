@@ -176,12 +176,7 @@ public class IPanel extends SimplePanel implements Container {
         }
         layout.updateFromUIDL(layoutUidl, client);
 
-        if (BrowserInfo.get().isIE() || BrowserInfo.get().isFF2()) {
-            // IE/FF2 is not able to make the offsetWidth for contentNode
-            // correct
-            // for some reason...
-            runHacks(false);
-        }
+        runHacks(false);
         // We may have actions attached to this panel
         if (uidl.getChildCount() > 1) {
             final int cnt = uidl.getChildCount();
