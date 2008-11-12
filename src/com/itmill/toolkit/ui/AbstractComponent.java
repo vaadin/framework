@@ -173,7 +173,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * RepaintRequestEvent}.
      * 
      * @param style
-     *                the new style of the component.
+     *            the new style of the component.
      * @deprecated Use setStyleName() instead; renamed for consistency and to
      *             indicate that "style" should not be used to switch client
      *             side implementation, only to style the component.
@@ -247,13 +247,13 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     }
 
     /**
-     * Sets the component's caption <code>String</code>. Caption is the
-     * visible name of the component. This method will trigger a
+     * Sets the component's caption <code>String</code>. Caption is the visible
+     * name of the component. This method will trigger a
      * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent
      * RepaintRequestEvent}.
      * 
      * @param caption
-     *                the new caption <code>String</code> for the component.
+     *            the new caption <code>String</code> for the component.
      */
     public void setCaption(String caption) {
         this.caption = caption;
@@ -282,7 +282,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * Sets the locale of this component.
      * 
      * @param locale
-     *                the locale to become this component's locale.
+     *            the locale to become this component's locale.
      */
     public void setLocale(Locale locale) {
         this.locale = locale;
@@ -302,7 +302,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * RepaintRequestEvent}.
      * 
      * @param icon
-     *                the icon to be shown with the component's caption.
+     *            the icon to be shown with the component's caption.
      */
     public void setIcon(Resource icon) {
         this.icon = icon;
@@ -348,8 +348,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * RepaintRequestEvent}.
      * 
      * @param immediate
-     *                the boolean value specifying if the component should be in
-     *                the immediate mode after the call.
+     *            the boolean value specifying if the component should be in the
+     *            immediate mode after the call.
      * @see Component#isImmediate()
      */
     public void setImmediate(boolean immediate) {
@@ -448,7 +448,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * RepaintRequestEvent}.
      * 
      * @param description
-     *                the new description string for the component.
+     *            the new description string for the component.
      */
     public void setDescription(String description) {
         this.description = description;
@@ -523,7 +523,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @link Component.ErrorMessage#ErrorMessage(String, int)
      * 
      * @param componentError
-     *                the new <code>ErrorMessage</code> of the component.
+     *            the new <code>ErrorMessage</code> of the component.
      */
     public void setComponentError(ErrorMessage componentError) {
         this.componentError = componentError;
@@ -690,10 +690,10 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * any component-specific attributes to the UIDL stream.
      * 
      * @param target
-     *                the target UIDL stream where the component should paint
-     *                itself to
+     *            the target UIDL stream where the component should paint itself
+     *            to
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void paintContent(PaintTarget target) throws PaintException {
 
@@ -812,12 +812,12 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * </p>
      * 
      * @param eventType
-     *                the type of the listened event. Events of this type or its
-     *                subclasses activate the listener.
+     *            the type of the listened event. Events of this type or its
+     *            subclasses activate the listener.
      * @param object
-     *                the object instance who owns the activation method.
+     *            the object instance who owns the activation method.
      * @param method
-     *                the activation method.
+     *            the activation method.
      */
     public void addListener(Class eventType, Object object, Method method) {
         if (eventRouter == null) {
@@ -835,8 +835,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * </p>
      * 
      * <p>
-     * This version of <code>addListener</code> gets the name of the
-     * activation method as a parameter. The actual method is reflected from
+     * This version of <code>addListener</code> gets the name of the activation
+     * method as a parameter. The actual method is reflected from
      * <code>object</code>, and unless exactly one match is found,
      * <code>java.lang.IllegalArgumentException</code> is thrown.
      * </p>
@@ -854,12 +854,12 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * </p>
      * 
      * @param eventType
-     *                the type of the listened event. Events of this type or its
-     *                subclasses activate the listener.
+     *            the type of the listened event. Events of this type or its
+     *            subclasses activate the listener.
      * @param object
-     *                the object instance who owns the activation method.
+     *            the object instance who owns the activation method.
      * @param methodName
-     *                the name of the activation method.
+     *            the name of the activation method.
      */
     public void addListener(Class eventType, Object object, String methodName) {
         if (eventRouter == null) {
@@ -871,9 +871,9 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     /**
      * Removes all registered listeners matching the given parameters. Since
      * this method receives the event type and the listener object as
-     * parameters, it will unregister all <code>object</code>'s methods that
-     * are registered to listen to events of type <code>eventType</code>
-     * generated by this component.
+     * parameters, it will unregister all <code>object</code>'s methods that are
+     * registered to listen to events of type <code>eventType</code> generated
+     * by this component.
      * 
      * <p>
      * For more information on the inheritable event mechanism see the
@@ -882,10 +882,10 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * </p>
      * 
      * @param eventType
-     *                the exact event type the <code>object</code> listens to.
+     *            the exact event type the <code>object</code> listens to.
      * @param target
-     *                the target object that has registered to listen to events
-     *                of type <code>eventType</code> with one or more methods.
+     *            the target object that has registered to listen to events of
+     *            type <code>eventType</code> with one or more methods.
      */
     public void removeListener(Class eventType, Object target) {
         if (eventRouter != null) {
@@ -905,14 +905,13 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * </p>
      * 
      * @param eventType
-     *                the exact event type the <code>object</code> listens to.
+     *            the exact event type the <code>object</code> listens to.
      * @param target
-     *                target object that has registered to listen to events of
-     *                type <code>eventType</code> with one or more methods.
+     *            target object that has registered to listen to events of type
+     *            <code>eventType</code> with one or more methods.
      * @param method
-     *                the method owned by <code>target</code> that's
-     *                registered to listen to events of type
-     *                <code>eventType</code>.
+     *            the method owned by <code>target</code> that's registered to
+     *            listen to events of type <code>eventType</code>.
      */
     public void removeListener(Class eventType, Object target, Method method) {
         if (eventRouter != null) {
@@ -941,14 +940,13 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * </p>
      * 
      * @param eventType
-     *                the exact event type the <code>object</code> listens to.
+     *            the exact event type the <code>object</code> listens to.
      * @param target
-     *                the target object that has registered to listen to events
-     *                of type <code>eventType</code> with one or more methods.
+     *            the target object that has registered to listen to events of
+     *            type <code>eventType</code> with one or more methods.
      * @param methodName
-     *                the name of the method owned by <code>target</code>
-     *                that's registered to listen to events of type
-     *                <code>eventType</code>.
+     *            the name of the method owned by <code>target</code> that's
+     *            registered to listen to events of type <code>eventType</code>.
      */
     public void removeListener(Class eventType, Object target, String methodName) {
         if (eventRouter != null) {
@@ -960,7 +958,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * Sends the event to all listeners.
      * 
      * @param event
-     *                the Event to be sent to all listeners.
+     *            the Event to be sent to all listeners.
      */
     protected void fireEvent(Component.Event event) {
         if (eventRouter != null) {
@@ -1018,7 +1016,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * The component does not use or modify this data.
      * 
      * @param data
-     *                the Application specific data.
+     *            the Application specific data.
      * @since 3.1
      */
     public void setData(Object data) {
@@ -1078,6 +1076,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * 
      * @see com.itmill.toolkit.terminal.Sizeable#setHeight(float)
      */
+    @Deprecated
     public void setHeight(float height) {
         setHeight(height, getHeightUnits());
     }
@@ -1087,6 +1086,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * 
      * @see com.itmill.toolkit.terminal.Sizeable#setHeightUnits(int)
      */
+    @Deprecated
     public void setHeightUnits(int unit) {
         setHeight(getHeight(), unit);
     }
@@ -1127,6 +1127,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * 
      * @see com.itmill.toolkit.terminal.Sizeable#setWidth(float)
      */
+    @Deprecated
     public void setWidth(float width) {
         setWidth(width, getWidthUnits());
     }
@@ -1136,6 +1137,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * 
      * @see com.itmill.toolkit.terminal.Sizeable#setWidthUnits(int)
      */
+    @Deprecated
     public void setWidthUnits(int unit) {
         setWidth(getWidth(), unit);
     }
@@ -1256,7 +1258,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * handle the exception.
      * 
      * @param errorHandler
-     *                AbstractField specific error handler
+     *            AbstractField specific error handler
      */
     public void setErrorHandler(ComponentErrorHandler errorHandler) {
         this.errorHandler = errorHandler;
@@ -1266,7 +1268,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * Handle the component error event.
      * 
      * @param error
-     *                Error event to handle
+     *            Error event to handle
      * @return True if the error has been handled False, otherwise. If the error
      *         haven't been handled by this component, it will be handled in the
      *         application error handler.
