@@ -14,7 +14,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.Icon;
 
-//TODO Move styles to CSS
 public class ICaption extends HTML {
 
     public static final String CLASSNAME = "i-caption";
@@ -59,8 +58,6 @@ public class ICaption extends HTML {
         setStyleName(CLASSNAME);
         sinkEvents(ITooltip.TOOLTIP_EVENTS);
 
-        DOM.setStyleAttribute(getElement(), "whiteSpace", "nowrap");
-
     }
 
     /**
@@ -84,6 +81,8 @@ public class ICaption extends HTML {
         if (uidl.hasAttribute(ATTRIBUTE_ICON)) {
             if (icon == null) {
                 icon = new Icon(client);
+                icon.setWidth("0px");
+                icon.setHeight("0px");
 
                 DOM.sinkEvents(icon.getElement(), Event.ONLOAD);
                 DOM.insertChild(getElement(), icon.getElement(),
@@ -219,6 +218,9 @@ public class ICaption extends HTML {
 
         if (DOM.eventGetType(event) == Event.ONLOAD
                 && icon.getElement() == target && !iconOnloadHandled) {
+            icon.setWidth("");
+            icon.setHeight("");
+
             /*
              * IE6 pngFix causes two onload events to be fired and we want to
              * react only to the first one
@@ -311,13 +313,6 @@ public class ICaption extends HTML {
 
     public int getHeight() {
         int height = clearElement.getOffsetTop() - getElement().getOffsetTop();
-        if (icon != null) {
-            int iconHeight = icon.getOffsetHeight();
-            ApplicationConnection.getConsole().log(
-                    "Caption height: " + height + ", icon height: "
-                            + iconHeight);
-        }
-
         return height;
     }
 
