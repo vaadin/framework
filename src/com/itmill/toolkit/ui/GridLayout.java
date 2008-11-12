@@ -1163,7 +1163,17 @@ public class GridLayout extends AbstractLayout implements
     }
 
     /**
-     * TODO
+     * Sets the expand ratio of given column. Expand ratio defines how excess
+     * space is distributed among columns. Excess space means the space not
+     * consumed by non relatively sized components.
+     * 
+     * <p>
+     * By default excess space is distributed evenly.
+     * 
+     * <p>
+     * Note, that width needs to be defined for this method to have any effect.
+     * 
+     * @see #setWidth(float, int)
      * 
      * @param columnIndex
      * @param ratio
@@ -1173,10 +1183,12 @@ public class GridLayout extends AbstractLayout implements
     }
 
     /**
-     * TODO
+     * Returns the expand ratio of given column
+     * 
+     * @see #setColumnExpandRatio(int, float)
      * 
      * @param columnIndex
-     * @return
+     * @return the expand ratio, 0.0f by default
      */
     public float getColumnExpandRatio(int columnIndex) {
         Float r = columnExpandRatio.get(columnIndex);
@@ -1184,7 +1196,17 @@ public class GridLayout extends AbstractLayout implements
     }
 
     /**
-     * TODO
+     * Sets the expand ratio of given row. Expand ratio defines how excess space
+     * is distributed among rows. Excess space means the space not consumed by
+     * non relatively sized components.
+     * 
+     * <p>
+     * By default excess space is distributed evenly.
+     * 
+     * <p>
+     * Note, that height needs to be defined for this method to have any effect.
+     * 
+     * @see #setHeight(float, int)
      * 
      * @param rowIndex
      * @param ratio
@@ -1194,10 +1216,12 @@ public class GridLayout extends AbstractLayout implements
     }
 
     /**
-     * TODO
+     * Returns the expand ratio of given row.
+     * 
+     * @see #setRowExpandRatio(int, float)
      * 
      * @param rowIndex
-     * @return
+     * @return the expand ratio, 0.0f by default
      */
     public float getRowExpandRatio(int rowIndex) {
         Float r = rowExpandRatio.get(rowIndex);

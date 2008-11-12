@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
+import com.itmill.toolkit.terminal.Sizeable;
 
 /**
  * Ordered layout.
@@ -360,9 +361,32 @@ public class OrderedLayout extends AbstractLayout implements
     }
 
     /**
-     * TODO
+     * <p>
+     * This method is used to control how excess space in layout is distributed
+     * among components. Excess space may exist if layout is sized and contained
+     * non relatively sized components don't consume all available space.
+     * 
+     * <p>
+     * Example how to distribute 1:3 (33%) for component1 and 2:3 (67%) for
+     * component2 :
+     * 
+     * <code>
+     * layout.setExpandRatio(component1, 1);<br>
+     * layout.setExpandRatio(component2, 2);
+     * </code>
+     * 
+     * <p>
+     * If no ratios have been set, the excess space is distributed evenly among
+     * all components.
+     * 
+     * <p>
+     * Note, that width or height (depending on orientation) needs to be defined
+     * for this method to have any effect.
+     * 
+     * @see Sizeable
      * 
      * @param component
+     *            the component which expand ratio is to be set
      * @param ratio
      */
     public void setExpandRatio(Component component, float ratio) {
@@ -370,10 +394,11 @@ public class OrderedLayout extends AbstractLayout implements
     };
 
     /**
-     * TODO
+     * Returns the expand ratio of given component.
      * 
      * @param component
-     * @return
+     *            which expand ratios is requested
+     * @return expand ratio of given component, 0.0f by default
      */
     public float getExpandRatio(Component component) {
         Float ratio = componentToExpandRatio.get(component);
