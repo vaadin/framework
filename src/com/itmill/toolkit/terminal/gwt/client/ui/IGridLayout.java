@@ -307,8 +307,20 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
             }
             x += columnWidths[i] + spacingPixels;
         }
-        // ensure canvas is right size
-        canvas.setPixelSize(x - spacingPixels, y - spacingPixels);
+
+        if ("".equals(width)) {
+            canvas.setWidth((x - spacingPixels) + "px");
+        } else {
+            // main element defines width
+            canvas.setWidth("");
+        }
+        int canvasHeight;
+        if ("".equals(height)) {
+            canvasHeight = y - spacingPixels;
+        } else {
+            canvasHeight = getOffsetHeight() - marginTopAndBottom;
+        }
+        canvas.setHeight(canvasHeight + "px");
     }
 
     private void renderRemainingComponents(LinkedList<Cell> pendingCells) {
@@ -718,7 +730,9 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
         }
 
         public RenderSpace getAllocatedSpace() {
-            return new RenderSpace(getAvailableWidth(), getAvailableHeight());
+            return new RenderSpace(getAvailableWidth()
+                    - cc.getCaptionWidthAfterComponent(), getAvailableHeight()
+                    - cc.getCaptionHeightAboveComponent());
         }
 
         public boolean hasContent() {
