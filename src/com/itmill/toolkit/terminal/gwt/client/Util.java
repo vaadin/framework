@@ -13,7 +13,6 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.RenderInformation.FloatSize;
@@ -355,17 +354,12 @@ public class Util {
      */
     public static void runWebkitOverflowAutoFix(final Element elem) {
         // add max version if fix landes sometime to webkit
+        elem.getStyle().setProperty("overflow", "hidden");
         if (BrowserInfo.get().getWebkitVersion() > 0) {
             DeferredCommand.addCommand(new Command() {
                 public void execute() {
                     // Dough, safari scoll auto means actually just a moped
-                    elem.getStyle().setProperty("overflow", "hidden");
-                    (new Timer() {
-                        @Override
-                        public void run() {
-                            elem.getStyle().setProperty("overflow", "auto");
-                        }
-                    }).schedule(1);
+                    elem.getStyle().setProperty("overflow", "auto");
                 }
             });
         }
