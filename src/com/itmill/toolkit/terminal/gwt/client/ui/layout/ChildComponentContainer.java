@@ -657,7 +657,11 @@ public class ChildComponentContainer extends Panel {
 
         // Also update caption max width
         if (caption != null) {
-            caption.setMaxWidth(width);
+            if (caption.shouldBePlacedAfterComponent()) {
+                caption.setMaxWidth(captionWidth);
+            } else {
+                caption.setMaxWidth(width);
+            }
             captionWidth = caption.getRenderedWidth();
         }
 
