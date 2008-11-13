@@ -386,11 +386,16 @@ public class OrderedLayout extends AbstractLayout implements
      * @see Sizeable
      * 
      * @param component
-     *            the component which expand ratio is to be set
+     *            the component in this layout which expand ratio is to be set
      * @param ratio
      */
     public void setExpandRatio(Component component, float ratio) {
-        componentToExpandRatio.put(component, ratio);
+        if (components.contains(component)) {
+            componentToExpandRatio.put(component, ratio);
+        } else {
+            throw new IllegalArgumentException(
+                    "Component must be added to layout before using setExpandRatio()");
+        }
     };
 
     /**
