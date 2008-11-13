@@ -538,7 +538,6 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
         }
 
         componentContainer.setWidget(newComponent);
-        client.unregisterPaintable((Paintable) oldComponent);
         widgetToComponentContainer.put(newComponent, componentContainer);
 
         paintableToCell.put((Paintable) newComponent, paintableToCell

@@ -480,7 +480,11 @@ public class ISplitPanel extends ComplexPanel implements Container,
     }
 
     public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
-        // TODO Auto-generated method stub
+        if (oldComponent == firstChild) {
+            setFirstWidget(newComponent);
+        } else if (oldComponent == secondChild) {
+            setSecondWidget(newComponent);
+        }
     }
 
     public boolean requestLayout(Set<Paintable> child) {

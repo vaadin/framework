@@ -473,7 +473,13 @@ public class IView extends SimplePanel implements Container,
     }
 
     public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
-        // TODO Auto-generated method stub
+        // TODO This is untested as no layouts require this
+        if (oldComponent != layout) {
+            return;
+        }
+
+        setWidget(newComponent);
+        layout = (Paintable) newComponent;
     }
 
     public boolean requestLayout(Set<Paintable> child) {

@@ -273,10 +273,6 @@ public class IPopupView extends HTML implements Paintable {
         public void replaceChildComponent(Widget oldComponent,
                 Widget newComponent) {
 
-            if (oldComponent != null) {
-                client.unregisterPaintable((Paintable) oldComponent);
-            }
-
             popupComponentWidget = newComponent;
 
             setWidget(popupComponentWidget);

@@ -127,7 +127,6 @@ public class IFormLayout extends FlexTable implements Container {
                         client);
                 setWidget(i, 0, newCap);
                 setWidget(i, 1, newComponent);
-                client.unregisterPaintable((Paintable) oldComponent);
                 break;
             }
         }
