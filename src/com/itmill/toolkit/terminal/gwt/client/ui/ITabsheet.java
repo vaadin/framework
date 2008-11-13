@@ -558,7 +558,7 @@ public class ITabsheet extends ITabsheetBase implements
     }
 
     public boolean requestLayout(Set<Paintable> child) {
-        if (height != null && width != null) {
+        if (!isDynamicHeight() && !isDynamicWidth()) {
             /*
              * If the height and width has been specified for this container the
              * child components cannot make the size of the layout change
@@ -567,14 +567,14 @@ public class ITabsheet extends ITabsheetBase implements
             return true;
         }
 
+        fixVisibleTabSize();
+
         if (renderInformation.updateSize(getElement())) {
             /*
              * Size has changed so we let the child components know about the
              * new size.
              */
-            fixVisibleTabSize();
             iLayout();
-
             return false;
         } else {
             /*
