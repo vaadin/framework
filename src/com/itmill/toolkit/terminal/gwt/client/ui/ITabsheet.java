@@ -105,6 +105,15 @@ public class ITabsheet extends ITabsheetBase implements
             return (ICaption) getWidget(index);
         }
 
+        public void setVisible(int index, boolean visible) {
+            Element e = DOM.getParent(getTab(index).getElement());
+            if (visible) {
+                DOM.setStyleAttribute(e, "display", "");
+            } else {
+                DOM.setStyleAttribute(e, "display", "none");
+            }
+        }
+
     }
 
     public static final String CLASSNAME = "i-tabsheet";
@@ -339,13 +348,16 @@ public class ITabsheet extends ITabsheetBase implements
         super.setWidth(realWidth + "px");
     }
 
-    protected void renderTab(final UIDL tabUidl, int index, boolean selected) {
+    protected void renderTab(final UIDL tabUidl, int index, boolean selected,
+            boolean hidden) {
         ICaption c = tb.getTab(index);
         if (c == null) {
             c = new ICaption(null, client);
             tb.addTab(c);
         }
         c.updateCaption(tabUidl);
+
+        tb.setVisible(index, !hidden);
 
         /*
          * Force the width of the caption container so the content will not wrap
@@ -399,7 +411,7 @@ public class ITabsheet extends ITabsheetBase implements
 
         ITabsheet.this.iLayout();
         (content).updateFromUIDL(contentUIDL, client);
-        fixVisibleTabSize();
+        updateOpenTabSize();
         ITabsheet.this.removeStyleDependentName("loading");
         if (previousVisibleWidget != null) {
             DOM.setStyleAttribute(previousVisibleWidget.getElement(),
@@ -426,7 +438,7 @@ public class ITabsheet extends ITabsheetBase implements
             DOM.setStyleAttribute(contentNode, "height", "");
             renderSpace.setHeight(0);
         }
-        fixVisibleTabSize();
+        updateOpenTabSize();
         iLayout();
     }
 
@@ -447,7 +459,7 @@ public class ITabsheet extends ITabsheetBase implements
             contentNode.getStyle().setProperty("width", contentWidth + "px");
             renderSpace.setWidth(contentWidth);
         }
-        fixVisibleTabSize();
+        updateOpenTabSize();
         iLayout();
     }
 
@@ -466,7 +478,7 @@ public class ITabsheet extends ITabsheetBase implements
      * position: absolute (to work around a firefox flickering bug) we must keep
      * this up-to-date by hand.
      */
-    private void fixVisibleTabSize() {
+    private void updateOpenTabSize() {
         /*
          * The overflow=auto element must have a height specified, otherwise it
          * will be just as high as the contents and no scrollbars will appear
@@ -554,7 +566,11 @@ public class ITabsheet extends ITabsheetBase implements
     public void updateCaption(Paintable component, UIDL uidl) {
         int i = tp.getWidgetIndex((Widget) component);
         ICaption c = (ICaption) captions.get("" + i);
+        boolean visible = c.isVisible();
         c.updateCaption(uidl);
+        if (c.isVisible() != visible) {
+            tb.setVisible(i, c.isVisible());
+        }
     }
 
     public boolean requestLayout(Set<Paintable> child) {
@@ -567,7 +583,7 @@ public class ITabsheet extends ITabsheetBase implements
             return true;
         }
 
-        fixVisibleTabSize();
+        updateOpenTabSize();
 
         if (renderInformation.updateSize(getElement())) {
             /*

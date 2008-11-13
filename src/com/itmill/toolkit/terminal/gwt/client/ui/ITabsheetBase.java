@@ -57,6 +57,7 @@ abstract class ITabsheetBase extends ComplexPanel implements Container {
             final UIDL tab = (UIDL) it.next();
             final String key = tab.getStringAttribute("key");
             final boolean selected = tab.getBooleanAttribute("selected");
+            final boolean hidden = tab.getBooleanAttribute("hidden");
 
             if (tab.getBooleanAttribute("disabled")) {
                 disabledTabKeys.add(key);
@@ -71,7 +72,7 @@ abstract class ITabsheetBase extends ComplexPanel implements Container {
                 Paintable p = client.getPaintable(tab.getChildUIDL(0));
                 oldPaintables.remove(p);
             }
-            renderTab(tab, index, selected);
+            renderTab(tab, index, selected, hidden);
             index++;
         }
 
@@ -103,7 +104,7 @@ abstract class ITabsheetBase extends ComplexPanel implements Container {
      * and set the visibility of the tab according to the 'selected' parameter.
      */
     protected abstract void renderTab(final UIDL tabUidl, int index,
-            boolean selected);
+            boolean selected, boolean hidden);
 
     /**
      * Implement in extending classes. This method should render any previously

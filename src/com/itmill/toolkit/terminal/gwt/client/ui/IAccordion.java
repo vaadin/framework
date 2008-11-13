@@ -16,6 +16,7 @@ import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
+import com.itmill.toolkit.terminal.gwt.client.RenderInformation;
 import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
@@ -42,6 +43,8 @@ public class IAccordion extends ITabsheetBase implements
     private boolean rendering = false;
 
     private int selectedUIDLItemIndex = -1;
+
+    private RenderInformation renderInformation = new RenderInformation();
 
     public IAccordion() {
         super(CLASSNAME);
@@ -79,10 +82,14 @@ public class IAccordion extends ITabsheetBase implements
             }
             lazyUpdateMap.clear();
         }
+
+        renderInformation.updateSize(getElement());
+
         rendering = false;
     }
 
-    protected void renderTab(UIDL tabUidl, int index, boolean selected) {
+    protected void renderTab(UIDL tabUidl, int index, boolean selected,
+            boolean hidden) {
         StackItem item;
         int itemIndex;
         if (stack.size() <= index) {
@@ -99,6 +106,8 @@ public class IAccordion extends ITabsheetBase implements
             itemIndex = index;
             item.updateCaption(tabUidl);
         }
+
+        item.setVisible(!hidden);
 
         if (selected) {
             selectedUIDLItemIndex = itemIndex;
@@ -222,6 +231,8 @@ public class IAccordion extends ITabsheetBase implements
             openTab.setHeight(spaceForOpenItem);
         } else {
             renderSpace.setHeight(0);
+            openTab.setHeightFromWidget();
+
         }
 
     }
@@ -272,6 +283,21 @@ public class IAccordion extends ITabsheetBase implements
             }
         }
 
+        public void setVisible(boolean visible) {
+            super.setVisible(visible);
+        }
+
+        public void setHeightFromWidget() {
+            Widget paintable = getPaintable();
+            if (paintable == null) {
+                return;
+            }
+
+            int paintableHeight = (paintable).getElement().getOffsetHeight();
+            setHeight(paintableHeight);
+
+        }
+
         /**
          * Returns caption width including padding
          * 
@@ -308,7 +334,6 @@ public class IAccordion extends ITabsheetBase implements
         private boolean open = false;
         private Element content = DOM.createDiv();
         private Element captionNode = DOM.createDiv();
-        private Paintable paintable;
 
         public StackItem(UIDL tabUidl) {
             setElement(DOM.createDiv());
@@ -338,6 +363,16 @@ public class IAccordion extends ITabsheetBase implements
             } else {
                 return null;
             }
+        }
+
+        public void replacePaintable(Paintable newPntbl) {
+            if (getWidgetCount() > 1) {
+                client.unregisterPaintable((Paintable) getWidget(1));
+                paintables.remove(getWidget(1));
+                remove(1);
+            }
+            add((Widget) newPntbl, content);
+            paintables.add(newPntbl);
         }
 
         public void open() {
@@ -371,19 +406,12 @@ public class IAccordion extends ITabsheetBase implements
                 add((Widget) newPntbl, content);
                 paintables.add(newPntbl);
             } else if (getPaintable() != newPntbl) {
-                client.unregisterPaintable((Paintable) getWidget(1));
-                paintables.remove(getWidget(1));
-                remove(1);
-                add((Widget) newPntbl, content);
-                paintables.add(newPntbl);
+                replacePaintable(newPntbl);
             }
-            paintable = newPntbl;
-            paintable.updateFromUIDL(contentUidl, client);
+            newPntbl.updateFromUIDL(contentUidl, client);
 
-            if (isOpen()) {
-                if (isDynamicHeight()) {
-                    setHeight(((Widget) paintable).getOffsetHeight());
-                }
+            if (isOpen() && isDynamicHeight()) {
+                setHeightFromWidget();
             }
         }
 
@@ -397,6 +425,14 @@ public class IAccordion extends ITabsheetBase implements
 
         public int getWidgetWidth() {
             return DOM.getFirstChild(content).getOffsetWidth();
+        }
+
+        public boolean contains(Paintable p) {
+            return (getPaintable() == p);
+        }
+
+        public boolean isCaptionVisible() {
+            return caption.isVisible();
         }
 
     }
@@ -427,22 +463,56 @@ public class IAccordion extends ITabsheetBase implements
     }
 
     public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
-        // TODO Auto-generated method stub
+        for (StackItem item : stack) {
+            if (item.getPaintable() == oldComponent) {
+                item.replacePaintable((Paintable) newComponent);
+                return;
+            }
+        }
     }
 
     public void updateCaption(Paintable component, UIDL uidl) {
         for (Iterator iterator = stack.iterator(); iterator.hasNext();) {
             StackItem si = (StackItem) iterator.next();
             if (si.getPaintable() == component) {
+                boolean visible = si.isVisible();
                 si.updateCaption(uidl);
+                if (si.isCaptionVisible() != visible) {
+                    si.setVisible(si.isCaptionVisible());
+                }
+
                 return;
             }
         }
     }
 
     public boolean requestLayout(Set<Paintable> child) {
-        // TODO Auto-generated method stub
-        return false;
+        if (!isDynamicHeight() && !isDynamicWidth()) {
+            /*
+             * If the height and width has been specified for this container the
+             * child components cannot make the size of the layout change
+             */
+
+            return true;
+        }
+
+        updateOpenTabSize();
+
+        if (renderInformation.updateSize(getElement())) {
+            /*
+             * Size has changed so we let the child components know about the
+             * new size.
+             */
+            iLayout();
+            return false;
+        } else {
+            /*
+             * Size has not changed so we do not need to propagate the event
+             * further
+             */
+            return true;
+        }
+
     }
 
     public RenderSpace getAllocatedSpace(Widget child) {

@@ -191,16 +191,19 @@ public class TabSheet extends AbstractComponentContainer implements
 
         for (final Iterator i = getComponentIterator(); i.hasNext();) {
             final Component c = (Component) i.next();
-            if (!c.isVisible()) {
-                continue;
-            }
+
             if (selected == null || !selected.isVisible()) {
                 selected = c;
             }
             target.startTag("tab");
-            if (!c.isEnabled()) {
+            if (!c.isEnabled() && c.isVisible()) {
                 target.addAttribute("disabled", true);
             }
+
+            if (!c.isVisible()) {
+                target.addAttribute("hidden", true);
+            }
+
             final Resource icon = getTabIcon(c);
             if (icon != null) {
                 target.addAttribute("icon", icon);
