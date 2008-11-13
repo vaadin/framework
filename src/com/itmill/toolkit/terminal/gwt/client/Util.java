@@ -354,8 +354,9 @@ public class Util {
      */
     public static void runWebkitOverflowAutoFix(final Element elem) {
         // add max version if fix landes sometime to webkit
-        elem.getStyle().setProperty("overflow", "hidden");
         if (BrowserInfo.get().getWebkitVersion() > 0) {
+            elem.getStyle().setProperty("overflow", "hidden");
+
             DeferredCommand.addCommand(new Command() {
                 public void execute() {
                     // Dough, safari scoll auto means actually just a moped
