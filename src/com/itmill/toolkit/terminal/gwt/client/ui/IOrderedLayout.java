@@ -61,8 +61,9 @@ public class IOrderedLayout extends CellBasedLayout {
         isRendering = true;
         super.updateFromUIDL(uidl, client);
 
-        // Only non-cached UIDL:s can introduce changes
-        if (uidl.getBooleanAttribute("cached")) {
+        // Only non-cached, visible UIDL:s can introduce changes
+        if (uidl.getBooleanAttribute("cached")
+                || uidl.getBooleanAttribute("invisible")) {
             isRendering = false;
             return;
         }
