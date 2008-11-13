@@ -31,10 +31,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -52,6 +54,7 @@ import com.itmill.toolkit.terminal.UploadStream;
 import com.itmill.toolkit.terminal.VariableOwner;
 import com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent;
 import com.itmill.toolkit.terminal.Terminal.ErrorEvent;
+import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.ui.AbstractField;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.Upload;
@@ -593,24 +596,27 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
             // Manage bursts one by one
             final String[] bursts = changes.split(VAR_BURST_SEPARATOR);
 
+            // Security: double cookie submission pattern
             boolean nocheck = "true".equals(application2
                     .getProperty("disable-xsrf-protection"));
-            // Security: double cookie submission pattern
-            if (!nocheck && bursts.length == 1 && "undefined".equals(bursts[0])) {
-                // No seckey, but no variables: initial request
-                /*- don't set key, we're using JSESSIONID
-                Cookie secCookie = new Cookie(
-                        ApplicationConnection.UIDL_SECURITY_COOKIE_NAME,
-                        request.getSession().getId());
-                secCookie.setPath("/");
-                response.addCookie(secCookie);
-                -*/
+            if (bursts.length == 1 && "init".equals(bursts[0])) {
+                // initial request, no variable changes: send key
+                String uuid = UUID.randomUUID().toString();
+                Cookie c = new Cookie(
+                        ApplicationConnection.UIDL_SECURITY_COOKIE_NAME, uuid);
+                response.addCookie(c);
+                request.getSession().setAttribute(
+                        ApplicationConnection.UIDL_SECURITY_COOKIE_NAME, uuid);
                 return true;
+            } else if (!nocheck) {
+                // check the key
+                String sessId = (String) request.getSession().getAttribute(
+                        ApplicationConnection.UIDL_SECURITY_COOKIE_NAME);
+                if (!sessId.equals(bursts[0])) {
+                    throw new InvalidUIDLSecurityKeyException(
+                            "Security key mismatch");
+                }
 
-            } else if (!nocheck
-                    && !request.getSession().getId().equals(bursts[0])) {
-                throw new InvalidUIDLSecurityKeyException(
-                        "Invalid UIDL security key");
             }
 
             for (int bi = 1; bi < bursts.length; bi++) {

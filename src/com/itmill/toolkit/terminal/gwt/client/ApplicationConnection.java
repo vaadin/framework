@@ -14,6 +14,7 @@ import java.util.Vector;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.http.client.Header;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -25,7 +26,6 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
@@ -61,7 +61,9 @@ public class ApplicationConnection {
 
     public static final String VAR_BURST_SEPARATOR = "\u001d";
 
-    public static final String UIDL_SECURITY_COOKIE_NAME = "JSESSIONID";
+    public static final String UIDL_SECURITY_COOKIE_NAME = "ISESSIONID";
+
+    private static String uidl_security_key = "init";
 
     private final HashMap resourcesMap = new HashMap();
 
@@ -284,9 +286,8 @@ public class ApplicationConnection {
             boolean forceSync) {
         startRequest();
 
-        // cookie double submission pattern
-        requestData = Cookies.getCookie(UIDL_SECURITY_COOKIE_NAME)
-                + VAR_BURST_SEPARATOR + requestData;
+        // Security: double cookie submission pattern
+        requestData = uidl_security_key + VAR_BURST_SEPARATOR + requestData;
 
         console.log("Making UIDL Request with params: " + requestData);
         String uri = getAppUri() + "UIDL" + configuration.getPathInfo();
@@ -315,6 +316,33 @@ public class ApplicationConnection {
 
                     public void onResponseReceived(Request request,
                             Response response) {
+                        if ("init".equals(uidl_security_key)) {
+                            // Read security key
+                            Header[] headers = response.getHeaders();
+                            if (null != headers) {
+                                String tmp = response.getHeader("Set-Cookie");
+                                if (null != tmp) {
+                                    int start = tmp
+                                            .indexOf(UIDL_SECURITY_COOKIE_NAME);
+                                    if (start > -1) {
+                                        start += UIDL_SECURITY_COOKIE_NAME
+                                                .length() + 1;
+                                        int end = tmp.indexOf(";", start);
+                                        if (end == -1) {
+                                            end = tmp.indexOf(" ", start);
+                                        }
+                                        if (end == -1) {
+                                            tmp = tmp.substring(start);
+                                        } else {
+                                            tmp = tmp.substring(start, end);
+                                        }
+                                        if (tmp != null && tmp.length() > 0) {
+                                            uidl_security_key = tmp;
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         if (applicationRunning) {
                             handleReceivedJSONMessage(response);
                         } else {
@@ -649,7 +677,7 @@ public class ApplicationConnection {
                 }
 
                 if (html.length() != 0) {
-                    INotification n = new INotification(1000 * 60 * 45); // 45min
+                    INotification n = new INotification(1000 * 60 * 45); //45min
                     n.addEventListener(new NotificationRedirect(url));
                     n.show(html, INotification.CENTERED_TOP,
                             INotification.STYLE_SYSTEM);
