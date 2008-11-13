@@ -6,9 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.ComplexPanel;
@@ -27,15 +25,23 @@ public class IAccordion extends ITabsheetBase implements
 
     public static final String CLASSNAME = "i-accordion";
 
-    private ArrayList stack = new ArrayList();
+    private ArrayList<StackItem> stack = new ArrayList<StackItem>();
 
-    private Set paintables = new HashSet();
+    private Set<Paintable> paintables = new HashSet<Paintable>();
 
     private String height;
 
-    private HashMap lazyUpdateMap = new HashMap();
+    private String width;
+
+    private HashMap<StackItem, UIDL> lazyUpdateMap = new HashMap<StackItem, UIDL>();
 
     private RenderSpace renderSpace = new RenderSpace(0, 0, true);
+
+    private StackItem openTab = null;
+
+    private boolean rendering = false;
+
+    private int selectedUIDLItemIndex = -1;
 
     public IAccordion() {
         super(CLASSNAME);
@@ -46,62 +52,98 @@ public class IAccordion extends ITabsheetBase implements
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        rendering = true;
+        selectedUIDLItemIndex = -1;
         super.updateFromUIDL(uidl, client);
+        /*
+         * Render content after all tabs have been created and we know how large
+         * the content area is
+         */
+        if (selectedUIDLItemIndex >= 0) {
+            StackItem selectedItem = stack.get(selectedUIDLItemIndex);
+            UIDL selectedTabUIDL = lazyUpdateMap.remove(selectedItem);
+            open(selectedUIDLItemIndex);
+
+            selectedItem.setContent(selectedTabUIDL);
+        } else if (!uidl.getBooleanAttribute("cached") && openTab != null) {
+            close(openTab);
+        }
+
         iLayout();
         // finally render possible hidden tabs
         if (lazyUpdateMap.size() > 0) {
             for (Iterator iterator = lazyUpdateMap.keySet().iterator(); iterator
                     .hasNext();) {
                 StackItem item = (StackItem) iterator.next();
-                item.setContent((UIDL) lazyUpdateMap.get(item));
+                item.setContent(lazyUpdateMap.get(item));
             }
             lazyUpdateMap.clear();
         }
-    }
-
-    private StackItem getSelectedStack() {
-        if (stack.size() == 0) {
-            return null;
-        }
-        return (StackItem) stack.get(activeTabIndex);
+        rendering = false;
     }
 
     protected void renderTab(UIDL tabUidl, int index, boolean selected) {
         StackItem item;
+        int itemIndex;
         if (stack.size() <= index) {
+            // Create stackItem and render caption
             item = new StackItem(tabUidl);
             if (stack.size() == 0) {
                 item.addStyleDependentName("first");
             }
             stack.add(item);
+            itemIndex = stack.size() - 1;
             add(item, getElement());
         } else {
-            item = (StackItem) stack.get(index);
+            item = stack.get(index);
+            itemIndex = index;
             item.updateCaption(tabUidl);
         }
 
         if (selected) {
-            item.open();
-            // content node is expected to be prepared prior render phase, force
-            // layout phase
-            iLayout();
-            item.setContent(tabUidl.getChildUIDL(0));
-        } else if (tabUidl.getChildCount() > 0) {
-            // content node is expected to be prepared prior render phase, force
-            // layout phase
+            selectedUIDLItemIndex = itemIndex;
+        }
+        
+        if (tabUidl.getChildCount() > 0) {
             lazyUpdateMap.put(item, tabUidl.getChildUIDL(0));
         }
     }
 
-    protected void selectTab(final int index, final UIDL contentUidl) {
-        StackItem item = (StackItem) stack.get(index);
-        if (index != activeTabIndex) {
-            StackItem old = (StackItem) stack.get(activeTabIndex);
-            if (old.isOpen()) {
-                old.close();
+    private void open(int itemIndex) {
+        StackItem item = stack.get(itemIndex);
+        if (openTab != null) {
+            if (openTab.isOpen()) {
+                if (openTab == item) {
+                    return;
+                } else {
+                    openTab.close();
+                }
             }
-            activeTabIndex = index;
-            item.open();
+        }
+
+        item.open();
+        activeTabIndex = itemIndex;
+        openTab = item;
+
+        // Update the size for the open tab
+        updateOpenTabSize();
+    }
+
+    private void close(StackItem item) {
+        if (!item.isOpen()) {
+            return;
+        }
+
+        item.close();
+        activeTabIndex = -1;
+        openTab = null;
+
+    }
+
+    protected void selectTab(final int index, final UIDL contentUidl) {
+        StackItem item = stack.get(index);
+        if (index != activeTabIndex) {
+            open(index);
             iLayout();
         }
         item.setContent(contentUidl);
@@ -111,39 +153,60 @@ public class IAccordion extends ITabsheetBase implements
         final int index = stack.indexOf(item);
         if (index != activeTabIndex && !disabled && !readonly
                 && !disabledTabKeys.contains(tabKeys.get(index))) {
-            if (getSelectedStack() != null) {
-                getSelectedStack().close();
-            }
             addStyleDependentName("loading");
-            // run updating variables in deferred command to bypass some FF
-            // optimization issues
-            DeferredCommand.addCommand(new Command() {
-                public void execute() {
-                    client.updateVariable(id, "selected", ""
-                            + tabKeys.get(index), true);
-                }
-            });
+            client
+                    .updateVariable(id, "selected", "" + tabKeys.get(index),
+                            true);
+        }
+    }
+
+    public void setWidth(String width) {
+        super.setWidth(width);
+        this.width = width;
+        if (!rendering) {
+            updateOpenTabSize();
         }
     }
 
     public void setHeight(String height) {
-        this.height = height;
         super.setHeight(height);
+        this.height = height;
+
+        if (!rendering) {
+            updateOpenTabSize();
+        }
+
     }
 
-    public void iLayout() {
-        StackItem item = getSelectedStack();
-        if (item == null) {
+    /**
+     * Sets the size of the open tab
+     */
+    private void updateOpenTabSize() {
+        if (openTab == null) {
+            renderSpace.setHeight(0);
+            renderSpace.setWidth(0);
             return;
         }
 
-        if (height != null && !height.equals("")) {
+        // WIDTH
+        if (!isDynamicWidth()) {
+            int w = getOffsetWidth();
+            openTab.setWidth(w);
+            renderSpace.setWidth(w);
+        } else {
+            renderSpace.setWidth(0);
+        }
 
+        // HEIGHT
+        if (!isDynamicHeight()) {
             int usedPixels = 0;
             for (Iterator iterator = stack.iterator(); iterator.hasNext();) {
-                StackItem si = (StackItem) iterator.next();
-                if (si != item) {
-                    usedPixels += si.getOffsetHeight();
+                StackItem item = (StackItem) iterator.next();
+                if (item == openTab) {
+                    usedPixels += item.getCaptionHeight();
+                } else {
+                    // This includes the captionNode borders
+                    usedPixels += item.getHeight();
                 }
             }
 
@@ -151,17 +214,42 @@ public class IAccordion extends ITabsheetBase implements
 
             int spaceForOpenItem = offsetHeight - usedPixels;
 
-            if (spaceForOpenItem > 0) {
-                item.setHeight(spaceForOpenItem + "px");
+            if (spaceForOpenItem < 0) {
+                spaceForOpenItem = 0;
             }
+
+            renderSpace.setHeight(spaceForOpenItem);
+            openTab.setHeight(spaceForOpenItem);
         } else {
-            super.setHeight("");
-            item.setHeight("");
+            renderSpace.setHeight(0);
         }
 
-        client.runDescendentsLayout(item);
+    }
 
-        Util.runWebkitOverflowAutoFix(getSelectedStack().getContainerElement());
+    public void iLayout() {
+        if (openTab == null) {
+            return;
+        }
+
+        if (isDynamicWidth()) {
+            int maxWidth = 40;
+            for (StackItem si : stack) {
+                int captionWidth = si.getCaptionWidth();
+                if (captionWidth > maxWidth) {
+                    maxWidth = captionWidth;
+                }
+            }
+            int widgetWidth = openTab.getWidgetWidth();
+            if (widgetWidth > maxWidth) {
+                maxWidth = widgetWidth;
+            }
+            super.setWidth(maxWidth + "px");
+            openTab.setWidth(maxWidth);
+        }
+
+        client.runDescendentsLayout(openTab);
+
+        Util.runWebkitOverflowAutoFix(openTab.getContainerElement());
 
     }
 
@@ -170,36 +258,50 @@ public class IAccordion extends ITabsheetBase implements
      */
     protected class StackItem extends ComplexPanel implements ClickListener {
 
-        public void setHeight(String height) {
-            super.setHeight(height);
-            if (!"".equals(height)) {
-                int offsetHeight = getOffsetHeight();
-                int captionHeight = DOM.getElementPropertyInt(captionNode,
-                        "offsetHeight");
-                int contentSpace = offsetHeight - captionHeight;
-                if (contentSpace < 0) {
-                    contentSpace = 0;
-                }
-                fixContentNodeSize(contentSpace);
+        public void setHeight(int height) {
+            if (height == -1) {
+                super.setHeight("");
+                DOM.setStyleAttribute(content, "height", "0px");
             } else {
-                DOM.setStyleAttribute(content, "height", "");
-                renderSpace.setHeight(0);
-                renderSpace.setWidth(content.getOffsetWidth());
+                super.setHeight((height + getCaptionHeight()) + "px");
+                DOM.setStyleAttribute(content, "height", height + "px");
+                DOM
+                        .setStyleAttribute(content, "top", getCaptionHeight()
+                                + "px");
+
             }
         }
 
-        void fixContentNodeSize(int contentHeight) {
-            DOM.setStyleAttribute(content, "height", contentHeight + "px");
-            if (!open) {
-                // fix also width
-                DOM
-                        .setStyleAttribute(content, "width", getOffsetWidth()
-                                + "px");
-            } else {
-                // update render information
-                renderSpace.setHeight(contentHeight);
-                renderSpace.setWidth(content.getOffsetWidth());
+        /**
+         * Returns caption width including padding
+         * 
+         * @return
+         */
+        public int getCaptionWidth() {
+            if (caption == null) {
+                return 0;
             }
+
+            int captionWidth = caption.getRequiredWidth();
+            int padding = Util.measureHorizontalPadding(caption.getElement(),
+                    18);
+            return captionWidth + padding;
+        }
+
+        public void setWidth(int width) {
+            if (width == -1) {
+                super.setWidth("");
+            } else {
+                super.setWidth(width + "px");
+            }
+        }
+
+        public int getHeight() {
+            return getOffsetHeight();
+        }
+
+        public int getCaptionHeight() {
+            return captionNode.getOffsetHeight();
         }
 
         private ICaption caption;
@@ -221,12 +323,6 @@ public class IAccordion extends ITabsheetBase implements
                     + "-item-content");
             DOM.setElementProperty(captionNode, "className", CLASSNAME
                     + "-item-caption");
-            DOM.setStyleAttribute(content, "overflow", "auto");
-            // Force 'hasLayout' in IE6 (prevents layout problems)
-            if (BrowserInfo.get().isIE6()) {
-                DOM.setStyleAttribute(content, "zoom", "1");
-                DOM.setStyleAttribute(getElement(), "overflow", "hidden");
-            }
             close();
 
             updateCaption(tabUidl);
@@ -246,30 +342,22 @@ public class IAccordion extends ITabsheetBase implements
 
         public void open() {
             open = true;
-            DOM.setStyleAttribute(content, "position", "relative");
-            DOM.setStyleAttribute(content, "top", "");
-            DOM.setStyleAttribute(content, "left", "");
+            DOM.setStyleAttribute(content, "top", getCaptionHeight() + "px");
+            DOM.setStyleAttribute(content, "left", "0px");
             DOM.setStyleAttribute(content, "visibility", "");
-            DOM.setStyleAttribute(content, "width", "");
-            if (height != null && !"".equals(height)) {
-                setHeight("100%");
-            } else {
-                setHeight("");
-            }
-            DOM.setStyleAttribute(content, "overflow", "auto");
             addStyleDependentName("open");
         }
 
-        public void close() {
-            DOM.setStyleAttribute(content, "width", getOffsetWidth() + "px");
-            DOM.setStyleAttribute(content, "height", getOffsetHeight() + "px");
-            DOM.setStyleAttribute(content, "overflow", "hidden");
+        public void hide() {
             DOM.setStyleAttribute(content, "visibility", "hidden");
-            DOM.setStyleAttribute(content, "position", "absolute");
-            DOM.setStyleAttribute(content, "top", "0");
-            DOM.setStyleAttribute(content, "left", "0px");
+        }
+
+        public void close() {
+            DOM.setStyleAttribute(content, "visibility", "hidden");
+            DOM.setStyleAttribute(content, "top", "-100000px");
+            DOM.setStyleAttribute(content, "left", "-100000px");
             removeStyleDependentName("open");
-            setHeight(""); // only open StackItem may contain height
+            setHeight(-1);
             open = false;
         }
 
@@ -278,15 +366,6 @@ public class IAccordion extends ITabsheetBase implements
         }
 
         public void setContent(UIDL contentUidl) {
-            if (!isOpen()) {
-                // ensure content node has right size
-                StackItem openItem = getSelectedStack();
-                int availableH = openItem.getOffsetHeight()
-                        - DOM
-                                .getElementPropertyInt(captionNode,
-                                        "offsetHeight");
-                fixContentNodeSize(availableH);
-            }
             final Paintable newPntbl = client.getPaintable(contentUidl);
             if (getPaintable() == null) {
                 add((Widget) newPntbl, content);
@@ -300,6 +379,12 @@ public class IAccordion extends ITabsheetBase implements
             }
             paintable = newPntbl;
             paintable.updateFromUIDL(contentUidl, client);
+
+            if (isOpen()) {
+                if (isDynamicHeight()) {
+                    setHeight(((Widget) paintable).getOffsetHeight());
+                }
+            }
         }
 
         public void onClick(Widget sender) {
@@ -309,11 +394,24 @@ public class IAccordion extends ITabsheetBase implements
         public void updateCaption(UIDL uidl) {
             caption.updateCaption(uidl);
         }
+
+        public int getWidgetWidth() {
+            return DOM.getFirstChild(content).getOffsetWidth();
+        }
+
     }
 
     protected void clearPaintables() {
         stack.clear();
         clear();
+    }
+
+    public boolean isDynamicHeight() {
+        return height == null || height.equals("");
+    }
+
+    public boolean isDynamicWidth() {
+        return width == null || width.equals("");
     }
 
     protected Iterator getPaintableIterator() {
