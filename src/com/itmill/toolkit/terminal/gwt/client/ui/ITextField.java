@@ -13,7 +13,6 @@ import com.google.gwt.user.client.ui.TextBoxBase;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
-import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.ITooltip;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
@@ -53,6 +52,11 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
 
     protected ITextField(Element node) {
         super(node);
+        if (BrowserInfo.get().isIE()) {
+            // Fixes IE margin problem (#2058)
+            DOM.setStyleAttribute(node, "marginTop", "-1px");
+            DOM.setStyleAttribute(node, "marginBottom", "-1px");
+        }
         setStyleName(CLASSNAME);
         addChangeListener(this);
         addFocusListener(this);
@@ -175,10 +179,6 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
         DOM.appendChild(DOM.getParent(getElement()), clone);
         extraHorizontalPixels = DOM.getElementPropertyInt(clone, "offsetWidth") - 10;
         extraVerticalPixels = DOM.getElementPropertyInt(clone, "offsetHeight") - 10;
-        if (BrowserInfo.get().isIE()) {
-            // IE just don't accept 0 margin for textarea #2058
-            extraVerticalPixels += 2;
-        }
 
         DOM.removeChild(DOM.getParent(getElement()), clone);
     }
@@ -188,6 +188,10 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
         if (height.endsWith("px")) {
             int h = Integer.parseInt(height.substring(0, height.length() - 2));
             h -= getExtraVerticalPixels();
+            if (h < 0) {
+                h = 0;
+            }
+
             super.setHeight(h + "px");
         } else {
             super.setHeight(height);
@@ -197,13 +201,13 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
     @Override
     public void setWidth(String width) {
         if (width.endsWith("px")) {
-            int h = Integer.parseInt(width.substring(0, width.length() - 2));
-            h -= getExtraHorizontalPixels();
-            if (h <= 0) {
-                h = 0;
+            int w = Integer.parseInt(width.substring(0, width.length() - 2));
+            w -= getExtraHorizontalPixels();
+            if (w < 0) {
+                w = 0;
             }
 
-            super.setWidth(h + "px");
+            super.setWidth(w + "px");
         } else {
             super.setWidth(width);
         }
