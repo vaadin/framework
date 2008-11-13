@@ -14,9 +14,7 @@ public interface Container extends Paintable {
      * Replace child of this layout with another component.
      * 
      * Each layout must be able to switch children. To to this, one must just
-     * give references to a current and new child. Note that the Layout is not
-     * responsible for registering Paintable into ApplicationConnection, but it
-     * is responsible is for unregistering it.
+     * give references to a current and new child.
      * 
      * @param oldComponent
      *            Child to be replaced

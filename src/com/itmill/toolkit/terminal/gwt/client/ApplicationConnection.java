@@ -935,6 +935,7 @@ public class ApplicationConnection {
             if (parent != null) {
                 final Widget w = (Widget) widgetSet.createWidget(uidl);
                 parent.replaceChildComponent(component, w);
+                unregisterPaintable((Paintable) component);
                 registerPaintable(uidl.getId(), (Paintable) w);
                 ((Paintable) w).updateFromUIDL(uidl, this);
                 return true;
@@ -1078,10 +1079,7 @@ public class ApplicationConnection {
      */
     public void runDescendentsLayout(HasWidgets container) {
         // getConsole().log(
-        // "runDescendentsLayout("
-        // + container.getClass().getName().replaceAll(
-        // "[^\\.]*\\.", "") + "/" + container.hashCode()
-        // + ")");
+        // "runDescendentsLayout(" + Util.getSimpleName(container) + ")");
         final Iterator childWidgets = container.iterator();
         while (childWidgets.hasNext()) {
             final Widget child = (Widget) childWidgets.next();
@@ -1161,13 +1159,15 @@ public class ApplicationConnection {
                 if (height < 0) {
                     height = 0;
                 }
+
                 // getConsole().log(
-                // "Widget " + widget.getClass().getName() + "/"
+                // "Widget " + Util.getSimpleName(widget) + "/"
                 // + widget.hashCode() + " relative height "
                 // + relativeSize.getHeight() + "% of "
-                // + renderSpace.getHeight() + "px ("
-                // + renderSpace.getReservedHeight()
-                // + "px reserved): " + height + "px");
+                // + renderSpace.getHeight() + "px (reported by "
+                //
+                // + Util.getSimpleName(parent) + "/"
+                // + parent.hashCode() + ") : " + height + "px");
                 widget.setHeight(height + "px");
             } else {
                 widget.setHeight(relativeSize.getHeight() + "%");
@@ -1205,12 +1205,12 @@ public class ApplicationConnection {
                 }
 
                 // getConsole().log(
-                // "Widget " + widget.getClass().getName() + "/"
+                // "Widget " + Util.getSimpleName(widget) + "/"
                 // + widget.hashCode() + " relative width "
                 // + relativeSize.getWidth() + "% of "
-                // + renderSpace.getWidth() + "px ("
-                // + renderSpace.getReservedWidth()
-                // + "px reserved): " + width + "px");
+                // + renderSpace.getWidth() + "px (reported by "
+                // + Util.getSimpleName(parent) + "/"
+                // + parent.hashCode() + ") : " + width + "px");
                 widget.setWidth(width + "px");
             } else {
                 widget.setWidth(relativeSize.getWidth() + "%");
