@@ -558,9 +558,7 @@ public class ITabsheet extends ITabsheetBase implements
     }
 
     public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
-        int widgetIndex = tp.getWidgetIndex(oldComponent);
-        tp.remove(oldComponent);
-        tp.insert(newComponent, widgetIndex);
+        tp.replaceComponent(oldComponent, newComponent);
     }
 
     public void updateCaption(Paintable component, UIDL uidl) {
@@ -570,6 +568,7 @@ public class ITabsheet extends ITabsheetBase implements
         c.updateCaption(uidl);
         if (c.isVisible() != visible) {
             tb.setVisible(i, c.isVisible());
+            c.setWidth(c.getRequiredWidth() + "px");
         }
     }
 

@@ -150,4 +150,14 @@ public class ITabsheetPanel extends ComplexPanel {
         }
 
     }
+
+    public void replaceComponent(Widget oldComponent, Widget newComponent) {
+        boolean isVisible = (visibleWidget == oldComponent);
+        int widgetIndex = getWidgetIndex(oldComponent);
+        remove(oldComponent);
+        insert(newComponent, widgetIndex);
+        if (isVisible) {
+            showWidget(widgetIndex);
+        }
+    }
 }
