@@ -42,8 +42,8 @@ import com.itmill.toolkit.terminal.gwt.client.ui.ITree;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITwinColSelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.IUnknownComponent;
 import com.itmill.toolkit.terminal.gwt.client.ui.IUpload;
+import com.itmill.toolkit.terminal.gwt.client.ui.IUriFragmentUtility;
 import com.itmill.toolkit.terminal.gwt.client.ui.IWindow;
-import com.itmill.toolkit.terminal.gwt.client.ui.absolutegrid.ISizeableGridLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.richtextarea.IRichTextArea;
 
 public class DefaultWidgetSet implements WidgetSet {
@@ -57,248 +57,213 @@ public class DefaultWidgetSet implements WidgetSet {
     }
 
     public Paintable createWidget(UIDL uidl) {
-
-        final String className = resolveWidgetTypeName(uidl);
-        if ("com.itmill.toolkit.terminal.gwt.client.ui.ICheckBox"
-                .equals(className)) {
+        final Class classType = resolveWidgetType(uidl);
+        if (ICheckBox.class == classType) {
             return new ICheckBox();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IButton"
-                .equals(className)) {
+        } else if (IButton.class == classType) {
             return new IButton();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IWindow"
-                .equals(className)) {
+        } else if (IWindow.class == classType) {
             return new IWindow();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayout"
-                .equals(className)) {
+        } else if (IOrderedLayout.class == classType) {
             return new IOrderedLayout();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.ILabel"
-                .equals(className)) {
+        } else if (ILabel.class == classType) {
             return new ILabel();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.ILink"
-                .equals(className)) {
+        } else if (ILink.class == classType) {
             return new ILink();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.absolutegrid.ISizeableGridLayout"
-                .equals(className)) {
-            return new ISizeableGridLayout();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IGridLayout"
-                .equals(className)) {
+        } else if (IGridLayout.class == classType) {
             return new IGridLayout();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.ITree"
-                .equals(className)) {
+        } else if (ITree.class == classType) {
             return new ITree();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IOptionGroup"
-                .equals(className)) {
+        } else if (IOptionGroup.class == classType) {
             return new IOptionGroup();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.ITwinColSelect"
-                .equals(className)) {
+        } else if (ITwinColSelect.class == classType) {
             return new ITwinColSelect();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.INativeSelect"
-                .equals(className)) {
+        } else if (INativeSelect.class == classType) {
             return new INativeSelect();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IListSelect"
-                .equals(className)) {
+        } else if (IListSelect.class == classType) {
             return new IListSelect();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IPanel"
-                .equals(className)) {
+        } else if (IPanel.class == classType) {
             return new IPanel();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.ITabsheet"
-                .equals(className)) {
+        } else if (ITabsheet.class == classType) {
             return new ITabsheet();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IEmbedded"
-                .equals(className)) {
+        } else if (IEmbedded.class == classType) {
             return new IEmbedded();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.ICustomLayout"
-                .equals(className)) {
+        } else if (ICustomLayout.class == classType) {
             return new ICustomLayout();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.ICustomComponent"
-                .equals(className)) {
+        } else if (ICustomComponent.class == classType) {
             return new ICustomComponent();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.ITextArea"
-                .equals(className)) {
+        } else if (ITextArea.class == classType) {
             return new ITextArea();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IPasswordField"
-                .equals(className)) {
+        } else if (IPasswordField.class == classType) {
             return new IPasswordField();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.ITextField"
-                .equals(className)) {
+        } else if (ITextField.class == classType) {
             return new ITextField();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.ITablePaging"
-                .equals(className)) {
+        } else if (ITablePaging.class == classType) {
             return new ITablePaging();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable"
-                .equals(className)) {
+        } else if (IScrollTable.class == classType) {
             return new IScrollTable();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IDateFieldCalendar"
-                .equals(className)) {
+        } else if (IDateFieldCalendar.class == classType) {
             return new IDateFieldCalendar();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.ITextualDate"
-                .equals(className)) {
+        } else if (ITextualDate.class == classType) {
             return new ITextualDate();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IPopupCalendar"
-                .equals(className)) {
+        } else if (IPopupCalendar.class == classType) {
             return new IPopupCalendar();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.ISlider"
-                .equals(className)) {
+        } else if (ISlider.class == classType) {
             return new ISlider();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IForm"
-                .equals(className)) {
+        } else if (IForm.class == classType) {
             return new IForm();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IFormLayout"
-                .equals(className)) {
+        } else if (IFormLayout.class == classType) {
             return new IFormLayout();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IUpload"
-                .equals(className)) {
+        } else if (IUpload.class == classType) {
             return new IUpload();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.ISplitPanelHorizontal"
-                .equals(className)) {
+        } else if (ISplitPanelHorizontal.class == classType) {
             return new ISplitPanelHorizontal();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.ISplitPanelVertical"
-                .equals(className)) {
+        } else if (ISplitPanelVertical.class == classType) {
             return new ISplitPanelVertical();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IFilterSelect"
-                .equals(className)) {
+        } else if (IFilterSelect.class == classType) {
             return new IFilterSelect();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IProgressIndicator"
-                .equals(className)) {
+        } else if (IProgressIndicator.class == classType) {
             return new IProgressIndicator();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.richtextarea.IRichTextArea"
-                .equals(className)) {
+        } else if (IRichTextArea.class == classType) {
             return new IRichTextArea();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IAccordion"
-                .equals(className)) {
+        } else if (IAccordion.class == classType) {
             return new IAccordion();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IMenuBar"
-                .equals(className)) {
+        } else if (IMenuBar.class == classType) {
             return new IMenuBar();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IPopupView"
-                .equals(className)) {
+        } else if (IPopupView.class == classType) {
             return new IPopupView();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.ICoordinateLayout"
-                .equals(className)) {
+        } else if (ICoordinateLayout.class == classType) {
             return new ICoordinateLayout();
+        } else if (IUriFragmentUtility.class == classType) {
+            return new IUriFragmentUtility();
         }
 
         return new IUnknownComponent();
 
-        /*
-         * TODO: Class based impl, use when GWT supports return
-         * (Widget)GWT.create(resolveWidgetClass(uidl));
-         */
     }
 
-    protected String resolveWidgetTypeName(UIDL uidl) {
-
+    protected Class resolveWidgetType(UIDL uidl) {
         final String tag = uidl.getTag();
         if ("button".equals(tag)) {
             if ("switch".equals(uidl.getStringAttribute("type"))) {
-                return "com.itmill.toolkit.terminal.gwt.client.ui.ICheckBox";
+                return ICheckBox.class;
             } else {
-                return "com.itmill.toolkit.terminal.gwt.client.ui.IButton";
+                return IButton.class;
             }
         } else if ("window".equals(tag)) {
-            return "com.itmill.toolkit.terminal.gwt.client.ui.IWindow";
+            return IWindow.class;
         } else if ("orderedlayout".equals(tag)) {
-            return "com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayout";
+            return IOrderedLayout.class;
         } else if ("label".equals(tag)) {
-            return "com.itmill.toolkit.terminal.gwt.client.ui.ILabel";
+            return ILabel.class;
         } else if ("link".equals(tag)) {
-            return "com.itmill.toolkit.terminal.gwt.client.ui.ILink";
+            return ILink.class;
         } else if ("gridlayout".equals(tag)) {
-            return "com.itmill.toolkit.terminal.gwt.client.ui.IGridLayout";
+            return IGridLayout.class;
         } else if ("tree".equals(tag)) {
-            return "com.itmill.toolkit.terminal.gwt.client.ui.ITree";
+            return ITree.class;
         } else if ("select".equals(tag)) {
             if (uidl.hasAttribute("type")) {
                 final String type = uidl.getStringAttribute("type");
                 if (type.equals("twincol")) {
-                    return "com.itmill.toolkit.terminal.gwt.client.ui.ITwinColSelect";
+                    return ITwinColSelect.class;
                 }
                 if (type.equals("optiongroup")) {
-                    return "com.itmill.toolkit.terminal.gwt.client.ui.IOptionGroup";
+                    return IOptionGroup.class;
                 }
                 if (type.equals("native")) {
-                    return "com.itmill.toolkit.terminal.gwt.client.ui.INativeSelect";
+                    return INativeSelect.class;
                 }
                 if (type.equals("list")) {
-                    return "com.itmill.toolkit.terminal.gwt.client.ui.IListSelect";
+                    return IListSelect.class;
                 }
             } else {
                 if (uidl.hasAttribute("selectmode")
                         && uidl.getStringAttribute("selectmode")
                                 .equals("multi")) {
-                    return "com.itmill.toolkit.terminal.gwt.client.ui.IListSelect";
+                    return IListSelect.class;
                 } else {
-                    return "com.itmill.toolkit.terminal.gwt.client.ui.IFilterSelect";
+                    return IFilterSelect.class;
                 }
             }
         } else if ("panel".equals(tag)) {
-            return "com.itmill.toolkit.terminal.gwt.client.ui.IPanel";
+            return IPanel.class;
         } else if ("tabsheet".equals(tag)) {
-            return "com.itmill.toolkit.terminal.gwt.client.ui.ITabsheet";
+            return ITabsheet.class;
         } else if ("accordion".equals(tag)) {
-            return "com.itmill.toolkit.terminal.gwt.client.ui.IAccordion";
+            return IAccordion.class;
         } else if ("embedded".equals(tag)) {
-            return "com.itmill.toolkit.terminal.gwt.client.ui.IEmbedded";
+            return IEmbedded.class;
         } else if ("customlayout".equals(tag)) {
-            return "com.itmill.toolkit.terminal.gwt.client.ui.ICustomLayout";
+            return ICustomLayout.class;
         } else if ("customcomponent".equals(tag)) {
-            return "com.itmill.toolkit.terminal.gwt.client.ui.ICustomComponent";
+            return ICustomComponent.class;
         } else if ("textfield".equals(tag)) {
             if (uidl.getBooleanAttribute("richtext")) {
-                return "com.itmill.toolkit.terminal.gwt.client.ui.richtextarea.IRichTextArea";
+                return IRichTextArea.class;
             } else if (uidl.hasAttribute("multiline")) {
-                return "com.itmill.toolkit.terminal.gwt.client.ui.ITextArea";
+                return ITextArea.class;
             } else if (uidl.getBooleanAttribute("secret")) {
-                return "com.itmill.toolkit.terminal.gwt.client.ui.IPasswordField";
+                return IPasswordField.class;
             } else {
-                return "com.itmill.toolkit.terminal.gwt.client.ui.ITextField";
+                return ITextField.class;
             }
         } else if ("table".equals(tag)) {
-            return "com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable";
+            return IScrollTable.class;
         } else if ("pagingtable".equals(tag)) {
-            return "com.itmill.toolkit.terminal.gwt.client.ui.ITablePaging";
+            return ITablePaging.class;
         } else if ("datefield".equals(tag)) {
             if (uidl.hasAttribute("type")) {
                 if ("inline".equals(uidl.getStringAttribute("type"))) {
-                    return "com.itmill.toolkit.terminal.gwt.client.ui.IDateFieldCalendar";
+                    return IDateFieldCalendar.class;
                 } else if ("popup".equals(uidl.getStringAttribute("type"))) {
-                    return "com.itmill.toolkit.terminal.gwt.client.ui.IPopupCalendar";
+                    return IPopupCalendar.class;
                 }
             }
             // popup calendar is the default
-            return "com.itmill.toolkit.terminal.gwt.client.ui.IPopupCalendar";
+            return IPopupCalendar.class;
         } else if ("slider".equals(tag)) {
-            return "com.itmill.toolkit.terminal.gwt.client.ui.ISlider";
+            return ISlider.class;
         } else if ("form".equals(tag)) {
-            return "com.itmill.toolkit.terminal.gwt.client.ui.IForm";
+            return IForm.class;
         } else if ("formlayout".equals(tag)) {
-            return "com.itmill.toolkit.terminal.gwt.client.ui.IFormLayout";
+            return IFormLayout.class;
         } else if ("upload".equals(tag)) {
-            return "com.itmill.toolkit.terminal.gwt.client.ui.IUpload";
+            return IUpload.class;
         } else if ("hsplitpanel".equals(tag)) {
-            return "com.itmill.toolkit.terminal.gwt.client.ui.ISplitPanelHorizontal";
+            return ISplitPanelHorizontal.class;
         } else if ("vsplitpanel".equals(tag)) {
-            return "com.itmill.toolkit.terminal.gwt.client.ui.ISplitPanelVertical";
+            return ISplitPanelVertical.class;
         } else if ("progressindicator".equals(tag)) {
-            return "com.itmill.toolkit.terminal.gwt.client.ui.IProgressIndicator";
+            return IProgressIndicator.class;
         } else if ("menubar".equals(tag)) {
-            return "com.itmill.toolkit.terminal.gwt.client.ui.IMenuBar";
+            return IMenuBar.class;
         } else if ("popupview".equals(tag)) {
-            return "com.itmill.toolkit.terminal.gwt.client.ui.IPopupView";
+            return IPopupView.class;
         } else if ("coordinatelayout".equals(tag)) {
-            return "com.itmill.toolkit.terminal.gwt.client.ui.ICoordinateLayout";
+            return ICoordinateLayout.class;
+        } else if ("urifragment".equals(tag)) {
+            return IUriFragmentUtility.class;
         }
 
-        return "com.itmill.toolkit.terminal.gwt.client.ui.IUnknownComponent";
+        return IUnknownComponent.class;
+    }
 
-        /*
-         * TODO: use class based impl when GWT supports it
-         */
+    /**
+     * Kept here to support 5.2 era widget sets
+     * 
+     * @deprecated use resolveWidgetType instead
+     */
+    protected String resolveWidgetTypeName(UIDL uidl) {
+        Class type = resolveWidgetType(uidl);
+        return type.getName();
     }
 
     public boolean isCorrectImplementation(Widget currentWidget, UIDL uidl) {
-        return currentWidget.getClass().getName().equals(
-                resolveWidgetTypeName(uidl));
+        // TODO remove backwardscompatibility check
+        return currentWidget.getClass() == resolveWidgetType(uidl)
+                || currentWidget.getClass().getName().equals(
+                        resolveWidgetTypeName(uidl));
     }
 
 }
