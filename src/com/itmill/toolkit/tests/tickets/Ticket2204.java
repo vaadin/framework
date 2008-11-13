@@ -6,12 +6,19 @@ import java.util.List;
 import java.util.Map;
 
 import com.itmill.toolkit.Application;
+import com.itmill.toolkit.data.Container;
+import com.itmill.toolkit.data.Item;
+import com.itmill.toolkit.data.Property;
+import com.itmill.toolkit.data.util.BeanItem;
 import com.itmill.toolkit.terminal.Sizeable;
 import com.itmill.toolkit.ui.Accordion;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.ComponentContainer;
 import com.itmill.toolkit.ui.CoordinateLayout;
+import com.itmill.toolkit.ui.Field;
+import com.itmill.toolkit.ui.FieldFactory;
+import com.itmill.toolkit.ui.Form;
 import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Layout;
@@ -28,9 +35,10 @@ public class Ticket2204 extends Application {
 
     private List<RichTextArea> textAreas = new ArrayList<RichTextArea>();
     private TabSheet ts;
-    private Map<ComponentContainer, Component> containerToComponent = new HashMap<ComponentContainer, Component>();
+    private Map<Component, Component> containerToComponent = new HashMap<Component, Component>();
     private RichTextArea rta;
-    private List<Class<? extends ComponentContainer>> classes = new ArrayList<Class<? extends ComponentContainer>>();
+    private List<Class<? extends Component>> classes = new ArrayList<Class<? extends Component>>();
+    protected RichTextArea formTextArea;
 
     public void init() {
         classes.add(OrderedLayout.class);
@@ -40,6 +48,7 @@ public class Ticket2204 extends Application {
         classes.add(Panel.class);
         classes.add(CoordinateLayout.class);
         classes.add(SplitPanel.class);
+        classes.add(Form.class);
 
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);
@@ -95,10 +104,10 @@ public class Ticket2204 extends Application {
         textArea.setWidth("200px");
         textArea.setHeight("100px");
         textAreas.add(textArea);
-        ComponentContainer cc = null;
+        Component cc = null;
 
         try {
-            cc = (ComponentContainer) c.newInstance();
+            cc = (Component) c.newInstance();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -116,12 +125,59 @@ public class Ticket2204 extends Application {
             ((Sizeable) cc).setHeight("100px");
         }
 
+        if (c == Form.class) {
+            Form f = (Form) cc;
+            f.setFieldFactory(new FieldFactory() {
+
+                public Field createField(Class type, Component uiContext) {
+                    return createField();
+                }
+
+                public Field createField(Property property, Component uiContext) {
+                    return createField();
+                }
+
+                public Field createField(Item item, Object propertyId,
+                        Component uiContext) {
+                    return createField();
+                }
+
+                private Field createField() {
+                    formTextArea = new RichTextArea();
+                    formTextArea.setVisible(false);
+                    return formTextArea;
+                }
+
+                public Field createField(Container container, Object itemId,
+                        Object propertyId, Component uiContext) {
+                    return createField();
+                }
+
+            });
+            f.setItemDataSource(new BeanItem(new Object() {
+                private int a;
+
+                public int getA() {
+                    return a;
+                }
+
+                public void setA(int a) {
+                    this.a = a;
+                }
+            }));
+            containerToComponent.put(f, formTextArea);
+            return f;
+        }
         containerToComponent.put(cc, textArea);
-        cc.addComponent(textArea);
+        if (cc instanceof ComponentContainer) {
+            ((ComponentContainer) cc).addComponent(textArea);
+        }
+
         if (c == SplitPanel.class) {
-            ((Sizeable) cc).setWidth("300px");
-            ((Sizeable) cc).setHeight("300px");
-            cc.addComponent(new Label("Label"));
+            SplitPanel sp = (SplitPanel) cc;
+            sp.setWidth("300px");
+            sp.setHeight("300px");
+            sp.addComponent(new Label("Label"));
         }
         if (c == Panel.class) {
             Layout layout = ((Panel) cc).getLayout();
