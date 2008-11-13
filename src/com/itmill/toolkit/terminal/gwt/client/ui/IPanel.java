@@ -473,7 +473,13 @@ public class IPanel extends SimplePanel implements Container {
     }
 
     public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
-        // TODO
+        // TODO This is untested as no layouts require this
+        if (oldComponent != layout) {
+            return;
+        }
+
+        setWidget(newComponent);
+        layout = (Paintable) newComponent;
     }
 
     public RenderSpace getAllocatedSpace(Widget child) {
