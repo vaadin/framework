@@ -36,7 +36,6 @@ import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -601,18 +600,26 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                     .getProperty("disable-xsrf-protection"));
             if (bursts.length == 1 && "init".equals(bursts[0])) {
                 // initial request, no variable changes: send key
-                String uuid = UUID.randomUUID().toString();
-                Cookie c = new Cookie(
-                        ApplicationConnection.UIDL_SECURITY_COOKIE_NAME, uuid);
-                response.addCookie(c);
+                String uuid = (String) request.getSession().getAttribute(
+                        ApplicationConnection.UIDL_SECURITY_HEADER);
+                if (uuid == null) {
+                    uuid = UUID.randomUUID().toString();
+                }
+                /*
+                 * Cookie c = new Cookie(
+                 * ApplicationConnection.UIDL_SECURITY_COOKIE_NAME, uuid);
+                 * response.addCookie(c);
+                 */
+                response.setHeader(ApplicationConnection.UIDL_SECURITY_HEADER,
+                        uuid);
                 request.getSession().setAttribute(
-                        ApplicationConnection.UIDL_SECURITY_COOKIE_NAME, uuid);
+                        ApplicationConnection.UIDL_SECURITY_HEADER, uuid);
                 return true;
             } else if (!nocheck) {
                 // check the key
                 String sessId = (String) request.getSession().getAttribute(
-                        ApplicationConnection.UIDL_SECURITY_COOKIE_NAME);
-                if (!sessId.equals(bursts[0])) {
+                        ApplicationConnection.UIDL_SECURITY_HEADER);
+                if (sessId == null || !sessId.equals(bursts[0])) {
                     throw new InvalidUIDLSecurityKeyException(
                             "Security key mismatch");
                 }
