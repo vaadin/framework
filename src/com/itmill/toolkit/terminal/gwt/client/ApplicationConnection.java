@@ -14,7 +14,6 @@ import java.util.Vector;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.http.client.Header;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -61,7 +60,7 @@ public class ApplicationConnection {
 
     public static final String VAR_BURST_SEPARATOR = "\u001d";
 
-    public static final String UIDL_SECURITY_COOKIE_NAME = "ISESSIONID";
+    public static final String UIDL_SECURITY_HEADER = "com.itmill.seckey";
 
     private static String uidl_security_key = "init";
 
@@ -318,29 +317,10 @@ public class ApplicationConnection {
                             Response response) {
                         if ("init".equals(uidl_security_key)) {
                             // Read security key
-                            Header[] headers = response.getHeaders();
-                            if (null != headers) {
-                                String tmp = response.getHeader("Set-Cookie");
-                                if (null != tmp) {
-                                    int start = tmp
-                                            .indexOf(UIDL_SECURITY_COOKIE_NAME);
-                                    if (start > -1) {
-                                        start += UIDL_SECURITY_COOKIE_NAME
-                                                .length() + 1;
-                                        int end = tmp.indexOf(";", start);
-                                        if (end == -1) {
-                                            end = tmp.indexOf(" ", start);
-                                        }
-                                        if (end == -1) {
-                                            tmp = tmp.substring(start);
-                                        } else {
-                                            tmp = tmp.substring(start, end);
-                                        }
-                                        if (tmp != null && tmp.length() > 0) {
-                                            uidl_security_key = tmp;
-                                        }
-                                    }
-                                }
+                            String key = response
+                                    .getHeader(UIDL_SECURITY_HEADER);
+                            if (null != key) {
+                                uidl_security_key = key;
                             }
                         }
                         if (applicationRunning) {
