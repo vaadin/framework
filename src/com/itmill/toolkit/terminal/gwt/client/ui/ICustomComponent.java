@@ -19,7 +19,6 @@ public class ICustomComponent extends SimplePanel implements Container {
     private static final String CLASSNAME = "i-customcomponent";
     private String height;
     private ApplicationConnection client;
-    private Paintable component;
     private boolean rendering;
     private String width;
     private RenderSpace renderSpace = new RenderSpace();
@@ -46,7 +45,6 @@ public class ICustomComponent extends SimplePanel implements Container {
                     clear();
                 }
                 setWidget((Widget) p);
-                component = p;
             }
             p.updateFromUIDL(child, client);
         }
