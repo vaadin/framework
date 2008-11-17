@@ -22,6 +22,7 @@ import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Resource;
 import com.itmill.toolkit.terminal.Terminal;
+import com.itmill.toolkit.terminal.gwt.server.DebugUtilities;
 
 /**
  * An abstract class that defines default implementation for the
@@ -607,13 +608,19 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             // Only paint content of visible components.
             if (isVisible()) {
 
-                if (getHeight() >= 0) {
-                    target.addAttribute("height", "" + getCSSHeight());
+                // TODO split this method
+                if (getApplication().isDebugMode()
+                        && !DebugUtilities.validateComponentRelativeSizes(this,
+                                false)) {
+                    addStyleName("invalidlayout");
+                } else {
+                    if (getHeight() >= 0) {
+                        target.addAttribute("height", "" + getCSSHeight());
+                    }
+                    if (getWidth() >= 0) {
+                        target.addAttribute("width", "" + getCSSWidth());
+                    }
                 }
-                if (getWidth() >= 0) {
-                    target.addAttribute("width", "" + getCSSWidth());
-                }
-
                 if (styles != null && styles.size() > 0) {
                     target.addAttribute("style", getStyle());
                 }

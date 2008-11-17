@@ -553,15 +553,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
         outWriter.flush();
         outWriter.close();
 
-        if (applicationServlet.isDebugMode()) {
-            if (paintables != null) {
-                for (Paintable paintable : paintables) {
-                    DebugUtilities
-                            .validateComponentRelativeSizes((Component) paintable);
-                }
-            }
-        }
-
     }
 
     /**
@@ -801,6 +792,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
             break;
         case 'l':
             val = Long.valueOf(strValue);
+            break;
         case 'f':
             val = Float.valueOf(strValue);
             break;

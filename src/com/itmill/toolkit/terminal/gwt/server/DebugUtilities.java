@@ -20,9 +20,11 @@ public class DebugUtilities {
      * @param component
      *            component to check
      */
-    static void validateComponentRelativeSizes(Component component) {
+    public static boolean validateComponentRelativeSizes(Component component,
+            boolean recursive) {
 
         String msg = null;
+        boolean valid = true;
 
         Component parent = component.getParent();
         if (!(component instanceof Window)) {
@@ -86,18 +88,28 @@ public class DebugUtilities {
             err.append("\n\t Error     : ");
             err.append(msg);
             System.err.println(err);
-            return;
+            valid = false;
         }
 
-        if (component instanceof Panel) {
-            Panel panel = (Panel) component;
-            validateComponentRelativeSizes(panel.getLayout());
-        } else if (component instanceof ComponentContainer) {
-            ComponentContainer lo = (ComponentContainer) component;
-            Iterator it = lo.getComponentIterator();
-            while (it.hasNext()) {
-                validateComponentRelativeSizes((Component) it.next());
+        if (recursive) {
+            if (component instanceof Panel) {
+                Panel panel = (Panel) component;
+                if (!validateComponentRelativeSizes(panel.getLayout(), false)) {
+                    valid = false;
+                }
+            } else if (component instanceof ComponentContainer) {
+                ComponentContainer lo = (ComponentContainer) component;
+                Iterator it = lo.getComponentIterator();
+                while (it.hasNext()) {
+                    if (!validateComponentRelativeSizes((Component) it.next(),
+                            false)) {
+                        valid = false;
+                    }
+                }
             }
+            return valid;
+        } else {
+            return valid;
         }
 
     }
@@ -120,7 +132,15 @@ public class DebugUtilities {
                 return false;
             }
         }
-        return parent.getHeight() < 0;
+        if (parent.getHeight() < 0) {
+            return true;
+        } else {
+            if (hasRelativeHeight(parent) && parent.getParent() != null) {
+                return hasUndefinedHeight(parent.getParent());
+            } else {
+                return false;
+            }
+        }
     }
 
     private static boolean hasRelativeHeight(Component component) {
@@ -143,16 +163,25 @@ public class DebugUtilities {
                 && paintable.getWidthUnits() == Sizeable.UNITS_PERCENTAGE;
     }
 
-    private static boolean hasUndefinedWidth(Component parent) {
-        if (parent instanceof Window) {
-            Window w = (Window) parent;
+    private static boolean hasUndefinedWidth(Component component) {
+        if (component instanceof Window) {
+            Window w = (Window) component;
             if (w.getParent() == null) {
                 // main window is considered to have size
                 return false;
             }
 
         }
-        return parent.getWidth() < 0;
+        if (component.getWidth() < 0) {
+            return true;
+        } else {
+            if (hasRelativeWidth(component) && component.getParent() != null) {
+                return hasUndefinedWidth(component.getParent());
+            } else {
+                return false;
+            }
+        }
+
     }
 
 }
