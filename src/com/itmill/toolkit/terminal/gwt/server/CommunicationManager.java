@@ -451,8 +451,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
             SystemMessages ci = null;
             try {
                 Method m = application.getClass().getMethod(
-                        "getSystemMessages", null);
-                ci = (Application.SystemMessages) m.invoke(null, null);
+                        "getSystemMessages", (Class[]) null);
+                ci = (Application.SystemMessages) m.invoke(null,
+                        (Object[]) null);
             } catch (NoSuchMethodException e1) {
                 e1.printStackTrace();
             } catch (IllegalArgumentException e) {
