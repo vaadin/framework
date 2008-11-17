@@ -151,8 +151,6 @@ public class ISplitPanel extends ComplexPanel implements Container,
             return;
         }
 
-        renderInformation.updateSize(getElement());
-
         setSplitPosition(uidl.getStringAttribute("position"));
 
         locked = uidl.hasAttribute("locked");
@@ -182,6 +180,8 @@ public class ISplitPanel extends ComplexPanel implements Container,
         newFirstChild.updateFromUIDL(uidl.getChildUIDL(0), client);
         newSecondChild.updateFromUIDL(uidl.getChildUIDL(1), client);
 
+        renderInformation.updateSize(getElement());
+
         if (Util.isIE7()) {
             // Part III of IE7 hack
             DeferredCommand.addCommand(new Command() {
@@ -199,6 +199,9 @@ public class ISplitPanel extends ComplexPanel implements Container,
             DOM.setStyleAttribute(splitter, "top", pos);
         }
         iLayout();
+        // TODO Check if this is needed
+        client.runDescendentsLayout(this);
+
     }
 
     /*
@@ -286,10 +289,6 @@ public class ISplitPanel extends ComplexPanel implements Container,
             break;
         }
 
-        client.runDescendentsLayout(this);
-
-        renderInformation.updateSize(getElement());
-
         // fixes scrollbars sometimes seen on webkit 528.5, but not in Safari
         // 3.1
         Util.runWebkitOverflowAutoFix(secondContainer);
@@ -368,6 +367,9 @@ public class ISplitPanel extends ComplexPanel implements Container,
             break;
         }
         iLayout();
+        // TODO Check if this is needed
+        client.runDescendentsLayout(this);
+
     }
 
     private void onHorizontalMouseMove(int x) {

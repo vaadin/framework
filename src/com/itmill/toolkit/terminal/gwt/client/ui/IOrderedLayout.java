@@ -189,9 +189,10 @@ public class IOrderedLayout extends CellBasedLayout {
         // w.mark("recalculateComponentSizesAndAlignments done");
 
         /* Must inform child components about possible size updates */
-        client.runDescendentsLayout(this);
+        // if (isDynamicHeight() || isDynamicWidth()) {
+        // client.runDescendentsLayout(this);
+        // }
         // w.mark("runDescendentsLayout done");
-
         isRendering = false;
     }
 
@@ -263,8 +264,19 @@ public class IOrderedLayout extends CellBasedLayout {
 
     }
 
+    /**
+     * Updated components with relative height in horizontal layouts and
+     * components with relative width in vertical layouts. This is only needed
+     * if the height (horizontal layout) or width (vertical layout) has not been
+     * specified.
+     */
     private void updateRelativeSizesInNonMainDirection() {
         int updateDirection = 1 - orientation;
+        if ((updateDirection == ORIENTATION_HORIZONTAL && !isDynamicWidth())
+                || (updateDirection == ORIENTATION_VERTICAL && !isDynamicHeight())) {
+            return;
+        }
+
         for (ChildComponentContainer componentContainer : widgetToComponentContainer
                 .values()) {
             if (componentContainer.isComponentRelativeSized(updateDirection)) {
@@ -635,7 +647,8 @@ public class IOrderedLayout extends CellBasedLayout {
         }
 
         if (!isRendering) {
-            if (recalculateLayoutAndComponentSizes()) {
+            boolean sameSize = recalculateLayoutAndComponentSizes();
+            if (!sameSize) {
                 /* Must inform child components about possible size updates */
                 client.runDescendentsLayout(this);
             }
@@ -652,7 +665,8 @@ public class IOrderedLayout extends CellBasedLayout {
         }
 
         if (!isRendering) {
-            if (recalculateLayoutAndComponentSizes()) {
+            boolean sameSize = recalculateLayoutAndComponentSizes();
+            if (!sameSize) {
                 /* Must inform child components about possible size updates */
                 client.runDescendentsLayout(this);
             }

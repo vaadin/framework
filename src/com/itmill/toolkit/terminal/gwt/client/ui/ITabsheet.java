@@ -19,7 +19,6 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
-import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.RenderInformation;
@@ -27,8 +26,7 @@ import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
 
-public class ITabsheet extends ITabsheetBase implements
-        ContainerResizedListener {
+public class ITabsheet extends ITabsheetBase {
 
     class TabBar extends ComplexPanel implements ClickListener {
 
@@ -146,6 +144,8 @@ public class ITabsheet extends ITabsheetBase implements
      */
     private Widget previousVisibleWidget;
 
+    private boolean rendering = false;
+
     private void onTabSelected(final int tabIndex) {
         if (disabled || waitingForResponse) {
             return;
@@ -256,6 +256,8 @@ public class ITabsheet extends ITabsheetBase implements
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        rendering = true;
+
         super.updateFromUIDL(uidl, client);
 
         // Add proper stylenames for all elements (easier to prevent unwanted
@@ -302,11 +304,12 @@ public class ITabsheet extends ITabsheetBase implements
             updateDynamicWidth();
         }
 
-        updateTabScroller();
+        iLayout();
 
         renderInformation.updateSize(getElement());
 
         waitingForResponse = false;
+        rendering = false;
     }
 
     private void updateDynamicWidth() {
@@ -438,8 +441,12 @@ public class ITabsheet extends ITabsheetBase implements
             DOM.setStyleAttribute(contentNode, "height", "");
             renderSpace.setHeight(0);
         }
-        updateOpenTabSize();
-        iLayout();
+        if (!rendering) {
+            updateOpenTabSize();
+            iLayout();
+            // TODO Check if this is needed
+            client.runDescendentsLayout(this);
+        }
     }
 
     public void setWidth(String width) {
@@ -459,17 +466,19 @@ public class ITabsheet extends ITabsheetBase implements
             contentNode.getStyle().setProperty("width", contentWidth + "px");
             renderSpace.setWidth(contentWidth);
         }
-        updateOpenTabSize();
-        iLayout();
+
+        if (!rendering) {
+            updateOpenTabSize();
+            iLayout();
+            // TODO Check if this is needed
+            client.runDescendentsLayout(this);
+
+        }
+
     }
 
     public void iLayout() {
-        if (client != null) {
-            client.runDescendentsLayout(this);
-        }
-
         updateTabScroller();
-
         tp.runWebkitOverflowAutoFix();
     }
 
@@ -590,6 +599,8 @@ public class ITabsheet extends ITabsheetBase implements
              * new size.
              */
             iLayout();
+            client.runDescendentsLayout(this);
+
             return false;
         } else {
             /*

@@ -193,6 +193,8 @@ public class ICoordinateLayout extends ComplexPanel implements Container,
 
         // Make sure coordinateLayout gets done every time
         iLayout();
+        // TODO Check if this is needed
+        client.runDescendentsLayout(this);
 
     }// updateFromUIDL
 
@@ -339,8 +341,6 @@ public class ICoordinateLayout extends ComplexPanel implements Container,
                 }
             }
 
-            // Run layout functions for children
-            client.runDescendentsLayout(this);
         }
 
         toUpdate.clear();

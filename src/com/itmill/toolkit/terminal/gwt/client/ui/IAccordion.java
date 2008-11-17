@@ -154,6 +154,9 @@ public class IAccordion extends ITabsheetBase implements
         if (index != activeTabIndex) {
             open(index);
             iLayout();
+            // TODO Check if this is needed
+            client.runDescendentsLayout(this);
+
         }
         item.setContent(contentUidl);
     }
@@ -257,8 +260,6 @@ public class IAccordion extends ITabsheetBase implements
             super.setWidth(maxWidth + "px");
             openTab.setWidth(maxWidth);
         }
-
-        client.runDescendentsLayout(openTab);
 
         Util.runWebkitOverflowAutoFix(openTab.getContainerElement());
 
@@ -504,6 +505,9 @@ public class IAccordion extends ITabsheetBase implements
              * new size.
              */
             iLayout();
+            // TODO Check if this is needed
+            client.runDescendentsLayout(this);
+
             return false;
         } else {
             /*

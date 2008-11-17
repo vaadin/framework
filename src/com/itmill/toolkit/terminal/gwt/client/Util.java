@@ -13,6 +13,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.RenderInformation.FloatSize;
@@ -404,4 +405,11 @@ public class Util {
     public static boolean isCached(UIDL uidl) {
         return uidl.getBooleanAttribute("cached");
     }
+
+    public static void alert(String string) {
+        if (true) {
+            Window.alert(string);
+        }
+    }
+
 }

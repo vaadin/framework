@@ -657,7 +657,8 @@ public class ApplicationConnection {
                 }
 
                 if (html.length() != 0) {
-                    INotification n = new INotification(1000 * 60 * 45); //45min
+                    /* 45 min */
+                    INotification n = new INotification(1000 * 60 * 45);
                     n.addEventListener(new NotificationRedirect(url));
                     n.show(html, INotification.CENTERED_TOP,
                             INotification.STYLE_SYSTEM);
@@ -1085,7 +1086,21 @@ public class ApplicationConnection {
      * 
      * @param container
      */
+    private boolean runningLayout = false;
+
     public void runDescendentsLayout(HasWidgets container) {
+        if (runningLayout) {
+            // getConsole().log(
+            // "Already running descendents layout. Not running again for "
+            // + Util.getSimpleName(container));
+            return;
+        }
+        runningLayout = true;
+        internalRunDescendentsLayout(container);
+        runningLayout = false;
+    }
+
+    private void internalRunDescendentsLayout(HasWidgets container) {
         // getConsole().log(
         // "runDescendentsLayout(" + Util.getSimpleName(container) + ")");
         final Iterator childWidgets = container.iterator();
@@ -1104,12 +1119,12 @@ public class ApplicationConnection {
                         ((ContainerResizedListener) child).iLayout();
                     } else if (child instanceof HasWidgets) {
                         final HasWidgets childContainer = (HasWidgets) child;
-                        runDescendentsLayout(childContainer);
+                        internalRunDescendentsLayout(childContainer);
                     }
                 }
             } else if (child instanceof HasWidgets) {
                 // propagate over non Paintable HasWidgets
-                runDescendentsLayout((HasWidgets) child);
+                internalRunDescendentsLayout((HasWidgets) child);
             }
 
         }

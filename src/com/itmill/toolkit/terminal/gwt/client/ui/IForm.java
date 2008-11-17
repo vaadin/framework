@@ -123,6 +123,8 @@ public class IForm extends ComplexPanel implements Container,
         }
 
         iLayout();
+        // TODO Check if this is needed
+        client.runDescendentsLayout(this);
 
         final UIDL layoutUidl = uidl.getChildUIDL(0);
         Container newLo = (Container) client.getPaintable(layoutUidl);
@@ -169,8 +171,6 @@ public class IForm extends ComplexPanel implements Container,
         renderInformation.setContentAreaWidth(renderInformation
                 .getRenderedSize().getWidth()
                 - borderPaddingHorizontal);
-
-        client.runDescendentsLayout(this);
     }
 
     public RenderSpace getAllocatedSpace(Widget child) {

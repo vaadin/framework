@@ -140,6 +140,8 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
         scripts = null;
 
         iLayout();
+        // TODO Check if this is needed
+        client.runDescendentsLayout(this);
 
         Set oldWidgets = new HashSet();
         oldWidgets.addAll(locationToWidget.values());
@@ -169,6 +171,9 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
         }
 
         iLayout();
+        // TODO Check if this is needed
+        client.runDescendentsLayout(this);
+
     }
 
     /** Initialize HTML-layout. */
@@ -416,9 +421,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
     }
 
     public void iLayout() {
-        if (!iLayoutJS(DOM.getFirstChild(getElement()))) {
-            client.runDescendentsLayout(this);
-        }
+        iLayoutJS(DOM.getFirstChild(getElement()));
     }
 
     /**
