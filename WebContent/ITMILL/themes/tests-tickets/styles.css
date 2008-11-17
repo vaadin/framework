@@ -168,3 +168,17 @@
 	padding: 0;
 	background: lime;
 }
+
+
+/*****************************************************************************/
+/* Table Cell Generator test
+/*****************************************************************************/
+
+.i-table-cell-content-red {
+	background: red;
+}
+
+.i-table-cell-content-green {
+	background: lightgreen;
+}
+	
