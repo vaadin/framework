@@ -30,9 +30,7 @@ import com.itmill.toolkit.terminal.URIHandler;
 import com.itmill.toolkit.terminal.VariableOwner;
 import com.itmill.toolkit.terminal.gwt.server.ChangeVariablesErrorEvent;
 import com.itmill.toolkit.ui.AbstractComponent;
-import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.Window;
-import com.itmill.toolkit.ui.Component.Focusable;
 
 /**
  * <p>
@@ -175,13 +173,13 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      */
     private static final SystemMessages DEFAULT_SYSTEM_MESSAGES = new SystemMessages();
 
-    private Focusable pendingFocus;
-
     /**
      * Application wide error handler which is used by default if an error is
      * left unhandled.
      */
     private Terminal.ErrorListener errorHandler = this;
+
+    private boolean debugMode = false;
 
     /**
      * <p>
@@ -471,6 +469,9 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
         this.applicationUrl = applicationUrl;
         properties = applicationProperties;
         this.context = context;
+        if (getProperty("Debug") != null && getProperty("Debug").equals("true")) {
+            debugMode = true;
+        }
         init();
         applicationIsRunning = true;
     }
@@ -1167,28 +1168,6 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
     }
 
     /**
-     * @deprecated Call component's focus method instead.
-     * 
-     * @param focusable
-     */
-    public void setFocusedComponent(Focusable focusable) {
-        pendingFocus = focusable;
-    }
-
-    /**
-     * Gets and nulls focused component in this window
-     * 
-     * @deprecated This method will be replaced with focus listener in the
-     *             future releases.
-     * @return Focused component or null if none is focused.
-     */
-    public Component.Focusable consumeFocus() {
-        final Component.Focusable f = pendingFocus;
-        pendingFocus = null;
-        return f;
-    }
-
-    /**
      * Override this method to return correct version number of your
      * Application. Version information is delivered for example to Testing
      * Tools test results.
@@ -1354,11 +1333,12 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * </p>
      * <p>
      * The default behavior is to show a notification, and restart the
-     * application the the user clicks the message. <br/> Instead of restarting
-     * the application, you can set a specific URL that the user is taken
-     * to.<br/> Setting both caption and message to null will restart the
-     * application (or go to the specified URL) without displaying a
-     * notification. set*NotificationEnabled(false) will achieve the same thing.
+     * application the the user clicks the message. <br/>
+     * Instead of restarting the application, you can set a specific URL that
+     * the user is taken to.<br/>
+     * Setting both caption and message to null will restart the application (or
+     * go to the specified URL) without displaying a notification.
+     * set*NotificationEnabled(false) will achieve the same thing.
      * </p>
      * <p>
      * The situations are:
@@ -1529,5 +1509,14 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
             return throwable;
         }
 
+    }
+
+    /**
+     * Return true if application is in debug mode.
+     * 
+     * @return true if in debug modes
+     */
+    public boolean isDebugMode() {
+        return debugMode;
     }
 }
