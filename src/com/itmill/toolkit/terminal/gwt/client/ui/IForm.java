@@ -234,8 +234,8 @@ public class IForm extends ComplexPanel implements Container,
     }
 
     public void updateCaption(Paintable component, UIDL uidl) {
-        // TODO Auto-generated method stub
-
+        // NOP form don't render caption for neither field layout nor footer
+        // layout
     }
 
     @Override
