@@ -341,7 +341,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                      * affect height. Example: Label with wrapping text without
                      * defined width.
                      */
-                    if (cell.hasUndefinedWidth()) {
+                    if (cell.cc != null && cell.hasUndefinedWidth()) {
                         cell.cc.setWidth(cell.getAvailableWidth() + "px");
                         cell.cc.updateWidgetSize();
                     }
