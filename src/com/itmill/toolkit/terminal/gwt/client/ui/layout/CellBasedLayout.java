@@ -3,7 +3,9 @@ package com.itmill.toolkit.terminal.gwt.client.ui.layout;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gwt.user.client.DOM;
+import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -19,7 +21,7 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
 
     protected ApplicationConnection client = null;
 
-    private Element root;
+    private DivElement root;
 
     public static final int ORIENTATION_VERTICAL = 0;
     public static final int ORIENTATION_HORIZONTAL = 1;
@@ -37,7 +39,7 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
 
     private boolean dynamicHeight;
 
-    private Element clearElement;
+    private DivElement clearElement;
 
     public static class Spacing {
 
@@ -60,20 +62,20 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
     public CellBasedLayout() {
         super();
 
-        setElement(DOM.createDiv());
-        DOM.setStyleAttribute(getElement(), "overflow", "hidden");
+        setElement(Document.get().createDivElement());
+        getElement().getStyle().setProperty("overflow", "hidden");
 
-        root = DOM.createDiv();
-        DOM.setStyleAttribute(root, "width", "500%");
+        root = Document.get().createDivElement();
+        root.getStyle().setProperty("width", "500%");
         getElement().appendChild(root);
 
-        clearElement = DOM.createDiv();
-        DOM.setStyleAttribute(clearElement, "width", "0px");
-        DOM.setStyleAttribute(clearElement, "height", "0px");
-        DOM.setStyleAttribute(clearElement, "clear", "both");
-        DOM.setStyleAttribute(clearElement, "overflow", "hidden");
-
-        DOM.appendChild(root, clearElement);
+        clearElement = Document.get().createDivElement();
+        Style style = clearElement.getStyle();
+        style.setProperty("width", "0px");
+        style.setProperty("height", "0px");
+        style.setProperty("clear", "both");
+        style.setProperty("overflow", "hidden");
+        root.appendChild(clearElement);
 
     }
 
@@ -132,7 +134,7 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
             int position) {
         widgetToComponentContainer.put(childComponent.getWidget(),
                 childComponent);
-        super.insert(childComponent, root, position, true);
+        super.insert(childComponent, (Element) root.cast(), position, true);
 
     }
 
@@ -193,16 +195,12 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
             activeMargins.setMarginRight(0);
         }
 
-        DOM.setStyleAttribute(root, "marginLeft", activeMargins.getMarginLeft()
-                + "px");
-        DOM.setStyleAttribute(root, "marginRight", activeMargins
-                .getMarginRight()
-                + "px");
-        DOM.setStyleAttribute(root, "marginTop", activeMargins.getMarginTop()
-                + "px");
-        DOM.setStyleAttribute(root, "marginBottom", activeMargins
-                .getMarginBottom()
-                + "px");
+        Style style = root.getStyle();
+
+        style.setPropertyPx("marginLeft", activeMargins.getMarginLeft());
+        style.setPropertyPx("marginRight", activeMargins.getMarginRight());
+        style.setPropertyPx("marginTop", activeMargins.getMarginTop());
+        style.setPropertyPx("marginBottom", activeMargins.getMarginBottom());
 
     }
 
@@ -213,11 +211,12 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
             return false;
         }
 
-        Element measurement = DOM.createDiv();
-        DOM.setStyleAttribute(measurement, "position", "absolute");
-        DOM.setStyleAttribute(measurement, "width", "1px");
-        DOM.setStyleAttribute(measurement, "height", "1px");
-        DOM.setStyleAttribute(measurement, "visibility", "hidden");
+        DivElement measurement = Document.get().createDivElement();
+        Style style = measurement.getStyle();
+        style.setProperty("position", "absolute");
+        style.setProperty("width", "1px");
+        style.setProperty("height", "1px");
+        style.setProperty("visibility", "hidden");
 
         root.appendChild(measurement);
 

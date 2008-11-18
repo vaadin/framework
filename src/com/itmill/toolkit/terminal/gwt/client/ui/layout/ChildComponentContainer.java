@@ -3,8 +3,8 @@ package com.itmill.toolkit.terminal.gwt.client.ui.layout;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
+import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
@@ -60,22 +60,22 @@ public class ChildComponentContainer extends Panel {
 
     // private Margins alignmentOffset = new Margins(0, 0, 0, 0);
     private ICaption caption = null;
-    private Element containerDIV;
-    private Element widgetDIV;
+    private DivElement containerDIV;
+    private DivElement widgetDIV;
     private Widget widget;
     private FloatSize relativeSize = null;
 
     public ChildComponentContainer(Widget widget, int orientation) {
         super();
 
-        containerDIV = DOM.createDiv();
+        containerDIV = Document.get().createDivElement();
         setElement(containerDIV);
 
-        DOM.setStyleAttribute(containerDIV, "height", "0px");
+        containerDIV.getStyle().setProperty("height", "0");
         // DOM.setStyleAttribute(containerDIV, "width", "0px");
-        DOM.setStyleAttribute(containerDIV, "overflow", "hidden");
+        containerDIV.getStyle().setProperty("overflow", "hidden");
 
-        widgetDIV = DOM.createDiv();
+        widgetDIV = Document.get().createDivElement();
         setFloat(widgetDIV, "left");
 
         containerDIV.appendChild(widgetDIV);
@@ -107,23 +107,24 @@ public class ChildComponentContainer extends Panel {
 
         if (w != null) {
             // Physical attach.
-            DOM.appendChild(widgetDIV, widget.getElement());
-
+            widgetDIV.appendChild(widget.getElement());
             adopt(w);
         }
     }
 
-    private static void setFloat(Element e, String floatString) {
-        Util.setFloat(e, floatString);
+    private static void setFloat(DivElement div, String floatString) {
         if (BrowserInfo.get().isIE()) {
+            div.getStyle().setProperty("styleFloat", floatString);
             // IE requires display:inline for margin-left to work together
             // with float:left
             if (floatString.equals("left")) {
-                DOM.setStyleAttribute(e, "display", "inline");
+                div.getStyle().setProperty("display", "inline");
             } else {
-                DOM.setStyleAttribute(e, "display", "block");
+                div.getStyle().setProperty("display", "block");
             }
 
+        } else {
+            div.getStyle().setProperty("cssFloat", floatString);
         }
     }
 
@@ -139,8 +140,8 @@ public class ChildComponentContainer extends Panel {
         contSize.setWidth(0);
         containerMarginLeft = 0;
         containerMarginTop = 0;
-        DOM.setStyleAttribute(getElement(), "paddingLeft", "0px");
-        DOM.setStyleAttribute(getElement(), "paddingTop", "0px");
+        getElement().getStyle().setProperty("paddingLeft", "0");
+        getElement().getStyle().setProperty("paddingTop", "0");
 
         containerExpansion.setHeight(0);
         containerExpansion.setWidth(0);
@@ -155,7 +156,7 @@ public class ChildComponentContainer extends Panel {
          * Must remove width specification from container before rendering to
          * allow components to grow in horizontal direction
          */
-        DOM.setStyleAttribute(containerDIV, "width", "");
+        containerDIV.getStyle().setProperty("width", "");
         ((Paintable) widget).updateFromUIDL(childUIDL, client);
     }
 
@@ -171,13 +172,13 @@ public class ChildComponentContainer extends Panel {
 
     public void setMarginLeft(int marginLeft) {
         containerMarginLeft = marginLeft;
-        DOM.setStyleAttribute(getElement(), "paddingLeft", marginLeft + "px");
+        getElement().getStyle().setPropertyPx("paddingLeft", marginLeft);
     }
 
     public void setMarginTop(int marginTop) {
         containerMarginTop = marginTop;
-        DOM.setStyleAttribute(getElement(), "paddingTop", marginTop
-                + alignmentTopOffset + "px");
+        getElement().getStyle().setPropertyPx("paddingTop",
+                marginTop + alignmentTopOffset);
 
         updateContainerDOMSize();
     }
@@ -204,11 +205,11 @@ public class ChildComponentContainer extends Panel {
         setMarginTop(containerMarginTop);
 
         if (caption != null) {
-            DOM.setStyleAttribute(caption.getElement(), "marginLeft",
-                    alignmentLeftOffsetForCaption + "px");
+            caption.getElement().getStyle().setPropertyPx("marginLeft",
+                    alignmentLeftOffsetForCaption);
         }
-        DOM.setStyleAttribute(widgetDIV, "marginLeft",
-                alignmentLeftOffsetForWidget + "px");
+        widgetDIV.getStyle().setPropertyPx("marginLeft",
+                alignmentLeftOffsetForWidget);
     }
 
     public int getCaptionRequiredWidth() {
@@ -363,7 +364,8 @@ public class ChildComponentContainer extends Panel {
                 newCaption = new ICaption((Paintable) widget, client);
                 // Set initial height to avoid Safari flicker
                 newCaption.setHeight("18px");
-                // newCaption.setHeight(newCaption.getHeight()); // This might be better... ??
+                // newCaption.setHeight(newCaption.getHeight()); // This might
+                // be better... ??
             }
 
             boolean positionChanged = newCaption.updateCaption(uidl);

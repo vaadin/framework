@@ -11,7 +11,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import com.google.gwt.user.client.DOM;
+import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -29,7 +30,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
 
     public static final String CLASSNAME = "i-gridlayout";
 
-    private Element margin = DOM.createDiv();
+    private DivElement margin = Document.get().createDivElement();
 
     private final AbsolutePanel canvas = new AbsolutePanel();
 
@@ -69,7 +70,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
 
     @Override
     protected Element getContainerElement() {
-        return margin;
+        return margin.cast();
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -507,7 +508,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
 
     private void detectSpacing(UIDL uidl) {
         if (uidl.getBooleanAttribute("spacing")) {
-            Element spacingmeter = DOM.createDiv();
+            DivElement spacingmeter = Document.get().createDivElement();
             spacingmeter.setClassName(CLASSNAME + "-" + "spacing-element");
             spacingmeter.getStyle().setProperty("width", "0");
             canvas.getElement().appendChild(spacingmeter);
@@ -522,14 +523,20 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
         final MarginInfo margins = new MarginInfo(uidl
                 .getIntAttribute("margins"));
 
-        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_TOP,
-                margins.hasTop());
-        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_RIGHT,
-                margins.hasRight());
-        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_BOTTOM,
-                margins.hasBottom());
-        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_LEFT,
-                margins.hasLeft());
+        String styles = "";
+        if (margins.hasTop()) {
+            styles += " " + CLASSNAME + "-" + StyleConstants.MARGIN_TOP;
+        }
+        if (margins.hasRight()) {
+            styles += " " + CLASSNAME + "-" + StyleConstants.MARGIN_RIGHT;
+        }
+        if (margins.hasBottom()) {
+            styles += " " + CLASSNAME + "-" + StyleConstants.MARGIN_BOTTOM;
+        }
+        if (margins.hasLeft()) {
+            styles += " " + CLASSNAME + "-" + StyleConstants.MARGIN_LEFT;
+        }
+        margin.setClassName(styles);
 
         marginTopAndBottom = margin.getOffsetHeight()
                 - canvas.getOffsetHeight();
