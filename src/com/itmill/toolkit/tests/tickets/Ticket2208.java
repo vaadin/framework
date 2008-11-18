@@ -25,7 +25,6 @@ public class Ticket2208 extends Application {
         t.setHeight("150px");
         t.addGeneratedColumn("col 3 (green)", new ColumnGenerator() {
 
-            @Override
             public Component generateCell(Table source, Object itemId,
                     Object columnId) {
                 Item item = source.getItem(itemId);
@@ -39,7 +38,6 @@ public class Ticket2208 extends Application {
         t.addContainerProperty("col 4", String.class, "");
         t.setCellStyleGenerator(new CellStyleGenerator() {
 
-            @Override
             public String getStyle(Object itemId, Object propertyId) {
                 if ("col 1 (red)".equals(propertyId)) {
                     return "red";
