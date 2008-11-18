@@ -199,7 +199,18 @@ public class IForm extends ComplexPanel implements Container,
     }
 
     public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
-        // TODO Auto-generated method stub
+        if (!hasChildComponent(oldComponent)) {
+            throw new IllegalArgumentException(
+                    "Old component is not inside this Container");
+        }
+        remove(oldComponent);
+        if (oldComponent == lo) {
+            lo = (Container) newComponent;
+            add((Widget) lo, fieldContainer);
+        } else {
+            footer = (Container) newComponent;
+            add((Widget) footer, footerContainer);
+        }
 
     }
 
