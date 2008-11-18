@@ -336,6 +336,15 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
             for (int j = 0; j < cells[i].length; j++) {
                 Cell cell = cells[i][j];
                 if (cell != null) {
+                    /*
+                     * Setting fixing container width may in some situations
+                     * affect height. Example: Label with wrapping text without
+                     * defined width.
+                     */
+                    if (cell.hasUndefinedWidth()) {
+                        cell.cc.setWidth(cell.getAvailableWidth() + "px");
+                        cell.cc.updateWidgetSize();
+                    }
                     if (cell.rowspan == 1) {
                         if (rowHeights[j] < cell.getHeight()) {
                             rowHeights[j] = cell.getHeight();
@@ -712,11 +721,16 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
     private class Cell {
         private boolean relHeight = false;
         private boolean relWidth = false;
+        private boolean hasWidth = false;
 
         public Cell(UIDL c) {
             row = c.getIntAttribute("y");
             col = c.getIntAttribute("x");
             setUidl(c);
+        }
+
+        public boolean hasUndefinedWidth() {
+            return !hasWidth;
         }
 
         public boolean hasRelativeHeight() {
@@ -884,11 +898,11 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                 } else {
                     relHeight = false;
                 }
-                if (uidl.hasAttribute("width")
-                        && uidl.getStringAttribute("width").contains("%")) {
-                    relWidth = true;
+                if (uidl.hasAttribute("width")) {
+                    hasWidth = false;
+                    relWidth = uidl.getStringAttribute("width").contains("%");
                 } else {
-                    relWidth = false;
+                    hasWidth = relWidth = false;
                 }
             }
         }
