@@ -2218,10 +2218,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
 
             public RenderSpace getAllocatedSpace(Widget child) {
                 int w = 0;
-                int i = childWidgets.indexOf(child);
-                if (showRowHeaders) {
-                    i++;
-                }
+                int i = getColIndexOf(child);
                 HeaderCell headerCell = tHead.getHeaderCell(i);
                 if (headerCell != null) {
                     if (initializedAndAttached) {
@@ -2239,13 +2236,34 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                 return new RenderSpace(w, getRowHeight());
             }
 
+            private int getColIndexOf(Widget child) {
+                com.google.gwt.dom.client.Element widgetCell = child
+                        .getElement().getParentElement().getParentElement();
+                com.google.gwt.dom.client.Element td = getElement()
+                        .getFirstChildElement();
+                int index = 0;
+                while (td != widgetCell && td.getNextSiblingElement() != null) {
+                    index++;
+                    td = td.getNextSiblingElement();
+                }
+                return index;
+            }
+
             public boolean hasChildComponent(Widget component) {
                 return childWidgets.contains(component);
             }
 
             public void replaceChildComponent(Widget oldComponent,
                     Widget newComponent) {
-                // Will no work in table
+                com.google.gwt.dom.client.Element parentElement = oldComponent
+                        .getElement().getParentElement();
+                int index = childWidgets.indexOf(oldComponent);
+                oldComponent.removeFromParent();
+
+                parentElement.appendChild(newComponent.getElement());
+                childWidgets.insertElementAt(newComponent, index);
+                adopt(newComponent);
+
             }
 
             public boolean requestLayout(Set<Paintable> children) {
