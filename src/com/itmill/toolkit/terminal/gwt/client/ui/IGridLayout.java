@@ -6,6 +6,7 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,6 +24,7 @@ import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.StyleConstants;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.Util;
 import com.itmill.toolkit.terminal.gwt.client.ui.layout.CellBasedLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.layout.ChildComponentContainer;
 
@@ -90,6 +92,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
             wBeforeRender = canvas.getOffsetWidth();
             hBeforeRender = getOffsetHeight();
         }
+        canvas.setWidth("0px");
 
         handleMargins(uidl);
         detectSpacing(uidl);
@@ -258,11 +261,75 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
         if (!width.equals(this.width)) {
             this.width = width;
             if (!rendering) {
+                int[] oldWidths = cloneArray(columnWidths);
                 expandColumns();
+                boolean heightChanged = false;
+                HashSet<Integer> dirtyRows = null;
+                for (int i = 0; i < oldWidths.length; i++) {
+                    if (columnWidths[i] != oldWidths[i]) {
+                        Cell[] column = cells[i];
+                        for (int j = 0; j < column.length; j++) {
+                            Cell c = column[j];
+                            if (c.widthCanAffectHeight()) {
+                                int oldheight = c.getHeight();
+                                c.cc.setContainerSize(c.getAvailableWidth(), c
+                                        .getAvailableHeight());
+                                c.cc.updateWidgetSize();
+                                int newHeight = c.getHeight();
+                                if (columnWidths[i] < oldWidths[i]
+                                        && newHeight > minRowHeights[j]) {
+                                    minRowHeights[j] = newHeight;
+                                    if (newHeight > rowHeights[j]) {
+                                        rowHeights[j] = newHeight;
+                                        heightChanged = true;
+                                    }
+                                } else if (newHeight < minRowHeights[j]) {
+                                    // need to recalculate new minimum height
+                                    // for this row
+                                    if (dirtyRows == null) {
+                                        dirtyRows = new HashSet<Integer>();
+                                    }
+                                    dirtyRows.add(j);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (dirtyRows != null) {
+                    /* flag indicating that there is a potential row shrinking */
+                    boolean rowMayShrink = false;
+                    for (Integer rowIndex : dirtyRows) {
+                        int oldMinimum = minRowHeights[rowIndex];
+                        int newMinimum = 0;
+                        for (int colIndex = 0; colIndex < columnWidths.length; colIndex++) {
+                            Cell cell = cells[colIndex][rowIndex];
+                            if (cell != null && !cell.hasRelativeHeight()
+                                    && cell.getHeight() > newMinimum) {
+                                newMinimum = cell.getHeight();
+                            }
+                        }
+                        if (newMinimum < oldMinimum) {
+                            minRowHeights[rowIndex] = rowHeights[rowIndex] = newMinimum;
+                            rowMayShrink = true;
+                        }
+                    }
+                    if (rowMayShrink) {
+                        distributeRowSpanHeights();
+                        minRowHeights = cloneArray(rowHeights);
+                        heightChanged = true;
+                    }
+
+                }
                 layoutCells();
                 for (Paintable c : paintableToCell.keySet()) {
                     client.handleComponentRelativeSize((Widget) c);
                 }
+                if (heightChanged && "".equals(height)) {
+                    Set<Widget> s = new HashSet<Widget>();
+                    s.add(this);
+                    Util.componentSizeUpdated(s);
+                }
+
             }
         }
     }
@@ -340,9 +407,9 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                     /*
                      * Setting fixing container width may in some situations
                      * affect height. Example: Label with wrapping text without
-                     * defined width.
+                     * or with relative width.
                      */
-                    if (cell.cc != null && cell.hasUndefinedWidth()) {
+                    if (cell.cc != null && cell.widthCanAffectHeight()) {
                         cell.cc.setWidth(cell.getAvailableWidth() + "px");
                         cell.cc.updateWidgetSize();
                     }
@@ -728,7 +795,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
     private class Cell {
         private boolean relHeight = false;
         private boolean relWidth = false;
-        private boolean hasWidth = false;
+        private boolean widthCanAffectHeight = false;
 
         public Cell(UIDL c) {
             row = c.getIntAttribute("y");
@@ -736,8 +803,8 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
             setUidl(c);
         }
 
-        public boolean hasUndefinedWidth() {
-            return !hasWidth;
+        public boolean widthCanAffectHeight() {
+            return widthCanAffectHeight;
         }
 
         public boolean hasRelativeHeight() {
@@ -906,10 +973,14 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                     relHeight = false;
                 }
                 if (uidl.hasAttribute("width")) {
-                    hasWidth = false;
-                    relWidth = uidl.getStringAttribute("width").contains("%");
+                    widthCanAffectHeight = relWidth = uidl.getStringAttribute(
+                            "width").contains("%");
+                    if (uidl.hasAttribute("height")) {
+                        widthCanAffectHeight = false;
+                    }
                 } else {
-                    hasWidth = relWidth = false;
+                    widthCanAffectHeight = true; // may be "wrapping"
+                    relWidth = false;
                 }
             }
         }
