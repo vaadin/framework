@@ -29,12 +29,12 @@ public class SplitPanel extends AbstractLayout {
     /**
      * Components are to be layed out vertically.
      */
-    public static int ORIENTATION_VERTICAL = 0;
+    public static final int ORIENTATION_VERTICAL = 0;
 
     /**
      * Components are to be layed out horizontally.
      */
-    public static int ORIENTATION_HORIZONTAL = 1;
+    public static final int ORIENTATION_HORIZONTAL = 1;
 
     private Component firstComponent;
 
