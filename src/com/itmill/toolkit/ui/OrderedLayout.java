@@ -33,12 +33,12 @@ public class OrderedLayout extends AbstractLayout implements
     /**
      * Components are to be laid out vertically.
      */
-    public static int ORIENTATION_VERTICAL = 0;
+    public static final int ORIENTATION_VERTICAL = 0;
 
     /**
      * Components are to be laid out horizontally.
      */
-    public static int ORIENTATION_HORIZONTAL = 1;
+    public static final int ORIENTATION_HORIZONTAL = 1;
 
     private static final int ALIGNMENT_DEFAULT = ALIGNMENT_TOP + ALIGNMENT_LEFT;
 
