@@ -91,6 +91,7 @@ public class ITabsheet extends ITabsheetBase {
             remove(i);
         }
 
+        @Override
         public boolean remove(Widget w) {
             ((ICaption) w).removeClickListener(this);
             return super.remove(w);
@@ -230,6 +231,7 @@ public class ITabsheet extends ITabsheetBase {
 
     }
 
+    @Override
     public void onBrowserEvent(Event event) {
 
         // Tab scrolling
@@ -255,6 +257,7 @@ public class ITabsheet extends ITabsheetBase {
         }
     }
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         rendering = true;
 
@@ -306,6 +309,15 @@ public class ITabsheet extends ITabsheetBase {
 
         iLayout();
 
+        // Re run relative size update to ensure optimal scrollbars
+        // TODO isolate to situation that visible tab has undefined height
+        try {
+            client.handleComponentRelativeSize(tp.getWidget(tp
+                    .getVisibleWidget()));
+        } catch (Exception e) {
+            // Ignore, most likely empty tabsheet
+        }
+
         renderInformation.updateSize(getElement());
 
         waitingForResponse = false;
@@ -351,6 +363,7 @@ public class ITabsheet extends ITabsheetBase {
         super.setWidth(realWidth + "px");
     }
 
+    @Override
     protected void renderTab(final UIDL tabUidl, int index, boolean selected,
             boolean hidden) {
         ICaption c = tb.getTab(index);
@@ -387,6 +400,7 @@ public class ITabsheet extends ITabsheetBase {
         }
     }
 
+    @Override
     protected void selectTab(int index, final UIDL contentUidl) {
         if (index != activeTabIndex) {
             activeTabIndex = index;
@@ -423,6 +437,7 @@ public class ITabsheet extends ITabsheetBase {
         }
     }
 
+    @Override
     public void setHeight(String height) {
         super.setHeight(height);
         this.height = height;
@@ -449,6 +464,7 @@ public class ITabsheet extends ITabsheetBase {
         }
     }
 
+    @Override
     public void setWidth(String width) {
         super.setWidth(width);
         if (width.equals("")) {
@@ -544,6 +560,7 @@ public class ITabsheet extends ITabsheetBase {
         return tb.getOffsetWidth() > getOffsetWidth();
     }
 
+    @Override
     protected void clearPaintables() {
 
         int i = tb.getTabCount();
@@ -554,6 +571,7 @@ public class ITabsheet extends ITabsheetBase {
 
     }
 
+    @Override
     protected Iterator getPaintableIterator() {
         return tp.iterator();
     }
