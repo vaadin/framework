@@ -291,7 +291,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
             }
             offsetHeight = getOffsetHeight();
 
-            final int desiredWidth = IFilterSelect.this.getOffsetWidth();
+            final int desiredWidth = getMainWidth();
             int naturalMenuWidth = DOM.getElementPropertyInt(DOM
                     .getFirstChild(menu.getElement()), "offsetWidth");
             if (naturalMenuWidth < desiredWidth) {
@@ -299,10 +299,6 @@ public class IFilterSelect extends Composite implements Paintable, Field,
                 DOM.setStyleAttribute(DOM.getFirstChild(menu.getElement()),
                         "width", "100%");
                 naturalMenuWidth = desiredWidth;
-            }
-            if (Util.isIE()) {
-                DOM.setStyleAttribute(getElement(), "width", naturalMenuWidth
-                        + "px");
             }
 
             if (offsetHeight + getPopupTop() > Window.getClientHeight()
@@ -484,7 +480,8 @@ public class IFilterSelect extends Composite implements Paintable, Field,
     // selected value has changed on the server-side. See #2119
     private boolean popupOpenerClicked;
     private String width = null;
-    private int elementPadding = -1;
+    private int textboxPadding = -1;
+    private int suggestionPopupMinWidth = 0;
     private static final String CLASSNAME_EMPTY = "empty";
     private static final String ATTR_EMPTYTEXT = "emptytext";
 
@@ -623,30 +620,11 @@ public class IFilterSelect extends Composite implements Paintable, Field,
         }
 
         // Calculate minumum textarea width
-        final int minw = minWidth(captions);
-        Element lastChild = DOM.getChild(panel.getElement(), DOM
-                .getChildCount(panel.getElement()) - 1);
-        if (DOM.getElementProperty(lastChild, "className") != null
-                && DOM.getElementProperty(lastChild, "className") != "") {
-            final Element spacer = DOM.createDiv();
-            DOM.setStyleAttribute(spacer, "height", "0");
-            DOM.setStyleAttribute(spacer, "overflow", "hidden");
-            DOM.appendChild(panel.getElement(), spacer);
-            lastChild = spacer;
-        }
-        DOM.setStyleAttribute(lastChild, "width", minw + "px");
+        suggestionPopupMinWidth = minWidth(captions);
 
         popupOpenerClicked = false;
 
-        if (width == null) {
-            /*
-             * When the width is not specified we must specify width for root
-             * div so the popupopener won't wrap to the next line and also so
-             * the size of the combobox won't change over time.
-             */
-            int w = tb.getOffsetWidth() + popupOpener.getOffsetWidth();
-            super.setWidth(w + "px");
-        }
+        updateRootWidth();
     }
 
     public void onSuggestionSelected(FilterSelectSuggestion suggestion) {
@@ -835,35 +813,61 @@ public class IFilterSelect extends Composite implements Paintable, Field,
 
         super.setWidth(width);
 
-        if (this.width != null) {
+        updateRootWidth();
+    }
+
+    private void updateRootWidth() {
+        if (width == null) {
+            /*
+             * When the width is not specified we must specify width for root
+             * div so the popupopener won't wrap to the next line and also so
+             * the size of the combobox won't change over time.
+             */
+            int w = tb.getOffsetWidth() + popupOpener.getOffsetWidth();
+            if (suggestionPopupMinWidth > w) {
+                setTextboxWidth(suggestionPopupMinWidth);
+                w = suggestionPopupMinWidth;
+            }
+            super.setWidth(w + "px");
+
+        } else {
             /*
              * When the width is specified we also want to explicitly specify
              * widths for textbox and popupopener
              */
-            int offsetWidth;
-            if (BrowserInfo.get().isIE6()) {
-                // Required in IE6 when textfield is wider than this.width
-                DOM.setStyleAttribute(getElement(), "overflow", "hidden");
-                offsetWidth = getOffsetWidth();
-                DOM.setStyleAttribute(getElement(), "overflow", "");
+            setTextboxWidth(getMainWidth());
 
-            } else {
-                offsetWidth = getOffsetWidth();
-            }
-            int padding = getElementPadding();
-            int popupOpenerWidth = popupOpener.getOffsetWidth();
-            int textboxWidth = offsetWidth - padding - popupOpenerWidth;
-            if (textboxWidth < 0) {
-                textboxWidth = 0;
-            }
-            tb.setWidth(textboxWidth + "px");
         }
     }
 
-    public int getElementPadding() {
-        if (elementPadding < 0) {
-            elementPadding = Util.measureHorizontalPadding(tb.getElement(), 4);
+    private int getMainWidth() {
+        int componentWidth;
+        if (BrowserInfo.get().isIE6()) {
+            // Required in IE when textfield is wider than this.width
+            DOM.setStyleAttribute(getElement(), "overflow", "hidden");
+            componentWidth = getOffsetWidth();
+            DOM.setStyleAttribute(getElement(), "overflow", "");
+        } else {
+            componentWidth = getOffsetWidth();
         }
-        return elementPadding;
+
+        return componentWidth;
+    }
+
+    private void setTextboxWidth(int componentWidth) {
+        int padding = getTextboxPadding();
+        int popupOpenerWidth = popupOpener.getOffsetWidth();
+        int textboxWidth = componentWidth - padding - popupOpenerWidth;
+        if (textboxWidth < 0) {
+            textboxWidth = 0;
+        }
+        tb.setWidth(textboxWidth + "px");
+    }
+
+    public int getTextboxPadding() {
+        if (textboxPadding < 0) {
+            textboxPadding = Util.measureHorizontalPadding(tb.getElement(), 4);
+        }
+        return textboxPadding;
     }
 }
