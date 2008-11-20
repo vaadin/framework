@@ -189,9 +189,9 @@ public class IOrderedLayout extends CellBasedLayout {
         // w.mark("recalculateComponentSizesAndAlignments done");
 
         /* Must inform child components about possible size updates */
-        // if (isDynamicHeight() || isDynamicWidth()) {
-        // client.runDescendentsLayout(this);
-        // }
+        if (isDynamicHeight() || isDynamicWidth()) {
+            client.runDescendentsLayout(this);
+        }
         // w.mark("runDescendentsLayout done");
         isRendering = false;
     }
