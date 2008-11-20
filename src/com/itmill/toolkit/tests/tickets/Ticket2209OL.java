@@ -18,14 +18,21 @@ public class Ticket2209OL extends Application {
     @Override
     public void init() {
         setMainWindow(new Window());
-
+        getMainWindow().getLayout().setWidth("250px");
         gl = new OrderedLayout();
         gl.setStyleName("borders");
         getMainWindow().addComponent(gl);
         setTheme("tests-tickets");
         combo = new ComboBox("Combo caption");
         labelLong = new Label(
-                "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?");
+                "This should stay on one line or to wrap to multiple lines? At leas it should display all the text?. "
+                        + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?"
+                        + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?"
+                        + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?"
+                        + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?"
+                        + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?"
+                        + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?"
+                        + "A long label, longer than the combo box. Why doesn't it affect the width? And why is the gridlayout so high?");
         gl.addComponent(combo);
         gl.addComponent(labelLong);
 
