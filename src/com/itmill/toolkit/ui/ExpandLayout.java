@@ -39,7 +39,11 @@ public class ExpandLayout extends OrderedLayout {
      */
     public void expand(Component c) {
         if (expanded != null) {
-            setExpandRatio(expanded, 0.0f);
+            try {
+                setExpandRatio(expanded, 0.0f);
+            } catch (IllegalArgumentException e) {
+                // Ignore error if component has been removed
+            }
         }
 
         expanded = c;
