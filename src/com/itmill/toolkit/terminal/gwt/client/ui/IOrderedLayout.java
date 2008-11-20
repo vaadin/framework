@@ -177,7 +177,18 @@ public class IOrderedLayout extends CellBasedLayout {
          */
         if ((isHorizontal() && isDynamicHeight())
                 || (isVertical() && isDynamicWidth())) {
+            Size oldSize = new Size(activeLayoutSize.getWidth(),
+                    activeLayoutSize.getHeight());
             calculateLayoutDimensions();
+
+            /*
+             * If layout dimension is changed due to relative sized components
+             * we must also update container sizes
+             */
+            if (!oldSize.equals(activeLayoutSize)) {
+                calculateContainerSize();
+            }
+
         }
         // w.mark("Layout dimensions updated");
 
@@ -188,10 +199,6 @@ public class IOrderedLayout extends CellBasedLayout {
         recalculateComponentSizesAndAlignments();
         // w.mark("recalculateComponentSizesAndAlignments done");
 
-        /* Must inform child components about possible size updates */
-        if (isDynamicHeight() || isDynamicWidth()) {
-            client.runDescendentsLayout(this);
-        }
         // w.mark("runDescendentsLayout done");
         isRendering = false;
     }
