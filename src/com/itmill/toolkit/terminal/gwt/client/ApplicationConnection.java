@@ -1117,7 +1117,9 @@ public class ApplicationConnection {
 
                     if (child instanceof ContainerResizedListener) {
                         ((ContainerResizedListener) child).iLayout();
-                    } else if (child instanceof HasWidgets) {
+                    }
+
+                    if (child instanceof HasWidgets) {
                         final HasWidgets childContainer = (HasWidgets) child;
                         internalRunDescendentsLayout(childContainer);
                     }
