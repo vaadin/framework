@@ -1248,4 +1248,23 @@ public class GridLayout extends AbstractLayout implements
         return null;
     }
 
+    /**
+     * Returns information about the area where given component is layed in the
+     * GridLayout.
+     * 
+     * @param component
+     *            the component whose area information is requested.
+     * @return an Area object that contains information how component is layed
+     *         in the grid
+     */
+    public Area getComponentArea(Component component) {
+        for (final Iterator iterator = areas.iterator(); iterator.hasNext();) {
+            final Area area = (Area) iterator.next();
+            if (area.getComponent() == component) {
+                return area;
+            }
+        }
+        return null;
+    }
+
 }
