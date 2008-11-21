@@ -99,7 +99,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
 
     private int totalRows;
 
-    private Set collapsedColumns;
+    private Set<String> collapsedColumns;
 
     private final RowRequestHandler rowRequestHandler;
     private IScrollTableBody tBody;
@@ -1979,6 +1979,8 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
 
                 tHead.getColumnAlignments();
                 int col = 0;
+                int visibleColumnIndex = -1;
+
                 // row header
                 if (showRowHeaders) {
                     addCell(buildCaptionHtmlSnippet(uidl), aligns[col++], "");
@@ -1991,23 +1993,25 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                 final Iterator cells = uidl.getChildIterator();
                 while (cells.hasNext()) {
                     final Object cell = cells.next();
+                    visibleColumnIndex++;
+
+                    String columnId = columnOrder[visibleColumnIndex];
+                    while (collapsedColumns.contains(columnId)) {
+                        columnId = columnOrder[++visibleColumnIndex];
+                    }
+
+                    String style = "";
+                    if (uidl.hasAttribute("style-" + visibleColumnIndex)) {
+                        style = uidl.getStringAttribute("style-"
+                                + visibleColumnIndex);
+                    }
+
                     if (cell instanceof String) {
-                        String style = "";
-                        if (uidl.hasAttribute("style-"
-                                + (showRowHeaders ? col - 1 : col))) {
-                            style = uidl.getStringAttribute("style-"
-                                    + (showRowHeaders ? col - 1 : col));
-                        }
                         addCell(cell.toString(), aligns[col++], style);
                     } else {
                         final Paintable cellContent = client
                                 .getPaintable((UIDL) cell);
-                        String style = "";
-                        if (uidl.hasAttribute("style-"
-                                + (showRowHeaders ? col - 1 : col))) {
-                            style = uidl.getStringAttribute("style-"
-                                    + (showRowHeaders ? col - 1 : col));
-                        }
+
                         addCell((Widget) cellContent, aligns[col++], style);
                         paintComponent(cellContent, (UIDL) cell);
                     }
