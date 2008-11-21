@@ -2010,9 +2010,8 @@ public class Table extends AbstractSelect implements Action.Container,
                     String cellStyle = cellStyleGenerator.getStyle(itemId,
                             columnId);
                     if (cellStyle != null && !cellStyle.equals("")) {
-                        target
-                                .addAttribute("style-" + currentColumn,
-                                        cellStyle);
+                        target.addAttribute("style-"
+                                + columnIdMap.key(columnId), cellStyle);
                     }
                 }
                 if ((iscomponent[currentColumn] || iseditable)

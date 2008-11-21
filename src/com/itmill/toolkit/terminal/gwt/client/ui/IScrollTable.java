@@ -1995,23 +1995,11 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                     final Object cell = cells.next();
                     visibleColumnIndex++;
 
-                    String columnId;
-                    if (columnOrder != null) {
-                        columnId = columnOrder[visibleColumnIndex];
-                        while (collapsedColumns.contains(columnId)) {
-                            columnId = columnOrder[++visibleColumnIndex];
-                        }
-                    } else {
-                        columnId = visibleColOrder[visibleColumnIndex];
-                        while (collapsedColumns.contains(columnId)) {
-                            columnId = visibleColOrder[++visibleColumnIndex];
-                        }
-                    }
+                    String columnId = visibleColOrder[visibleColumnIndex];
 
                     String style = "";
-                    if (uidl.hasAttribute("style-" + visibleColumnIndex)) {
-                        style = uidl.getStringAttribute("style-"
-                                + visibleColumnIndex);
+                    if (uidl.hasAttribute("style-" + columnId)) {
+                        style = uidl.getStringAttribute("style-" + columnId);
                     }
 
                     if (cell instanceof String) {
