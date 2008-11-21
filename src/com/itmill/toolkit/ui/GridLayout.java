@@ -1228,4 +1228,24 @@ public class GridLayout extends AbstractLayout implements
         return r == null ? 0 : r.floatValue();
     }
 
+    /**
+     * Gets the Component at given index.
+     * 
+     * @param x
+     *            x-index
+     * @param y
+     *            y-index
+     * @return Component in given cell or null if empty
+     */
+    public Component getComponent(int x, int y) {
+        for (final Iterator iterator = areas.iterator(); iterator.hasNext();) {
+            final Area area = (Area) iterator.next();
+            if (area.getColumn1() <= x && x <= area.getColumn2()
+                    && area.getRow1() <= y && y <= area.getRow2()) {
+                return area.getComponent();
+            }
+        }
+        return null;
+    }
+
 }
