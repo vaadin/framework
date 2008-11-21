@@ -170,7 +170,7 @@ public class ChildComponentContainer extends Panel {
     }
 
     public void setUnlimitedContainerWidth() {
-        containerDIV.getStyle().setProperty("width", "10000000px");
+        containerDIV.getStyle().setProperty("width", "1000000px");
     }
 
     public void updateWidgetSize() {
