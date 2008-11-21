@@ -10,6 +10,7 @@ import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.Window;
+import com.itmill.toolkit.ui.GridLayout.Area;
 
 public class DebugUtilities {
 
@@ -38,10 +39,24 @@ public class DebugUtilities {
                     } else {
                         // valid situation, other components defined width
                     }
-                } else if (!(parent instanceof GridLayout)
-                        && !(parent instanceof CustomLayout)) {
-                    // TODO make grid layout check (each col should have at
-                    // least one non relatively sized component)
+                } else if (parent instanceof GridLayout) {
+                    GridLayout gl = (GridLayout) parent;
+                    Area componentArea = gl.getComponentArea(component);
+                    boolean columnHasWidth = false;
+                    for (int col = componentArea.getColumn1(); !columnHasWidth
+                            && col <= componentArea.getColumn2(); col++) {
+                        for (int row = 0; !columnHasWidth && row < gl.getRows(); row++) {
+                            Component c = gl.getComponent(col, row);
+                            if (c != null) {
+                                columnHasWidth = !hasRelativeWidth(c);
+                            }
+                        }
+                    }
+                    if (!columnHasWidth) {
+                        msg = "At least one component in each column should have non relative width in GridLayout with undefined width.";
+                    }
+
+                } else if (!(parent instanceof CustomLayout)) {
 
                     // default error for non sized parent issue
                     msg = "Relative width component's parent should not have undefined width.";
@@ -59,7 +74,25 @@ public class DebugUtilities {
                         } else {
                             // valid situation, other components defined height
                         }
-                    } else if (!(parent instanceof GridLayout)) {
+                    } else if (parent instanceof GridLayout) {
+
+                        GridLayout gl = (GridLayout) parent;
+                        Area componentArea = gl.getComponentArea(component);
+                        boolean rowHasHeight = false;
+                        for (int row = componentArea.getRow1(); !rowHasHeight
+                                && row <= componentArea.getRow2(); row++) {
+                            for (int column = 0; !rowHasHeight
+                                    && column < gl.getColumns(); column++) {
+                                Component c = gl.getComponent(column, row);
+                                if (c != null) {
+                                    rowHasHeight = !hasRelativeHeight(c);
+                                }
+                            }
+                        }
+                        if (!rowHasHeight) {
+                            msg = "At least one component in each row should have non relative height in GridLayout with undefined height.";
+                        }
+
                         // TODO make grid layout check (each row should have at
                         // least one non relatively sized component)
 
@@ -74,6 +107,8 @@ public class DebugUtilities {
             err
                     .append("IT MILL Toolkit DEBUG: Invalid layout detected. Components may be invisible or not render as expected.\n");
             err.append("\t Component : ");
+            err.append(component.getClass().getSimpleName());
+            err.append(" ");
             err.append(component);
             err.append(", Caption: ");
             err.append(component.getCaption());
