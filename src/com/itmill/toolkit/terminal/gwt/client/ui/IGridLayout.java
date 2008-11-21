@@ -906,7 +906,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                     canvas.add(cc, 0, 0);
                 }
             }
-            cc.renderChild(childUidl, client);
+            cc.renderChild(childUidl, client, -1);
             cc.updateWidgetSize();
             nonRenderedWidgets.remove(paintable);
         }
