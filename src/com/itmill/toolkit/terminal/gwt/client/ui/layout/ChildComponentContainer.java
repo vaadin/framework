@@ -163,10 +163,14 @@ public class ChildComponentContainer extends Panel {
         if (fixedWidth > 0) {
             containerDIV.getStyle().setProperty("width", fixedWidth + "px");
         } else {
-            containerDIV.getStyle().setProperty("width", "10000000px");
+            setUnlimitedContainerWidth();
         }
 
         ((Paintable) widget).updateFromUIDL(childUIDL, client);
+    }
+
+    public void setUnlimitedContainerWidth() {
+        containerDIV.getStyle().setProperty("width", "10000000px");
     }
 
     public void updateWidgetSize() {

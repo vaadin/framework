@@ -634,6 +634,10 @@ public class IOrderedLayout extends CellBasedLayout {
         for (Paintable p : children) {
             /* Update widget size from DOM */
             ChildComponentContainer componentContainer = getComponentContainer((Widget) p);
+            if (isDynamicWidth()) {
+                componentContainer.setUnlimitedContainerWidth();
+            }
+
             componentContainer.updateWidgetSize();
 
             /*
