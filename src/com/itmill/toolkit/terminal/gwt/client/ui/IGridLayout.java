@@ -270,10 +270,11 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                         Cell[] column = cells[i];
                         for (int j = 0; j < column.length; j++) {
                             Cell c = column[j];
-                            if (c.widthCanAffectHeight()) {
-                                int oldheight = c.getHeight();
+                            if (c != null && c.widthCanAffectHeight()) {
                                 c.cc.setContainerSize(c.getAvailableWidth(), c
                                         .getAvailableHeight());
+                                client.handleComponentRelativeSize(c.cc
+                                        .getWidget());
                                 c.cc.updateWidgetSize();
                                 int newHeight = c.getHeight();
                                 if (columnWidths[i] < oldWidths[i]
@@ -979,7 +980,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                         widthCanAffectHeight = false;
                     }
                 } else {
-                    widthCanAffectHeight = true; // may be "wrapping"
+                    widthCanAffectHeight = !uidl.hasAttribute("height");
                     relWidth = false;
                 }
             }
