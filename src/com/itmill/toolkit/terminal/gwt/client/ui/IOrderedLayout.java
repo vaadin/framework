@@ -109,7 +109,12 @@ public class IOrderedLayout extends CellBasedLayout {
                 relativeSizeComponentUIDL.add(childUIDL);
                 relativeSizeWidgets.add(widget);
             } else {
-                childComponentContainer.renderChild(childUIDL, client);
+                if (isDynamicWidth()) {
+                    childComponentContainer.renderChild(childUIDL, client, 0);
+                } else {
+                    childComponentContainer.renderChild(childUIDL, client,
+                            activeLayoutSize.getWidth());
+                }
             }
 
             uidlWidgets.add(widget);
@@ -154,7 +159,12 @@ public class IOrderedLayout extends CellBasedLayout {
                     .get(i);
             UIDL childUIDL = relativeSizeComponentUIDL.get(i);
 
-            childComponentContainer.renderChild(childUIDL, client);
+            if (isDynamicWidth()) {
+                childComponentContainer.renderChild(childUIDL, client, 0);
+            } else {
+                childComponentContainer.renderChild(childUIDL, client,
+                        activeLayoutSize.getWidth());
+            }
             // childComponentContainer.updateWidgetSize();
         }
 

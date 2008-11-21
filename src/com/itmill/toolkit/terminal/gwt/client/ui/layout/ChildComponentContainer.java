@@ -151,12 +151,21 @@ public class ChildComponentContainer extends Panel {
 
     }
 
-    public void renderChild(UIDL childUIDL, ApplicationConnection client) {
+    public void renderChild(UIDL childUIDL, ApplicationConnection client,
+            int fixedWidth) {
         /*
          * Must remove width specification from container before rendering to
-         * allow components to grow in horizontal direction
+         * allow components to grow in horizontal direction.
+         * 
+         * For fixed width layouts we specify the width directly so that height
+         * is automatically calculated correctly (e.g. for Labels).
          */
-        containerDIV.getStyle().setProperty("width", "");
+        if (fixedWidth > 0) {
+            containerDIV.getStyle().setProperty("width", fixedWidth + "px");
+        } else {
+            containerDIV.getStyle().setProperty("width", "10000000px");
+        }
+
         ((Paintable) widget).updateFromUIDL(childUIDL, client);
     }
 
