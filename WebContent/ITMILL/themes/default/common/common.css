@@ -273,3 +273,9 @@ input.i-modified,
 	font-size:xx-small;
 }
 
+/* Debug style */
+.i-app .invalidlayout,
+.i-app .invalidlayout * {
+	background: #f99 !important;
+	
+}

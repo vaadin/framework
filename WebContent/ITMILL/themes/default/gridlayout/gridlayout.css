@@ -1,3 +1,6 @@
+.i-gridlayout {
+	overflow:hidden;
+}
 .i-gridlayout-margin-top {
 	padding-top: 15px;
 }

@@ -426,6 +426,12 @@ input.i-modified,
 	font-size:xx-small;
 }
 
+/* Debug style */
+.i-app .invalidlayout,
+.i-app .invalidlayout * {
+	background: #f99 !important;
+	
+}
 /*
  *	CoordinateLayout
  */
@@ -732,6 +738,9 @@ input.i-modified,
 
 .i-form .i-caption .i-required-field-indicator {
 	float: none;
+}
+.i-gridlayout {
+	overflow:hidden;
 }
 .i-gridlayout-margin-top {
 	padding-top: 15px;
