@@ -209,3 +209,23 @@
 .borders {
 	border: 1px solid black;
 }
+
+.i-gridlayout-ticket2222 .i-gridlayout-margin-top {
+	padding-top: 100px;
+}
+.i-gridlayout-ticket2222 .i-gridlayout-margin-right {
+	padding-right: 20px;
+}
+.i-gridlayout-ticket2222 .i-gridlayout-margin-bottom {
+	padding-bottom: 30px;
+}
+
+.i-gridlayout-ticket2222 .i-gridlayout-margin-left {
+	padding-left: 40px;
+}
+
+.i-gridlayout-ticket2222 .i-gridlayout-spacing {
+	padding-top: 50px;
+	padding-left: 60px;
+}
+

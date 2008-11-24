@@ -1,6 +1,7 @@
 package com.itmill.toolkit.tests.tickets;
 
 import com.itmill.toolkit.Application;
+import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Window;
@@ -39,9 +40,24 @@ public class Ticket2222 extends Application {
         vert.addComponent(new Label("label 3"));
         vert.addStyleName("borders");
 
+        GridLayout gl = new GridLayout(3, 3);
+        gl.setStyleName("borders");
+        gl.setSpacing(true);
+        gl.setMargin(true);
+        gl.setStyleName("ticket2222");
+        gl.addComponent(new Label("Vert spacing: 50px;"));
+        horiz.addComponent(new Label("Margin-left: 40px"));
+        horiz.addComponent(new Label("Margin-top: 100px;"));
+        horiz.addComponent(new Label("Margin-right: 20px;"));
+        horiz.addComponent(new Label("Margin-bottom: 30px;"));
+        gl.addComponent(new Label("label 3"));
+        gl.addStyleName("borders");
+
         layout.addComponent(horiz);
         layout.addComponent(new Label(" "));
         layout.addComponent(vert);
+        layout.addComponent(new Label(" "));
+        layout.addComponent(gl);
     }
 
 }
