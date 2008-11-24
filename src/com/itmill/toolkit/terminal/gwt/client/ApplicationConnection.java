@@ -983,6 +983,8 @@ public class ApplicationConnection {
                 styleBuf.append(primaryName);
                 styleBuf.append("-");
                 styleBuf.append(styles[i]);
+                styleBuf.append(" ");
+                styleBuf.append(styles[i]);
             }
         }
 
