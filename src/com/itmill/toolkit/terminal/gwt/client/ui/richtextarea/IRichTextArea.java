@@ -135,7 +135,7 @@ public class IRichTextArea extends Composite implements Paintable, Field,
     }
 
     /**
-     * Detects space used by components paddings and borders. 
+     * Detects space used by components paddings and borders.
      */
     private void detectExtraSizes() {
         Element clone = Util.cloneNode(getElement(), false);
@@ -162,11 +162,16 @@ public class IRichTextArea extends Composite implements Paintable, Field,
             }
 
             super.setHeight(h + "px");
-            int editorHeight = h - formatter.getOffsetHeight();
-            rta.setHeight(editorHeight + "px");
         } else {
             super.setHeight(height);
+        }
+
+        if (height == null || height.equals("")) {
             rta.setHeight("");
+        } else {
+            int editorHeight = getOffsetHeight() - getExtraVerticalPixels()
+                    - formatter.getOffsetHeight();
+            rta.setHeight(editorHeight + "px");
         }
     }
 
