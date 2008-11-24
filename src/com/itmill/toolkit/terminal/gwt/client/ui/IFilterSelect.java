@@ -786,6 +786,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
             tb.setText("");
             // TODO remove class CLASSNAME_EMPTY
         }
+        addStyleDependentName("focus");
     }
 
     public void onLostFocus(Widget sender) {
@@ -797,6 +798,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
             tb.setText(emptyText);
             // TODO add CLASSNAME_EMPTY
         }
+        removeStyleDependentName("focus");
     }
 
     public void focus() {

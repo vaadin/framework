@@ -84,8 +84,13 @@
 	font-size: 13px;
 }
 .i-filterselect-input:focus {
-	/* button clips safari outline otherwise (#1684) */
-	outline-offset: -1px; 
+	/* remove safari/mac outline from this element */
+	outline: 0px;
+}
+.i-filterselect-focus {
+	/* place safari focus outline around the whole thing */
+	outline: 5px auto -webkit-focus-ring-color;
+	outline-offset: -4px;
 }
 
 .i-filterselect-button {
