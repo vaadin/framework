@@ -88,6 +88,8 @@ public class Label extends AbstractComponent implements Property,
     private static final String[] CONTENT_MODE_NAME = { "text", "pre", "uidl",
             "xhtml", "xml", "raw" };
 
+    private static final String DATASOURCE_MUST_BE_SET = "Datasource must be set";
+
     private Property dataSource;
 
     private int contentMode = CONTENT_DEFAULT;
@@ -158,7 +160,7 @@ public class Label extends AbstractComponent implements Property,
      */
     public void setReadOnly(boolean readOnly) {
         if (dataSource == null) {
-            throw new IllegalStateException("Datasource must be se");
+            throw new IllegalStateException(DATASOURCE_MUST_BE_SET);
         }
         dataSource.setReadOnly(readOnly);
     }
@@ -171,7 +173,7 @@ public class Label extends AbstractComponent implements Property,
      */
     public boolean isReadOnly() {
         if (dataSource == null) {
-            throw new IllegalStateException("Datasource must be se");
+            throw new IllegalStateException(DATASOURCE_MUST_BE_SET);
         }
         return dataSource.isReadOnly();
     }
@@ -220,7 +222,7 @@ public class Label extends AbstractComponent implements Property,
      */
     public Object getValue() {
         if (dataSource == null) {
-            throw new IllegalStateException("Datasource must be se");
+            throw new IllegalStateException(DATASOURCE_MUST_BE_SET);
         }
         return dataSource.getValue();
     }
@@ -234,7 +236,7 @@ public class Label extends AbstractComponent implements Property,
      */
     public void setValue(Object newValue) {
         if (dataSource == null) {
-            throw new IllegalStateException("Datasource must be se");
+            throw new IllegalStateException(DATASOURCE_MUST_BE_SET);
         }
         dataSource.setValue(newValue);
     }
@@ -244,7 +246,7 @@ public class Label extends AbstractComponent implements Property,
      */
     public String toString() {
         if (dataSource == null) {
-            throw new IllegalStateException("Datasource must be se");
+            throw new IllegalStateException(DATASOURCE_MUST_BE_SET);
         }
         return dataSource.toString();
     }
@@ -256,7 +258,7 @@ public class Label extends AbstractComponent implements Property,
      */
     public Class getType() {
         if (dataSource == null) {
-            throw new IllegalStateException("Datasource must be se");
+            throw new IllegalStateException(DATASOURCE_MUST_BE_SET);
         }
         return dataSource.getType();
     }
