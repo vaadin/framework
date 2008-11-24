@@ -4,8 +4,6 @@
 
 package com.itmill.toolkit.demo.reservation.gwt.client;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.demo.reservation.gwt.client.ui.ICalendarField;
 import com.itmill.toolkit.demo.reservation.gwt.client.ui.IGoogleMap;
 import com.itmill.toolkit.terminal.gwt.client.DefaultWidgetSet;
@@ -14,32 +12,24 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class ReservationWidgetSet extends DefaultWidgetSet {
     public Paintable createWidget(UIDL uidl) {
-        final String className = resolveWidgetTypeName(uidl);
-        if ("com.itmill.toolkit.terminal.gwt.client.ui.IGoogleMap"
-                .equals(className)) {
+        final Class type = resolveWidgetType(uidl);
+        if (IGoogleMap.class == type) {
             return new IGoogleMap();
-        } else if ("com.itmill.toolkit.demo.reservation.gwt.client.ui.ICalendarField"
-                .equals(className)) {
+        } else if (ICalendarField.class == type) {
             return new ICalendarField();
         }
 
         return super.createWidget(uidl);
     }
 
-    protected String resolveWidgetTypeName(UIDL uidl) {
-
+    protected Class resolveWidgetType(UIDL uidl) {
         final String tag = uidl.getTag();
         if ("googlemap".equals(tag)) {
-            return "com.itmill.toolkit.terminal.gwt.client.ui.IGoogleMap";
+            return IGoogleMap.class;
         } else if ("calendarfield".equals(tag)) {
-            return "com.itmill.toolkit.demo.reservation.gwt.client.ui.ICalendarField";
+            return ICalendarField.class;
         }
-
-        return super.resolveWidgetTypeName(uidl);
+        return super.resolveWidgetType(uidl);
     }
 
-    public boolean isCorrectImplementation(Widget currentWidget, UIDL uidl) {
-        return GWT.getTypeName(currentWidget).equals(
-                resolveWidgetTypeName(uidl));
-    }
 }

@@ -10,11 +10,10 @@ import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class ColorPickerWidgetSet extends DefaultWidgetSet {
-    /** Creates a widget according to its class name. */
+    /** Creates a widget according to its uidl. */
     public Paintable createWidget(UIDL uidl) {
-        final String className = resolveWidgetTypeName(uidl);
-        if ("com.itmill.toolkit.demo.colorpicker.gwt.client.ui.IColorPicker"
-                .equals(className)) {
+        final Class type = resolveWidgetType(uidl);
+        if (IColorPicker.class == type) {
             return new IColorPicker();
         }
 
@@ -22,14 +21,14 @@ public class ColorPickerWidgetSet extends DefaultWidgetSet {
         return super.createWidget(uidl);
     }
 
-    /** Resolves UIDL tag name to class name. */
-    protected String resolveWidgetTypeName(UIDL uidl) {
+    /** Resolves UIDL tag name to class. */
+    protected Class resolveWidgetType(UIDL uidl) {
         final String tag = uidl.getTag();
         if ("colorpicker".equals(tag)) {
-            return "com.itmill.toolkit.demo.colorpicker.gwt.client.ui.IColorPicker";
+            return IColorPicker.class;
         }
 
         // Let the DefaultWidgetSet handle resolution of default widgets
-        return super.resolveWidgetTypeName(uidl);
+        return super.resolveWidgetType(uidl);
     }
 }
