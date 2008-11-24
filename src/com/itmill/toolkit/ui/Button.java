@@ -27,8 +27,8 @@ public class Button extends AbstractField {
     boolean switchMode = false;
 
     /**
-     * Creates a new push button. The value of the push button is allways false
-     * and they are immediate by default.
+     * Creates a new push button. The value of the push button is false and it
+     * is immediate by default.
      * 
      */
     public Button() {
@@ -39,8 +39,7 @@ public class Button extends AbstractField {
     /**
      * Creates a new push button.
      * 
-     * The value of the push button is allways false and they are immediate by
-     * default.
+     * The value of the push button is false and it is immediate by default.
      * 
      * @param caption
      *            the Button caption.
@@ -334,6 +333,16 @@ public class Button extends AbstractField {
      */
     protected void fireClick() {
         fireEvent(new Button.ClickEvent(this));
+    }
+
+    @Override
+    protected void setInternalValue(Object newValue) {
+        // Make sure only booleans get through
+        if (!(newValue instanceof Boolean)) {
+            throw new IllegalArgumentException(getClass().getSimpleName()
+                    + " only accepts Boolean values");
+        }
+        super.setInternalValue(newValue);
     }
 
 }
