@@ -182,3 +182,30 @@
 	background: lightgreen;
 }
 	
+
+
+/*****************************************************************************/
+/* Ticket 2222                                                               */
+/*****************************************************************************/
+.i-orderedlayout-ticket2222 .i-orderedlayout-margin-top {
+	padding-top: 100px;
+}
+.i-orderedlayout-ticket2222 .i-orderedlayout-margin-right {
+	padding-right: 20px;
+}
+.i-orderedlayout-ticket2222 .i-orderedlayout-margin-bottom {
+	padding-bottom: 30px;
+}
+
+.i-orderedlayout-ticket2222 .i-orderedlayout-margin-left {
+	padding-left: 40px;
+}
+
+.i-orderedlayout-ticket2222 .i-orderedlayout-spacing {
+	padding-top: 50px;
+	padding-left: 60px;
+}
+
+.borders {
+	border: 1px solid black;
+}

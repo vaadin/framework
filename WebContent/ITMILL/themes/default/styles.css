@@ -940,11 +940,8 @@ input.i-modified,
 	padding-left: 18px;
 }
 
-.i-orderedlayout-vspacing {
+.i-orderedlayout-spacing {
 	padding-top: 8px;
-}
-
-.i-orderedlayout-hspacing {
 	padding-left: 8px;
 }
 .i-panel,

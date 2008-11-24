@@ -21,7 +21,7 @@ public class IOrderedLayout extends CellBasedLayout {
 
     private static final String MARGIN_TOP_LEFT_CLASSNAMES = "i-orderedlayout-margin-top i-orderedlayout-margin-left";
     private static final String MARGIN_BOTTOM_RIGHT_CLASSNAMES = "i-orderedlayout-margin-bottom i-orderedlayout-margin-right";
-    private static final String SPACING_CLASSNAMES = "i-orderedlayout-hspacing i-orderedlayout-vspacing";
+    private static final String SPACING_CLASSNAMES = "i-orderedlayout-spacing";
 
     private String marginsMeasureStyleName = "";
     private int orientation = ORIENTATION_HORIZONTAL;

@@ -158,15 +158,13 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
     }
 
     private void updateSpacing(boolean spacing) {
-        if (spacing != spacingEnabled) {
-            spacingEnabled = spacing;
-            if (spacing) {
-                activeSpacing.hSpacing = spacingFromCSS.hSpacing;
-                activeSpacing.vSpacing = spacingFromCSS.vSpacing;
-            } else {
-                activeSpacing.hSpacing = 0;
-                activeSpacing.vSpacing = 0;
-            }
+        spacingEnabled = spacing;
+        if (spacing) {
+            activeSpacing.hSpacing = spacingFromCSS.hSpacing;
+            activeSpacing.vSpacing = spacingFromCSS.vSpacing;
+        } else {
+            activeSpacing.hSpacing = 0;
+            activeSpacing.vSpacing = 0;
         }
 
     }
@@ -244,6 +242,8 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
         root.removeChild(measurement);
 
         updateMargins(activeMarginsInfo);
+        updateSpacing(spacingEnabled);
+
         return true;
     }
 
