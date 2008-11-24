@@ -92,10 +92,7 @@ public class DebugUtilities {
                         if (!rowHasHeight) {
                             msg = "At least one component in each row should have non relative height in GridLayout with undefined height.";
                         }
-
-                        // TODO make grid layout check (each row should have at
-                        // least one non relatively sized component)
-
+                    } else {
                         // default error for non sized parent issue
                         msg = "Relative height component's parent should not have undefined height.";
                     }
@@ -105,7 +102,7 @@ public class DebugUtilities {
         if (msg != null) {
             StringBuffer err = new StringBuffer();
             err
-                    .append("IT MILL Toolkit DEBUG: Invalid layout detected. Components may be invisible or not render as expected.\n");
+                    .append("IT MILL Toolkit DEBUG: Invalid layout detected. Components may be invisible or not render as expected. Relative size was replaced with undefined size.\n");
             err.append("\t Component : ");
             err.append(component.getClass().getSimpleName());
             err.append(" ");
@@ -115,6 +112,8 @@ public class DebugUtilities {
             err.append(" DebugId : ");
             err.append(component.getDebugId());
             err.append("\n\t Parent    : ");
+            err.append(parent.getClass().getSimpleName());
+            err.append(" ");
             err.append(parent);
             err.append(", Caption: ");
             err.append(parent.getCaption());
