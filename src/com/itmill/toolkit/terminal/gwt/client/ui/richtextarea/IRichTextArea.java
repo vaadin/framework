@@ -4,6 +4,8 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui.richtextarea;
 
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -14,6 +16,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.Util;
 import com.itmill.toolkit.terminal.gwt.client.ui.Field;
 
 /**
@@ -45,6 +48,9 @@ public class IRichTextArea extends Composite implements Paintable, Field,
     private final FlowPanel fp = new FlowPanel();
 
     private boolean enabled = true;
+
+    private int extraHorizontalPixels = -1;
+    private int extraVerticalPixels = -1;
 
     public IRichTextArea() {
         fp.add(formatter);
@@ -106,6 +112,77 @@ public class IRichTextArea extends Composite implements Paintable, Field,
         final String html = rta.getHTML();
         client.updateVariable(id, "text", html, immediate);
 
+    }
+
+    /**
+     * @return space used by components paddings and borders
+     */
+    private int getExtraHorizontalPixels() {
+        if (extraHorizontalPixels < 0) {
+            detectExtraSizes();
+        }
+        return extraHorizontalPixels;
+    }
+
+    /**
+     * @return space used by components paddings and borders
+     */
+    private int getExtraVerticalPixels() {
+        if (extraVerticalPixels < 0) {
+            detectExtraSizes();
+        }
+        return extraVerticalPixels;
+    }
+
+    /**
+     * Detects space used by components paddings and borders. 
+     */
+    private void detectExtraSizes() {
+        Element clone = Util.cloneNode(getElement(), false);
+        DOM.setElementAttribute(clone, "id", "");
+        DOM.setStyleAttribute(clone, "visibility", "hidden");
+        DOM.setStyleAttribute(clone, "position", "absolute");
+        // due FF3 bug set size to 10px and later subtract it from extra pixels
+        DOM.setStyleAttribute(clone, "width", "10px");
+        DOM.setStyleAttribute(clone, "height", "10px");
+        DOM.appendChild(DOM.getParent(getElement()), clone);
+        extraHorizontalPixels = DOM.getElementPropertyInt(clone, "offsetWidth") - 10;
+        extraVerticalPixels = DOM.getElementPropertyInt(clone, "offsetHeight") - 10;
+
+        DOM.removeChild(DOM.getParent(getElement()), clone);
+    }
+
+    @Override
+    public void setHeight(String height) {
+        if (height.endsWith("px")) {
+            int h = Integer.parseInt(height.substring(0, height.length() - 2));
+            h -= getExtraVerticalPixels();
+            if (h < 0) {
+                h = 0;
+            }
+
+            super.setHeight(h + "px");
+            int editorHeight = h - formatter.getOffsetHeight();
+            rta.setHeight(editorHeight + "px");
+        } else {
+            super.setHeight(height);
+            rta.setHeight("");
+        }
+    }
+
+    @Override
+    public void setWidth(String width) {
+        if (width.endsWith("px")) {
+            int w = Integer.parseInt(width.substring(0, width.length() - 2));
+            w -= getExtraHorizontalPixels();
+            if (w < 0) {
+                w = 0;
+            }
+
+            super.setWidth(w + "px");
+        } else {
+            super.setWidth(width);
+        }
     }
 
 }
