@@ -40,7 +40,7 @@ public class Ticket2222 extends Application {
         vert.addComponent(new Label("label 3"));
         vert.addStyleName("borders");
 
-        GridLayout gl = new GridLayout(3, 3);
+        GridLayout gl = new GridLayout(3, 2);
         gl.setStyleName("borders");
         gl.setSpacing(true);
         gl.setMargin(true);
