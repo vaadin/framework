@@ -46,10 +46,10 @@ public class Ticket2222 extends Application {
         gl.setMargin(true);
         gl.setStyleName("ticket2222");
         gl.addComponent(new Label("Vert spacing: 50px;"));
-        horiz.addComponent(new Label("Margin-left: 40px"));
-        horiz.addComponent(new Label("Margin-top: 100px;"));
-        horiz.addComponent(new Label("Margin-right: 20px;"));
-        horiz.addComponent(new Label("Margin-bottom: 30px;"));
+        gl.addComponent(new Label("Margin-left: 40px"));
+        gl.addComponent(new Label("Margin-top: 100px;"));
+        gl.addComponent(new Label("Margin-right: 20px;"));
+        gl.addComponent(new Label("Margin-bottom: 30px;"));
         gl.addComponent(new Label("label 3"));
         gl.addStyleName("borders");
 
