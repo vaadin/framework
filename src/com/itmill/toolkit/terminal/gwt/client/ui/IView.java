@@ -82,13 +82,16 @@ public class IView extends SimplePanel implements Container,
         // 1 due 0 is at the end of natural tabbing order
         DOM.setElementProperty(getElement(), "tabIndex", "1");
 
-        RootPanel.get(elementId).add(this);
-        RootPanel.get(elementId).removeStyleName("i-app-loading");
+        RootPanel root = RootPanel.get(elementId);
+        root.add(this);
+        root.removeStyleName("i-app-loading");
+
+        BrowserInfo browser = BrowserInfo.get();
 
         // set focus to iview element by default to listen possible keyboard
         // shortcuts
-        if (BrowserInfo.get().isOpera() || BrowserInfo.get().isSafari()
-                && BrowserInfo.get().getWebkitVersion() < 526) {
+        if (browser.isOpera() || browser.isSafari()
+                && browser.getWebkitVersion() < 526) {
             // old webkits don't support focusing div elements
             Element fElem = DOM.createInputCheck();
             DOM.setStyleAttribute(fElem, "margin", "0");
@@ -105,6 +108,10 @@ public class IView extends SimplePanel implements Container,
             focus(getElement());
         }
 
+        String browserClassnames = browser.getCSSClass();
+        ApplicationConnection.getConsole().log(
+                "Browser classnames: " + browserClassnames);
+        root.addStyleName(browserClassnames);
     }
 
     private static native void focus(Element el)
