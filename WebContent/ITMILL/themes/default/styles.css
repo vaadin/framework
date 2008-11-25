@@ -50,7 +50,6 @@
 	white-space: nowrap;
 	margin: 0px;
 }
-
 .i-button img {
 	display:inline;
 }
@@ -61,6 +60,9 @@
 	text-decoration: underline;
 	background: none;
 	padding: 0;
+}
+.i-sa .i-button-link:focus {
+	outline-offset: -3px;
 }
 .i-button-link span {
 	text-decoration: underline;
@@ -1224,6 +1226,10 @@ input.i-modified,
 	outline: 0px;
 }
 .i-filterselect-focus {
+	outline: 1px solid #5daee8;
+	outline-offset: -1px;
+}
+.i-sa .i-filterselect-focus {
 	/* place safari focus outline around the whole thing */
 	outline: 5px auto -webkit-focus-ring-color;
 	outline-offset: -4px;
