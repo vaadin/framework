@@ -42,9 +42,8 @@ public class IColorPicker extends GwtColorPicker implements Paintable {
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         // This call should be made first. Ensure correct implementation,
         // and let the containing layout manage caption, etc.
-        if (client.updateComponent(this, uidl, true)) {
+        if (client.updateComponent(this, uidl, true))
             return;
-        }
 
         // Save reference to server connection object to be able to send
         // user interaction later
@@ -60,9 +59,8 @@ public class IColorPicker extends GwtColorPicker implements Paintable {
     /** Override the method to communicate the new value to server. */
     public void setColor(String newcolor) {
         // Ignore if no change
-        if (newcolor.equals(currentcolor.getText())) {
+        if (newcolor.equals(currentcolor.getText()))
             return;
-        }
 
         // Let the original implementation to do whatever it needs to do
         super.setColor(newcolor);
@@ -70,9 +68,8 @@ public class IColorPicker extends GwtColorPicker implements Paintable {
         // Updating the state to the server can not be done before
         // the server connection is known, i.e., before updateFromUIDL()
         // has been called.
-        if (uidlId == null || client == null) {
+        if (uidlId == null || client == null)
             return;
-        }
 
         // Communicate the user interaction parameters to server. This call will
         // initiate an AJAX request to the server.
