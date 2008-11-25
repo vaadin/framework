@@ -45,7 +45,7 @@ public class Ticket2222 extends Application {
         gl.setSpacing(true);
         gl.setMargin(true);
         gl.setStyleName("ticket2222");
-        gl.addComponent(new Label("Vert spacing: 50px;"));
+        gl.addComponent(new Label("Vert spacing: 50px; horiz 20px;"));
         gl.addComponent(new Label("Margin-left: 40px"));
         gl.addComponent(new Label("Margin-top: 100px;"));
         gl.addComponent(new Label("Margin-right: 20px;"));

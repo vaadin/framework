@@ -42,7 +42,8 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
 
     private HashMap<Paintable, Cell> paintableToCell = new HashMap<Paintable, Cell>();
 
-    private int spacingPixels;
+    private int spacingPixelsHorizontal;
+    private int spacingPixelsVertical;
 
     private int[] columnWidths;
     private int[] rowHeights;
@@ -218,7 +219,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
         if (!"".equals(height)) {
             int usedSpace = minRowHeights[0];
             for (int i = 1; i < minRowHeights.length; i++) {
-                usedSpace += spacingPixels + minRowHeights[i];
+                usedSpace += spacingPixelsVertical + minRowHeights[i];
             }
             int availableSpace = getOffsetHeight() - marginTopAndBottom;
             int excessSpace = availableSpace - usedSpace;
@@ -339,7 +340,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
         if (!"".equals(width)) {
             int usedSpace = minColumnWidths[0];
             for (int i = 1; i < minColumnWidths.length; i++) {
-                usedSpace += spacingPixels + minColumnWidths[i];
+                usedSpace += spacingPixelsHorizontal + minColumnWidths[i];
             }
             canvas.setWidth("");
             int availableSpace = canvas.getOffsetWidth();
@@ -372,20 +373,20 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                 if (cell != null) {
                     cell.layout(x, y);
                 }
-                y += rowHeights[j] + spacingPixels;
+                y += rowHeights[j] + spacingPixelsVertical;
             }
-            x += columnWidths[i] + spacingPixels;
+            x += columnWidths[i] + spacingPixelsHorizontal;
         }
 
         if ("".equals(width)) {
-            canvas.setWidth((x - spacingPixels) + "px");
+            canvas.setWidth((x - spacingPixelsHorizontal) + "px");
         } else {
             // main element defines width
             canvas.setWidth("");
         }
         int canvasHeight;
         if ("".equals(height)) {
-            canvasHeight = y - spacingPixels;
+            canvasHeight = y - spacingPixelsVertical;
         } else {
             canvasHeight = getOffsetHeight() - marginTopAndBottom;
         }
@@ -475,7 +476,8 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                 int width = cell.getWidth();
                 int allocated = columnWidths[cell.col];
                 for (int i = 1; i < cell.colspan; i++) {
-                    allocated += spacingPixels + columnWidths[cell.col + i];
+                    allocated += spacingPixelsHorizontal
+                            + columnWidths[cell.col + i];
                 }
                 if (allocated < width) {
                     // columnWidths needs to be expanded due colspanned cell
@@ -511,7 +513,8 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                 int height = cell.getHeight();
                 int allocated = rowHeights[cell.row];
                 for (int i = 1; i < cell.rowspan; i++) {
-                    allocated += spacingPixels + rowHeights[cell.row + i];
+                    allocated += spacingPixelsVertical
+                            + rowHeights[cell.row + i];
                 }
                 if (allocated < height) {
                     // columnWidths needs to be expanded due colspanned cell
@@ -577,13 +580,15 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
     private void detectSpacing(UIDL uidl) {
         if (uidl.getBooleanAttribute("spacing")) {
             DivElement spacingmeter = Document.get().createDivElement();
-            spacingmeter.setClassName(CLASSNAME + "-" + "spacing-element");
+            spacingmeter.setClassName(CLASSNAME + "-" + "spacing");
             spacingmeter.getStyle().setProperty("width", "0");
             canvas.getElement().appendChild(spacingmeter);
-            spacingPixels = spacingmeter.getOffsetWidth();
+            spacingPixelsHorizontal = spacingmeter.getOffsetWidth();
+            spacingPixelsVertical = spacingmeter.getOffsetHeight();
             canvas.getElement().removeChild(spacingmeter);
         } else {
-            spacingPixels = 0;
+            spacingPixelsHorizontal = 0;
+            spacingPixelsVertical = 0;
         }
     }
 
@@ -665,7 +670,8 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                 int width = cell.getWidth();
                 int allocated = columnWidths[cell.col];
                 for (int i = 1; i < cell.colspan; i++) {
-                    allocated += spacingPixels + columnWidths[cell.col + i];
+                    allocated += spacingPixelsHorizontal
+                            + columnWidths[cell.col + i];
                 }
                 if (allocated < width) {
                     needsLayout = true;
@@ -686,7 +692,8 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
 
                 allocated = rowHeights[cell.row];
                 for (int i = 1; i < cell.rowspan; i++) {
-                    allocated += spacingPixels + rowHeights[cell.row + i];
+                    allocated += spacingPixelsVertical
+                            + rowHeights[cell.row + i];
                 }
                 if (allocated < height) {
                     needsLayout = true;
@@ -828,7 +835,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
         private int getAvailableWidth() {
             int width = columnWidths[col];
             for (int i = 1; i < colspan; i++) {
-                width += spacingPixels + columnWidths[col + i];
+                width += spacingPixelsHorizontal + columnWidths[col + i];
             }
             return width;
         }
@@ -839,7 +846,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
         private int getAvailableHeight() {
             int height = rowHeights[row];
             for (int i = 1; i < rowspan; i++) {
-                height += spacingPixels + rowHeights[row + i];
+                height += spacingPixelsVertical + rowHeights[row + i];
             }
             return height;
         }
