@@ -74,14 +74,6 @@ public class ChildComponentContainer extends Panel {
         containerDIV.getStyle().setProperty("height", "0");
         // DOM.setStyleAttribute(containerDIV, "width", "0px");
         containerDIV.getStyle().setProperty("overflow", "hidden");
-        if (BrowserInfo.get().isIE()) {
-            /*
-             * IE requires position: relative for some reason. Without e.g. a
-             * Panel inside will be fully shown and not clipped if the layout
-             * has a specified height.
-             */
-            containerDIV.getStyle().setProperty("position", "relative");
-        }
 
         widgetDIV = Document.get().createDivElement();
         setFloat(widgetDIV, "left");
