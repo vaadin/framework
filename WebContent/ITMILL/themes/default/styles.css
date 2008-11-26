@@ -759,7 +759,7 @@ input.i-modified,
  * Spacing values used by IGridLayout. (element does not exist in DOM)
  * Use padding-left for horizontal spacing and padding-top for vertical.
  */
-.i-gridlayout-spacing-element {
+.i-gridlayout-spacing {
 	padding-left:8px;
 	padding-top:8px;
 }
