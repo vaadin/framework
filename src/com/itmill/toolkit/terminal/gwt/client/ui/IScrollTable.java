@@ -600,6 +600,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             }
             i++;
         }
+        tBody.reLayoutComponents();
 
         isNewBody = false;
 
