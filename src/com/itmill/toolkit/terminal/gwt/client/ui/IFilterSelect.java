@@ -212,6 +212,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
                         - lastFilter.length());
 
             } else if (hasNextPage()) {
+                lastIndex = index - 1; // save for paging
                 filterOptions(currentPage + 1, lastFilter);
             }
         }
@@ -229,6 +230,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
                         - lastFilter.length());
             } else if (index == -1) {
                 if (currentPage > 0) {
+                    lastIndex = index + 1; // save for paging
                     filterOptions(currentPage - 1, lastFilter);
                 }
             } else {
@@ -465,6 +467,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
     private boolean filtering = false;
 
     private String lastFilter = "";
+    private int lastIndex = -1; // last selected index when using arrows
 
     private FilterSelectSuggestion currentSuggestion;
 
@@ -617,6 +620,21 @@ public class IFilterSelect extends Composite implements Paintable, Field,
             suggestionPopup.showSuggestions(currentSuggestions, currentPage,
                     totalMatches);
             filtering = false;
+            if (!popupOpenerClicked && lastIndex != -1) {
+                // we're paging w/ arrows
+                if (lastIndex == 0) {
+                    // going up, select last item
+                    suggestionPopup.menu
+                            .selectItem((MenuItem) suggestionPopup.menu
+                                    .getItems().get(PAGELENTH - 1));
+                } else {
+                    // going down, select first item
+                    suggestionPopup.menu
+                            .selectItem((MenuItem) suggestionPopup.menu
+                                    .getItems().get(0));
+                }
+                lastIndex = -1; // reset
+            }
         }
 
         // Calculate minumum textarea width
