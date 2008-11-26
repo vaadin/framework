@@ -564,11 +564,14 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         // Hey IE, are you really sure about this?
         availW = tBody.getAvailableWidth();
 
+        boolean needsReLayout = false;
+
         if (availW > total) {
             // natural size is smaller than available space
             final int extraSpace = availW - total;
             final int totalWidthR = total - totalExplicitColumnsWidths;
             if (totalWidthR > 0) {
+                needsReLayout = true;
                 // now we will share this sum relatively to those without
                 // explicit width
                 headCells = tHead.iterator();
@@ -600,7 +603,9 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             }
             i++;
         }
-        tBody.reLayoutComponents();
+        if (needsReLayout) {
+            tBody.reLayoutComponents();
+        }
 
         isNewBody = false;
 
