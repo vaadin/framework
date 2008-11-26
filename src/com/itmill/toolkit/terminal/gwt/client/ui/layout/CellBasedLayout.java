@@ -26,10 +26,8 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
     public static final int ORIENTATION_VERTICAL = 0;
     public static final int ORIENTATION_HORIZONTAL = 1;
 
-    protected final Margins marginsFromCSS = new Margins(10, 10, 10, 10);
-    protected final Margins activeMargins = new Margins(0, 0, 0, 0);
-    protected MarginInfo activeMarginsInfo = new MarginInfo(false, false,
-            false, false);
+    protected Margins activeMargins = new Margins(0, 0, 0, 0);
+    protected MarginInfo activeMarginsInfo = new MarginInfo(-1);
 
     protected boolean spacingEnabled = false;
     protected final Spacing spacingFromCSS = new Spacing(12, 12);
@@ -40,6 +38,10 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
     private boolean dynamicHeight;
 
     private DivElement clearElement;
+
+    private String lastStyleName = "";
+
+    private boolean marginsNeedsRecalculation = false;
 
     public static class Spacing {
 
@@ -91,11 +93,12 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
             return;
         }
 
-        /*
-         * This must be called before size so that setWidth/setHeight is aware
-         * of the margins in use.
+        /**
+         * Margin and spacind detection depends on classNames and must be set
+         * before setting size. Here just update the details from UIDL and from
+         * overridden setStyleName run actual margin detections.
          */
-        handleMarginsAndSpacing(uidl);
+        updateMarginAndSpacingInfo(uidl);
 
         /*
          * This call should be made first. Ensure correct implementation, handle
@@ -106,6 +109,25 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
         }
 
         handleDynamicDimensions(uidl);
+
+    }
+
+    protected static String STYLENAME_SPACING = "";
+    protected static String STYLENAME_MARGIN_TOP = "";
+    protected static String STYLENAME_MARGIN_RIGHT = "";
+    protected static String STYLENAME_MARGIN_BOTTOM = "";
+    protected static String STYLENAME_MARGIN_LEFT = "";
+
+    @Override
+    public void setStyleName(String styleName) {
+        super.setStyleName(styleName);
+
+        if (isAttached() && marginsNeedsRecalculation
+                || !lastStyleName.equals(styleName)) {
+            measureMarginsAndSpacing();
+            lastStyleName = styleName;
+            marginsNeedsRecalculation = false;
+        }
 
     }
 
@@ -150,61 +172,20 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
         return dynamicHeight;
     }
 
-    private void handleMarginsAndSpacing(UIDL uidl) {
-        MarginInfo newMargins = new MarginInfo(uidl.getIntAttribute("margins"));
-        updateMargins(newMargins);
+    private void updateMarginAndSpacingInfo(UIDL uidl) {
+        int bitMask = uidl.getIntAttribute("margins");
+        if (activeMarginsInfo.getBitMask() != bitMask) {
+            activeMarginsInfo = new MarginInfo(bitMask);
+            marginsNeedsRecalculation = true;
+        }
         boolean spacing = uidl.getBooleanAttribute("spacing");
-        updateSpacing(spacing);
+        if (spacing != spacingEnabled) {
+            marginsNeedsRecalculation = true;
+            spacingEnabled = spacing;
+        }
     }
 
-    private void updateSpacing(boolean spacing) {
-        spacingEnabled = spacing;
-        if (spacing) {
-            activeSpacing.hSpacing = spacingFromCSS.hSpacing;
-            activeSpacing.vSpacing = spacingFromCSS.vSpacing;
-        } else {
-            activeSpacing.hSpacing = 0;
-            activeSpacing.vSpacing = 0;
-        }
-
-    }
-
-    private void updateMargins(MarginInfo newMarginInfo) {
-        // Update active margins
-        activeMarginsInfo = newMarginInfo;
-        if (newMarginInfo.hasTop()) {
-            activeMargins.setMarginTop(marginsFromCSS.getMarginTop());
-        } else {
-            activeMargins.setMarginTop(0);
-        }
-        if (newMarginInfo.hasBottom()) {
-            activeMargins.setMarginBottom(marginsFromCSS.getMarginBottom());
-        } else {
-            activeMargins.setMarginBottom(0);
-        }
-        if (newMarginInfo.hasLeft()) {
-            activeMargins.setMarginLeft(marginsFromCSS.getMarginLeft());
-        } else {
-            activeMargins.setMarginLeft(0);
-        }
-        if (newMarginInfo.hasRight()) {
-            activeMargins.setMarginRight(marginsFromCSS.getMarginRight());
-        } else {
-            activeMargins.setMarginRight(0);
-        }
-
-        Style style = root.getStyle();
-
-        style.setPropertyPx("marginLeft", activeMargins.getMarginLeft());
-        style.setPropertyPx("marginRight", activeMargins.getMarginRight());
-        style.setPropertyPx("marginTop", activeMargins.getMarginTop());
-        style.setPropertyPx("marginBottom", activeMargins.getMarginBottom());
-
-    }
-
-    protected boolean measureMarginsAndSpacing(String styleName,
-            String marginTopLeftStyleNames, String marginBottomRightStyleNames,
-            String spacingStyleNames) {
+    protected boolean measureMarginsAndSpacing() {
         if (!isAttached()) {
             return false;
         }
@@ -212,37 +193,68 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
         DivElement measurement = Document.get().createDivElement();
         Style style = measurement.getStyle();
         style.setProperty("position", "absolute");
-        style.setProperty("width", "1px");
-        style.setProperty("height", "1px");
+        style.setProperty("top", "0");
+        style.setProperty("left", "0");
+        style.setProperty("width", "0");
+        style.setProperty("height", "0");
         style.setProperty("visibility", "hidden");
-
+        style.setProperty("overflow", "hidden");
         root.appendChild(measurement);
 
+        if (spacingEnabled) {
+            // Measure spacing (actually CSS padding)
+            measurement.setClassName(STYLENAME_SPACING);
+            activeSpacing.vSpacing = measurement.getOffsetHeight() - 1;
+            activeSpacing.hSpacing = measurement.getOffsetWidth() - 1;
+        } else {
+            activeSpacing.hSpacing = 0;
+            activeSpacing.vSpacing = 0;
+        }
+
+        DivElement measurement2 = Document.get().createDivElement();
+        style = measurement2.getStyle();
+        style.setProperty("width", "0px");
+        style.setProperty("height", "0px");
+        style.setProperty("visibility", "hidden");
+        style.setProperty("overflow", "hidden");
+
+        measurement.appendChild(measurement2);
+
+        String sn = getStylePrimaryName() + "-margin";
+
+        if (activeMarginsInfo.hasTop()) {
+            sn += " " + STYLENAME_MARGIN_TOP;
+        }
+        if (activeMarginsInfo.hasBottom()) {
+            sn += " " + STYLENAME_MARGIN_BOTTOM;
+        }
+        if (activeMarginsInfo.hasLeft()) {
+            sn += " " + STYLENAME_MARGIN_LEFT;
+        }
+        if (activeMarginsInfo.hasRight()) {
+            sn += " " + STYLENAME_MARGIN_RIGHT;
+        }
+
         // Measure top and left margins (actually CSS padding)
-        measurement.setClassName(marginTopLeftStyleNames);
+        measurement.setClassName(sn);
 
-        marginsFromCSS.setMarginTop(measurement.getOffsetHeight() - 1);
-        marginsFromCSS.setMarginLeft(measurement.getOffsetWidth() - 1);
-
-        // Measure bottom and right margins (actually CSS padding)
-        measurement.setClassName(marginBottomRightStyleNames);
-
-        marginsFromCSS.setMarginBottom(measurement.getOffsetHeight() - 1);
-        marginsFromCSS.setMarginRight(measurement.getOffsetWidth() - 1);
-
-        // Measure spacing (actually CSS padding)
-        measurement.setClassName(spacingStyleNames);
-
-        spacingFromCSS.vSpacing = measurement.getOffsetHeight() - 1;
-        spacingFromCSS.hSpacing = measurement.getOffsetWidth() - 1;
-
-        // ApplicationConnection.getConsole().log("Margins: " + marginsFromCSS);
-        // ApplicationConnection.getConsole().log("Spacing: " + spacingFromCSS);
+        activeMargins.setMarginTop(measurement2.getOffsetTop()
+                - measurement.getOffsetTop());
+        activeMargins.setMarginLeft(measurement2.getOffsetLeft()
+                - measurement.getOffsetLeft());
+        activeMargins.setMarginRight(measurement.getOffsetWidth()
+                - activeMargins.getMarginLeft());
+        activeMargins.setMarginBottom(measurement.getOffsetHeight()
+                - activeMargins.getMarginTop());
 
         root.removeChild(measurement);
 
-        updateMargins(activeMarginsInfo);
-        updateSpacing(spacingEnabled);
+        // apply margin
+        style = root.getStyle();
+        style.setPropertyPx("marginLeft", activeMargins.getMarginLeft());
+        style.setPropertyPx("marginRight", activeMargins.getMarginRight());
+        style.setPropertyPx("marginTop", activeMargins.getMarginTop());
+        style.setPropertyPx("marginBottom", activeMargins.getMarginBottom());
 
         return true;
     }

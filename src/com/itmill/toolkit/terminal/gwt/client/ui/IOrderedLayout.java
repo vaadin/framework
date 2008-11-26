@@ -19,11 +19,14 @@ public class IOrderedLayout extends CellBasedLayout {
 
     public static final String CLASSNAME = "i-orderedlayout";
 
-    private static final String MARGIN_TOP_LEFT_CLASSNAMES = "i-orderedlayout-margin-top i-orderedlayout-margin-left";
-    private static final String MARGIN_BOTTOM_RIGHT_CLASSNAMES = "i-orderedlayout-margin-bottom i-orderedlayout-margin-right";
-    private static final String SPACING_CLASSNAMES = "i-orderedlayout-spacing";
+    static {
+        STYLENAME_SPACING = "i-orderedlayout-spacing";
+        STYLENAME_MARGIN_TOP = "i-orderedlayout-margin-top";
+        STYLENAME_MARGIN_RIGHT = "i-orderedlayout-margin-right";
+        STYLENAME_MARGIN_BOTTOM = "i-orderedlayout-margin-bottom";
+        STYLENAME_MARGIN_LEFT = "i-orderedlayout-margin-left";
+    }
 
-    private String marginsMeasureStyleName = "";
     private int orientation = ORIENTATION_HORIZONTAL;
 
     /**
@@ -32,25 +35,6 @@ public class IOrderedLayout extends CellBasedLayout {
     private Size activeLayoutSize = new Size(0, 0);
 
     private boolean isRendering = false;
-
-    @Override
-    public void setStyleName(String styleName) {
-        super.setStyleName(styleName);
-
-        if (marginsMeasureStyleName.equals(styleName)) {
-            return;
-        }
-
-        String spacingStyleNames = styleName + " " + SPACING_CLASSNAMES;
-        String marginBottomRightStyleNames = styleName + " "
-                + MARGIN_BOTTOM_RIGHT_CLASSNAMES;
-        String marginTopLeftStyleNames = styleName + " "
-                + MARGIN_TOP_LEFT_CLASSNAMES;
-        if (measureMarginsAndSpacing(styleName, marginTopLeftStyleNames,
-                marginBottomRightStyleNames, spacingStyleNames)) {
-            marginsMeasureStyleName = styleName;
-        }
-    }
 
     public IOrderedLayout() {
         setStyleName(CLASSNAME);
