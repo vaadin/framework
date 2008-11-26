@@ -248,13 +248,24 @@ public class OrderedLayout extends AbstractLayout implements
     }
 
     /**
-     * Set the orientation of the container.
+     * Sets the orientation of this OrderedLayout. This method should only be
+     * used before initial paint.
      * 
      * @param orientation
      *            the New value of property orientation.
+     * @deprecated define orientation in constructor instead
      */
     public void setOrientation(int orientation) {
+        setOrientation(orientation, true);
+    }
 
+    /**
+     * Internal method to change orientation of layout. This method should only
+     * be used before initial paint.
+     * 
+     * @param orientation
+     */
+    protected void setOrientation(int orientation, boolean needsRepaint) {
         // Checks the validity of the argument
         if (orientation < ORIENTATION_VERTICAL
                 || orientation > ORIENTATION_HORIZONTAL) {
@@ -262,8 +273,9 @@ public class OrderedLayout extends AbstractLayout implements
         }
 
         this.orientation = orientation;
-
-        requestRepaint();
+        if (needsRepaint) {
+            requestRepaint();
+        }
     }
 
     /* Documented in superclass */
