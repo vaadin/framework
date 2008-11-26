@@ -119,8 +119,8 @@ public class TestForTrees extends CustomComponent implements Handler {
     }
 
     public Component createTestBench(Tree t) {
-        final OrderedLayout ol = new OrderedLayout();
-        ol.setOrientation(OrderedLayout.ORIENTATION_HORIZONTAL);
+        final OrderedLayout ol = new OrderedLayout(
+                OrderedLayout.ORIENTATION_HORIZONTAL);
 
         ol.addComponent(t);
 
@@ -134,8 +134,8 @@ public class TestForTrees extends CustomComponent implements Handler {
         });
         status.addComponent(clear);
 
-        status.setHeight(300);
-        status.setWidth(400);
+        status.setHeight("300px");
+        status.setWidth("400px");
 
         ol.addComponent(status);
 
