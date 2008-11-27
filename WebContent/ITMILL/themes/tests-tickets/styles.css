@@ -201,7 +201,7 @@
 	padding-left: 40px;
 }
 
-.i-orderedlayout-ticket2222 .i-orderedlayout-spacing {
+.i-orderedlayout-ticket2222 .i-orderedlayout-spacing-on {
 	padding-top: 50px;
 	padding-left: 60px;
 }
@@ -224,8 +224,21 @@
 	padding-left: 40px;
 }
 
-.i-gridlayout-ticket2222 .i-gridlayout-spacing {
+.i-gridlayout-ticket2222 .i-gridlayout-spacing-on {
 	padding-top: 50px;
 	padding-left: 20px;
 }
 
+/*****************************************************************************/
+/* Ticket 2232                                                               */
+/*****************************************************************************/
+
+.i-gridlayout-t2232 .i-gridlayout-spacing-off {
+	padding-top: 50px;
+	padding-left: 20px;
+}
+
+.i-orderedlayout-t2232 .i-orderedlayout-spacing-off {
+	padding-top: 25px;
+	padding-left: 25px;
+}

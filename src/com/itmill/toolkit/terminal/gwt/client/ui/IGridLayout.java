@@ -578,18 +578,14 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
     }
 
     private void detectSpacing(UIDL uidl) {
-        if (uidl.getBooleanAttribute("spacing")) {
-            DivElement spacingmeter = Document.get().createDivElement();
-            spacingmeter.setClassName(CLASSNAME + "-" + "spacing");
-            spacingmeter.getStyle().setProperty("width", "0");
-            canvas.getElement().appendChild(spacingmeter);
-            spacingPixelsHorizontal = spacingmeter.getOffsetWidth();
-            spacingPixelsVertical = spacingmeter.getOffsetHeight();
-            canvas.getElement().removeChild(spacingmeter);
-        } else {
-            spacingPixelsHorizontal = 0;
-            spacingPixelsVertical = 0;
-        }
+        DivElement spacingmeter = Document.get().createDivElement();
+        spacingmeter.setClassName(CLASSNAME + "-" + "spacing-"
+                + (uidl.getBooleanAttribute("spacing") ? "on" : "off"));
+        spacingmeter.getStyle().setProperty("width", "0");
+        canvas.getElement().appendChild(spacingmeter);
+        spacingPixelsHorizontal = spacingmeter.getOffsetWidth();
+        spacingPixelsVertical = spacingmeter.getOffsetHeight();
+        canvas.getElement().removeChild(spacingmeter);
     }
 
     private void handleMargins(UIDL uidl) {

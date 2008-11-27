@@ -18,7 +18,12 @@
 	padding-left: 18px;
 }
 
-.i-orderedlayout-spacing {
+.i-orderedlayout-spacing-on {
 	padding-top: 8px;
 	padding-left: 8px;
+}
+/** This can be used to define spacing if spacing is off server side */
+.i-orderedlayout-spacing-off {
+	padding-top: 0px;
+	padding-left: 0px;
 }

@@ -210,15 +210,11 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
         style.setProperty("overflow", "hidden");
         root.appendChild(measurement);
 
-        if (spacingEnabled) {
-            // Measure spacing (actually CSS padding)
-            measurement.setClassName(STYLENAME_SPACING);
-            activeSpacing.vSpacing = measurement.getOffsetHeight();
-            activeSpacing.hSpacing = measurement.getOffsetWidth();
-        } else {
-            activeSpacing.hSpacing = 0;
-            activeSpacing.vSpacing = 0;
-        }
+        // Measure spacing (actually CSS padding)
+        measurement.setClassName(STYLENAME_SPACING
+                + (spacingEnabled ? "-on" : "-off"));
+        activeSpacing.vSpacing = measurement.getOffsetHeight();
+        activeSpacing.hSpacing = measurement.getOffsetWidth();
 
         DivElement measurement2 = Document.get().createDivElement();
         style = measurement2.getStyle();
