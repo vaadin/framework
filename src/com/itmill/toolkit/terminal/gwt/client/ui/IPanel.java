@@ -6,6 +6,8 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.Set;
 
+import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -73,23 +75,23 @@ public class IPanel extends SimplePanel implements Container {
 
     public IPanel() {
         super();
-        DOM.appendChild(getElement(), captionNode);
-        DOM.appendChild(captionNode, captionText);
-        DOM.appendChild(getElement(), contentNode);
-        DOM.appendChild(getElement(), bottomDecoration);
+        DivElement captionWrap = Document.get().createDivElement();
+        captionWrap.appendChild(captionNode);
+        captionNode.appendChild(captionText);
+
+        captionWrap.setClassName(CLASSNAME + "-captionwrap");
+        captionNode.setClassName(CLASSNAME + "-caption");
+        contentNode.setClassName(CLASSNAME + "-content");
+        bottomDecoration.setClassName(CLASSNAME + "-deco");
+
+        getElement().appendChild(captionWrap);
+        getElement().appendChild(contentNode);
+        getElement().appendChild(bottomDecoration);
         setStyleName(CLASSNAME);
-        DOM
-                .setElementProperty(captionNode, "className", CLASSNAME
-                        + "-caption");
-        DOM
-                .setElementProperty(contentNode, "className", CLASSNAME
-                        + "-content");
-        DOM.setElementProperty(bottomDecoration, "className", CLASSNAME
-                + "-deco");
         DOM.sinkEvents(getElement(), Event.ONKEYDOWN);
         DOM.sinkEvents(contentNode, Event.ONSCROLL);
         contentNode.getStyle().setProperty("position", "relative");
-        DOM.setStyleAttribute(getElement(), "overflow", "hidden");
+        getElement().getStyle().setProperty("overflow", "hidden");
     }
 
     @Override
@@ -113,14 +115,9 @@ public class IPanel extends SimplePanel implements Container {
         id = uidl.getId();
 
         // Restore default stylenames
-        DOM
-                .setElementProperty(captionNode, "className", CLASSNAME
-                        + "-caption");
-        DOM
-                .setElementProperty(contentNode, "className", CLASSNAME
-                        + "-content");
-        DOM.setElementProperty(bottomDecoration, "className", CLASSNAME
-                + "-deco");
+        captionNode.setClassName(CLASSNAME + "-caption");
+        contentNode.setClassName(CLASSNAME + "-content");
+        bottomDecoration.setClassName(CLASSNAME + "-deco");
 
         // Handle caption displaying
         boolean hasCaption = false;
@@ -130,8 +127,7 @@ public class IPanel extends SimplePanel implements Container {
             hasCaption = true;
         } else {
             setCaption("");
-            DOM.setElementProperty(captionNode, "className", CLASSNAME
-                    + "-nocaption");
+            captionNode.setClassName(CLASSNAME + "-nocaption");
         }
 
         setIconUri(uidl, client);
@@ -156,9 +152,10 @@ public class IPanel extends SimplePanel implements Container {
                 contentClass += " " + contentBaseClass + "-" + styles[i];
                 decoClass += " " + decoBaseClass + "-" + styles[i];
             }
-            DOM.setElementProperty(captionNode, "className", captionClass);
-            DOM.setElementProperty(contentNode, "className", contentClass);
-            DOM.setElementProperty(bottomDecoration, "className", decoClass);
+            captionNode.setClassName(captionClass);
+            contentNode.setClassName(contentClass);
+            bottomDecoration.setClassName(decoClass);
+
         }
 
         // Height adjustment
