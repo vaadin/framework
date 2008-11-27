@@ -18,6 +18,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -883,7 +884,8 @@ public class ApplicationServlet extends HttpServlet {
                     + "hidden\" src=\"javascript:false\"></iframe>\n");
             page.write("<script language='javascript' src='" + staticFilePath
                     + "/" + WIDGETSET_DIRECTORY_PATH + widgetset + "/"
-                    + widgetset + ".nocache.js'></script>\n");
+                    + widgetset + ".nocache.js?" + new Date().getTime()
+                    + "'></script>\n");
             page.write("<script type=\"text/javascript\">\n");
             page.write("//<![CDATA[\n");
             page.write("if(!itmill || !itmill.toolkitConfigurations) {\n "
@@ -944,8 +946,8 @@ public class ApplicationServlet extends HttpServlet {
                             + "hidden\" src=\"javascript:false\"></iframe>');\n");
             page.write("document.write(\"<script language='javascript' src='"
                     + staticFilePath + "/" + WIDGETSET_DIRECTORY_PATH
-                    + widgetset + "/" + widgetset
-                    + ".nocache.js'><\\/script>\");\n}\n");
+                    + widgetset + "/" + widgetset + ".nocache.js?"
+                    + new Date().getTime() + "'><\\/script>\");\n}\n");
 
             page.write("itmill.toolkitConfigurations[\"" + appId + "\"] = {");
             page.write("appUri:'" + appUrl + "', ");
