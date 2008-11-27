@@ -227,6 +227,8 @@ public class DebugUtilities {
             width += "RELATIVE, " + component.getWidth() + " %";
         } else if (hasUndefinedWidth(component)) {
             width += "UNDEFINED";
+        } else if (component instanceof Window && component.getParent() == null) {
+            width += "MAIN WINDOW";
         } else {
             width += "ABSOLUTE, " + component.getWidth() + " "
                     + Sizeable.UNIT_SYMBOLS[component.getWidthUnits()];
@@ -241,6 +243,8 @@ public class DebugUtilities {
             height += "RELATIVE, " + component.getHeight() + " %";
         } else if (hasUndefinedHeight(component)) {
             height += "UNDEFINED";
+        } else if (component instanceof Window && component.getParent() == null) {
+            height += "MAIN WINDOW";
         } else {
             height += "ABSOLUTE, " + component.getHeight() + " "
                     + Sizeable.UNIT_SYMBOLS[component.getHeightUnits()];
