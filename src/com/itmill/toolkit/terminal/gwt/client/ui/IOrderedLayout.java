@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
@@ -192,6 +193,17 @@ public class IOrderedLayout extends CellBasedLayout {
         /* Recalculate component sizes and alignments */
         recalculateComponentSizesAndAlignments();
         // w.mark("recalculateComponentSizesAndAlignments done");
+
+        setRootSize();
+
+        if (BrowserInfo.get().isIE()) {
+            /*
+             * This should fix the issue with padding not always taken into
+             * account for the containers leading to no spacing between
+             * elements.
+             */
+            root.getStyle().setProperty("zoom", "1");
+        }
 
         // w.mark("runDescendentsLayout done");
         isRendering = false;
@@ -406,10 +418,14 @@ public class IOrderedLayout extends CellBasedLayout {
          * separately into account.
          */
         int height = 0, width = 0;
+        Iterator<Widget> widgetIterator = iterator();
         if (isHorizontal()) {
             height = activeLayoutSize.getHeight();
-            for (ChildComponentContainer childComponentContainer : widgetToComponentContainer
-                    .values()) {
+            int availableWidth = activeLayoutSize.getWidth();
+            boolean first = true;
+            while (widgetIterator.hasNext()) {
+                ChildComponentContainer childComponentContainer = (ChildComponentContainer) widgetIterator
+                        .next();
                 if (!childComponentContainer
                         .isComponentRelativeSized(ORIENTATION_HORIZONTAL)) {
                     /*
@@ -440,12 +456,38 @@ public class IOrderedLayout extends CellBasedLayout {
                     width = 0;
                 }
 
+                if (!isDynamicWidth()) {
+                    if (availableWidth == 0) {
+                        /*
+                         * Let the overflowing components overflow. IE has
+                         * problems with zero sizes.
+                         */
+                        // width = 0;
+                        // height = 0;
+                    } else if (width > availableWidth) {
+                        width = availableWidth;
+
+                        if (!first) {
+                            width -= activeSpacing.hSpacing;
+                        }
+                        availableWidth = 0;
+                    } else {
+                        availableWidth -= width;
+                        if (!first) {
+                            availableWidth -= activeSpacing.hSpacing;
+                        }
+                    }
+
+                    first = false;
+                }
+
                 childComponentContainer.setContainerSize(width, height);
             }
         } else {
             width = activeLayoutSize.getWidth();
-            for (ChildComponentContainer childComponentContainer : widgetToComponentContainer
-                    .values()) {
+            while (widgetIterator.hasNext()) {
+                ChildComponentContainer childComponentContainer = (ChildComponentContainer) widgetIterator
+                        .next();
 
                 if (!childComponentContainer
                         .isComponentRelativeSized(ORIENTATION_VERTICAL)) {
@@ -611,7 +653,16 @@ public class IOrderedLayout extends CellBasedLayout {
 
         boolean sameSize = (sizeBefore.equals(activeLayoutSize));
 
+        if (!sameSize) {
+            setRootSize();
+        }
+
         return sameSize;
+    }
+
+    private void setRootSize() {
+        root.getStyle().setPropertyPx("width", activeLayoutSize.getWidth());
+        root.getStyle().setPropertyPx("height", activeLayoutSize.getHeight());
     }
 
     public boolean requestLayout(Set<Paintable> children) {

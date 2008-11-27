@@ -10,10 +10,10 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
-import com.itmill.toolkit.terminal.gwt.client.Util;
 import com.itmill.toolkit.terminal.gwt.client.ui.MarginInfo;
 
 public abstract class CellBasedLayout extends ComplexPanel implements Container {
@@ -22,7 +22,7 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
 
     protected ApplicationConnection client = null;
 
-    private DivElement root;
+    protected DivElement root;
 
     public static final int ORIENTATION_VERTICAL = 0;
     public static final int ORIENTATION_HORIZONTAL = 1;
@@ -67,9 +67,17 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
 
         setElement(Document.get().createDivElement());
         getElement().getStyle().setProperty("overflow", "hidden");
+        if (BrowserInfo.get().isIE()) {
+            getElement().getStyle().setProperty("position", "relative");
+            getElement().getStyle().setProperty("zoom", "1");
+        }
 
         root = Document.get().createDivElement();
-        root.getStyle().setProperty("width", "500%");
+        root.getStyle().setProperty("overflow", "hidden");
+        if (BrowserInfo.get().isIE()) {
+            root.getStyle().setProperty("position", "relative");
+        }
+
         getElement().appendChild(root);
 
         clearElement = Document.get().createDivElement();
@@ -246,9 +254,9 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
         activeMargins.setMarginBottom(measurement.getOffsetHeight()
                 - activeMargins.getMarginTop());
 
-//        ApplicationConnection.getConsole().log("Margins: " + activeMargins);
-//        ApplicationConnection.getConsole().log("Spacing: " + activeSpacing);
-//        Util.alert("Margins: " + activeMargins);
+        // ApplicationConnection.getConsole().log("Margins: " + activeMargins);
+        // ApplicationConnection.getConsole().log("Spacing: " + activeSpacing);
+        // Util.alert("Margins: " + activeMargins);
         root.removeChild(measurement);
 
         // apply margin

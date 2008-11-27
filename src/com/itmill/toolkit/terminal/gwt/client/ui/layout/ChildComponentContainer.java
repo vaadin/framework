@@ -78,6 +78,17 @@ public class ChildComponentContainer extends Panel {
         widgetDIV = Document.get().createDivElement();
         setFloat(widgetDIV, "left");
 
+        if (BrowserInfo.get().isIE()) {
+            /*
+             * IE requires position: relative on overflow:hidden elements if
+             * they should hide position:relative elements. Without this e.g. a
+             * 1000x1000 Panel inside an 500x500 OrderedLayout will not be
+             * clipped but fully shown.
+             */
+            containerDIV.getStyle().setProperty("position", "relative");
+            widgetDIV.getStyle().setProperty("position", "relative");
+        }
+
         containerDIV.appendChild(widgetDIV);
 
         setOrientation(orientation);
