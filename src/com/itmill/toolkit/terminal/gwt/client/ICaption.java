@@ -72,11 +72,18 @@ public class ICaption extends HTML {
 
         setStyleName(getElement(), "i-disabled", uidl.hasAttribute("disabled"));
 
-        boolean isEmpty = true;
-
         boolean wasPlacedAfterComponent = placedAfterComponent;
 
         placedAfterComponent = true;
+
+        String style = CLASSNAME;
+        if (uidl.hasAttribute("style")) {
+            final String[] styles = uidl.getStringAttribute("style").split(" ");
+            for (int i = 0; i < styles.length; i++) {
+                style += " " + CLASSNAME + "-" + styles[i];
+            }
+        }
+        setStyleName(style);
 
         if (uidl.hasAttribute(ATTRIBUTE_ICON)) {
             if (icon == null) {
@@ -93,7 +100,6 @@ public class ICaption extends HTML {
             icon.setUri(uidl.getStringAttribute(ATTRIBUTE_ICON));
             iconOnloadHandled = false;
 
-            isEmpty = false;
         } else if (icon != null) {
             // Remove existing
             DOM.removeChild(getElement(), icon.getElement());
@@ -114,7 +120,6 @@ public class ICaption extends HTML {
             if (c == null) {
                 c = "";
             } else {
-                isEmpty = false;
                 placedAfterComponent = false;
             }
             DOM.setInnerText(captionText, c);
@@ -133,7 +138,6 @@ public class ICaption extends HTML {
         }
 
         if (uidl.getBooleanAttribute(ATTRIBUTE_REQUIRED)) {
-            isEmpty = false;
             if (requiredFieldIndicator == null) {
                 requiredFieldIndicator = DOM.createDiv();
                 requiredFieldIndicator
@@ -151,7 +155,6 @@ public class ICaption extends HTML {
 
         if (uidl.hasAttribute(ATTRIBUTE_ERROR)
                 && !uidl.getBooleanAttribute(ATTRIBUTE_HIDEERRORS)) {
-            isEmpty = false;
             if (errorIndicatorElement == null) {
                 errorIndicatorElement = DOM.createDiv();
                 DOM.setInnerHTML(errorIndicatorElement, "&nbsp;");
