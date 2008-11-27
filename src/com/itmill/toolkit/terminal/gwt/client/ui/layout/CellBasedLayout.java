@@ -13,6 +13,7 @@ import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.Util;
 import com.itmill.toolkit.terminal.gwt.client.ui.MarginInfo;
 
 public abstract class CellBasedLayout extends ComplexPanel implements Container {
@@ -204,8 +205,8 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
         if (spacingEnabled) {
             // Measure spacing (actually CSS padding)
             measurement.setClassName(STYLENAME_SPACING);
-            activeSpacing.vSpacing = measurement.getOffsetHeight() - 1;
-            activeSpacing.hSpacing = measurement.getOffsetWidth() - 1;
+            activeSpacing.vSpacing = measurement.getOffsetHeight();
+            activeSpacing.hSpacing = measurement.getOffsetWidth();
         } else {
             activeSpacing.hSpacing = 0;
             activeSpacing.vSpacing = 0;
@@ -238,15 +239,16 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
         // Measure top and left margins (actually CSS padding)
         measurement.setClassName(sn);
 
-        activeMargins.setMarginTop(measurement2.getOffsetTop()
-                - measurement.getOffsetTop());
-        activeMargins.setMarginLeft(measurement2.getOffsetLeft()
-                - measurement.getOffsetLeft());
+        activeMargins.setMarginTop(measurement2.getOffsetTop());
+        activeMargins.setMarginLeft(measurement2.getOffsetLeft());
         activeMargins.setMarginRight(measurement.getOffsetWidth()
                 - activeMargins.getMarginLeft());
         activeMargins.setMarginBottom(measurement.getOffsetHeight()
                 - activeMargins.getMarginTop());
 
+//        ApplicationConnection.getConsole().log("Margins: " + activeMargins);
+//        ApplicationConnection.getConsole().log("Spacing: " + activeSpacing);
+//        Util.alert("Margins: " + activeMargins);
         root.removeChild(measurement);
 
         // apply margin
