@@ -643,21 +643,12 @@ public class IOrderedLayout extends CellBasedLayout {
         return space;
     }
 
-    private boolean recalculateLayoutAndComponentSizes() {
-        Size sizeBefore = new Size(activeLayoutSize.getWidth(),
-                activeLayoutSize.getHeight());
-
+    private void recalculateLayoutAndComponentSizes() {
         recalculateLayout();
 
         recalculateComponentSizesAndAlignments();
 
-        boolean sameSize = (sizeBefore.equals(activeLayoutSize));
-
-        if (!sameSize) {
-            setRootSize();
-        }
-
-        return sameSize;
+        setRootSize();
     }
 
     private void setRootSize() {
@@ -682,7 +673,11 @@ public class IOrderedLayout extends CellBasedLayout {
             componentContainer.updateCaptionSize();
         }
 
-        boolean sameSize = recalculateLayoutAndComponentSizes();
+        Size sizeBefore = new Size(activeLayoutSize.getWidth(),
+                activeLayoutSize.getHeight());
+
+        recalculateLayoutAndComponentSizes();
+        boolean sameSize = (sizeBefore.equals(activeLayoutSize));
         if (!sameSize) {
             /* Must inform child components about possible size updates */
             client.runDescendentsLayout(this);
@@ -695,6 +690,9 @@ public class IOrderedLayout extends CellBasedLayout {
 
     @Override
     public void setHeight(String height) {
+        Size sizeBefore = new Size(activeLayoutSize.getWidth(),
+                activeLayoutSize.getHeight());
+
         super.setHeight(height);
 
         if (height != null && !height.equals("")) {
@@ -703,7 +701,8 @@ public class IOrderedLayout extends CellBasedLayout {
         }
 
         if (!isRendering) {
-            boolean sameSize = recalculateLayoutAndComponentSizes();
+            recalculateLayoutAndComponentSizes();
+            boolean sameSize = (sizeBefore.equals(activeLayoutSize));
             if (!sameSize) {
                 /* Must inform child components about possible size updates */
                 client.runDescendentsLayout(this);
@@ -713,6 +712,9 @@ public class IOrderedLayout extends CellBasedLayout {
 
     @Override
     public void setWidth(String width) {
+        Size sizeBefore = new Size(activeLayoutSize.getWidth(),
+                activeLayoutSize.getHeight());
+
         super.setWidth(width);
 
         if (width != null && !width.equals("")) {
@@ -721,7 +723,8 @@ public class IOrderedLayout extends CellBasedLayout {
         }
 
         if (!isRendering) {
-            boolean sameSize = recalculateLayoutAndComponentSizes();
+            recalculateLayoutAndComponentSizes();
+            boolean sameSize = (sizeBefore.equals(activeLayoutSize));
             if (!sameSize) {
                 /* Must inform child components about possible size updates */
                 client.runDescendentsLayout(this);
