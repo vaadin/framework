@@ -74,12 +74,20 @@ public class TestOrderedLayout extends Application {
         layout
                 .addComponent(wrapLayout(layout_field_100pct_button_field(new OrderedLayout(
                         OrderedLayout.ORIENTATION_HORIZONTAL))));
+        layout.addComponent(wrapLayout(layout_overfilled(new OrderedLayout(
+                OrderedLayout.ORIENTATION_HORIZONTAL))));
+        layout
+                .addComponent(wrapLayout(layout_overfilled_dynamic_height(new OrderedLayout(
+                        OrderedLayout.ORIENTATION_HORIZONTAL))));
+        if (true) {
+            return;
+        }
         layout
                 .addComponent(wrapLayout(layout_symmetric_fields(new OrderedLayout(
                         OrderedLayout.ORIENTATION_HORIZONTAL))));
         layout.addComponent(wrapLayout(layout_leftAndRight(new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL))));
-        layout.addComponent(wrapLayout(layout_overFilled(new OrderedLayout(
+        layout.addComponent(wrapLayout(layout_fixed_filled(new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL))));
         layout.addComponent(wrapLayout(layout_dynamic(new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL))));
@@ -111,10 +119,12 @@ public class TestOrderedLayout extends Application {
 
     private Layout wrapLayout(Layout ol) {
         Panel p = new Panel(ol);
+        p.setSizeUndefined();
         p.setCaption(ol.getCaption());
         ol.setCaption(null);
 
         OrderedLayout l = new OrderedLayout();
+        l.setSizeUndefined();
         l.addComponent(p);
         // p.setWidth("600px");
 
@@ -590,7 +600,7 @@ public class TestOrderedLayout extends Application {
         return ol;
     }
 
-    private Layout layout_overFilled(OrderedLayout ol) {
+    private Layout layout_fixed_filled(OrderedLayout ol) {
         ol.setHeight("700px");
         ol.setWidth("700px");
         ol.setMargin(true);
@@ -607,13 +617,13 @@ public class TestOrderedLayout extends Application {
         tf.setWidth("100%");
         tf.setHeight("100%");
         tf.setRequired(true);
-        ol.setExpandRatio(tf, 1f);
         // tf.setComponentError(new UserError("It's broken!"));
 
         // tf.setHeight("100%");
         // tf.setWidth("100px");
         tf.setRows(2);
         ol.addComponent(tf);
+        ol.setExpandRatio(tf, 1f);
         //
 
         tf = new TextField("60%x60% Field");
@@ -622,6 +632,7 @@ public class TestOrderedLayout extends Application {
         tf.setWidth("100%");
         tf.setHeight("60%");
         tf.setRequired(true);
+        ol.addComponent(tf);
         ol.setExpandRatio(tf, 1f);
         ol.setComponentAlignment(tf, AlignmentHandler.ALIGNMENT_LEFT,
                 AlignmentHandler.ALIGNMENT_VERTICAL_CENTER);
@@ -630,7 +641,6 @@ public class TestOrderedLayout extends Application {
         // tf.setHeight("100%");
         // tf.setWidth("100px");
         tf.setRows(2);
-        ol.addComponent(tf);
         //
         // for (int i = 1; i < 5; i++) {
         // int w = i * 100;
@@ -683,6 +693,64 @@ public class TestOrderedLayout extends Application {
         ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT,
                 OrderedLayout.ALIGNMENT_BOTTOM);
         ol.addComponent(tf);
+        return ol;
+    }
+
+    private Layout layout_overfilled(OrderedLayout ol) {
+        ol.setHeight("300px");
+        ol.setWidth("700px");
+        ol.setMargin(true);
+        ol.setSpacing(true);
+
+        // ol.setWidth("");
+        ol.setCaption("OverFilled with fixed width (" + ol.getWidth()
+                + "px) and fixed height (" + ol.getHeight() + "px)");
+        TextField tf;
+
+        for (int i = 0; i < 5; i++) {
+            tf = new TextField("200x200px Field");
+            tf.setCaption("This one has a caption");
+            tf.setValue("200x200 TextField");
+            tf.setWidth("200px");
+            tf.setHeight("200px");
+            tf.setRequired(true);
+            // tf.setComponentError(new UserError("It's broken!"));
+
+            // tf.setHeight("100%");
+            // tf.setWidth("100px");
+            tf.setRows(2);
+            ol.addComponent(tf);
+        }
+
+        return ol;
+    }
+
+    private Layout layout_overfilled_dynamic_height(OrderedLayout ol) {
+        ol.setHeight(null);
+        ol.setWidth("700px");
+        ol.setMargin(true);
+        ol.setSpacing(true);
+
+        // ol.setWidth("");
+        ol.setCaption("OverFilled with fixed width (" + ol.getWidth()
+                + "px) and dynamic height");
+        TextField tf;
+
+        for (int i = 0; i < 10; i++) {
+            tf = new TextField("200x200px Field");
+            tf.setCaption("This one has a caption");
+            tf.setWidth("200px");
+            tf.setHeight(((i + 1) * 50) + "px");
+            tf.setValue(tf.getWidth() + "x" + tf.getHeight() + " TextField");
+            tf.setRequired(true);
+            // tf.setComponentError(new UserError("It's broken!"));
+
+            // tf.setHeight("100%");
+            // tf.setWidth("100px");
+            tf.setRows(2);
+            ol.addComponent(tf);
+        }
+
         return ol;
     }
 
@@ -981,9 +1049,6 @@ public class TestOrderedLayout extends Application {
                 OrderedLayout.ORIENTATION_VERTICAL);
         inner.setCaption("Width: " + width);
         inner.setWidth(width);
-        if (width.contains("%")) {
-            ol.setExpandRatio(inner, 1.0f);
-        }
 
         inner.addComponent(b);
         inner.addComponent(wb);
@@ -1053,6 +1118,10 @@ public class TestOrderedLayout extends Application {
         OrderedLayout inner = createAddRemove(ol, width, String
                 .valueOf(suffix++));
         ol.addComponent(inner, index);
+        if (width.contains("%")) {
+            ol.setExpandRatio(inner, 1.0f);
+        }
+
         ol.setComponentAlignment(inner, OrderedLayout.ALIGNMENT_RIGHT,
                 OrderedLayout.ALIGNMENT_BOTTOM);
 
@@ -1100,13 +1169,13 @@ public class TestOrderedLayout extends Application {
         tf.setValue("40% expand (40% height) TextField");
         tf.setWidth("100%");
         tf.setHeight("40%");
+        ol.addComponent(tf);
         ol.setExpandRatio(tf, 40);
         // tf.setRequired(true);
         ol.setComponentAlignment(tf, AlignmentHandler.ALIGNMENT_RIGHT,
                 AlignmentHandler.ALIGNMENT_BOTTOM);
 
         tf.setRows(2);
-        ol.addComponent(tf);
 
         return ol;
     }
