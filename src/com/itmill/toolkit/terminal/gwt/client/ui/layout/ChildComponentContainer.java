@@ -185,19 +185,18 @@ public class ChildComponentContainer extends Panel {
     }
 
     public void updateWidgetSize() {
-        int w = widget.getOffsetWidth();
-        int h = widget.getOffsetHeight();
-
         /*
          * Widget wrapper includes margin which the widget offsetWidth/Height
          * does not include
          */
-        int widgetWrapperWidth = widgetDIV.getOffsetWidth();
-        int widgetWrapperHeight = widgetDIV.getOffsetHeight();
+        int w = widgetDIV.getOffsetWidth();
+        int h = widgetDIV.getOffsetHeight();
+        widgetSize.setWidth(w);
+        widgetSize.setHeight(h);
+
         // ApplicationConnection.getConsole().log(
         // Util.getSimpleName(widget) + " size is " + w + "," + h);
-        widgetSize.setHeight(widgetWrapperHeight);
-        widgetSize.setWidth(widgetWrapperWidth);
+
     }
 
     public void setMarginLeft(int marginLeft) {
