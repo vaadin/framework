@@ -79,9 +79,6 @@ public class TestOrderedLayout extends Application {
         layout
                 .addComponent(wrapLayout(layout_overfilled_dynamic_height(new OrderedLayout(
                         OrderedLayout.ORIENTATION_HORIZONTAL))));
-        if (true) {
-            return;
-        }
         layout
                 .addComponent(wrapLayout(layout_symmetric_fields(new OrderedLayout(
                         OrderedLayout.ORIENTATION_HORIZONTAL))));
