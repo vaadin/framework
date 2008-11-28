@@ -123,14 +123,7 @@ public class IOrderedLayout extends CellBasedLayout {
         // w.mark("Alignments and expand ratios updated");
 
         /* Fetch widget sizes from rendered components */
-        for (ChildComponentContainer childComponentContainer : widgetToComponentContainer
-                .values()) {
-
-            /*
-             * Update widget size from DOM
-             */
-            childComponentContainer.updateWidgetSize();
-        }
+        updateWidgetSizes();
         // w.mark("Widget sizes updated");
 
         recalculateLayout();
@@ -207,6 +200,17 @@ public class IOrderedLayout extends CellBasedLayout {
 
         // w.mark("runDescendentsLayout done");
         isRendering = false;
+    }
+
+    private void updateWidgetSizes() {
+        for (ChildComponentContainer childComponentContainer : widgetToComponentContainer
+                .values()) {
+
+            /*
+             * Update widget size from DOM
+             */
+            childComponentContainer.updateWidgetSize();
+        }
     }
 
     private void recalculateLayout() {
@@ -645,6 +649,33 @@ public class IOrderedLayout extends CellBasedLayout {
 
     private void recalculateLayoutAndComponentSizes() {
         recalculateLayout();
+
+        if (isDynamicHeight()) {
+            /*
+             * Height is not necessarily correct anymore as the height of
+             * components might have changed if the width has changed.
+             */
+
+            /* First update relative sized components */
+            for (ChildComponentContainer componentContainer : widgetToComponentContainer
+                    .values()) {
+                if (componentContainer
+                        .isComponentRelativeSized(ORIENTATION_HORIZONTAL)) {
+                    client.handleComponentRelativeSize(componentContainer
+                            .getWidget());
+                }
+            }
+
+            /*
+             * Get the new widget sizes from DOM and calculate new container
+             * sizes
+             */
+            updateWidgetSizes();
+            calculateContainerSize();
+
+            /* Finally calculate new layout height */
+            calculateLayoutDimensions();
+        }
 
         recalculateComponentSizesAndAlignments();
 
