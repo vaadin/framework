@@ -50,6 +50,7 @@ public class WindowingExample extends CustomComponent {
                 new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
                         final Window w = new Window("Subwindow");
+                        w.setWidth("50%");
                         final Label l = new Label(txt);
                         l.setContentMode(Label.CONTENT_XHTML);
                         w.addComponent(l);
@@ -61,6 +62,7 @@ public class WindowingExample extends CustomComponent {
         b = new Button("Create a new modal window", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 final Window w = new Window("Modal window");
+                w.setWidth("50%");
                 w.setModal(true);
                 final Label l = new Label(txt);
                 l.setContentMode(Label.CONTENT_XHTML);
