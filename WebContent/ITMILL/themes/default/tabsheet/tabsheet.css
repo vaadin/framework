@@ -131,6 +131,7 @@
 	margin: 0 -1px 0 9px;
 	height: 18px;
 	padding: 16px 16px 14px 7px;
+	overflow: visible;
 }
 
 .i-tabsheet-content {
@@ -164,10 +165,10 @@
 
 /* Progress indication */
 
-.i-tabsheet-loading .i-tabsheet-tabs .i-tabsheet-tabitem-selected .i-caption .i-captiontext {
+.i-tabsheet-loading .i-tabsheet-tabitem-selected .i-captiontext {
 	background: transparent url(../common/img/ajax-loader.gif) no-repeat;
-	margin-left: -7px;
-	padding-left: 7px;
+	margin-left: -10px;
+	padding-left: 10px;
 	margin-top: -12px;
 	padding-top: 12px;
 }
@@ -182,7 +183,7 @@
 	height: 46px;
 }
 
-* html .i-tabsheet-tabs .i-tabsheet-tabitem-selected {
+* html .i-tabsheet-tabitem-selected {
 	border: 1px solid #babfc0;
 	border-bottom: none;
 	background: #fff;
@@ -192,7 +193,7 @@
 	cursor: default;
 	color: #ee5311;
 }
-*+html .i-tabsheet-tabs .i-tabsheet-tabitem-selected {
+*+html .i-tabsheet-tabitem-selected {
 	border: 1px solid #babfc0;
 	border-bottom: none;
 	background: #fff;
@@ -203,12 +204,12 @@
 	color: #ee5311;
 }
 
-* html .i-tabsheet-tabs .i-tabsheet-tabitem-selected .i-caption {
+* html .i-tabsheet-tabitem-selected .i-caption {
 	background: transparent;
 	padding: 0;
 	margin: 0;
 }
-*+html .i-tabsheet-tabs .i-tabsheet-tabitem-selected .i-caption {
+*+html .i-tabsheet-tabitem-selected .i-caption {
 	background: transparent;
 	padding: 0;
 	margin: 0;
