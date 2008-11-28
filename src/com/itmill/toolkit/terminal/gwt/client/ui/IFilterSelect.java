@@ -104,6 +104,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
         private boolean isPagingEnabled = true;
 
         private long lastAutoClosed;
+        private int menuLeftMargin = -1;
 
         SuggestionPopup() {
             super(true, false, true);
@@ -301,6 +302,24 @@ public class IFilterSelect extends Composite implements Paintable, Field,
                 DOM.setStyleAttribute(DOM.getFirstChild(menu.getElement()),
                         "width", "100%");
                 naturalMenuWidth = desiredWidth;
+            }
+
+            if (BrowserInfo.get().isIE()) {
+                // Take left margin into account
+                if (menuLeftMargin == -1) {
+                    int menuOffsetLeft = menu.getElement().getOffsetLeft();
+                    int menuParentOffsetLeft = getContainerElement()
+                            .getOffsetLeft();
+                    menuLeftMargin = menuOffsetLeft - menuParentOffsetLeft;
+                }
+
+                /*
+                 * IE requires us to specify the width for the container
+                 * element. Otherwise it will be 100% wide
+                 */
+                int rootWidth = naturalMenuWidth + menuLeftMargin;
+                DOM.setStyleAttribute(getContainerElement(), "width", rootWidth
+                        + "px");
             }
 
             if (offsetHeight + getPopupTop() > Window.getClientHeight()
