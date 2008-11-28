@@ -36,50 +36,10 @@
     <h2>Important Changes</h2>
     
 <p>The <version></version> release if IT Mill Toolkit includes new features and a number
-of fixed problems. You should also notice the changes that cause backward incompatibility
-with existing applications, mainly caused by the new support for multiple applications per
-page.</p>
-
-<ul>
-  <li>Support for multiple applications in the same browser window (already in 5.1.2).
-  See <tt>WebContent/multiapp.html</tt> for an example on how to embed multiple
-  applications.<p><i><b>IMPORTANT!</b> If you have embedded Toolkit Applications in a HTML
-  page with earlier versions of IT Mill Toolkit, you must update the embedding page! Run
-  the application separately, view the source code, and copy the loading code to your HTML
-  page.</i></p></li>
-
-  <li>Support for Java Portlets. See the following dev.itmill.com wiki articles for details.</li>
-
-  <ul>
-    <li><a href="http://dev.itmill.com/wiki/Articles/PortalTools">PortalTools - IT Mill Toolkit Portal Integration</a> -- an introduction</li>
-    <li><a href="http://dev.itmill.com/wiki/Articles/SimplePortalIntegration">Simple IT Mill Toolkit Portal Integration</a> -- instructions for using the portal integration</li>
-  </ul>
-
-  <li>The root style identifier <tt>#itmill-ajax-window</tt> if IT Mill Toolkit
-  applications has changed to style class <tt>.i-app</tt>. This change will affect all
-  applications that match for the style identifier in the style sheets and the rules have
-  to be updated to the new convention. This is part of the changes for supporting multiple
-  applications per page.</li>
-
-  <li>To speed up the loading time of applications, the default theme has been collected
-  into a single CSS file in <tt>WebContent/ITMILL/themes/default/styles.css</tt>, which is
-  a compilation of the separate CSS files for different components. <b>Custom themes must
-  inherit this stylesheet</b> with the <tt>import</tt> command: <pre>@import
-  "../default/styles.css";</pre></li>
-
-  <li>Google Web Toolkit (gwt) libraries have been updated to 1.4.62, giving improved
-  support for IE6. This <b>requires updating GWT libraries in classpath to the new
-  versions</b>, if (and only if) you are developing custom widgets. As a downside, the
-  Hosted Mode Browser of GWT 1.4.62 on Linux platform is based on Gecco 1.7, see #1636
-  below.</li>
-
-  <li>The default theme for <b>TabSheet</b> has changed in a way that may cause
-  incompatibility with custom styling. If you have problems, just ask on the <a
-  href="http://forum.itmill.com/">forum</a>.</li>
-
-  <li>Many bug fixes. See the ChangeLog below.</li>
-
-</ul>
+  of fixed problems compared to the older 5.2.x version. Major changes and dozens of bug 
+  fixes have been done.</p>
+  
+  <p>TODO include 5.3 changes from wiki</p>
 
   <p>For up-to-date status of known problems, see the developer website <a href="http://dev.itmill.com/">dev.itmill.com</a>.</p>
 
@@ -121,10 +81,10 @@ page.</p>
   <p>IT Mill Toolkit supports the following browsers:</p>
 
   <ul>
-    <li>Mozilla Firefox releases 1.5, 2, and 3 (see notice above about Gecco 1.7).</li>
+    <li>Mozilla Firefox releases 2, and 3 (see notice above about Gecco 1.7).</li>
     <li>Internet Explorer releases 6, 7, and 8.</li>
     <li>Safari 3</li>
-    <li>Opera 9</li>
+    <li>Opera 9.6</li>
   </ul>
 
   <p>There may be differences between the exact versions of the supported browsers that
@@ -133,6 +93,7 @@ page.</p>
   <p>The following browsers are not supported but have been found to work to a large degree:</p>
   <ul>
     <li>Safari 2</li>
+    <li>Firefox 1.5</li>
     <li>iPhone</li>
     <li>Galeon, Epiphany and other Gecco-based browsers (see notice about Gecco 1.7 above)</li>
     <li>Nokia Internet Tablet N800 and N810 (ITOS 2008)</li>
