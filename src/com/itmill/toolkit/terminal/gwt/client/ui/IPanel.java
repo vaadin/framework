@@ -272,13 +272,14 @@ public class IPanel extends SimplePanel implements Container {
             int parentWidthExcludingPadding = getElement().getOffsetWidth()
                     - parentPadding;
 
-            Util.setWidthExcludingPadding(captionNode,
-                    parentWidthExcludingPadding - getCaptionMarginLeft(), 26);
+            Util.setWidthExcludingPaddingAndBorder(captionNode,
+                    parentWidthExcludingPadding - getCaptionMarginLeft(), 26,
+                    false);
 
             int contentMarginLeft = getContentMarginLeft();
 
-            Util.setWidthExcludingPadding(contentNode,
-                    parentWidthExcludingPadding - contentMarginLeft, 2);
+            Util.setWidthExcludingPaddingAndBorder(contentNode,
+                    parentWidthExcludingPadding - contentMarginLeft, 2, false);
 
         }
 
@@ -298,8 +299,8 @@ public class IPanel extends SimplePanel implements Container {
             }
 
             if (BrowserInfo.get().isIE7()) {
-                Util.setWidthExcludingPadding(captionNode, width
-                        - getCaptionMarginLeft(), 26);
+                Util.setWidthExcludingPaddingAndBorder(captionNode, width
+                        - getCaptionMarginLeft(), 26, false);
             }
 
             super.setWidth(width + "px");

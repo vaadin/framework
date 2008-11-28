@@ -286,10 +286,55 @@ public class Util {
                 - element.getParentElement().getAbsoluteLeft();
     }
 
-    public static void setWidthExcludingPadding(Element element,
-            int requestedWidth, int paddingGuess) {
+    public static int setHeightExcludingPaddingAndBorder(Widget widget,
+            String height, int paddingBorderGuess) {
+        if (height.equals("")) {
+            setHeight(widget, "");
+            return paddingBorderGuess;
+        } else if (height.endsWith("px")) {
+            int pixelHeight = Integer.parseInt(height.substring(0, height
+                    .length() - 3));
+            return setHeightExcludingPaddingAndBorder(widget.getElement(),
+                    pixelHeight, paddingBorderGuess, false);
+        } else {
+            // Set the height in unknown units
+            setHeight(widget, height);
+            // Use the offsetWidth
+            return setHeightExcludingPaddingAndBorder(widget.getElement(),
+                    widget.getOffsetHeight(), paddingBorderGuess, true);
+        }
+    }
 
-        int widthGuess = requestedWidth - paddingGuess;
+    private static void setWidth(Widget widget, String width) {
+        DOM.setStyleAttribute(widget.getElement(), "width", width);
+    }
+
+    private static void setHeight(Widget widget, String height) {
+        DOM.setStyleAttribute(widget.getElement(), "height", height);
+    }
+
+    public static int setWidthExcludingPaddingAndBorder(Widget widget,
+            String width, int paddingBorderGuess) {
+        if (width.equals("")) {
+            setWidth(widget, "");
+            return paddingBorderGuess;
+        } else if (width.endsWith("px")) {
+            int pixelWidth = Integer.parseInt(width.substring(0,
+                    width.length() - 2));
+            return setWidthExcludingPaddingAndBorder(widget.getElement(),
+                    pixelWidth, paddingBorderGuess, false);
+        } else {
+            setWidth(widget, width);
+            return setWidthExcludingPaddingAndBorder(widget.getElement(),
+                    widget.getOffsetWidth(), paddingBorderGuess, true);
+        }
+    }
+
+    public static int setWidthExcludingPaddingAndBorder(Element element,
+            int requestedWidth, int horizontalPaddingBorderGuess,
+            boolean requestedWidthIncludesPaddingBorder) {
+
+        int widthGuess = requestedWidth - horizontalPaddingBorderGuess;
         if (widthGuess < 0) {
             widthGuess = 0;
         }
@@ -300,11 +345,54 @@ public class Util {
 
         int actualPadding = captionOffsetWidth - widthGuess;
 
-        if (actualPadding != paddingGuess) {
-            DOM.setStyleAttribute(element, "width", requestedWidth
-                    - actualPadding + "px");
+        if (requestedWidthIncludesPaddingBorder) {
+            actualPadding += actualPadding;
+        }
+
+        if (actualPadding != horizontalPaddingBorderGuess) {
+            int w = requestedWidth - actualPadding;
+            if (w < 0) {
+                // Cannot set negative width even if we would want to
+                w = 0;
+            }
+            DOM.setStyleAttribute(element, "width", w + "px");
 
         }
+
+        return actualPadding;
+
+    }
+
+    public static int setHeightExcludingPaddingAndBorder(Element element,
+            int requestedHeight, int verticalPaddingBorderGuess,
+            boolean requestedHeightIncludesPaddingBorder) {
+
+        int heightGuess = requestedHeight - verticalPaddingBorderGuess;
+        if (heightGuess < 0) {
+            heightGuess = 0;
+        }
+
+        DOM.setStyleAttribute(element, "height", heightGuess + "px");
+        int captionOffsetHeight = DOM.getElementPropertyInt(element,
+                "offsetHeight");
+
+        int actualPadding = captionOffsetHeight - heightGuess;
+
+        if (requestedHeightIncludesPaddingBorder) {
+            actualPadding += actualPadding;
+        }
+
+        if (actualPadding != verticalPaddingBorderGuess) {
+            int h = requestedHeight - actualPadding;
+            if (h < 0) {
+                // Cannot set negative height even if we would want to
+                h = 0;
+            }
+            DOM.setStyleAttribute(element, "height", h + "px");
+
+        }
+
+        return actualPadding;
 
     }
 

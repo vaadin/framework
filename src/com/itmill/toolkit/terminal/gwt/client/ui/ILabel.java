@@ -10,11 +10,14 @@ import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.ITooltip;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.Util;
 
 public class ILabel extends HTML implements Paintable {
 
     public static final String CLASSNAME = "i-label";
     private ApplicationConnection client;
+    private int verticalPaddingBorder = 0;
+    private int horizontalPaddingBorder = 0;
 
     public ILabel() {
         super();
@@ -59,5 +62,17 @@ public class ILabel extends HTML implements Paintable {
         } else {
             setText("");
         }
+    }
+
+    @Override
+    public void setHeight(String height) {
+        verticalPaddingBorder = Util.setHeightExcludingPaddingAndBorder(this,
+                height, verticalPaddingBorder);
+    }
+
+    @Override
+    public void setWidth(String width) {
+        horizontalPaddingBorder = Util.setWidthExcludingPaddingAndBorder(this,
+                width, horizontalPaddingBorder);
     }
 }
