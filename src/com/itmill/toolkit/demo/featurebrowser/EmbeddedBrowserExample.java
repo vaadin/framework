@@ -4,11 +4,15 @@
 
 package com.itmill.toolkit.demo.featurebrowser;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.ui.Embedded;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Select;
+import com.itmill.toolkit.ui.Window.Notification;
 
 /**
  * Demonstrates the use of Embedded and "suggesting" Select by creating a simple
@@ -68,10 +72,18 @@ public class EmbeddedBrowserExample extends OrderedLayout implements
     public void valueChange(ValueChangeEvent event) {
         final String url = (String) event.getProperty().getValue();
         if (url != null) {
-            // the selected url has changed, let's go there
-            emb.setSource(new ExternalResource(url));
+            try {
+                // the selected url has changed, let's go there
+                URL u = new URL(url);
+                emb.setSource(new ExternalResource(url));
+
+            } catch (MalformedURLException e) {
+                getWindow().showNotification("Invalid address",
+                        e.getMessage() + " (example: http://www.itmill.com)",
+                        Notification.TYPE_WARNING_MESSAGE);
+            }
+
         }
 
     }
-
 }

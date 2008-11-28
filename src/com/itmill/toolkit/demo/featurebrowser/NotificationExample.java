@@ -38,6 +38,8 @@ public class NotificationExample extends CustomComponent {
     public NotificationExample() {
         // Main layout
         final OrderedLayout main = new OrderedLayout();
+        main.setSizeUndefined();
+        main.setSpacing(true);
         main.setMargin(true); // use theme-specific margin
         setCompositionRoot(main);
 

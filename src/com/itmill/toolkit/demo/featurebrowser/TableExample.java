@@ -51,10 +51,12 @@ public class TableExample extends CustomComponent implements Action.Handler,
     Button deselect;
 
     public TableExample() {
+        OrderedLayout margin = new OrderedLayout();
+        margin.setMargin(true);
+
         TabSheet root = new TabSheet();
-        root.setSizeFull();
-        setCompositionRoot(root);
-        setSizeFull();
+        setCompositionRoot(margin);
+        margin.addComponent(root);
 
         // main layout
         final OrderedLayout main = new OrderedLayout();
