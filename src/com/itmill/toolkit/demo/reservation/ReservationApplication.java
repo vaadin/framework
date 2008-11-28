@@ -91,6 +91,7 @@ public class ReservationApplication extends Application {
         reservationTab.addComponent(reservationPanel);
 
         final OrderedLayout infoLayout = new OrderedLayout();
+        infoLayout.setSizeUndefined();
         infoLayout.setMargin(false, true, false, false);
         reservationPanel.addComponent(infoLayout);
         resourceName = new Label("From the list above");

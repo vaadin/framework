@@ -27,6 +27,7 @@ public class ResourceSelectorPanel extends Panel implements
     public ResourceSelectorPanel(String caption) {
         super(caption, new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL));
         addStyleName(Panel.STYLE_LIGHT);
+        setSizeUndefined();
     }
 
     public void setResourceContainer(Container resources) {
@@ -54,6 +55,7 @@ public class ResourceSelectorPanel extends Panel implements
                         .get(category);
                 if (resourceLayout == null) {
                     resourceLayout = new OrderedLayout();
+                    resourceLayout.setSizeUndefined();
                     resourceLayout.setMargin(true);
                     addComponent(resourceLayout);
                     categoryLayouts.put(category, resourceLayout);
