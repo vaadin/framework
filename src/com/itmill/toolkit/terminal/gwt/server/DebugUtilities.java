@@ -30,9 +30,8 @@ public class DebugUtilities {
         boolean valid = true;
 
         if (!(component instanceof Window)) {
-            valid |= checkWidths(component);
-            valid |= checkHeights(component);
-
+            valid = valid && checkWidths(component);
+            valid = valid && checkHeights(component);
         }
 
         if (recursive) {
@@ -51,11 +50,9 @@ public class DebugUtilities {
                     }
                 }
             }
-            return valid;
-        } else {
-            return valid;
         }
 
+        return valid;
     }
 
     private static void showError(String msg, Stack<ComponentInfo> attributes) {
