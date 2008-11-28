@@ -29,17 +29,111 @@
 <p>
   Version <version></version> of IT Mill Toolkit Release 5 is still in beta
   phase, meaning that the library should be considered unstable and is recommended for
-  evaluation and early adoption. Also, any
-  changes are possible, including API changes, before the stable release.
+  evaluation and early adoption. Also, any changes are possible, including API changes, 
+  before the stable release.
 </p>
-
-    <h2>Important Changes</h2>
+    <h2 id="ClientsideiscompiledwithGWT1.5">Client side is compiled with GWT 1.5</h2>
+<p>
+GWT is upgraded to 1.5. In case you have built your own client side components, you need to upgrade your GWT library. Lot's of things have changed in GWT 1.5, but upgrading to is rather straightforward and as a bonus you'll get nice features from Java 1.5. See more details from  <a class="ext-link" href="http://code.google.com/webtoolkit/"><span class="icon">GWT web site</span></a>
+</p>
+<h2 id="Java5isrequired">Java 5 is required</h2>
+<p>
+Since GWT now needs java 5, support for java 1.4 is now dropped.
+</p>
+<h2 id="Layoutchanges">Layout changes</h2>
+<h3 id="Usedebugmodeduringdevelopmentdebugging">Use debug mode during development / debugging</h3>
+<p>
+Layouts are now more strict than before. Some components may even be invisible when using relative sizes in wrong way. During debugging/development always add the following parameter to your web.xml file: 
+</p>
+<pre class="wiki">  &lt;context-param&gt;
+  	&lt;param-name&gt;Debug&lt;/param-name&gt;
+  	&lt;param-value&gt;true&lt;/param-value&gt;
+  	&lt;description&gt;IT Mill Toolkit debug mode&lt;/description&gt;
+  &lt;/context-param&gt;
+</pre><p>
+This will make Toolkit run some sanity checks for relatively sized components. Informative error messages are printed to server console, invalid components are painted without their relative size and colored red.
+</p>
+<p>
+Since 5.3 this parameter is also needed to show the client side logging window ( enabled by adding the request parameter "?debug=true" to uri).
+</p>
+<h3 id="HandlingofrelativesizeshavechangedExpandLayoutdeprecated">Handling of relative sizes have changed, <a class="missing wiki" href="/wiki/ExpandLayout" rel="nofollow">ExpandLayout?</a> deprecated</h3>
+<p>
+See <a class="wiki" href="/wiki/DevDocs/RFC/RelativeSizes">wiki:DevDocs/RFC/RelativeSizes</a> for details
+</p>
+<h3 id="Somecomponentsnowhavedefaultsizes">Some components now have default sizes</h3>
+<p>
+Previously almost all components had undefined size by default. Now some containers have 100% width by default. These are:
+</p>
+<ul><li>Vertical <a class="missing wiki" href="/wiki/OrderedLayout" rel="nofollow">OrderedLayout?</a> (vertical via constructor, not via setOrientation method)
+</li><li>Window
+</li><li>Panel
+</li><li><a class="missing wiki" href="/wiki/TabSheet" rel="nofollow">TabSheet?</a>
+</li><li><a class="missing wiki" href="/wiki/SplitPanel" rel="nofollow">SplitPanel?</a> (note that <a class="missing wiki" href="/wiki/SplitPanel" rel="nofollow">SplitPanel?</a> also has 100% height by default)
+</li><li>Form
+</li><li><a class="missing wiki" href="/wiki/FormLayout" rel="nofollow">FormLayout?</a>
+</li></ul><h2 id="Customtailoredclientsidecomponents">Custom tailored client side components</h2>
+<p>
+Due to the layout changes, all child component size changes (outside updateFromUIDL function) must be announced. Most commonly this kind of change happens when an image gets loaded inside a component. There is a helper method in the Util class for doing the announcement:
+</p>
+<pre class="wiki">            Set&lt;Widget&gt; w = new HashSet&lt;Widget&gt;();
+            w.add(this);
+            Util.componentSizeUpdated(w);
+</pre><h2 id="Themes">Themes</h2>
+<p>
+Many component have changed quite a lot due to layout refactoring. DOM structures have been changed etc. This may break old themes. 
+</p>
+<p>
+Theme building for Toolkit is not the most straightforward process as there is quite a lot of javascript magic done e.g. dimension measuring etc. If using unsupported CSS a component might be rendered in an unexpected way. "Theme builders handbook" is at the top of our TODO list. In the mean time it is often safest to override values defined in the default theme.
+</p>
+<p>
+Especially if you encounter problems with margins or spacings, check the manual. Some CSS class names and conventions have changed.
+</p>
+<p>
+If you have or get "broken" component on your screen, the first thing to do is to comment out all custom theme. If it works you may have the rework your css for that particular component. Things to check:
+</p>
+<ul><li>Don't use custom margins outside component. In Toolkit no component should have a margin defined. Width/height on server side means offset width/height on client side, so using custom margins for components using css may break some features in the layouts.
+</li><li>The same goes for borders and paddings for the main element unless they are used for the main element in the default theme. It is often safer to use borders in the same elements that have borders in the default theme or in inner elements.
+</li></ul><p>
+Often the easiest path for your custom theme is to override values from the default theme.
+</p>
+<h2 id="Browsersupportchangessince5.2.x">Browser support changes since 5.2.x</h2>
+<p>
+Safari 2 and Firefox 1.5 and Operas prior to version 9.6 are no longer supported. Users of these browsers are strongly encouraged to move to newer versions.
+</p>
+<p>
+Google Chrome is not yet supported, but it is known to work rather well as it is a close relative to Safari. 
+</p>
+<p>
+GWT Hosted mode on Linux uses same Gecko version as FF 1.5 and is currently partly broken. Some layout's don't render properly. We hope to resolve these issues soon with next generation Hosted Mode Browser aka OOPHM or with minor hacks to the client side code.
+</p>
+<h2 id="MinorChanges">Minor Changes</h2>
+<p>
+Version 5.3 contains lots of small changes also (more than 200), which might not be worth mentioning in the release notes, but here are some of them. 
+</p>
+<p>
+- New sub-window theme<br />
+- Tabsheet HTML-structure has changed<br />
+- Better shadow support for overlay elements<br />
+- Row and column icons for Table<br />
+- New component: PopupPanel/PopupView<br />
+- Theme changing on-the-fly<br />
+- Table cellstyle and rowstyle generators<br />
+- New component: MenuBar (is this in the release?)<br />
+- Security: double-cookie submission pattern<br />
+- Low level bookmarking and history support<br />
+- Sub-windows can be centered on screen. Modal windows are centered automatically<br />
+- Link component now behaves like a normal "weblink"<br />
+</p>
+        
+    
+    
+    
+    ======
     
 <p>The <version></version> release if IT Mill Toolkit includes new features and a number
   of fixed problems compared to the older 5.2.x version. Major changes and dozens of bug 
-  fixes have been done.</p>
+  fixes have been done. Only major issues handled below.</p>
   
-  <p>TODO include 5.3 changes from wiki</p>
 
   <p>For up-to-date status of known problems, see the developer website <a href="http://dev.itmill.com/">dev.itmill.com</a>.</p>
 
