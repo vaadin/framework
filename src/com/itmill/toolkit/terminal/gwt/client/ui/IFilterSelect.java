@@ -347,6 +347,20 @@ public class IFilterSelect extends Composite implements Paintable, Field,
             }
         }
 
+        /**
+         * Updates style names in suggestion popup to help theme building.
+         */
+        public void updateStyleNames(UIDL uidl) {
+            if (uidl.hasAttribute("style")) {
+                setStyleName(CLASSNAME + "-suggestpopup");
+                final String[] styles = uidl.getStringAttribute("style").split(
+                        " ");
+                for (int i = 0; i < styles.length; i++) {
+                    addStyleDependentName(styles[i]);
+                }
+            }
+        }
+
     }
 
     public class SuggestionMenu extends MenuBar {
@@ -576,6 +590,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
         }
 
         suggestionPopup.setPagingEnabled(true);
+        suggestionPopup.updateStyleNames(uidl);
 
         allowNewItem = uidl.hasAttribute("allownewitem");
 
