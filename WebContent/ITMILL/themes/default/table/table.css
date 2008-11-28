@@ -13,6 +13,7 @@
 	height: 36px;
 	background: #e7edf3 url(img/header-bg.png) repeat-x;
 	border: 1px solid #b6bbbc;
+	border-bottom: none;
 	overflow: hidden;
 }
 
@@ -73,7 +74,6 @@
 .i-table-body {
 	background: #fff;
 	border: 1px solid #b6bbbc;
-	border-top: none;
 }
 
 .i-table-row-spacer {
