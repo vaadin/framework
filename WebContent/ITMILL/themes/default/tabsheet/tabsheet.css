@@ -166,8 +166,8 @@
 
 .i-tabsheet-loading .i-tabsheet-tabs .i-tabsheet-tabitem-selected .i-caption .i-captiontext {
 	background: transparent url(../common/img/ajax-loader.gif) no-repeat;
-	margin-left: -10px;
-	padding-left: 10px;
+	margin-left: -7px;
+	padding-left: 7px;
 	margin-top: -12px;
 	padding-top: 12px;
 }
