@@ -91,6 +91,7 @@ public class ReservationApplication extends Application {
         reservationTab.addComponent(reservationPanel);
 
         final OrderedLayout infoLayout = new OrderedLayout();
+        infoLayout.setSpacing(true);
         infoLayout.setSizeUndefined();
         infoLayout.setMargin(false, true, false, false);
         reservationPanel.addComponent(infoLayout);
@@ -104,6 +105,9 @@ public class ReservationApplication extends Application {
         reservationButton = new Button("Make reservation", this,
                 "makeReservation");
         infoLayout.addComponent(reservationButton);
+        infoLayout.setComponentAlignment(reservationButton,
+                OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER,
+                OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
 
         map = new GoogleMap();
         map.setWidth("250px");

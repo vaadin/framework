@@ -28,6 +28,7 @@ public class ResourceSelectorPanel extends Panel implements
         super(caption, new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL));
         addStyleName(Panel.STYLE_LIGHT);
         setSizeUndefined();
+        setWidth("100%");
     }
 
     public void setResourceContainer(Container resources) {
