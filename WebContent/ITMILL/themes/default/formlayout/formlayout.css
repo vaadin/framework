@@ -8,6 +8,9 @@
 	text-align:right;
 	white-space: nowrap;
 }
+.i-formlayout-captioncell .i-caption {
+	overflow: visible;
+}
 
 .i-formlayout-contentcell {
 	width:100%;
