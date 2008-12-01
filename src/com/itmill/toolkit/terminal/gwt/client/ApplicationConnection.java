@@ -249,6 +249,16 @@ public class ApplicationConnection {
             }
             app.@com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::sendPendingVariableChanges()();
         }
+        var oldForceLayout;
+        if($wnd.itmill.forceLayout) {
+            oldForceLayout = $wnd.itmill.forceLayout;
+        }
+        $wnd.itmill.forceLayout = function() {
+            if(oldForceLayout) {
+                oldForceLayout();
+            }
+            app.@com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::forceLayout()();
+        }
     }-*/;
 
     public static Console getConsole() {
@@ -1100,6 +1110,14 @@ public class ApplicationConnection {
         runningLayout = true;
         internalRunDescendentsLayout(container);
         runningLayout = false;
+    }
+
+    /**
+     * This will cause re-layouting of all components. Mainly used for
+     * development. Published to JavaScript.
+     */
+    public void forceLayout() {
+        Util.componentSizeUpdated((Set) paintableToId.keySet());
     }
 
     private void internalRunDescendentsLayout(HasWidgets container) {
