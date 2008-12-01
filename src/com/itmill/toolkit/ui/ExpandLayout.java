@@ -16,7 +16,7 @@ package com.itmill.toolkit.ui;
  * fixed size. If the layout fails to show up, check that the parent layout is
  * actually giving some space.
  * 
- * @deprecated Deprecated in favor of new OrderedLayout
+ * @deprecated Deprecated in favor of the new OrderedLayout
  */
 @Deprecated
 public class ExpandLayout extends OrderedLayout {
@@ -47,8 +47,54 @@ public class ExpandLayout extends OrderedLayout {
         }
 
         expanded = c;
-        setExpandRatio(expanded, 1.0f);
+        if (expanded != null) {
+            setExpandRatio(expanded, 1.0f);
+        }
+
         requestRepaint();
     }
 
+    @Override
+    public void addComponent(Component c, int index) {
+        super.addComponent(c, index);
+        if (expanded == null) {
+            expand(c);
+        }
+    }
+
+    @Override
+    public void addComponent(Component c) {
+        super.addComponent(c);
+        if (expanded == null) {
+            expand(c);
+        }
+    }
+
+    @Override
+    public void addComponentAsFirst(Component c) {
+        super.addComponentAsFirst(c);
+        if (expanded == null) {
+            expand(c);
+        }
+    }
+
+    @Override
+    public void removeComponent(Component c) {
+        super.removeComponent(c);
+        if (c == expanded) {
+            if (getComponentIterator().hasNext()) {
+                expand((Component) getComponentIterator().next());
+            } else {
+                expand(null);
+            }
+        }
+    }
+
+    @Override
+    public void replaceComponent(Component oldComponent, Component newComponent) {
+        super.replaceComponent(oldComponent, newComponent);
+        if (oldComponent == expanded) {
+            expand(newComponent);
+        }
+    }
 }
