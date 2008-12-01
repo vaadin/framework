@@ -549,16 +549,31 @@ public class IOrderedLayout extends CellBasedLayout {
         }
 
         if (isDynamicWidth()) {
-            setOuterLayoutWidth(activeLayoutWidth);
-            activeLayoutSize.setWidth(activeLayoutWidth);
+            setActiveLayoutWidth(activeLayoutWidth);
+            setOuterLayoutWidth(activeLayoutSize.getWidth());
         }
 
         if (isDynamicHeight()) {
-            activeLayoutSize.setHeight(activeLayoutHeight);
-            setOuterLayoutHeight(activeLayoutHeight);
+            setActiveLayoutHeight(activeLayoutHeight);
+            setOuterLayoutHeight(activeLayoutSize.getHeight());
         }
 
         return activeLayoutSize;
+    }
+
+    private void setActiveLayoutWidth(int activeLayoutWidth) {
+        if (activeLayoutWidth < 0) {
+            activeLayoutWidth = 0;
+        }
+        activeLayoutSize.setWidth(activeLayoutWidth);
+    }
+
+    private void setActiveLayoutHeight(int activeLayoutHeight) {
+        if (activeLayoutHeight < 0) {
+            activeLayoutHeight = 0;
+        }
+        activeLayoutSize.setHeight(activeLayoutHeight);
+
     }
 
     private void setOuterLayoutWidth(int activeLayoutWidth) {
@@ -727,7 +742,7 @@ public class IOrderedLayout extends CellBasedLayout {
         super.setHeight(height);
 
         if (height != null && !height.equals("")) {
-            activeLayoutSize.setHeight(getOffsetHeight()
+            setActiveLayoutHeight(getOffsetHeight()
                     - activeMargins.getVertical());
         }
 
@@ -749,7 +764,7 @@ public class IOrderedLayout extends CellBasedLayout {
         super.setWidth(width);
 
         if (width != null && !width.equals("")) {
-            activeLayoutSize.setWidth(getOffsetWidth()
+            setActiveLayoutWidth(getOffsetWidth()
                     - activeMargins.getHorizontal());
         }
 
