@@ -274,10 +274,35 @@ public class ICalendarPanel extends FlexTable implements MouseListener {
                 showingDate.setYear(showingDate.getYear() + 1);
                 updateCalendar();
             } else if (sender == prevMonth) {
-                showingDate.setMonth(showingDate.getMonth() - 1);
+                int currentMonth = showingDate.getMonth();
+                showingDate.setMonth(currentMonth - 1);
+
+                /*
+                 * If the selected date was e.g. 31.12 the new date would be
+                 * 31.11 but this date is invalid so the new date will be 1.12.
+                 * This is taken care of by decreasing the date until we have
+                 * the correct month.
+                 */
+                while (showingDate.getMonth() == currentMonth) {
+                    showingDate.setDate(showingDate.getDate() - 1);
+                }
+
                 updateCalendar();
             } else if (sender == nextMonth) {
-                showingDate.setMonth(showingDate.getMonth() + 1);
+                int currentMonth = showingDate.getMonth();
+                showingDate.setMonth(currentMonth + 1);
+                int requestedMonth = (currentMonth + 1) % 12;
+
+                /*
+                 * If the selected date was e.g. 31.3 the new date would be 31.4
+                 * but this date is invalid so the new date will be 1.5. This is
+                 * taken care of by decreasing the date until we have the
+                 * correct month.
+                 */
+                while (showingDate.getMonth() != requestedMonth) {
+                    showingDate.setDate(showingDate.getDate() - 1);
+                }
+
                 updateCalendar();
             }
         } else {
