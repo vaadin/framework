@@ -879,8 +879,7 @@ public abstract class AbstractSelect extends AbstractField implements
                 }
             }
 
-            // TODO: This should be conditional
-            fireValueChange(false);
+            requestRepaint();
         }
     }
 
