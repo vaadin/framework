@@ -609,7 +609,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             if (isVisible()) {
 
                 // TODO split this method
-                if (getApplication().isDebugMode()
+                if (getApplication() != null
+                        && getApplication().isDebugMode()
                         && !DebugUtilities.validateComponentRelativeSizes(this,
                                 false)) {
                     addStyleName("invalidlayout");
