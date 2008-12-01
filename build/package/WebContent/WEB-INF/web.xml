@@ -11,10 +11,6 @@
      IT Mill Toolkit examples
   </description>
   
-  <session-config>
-    <session-timeout>20</session-timeout>
-  </session-config>
-  
   <!-- Permit use of IT Mill Testing Tools for this servlet container -->
   <context-param>
   	<param-name>testingToolsActive</param-name>
@@ -480,6 +476,10 @@
   </servlet-mapping>
   <!-- Section ends: Automated tests used by Testing Tools plug-in client -->
 
+  <session-config>
+    <session-timeout>20</session-timeout>
+  </session-config>
+  
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
     <welcome-file>index.html</welcome-file>
