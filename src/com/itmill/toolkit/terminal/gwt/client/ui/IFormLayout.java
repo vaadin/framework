@@ -13,6 +13,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Container;
@@ -25,19 +26,152 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
 /**
  * Two col Layout that places caption on left col and field on right col
  */
-public class IFormLayout extends FlexTable implements Container {
+public class IFormLayout extends SimplePanel implements Container {
 
     private final static String CLASSNAME = "i-formlayout";
 
-    HashMap componentToCaption = new HashMap();
     private ApplicationConnection client;
-    private HashMap componentToError = new HashMap();
+    private IFormLayoutTable table;
+
+    private String width = "";
+    private String height = "";
 
     public IFormLayout() {
         super();
         setStylePrimaryName(CLASSNAME);
-        DOM.setElementProperty(getElement(), "cellPadding", "0");
-        DOM.setElementProperty(getElement(), "cellSpacing", "0");
+        table = new IFormLayoutTable();
+        setWidget(table);
+    }
+
+    public class IFormLayoutTable extends FlexTable {
+
+        private HashMap componentToCaption = new HashMap();
+        private HashMap componentToError = new HashMap();
+
+        public IFormLayoutTable() {
+            DOM.setElementProperty(getElement(), "cellPadding", "0");
+            DOM.setElementProperty(getElement(), "cellSpacing", "0");
+        }
+
+        public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+            final MarginInfo margins = new MarginInfo(uidl
+                    .getIntAttribute("margins"));
+
+            Element margin = getElement();
+            setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_TOP,
+                    margins.hasTop());
+            setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_RIGHT,
+                    margins.hasRight());
+            setStyleName(margin,
+                    CLASSNAME + "-" + StyleConstants.MARGIN_BOTTOM, margins
+                            .hasBottom());
+            setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_LEFT,
+                    margins.hasLeft());
+
+            setStyleName(margin, CLASSNAME + "-" + "spacing", uidl
+                    .hasAttribute("spacing"));
+
+            int i = 0;
+            for (final Iterator it = uidl.getChildIterator(); it.hasNext(); i++) {
+                prepareCell(i, 1);
+                final UIDL childUidl = (UIDL) it.next();
+                final Paintable p = client.getPaintable(childUidl);
+                Caption caption = (Caption) componentToCaption.get(p);
+                if (caption == null) {
+                    caption = new Caption(p, client);
+                    componentToCaption.put(p, caption);
+                }
+                ErrorFlag error = (ErrorFlag) componentToError.get(p);
+                if (error == null) {
+                    error = new ErrorFlag();
+                    componentToError.put(p, error);
+                }
+                prepareCell(i, 2);
+                final Paintable oldComponent = (Paintable) getWidget(i, 2);
+                if (oldComponent == null) {
+                    setWidget(i, 2, (Widget) p);
+                } else if (oldComponent != p) {
+                    client.unregisterPaintable(oldComponent);
+                    setWidget(i, 2, (Widget) p);
+                }
+                getCellFormatter().setStyleName(i, 2,
+                        CLASSNAME + "-contentcell");
+                getCellFormatter().setStyleName(i, 0,
+                        CLASSNAME + "-captioncell");
+                setWidget(i, 0, caption);
+
+                getCellFormatter().setStyleName(i, 1, CLASSNAME + "-errorcell");
+                setWidget(i, 1, error);
+
+                p.updateFromUIDL(childUidl, client);
+
+                String rowstyles = CLASSNAME + "-row";
+                if (i == 0) {
+                    rowstyles += " " + CLASSNAME + "-firstrow";
+                }
+                if (!it.hasNext()) {
+                    rowstyles += " " + CLASSNAME + "-lastrow";
+                }
+
+                getRowFormatter().setStyleName(i, rowstyles);
+
+            }
+
+            while (getRowCount() > i) {
+                final Paintable p = (Paintable) getWidget(i, 2);
+                client.unregisterPaintable(p);
+                componentToCaption.remove(p);
+                removeRow(i);
+            }
+
+        }
+
+        public void replaceChildComponent(Widget oldComponent,
+                Widget newComponent) {
+            int i;
+            for (i = 0; i < getRowCount(); i++) {
+                if (oldComponent == getWidget(i, 1)) {
+                    final Caption newCap = new Caption(
+                            (Paintable) newComponent, client);
+                    setWidget(i, 0, newCap);
+                    setWidget(i, 1, newComponent);
+                    break;
+                }
+            }
+
+        }
+
+        public boolean hasChildComponent(Widget component) {
+            return componentToCaption.containsKey(component);
+        }
+
+        public void updateCaption(Paintable component, UIDL uidl) {
+            final Caption c = (Caption) componentToCaption.get(component);
+            if (c != null) {
+                c.updateCaption(uidl);
+            }
+            final ErrorFlag e = (ErrorFlag) componentToError.get(component);
+            if (e != null) {
+                e.updateFromUIDL(uidl, component);
+            }
+
+        }
+
+        public int getAllocatedWidth(Widget child, int availableWidth) {
+            Caption caption = (Caption) componentToCaption.get(child);
+            ErrorFlag error = (ErrorFlag) componentToError.get(child);
+            int width = availableWidth;
+
+            if (caption != null) {
+                width -= DOM.getParent(caption.getElement()).getOffsetWidth();
+            }
+            if (error != null) {
+                width -= DOM.getParent(error.getElement()).getOffsetWidth();
+            }
+
+            return width;
+        }
+
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -47,100 +181,19 @@ public class IFormLayout extends FlexTable implements Container {
             return;
         }
 
-        final MarginInfo margins = new MarginInfo(uidl
-                .getIntAttribute("margins"));
-
-        Element margin = getElement();
-        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_TOP,
-                margins.hasTop());
-        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_RIGHT,
-                margins.hasRight());
-        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_BOTTOM,
-                margins.hasBottom());
-        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_LEFT,
-                margins.hasLeft());
-
-        setStyleName(margin, CLASSNAME + "-" + "spacing", uidl
-                .hasAttribute("spacing"));
-
-        int i = 0;
-        for (final Iterator it = uidl.getChildIterator(); it.hasNext(); i++) {
-            prepareCell(i, 1);
-            final UIDL childUidl = (UIDL) it.next();
-            final Paintable p = client.getPaintable(childUidl);
-            Caption caption = (Caption) componentToCaption.get(p);
-            if (caption == null) {
-                caption = new Caption(p, client);
-                componentToCaption.put(p, caption);
-            }
-            ErrorFlag error = (ErrorFlag) componentToError.get(p);
-            if (error == null) {
-                error = new ErrorFlag();
-                componentToError.put(p, error);
-            }
-            prepareCell(i, 2);
-            final Paintable oldComponent = (Paintable) getWidget(i, 2);
-            if (oldComponent == null) {
-                setWidget(i, 2, (Widget) p);
-            } else if (oldComponent != p) {
-                client.unregisterPaintable(oldComponent);
-                setWidget(i, 2, (Widget) p);
-            }
-            getCellFormatter().setStyleName(i, 2, CLASSNAME + "-contentcell");
-            getCellFormatter().setStyleName(i, 0, CLASSNAME + "-captioncell");
-            setWidget(i, 0, caption);
-
-            getCellFormatter().setStyleName(i, 1, CLASSNAME + "-errorcell");
-            setWidget(i, 1, error);
-
-            p.updateFromUIDL(childUidl, client);
-
-            String rowstyles = CLASSNAME + "-row";
-            if (i == 0) {
-                rowstyles += " " + CLASSNAME + "-firstrow";
-            }
-            if (!it.hasNext()) {
-                rowstyles += " " + CLASSNAME + "-lastrow";
-            }
-
-            getRowFormatter().setStyleName(i, rowstyles);
-
-        }
-
-        while (getRowCount() > i) {
-            final Paintable p = (Paintable) getWidget(i, 2);
-            client.unregisterPaintable(p);
-            componentToCaption.remove(p);
-            removeRow(i);
-        }
+        table.updateFromUIDL(uidl, client);
     }
 
     public boolean hasChildComponent(Widget component) {
-        return componentToCaption.containsKey(component);
+        return table.hasChildComponent(component);
     }
 
     public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
-        int i;
-        for (i = 0; i < getRowCount(); i++) {
-            if (oldComponent == getWidget(i, 1)) {
-                final Caption newCap = new Caption((Paintable) newComponent,
-                        client);
-                setWidget(i, 0, newCap);
-                setWidget(i, 1, newComponent);
-                break;
-            }
-        }
+        table.replaceChildComponent(oldComponent, newComponent);
     }
 
     public void updateCaption(Paintable component, UIDL uidl) {
-        final Caption c = (Caption) componentToCaption.get(component);
-        if (c != null) {
-            c.updateCaption(uidl);
-        }
-        final ErrorFlag e = (ErrorFlag) componentToError.get(component);
-        if (e != null) {
-            e.updateFromUIDL(uidl, component);
-        }
+        table.updateCaption(component, uidl);
     }
 
     public class Caption extends HTML {
@@ -305,14 +358,50 @@ public class IFormLayout extends FlexTable implements Container {
     }
 
     public boolean requestLayout(Set<Paintable> child) {
-        // TODO Auto-generated method stub
-        return false;
+        if (height.equals("") || width.equals("")) {
+            // A dynamic size might change due to children changes
+            return false;
+        }
+
+        return true;
     }
 
     public RenderSpace getAllocatedSpace(Widget child) {
-        com.google.gwt.dom.client.Element pe = child.getElement()
-                .getParentElement();
-        return new RenderSpace(pe.getOffsetWidth(), pe.getOffsetHeight(), false);
+        int width = 0;
+        int height = 0;
+
+        if (!this.width.equals("")) {
+            int availableWidth = getOffsetWidth();
+            width = table.getAllocatedWidth(child, availableWidth);
+        }
+
+        return new RenderSpace(width, height, false);
+    }
+
+    @Override
+    public void setHeight(String height) {
+        if (this.height.equals(height)) {
+            return;
+        }
+
+        this.height = height;
+        super.setHeight(height);
+    }
+
+    @Override
+    public void setWidth(String width) {
+        if (this.width.equals(width)) {
+            return;
+        }
+
+        this.width = width;
+        super.setWidth(width);
+
+        if (height.equals("")) {
+            // Width might affect height
+            Util.updateRelativeChildrenAndSendSizeUpdateEvent(client, this);
+        }
+
     }
 
 }

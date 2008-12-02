@@ -6,6 +6,7 @@ package com.itmill.toolkit.terminal.gwt.client;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,6 +15,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.RenderInformation.FloatSize;
@@ -46,8 +48,8 @@ public class Util {
         Map<Container, Set<Paintable>> childWidgets = new HashMap<Container, Set<Paintable>>();
 
         for (Widget widget : widgets) {
-            // ApplicationConnection.getConsole().log(
-            // "Widget " + Util.getSimpleName(widget) + " size updated");
+            ApplicationConnection.getConsole().log(
+                    "Widget " + Util.getSimpleName(widget) + " size updated");
             Widget parent = widget.getParent();
             while (parent != null && !(parent instanceof Container)) {
                 parent = parent.getParent();
@@ -498,6 +500,34 @@ public class Util {
         if (true) {
             Window.alert(string);
         }
+    }
+
+    public static boolean equals(Object a, Object b) {
+        if (a == null) {
+            return b == null;
+        }
+
+        return a.equals(b);
+    }
+
+    public static void updateRelativeChildrenAndSendSizeUpdateEvent(
+            ApplicationConnection client, HasWidgets container) {
+        /*
+         * Relative sized children must be updated first so the component has
+         * the correct outer dimensions when signaling a size change to the
+         * parent.
+         */
+        Iterator<Widget> childIterator = container.iterator();
+        while (childIterator.hasNext()) {
+            Widget w = childIterator.next();
+            // alert("Update relative size for " + getSimpleName(w));
+            client.handleComponentRelativeSize(w);
+        }
+
+        // alert("abc");
+        HashSet<Widget> widgets = new HashSet<Widget>();
+        widgets.add((Widget) container);
+        Util.componentSizeUpdated(widgets);
     }
 
 }

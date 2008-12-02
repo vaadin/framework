@@ -12,19 +12,18 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Container;
-import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.IErrorMessage;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.RenderInformation;
 import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.Util;
 
-public class IForm extends ComplexPanel implements Container,
-        ContainerResizedListener {
+public class IForm extends ComplexPanel implements Container {
 
-    private String height;
+    private String height = "";
 
-    private String width;
+    private String width = "";
 
     public static final String CLASSNAME = "i-form";
 
@@ -122,7 +121,7 @@ public class IForm extends ComplexPanel implements Container,
             DOM.setInnerHTML(desc, "");
         }
 
-        iLayout();
+        updateSize();
         // TODO Check if this is needed
         client.runDescendentsLayout(this);
 
@@ -161,7 +160,7 @@ public class IForm extends ComplexPanel implements Container,
         }
     }
 
-    public void iLayout() {
+    public void updateSize() {
 
         renderInformation.updateSize(getElement());
 
@@ -184,7 +183,9 @@ public class IForm extends ComplexPanel implements Container,
                 hPixels -= desc.getOffsetHeight();
 
             }
-            return new RenderSpace(fieldContainer.getOffsetWidth(), 0);
+
+            return new RenderSpace(renderInformation.getContentAreaSize()
+                    .getWidth(), hPixels);
         } else if (child == footer) {
             return new RenderSpace(footerContainer.getOffsetWidth(), 0);
         } else {
@@ -240,14 +241,30 @@ public class IForm extends ComplexPanel implements Container,
 
     @Override
     public void setHeight(String height) {
+        if (this.height.equals(height)) {
+            return;
+        }
+
         this.height = height;
         super.setHeight(height);
 
+        updateSize();
     }
 
     @Override
     public void setWidth(String width) {
+        if (Util.equals(this.width, width)) {
+            return;
+        }
+
         this.width = width;
         super.setWidth(width);
+
+        updateSize();
+
+        if (height.equals("")) {
+            // Width might affect height
+            Util.updateRelativeChildrenAndSendSizeUpdateEvent(client, this);
+        }
     }
 }
