@@ -42,6 +42,7 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
 
     private Button clear = new Button("Clear console");
     private Button restart = new Button("Restart app");
+    private Button forceLayout = new Button("Force layout");
     private HorizontalPanel actions;
     private boolean collapsed = false;
 
@@ -57,12 +58,16 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
 
     private int origLeft;
 
+    private ApplicationConnection client;
+
     private static final String help = "Drag=move, shift-drag=resize, doubleclick=min/max."
             + "Use debug=quiet to log only to browser console.";
 
     public IDebugConsole(ApplicationConnection client,
             ApplicationConfiguration cnf, boolean showWindow) {
         super(false, false);
+
+        this.client = client;
 
         panel = new FlowPanel();
         if (showWindow) {
@@ -89,6 +94,7 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
             actions = new HorizontalPanel();
             actions.add(clear);
             actions.add(restart);
+            actions.add(forceLayout);
 
             panel.add(actions);
 
@@ -125,6 +131,12 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
                         Window.Location.replace(url);
                     }
 
+                }
+            });
+
+            forceLayout.addClickListener(new ClickListener() {
+                public void onClick(Widget sender) {
+                    IDebugConsole.this.client.forceLayout();
                 }
             });
         }
