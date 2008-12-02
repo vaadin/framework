@@ -431,6 +431,13 @@ public class ITabsheet extends ITabsheetBase {
 
         ITabsheet.this.iLayout();
         (content).updateFromUIDL(contentUIDL, client);
+        /*
+         * The size of a cached, relative sized component must be updated to
+         * report correct size to updateOpenTabSize().
+         */
+        if (contentUIDL.getBooleanAttribute("cached")) {
+            client.handleComponentRelativeSize((Widget) content);
+        }
         updateOpenTabSize();
         ITabsheet.this.removeStyleDependentName("loading");
         if (previousVisibleWidget != null) {
@@ -469,6 +476,11 @@ public class ITabsheet extends ITabsheetBase {
 
     @Override
     public void setWidth(String width) {
+        if ((this.width == null && width.equals(""))
+                || (this.width != null && this.width.equals(width))) {
+            return;
+        }
+
         super.setWidth(width);
         if (width.equals("")) {
             width = null;
@@ -487,6 +499,11 @@ public class ITabsheet extends ITabsheetBase {
         }
 
         if (!rendering) {
+            if (isDynamicHeight()) {
+                Util.updateRelativeChildrenAndSendSizeUpdateEvent(client, tp,
+                        this);
+            }
+
             updateOpenTabSize();
             iLayout();
             // TODO Check if this is needed

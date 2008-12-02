@@ -512,6 +512,12 @@ public class Util {
 
     public static void updateRelativeChildrenAndSendSizeUpdateEvent(
             ApplicationConnection client, HasWidgets container) {
+        updateRelativeChildrenAndSendSizeUpdateEvent(client, container,
+                (Widget) container);
+    }
+
+    public static void updateRelativeChildrenAndSendSizeUpdateEvent(
+            ApplicationConnection client, HasWidgets container, Widget widget) {
         /*
          * Relative sized children must be updated first so the component has
          * the correct outer dimensions when signaling a size change to the
@@ -520,13 +526,11 @@ public class Util {
         Iterator<Widget> childIterator = container.iterator();
         while (childIterator.hasNext()) {
             Widget w = childIterator.next();
-            // alert("Update relative size for " + getSimpleName(w));
             client.handleComponentRelativeSize(w);
         }
 
-        // alert("abc");
         HashSet<Widget> widgets = new HashSet<Widget>();
-        widgets.add((Widget) container);
+        widgets.add(widget);
         Util.componentSizeUpdated(widgets);
     }
 

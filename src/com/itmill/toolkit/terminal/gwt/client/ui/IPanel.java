@@ -51,7 +51,7 @@ public class IPanel extends SimplePanel implements Container {
 
     ShortcutActionHandler shortcutHandler;
 
-    private String width;
+    private String width = "";
 
     private Element geckoCaptionMeter;
 
@@ -432,10 +432,20 @@ public class IPanel extends SimplePanel implements Container {
 
     @Override
     public void setWidth(String width) {
+        if (this.width.equals(width)) {
+            return;
+        }
+
         this.width = width;
         super.setWidth(width);
         if (!rendering) {
             runHacks(true);
+
+            if (height.equals("")) {
+                // Width change may affect height
+                Util.updateRelativeChildrenAndSendSizeUpdateEvent(client, this);
+            }
+
         }
     }
 
