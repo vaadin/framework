@@ -45,8 +45,8 @@ public class IFormLayout extends SimplePanel implements Container {
 
     public class IFormLayoutTable extends FlexTable {
 
-        private HashMap componentToCaption = new HashMap();
-        private HashMap componentToError = new HashMap();
+        private HashMap<Paintable, Caption> componentToCaption = new HashMap<Paintable, Caption>();
+        private HashMap<Paintable, ErrorFlag> componentToError = new HashMap<Paintable, ErrorFlag>();
 
         public IFormLayoutTable() {
             DOM.setElementProperty(getElement(), "cellPadding", "0");
@@ -76,12 +76,12 @@ public class IFormLayout extends SimplePanel implements Container {
                 prepareCell(i, 1);
                 final UIDL childUidl = (UIDL) it.next();
                 final Paintable p = client.getPaintable(childUidl);
-                Caption caption = (Caption) componentToCaption.get(p);
+                Caption caption = componentToCaption.get(p);
                 if (caption == null) {
                     caption = new Caption(p, client);
                     componentToCaption.put(p, caption);
                 }
-                ErrorFlag error = (ErrorFlag) componentToError.get(p);
+                ErrorFlag error = componentToError.get(p);
                 if (error == null) {
                     error = new ErrorFlag();
                     componentToError.put(p, error);
@@ -124,6 +124,13 @@ public class IFormLayout extends SimplePanel implements Container {
                 removeRow(i);
             }
 
+            /*
+             * Must update relative sized fields last when it is clear how much
+             * space they are allowed to use
+             */
+            for (Paintable p : componentToCaption.keySet()) {
+                client.handleComponentRelativeSize((Widget) p);
+            }
         }
 
         public void replaceChildComponent(Widget oldComponent,
@@ -146,11 +153,11 @@ public class IFormLayout extends SimplePanel implements Container {
         }
 
         public void updateCaption(Paintable component, UIDL uidl) {
-            final Caption c = (Caption) componentToCaption.get(component);
+            final Caption c = componentToCaption.get(component);
             if (c != null) {
                 c.updateCaption(uidl);
             }
-            final ErrorFlag e = (ErrorFlag) componentToError.get(component);
+            final ErrorFlag e = componentToError.get(component);
             if (e != null) {
                 e.updateFromUIDL(uidl, component);
             }
@@ -158,8 +165,8 @@ public class IFormLayout extends SimplePanel implements Container {
         }
 
         public int getAllocatedWidth(Widget child, int availableWidth) {
-            Caption caption = (Caption) componentToCaption.get(child);
-            ErrorFlag error = (ErrorFlag) componentToError.get(child);
+            Caption caption = componentToCaption.get(child);
+            ErrorFlag error = componentToError.get(child);
             int width = availableWidth;
 
             if (caption != null) {
