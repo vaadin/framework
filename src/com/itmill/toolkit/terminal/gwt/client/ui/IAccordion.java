@@ -32,7 +32,7 @@ public class IAccordion extends ITabsheetBase implements
 
     private String height;
 
-    private String width;
+    private String width = "";
 
     private HashMap<StackItem, UIDL> lazyUpdateMap = new HashMap<StackItem, UIDL>();
 
@@ -112,7 +112,7 @@ public class IAccordion extends ITabsheetBase implements
         if (selected) {
             selectedUIDLItemIndex = itemIndex;
         }
-        
+
         if (tabUidl.getChildCount() > 0) {
             lazyUpdateMap.put(item, tabUidl.getChildUIDL(0));
         }
@@ -120,19 +120,22 @@ public class IAccordion extends ITabsheetBase implements
 
     private void open(int itemIndex) {
         StackItem item = stack.get(itemIndex);
+        boolean alreadyOpen = false;
         if (openTab != null) {
             if (openTab.isOpen()) {
                 if (openTab == item) {
-                    return;
+                    alreadyOpen = true;
                 } else {
                     openTab.close();
                 }
             }
         }
 
-        item.open();
-        activeTabIndex = itemIndex;
-        openTab = item;
+        if (!alreadyOpen) {
+            item.open();
+            activeTabIndex = itemIndex;
+            openTab = item;
+        }
 
         // Update the size for the open tab
         updateOpenTabSize();
@@ -173,10 +176,25 @@ public class IAccordion extends ITabsheetBase implements
     }
 
     public void setWidth(String width) {
+        if (this.width.equals(width)) {
+            return;
+        }
+
         super.setWidth(width);
         this.width = width;
         if (!rendering) {
             updateOpenTabSize();
+
+            if (isDynamicHeight()) {
+                Util.updateRelativeChildrenAndSendSizeUpdateEvent(client,
+                        openTab, this);
+                updateOpenTabSize();
+            }
+
+            if (isDynamicHeight()) {
+                openTab.setHeightFromWidget();
+            }
+            iLayout();
         }
     }
 
@@ -410,7 +428,13 @@ public class IAccordion extends ITabsheetBase implements
                 replacePaintable(newPntbl);
             }
             newPntbl.updateFromUIDL(contentUidl, client);
-
+            if (contentUidl.getBooleanAttribute("cached")) {
+                /*
+                 * The size of a cached, relative sized component must be
+                 * updated to report correct size.
+                 */
+                client.handleComponentRelativeSize((Widget) newPntbl);
+            }
             if (isOpen() && isDynamicHeight()) {
                 setHeightFromWidget();
             }
