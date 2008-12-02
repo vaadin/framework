@@ -158,8 +158,7 @@ public class ITabsheet extends ITabsheetBase {
         if (client != null && activeTabIndex != tabIndex) {
             tb.selectTab(tabIndex);
             addStyleDependentName("loading");
-            // run updating variables in deferred command to bypass some
-            // FF
+            // run updating variables in deferred command to bypass some FF
             // optimization issues
             DeferredCommand.addCommand(new Command() {
                 public void execute() {

@@ -1759,8 +1759,8 @@ input.i-modified,
 	background-color: #edeeee;
 }
 .i-table .i-selected {
-	background: #d5dde0;
-	color: #456572;
+	background: #57a7ed;
+	color: #fff;
 }
 .i-table-row td,
 .i-table-row-odd td {
@@ -1775,7 +1775,7 @@ input.i-modified,
 }
 
 /* Fix textfield size to correspond label size inside table */
-.i-table-cell-content input.i-textfield,
+.i-table-cell-content .i-textfield,
 .i-table-cell-content .i-button {
 	margin: -2px 0 -2px -3px;
 }
@@ -2114,6 +2114,176 @@ input.i-modified,
 	margin: 0;
 	width: 100%;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Inline style */
+
+.i-tabsheet-light .i-tabsheet-tabcontainer {
+	height: 32px;
+}
+
+.i-tabsheet-tabs-light {
+	height: 32px;
+	width: 100%;
+	overflow:hidden;
+	background: transparent url(tabsheet/img/inline-tab-bg.png) repeat-x;
+}
+
+.i-tabsheet-light .i-tabsheet-spacertd div {
+	height: 31px;
+	border: none;
+	border-bottom: 1px solid #b6bbbc;
+	background: transparent;
+}
+
+.i-tabsheet-light .i-tabsheet-tabitem {
+	border: none;
+	border-bottom: 1px solid #b6bbbc;
+	height: 30px;
+	padding: 0;
+	margin-top: 0;
+	color: #656d73;
+	font-size: 12px;
+	line-height: normal;
+	background: transparent;
+	cursor: pointer;
+	text-shadow: #fff 0 1px 0;
+}
+
+.i-tabsheet-light .i-tabsheet-tabitemcell-first .i-caption {
+	margin-left: 6px;
+}
+
+.i-tabsheet-light .i-tabsheet-tabitem .i-caption {
+	height: 24px;
+	padding: 8px 9px 0 9px;
+}
+
+.i-tabsheet-light .i-tabsheet-tabitem-selected {
+	border: none;
+	background: #fff url(tabsheet/img/inline-tab-right.png) no-repeat right top;
+	margin: 0;
+	padding: 0;
+	height: 32px;
+	cursor: default;
+	color: #ee5311;
+	text-shadow: none;
+}
+
+.i-tabsheet-light .i-tabsheet-tabitem:hover {
+	color: #4b5257;
+}
+
+.i-tabsheet-light .i-tabsheet-tabitem-selected:hover {
+	color: #ee5311;
+}
+
+.i-tabsheet-light .i-tabsheet-tabitem-selected .i-caption {
+	background: transparent url(tabsheet/img/inline-tab-left.png) no-repeat -7px 0;
+	margin: 0;
+	height: 23px;
+	padding: 9px 11px 0 11px;
+	overflow: visible;
+}
+
+.i-tabsheet-light .i-tabsheet-tabitemcell-first .i-tabsheet-tabitem-selected .i-caption {
+	background: transparent url(tabsheet/img/inline-tab-left.png) no-repeat -3px 0;
+	padding-left: 15px;
+}
+
+.i-tabsheet-light .i-tabsheet-content {
+	border: none;
+	background: transparent;
+}
+
+.i-tabsheet-light .i-tabsheet-hidetabs .i-tabsheet-content {
+	border: none;
+}
+
+.i-tabsheet-deco-light {
+	height: 0;
+	overflow: hidden;
+}
+
+.i-tabsheet-deco-light:before {
+	display: none;
+}
+
+
+/* Scroller */
+
+.i-tabsheet-light .i-tabsheet-scrollerPrev,
+.i-tabsheet-light .i-tabsheet-scrollerNext {
+	margin-top: 2px;
+	height: 34px;
+}
+.i-tabsheet-light .i-tabsheet-scrollerPrev-disabled,
+.i-tabsheet-light .i-tabsheet-scrollerNext-disabled {
+	margin-top: 2px;
+	height: 34px;
+}
+
+
+
+
+/* Progress indication */
+
+.i-tabsheet-loading .i-tabsheet-tabs-light .i-tabsheet-tabitem-selected .i-captiontext {
+	margin-left: -3px;
+	padding-left: 3px;
+}
+
+
+
+/* IE specific styles */
+
+* html .i-tabsheet-tabs-light {
+	height: 32px;
+}
+*+html .i-tabsheet-tabs-light {
+	height: 32px;
+}
+
+* html .i-tabsheet-light .i-tabsheet-tabitem-selected {
+	border: none;
+	background: #fff url(tabsheet/img/inline-tab-right.png) no-repeat right top;
+	padding: 0;
+	height: 32px;
+}
+*+html .i-tabsheet-light .i-tabsheet-tabitem-selected {
+	border: none;
+	background: #fff url(tabsheet/img/inline-tab-right.png) no-repeat right top;
+	padding: 0;
+	height: 32px;
+}
+
+* html .i-tabsheet-light .i-tabsheet-tabitem-selected .i-caption {
+	background: transparent url(tabsheet/img/inline-tab-left.png) no-repeat -7px 0;
+	padding: 9px 11px 0 11px;
+}
+*+html .i-tabsheet-light .i-tabsheet-tabitem-selected .i-caption {
+	background: transparent url(tabsheet/img/inline-tab-left.png) no-repeat -7px 0;
+	padding: 9px 11px 0 11px;
+}
+
+* html .i-tabsheet-deco-light {
+	height: 0;
+}
+*+html .i-tabsheet-deco-light {
+	height: 0;
+}
 .i-textfield {
 	background: #fff url(textfield/img/bg.png) repeat-x;
 	padding: 2px;
@@ -2244,7 +2414,7 @@ input.i-modified,
 }
 
 .i-window-outerheader {
-	height: 22px;
+	height: 23px;
 	margin-left: 9px;
 	padding: 15px 34px 11px 12px;
 	background: transparent url(window/img/top-right.png) no-repeat right top;
@@ -2274,7 +2444,7 @@ input.i-modified,
 .i-window-contents {
 	background: #fff;
 	border: 2px solid #acb2b3;
-	border-top-width: 1px;
+	border-top: none;
 	border-bottom: none;
 }
 

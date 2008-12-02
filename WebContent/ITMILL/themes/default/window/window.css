@@ -11,7 +11,7 @@
 }
 
 .i-window-outerheader {
-	height: 22px;
+	height: 23px;
 	margin-left: 9px;
 	padding: 15px 34px 11px 12px;
 	background: transparent url(img/top-right.png) no-repeat right top;
@@ -41,7 +41,7 @@
 .i-window-contents {
 	background: #fff;
 	border: 2px solid #acb2b3;
-	border-top-width: 1px;
+	border-top: none;
 	border-bottom: none;
 }
 
