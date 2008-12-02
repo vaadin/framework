@@ -23,6 +23,7 @@ abstract class ITabsheetBase extends ComplexPanel implements Container {
     protected boolean disabled;
     protected boolean readonly;
     protected Set disabledTabKeys = new HashSet();
+    protected boolean cachedUpdate = false;
 
     public ITabsheetBase(String classname) {
         setElement(DOM.createDiv());
@@ -33,7 +34,8 @@ abstract class ITabsheetBase extends ComplexPanel implements Container {
         this.client = client;
 
         // Ensure correct implementation
-        if (client.updateComponent(this, uidl, true)) {
+        cachedUpdate = client.updateComponent(this, uidl, true);
+        if (cachedUpdate) {
             return;
         }
 

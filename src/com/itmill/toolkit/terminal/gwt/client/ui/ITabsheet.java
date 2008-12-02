@@ -262,6 +262,9 @@ public class ITabsheet extends ITabsheetBase {
         rendering = true;
 
         super.updateFromUIDL(uidl, client);
+        if (cachedUpdate) {
+            return;
+        }
 
         // Add proper stylenames for all elements (easier to prevent unwanted
         // style inheritance)
