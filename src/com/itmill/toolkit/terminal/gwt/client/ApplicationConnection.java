@@ -1064,14 +1064,7 @@ public class ApplicationConnection {
         float relativeWidth = Util.parseRelativeSize(w);
         float relativeHeight = Util.parseRelativeSize(h);
 
-        // first set absolute sizes
-        if (relativeHeight < 0.0) {
-            component.setHeight(h);
-        }
-        if (relativeWidth < 0.0) {
-            component.setWidth(w);
-        }
-
+        // First update maps so they are correct in the setHeight/setWidth calls
         if (relativeHeight >= 0.0 || relativeWidth >= 0.0) {
             // One or both is relative
             FloatSize relativeSize = new FloatSize(relativeWidth,
@@ -1081,13 +1074,25 @@ public class ApplicationConnection {
                 // The component has changed from absolute size to relative size
                 relativeSizeChanges.add(component);
             }
-            handleComponentRelativeSize(component);
         } else if (relativeHeight < 0.0 && relativeWidth < 0.0) {
-
             if (componentRelativeSizes.remove(component) != null) {
                 // The component has changed from relative size to absolute size
                 relativeSizeChanges.add(component);
             }
+        }
+
+        // Set absolute sizes
+        if (relativeHeight < 0.0) {
+            component.setHeight(h);
+        }
+        if (relativeWidth < 0.0) {
+            component.setWidth(w);
+        }
+
+	// Set relative sizes
+        if (relativeHeight >= 0.0 || relativeWidth >= 0.0) {
+            // One or both is relative
+            handleComponentRelativeSize(component);
         }
 
     }
