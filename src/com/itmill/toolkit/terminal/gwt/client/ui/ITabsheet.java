@@ -309,6 +309,12 @@ public class ITabsheet extends ITabsheetBase {
             updateDynamicWidth();
         }
 
+        if (!isDynamicHeight()) {
+            // Must update height after the styles have been set
+            updateContentNodeHeight();
+            updateOpenTabSize();
+        }
+
         iLayout();
 
         // Re run relative size update to ensure optimal scrollbars
@@ -450,10 +456,21 @@ public class ITabsheet extends ITabsheetBase {
     public void setHeight(String height) {
         super.setHeight(height);
         this.height = height;
+        updateContentNodeHeight();
+
+        if (!rendering) {
+            updateOpenTabSize();
+            iLayout();
+            // TODO Check if this is needed
+            client.runDescendentsLayout(this);
+        }
+    }
+
+    private void updateContentNodeHeight() {
         if (height != null && !"".equals(height)) {
-            int contentHeight = getOffsetHeight()
-                    - DOM.getElementPropertyInt(deco, "offsetHeight")
-                    - tb.getOffsetHeight() - 5;
+            int contentHeight = getOffsetHeight();
+            contentHeight -= DOM.getElementPropertyInt(deco, "offsetHeight");
+            contentHeight -= tb.getOffsetHeight();
             if (contentHeight < 0) {
                 contentHeight = 0;
             }
@@ -464,12 +481,6 @@ public class ITabsheet extends ITabsheetBase {
         } else {
             DOM.setStyleAttribute(contentNode, "height", "");
             renderSpace.setHeight(0);
-        }
-        if (!rendering) {
-            updateOpenTabSize();
-            iLayout();
-            // TODO Check if this is needed
-            client.runDescendentsLayout(this);
         }
     }
 
