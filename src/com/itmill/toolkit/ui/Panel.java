@@ -30,8 +30,6 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
 
     public static final String STYLE_LIGHT = "light";
 
-    public static final String STYLE_EMPHASIZE = "emphasize";
-
     /**
      * Layout of the panel.
      */
@@ -163,6 +161,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * @throws PaintException
      *             if the paint operation failed.
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         layout.paint(target);
 
@@ -211,6 +210,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         }
     }
 
+    @Override
     public void requestRepaintAll() {
         // Panel has odd structure, delegate to layout
         requestRepaint();
@@ -222,6 +222,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * 
      * @return the Component UIDL tag as string.
      */
+    @Override
     public String getTag() {
         return "panel";
     }
@@ -233,6 +234,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      *            the component to be added.
      * @see com.itmill.toolkit.ui.AbstractComponentContainer#addComponent(com.itmill.toolkit.ui.Component)
      */
+    @Override
     public void addComponent(Component c) {
         layout.addComponent(c);
         // No repaint request is made as we except the underlying container to
@@ -246,6 +248,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      *            The component to be added.
      * @see com.itmill.toolkit.ui.AbstractComponentContainer#removeComponent(com.itmill.toolkit.ui.Component)
      */
+    @Override
     public void removeComponent(Component c) {
         layout.removeComponent(c);
         // No repaint request is made as we except the underlying container to
@@ -270,6 +273,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * @see com.itmill.toolkit.terminal.VariableOwner#changeVariables(Object,
      *      Map)
      */
+    @Override
     public void changeVariables(Object source, Map variables) {
         super.changeVariables(source, variables);
 
@@ -319,6 +323,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     /**
      * @deprecated use getScrollLeft() instead
      */
+    @Deprecated
     public int getScrollOffsetX() {
         return getScrollLeft();
     }
@@ -331,6 +336,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     /**
      * @deprecated use getScrollTop() instead
      */
+    @Deprecated
     public int getScrollOffsetY() {
         return getScrollTop();
     }
@@ -363,6 +369,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     /**
      * @deprecated use setScrollLeft() method instead
      */
+    @Deprecated
     public void setScrollOffsetX(int pixels) {
         setScrollLeft(pixels);
     }
@@ -382,6 +389,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     /**
      * @deprecated use setScrollTop() method instead
      */
+    @Deprecated
     public void setScrollOffsetY(int pixels) {
         setScrollTop(pixels);
     }
@@ -419,6 +427,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * 
      * @see com.itmill.toolkit.ui.Component#attach()
      */
+    @Override
     public void attach() {
         // can't call parent here as this is Panels hierarchy is a hack
         requestRepaint();
@@ -432,6 +441,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * 
      * @see com.itmill.toolkit.ui.Component#detach()
      */
+    @Override
     public void detach() {
         // can't call parent here as this is Panels hierarchy is a hack
         if (layout != null) {
@@ -444,6 +454,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * 
      * @see com.itmill.toolkit.ui.ComponentContainer#removeAllComponents()
      */
+    @Override
     public void removeAllComponents() {
         layout.removeAllComponents();
     }
