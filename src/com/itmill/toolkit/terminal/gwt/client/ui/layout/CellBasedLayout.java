@@ -14,7 +14,7 @@ import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
-import com.itmill.toolkit.terminal.gwt.client.ui.MarginInfo;
+import com.itmill.toolkit.terminal.gwt.client.ui.IMarginInfo;
 
 public abstract class CellBasedLayout extends ComplexPanel implements Container {
 
@@ -28,7 +28,7 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
     public static final int ORIENTATION_HORIZONTAL = 1;
 
     protected Margins activeMargins = new Margins(0, 0, 0, 0);
-    protected MarginInfo activeMarginsInfo = new MarginInfo(-1);
+    protected IMarginInfo activeMarginsInfo = new IMarginInfo(-1);
 
     protected boolean spacingEnabled = false;
     protected final Spacing spacingFromCSS = new Spacing(12, 12);
@@ -184,7 +184,7 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
     private void updateMarginAndSpacingInfo(UIDL uidl) {
         int bitMask = uidl.getIntAttribute("margins");
         if (activeMarginsInfo.getBitMask() != bitMask) {
-            activeMarginsInfo = new MarginInfo(bitMask);
+            activeMarginsInfo = new IMarginInfo(bitMask);
             marginsNeedsRecalculation = true;
         }
         boolean spacing = uidl.getBooleanAttribute("spacing");

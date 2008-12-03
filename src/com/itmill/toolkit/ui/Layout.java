@@ -5,6 +5,7 @@
 package com.itmill.toolkit.ui;
 
 import com.itmill.toolkit.terminal.gwt.client.ui.AlignmentInfo;
+import com.itmill.toolkit.terminal.gwt.client.ui.IMarginInfo;
 
 /**
  * Extension to the {@link ComponentContainer} interface which adds the
@@ -130,4 +131,42 @@ public interface Layout extends ComponentContainer {
         public boolean isSpacingEnabled();
     }
 
+    /**
+     * This type of layout can enable margins.
+     * 
+     * TODO refine javadocs
+     */
+    public interface MarginHandler {
+        /**
+         * Enable margins for this layout.
+         * 
+         * <p>
+         * <strong>NOTE:</strong> This will only affect margins for the layout,
+         * not spacing between components inside the layout. Use
+         * {@link #setSpacing(boolean)} to add space between components in the
+         * layout.
+         * </p>
+         * 
+         * @param marginInfo MarginInfo object containing the new margins.
+         */
+        public void setMargin(MarginInfo marginInfo);
+
+        /**
+         * 
+         * @return MarginInfo containing the currently enabled margins.
+         */
+        public MarginInfo getMargin();
+    }
+
+    public static class MarginInfo extends IMarginInfo {
+
+        public MarginInfo(boolean enabled) {
+            super(enabled, enabled, enabled, enabled);
+        }
+
+        public MarginInfo(boolean top, boolean right, boolean bottom,
+                boolean left) {
+            super(top, right, bottom, left);
+        }
+    }
 }

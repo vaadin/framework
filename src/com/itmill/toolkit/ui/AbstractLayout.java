@@ -6,7 +6,7 @@ package com.itmill.toolkit.ui;
 
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
-import com.itmill.toolkit.terminal.gwt.client.ui.MarginInfo;
+import com.itmill.toolkit.ui.Layout.MarginHandler;
 
 /**
  * An abstract class that defines default implementation for the {@link Layout}
@@ -18,9 +18,9 @@ import com.itmill.toolkit.terminal.gwt.client.ui.MarginInfo;
  * @since 5.0
  */
 public abstract class AbstractLayout extends AbstractComponentContainer
-        implements Layout {
+        implements Layout, MarginHandler {
 
-    protected MarginInfo margins = new MarginInfo(false, false, false, false);
+    protected MarginInfo margins = new MarginInfo(false);
 
     /*
      * (non-Javadoc)
@@ -36,6 +36,25 @@ public abstract class AbstractLayout extends AbstractComponentContainer
      */
     public void setMargin(boolean enabled) {
         margins.setMargins(enabled);
+        requestRepaint();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.itmill.toolkit.ui.Layout.MarginHandler#getMargin()
+     */
+    public MarginInfo getMargin() {
+        return margins;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.itmill.toolkit.ui.Layout.MarginHandler#setMargin(MarginInfo)
+     */
+    public void setMargin(MarginInfo marginInfo) {
+        margins.setMargins(marginInfo);
         requestRepaint();
     }
 

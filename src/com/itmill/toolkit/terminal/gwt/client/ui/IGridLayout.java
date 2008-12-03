@@ -589,7 +589,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
     }
 
     private void handleMargins(UIDL uidl) {
-        final MarginInfo margins = new MarginInfo(uidl
+        final IMarginInfo margins = new IMarginInfo(uidl
                 .getIntAttribute("margins"));
 
         String styles = CLASSNAME + "-margin";

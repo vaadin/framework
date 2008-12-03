@@ -4,7 +4,7 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
-public class MarginInfo {
+public class IMarginInfo {
 
     private static final int TOP = 1;
     private static final int RIGHT = 2;
@@ -13,11 +13,11 @@ public class MarginInfo {
 
     private int bitMask;
 
-    public MarginInfo(int bitMask) {
+    public IMarginInfo(int bitMask) {
         this.bitMask = bitMask;
     }
 
-    public MarginInfo(boolean top, boolean right, boolean bottom, boolean left) {
+    public IMarginInfo(boolean top, boolean right, boolean bottom, boolean left) {
         setMargins(top, right, bottom, left);
     }
 
@@ -27,6 +27,10 @@ public class MarginInfo {
         bitMask += right ? RIGHT : 0;
         bitMask += bottom ? BOTTOM : 0;
         bitMask += left ? LEFT : 0;
+    }
+
+    public void setMargins(IMarginInfo marginInfo) {
+        bitMask = marginInfo.bitMask;
     }
 
     public boolean hasLeft() {
@@ -58,11 +62,11 @@ public class MarginInfo {
     }
 
     public boolean equals(Object obj) {
-        if (!(obj instanceof MarginInfo)) {
+        if (!(obj instanceof IMarginInfo)) {
             return false;
         }
 
-        return ((MarginInfo) obj).bitMask == bitMask;
+        return ((IMarginInfo) obj).bitMask == bitMask;
     }
 
 }

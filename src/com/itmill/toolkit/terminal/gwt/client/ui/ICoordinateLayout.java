@@ -64,7 +64,7 @@ public class ICoordinateLayout extends ComplexPanel implements Container,
     // current layout margins and width/height
     protected int[] layout = new int[6];
 
-    protected MarginInfo marginInfo; // from UIDL
+    protected IMarginInfo marginInfo; // from UIDL
     protected int[] margins; // from CSS
 
     public ICoordinateLayout() {
@@ -79,7 +79,7 @@ public class ICoordinateLayout extends ComplexPanel implements Container,
             DOM.setStyleAttribute(getElement(), "zoom", "1");
         }
 
-        marginInfo = new MarginInfo(0);
+        marginInfo = new IMarginInfo(0);
 
         // Init data structures
         componentList = new ArrayList<Widget>();
@@ -124,9 +124,9 @@ public class ICoordinateLayout extends ComplexPanel implements Container,
 
         // Enable / disable margins
         if (uidl.hasAttribute("margins")) {
-            marginInfo = new MarginInfo(uidl.getIntAttribute("margins"));
+            marginInfo = new IMarginInfo(uidl.getIntAttribute("margins"));
         } else {
-            marginInfo = new MarginInfo(0);
+            marginInfo = new IMarginInfo(0);
         }
 
         // Start going through the component tree

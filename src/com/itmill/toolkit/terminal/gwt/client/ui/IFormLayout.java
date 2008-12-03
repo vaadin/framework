@@ -54,7 +54,7 @@ public class IFormLayout extends SimplePanel implements Container {
         }
 
         public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-            final MarginInfo margins = new MarginInfo(uidl
+            final IMarginInfo margins = new IMarginInfo(uidl
                     .getIntAttribute("margins"));
 
             Element margin = getElement();
