@@ -63,7 +63,7 @@ public class Ticket2061b extends Application implements
         tf.setHeight("2500px");
         tf.setWidth("2500px");
 
-        Tabs tab = new Tabs(new Component[] { p, a, tf });
+        TabsAcc tab = new TabsAcc(new Component[] { p, a, tf });
         tab.addListener(this);
 
         mainLayout.addComponent(sp);
@@ -155,6 +155,19 @@ public class Ticket2061b extends Application implements
     public class Tabs extends TabSheet {
 
         public Tabs(Component[] components) {
+            this.setWidth("100%");
+            this.setHeight("100%");
+            for (int i = 0; i < components.length; i++) {
+                this.addTab(components[i], components[i].getDebugId(), null);
+            }
+
+        }
+
+    }
+
+    public class TabsAcc extends Accordion {
+
+        public TabsAcc(Component[] components) {
             this.setWidth("100%");
             this.setHeight("100%");
             for (int i = 0; i < components.length; i++) {

@@ -178,6 +178,7 @@ public class Ticket2204 extends Application {
             sp.setWidth("300px");
             sp.setHeight("300px");
             sp.addComponent(new Label("Label"));
+            textArea.setSizeFull();
         }
         if (c == Panel.class) {
             Layout layout = ((Panel) cc).getLayout();

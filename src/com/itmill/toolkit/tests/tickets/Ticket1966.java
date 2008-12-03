@@ -54,7 +54,7 @@ public class Ticket1966 extends Application {
         Button b;
 
         b = new Button("Wide button");
-        b.setWidth("500");
+        b.setWidth("500px");
         gl.addComponent(b);
 
         addButtons(gl);
@@ -87,7 +87,7 @@ public class Ticket1966 extends Application {
         Button b;
 
         b = new Button("Wide button");
-        b.setWidth("500");
+        b.setWidth("500px");
         ol.addComponent(b);
 
         addButtons(ol);
@@ -107,19 +107,19 @@ public class Ticket1966 extends Application {
 
     }
 
-    private void addButtons(AlignmentHandler ol) {
+    private void addButtons(Layout ol) {
         ol.addComponent(getButton(ol, LEFT, TOP));
         ol.addComponent(getButton(ol, CENTER, VCENTER));
         ol.addComponent(getButton(ol, RIGHT, BOTTOM));
 
     }
 
-    private Button getButton(AlignmentHandler l, int hAlign, int vAlign) {
+    private Button getButton(Layout l, int hAlign, int vAlign) {
         Button b = new Button("Narrow Button - "
                 + names.get(new Integer(hAlign)) + " - "
                 + names.get(new Integer(vAlign)));
-        b.setWidth("100");
-        l.setComponentAlignment(b, hAlign, vAlign);
+        b.setWidth("100px");
+        ((AlignmentHandler) l).setComponentAlignment(b, hAlign, vAlign);
 
         return b;
 

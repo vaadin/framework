@@ -7,6 +7,7 @@ import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Layout;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Window;
+import com.itmill.toolkit.ui.Layout.SpacingHandler;
 
 public class Ticket2232 extends Application {
 
@@ -20,7 +21,7 @@ public class Ticket2232 extends Application {
                         new Label(
                                 "Defining spacing must be possible also with pure CSS"));
 
-        Layout.SpacingHandler gl;
+        Layout gl;
         gl = new OrderedLayout();
         gl.setWidth("100%");
         gl.setHeight("200px");
@@ -36,13 +37,13 @@ public class Ticket2232 extends Application {
         gl = new OrderedLayout();
         gl.setWidth("100%");
         gl.setHeight("200px");
-        gl.setSpacing(true);
+        ((SpacingHandler) gl).setSpacing(true);
         fillAndAdd(gl);
 
         gl = new GridLayout();
         gl.setWidth("100%");
         gl.setHeight("200px");
-        gl.setSpacing(true);
+        ((SpacingHandler) gl).setSpacing(true);
         fillAndAdd(gl);
 
         gl = new OrderedLayout();
@@ -57,7 +58,7 @@ public class Ticket2232 extends Application {
 
     }
 
-    private void fillAndAdd(Layout.SpacingHandler gl) {
+    private void fillAndAdd(Layout gl) {
         for (int i = 0; i < 4; i++) {
             Button b = new Button("B");
             b.setSizeFull();
@@ -65,7 +66,7 @@ public class Ticket2232 extends Application {
         }
         String caption = gl.getClass().getSimpleName();
         caption += " style: " + gl.getStyleName() + ", spacingFromServer:"
-                + gl.isSpacingEnabled();
+                + ((SpacingHandler) gl).isSpacingEnabled();
         gl.setCaption(caption);
         getMainWindow().addComponent(gl);
     }

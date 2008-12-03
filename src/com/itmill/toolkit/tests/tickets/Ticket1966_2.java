@@ -166,18 +166,18 @@ public class Ticket1966_2 extends Application {
 
     }
 
-    private void addButtons(AlignmentHandler ol) {
+    private void addButtons(Layout ol) {
         ol.addComponent(getButton(ol, LEFT, TOP));
         ol.addComponent(getButton(ol, CENTER, VCENTER));
         ol.addComponent(getButton(ol, RIGHT, BOTTOM));
 
     }
 
-    private Button getButton(AlignmentHandler l, int hAlign, int vAlign) {
+    private Button getButton(Layout l, int hAlign, int vAlign) {
         Button b = new Button(names.get(new Integer(hAlign)) + " - "
                 + names.get(new Integer(vAlign)));
         // b.setWidth("100");
-        l.setComponentAlignment(b, hAlign, vAlign);
+        ((AlignmentHandler) l).setComponentAlignment(b, hAlign, vAlign);
 
         return b;
 

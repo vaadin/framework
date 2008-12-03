@@ -19,7 +19,7 @@ public class Ticket2061 extends Application {
 
     @Override
     public void init() {
-        mainWindow = new Window("It Mill");
+        mainWindow = new Window("Ticket 2061");
         mainWindow.setSizeFull();
         mainWindow.getLayout().setSizeFull();
         setMainWindow(mainWindow);

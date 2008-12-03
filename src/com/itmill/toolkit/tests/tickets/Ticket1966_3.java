@@ -23,19 +23,19 @@ public class Ticket1966_3 extends Application {
     private void createUI(GridLayout layout) {
         OrderedLayout ol = new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL);
         Panel p = new Panel(ol);
-        p.setWidth("300");
-        p.setHeight("300");
+        p.setWidth("300px");
+        p.setHeight("300px");
         p.getLayout().setSizeFull();
 
         TextField tf = new TextField("Long caption, longer than 100 pixels");
-        tf.setWidth("100");
+        tf.setWidth("100px");
 
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT,
                 OrderedLayout.ALIGNMENT_TOP);
 
         tf = new TextField("Short caption");
-        tf.setWidth("100");
+        tf.setWidth("100px");
 
         tf.setComponentError(new UserError("error message"));
         ol.addComponent(tf);
@@ -45,7 +45,7 @@ public class Ticket1966_3 extends Application {
         tf = new TextField("Short caption");
         tf.setComponentError(new UserError("error message"));
         tf.setIcon(new ThemeResource("icons/16/calendar.png"));
-        tf.setWidth("100");
+        tf.setWidth("100px");
 
         tf.setComponentError(new UserError("error message"));
         ol.addComponent(tf);
@@ -54,7 +54,7 @@ public class Ticket1966_3 extends Application {
 
         tf = new TextField();
         tf.setValue("No caption");
-        tf.setWidth("100");
+        tf.setWidth("100px");
 
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT,

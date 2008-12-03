@@ -24,6 +24,8 @@ public class Ticket2021 extends Application {
             + "Nulla nisi. Sed blandit, ante vitae sagittis volutpat, arcu mauris vehicula risus, vitae posuere felis lectus sit amet purus. Donec nec magna et leo eleifend scelerisque. Suspendisse condimentum pharetra ligula. Curabitur lorem. Pellentesque a augue sit amet enim fermentum placerat. Phasellus ante risus, molestie at, iaculis at, pellentesque non, tellus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Phasellus non urna eget risus tempus imperdiet. Integer est diam, sagittis sit amet, posuere sit amet, bibendum sed, lacus. Aenean adipiscing cursus ipsum. Quisque at elit. Vestibulum vitae nunc. Praesent placerat metus viverra lorem. Cras nec elit congue nisi faucibus feugiat. Nam eget mi. Vestibulum condimentum. Nunc nisl ante, cursus in, dictum ac, lobortis rutrum, mi. Nulla eu nisi. In ultricies vehicula magna."
             + "Nunc eros dui, elementum at, ullamcorper eget, varius at, velit. Ut dictum. Cras ullamcorper ante vel tortor. Quisque viverra mauris vulputate quam. Nulla dui. Suspendisse non eros at ipsum faucibus hendrerit. Morbi dignissim pharetra tortor. Etiam malesuada. Mauris lacinia elementum erat. Duis mollis placerat metus. Nunc risus felis, cursus ac, cursus vel, convallis vel, metus. Ut vehicula nibh et nulla. Vivamus id pede. Quisque egestas arcu a ligula. Maecenas vehicula. Quisque sed ligula quis tellus tempus rutrum. Curabitur vel augue sed orci egestas pharetra. Duis pharetra.";
 
+    private OrderedLayout orderedLayout;
+
     public void init() {
         Window w = new Window(getClass().getSimpleName());
         w.setLayout(new GridLayout(2, 2));
@@ -31,8 +33,8 @@ public class Ticket2021 extends Application {
 
         Panel p = new Panel();
         p.setCaption("ExpandLayout");
-        p.setWidth(500);
-        p.setHeight(500);
+        p.setWidth("500px");
+        p.setHeight("500px");
         p.setLayout(new ExpandLayout());
         p.getLayout().setSizeFull();
 
@@ -52,8 +54,8 @@ public class Ticket2021 extends Application {
 
         Panel p2 = new Panel();
         p2.setCaption("OrderedLayout");
-        p2.setWidth(500);
-        p2.setHeight(500);
+        p2.setWidth("500px");
+        p2.setHeight("500px");
         p2.setLayout(new OrderedLayout());
         p2.getLayout().setSizeFull();
 
@@ -93,14 +95,14 @@ public class Ticket2021 extends Application {
         // p3.getLayout().addComponent(tf3);
         gl.addComponent(tf3);
 
-        // p = new Panel();
-        // p.setCaption("OrderedLayout");
-        // p.setWidth(500);
-        // p.setHeight(500);
-        // p.getLayout().setSizeFull();
+        // Panel pp = new Panel();
+        // pp.setCaption("OrderedLayout");
+        // pp.setWidth("500px");
+        // pp.setHeight("500px");
+        // pp.getLayout().setSizeFull();
         // orderedLayout = new OrderedLayout();
-        // p.getLayout().addComponent(orderedLayout);
-        // w.getLayout().addComponent(p);
+        // pp.getLayout().addComponent(orderedLayout);
+        // w.getLayout().addComponent(pp);
         // createUI(orderedLayout);
     }
 
@@ -111,15 +113,17 @@ public class Ticket2021 extends Application {
                 new ClickListener() {
 
                     public void buttonClick(ClickEvent event) {
-                        System.out.println("Enable caption");
-                        AbstractComponent l = tf1;
-                        // Layout l = (Layout) event.getButton().getData();
-                        if (l.getCaption() == null) {
-                            l.setCaption("Expand layout caption");
-                        } else {
-                            l.setCaption(null);
+                        System.out.println("Enable/disable caption");
+                        for (AbstractComponent l : new AbstractComponent[] {
+                                tf1, tf2, tf3 }) {
+                            // AbstractComponent l = tf2;
+                            // Layout l = (Layout) event.getButton().getData();
+                            if (l.getCaption() == null) {
+                                l.setCaption("Expand layout caption");
+                            } else {
+                                l.setCaption(null);
+                            }
                         }
-
                     }
 
                 });
