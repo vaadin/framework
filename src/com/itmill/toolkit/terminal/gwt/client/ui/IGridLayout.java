@@ -713,7 +713,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                 for (int i = 0; i < rowHeights.length; i++) {
                     Cell cell = cells[colIndex][i];
                     if (cell != null && cell.getChildUIDL() != null
-                            && !cell.hasRelativeWidth()) {
+                            && !cell.hasRelativeWidth() && cell.colspan == 1) {
                         int width = cell.getWidth();
                         if (width > colW) {
                             colW = width;
@@ -742,7 +742,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                 for (int i = 0; i < columnWidths.length; i++) {
                     Cell cell = cells[i][rowIndex];
                     if (cell != null && cell.getChildUIDL() != null
-                            && !cell.hasRelativeHeight()) {
+                            && !cell.hasRelativeHeight() && cell.rowspan == 1) {
                         int h = cell.getHeight();
                         if (h > rowH) {
                             rowH = h;
