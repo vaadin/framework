@@ -4,6 +4,8 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import java.util.HashSet;
+
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -15,6 +17,7 @@ import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.ITooltip;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.Util;
 
 public class IButton extends Button implements Paintable {
 
@@ -32,6 +35,11 @@ public class IButton extends Button implements Paintable {
 
     private Icon icon;
 
+    /**
+     * Helper flat to handle special-case where the button is moved from under
+     * mouse while clicking it. In this case mouse leaves the button without
+     * moving.
+     */
     private boolean clickPending;
 
     public IButton() {
@@ -45,7 +53,7 @@ public class IButton extends Button implements Paintable {
                     return;
                 }
                 /*
-                 * TODO isolata workaround. Safari don't always seem to fire
+                 * TODO isolate workaround. Safari don't always seem to fire
                  * onblur previously focused component before button is clicked.
                  */
                 IButton.this.setFocus(true);
@@ -110,23 +118,24 @@ public class IButton extends Button implements Paintable {
         }
     }
 
+    @Override
     public void setText(String text) {
         DOM.setInnerText(captionElement, text);
     }
 
+    @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
 
-        // Handle special-case where the button is moved from under mouse
-        // while clicking it. In this case mouse leaves the button without
-        // moving.
-        if (DOM.eventGetType(event) == Event.ONMOUSEDOWN) {
+        if (DOM.eventGetType(event) == Event.ONLOAD) {
+            HashSet<Widget> set = new HashSet<Widget>();
+            set.add(this);
+            Util.componentSizeUpdated(set);
+        } else if (DOM.eventGetType(event) == Event.ONMOUSEDOWN) {
             clickPending = true;
-        }
-        if (DOM.eventGetType(event) == Event.ONMOUSEMOVE) {
+        } else if (DOM.eventGetType(event) == Event.ONMOUSEMOVE) {
             clickPending = false;
-        }
-        if (DOM.eventGetType(event) == Event.ONMOUSEOUT) {
+        } else if (DOM.eventGetType(event) == Event.ONMOUSEOUT) {
             if (clickPending) {
                 click();
             }

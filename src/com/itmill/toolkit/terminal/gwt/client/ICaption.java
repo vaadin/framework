@@ -91,7 +91,6 @@ public class ICaption extends HTML {
                 icon.setWidth("0px");
                 icon.setHeight("0px");
 
-                DOM.sinkEvents(icon.getElement(), Event.ONLOAD);
                 DOM.insertChild(getElement(), icon.getElement(),
                         getInsertPosition(ATTRIBUTE_ICON));
             }
@@ -212,6 +211,7 @@ public class ICaption extends HTML {
 
     }
 
+    @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         final Element target = DOM.eventGetTarget(event);

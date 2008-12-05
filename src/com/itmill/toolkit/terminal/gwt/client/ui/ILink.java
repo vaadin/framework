@@ -4,6 +4,8 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import java.util.HashSet;
+
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -15,6 +17,7 @@ import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.ITooltip;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.Util;
 
 public class ILink extends HTML implements Paintable, ClickListener {
 
@@ -157,8 +160,14 @@ public class ILink extends HTML implements Paintable, ClickListener {
         }
     }
 
+    @Override
     public void onBrowserEvent(Event event) {
         final Element target = DOM.eventGetTarget(event);
+        if (event.getTypeInt() == Event.ONLOAD) {
+            HashSet<Widget> set = new HashSet<Widget>();
+            set.add(this);
+            Util.componentSizeUpdated(set);
+        }
         if (client != null) {
             client.handleTooltipEvent(event, this);
         }

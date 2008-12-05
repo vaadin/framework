@@ -4,6 +4,8 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import java.util.HashSet;
+
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -13,6 +15,7 @@ import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.ITooltip;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.Util;
 
 public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox implements
         Paintable, Field {
@@ -89,18 +92,26 @@ public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox implements
         immediate = uidl.getBooleanAttribute("immediate");
     }
 
+    @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
+        if (event.getTypeInt() == Event.ONLOAD) {
+            HashSet<Widget> set = new HashSet<Widget>();
+            set.add(this);
+            Util.componentSizeUpdated(set);
+        }
         if (client != null) {
             client.handleTooltipEvent(event, this);
         }
     }
 
+    @Override
     public void setWidth(String width) {
         setBlockMode();
         super.setWidth(width);
     }
 
+    @Override
     public void setHeight(String height) {
         setBlockMode();
         super.setHeight(height);

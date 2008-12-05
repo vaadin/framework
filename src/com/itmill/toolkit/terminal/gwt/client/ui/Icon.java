@@ -5,6 +5,7 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.UIObject;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 
@@ -30,6 +31,8 @@ public class Icon extends UIObject {
             String uri = client.translateToolkitUri(uidlUri);
             DOM.setElementProperty(getElement(), "src", uri);
             myUri = uidlUri;
+            // start sinkin onload events, widgets responsibility to react
+            sinkEvents(Event.ONLOAD);
         }
     }
 
