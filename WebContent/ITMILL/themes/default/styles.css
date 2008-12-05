@@ -1,4 +1,6 @@
 /* Automatically compiled css file from subdirectories. */
+
+/*./WebContent/ITMILL/themes/default/accordion/accordion.css*/
 .i-accordion {
 	position: relative;
 	outline: none;
@@ -44,6 +46,8 @@
 	overflow: auto;
 	width: 100%;
 }
+
+/*./WebContent/ITMILL/themes/default/button/button.css*/
 .i-button {
 	cursor: pointer;
 	font-size: 13px;
@@ -112,6 +116,8 @@
 	background-color: #FFE0E0;
 }
 */
+
+/*./WebContent/ITMILL/themes/default/caption/caption.css*/
 /* Provide some extra whitespace for wrapped elements
    (these elements usually need the extra space, since 
    they aren't even handling their own caption) */
@@ -153,6 +159,8 @@
 .i-caption .i-required-field-indicator {
 	float: left;
 }
+
+/*./WebContent/ITMILL/themes/default/common/common.css*/
 /* body tag created by servlet */
 .i-generated-body {
 	background: #e9eced;
@@ -434,6 +442,8 @@ input.i-modified,
 	background: #f99 !important;
 	
 }
+
+/*./WebContent/ITMILL/themes/default/coordinatelayout/coordinatelayout.css*/
 /*
  *	CoordinateLayout
  */
@@ -444,6 +454,8 @@ input.i-modified,
 	margin-bottom: 0px;
 	margin-left: 0px;
 }
+
+/*./WebContent/ITMILL/themes/default/datefield/datefield.css*/
 .i-datefield {
 	white-space: nowrap;
 }
@@ -669,6 +681,8 @@ input.i-modified,
 	filter: alpha(opacity=30);
 }
 
+
+/*./WebContent/ITMILL/themes/default/formlayout/formlayout.css*/
 .i-formlayout-cell .i-errorindicator {
 	width: 10px;
 	height: 16px;
@@ -744,6 +758,8 @@ input.i-modified,
 .i-form .i-caption .i-required-field-indicator {
 	float: none;
 }
+
+/*./WebContent/ITMILL/themes/default/gridlayout/gridlayout.css*/
 /* Margin values if defined from server side */
 .i-gridlayout-margin-top {
 	padding-top: 15px;
@@ -781,6 +797,8 @@ input.i-modified,
 	overflow:hidden;
 }
 
+
+/*./WebContent/ITMILL/themes/default/menubar/menubar.css*/
 /*
  *MenuBar styles
  */
@@ -837,6 +855,8 @@ input.i-modified,
 .i-menubar-submenu .menuitem-selected {
 	background-color : 	#EEEEFF;
 }
+
+/*./WebContent/ITMILL/themes/default/notification/notification.css*/
 
 .i-Notification {
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
@@ -918,6 +938,8 @@ input.i-modified,
 .i-Notification.system p {
 	white-space: nowrap;
 }
+
+/*./WebContent/ITMILL/themes/default/orderedlayout/orderedlayout.css*/
 .i-orderedlayout {
 	overflow: hidden;
 }
@@ -947,6 +969,8 @@ input.i-modified,
 	padding-top: 0px;
 	padding-left: 0px;
 }
+
+/*./WebContent/ITMILL/themes/default/panel/panel.css*/
 .i-panel,
 .i-panel-caption,
 .i-panel-content,
@@ -1102,6 +1126,8 @@ input.i-modified,
 	height: 0;
 	overflow: hidden;
 }
+
+/*./WebContent/ITMILL/themes/default/popupview/popupview.css*/
 /*
  * PopupView styles
  */
@@ -1118,6 +1144,8 @@ input.i-modified,
 	cursor: 				pointer; 
 	cursor: 				hand;
 }
+
+/*./WebContent/ITMILL/themes/default/progressindicator/progressindicator.css*/
 .i-progressindicator {
 	background: #dfe2e4 url(progressindicator/img/base.gif);
 	overflow: hidden; /* for IE6 */
@@ -1153,6 +1181,8 @@ input.i-modified,
 	width: 16px;
 	overflow: hidden; /* for IE6 */
 }
+
+/*./WebContent/ITMILL/themes/default/select/select.css*/
 .i-select {
 	text-align: left /* Force default alignment */
 }
@@ -1386,6 +1416,8 @@ input.i-modified,
 
 }
 
+
+/*./WebContent/ITMILL/themes/default/shadow/shadow.css*/
 .i-shadow {
 	position: absolute;
 }
@@ -1471,6 +1503,8 @@ input.i-modified,
 	margin-top: -3px;
 	margin-left: -4px;
 }  
+
+/*./WebContent/ITMILL/themes/default/slider/slider.css*/
 /*--------------------------
   Default (horizontal) styles
   --------------------------*/
@@ -1607,6 +1641,8 @@ input.i-modified,
 * html .i-slider-vertical .i-slider-handle {
 	margin: 0 -1px;
 }
+
+/*./WebContent/ITMILL/themes/default/splitpanel/splitpanel.css*/
 .i-splitpanel-horizontal, .i-splitpanel-vertical {
 	overflow: hidden;
 }
@@ -1660,6 +1696,8 @@ input.i-modified,
 	margin: 0;
 }
 
+
+/*./WebContent/ITMILL/themes/default/table/table.css*/
 .i-table {
 	overflow: hidden;
 	text-align: left /* Force default alignment */
@@ -1759,8 +1797,8 @@ input.i-modified,
 	background-color: #edeeee;
 }
 .i-table .i-selected {
-	background: #57a7ed;
-	color: #fff;
+	background: #d5dde0;
+	color: #456572;
 }
 .i-table-row td,
 .i-table-row-odd td {
@@ -1775,7 +1813,7 @@ input.i-modified,
 }
 
 /* Fix textfield size to correspond label size inside table */
-.i-table-cell-content .i-textfield,
+.i-table-cell-content input.i-textfield,
 .i-table-cell-content .i-button {
 	margin: -2px 0 -2px -3px;
 }
@@ -1877,6 +1915,8 @@ input.i-modified,
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="ITMILL/themes/default/table/img/scroll-position-bg.png", sizingMethod="scale");
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="/ITMILL/themes/default/table/img/scroll-position-bg.png", sizingMethod="scale");
 }
+
+/*./WebContent/ITMILL/themes/default/tabsheet/tabsheet.css*/
 .i-tabsheet,
 .i-tabsheet-content,
 .i-tabsheet-deco {
@@ -2284,6 +2324,8 @@ input.i-modified,
 *+html .i-tabsheet-deco-light {
 	height: 0;
 }
+
+/*./WebContent/ITMILL/themes/default/textfield/textfield.css*/
 .i-textfield {
 	background: #fff url(textfield/img/bg.png) repeat-x;
 	padding: 2px;
@@ -2349,6 +2391,8 @@ input.i-modified,
 	background-color: #FFE0E0;	
 }
 */
+
+/*./WebContent/ITMILL/themes/default/tree/tree.css*/
 .i-tree {
 	text-align: left /* Force default alignment */
 }
@@ -2401,6 +2445,8 @@ input.i-modified,
 .i-tree-node-children {
 	padding-left: 16px;
 }
+
+/*./WebContent/ITMILL/themes/default/window/window.css*/
 .i-window {
 	color: #464f52;
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
