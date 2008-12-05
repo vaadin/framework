@@ -542,7 +542,7 @@ public class Util {
           var rect = element.getBoundingClientRect();
           width = Math.ceil(rect.right - rect.left);
         } else {
-          width = elem.offsetWidth;
+          width = element.offsetWidth;
         }
         return width;
     }-*/;
@@ -555,7 +555,7 @@ public class Util {
           var rect = element.getBoundingClientRect();
           height = Math.ceil(rect.bottom - rect.top);
         } else {
-          height = elem.offsetHeight;
+          height = element.offsetHeight;
         }
         return height;
     }-*/;
