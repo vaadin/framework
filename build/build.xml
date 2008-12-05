@@ -581,7 +581,7 @@
 		<echo>Compiling src (server-side)</echo>
 		<!-- Compile -->
 		<mkdir dir="${result-path}/classes" />
-		<javac source="1.5" target="1.5" classpathref="compile.classpath" srcdir="${result-path}/src" destdir="${result-path}/classes" includes="${toolkit-package}/**" debug="true">
+		<javac source="1.5" target="1.5" classpathref="compile.classpath" srcdir="${result-path}/src" destdir="${result-path}/classes" includes="${toolkit-package}/**" debug="true" encoding="UTF-8">
 		</javac>
 	</target>
 
