@@ -189,8 +189,9 @@ public class ChildComponentContainer extends Panel {
          * Widget wrapper includes margin which the widget offsetWidth/Height
          * does not include
          */
-        int w = widgetDIV.getOffsetWidth();
-        int h = widgetDIV.getOffsetHeight();
+        int w = getRequiredWidth(widgetDIV);
+        int h = getRequiredHeight(widgetDIV);
+
         widgetSize.setWidth(w);
         widgetSize.setHeight(h);
 
@@ -198,6 +199,32 @@ public class ChildComponentContainer extends Panel {
         // Util.getSimpleName(widget) + " size is " + w + "," + h);
 
     }
+
+    public static native int getRequiredWidth(
+            com.google.gwt.dom.client.Element element)
+    /*-{
+        var width;
+        if (element.getBoundingClientRect != null) {
+          var rect = element.getBoundingClientRect();
+          width = Math.ceil(rect.right - rect.left);
+        } else {
+          width = elem.offsetWidth;
+        }
+        return width;
+    }-*/;
+
+    public static native int getRequiredHeight(
+            com.google.gwt.dom.client.Element element)
+    /*-{
+        var height;
+        if (element.getBoundingClientRect != null) {
+          var rect = element.getBoundingClientRect();
+          height = Math.ceil(rect.bottom - rect.top);
+        } else {
+          height = elem.offsetHeight;
+        }
+        return height;
+    }-*/;
 
     public void setMarginLeft(int marginLeft) {
         containerMarginLeft = marginLeft;
