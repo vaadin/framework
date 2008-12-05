@@ -184,7 +184,8 @@ public class ICalendarField extends IDateField {
         }
 
         // int hour = new Date().getHours()+1; // scroll to current hour
-        final int hour = this.date.getHours() + 1; // scroll to selected
+        Date d = (this.date != null ? this.date : new Date());
+        final int hour = d.getHours() + 1; // scroll to selected
         // hour
         final int h1 = hourPanel.getOffsetHeight() / 2;
         final int oh = hourTable.getOffsetHeight();
@@ -262,9 +263,13 @@ public class ICalendarField extends IDateField {
         }
 
         public List getEntries(Date date, int resolution) {
+            final ArrayList res = new ArrayList();
+            if (date == null) {
+                return res;
+            }
             final List entries = (List) dates.get(date.getYear() + ""
                     + date.getMonth() + "" + date.getDate());
-            final ArrayList res = new ArrayList();
+
             if (entries == null) {
                 return res;
             }

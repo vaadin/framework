@@ -76,7 +76,7 @@ public class WindowedDemos extends com.itmill.toolkit.Application {
         Window w = (Window) windows.get(demoName);
         if (w == null) {
             w = new Window(demoName);
-            w.setWidth(520);
+            w.setWidth(560);
             w.setHeight(500);
             w.setPositionX(202);
             w.getLayout().setSizeFull();
