@@ -877,7 +877,8 @@ public class IFilterSelect extends Composite implements Paintable, Field,
              * div so the popupopener won't wrap to the next line and also so
              * the size of the combobox won't change over time.
              */
-            int w = tb.getOffsetWidth() + popupOpener.getOffsetWidth();
+            int w = Util.getRequiredWidth(tb)
+                    + Util.getRequiredWidth(popupOpener);
             if (suggestionPopupMinWidth > w) {
                 setTextboxWidth(suggestionPopupMinWidth);
                 w = suggestionPopupMinWidth;

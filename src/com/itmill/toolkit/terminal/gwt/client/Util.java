@@ -534,4 +534,38 @@ public class Util {
         Util.componentSizeUpdated(widgets);
     }
 
+    public static native int getRequiredWidth(
+            com.google.gwt.dom.client.Element element)
+    /*-{
+        var width;
+        if (element.getBoundingClientRect != null) {
+          var rect = element.getBoundingClientRect();
+          width = Math.ceil(rect.right - rect.left);
+        } else {
+          width = elem.offsetWidth;
+        }
+        return width;
+    }-*/;
+
+    public static native int getRequiredHeight(
+            com.google.gwt.dom.client.Element element)
+    /*-{
+        var height;
+        if (element.getBoundingClientRect != null) {
+          var rect = element.getBoundingClientRect();
+          height = Math.ceil(rect.bottom - rect.top);
+        } else {
+          height = elem.offsetHeight;
+        }
+        return height;
+    }-*/;
+
+    public static int getRequiredWidth(Widget widget) {
+        return getRequiredWidth(widget.getElement());
+    }
+
+    public static int getRequiredHeight(Widget widget) {
+        return getRequiredHeight(widget.getElement());
+    }
+
 }
