@@ -13,10 +13,12 @@ public class ModeSwitch extends CustomComponent {
 
     GridLayout layout = new GridLayout(3, 1);
 
-    HashMap idToButton = new HashMap();
+    HashMap<Object, Button> idToButton = new HashMap<Object, Button>();
     Object mode = null;
 
     public ModeSwitch() {
+        setSizeUndefined();
+        layout.setSizeUndefined();
         setCompositionRoot(layout);
         setStyleName("ModeSwitch");
     }
@@ -64,7 +66,7 @@ public class ModeSwitch extends CustomComponent {
     }
 
     public void removeMode(Object id) {
-        Button b = (Button) idToButton.remove(id);
+        Button b = idToButton.remove(id);
         layout.removeComponent(b);
         updateStyles();
     }

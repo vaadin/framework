@@ -43,6 +43,7 @@ import com.itmill.toolkit.ui.Embedded;
 import com.itmill.toolkit.ui.ExpandLayout;
 import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.SplitPanel;
 import com.itmill.toolkit.ui.Table;
@@ -207,16 +208,20 @@ public class SamplerApplication extends Application {
 
         private SplitPanel mainSplit;
         private Tree navigationTree;
+        // itmill: UA-658457-6
+        private WebAnalytics webAnalytics = new WebAnalytics("UA-658457-6",
+                "none");
 
         SamplerWindow() {
             // Main top/expanded-bottom layout
-            ExpandLayout mainExpand = new ExpandLayout();
+            OrderedLayout mainExpand = new OrderedLayout();
             setLayout(mainExpand);
+            setSizeFull();
             mainExpand.setSizeFull();
 
             // topbar (navigation)
-            ExpandLayout nav = new ExpandLayout(
-                    ExpandLayout.ORIENTATION_HORIZONTAL);
+            OrderedLayout nav = new OrderedLayout(
+                    OrderedLayout.ORIENTATION_HORIZONTAL);
             mainExpand.addComponent(nav);
             nav.setHeight("40px");
             nav.setWidth("100%");
@@ -229,7 +234,10 @@ public class SamplerApplication extends Application {
             nav.addComponent(logo);
             nav.setComponentAlignment(logo, ExpandLayout.ALIGNMENT_LEFT,
                     ExpandLayout.ALIGNMENT_VERTICAL_CENTER);
-            nav.expand(logo);
+            nav.setExpandRatio(logo, 1);
+
+            // invisible analytics -component
+            nav.addComponent(webAnalytics);
 
             // Previous sample
             Button b = createPrevButton();
@@ -242,6 +250,8 @@ public class SamplerApplication extends Application {
             nav.setComponentAlignment(b, ExpandLayout.ALIGNMENT_LEFT,
                     ExpandLayout.ALIGNMENT_VERTICAL_CENTER);
 
+            // "Search" combobox
+            // TODO add input prompt
             Component search = createSearch();
             nav.addComponent(search);
             nav.setComponentAlignment(search, ExpandLayout.ALIGNMENT_LEFT,
@@ -263,14 +273,14 @@ public class SamplerApplication extends Application {
             // Show / hide tree
             Component treeSwitch = createTreeSwitch();
             nav.addComponent(treeSwitch);
-            nav.setComponentAlignment(treeSwitch, ExpandLayout.ALIGNMENT_LEFT,
-                    ExpandLayout.ALIGNMENT_VERTICAL_CENTER);
+            nav.setComponentAlignment(treeSwitch, OrderedLayout.ALIGNMENT_LEFT,
+                    OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
 
             // List/grid/coverflow
             Component mode = createModeSwitch();
             nav.addComponent(mode);
-            nav.setComponentAlignment(mode, ExpandLayout.ALIGNMENT_RIGHT,
-                    ExpandLayout.ALIGNMENT_VERTICAL_CENTER);
+            nav.setComponentAlignment(mode, OrderedLayout.ALIGNMENT_RIGHT,
+                    OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
 
         }
 
@@ -282,6 +292,7 @@ public class SamplerApplication extends Application {
          */
         public void setFeature(Feature f) {
             currentFeature.setValue(f);
+            webAnalytics.trackPageview(getPathFor(f));
         }
 
         /**

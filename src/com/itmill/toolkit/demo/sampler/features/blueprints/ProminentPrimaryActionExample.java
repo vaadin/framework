@@ -49,6 +49,9 @@ public class ProminentPrimaryActionExample extends OrderedLayout implements
             Button secondary = new Button("Forgot your password?", this);
             secondary.setStyleName(Button.STYLE_LINK);
             vert.addComponent(secondary);
+            vert.setComponentAlignment(secondary,
+                    OrderedLayout.ALIGNMENT_RIGHT,
+                    OrderedLayout.ALIGNMENT_BOTTOM);
         }
 
     }

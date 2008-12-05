@@ -1,0 +1,14 @@
+<module>
+	<!-- Inherit the NoEntry version to avoid multiple entrypoints -->
+	<inherits name="com.itmill.toolkit.terminal.gwt.DefaultWidgetSetNoEntry" /> 
+	
+	<!-- WidgetSet default theme -->	
+	<stylesheet src="sampler/styles.css"/>
+
+	<!-- Tracker -->
+	<script src="http://www.google-analytics.com/ga.js" />
+
+	<!-- Entry point -->
+	<entry-point class="com.itmill.toolkit.demo.sampler.gwt.client.SamplerWidgetSet"/>
+  
+</module>
