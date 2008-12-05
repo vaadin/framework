@@ -130,7 +130,7 @@ abstract public class Feature {
                 StringBuffer src = new StringBuffer();
                 try {
                     InputStream is = getClass().getResourceAsStream(
-                            getClass().getSimpleName() + "Example.txt");
+                            getClass().getSimpleName() + "Example.java");
                     BufferedReader bis = new BufferedReader(
                             new InputStreamReader(is));
                     for (String line = bis.readLine(); null != line; line = bis
