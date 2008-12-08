@@ -129,6 +129,12 @@ public class ITabsheet extends ITabsheetBase {
             }
         }
 
+        public void updateCaptionSize(int index) {
+            ICaption c = getTab(index);
+            c.setWidth(c.getRequiredWidth() + "px");
+
+        }
+
     }
 
     public static final String CLASSNAME = "i-tabsheet";
@@ -256,6 +262,7 @@ public class ITabsheet extends ITabsheetBase {
                 DOM.setStyleAttribute(DOM.getChild(DOM.getFirstChild(DOM
                         .getFirstChild(tb.getElement())), scrollerIndex),
                         "display", "");
+                tb.updateCaptionSize(scrollerIndex);
                 updateTabScroller();
             }
         } else if (isClippedTabs() && DOM.eventGetTarget(event) == scrollerNext) {
@@ -264,6 +271,7 @@ public class ITabsheet extends ITabsheetBase {
                 DOM.setStyleAttribute(DOM.getChild(DOM.getFirstChild(DOM
                         .getFirstChild(tb.getElement())), scrollerIndex),
                         "display", "none");
+                tb.updateCaptionSize(scrollerIndex);
                 scrollerIndex++;
                 updateTabScroller();
             }
