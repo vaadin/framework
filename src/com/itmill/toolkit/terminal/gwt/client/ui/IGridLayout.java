@@ -582,6 +582,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
         spacingmeter.setClassName(CLASSNAME + "-" + "spacing-"
                 + (uidl.getBooleanAttribute("spacing") ? "on" : "off"));
         spacingmeter.getStyle().setProperty("width", "0");
+        spacingmeter.getStyle().setProperty("height", "0");
         canvas.getElement().appendChild(spacingmeter);
         spacingPixelsHorizontal = spacingmeter.getOffsetWidth();
         spacingPixelsVertical = spacingmeter.getOffsetHeight();

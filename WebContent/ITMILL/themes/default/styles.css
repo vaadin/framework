@@ -780,10 +780,12 @@ input.i-modified,
 .i-gridlayout-spacing-on {
 	padding-left:8px;
 	padding-top:8px;
+	overflow:hidden;
 }
 .i-gridlayout-spacing-off {
 	padding-left:0px;
 	padding-top:0px;
+	overflow:hidden;
 }
 
 .i-gridlayout-spacing,
