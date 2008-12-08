@@ -8,6 +8,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Util;
 
 /**
@@ -72,8 +73,8 @@ public class ITabsheetPanel extends ComplexPanel {
      */
     public void insert(Widget w, int beforeIndex) {
         Element el = createContainerElement();
-        DOM.insertChild(getElement(), el, beforeIndex);
         super.insert(w, el, beforeIndex, false);
+        DOM.insertChild(getElement(), el, beforeIndex);
     }
 
     @Override

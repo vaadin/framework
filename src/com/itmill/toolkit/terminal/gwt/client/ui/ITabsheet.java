@@ -88,7 +88,23 @@ public class ITabsheet extends ITabsheetBase {
         }
 
         public void removeTab(int i) {
-            remove(i);
+            Widget w = getWidget(i);
+            if (w == null) {
+                return;
+            }
+
+            Element caption = w.getElement();
+            Element div = DOM.getParent(caption);
+            Element td = DOM.getParent(div);
+            Element tr = DOM.getParent(td);
+            remove(w);
+
+            /*
+             * Widget is the Caption but we want to remove everything up to and
+             * including the parent TD
+             */
+
+            DOM.removeChild(tr, td);
         }
 
         @Override
@@ -349,7 +365,11 @@ public class ITabsheet extends ITabsheetBase {
         String width = style.getProperty("width");
         style.setProperty("width", tabsWidth + "px");
         // Get content width from actual widget
-        int contentWidth = tp.getWidget(tp.getVisibleWidget()).getOffsetWidth();
+
+        int contentWidth = 0;
+        if (tp.getWidgetCount() > 0) {
+            contentWidth = tp.getWidget(tp.getVisibleWidget()).getOffsetWidth();
+        }
         style.setProperty("width", width);
         style.setProperty("overflow", overflow);
 
@@ -675,4 +695,22 @@ public class ITabsheet extends ITabsheetBase {
         // All tabs have equal amount of space allocated
         return renderSpace;
     }
+
+    @Override
+    protected int getTabCount() {
+        return tb.getWidgetCount();
+    }
+
+    @Override
+    protected void removeTab(int index) {
+        tb.removeTab(index);
+        /*
+         * This must be checked because renderTab automatically removes the
+         * active tab content when it changes
+         */
+        if (tp.getWidgetCount() > index) {
+            tp.remove(index);
+        }
+    }
+
 }

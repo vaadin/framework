@@ -547,4 +547,15 @@ public class IAccordion extends ITabsheetBase implements
         return renderSpace;
     }
 
+    @Override
+    protected int getTabCount() {
+        return stack.size();
+    }
+
+    @Override
+    protected void removeTab(int index) {
+        StackItem item = stack.get(index);
+        remove(item);
+    }
+
 }

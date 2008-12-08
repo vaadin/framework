@@ -78,6 +78,11 @@ abstract class ITabsheetBase extends ComplexPanel implements Container {
             index++;
         }
 
+        int tabCount = getTabCount();
+        while (tabCount-- > index) {
+            removeTab(index);
+        }
+
         for (Iterator iterator = oldPaintables.iterator(); iterator.hasNext();) {
             Object oldPaintable = iterator.next();
             if (oldPaintable instanceof Paintable) {
@@ -115,4 +120,15 @@ abstract class ITabsheetBase extends ComplexPanel implements Container {
      */
     protected abstract void selectTab(int index, final UIDL contentUidl);
 
+    /**
+     * Implement in extending classes. This method should return the number of
+     * tabs currently rendered.
+     */
+    protected abstract int getTabCount();
+
+    /**
+     * Implement in extending classes. This method should remove the rendered
+     * tab with the specified index.
+     */
+    protected abstract void removeTab(int index);
 }
