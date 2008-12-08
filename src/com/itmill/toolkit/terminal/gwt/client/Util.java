@@ -428,7 +428,13 @@ public class Util {
             RootPanel.getBodyElement().appendChild(scroller);
             detectedScrollbarSize = scroller.getOffsetWidth()
                     - scroller.getPropertyInt("clientWidth");
-            assert detectedScrollbarSize != 0;
+	   
+            // Asserting the detected value causes a problem
+	    // at least in Hosted Mode Browser/Linux/GWT-1.5.3, so
+	    // use a default if detection fails.
+	    if (detectedScrollbarSize == 0)
+	        detectedScrollbarSize = 20;
+	   
             RootPanel.getBodyElement().removeChild(scroller);
 
         }
