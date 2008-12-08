@@ -65,7 +65,8 @@ public class CompileDefaultTheme {
                 if (cssFile.isFile()) {
 
                     combinedCss.append("\n");
-                    combinedCss.append("/*" + filename + "*/");
+                    combinedCss.append("/* " + filename.replaceAll("\\\\", "/")
+                            + " */");
                     combinedCss.append("\n");
 
                     FileInputStream fstream = new FileInputStream(cssFile);

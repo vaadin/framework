@@ -1,6 +1,6 @@
 /* Automatically compiled css file from subdirectories. */
 
-/*./WebContent/ITMILL/themes/default/accordion/accordion.css*/
+/* ./WebContent/ITMILL/themes/default/accordion/accordion.css */
 .i-accordion {
 	position: relative;
 	outline: none;
@@ -47,7 +47,7 @@
 	width: 100%;
 }
 
-/*./WebContent/ITMILL/themes/default/button/button.css*/
+/* ./WebContent/ITMILL/themes/default/button/button.css */
 .i-button {
 	cursor: pointer;
 	font-size: 13px;
@@ -117,7 +117,7 @@
 }
 */
 
-/*./WebContent/ITMILL/themes/default/caption/caption.css*/
+/* ./WebContent/ITMILL/themes/default/caption/caption.css */
 /* Provide some extra whitespace for wrapped elements
    (these elements usually need the extra space, since 
    they aren't even handling their own caption) */
@@ -160,7 +160,7 @@
 	float: left;
 }
 
-/*./WebContent/ITMILL/themes/default/common/common.css*/
+/* ./WebContent/ITMILL/themes/default/common/common.css */
 /* body tag created by servlet */
 .i-generated-body {
 	background: #e9eced;
@@ -443,7 +443,7 @@ input.i-modified,
 	
 }
 
-/*./WebContent/ITMILL/themes/default/coordinatelayout/coordinatelayout.css*/
+/* ./WebContent/ITMILL/themes/default/coordinatelayout/coordinatelayout.css */
 /*
  *	CoordinateLayout
  */
@@ -455,7 +455,7 @@ input.i-modified,
 	margin-left: 0px;
 }
 
-/*./WebContent/ITMILL/themes/default/datefield/datefield.css*/
+/* ./WebContent/ITMILL/themes/default/datefield/datefield.css */
 .i-datefield {
 	white-space: nowrap;
 }
@@ -682,7 +682,7 @@ input.i-modified,
 }
 
 
-/*./WebContent/ITMILL/themes/default/formlayout/formlayout.css*/
+/* ./WebContent/ITMILL/themes/default/formlayout/formlayout.css */
 .i-formlayout-cell .i-errorindicator {
 	width: 10px;
 	height: 16px;
@@ -759,7 +759,7 @@ input.i-modified,
 	float: none;
 }
 
-/*./WebContent/ITMILL/themes/default/gridlayout/gridlayout.css*/
+/* ./WebContent/ITMILL/themes/default/gridlayout/gridlayout.css */
 /* Margin values if defined from server side */
 .i-gridlayout-margin-top {
 	padding-top: 15px;
@@ -798,7 +798,7 @@ input.i-modified,
 }
 
 
-/*./WebContent/ITMILL/themes/default/menubar/menubar.css*/
+/* ./WebContent/ITMILL/themes/default/menubar/menubar.css */
 /*
  *MenuBar styles
  */
@@ -856,7 +856,7 @@ input.i-modified,
 	background-color : 	#EEEEFF;
 }
 
-/*./WebContent/ITMILL/themes/default/notification/notification.css*/
+/* ./WebContent/ITMILL/themes/default/notification/notification.css */
 
 .i-Notification {
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
@@ -939,7 +939,7 @@ input.i-modified,
 	white-space: nowrap;
 }
 
-/*./WebContent/ITMILL/themes/default/orderedlayout/orderedlayout.css*/
+/* ./WebContent/ITMILL/themes/default/orderedlayout/orderedlayout.css */
 .i-orderedlayout {
 	overflow: hidden;
 }
@@ -970,7 +970,7 @@ input.i-modified,
 	padding-left: 0px;
 }
 
-/*./WebContent/ITMILL/themes/default/panel/panel.css*/
+/* ./WebContent/ITMILL/themes/default/panel/panel.css */
 .i-panel,
 .i-panel-caption,
 .i-panel-content,
@@ -1127,7 +1127,7 @@ input.i-modified,
 	overflow: hidden;
 }
 
-/*./WebContent/ITMILL/themes/default/popupview/popupview.css*/
+/* ./WebContent/ITMILL/themes/default/popupview/popupview.css */
 /*
  * PopupView styles
  */
@@ -1145,7 +1145,7 @@ input.i-modified,
 	cursor: 				hand;
 }
 
-/*./WebContent/ITMILL/themes/default/progressindicator/progressindicator.css*/
+/* ./WebContent/ITMILL/themes/default/progressindicator/progressindicator.css */
 .i-progressindicator {
 	background: #dfe2e4 url(progressindicator/img/base.gif);
 	overflow: hidden; /* for IE6 */
@@ -1182,7 +1182,7 @@ input.i-modified,
 	overflow: hidden; /* for IE6 */
 }
 
-/*./WebContent/ITMILL/themes/default/select/select.css*/
+/* ./WebContent/ITMILL/themes/default/select/select.css */
 .i-select {
 	text-align: left /* Force default alignment */
 }
@@ -1417,7 +1417,7 @@ input.i-modified,
 }
 
 
-/*./WebContent/ITMILL/themes/default/shadow/shadow.css*/
+/* ./WebContent/ITMILL/themes/default/shadow/shadow.css */
 .i-shadow {
 	position: absolute;
 }
@@ -1504,7 +1504,7 @@ input.i-modified,
 	margin-left: -4px;
 }  
 
-/*./WebContent/ITMILL/themes/default/slider/slider.css*/
+/* ./WebContent/ITMILL/themes/default/slider/slider.css */
 /*--------------------------
   Default (horizontal) styles
   --------------------------*/
@@ -1642,7 +1642,7 @@ input.i-modified,
 	margin: 0 -1px;
 }
 
-/*./WebContent/ITMILL/themes/default/splitpanel/splitpanel.css*/
+/* ./WebContent/ITMILL/themes/default/splitpanel/splitpanel.css */
 .i-splitpanel-horizontal, .i-splitpanel-vertical {
 	overflow: hidden;
 }
@@ -1697,7 +1697,7 @@ input.i-modified,
 }
 
 
-/*./WebContent/ITMILL/themes/default/table/table.css*/
+/* ./WebContent/ITMILL/themes/default/table/table.css */
 .i-table {
 	overflow: hidden;
 	text-align: left /* Force default alignment */
@@ -1916,7 +1916,7 @@ input.i-modified,
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="/ITMILL/themes/default/table/img/scroll-position-bg.png", sizingMethod="scale");
 }
 
-/*./WebContent/ITMILL/themes/default/tabsheet/tabsheet.css*/
+/* ./WebContent/ITMILL/themes/default/tabsheet/tabsheet.css */
 .i-tabsheet,
 .i-tabsheet-content,
 .i-tabsheet-deco {
@@ -2325,7 +2325,7 @@ input.i-modified,
 	height: 0;
 }
 
-/*./WebContent/ITMILL/themes/default/textfield/textfield.css*/
+/* ./WebContent/ITMILL/themes/default/textfield/textfield.css */
 .i-textfield {
 	background: #fff url(textfield/img/bg.png) repeat-x;
 	padding: 2px;
@@ -2392,7 +2392,7 @@ input.i-modified,
 }
 */
 
-/*./WebContent/ITMILL/themes/default/tree/tree.css*/
+/* ./WebContent/ITMILL/themes/default/tree/tree.css */
 .i-tree {
 	text-align: left /* Force default alignment */
 }
@@ -2446,7 +2446,7 @@ input.i-modified,
 	padding-left: 16px;
 }
 
-/*./WebContent/ITMILL/themes/default/window/window.css*/
+/* ./WebContent/ITMILL/themes/default/window/window.css */
 .i-window {
 	color: #464f52;
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
