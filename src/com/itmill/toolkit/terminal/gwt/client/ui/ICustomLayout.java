@@ -283,7 +283,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
         for (int i = 0; i < nodeList.getLength(); i++) {
             com.google.gwt.dom.client.ImageElement img = (ImageElement) nodeList
                     .getItem(i);
-            String src = img.getSrc();
+            String src = img.getAttribute("src");
             if (!(src.startsWith("/") || src.contains("://"))) {
                 img.setSrc(srcPrefix + src);
             }
