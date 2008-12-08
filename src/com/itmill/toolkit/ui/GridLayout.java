@@ -999,6 +999,16 @@ public class GridLayout extends AbstractLayout implements
     }
 
     /**
+     * Sets the current cursor x-position. This is usually handled automatically
+     * by GridLayout.
+     * 
+     * @param cursorX
+     */
+    public void setCursorX(int cursorX) {
+        this.cursorX = cursorX;
+    }
+
+    /**
      * Gets the current cursor y-position. The cursor position points the
      * position for the next component that is added without specifying its
      * coordinates (grid cell). When the cursor position is occupied, the next
@@ -1008,6 +1018,16 @@ public class GridLayout extends AbstractLayout implements
      */
     public int getCursorY() {
         return cursorY;
+    }
+
+    /**
+     * Sets the current cursor y-position. This is usually handled automatically
+     * by GridLayout.
+     * 
+     * @param cursorY
+     */
+    public void setCursorY(int cursorY) {
+        this.cursorY = cursorY;
     }
 
     /* Documented in superclass */
