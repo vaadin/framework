@@ -235,9 +235,14 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      */
     public void setComponentAlignment(Component childComponent,
             int horizontalAlignment, int verticalAlignment) {
-        componentToAlignment.put(childComponent, new Integer(
-                horizontalAlignment + verticalAlignment));
-        requestRepaint();
+        if (components.contains(childComponent)) {
+            componentToAlignment.put(childComponent, new Integer(
+                    horizontalAlignment + verticalAlignment));
+            requestRepaint();
+        } else {
+            throw new IllegalArgumentException(
+                    "Component must be added to layout before using setComponentAlignment()");
+        }
     }
 
     /*
