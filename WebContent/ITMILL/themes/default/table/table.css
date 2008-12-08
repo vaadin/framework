@@ -97,8 +97,8 @@
 	background-color: #edeeee;
 }
 .i-table .i-selected {
-	background: #d5dde0;
-	color: #456572;
+	background: #57a7ed;
+	color: #fff;
 }
 .i-table-row td,
 .i-table-row-odd td {
@@ -113,7 +113,7 @@
 }
 
 /* Fix textfield size to correspond label size inside table */
-.i-table-cell-content input.i-textfield,
+.i-table-cell-content .i-textfield,
 .i-table-cell-content .i-button {
 	margin: -2px 0 -2px -3px;
 }
