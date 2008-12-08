@@ -121,6 +121,10 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      */
     private boolean validationVisibleOnCommit = true;
 
+    // special handling for gridlayout; remember initial cursor pos
+    private int gridlayoutCursorX = -1;
+    private int gridlayoutCursorY = -1;
+
     /**
      * Contructs a new form with default layout.
      * 
@@ -611,6 +615,19 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      */
     public void setItemDataSource(Item newDataSource, Collection propertyIds) {
 
+        if (layout instanceof GridLayout) {
+            GridLayout gl = (GridLayout) layout;
+            if (gridlayoutCursorX == -1) {
+                // first setItemDataSource, remember initial cursor
+                gridlayoutCursorX = gl.getCursorX();
+                gridlayoutCursorY = gl.getCursorY();
+            } else {
+                // restore initial cursor
+                gl.setCursorX(gridlayoutCursorX);
+                gl.setCursorY(gridlayoutCursorY);
+            }
+        }
+
         // Removes all fields first from the form
         removeAllProperties();
 
@@ -669,15 +686,31 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
             newLayout = new FormLayout();
         }
 
-        // Move components from previous layout
+        // reset cursor memory
+        gridlayoutCursorX = -1;
+        gridlayoutCursorY = -1;
+
+        // Move fields from previous layout
         if (layout != null) {
-            newLayout.moveComponentsFrom(layout);
+            final Object[] properties = propertyIds.toArray();
+            for (int i = 0; i < properties.length; i++) {
+                Field f = getField(properties[i]);
+                layout.removeComponent(f);
+                if (newLayout instanceof CustomLayout) {
+                    ((CustomLayout) newLayout).addComponent(f, properties[i]
+                            .toString());
+                } else {
+                    newLayout.addComponent(f);
+                }
+            }
+
             layout.setParent(null);
         }
 
         // Replace the previous layout
         newLayout.setParent(this);
         layout = newLayout;
+
     }
 
     /**
