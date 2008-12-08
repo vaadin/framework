@@ -36,6 +36,8 @@ public class IFormLayout extends SimplePanel implements Container {
     private String width = "";
     private String height = "";
 
+    private boolean rendering = false;
+
     public IFormLayout() {
         super();
         setStylePrimaryName(CLASSNAME);
@@ -100,6 +102,8 @@ public class IFormLayout extends SimplePanel implements Container {
                         CLASSNAME + "-captioncell");
                 setWidget(i, 0, caption);
 
+                setContentWidth(i);
+
                 getCellFormatter().setStyleName(i, 1, CLASSNAME + "-errorcell");
                 setWidget(i, 1, error);
 
@@ -131,6 +135,20 @@ public class IFormLayout extends SimplePanel implements Container {
             for (Paintable p : componentToCaption.keySet()) {
                 client.handleComponentRelativeSize((Widget) p);
             }
+        }
+
+        public void setContentWidths() {
+            for (int row = 0; row < getRowCount(); row++) {
+                setContentWidth(row);
+            }
+        }
+
+        private void setContentWidth(int row) {
+            String width = "";
+            if (!isDynamicWidth()) {
+                width = "100%";
+            }
+            getCellFormatter().setWidth(row, 2, width);
         }
 
         public void replaceChildComponent(Widget oldComponent,
@@ -182,13 +200,22 @@ public class IFormLayout extends SimplePanel implements Container {
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        rendering = true;
+
         this.client = client;
 
         if (client.updateComponent(this, uidl, true)) {
+            rendering = false;
             return;
         }
 
         table.updateFromUIDL(uidl, client);
+
+        rendering = false;
+    }
+
+    public boolean isDynamicWidth() {
+        return width.equals("");
     }
 
     public boolean hasChildComponent(Widget component) {
@@ -404,11 +431,13 @@ public class IFormLayout extends SimplePanel implements Container {
         this.width = width;
         super.setWidth(width);
 
-        if (height.equals("")) {
-            // Width might affect height
-            Util.updateRelativeChildrenAndSendSizeUpdateEvent(client, this);
+        if (!rendering) {
+            table.setContentWidths();
+            if (height.equals("")) {
+                // Width might affect height
+                Util.updateRelativeChildrenAndSendSizeUpdateEvent(client, this);
+            }
         }
-
     }
 
 }
