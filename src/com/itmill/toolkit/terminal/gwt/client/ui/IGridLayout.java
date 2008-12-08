@@ -327,11 +327,8 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                     client.handleComponentRelativeSize((Widget) c);
                 }
                 if (heightChanged && "".equals(height)) {
-                    Set<Widget> s = new HashSet<Widget>();
-                    s.add(this);
-                    Util.componentSizeUpdated(s);
+                    Util.notifyParentOfSizeChange(this, false);
                 }
-
             }
         }
     }

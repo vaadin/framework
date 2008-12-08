@@ -4,14 +4,10 @@
 
 package com.itmill.toolkit.terminal.gwt.client;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.Icon;
 
 public class ICaption extends HTML {
@@ -236,11 +232,8 @@ public class ICaption extends HTML {
              * The size of the icon might affect the size of the component so we
              * must report the size change to the parent
              */
-            Set<Widget> w = new HashSet<Widget>();
-            w.add((Widget) owner);
-            Util.componentSizeUpdated(w);
+            Util.notifyParentOfSizeChange(this, true);
         }
-
     }
 
     public static boolean isNeeded(UIDL uidl) {

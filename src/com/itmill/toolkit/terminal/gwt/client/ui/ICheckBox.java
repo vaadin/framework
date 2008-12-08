@@ -4,8 +4,6 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
-import java.util.HashSet;
-
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -96,9 +94,7 @@ public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox implements
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         if (event.getTypeInt() == Event.ONLOAD) {
-            HashSet<Widget> set = new HashSet<Widget>();
-            set.add(this);
-            Util.componentSizeUpdated(set);
+            Util.notifyParentOfSizeChange(this, true);
         }
         if (client != null) {
             client.handleTooltipEvent(event, this);

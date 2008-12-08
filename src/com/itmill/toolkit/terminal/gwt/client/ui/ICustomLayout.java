@@ -9,8 +9,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.google.gwt.dom.client.ImageElement;
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
@@ -21,6 +24,7 @@ import com.itmill.toolkit.terminal.gwt.client.ICaptionWrapper;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.Util;
 
 /**
  * Custom Layout implements complex layout defined with HTML template.
@@ -55,6 +59,8 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
 
     /** Has the template been loaded from contents passed in UIDL **/
     private boolean hasTemplateContents = false;
+
+    private Element elementWithNativeResizeFunction;
 
     public ICustomLayout() {
         setElement(DOM.createDiv());
@@ -204,16 +210,20 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
 
         // Connect body of the template to DOM
         template = extractBodyAndScriptsFromTemplate(template);
-        DOM.setInnerHTML(getElement(), template);
+        getElement().setInnerHTML(template);
 
         // Remap locations to elements
         locationToElement.clear();
         scanForLocations(getElement());
 
         String themeUri = client.getThemeUri();
-        prefixImgSrcs(getElement(), themeUri + "/layouts/");
+        initImgElements(getElement(), themeUri + "/layouts/");
 
-        publishResizedFunction(DOM.getFirstChild(getElement()));
+        elementWithNativeResizeFunction = DOM.getFirstChild(getElement());
+        if (elementWithNativeResizeFunction == null) {
+            elementWithNativeResizeFunction = getElement();
+        }
+        publishResizedFunction(elementWithNativeResizeFunction);
 
     }
 
@@ -236,10 +246,10 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
     /** Collect locations from template */
     private void scanForLocations(Element elem) {
 
-        final String location = getLocation(elem);
-        if (location != null) {
+        final String location = elem.getAttribute("location");
+        if (!"".equals(location)) {
             locationToElement.put(location, elem);
-            DOM.setInnerHTML(elem, "");
+            elem.setInnerHTML("");
         } else {
             final int len = DOM.getChildCount(elem);
             for (int i = 0; i < len; i++) {
@@ -247,12 +257,6 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
             }
         }
     }
-
-    /** Get the location attribute for given element */
-    private static native String getLocation(Element elem)
-    /*-{
-        return elem.getAttribute("location");
-    }-*/;
 
     /** Evaluate given script in browser document */
     private static native void eval(String script)
@@ -264,25 +268,28 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
       }
     }-*/;
 
-    /** Prefix all img tag srcs with given prefix. */
-    private static native void prefixImgSrcs(Element e, String srcPrefix)
-    /*-{
-      try {
-          var divs = e.getElementsByTagName("img"); 
-          var base = "" + $doc.location;
-          var l = base.length-1;
-          while (l >= 0 && base.charAt(l) != "/") l--;
-          base = base.substring(0,l+1);
-          for (var i = 0; i < divs.length; i++) {
-              var div = divs[i];
-              var src = div.getAttribute("src");
-              if (src.indexOf("/")==0 || src.match(/\w+:\/\//)) {
-                  continue;
-              }
-              div.setAttribute("src",srcPrefix + src);             
-          }			
-      } catch (e) { alert(e + " " + srcPrefix);}
-    }-*/;
+    /**
+     * Img elements needs some special handling in custom layout
+     * 
+     * Prefixes img tag srcs with given prefix, if it has a relative uri.
+     * 
+     * Img elements will also get their onload events sunk to notify paren of
+     * possible size change.
+     * 
+     */
+    private static void initImgElements(Element e, String srcPrefix) {
+        NodeList<com.google.gwt.dom.client.Element> nodeList = e
+                .getElementsByTagName("IMG");
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            com.google.gwt.dom.client.ImageElement img = (ImageElement) nodeList
+                    .getItem(i);
+            String src = img.getSrc();
+            if (!(src.startsWith("/") || src.contains("://"))) {
+                img.setSrc(srcPrefix + src);
+            }
+            DOM.sinkEvents((Element) img.cast(), Event.ONLOAD);
+        }
+    }
 
     /**
      * Extract body part and script tags from raw html-template.
@@ -436,7 +443,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
     @Override
     public void onDetach() {
         super.onDetach();
-        detachResizedFunction(DOM.getFirstChild(getElement()));
+        detachResizedFunction(elementWithNativeResizeFunction);
     }
 
     private native void detachResizedFunction(Element element)
@@ -489,6 +496,15 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
         com.google.gwt.dom.client.Element pe = child.getElement()
                 .getParentElement();
         return new RenderSpace(pe.getOffsetWidth(), pe.getOffsetHeight(), true);
+    }
+
+    @Override
+    public void onBrowserEvent(Event event) {
+        super.onBrowserEvent(event);
+        if (event.getTypeInt() == Event.ONLOAD) {
+            Util.notifyParentOfSizeChange(this, true);
+            event.cancelBubble(true);
+        }
     }
 
 }

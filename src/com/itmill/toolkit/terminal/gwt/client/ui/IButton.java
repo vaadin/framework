@@ -4,8 +4,6 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
-import java.util.HashSet;
-
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -128,9 +126,8 @@ public class IButton extends Button implements Paintable {
         super.onBrowserEvent(event);
 
         if (DOM.eventGetType(event) == Event.ONLOAD) {
-            HashSet<Widget> set = new HashSet<Widget>();
-            set.add(this);
-            Util.componentSizeUpdated(set);
+            Util.notifyParentOfSizeChange(this, true);
+
         } else if (DOM.eventGetType(event) == Event.ONMOUSEDOWN) {
             clickPending = true;
         } else if (DOM.eventGetType(event) == Event.ONMOUSEMOVE) {

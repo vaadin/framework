@@ -4,14 +4,10 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
@@ -137,9 +133,7 @@ public class IEmbedded extends HTML implements Paintable {
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         if (DOM.eventGetType(event) == Event.ONLOAD) {
-            Set<Widget> w = new HashSet<Widget>();
-            w.add(this);
-            Util.componentSizeUpdated(w);
+            Util.notifyParentOfSizeChange(this, true);
         }
     }
 }

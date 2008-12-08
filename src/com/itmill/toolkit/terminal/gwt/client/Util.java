@@ -14,6 +14,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -33,6 +34,56 @@ public class Util {
         if($wnd.console)
             debugger;
     }-*/;
+
+    private static final int LAZY_SIZE_CHANGE_TIMEOUT = 400;
+    private static Set<Widget> latelyChangedWidgets = new HashSet<Widget>();
+
+    private static Timer lazySizeChangeTimer = new Timer() {
+        private boolean lazySizeChangeTimerScheduled = false;
+
+        public void run() {
+            componentSizeUpdated(latelyChangedWidgets);
+            latelyChangedWidgets.clear();
+            lazySizeChangeTimerScheduled = false;
+        }
+
+        @Override
+        public void schedule(int delayMillis) {
+            if (lazySizeChangeTimerScheduled) {
+                cancel();
+            } else {
+                lazySizeChangeTimerScheduled = true;
+            }
+            super.schedule(delayMillis);
+        }
+    };
+
+    /**
+     * This helper method can be called if components size have been changed
+     * outside rendering phase. It notifies components parent about the size
+     * change so it can react.
+     * 
+     * When using this method, developer should consider if size changes could
+     * be notified lazily. If lazy flag is true, method will save widget and
+     * wait for a moment until it notifies parents in chunks. This may vastly
+     * optimize layout in various situation. Example: if component have a lot of
+     * images their onload events may fire "layout phase" many times in a short
+     * period.
+     * 
+     * @param widget
+     * @param lazy
+     *            run componentSizeUpdated lazyly
+     */
+    public static void notifyParentOfSizeChange(Widget widget, boolean lazy) {
+        if (lazy) {
+            latelyChangedWidgets.add(widget);
+            lazySizeChangeTimer.schedule(LAZY_SIZE_CHANGE_TIMEOUT);
+        } else {
+            Set<Widget> widgets = new HashSet<Widget>();
+            widgets.add(widget);
+            Util.componentSizeUpdated(widgets);
+        }
+    }
 
     /**
      * Called when the size of one or more widgets have changed during
@@ -428,13 +479,14 @@ public class Util {
             RootPanel.getBodyElement().appendChild(scroller);
             detectedScrollbarSize = scroller.getOffsetWidth()
                     - scroller.getPropertyInt("clientWidth");
-	   
+
             // Asserting the detected value causes a problem
-	    // at least in Hosted Mode Browser/Linux/GWT-1.5.3, so
-	    // use a default if detection fails.
-	    if (detectedScrollbarSize == 0)
-	        detectedScrollbarSize = 20;
-	   
+            // at least in Hosted Mode Browser/Linux/GWT-1.5.3, so
+            // use a default if detection fails.
+            if (detectedScrollbarSize == 0) {
+                detectedScrollbarSize = 20;
+            }
+
             RootPanel.getBodyElement().removeChild(scroller);
 
         }
