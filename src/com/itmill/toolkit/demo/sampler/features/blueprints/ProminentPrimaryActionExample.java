@@ -32,13 +32,14 @@ public class ProminentPrimaryActionExample extends OrderedLayout implements
             horiz.addComponent(primary);
             Button secondary = new Button("or Sign in", this);
             secondary.setStyleName(Button.STYLE_LINK);
+            horiz.addComponent(secondary);
             horiz.setComponentAlignment(secondary, ALIGNMENT_LEFT,
                     ALIGNMENT_VERTICAL_CENTER);
-            horiz.addComponent(secondary);
         }
 
         { // Login / Forgot password?
             OrderedLayout vert = new OrderedLayout();
+            vert.setSizeUndefined();
             vert.setSpacing(true);
             vert.setMargin(true);
             addComponent(vert);

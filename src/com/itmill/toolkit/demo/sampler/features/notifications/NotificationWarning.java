@@ -31,7 +31,9 @@ public class NotificationWarning extends Feature {
 
     @Override
     public Class[] getRelatedFeatures() {
-        return new Class[] { NotificationHumanized.class };
+        return new Class[] { NotificationHumanized.class,
+                NotificationTray.class, NotificationError.class,
+                NotificationCustom.class };
     }
 
     @Override

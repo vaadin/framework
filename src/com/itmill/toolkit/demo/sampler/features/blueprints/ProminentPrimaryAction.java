@@ -12,7 +12,7 @@ public class ProminentPrimaryAction extends Feature {
 
     public String getDescription() {
         return "A primary action is an action that is clearly the"
-                + " default and it should be visually more prominent"
+                + " default, and it should be visually more prominent"
                 + " than the secondary actions.<br/>Good candidates"
                 + " include <i>Save</i>, <i>Submit</i>, <i>Continue</i>, <i>Next</i>,"
                 + " <i>Finish</i> and so on.<br/>Note that 'dangerous' actions"
@@ -36,8 +36,8 @@ public class ProminentPrimaryAction extends Feature {
     public NamedExternalResource[] getRelatedResources() {
         return new NamedExternalResource[] {
 
-                new NamedExternalResource("CSS used", getThemeBase()
-                        + "prominentprimaryaction/styles.css"),
+                new NamedExternalResource("CSS for 'Sign up' button",
+                        getThemeBase() + "prominentprimaryaction/styles.css"),
 
                 new NamedExternalResource(
                         "Article: Primary & Secondary Actions in Web Forms (LukeW)",
