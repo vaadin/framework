@@ -19,6 +19,11 @@ abstract public class Feature {
     public static final Object PROPERTY_NAME = "Name";
     public static final Object PROPERTY_DESCRIPTION = "Description";
 
+    private static final String MSG_SOURCE_NOT_AVAILABLE = "I'm terribly sorry,"
+            + " but it seems the source could not be found.\n"
+            + "Please try adding the source folder to the classpath for your"
+            + " server, or tell the administrator to do so!";
+
     private static final Object MUTEX = new Object();
     private String javaSource = null;
 
@@ -123,8 +128,6 @@ abstract public class Feature {
     }
 
     public String getSource() {
-
-        // TODO get's .txt for now, change to .java!
         synchronized (MUTEX) {
             if (javaSource == null) {
                 StringBuffer src = new StringBuffer();
@@ -140,9 +143,9 @@ abstract public class Feature {
                     }
                     javaSource = src.toString();
                 } catch (Exception e) {
-                    System.err.println("Could not read source for "
-                            + getPathName());
-                    javaSource = "Sorry, no source available right now.";
+                    System.err.println(MSG_SOURCE_NOT_AVAILABLE + " ("
+                            + getPathName() + ")");
+                    javaSource = MSG_SOURCE_NOT_AVAILABLE;
                 }
             }
         }
