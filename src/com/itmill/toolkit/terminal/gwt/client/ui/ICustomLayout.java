@@ -210,14 +210,30 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
 
         // Connect body of the template to DOM
         template = extractBodyAndScriptsFromTemplate(template);
+
+        // TODO prefix img src:s here with a regeps, cannot work further with IE
+
+        String themeUri = client.getThemeUri();
+        String relImgPrefix = themeUri + "/layouts/";
+
+        // prefix all relative image elements to point to theme dir with a
+        // regexp search
+        template = template.replaceAll(
+                "<((?:img)|(?:IMG)) ([^>]*)src=\"((?![a-z]+:)[^/][^\"]+)\"",
+                "<$1 $2src=\"" + relImgPrefix + "$3\"");
+        // also support src attributes without quotas
+        template = template
+                .replaceAll(
+                        "<((?:img)|(?:IMG)) ([^>]*)src=[^\"]((?![a-z]+:)[^/][^ />]+)[ />]",
+                        "<$1 $2src=\"" + relImgPrefix + "$3\"");
+
         getElement().setInnerHTML(template);
 
         // Remap locations to elements
         locationToElement.clear();
         scanForLocations(getElement());
 
-        String themeUri = client.getThemeUri();
-        initImgElements(getElement(), themeUri + "/layouts/");
+        initImgElements();
 
         elementWithNativeResizeFunction = DOM.getFirstChild(getElement());
         if (elementWithNativeResizeFunction == null) {
@@ -269,24 +285,16 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
     }-*/;
 
     /**
-     * Img elements needs some special handling in custom layout
-     * 
-     * Prefixes img tag srcs with given prefix, if it has a relative uri.
-     * 
-     * Img elements will also get their onload events sunk to notify paren of
-     * possible size change.
-     * 
+     * Img elements needs some special handling in custom layout. Img elements
+     * will get their onload events sunk. This way custom layout can notify
+     * parent about possible size change.
      */
-    private static void initImgElements(Element e, String srcPrefix) {
-        NodeList<com.google.gwt.dom.client.Element> nodeList = e
+    private void initImgElements() {
+        NodeList<com.google.gwt.dom.client.Element> nodeList = getElement()
                 .getElementsByTagName("IMG");
         for (int i = 0; i < nodeList.getLength(); i++) {
             com.google.gwt.dom.client.ImageElement img = (ImageElement) nodeList
                     .getItem(i);
-            String src = img.getAttribute("src");
-            if (!(src.startsWith("/") || src.contains("://"))) {
-                img.setSrc(srcPrefix + src);
-            }
             DOM.sinkEvents((Element) img.cast(), Event.ONLOAD);
         }
     }
