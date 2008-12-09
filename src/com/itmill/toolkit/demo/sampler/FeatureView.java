@@ -118,8 +118,6 @@ public class FeatureView extends CustomLayout {
                                         + "#" + path));
                         al.addListener(new LinkActivatedListener() {
                             public void linkActivated(LinkActivatedEvent event) {
-                                System.err.println("Link followed, opened: "
-                                        + event.isLinkOpened());
                                 if (event.isLinkOpened()) {
                                     getWindow()
                                             .showNotification(
