@@ -121,17 +121,36 @@ public class UriFragmentUtility extends AbstractComponent {
     }
 
     /**
-     * Sets URI fragment.
+     * Sets URI fragment. Optionally fires a {@link FragmentChangedEvent}
      * 
      * @param newFragment
+     *            id of the new fragment
+     * @param fireEvent
+     *            true to fire event
+     * @see FragmentChangedEvent
+     * @see FragmentChangedListener
      */
-    public void setFragment(String newFragment) {
+    public void setFragment(String newFragment, boolean fireEvent) {
         if ((newFragment == null && fragment != null)
                 || (newFragment != null && !newFragment.equals(fragment))) {
             fragment = newFragment;
-            fireEvent(new FragmentChangedEvent(this));
+            if (fireEvent) {
+                fireEvent(new FragmentChangedEvent(this));
+            }
             requestRepaint();
         }
+    }
+
+    /**
+     * Sets URI fragment. This method fires a {@link FragmentChangedEvent}
+     * 
+     * @param newFragment
+     *            id of the new fragment
+     * @see FragmentChangedEvent
+     * @see FragmentChangedListener
+     */
+    public void setFragment(String newFragment) {
+        setFragment(newFragment, true);
     }
 
 }
