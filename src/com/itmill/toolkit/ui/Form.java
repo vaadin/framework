@@ -746,7 +746,9 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
             throw new IllegalArgumentException("Field with given propertyid '"
                     + propertyId.toString() + "' can not be found.");
         }
-        final Object value = oldField.getValue();
+        final Object value = oldField.getPropertyDataSource() == null ? oldField
+                .getValue()
+                : oldField.getPropertyDataSource().getValue();
 
         // Checks that the value exists and check if the select should
         // be forced in multiselect mode
