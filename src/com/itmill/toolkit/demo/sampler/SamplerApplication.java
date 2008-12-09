@@ -1,7 +1,6 @@
 package com.itmill.toolkit.demo.sampler;
 
 import java.net.URI;
-import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -31,8 +30,6 @@ import com.itmill.toolkit.demo.sampler.features.notifications.NotificationHumani
 import com.itmill.toolkit.demo.sampler.features.notifications.NotificationTray;
 import com.itmill.toolkit.demo.sampler.features.notifications.NotificationWarning;
 import com.itmill.toolkit.terminal.ClassResource;
-import com.itmill.toolkit.terminal.DownloadStream;
-import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.terminal.Resource;
 import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.ui.Button;
@@ -144,21 +141,23 @@ public class SamplerApplication extends Application {
 
     // Supports multiple browser windows
     public Window getWindow(String name) {
+        /*- REST code, using fragments
         if (features.getFeatureByPath(name) != null) {
             return null;
-        } else {
-            Window w = super.getWindow(name);
-            if (w == null) {
-                w = new SamplerWindow();
-                w.setName(name);
-                addWindow(w);
-                // secondary windows will support normal reload if this is
-                // enabled, but the url gets ugly:
-                // w.open(new ExternalResource(w.getURL()));
-
-            }
-            return w;
         }
+        -*/
+        Window w = super.getWindow(name);
+        if (w == null) {
+            w = new SamplerWindow();
+            w.setName(name);
+            addWindow(w);
+            // secondary windows will support normal reload if this is
+            // enabled, but the url gets ugly:
+            // w.open(new ExternalResource(w.getURL()));
+
+        }
+        return w;
+
     }
 
     /**
@@ -169,6 +168,9 @@ public class SamplerApplication extends Application {
      * @return the path of the Feature
      */
     public static String getPathFor(Feature f) {
+        if (f == null) {
+            return "";
+        }
         if (allFeatures.containsId(f)) {
             String path = f.getPathName();
             f = (Feature) allFeatures.getParent(f);
@@ -178,7 +180,7 @@ public class SamplerApplication extends Application {
             }
             return path;
         }
-        return null;
+        return "";
     }
 
     /**
@@ -204,7 +206,7 @@ public class SamplerApplication extends Application {
     class SamplerWindow extends Window {
         private FeatureList currentList = new FeatureGrid();
         private FeatureView featureView = new FeatureView();
-        private Property currentFeature = new ObjectProperty(null,
+        private ObjectProperty currentFeature = new ObjectProperty(null,
                 Feature.class);
 
         private MainArea mainArea = new MainArea();
@@ -309,6 +311,7 @@ public class SamplerApplication extends Application {
             String path = getPathFor(f);
             webAnalytics.trackPageview(path);
             uriFragmentUtility.setFragment(path, false);
+            updateFeatureList(currentList);
         }
 
         /**
@@ -324,6 +327,7 @@ public class SamplerApplication extends Application {
         }
 
         // Handle REST -style urls
+        /*- USING FRAGMENTS
         public DownloadStream handleURI(URL context, String relativeUri) {
 
             Feature f = features.getFeatureByPath(relativeUri);
@@ -333,6 +337,7 @@ public class SamplerApplication extends Application {
             }
             return super.handleURI(context, relativeUri);
         }
+        -*/
 
         /*
          * SamplerWindow helpers
@@ -362,7 +367,7 @@ public class SamplerApplication extends Application {
         private Component createLogo() {
             Button logo = new Button("", new Button.ClickListener() {
                 public void buttonClick(ClickEvent event) {
-                    currentFeature.setValue(null);
+                    setFeature((Feature) null);
                 }
             });
             logo.setDescription("↶ Home");
@@ -448,17 +453,26 @@ public class SamplerApplication extends Application {
         }
 
         private Tree createMenuTree() {
-            Tree tree = new Tree();
+            final Tree tree = new Tree();
             tree.setImmediate(true);
             tree.setContainerDataSource(allFeatures);
-            tree.setPropertyDataSource(currentFeature);
+            currentFeature.addListener(new Property.ValueChangeListener() {
+                public void valueChange(ValueChangeEvent event) {
+                    Feature f = (Feature) event.getProperty().getValue();
+                    Feature v = (Feature) tree.getValue();
+                    if ((f != null && !f.equals(v)) || (f == null && v != null)) {
+                        tree.setValue(f);
+                    }
+                }
+            });
             for (int i = 0; i < features.getFeatures().length; i++) {
                 tree.expandItemsRecursively(features.getFeatures()[i]);
             }
             tree.expandItemsRecursively(features);
-            tree.addListener(new Table.ValueChangeListener() {
+            tree.addListener(new Tree.ValueChangeListener() {
                 public void valueChange(ValueChangeEvent event) {
-                    updateFeatureList(currentList);
+                    Feature f = (Feature) event.getProperty().getValue();
+                    setFeature(f);
                 }
             });
             return tree;

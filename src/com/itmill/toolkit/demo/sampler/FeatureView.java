@@ -115,11 +115,20 @@ public class FeatureView extends CustomLayout {
                         String path = SamplerApplication.getPathFor(f);
                         ActiveLink al = new ActiveLink(f.getName(),
                                 new ExternalResource(getApplication().getURL()
-                                        + path));
+                                        + "#" + path));
                         al.addListener(new LinkActivatedListener() {
                             public void linkActivated(LinkActivatedEvent event) {
-                                SamplerWindow w = (SamplerWindow) getWindow();
-                                w.setFeature(f);
+                                System.err.println("Link followed, opened: "
+                                        + event.isLinkOpened());
+                                if (event.isLinkOpened()) {
+                                    getWindow()
+                                            .showNotification(
+                                                    f.getName()
+                                                            + " opened if new window/tab");
+                                } else {
+                                    SamplerWindow w = (SamplerWindow) getWindow();
+                                    w.setFeature(f);
+                                }
                             }
                         });
                         rel.addComponent(al);
