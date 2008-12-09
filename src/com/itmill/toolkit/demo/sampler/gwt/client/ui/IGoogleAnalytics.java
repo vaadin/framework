@@ -7,9 +7,9 @@ import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
-public class IWebAnalytics extends Widget implements Paintable {
+public class IGoogleAnalytics extends Widget implements Paintable {
 
-    public IWebAnalytics() {
+    public IGoogleAnalytics() {
         setElement(Document.get().createDivElement());
         if (BrowserInfo.get().isIE6()) {
             getElement().getStyle().setProperty("overflow", "hidden");

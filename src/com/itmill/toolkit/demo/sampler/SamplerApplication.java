@@ -214,7 +214,7 @@ public class SamplerApplication extends Application {
         private SplitPanel mainSplit;
         private Tree navigationTree;
         // itmill: UA-658457-6
-        private WebAnalytics webAnalytics = new WebAnalytics("UA-658457-6",
+        private GoogleAnalytics webAnalytics = new GoogleAnalytics("UA-658457-6",
                 "none");
         // "backbutton"
         UriFragmentUtility uriFragmentUtility = new UriFragmentUtility();

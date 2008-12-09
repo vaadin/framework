@@ -4,23 +4,25 @@ import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.ui.AbstractComponent;
 
-public class WebAnalytics extends AbstractComponent {
+public class GoogleAnalytics extends AbstractComponent {
 
     private String trackerId;
     private String pageId;
     private String domainName;
 
-    public WebAnalytics(String trackerId) {
+    private static final String TAG = "googleanalytics";
+
+    public GoogleAnalytics(String trackerId) {
         this.trackerId = trackerId;
     }
 
-    public WebAnalytics(String trackerId, String domainName) {
+    public GoogleAnalytics(String trackerId, String domainName) {
         this(trackerId);
         this.domainName = domainName;
     }
 
     public String getTag() {
-        return "webanalytics";
+        return TAG;
     }
 
     public String getTrackerId() {
