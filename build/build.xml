@@ -645,6 +645,25 @@
 		<echo>Compiled ReservationWidgetSet</echo>
 	</target>
 
+	<target name="compile-widgetset-sampler">
+		<echo>com.itmill.toolkit.demo.sampler.gwt.SamplerWidgetSet</echo>
+		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
+			<arg value="-out" />
+			<arg value="${output-dir}/WebContent/ITMILL/widgetsets" />
+			<arg value="com.itmill.toolkit.demo.sampler.gwt.SamplerWidgetSet" />
+			<arg value="-style" />
+			<arg value="OBF" />
+			<classpath>
+				<pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
+				<pathelement location="${gwt-dir}/${platform}/${lib-gwt-dev}" />
+				<pathelement location="${result-path}/src" />
+				<!-- demo widgetset sources -->
+				<pathelement path="${output-dir}/WebContent/WEB-INF/src" />
+			</classpath>
+		</java>
+		<echo>Compiled SamplerWidgetSet</echo>
+	</target>
+	
 	<target name="compile-widgetset-colorpicker">
 		<echo>com.itmill.toolkit.demo.colorpicker.gwt.ColorPickerWidgetSet</echo>
 		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
@@ -691,7 +710,8 @@
 		<echo>Compiling widget sets in parallel.</echo>
 		<parallel threadsperprocessor="1">
 			<subant antfile="build.xml" target="compile-widgetset-default" inheritall="true" buildpath="build" />
-			<subant antfile="build.xml" target="compile-widgetset-reserver" inheritall="true" buildpath="build" />
+			<subant antfile="build.xml" target="compile-widgetset-sampler" inheritall="true" buildpath="build" />
+			<subant antfile="build.xml" target="compile-widgetset-reserver" inheritall="true" buildpath="build" />		
 			<subant antfile="build.xml" target="compile-widgetset-colorpicker" inheritall="true" buildpath="build" />
 		</parallel>
 	</target>
@@ -725,6 +745,10 @@
 	<target name="widgetset-default" depends="init-nonpackage, compile-widgetset-default">
 	</target>
 
+	<!-- Builds the sampler widgetset locally, i.e., not for an installation package. -->
+	<target name="widgetset-sampler" depends="init-nonpackage, compile-widgetset-sampler">
+	</target>
+	
 	<!-- Builds the reservation widgetset locally, i.e., not for an installation package. -->
 	<target name="widgetset-reserver" depends="init-nonpackage, compile-widgetset-reserver">
 	</target>
