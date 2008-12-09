@@ -17,18 +17,17 @@ import com.itmill.toolkit.terminal.PaintTarget;
  * <p>
  * A container component with freely designed layout and style. The layout
  * consists of items with textually represented locations. Each item contains
- * one sub-component, which can be any Toolkit component, such as a layout.
- * The adapter and theme are responsible for rendering the
- * layout with a given style by placing the items in the defined
- * locations.
+ * one sub-component, which can be any Toolkit component, such as a layout. The
+ * adapter and theme are responsible for rendering the layout with a given style
+ * by placing the items in the defined locations.
  * </p>
  * 
  * <p>
  * The placement of the locations is not fixed - different themes can define the
  * locations in a way that is suitable for them. One typical example would be to
  * create visual design for a web site as a custom layout: the visual design
- * would define locations for "menu", "body", and "title", for example. The layout
- * would then be implemented as an XHTML template for each theme.
+ * would define locations for "menu", "body", and "title", for example. The
+ * layout would then be implemented as an XHTML template for each theme.
  * </p>
  * 
  * <p>
@@ -83,6 +82,7 @@ public class CustomLayout extends AbstractLayout {
         }
 
         templateContents = b.toString();
+        setWidth(100, UNITS_PERCENTAGE);
     }
 
     /**
@@ -91,6 +91,7 @@ public class CustomLayout extends AbstractLayout {
      */
     public CustomLayout(String template) {
         templateName = template;
+        setWidth(100, UNITS_PERCENTAGE);
     }
 
     /**
