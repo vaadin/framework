@@ -105,6 +105,48 @@ public class IPanel extends SimplePanel implements Container {
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         rendering = true;
+        if (!uidl.hasAttribute("cached")) {
+            // Handle caption displaying and style names, prior generics.
+            // Affects size
+            // calculations
+
+            // Restore default stylenames
+            contentNode.setClassName(CLASSNAME + "-content");
+            bottomDecoration.setClassName(CLASSNAME + "-deco");
+            captionNode.setClassName(CLASSNAME + "-caption");
+            boolean hasCaption = false;
+            if (uidl.hasAttribute("caption")
+                    && !uidl.getStringAttribute("caption").equals("")) {
+                setCaption(uidl.getStringAttribute("caption"));
+                hasCaption = true;
+            } else {
+                setCaption("");
+                captionNode.setClassName(CLASSNAME + "-nocaption");
+            }
+
+            // Add proper stylenames for all elements. This way we can prevent
+            // unwanted CSS selector inheritance.
+            if (uidl.hasAttribute("style")) {
+                final String[] styles = uidl.getStringAttribute("style").split(
+                        " ");
+                final String captionBaseClass = CLASSNAME
+                        + (hasCaption ? "-caption" : "-nocaption");
+                final String contentBaseClass = CLASSNAME + "-content";
+                final String decoBaseClass = CLASSNAME + "-deco";
+                String captionClass = captionBaseClass;
+                String contentClass = contentBaseClass;
+                String decoClass = decoBaseClass;
+                for (int i = 0; i < styles.length; i++) {
+                    captionClass += " " + captionBaseClass + "-" + styles[i];
+                    contentClass += " " + contentBaseClass + "-" + styles[i];
+                    decoClass += " " + decoBaseClass + "-" + styles[i];
+                }
+                captionNode.setClassName(captionClass);
+                contentNode.setClassName(contentClass);
+                bottomDecoration.setClassName(decoClass);
+
+            }
+        }
         // Ensure correct implementation
         if (client.updateComponent(this, uidl, false)) {
             rendering = false;
@@ -114,52 +156,11 @@ public class IPanel extends SimplePanel implements Container {
         this.client = client;
         id = uidl.getId();
 
-        // Restore default stylenames
-        captionNode.setClassName(CLASSNAME + "-caption");
-        contentNode.setClassName(CLASSNAME + "-content");
-        bottomDecoration.setClassName(CLASSNAME + "-deco");
-
-        // Handle caption displaying
-        boolean hasCaption = false;
-        if (uidl.hasAttribute("caption")
-                && !uidl.getStringAttribute("caption").equals("")) {
-            setCaption(uidl.getStringAttribute("caption"));
-            hasCaption = true;
-        } else {
-            setCaption("");
-            captionNode.setClassName(CLASSNAME + "-nocaption");
-        }
-
         setIconUri(uidl, client);
 
         handleDescription(uidl);
 
         handleError(uidl);
-
-        // Add proper stylenames for all elements. This way we can prevent
-        // unwanted CSS selector inheritance.
-        if (uidl.hasAttribute("style")) {
-            final String[] styles = uidl.getStringAttribute("style").split(" ");
-            final String captionBaseClass = CLASSNAME
-                    + (hasCaption ? "-caption" : "-nocaption");
-            final String contentBaseClass = CLASSNAME + "-content";
-            final String decoBaseClass = CLASSNAME + "-deco";
-            String captionClass = captionBaseClass;
-            String contentClass = contentBaseClass;
-            String decoClass = decoBaseClass;
-            for (int i = 0; i < styles.length; i++) {
-                captionClass += " " + captionBaseClass + "-" + styles[i];
-                contentClass += " " + contentBaseClass + "-" + styles[i];
-                decoClass += " " + decoBaseClass + "-" + styles[i];
-            }
-            captionNode.setClassName(captionClass);
-            contentNode.setClassName(contentClass);
-            bottomDecoration.setClassName(decoClass);
-
-        }
-
-        // Height adjustment
-        // iLayout(false);
 
         // Render content
         final UIDL layoutUidl = uidl.getChildUIDL(0);
