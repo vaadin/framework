@@ -25,6 +25,7 @@ import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
+import com.itmill.toolkit.terminal.gwt.client.RenderInformation.FloatSize;
 
 /**
  * Custom Layout implements complex layout defined with HTML template.
@@ -41,7 +42,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
     private final HashMap locationToElement = new HashMap();
 
     /** Location-name to contained widget map */
-    private final HashMap locationToWidget = new HashMap();
+    private final HashMap<String, Widget> locationToWidget = new HashMap<String, Widget>();
 
     /** Widget to captionwrapper map */
     private final HashMap widgetToCaptionWrapper = new HashMap();
@@ -61,6 +62,10 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
     private boolean hasTemplateContents = false;
 
     private Element elementWithNativeResizeFunction;
+
+    private String height = "";
+
+    private String width = "";
 
     public ICustomLayout() {
         setElement(DOM.createDiv());
@@ -98,7 +103,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
         }
 
         // Get previous widget
-        final Widget previous = (Widget) locationToWidget.get(location);
+        final Widget previous = locationToWidget.get(location);
         // NOP if given widget already exists in this location
         if (previous == widget) {
             return;
@@ -127,18 +132,6 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
         if (!hasTemplate()) {
             // Update HTML template only once
             initializeHTML(uidl, client);
-        }
-
-        // Set size
-        if (uidl.hasAttribute("width")) {
-            setWidth(uidl.getStringAttribute("width"));
-        } else {
-            setWidth("100%");
-        }
-        if (uidl.hasAttribute("height")) {
-            setHeight(uidl.getStringAttribute("height"));
-        } else {
-            setHeight("100%");
         }
 
         // Evaluate scripts
@@ -513,6 +506,107 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
             Util.notifyParentOfSizeChange(this, true);
             event.cancelBubble(true);
         }
+    }
+
+    @Override
+    public void setHeight(String height) {
+        if (this.height.equals(height)) {
+            return;
+        }
+
+        boolean shrinking = true;
+        if (isLarger(height, this.height)) {
+            shrinking = false;
+        }
+
+        this.height = height;
+        super.setHeight(height);
+
+        /*
+         * If the height shrinks we must remove all components with relative
+         * height from the DOM, update their height when they do not affect the
+         * available space and finally restore them to the original state
+         */
+        if (shrinking) {
+            Set<Widget> relativeSizeWidgets = new HashSet<Widget>();
+            for (Widget widget : locationToWidget.values()) {
+                FloatSize relativeSize = client.getRelativeSize(widget);
+                if (relativeSize.getHeight() >= 0.0f) {
+                    relativeSizeWidgets.add(widget);
+                    widget.getElement().getStyle().setProperty("position",
+                            "absolute");
+                }
+            }
+
+            for (Widget widget : relativeSizeWidgets) {
+                client.handleComponentRelativeSize(widget);
+                widget.getElement().getStyle().setProperty("position", "");
+            }
+        }
+    }
+
+    @Override
+    public void setWidth(String width) {
+        if (this.width.equals(width)) {
+            return;
+        }
+
+        boolean shrinking = true;
+        if (isLarger(width, this.width)) {
+            shrinking = false;
+        }
+
+        super.setWidth(width);
+        this.width = width;
+
+        /*
+         * If the width shrinks we must remove all components with relative
+         * width from the DOM, update their width when they do not affect the
+         * available space and finally restore them to the original state
+         */
+        if (shrinking) {
+            Set<Widget> relativeSizeWidgets = new HashSet<Widget>();
+            for (Widget widget : locationToWidget.values()) {
+                FloatSize relativeSize = client.getRelativeSize(widget);
+                if (relativeSize.getWidth() >= 0.0f) {
+                    relativeSizeWidgets.add(widget);
+                    widget.getElement().getStyle().setProperty("position",
+                            "absolute");
+                }
+            }
+
+            for (Widget widget : relativeSizeWidgets) {
+                client.handleComponentRelativeSize(widget);
+                widget.getElement().getStyle().setProperty("position", "");
+            }
+        }
+    }
+
+    /**
+     * Compares newSize with currentSize and returns true if it is clear that
+     * newSize is larger than currentSize. Returns false if newSize is smaller
+     * or if it is unclear which one is smaller.
+     * 
+     * @param newSize
+     * @param currentSize
+     * @return
+     */
+    private boolean isLarger(String newSize, String currentSize) {
+        if (newSize.equals("") || currentSize.equals("")) {
+            return false;
+        }
+
+        if (!newSize.endsWith("px") || !currentSize.endsWith("px")) {
+            return false;
+        }
+
+        int newSizePx = Integer.parseInt(newSize.substring(0,
+                newSize.length() - 2));
+        int currentSizePx = Integer.parseInt(currentSize.substring(0,
+                currentSize.length() - 2));
+
+        boolean larger = newSizePx > currentSizePx;
+        return larger;
     }
 
 }

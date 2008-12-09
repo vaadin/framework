@@ -1275,7 +1275,7 @@ public class ApplicationConnection {
 
     }
 
-    private FloatSize getRelativeSize(Widget widget) {
+    public FloatSize getRelativeSize(Widget widget) {
         return componentRelativeSizes.get(widget);
     }
 
