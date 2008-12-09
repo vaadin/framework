@@ -101,6 +101,11 @@
       <param-name>application</param-name>
       <param-value>com.itmill.toolkit.demo.sampler.SamplerApplication</param-value>
     </init-param>
+    <init-param>
+      <param-name>widgetset</param-name>
+      <param-value>com.itmill.toolkit.demo.sampler.gwt.SamplerWidgetSet</param-value>
+    </init-param>
+    
   </servlet>
   
  <servlet>
