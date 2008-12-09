@@ -48,9 +48,12 @@ import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.SplitPanel;
 import com.itmill.toolkit.ui.Table;
 import com.itmill.toolkit.ui.Tree;
+import com.itmill.toolkit.ui.UriFragmentUtility;
 import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 import com.itmill.toolkit.ui.Button.ClickListener;
+import com.itmill.toolkit.ui.UriFragmentUtility.FragmentChangedEvent;
+import com.itmill.toolkit.ui.UriFragmentUtility.FragmentChangedListener;
 
 public class SamplerApplication extends Application {
     // Main structure, root is always a FeatureSet that is not shown
@@ -211,6 +214,8 @@ public class SamplerApplication extends Application {
         // itmill: UA-658457-6
         private WebAnalytics webAnalytics = new WebAnalytics("UA-658457-6",
                 "none");
+        // "backbutton"
+        UriFragmentUtility uriFragmentUtility = new UriFragmentUtility();
 
         SamplerWindow() {
             // Main top/expanded-bottom layout
@@ -238,6 +243,15 @@ public class SamplerApplication extends Application {
 
             // invisible analytics -component
             nav.addComponent(webAnalytics);
+
+            // "backbutton"
+            nav.addComponent(uriFragmentUtility);
+            uriFragmentUtility.addListener(new FragmentChangedListener() {
+                public void fragmentChanged(FragmentChangedEvent source) {
+                    String frag = source.getUriFragmentUtility().getFragment();
+                    setFeature(frag);
+                }
+            });
 
             // Previous sample
             Button b = createPrevButton();
@@ -292,7 +306,9 @@ public class SamplerApplication extends Application {
          */
         public void setFeature(Feature f) {
             currentFeature.setValue(f);
-            webAnalytics.trackPageview(getPathFor(f));
+            String path = getPathFor(f);
+            webAnalytics.trackPageview(path);
+            uriFragmentUtility.setFragment(path, false);
         }
 
         /**
