@@ -9,15 +9,17 @@ import com.itmill.toolkit.ui.CustomLayout;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Link;
 import com.itmill.toolkit.ui.OrderedLayout;
+import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
 public class FeatureView extends CustomLayout {
 
-    private static final String MSG_SHOW_SRC = "Show java source";
-    private static final String MSG_HIDE_SRC = "Hide java source";
+    private static final String MSG_SHOW_SRC = "Show Java™ source";
+    private static final String MSG_HIDE_SRC = "Hide Java™ source";
 
     private OrderedLayout controls;
 
+    private Panel sourcePanel;
     private Label sourceCode;
     private Button showCode;
 
@@ -38,19 +40,28 @@ public class FeatureView extends CustomLayout {
         showCode.setStyleName(Button.STYLE_LINK);
         controls.addComponent(showCode);
 
-        sourceCode = new Label();
-        sourceCode.setVisible(false);
+        sourceCode = new CodeLabel();
         sourceCode.setContentMode(Label.CONTENT_PREFORMATTED);
-        controls.addComponent(sourceCode);
+
+        sourcePanel = new Panel();
+        sourcePanel.getLayout().setSizeUndefined();
+        sourcePanel.addStyleName(Panel.STYLE_LIGHT);
+        sourcePanel.addStyleName("source");
+        sourcePanel.addComponent(sourceCode);
+        sourcePanel.setVisible(false);
+        sourcePanel.setWidth("100%");
+        sourcePanel.setHeight("250px");
+
+        controls.addComponent(sourcePanel);
     }
 
     private void toggleSource() {
-        showSource(!sourceCode.isVisible());
+        showSource(!sourcePanel.isVisible());
     }
 
     private void showSource(boolean show) {
         showCode.setCaption((show ? MSG_HIDE_SRC : MSG_SHOW_SRC));
-        sourceCode.setVisible(show);
+        sourcePanel.setVisible(show);
     }
 
     public void setFeature(Feature feature) {

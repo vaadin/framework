@@ -54,6 +54,7 @@
 	font-weight: bold;
 	font-size: 16px;
 }
+
 .i-app-SamplerApplication .feature-info {
 	background-color: #999;
 	color: white;
@@ -75,6 +76,10 @@
 	font-size: 16px;
 	line-height: 30px;
 	margin-top: 10px;
+}
+
+.i-app-SamplerApplication .i-panel-content-source {
+	border: 1px solid #eee;
 }
 
 .i-customcomponent-ModeSwitch .i-button {
