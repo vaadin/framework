@@ -201,7 +201,7 @@ public class SamplerApplication extends Application {
      * The main window for Sampler, contains the full application UI.
      * 
      */
-    private class SamplerWindow extends Window {
+    class SamplerWindow extends Window {
         private FeatureList currentList = new FeatureGrid();
         private FeatureView featureView = new FeatureView();
         private Property currentFeature = new ObjectProperty(null,

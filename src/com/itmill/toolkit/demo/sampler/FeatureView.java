@@ -2,6 +2,9 @@ package com.itmill.toolkit.demo.sampler;
 
 import java.util.HashMap;
 
+import com.itmill.toolkit.demo.sampler.ActiveLink.LinkActivatedEvent;
+import com.itmill.toolkit.demo.sampler.ActiveLink.LinkActivatedListener;
+import com.itmill.toolkit.demo.sampler.SamplerApplication.SamplerWindow;
 import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Component;
@@ -107,12 +110,19 @@ public class FeatureView extends CustomLayout {
                 OrderedLayout rel = new OrderedLayout();
                 rel.setCaption("Related Samples");
                 for (Class c : features) {
-                    Feature f = SamplerApplication.getFeatureFor(c);
+                    final Feature f = SamplerApplication.getFeatureFor(c);
                     if (f != null) {
                         String path = SamplerApplication.getPathFor(f);
-                        rel.addComponent(new Link(f.getName(),
+                        ActiveLink al = new ActiveLink(f.getName(),
                                 new ExternalResource(getApplication().getURL()
-                                        + path)));
+                                        + path));
+                        al.addListener(new LinkActivatedListener() {
+                            public void linkActivated(LinkActivatedEvent event) {
+                                SamplerWindow w = (SamplerWindow) getWindow();
+                                w.setFeature(f);
+                            }
+                        });
+                        rel.addComponent(al);
                     }
                 }
                 addComponent(rel, "feature-rel");

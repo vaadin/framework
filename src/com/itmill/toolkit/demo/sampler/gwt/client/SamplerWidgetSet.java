@@ -1,5 +1,6 @@
 package com.itmill.toolkit.demo.sampler.gwt.client;
 
+import com.itmill.toolkit.demo.sampler.gwt.client.ui.IActiveLink;
 import com.itmill.toolkit.demo.sampler.gwt.client.ui.ICodeLabel;
 import com.itmill.toolkit.demo.sampler.gwt.client.ui.IWebAnalytics;
 import com.itmill.toolkit.terminal.gwt.client.DefaultWidgetSet;
@@ -14,6 +15,8 @@ public class SamplerWidgetSet extends DefaultWidgetSet {
             return new IWebAnalytics();
         } else if (ICodeLabel.class == classType) {
             return new ICodeLabel();
+        } else if (IActiveLink.class == classType) {
+            return new IActiveLink();
         } else {
             return super.createWidget(uidl);
         }
@@ -25,6 +28,8 @@ public class SamplerWidgetSet extends DefaultWidgetSet {
             return IWebAnalytics.class;
         } else if ("codelabel".equals(tag)) {
             return ICodeLabel.class;
+        } else if ("activelink".equals(tag)) {
+            return IActiveLink.class;
         } else {
             return super.resolveWidgetType(uidl);
         }
