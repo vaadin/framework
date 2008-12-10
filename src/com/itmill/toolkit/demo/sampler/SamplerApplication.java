@@ -138,6 +138,9 @@ public class SamplerApplication extends Application {
         private ObjectProperty currentFeature = new ObjectProperty(null,
                 Feature.class);
 
+        private OrderedLayout toggleBar = new OrderedLayout(
+                OrderedLayout.ORIENTATION_HORIZONTAL);
+
         private MainArea mainArea = new MainArea();
 
         private SplitPanel mainSplit;
@@ -202,6 +205,14 @@ public class SamplerApplication extends Application {
             nav.setComponentAlignment(search, ExpandLayout.ALIGNMENT_LEFT,
                     ExpandLayout.ALIGNMENT_VERTICAL_CENTER);
 
+            // togglebar
+            mainExpand.addComponent(toggleBar);
+            toggleBar.setHeight("40px");
+            toggleBar.setWidth("100%");
+            // toggle.setStyleName("topbar");
+            toggleBar.setSpacing(true);
+            toggleBar.setMargin(false, true, false, true);
+
             // Main left/right split; hidden menu tree
             mainSplit = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
             mainSplit.setSizeFull();
@@ -217,14 +228,17 @@ public class SamplerApplication extends Application {
 
             // Show / hide tree
             Component treeSwitch = createTreeSwitch();
-            nav.addComponent(treeSwitch);
-            nav.setComponentAlignment(treeSwitch, OrderedLayout.ALIGNMENT_LEFT,
+            toggleBar.addComponent(treeSwitch);
+            toggleBar.setExpandRatio(treeSwitch, 1);
+            toggleBar.setComponentAlignment(treeSwitch,
+                    OrderedLayout.ALIGNMENT_RIGHT,
                     OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
 
             // List/grid/coverflow
             Component mode = createModeSwitch();
-            nav.addComponent(mode);
-            nav.setComponentAlignment(mode, OrderedLayout.ALIGNMENT_RIGHT,
+            toggleBar.addComponent(mode);
+            toggleBar.setComponentAlignment(mode,
+                    OrderedLayout.ALIGNMENT_RIGHT,
                     OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
 
         }
@@ -415,13 +429,16 @@ public class SamplerApplication extends Application {
             if (val == null) {
                 currentList.setFeatureContainer(allFeatures);
                 mainArea.show(currentList);
+                toggleBar.setVisible(true);
             } else if (val instanceof FeatureSet) {
                 currentList.setFeatureContainer(((FeatureSet) val)
                         .getContainer(true));
                 mainArea.show(currentList);
+                toggleBar.setVisible(true);
             } else {
                 mainArea.show(featureView);
                 featureView.setFeature(val);
+                toggleBar.setVisible(false);
             }
 
         }
