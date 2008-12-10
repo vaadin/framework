@@ -116,7 +116,7 @@ public class DebugUtilities {
                     msg = "At least one component in each row should have non relative height in GridLayout with undefined height.";
                     attributes = getHeightAttributes(component);
                 }
-            } else {
+            } else if (!(parent instanceof CustomLayout)) {
                 // default error for non sized parent issue
                 msg = "Relative height component's parent should not have undefined height.";
                 attributes = getHeightAttributes(component);
