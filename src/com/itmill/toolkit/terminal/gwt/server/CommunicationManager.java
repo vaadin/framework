@@ -370,7 +370,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                         p.removeListener(this);
                     }
                 }
-                paintables = getDirtyComponents(window);
+                paintables = getDirtyVisibleComponents(window);
             }
             if (paintables != null) {
 
@@ -1084,11 +1084,14 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
     }
 
     /**
+     * Returns dirty components which are in given window. Components in an
+     * invisible subtrees are omitted.
+     * 
      * @param w
      *            root window for which dirty components is to be fetched
      * @return
      */
-    private ArrayList getDirtyComponents(Window w) {
+    private ArrayList getDirtyVisibleComponents(Window w) {
         final ArrayList resultset = new ArrayList(dirtyPaintabletSet);
 
         // The following algorithm removes any components that would be painted
@@ -1111,6 +1114,16 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                         componentsRoot = (Window) componentsRoot.getParent();
                     }
                     if (componentsRoot != w) {
+                        resultset.remove(p);
+                    } else if (component.getParent() != null
+                            && !component.getParent().isVisible()) {
+                        /*
+                         * Do not return components in an invisible subtree.
+                         * 
+                         * Components that are invisible in visible subree, must
+                         * be rendered (to let client know that they need to be
+                         * hidden).
+                         */
                         resultset.remove(p);
                     }
                 }

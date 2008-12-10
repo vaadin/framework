@@ -113,8 +113,19 @@ public interface Component extends Paintable, VariableOwner, Sizeable {
     public void setEnabled(boolean enabled);
 
     /**
-     * Tests if the component is visible or not. Visibility defines if the
-     * component is shown in the UI or not. Default is <code>true</code>.
+     * Tests the components visibility. Visibility defines if the component is
+     * drawn when updating UI. Default is <code>true</code>.
+     * 
+     * <p>
+     * <b>Note</b> that to return true, this component and all its parents must
+     * be visible.
+     * 
+     * <p>
+     * <b>Also note</b> that this method does not check if component is attached
+     * and shown to user. Component and all its parents may be visible, but not
+     * necessary attached to application. To test if component will be drawn,
+     * check its visibility and that {@link Component#getApplication()} does not
+     * return <code>null</code>.
      * 
      * @return <code>true</code> if the component is visible in the UI,
      *         <code>false</code> if not
@@ -122,11 +133,14 @@ public interface Component extends Paintable, VariableOwner, Sizeable {
     public boolean isVisible();
 
     /**
-     * Sets the components visibility status. Visibility defines if the
+     * Sets this components visibility status. Visibility defines if the
      * component is shown in the UI or not.
+     * <p>
+     * <b>Note</b> that to be shown in UI this component and all its parents
+     * must be visible.
      * 
      * @param visible
-     *            the Boolean value specifying if the component should be
+     *            the boolean value specifying if the component should be
      *            visible after the call or not.
      */
     public void setVisible(boolean visible);

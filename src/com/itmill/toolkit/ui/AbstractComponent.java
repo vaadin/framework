@@ -359,16 +359,18 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     }
 
     /*
-     * Tests if the component is visible. Don't add a JavaDoc comment here, we
-     * use the default documentation from implemented interface.
+     * (non-Javadoc)
+     * 
+     * @see com.itmill.toolkit.ui.Component#isVisible()
      */
     public boolean isVisible() {
-        return visible;
+        return visible && (getParent() == null || getParent().isVisible());
     }
 
     /*
-     * Sets the components visibility. Don't add a JavaDoc comment here, we use
-     * the default documentation from implemented interface.
+     * (non-Javadoc)
+     * 
+     * @see com.itmill.toolkit.ui.Component#setVisible(boolean)
      */
     public void setVisible(boolean visible) {
 
@@ -717,8 +719,9 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
     /* Documentation copied from interface */
     public void childRequestedRepaint(Collection alreadyNotified) {
-        // Invisible components do not need repaints
-        if (!isVisible()) {
+        // Invisible components (by flag in this particular component) do not
+        // need repaints
+        if (!visible) {
             return;
         }
 
