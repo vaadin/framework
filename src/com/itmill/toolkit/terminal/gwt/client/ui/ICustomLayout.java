@@ -531,7 +531,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
             Set<Widget> relativeSizeWidgets = new HashSet<Widget>();
             for (Widget widget : locationToWidget.values()) {
                 FloatSize relativeSize = client.getRelativeSize(widget);
-                if (relativeSize.getHeight() >= 0.0f) {
+                if (relativeSize != null && relativeSize.getHeight() >= 0.0f) {
                     relativeSizeWidgets.add(widget);
                     widget.getElement().getStyle().setProperty("position",
                             "absolute");
@@ -568,7 +568,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
             Set<Widget> relativeSizeWidgets = new HashSet<Widget>();
             for (Widget widget : locationToWidget.values()) {
                 FloatSize relativeSize = client.getRelativeSize(widget);
-                if (relativeSize.getWidth() >= 0.0f) {
+                if (relativeSize != null && relativeSize.getWidth() >= 0.0f) {
                     relativeSizeWidgets.add(widget);
                     widget.getElement().getStyle().setProperty("position",
                             "absolute");
