@@ -2,33 +2,14 @@ package com.itmill.toolkit.demo.sampler;
 
 import java.net.URI;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 
 import com.itmill.toolkit.Application;
-import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.data.util.HierarchicalContainer;
 import com.itmill.toolkit.data.util.ObjectProperty;
 import com.itmill.toolkit.demo.sampler.ModeSwitch.ModeSwitchEvent;
-import com.itmill.toolkit.demo.sampler.features.DummyFeature;
-import com.itmill.toolkit.demo.sampler.features.DummyFeature2;
-import com.itmill.toolkit.demo.sampler.features.blueprints.ProminentPrimaryAction;
-import com.itmill.toolkit.demo.sampler.features.buttons.ButtonLink;
-import com.itmill.toolkit.demo.sampler.features.buttons.ButtonPush;
-import com.itmill.toolkit.demo.sampler.features.buttons.ButtonSwitch;
-import com.itmill.toolkit.demo.sampler.features.commons.Icons;
-import com.itmill.toolkit.demo.sampler.features.commons.Tooltips;
-import com.itmill.toolkit.demo.sampler.features.link.LinkCurrentWindow;
-import com.itmill.toolkit.demo.sampler.features.link.LinkNoDecorations;
-import com.itmill.toolkit.demo.sampler.features.link.LinkSizedWindow;
-import com.itmill.toolkit.demo.sampler.features.notifications.NotificationCustom;
-import com.itmill.toolkit.demo.sampler.features.notifications.NotificationError;
-import com.itmill.toolkit.demo.sampler.features.notifications.NotificationHumanized;
-import com.itmill.toolkit.demo.sampler.features.notifications.NotificationTray;
-import com.itmill.toolkit.demo.sampler.features.notifications.NotificationWarning;
 import com.itmill.toolkit.terminal.ClassResource;
 import com.itmill.toolkit.terminal.Resource;
 import com.itmill.toolkit.terminal.ThemeResource;
@@ -53,61 +34,9 @@ import com.itmill.toolkit.ui.UriFragmentUtility.FragmentChangedEvent;
 import com.itmill.toolkit.ui.UriFragmentUtility.FragmentChangedListener;
 
 public class SamplerApplication extends Application {
-    // Main structure, root is always a FeatureSet that is not shown
-    private static final FeatureSet features = new FeatureSet("All",
-            new Feature[] {
-                    // Main sets
-
-                    new FeatureSet("Blueprints", new Feature[] {
-                    // Blueprints
-                            new ProminentPrimaryAction(), //
-
-                            }),
-
-                    new FeatureSet("Components", new Feature[] {
-                            // Components
-
-                            new FeatureSet("Commons", new Feature[] {
-                                    new Tooltips(), // tooltips
-                                    new Icons(), // icons
-
-                            }),
-
-                            new FeatureSet("Buttons", new Feature[] {
-                                    new ButtonPush(), // basic
-                                    new ButtonLink(), // link
-                                    new ButtonSwitch(), // switch/checkbox
-
-                            }),
-
-                            new FeatureSet("Links", new Feature[] {
-                                    new LinkCurrentWindow(), // basic
-                                    new LinkNoDecorations(), // new win
-                                    new LinkSizedWindow(), // new win
-
-                            }),
-
-                            new FeatureSet("Notifications", new Feature[] {
-                                    new NotificationHumanized(), // humanized
-                                    new NotificationWarning(), // warning
-                                    new NotificationTray(), // tray
-                                    new NotificationError(), // error
-                                    new NotificationCustom(), // error
-                            }),
-
-                    }),
-
-                    new FeatureSet("Unsorted", new Feature[] {
-                    // Patterns
-                            new DummyFeature(), //
-                            new DummyFeature2(), //
-
-                    }),
-
-            });
 
     // All features in one container
-    private static final HierarchicalContainer allFeatures = features
+    private static final HierarchicalContainer allFeatures = FeatureSet.FEATURES
             .getContainer(true);
 
     // init() inits
@@ -214,8 +143,8 @@ public class SamplerApplication extends Application {
         private SplitPanel mainSplit;
         private Tree navigationTree;
         // itmill: UA-658457-6
-        private GoogleAnalytics webAnalytics = new GoogleAnalytics("UA-658457-6",
-                "none");
+        private GoogleAnalytics webAnalytics = new GoogleAnalytics(
+                "UA-658457-6", "none");
         // "backbutton"
         UriFragmentUtility uriFragmentUtility = new UriFragmentUtility();
 
@@ -322,7 +251,7 @@ public class SamplerApplication extends Application {
          *            the path of the Feature(Set) to show
          */
         public void setFeature(String path) {
-            Feature f = features.getFeatureByPath(path);
+            Feature f = FeatureSet.FEATURES.getFeatureByPath(path);
             setFeature(f);
         }
 
@@ -465,10 +394,12 @@ public class SamplerApplication extends Application {
                     }
                 }
             });
-            for (int i = 0; i < features.getFeatures().length; i++) {
-                tree.expandItemsRecursively(features.getFeatures()[i]);
+            for (int i = 0; i < FeatureSet.FEATURES.getFeatures().length; i++) {
+                tree
+                        .expandItemsRecursively(FeatureSet.FEATURES
+                                .getFeatures()[i]);
             }
-            tree.expandItemsRecursively(features);
+            tree.expandItemsRecursively(FeatureSet.FEATURES);
             tree.addListener(new Tree.ValueChangeListener() {
                 public void valueChange(ValueChangeEvent event) {
                     Feature f = (Feature) event.getProperty().getValue();
@@ -660,137 +591,6 @@ public class SamplerApplication extends Application {
                 }
             }
         }
-    }
-
-    /**
-     * A set of features.
-     */
-    static class FeatureSet extends Feature {
-
-        private String pathname;
-
-        private String name;
-
-        private String desc;
-
-        private String icon = "folder.gif";
-
-        private Feature[] content;
-
-        private HierarchicalContainer container = null;
-
-        private boolean containerRecursive = false;
-
-        FeatureSet(String pathname, Feature[] content) {
-            this(pathname, pathname, "", content);
-        }
-
-        FeatureSet(String pathname, String name, Feature[] content) {
-            this(pathname, name, "", content);
-        }
-
-        FeatureSet(String pathname, String name, String desc, Feature[] content) {
-            this.pathname = pathname;
-            this.name = name;
-            this.desc = desc;
-            this.content = content;
-        }
-
-        Feature[] getFeatures() {
-            return content;
-        }
-
-        Feature getFeatureByPath(String path) {
-            LinkedList<String> parts = new LinkedList<String>();
-            Collections.addAll(parts, path.split("/"));
-            FeatureSet f = this;
-            while (f != null) {
-                Feature[] fs = f.getFeatures();
-                f = null; // break while if no new found
-                String part = parts.remove(0);
-                for (int i = 0; i < fs.length; i++) {
-                    if (fs[i].getPathName().equalsIgnoreCase(part)) {
-                        if (parts.isEmpty()) {
-                            return fs[i];
-                        } else if (fs[i] instanceof FeatureSet) {
-                            f = (FeatureSet) fs[i];
-                            break;
-                        } else {
-                            return null;
-                        }
-                    }
-                }
-            }
-            return null;
-        }
-
-        HierarchicalContainer getContainer(boolean recurse) {
-            if (container == null || containerRecursive != recurse) {
-                container = new HierarchicalContainer();
-                container.addContainerProperty(PROPERTY_NAME, String.class, "");
-                container.addContainerProperty(PROPERTY_DESCRIPTION,
-                        String.class, "");
-                // fill
-                addFeatures(this, container, recurse);
-            }
-            return container;
-        }
-
-        private void addFeatures(FeatureSet f, HierarchicalContainer c,
-                boolean recurse) {
-            Feature[] features = f.getFeatures();
-            for (int i = 0; i < features.length; i++) {
-                Item item = c.addItem(features[i]);
-                Property property = item.getItemProperty(PROPERTY_NAME);
-                property.setValue(features[i].getName());
-                property = item.getItemProperty(PROPERTY_DESCRIPTION);
-                property.setValue(features[i].getDescription());
-                if (recurse) {
-                    c.setParent(features[i], f);
-                    if (features[i] instanceof FeatureSet) {
-                        addFeatures((FeatureSet) features[i], c, recurse);
-                    }
-                }
-                if (!(features[i] instanceof FeatureSet)) {
-                    c.setChildrenAllowed(features[i], false);
-                }
-            }
-        }
-
-        public String getDescription() {
-            return desc;
-        }
-
-        public String getPathName() {
-            return pathname;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getIconName() {
-            return icon;
-        }
-
-        @Override
-        public APIResource[] getRelatedAPI() {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        @Override
-        public Class[] getRelatedFeatures() {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        @Override
-        public NamedExternalResource[] getRelatedResources() {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
     }
 
 }
