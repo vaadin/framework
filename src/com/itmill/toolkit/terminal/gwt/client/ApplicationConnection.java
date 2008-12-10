@@ -945,6 +945,9 @@ public class ApplicationConnection {
         }
 
         if (!visible) {
+            // component is invisible, delete old size to notify parent, if
+            // later make visible
+            componentOffsetSizes.remove(component);
             return true;
         }
 
@@ -1089,7 +1092,7 @@ public class ApplicationConnection {
             component.setWidth(w);
         }
 
-	// Set relative sizes
+        // Set relative sizes
         if (relativeHeight >= 0.0 || relativeWidth >= 0.0) {
             // One or both is relative
             handleComponentRelativeSize(component);
