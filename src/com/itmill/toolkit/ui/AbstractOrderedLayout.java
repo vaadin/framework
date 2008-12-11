@@ -331,4 +331,8 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
         return (ratio == null) ? 0 : ratio.floatValue();
     }
 
+    public void setComponentAlignment(Component component, String alignment) {
+        AlignmentUtils.setComponentAlignment(this, component, alignment);
+    }
+
 }

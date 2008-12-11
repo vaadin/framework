@@ -1287,4 +1287,8 @@ public class GridLayout extends AbstractLayout implements
         return null;
     }
 
+    public void setComponentAlignment(Component component, String alignment) {
+        AlignmentUtils.setComponentAlignment(this, component, alignment);
+    }
+
 }
