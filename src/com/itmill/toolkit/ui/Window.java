@@ -1039,6 +1039,14 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
                     "You can only add windows inside application-level windows");
         }
 
+        if (window.getWidth() < 0
+                && window.getLayout().getWidthUnits() == UNITS_PERCENTAGE) {
+            // set sane width for subwindow layout when window has undefined
+            // width. This may though be odd for developer in some situations.
+            // See #2321
+            window.getLayout().setWidth(-1, UNITS_PIXELS);
+        }
+
         subwindows.add(window);
         window.setParent(this);
         requestRepaint();
