@@ -469,7 +469,10 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
         this.applicationUrl = applicationUrl;
         properties = applicationProperties;
         this.context = context;
-        if (getProperty("Debug") != null && getProperty("Debug").equals("true")) {
+        if ((getProperty("Debug") != null && getProperty("Debug")
+                .equals("true"))
+                || getProperty("debug") != null
+                && getProperty("debug").equals("true")) {
             debugMode = true;
         }
         init();
