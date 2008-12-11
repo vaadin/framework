@@ -367,7 +367,8 @@ public class IFormLayout extends SimplePanel implements Container {
 
         public void updateFromUIDL(UIDL uidl, Paintable component) {
             owner = component;
-            if (uidl.hasAttribute("error")) {
+            if (uidl.hasAttribute("error")
+                    && !uidl.getBooleanAttribute("hideErrors")) {
                 if (errorIndicatorElement == null) {
                     errorIndicatorElement = DOM.createDiv();
                     DOM.setInnerHTML(errorIndicatorElement, "&nbsp;");
