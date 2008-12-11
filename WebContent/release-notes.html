@@ -51,6 +51,17 @@ Toolkit.</p>
 <p>The stable IT Mill Toolkit version 5.3 introduces a major rework of layout components
 since the beta versions 5.2.x and before.</p>
 
+<p>Major changes include:</p>
+
+<ul>
+  <li>Layouts are stricter than before - <i>use of debug mode recommended</i></li>
+  <li><b>VerticalLayout</b> and <b>HorizontalLayout</b> obsolete <b><s>OrderedLayout</s></b></li>
+  <li><b>ExpandLayout</b> deprecated</li>
+  <li>Default changes changed</li>
+</ul>
+
+<p>These major changes are detailed below.</p>
+
 <h3 id="Usedebugmodeduringdevelopmentdebugging">Use debug mode during development / debugging</h3>
 
 <p>Layouts are now more strict than before and some components may even be invisible if
@@ -72,7 +83,21 @@ their relative size and colored red.</p>
 which you can enable by adding the request parameter "<tt>?debug=true</tt>" to application
 URI.</p>
 
+<h3>OrderedLayout deprecated</h3>
+
+<p><b>VerticalLayout</b> and <b>HorizontalLayout</b> replace the old
+<b><s>OrderedLayout</s></b>, which is now deprecated.</p>
+
+<p>Essentially, this makes the creation of these basic layouts a bit tidier as you don't
+have to give the orientation as an ugly parameter to the constructor. You won't be able to
+change the orientation with <tt>setOrientation()</tt> any longer, though such need is rare
+anyhow.</p>
+
 <h3 id="HandlingofrelativesizeshavechangedExpandLayoutdeprecated">Handling of relative sizes has changed, ExpandLayout deprecated</h3>
+
+<p><b><s>ExpandLayout</s></b> is deprecated. You can now define the relative sizes of
+components more flexibly with <tt>setExpandRatio()</tt> method available in
+<b>VerticalLayout</b> or <b>HorizontalLayout</b>.</p>
 
 <p>See the article on <a class="wiki"
 href="http://dev.itmill.com/wiki/DevDocs/RFC/RelativeSizes">Relative sizes in IT Mill
@@ -84,14 +109,28 @@ Toolkit</a> for details.</p>
 have 100% width by default. These components are:</p>
 
 <ul>
-  <li>Vertical <b>OrderedLayout</b> (vertical via constructor, not via setOrientation method)</li>
-  <li>Window</li>
-  <li>Panel</li>
+  <li><b>VerticalLayout</b></li>
+  <li><b>Window</b></li>
+  <li><b>Panel</b></li>
   <li><b>TabSheet</b></li>
-  <li><b>SplitPanel</b> (note that SplitPanel also has 100% height by default)</li>
-  <li>Form</li>
+  <li><b>SplitPanel</b> (note that <b>SplitPanel</b> also has 100% height by default)</li>
+  <li><b>Form</b></li>
   <li><b>FormLayout</b></li>
 </ul>
+
+<h3>Miscellaneous Layout Changes</h3>
+
+<ul>
+  <li>You can now give component alignments inside layouts easily with
+  <tt>setComponentAlignment()</tt> as a string, such as "<tt>top left</tt>" or
+  "<tt>m,c</tt>" (for middle-center). See <a
+  href="http://dev.itmill.com/ticket/2279">#2279</a>.</li>
+
+  <li><b>Form</b> no longer copies all components from the old layout to the new one when
+  doing <tt>setLayout()</tt>, instead only fields belonging to the <b>Form</b> are
+  copied.</li>
+</ul>
+
 
 <h2 id="Customtailoredclientsidecomponents">Custom Tailored Client-Side Components</h2>
 
