@@ -186,11 +186,11 @@ public class IRichTextArea extends Composite implements Paintable, Field,
             }
 
             super.setWidth(w + "px");
-        } else if (width.equals("") && BrowserInfo.get().isIE7()) {
+        } else if (width.equals("") && BrowserInfo.get().isIE()) {
             /*
-             * IE7 cannot calculate the width of the 100% iframe if there is no
-             * width specified for the parent so we use the width of the
-             * toolbar.
+             * IE cannot calculate the width of the 100% iframe correctly if
+             * there is no width specified for the parent so we use the width of
+             * the toolbar.
              */
             super.setWidth(formatter.getOffsetWidth() + "px");
         } else {
