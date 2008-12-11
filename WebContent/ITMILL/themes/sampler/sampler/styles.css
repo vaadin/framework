@@ -8,6 +8,16 @@
 	border-bottom: 1px solid #999;
 }
 
+.i-customcomponent-breadcrumbs .i-link a {
+	text-decoration: none;
+}
+.i-customcomponent-breadcrumbs .i-link a:hover {
+	text-decoration: underline;
+}
+.i-customcomponent-breadcrumbs .i-link-bold a {
+	font-weight: bold;	
+}
+
 .i-app-SamplerApplication .i-label-section {
 	font-size: 18px;
 	font-weight: bold;
@@ -22,8 +32,13 @@
 }
 
 .i-app-SamplerApplication .i-button-screenshot {
-	border: 3px solid #eeeeee;
+	border: 3px solid #ccc;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
 	overflow: hidden;
+}
+.i-app-SamplerApplication .i-button-screenshot:hover {
+	border-color: #abc;
 }
 .i-app-SamplerApplication .i-button-screenshot img {
 	margin-top: -2px;

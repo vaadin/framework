@@ -9,8 +9,10 @@ import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.data.util.HierarchicalContainer;
 import com.itmill.toolkit.data.util.ObjectProperty;
+import com.itmill.toolkit.demo.sampler.ActiveLink.LinkActivatedEvent;
 import com.itmill.toolkit.demo.sampler.ModeSwitch.ModeSwitchEvent;
 import com.itmill.toolkit.terminal.ClassResource;
+import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.terminal.Resource;
 import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.ui.Button;
@@ -20,6 +22,7 @@ import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.Embedded;
 import com.itmill.toolkit.ui.ExpandLayout;
 import com.itmill.toolkit.ui.GridLayout;
+import com.itmill.toolkit.ui.HorizontalLayout;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
@@ -150,6 +153,8 @@ public class SamplerApplication extends Application {
                 "UA-658457-6", "none");
         // "backbutton"
         UriFragmentUtility uriFragmentUtility = new UriFragmentUtility();
+        // breadcrumbs
+        BreadCrumbs breadcrumbs = new BreadCrumbs();
 
         SamplerWindow() {
             // Main top/expanded-bottom layout
@@ -173,7 +178,12 @@ public class SamplerApplication extends Application {
             nav.addComponent(logo);
             nav.setComponentAlignment(logo, ExpandLayout.ALIGNMENT_LEFT,
                     ExpandLayout.ALIGNMENT_VERTICAL_CENTER);
-            nav.setExpandRatio(logo, 1);
+
+            // Breadcrumbs
+            nav.addComponent(breadcrumbs);
+            nav.setExpandRatio(breadcrumbs, 1);
+            nav.setComponentAlignment(breadcrumbs, ExpandLayout.ALIGNMENT_LEFT,
+                    ExpandLayout.ALIGNMENT_VERTICAL_CENTER);
 
             // invisible analytics -component
             nav.addComponent(webAnalytics);
@@ -254,6 +264,7 @@ public class SamplerApplication extends Application {
             String path = getPathFor(f);
             webAnalytics.trackPageview(path);
             uriFragmentUtility.setFragment(path, false);
+            breadcrumbs.setPath(path);
             updateFeatureList(currentList);
         }
 
@@ -288,7 +299,7 @@ public class SamplerApplication extends Application {
 
         private Component createSearch() {
             ComboBox search = new ComboBox();
-            search.setWidth("120px");
+            search.setWidth("160px");
             search.setNewItemsAllowed(false);
             search.setFilteringMode(ComboBox.FILTERINGMODE_CONTAINS);
             search.setNullSelectionAllowed(true);
@@ -459,6 +470,58 @@ public class SamplerApplication extends Application {
             if (getCompositionRoot() != c) {
                 c.setSizeFull();
                 setCompositionRoot(c);
+            }
+        }
+    }
+
+    private class BreadCrumbs extends CustomComponent implements
+            ActiveLink.LinkActivatedListener {
+        HorizontalLayout layout;
+
+        BreadCrumbs() {
+            layout = new HorizontalLayout();
+            layout.setSpacing(true);
+            setCompositionRoot(layout);
+            setStyleName("breadcrumbs");
+        }
+
+        public void setPath(String path) {
+            // could be optimized: always builds path from scratch
+            layout.removeAllComponents();
+
+            { // home
+                ActiveLink link = new ActiveLink("Home", new ExternalResource(
+                        "#"));
+                link.addListener(this);
+                layout.addComponent(link);
+            }
+
+            if (path != null && !"".equals(path)) {
+                String parts[] = path.split("/");
+                String current = "";
+                ActiveLink link = null;
+                for (int i = 0; i < parts.length; i++) {
+                    layout.addComponent(new Label("‣"));
+                    current += (i > 0 ? "/" : "") + parts[i];
+                    Feature f = FeatureSet.FEATURES.getFeatureByPath(current);
+                    link = new ActiveLink(f.getName(), new ExternalResource("#"
+                            + f.getPathName()));
+                    link.setData(f);
+                    link.addListener(this);
+                    layout.addComponent(link);
+                }
+                if (link != null) {
+                    link.setStyleName("bold");
+                }
+            }
+
+        }
+
+        @Override
+        public void linkActivated(LinkActivatedEvent event) {
+            if (!event.isLinkOpened()) {
+                ((SamplerWindow) getWindow()).setFeature((Feature) event
+                        .getActiveLink().getData());
             }
         }
     }
