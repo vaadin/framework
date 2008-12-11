@@ -16,12 +16,12 @@ public class ButtonLink extends Feature {
         return "A link-styled button.";
     }
 
-    @Override
+    
     public APIResource[] getRelatedAPI() {
         return new APIResource[] { new APIResource(Button.class) };
     }
 
-    @Override
+    
     public Class[] getRelatedFeatures() {
         return new Class[] { ButtonPush.class, ButtonSwitch.class,
                 LinkCurrentWindow.class, LinkNoDecorations.class,
@@ -29,7 +29,7 @@ public class ButtonLink extends Feature {
                 FeatureSet.Links.class };
     }
 
-    @Override
+    
     public NamedExternalResource[] getRelatedResources() {
         // TODO Auto-generated method stub
         return null;

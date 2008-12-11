@@ -12,18 +12,18 @@ public class ButtonPush extends Feature {
         return "A basic push-button.";
     }
 
-    @Override
+    
     public APIResource[] getRelatedAPI() {
         return new APIResource[] { new APIResource(Button.class) };
     }
 
-    @Override
+    
     public Class[] getRelatedFeatures() {
         return new Class[] { ButtonLink.class, ButtonSwitch.class,
                 ProminentPrimaryAction.class };
     }
 
-    @Override
+    
     public NamedExternalResource[] getRelatedResources() {
         // TODO Auto-generated method stub
         return null;

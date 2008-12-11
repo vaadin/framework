@@ -517,7 +517,7 @@ public class SamplerApplication extends Application {
 
         }
 
-        @Override
+        
         public void linkActivated(LinkActivatedEvent event) {
             if (!event.isLinkOpened()) {
                 ((SamplerWindow) getWindow()).setFeature((Feature) event

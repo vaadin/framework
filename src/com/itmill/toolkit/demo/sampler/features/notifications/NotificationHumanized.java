@@ -7,7 +7,7 @@ import com.itmill.toolkit.ui.Window;
 
 public class NotificationHumanized extends Feature {
 
-    @Override
+    
     public String getDescription() {
         return "Notifications are lightweight informational messages,"
                 + " used to inform the user of various events. The"
@@ -23,19 +23,19 @@ public class NotificationHumanized extends Feature {
                 + " safely ignore, once the application is familliar.";
     }
 
-    @Override
+    
     public APIResource[] getRelatedAPI() {
         return new APIResource[] { new APIResource(Window.class),
                 new APIResource(Window.Notification.class) };
     }
 
-    @Override
+    
     public Class[] getRelatedFeatures() {
         return new Class[] { NotificationTray.class, NotificationWarning.class,
                 NotificationError.class, NotificationCustom.class };
     }
 
-    @Override
+    
     public NamedExternalResource[] getRelatedResources() {
         return new NamedExternalResource[] { new NamedExternalResource(
                 "Monolog Boxes and Transparent Messages",
