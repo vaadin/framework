@@ -17,8 +17,8 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
 
 public class FeatureView extends CustomLayout {
 
-    private static final String MSG_SHOW_SRC = "Show Java™ source";
-    private static final String MSG_HIDE_SRC = "Hide Java™ source";
+    private static final String MSG_SHOW_SRC = "⊞ Show Java™ source";
+    private static final String MSG_HIDE_SRC = "⊟ Hide Java™ source";
 
     private OrderedLayout controls;
 
@@ -41,6 +41,8 @@ public class FeatureView extends CustomLayout {
             }
         });
         showCode.setStyleName(Button.STYLE_LINK);
+        showCode.addStyleName("showcode");
+        showCode.setWidth("100%");
         controls.addComponent(showCode);
 
         sourceCode = new CodeLabel();

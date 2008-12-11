@@ -167,7 +167,7 @@ public class SamplerApplication extends Application {
             OrderedLayout nav = new OrderedLayout(
                     OrderedLayout.ORIENTATION_HORIZONTAL);
             mainExpand.addComponent(nav);
-            nav.setHeight("40px");
+            nav.setHeight("50px");
             nav.setWidth("100%");
             nav.setStyleName("topbar");
             nav.setSpacing(true);
@@ -219,7 +219,7 @@ public class SamplerApplication extends Application {
             mainExpand.addComponent(toggleBar);
             toggleBar.setHeight("40px");
             toggleBar.setWidth("100%");
-            // toggle.setStyleName("topbar");
+            toggleBar.setStyleName("togglebar");
             toggleBar.setSpacing(true);
             toggleBar.setMargin(false, true, false, true);
 
@@ -642,13 +642,17 @@ public class SamplerApplication extends Application {
                         title.setStyleName("section");
                         grid.addComponent(title, 0, grid.getCursorY(), grid
                                 .getColumns() - 1, grid.getCursorY());
+                        grid.setComponentAlignment(title,
+                                GridLayout.ALIGNMENT_LEFT,
+                                GridLayout.ALIGNMENT_VERTICAL_CENTER);
                     } else {
                         title.setStyleName("subsection");
                         grid.addComponent(title);
+                        grid.setComponentAlignment(title,
+                                GridLayout.ALIGNMENT_LEFT,
+                                GridLayout.ALIGNMENT_TOP);
                     }
-                    grid.setComponentAlignment(title,
-                            GridLayout.ALIGNMENT_LEFT,
-                            GridLayout.ALIGNMENT_VERTICAL_CENTER);
+
                 } else {
                     if (grid.getCursorX() == 0) {
                         grid.space();
