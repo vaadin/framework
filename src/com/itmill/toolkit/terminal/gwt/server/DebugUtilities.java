@@ -94,15 +94,17 @@ public class DebugUtilities {
         if (hasRelativeHeight(component) && hasUndefinedHeight(parent)) {
             if (parent instanceof AbstractOrderedLayout) {
                 AbstractOrderedLayout ol = (AbstractOrderedLayout) parent;
-                int orientation = OrderedLayout.ORIENTATION_HORIZONTAL;
+                boolean vertical = false;
 
                 if (ol instanceof OrderedLayout) {
-                    orientation = ((OrderedLayout) ol).getOrientation();
+                    if (((OrderedLayout) ol).getOrientation() == OrderedLayout.ORIENTATION_VERTICAL) {
+                        vertical = true;
+                    }
                 } else if (ol instanceof VerticalLayout) {
-                    orientation = OrderedLayout.ORIENTATION_VERTICAL;
+                    vertical = true;
                 }
 
-                if (orientation == OrderedLayout.ORIENTATION_VERTICAL) {
+                if (vertical) {
                     msg = "Relative height for component inside non sized vertical ordered layout.";
                     attributes = getHeightAttributes(component);
                 } else if (!hasNonRelativeHeightComponent(ol)) {
@@ -152,15 +154,17 @@ public class DebugUtilities {
         if (hasRelativeWidth(component) && hasUndefinedWidth(parent)) {
             if (parent instanceof AbstractOrderedLayout) {
                 AbstractOrderedLayout ol = (AbstractOrderedLayout) parent;
-                int orientation = OrderedLayout.ORIENTATION_HORIZONTAL;
+                boolean horizontal = true;
 
                 if (ol instanceof OrderedLayout) {
-                    orientation = ((OrderedLayout) ol).getOrientation();
+                    if (((OrderedLayout) ol).getOrientation() == OrderedLayout.ORIENTATION_VERTICAL) {
+                        horizontal = false;
+                    }
                 } else if (ol instanceof VerticalLayout) {
-                    orientation = OrderedLayout.ORIENTATION_VERTICAL;
+                    horizontal = false;
                 }
 
-                if (orientation == OrderedLayout.ORIENTATION_HORIZONTAL) {
+                if (horizontal) {
                     msg = "Relative width for component inside non sized horizontal ordered layout.";
                     attributes = getWidthAttributes(component);
                 } else if (!hasNonRelativeWidthComponent(ol)) {
