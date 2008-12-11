@@ -13,7 +13,12 @@ import com.itmill.toolkit.terminal.PaintTarget;
  * @version
  * @VERSION@
  * @since 3.0
+ * @deprecated Replaced by VerticalLayout/HorizontalLayout. For type checking
+ *             please not that VerticalLayout/HorizontalLayout do not extend
+ *             OrderedLayout but AbstractOrderedLayout (which also OrderedLayout
+ *             extends).
  */
+@Deprecated
 public class OrderedLayout extends AbstractOrderedLayout {
     /* Predefined orientations */
 
