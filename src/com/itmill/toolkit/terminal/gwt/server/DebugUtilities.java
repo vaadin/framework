@@ -32,12 +32,7 @@ public class DebugUtilities {
     public static boolean validateComponentRelativeSizes(Component component,
             boolean recursive) {
 
-        boolean valid = true;
-
-        if (!(component instanceof Window)) {
-            valid = valid && checkWidths(component);
-            valid = valid && checkHeights(component);
-        }
+        boolean valid = checkWidths(component) && checkHeights(component);
 
         if (recursive) {
             if (component instanceof Panel) {
@@ -86,7 +81,11 @@ public class DebugUtilities {
 
     }
 
-    private static boolean checkHeights(Component component) {
+    public static boolean checkHeights(Component component) {
+        if (component instanceof Window) {
+            return true;
+        }
+
         Component parent = component.getParent();
         String msg = null;
         Stack<ComponentInfo> attributes = null;
@@ -146,7 +145,11 @@ public class DebugUtilities {
 
     }
 
-    private static boolean checkWidths(Component component) {
+    public static boolean checkWidths(Component component) {
+        if (component instanceof Window) {
+            return true;
+        }
+
         Component parent = component.getParent();
         String msg = null;
         Stack<ComponentInfo> attributes = null;
