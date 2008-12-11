@@ -2473,7 +2473,7 @@ input.i-modified,
 .i-window-outerheader {
 	height: 23px;
 	margin-left: 9px;
-	padding: 15px 34px 11px 12px;
+	padding: 15px 40px 11px 12px;
 	background: transparent url(window/img/top-right.png) no-repeat right top;
 	cursor: move;
 }
