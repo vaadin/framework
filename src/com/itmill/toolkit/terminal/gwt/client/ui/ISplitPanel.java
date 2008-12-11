@@ -294,9 +294,9 @@ public class ISplitPanel extends ComplexPanel implements Container,
             break;
         }
 
-        // fixes scrollbars sometimes seen on webkit 528.5, but not in Safari
-        // 3.1
+        // fixes scrollbars issues on webkit based browsers
         Util.runWebkitOverflowAutoFix(secondContainer);
+        Util.runWebkitOverflowAutoFix(firstContainer);
 
     }
 
