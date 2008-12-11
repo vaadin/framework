@@ -455,6 +455,16 @@ input.i-modified,
 	margin-left: 0px;
 }
 
+/* ./WebContent/ITMILL/themes/default/customcomponent/customcomponent.css */
+.i-customcomponent {
+	overflow: hidden;
+}
+
+/* ./WebContent/ITMILL/themes/default/customlayout/customlayout.css */
+.i-customlayout {
+	overflow: hidden;
+}
+
 /* ./WebContent/ITMILL/themes/default/datefield/datefield.css */
 .i-datefield {
 	white-space: nowrap;
