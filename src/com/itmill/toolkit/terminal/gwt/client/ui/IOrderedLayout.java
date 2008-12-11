@@ -665,21 +665,20 @@ public class IOrderedLayout extends CellBasedLayout {
     private void recalculateLayoutAndComponentSizes() {
         recalculateLayout();
 
+        if (!(isDynamicHeight() && isDynamicWidth())) {
+            /* First update relative sized components */
+            for (ChildComponentContainer componentContainer : widgetToComponentContainer
+                    .values()) {
+                client.handleComponentRelativeSize(componentContainer
+                        .getWidget());
+            }
+        }
+
         if (isDynamicHeight()) {
             /*
              * Height is not necessarily correct anymore as the height of
              * components might have changed if the width has changed.
              */
-
-            /* First update relative sized components */
-            for (ChildComponentContainer componentContainer : widgetToComponentContainer
-                    .values()) {
-                if (componentContainer
-                        .isComponentRelativeSized(ORIENTATION_HORIZONTAL)) {
-                    client.handleComponentRelativeSize(componentContainer
-                            .getWidget());
-                }
-            }
 
             /*
              * Get the new widget sizes from DOM and calculate new container
