@@ -1040,6 +1040,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         }
 
         if (window.getWidth() < 0
+                && window.getLayout() instanceof VerticalLayout
                 && window.getLayout().getWidthUnits() == UNITS_PERCENTAGE) {
             // set sane width for subwindow layout when window has undefined
             // width. This may though be odd for developer in some situations.
