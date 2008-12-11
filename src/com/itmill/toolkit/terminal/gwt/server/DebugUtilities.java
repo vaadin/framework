@@ -1,15 +1,20 @@
 package com.itmill.toolkit.terminal.gwt.server;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Stack;
 
 import com.itmill.toolkit.terminal.Sizeable;
+import com.itmill.toolkit.ui.AbstractOrderedLayout;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.ComponentContainer;
+import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.CustomLayout;
 import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.GridLayout.Area;
 
@@ -55,7 +60,8 @@ public class DebugUtilities {
         return valid;
     }
 
-    private static void showError(String msg, Stack<ComponentInfo> attributes) {
+    private static void showError(String msg, Stack<ComponentInfo> attributes,
+            boolean widthError) {
         StringBuffer err = new StringBuffer();
         err.append("IT MILL Toolkit DEBUG\n");
 
@@ -67,7 +73,7 @@ public class DebugUtilities {
             }
             while (!attributes.empty()) {
                 ci = attributes.pop();
-                showComponent(ci.component, ci.info, err, indent);
+                showComponent(ci.component, ci.info, err, indent, widthError);
             }
         }
 
@@ -86,9 +92,17 @@ public class DebugUtilities {
         Stack<ComponentInfo> attributes = null;
 
         if (hasRelativeHeight(component) && hasUndefinedHeight(parent)) {
-            if (parent instanceof OrderedLayout) {
-                OrderedLayout ol = (OrderedLayout) parent;
-                if (ol.getOrientation() == OrderedLayout.ORIENTATION_VERTICAL) {
+            if (parent instanceof AbstractOrderedLayout) {
+                AbstractOrderedLayout ol = (AbstractOrderedLayout) parent;
+                int orientation = OrderedLayout.ORIENTATION_HORIZONTAL;
+
+                if (ol instanceof OrderedLayout) {
+                    orientation = ((OrderedLayout) ol).getOrientation();
+                } else if (ol instanceof VerticalLayout) {
+                    orientation = OrderedLayout.ORIENTATION_VERTICAL;
+                }
+
+                if (orientation == OrderedLayout.ORIENTATION_VERTICAL) {
                     msg = "Relative height for component inside non sized vertical ordered layout.";
                     attributes = getHeightAttributes(component);
                 } else if (!hasNonRelativeHeightComponent(ol)) {
@@ -124,7 +138,7 @@ public class DebugUtilities {
         }
 
         if (msg != null) {
-            showError(msg, attributes);
+            showError(msg, attributes, false);
         }
         return (msg == null);
 
@@ -136,9 +150,17 @@ public class DebugUtilities {
         Stack<ComponentInfo> attributes = null;
 
         if (hasRelativeWidth(component) && hasUndefinedWidth(parent)) {
-            if (parent instanceof OrderedLayout) {
-                OrderedLayout ol = (OrderedLayout) parent;
-                if (ol.getOrientation() == OrderedLayout.ORIENTATION_HORIZONTAL) {
+            if (parent instanceof AbstractOrderedLayout) {
+                AbstractOrderedLayout ol = (AbstractOrderedLayout) parent;
+                int orientation = OrderedLayout.ORIENTATION_HORIZONTAL;
+
+                if (ol instanceof OrderedLayout) {
+                    orientation = ((OrderedLayout) ol).getOrientation();
+                } else if (ol instanceof VerticalLayout) {
+                    orientation = OrderedLayout.ORIENTATION_VERTICAL;
+                }
+
+                if (orientation == OrderedLayout.ORIENTATION_HORIZONTAL) {
                     msg = "Relative width for component inside non sized horizontal ordered layout.";
                     attributes = getWidthAttributes(component);
                 } else if (!hasNonRelativeWidthComponent(ol)) {
@@ -174,7 +196,7 @@ public class DebugUtilities {
         }
 
         if (msg != null) {
-            showError(msg, attributes);
+            showError(msg, attributes, true);
         }
 
         return (msg == null);
@@ -251,17 +273,26 @@ public class DebugUtilities {
     }
 
     private static void showComponent(Component component, String attribute,
-            StringBuffer err, StringBuilder indent) {
+            StringBuffer err, StringBuilder indent, boolean widthError) {
+
+        FileLocation createLoc = creationLocations.get(component);
+
+        FileLocation sizeLoc;
+        if (widthError) {
+            sizeLoc = widthLocations.get(component);
+        } else {
+            sizeLoc = heightLocations.get(component);
+        }
+
         err.append(indent);
         indent.append("  ");
         err.append("- ");
 
         err.append(component.getClass().getSimpleName());
         err.append("/").append(Integer.toHexString(component.hashCode()));
-        err.append(" (");
 
         if (component.getCaption() != null) {
-            err.append("\"");
+            err.append(" \"");
             err.append(component.getCaption());
             err.append("\"");
         }
@@ -271,10 +302,20 @@ public class DebugUtilities {
             err.append(component.getDebugId());
         }
 
-        err.append(")");
+        if (createLoc != null) {
+            err.append(", created at (" + createLoc.file + ":"
+                    + createLoc.lineNumber + ")");
+
+        }
+
         if (attribute != null) {
             err.append(" (");
             err.append(attribute);
+            if (sizeLoc != null) {
+                err.append(", set at (" + sizeLoc.file + ":"
+                        + sizeLoc.lineNumber + ")");
+            }
+
             err.append(")");
         }
         err.append("\n");
@@ -285,7 +326,8 @@ public class DebugUtilities {
         return component.getHeight() + " %";
     }
 
-    private static boolean hasNonRelativeHeightComponent(OrderedLayout ol) {
+    private static boolean hasNonRelativeHeightComponent(
+            AbstractOrderedLayout ol) {
         Iterator it = ol.getComponentIterator();
         while (it.hasNext()) {
             if (!hasRelativeHeight((Component) it.next())) {
@@ -319,7 +361,7 @@ public class DebugUtilities {
                 .getHeight() > 0);
     }
 
-    private static boolean hasNonRelativeWidthComponent(OrderedLayout ol) {
+    private static boolean hasNonRelativeWidthComponent(AbstractOrderedLayout ol) {
         Iterator it = ol.getComponentIterator();
         while (it.hasNext()) {
             if (!hasRelativeWidth((Component) it.next())) {
@@ -353,6 +395,70 @@ public class DebugUtilities {
             }
         }
 
+    }
+
+    private static Map<Object, FileLocation> creationLocations = new HashMap<Object, FileLocation>();
+    private static Map<Object, FileLocation> widthLocations = new HashMap<Object, FileLocation>();
+    private static Map<Object, FileLocation> heightLocations = new HashMap<Object, FileLocation>();
+
+    public static class FileLocation {
+        public String method;
+        public String file;
+        public String className;
+        public String classNameSimple;
+        public int lineNumber;
+
+        public FileLocation(StackTraceElement traceElement) {
+            file = traceElement.getFileName();
+            className = traceElement.getClassName();
+            classNameSimple = className
+                    .substring(className.lastIndexOf('.') + 1);
+            lineNumber = traceElement.getLineNumber();
+            method = traceElement.getMethodName();
+        }
+    }
+
+    public static void setCreationLocation(Object object) {
+        setLocation(creationLocations, object);
+    }
+
+    public static void setWidthLocation(Object object) {
+        setLocation(widthLocations, object);
+    }
+
+    public static void setHeightLocation(Object object) {
+        setLocation(heightLocations, object);
+    }
+
+    private static void setLocation(Map<Object, FileLocation> map, Object object) {
+        StackTraceElement[] traceLines = Thread.currentThread().getStackTrace();
+        for (StackTraceElement traceElement : traceLines) {
+            Class cls;
+            try {
+                String className = traceElement.getClassName();
+                if (className.startsWith("java.")
+                        || className.startsWith("sun.")) {
+                    continue;
+                }
+
+                cls = Class.forName(className);
+                if (cls == DebugUtilities.class || cls == Thread.class) {
+                    continue;
+                }
+
+                if (Component.class.isAssignableFrom(cls)
+                        && !CustomComponent.class.isAssignableFrom(cls)) {
+                    continue;
+                }
+                FileLocation cl = new FileLocation(traceElement);
+                map.put(object, cl);
+                return;
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+        }
     }
 
 }
