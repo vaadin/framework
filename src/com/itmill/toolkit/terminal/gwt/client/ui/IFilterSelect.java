@@ -877,11 +877,20 @@ public class IFilterSelect extends Composite implements Paintable, Field,
              * div so the popupopener won't wrap to the next line and also so
              * the size of the combobox won't change over time.
              */
-            int w = Util.getRequiredWidth(tb)
-                    + Util.getRequiredWidth(popupOpener);
+            int tbWidth = Util.getRequiredWidth(tb);
+            int openerWidth = Util.getRequiredWidth(popupOpener);
+
+            int w = tbWidth + openerWidth;
             if (suggestionPopupMinWidth > w) {
                 setTextboxWidth(suggestionPopupMinWidth);
                 w = suggestionPopupMinWidth;
+            } else {
+                /*
+                 * Firefox3 has its own way of doing rendering so we need to
+                 * specify the width for the TextField to make sure it actually
+                 * is rendered as wide as FF3 says it is
+                 */
+                tb.setWidth((tbWidth - getTextboxPadding()) + "px");
             }
             super.setWidth(w + "px");
 
@@ -911,7 +920,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
 
     private void setTextboxWidth(int componentWidth) {
         int padding = getTextboxPadding();
-        int popupOpenerWidth = popupOpener.getOffsetWidth();
+        int popupOpenerWidth = Util.getRequiredWidth(popupOpener);
         int textboxWidth = componentWidth - padding - popupOpenerWidth;
         if (textboxWidth < 0) {
             textboxWidth = 0;
