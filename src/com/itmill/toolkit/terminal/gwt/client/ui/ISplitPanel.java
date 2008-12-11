@@ -79,6 +79,8 @@ public class ISplitPanel extends ComplexPanel implements Container,
 
     private boolean immediate;
 
+    private boolean rendering = false;
+
     public ISplitPanel() {
         this(ORIENTATION_HORIZONTAL);
     }
@@ -144,10 +146,12 @@ public class ISplitPanel extends ComplexPanel implements Container,
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         this.client = client;
         id = uidl.getId();
+        rendering = true;
 
         immediate = uidl.hasAttribute("immediate");
 
         if (client.updateComponent(this, uidl, true)) {
+            rendering = false;
             return;
         }
 
@@ -190,6 +194,8 @@ public class ISplitPanel extends ComplexPanel implements Container,
                 }
             });
         }
+        rendering = false;
+
     }
 
     private void setSplitPosition(String pos) {
@@ -199,7 +205,6 @@ public class ISplitPanel extends ComplexPanel implements Container,
             DOM.setStyleAttribute(splitter, "top", pos);
         }
         iLayout();
-        // TODO Check if this is needed
         client.runDescendentsLayout(this);
 
     }
@@ -459,12 +464,20 @@ public class ISplitPanel extends ComplexPanel implements Container,
     public void setHeight(String height) {
         this.height = height;
         super.setHeight(height);
+        if (!rendering && client != null) {
+            iLayout();
+            client.runDescendentsLayout(this);
+        }
     }
 
     @Override
     public void setWidth(String width) {
         this.width = width;
         super.setWidth(width);
+        if (!rendering && client != null) {
+            iLayout();
+            client.runDescendentsLayout(this);
+        }
     }
 
     public RenderSpace getAllocatedSpace(Widget child) {
