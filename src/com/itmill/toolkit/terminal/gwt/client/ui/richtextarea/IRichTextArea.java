@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
@@ -185,6 +186,13 @@ public class IRichTextArea extends Composite implements Paintable, Field,
             }
 
             super.setWidth(w + "px");
+        } else if (width.equals("") && BrowserInfo.get().isIE7()) {
+            /*
+             * IE7 cannot calculate the width of the 100% iframe if there is no
+             * width specified for the parent so we use the width of the
+             * toolbar.
+             */
+            super.setWidth(formatter.getOffsetWidth() + "px");
         } else {
             super.setWidth(width);
         }
