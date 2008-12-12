@@ -546,6 +546,7 @@ public class SamplerApplication extends Application {
      */
     private class FeatureTable extends Table implements FeatureList {
         FeatureTable() {
+            setStyleName("featuretable");
             alwaysRecalculateColumnWidths = true;
             setSelectable(false);
             setSizeFull();
