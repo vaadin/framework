@@ -114,6 +114,12 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     private Focusable pendingFocus;
 
+    /**
+     * Flag to trac if window has default layout and no defined size. This is
+     * invalid situations for sub windows.
+     */
+    private boolean defaultLayout;
+
     /* ********************************************************************* */
 
     /**
@@ -173,8 +179,15 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      */
     public Window(String caption, Layout layout) {
         super(caption, layout);
+        defaultLayout = layout == null;
         setScrollable(true);
         setSizeUndefined();
+    }
+
+    @Override
+    public void setLayout(Layout newLayout) {
+        super.setLayout(newLayout);
+        defaultLayout = false;
     }
 
     /**
@@ -1039,9 +1052,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
                     "You can only add windows inside application-level windows");
         }
 
-        if (window.getWidth() < 0
-                && window.getLayout() instanceof VerticalLayout
-                && window.getLayout().getWidthUnits() == UNITS_PERCENTAGE) {
+        if (window.getWidth() < 0 && window.defaultLayout) {
             // set sane width for subwindow layout when window has undefined
             // width. This may though be odd for developer in some situations.
             // See #2321
