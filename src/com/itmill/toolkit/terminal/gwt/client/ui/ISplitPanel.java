@@ -155,8 +155,6 @@ public class ISplitPanel extends ComplexPanel implements Container,
             return;
         }
 
-        setSplitPosition(uidl.getStringAttribute("position"));
-
         locked = uidl.hasAttribute("locked");
         if (locked) {
             DOM.setElementProperty(splitter, "className", splitterStyleName
@@ -164,6 +162,8 @@ public class ISplitPanel extends ComplexPanel implements Container,
         } else {
             DOM.setElementProperty(splitter, "className", splitterStyleName);
         }
+
+        setSplitPosition(uidl.getStringAttribute("position"));
 
         final Paintable newFirstChild = client.getPaintable(uidl
                 .getChildUIDL(0));
