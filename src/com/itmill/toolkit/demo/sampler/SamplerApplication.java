@@ -344,6 +344,7 @@ public class SamplerApplication extends Application {
                     currentFeature.setValue(next);
                 }
             });
+            b.setDescription("Jump to the next sample");
             b.setStyleName(Button.STYLE_LINK);
             return b;
         }
@@ -359,6 +360,7 @@ public class SamplerApplication extends Application {
                     currentFeature.setValue(prev);
                 }
             });
+            b.setDescription("Jump to the previous sample");
             b.setStyleName(Button.STYLE_LINK);
             return b;
         }

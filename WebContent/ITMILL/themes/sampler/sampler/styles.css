@@ -22,6 +22,13 @@
 	font-weight: bold;	
 }
 
+.i-app-SamplerApplication .i-orderedlayout-topbar .i-button-link span {
+	text-decoration: none;
+}
+.i-app-SamplerApplication .i-orderedlayout-topbar .i-button-link:hover span {
+	text-decoration: underline;
+}
+
 .i-app-SamplerApplication .i-label-section {
 	font-size: 18px;
 	font-weight: bold;
