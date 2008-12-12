@@ -397,6 +397,13 @@ public class DebugUtilities {
             }
 
         }
+        if (component instanceof Panel) {
+            if (component.getCaption() != null
+                    && !component.getCaption().equals("")) {
+                return false;
+            }
+        }
+
         if (component.getWidth() < 0) {
             return true;
         } else {
