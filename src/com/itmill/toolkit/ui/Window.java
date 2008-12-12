@@ -114,12 +114,6 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     private Focusable pendingFocus;
 
-    /**
-     * Flag to trac if window has default layout and no defined size. This is
-     * invalid situations for sub windows.
-     */
-    private boolean defaultLayout;
-
     /* ********************************************************************* */
 
     /**
@@ -179,7 +173,6 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      */
     public Window(String caption, Layout layout) {
         super(caption, layout);
-        defaultLayout = layout == null;
         setScrollable(true);
         setSizeUndefined();
     }
@@ -187,7 +180,6 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     @Override
     public void setLayout(Layout newLayout) {
         super.setLayout(newLayout);
-        defaultLayout = false;
     }
 
     /**
@@ -1015,7 +1007,53 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     }
 
     /**
-     * Adds a new window inside another window.
+     * Creates a new window inside a top level window.
+     * 
+     * <p>
+     * Adding windows inside another window creates "sub-windows". These windows
+     * should not be added to application directly and are not accessible
+     * directly with any url. Adding windows implicitly sets their parents.
+     * </p>
+     * 
+     * <p>
+     * Only one level of sub-windows are supported. Thus you can add windows
+     * inside such windows whose parent is <code>null</code>.
+     * </p>
+     * 
+     * <p>
+     * <b>Note</b> that sub-windows created via this method have their layouts
+     * width set to be undefined, making sub-windows as narrow as possible by
+     * default.
+     * </p>
+     * 
+     * @return window the window instance created and added to this top level
+     *         window
+     * @throws IllegalArgumentException
+     *             if a window is added inside non-application level window.
+     */
+    public Window createSubWindow() {
+        if (getParent() != null) {
+            throw new IllegalArgumentException(
+                    "You can only add windows inside application-level windows");
+        }
+        Window w = new Window();
+        w.getLayout().setSizeUndefined();
+        attachWindow(w);
+        return w;
+    }
+
+    private void attachWindow(Window w) {
+        subwindows.add(w);
+        w.setParent(this);
+        requestRepaint();
+    }
+
+    /**
+     * Adds a window inside another window.
+     * 
+     * <p>
+     * <b>Consider using</b> using {@link Window#addWindow()} method instead to
+     * instantiate and add sub-windows.
      * 
      * <p>
      * Adding windows inside another window creates "subwindows". These windows
@@ -1041,27 +1079,19 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
             throw new NullPointerException("Argument must not be null");
         }
 
-        if (application.getWindows().contains(window)) {
+        if (window.getApplication() != null) {
             throw new IllegalArgumentException(
                     "Window was already added to application"
                             + " - it can not be added to another window also.");
-        }
-
-        if (getParent() != null) {
+        } else if (getParent() != null) {
             throw new IllegalArgumentException(
-                    "You can only add windows inside application-level windows");
+                    "You can only add windows inside application-level windows.");
+        } else if (window.subwindows.size() > 0) {
+            throw new IllegalArgumentException(
+                    "Only one level of subwindows are supported.");
         }
 
-        if (window.getWidth() < 0 && window.defaultLayout) {
-            // set sane width for subwindow layout when window has undefined
-            // width. This may though be odd for developer in some situations.
-            // See #2321
-            window.getLayout().setWidth(-1, UNITS_PIXELS);
-        }
-
-        subwindows.add(window);
-        window.setParent(this);
-        requestRepaint();
+        attachWindow(window);
     }
 
     /**
