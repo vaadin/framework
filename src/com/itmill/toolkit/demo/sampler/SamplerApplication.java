@@ -492,8 +492,8 @@ public class SamplerApplication extends Application {
             layout.removeAllComponents();
 
             { // home
-                ActiveLink link = new ActiveLink("Home", new ExternalResource(
-                        "#"));
+                ActiveLink link = new ActiveLink("⌂ Home",
+                        new ExternalResource("#"));
                 link.addListener(this);
                 layout.addComponent(link);
             }

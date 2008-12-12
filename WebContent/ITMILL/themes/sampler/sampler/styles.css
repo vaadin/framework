@@ -68,11 +68,10 @@
 }
 
 .i-app-SamplerApplication .feature-main {
-	padding-right: 6px;
+	padding: 0px 5px 0px 5px;
 }
 .i-app-SamplerApplication .feature-controls {
 	padding-top: 10px;
-	margin-bottom: 20px;
 }
 .i-app-SamplerApplication .feature-controls .i-caption {
 	font-weight: bold;
@@ -100,10 +99,11 @@
 	font-weight: bold;
 	font-size: 16px;
 	line-height: 30px;
-	margin-top: 10px;
+	padding-top: 10px;
 }
 .i-app-SamplerApplication .feature-example {
 	padding: 10px;
+	padding-top: 20px;
 }
 
 .i-app-SamplerApplication .i-button-showcode {
