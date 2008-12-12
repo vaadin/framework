@@ -109,7 +109,8 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     /**
      * Sets the layout of the panel.
      * 
-     * If given layout is null, an OrderedLayout is used as a default.
+     * If given layout is null, a VerticalLayout with margins set is used as a
+     * default.
      * 
      * Components from old layout are not moved to new layout by default
      * (changed in 5.2.2). Use function in Layout interface manually.
@@ -121,7 +122,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
 
         // Only allow non-null layouts
         if (newLayout == null) {
-            newLayout = new OrderedLayout();
+            newLayout = new VerticalLayout();
             // Force margins by default
             newLayout.setMargin(true);
         }
