@@ -11,6 +11,8 @@ import com.itmill.toolkit.data.util.HierarchicalContainer;
 import com.itmill.toolkit.data.util.ObjectProperty;
 import com.itmill.toolkit.demo.sampler.ActiveLink.LinkActivatedEvent;
 import com.itmill.toolkit.demo.sampler.ModeSwitch.ModeSwitchEvent;
+import com.itmill.toolkit.event.ItemClickEvent;
+import com.itmill.toolkit.event.ItemClickEvent.ItemClickListener;
 import com.itmill.toolkit.terminal.ClassResource;
 import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.terminal.Resource;
@@ -517,7 +519,6 @@ public class SamplerApplication extends Application {
 
         }
 
-        
         public void linkActivated(LinkActivatedEvent event) {
             if (!event.isLinkOpened()) {
                 ((SamplerWindow) getWindow()).setFeature((Feature) event
@@ -568,19 +569,36 @@ public class SamplerApplication extends Application {
                 public Component generateCell(Table source, Object itemId,
                         Object columnId) {
                     final Feature feature = (Feature) itemId;
-                    Button b = new Button(
-                            feature instanceof FeatureSet ? "See samples ‣"
-                                    : "See sample ‣");
-                    b.addListener(new Button.ClickListener() {
-                        public void buttonClick(ClickEvent event) {
-                            ((SamplerWindow) getWindow()).setFeature(feature);
-
+                    ActiveLink b = new ActiveLink(
+                            (feature instanceof FeatureSet ? "View section ‣"
+                                    : "View sample ‣"), new ExternalResource(
+                                    "#" + getPathFor(feature)));
+                    b.addListener(new ActiveLink.LinkActivatedListener() {
+                        public void linkActivated(LinkActivatedEvent event) {
+                            if (!event.isLinkOpened()) {
+                                ((SamplerWindow) getWindow())
+                                        .setFeature(feature);
+                            }
                         }
                     });
                     b.setStyleName(Button.STYLE_LINK);
                     return b;
                 }
 
+            });
+
+            addListener(new ItemClickListener() {
+                public void itemClick(ItemClickEvent event) {
+                    Feature f = (Feature) event.getItemId();
+                    if (event.getButton() == ItemClickEvent.BUTTON_MIDDLE
+                            || event.isCtrlKey() || event.isShiftKey()) {
+                        getWindow().open(
+                                new ExternalResource(getURL() + "#"
+                                        + getPathFor(f)), "_blank");
+                    } else {
+                        ((SamplerWindow) getWindow()).setFeature(f);
+                    }
+                }
             });
 
             setCellStyleGenerator(new CellStyleGenerator() {
@@ -601,9 +619,8 @@ public class SamplerApplication extends Application {
         public void setFeatureContainer(HierarchicalContainer c) {
             setContainerDataSource(c);
             setVisibleColumns(new Object[] { Feature.PROPERTY_ICON,
-                    Feature.PROPERTY_NAME, Feature.PROPERTY_DESCRIPTION, "" });
+                    Feature.PROPERTY_NAME, "" });
             setColumnWidth(Feature.PROPERTY_ICON, 60);
-            setColumnWidth(Feature.PROPERTY_NAME, 150);
 
         }
 
