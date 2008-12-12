@@ -195,10 +195,15 @@ public class DebugUtilities {
                 }
 
             } else if (!(parent instanceof CustomLayout)) {
+                // CustomLayout's and Panels are omitted. Width can be defined
+                // by layout or by caption in Window
+                if (!(parent instanceof Panel && parent.getCaption() != null && !parent
+                        .getCaption().equals(""))) {
+                    // default error for non sized parent issue
+                    msg = "Relative width component's parent should not have undefined width.";
+                    attributes = getWidthAttributes(component);
 
-                // default error for non sized parent issue
-                msg = "Relative width component's parent should not have undefined width.";
-                attributes = getWidthAttributes(component);
+                }
             }
         }
 
