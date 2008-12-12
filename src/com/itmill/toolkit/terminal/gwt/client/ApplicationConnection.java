@@ -268,9 +268,9 @@ public class ApplicationConnection {
     private native static boolean isDebugMode()
     /*-{
         if($wnd.itmill.debug) {
-            var uri = $wnd.location;
+            var parameters = $wnd.location.search;
             var re = /debug[^\/]*$/;
-            return re.test(uri);
+            return re.test(parameters);
         } else {
             return false;
         }
