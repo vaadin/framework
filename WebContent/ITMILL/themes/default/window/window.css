@@ -59,15 +59,16 @@
 	height: 8px;
 	margin-left: 9px;
 	background: transparent url(img/bottom-right.png) no-repeat right top;
+	position: relative;
 }
 
 .i-window-resizebox {
-	position: relative; /* Needed to position the element over ScrollPanel, which is also relatively positioned */
+	position: absolute; /* Needed to position the element over ScrollPanel, which is also relatively positioned */
 	display: inline; /* fix IE6 double float margin bug */
-	float: right;
+	right: 5px;
 	width: 10px;
 	height: 10px;
-	margin-right: 5px;
+	/*margin-right: 5px;*/
 	margin-top: -7px;
 	cursor: se-resize;
 	background: transparent url(img/resize.png);
