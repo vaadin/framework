@@ -10,12 +10,10 @@ import com.itmill.toolkit.data.Container;
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.util.BeanItem;
-import com.itmill.toolkit.terminal.Sizeable;
 import com.itmill.toolkit.ui.Accordion;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.ComponentContainer;
-import com.itmill.toolkit.ui.CoordinateLayout;
 import com.itmill.toolkit.ui.Field;
 import com.itmill.toolkit.ui.FieldFactory;
 import com.itmill.toolkit.ui.Form;
@@ -33,11 +31,11 @@ import com.itmill.toolkit.ui.Button.ClickListener;
 
 public class Ticket2204 extends Application {
 
-    private List<RichTextArea> textAreas = new ArrayList<RichTextArea>();
+    private final List<RichTextArea> textAreas = new ArrayList<RichTextArea>();
     private TabSheet ts;
-    private Map<Component, Component> containerToComponent = new HashMap<Component, Component>();
+    private final Map<Component, Component> containerToComponent = new HashMap<Component, Component>();
     private RichTextArea rta;
-    private List<Class<? extends Component>> classes = new ArrayList<Class<? extends Component>>();
+    private final List<Class<? extends Component>> classes = new ArrayList<Class<? extends Component>>();
     protected RichTextArea formTextArea;
 
     public void init() {
@@ -46,7 +44,6 @@ public class Ticket2204 extends Application {
         classes.add(Accordion.class);
         classes.add(TabSheet.class);
         classes.add(Panel.class);
-        classes.add(CoordinateLayout.class);
         classes.add(SplitPanel.class);
         classes.add(Form.class);
 
@@ -120,9 +117,6 @@ public class Ticket2204 extends Application {
             // Label l = new Label("Filler");
             // l.setCaption("Filler label");
             // cc.addComponent(l);
-        }
-        if (c == CoordinateLayout.class) {
-            ((Sizeable) cc).setHeight("100px");
         }
 
         if (c == Form.class) {

@@ -8,7 +8,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.IAccordion;
 import com.itmill.toolkit.terminal.gwt.client.ui.IButton;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICheckBox;
-import com.itmill.toolkit.terminal.gwt.client.ui.ICoordinateLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICustomComponent;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICustomLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IDateFieldCalendar;
@@ -132,8 +131,6 @@ public class DefaultWidgetSet implements WidgetSet {
             return new IMenuBar();
         } else if (IPopupView.class == classType) {
             return new IPopupView();
-        } else if (ICoordinateLayout.class == classType) {
-            return new ICoordinateLayout();
         } else if (IUriFragmentUtility.class == classType) {
             return new IUriFragmentUtility();
         }
@@ -240,8 +237,6 @@ public class DefaultWidgetSet implements WidgetSet {
             return IMenuBar.class;
         } else if ("popupview".equals(tag)) {
             return IPopupView.class;
-        } else if ("coordinatelayout".equals(tag)) {
-            return ICoordinateLayout.class;
         } else if ("urifragment".equals(tag)) {
             return IUriFragmentUtility.class;
         }
