@@ -997,6 +997,15 @@ public class ApplicationServlet extends HttpServlet {
             }
         }
 
+        // Warn if the widgetset has not been loaded after 15 seconds on
+        // inactivity
+        page.write("<script type=\"text/javascript\">\n"
+                + "setTimeout('if (typeof " + widgetset.replace('.', '_')
+                + " == \"undefined\") {alert(\"Failed to load the widgetset: "
+                + staticFilePath + "/" + WIDGETSET_DIRECTORY_PATH + widgetset
+                + "/" + widgetset + ".nocache.js\")};',15000);\n"
+                + "//]]>\n</script>\n");
+
         String style = null;
         reqParam = request.getAttribute(REQUEST_APPSTYLE);
         if (reqParam != null) {
