@@ -305,20 +305,31 @@ public class IWindow extends IToolkitOverlay implements Container,
         }
 
         boolean dynamicWidth = !uidl.hasAttribute("width");
+        boolean dynamicHeight = !uidl.hasAttribute("height");
         boolean widthHasBeenFixed = false;
 
         String layoutWidth = childUidl.getStringAttribute("width");
-        if (dynamicWidth) {
-            if (layoutWidth != null && layoutWidth.contains("%")) {
-                /*
-                 * Relative layout width, fix window width before rendering
-                 * (width according to caption)
-                 */
-                widthHasBeenFixed = true;
-                setNaturalWidth();
-            }
+        boolean layoutRelativeWidth = (layoutWidth != null && layoutWidth
+                .endsWith("%"));
+
+        if (dynamicWidth && layoutRelativeWidth) {
+            /*
+             * Relative layout width, fix window width before rendering (width
+             * according to caption)
+             */
+            widthHasBeenFixed = true;
+            setNaturalWidth();
         }
-        lo.updateFromUIDL(childUidl, client);
+
+        layout.updateFromUIDL(childUidl, client);
+        if (!dynamicHeight && layoutRelativeWidth) {
+            /*
+             * Relative layout width, and fixed height. Must update the size to
+             * be able to take scrollbars into account (layout gets narrower
+             * space if it is higher than the window) -> only vertical scrollbar
+             */
+            client.handleComponentRelativeSize((Widget) layout);
+        }
 
         /*
          * No explicit width is set and the layout does not have relative width
