@@ -317,6 +317,7 @@ public class SamplerApplication extends Application {
 
                 }
             });
+            // TODO add icons for section/sample
             return search;
         }
 
@@ -394,8 +395,8 @@ public class SamplerApplication extends Application {
             ModeSwitch m = new ModeSwitch();
             m.addMode(currentList, "", "View as Icons", new ThemeResource(
                     "sampler/grid.gif"));
-            m.addMode(new FeatureGrid(), "", "View as Icons",
-                    new ThemeResource("sampler/flow.gif"));
+            m.addMode(currentList, "", "View as Icons", new ThemeResource(
+                    "sampler/flow.gif"));
             m.addMode(new FeatureTable(), "", "View as List",
                     new ThemeResource("sampler/list.gif"));
             m.addListener(new ModeSwitch.ModeSwitchListener() {
@@ -651,6 +652,7 @@ public class SamplerApplication extends Application {
 
         public void setFeatureContainer(HierarchicalContainer c) {
             grid.removeAllComponents();
+            grid.setRows(1);
             Collection features = c.getItemIds();
             for (Iterator it = features.iterator(); it.hasNext();) {
                 final Feature f = (Feature) it.next();
