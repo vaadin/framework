@@ -303,13 +303,30 @@ public class IWindow extends IToolkitOverlay implements Container,
             contentPanel.setWidget((Widget) lo);
             layout = lo;
         }
+
+        boolean dynamicWidth = !uidl.hasAttribute("width");
+        boolean widthHasBeenFixed = false;
+
+        String layoutWidth = childUidl.getStringAttribute("width");
+        if (dynamicWidth) {
+            if (layoutWidth != null && layoutWidth.contains("%")) {
+                /*
+                 * Relative layout width, fix window width before rendering
+                 * (width according to caption)
+                 */
+                widthHasBeenFixed = true;
+                setNaturalWidth();
+            }
+        }
         lo.updateFromUIDL(childUidl, client);
 
-        // If no explicit width is specified, calculate natural width for window
-        // and set it explicitly
-        if (!uidl.hasAttribute("width")) {
-            final int naturalWidth = getElement().getOffsetWidth();
-            setWidth(naturalWidth + "px");
+        /*
+         * No explicit width is set and the layout does not have relative width
+         * so fix the size according to the layout.
+         */
+        if (dynamicWidth && !widthHasBeenFixed) {
+            setNaturalWidth();
+            widthHasBeenFixed = true;
         }
 
         // we may have actions and notifications
@@ -381,6 +398,24 @@ public class IWindow extends IToolkitOverlay implements Container,
         if (getOffsetHeight() > Window.getClientHeight()) {
             setHeight(Window.getClientHeight() + "px");
         }
+    }
+
+    private void setNaturalWidth() {
+        /*
+         * For some reason IE6 has title DIV set to width 100% which messes this
+         * up. Also IE6 has a 0 wide element so we use the container element.
+         */
+        int naturalWidth;
+        if (BrowserInfo.get().isIE6()) {
+            String headerW = headerText.getStyle().getProperty("width");
+            headerText.getStyle().setProperty("width", "auto");
+            naturalWidth = getElement().getOffsetWidth();
+            headerText.getStyle().setProperty("width", headerW);
+        } else {
+            naturalWidth = getElement().getOffsetWidth();
+        }
+
+        setWidth(naturalWidth + "px");
     }
 
     private void setReadOnly(boolean readonly) {
