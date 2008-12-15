@@ -1006,42 +1006,6 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         fireEvent(new Window.CloseEvent(this));
     }
 
-    /**
-     * Creates a new window inside a top level window.
-     * 
-     * <p>
-     * Adding windows inside another window creates "sub-windows". These windows
-     * should not be added to application directly and are not accessible
-     * directly with any url. Adding windows implicitly sets their parents.
-     * </p>
-     * 
-     * <p>
-     * Only one level of sub-windows are supported. Thus you can add windows
-     * inside such windows whose parent is <code>null</code>.
-     * </p>
-     * 
-     * <p>
-     * <b>Note</b> that sub-windows created via this method have their layouts
-     * width set to be undefined, making sub-windows as narrow as possible by
-     * default.
-     * </p>
-     * 
-     * @return window the window instance created and added to this top level
-     *         window
-     * @throws IllegalArgumentException
-     *             if a window is added inside non-application level window.
-     */
-    public Window createSubWindow() {
-        if (getParent() != null) {
-            throw new IllegalArgumentException(
-                    "You can only add windows inside application-level windows");
-        }
-        Window w = new Window();
-        w.getLayout().setSizeUndefined();
-        attachWindow(w);
-        return w;
-    }
-
     private void attachWindow(Window w) {
         subwindows.add(w);
         w.setParent(this);
@@ -1050,10 +1014,6 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Adds a window inside another window.
-     * 
-     * <p>
-     * <b>Consider using</b> using {@link Window#addWindow()} method instead to
-     * instantiate and add sub-windows.
      * 
      * <p>
      * Adding windows inside another window creates "subwindows". These windows
