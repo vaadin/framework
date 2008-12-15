@@ -17,6 +17,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.ICaption;
@@ -73,6 +74,11 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
         DOM.setStyleAttribute(getElement(), "border", "none");
         DOM.setStyleAttribute(getElement(), "margin", "0");
         DOM.setStyleAttribute(getElement(), "padding", "0");
+
+        if (BrowserInfo.get().isIE()) {
+            DOM.setStyleAttribute(getElement(), "position", "relative");
+        }
+
         setStyleName(CLASSNAME);
     }
 
@@ -490,7 +496,14 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
     }-*/;
 
     public boolean requestLayout(Set<Paintable> child) {
-        return false;
+        updateRelativeSizedComponents(true, true);
+
+        if (width.equals("") || height.equals("")) {
+            /* Automatically propagated upwards if the size can change */
+            return false;
+        }
+
+        return true;
     }
 
     public RenderSpace getAllocatedSpace(Widget child) {
@@ -528,20 +541,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
          * available space and finally restore them to the original state
          */
         if (shrinking) {
-            Set<Widget> relativeSizeWidgets = new HashSet<Widget>();
-            for (Widget widget : locationToWidget.values()) {
-                FloatSize relativeSize = client.getRelativeSize(widget);
-                if (relativeSize != null && relativeSize.getHeight() >= 0.0f) {
-                    relativeSizeWidgets.add(widget);
-                    widget.getElement().getStyle().setProperty("position",
-                            "absolute");
-                }
-            }
-
-            for (Widget widget : relativeSizeWidgets) {
-                client.handleComponentRelativeSize(widget);
-                widget.getElement().getStyle().setProperty("position", "");
-            }
+            updateRelativeSizedComponents(false, true);
         }
     }
 
@@ -565,20 +565,31 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
          * available space and finally restore them to the original state
          */
         if (shrinking) {
-            Set<Widget> relativeSizeWidgets = new HashSet<Widget>();
-            for (Widget widget : locationToWidget.values()) {
-                FloatSize relativeSize = client.getRelativeSize(widget);
-                if (relativeSize != null && relativeSize.getWidth() >= 0.0f) {
+            updateRelativeSizedComponents(true, false);
+        }
+    }
+
+    private void updateRelativeSizedComponents(boolean relativeWidth,
+            boolean relativeHeight) {
+
+        Set<Widget> relativeSizeWidgets = new HashSet<Widget>();
+
+        for (Widget widget : locationToWidget.values()) {
+            FloatSize relativeSize = client.getRelativeSize(widget);
+            if (relativeSize != null) {
+                if ((relativeWidth && (relativeSize.getWidth() >= 0.0f))
+                        || (relativeHeight && (relativeSize.getHeight() >= 0.0f))) {
+
                     relativeSizeWidgets.add(widget);
                     widget.getElement().getStyle().setProperty("position",
                             "absolute");
                 }
             }
+        }
 
-            for (Widget widget : relativeSizeWidgets) {
-                client.handleComponentRelativeSize(widget);
-                widget.getElement().getStyle().setProperty("position", "");
-            }
+        for (Widget widget : relativeSizeWidgets) {
+            client.handleComponentRelativeSize(widget);
+            widget.getElement().getStyle().setProperty("position", "");
         }
     }
 
