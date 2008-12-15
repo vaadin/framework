@@ -63,3 +63,9 @@
 	background-color: #FFE0E0;	
 }
 */
+
+/* Safari focus glow fix */
+.i-sa input:focus, 
+.i-sa textarea:focus{
+	outline-width: medium;
+}

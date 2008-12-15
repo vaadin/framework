@@ -443,18 +443,6 @@ input.i-modified,
 	
 }
 
-/* ./WebContent/ITMILL/themes/default/coordinatelayout/coordinatelayout.css */
-/*
- *	CoordinateLayout
- */
-
-.i-coordinatelayout-margin-values{
-	margin-top: 0px;
-	margin-right: 0px;
-	margin-bottom: 0px;
-	margin-left: 0px;
-}
-
 /* ./WebContent/ITMILL/themes/default/customcomponent/customcomponent.css */
 .i-customcomponent {
 	overflow: hidden;
@@ -2402,6 +2390,12 @@ input.i-modified,
 	background-color: #FFE0E0;	
 }
 */
+
+/* Safari focus glow fix */
+.i-sa input:focus, 
+.i-sa textarea:focus{
+	outline-width: medium;
+}
 
 /* ./WebContent/ITMILL/themes/default/tree/tree.css */
 .i-tree {
