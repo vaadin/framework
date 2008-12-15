@@ -91,7 +91,8 @@ public class DebugUtilities {
             Component parent = component.getParent();
             Stack<ComponentInfo> attributes = null;
 
-            if (hasRelativeHeight(component) && hasUndefinedHeight(parent)) {
+            if (hasRelativeHeight(component) && parent != null
+                    && hasUndefinedHeight(parent)) {
                 if (parent instanceof AbstractOrderedLayout) {
                     AbstractOrderedLayout ol = (AbstractOrderedLayout) parent;
                     boolean vertical = false;
@@ -158,7 +159,8 @@ public class DebugUtilities {
             Component parent = component.getParent();
             Stack<ComponentInfo> attributes = null;
 
-            if (hasRelativeWidth(component) && hasUndefinedWidth(parent)) {
+            if (hasRelativeWidth(component) && parent != null
+                    && hasUndefinedWidth(parent)) {
                 if (parent instanceof AbstractOrderedLayout) {
                     AbstractOrderedLayout ol = (AbstractOrderedLayout) parent;
                     boolean horizontal = true;
