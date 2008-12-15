@@ -131,7 +131,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
      */
     boolean recalcWidths = false;
 
-    private ArrayList lazyUnregistryBag = new ArrayList();
+    private final ArrayList lazyUnregistryBag = new ArrayList();
     private String height;
     private String width;
 
@@ -2033,7 +2033,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                 }
 
                 DOM.setElementProperty(container, "className", className);
-                DOM.setInnerHTML(container, text);
+                DOM.setInnerText(container, text);
                 if (align != ALIGN_LEFT) {
                     switch (align) {
                     case ALIGN_CENTER:
