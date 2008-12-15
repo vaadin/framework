@@ -11,9 +11,9 @@
   </description>
     
   <context-param>
-  	<param-name>Debug</param-name>
-  	<param-value>true</param-value>
-  	<description>IT Mill Toolkit debug mode</description>
+  	<param-name>productionMode</param-name>
+  	<param-value>false</param-value>
+  	<description>IT Mill Toolkit production mode</description>
   </context-param>
     
   <!-- Permit use of IT Mill Testing Tools for this servlet continer -->

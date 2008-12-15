@@ -118,6 +118,9 @@ public class ApplicationServlet extends HttpServlet {
     // Configurable parameter names
     private static final String PARAMETER_DEBUG = "Debug";
 
+    private static final String PARAMETER_PRODUCTION_MODE = "productionMode";
+    private static final String NOT_PRODUCTION_MODE_INFO = "IT Mill Toolkit running in debug mode. Add productionMode=true to web.xml to disable debug features";
+
     private static final String PARAMETER_ITMILL_RESOURCES = "Resources";
 
     private static final int DEFAULT_BUFFER_SIZE = 32 * 1024;
@@ -151,7 +154,7 @@ public class ApplicationServlet extends HttpServlet {
 
     private String resourcePath = null;
 
-    private boolean debugMode = false;
+    private boolean productionMode = false;
 
     // Is this servlet application runner
     boolean isApplicationRunnerServlet = false;
@@ -213,10 +216,21 @@ public class ApplicationServlet extends HttpServlet {
                     .getInitParameter(name));
         }
 
-        // check if application is in debug mode
-        if (getApplicationOrSystemProperty(PARAMETER_DEBUG, "false").equals(
-                "true")) {
-            debugMode = true;
+        // Check if the application is in production mode.
+        // We are in production mode if Debug=false or productionMode=true
+        if (getApplicationOrSystemProperty(PARAMETER_DEBUG, "true").equals(
+                "false")) {
+            // "Debug=true" is the old way and should no longer be used
+            productionMode = true;
+        } else if (getApplicationOrSystemProperty(PARAMETER_PRODUCTION_MODE,
+                "false").equals("true")) {
+            // "productionMode=true" is the real way to do it
+            productionMode = true;
+        }
+
+        if (!productionMode) {
+            /* Print an information/warning message about running in debug mode */
+            System.out.println(NOT_PRODUCTION_MODE_INFO);
         }
 
         // Gets Testing Tools parameters if feature is activated
@@ -893,7 +907,7 @@ public class ApplicationServlet extends HttpServlet {
                     + "itmill.toolkitConfigurations = {};\n"
                     + "itmill.themesLoaded = {}};\n");
 
-            if (isDebugMode()) {
+            if (!isProductionMode()) {
                 page.write("itmill.debug = true;\n");
             }
 
@@ -937,7 +951,7 @@ public class ApplicationServlet extends HttpServlet {
                     + "if(!itmill) { var itmill = {}} \n"
                     + "itmill.toolkitConfigurations = {};\n"
                     + "itmill.themesLoaded = {};\n");
-            if (isDebugMode()) {
+            if (!isProductionMode()) {
                 page.write("itmill.debug = true;\n");
             }
             page
@@ -1710,11 +1724,13 @@ public class ApplicationServlet extends HttpServlet {
     }
 
     /**
+     * Returns true if the servlet is running in production mode. Production
+     * mode disables all debug facilities.
      * 
-     * @return true if debug mode parameter is defined as "true" in web.xml
+     * @return true if in production mode, false if in debug mode
      */
-    public boolean isDebugMode() {
-        return debugMode;
+    public boolean isProductionMode() {
+        return productionMode;
     }
 
 }
