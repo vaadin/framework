@@ -15,15 +15,20 @@ import java.util.List;
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.util.HierarchicalContainer;
+import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.ExpandLayout;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Layout;
+import com.itmill.toolkit.ui.Link;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.SplitPanel;
 import com.itmill.toolkit.ui.Tree;
+import com.itmill.toolkit.ui.UriFragmentUtility;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Window;
+import com.itmill.toolkit.ui.UriFragmentUtility.FragmentChangedEvent;
 
 /**
  * TestBench finds out testable classes within given java packages and adds them
@@ -95,7 +100,7 @@ public class TestBench extends com.itmill.toolkit.Application implements
             }
         }
 
-        menu = new Tree("Testables", testables);
+        menu = new Tree("Testafdsfsbles", testables);
 
         for (final Iterator i = itemCaptions.keySet().iterator(); i.hasNext();) {
             final Class testable = (Class) i.next();
@@ -112,8 +117,87 @@ public class TestBench extends com.itmill.toolkit.Application implements
         menu.addListener(this);
         menu.setImmediate(true);
         menu.setNullSelectionAllowed(false);
+        VerticalLayout lo = new VerticalLayout();
+        lo.addComponent(menu);
 
-        mainLayout.addComponent(menu);
+        UriFragmentUtility uri = new UriFragmentUtility();
+        lo.addComponent(uri);
+
+        uri.addListener(new UriFragmentUtility.FragmentChangedListener() {
+            public void fragmentChanged(FragmentChangedEvent source) {
+                String fragment = source.getUriFragmentUtility().getFragment();
+                if (fragment != null && !"".equals(fragment)) {
+                    // try to find a proper test class
+
+                    // exact match
+                    Iterator iterator = menu.getItemIds().iterator();
+                    while (iterator.hasNext()) {
+                        Object next = iterator.next();
+                        if (next instanceof Class) {
+                            Class c = (Class) next;
+                            String string = c.getName();
+                            if (string.equals(fragment)) {
+                                menu.setValue(c);
+                                mainLayout.setSplitPosition(0);
+                                return;
+                            }
+                        }
+                    }
+
+                    // simple name match
+                    iterator = menu.getItemIds().iterator();
+                    while (iterator.hasNext()) {
+                        Object next = iterator.next();
+                        if (next instanceof Class) {
+                            Class c = (Class) next;
+                            String string = c.getSimpleName();
+                            if (string.equals(fragment)) {
+                                menu.setValue(c);
+                                mainLayout.setSplitPosition(0);
+                                return;
+                            }
+                        }
+                    }
+                    // ticket match
+                    iterator = menu.getItemIds().iterator();
+                    while (iterator.hasNext()) {
+                        Object next = iterator.next();
+                        if (next instanceof Class) {
+                            Class c = (Class) next;
+                            String string = c.getSimpleName();
+                            if (string.startsWith("Ticket" + fragment)) {
+                                menu.setValue(c);
+                                mainLayout.setSplitPosition(0);
+                                return;
+                            }
+                        }
+                    }
+
+                    // just partly mach lowercase
+                    iterator = menu.getItemIds().iterator();
+                    while (iterator.hasNext()) {
+                        Object next = iterator.next();
+                        if (next instanceof Class) {
+                            Class c = (Class) next;
+                            String string = c.getSimpleName();
+                            if (string.toLowerCase().contains(
+                                    fragment.toLowerCase())) {
+                                menu.setValue(c);
+                                mainLayout.setSplitPosition(0);
+                                return;
+                            }
+                        }
+                    }
+
+                    getMainWindow().showNotification(
+                            "No potential matc for #" + fragment);
+
+                }
+
+            }
+        });
+
+        mainLayout.addComponent(lo);
 
         bodyLayout.addStyleName("light");
         bodyLayout.setSizeFull();
@@ -142,9 +226,16 @@ public class TestBench extends com.itmill.toolkit.Application implements
                 return cc;
             } catch (final Exception e1) {
                 e1.printStackTrace();
-                return new Label(
+                VerticalLayout lo = new VerticalLayout();
+                lo.addComponent(new Label(
                         "Cannot create application / custom component: "
-                                + e1.toString());
+                                + e1.toString()));
+
+                Link l = new Link("Try opening via app runner",
+                        new ExternalResource("../run/" + c.getName()));
+                lo.addComponent(l);
+
+                return lo;
             }
         }
     }

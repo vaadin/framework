@@ -464,6 +464,10 @@
     <servlet-name>TestBench</servlet-name>
     <url-pattern>/TestBench/*</url-pattern>
   </servlet-mapping>
+   <servlet-mapping>
+    <servlet-name>TestBench</servlet-name>
+    <url-pattern>/t/*</url-pattern>
+  </servlet-mapping>
 
   <servlet-mapping>
     <servlet-name>Reservr</servlet-name>
