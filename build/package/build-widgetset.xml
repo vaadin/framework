@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+
+<!-- 
+
+Client-side code is compiled by using GWTCompiler which compiles client-side Java code into
+JavaScript. Generated files are located under WebContent/ITMILL/widgetsets/*.
+
+Client-side compilation is required if you create new or modify existing widgets.
+You may use either this script or IT Mill Toolkit Hosted Mode.launch (in Eclipse)
+to compile your client-side java code. 
+
+By default IT Mill Toolkit first tries to serve widgetset resources from the file system, if that
+fails then files are streamed from itmill-toolkit-<version>.jar. 
+
+See configure target to adjust this buildfile.
+
+-->
+
+<project name="Widgetset compile example" basedir="." default="compile-widgetset">
+
+	<!-- 
+		Update based on your project structure, by default this buildfile assumes that you 
+		1. use WebContent under your project's root directory
+		2. WebContent/WEB-INF/lib/itmill-toolkit-<version>.jar exists
+		3. WebContent/WEB-INF/src contains your project source files
+		4. gwt directory contains extracted GWT distribution for your platform (windows, linux or mac)
+	-->
+	<target name="configure">
+		
+		<!-- Path from this file to the root of the toolkit distribution package -->
+		<property name="base" value="../../../" />
+		
+		<!-- which platform we are in, possible values are windows, linux and mac -->
+		<property name="gwt-platform" value="<platform></platform>" />
+		
+		<!-- where platform specific GWT distribution is located -->
+		<property name="gwt-location" value="${base}gwt" />
+		
+		<!-- where Toolkit jar is located -->
+		<property name="toolkit-jar-location" value="${base}WebContent/WEB-INF/lib/itmill-toolkit-<version></version>.jar" />
+		
+		<!-- where project client-side widgetset source files are located -->
+		<property name="client-side-src-location" value="${base}WebContent/WEB-INF/src" />
+			
+		<!-- where to generate compiled javascript and theme files -->
+		<property name="client-side-destination" value="${base}WebContent/ITMILL/widgetsets" />
+	</target>
+		
+	<target name="init" depends="configure">
+
+		<echo>Configured for ${gwt-platform} platform.</echo>
+		<echo>Requirements for classpath:</echo>
+		<echo>  ${gwt-location}/gwt-dev-${gwt-platform}.jar</echo>
+		<echo>  ${gwt-location}/gwt-user.jar</echo>
+		<echo>  ${toolkit-jar-location}</echo>
+		<echo>  ${client-side-src-location}</echo>
+		<echo>Output will be written into ${client-side-destination}</echo>
+
+		<!-- Check that files exist -->
+		<fail message="Some of the required files (listed above) are missing.">
+			<condition><not><resourcecount count="3">
+				<filelist files="${gwt-location}/gwt-dev-${gwt-platform}.jar,${gwt-location}/gwt-user.jar,${toolkit-jar-location}"/>
+			</resourcecount></not></condition>
+		</fail>
+
+		<!-- Construct and check classpath -->
+		<path id="compile.classpath">
+			<pathelement path="${client-side-src-location}" />
+			<pathelement path="${toolkit-jar-location}" />
+			<pathelement path="${gwt-location}/gwt-user.jar" />
+			<pathelement path="${gwt-location}/gwt-dev-${gwt-platform}.jar" />
+		</path>
+	</target>
+	
+	<!-- NOTE: Modify this example to compile your own widgetset  -->
+	<target name="compile-widgetset" depends="init">
+		<echo>Compiling com.itmill.toolkit.demo.colorpicker.gwt.ColorPickerWidgetSet.</echo>
+		<echo>Modify this example ant-script to compile your own widgetsets.</echo>
+		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="256m">
+			<arg value="-out" />
+			<arg value="${client-side-destination}" />
+			<arg value="com.itmill.toolkit.demo.colorpicker.gwt.ColorPickerWidgetSet" />
+			<classpath>
+				<path refid="compile.classpath"/>
+			</classpath>
+		</java>
+	</target>
+
+</project>

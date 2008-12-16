@@ -58,8 +58,8 @@ IT Mill Toolkit Hosted Mode.launch
 IT Mill Toolkit Web Mode.launch
 - launch configurations for Eclipse workspace
 
-build-widgetsets.xml
-- builds GWT widget sets for IT Mill Toolkit applications
+WebContent/doc/example-source/build-widgetset.xml
+- example on how to build GWT widget sets for IT Mill Toolkit application
 
 WebContent/ITMILL
 - widget sets and themes

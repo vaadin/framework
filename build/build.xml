@@ -394,7 +394,7 @@
 				<include name="build-widgetset.xml" />
 			</fileset>
 		</copy>
-
+		<move file="${output-dir}/build-widgetset.xml" tofile="${output-dir}/WebContent/doc/example-source/build-widgetset.xml" />
 		<move file="${output-dir}/eclipse-classpath" tofile="${output-dir}/.classpath" />
 		<move file="${output-dir}/eclipse-project" tofile="${output-dir}/.project" />
 		<move file="${output-dir}/eclipse-IT Mill Toolkit Hosted Mode-launch" tofile="${output-dir}/IT Mill Toolkit Hosted Mode.launch" />
