@@ -100,7 +100,7 @@ public class TestBench extends com.itmill.toolkit.Application implements
             }
         }
 
-        menu = new Tree("Testafdsfsbles", testables);
+        menu = new Tree("Testables", testables);
 
         for (final Iterator i = itemCaptions.keySet().iterator(); i.hasNext();) {
             final Class testable = (Class) i.next();
