@@ -2236,7 +2236,8 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                         // a best guess (expecting similar content in all
                         // columns ->
                         // if one component is relative width so are others)
-                        w = headerCell.getOffsetWidth();
+                        w = headerCell.getOffsetWidth() - CELL_EXTRA_WIDTH
+                                - CELL_CONTENT_PADDING;
                     }
                 }
                 return new RenderSpace(w, getRowHeight());
