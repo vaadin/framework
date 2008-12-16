@@ -10,10 +10,11 @@ import com.itmill.toolkit.ui.AbstractOrderedLayout;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.ComponentContainer;
 import com.itmill.toolkit.ui.CustomComponent;
-import com.itmill.toolkit.ui.CustomLayout;
 import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
+import com.itmill.toolkit.ui.SplitPanel;
+import com.itmill.toolkit.ui.TabSheet;
 import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.GridLayout.Area;
@@ -92,7 +93,9 @@ public class DebugUtilities {
             Stack<ComponentInfo> attributes = null;
 
             if (hasRelativeHeight(component) && parent != null
-                    && hasUndefinedHeight(parent)) {
+                    && parentCannotDefineHeight(parent, component)) {
+
+                // set proper error messages
                 if (parent instanceof AbstractOrderedLayout) {
                     AbstractOrderedLayout ol = (AbstractOrderedLayout) parent;
                     boolean vertical = false;
@@ -108,32 +111,14 @@ public class DebugUtilities {
                     if (vertical) {
                         msg = "Relative height for component inside non sized vertical ordered layout.";
                         attributes = getHeightAttributes(component);
-                    } else if (!hasNonRelativeHeightComponent(ol)) {
+                    } else {
                         msg = "At least one of horizontal orderedlayout's components must have non relative height if layout has no height defined";
                         attributes = getHeightAttributes(component);
-                    } else {
-                        // valid situation, other components defined height
                     }
                 } else if (parent instanceof GridLayout) {
-
-                    GridLayout gl = (GridLayout) parent;
-                    Area componentArea = gl.getComponentArea(component);
-                    boolean rowHasHeight = false;
-                    for (int row = componentArea.getRow1(); !rowHasHeight
-                            && row <= componentArea.getRow2(); row++) {
-                        for (int column = 0; !rowHasHeight
-                                && column < gl.getColumns(); column++) {
-                            Component c = gl.getComponent(column, row);
-                            if (c != null) {
-                                rowHasHeight = !hasRelativeHeight(c);
-                            }
-                        }
-                    }
-                    if (!rowHasHeight) {
-                        msg = "At least one component in each row should have non relative height in GridLayout with undefined height.";
-                        attributes = getHeightAttributes(component);
-                    }
-                } else if (!(parent instanceof CustomLayout)) {
+                    msg = "At least one component in each row should have non relative height in GridLayout with undefined height.";
+                    attributes = getHeightAttributes(component);
+                } else {
                     // default error for non sized parent issue
                     msg = "Relative height component's parent should not have undefined height.";
                     attributes = getHeightAttributes(component);
@@ -160,7 +145,7 @@ public class DebugUtilities {
             Stack<ComponentInfo> attributes = null;
 
             if (hasRelativeWidth(component) && parent != null
-                    && hasUndefinedWidth(parent)) {
+                    && parentCannotDefineWidth(parent, component)) {
                 if (parent instanceof AbstractOrderedLayout) {
                     AbstractOrderedLayout ol = (AbstractOrderedLayout) parent;
                     boolean horizontal = true;
@@ -176,42 +161,17 @@ public class DebugUtilities {
                     if (horizontal) {
                         msg = "Relative width for component inside non sized horizontal ordered layout.";
                         attributes = getWidthAttributes(component);
-                    } else if (!hasNonRelativeWidthComponent(ol)) {
+                    } else {
                         msg = "At least one of vertical orderedlayout's components must have non relative width if layout has no width defined";
                         attributes = getWidthAttributes(component);
-                    } else {
-                        // valid situation, other components defined width
                     }
                 } else if (parent instanceof GridLayout) {
-                    GridLayout gl = (GridLayout) parent;
-                    Area componentArea = gl.getComponentArea(component);
-                    boolean columnHasWidth = false;
-                    for (int col = componentArea.getColumn1(); !columnHasWidth
-                            && col <= componentArea.getColumn2(); col++) {
-                        for (int row = 0; !columnHasWidth && row < gl.getRows(); row++) {
-                            Component c = gl.getComponent(col, row);
-                            if (c != null) {
-                                columnHasWidth = !hasRelativeWidth(c);
-                            }
-                        }
-                    }
-                    if (!columnHasWidth) {
-                        msg = "At least one component in each column should have non relative width in GridLayout with undefined width.";
-                        attributes = getWidthAttributes(component);
-                    }
-
-                } else if (!(parent instanceof CustomLayout)) {
-                    // CustomLayout's and Panels are omitted. Width can be
-                    // defined
-                    // by layout or by caption in Window
-                    if (!(parent instanceof Panel
-                            && parent.getCaption() != null && !parent
-                            .getCaption().equals(""))) {
-                        // default error for non sized parent issue
-                        msg = "Relative width component's parent should not have undefined width.";
-                        attributes = getWidthAttributes(component);
-
-                    }
+                    msg = "At least one component in each column should have non relative width in GridLayout with undefined width.";
+                    attributes = getWidthAttributes(component);
+                } else {
+                    // default error for non sized parent issue
+                    msg = "Relative width component's parent should not have undefined width.";
+                    attributes = getWidthAttributes(component);
                 }
             }
 
@@ -267,13 +227,13 @@ public class DebugUtilities {
         String width = "width: ";
         if (hasRelativeWidth(component)) {
             width += "RELATIVE, " + component.getWidth() + " %";
-        } else if (hasUndefinedWidth(component)) {
-            width += "UNDEFINED";
         } else if (component instanceof Window && component.getParent() == null) {
             width += "MAIN WINDOW";
-        } else {
+        } else if (component.getWidth() >= 0) {
             width += "ABSOLUTE, " + component.getWidth() + " "
                     + Sizeable.UNIT_SYMBOLS[component.getWidthUnits()];
+        } else {
+            width += "UNDEFINED";
         }
 
         return width;
@@ -283,13 +243,13 @@ public class DebugUtilities {
         String height = "height: ";
         if (hasRelativeHeight(component)) {
             height += "RELATIVE, " + component.getHeight() + " %";
-        } else if (hasUndefinedHeight(component)) {
-            height += "UNDEFINED";
         } else if (component instanceof Window && component.getParent() == null) {
             height += "MAIN WINDOW";
-        } else {
+        } else if (component.getHeight() > 0) {
             height += "ABSOLUTE, " + component.getHeight() + " "
                     + Sizeable.UNIT_SYMBOLS[component.getHeightUnits()];
+        } else {
+            height += "UNDEFINED";
         }
 
         return height;
@@ -345,10 +305,6 @@ public class DebugUtilities {
 
     }
 
-    private static String getRelativeHeight(Component component) {
-        return component.getHeight() + " %";
-    }
-
     private static boolean hasNonRelativeHeightComponent(
             AbstractOrderedLayout ol) {
         Iterator it = ol.getComponentIterator();
@@ -360,19 +316,66 @@ public class DebugUtilities {
         return false;
     }
 
-    private static boolean hasUndefinedHeight(Component parent) {
-        if (parent instanceof Window) {
-            Window w = (Window) parent;
-            if (w.getParent() == null) {
-                // main window is considered to have size
+    private static boolean parentCannotDefineHeight(Component parent,
+            Component component) {
+        if (parent.getHeight() < 0) {
+            if (parent instanceof Window) {
+                Window w = (Window) parent;
+                if (w.getParent() == null) {
+                    // main window is considered to have size
+                    return false;
+                }
+            }
+            if (parent instanceof VerticalLayout) {
+                return true;
+            } else if (parent instanceof AbstractOrderedLayout) {
+                boolean horizontal = true;
+                if (parent instanceof OrderedLayout) {
+                    horizontal = ((OrderedLayout) parent).getOrientation() == OrderedLayout.ORIENTATION_HORIZONTAL;
+                }
+                if (horizontal
+                        && hasNonRelativeHeightComponent((AbstractOrderedLayout) parent)) {
+                    return false;
+                } else {
+                    return true;
+                }
+
+            } else if (parent instanceof GridLayout) {
+                GridLayout gl = (GridLayout) parent;
+                Area componentArea = gl.getComponentArea(component);
+                boolean rowHasHeight = false;
+                for (int row = componentArea.getRow1(); !rowHasHeight
+                        && row <= componentArea.getRow2(); row++) {
+                    for (int column = 0; !rowHasHeight
+                            && column < gl.getColumns(); column++) {
+                        Component c = gl.getComponent(column, row);
+                        if (c != null) {
+                            rowHasHeight = !hasRelativeHeight(c);
+                        }
+                    }
+                }
+                if (!rowHasHeight) {
+                    return true;
+                }
+            }
+
+            if (parent instanceof Panel || parent instanceof SplitPanel
+                    || parent instanceof TabSheet
+                    || parent instanceof CustomComponent) {
+                // height undefined, we know how how component works and no
+                // exceptions
+                // TODO horiz SplitPanel ??
+                return true;
+            } else {
+                // we cannot generally know if undefined component can serve
+                // space for children (like CustomLayout or component built by
+                // third party)
                 return false;
             }
-        }
-        if (parent.getHeight() < 0) {
-            return true;
+
         } else {
             if (hasRelativeHeight(parent) && parent.getParent() != null) {
-                return hasUndefinedHeight(parent.getParent());
+                return parentCannotDefineHeight(parent.getParent(), parent);
             } else {
                 return false;
             }
@@ -399,27 +402,74 @@ public class DebugUtilities {
                 && paintable.getWidthUnits() == Sizeable.UNITS_PERCENTAGE;
     }
 
-    private static boolean hasUndefinedWidth(Component component) {
-        if (component instanceof Window) {
-            Window w = (Window) component;
+    private static boolean parentCannotDefineWidth(Component parent,
+            Component component) {
+        if (parent instanceof Window) {
+            Window w = (Window) parent;
             if (w.getParent() == null) {
                 // main window is considered to have size
                 return false;
             }
 
         }
-        if (component instanceof Panel) {
-            if (component.getCaption() != null
-                    && !component.getCaption().equals("")) {
+
+        if (parent.getWidth() < 0) {
+            if (parent instanceof Panel) {
+                if (parent.getCaption() != null
+                        && !parent.getCaption().equals("")) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else if (parent instanceof AbstractOrderedLayout) {
+                AbstractOrderedLayout ol = (AbstractOrderedLayout) parent;
+                boolean horizontal = true;
+                if (ol instanceof OrderedLayout) {
+                    if (((OrderedLayout) ol).getOrientation() == OrderedLayout.ORIENTATION_VERTICAL) {
+                        horizontal = false;
+                    }
+                } else if (ol instanceof VerticalLayout) {
+                    horizontal = false;
+                }
+
+                if (horizontal) {
+                    return true;
+                } else if (!hasNonRelativeWidthComponent(ol)) {
+                    return true;
+                } else {
+                    // valid situation, other components defined width
+                    return false;
+                }
+            } else if (parent instanceof GridLayout) {
+                GridLayout gl = (GridLayout) parent;
+                Area componentArea = gl.getComponentArea(component);
+                boolean columnHasWidth = false;
+                for (int col = componentArea.getColumn1(); !columnHasWidth
+                        && col <= componentArea.getColumn2(); col++) {
+                    for (int row = 0; !columnHasWidth && row < gl.getRows(); row++) {
+                        Component c = gl.getComponent(col, row);
+                        if (c != null) {
+                            columnHasWidth = !hasRelativeWidth(c);
+                        }
+                    }
+                }
+                if (!columnHasWidth) {
+                    return true;
+                } else {
+                    // valid situation
+                    return false;
+                }
+            } else if (parent instanceof SplitPanel
+                    || parent instanceof TabSheet
+                    || parent instanceof CustomComponent) {
+                // TODO vertical splitpanel with another non relative component?
+                return true;
+            } else {
                 return false;
             }
-        }
-
-        if (component.getWidth() < 0) {
-            return true;
         } else {
-            if (hasRelativeWidth(component) && component.getParent() != null) {
-                return hasUndefinedWidth(component.getParent());
+            if (hasRelativeWidth(parent) && parent.getParent() != null) {
+                return parentCannotDefineWidth(parent.getParent(), parent);
             } else {
                 return false;
             }
