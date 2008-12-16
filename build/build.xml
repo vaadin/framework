@@ -361,7 +361,7 @@
 		<copy todir="${output-dir}">
 			<filterchain>
 				<expandproperties />
-				<!-- .classpath, *.launch, build-widgetsets.xml -->
+				<!-- .classpath, *.launch, build-widgetset.xml -->
 				<replacetokens begintoken="&lt;" endtoken=">">
 					<token key="version" value="${version}" />
 					<token key="/version" value="" />
@@ -371,7 +371,7 @@
 					<token key="platform-specific-entries" value="&lt;classpathentry kind=&quot;lib&quot; path=&quot;gwt/gwt-dev-${package-platform}.jar&quot; /&gt;" />
 					<token key="/platform-specific-entries" value="" />
 				</replacetokens>
-				<!-- .classpath, HostedMode.launch, build-widgetsets.xml -->
+				<!-- .classpath, HostedMode.launch, build-widgetset.xml -->
 				<replacetokens begintoken="&lt;" endtoken=">">
 					<token key="platform" value="${package-platform}" />
 					<token key="/platform" value="" />
@@ -391,7 +391,7 @@
 				<include name="eclipse-classpath" />
 				<include name="eclipse-project" />
 				<include name="eclipse*launch" />
-				<include name="build-widgetsets.xml" />
+				<include name="build-widgetset.xml" />
 			</fileset>
 		</copy>
 
@@ -681,28 +681,6 @@
 			</classpath>
 		</java>
 		<echo>Compiled ColorPickerWidgetSet</echo>
-	</target>
-	
-	<!-- NOTE: use this template to compile your own widgetset -->
-	<target name="compile-my-widgetset">
-		<fail message="Please open build-widgetset.xml and update your widgetset's package name to enable this target" />
-		<echo>Custom widgetset</echo>
-		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
-			<arg value="-out" />
-			<arg value="${output-dir}/WebContent/ITMILL/widgetsets" />
-			<!-- NOTE: Update line below and tell package name to your own widgetset -->
-			<arg value="com.myexample.gwt.MyWidgetSet" />
-			<arg value="-style" />
-			<arg value="OBF" />
-			<classpath>
-				<pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
-				<pathelement location="${gwt-dir}/${platform}/${lib-gwt-dev}" />
-				<pathelement location="${result-path}/src" />
-				<!-- demo widgetset sources -->
-				<pathelement path="${output-dir}/WebContent/WEB-INF/src" />
-			</classpath>
-		</java>
-		<echo>Compiled custom widgetset</echo>
 	</target>
 
 	<!-- Builds the client-side engine, i.e., the widgetsets in parallel. -->
