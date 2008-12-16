@@ -125,7 +125,9 @@ public class ApplicationConnection {
     private int sessionExpirationInterval;
 
     private ArrayList<Widget> relativeSizeChanges = new ArrayList<Widget>();;
-    private ArrayList<Widget> captionSizeChanges = new ArrayList<Widget>();;
+    private ArrayList<Widget> captionSizeChanges = new ArrayList<Widget>();
+
+    private Date requestStartTime;;
 
     public ApplicationConnection(WidgetSet widgetSet,
             ApplicationConfiguration cnf) {
@@ -333,6 +335,9 @@ public class ApplicationConnection {
                                 uidl_security_key = key;
                             }
                         }
+                        console.log("Server visit took "
+                                + String.valueOf((new Date()).getTime()
+                                        - requestStartTime.getTime()) + "ms");
                         if (applicationRunning) {
                             handleReceivedJSONMessage(response);
                         } else {
@@ -399,6 +404,7 @@ public class ApplicationConnection {
 
     private void startRequest() {
         activeRequests++;
+        requestStartTime = new Date();
         // show initial throbber
         if (loadTimer == null) {
             loadTimer = new Timer() {
