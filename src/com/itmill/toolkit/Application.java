@@ -179,7 +179,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      */
     private Terminal.ErrorListener errorHandler = this;
 
-    private boolean debugMode = false;
+    private boolean debugMode = true;
 
     /**
      * <p>
