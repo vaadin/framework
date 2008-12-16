@@ -69,7 +69,7 @@ See configure target to adjust this buildfile.
 	<target name="compile-my-widgetset" depends="init">
 		<fail message="Please open build-widgetset.xml and update your widgetset's package name to enable this target" />
 		<!-- remove upper fail message -->
-		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="128m">
+		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="256m">
 			<arg value="-out" />
 			<arg value="${client-side-destination}" />
 			<!-- NOTE: Update line below and tell package name to your own widgetset -->
@@ -83,7 +83,7 @@ See configure target to adjust this buildfile.
 	<!-- NOTE: used only in demos, execute after changes to colorpicker demo's client-side source code  -->
 	<target name="compile-colorpicker_demo-widgetset" depends="init">
 		<echo>com.itmill.toolkit.demo.colorpicker.gwt.ColorPickerWidgetSet</echo>
-		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="128m">
+		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="256m">
 			<arg value="-out" />
 			<arg value="${client-side-destination}" />
 			<arg value="com.itmill.toolkit.demo.colorpicker.gwt.ColorPickerWidgetSet" />
@@ -96,7 +96,7 @@ See configure target to adjust this buildfile.
 	<!-- NOTE: used only in demos, execute changes to reservation demo's client-side source code -->
 	<target name="compile-reservation_demo-widgetset" depends="init">
 		<echo>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</echo>
-		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="128m">
+		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="256m">
 			<arg value="-out" />
 			<arg value="${client-side-destination}" />
 			<arg value="com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet" />
@@ -110,7 +110,7 @@ See configure target to adjust this buildfile.
 	<!-- NOTE: only required if you extract Toolkit sources and change default widgetset -->
 	<target name="compile-default-widgetset" depends="init">
 		<echo>com.itmill.toolkit.terminal.gwt.DefaultWidgetSet</echo>
-		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="128m">
+		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="256m">
 			<arg value="-out" />
 			<arg value="${client-side-destination}" />
 			<arg value="com.itmill.toolkit.terminal.gwt.DefaultWidgetSet" />
