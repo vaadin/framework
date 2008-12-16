@@ -643,25 +643,18 @@ public class SamplerApplication extends Application {
             setStyleName(Panel.STYLE_LIGHT);
         }
 
-        private void newRow() {
-            while (grid.getCursorX() > 0) {
-                grid.space();
-            }
-            grid.setRows(grid.getRows() + 1);
-        }
-
         public void setFeatureContainer(HierarchicalContainer c) {
             grid.removeAllComponents();
-            grid.setRows(1);
             Collection features = c.getItemIds();
             for (Iterator it = features.iterator(); it.hasNext();) {
                 final Feature f = (Feature) it.next();
                 if (f instanceof FeatureSet) {
-                    newRow();
+                    grid.newLine();
                     Label title = new Label(f.getName());
                     if (c.isRoot(f)) {
                         title.setWidth("100%");
                         title.setStyleName("section");
+                        grid.setRows(grid.getCursorY() + 1);
                         grid.addComponent(title, 0, grid.getCursorY(), grid
                                 .getColumns() - 1, grid.getCursorY());
                         grid.setComponentAlignment(title,
