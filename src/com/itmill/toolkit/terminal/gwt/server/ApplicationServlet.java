@@ -119,7 +119,7 @@ public class ApplicationServlet extends HttpServlet {
     private static final String PARAMETER_DEBUG = "Debug";
 
     private static final String PARAMETER_PRODUCTION_MODE = "productionMode";
-    private static final String NOT_PRODUCTION_MODE_INFO = "IT Mill Toolkit running in debug mode. Add productionMode=true to web.xml to disable debug features";
+    private static final String NOT_PRODUCTION_MODE_INFO = "IT Mill Toolkit running in debug mode. To show debug window, add ?debug to your application URL. Add productionMode=true to web.xml to disable debug features";
 
     private static final String PARAMETER_ITMILL_RESOURCES = "Resources";
 
