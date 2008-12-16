@@ -203,12 +203,17 @@ public class GridLayout extends AbstractLayout implements
         // outside this area, even if it's occupied
         if (cursorX >= column1 && cursorX <= column2 && cursorY >= row1
                 && cursorY <= row2) {
-            cursorX = column2 + 1;
+            // cursor within area
+            cursorX = column2 + 1; // one right of area
             if (cursorX >= cols) {
-                cursorX = 0;
+                // overflowed columns
+                cursorX = 0; // first col
+                // move one row down, or one row under the area
                 cursorY = (column1 == 0 ? row2 : row1) + 1;
-            } else {
-                cursorY = row1;
+                if (cursorY >= rows) {
+                    // rows overflow, increase
+                    rows = cursorY + 1;
+                }
             }
         }
 
