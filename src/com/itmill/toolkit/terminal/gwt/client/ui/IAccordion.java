@@ -328,7 +328,7 @@ public class IAccordion extends ITabsheetBase implements
             }
 
             int captionWidth = caption.getRequiredWidth();
-            int padding = Util.measureHorizontalPadding(caption.getElement(),
+            int padding = Util.measureHorizontalPaddingAndBorder(caption.getElement(),
                     18);
             return captionWidth + padding;
         }

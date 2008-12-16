@@ -930,7 +930,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
 
     public int getTextboxPadding() {
         if (textboxPadding < 0) {
-            textboxPadding = Util.measureHorizontalPadding(tb.getElement(), 4);
+            textboxPadding = Util.measureHorizontalPaddingAndBorder(tb.getElement(), 4);
         }
         return textboxPadding;
     }

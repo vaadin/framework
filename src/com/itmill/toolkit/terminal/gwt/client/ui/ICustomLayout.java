@@ -68,6 +68,8 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
 
     private String width = "";
 
+    private HashMap<String, FloatSize> locationToExtraSize = new HashMap<String, FloatSize>();
+
     public ICustomLayout() {
         setElement(DOM.createDiv());
         // Clear any unwanted styling
@@ -265,6 +267,13 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
         if (!"".equals(location)) {
             locationToElement.put(location, elem);
             elem.setInnerHTML("");
+            int x = Util.measureHorizontalPaddingAndBorder(elem, 0);
+            int y = Util.measureVerticalPaddingAndBorder(elem, 0);
+
+            FloatSize fs = new FloatSize(x, y);
+
+            locationToExtraSize.put(location, fs);
+
         } else {
             final int len = DOM.getChildCount(elem);
             for (int i = 0; i < len; i++) {
@@ -509,7 +518,11 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
     public RenderSpace getAllocatedSpace(Widget child) {
         com.google.gwt.dom.client.Element pe = child.getElement()
                 .getParentElement();
-        return new RenderSpace(pe.getOffsetWidth(), pe.getOffsetHeight(), true);
+
+        FloatSize extra = locationToExtraSize.get(getLocation(child));
+        return new RenderSpace(pe.getOffsetWidth() - (int) extra.getWidth(), pe
+                .getOffsetHeight()
+                - (int) extra.getHeight(), true);
     }
 
     @Override

@@ -249,7 +249,8 @@ public class Util {
         return element.cloneNode(deep);
     }-*/;
 
-    public static int measureHorizontalPadding(Element element, int paddingGuess) {
+    public static int measureHorizontalPaddingAndBorder(Element element,
+            int paddingGuess) {
         String originalWidth = DOM.getStyleAttribute(element, "width");
         int originalOffsetWidth = element.getOffsetWidth();
         int widthGuess = (originalOffsetWidth - paddingGuess);
@@ -260,6 +261,21 @@ public class Util {
         int padding = element.getOffsetWidth() - widthGuess;
 
         DOM.setStyleAttribute(element, "width", originalWidth);
+        return padding;
+    }
+
+    public static int measureVerticalPaddingAndBorder(Element element,
+            int paddingGuess) {
+        String originalHeight = DOM.getStyleAttribute(element, "height");
+        int originalOffsetHeight = element.getOffsetHeight();
+        int widthGuess = (originalOffsetHeight - paddingGuess);
+        if (widthGuess < 1) {
+            widthGuess = 1;
+        }
+        DOM.setStyleAttribute(element, "height", widthGuess + "px");
+        int padding = element.getOffsetHeight() - widthGuess;
+
+        DOM.setStyleAttribute(element, "height", originalHeight);
         return padding;
     }
 

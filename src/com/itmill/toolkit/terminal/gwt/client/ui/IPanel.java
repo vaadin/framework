@@ -268,7 +268,7 @@ public class IPanel extends SimplePanel implements Container {
              */
             DOM.setStyleAttribute(captionNode, "width", "1px");
 
-            int parentPadding = Util.measureHorizontalPadding(getElement(), 0);
+            int parentPadding = Util.measureHorizontalPaddingAndBorder(getElement(), 0);
 
             int parentWidthExcludingPadding = getElement().getOffsetWidth()
                     - parentPadding;
@@ -465,7 +465,7 @@ public class IPanel extends SimplePanel implements Container {
 
         DOM.setStyleAttribute(contentNode, "overflow", "auto");
 
-        captionPaddingHorizontal = Util.measureHorizontalPadding(captionNode,
+        captionPaddingHorizontal = Util.measureHorizontalPaddingAndBorder(captionNode,
                 26);
 
         captionMarginLeft = Util.measureMarginLeft(captionNode);
