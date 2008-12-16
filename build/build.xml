@@ -309,7 +309,7 @@
 				<include name="*.bat" />
 				<include name="*.sh" />
 				<include name="*.app" />
-				<include name="build-widgetsets.xml" />
+				<include name="build-widgetset.xml" />
 			</fileset>
 		</delete>
 		<copy todir="${output-dir}">
@@ -733,10 +733,6 @@
 
 	<!-- Builds the colorpicker widgetset locally, i.e., not for an installation package. -->
 	<target name="widgetset-colorpicker" depends="init-nonpackage, compile-widgetset-colorpicker">
-	</target>
-
-	<!-- Builds the custom widgetset locally, i.e., not for an installation package. -->
-	<target name="widgetset-my-widgetset" depends="init-nonpackage, compile-my-widgetset">
 	</target>
 
 	<target name="libs" depends="compile-java, webcontent, compile-client-side">
