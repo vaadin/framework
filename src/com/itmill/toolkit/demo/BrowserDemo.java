@@ -7,8 +7,8 @@ package com.itmill.toolkit.demo;
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.ui.Embedded;
-import com.itmill.toolkit.ui.ExpandLayout;
 import com.itmill.toolkit.ui.Select;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Window;
 
 /**
@@ -35,7 +35,7 @@ public class BrowserDemo extends com.itmill.toolkit.Application implements
         // Use the expand layout to allow one component to use as much
         // space as
         // possible.
-        final ExpandLayout exl = new ExpandLayout();
+        final VerticalLayout exl = new VerticalLayout();
         browser.setLayout(exl);
         exl.setSizeFull();
 
@@ -45,6 +45,7 @@ public class BrowserDemo extends com.itmill.toolkit.Application implements
         select.setNewItemsAllowed(true);
         // no empty selection
         select.setNullSelectionAllowed(false);
+        select.setWidth("100%");
         // no 'go' -button clicking necessary
         select.setImmediate(true);
         // add some pre-configured URLs
@@ -59,9 +60,10 @@ public class BrowserDemo extends com.itmill.toolkit.Application implements
 
         // configure the embedded and add to layout
         emb.setType(Embedded.TYPE_BROWSER);
+        emb.setSizeFull();
         exl.addComponent(emb);
         // make the embedded as large as possible
-        exl.expand(emb);
+        exl.setExpandRatio(emb, 1.0F);
 
     }
 
