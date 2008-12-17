@@ -119,7 +119,7 @@ public class ApplicationServlet extends HttpServlet {
     private static final String PARAMETER_DEBUG = "Debug";
 
     private static final String PARAMETER_PRODUCTION_MODE = "productionMode";
-    private static final String NOT_PRODUCTION_MODE_INFO = "IT Mill Toolkit running in debug mode. To show debug window, add ?debug to your application URL. Add productionMode=true to web.xml to disable debug features";
+    private static final String NOT_PRODUCTION_MODE_INFO = "=================================================================\nIT Mill Toolkit is running in DEBUG MODE.\nAdd productionMode=true to web.xml to disable debug features.\nTo show debug window, add ?debug to your application URL.\n=================================================================";
 
     private static final String PARAMETER_ITMILL_RESOURCES = "Resources";
 
@@ -230,7 +230,7 @@ public class ApplicationServlet extends HttpServlet {
 
         if (!productionMode) {
             /* Print an information/warning message about running in debug mode */
-            System.out.println(NOT_PRODUCTION_MODE_INFO);
+            System.err.println(NOT_PRODUCTION_MODE_INFO);
         }
 
         // Gets Testing Tools parameters if feature is activated
