@@ -8,6 +8,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.Icon;
 
 public class ICaption extends HTML {
@@ -230,9 +231,16 @@ public class ICaption extends HTML {
 
             /*
              * The size of the icon might affect the size of the component so we
-             * must report the size change to the parent
+             * must report the size change to the parent TODO consider moving
+             * the responsibility of reacting to ONLOAD from ICaption to layouts
              */
-            Util.notifyParentOfSizeChange(this, true);
+            if (owner != null) {
+                Util.notifyParentOfSizeChange((Widget) owner, true);
+            } else {
+                ApplicationConnection.getConsole().log(
+                        "Warning: Icon load was not notified "
+                                + "by ICaption due paren was unknown");
+            }
         }
     }
 
