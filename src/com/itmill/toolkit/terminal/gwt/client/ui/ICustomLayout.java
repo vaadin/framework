@@ -522,7 +522,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
         FloatSize extra = locationToExtraSize.get(getLocation(child));
         return new RenderSpace(pe.getOffsetWidth() - (int) extra.getWidth(), pe
                 .getOffsetHeight()
-                - (int) extra.getHeight(), true);
+                - (int) extra.getHeight(), Util.mayHaveScrollBars(pe));
     }
 
     @Override

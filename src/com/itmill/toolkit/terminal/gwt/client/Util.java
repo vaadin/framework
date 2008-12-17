@@ -75,6 +75,12 @@ public class Util {
      *            run componentSizeUpdated lazyly
      */
     public static void notifyParentOfSizeChange(Widget widget, boolean lazy) {
+        if (!(widget instanceof Paintable)) {
+            ApplicationConnection.getConsole().log(
+                    "Notified widget must be paintable not "
+                            + widget.getClass().getName());
+            return;
+        }
         if (lazy) {
             latelyChangedWidgets.add(widget);
             lazySizeChangeTimer.schedule(LAZY_SIZE_CHANGE_TIMEOUT);
@@ -101,6 +107,7 @@ public class Util {
         for (Widget widget : widgets) {
             ApplicationConnection.getConsole().log(
                     "Widget " + Util.getSimpleName(widget) + " size updated");
+
             Widget parent = widget.getParent();
             while (parent != null && !(parent instanceof Container)) {
                 parent = parent.getParent();
@@ -641,5 +648,41 @@ public class Util {
     public static int getRequiredHeight(Widget widget) {
         return getRequiredHeight(widget.getElement());
     }
+
+    /**
+     * Detects what is currently the oveflow style attribute in given element.
+     * 
+     * @param pe
+     * @return
+     */
+    public static boolean mayHaveScrollBars(com.google.gwt.dom.client.Element pe) {
+        String overflow = getComputedStyle(pe, "overflow");
+        if (overflow != null) {
+            if (overflow.equals("auto") || overflow.equals("scroll")) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    private static native String getComputedStyle(
+            com.google.gwt.dom.client.Element el, String p)
+    /*-{
+
+        if (el.currentStyle) {
+            // IE
+            return el.currentStyle[p];
+        } else if (window.getComputedStyle) {
+            //Sa, FF, Opera
+            return document.defaultView.getComputedStyle(el,null).getPropertyValue(p);
+        } else {
+            // fall back for non IE, Sa, FF, Opera
+            return "";
+        }
+
+     }-*/;
 
 }
