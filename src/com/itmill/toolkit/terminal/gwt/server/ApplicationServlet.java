@@ -837,11 +837,10 @@ public class ApplicationServlet extends HttpServlet {
 
         if (!fragment) {
             // Window renders are not cacheable
-            response.setCharacterEncoding("utf-8");
             response.setHeader("Cache-Control", "no-cache");
             response.setHeader("Pragma", "no-cache");
             response.setDateHeader("Expires", 0);
-            response.setContentType("text/html");
+            response.setContentType("text/html; charset=UTF-8");
 
             // write html header
             page.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD "
