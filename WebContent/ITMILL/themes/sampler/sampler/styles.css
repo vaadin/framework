@@ -8,7 +8,7 @@
 	border-bottom: 3px solid #ccc;
 }
 .i-app-SamplerApplication .i-orderedlayout-togglebar {
-	border-bottom: 0px solid #eee;
+	border-bottom: 1px solid #eee;
 	background: transparent url(grayfade.png) repeat-x;
 }
 
