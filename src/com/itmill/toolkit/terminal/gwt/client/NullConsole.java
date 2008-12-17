@@ -4,6 +4,8 @@
 
 package com.itmill.toolkit.terminal.gwt.client;
 
+import com.google.gwt.json.client.JSONArray;
+
 /**
  * Client side console implementation for non-debug mode that discards all
  * messages.
@@ -21,6 +23,9 @@ public class NullConsole implements Console {
     }
 
     public void printObject(Object msg) {
+    }
+
+    public void printLayoutProblems(JSONArray array, ApplicationConnection ac) {
     }
 
 }

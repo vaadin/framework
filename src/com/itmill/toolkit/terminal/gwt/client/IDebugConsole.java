@@ -4,6 +4,11 @@
 
 package com.itmill.toolkit.terminal.gwt.client;
 
+import java.util.List;
+
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -11,12 +16,16 @@ import com.google.gwt.user.client.EventPreview;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.Tree;
+import com.google.gwt.user.client.ui.TreeItem;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.IToolkitOverlay;
 
@@ -43,6 +52,7 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
     private Button clear = new Button("Clear console");
     private Button restart = new Button("Restart app");
     private Button forceLayout = new Button("Force layout");
+    private Button analyzeLayout = new Button("Analyze layout");
     private HorizontalPanel actions;
     private boolean collapsed = false;
 
@@ -95,6 +105,7 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
             actions.add(clear);
             actions.add(restart);
             actions.add(forceLayout);
+            actions.add(analyzeLayout);
 
             panel.add(actions);
 
@@ -139,6 +150,20 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
                     IDebugConsole.this.client.forceLayout();
                 }
             });
+
+            analyzeLayout.addClickListener(new ClickListener() {
+                public void onClick(Widget sender) {
+                    List<ApplicationConnection> runningApplications = ApplicationConfiguration
+                            .getRunningApplications();
+                    for (ApplicationConnection applicationConnection : runningApplications) {
+                        applicationConnection.analyzeLayouts();
+                    }
+                }
+            });
+            analyzeLayout
+                    .setTitle("Repaints everything with analyze flag, giving information "
+                            + "about most likely invalid layouts.");
+
         }
 
         log("Toolkit application servlet version: " + cnf.getSerletVersion());
@@ -321,4 +346,67 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
          }
      }-*/;
 
+    public void printLayoutProblems(JSONArray array, ApplicationConnection ac) {
+        log("************************");
+        int size = array.size();
+        log("Layout analyzed, total top level errors: " + size);
+        if (size > 0) {
+            Tree tree = new Tree();
+            TreeItem root = new TreeItem("Root errors");
+            for (int i = 0; i < size; i++) {
+                JSONObject error = array.get(i).isObject();
+                printLayoutError(error, root, ac);
+            }
+            panel.add(tree);
+            tree.addItem(root);
+        }
+        log("************************");
+    }
+
+    private void printLayoutError(JSONObject error, TreeItem parent,
+            final ApplicationConnection ac) {
+        final String pid = error.get("id").isString().stringValue();
+        final Paintable paintable = ac.getPaintable(pid);
+
+        TreeItem errorNode = new TreeItem();
+        VerticalPanel errorDetails = new VerticalPanel();
+        errorDetails.add(new Label("Error in " + Util.getSimpleName(paintable)
+                + " id: " + pid));
+        if (error.containsKey("heightMsg")) {
+            errorDetails.add(new Label("Height error: "
+                    + error.get("heightMsg")));
+        }
+        if (error.containsKey("widthMsg")) {
+            errorDetails
+                    .add(new Label("Width error: " + error.get("widthMsg")));
+        }
+        final CheckBox emphasisInUi = new CheckBox("Emphasis component in UI");
+        emphasisInUi.addClickListener(new ClickListener() {
+            public void onClick(Widget sender) {
+                if (paintable != null) {
+                    Element element2 = ((Widget) paintable).getElement();
+                    Widget.setStyleName(element2, "invalidlayout", emphasisInUi
+                            .isChecked());
+                }
+            }
+        });
+        errorDetails.add(emphasisInUi);
+        errorNode.setWidget(errorDetails);
+        if (error.containsKey("subErrors")) {
+            HTML l = new HTML(
+                    "<em>Expand this tree node to show errors that may be dependent about this error</em>");
+            errorDetails.add(l);
+            JSONArray array = error.get("subErrors").isArray();
+            for (int i = 0; i < array.size(); i++) {
+                JSONValue value = array.get(i);
+                if (value != null && value.isObject() != null) {
+                    printLayoutError(value.isObject(), errorNode, ac);
+                } else {
+                    System.out.print(value);
+                }
+            }
+
+        }
+        parent.addItem(errorNode);
+    }
 }

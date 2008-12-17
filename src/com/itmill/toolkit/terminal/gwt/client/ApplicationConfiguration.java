@@ -2,6 +2,7 @@ package com.itmill.toolkit.terminal.gwt.client;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -13,7 +14,8 @@ public class ApplicationConfiguration {
     private String appUri;
     private JavaScriptObject versionInfo;
 
-    private static ArrayList unstartedApplications = new ArrayList();
+    private static ArrayList<ApplicationConnection> unstartedApplications = new ArrayList<ApplicationConnection>();
+    private static ArrayList<ApplicationConnection> runningApplications = new ArrayList<ApplicationConnection>();
 
     public String getRootPanelId() {
         return id;
@@ -93,13 +95,17 @@ public class ApplicationConfiguration {
      */
     public static boolean startNextApplication() {
         if (unstartedApplications.size() > 0) {
-            ApplicationConnection a = (ApplicationConnection) unstartedApplications
-                    .remove(0);
+            ApplicationConnection a = unstartedApplications.remove(0);
             a.start();
+            runningApplications.add(a);
             return true;
         } else {
             return false;
         }
+    }
+
+    public static List<ApplicationConnection> getRunningApplications() {
+        return runningApplications;
     }
 
     private native static void loadAppIdListFromDOM(ArrayList list)

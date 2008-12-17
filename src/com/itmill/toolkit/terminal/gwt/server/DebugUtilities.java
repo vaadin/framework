@@ -1,9 +1,14 @@
 package com.itmill.toolkit.terminal.gwt.server;
 
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.Vector;
 
 import com.itmill.toolkit.terminal.Sizeable;
 import com.itmill.toolkit.ui.AbstractOrderedLayout;
@@ -29,35 +34,48 @@ public class DebugUtilities {
      * 
      * @param component
      *            component to check
+     * @return set of first level errors found
      */
-    public static boolean validateComponentRelativeSizes(Component component,
-            boolean recursive) {
+    public static List<InvalidLayout> validateComponentRelativeSizes(
+            Component component, List<InvalidLayout> errors,
+            InvalidLayout parent) {
 
-        boolean valid = checkWidths(component) && checkHeights(component);
+        boolean invalidHeight = !checkHeights(component);
+        boolean invalidWidth = !checkWidths(component);
 
-        if (recursive) {
-            if (component instanceof Panel) {
-                Panel panel = (Panel) component;
-                if (!validateComponentRelativeSizes(panel.getLayout(), false)) {
-                    valid = false;
+        if (invalidHeight || invalidWidth) {
+            InvalidLayout error = new InvalidLayout(component, invalidHeight,
+                    invalidWidth);
+            if (parent != null) {
+                parent.addError(error);
+            } else {
+                if (errors == null) {
+                    errors = new LinkedList<InvalidLayout>();
                 }
-            } else if (component instanceof ComponentContainer) {
-                ComponentContainer lo = (ComponentContainer) component;
-                Iterator it = lo.getComponentIterator();
-                while (it.hasNext()) {
-                    if (!validateComponentRelativeSizes((Component) it.next(),
-                            false)) {
-                        valid = false;
-                    }
-                }
+                errors.add(error);
+            }
+            parent = error;
+        }
+
+        if (component instanceof Panel) {
+            Panel panel = (Panel) component;
+            errors = validateComponentRelativeSizes(panel.getLayout(), errors,
+                    parent);
+        } else if (component instanceof ComponentContainer) {
+            ComponentContainer lo = (ComponentContainer) component;
+            Iterator it = lo.getComponentIterator();
+            while (it.hasNext()) {
+                errors = validateComponentRelativeSizes((Component) it.next(),
+                        errors, parent);
             }
         }
 
-        return valid;
+        return errors;
     }
 
-    private static void showError(String msg, Stack<ComponentInfo> attributes,
-            boolean widthError) {
+    private static void printServerError(String msg,
+            Stack<ComponentInfo> attributes, boolean widthError,
+            PrintStream errorStream) {
         StringBuffer err = new StringBuffer();
         err.append("IT MILL Toolkit DEBUG\n");
 
@@ -78,23 +96,72 @@ public class DebugUtilities {
         err.append("\n");
         err
                 .append("Components may be invisible or not render as expected. Relative sizes were replaced by undefined sizes.\n");
-        System.err.println(err);
+        errorStream.println(err);
 
     }
 
     public static boolean checkHeights(Component component) {
-        String msg = null;
         try {
+            if (!hasRelativeHeight(component)) {
+                return true;
+            }
             if (component instanceof Window) {
                 return true;
             }
+            return !(component.getParent() != null && parentCannotDefineHeight(component));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return true;
+        }
+    }
+
+    public static boolean checkWidths(Component component) {
+        try {
+            if (!hasRelativeWidth(component)) {
+                return true;
+            }
+            if (component instanceof Window) {
+                return true;
+            }
+            return !(component.getParent() != null && parentCannotDefineWidth(component));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return true;
+        }
+    }
+
+    public static class InvalidLayout {
+
+        private Component component;
+
+        private boolean invalidHeight;
+        private boolean invalidWidth;
+
+        private Vector<InvalidLayout> subErrors = new Vector<InvalidLayout>();
+
+        public InvalidLayout(Component component, boolean height, boolean width) {
+            this.component = component;
+            invalidHeight = height;
+            invalidWidth = width;
+        }
+
+        public void addError(InvalidLayout error) {
+            subErrors.add(error);
+        }
+
+        public void reportErrors(PrintWriter clientJSON,
+                CommunicationManager communicationManager,
+                PrintStream serverErrorStream) {
+            clientJSON.write("{");
 
             Component parent = component.getParent();
-            Stack<ComponentInfo> attributes = null;
+            String paintableId = communicationManager.getPaintableId(component);
 
-            if (hasRelativeHeight(component) && parent != null
-                    && parentCannotDefineHeight(parent, component)) {
+            clientJSON.print("id:\"" + paintableId + "\"");
 
+            if (invalidHeight) {
+                Stack<ComponentInfo> attributes = null;
+                String msg = "";
                 // set proper error messages
                 if (parent instanceof AbstractOrderedLayout) {
                     AbstractOrderedLayout ol = (AbstractOrderedLayout) parent;
@@ -123,29 +190,12 @@ public class DebugUtilities {
                     msg = "Relative height component's parent should not have undefined height.";
                     attributes = getHeightAttributes(component);
                 }
+                printServerError(msg, attributes, false, serverErrorStream);
+                clientJSON.print(",\"heightMsg\":\"" + msg + "\"");
             }
-
-            if (msg != null) {
-                showError(msg, attributes, false);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return (msg == null);
-    }
-
-    public static boolean checkWidths(Component component) {
-        String msg = null;
-        try {
-            if (component instanceof Window) {
-                return true;
-            }
-
-            Component parent = component.getParent();
-            Stack<ComponentInfo> attributes = null;
-
-            if (hasRelativeWidth(component) && parent != null
-                    && parentCannotDefineWidth(parent, component)) {
+            if (invalidWidth) {
+                Stack<ComponentInfo> attributes = null;
+                String msg = "";
                 if (parent instanceof AbstractOrderedLayout) {
                     AbstractOrderedLayout ol = (AbstractOrderedLayout) parent;
                     boolean horizontal = true;
@@ -173,16 +223,27 @@ public class DebugUtilities {
                     msg = "Relative width component's parent should not have undefined width.";
                     attributes = getWidthAttributes(component);
                 }
+                clientJSON.print(",\"widthMsg\":\"" + msg + "\"");
+                printServerError(msg, attributes, true, serverErrorStream);
             }
-
-            if (msg != null) {
-                showError(msg, attributes, true);
+            if (subErrors.size() > 0) {
+                serverErrorStream.println("Sub erros >>");
+                clientJSON.write(", \"subErrors\" : [");
+                boolean first = true;
+                for (InvalidLayout subError : subErrors) {
+                    if (first) {
+                        clientJSON.print(",");
+                    } else {
+                        first = false;
+                    }
+                    subError.reportErrors(clientJSON, communicationManager,
+                            serverErrorStream);
+                }
+                clientJSON.write("]");
+                serverErrorStream.println("<< Sub erros");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            clientJSON.write("}");
         }
-
-        return (msg == null);
     }
 
     private static class ComponentInfo {
@@ -316,8 +377,12 @@ public class DebugUtilities {
         return false;
     }
 
-    private static boolean parentCannotDefineHeight(Component parent,
-            Component component) {
+    public static boolean parentCannotDefineHeight(Component component) {
+        Component parent = component.getParent();
+        if (parent == null) {
+            // main window, valid situation
+            return false;
+        }
         if (parent.getHeight() < 0) {
             if (parent instanceof Window) {
                 Window w = (Window) parent;
@@ -375,7 +440,7 @@ public class DebugUtilities {
 
         } else {
             if (hasRelativeHeight(parent) && parent.getParent() != null) {
-                return parentCannotDefineHeight(parent.getParent(), parent);
+                return parentCannotDefineHeight(parent);
             } else {
                 return false;
             }
@@ -402,8 +467,12 @@ public class DebugUtilities {
                 && paintable.getWidthUnits() == Sizeable.UNITS_PERCENTAGE;
     }
 
-    private static boolean parentCannotDefineWidth(Component parent,
-            Component component) {
+    public static boolean parentCannotDefineWidth(Component component) {
+        Component parent = component.getParent();
+        if (parent == null) {
+            // main window, valid situation
+            return false;
+        }
         if (parent instanceof Window) {
             Window w = (Window) parent;
             if (w.getParent() == null) {
@@ -469,7 +538,7 @@ public class DebugUtilities {
             }
         } else {
             if (hasRelativeWidth(parent) && parent.getParent() != null) {
-                return parentCannotDefineWidth(parent.getParent(), parent);
+                return parentCannotDefineWidth(parent);
             } else {
                 return false;
             }

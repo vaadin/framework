@@ -609,22 +609,15 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
             // Only paint content of visible components.
             if (isVisible()) {
-                boolean validHeight = true;
-                boolean validWidth = true;
-
-                if (getApplication() != null && getApplication().isDebugMode()) {
-                    validHeight = DebugUtilities.checkHeights(this);
-                    validWidth = DebugUtilities.checkWidths(this);
-                }
-                if (!validHeight || !validWidth) {
-                    addStyleName("invalidlayout");
-                }
-
-                if (validHeight && getHeight() >= 0) {
+                if (getHeight() >= 0
+                        && (getHeightUnits() != UNITS_PERCENTAGE || !DebugUtilities
+                                .parentCannotDefineHeight(this))) {
                     target.addAttribute("height", "" + getCSSHeight());
                 }
 
-                if (validWidth && getWidth() >= 0) {
+                if (getWidth() >= 0
+                        && (getWidthUnits() != UNITS_PERCENTAGE || !DebugUtilities
+                                .parentCannotDefineWidth(this))) {
                     target.addAttribute("width", "" + getCSSWidth());
                 }
                 if (styles != null && styles.size() > 0) {

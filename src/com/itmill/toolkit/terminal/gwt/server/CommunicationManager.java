@@ -54,6 +54,7 @@ import com.itmill.toolkit.terminal.VariableOwner;
 import com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent;
 import com.itmill.toolkit.terminal.Terminal.ErrorEvent;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.server.DebugUtilities.InvalidLayout;
 import com.itmill.toolkit.ui.AbstractField;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.Upload;
@@ -87,6 +88,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
     private final HashSet currentlyOpenWindowsInClient = new HashSet();
 
     private static final int MAX_BUFFER_SIZE = 64 * 1024;
+
+    private static final String GET_PARAM_ANALYZE_LAYOUTS = "analyzeLayouts";
 
     private final ArrayList dirtyPaintabletSet = new ArrayList();
 
@@ -225,6 +228,11 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
         // repaint requested or session has timed out and new one is created
         boolean repaintAll = (request.getParameter(GET_PARAM_REPAINT_ALL) != null)
                 || request.getSession().isNew();
+        boolean analyzeLayouts = false;
+        if (repaintAll) {
+            // analyzing can be done only with repaintAll
+            analyzeLayouts = (request.getParameter(GET_PARAM_ANALYZE_LAYOUTS) != null);
+        }
 
         final OutputStream out = response.getOutputStream();
         final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
@@ -286,7 +294,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
             }
 
             paintAfterVariablechanges(request, response, applicationServlet,
-                    repaintAll, outWriter, window);
+                    repaintAll, outWriter, window, analyzeLayouts);
 
             // Mark this window to be open on client
             currentlyOpenWindowsInClient.add(window.getName());
@@ -303,8 +311,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
     private void paintAfterVariablechanges(HttpServletRequest request,
             HttpServletResponse response,
             ApplicationServlet applicationServlet, boolean repaintAll,
-            final PrintWriter outWriter, Window window) throws IOException,
-            ServletException, PaintException {
+            final PrintWriter outWriter, Window window, boolean analyzeLayouts)
+            throws IOException, ServletException, PaintException {
 
         // If repaint is requested, clean all ids in this root window
         if (repaintAll) {
@@ -336,6 +344,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
         // If the browser-window has been closed - we do not need to paint it at
         // all
         if (!window.getName().equals(closingWindowName)) {
+
+            List<InvalidLayout> invalidComponentRelativeSizes = null;
 
             // re-get window - may have been changed
             Window newWindow = getApplicationWindow(request, application,
@@ -434,6 +444,12 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                         paintTarget.endTag("change");
                     }
                     paintablePainted(p);
+
+                    if (analyzeLayouts) {
+                        invalidComponentRelativeSizes = DebugUtilities
+                                .validateComponentRelativeSizes(((Window) p)
+                                        .getLayout(), null, null);
+                    }
                 }
             }
 
@@ -446,6 +462,23 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
             if (repaintAll) {
                 metaOpen = true;
                 outWriter.write("\"repaintAll\":true");
+                if (analyzeLayouts) {
+                    outWriter.write(", \"invalidLayouts\":");
+                    outWriter.write("[");
+                    if (invalidComponentRelativeSizes != null) {
+                        boolean first = true;
+                        for (InvalidLayout invalidLayout : invalidComponentRelativeSizes) {
+                            if (!first) {
+                                outWriter.write(",");
+                            } else {
+                                first = false;
+                            }
+                            invalidLayout.reportErrors(outWriter, this,
+                                    System.err);
+                        }
+                    }
+                    outWriter.write("]");
+                }
             }
 
             SystemMessages ci = null;
@@ -727,7 +760,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                             new CharArrayWriter());
                     try {
                         paintAfterVariablechanges(request, response,
-                                applicationServlet, true, outWriter, window);
+                                applicationServlet, true, outWriter, window,
+                                false);
                     } catch (ServletException e) {
                         // We will ignore all servlet exceptions
                     }

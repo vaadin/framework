@@ -169,7 +169,7 @@ public class ApplicationConnection {
      * to avoid session-id problems.
      */
     void start() {
-        makeUidlRequest("", true, false);
+        makeUidlRequest("", true, false, false);
     }
 
     /**
@@ -294,7 +294,7 @@ public class ApplicationConnection {
     }
 
     private void makeUidlRequest(String requestData, boolean repaintAll,
-            boolean forceSync) {
+            boolean forceSync, boolean analyzeLayouts) {
         startRequest();
 
         // Security: double cookie submission pattern
@@ -304,6 +304,9 @@ public class ApplicationConnection {
         String uri = getAppUri() + "UIDL" + configuration.getPathInfo();
         if (repaintAll) {
             uri += "?repaintAll=1";
+            if (analyzeLayouts) {
+                uri += "&analyzeLayouts=1";
+            }
         }
         if (windowName != null && windowName.length() > 0) {
             uri += (repaintAll ? "&" : "?") + "windowName=" + windowName;
@@ -683,6 +686,10 @@ public class ApplicationConnection {
                 }
                 applicationRunning = false;
             }
+            if (meta.containsKey("invalidLayouts")) {
+                getConsole().printLayoutProblems(
+                        meta.get("invalidLayouts").isArray(), this);
+            }
         }
 
         final long prosessingTime = (new Date().getTime()) - start.getTime();
@@ -836,7 +843,7 @@ public class ApplicationConnection {
                 req.append(VAR_BURST_SEPARATOR);
             }
         }
-        makeUidlRequest(req.toString(), false, forceSync);
+        makeUidlRequest(req.toString(), false, forceSync, false);
     }
 
     public void updateVariable(String paintableId, String variableName,
@@ -1476,5 +1483,9 @@ public class ApplicationConnection {
 
     public void captionSizeUpdated(Widget component) {
         captionSizeChanges.add(component);
+    }
+
+    public void analyzeLayouts() {
+        makeUidlRequest("", true, false, true);
     }
 }
