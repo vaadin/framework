@@ -56,6 +56,11 @@
 }
 .i-button img {
 	display:inline;
+	vertical-align: middle;
+	margin-right: 3px;
+}
+.i-button span {
+	vertical-align: middle;
 }
 
 .i-button-link {
