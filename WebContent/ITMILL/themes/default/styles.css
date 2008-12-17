@@ -54,12 +54,15 @@
 	white-space: nowrap;
 	margin: 0px;
 }
-.i-button img {
+.i-checkbox input {
+	vertical-align: middle;
+}
+.i-button img, .i-checkbox img {
 	display:inline;
 	vertical-align: middle;
 	margin-right: 3px;
 }
-.i-button span {
+.i-button span, .i-checkbox label {
 	vertical-align: middle;
 }
 
@@ -397,6 +400,10 @@ input.i-modified,
 	font-size: 13px;
 	line-height: 18px;
 	color: #464f52;
+	vertical-align: middle;
+}
+.i-link img {
+	vertical-align: middle;
 }
 
 /**
@@ -1005,6 +1012,10 @@ input.i-modified,
 
 .i-panel-caption .i-icon {
 	display:inline;
+	vertical-align: middle;
+}
+.i-panel-caption span {
+	vertical-align: middle;
 }
 
 .i-panel-caption,

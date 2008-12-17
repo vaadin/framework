@@ -22,6 +22,10 @@
 
 .i-panel-caption .i-icon {
 	display:inline;
+	vertical-align: middle;
+}
+.i-panel-caption span {
+	vertical-align: middle;
 }
 
 .i-panel-caption,

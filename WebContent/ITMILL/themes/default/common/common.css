@@ -223,6 +223,10 @@ input.i-modified,
 	font-size: 13px;
 	line-height: 18px;
 	color: #464f52;
+	vertical-align: middle;
+}
+.i-link img {
+	vertical-align: middle;
 }
 
 /**

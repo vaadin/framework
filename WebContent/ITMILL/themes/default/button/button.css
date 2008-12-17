@@ -4,12 +4,15 @@
 	white-space: nowrap;
 	margin: 0px;
 }
-.i-button img {
+.i-checkbox input {
+	vertical-align: middle;
+}
+.i-button img, .i-checkbox img {
 	display:inline;
 	vertical-align: middle;
 	margin-right: 3px;
 }
-.i-button span {
+.i-button span, .i-checkbox label {
 	vertical-align: middle;
 }
 
