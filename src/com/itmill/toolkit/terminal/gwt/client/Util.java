@@ -671,7 +671,8 @@ public class Util {
     private static native String getComputedStyle(
             com.google.gwt.dom.client.Element el, String p)
     /*-{
-
+        try {
+        
         if (el.currentStyle) {
             // IE
             return el.currentStyle[p];
@@ -680,6 +681,9 @@ public class Util {
             return document.defaultView.getComputedStyle(el,null).getPropertyValue(p);
         } else {
             // fall back for non IE, Sa, FF, Opera
+            return "";
+        }
+        } catch (e) {
             return "";
         }
 
