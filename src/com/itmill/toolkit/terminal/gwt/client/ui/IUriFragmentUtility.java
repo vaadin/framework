@@ -29,6 +29,7 @@ public class IUriFragmentUtility extends Widget implements Paintable,
             getElement().getStyle().setProperty("height", "0");
         }
         History.addHistoryListener(this);
+        History.fireCurrentHistoryState();
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -41,12 +42,11 @@ public class IUriFragmentUtility extends Widget implements Paintable,
             // initial paint has some special logic
             this.client = client;
             paintableId = uidl.getId();
-            if ("".equals(uidlFragment)) {
-                // empty fragment, send initial fragment to server
+            if (!fragment.equals(uidlFragment)) {
+                // initial server side fragment (from link/bookmark/typed) does
+                // not equal the one on
+                // server, send initial fragment to server
                 History.fireCurrentHistoryState();
-            } else {
-                // fragment initially exists server side, set that
-                History.newItem(uidlFragment, false);
             }
         } else {
             if (uidlFragment != null && !uidlFragment.equals(fragment)) {
