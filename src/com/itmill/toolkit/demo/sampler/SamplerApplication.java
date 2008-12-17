@@ -53,9 +53,7 @@ public class SamplerApplication extends Application {
     public void init() {
         setTheme("sampler");
         setMainWindow(new SamplerWindow());
-        if (APP_URL == null) {
-            APP_URL = getURL().toString();
-        }
+        APP_URL = getURL().toString();
     }
 
     /**
