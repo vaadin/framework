@@ -231,7 +231,7 @@ public class DebugUtilities {
                 clientJSON.write(", \"subErrors\" : [");
                 boolean first = true;
                 for (InvalidLayout subError : subErrors) {
-                    if (first) {
+                    if (!first) {
                         clientJSON.print(",");
                     } else {
                         first = false;
