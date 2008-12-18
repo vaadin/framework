@@ -33,6 +33,7 @@ import com.itmill.toolkit.terminal.gwt.client.MouseEventDetails;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.Util;
 import com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.IScrollTableRow;
 
 /**
@@ -2333,8 +2334,8 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
      */
     private int getBorderWidth() {
         if (borderWidth < 0) {
-            borderWidth = bodyContainer.getOffsetWidth()
-                    - bodyContainer.getElement().getPropertyInt("clientWidth");
+            borderWidth = Util.measureHorizontalPaddingAndBorder(bodyContainer
+                    .getElement(), 2);
             if (borderWidth < 0) {
                 borderWidth = 0;
             }
