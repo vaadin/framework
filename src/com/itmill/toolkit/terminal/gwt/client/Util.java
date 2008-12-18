@@ -650,10 +650,11 @@ public class Util {
     }
 
     /**
-     * Detects what is currently the oveflow style attribute in given element.
+     * Detects what is currently the overflow style attribute in given element.
      * 
      * @param pe
-     * @return
+     *            the element to detect
+     * @return true if auto or scroll
      */
     public static boolean mayHaveScrollBars(com.google.gwt.dom.client.Element pe) {
         String overflow = getComputedStyle(pe, "overflow");
@@ -668,6 +669,17 @@ public class Util {
         }
     }
 
+    /**
+     * A simple helper method to detect "computed style" (aka style sheets +
+     * element styles). Values returned differ a lot depending on browsers.
+     * Always be very careful when using this.
+     * 
+     * @param el
+     *            the element from which the style property is detected
+     * @param p
+     *            the property to detect
+     * @return String value of style property
+     */
     private static native String getComputedStyle(
             com.google.gwt.dom.client.Element el, String p)
     /*-{
