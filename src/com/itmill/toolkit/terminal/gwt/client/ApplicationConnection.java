@@ -127,7 +127,13 @@ public class ApplicationConnection {
     private ArrayList<Paintable> relativeSizeChanges = new ArrayList<Paintable>();;
     private ArrayList<Paintable> componentCaptionSizeChanges = new ArrayList<Paintable>();;
 
-    private Date requestStartTime;;
+    private Date requestStartTime;
+
+    private boolean validatingLayouts = false;
+
+    private Set<Paintable> zeroWidthComponents = null;
+
+    private Set<Paintable> zeroHeightComponents = null;
 
     public ApplicationConnection(WidgetSet widgetSet,
             ApplicationConfiguration cnf) {
@@ -576,6 +582,11 @@ public class ApplicationConnection {
                 view.clear();
                 idToPaintable.clear();
                 paintableToId.clear();
+                if (meta.containsKey("invalidLayouts")) {
+                    validatingLayouts = true;
+                    zeroWidthComponents = new HashSet<Paintable>();
+                    zeroHeightComponents = new HashSet<Paintable>();
+                }
             }
             if (meta.containsKey("timedRedirect")) {
                 final JSONObject timedRedirect = meta.get("timedRedirect")
@@ -686,9 +697,14 @@ public class ApplicationConnection {
                 }
                 applicationRunning = false;
             }
-            if (meta.containsKey("invalidLayouts")) {
+            if (validatingLayouts) {
                 getConsole().printLayoutProblems(
-                        meta.get("invalidLayouts").isArray(), this);
+                        meta.get("invalidLayouts").isArray(), this,
+                        zeroHeightComponents, zeroWidthComponents);
+                zeroHeightComponents = null;
+                zeroWidthComponents = null;
+                validatingLayouts = false;
+
             }
         }
 
@@ -1223,6 +1239,10 @@ public class ApplicationConnection {
                 if (horizontalScrollBar) {
                     height -= renderSpace.getScrollbarSize();
                 }
+                if (validatingLayouts && height <= 0) {
+                    zeroHeightComponents.add((Paintable) child);
+                }
+
                 height = (int) (height * relativeSize.getHeight() / 100.0);
 
                 if (height < 0) {
@@ -1278,6 +1298,10 @@ public class ApplicationConnection {
                 if (verticalScrollBar) {
                     width -= renderSpace.getScrollbarSize();
                 }
+                if (validatingLayouts && width <= 0) {
+                    zeroWidthComponents.add((Paintable) child);
+                }
+
                 width = (int) (width * relativeSize.getWidth() / 100.0);
 
                 if (width < 0) {

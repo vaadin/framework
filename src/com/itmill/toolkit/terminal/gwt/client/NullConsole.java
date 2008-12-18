@@ -4,6 +4,8 @@
 
 package com.itmill.toolkit.terminal.gwt.client;
 
+import java.util.Set;
+
 import com.google.gwt.json.client.JSONArray;
 
 /**
@@ -25,7 +27,10 @@ public class NullConsole implements Console {
     public void printObject(Object msg) {
     }
 
-    public void printLayoutProblems(JSONArray array, ApplicationConnection ac) {
+    public void printLayoutProblems(JSONArray array,
+            ApplicationConnection applicationConnection,
+            Set<Paintable> zeroHeightComponents,
+            Set<Paintable> zeroWidthComponents) {
     }
 
 }

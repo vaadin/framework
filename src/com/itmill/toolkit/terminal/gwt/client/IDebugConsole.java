@@ -5,6 +5,7 @@
 package com.itmill.toolkit.terminal.gwt.client;
 
 import java.util.List;
+import java.util.Set;
 
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
@@ -348,10 +349,13 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
          }
      }-*/;
 
-    public void printLayoutProblems(JSONArray array, ApplicationConnection ac) {
-        log("************************");
+    public void printLayoutProblems(JSONArray array, ApplicationConnection ac,
+            Set<Paintable> zeroHeightComponents,
+            Set<Paintable> zeroWidthComponents) {
         int size = array.size();
-        log("Layouts analyzed, total top level errors: " + size);
+        panel.add(new HTML("<div>************************</di>"
+                + "<h4>Layouts analyzed on server, total top level errors: "
+                + size + " </h4>"));
         if (size > 0) {
             Tree tree = new Tree();
             TreeItem root = new TreeItem("Root errors");
@@ -361,8 +365,51 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
             }
             panel.add(tree);
             tree.addItem(root);
+
+            if (zeroHeightComponents.size() > 0
+                    || zeroWidthComponents.size() > 0) {
+                panel.add(new HTML("<h4> Client side notifications</h4>"
+                        + " <em>Following relative sized components where "
+                        + "rendered to zero size container on client side."
+                        + " Note that these are not necessary invalid "
+                        + "states. Just reported here as they might be.</em>"));
+                if (zeroHeightComponents.size() > 0) {
+                    panel.add(new HTML(
+                            "<p><strong>Vertically zero size:</strong><p>"));
+                    printClientSideDetectedIssues(zeroHeightComponents, ac);
+                }
+                if (zeroWidthComponents.size() > 0) {
+                    panel.add(new HTML(
+                            "<p><strong>Horizontally zero size:</strong><p>"));
+                    printClientSideDetectedIssues(zeroWidthComponents, ac);
+                }
+            }
         }
         log("************************");
+    }
+
+    private void printClientSideDetectedIssues(
+            Set<Paintable> zeroHeightComponents, ApplicationConnection ac) {
+        for (final Paintable paintable : zeroHeightComponents) {
+            final Container layout = Util.getLayout((Widget) paintable);
+
+            VerticalPanel errorDetails = new VerticalPanel();
+            errorDetails.add(new Label("" + Util.getSimpleName(paintable)
+                    + " inside " + Util.getSimpleName(layout)));
+            final CheckBox emphasisInUi = new CheckBox(
+                    "Emphasis components parent in UI (actual component not visible)");
+            emphasisInUi.addClickListener(new ClickListener() {
+                public void onClick(Widget sender) {
+                    if (paintable != null) {
+                        Element element2 = ((Widget) layout).getElement();
+                        Widget.setStyleName(element2, "invalidlayout",
+                                emphasisInUi.isChecked());
+                    }
+                }
+            });
+            errorDetails.add(emphasisInUi);
+            panel.add(errorDetails);
+        }
     }
 
     private void printLayoutError(JSONObject error, TreeItem parent,
