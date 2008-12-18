@@ -52,7 +52,7 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
     private Button clear = new Button("Clear console");
     private Button restart = new Button("Restart app");
     private Button forceLayout = new Button("Force layout");
-    private Button analyzeLayout = new Button("Analyze layout");
+    private Button analyzeLayout = new Button("Analyze layouts");
     private HorizontalPanel actions;
     private boolean collapsed = false;
 
@@ -161,8 +161,10 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
                 }
             });
             analyzeLayout
-                    .setTitle("Repaints everything with analyze flag, giving information "
-                            + "about most likely invalid layouts.");
+                    .setTitle("Analyzes currently rendered view and "
+                            + "reports possible common problems in usage of relative sizes."
+                            + "Will cause server visit/rendering of whole screen + lose of"
+                            + " all non committed variables form client side.");
 
         }
 
@@ -349,7 +351,7 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
     public void printLayoutProblems(JSONArray array, ApplicationConnection ac) {
         log("************************");
         int size = array.size();
-        log("Layout analyzed, total top level errors: " + size);
+        log("Layouts analyzed, total top level errors: " + size);
         if (size > 0) {
             Tree tree = new Tree();
             TreeItem root = new TreeItem("Root errors");
@@ -394,7 +396,7 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
         errorNode.setWidget(errorDetails);
         if (error.containsKey("subErrors")) {
             HTML l = new HTML(
-                    "<em>Expand this tree node to show errors that may be dependent about this error</em>");
+                    "<em>Expand this node to show errors that may be dependent on this error.</em>");
             errorDetails.add(l);
             JSONArray array = error.get("subErrors").isArray();
             for (int i = 0; i < array.size(); i++) {
