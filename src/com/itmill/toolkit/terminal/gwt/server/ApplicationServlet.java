@@ -1143,7 +1143,7 @@ public class ApplicationServlet extends HttpServlet {
             throws IOException {
 
         if (stream.getParameter("Location") != null) {
-            response.setStatus(HttpServletResponse.SC_FOUND);
+            response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
             response.addHeader("Location", stream.getParameter("Location"));
             return;
         }
