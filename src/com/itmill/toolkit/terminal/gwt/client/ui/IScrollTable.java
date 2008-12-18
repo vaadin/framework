@@ -2228,16 +2228,14 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                 HeaderCell headerCell = tHead.getHeaderCell(i);
                 if (headerCell != null) {
                     if (initializedAndAttached) {
-                        w = headerCell.getWidth() - CELL_EXTRA_WIDTH
-                                - CELL_CONTENT_PADDING;
+                        w = headerCell.getWidth() - CELL_CONTENT_PADDING;
                     } else {
                         // header offset width is not absolutely correct value,
                         // but
                         // a best guess (expecting similar content in all
                         // columns ->
                         // if one component is relative width so are others)
-                        w = headerCell.getOffsetWidth() - CELL_EXTRA_WIDTH
-                                - CELL_CONTENT_PADDING;
+                        w = headerCell.getOffsetWidth() - CELL_CONTENT_PADDING;
                     }
                 }
                 return new RenderSpace(w, getRowHeight());
