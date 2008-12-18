@@ -72,7 +72,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
             { "Getting started", "Choices, choices",
                     "Some variations of simple selects", SelectExample.class },
             // Layouts
-            { "Getting started", "Layouts", "Laying out components",
+            { "Layouts", "Basic layouts", "Laying out components",
                     LayoutExample.class },
             // Layouts
             { "Layouts", "Accordion", "Play the Accordion!",
