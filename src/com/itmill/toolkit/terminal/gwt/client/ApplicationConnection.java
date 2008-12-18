@@ -124,8 +124,8 @@ public class ApplicationConnection {
     /** redirectTimer scheduling interval in seconds */
     private int sessionExpirationInterval;
 
-    private ArrayList<Widget> relativeSizeChanges = new ArrayList<Widget>();;
-    private ArrayList<Widget> captionSizeChanges = new ArrayList<Widget>();
+    private ArrayList<Paintable> relativeSizeChanges = new ArrayList<Paintable>();;
+    private ArrayList<Paintable> componentCaptionSizeChanges = new ArrayList<Paintable>();;
 
     private Date requestStartTime;;
 
@@ -598,9 +598,9 @@ public class ApplicationConnection {
         final JSONArray changes = (JSONArray) ((JSONObject) json)
                 .get("changes");
 
-        Vector<Widget> updatedWidgets = new Vector<Widget>();
+        Vector<Paintable> updatedWidgets = new Vector<Paintable>();
         relativeSizeChanges.clear();
-        captionSizeChanges.clear();
+        componentCaptionSizeChanges.clear();
 
         for (int i = 0; i < changes.size(); i++) {
             try {
@@ -619,8 +619,7 @@ public class ApplicationConnection {
                     paintable.updateFromUIDL(uidl, this);
                     // paintable may have changed during render to another
                     // implementation, use the new one for updated widgets map
-                    updatedWidgets
-                            .add((Widget) idToPaintable.get(uidl.getId()));
+                    updatedWidgets.add(idToPaintable.get(uidl.getId()));
                 } else {
                     if (!uidl.getTag().equals("window")) {
                         ClientExceptionHandler
@@ -638,18 +637,19 @@ public class ApplicationConnection {
         }
 
         // Check which widgets' size has been updated
-        Set<Widget> sizeUpdatedWidgets = new HashSet<Widget>();
+        Set<Paintable> sizeUpdatedWidgets = new HashSet<Paintable>();
 
         updatedWidgets.addAll(relativeSizeChanges);
-        sizeUpdatedWidgets.addAll(captionSizeChanges);
+        sizeUpdatedWidgets.addAll(componentCaptionSizeChanges);
 
-        for (Widget widget : updatedWidgets) {
+        for (Paintable paintable : updatedWidgets) {
+            Widget widget = (Widget) paintable;
             Size oldSize = componentOffsetSizes.get(widget);
             Size newSize = new Size(widget.getOffsetWidth(), widget
                     .getOffsetHeight());
 
             if (oldSize == null || !oldSize.equals(newSize)) {
-                sizeUpdatedWidgets.add(widget);
+                sizeUpdatedWidgets.add(paintable);
                 componentOffsetSizes.put(widget, newSize);
             }
 
@@ -1088,12 +1088,12 @@ public class ApplicationConnection {
             if (componentRelativeSizes.put(component, relativeSize) == null
                     && componentOffsetSizes.containsKey(component)) {
                 // The component has changed from absolute size to relative size
-                relativeSizeChanges.add(component);
+                relativeSizeChanges.add((Paintable) component);
             }
         } else if (relativeHeight < 0.0 && relativeWidth < 0.0) {
             if (componentRelativeSizes.remove(component) != null) {
                 // The component has changed from relative size to absolute size
-                relativeSizeChanges.add(component);
+                relativeSizeChanges.add((Paintable) component);
             }
         }
 
@@ -1138,7 +1138,7 @@ public class ApplicationConnection {
      * development. Published to JavaScript.
      */
     public void forceLayout() {
-        Util.componentSizeUpdated((Set) paintableToId.keySet());
+        Util.componentSizeUpdated(paintableToId.keySet());
     }
 
     private void internalRunDescendentsLayout(HasWidgets container) {
@@ -1180,6 +1180,8 @@ public class ApplicationConnection {
      * @return true if the child has a relative size
      */
     public boolean handleComponentRelativeSize(Widget child) {
+        final boolean debugSizes = false;
+
         Widget widget = child;
         FloatSize relativeSize = getRelativeSize(child);
         if (relativeSize == null) {
@@ -1200,6 +1202,7 @@ public class ApplicationConnection {
         } else {
             renderSpace = parent.getAllocatedSpace(widget);
         }
+
         if (relativeSize.getHeight() >= 0) {
             if (renderSpace != null) {
 
@@ -1226,14 +1229,25 @@ public class ApplicationConnection {
                     height = 0;
                 }
 
-                // getConsole().log(
-                // "Widget " + Util.getSimpleName(widget) + "/"
-                // + widget.hashCode() + " relative height "
-                // + relativeSize.getHeight() + "% of "
-                // + renderSpace.getHeight() + "px (reported by "
-                //
-                // + Util.getSimpleName(parent) + "/"
-                // + parent.hashCode() + ") : " + height + "px");
+                if (debugSizes) {
+                    getConsole()
+                            .log(
+                                    "Widget "
+                                            + Util.getSimpleName(widget)
+                                            + "/"
+                                            + widget.hashCode()
+                                            + " relative height "
+                                            + relativeSize.getHeight()
+                                            + "% of "
+                                            + renderSpace.getHeight()
+                                            + "px (reported by "
+
+                                            + Util.getSimpleName(parent)
+                                            + "/"
+                                            + (parent == null ? "?" : parent
+                                                    .hashCode()) + ") : "
+                                            + height + "px");
+                }
                 widget.setHeight(height + "px");
             } else {
                 widget.setHeight(relativeSize.getHeight() + "%");
@@ -1270,13 +1284,24 @@ public class ApplicationConnection {
                     width = 0;
                 }
 
-                // getConsole().log(
-                // "Widget " + Util.getSimpleName(widget) + "/"
-                // + widget.hashCode() + " relative width "
-                // + relativeSize.getWidth() + "% of "
-                // + renderSpace.getWidth() + "px (reported by "
-                // + Util.getSimpleName(parent) + "/"
-                // + parent.hashCode() + ") : " + width + "px");
+                if (debugSizes) {
+                    getConsole()
+                            .log(
+                                    "Widget "
+                                            + Util.getSimpleName(widget)
+                                            + "/"
+                                            + widget.hashCode()
+                                            + " relative width "
+                                            + relativeSize.getWidth()
+                                            + "% of "
+                                            + renderSpace.getWidth()
+                                            + "px (reported by "
+                                            + Util.getSimpleName(parent)
+                                            + "/"
+                                            + (parent == null ? "?" : parent
+                                                    .hashCode()) + ") : "
+                                            + width + "px");
+                }
                 widget.setWidth(width + "px");
             } else {
                 widget.setWidth(relativeSize.getWidth() + "%");
@@ -1481,8 +1506,8 @@ public class ApplicationConnection {
         windowName = newName;
     }
 
-    public void captionSizeUpdated(Widget component) {
-        captionSizeChanges.add(component);
+    public void captionSizeUpdated(Paintable component) {
+        componentCaptionSizeChanges.add(component);
     }
 
     public void analyzeLayouts() {

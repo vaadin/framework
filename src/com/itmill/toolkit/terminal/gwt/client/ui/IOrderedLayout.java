@@ -815,7 +815,7 @@ public class IOrderedLayout extends CellBasedLayout {
              * This was a component-only update and the possible size change
              * must be propagated to the layout
              */
-            client.captionSizeUpdated((Widget) component);
+            client.captionSizeUpdated(component);
         }
     }
 

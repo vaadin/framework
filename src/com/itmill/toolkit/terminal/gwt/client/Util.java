@@ -36,7 +36,7 @@ public class Util {
     }-*/;
 
     private static final int LAZY_SIZE_CHANGE_TIMEOUT = 400;
-    private static Set<Widget> latelyChangedWidgets = new HashSet<Widget>();
+    private static Set<Paintable> latelyChangedWidgets = new HashSet<Paintable>();
 
     private static Timer lazySizeChangeTimer = new Timer() {
         private boolean lazySizeChangeTimerScheduled = false;
@@ -74,7 +74,7 @@ public class Util {
      * @param lazy
      *            run componentSizeUpdated lazyly
      */
-    public static void notifyParentOfSizeChange(Widget widget, boolean lazy) {
+    public static void notifyParentOfSizeChange(Paintable widget, boolean lazy) {
         if (!(widget instanceof Paintable)) {
             ApplicationConnection.getConsole().log(
                     "Notified widget must be paintable not "
@@ -85,7 +85,7 @@ public class Util {
             latelyChangedWidgets.add(widget);
             lazySizeChangeTimer.schedule(LAZY_SIZE_CHANGE_TIMEOUT);
         } else {
-            Set<Widget> widgets = new HashSet<Widget>();
+            Set<Paintable> widgets = new HashSet<Paintable>();
             widgets.add(widget);
             Util.componentSizeUpdated(widgets);
         }
@@ -97,18 +97,17 @@ public class Util {
      * 
      * @param widgets
      */
-    public static void componentSizeUpdated(Set<Widget> widgets) {
+    public static void componentSizeUpdated(Set<Paintable> widgets) {
         if (widgets.isEmpty()) {
             return;
         }
 
         Map<Container, Set<Paintable>> childWidgets = new HashMap<Container, Set<Paintable>>();
 
-        for (Widget widget : widgets) {
+        for (Paintable widget : widgets) {
             ApplicationConnection.getConsole().log(
                     "Widget " + Util.getSimpleName(widget) + " size updated");
-
-            Widget parent = widget.getParent();
+            Widget parent = ((Widget) widget).getParent();
             while (parent != null && !(parent instanceof Container)) {
                 parent = parent.getParent();
             }
@@ -118,14 +117,14 @@ public class Util {
                     set = new HashSet<Paintable>();
                     childWidgets.put((Container) parent, set);
                 }
-                set.add((Paintable) widget);
+                set.add(widget);
             }
         }
 
-        Set<Widget> parentChanges = new HashSet<Widget>();
+        Set<Paintable> parentChanges = new HashSet<Paintable>();
         for (Container parent : childWidgets.keySet()) {
             if (!parent.requestLayout(childWidgets.get(parent))) {
-                parentChanges.add((Widget) parent);
+                parentChanges.add(parent);
             }
         }
 
@@ -594,11 +593,11 @@ public class Util {
     public static void updateRelativeChildrenAndSendSizeUpdateEvent(
             ApplicationConnection client, HasWidgets container) {
         updateRelativeChildrenAndSendSizeUpdateEvent(client, container,
-                (Widget) container);
+                (Paintable) container);
     }
 
     public static void updateRelativeChildrenAndSendSizeUpdateEvent(
-            ApplicationConnection client, HasWidgets container, Widget widget) {
+            ApplicationConnection client, HasWidgets container, Paintable widget) {
         /*
          * Relative sized children must be updated first so the component has
          * the correct outer dimensions when signaling a size change to the
@@ -610,7 +609,7 @@ public class Util {
             client.handleComponentRelativeSize(w);
         }
 
-        HashSet<Widget> widgets = new HashSet<Widget>();
+        HashSet<Paintable> widgets = new HashSet<Paintable>();
         widgets.add(widget);
         Util.componentSizeUpdated(widgets);
     }

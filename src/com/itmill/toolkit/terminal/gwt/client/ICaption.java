@@ -8,7 +8,6 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.Icon;
 
 public class ICaption extends HTML {
@@ -235,11 +234,12 @@ public class ICaption extends HTML {
              * the responsibility of reacting to ONLOAD from ICaption to layouts
              */
             if (owner != null) {
-                Util.notifyParentOfSizeChange((Widget) owner, true);
+                Util.notifyParentOfSizeChange(owner, true);
             } else {
-                ApplicationConnection.getConsole().log(
-                        "Warning: Icon load was not notified "
-                                + "by ICaption due paren was unknown");
+                ApplicationConnection
+                        .getConsole()
+                        .log(
+                                "Warning: Icon load event was not propagated because ICaption owner is unknown.");
             }
         }
     }
