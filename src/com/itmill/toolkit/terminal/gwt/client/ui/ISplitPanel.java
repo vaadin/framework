@@ -66,9 +66,9 @@ public class ISplitPanel extends ComplexPanel implements Container,
 
     private ApplicationConnection client;
 
-    private String width = null;
+    private String width = "";
 
-    private String height = null;
+    private String height = "";
 
     private RenderSpace firstRenderSpace = new RenderSpace(0, 0, true);
     private RenderSpace secondRenderSpace = new RenderSpace(0, 0, true);
@@ -462,6 +462,10 @@ public class ISplitPanel extends ComplexPanel implements Container,
 
     @Override
     public void setHeight(String height) {
+        if (this.height.equals(height)) {
+            return;
+        }
+
         this.height = height;
         super.setHeight(height);
         if (!rendering && client != null) {
@@ -472,6 +476,10 @@ public class ISplitPanel extends ComplexPanel implements Container,
 
     @Override
     public void setWidth(String width) {
+        if (this.width.equals(width)) {
+            return;
+        }
+
         this.width = width;
         super.setWidth(width);
         if (!rendering && client != null) {

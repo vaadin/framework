@@ -37,6 +37,8 @@ public class IOrderedLayout extends CellBasedLayout {
 
     private boolean isRendering = false;
 
+    private String width = "";
+
     public IOrderedLayout() {
         setStyleName(CLASSNAME);
     }
@@ -758,11 +760,14 @@ public class IOrderedLayout extends CellBasedLayout {
 
     @Override
     public void setWidth(String width) {
+        if (this.width.equals(width)) {
+            return;
+        }
         Size sizeBefore = new Size(activeLayoutSize.getWidth(),
                 activeLayoutSize.getHeight());
 
         super.setWidth(width);
-
+        this.width = width;
         if (width != null && !width.equals("")) {
             setActiveLayoutWidth(getOffsetWidth()
                     - activeMargins.getHorizontal());
