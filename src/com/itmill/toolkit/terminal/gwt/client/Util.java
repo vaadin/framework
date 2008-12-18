@@ -368,7 +368,7 @@ public class Util {
             return paddingBorderGuess;
         } else if (height.endsWith("px")) {
             int pixelHeight = Integer.parseInt(height.substring(0, height
-                    .length() - 3));
+                    .length() - 2));
             return setHeightExcludingPaddingAndBorder(widget.getElement(),
                     pixelHeight, paddingBorderGuess, false);
         } else {
