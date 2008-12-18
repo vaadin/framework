@@ -146,7 +146,7 @@ public class CustomComponent extends AbstractComponentContainer {
 
     public Iterator getComponentIterator() {
         return new Iterator() {
-            boolean first = true;
+            boolean first = getCompositionRoot() != null;
 
             public boolean hasNext() {
                 return first;
