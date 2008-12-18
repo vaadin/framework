@@ -93,15 +93,8 @@
 	overflow: visible;
 	padding-left: 10px;
 	padding-right: 10px;
-	width: expression(this.offsetWidth + "px");
 }
 
-/* can't use expression hack in IE7 if lot's of button due 
- * performance issues (as often in table). See #2329 */
-*+html .i-table .i-button {
-	width: auto;
-}
-	
 /* Error indicator on checkbox fix for IE6 */
 * html .i-checkbox * { display: block; float: left;}
 * html .i-checkbox .i-errorindicator {padding-right:4px;}

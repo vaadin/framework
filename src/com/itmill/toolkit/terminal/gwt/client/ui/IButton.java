@@ -114,6 +114,11 @@ public class IButton extends Button implements Paintable {
                 icon = null;
             }
         }
+        if (BrowserInfo.get().isIE7()) {
+            if (width.equals("")) {
+                setWidth(getOffsetWidth() + "px");
+            }
+        }
     }
 
     @Override
