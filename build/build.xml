@@ -898,6 +898,9 @@
 			<arg value="-param" />
 			<arg value="draft.mode" />
 			<arg value="'no'" />
+			<arg value="-param" />
+			<arg value="double.sided" />
+			<arg value="1" />
 			<classpath>
 				<pathelement location="build/lib/xalan.jar" />
 				<pathelement location="build/lib/xercesImpl.jar" />
