@@ -212,14 +212,14 @@ public class SplitPanel extends AbstractLayout {
         if (firstComponent != null) {
             firstComponent.paint(target);
         } else {
-            OrderedLayout temporaryComponent = new OrderedLayout();
+            VerticalLayout temporaryComponent = new VerticalLayout();
             temporaryComponent.setParent(this);
             temporaryComponent.paint(target);
         }
         if (secondComponent != null) {
             secondComponent.paint(target);
         } else {
-            OrderedLayout temporaryComponent = new OrderedLayout();
+            VerticalLayout temporaryComponent = new VerticalLayout();
             temporaryComponent.setParent(this);
             temporaryComponent.paint(target);
         }
