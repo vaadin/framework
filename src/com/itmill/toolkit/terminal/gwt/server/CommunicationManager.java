@@ -54,7 +54,7 @@ import com.itmill.toolkit.terminal.VariableOwner;
 import com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent;
 import com.itmill.toolkit.terminal.Terminal.ErrorEvent;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
-import com.itmill.toolkit.terminal.gwt.server.DebugUtilities.InvalidLayout;
+import com.itmill.toolkit.terminal.gwt.server.ComponentSizeValidator.InvalidLayout;
 import com.itmill.toolkit.ui.AbstractField;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.Upload;
@@ -446,7 +446,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                     paintablePainted(p);
 
                     if (analyzeLayouts) {
-                        invalidComponentRelativeSizes = DebugUtilities
+                        invalidComponentRelativeSizes = ComponentSizeValidator
                                 .validateComponentRelativeSizes(((Window) p)
                                         .getLayout(), null, null);
                     }

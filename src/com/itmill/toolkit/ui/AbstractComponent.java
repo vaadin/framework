@@ -22,7 +22,7 @@ import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Resource;
 import com.itmill.toolkit.terminal.Terminal;
-import com.itmill.toolkit.terminal.gwt.server.DebugUtilities;
+import com.itmill.toolkit.terminal.gwt.server.ComponentSizeValidator;
 
 /**
  * An abstract class that defines default implementation for the
@@ -135,6 +135,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * Constructs a new Component.
      */
     public AbstractComponent() {
+        // ComponentSizeValidator.setCreationLocation(this);
     }
 
     /* Get/Set component properties */
@@ -610,14 +611,14 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             // Only paint content of visible components.
             if (isVisible()) {
                 if (getHeight() >= 0
-                        && (getHeightUnits() != UNITS_PERCENTAGE || !DebugUtilities
-                                .parentCannotDefineHeight(this))) {
+                        && (getHeightUnits() != UNITS_PERCENTAGE || ComponentSizeValidator
+                                .parentCanDefineHeight(this))) {
                     target.addAttribute("height", "" + getCSSHeight());
                 }
 
                 if (getWidth() >= 0
-                        && (getWidthUnits() != UNITS_PERCENTAGE || !DebugUtilities
-                                .parentCannotDefineWidth(this))) {
+                        && (getWidthUnits() != UNITS_PERCENTAGE || ComponentSizeValidator
+                                .parentCanDefineWidth(this))) {
                     target.addAttribute("width", "" + getCSSWidth());
                 }
                 if (styles != null && styles.size() > 0) {
@@ -1107,6 +1108,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         this.height = height;
         heightUnit = unit;
         requestRepaint();
+        // ComponentSizeValidator.setHeightLocation(this);
     }
 
     /*
@@ -1158,6 +1160,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         this.width = width;
         widthUnit = unit;
         requestRepaint();
+        // ComponentSizeValidator.setWidthLocation(this);
     }
 
     /*

@@ -24,7 +24,7 @@ import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.GridLayout.Area;
 
-public class DebugUtilities {
+public class ComponentSizeValidator {
 
     private final static int LAYERS_SHOWN = 4;
 
@@ -108,7 +108,11 @@ public class DebugUtilities {
             if (component instanceof Window) {
                 return true;
             }
-            return !(component.getParent() != null && parentCannotDefineHeight(component));
+            if (component.getParent() == null) {
+                return true;
+            }
+
+            return parentCanDefineHeight(component);
         } catch (Exception e) {
             e.printStackTrace();
             return true;
@@ -123,7 +127,11 @@ public class DebugUtilities {
             if (component instanceof Window) {
                 return true;
             }
-            return !(component.getParent() != null && parentCannotDefineWidth(component));
+            if (component.getParent() == null) {
+                return true;
+            }
+
+            return parentCanDefineWidth(component);
         } catch (Exception e) {
             e.printStackTrace();
             return true;
@@ -227,7 +235,7 @@ public class DebugUtilities {
                 printServerError(msg, attributes, true, serverErrorStream);
             }
             if (subErrors.size() > 0) {
-                serverErrorStream.println("Sub erros >>");
+                serverErrorStream.println("Sub errors >>");
                 clientJSON.write(", \"subErrors\" : [");
                 boolean first = true;
                 for (InvalidLayout subError : subErrors) {
@@ -377,32 +385,34 @@ public class DebugUtilities {
         return false;
     }
 
-    public static boolean parentCannotDefineHeight(Component component) {
+    public static boolean parentCanDefineHeight(Component component) {
         Component parent = component.getParent();
         if (parent == null) {
             // main window, valid situation
-            return false;
+            return true;
         }
         if (parent.getHeight() < 0) {
+            // Undefined height
             if (parent instanceof Window) {
                 Window w = (Window) parent;
                 if (w.getParent() == null) {
                     // main window is considered to have size
-                    return false;
+                    return true;
                 }
             }
-            if (parent instanceof VerticalLayout) {
-                return true;
-            } else if (parent instanceof AbstractOrderedLayout) {
+
+            if (parent instanceof AbstractOrderedLayout) {
                 boolean horizontal = true;
                 if (parent instanceof OrderedLayout) {
                     horizontal = ((OrderedLayout) parent).getOrientation() == OrderedLayout.ORIENTATION_HORIZONTAL;
+                } else if (parent instanceof VerticalLayout) {
+                    horizontal = false;
                 }
                 if (horizontal
                         && hasNonRelativeHeightComponent((AbstractOrderedLayout) parent)) {
-                    return false;
-                } else {
                     return true;
+                } else {
+                    return false;
                 }
 
             } else if (parent instanceof GridLayout) {
@@ -420,6 +430,9 @@ public class DebugUtilities {
                     }
                 }
                 if (!rowHasHeight) {
+                    return false;
+                } else {
+                    // Other components define row height
                     return true;
                 }
             }
@@ -430,20 +443,24 @@ public class DebugUtilities {
                 // height undefined, we know how how component works and no
                 // exceptions
                 // TODO horiz SplitPanel ??
-                return true;
-            } else {
-                // we cannot generally know if undefined component can serve
-                // space for children (like CustomLayout or component built by
-                // third party)
                 return false;
+            } else {
+                // We cannot generally know if undefined component can serve
+                // space for children (like CustomLayout or component built by
+                // third party) so we assume they can
+                return true;
             }
 
-        } else {
-            if (hasRelativeHeight(parent) && parent.getParent() != null) {
-                return parentCannotDefineHeight(parent);
+        } else if (hasRelativeHeight(parent)) {
+            // Relative height
+            if (parent.getParent() != null) {
+                return parentCanDefineHeight(parent);
             } else {
-                return false;
+                return true;
             }
+        } else {
+            // Absolute height
+            return true;
         }
     }
 
@@ -467,30 +484,25 @@ public class DebugUtilities {
                 && paintable.getWidthUnits() == Sizeable.UNITS_PERCENTAGE;
     }
 
-    public static boolean parentCannotDefineWidth(Component component) {
+    public static boolean parentCanDefineWidth(Component component) {
         Component parent = component.getParent();
         if (parent == null) {
             // main window, valid situation
-            return false;
+            return true;
         }
         if (parent instanceof Window) {
             Window w = (Window) parent;
             if (w.getParent() == null) {
                 // main window is considered to have size
-                return false;
+                return true;
             }
 
         }
 
         if (parent.getWidth() < 0) {
-            if (parent instanceof Panel) {
-                if (parent.getCaption() != null
-                        && !parent.getCaption().equals("")) {
-                    return false;
-                } else {
-                    return true;
-                }
-            } else if (parent instanceof AbstractOrderedLayout) {
+            // Undefined width
+
+            if (parent instanceof AbstractOrderedLayout) {
                 AbstractOrderedLayout ol = (AbstractOrderedLayout) parent;
                 boolean horizontal = true;
                 if (ol instanceof OrderedLayout) {
@@ -501,12 +513,10 @@ public class DebugUtilities {
                     horizontal = false;
                 }
 
-                if (horizontal) {
-                    return true;
-                } else if (!hasNonRelativeWidthComponent(ol)) {
+                if (!horizontal && hasNonRelativeWidthComponent(ol)) {
+                    // valid situation, other components defined width
                     return true;
                 } else {
-                    // valid situation, other components defined width
                     return false;
                 }
             } else if (parent instanceof GridLayout) {
@@ -523,25 +533,37 @@ public class DebugUtilities {
                     }
                 }
                 if (!columnHasWidth) {
-                    return true;
-                } else {
-                    // valid situation
                     return false;
+                } else {
+                    // Other components define column width
+                    return true;
                 }
             } else if (parent instanceof SplitPanel
                     || parent instanceof TabSheet
                     || parent instanceof CustomComponent) {
                 // TODO vertical splitpanel with another non relative component?
+                return false;
+            } else if (parent instanceof Panel) {
+                // TODO Panel should be able to define width based on caption
+                return false;
+                // if (parent.getCaption() != null
+                // && !parent.getCaption().equals("")) {
+                // return true;
+                // } else {
+                // return false;
+                // }
+            } else {
                 return true;
-            } else {
-                return false;
             }
+        } else if (hasRelativeWidth(parent)) {
+            // Relative width
+            if (parent.getParent() == null) {
+                return true;
+            }
+
+            return parentCanDefineWidth(parent);
         } else {
-            if (hasRelativeWidth(parent) && parent.getParent() != null) {
-                return parentCannotDefineWidth(parent);
-            } else {
-                return false;
-            }
+            return true;
         }
 
     }
@@ -591,7 +613,7 @@ public class DebugUtilities {
                 }
 
                 cls = Class.forName(className);
-                if (cls == DebugUtilities.class || cls == Thread.class) {
+                if (cls == ComponentSizeValidator.class || cls == Thread.class) {
                     continue;
                 }
 
