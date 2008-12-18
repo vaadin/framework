@@ -216,6 +216,36 @@ public abstract class AbstractComponentContainer extends AbstractComponent
         }
     }
 
+    @Override
+    public void setWidth(float width, int unit) {
+        if (getWidth() < 0 && width >= 0) {
+            // width becoming defined -> relative width children currently
+            // painted undefined may become defined
+            // TODO could be optimized(subtree of only those components
+            // which have undefined height due this component), currently just
+            // repaints whole subtree
+            requestRepaintAll();
+        } else if (getWidth() >= 0 && width < 0) {
+            requestRepaintAll();
+        }
+        super.setWidth(width, unit);
+    }
+
+    @Override
+    public void setHeight(float height, int unit) {
+        if (getHeight() < 0 && height >= 0) {
+            // height becoming defined -> relative height childs currently
+            // painted undefined may become defined
+            // TODO this could be optimized (subtree of only those components
+            // which have undefined width due this component), currently just
+            // repaints whole
+            // subtree
+        } else if (getHeight() >= 0 && height < 0) {
+            requestRepaintAll();
+        }
+        super.setHeight(height, unit);
+    }
+
     public void requestRepaintAll() {
         requestRepaint();
         for (Iterator childIterator = getComponentIterator(); childIterator
