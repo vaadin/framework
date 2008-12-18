@@ -66,8 +66,6 @@ public class ICaption extends HTML {
     public boolean updateCaption(UIDL uidl) {
         setVisible(!uidl.getBooleanAttribute("invisible"));
 
-        setStyleName(getElement(), "i-disabled", uidl.hasAttribute("disabled"));
-
         boolean wasPlacedAfterComponent = placedAfterComponent;
 
         placedAfterComponent = true;
@@ -79,6 +77,11 @@ public class ICaption extends HTML {
                 style += " " + CLASSNAME + "-" + styles[i];
             }
         }
+
+        if (uidl.hasAttribute("disabled")) {
+            style += " " + "i-disabled";
+        }
+
         setStyleName(style);
 
         if (uidl.hasAttribute(ATTRIBUTE_ICON)) {
