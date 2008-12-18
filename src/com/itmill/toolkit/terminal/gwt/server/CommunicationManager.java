@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
@@ -625,10 +624,10 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                     .getProperty("disable-xsrf-protection"));
             if (bursts.length == 1 && "init".equals(bursts[0])) {
                 // initial request, no variable changes: send key
-                String uuid = (String) request.getSession().getAttribute(
+                String seckey = (String) request.getSession().getAttribute(
                         ApplicationConnection.UIDL_SECURITY_HEADER);
-                if (uuid == null) {
-                    uuid = UUID.randomUUID().toString();
+                if (seckey == null) {
+                    seckey = "" + (int) (Math.random() * 1000000);
                 }
                 /*
                  * Cookie c = new Cookie(
@@ -636,9 +635,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                  * response.addCookie(c);
                  */
                 response.setHeader(ApplicationConnection.UIDL_SECURITY_HEADER,
-                        uuid);
+                        seckey);
                 request.getSession().setAttribute(
-                        ApplicationConnection.UIDL_SECURITY_HEADER, uuid);
+                        ApplicationConnection.UIDL_SECURITY_HEADER, seckey);
                 return true;
             } else if (!nocheck) {
                 // check the key
