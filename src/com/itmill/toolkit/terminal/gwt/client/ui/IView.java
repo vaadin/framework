@@ -108,10 +108,6 @@ public class IView extends SimplePanel implements Container,
             focus(getElement());
         }
 
-        String browserClassnames = browser.getCSSClass();
-        ApplicationConnection.getConsole().log(
-                "Browser classnames: " + browserClassnames);
-        root.addStyleName(browserClassnames);
     }
 
     private static native void focus(Element el)

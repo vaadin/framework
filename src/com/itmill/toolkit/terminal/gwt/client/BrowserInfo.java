@@ -4,6 +4,8 @@
 
 package com.itmill.toolkit.terminal.gwt.client;
 
+import com.google.gwt.user.client.ui.RootPanel;
+
 /**
  * Class used to query information about web browser.
  * 
@@ -16,6 +18,12 @@ public class BrowserInfo {
     private static BrowserInfo instance;
 
     private static String cssClass = null;
+
+    static {
+        // Add browser dependent i-* classnames to body to help css hacks
+        String browserClassnames = get().getCSSClass();
+        RootPanel.get().addStyleName(browserClassnames);
+    }
 
     /**
      * Singleton method to get BrowserInfo object.
