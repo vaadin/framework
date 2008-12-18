@@ -179,8 +179,6 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      */
     private Terminal.ErrorListener errorHandler = this;
 
-    private boolean debugMode = true;
-
     /**
      * <p>
      * Gets a window by name. Returns <code>null</code> if the application is
@@ -469,12 +467,6 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
         this.applicationUrl = applicationUrl;
         properties = applicationProperties;
         this.context = context;
-        if ((getProperty("Debug") != null && getProperty("Debug")
-                .equals("true"))
-                || getProperty("debug") != null
-                && getProperty("debug").equals("true")) {
-            debugMode = true;
-        }
         init();
         applicationIsRunning = true;
     }
@@ -1514,12 +1506,4 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 
     }
 
-    /**
-     * Return true if application is in debug mode.
-     * 
-     * @return true if in debug modes
-     */
-    public boolean isDebugMode() {
-        return debugMode;
-    }
 }
