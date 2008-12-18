@@ -688,8 +688,9 @@ public class Util {
             // IE
             return el.currentStyle[p];
         } else if (window.getComputedStyle) {
-            //Sa, FF, Opera
-            return document.defaultView.getComputedStyle(el,null).getPropertyValue(p);
+            // Sa, FF, Opera
+            var view = el.ownerDocument.defaultView;
+            return view.getComputedStyle(el,null).getPropertyValue(p);
         } else {
             // fall back for non IE, Sa, FF, Opera
             return "";
