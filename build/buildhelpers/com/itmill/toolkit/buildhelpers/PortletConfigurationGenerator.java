@@ -140,7 +140,7 @@ public class PortletConfigurationGenerator {
 
     /**
      * @param args
-     *                <path to directory with web.xml> [widgetset to use]
+     *            <path to directory with web.xml> [widgetset to use]
      */
     public static void main(String[] args) {
         if (args.length < 1 || !new File(args[0]).isDirectory()) {
@@ -257,7 +257,7 @@ public class PortletConfigurationGenerator {
             Pattern p1 = Pattern
                     .compile("<servlet-mapping>.*?<servlet-name>(.*?)<\\/servlet-name>.*?<url-pattern>(.*?)<\\/url-pattern>(.*?)<\\/servlet-mapping>");
             Pattern p2 = Pattern
-                    .compile(".*?<!--\\s+portlet\\s?(style=\\S+)?\\s+-->.*?");
+                    .compile(".*?<!--\\s+portlet\\s?style=(\\S+)?\\s+-->.*?");
             Matcher m = p1.matcher(webXml);
             while (m.find()) {
                 if (m.groupCount() < 3) {
