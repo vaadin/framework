@@ -543,15 +543,17 @@ public class ComponentSizeValidator {
                     || parent instanceof CustomComponent) {
                 // TODO vertical splitpanel with another non relative component?
                 return false;
+            } else if (parent instanceof Window) {
+                // Sub window can define width based on caption
+                if (parent.getCaption() != null
+                        && !parent.getCaption().equals("")) {
+                    return true;
+                } else {
+                    return false;
+                }
             } else if (parent instanceof Panel) {
                 // TODO Panel should be able to define width based on caption
                 return false;
-                // if (parent.getCaption() != null
-                // && !parent.getCaption().equals("")) {
-                // return true;
-                // } else {
-                // return false;
-                // }
             } else {
                 return true;
             }
