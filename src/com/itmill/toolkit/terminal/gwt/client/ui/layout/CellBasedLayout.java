@@ -267,7 +267,7 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
 
     protected ChildComponentContainer getFirstChildComponentContainer() {
         int size = getChildren().size();
-        if (size < 2) {
+        if (size < 1) {
             return null;
         }
 

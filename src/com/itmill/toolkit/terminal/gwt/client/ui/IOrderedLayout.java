@@ -240,9 +240,10 @@ public class IOrderedLayout extends CellBasedLayout {
             // Some left-over pixels due to rounding errors
 
             // Add extra pixels to first container
-            getFirstChildComponentContainer().expandExtra(orientation,
-                    remaining);
-
+            ChildComponentContainer firstChildContainer = getFirstChildComponentContainer();
+            if (firstChildContainer != null) {
+                firstChildContainer.expandExtra(orientation, remaining);
+            }
         }
 
     }
