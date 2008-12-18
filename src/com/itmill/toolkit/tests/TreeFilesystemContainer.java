@@ -2,7 +2,7 @@
 @ITMillApache2LicenseForJavaFiles@
  */
 
-package com.itmill.toolkit.demo;
+package com.itmill.toolkit.tests;
 
 import java.io.File;
 

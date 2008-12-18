@@ -202,7 +202,7 @@
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.CustomLayoutDemo</param-value>
+      <param-value>com.itmill.toolkit.tests.CustomLayoutDemo</param-value>
     </init-param>
   </servlet>
 
@@ -211,7 +211,7 @@
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.LayoutDemo</param-value>
+      <param-value>com.itmill.toolkit.tests.LayoutDemo</param-value>
     </init-param>
   </servlet>
 
@@ -238,7 +238,7 @@
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.Parameters</param-value>
+      <param-value>com.itmill.toolkit.tests.Parameters</param-value>
     </init-param>
   </servlet>
 
@@ -247,7 +247,7 @@
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.UpgradingSample</param-value>
+      <param-value>com.itmill.toolkit.tests.UpgradingSample</param-value>
     </init-param>
   </servlet>
 
@@ -256,7 +256,7 @@
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.QueryContainerDemo</param-value>
+      <param-value>com.itmill.toolkit.tests.QueryContainerDemo</param-value>
     </init-param>
   </servlet>
   
@@ -265,7 +265,7 @@
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.TreeFilesystemContainer</param-value>
+      <param-value>com.itmill.toolkit.tests.TreeFilesystemContainer</param-value>
     </init-param>
     <!-- Set this property if demo cannot access context base directory
       because of Application Server or Servlet Container security constraints-->
@@ -282,7 +282,7 @@
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.TreeFilesystem</param-value>
+      <param-value>com.itmill.toolkit.tests.TreeFilesystem</param-value>
     </init-param>
     <!-- Set this property if demo cannot access context base directory
       because of Application Server or Servlet Container security constraints-->
@@ -299,7 +299,7 @@
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.ModalWindow</param-value>
+      <param-value>com.itmill.toolkit.tests.ModalWindow</param-value>
     </init-param>
   </servlet>
 
