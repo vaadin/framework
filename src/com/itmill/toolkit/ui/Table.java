@@ -3025,19 +3025,22 @@ public class Table extends AbstractSelect implements Action.Container,
     // Virtually identical to AbstractCompoenentContainer.setEnabled();
     public void requestRepaintAll() {
         requestRepaint();
-        for (Iterator childIterator = visibleComponents.iterator(); childIterator
-                .hasNext();) {
-            Component c = (Component) childIterator.next();
-            if (c instanceof Form) {
-                // Form has children in layout, but is not ComponentContainer
-                c.requestRepaint();
-                ((Form) c).getLayout().requestRepaintAll();
-            } else if (c instanceof Table) {
-                ((Table) c).requestRepaintAll();
-            } else if (c instanceof ComponentContainer) {
-                ((ComponentContainer) c).requestRepaintAll();
-            } else {
-                c.requestRepaint();
+        if (visibleComponents != null) {
+            for (Iterator childIterator = visibleComponents.iterator(); childIterator
+                    .hasNext();) {
+                Component c = (Component) childIterator.next();
+                if (c instanceof Form) {
+                    // Form has children in layout, but is not
+                    // ComponentContainer
+                    c.requestRepaint();
+                    ((Form) c).getLayout().requestRepaintAll();
+                } else if (c instanceof Table) {
+                    ((Table) c).requestRepaintAll();
+                } else if (c instanceof ComponentContainer) {
+                    ((ComponentContainer) c).requestRepaintAll();
+                } else {
+                    c.requestRepaint();
+                }
             }
         }
     }
