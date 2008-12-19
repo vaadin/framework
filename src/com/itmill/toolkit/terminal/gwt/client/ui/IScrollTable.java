@@ -588,6 +588,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                  * for a scrollbar we reserve this in the last column
                  */
                 int scrollbarWidth = getScrollbarWidth();
+                scrollbarWidth = Util.getNativeScrollbarSize();
                 if (relativeWidth && totalWidthR >= scrollbarWidth) {
                     scrollbarWidthReserved = scrollbarWidth + 1; // 
                     widths[tHead.getVisibleCellCount() - 1] += scrollbarWidthReserved;
