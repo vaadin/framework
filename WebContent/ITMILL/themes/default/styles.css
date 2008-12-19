@@ -758,13 +758,12 @@ input.i-modified,
 
 .i-form fieldset {
 	border: none;
-	margin: 0;
-	padding: 0;
+	border-top: 1px solid #babfc0;
 }
 
 .i-form legend {
 	margin: 0;
-	padding: 0 0 0.3em 0;
+	padding: 0 4px 0.3em 4px;
 	font-weight: bold;
 }
 
