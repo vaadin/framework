@@ -1790,6 +1790,8 @@ public class Table extends AbstractSelect implements Action.Container,
         isContentRefreshesEnabled = true;
         if (refreshContent) {
             refreshRenderedCells();
+            // Ensure that client gets a response 
+            requestRepaint();
         }
     }
 
