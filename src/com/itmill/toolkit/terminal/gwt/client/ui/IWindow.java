@@ -726,6 +726,8 @@ public class IWindow extends IToolkitOverlay implements Container,
             client.handleComponentRelativeSize((Widget) layout);
             client.runDescendentsLayout((HasWidgets) layout);
         }
+
+        Util.runWebkitOverflowAutoFix(contentPanel.getElement());
     }
 
     @Override
