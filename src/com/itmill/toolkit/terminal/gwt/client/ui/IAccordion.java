@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -328,8 +329,8 @@ public class IAccordion extends ITabsheetBase implements
             }
 
             int captionWidth = caption.getRequiredWidth();
-            int padding = Util.measureHorizontalPaddingAndBorder(caption.getElement(),
-                    18);
+            int padding = Util.measureHorizontalPaddingAndBorder(caption
+                    .getElement(), 18);
             return captionWidth + padding;
         }
 
@@ -358,6 +359,10 @@ public class IAccordion extends ITabsheetBase implements
             setElement(DOM.createDiv());
             caption = new ICaption(null, client);
             caption.addClickListener(this);
+            if (BrowserInfo.get().isIE6()) {
+                DOM.setEventListener(captionNode, this);
+                DOM.sinkEvents(captionNode, Event.BUTTON_LEFT);
+            }
             super.add(caption, captionNode);
             DOM.appendChild(captionNode, caption.getElement());
             DOM.appendChild(getElement(), captionNode);
@@ -370,6 +375,10 @@ public class IAccordion extends ITabsheetBase implements
             close();
 
             updateCaption(tabUidl);
+        }
+
+        public void onBrowserEvent(Event event) {
+            onSelectTab(this);
         }
 
         public Element getContainerElement() {
