@@ -609,6 +609,7 @@
 			<arg value="com.itmill.toolkit.terminal.gwt.DefaultWidgetSet" />
 			<arg value="-style" />
 			<arg value="OBF" />
+            <jvmarg value="-Djava.awt.headless=true"/>
 			<classpath>
 				<pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
 				<pathelement location="${gwt-dir}/${platform}/${lib-gwt-dev}" />
@@ -632,6 +633,7 @@
 			<arg value="com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet" />
 			<arg value="-style" />
 			<arg value="OBF" />
+            <jvmarg value="-Djava.awt.headless=true"/>
 			<classpath>
 				<pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
 				<pathelement location="${gwt-dir}/${platform}/${lib-gwt-dev}" />
@@ -672,6 +674,7 @@
 			<arg value="com.itmill.toolkit.demo.colorpicker.gwt.ColorPickerWidgetSet" />
 			<arg value="-style" />
 			<arg value="OBF" />
+            <jvmarg value="-Djava.awt.headless=true"/>
 			<classpath>
 				<pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
 				<pathelement location="${gwt-dir}/${platform}/${lib-gwt-dev}" />
