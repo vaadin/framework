@@ -655,6 +655,7 @@
 			<arg value="com.itmill.toolkit.demo.sampler.gwt.SamplerWidgetSet" />
 			<arg value="-style" />
 			<arg value="OBF" />
+            <jvmarg value="-Djava.awt.headless=true"/>
 			<classpath>
 				<pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
 				<pathelement location="${gwt-dir}/${platform}/${lib-gwt-dev}" />
