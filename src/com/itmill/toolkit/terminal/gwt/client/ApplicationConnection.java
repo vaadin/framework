@@ -419,7 +419,15 @@ public class ApplicationConnection {
             loadTimer = new Timer() {
                 @Override
                 public void run() {
-                    showLoadingIndicator();
+                    /*
+                     * IE7 does not properly cancel the event with
+                     * loadTimer.cancel() so we have to check that we really
+                     * should make it visible
+                     */
+                    if (loadTimer != null) {
+                        showLoadingIndicator();
+                    }
+
                 }
             };
             // First one kicks in at 300ms
