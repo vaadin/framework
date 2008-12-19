@@ -5,6 +5,7 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.EventObject;
 import java.util.Iterator;
 
@@ -73,7 +74,7 @@ public class INotification extends IToolkitOverlay {
                     fade();
                 }
             };
-            delay.scheduleRepeating(delayMsec);
+            delay.schedule(delayMsec);
         } else if (delayMsec == 0) {
             fade();
         }
@@ -126,11 +127,15 @@ public class INotification extends IToolkitOverlay {
     public void fade() {
         DOM.removeEventPreview(this);
         cancelDelay();
+        final int msec = fadeMsec / (startOpacity / 5);
         fader = new Timer() {
+            long timestamp = 0;
             int opacity = startOpacity;
 
             public void run() {
-                opacity -= 5;
+                double adjust = (timestamp == 0 ? 1
+                        : (new Date().getTime() - timestamp) / msec);
+                opacity -= adjust * 5d;
                 setOpacity(getElement(), opacity);
                 if (opacity <= 0) {
                     cancel();
@@ -143,9 +148,9 @@ public class INotification extends IToolkitOverlay {
                     }
 
                 }
+                timestamp = new Date().getTime();
             }
         };
-        final int msec = fadeMsec / (startOpacity / 5);
         fader.scheduleRepeating(msec);
     }
 
