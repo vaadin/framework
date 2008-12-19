@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.ScrollListener;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.MouseEventDetails;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
@@ -63,7 +64,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
 
     public static final String CLASSNAME = "i-table";
     /**
-     * multiple of pagelenght which component will cache when requesting more
+     * multiple of pagelength which component will cache when requesting more
      * rows
      */
     private static final double CACHE_RATE = 2;
@@ -132,9 +133,13 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
      */
     boolean recalcWidths = false;
 
+    int scrollbarWidthReservedInColumn = -1;
+    int scrollbarWidthReserved = -1;
+    boolean relativeWidth = false;
+
     private final ArrayList lazyUnregistryBag = new ArrayList();
     private String height;
-    private String width;
+    private String width = "";
 
     public IScrollTable() {
         bodyContainer.addScrollListener(this);
@@ -151,6 +156,10 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         if (client.updateComponent(this, uidl, true)) {
             return;
+        }
+
+        if (uidl.hasAttribute("width")) {
+            relativeWidth = uidl.getStringAttribute("width").endsWith("%");
         }
 
         // we may have pending cache row fetch, cancel it. See #2136
@@ -569,10 +578,25 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
 
         if (availW > total) {
             // natural size is smaller than available space
-            final int extraSpace = availW - total;
-            final int totalWidthR = total - totalExplicitColumnsWidths;
+            int extraSpace = availW - total;
+            int totalWidthR = total - totalExplicitColumnsWidths;
             if (totalWidthR > 0) {
                 needsReLayout = true;
+
+                /*
+                 * If the table has a relative width and there is enough space
+                 * for a scrollbar we reserve this in the last column
+                 */
+                int scrollbarWidth = getScrollbarWidth();
+                if (relativeWidth && totalWidthR >= scrollbarWidth) {
+                    scrollbarWidthReserved = scrollbarWidth + 1; // 
+                    widths[tHead.getVisibleCellCount() - 1] += scrollbarWidthReserved;
+                    totalWidthR += scrollbarWidthReserved;
+                    extraSpace -= scrollbarWidthReserved;
+                    scrollbarWidthReservedInColumn = tHead
+                            .getVisibleCellCount() - 1;
+                }
+
                 // now we will share this sum relatively to those without
                 // explicit width
                 headCells = tHead.iterator();
@@ -640,6 +664,10 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
     }
 
     private int getScrollbarWidth() {
+        if (BrowserInfo.get().isIE6()) {
+            return Util.measureHorizontalBorder(bodyContainer.getElement());
+        }
+
         return bodyContainer.getOffsetWidth()
                 - DOM.getElementPropertyInt(bodyContainer.getElement(),
                         "clientWidth");
@@ -2304,9 +2332,25 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
     }
 
     public void setWidth(String width) {
+        if (this.width.equals(width)) {
+            return;
+        }
+
         this.width = width;
         if (width != null && !"".equals(width)) {
+            int oldWidth = getOffsetWidth();
             super.setWidth(width);
+            int newWidth = getOffsetWidth();
+
+            if (scrollbarWidthReservedInColumn != -1 && oldWidth > newWidth
+                    && (oldWidth - newWidth) < scrollbarWidthReserved) {
+                int col = scrollbarWidthReservedInColumn;
+                String colKey = getColKeyByIndex(col);
+                setColWidth(scrollbarWidthReservedInColumn, getColWidth(colKey)
+                        - (oldWidth - newWidth));
+                scrollbarWidthReservedInColumn = -1;
+            }
+
             int innerPixels = getOffsetWidth() - getBorderWidth();
             if (innerPixels < 0) {
                 innerPixels = 0;
