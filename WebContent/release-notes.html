@@ -46,6 +46,32 @@ href="http://code.google.com/webtoolkit/"><span class="icon">GWT web site</span>
 <p>As GWT now requires Java 5, support for Java 1.4 is discontinued also in IT Mill
 Toolkit.</p>
 
+<h2>Debug Mode Enabled by Default</h2>
+
+<p>The debug mode is now enabled by default, to allow debugging layout and other problems
+more easily. The debug mode:</p>
+
+<ul>
+  <li>Displays debug data to the server console/log.</li>
+
+  <li>Allows showing the client-side logging window, which you can enable by adding the
+  request parameter "<tt>?debug=true</tt>" to the application URI.</li>
+
+  <li>Adds an "Analyze layouting" -button to the debug window: when pressed, it will show
+  red markers in potentially problematic layouts and show layout hint texts in the
+  browser-window and in <tt>System.out</tt>.</li>
+</ul>
+
+<p>You should disable the debug mode when releasing your application for production
+use. You can do this by including the following setting in your <tt>web.xml</tt>.</p>
+
+<pre class="wiki">  &lt;context-param&gt;
+  	&lt;param-name&gt;productionMode&lt;/param-name&gt;
+  	&lt;param-value&gt;true&lt;/param-value&gt;
+  	&lt;description&gt;IT Mill Toolkit production mode&lt;/description&gt;
+  &lt;/context-param&gt;
+</pre>
+
 <h2 id="Layoutchanges">Layout Changes</h2>
 
 <p>The stable IT Mill Toolkit version 5.3 introduces a major rework of layout components
@@ -65,23 +91,12 @@ since the beta versions 5.2.x and before.</p>
 <h3 id="Usedebugmodeduringdevelopmentdebugging">Use debug mode during development / debugging</h3>
 
 <p>Layouts are now more strict than before and some components may even be invisible if
-you use relative sizes in a wrong way. You should always have the following parameter in
-your <tt>web.xml</tt> file during development:</p>
+you use relative sizes in a wrong way.</p>
 
-<pre class="wiki">  &lt;context-param&gt;
-  	&lt;param-name&gt;Debug&lt;/param-name&gt;
-  	&lt;param-value&gt;true&lt;/param-value&gt;
-  	&lt;description&gt;IT Mill Toolkit debug mode&lt;/description&gt;
-  &lt;/context-param&gt;
-</pre>
-
-<p>This will make Toolkit run some sanity checks for relatively sized components and print
-informative error messages to the server console. Invalid components are painted without
-their relative size and colored red.</p>
-
-<p>From version 5.3 this parameter is also needed to show the client-side logging window,
-which you can enable by adding the request parameter "<tt>?debug=true</tt>" to application
-URI.</p>
+<p>The debug mode, which is now enabled by default (see above), will make Toolkit run some
+sanity checks for relatively sized components and print informative error messages to the
+server console. Invalid components are painted without their relative size and colored
+red.</p>
 
 <h3>OrderedLayout deprecated</h3>
 
