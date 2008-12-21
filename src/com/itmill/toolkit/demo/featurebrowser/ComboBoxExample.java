@@ -8,7 +8,7 @@ import java.util.Random;
 
 import com.itmill.toolkit.ui.ComboBox;
 import com.itmill.toolkit.ui.CustomComponent;
-import com.itmill.toolkit.ui.OrderedLayout;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.AbstractSelect.Filtering;
 
 /**
@@ -27,7 +27,7 @@ public class ComboBoxExample extends CustomComponent {
             "Fielding", "Einstein" };
 
     public ComboBoxExample() {
-        final OrderedLayout main = new OrderedLayout();
+        final VerticalLayout main = new VerticalLayout();
         main.setMargin(true);
         setCompositionRoot(main);
 

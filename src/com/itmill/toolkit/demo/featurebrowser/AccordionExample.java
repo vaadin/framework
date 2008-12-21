@@ -3,8 +3,8 @@ package com.itmill.toolkit.demo.featurebrowser;
 import com.itmill.toolkit.ui.Accordion;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.Label;
-import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.TextField;
+import com.itmill.toolkit.ui.VerticalLayout;
 
 /**
  * Accordion is a derivative of TabSheet, a vertical tabbed layout that places
@@ -19,7 +19,7 @@ public class AccordionExample extends CustomComponent {
         // Add a few tabs to the accordion.
         for (int i = 0; i < 5; i++) {
             // Create a root component for a accordion tab
-            OrderedLayout layout = new OrderedLayout();
+            VerticalLayout layout = new VerticalLayout();
             accordion.addComponent(layout);
 
             // The accordion tab label is taken from the caption of the root

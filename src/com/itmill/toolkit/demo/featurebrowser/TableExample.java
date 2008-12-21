@@ -14,9 +14,10 @@ import com.itmill.toolkit.event.Action;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CheckBox;
 import com.itmill.toolkit.ui.CustomComponent;
-import com.itmill.toolkit.ui.OrderedLayout;
+import com.itmill.toolkit.ui.HorizontalLayout;
 import com.itmill.toolkit.ui.TabSheet;
 import com.itmill.toolkit.ui.Table;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
 /**
@@ -51,7 +52,7 @@ public class TableExample extends CustomComponent implements Action.Handler,
     Button deselect;
 
     public TableExample() {
-        OrderedLayout margin = new OrderedLayout();
+        VerticalLayout margin = new VerticalLayout();
         margin.setMargin(true);
 
         TabSheet root = new TabSheet();
@@ -59,7 +60,7 @@ public class TableExample extends CustomComponent implements Action.Handler,
         margin.addComponent(root);
 
         // main layout
-        final OrderedLayout main = new OrderedLayout();
+        final VerticalLayout main = new VerticalLayout();
         root.addComponent(main);
         main.setCaption("Basic Table");
         main.setMargin(true);
@@ -67,7 +68,7 @@ public class TableExample extends CustomComponent implements Action.Handler,
         // "source" table with bells & whistlesenabled
         source = new Table("All creatures");
         source.setPageLength(7);
-        source.setWidth(550);
+        source.setWidth("550px");
         source.setColumnCollapsingAllowed(true);
         source.setColumnReorderingAllowed(true);
         source.setSelectable(true);
@@ -78,8 +79,8 @@ public class TableExample extends CustomComponent implements Action.Handler,
         main.addComponent(source);
 
         // x-selected button row
-        final OrderedLayout horiz = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        final HorizontalLayout horiz = new HorizontalLayout();
+
         horiz.setMargin(false, false, true, false);
         main.addComponent(horiz);
         saveSelected = new Button("Save selected");
@@ -111,7 +112,7 @@ public class TableExample extends CustomComponent implements Action.Handler,
         // "saved" table, minimalistic
         saved = new Table("Saved creatures");
         saved.setPageLength(5);
-        saved.setWidth(550);
+        saved.setWidth("550px");
         saved.setSelectable(false);
         saved.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
         saved.setRowHeaderMode(Table.ROW_HEADER_MODE_ID);

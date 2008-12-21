@@ -9,8 +9,9 @@ import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.Field;
 import com.itmill.toolkit.ui.Form;
-import com.itmill.toolkit.ui.OrderedLayout;
+import com.itmill.toolkit.ui.HorizontalLayout;
 import com.itmill.toolkit.ui.TextField;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
 /**
@@ -51,7 +52,7 @@ public class FormExample extends CustomComponent {
                         + "(Address is required but failing to give it a value does not display an error.)");
 
         // Layout the example
-        OrderedLayout root = new OrderedLayout();
+        VerticalLayout root = new VerticalLayout();
         root.setMargin(true);
         root.setSpacing(true);
         root.addComponent(form);
@@ -71,8 +72,7 @@ public class FormExample extends CustomComponent {
             // Add Commit and Discard controls to the form.
             Button commit = new Button("Save", this, "commit");
             Button discard = new Button("Reset", this, "discard");
-            OrderedLayout footer = new OrderedLayout(
-                    OrderedLayout.ORIENTATION_HORIZONTAL);
+            HorizontalLayout footer = new HorizontalLayout();
             footer.addComponent(commit);
             footer.addComponent(discard);
             setFooter(footer);
@@ -116,6 +116,7 @@ public class FormExample extends CustomComponent {
      */
     static class MyFieldFactory extends BaseFieldFactory {
 
+        @Override
         public Field createField(Item item, Object propertyId,
                 Component uiContext) {
 

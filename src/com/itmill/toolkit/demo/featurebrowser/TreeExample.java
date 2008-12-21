@@ -10,8 +10,8 @@ import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.event.Action;
 import com.itmill.toolkit.ui.AbstractSelect;
 import com.itmill.toolkit.ui.CustomComponent;
+import com.itmill.toolkit.ui.HorizontalLayout;
 import com.itmill.toolkit.ui.Label;
-import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.TextField;
 import com.itmill.toolkit.ui.Tree;
@@ -37,8 +37,7 @@ public class TreeExample extends CustomComponent implements Action.Handler,
     TextField editor;
 
     public TreeExample() {
-        final OrderedLayout main = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        final HorizontalLayout main = new HorizontalLayout();
         main.setWidth("100%");
         main.setMargin(true);
         setCompositionRoot(main);

@@ -18,14 +18,15 @@ import com.itmill.toolkit.ui.AbstractSelect;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.Embedded;
+import com.itmill.toolkit.ui.HorizontalLayout;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Layout;
-import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Select;
 import com.itmill.toolkit.ui.SplitPanel;
 import com.itmill.toolkit.ui.TabSheet;
 import com.itmill.toolkit.ui.Table;
 import com.itmill.toolkit.ui.Tree;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
@@ -111,6 +112,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
     // END
     };
 
+    @Override
     public void init() {
 
         // Need to set a theme for ThemeResources to work
@@ -196,13 +198,12 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         table.setImmediate(true);
         split2.addComponent(table);
 
-        final OrderedLayout exp = new OrderedLayout();
+        final VerticalLayout exp = new VerticalLayout();
         exp.setSizeFull();
         exp.setMargin(true);
         split2.addComponent(exp);
 
-        final OrderedLayout wbLayout = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        final HorizontalLayout wbLayout = new HorizontalLayout();
         Button b = new Button("Open in sub-window", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 Component component = (Component) ts.getComponentIterator()
@@ -257,8 +258,8 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         wbLayout.addComponent(b);
 
         exp.addComponent(wbLayout);
-        exp.setComponentAlignment(wbLayout, OrderedLayout.ALIGNMENT_RIGHT,
-                OrderedLayout.ALIGNMENT_TOP);
+        exp.setComponentAlignment(wbLayout, VerticalLayout.ALIGNMENT_RIGHT,
+                VerticalLayout.ALIGNMENT_TOP);
 
         ts = new TabSheet();
         ts.setSizeFull();
@@ -271,8 +272,8 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
                         + " | <a href=\"http://www.itmill.com/documentation/\">Documentation</a>");
         status.setContentMode(Label.CONTENT_XHTML);
         exp.addComponent(status);
-        exp.setComponentAlignment(status, OrderedLayout.ALIGNMENT_RIGHT,
-                OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
+        exp.setComponentAlignment(status, VerticalLayout.ALIGNMENT_RIGHT,
+                VerticalLayout.ALIGNMENT_VERTICAL_CENTER);
 
         // select initial section ("All")
         tree.setValue(rootId);

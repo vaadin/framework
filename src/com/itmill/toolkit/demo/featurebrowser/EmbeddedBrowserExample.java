@@ -10,8 +10,8 @@ import java.net.URL;
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.ui.Embedded;
-import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Select;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Window.Notification;
 
 /**
@@ -21,7 +21,7 @@ import com.itmill.toolkit.ui.Window.Notification;
  * @author IT Mill Ltd.
  * @see com.itmill.toolkit.ui.Window
  */
-public class EmbeddedBrowserExample extends OrderedLayout implements
+public class EmbeddedBrowserExample extends VerticalLayout implements
         Select.ValueChangeListener {
 
     // Default URL to open.
@@ -74,6 +74,7 @@ public class EmbeddedBrowserExample extends OrderedLayout implements
         if (url != null) {
             try {
                 // the selected url has changed, let's go there
+                @SuppressWarnings("unused")
                 URL u = new URL(url);
                 emb.setSource(new ExternalResource(url));
 

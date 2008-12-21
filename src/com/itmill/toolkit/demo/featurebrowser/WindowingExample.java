@@ -10,7 +10,7 @@ import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.Label;
-import com.itmill.toolkit.ui.OrderedLayout;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
@@ -38,7 +38,7 @@ public class WindowingExample extends CustomComponent {
     private URL windowUrl = null;
 
     public WindowingExample() {
-        final OrderedLayout main = new OrderedLayout();
+        final VerticalLayout main = new VerticalLayout();
         main.setMargin(true);
         setCompositionRoot(main);
 

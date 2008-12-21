@@ -19,10 +19,10 @@ import com.itmill.toolkit.ui.BaseFieldFactory;
 import com.itmill.toolkit.ui.CheckBox;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.CustomComponent;
-import com.itmill.toolkit.ui.ExpandLayout;
 import com.itmill.toolkit.ui.Field;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Table;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 import com.itmill.toolkit.ui.Button.ClickListener;
 
@@ -408,6 +408,7 @@ public class GeneratedColumnExample extends CustomComponent {
 
     /** Table column generator for calculating daily cost column. */
     class DailyCostColumnGenerator extends ConsumptionColumnGenerator {
+        @Override
         public Component generateCell(FillUp fillup, FillUp prev) {
             double dailycost = fillup.dailyCost(prev);
 
@@ -426,6 +427,7 @@ public class GeneratedColumnExample extends CustomComponent {
      * Custom field factory that sets the fields as immediate.
      */
     public class ImmediateFieldFactory extends BaseFieldFactory {
+        @Override
         public Field createField(Class type, Component uiContext) {
             // Let the BaseFieldFactory create the fields
             Field field = super.createField(type, uiContext);
@@ -536,7 +538,7 @@ public class GeneratedColumnExample extends CustomComponent {
 
         table.setHeight("300px");
 
-        ExpandLayout layout = new ExpandLayout();
+        VerticalLayout layout = new VerticalLayout();
         layout.setMargin(true);
         layout
                 .addComponent(new Label(
@@ -546,7 +548,7 @@ public class GeneratedColumnExample extends CustomComponent {
         layout.addComponent(new Label(
                 "Columns displayed in blue are calculated from Quantity and Total. "
                         + "Others are simply formatted."));
-        layout.expand(table);
+        layout.setExpandRatio(table, 1);
         layout.setSizeUndefined();
         setCompositionRoot(layout);
         // setSizeFull();
