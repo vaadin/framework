@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.EventObject;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -113,6 +114,8 @@ public class IndexedContainer implements Container, Container.Indexed,
      * it
      */
     private HashSet filters;
+
+    private HashMap<Object, Object> defaultPropertyValues;
 
     /* Container constructors */
 
@@ -272,10 +275,16 @@ public class IndexedContainer implements Container, Container.Indexed,
 
         // If default value is given, set it
         if (defaultValue != null) {
+            // for existing rows
             for (final Iterator i = itemIds.iterator(); i.hasNext();) {
                 getItem(i.next()).getItemProperty(propertyId).setValue(
                         defaultValue);
             }
+            // store for next rows
+            if (defaultPropertyValues == null) {
+                defaultPropertyValues = new HashMap<Object, Object>();
+            }
+            defaultPropertyValues.put(propertyId, defaultValue);
         }
 
         // Sends a change event
@@ -352,7 +361,11 @@ public class IndexedContainer implements Container, Container.Indexed,
 
         // Adds the Item to container
         itemIds.add(itemId);
-        items.put(itemId, new Hashtable());
+        Hashtable t = new Hashtable();
+        items.put(itemId, t);
+
+        addDefaultValues(t);
+
         final Item item = new IndexedContainerItem(itemId);
         if (filteredItemIds != null) {
             if (passesFilters(item)) {
@@ -364,6 +377,20 @@ public class IndexedContainer implements Container, Container.Indexed,
         fireContentsChange(itemIds.size() - 1);
 
         return item;
+    }
+
+    /**
+     * Helper method to add default values for items if available
+     * 
+     * @param t
+     *            data table of added item
+     */
+    private void addDefaultValues(Hashtable t) {
+        if (defaultPropertyValues != null) {
+            for (Object key : defaultPropertyValues.keySet()) {
+                t.put(key, defaultPropertyValues.get(key));
+            }
+        }
     }
 
     /**
@@ -408,6 +435,7 @@ public class IndexedContainer implements Container, Container.Indexed,
         // Removes the Property to Property list and types
         propertyIds.remove(propertyId);
         types.remove(propertyId);
+        defaultPropertyValues.remove(propertyId);
 
         // If remove the Property from all Items
         for (final Iterator i = itemIds.iterator(); i.hasNext();) {
@@ -673,7 +701,9 @@ public class IndexedContainer implements Container, Container.Indexed,
 
         // Adds the Item to container
         itemIds.add(index, newItemId);
-        items.put(newItemId, new Hashtable());
+        Hashtable t = new Hashtable();
+        items.put(newItemId, t);
+        addDefaultValues(t);
 
         if (filteredItemIds != null) {
             updateContainerFiltering();
@@ -1230,10 +1260,12 @@ public class IndexedContainer implements Container, Container.Indexed,
         }
 
         /**
-         * <p> Tests if the Property is in read-only mode. In read-only mode
-         * calls to the method <code>setValue</code> will throw
+         * <p>
+         * Tests if the Property is in read-only mode. In read-only mode calls
+         * to the method <code>setValue</code> will throw
          * <code>ReadOnlyException</code> s and will not modify the value of the
-         * Property. </p>
+         * Property.
+         * </p>
          * 
          * @return <code>true</code> if the Property is in read-only mode,
          *         <code>false</code> if it's not.
