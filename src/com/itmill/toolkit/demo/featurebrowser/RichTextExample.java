@@ -7,8 +7,8 @@ package com.itmill.toolkit.demo.featurebrowser;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.Label;
-import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.RichTextArea;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
 /**
@@ -23,16 +23,19 @@ public class RichTextExample extends CustomComponent {
             + "See the <A href=\"http://www.itmill.com/documentation/itmill-toolkit-5-reference-manual/\">manual</a> "
             + "for more information.";
 
-    private final OrderedLayout main;
+    private final VerticalLayout main;
     private final Label l;
     private final RichTextArea editor = new RichTextArea();
     private final Button b;
 
     public RichTextExample() {
         // main layout
-        main = new OrderedLayout();
+        main = new VerticalLayout();
         main.setMargin(true);
         setCompositionRoot(main);
+
+        editor.setWidth("100%");
+
         // Add the label
         l = new Label(txt);
         l.setContentMode(Label.CONTENT_XHTML);
@@ -53,8 +56,8 @@ public class RichTextExample extends CustomComponent {
             }
         });
         main.addComponent(b);
-        main.setComponentAlignment(b, OrderedLayout.ALIGNMENT_RIGHT,
-                OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
+        main.setComponentAlignment(b, VerticalLayout.ALIGNMENT_RIGHT,
+                VerticalLayout.ALIGNMENT_VERTICAL_CENTER);
     }
 
 }
