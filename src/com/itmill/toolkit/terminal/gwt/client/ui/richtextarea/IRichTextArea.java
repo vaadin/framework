@@ -82,12 +82,20 @@ public class IRichTextArea extends Composite implements Paintable, Field,
         }
     }
 
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+    public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
         this.client = client;
         id = uidl.getId();
 
         if (uidl.hasVariable("text")) {
+            if (BrowserInfo.get().isIE()) {
+                // rta is rather buggy in IE (as pretty much everything is)
+                // it needs some "shaking" not to fall into uneditable state
+                // see #2374
+                rta.getBasicFormatter().toggleBold();
+                rta.getBasicFormatter().toggleBold();
+            }
             rta.setHTML(uidl.getStringVariable("text"));
+
         }
         setEnabled(!uidl.getBooleanAttribute("disabled"));
 
