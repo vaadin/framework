@@ -47,7 +47,7 @@ public interface Layout extends ComponentContainer {
     /**
      * TODO make javadocs, remove from implementing classes
      */
-    public interface AlignmentHandler extends Layout {
+    public interface AlignmentHandler {
 
         /**
          * Contained component should be aligned horizontally to the left.
@@ -109,7 +109,7 @@ public interface Layout extends ComponentContainer {
      * 
      * TODO refine javadocs
      */
-    public interface SpacingHandler extends Layout {
+    public interface SpacingHandler {
         /**
          * Enable spacing between child components within this layout.
          * 
@@ -147,7 +147,8 @@ public interface Layout extends ComponentContainer {
          * layout.
          * </p>
          * 
-         * @param marginInfo MarginInfo object containing the new margins.
+         * @param marginInfo
+         *            MarginInfo object containing the new margins.
          */
         public void setMargin(MarginInfo marginInfo);
 
