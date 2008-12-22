@@ -75,12 +75,6 @@ public class Util {
      *            run componentSizeUpdated lazyly
      */
     public static void notifyParentOfSizeChange(Paintable widget, boolean lazy) {
-        if (!(widget instanceof Paintable)) {
-            ApplicationConnection.getConsole().log(
-                    "Notified widget must be paintable not "
-                            + widget.getClass().getName());
-            return;
-        }
         if (lazy) {
             latelyChangedWidgets.add(widget);
             lazySizeChangeTimer.schedule(LAZY_SIZE_CHANGE_TIMEOUT);
