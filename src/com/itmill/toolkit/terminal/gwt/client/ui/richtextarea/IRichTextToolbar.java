@@ -22,20 +22,19 @@ import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ImageBundle;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.ToggleButton;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * A sample toolbar for use with {@link RichTextArea}. It provides a simple UI
- * for all rich text formatting, dynamically displayed only for the available
- * functionality.
+ * A modified version of sample toolbar for use with {@link RichTextArea}. It
+ * provides a simple UI for all rich text formatting, dynamically displayed only
+ * for the available functionality.
  */
 public class IRichTextToolbar extends Composite {
 
@@ -293,9 +292,9 @@ public class IRichTextToolbar extends Composite {
     private final RichTextArea.BasicFormatter basic;
     private final RichTextArea.ExtendedFormatter extended;
 
-    private final VerticalPanel outer = new VerticalPanel();
-    private final HorizontalPanel topPanel = new HorizontalPanel();
-    private final HorizontalPanel bottomPanel = new HorizontalPanel();
+    private final FlowPanel outer = new FlowPanel();
+    private final FlowPanel topPanel = new FlowPanel();
+    private final FlowPanel bottomPanel = new FlowPanel();
     private ToggleButton bold;
     private ToggleButton italic;
     private ToggleButton underline;
@@ -334,6 +333,8 @@ public class IRichTextToolbar extends Composite {
         outer.add(topPanel);
         outer.add(bottomPanel);
         topPanel.setWidth("100%");
+        topPanel.setHeight("20px");
+        topPanel.getElement().getStyle().setProperty("overflow", "hidden");
         bottomPanel.setWidth("100%");
 
         initWidget(outer);
