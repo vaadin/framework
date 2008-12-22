@@ -358,15 +358,6 @@
 				</replacetokens>
 			</filterchain>
 		</copy>
-		<if> <!-- use oophm for hosted mode in Linux only -->
-			<equals arg1="${package-platform}" arg2="linux" />
-			<then> 
-				<var name="hostedmode-platform" value="oophm" />
-			</then>
-			<else>
-				<var name="hostedmode-platform" value="${hostedmode-platform}" />
-			</else>
-		</if>
 		<copy todir="${output-dir}">
 			<filterchain>
 				<expandproperties />
@@ -380,15 +371,10 @@
 					<token key="platform-specific-entries" value="&lt;classpathentry kind=&quot;lib&quot; path=&quot;gwt/gwt-dev-${package-platform}.jar&quot; /&gt;" />
 					<token key="/platform-specific-entries" value="" />
 				</replacetokens>
-				<!-- .classpath, build-widgetset.xml -->
+				<!-- .classpath, HostedMode.launch, build-widgetset.xml -->
 				<replacetokens begintoken="&lt;" endtoken=">">
 					<token key="platform" value="${package-platform}" />
 					<token key="/platform" value="" />
-				</replacetokens>
-				<!-- HostedMode.launch -->
-				<replacetokens begintoken="&lt;" endtoken=">">
-					<token key="hostedmode-platform" value="${hostedmode-platform}" />
-					<token key="/hostedmode-platform" value="" />
 				</replacetokens>
 				<!-- .project, *.launch -->
 				<replacetokens begintoken="&lt;" endtoken=">">
