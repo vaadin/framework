@@ -2,7 +2,7 @@
 <launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
 <stringAttribute key="bad_container_name" value="/<eclipse-workspace-name></eclipse-workspace-name>/IT Mill Toolkit Hosted Mode.launch"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/<eclipse-workspace-name></eclipse-workspace-name>/gwt/gwt-dev-<platform></platform>.jar"/>
+<listEntry value="/<eclipse-workspace-name></eclipse-workspace-name>/gwt/gwt-dev-<hostedmode-platform></hostedmode-platform>.jar"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="1"/>
