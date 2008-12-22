@@ -174,7 +174,7 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
         log("Application version: " + cnf.getApplicationVersion());
 
         if (!cnf.getSerletVersion().equals(VERSION)) {
-            error("Warning: your widget set seems to be built with different "
+            error("Warning: your widget set seems to be built with a different "
                     + "version than the one used on server. Unexpected "
                     + "behavior may occur.");
         }
@@ -354,11 +354,11 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
             Set<Paintable> zeroWidthComponents) {
         int size = array.size();
         panel.add(new HTML("<div>************************</di>"
-                + "<h4>Layouts analyzed on server, total top level errors: "
+                + "<h4>Layouts analyzed on server, total top level problems: "
                 + size + " </h4>"));
         if (size > 0) {
             Tree tree = new Tree();
-            TreeItem root = new TreeItem("Root errors");
+            TreeItem root = new TreeItem("Root problems");
             for (int i = 0; i < size; i++) {
                 JSONObject error = array.get(i).isObject();
                 printLayoutError(error, root, ac);
@@ -396,7 +396,7 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
             errorDetails.add(new Label("" + Util.getSimpleName(paintable)
                     + " inside " + Util.getSimpleName(layout)));
             final CheckBox emphasisInUi = new CheckBox(
-                    "Emphasis components parent in UI (actual component not visible)");
+                    "Emphasis components parent in UI (actual component is not visible)");
             emphasisInUi.addClickListener(new ClickListener() {
                 public void onClick(Widget sender) {
                     if (paintable != null) {
@@ -418,15 +418,15 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
 
         TreeItem errorNode = new TreeItem();
         VerticalPanel errorDetails = new VerticalPanel();
-        errorDetails.add(new Label("Error in " + Util.getSimpleName(paintable)
-                + " id: " + pid));
+        errorDetails.add(new Label(Util.getSimpleName(paintable) + " id: "
+                + pid));
         if (error.containsKey("heightMsg")) {
-            errorDetails.add(new Label("Height error: "
+            errorDetails.add(new Label("Height problem: "
                     + error.get("heightMsg")));
         }
         if (error.containsKey("widthMsg")) {
-            errorDetails
-                    .add(new Label("Width error: " + error.get("widthMsg")));
+            errorDetails.add(new Label("Width problem: "
+                    + error.get("widthMsg")));
         }
         final CheckBox emphasisInUi = new CheckBox("Emphasis component in UI");
         emphasisInUi.addClickListener(new ClickListener() {
@@ -442,7 +442,7 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
         errorNode.setWidget(errorDetails);
         if (error.containsKey("subErrors")) {
             HTML l = new HTML(
-                    "<em>Expand this node to show errors that may be dependent on this error.</em>");
+                    "<em>Expand this node to show problems that may be dependent on this problem.</em>");
             errorDetails.add(l);
             JSONArray array = error.get("subErrors").isArray();
             for (int i = 0; i < array.size(); i++) {

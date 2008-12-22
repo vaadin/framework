@@ -77,7 +77,7 @@ public class ComponentSizeValidator {
             Stack<ComponentInfo> attributes, boolean widthError,
             PrintStream errorStream) {
         StringBuffer err = new StringBuffer();
-        err.append("IT MILL Toolkit DEBUG\n");
+        err.append("IT Mill Toolkit DEBUG\n");
 
         StringBuilder indent = new StringBuilder("");
         ComponentInfo ci;
@@ -91,11 +91,11 @@ public class ComponentSizeValidator {
             }
         }
 
-        err.append("Invalid layout detected. ");
+        err.append("Layout problem detected: ");
         err.append(msg);
         err.append("\n");
         err
-                .append("Components may be invisible or not render as expected. Relative sizes were replaced by undefined sizes.\n");
+                .append("Relative sizes were replaced by undefined sizes, components may not render as expected.\n");
         errorStream.println(err);
 
     }
@@ -184,18 +184,18 @@ public class ComponentSizeValidator {
                     }
 
                     if (vertical) {
-                        msg = "Relative height for component inside non sized vertical ordered layout.";
+                        msg = "Component with relative height inside a VerticalLayout with no height defined.";
                         attributes = getHeightAttributes(component);
                     } else {
-                        msg = "At least one of horizontal orderedlayout's components must have non relative height if layout has no height defined";
+                        msg = "At least one of a HorizontalLayout's components must have non relative height if the height of the layout is not defined";
                         attributes = getHeightAttributes(component);
                     }
                 } else if (parent instanceof GridLayout) {
-                    msg = "At least one component in each row should have non relative height in GridLayout with undefined height.";
+                    msg = "At least one of the GridLayout's components in each row should have non relative height if the height of the layout is not defined.";
                     attributes = getHeightAttributes(component);
                 } else {
                     // default error for non sized parent issue
-                    msg = "Relative height component's parent should not have undefined height.";
+                    msg = "A component with relative height needs a parent with defined height.";
                     attributes = getHeightAttributes(component);
                 }
                 printServerError(msg, attributes, false, serverErrorStream);
@@ -217,18 +217,18 @@ public class ComponentSizeValidator {
                     }
 
                     if (horizontal) {
-                        msg = "Relative width for component inside non sized horizontal ordered layout.";
+                        msg = "Component with relative width inside a HorizontalLayout with no width defined";
                         attributes = getWidthAttributes(component);
                     } else {
-                        msg = "At least one of vertical orderedlayout's components must have non relative width if layout has no width defined";
+                        msg = "At least one of a VerticalLayout's components must have non relative width if the width of the layout is not defined";
                         attributes = getWidthAttributes(component);
                     }
                 } else if (parent instanceof GridLayout) {
-                    msg = "At least one component in each column should have non relative width in GridLayout with undefined width.";
+                    msg = "At least one of the GridLayout's components in each column should have non relative width if the width of the layout is not defined.";
                     attributes = getWidthAttributes(component);
                 } else {
                     // default error for non sized parent issue
-                    msg = "Relative width component's parent should not have undefined width.";
+                    msg = "A component with relative width needs a parent with defined width.";
                     attributes = getWidthAttributes(component);
                 }
                 clientJSON.print(",\"widthMsg\":\"" + msg + "\"");
