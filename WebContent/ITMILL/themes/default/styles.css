@@ -169,16 +169,17 @@
 /* body tag created by servlet */
 .i-generated-body {
 	background: #e9eced;
-	width:100%;
-	height:100%;
-	border:0;
-	margin:0;
-	overflow:hidden;
+	width: 100%;
+	height: 100%;
+	border: 0;
+	margin: 0;
+	overflow: hidden;
 }
 
 .i-app {
 	background: #e9eced;
-	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana,
+		sans-serif;
 	color: #464f52;
 	font-size: 13px;
 	line-height: 18px;
@@ -194,84 +195,75 @@
 .i-view {
 	height: 100%;
 	width: 100%;
-	overflow: auto; 
+	overflow: auto;
 	/* avoid scrollbars with margins in root layout */
 	outline: none;
-	margin-top:-1px;
-	border-top:1px solid transparent;
-	position:relative;
+	margin-top: -1px;
+	border-top: 1px solid transparent;
+	position: relative;
 }
-
 
 /**
  * Try to cope printing somehow. Reasonable printing support 
  * needs application specific planning and CSS tuning.
  */
 @media print {
-	
 	.i-generated-body {
 		height: auto;
 		min-height: 20cm;
 		overflow: visible;
 	}
-
 	.i-app {
-		height:auto;
+		height: auto;
 		min-height: 20cm;
 	}
-	
 	.i-view {
 		overflow: visible;
 	}
-	
 	.i-gridlayout {
 		overflow: visible !important;
 	}
-	
 }
 
-.i-view:active, .i-view:focus { 
+.i-view:active,.i-view:focus {
 	outline: none;
 }
 
-.i-app input, 
-.i-window input, 
-.i-app select, 
-.i-window select, 
-.i-app textarea, 
-.i-window textarea, 
-.i-app button,
-.i-window button {
-	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+.i-app input,.i-window input,.i-app select,.i-window select,.i-app textarea,.i-window textarea,.i-app button,.i-window button
+	{
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana,
+		sans-serif;
 	color: #464f52;
 }
 
-.i-app select,
-.i-window select {
+.i-app select,.i-window select {
 	padding: 0;
 	margin: 0;
 }
 
 .i-disabled {
 	opacity: 0.3;
-	filter: Alpha(opacity=30);
+	filter: Alpha(opacity = 30);
 }
+
 * html .i-disabled {
 	zoom: 1;
 }
+
 *+html .i-disabled {
 	zoom: 1;
 }
+
 .i-disabled .i-disabled {
 	opacity: 1.0;
 }
+
 .i-required-field-indicator {
-	padding-left:2px;
+	padding-left: 2px;
 	color: red;
 }
 
-/* Field modified */
-/* Disabled by default
+/* Field modified */ /* Disabled by default
 input.i-modified,
 .i-richtextarea.i-modified iframe.gwt-RichTextArea,
 .i-checkbox.i-modified,
@@ -285,19 +277,17 @@ input.i-modified,
 	background:transparent;
 	background-color: #FFFFE0;
 }
-*/
-
-/**
+*/ /**
  * Custom tooltip
  */
 .i-tooltip {
- 	background-color: #fffcdd;
- 	border: 1px solid #b8b295;
- 	border-top-color: #d5d2c1;
- 	border-left-color: #d5d2c1;
- 	font-size: 11px;
- 	line-height: 13px;
- 	font-family: arial, helvetica, tahoma, verdana, sans-serif;
+	background-color: #fffcdd;
+	border: 1px solid #b8b295;
+	border-top-color: #d5d2c1;
+	border-left-color: #d5d2c1;
+	font-size: 11px;
+	line-height: 13px;
+	font-family: arial, helvetica, tahoma, verdana, sans-serif;
 	color: #5d5444;
 }
 
@@ -317,7 +307,7 @@ input.i-modified,
 	border-top: 1px solid #fff3dc;
 	border-bottom: 1px solid #ead7b1;
 	overflow: auto;
- }
+}
 
 .i-tooltip .i-errormessage h2 {
 	font-size: 16px;
@@ -335,10 +325,10 @@ input.i-modified,
 /**
  * Context menu styles 
  */
-
 .i-contextmenu {
 	background: #e9eced url(tabsheet/img/tab-bg.png);
-	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana,
+		sans-serif;
 	background-color: #f6f7f7;
 	color: #464f52;
 	font-size: 12px;
@@ -358,8 +348,7 @@ input.i-modified,
 	vertical-align: middle;
 }
 
-.i-contextmenu .gwt-MenuItem div {
-	/*border: 1px solid #f6f7f7;*/
+.i-contextmenu .gwt-MenuItem div { /*border: 1px solid #f6f7f7;*/
 	padding: 1px 20px 1px 8px;
 	cursor: pointer;
 	vertical-align: middle;
@@ -372,15 +361,15 @@ input.i-modified,
 }
 
 .i-contextmenu table {
-	border-collapse:collapse;
-	margin:0;
-	padding:0;
+	border-collapse: collapse;
+	margin: 0;
+	padding: 0;
 }
+
 .i-contextmenu .gwt-MenuItem img {
 	margin-right: 10px;
 	vertical-align: middle;
 }
-
 
 /**
  * Link component styles 
@@ -392,6 +381,7 @@ input.i-modified,
 	color: #464f52;
 	vertical-align: middle;
 }
+
 .i-link img {
 	vertical-align: middle;
 }
@@ -400,7 +390,7 @@ input.i-modified,
  * Label has tiny paddings to include contents margins.
  */
 .i-label {
-	padding-top:1px;
+	padding-top: 1px;
 	padding-bottom: 1px;
 }
 
@@ -408,47 +398,54 @@ input.i-modified,
  * Note: client side expects that loading indicator has a height. It depends on
  * this css property to ensure browsers have applied all required styles.
  */
-.i-loading-indicator,
-.i-loading-indicator-delay,
-.i-loading-indicator-wait {
+.i-loading-indicator,.i-loading-indicator-delay,.i-loading-indicator-wait
+	{
 	width: 31px;
 	height: 31px;
 	background: transparent url(common/img/loading-indicator.gif);
 }
+
 .i-loading-indicator-delay {
 	background: transparent url(common/img/loading-indicator-delay.gif);
 }
+
 .i-loading-indicator-wait {
 	background: transparent url(common/img/loading-indicator-wait.gif);
 }
 
 /* debug dialog */
-
 .i-debug-console {
-	background:white;
-	opacity: 0.85;	
+	background: white;
+	opacity: 0.85;
 	border: 1px solid black;
-	font-family:sans-serif;
+	font-family: sans-serif;
 }
+
 .i-debug-console-caption {
-	background:black;
+	background: black;
 	border-bottom: 1px solid grey;
 	color: white;
 	font-weight: bold;
 }
+
 .i-debug-console-content {
-	font-size:x-small;
+	font-size: x-small;
 	overflow: auto;
 }
+
 .i-debug-console-content input {
-	font-size:xx-small;
+	font-size: xx-small;
 }
 
 /* Debug style */
-.i-app .invalidlayout,
-.i-app .invalidlayout * {
+.i-app .invalidlayout,.i-app .invalidlayout * {
 	background: #f99 !important;
-	
+}
+
+/* Fix for liferay. #2384 */
+.i-app input[type="text"],.i-app input[type="password"],.i-app input[type="reset"],.i-app select,.i-app textarea,.i-app .textarea
+	{
+	padding: 2px 2px;
 }
 
 /* ./WebContent/ITMILL/themes/default/customcomponent/customcomponent.css */
