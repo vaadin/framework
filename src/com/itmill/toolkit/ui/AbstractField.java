@@ -763,7 +763,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         // required fields, as in those cases user is aware of the problem.
         // Furthermore, non-required empty fields are obviously correct.
         ErrorMessage validationError = null;
-        if (isValidationVisible() && !(isEmpty() && !isRequired())) {
+        if (isValidationVisible() && !(isEmpty() && isRequired())) {
 
             try {
                 validate();

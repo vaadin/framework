@@ -211,7 +211,13 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
                         }
                         break;
                     } else if (f instanceof Field && !((Field) f).isValid()) {
-                        // Something is wring with the field, but no proper
+                        // A required, empty field should not be marked invalid
+                        AbstractField absField = (AbstractField) f;
+                        if (absField.isEmpty() && absField.isRequired()) {
+                            break;
+                        }
+
+                        // Something is wrong with the field, but no proper
                         // error is given. Generate one.
                         validationError = new Validator.InvalidValueException(
                                 field.getCaption());
