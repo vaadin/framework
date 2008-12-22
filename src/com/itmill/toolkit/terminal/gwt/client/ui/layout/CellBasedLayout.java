@@ -284,6 +284,8 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
                     .get(pos);
             widgetToComponentContainer.remove(child.getWidget());
             remove(child);
+            Paintable p = (Paintable) child.getWidget();
+            client.unregisterPaintable(p);
         }
 
     }
