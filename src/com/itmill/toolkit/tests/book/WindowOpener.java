@@ -7,7 +7,7 @@ package com.itmill.toolkit.tests.book;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.Label;
-import com.itmill.toolkit.ui.OrderedLayout;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Window.CloseEvent;
 
@@ -24,7 +24,7 @@ public class WindowOpener extends CustomComponent
         mainwindow = main;
 
         /* The component consists of a button that opens the window. */
-        final OrderedLayout layout = new OrderedLayout();
+        final VerticalLayout layout = new VerticalLayout();
         
         openbutton = new Button("Open Window", this, "openButtonClick");
         explanation = new Label("Explanation");
@@ -40,6 +40,7 @@ public class WindowOpener extends CustomComponent
         mywindow = new Window("My Dialog");
         mywindow.setPositionX(200);
         mywindow.setPositionY(100);
+        mywindow.getLayout().setSizeUndefined();
 
         /* Add the window inside the main window. */
         mainwindow.addWindow(mywindow);

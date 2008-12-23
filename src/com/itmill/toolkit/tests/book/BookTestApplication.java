@@ -36,16 +36,15 @@ import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.CustomLayout;
 import com.itmill.toolkit.ui.DateField;
 import com.itmill.toolkit.ui.Embedded;
-import com.itmill.toolkit.ui.ExpandLayout;
 import com.itmill.toolkit.ui.Form;
 import com.itmill.toolkit.ui.FormLayout;
 import com.itmill.toolkit.ui.GridLayout;
+import com.itmill.toolkit.ui.HorizontalLayout;
 import com.itmill.toolkit.ui.InlineDateField;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Link;
 import com.itmill.toolkit.ui.MenuBar;
 import com.itmill.toolkit.ui.NativeSelect;
-import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.PopupDateField;
 import com.itmill.toolkit.ui.ProgressIndicator;
@@ -55,8 +54,10 @@ import com.itmill.toolkit.ui.TabSheet;
 import com.itmill.toolkit.ui.Table;
 import com.itmill.toolkit.ui.TextField;
 import com.itmill.toolkit.ui.Tree;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Button.ClickEvent;
+import com.itmill.toolkit.ui.Layout.AlignmentHandler;
 import com.itmill.toolkit.ui.MenuBar.MenuItem;
 
 public class BookTestApplication extends com.itmill.toolkit.Application {
@@ -71,38 +72,40 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
     Label mylabel3;
 
     StreamResource strres;
-    OrderedLayout ol;
+    VerticalLayout ol;
     int getwincount = 0;
-    
+
     public void init() {
         setTheme("tests-book");
-        
+
         setMainWindow(main);
 
         // Demo the use of parameter and URI handlers
         main.addParameterHandler(new MyParameterHandler());
         main.addURIHandler(new MyURIHandler());
-        
+
         MyDynamicResource myresource = new MyDynamicResource();
         main.addParameterHandler(myresource);
         main.addURIHandler(myresource);
 
         main.addURIHandler(new BookTestURIHandler());
     }
-    
+
     class MyParameterHandler implements ParameterHandler {
         public void handleParameters(Map parameters) {
             // Print out the parameters to standard output
             for (Iterator it = parameters.keySet().iterator(); it.hasNext();) {
-                String key   = (String) it.next();
+                String key = (String) it.next();
                 String value = ((String[]) parameters.get(key))[0];
-                System.out.println("Key: "+key+", value: "+value);
+                System.out.println("Key: " + key + ", value: " + value);
             }
         }
     }
+
     class MyURIHandler implements URIHandler {
         public DownloadStream handleURI(URL context, String relativeUri) {
-            System.out.println("Context: "+context.toString()+", relative: "+relativeUri);
+            System.out.println("Context: " + context.toString()
+                    + ", relative: " + relativeUri);
             return null; // Let the Application provide the response
         }
     }
@@ -127,10 +130,10 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
                 final Window child = (Window) cwi.next();
                 main.removeWindow(child);
             }
-            
+
             // The index is listed inside a grid layout
-            main.setLayout(new OrderedLayout());
-            GridLayout grid = new GridLayout(4,4);
+            main.setLayout(new VerticalLayout());
+            GridLayout grid = new GridLayout(4, 4);
             grid.addStyleName("index");
             main.addComponent(grid);
 
@@ -139,19 +142,22 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
                         "labelcontent", "tree", "embedded", "textfield",
                         "textfieldvalidation", "datefield", "button",
                         "select/select", "select/native", "select/optiongroup",
-                        "select/twincol", "filterselect", "validator", "table", "table/select", "table/component", "table/paging", "table/editable",
-                        "upload", "link", "gridlayout", "orderedlayout",
-                        "formlayout", "form", "form/simple", "form/layout", "panel", "expandlayout", "expandlayout/root", "tabsheet",
-                        "alignment", "alignment/grid", "window", "window/opener",
+                        "select/twincol", "filterselect", "validator", "table",
+                        "table/select", "table/component", "table/paging",
+                        "table/editable", "upload", "link", "gridlayout",
+                        "orderedlayout", "formlayout", "form", "form/simple",
+                        "form/layout", "panel", "expandlayout",
+                        "expandlayout/root", "tabsheet", "alignment",
+                        "alignment/grid", "window", "window/opener",
                         "window/multiple", "classresource", "usererror",
                         "progress/window", "progress/thread", "progress",
                         "customlayout", "spacing", "margin", "clientinfo",
                         "fillinform/templates", "notification", "print",
-                        "richtextfield", "querycontainer", "menubar"};
+                        "richtextfield", "querycontainer", "menubar" };
                 for (int i = 0; i < examples.length; i++) {
-                    grid.addComponent(new Label("<a href='" + context.toString() +
-                            examples[i] + "'>" + examples[i] + "</a>",
-                            Label.CONTENT_XHTML));
+                    grid.addComponent(new Label("<a href='"
+                            + context.toString() + examples[i] + "'>"
+                            + examples[i] + "</a>", Label.CONTENT_XHTML));
                 }
                 return null;
             }
@@ -233,13 +239,14 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
             } else if (example.equals("menubar")) {
                 example_MenuBar(main, param);
             } else {
-                ; // main.addComponent(new Label("Unknown test '"+example+"'."));
+                ; // main.addComponent(new
+                // Label("Unknown test '"+example+"'."));
             }
 
             return null;
         }
     }
-    
+
     /*
      * public Window getWindow(String name) { Window superwin =
      * super.getWindow(name); if (superwin != null) return superwin;
@@ -310,10 +317,14 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
                 new Object[] { "Venus" },
                 new Object[] { "Earth", "The Moon" },
                 new Object[] { "Mars", "Phobos", "Deimos" },
-                new Object[] { "Jupiter", "Io", "Europa", "Ganymedes", "Callisto" },
-                new Object[] { "Saturn", "Titan", "Tethys", "Dione", "Rhea", "Iapetus" },
-                new Object[] { "Uranus", "Miranda", "Ariel", "Umbriel", "Titania", "Oberon" },
-                new Object[] { "Neptune", "Triton", "Proteus", "Nereid", "Larissa" } };
+                new Object[] { "Jupiter", "Io", "Europa", "Ganymedes",
+                        "Callisto" },
+                new Object[] { "Saturn", "Titan", "Tethys", "Dione", "Rhea",
+                        "Iapetus" },
+                new Object[] { "Uranus", "Miranda", "Ariel", "Umbriel",
+                        "Titania", "Oberon" },
+                new Object[] { "Neptune", "Triton", "Proteus", "Nereid",
+                        "Larissa" } };
 
         final Tree tree = new Tree();
 
@@ -344,48 +355,51 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
                 tree.expandItemsRecursively(planet);
             }
         }
-        
-        // Horizontal layout with the tree on the left and a details panel on the right. 
-        final ExpandLayout horlayout = new ExpandLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+
+        // Horizontal layout with the tree on the left and a details panel on
+        // the right.
+        final HorizontalLayout horlayout = new HorizontalLayout();
         horlayout.addStyleName("treeexample");
         horlayout.setSizeFull();
-        
+
         final Panel treepanel = new Panel("The Planets and Major Moons");
         treepanel.addComponent(tree);
         horlayout.addComponent(treepanel);
-        
+
         final Panel detailspanel = new Panel("Details");
         horlayout.addComponent(detailspanel);
-        horlayout.expand(detailspanel);
-        
-        final OrderedLayout detailslayout = new OrderedLayout();
+        horlayout.setExpandRatio(detailspanel, 1);
+
+        final VerticalLayout detailslayout = new VerticalLayout();
         detailspanel.setLayout(detailslayout);
-        
-		// Allow null selection - this is the default actually.
-		tree.setNullSelectionAllowed(true);
-		
-		// When a tree item (planet or moon) is clicked, open the item in Details view.
-		tree.setImmediate(true);
-		tree.addListener(new ValueChangeListener() {
-		    String lastselected = null;
-		    
-		    public void valueChange(ValueChangeEvent event) {
-		        String planet = (String) tree.getValue();
-		
-		        // Reselect a selected item if it is unselected by clicking it.
-		        if (planet == null) {
-		        	planet = lastselected;
-		        	tree.setValue(planet);
-		        }
-		        lastselected = planet;
-                
+
+        // Allow null selection - this is the default actually.
+        tree.setNullSelectionAllowed(true);
+
+        // When a tree item (planet or moon) is clicked, open the item in
+        // Details view.
+        tree.setImmediate(true);
+        tree.addListener(new ValueChangeListener() {
+            String lastselected = null;
+
+            public void valueChange(ValueChangeEvent event) {
+                String planet = (String) tree.getValue();
+
+                // Reselect a selected item if it is unselected by clicking it.
+                if (planet == null) {
+                    planet = lastselected;
+                    tree.setValue(planet);
+                }
+                lastselected = planet;
+
                 detailspanel.setCaption("Details on " + planet);
                 detailslayout.removeAllComponents();
-                
+
                 // Put some stuff in the Details view.
                 detailslayout.addComponent(new Label("Where is the cat?"));
-                detailslayout.addComponent(new Label("The cat is in " + planet + "."));
-                
+                detailslayout.addComponent(new Label("The cat is in " + planet
+                        + "."));
+
             }
         });
 
@@ -393,8 +407,7 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
     }
 
     void example_Select(Window main, String param) {
-        final OrderedLayout layout = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        final HorizontalLayout layout = new HorizontalLayout();
         layout.addStyleName("aligntop");
 
         if (param.equals("twincol")) {
@@ -527,8 +540,8 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
     }
 
     void example_DateField(Window main, String param) {
-        OrderedLayout layout = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
-        
+        HorizontalLayout layout = new HorizontalLayout();
+
         /* Create a DateField with the calendar style. */
         final DateField popupdate = new PopupDateField("Popup calendar field");
 
@@ -539,8 +552,9 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
         popupdate.setValue(new java.util.Date());
 
         /* Create a DateField with the calendar style. */
-        final DateField inlinedate = new InlineDateField("Inline calendar field");
-        
+        final DateField inlinedate = new InlineDateField(
+                "Inline calendar field");
+
         /* Set locale of the DateField to American English. */
         inlinedate.setLocale(new Locale("en", "US"));
 
@@ -562,7 +576,7 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
             form.setCaption("My Form");
             form.setRequired(true);
             main.addComponent(form);
-            
+
             TextField text = new TextField("This is a required text field");
             text.setRequired(true);
             text.setImmediate(true);
@@ -577,7 +591,7 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
             return "pagingtable";
         }
     }
-    
+
     void example_Table(Window main, String param) {
         if (param != null) {
             if (param.equals("select")) {
@@ -597,11 +611,11 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
             } else if (param.equals("paging")) {
                 PagingTable table = new PagingTable();
                 table.addContainerProperty("Column 1", String.class, null);
-                for (int i=0; i<100; i++)
-                    table.addItem(new Object[]{"Item "+i}, new Integer(i));
+                for (int i = 0; i < 100; i++)
+                    table.addItem(new Object[] { "Item " + i }, new Integer(i));
                 main.addComponent(table);
             }
-        }else
+        } else
             main.addComponent(new TableExample1());
     }
 
@@ -683,7 +697,7 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
         final Panel panel = new Panel("Contact Information");
 
         // Create a layout inside the panel
-        final OrderedLayout form = new FormLayout();
+        final FormLayout form = new FormLayout();
 
         // Set the layout as the root layout of the panel
         panel.setLayout(form);
@@ -703,9 +717,10 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
 
     void example_GridLayout(Window main, String param) {
         if (param.equals("embedded")) {
-            final GridLayout grid = new GridLayout(3,3);
-            for (int i=0; i<3*3; i++) {
-                ClassResource img = new ClassResource("smiley.jpg", main.getApplication());
+            final GridLayout grid = new GridLayout(3, 3);
+            for (int i = 0; i < 3 * 3; i++) {
+                ClassResource img = new ClassResource("smiley.jpg", main
+                        .getApplication());
                 Embedded embedded = new Embedded("", img);
                 grid.addComponent(embedded);
             }
@@ -750,25 +765,61 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
             layout.setHeight(400, Sizeable.UNITS_PIXELS);
 
             /* Define cells and their layouts to create. */
-            
-             Object cells[][] = {
-                     {new Button("Top Left"),      new Integer(OrderedLayout.ALIGNMENT_LEFT),              new Integer(OrderedLayout.ALIGNMENT_TOP)},
-                     {new Label ("Top Center"),    new Integer(OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER), new Integer(OrderedLayout.ALIGNMENT_TOP)},
-                     {new Label ("Top Right"),     new Integer(OrderedLayout.ALIGNMENT_RIGHT),             new Integer(OrderedLayout.ALIGNMENT_TOP)},
-                     {new Button("Center Left"),   new Integer(OrderedLayout.ALIGNMENT_LEFT),              new Integer(OrderedLayout.ALIGNMENT_VERTICAL_CENTER)},
-                     {new Button("Center Center"), new Integer(OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER), new Integer(OrderedLayout.ALIGNMENT_VERTICAL_CENTER)},
-                     {new Button("Center Right"),  new Integer(OrderedLayout.ALIGNMENT_RIGHT),             new Integer(OrderedLayout.ALIGNMENT_VERTICAL_CENTER)},
-                     {new Button("Bottom Left"),   new Integer(OrderedLayout.ALIGNMENT_LEFT),              new Integer(OrderedLayout.ALIGNMENT_BOTTOM)},
-                     {new Button("Bottom Center"), new Integer(OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER), new Integer(OrderedLayout.ALIGNMENT_BOTTOM)},
-                     {new Button("Bottom Right"),  new Integer(OrderedLayout.ALIGNMENT_RIGHT),             new Integer(OrderedLayout.ALIGNMENT_BOTTOM)}};
-             
-             for (int i=0; i<9; i++) {
-                 ExpandLayout celllayout = new ExpandLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
-                 celllayout.addComponent((Component) cells[i][0]);
-                 celllayout.setComponentAlignment((Component)cells[i][0], ((Integer)cells[i][1]).intValue(), ((Integer)cells[i][2]).intValue());
-                 layout.addComponent(celllayout);
-                 //layout.setComponentAlignment((Component)cells[i][0], ((Integer)cells[i][1]).intValue(), ((Integer)cells[i][2]).intValue());
-             }
+
+            Object cells[][] = {
+                    { new Button("Top Left"),
+                            new Integer(AlignmentHandler.ALIGNMENT_LEFT),
+                            new Integer(AlignmentHandler.ALIGNMENT_TOP) },
+                    {
+                            new Label("Top Center"),
+                            new Integer(
+                                    AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER),
+                            new Integer(AlignmentHandler.ALIGNMENT_TOP) },
+                    { new Label("Top Right"),
+                            new Integer(AlignmentHandler.ALIGNMENT_RIGHT),
+                            new Integer(AlignmentHandler.ALIGNMENT_TOP) },
+                    {
+                            new Button("Center Left"),
+                            new Integer(AlignmentHandler.ALIGNMENT_LEFT),
+                            new Integer(
+                                    AlignmentHandler.ALIGNMENT_VERTICAL_CENTER) },
+                    {
+                            new Button("Center Center"),
+                            new Integer(
+                                    AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER),
+                            new Integer(
+                                    AlignmentHandler.ALIGNMENT_VERTICAL_CENTER) },
+                    {
+                            new Button("Center Right"),
+                            new Integer(AlignmentHandler.ALIGNMENT_RIGHT),
+                            new Integer(
+                                    AlignmentHandler.ALIGNMENT_VERTICAL_CENTER) },
+                    { new Button("Bottom Left"),
+                            new Integer(AlignmentHandler.ALIGNMENT_LEFT),
+                            new Integer(AlignmentHandler.ALIGNMENT_BOTTOM) },
+                    {
+                            new Button("Bottom Center"),
+                            new Integer(
+                                    AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER),
+                            new Integer(AlignmentHandler.ALIGNMENT_BOTTOM) },
+                    { new Button("Bottom Right"),
+                            new Integer(AlignmentHandler.ALIGNMENT_RIGHT),
+                            new Integer(AlignmentHandler.ALIGNMENT_BOTTOM) } };
+
+            for (int i = 0; i < 9; i++) {
+                HorizontalLayout celllayout = new HorizontalLayout();
+                celllayout.addComponent((Component) cells[i][0]);
+                if (i == 0)
+                    celllayout.setExpandRatio((Component) cells[i][0], 1);
+
+                celllayout.setComponentAlignment((Component) cells[i][0],
+                        ((Integer) cells[i][1]).intValue(),
+                        ((Integer) cells[i][2]).intValue());
+                layout.addComponent(celllayout);
+                // layout.setComponentAlignment((Component)cells[i][0],
+                // ((Integer)cells[i][1]).intValue(),
+                // ((Integer)cells[i][2]).intValue());
+            }
         } else {
             final Panel panel = new Panel("A Panel with a Layout");
             main.addComponent(panel);
@@ -778,8 +829,7 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
     }
 
     void example_OrderedLayout(Window main, String param) {
-        final OrderedLayout layout = new OrderedLayout(
-                OrderedLayout.ORIENTATION_VERTICAL);
+        final VerticalLayout layout = new VerticalLayout();
         layout.addComponent(new TextField("Name"));
         layout.addComponent(new TextField("Street address"));
         layout.addComponent(new TextField("Postal code"));
@@ -800,80 +850,95 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
         } else if (param != null && param.equals("layout")) {
             Form form = new Form();
             form.setCaption("Form Caption");
-            form.setDescription("This is a description of the Form that is " +
-                    "displayed in the upper part of the form. You normally enter some " +
-                    "descriptive text about the form and its use here.");
-            
-            // Add a field directly to the layout. This field will not be bound to
-            // the data source Item of the form. 
+            form
+                    .setDescription("This is a description of the Form that is "
+                            + "displayed in the upper part of the form. You normally enter some "
+                            + "descriptive text about the form and its use here.");
+
+            // Add a field directly to the layout. This field will not be bound
+            // to
+            // the data source Item of the form.
             form.getLayout().addComponent(new TextField("A Field"));
-            
+
             // Add a field and bind it to an named item property.
             form.addField("another", new TextField("Another Field"));
-            
-            form.setComponentError(new UserError("This is the error indicator of the Form."));
+
+            form.setComponentError(new UserError(
+                    "This is the error indicator of the Form."));
 
             // Set the footer layout and add some text.
-            form.setFooter(new OrderedLayout());
-            form.getFooter().addComponent(new Label("This is the footer area of the Form. "+
-                                        "You can use any layout here. This is nice for buttons."));
-            
-            // Add an Ok (commit), Reset (discard), and Cancel buttons for the form.
-            ExpandLayout okbar = new ExpandLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+            form.setFooter(new VerticalLayout());
+            form
+                    .getFooter()
+                    .addComponent(
+                            new Label(
+                                    "This is the footer area of the Form. "
+                                            + "You can use any layout here. This is nice for buttons."));
+
+            // Add an Ok (commit), Reset (discard), and Cancel buttons for the
+            // form.
+            HorizontalLayout okbar = new HorizontalLayout();
             okbar.setHeight("25px");
             Button okbutton = new Button("OK", form, "commit");
             okbar.addComponent(okbutton);
-            okbar.setComponentAlignment(okbutton, ExpandLayout.ALIGNMENT_RIGHT, ExpandLayout.ALIGNMENT_TOP);
+            okbar.setExpandRatio(okbutton, 1);
+            okbar.setComponentAlignment(okbutton,
+                    AlignmentHandler.ALIGNMENT_RIGHT,
+                    AlignmentHandler.ALIGNMENT_TOP);
             okbar.addComponent(new Button("Reset", form, "discard"));
             okbar.addComponent(new Button("Cancel"));
             form.getFooter().addComponent(okbar);
-            
+
             main.addComponent(form);
-        } else 
+        } else
             main.addComponent(new FormExample());
     }
 
     void example_ExpandLayout(Window main, String param) {
         if (param != null && param.equals("centered")) {
             Label widget = new Label("Here is text");
-    
-            ExpandLayout layout = new ExpandLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+
+            HorizontalLayout layout = new HorizontalLayout();
             layout.addComponent(widget);
-            layout.expand(widget);
-            layout.setComponentAlignment(widget, OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER, OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
+            layout.setExpandRatio(widget, 1);
+            layout.setComponentAlignment(widget,
+                    AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER,
+                    AlignmentHandler.ALIGNMENT_VERTICAL_CENTER);
             layout.setWidth(100, Sizeable.UNITS_PERCENTAGE);
             layout.setHeight(100, Sizeable.UNITS_PERCENTAGE);
-    
+
             main.setLayout(layout);
-            
+
             return;
         } else if (param != null && param.equals("window")) {
             Window window = new Window("Progress");
             window.setHeight(100, Sizeable.UNITS_PIXELS);
             window.setWidth(200, Sizeable.UNITS_PIXELS);
             main.addWindow(window);
-            
+
             ProgressIndicator progress = new ProgressIndicator(new Float(0.4));
             progress.addStyleName("fullwidth");
             progress.setPollingInterval(1000000);
             progress.setIndeterminate(false);
-    
-            ExpandLayout layout = new ExpandLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+
+            HorizontalLayout layout = new HorizontalLayout();
             layout.setHeight(100, Sizeable.UNITS_PERCENTAGE);
-            layout.setComponentAlignment(progress, OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER, OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
+            layout.setComponentAlignment(progress,
+                    HorizontalLayout.ALIGNMENT_HORIZONTAL_CENTER,
+                    HorizontalLayout.ALIGNMENT_VERTICAL_CENTER);
             window.setLayout(layout);
             window.addComponent(progress);
-            
+
             return;
         } else if (param != null && param.equals("root")) {
             final Window mainwin = main;
-            
+
             // Layout to switch to
-            final OrderedLayout expand2 = new OrderedLayout();
+            final VerticalLayout expand2 = new VerticalLayout();
             expand2.addComponent(new Label("I am layout too."));
-            
+
             // Original layout
-            final OrderedLayout expand1 = new OrderedLayout();
+            final VerticalLayout expand1 = new VerticalLayout();
             Button switchButton = new Button("Switch to other layout");
             switchButton.addListener(new Button.ClickListener() {
                 public void buttonClick(ClickEvent event) {
@@ -883,23 +948,24 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
             });
             expand1.addComponent(switchButton);
             main.setLayout(expand1);
-            
+
             return;
         } else if (param != null && param.equals("size")) {
-            ExpandLayout layout = new ExpandLayout();
+            VerticalLayout layout = new VerticalLayout();
             layout.setSizeFull();
             main.setLayout(layout);
 
             Button button = new Button("This is a button in middle of nowhere");
             layout.addComponent(button);
-            layout.setComponentAlignment(button, OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER, OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
-            
+            layout.setComponentAlignment(button,
+                    VerticalLayout.ALIGNMENT_HORIZONTAL_CENTER,
+                    VerticalLayout.ALIGNMENT_VERTICAL_CENTER);
+            layout.setExpandRatio(button, 1.0f);
             return;
         }
 
         for (int w = 0; w < 2; w++) {
-            final ExpandLayout layout = new ExpandLayout(
-                    OrderedLayout.ORIENTATION_VERTICAL);
+            final VerticalLayout layout = new VerticalLayout();
 
             /* Set the expanding layout as the root layout of a child window. */
             final Window window = new Window("A Child Window", layout);
@@ -913,13 +979,13 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
             /*
              * FIXME Java 5 -> 1.4 for (int i=0; i<5; i++)
              * table.addContainerProperty("col "+(i+1), Integer.class, 0); for
-             * (int j=0; j<20; j++) table.addItem(new
-             * Object[]{1*j,2*j,3*j,4*j,5*j}, j);
+             * (int j=0; j<20; j++) table.addItem(new Object[]{1j,2j,3j,4j,5j},
+             * j);
              */
             layout.addComponent(table);
 
             /* Designate the table to be the expanding component. */
-            layout.expand(table);
+            layout.setExpandRatio(table, 1.0f);
 
             /* Set it to use all available area. */
             table.setSizeFull();
@@ -928,7 +994,7 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
             final Button button2 = new Button("Ok");
             layout.addComponent(button2);
             layout.setComponentAlignment(button2,
-                    OrderedLayout.ALIGNMENT_RIGHT, 0);
+                    AlignmentHandler.ALIGNMENT_RIGHT, 0);
         }
     }
 
@@ -951,20 +1017,23 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
             // ("images/Mercury_small.png", this)));
         } else if (param.equals("expanding")) {
             // Create the layout
-            ExpandLayout expanding = new ExpandLayout(OrderedLayout.ORIENTATION_VERTICAL);
-            
+            VerticalLayout expanding = new VerticalLayout();
+
             // It is important to set the expanding layout as the root layout
             // of the containing window, in this case the main window, and not
             // use addComponent(), which would place the layout inside the
             // default root layout.
             main.setLayout(expanding);
-            
+
             // Create a tab sheet that fills the expanding layout
             final TabSheet tabsheet = new TabSheet();
-            tabsheet.addTab(new Label("Contents of the first tab"), "First Tab", null);
-            tabsheet.addTab(new Label("Contents of the second tab"), "Second Tab", null);
-            tabsheet.addTab(new Label("Contents of the third tab"), "Third tab", null);
-            
+            tabsheet.addTab(new Label("Contents of the first tab"),
+                    "First Tab", null);
+            tabsheet.addTab(new Label("Contents of the second tab"),
+                    "Second Tab", null);
+            tabsheet.addTab(new Label("Contents of the third tab"),
+                    "Third tab", null);
+
             // Set the tabsheet to scale to full size inside its container
             tabsheet.setWidth(100, Sizeable.UNITS_PERCENTAGE);
             tabsheet.setHeight(100, Sizeable.UNITS_PERCENTAGE);
@@ -973,26 +1042,29 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
             expanding.addComponent(tabsheet);
 
             // Set the tab sheet to be the expanding component
-            expanding.expand(tabsheet);
+            expanding.setExpandRatio(tabsheet, 1);
         } else if (param.equals("ordered")) {
             // Create the layout
-            OrderedLayout layout = new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL);
-            
+            VerticalLayout layout = new VerticalLayout();
+
             // It is important to set the expanding layout as the root layout
             // of the containing window, in this case the main window, and not
             // use addComponent(), which would place the layout inside the
             // default root layout.
             main.setLayout(layout);
-            
+
             // Create a tab sheet that fills the expanding layout
             final TabSheet tabsheet = new TabSheet();
-            tabsheet.addTab(new Label("Contents of the first tab"), "First Tab", null);
-            tabsheet.addTab(new Label("Contents of the second tab"), "Second Tab", null);
-            tabsheet.addTab(new Label("Contents of the third tab"), "Third tab", null);
-            
+            tabsheet.addTab(new Label("Contents of the first tab"),
+                    "First Tab", null);
+            tabsheet.addTab(new Label("Contents of the second tab"),
+                    "Second Tab", null);
+            tabsheet.addTab(new Label("Contents of the third tab"),
+                    "Third tab", null);
+
             // Set the tabsheet to scale to full size inside its container
             tabsheet.setWidth(100, Sizeable.UNITS_PERCENTAGE);
-            //tabsheet().setHeight(100, Sizeable.UNITS_PERCENTAGE);
+            // tabsheet().setHeight(100, Sizeable.UNITS_PERCENTAGE);
 
             // Add the tab sheet to the layout as usual
             layout.addComponent(tabsheet);
@@ -1046,8 +1118,8 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
         mywindow.addComponent(okbutton);
 
         /* Set window size. */
-        mywindow.setHeight(200);
-        mywindow.setWidth(400);
+        mywindow.setHeight("200px");
+        mywindow.setWidth("400px");
 
         /* Set window position. */
         mywindow.setPositionX(200);
@@ -1065,43 +1137,45 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
         main.addComponent(new Embedded("This is Embedded", new ClassResource(
                 "smiley.jpg", main.getApplication())));
     }
-    
+
     void example_ProgressIndicator(final Window main, String param) {
         if (param != null) {
             if (param.equals("thread")) {
 
                 // Create the indicator
-                final ProgressIndicator indicator = new ProgressIndicator(new Float(0.0));
+                final ProgressIndicator indicator = new ProgressIndicator(
+                        new Float(0.0));
                 main.addComponent(indicator);
-                
+
                 // Set polling frequency to 0.5 seconds.
                 indicator.setPollingInterval(1000);
-                
-                //indicator.addStyleName("invisible");
+
+                // indicator.addStyleName("invisible");
                 final Label text = new Label("-- Not running --");
                 main.addComponent(text);
-                
+
                 // Add a button to start the progress
                 final Button button = new Button("Click to start");
                 main.addComponent(button);
-        
+
                 // Another thread to do some work
                 class WorkThread extends Thread {
-                    public void run () {
+                    public void run() {
                         double current = 0.0;
                         while (true) {
                             // Do some "heavy work"
                             try {
                                 sleep(50); // Sleep for 50 milliseconds
-                            } catch (InterruptedException e) {}
-                            
+                            } catch (InterruptedException e) {
+                            }
+
                             // Grow the progress value until it reaches 1.0.
                             current += 0.01;
-                            if (current>1.0)
+                            if (current > 1.0)
                                 indicator.setValue(new Float(1.0));
-                            else 
+                            else
                                 indicator.setValue(new Float(current));
-                            
+
                             // After the progress is full for a while, stop.
                             if (current > 1.2) {
                                 // Restore the state to initial.
@@ -1112,19 +1186,20 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
                         }
                     }
                 }
-                
+
                 // Clicking the button creates and runs a work thread
                 button.addListener(new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
                         final WorkThread thread = new WorkThread();
                         thread.start();
-                        
+
                         // The button hides until the work is done.
                         button.setVisible(false);
                     }
                 });
             } else if (param.equals("window")) {
-                // Create a table in the main window to hold items added in the second window
+                // Create a table in the main window to hold items added in the
+                // second window
                 final Table table = new Table();
                 table.setPageLength(5);
                 table.setWidth(100, Sizeable.UNITS_PERCENTAGE);
@@ -1137,33 +1212,38 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
                 main.getApplication().addWindow(adderWindow);
 
                 // Create selection component to add items to the table
-                final NativeSelect select = new NativeSelect("Select item to add");
+                final NativeSelect select = new NativeSelect(
+                        "Select item to add");
                 select.setImmediate(true);
                 adderWindow.addComponent(select);
-                
+
                 // Add some items to the selection
-                String items[] = new String[]{"-- Select --", "Mercury", "Venus", 
-                        "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"};
-                for (int i=0; i<items.length; i++)
+                String items[] = new String[] { "-- Select --", "Mercury",
+                        "Venus", "Earth", "Mars", "Jupiter", "Saturn",
+                        "Uranus", "Neptune" };
+                for (int i = 0; i < items.length; i++)
                     select.addItem(items[i]);
                 select.setNullSelectionItemId(items[0]);
-                
+
                 // When an item is selected in the second window, add
                 // table in the main window
                 select.addListener(new ValueChangeListener() {
                     public void valueChange(ValueChangeEvent event) {
-                        // If the selected value is something else but null selection item.
+                        // If the selected value is something else but null
+                        // selection item.
                         if (select.getValue() != null) {
-                            // Add the selected item to the table in the main window
-                            table.addItem(new Object[]{select.getValue()}, new Integer(table.size()));
+                            // Add the selected item to the table in the main
+                            // window
+                            table.addItem(new Object[] { select.getValue() },
+                                    new Integer(table.size()));
                         }
                     }
                 });
 
                 // Link to open the selection window
                 Link link = new Link("Click to open second window",
-                                     new ExternalResource(adderWindow.getURL()),
-                                     "_new", 50, 200, Link.TARGET_BORDER_DEFAULT);
+                        new ExternalResource(adderWindow.getURL()), "_new", 50,
+                        200, Link.TARGET_BORDER_DEFAULT);
                 main.addComponent(link);
 
                 // Enable polling to update the main window
@@ -1171,41 +1251,53 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
                 poller.addStyleName("invisible");
                 main.addComponent(poller);
             } else if (param.equals("centered")) {
-/*                GridLayout grid = new GridLayout(3,3);
-                main.setLayout(grid);
-                grid().setWidth(100, Sizeable.UNITS_PERCENTAGE);
-                
-                ExpandLayout layout2 = new ExpandLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
-                layout2().setWidth(50, Sizeable.UNITS_PERCENTAGE);
+                /*
+                 * GridLayout grid = new GridLayout(3,3); main.setLayout(grid);
+                 * grid().setWidth(100, Sizeable.UNITS_PERCENTAGE);
+                 * 
+                 * ExpandLayout layout2 = new
+                 * ExpandLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+                 * layout2().setWidth(50, Sizeable.UNITS_PERCENTAGE);
+                 * 
+                 * ProgressIndicator poller = new ProgressIndicator(new
+                 * Float(0.4)); poller.setPollingInterval(1000000);
+                 * poller.setIndeterminate(false); layout2.addComponent(poller);
+                 * 
+                 * grid.addComponent(layout2, 1, 1);
+                 */
 
-                ProgressIndicator poller = new ProgressIndicator(new Float(0.4));
-                poller.setPollingInterval(1000000);
-                poller.setIndeterminate(false);
-                layout2.addComponent(poller);
+                // ExpandLayout layout2 = new
+                // ExpandLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+                /*
+                 * ProgressIndicator poller = new ProgressIndicator(new
+                 * Float(0.4)); poller.setPollingInterval(1000000);
+                 * poller.setIndeterminate(false);
+                 */
+                /*
+                 * layout2.addComponent(poller); layout2().setWidth(50,
+                 * Sizeable.UNITS_PERCENTAGE);
+                 */
 
-                grid.addComponent(layout2, 1, 1);
-                */
+                // layout.setComponentAlignment(poller,
+                // AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER,
+                // AlignmentHandler.ALIGNMENT_VERTICAL_CENTER);
+                /*
+                 * GridLayout grid = new GridLayout(1,1);
+                 * grid.addComponent(layout2, 0, 0); grid().setWidth(100,
+                 * Sizeable.UNITS_PERCENTAGE);
+                 */
 
-                //ExpandLayout layout2 = new ExpandLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
-                
-                /*ProgressIndicator poller = new ProgressIndicator(new Float(0.4));
-                poller.setPollingInterval(1000000);
-                poller.setIndeterminate(false);*/
-                /*layout2.addComponent(poller);
-                layout2().setWidth(50, Sizeable.UNITS_PERCENTAGE);*/
-                
-                //layout.setComponentAlignment(poller, OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER, OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
-                /*GridLayout grid = new GridLayout(1,1);
-                grid.addComponent(layout2, 0, 0);
-                grid().setWidth(100, Sizeable.UNITS_PERCENTAGE);*/
-                
-                /*GridLayout layout = new GridLayout(1,1); //OrderedLayout.ORIENTATION_HORIZONTAL);
-                layout.addComponent(poller);
-                //layout.expand(poller);
-                layout.setComponentAlignment(poller, OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER, OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
-                layout().setWidth(100, Sizeable.UNITS_PERCENTAGE);
-                layout().setHeight(100, Sizeable.UNITS_PERCENTAGE);*/
-                
+                /*
+                 * GridLayout layout = new GridLayout(1,1);
+                 * //OrderedLayout.ORIENTATION_HORIZONTAL);
+                 * layout.addComponent(poller); //layout.expand(poller);
+                 * layout.setComponentAlignment(poller,
+                 * AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER,
+                 * AlignmentHandler.ALIGNMENT_VERTICAL_CENTER);
+                 * layout().setWidth(100, Sizeable.UNITS_PERCENTAGE);
+                 * layout().setHeight(100, Sizeable.UNITS_PERCENTAGE);
+                 */
+
             }
         } else {
             ProgressIndicator poller = new ProgressIndicator(new Float(0.0));
@@ -1214,30 +1306,30 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
             main.addComponent(poller);
         }
     }
-    
+
     void example_CustomLayout(final Window main, String param) {
         Window sub = new Window("Login");
         sub.setModal(true);
         main.addWindow(sub);
-        
+
         // Create the custom layout and set it as the root layout of
         // the containing window.
         final CustomLayout custom = new CustomLayout("layoutname");
         sub.setLayout(custom);
-        
+
         // Create components and bind them to the location tags
         // in the custom layout.
         TextField username = new TextField();
         custom.addComponent(username, "username");
-        
+
         TextField password = new TextField();
         custom.addComponent(password, "password");
-        
+
         final Button ok = new Button("Login");
         custom.addComponent(ok, "okbutton");
-        
+
         final Button deny = new Button("No can do!");
-        
+
         Button.ClickListener listener = new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 // Switch between ok and deny
@@ -1248,66 +1340,66 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
                     System.out.println("Changing to ok button.");
                     custom.addComponent(ok, "okbutton");
                 }
-             } 
-         };
-        
+            }
+        };
+
         ok.addListener(listener);
         deny.addListener(listener);
     }
 
     void example_Spacing(final Window main, String param) {
-        OrderedLayout containinglayout = new OrderedLayout();
+        VerticalLayout containinglayout = new VerticalLayout();
         main.setLayout(containinglayout);
 
-        GridLayout grid = new GridLayout(4,3);
+        GridLayout grid = new GridLayout(4, 3);
         grid.addStyleName("spacingexample");
         containinglayout.addComponent(grid);
         grid.addComponent(new Label(""), 0, 0);
         grid.addComponent(new Label(""), 1, 0);
-        
-        grid.addComponent(new Label("No spacing:"),0,1);
-        OrderedLayout layout1 = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
-        grid.addComponent(layout1,1,1);
+
+        grid.addComponent(new Label("No spacing:"), 0, 1);
+        HorizontalLayout layout1 = new HorizontalLayout();
+        grid.addComponent(layout1, 1, 1);
         layout1.addStyleName("spacingexample");
         layout1.addComponent(new Button("Component 1"));
         layout1.addComponent(new Button("Component 2"));
         layout1.addComponent(new Button("Component 3"));
-        
+
         grid.addComponent(new Label("Horizontal spacing:"), 0, 2);
-        OrderedLayout layout2 = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
-        grid.addComponent(layout2,1,2);
+        HorizontalLayout layout2 = new HorizontalLayout();
+        grid.addComponent(layout2, 1, 2);
         layout2.addStyleName("spacingexample");
         layout2.setSpacing(true);
         layout2.addComponent(new Button("Component 1"));
         layout2.addComponent(new Button("Component 2"));
         layout2.addComponent(new Button("Component 3"));
 
-        grid.addComponent(new Label("No spacing:"),2,0);
-        OrderedLayout layout3 = new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL);
-        grid.addComponent(layout3,2,1,2,2);
+        grid.addComponent(new Label("No spacing:"), 2, 0);
+        VerticalLayout layout3 = new VerticalLayout();
+        grid.addComponent(layout3, 2, 1, 2, 2);
         layout3.addStyleName("spacingexample");
         layout3.addComponent(new Button("Component 1"));
         layout3.addComponent(new Button("Component 2"));
         layout3.addComponent(new Button("Component 3"));
 
-        grid.addComponent(new Label("Vertical spacing:"),3,0);
-        OrderedLayout layout4 = new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL);
-        grid.addComponent(layout4,3,1,3,2);
+        grid.addComponent(new Label("Vertical spacing:"), 3, 0);
+        VerticalLayout layout4 = new VerticalLayout();
+        grid.addComponent(layout4, 3, 1, 3, 2);
         layout4.addStyleName("spacingexample");
         layout4.setSpacing(true);
         layout4.addComponent(new Button("Component 1"));
         layout4.addComponent(new Button("Component 2"));
         layout4.addComponent(new Button("Component 3"));
-}
+    }
 
     void example_Margin(final Window main, String param) {
-        OrderedLayout hor = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+        HorizontalLayout hor = new HorizontalLayout();
         main.setLayout(hor);
-        
-        OrderedLayout containinglayout = new OrderedLayout();
+
+        VerticalLayout containinglayout = new VerticalLayout();
         hor.addComponent(containinglayout);
 
-        OrderedLayout layout1 = new OrderedLayout();
+        VerticalLayout layout1 = new VerticalLayout();
         containinglayout.addComponent(new Label("Regular layout margins:"));
         containinglayout.addComponent(layout1);
         layout1.addStyleName("marginexample1");
@@ -1316,16 +1408,17 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
         layout1.addComponent(new Button("Component 3"));
 
         // Create a layout
-        OrderedLayout layout2 = new OrderedLayout();
-        containinglayout.addComponent(new Label("Layout with a special margin element:"));
+        VerticalLayout layout2 = new VerticalLayout();
+        containinglayout.addComponent(new Label(
+                "Layout with a special margin element:"));
         containinglayout.addComponent(layout2);
-        
+
         // Set style name for the layout to allow styling it
         layout2.addStyleName("marginexample2");
-        
+
         // Have margin on all sides around the layout
         layout2.setMargin(true);
-        
+
         // Put something inside the layout
         layout2.addComponent(new Button("Component 1"));
         layout2.addComponent(new Button("Component 2"));
@@ -1335,55 +1428,59 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
     void example_ClientInfo(final Window main, String param) {
         // Get the client identification string
         WebApplicationContext context2 = (WebApplicationContext) getContext();
-        String browserApplication = context2.getBrowser().getBrowserApplication();
-        
+        String browserApplication = context2.getBrowser()
+                .getBrowserApplication();
+
         // Add a browser-dependent style name for the main window
         if (browserApplication.indexOf("Firefox/2") != -1)
             main.addStyleName("firefox2");
-        
+
         // Display the client identification string
         main.addComponent(new Label(browserApplication));
     }
 
     void example_FillInForm(final Window main, String param) {
-    	if (param.equals("templates")) {    	
-    		// Create a custom layout from the fill-in-form.html template.
-    		CustomLayout fillinlayout = new CustomLayout("fill-in-form");
-    	
-    		// The style will set the display to be "inline".
-    		fillinlayout.addStyleName("fillinlayout");
-    	
-    		// Create the fields that occur in the text.
-    		TextField field1 = new TextField();
-    		TextField field2 = new TextField();
-    		fillinlayout.addComponent(field1, "q1");
-    		fillinlayout.addComponent(field2, "q2");
-    	
-    		main.addComponent(fillinlayout);
-    	} else {
-    		String fillintext = "The <q1> is mightier than <q2>.";
-    		int pos = 0;
-    		while (pos < fillintext.length()) {
-    			int nexttag = fillintext.indexOf("<", pos);
-    			if (nexttag == -1) {
-    				
-    			}
-    		}
-    	}
+        if (param.equals("templates")) {
+            // Create a custom layout from the fill-in-form.html template.
+            CustomLayout fillinlayout = new CustomLayout("fill-in-form");
+
+            // The style will set the display to be "inline".
+            fillinlayout.addStyleName("fillinlayout");
+
+            // Create the fields that occur in the text.
+            TextField field1 = new TextField();
+            TextField field2 = new TextField();
+            fillinlayout.addComponent(field1, "q1");
+            fillinlayout.addComponent(field2, "q2");
+
+            main.addComponent(fillinlayout);
+        } else {
+            String fillintext = "The <q1> is mightier than <q2>.";
+            int pos = 0;
+            while (pos < fillintext.length()) {
+                int nexttag = fillintext.indexOf("<", pos);
+                if (nexttag == -1) {
+
+                }
+            }
+        }
     }
 
     void example_Notification(final Window main, String param) {
         final Window sub1 = new Window("");
         main.addWindow(sub1);
-        
+
         sub1.showNotification("The default notification");
-        
-        //Notification notif = new Notification("Title");
+
+        // Notification notif = new Notification("Title");
     }
 
     void example_Print(final Window main, String param) {
-        if (param != null && param.equals("simple")) {        
-            main.addComponent(new Label("<input type='button' onClick='print()' value='Click to Print'/>", Label.CONTENT_XHTML));
+        if (param != null && param.equals("simple")) {
+            main
+                    .addComponent(new Label(
+                            "<input type='button' onClick='print()' value='Click to Print'/>",
+                            Label.CONTENT_XHTML));
             return;
         }
 
@@ -1394,37 +1491,41 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
             public void buttonClick(ClickEvent event) {
                 // Create a window that contains stuff you want to print.
                 Window printWindow = new Window("Window to Print");
-                
+
                 // Have some content to print.
-                printWindow.addComponent(new Label("Here's some dynamic content."));
-                
+                printWindow.addComponent(new Label(
+                        "Here's some dynamic content."));
+
                 // To execute the print() JavaScript, we need to run it
                 // from a custom layout.
                 CustomLayout scriptLayout = new CustomLayout("printpage");
-                printWindow.addComponent (scriptLayout);
-                
+                printWindow.addComponent(scriptLayout);
+
                 // Add the printing window as an application-level window.
                 main.getApplication().addWindow(printWindow);
-        
+
                 // Open the printing window as a new browser window
                 main.open(new ExternalResource(printWindow.getURL()), "_new");
-            } 
+            }
         });
 
-        //main.addComponent(new Label("<p>Print this!</p>\n<script type='text/javascript'>print();</script>", Label.CONTENT_XHTML));
+        // main.addComponent(new
+        // Label("<p>Print this!</p>\n<script type='text/javascript'>print();</script>",
+        // Label.CONTENT_XHTML));
     }
 
     void example_RichTextArea(final Window main, String param) {
-        main.setLayout(new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL));
-        
+        main.setLayout(new HorizontalLayout());
+
         // Create a rich text area
         final RichTextArea rtarea = new RichTextArea();
         rtarea.addStyleName("richtextexample");
-        //rtarea.setCaption("My Rich Text Area");
-        
+        // rtarea.setCaption("My Rich Text Area");
+
         // Set initial content as HTML
-        rtarea.setValue("<h1>Hello</h1>\n<p>This rich text area contains some text.</p>");
-        
+        rtarea
+                .setValue("<h1>Hello</h1>\n<p>This rich text area contains some text.</p>");
+
         // Show the text edited in the rich text area as HTML.
         final Button show = new Button("Show HTML");
         final Label html = new Label((String) rtarea.getValue());
@@ -1440,7 +1541,7 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
 
         Panel valuePanel = new Panel("Value");
         valuePanel.addComponent(html);
-        
+
         main.addComponent(rtPanel);
         main.addComponent(valuePanel);
     }
@@ -1449,33 +1550,39 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
         try {
             // Create a database connection
             Class.forName("org.hsqldb.jdbcDriver");
-            final Connection connection = DriverManager.getConnection("jdbc:hsqldb:mem:qcexample", "sa", "");
-            
+            final Connection connection = DriverManager.getConnection(
+                    "jdbc:hsqldb:mem:qcexample", "sa", "");
+
             // Create an example table and put some data in it.
             Statement st = connection.createStatement();
-            st.executeQuery("CREATE TABLE Prisoners (id INTEGER, name VARCHAR)");
+            st
+                    .executeQuery("CREATE TABLE Prisoners (id INTEGER, name VARCHAR)");
             st.close();
-            for (int i=0; i<100; i++) {
+            for (int i = 0; i < 100; i++) {
                 st = connection.createStatement();
-                st.executeQuery("INSERT INTO Prisoners (id, name) VALUES ("+i+",'I am number "+(i+1)+"')");
+                st.executeQuery("INSERT INTO Prisoners (id, name) VALUES (" + i
+                        + ",'I am number " + (i + 1) + "')");
                 st.close();
             }
-            
+
             // Query the database
-            final QueryContainer qc = new QueryContainer("SELECT id,name FROM Prisoners", connection);
-            
+            final QueryContainer qc = new QueryContainer(
+                    "SELECT id,name FROM Prisoners", connection);
+
             // Create a component for selecting a query result item.
             Select select = new Select("Select an item");
-            
-            // The items shown in the selection component are obtained from the query.
+
+            // The items shown in the selection component are obtained from the
+            // query.
             select.setContainerDataSource(qc);
-            
-            // The item captions are obtained from a field in the query result. 
+
+            // The item captions are obtained from a field in the query result.
             select.setItemCaptionMode(Select.ITEM_CAPTION_MODE_PROPERTY);
-            
-            // Set the name of the field from which the item captions are obtained.
+
+            // Set the name of the field from which the item captions are
+            // obtained.
             select.setItemCaptionPropertyId("name");
-        
+
             // When selection changes, display the selected item.
             select.setImmediate(true);
             final Label selection = new Label("Currently selected: -");
@@ -1483,17 +1590,19 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
                 public void valueChange(ValueChangeEvent event) {
                     // Get the item id of the currently selected item
                     Integer itemId = (Integer) event.getProperty().getValue();
-                    
-                    // Use the item ID to get the actual row from the query result.
+
+                    // Use the item ID to get the actual row from the query
+                    // result.
                     Item qrItem = qc.getItem(itemId);
-                    
+
                     // Display the item ID
-                    selection.setValue("Currently selected: result row "+itemId.intValue() +
-                                       " (id="+qrItem.getItemProperty("id")+", " +
-                                       "name="+qrItem.getItemProperty("name")+")");
+                    selection.setValue("Currently selected: result row "
+                            + itemId.intValue() + " (id="
+                            + qrItem.getItemProperty("id") + ", " + "name="
+                            + qrItem.getItemProperty("name") + ")");
                 }
             });
-            
+
             main.addComponent(select);
             main.addComponent(selection);
         } catch (SQLException e) {
@@ -1507,18 +1616,19 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
         // Create a menu bar
         final MenuBar menubar = new MenuBar();
         main.addComponent(menubar);
-        
+
         // A feedback component
         final Label selection = new Label("");
         main.addComponent(selection);
-        
+
         // Define a common menu command for all the menu items.
         MenuBar.Command mycommand = new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {
-                selection.setValue("Ordered a " + selectedItem.getText() + " from menu.");
-            }  
+                selection.setValue("Ordered a " + selectedItem.getText()
+                        + " from menu.");
+            }
         };
-        
+
         // Put some items in the menu hierarchically
         MenuBar.MenuItem beverages = menubar.addItem("Beverages", null, null);
         MenuBar.MenuItem hot_beverages = beverages.addItem("Hot", null, null);
@@ -1526,14 +1636,14 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
         hot_beverages.addItem("Coffee", null, mycommand);
         MenuBar.MenuItem cold_beverages = beverages.addItem("Cold", null, null);
         cold_beverages.addItem("Milk", null, mycommand);
-        
+
         // Another top-level item
         MenuBar.MenuItem snacks = menubar.addItem("Snacks", null, null);
         snacks.addItem("Weisswurst", null, mycommand);
         snacks.addItem("Salami", null, mycommand);
-        
+
         // Yet another top-level item
         MenuBar.MenuItem services = menubar.addItem("Services", null, null);
         services.addItem("Car Service", null, mycommand);
-   }
+    }
 }

@@ -13,6 +13,7 @@ import java.util.Date;
  * @author IT Mill Ltd.
  * 
  */
+@SuppressWarnings("deprecation")
 public class DateTimeService {
     public static int RESOLUTION_YEAR = 0;
     public static int RESOLUTION_MONTH = 1;

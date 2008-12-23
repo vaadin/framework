@@ -157,6 +157,7 @@ public class ComponentSizeValidator {
             subErrors.add(error);
         }
 
+        @SuppressWarnings("deprecation")
         public void reportErrors(PrintWriter clientJSON,
                 CommunicationManager communicationManager,
                 PrintStream serverErrorStream) {
@@ -385,6 +386,7 @@ public class ComponentSizeValidator {
         return false;
     }
 
+    @SuppressWarnings("deprecation")
     public static boolean parentCanDefineHeight(Component component) {
         Component parent = component.getParent();
         if (parent == null) {
@@ -484,6 +486,7 @@ public class ComponentSizeValidator {
                 && paintable.getWidthUnits() == Sizeable.UNITS_PERCENTAGE;
     }
 
+    @SuppressWarnings("deprecation")
     public static boolean parentCanDefineWidth(Component component) {
         Component parent = component.getParent();
         if (parent == null) {

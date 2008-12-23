@@ -35,6 +35,7 @@ public class Parameters extends com.itmill.toolkit.Application implements
 
     private final Table params = new Table();
 
+    @SuppressWarnings("deprecation")
     public void init() {
         final Window main = new Window("Parameters demo");
         setMainWindow(main);

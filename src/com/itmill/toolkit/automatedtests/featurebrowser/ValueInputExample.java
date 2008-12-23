@@ -25,6 +25,7 @@ import com.itmill.toolkit.ui.Window.Notification;
  */
 public class ValueInputExample extends CustomComponent {
 
+    @SuppressWarnings("deprecation")
     public ValueInputExample() {
         final VerticalLayout main = new VerticalLayout();
         main.setMargin(true);

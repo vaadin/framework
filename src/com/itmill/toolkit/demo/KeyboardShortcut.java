@@ -11,11 +11,11 @@ import com.itmill.toolkit.event.Action;
 import com.itmill.toolkit.event.ShortcutAction;
 import com.itmill.toolkit.event.Action.Handler;
 import com.itmill.toolkit.ui.Button;
-import com.itmill.toolkit.ui.ExpandLayout;
+import com.itmill.toolkit.ui.HorizontalLayout;
 import com.itmill.toolkit.ui.Label;
-import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.TextField;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Window;
 
 /**
@@ -23,7 +23,7 @@ import com.itmill.toolkit.ui.Window;
  */
 public class KeyboardShortcut extends Application implements Handler {
 
-    private OrderedLayout loki;
+    private VerticalLayout loki;
 
     private final Label instructions = new Label(
             "<p>Keyboard shortcuts is a must have feature for applications in a "
@@ -68,7 +68,7 @@ public class KeyboardShortcut extends Application implements Handler {
     public void init() {
 
         final Window w = new Window("Keyboard shortcuts demo");
-        final ExpandLayout main = new ExpandLayout();
+        final VerticalLayout main = new VerticalLayout();
         main.setMargin(true);
         main.setSpacing(true);
         setMainWindow(w);
@@ -77,8 +77,7 @@ public class KeyboardShortcut extends Application implements Handler {
         final Panel p = new Panel("Test application for shortcut actions");
         p.addComponent(instructions);
 
-        final OrderedLayout buttons = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        final HorizontalLayout buttons = new HorizontalLayout();
 
         // Restart button
         final Button close = new Button("restart", this, "close");
@@ -97,9 +96,9 @@ public class KeyboardShortcut extends Application implements Handler {
 
         main.addComponent(p);
 
-        loki = new OrderedLayout();
+        loki = new VerticalLayout();
         main.addComponent(loki);
-        main.expand(loki);
+        main.setExpandRatio(loki,1.0f);
 
         w.addActionHandler(this);
 
