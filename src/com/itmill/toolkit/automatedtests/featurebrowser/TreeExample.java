@@ -10,8 +10,8 @@ import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.event.Action;
 import com.itmill.toolkit.ui.AbstractSelect;
 import com.itmill.toolkit.ui.CustomComponent;
+import com.itmill.toolkit.ui.HorizontalLayout;
 import com.itmill.toolkit.ui.Label;
-import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.TextField;
 import com.itmill.toolkit.ui.Tree;
@@ -37,8 +37,8 @@ public class TreeExample extends CustomComponent implements Action.Handler,
     TextField editor;
 
     public TreeExample() {
-        final OrderedLayout main = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        final HorizontalLayout main = new HorizontalLayout();
+        main.setWidth("100%");
         main.setDebugId("mainLayout");
         main.setMargin(true);
         setCompositionRoot(main);
@@ -46,7 +46,7 @@ public class TreeExample extends CustomComponent implements Action.Handler,
         // Panel w/ Tree
         Panel p = new Panel("Select item");
         p.setStyleName(Panel.STYLE_LIGHT);
-        p.setWidth(250);
+        p.setWidth("250px");
         // Description
         p.addComponent(new Label(desc));
         // Tree with a few items
@@ -81,6 +81,7 @@ public class TreeExample extends CustomComponent implements Action.Handler,
         editor.setColumns(15);
         p.addComponent(editor);
         main.addComponent(p);
+        main.setExpandRatio(p, 1);
     }
 
     public Action[] getActions(Object target, Object sender) {
@@ -153,7 +154,9 @@ public class TreeExample extends CustomComponent implements Action.Handler,
         final Property p = item.getItemProperty(CAPTION_PROPERTY);
         p.setValue(caption);
         if (parent != null) {
+            tree.setChildrenAllowed(parent, true);
             tree.setParent(id, parent);
+            tree.setChildrenAllowed(id, false);
         }
         return id;
     }

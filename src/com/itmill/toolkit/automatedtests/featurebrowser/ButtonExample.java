@@ -9,10 +9,11 @@ import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CheckBox;
 import com.itmill.toolkit.ui.CustomComponent;
+import com.itmill.toolkit.ui.HorizontalLayout;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Link;
-import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
 /**
@@ -25,12 +26,12 @@ public class ButtonExample extends CustomComponent implements
 
     public ButtonExample() {
 
-        final OrderedLayout main = new OrderedLayout();
+        final VerticalLayout main = new VerticalLayout();
         main.setMargin(true);
         setCompositionRoot(main);
 
-        final OrderedLayout horiz = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        final HorizontalLayout horiz = new HorizontalLayout();
+        horiz.setWidth("100%");
         main.addComponent(horiz);
         final Panel basic = new Panel("Basic buttons");
         basic.setStyleName(Panel.STYLE_LIGHT);

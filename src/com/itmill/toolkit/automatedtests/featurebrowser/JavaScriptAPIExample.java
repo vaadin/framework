@@ -11,8 +11,8 @@ import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.Label;
-import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.TextField;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
 /**
@@ -21,15 +21,15 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
  */
 public class JavaScriptAPIExample extends CustomComponent {
 
-    public static final String txt = "(more examples will be added here as the APIs are made public)<br/><br/><A href=\"javascript:itmill.forceSync();\">javascript:itmill.forceSync();</A>";
+    public static final String txt = "<p>For advanced client side programmers Toolkit offers a simple method which can be used to force sync client with server. This may be needed for example if another part of a mashup changes things on server.</p> (more examples will be added here as the APIs are made public)<br/><br/><A href=\"javascript:itmill.forceSync();\">javascript:itmill.forceSync();</A>";
 
-    private final OrderedLayout main;
+    private final VerticalLayout main;
     private final Label l;
     private final TextField editor = new TextField();
 
     public JavaScriptAPIExample() {
         // main layout
-        main = new OrderedLayout();
+        main = new VerticalLayout();
         main.setMargin(true);
         setCompositionRoot(main);
         editor.setRows(7);
@@ -54,8 +54,8 @@ public class JavaScriptAPIExample extends CustomComponent {
             }
         });
         main.addComponent(b);
-        main.setComponentAlignment(b, OrderedLayout.ALIGNMENT_RIGHT,
-                OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
+        main.setComponentAlignment(b, VerticalLayout.ALIGNMENT_RIGHT,
+                VerticalLayout.ALIGNMENT_VERTICAL_CENTER);
 
         // 
         Label l = new Label(
@@ -63,6 +63,7 @@ public class JavaScriptAPIExample extends CustomComponent {
                         + "The client will be synchronized on reload, when you click a button, "
                         + "or when itmill.forceSync() is called.") {
 
+            @Override
             public void paintContent(PaintTarget target) throws PaintException {
 
                 super.paintContent(target);
@@ -82,6 +83,7 @@ public class JavaScriptAPIExample extends CustomComponent {
             label = l;
         }
 
+        @Override
         public void run() {
             try {
                 Thread.sleep(500);

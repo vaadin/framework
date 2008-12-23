@@ -9,8 +9,8 @@ import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Layout;
-import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.TabSheet;
+import com.itmill.toolkit.ui.VerticalLayout;
 
 /**
  * This example is a (simple) demonstration of client-side caching. The content
@@ -32,7 +32,7 @@ public class ClientCachingExample extends CustomComponent {
 
     public ClientCachingExample() {
 
-        final OrderedLayout main = new OrderedLayout();
+        final VerticalLayout main = new VerticalLayout();
         main.setMargin(true);
         setCompositionRoot(main);
 
@@ -41,7 +41,7 @@ public class ClientCachingExample extends CustomComponent {
         final TabSheet ts = new TabSheet();
         main.addComponent(ts);
 
-        Layout layout = new OrderedLayout();
+        Layout layout = new VerticalLayout();
         layout.setMargin(true);
         Label l = new Label("This is a normal label, quick to render.");
         l.setCaption("A normal label");
@@ -49,9 +49,10 @@ public class ClientCachingExample extends CustomComponent {
 
         ts.addTab(layout, "Normal", null);
 
-        layout = new OrderedLayout();
+        layout = new VerticalLayout();
         layout.setMargin(true);
         l = new Label("Slow label - until cached client side.") {
+            @Override
             public void paintContent(PaintTarget target) throws PaintException {
                 try {
                     Thread.sleep(3000);

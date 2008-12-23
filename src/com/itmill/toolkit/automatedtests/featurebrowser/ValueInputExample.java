@@ -10,11 +10,12 @@ import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.DateField;
 import com.itmill.toolkit.ui.Field;
+import com.itmill.toolkit.ui.HorizontalLayout;
 import com.itmill.toolkit.ui.InlineDateField;
-import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.Slider;
 import com.itmill.toolkit.ui.TextField;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Window.Notification;
 
 /**
@@ -25,7 +26,7 @@ import com.itmill.toolkit.ui.Window.Notification;
 public class ValueInputExample extends CustomComponent {
 
     public ValueInputExample() {
-        final OrderedLayout main = new OrderedLayout();
+        final VerticalLayout main = new VerticalLayout();
         main.setMargin(true);
         setCompositionRoot(main);
 
@@ -39,8 +40,8 @@ public class ValueInputExample extends CustomComponent {
         };
 
         // TextField
-        OrderedLayout horiz = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        HorizontalLayout horiz = new HorizontalLayout();
+        horiz.setWidth("100%");
         main.addComponent(horiz);
         Panel left = new Panel("TextField");
         left.setStyleName(Panel.STYLE_LIGHT);
@@ -65,10 +66,9 @@ public class ValueInputExample extends CustomComponent {
         right.addComponent(tf);
 
         // DateFields
-
         Date d = new Date(98, 1, 22, 13, 14, 15);
-
-        horiz = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+        horiz = new HorizontalLayout();
+        horiz.setWidth("100%");
         main.addComponent(horiz);
         left = new Panel("DateField");
         left.setStyleName(Panel.STYLE_LIGHT);
@@ -123,7 +123,7 @@ public class ValueInputExample extends CustomComponent {
         // int slider
         Slider slider = new Slider(0, 100);
         slider.setDebugId("Slider1");
-        slider.setSize(300);
+        slider.setWidth("300px");
         slider.setImmediate(true);
         slider.addListener(new Slider.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
@@ -140,6 +140,7 @@ public class ValueInputExample extends CustomComponent {
         left.addComponent(slider);
         // double slider
         slider = new Slider(0.0, 1.0, 1);
+        slider.setOrientation(Slider.ORIENTATION_VERTICAL);
         slider.setDebugId("Slider2");
         slider.setImmediate(true);
         slider.addListener(new Slider.ValueChangeListener() {

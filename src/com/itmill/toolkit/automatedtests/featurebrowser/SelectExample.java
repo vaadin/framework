@@ -9,12 +9,13 @@ import com.itmill.toolkit.ui.AbstractSelect;
 import com.itmill.toolkit.ui.ComboBox;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.Field;
+import com.itmill.toolkit.ui.HorizontalLayout;
 import com.itmill.toolkit.ui.ListSelect;
 import com.itmill.toolkit.ui.NativeSelect;
 import com.itmill.toolkit.ui.OptionGroup;
-import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.TwinColSelect;
+import com.itmill.toolkit.ui.VerticalLayout;
 
 /**
  * Shows some basic fields for value input; TextField, DateField, Slider...
@@ -31,12 +32,12 @@ public class SelectExample extends CustomComponent {
     };
 
     public SelectExample() {
-        final OrderedLayout main = new OrderedLayout();
+        final VerticalLayout main = new VerticalLayout();
         main.setMargin(true);
         setCompositionRoot(main);
 
-        final OrderedLayout horiz = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        final HorizontalLayout horiz = new HorizontalLayout();
+        horiz.setWidth("100%");
         main.addComponent(horiz);
         final Panel single = new Panel("Single selects");
         single.setStyleName(Panel.STYLE_LIGHT);

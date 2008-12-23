@@ -6,10 +6,11 @@ package com.itmill.toolkit.automatedtests.featurebrowser;
 
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.GridLayout;
+import com.itmill.toolkit.ui.HorizontalLayout;
 import com.itmill.toolkit.ui.Label;
-import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.TabSheet;
+import com.itmill.toolkit.ui.VerticalLayout;
 
 /**
  * A few examples of layout possibilities.
@@ -20,11 +21,12 @@ public class LayoutExample extends CustomComponent {
 
     public LayoutExample() {
 
-        final OrderedLayout main = new OrderedLayout();
+        final VerticalLayout main = new VerticalLayout();
         main.setMargin(true);
         setCompositionRoot(main);
 
         final GridLayout g = new GridLayout(2, 5);
+        g.setWidth("100%");
         main.addComponent(g);
 
         // panel
@@ -44,7 +46,7 @@ public class LayoutExample extends CustomComponent {
         TabSheet ts = new TabSheet();
         g.addComponent(ts, 0, 1, 1, 1);
 
-        OrderedLayout ol = new OrderedLayout();
+        VerticalLayout ol = new VerticalLayout();
         ol.setDebugId("VerticalOrderedLayout");
         ol.setMargin(true);
         ol.addComponent(new Label("Component 1"));
@@ -52,13 +54,13 @@ public class LayoutExample extends CustomComponent {
         ol.addComponent(new Label("Component 3"));
         ts.addTab(ol, "Vertical OrderedLayout", null);
 
-        ol = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
-        ol.setDebugId("HorizontalOrderedLayout");
-        ol.setMargin(true);
-        ol.addComponent(new Label("Component 1"));
-        ol.addComponent(new Label("Component 2"));
-        ol.addComponent(new Label("Component 3"));
-        ts.addTab(ol, "Horizontal OrderedLayout", null);
+        HorizontalLayout hl = new HorizontalLayout();
+        hl.setDebugId("HorizontalOrderedLayout");
+        hl.setMargin(true);
+        hl.addComponent(new Label("Component 1"));
+        hl.addComponent(new Label("Component 2"));
+        hl.addComponent(new Label("Component 3"));
+        ts.addTab(hl, "Horizontal OrderedLayout", null);
 
         final GridLayout gl = new GridLayout(3, 3);
         gl.setDebugId("GridLayout");

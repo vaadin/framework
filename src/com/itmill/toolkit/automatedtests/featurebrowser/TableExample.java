@@ -5,8 +5,6 @@
 package com.itmill.toolkit.automatedtests.featurebrowser;
 
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -16,8 +14,10 @@ import com.itmill.toolkit.event.Action;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CheckBox;
 import com.itmill.toolkit.ui.CustomComponent;
-import com.itmill.toolkit.ui.OrderedLayout;
+import com.itmill.toolkit.ui.HorizontalLayout;
+import com.itmill.toolkit.ui.TabSheet;
 import com.itmill.toolkit.ui.Table;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
 /**
@@ -52,15 +52,23 @@ public class TableExample extends CustomComponent implements Action.Handler,
     Button deselect;
 
     public TableExample() {
+        VerticalLayout margin = new VerticalLayout();
+        margin.setMargin(true);
+
+        TabSheet root = new TabSheet();
+        setCompositionRoot(margin);
+        margin.addComponent(root);
+
         // main layout
-        final OrderedLayout main = new OrderedLayout();
+        final VerticalLayout main = new VerticalLayout();
+        root.addComponent(main);
+        main.setCaption("Basic Table");
         main.setMargin(true);
-        setCompositionRoot(main);
 
         // "source" table with bells & whistlesenabled
         source = new Table("All creatures");
         source.setPageLength(7);
-        source.setWidth(550);
+        source.setWidth("550px");
         source.setColumnCollapsingAllowed(true);
         source.setColumnReorderingAllowed(true);
         source.setSelectable(true);
@@ -72,8 +80,8 @@ public class TableExample extends CustomComponent implements Action.Handler,
         source.setDebugId("AllCreatures");
 
         // x-selected button row
-        final OrderedLayout horiz = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        final HorizontalLayout horiz = new HorizontalLayout();
+
         horiz.setMargin(false, false, true, false);
         main.addComponent(horiz);
         saveSelected = new Button("Save selected");
@@ -106,7 +114,7 @@ public class TableExample extends CustomComponent implements Action.Handler,
         // "saved" table, minimalistic
         saved = new Table("Saved creatures");
         saved.setPageLength(5);
-        saved.setWidth(550);
+        saved.setWidth("550px");
         saved.setSelectable(false);
         saved.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
         saved.setRowHeaderMode(Table.ROW_HEADER_MODE_ID);
@@ -126,6 +134,9 @@ public class TableExample extends CustomComponent implements Action.Handler,
         b.setImmediate(true);
         main.addComponent(b);
 
+        GeneratedColumnExample gencols = new GeneratedColumnExample();
+        gencols.setCaption("Generated Columns");
+        root.addComponent(gencols);
     }
 
     // set up the properties (columns)
@@ -185,11 +196,9 @@ public class TableExample extends CustomComponent implements Action.Handler,
             if (action == ACTION_HIRE) {
                 // set HIRED property to true
                 item.getItemProperty(PROPERTY_HIRED).setValue(Boolean.TRUE);
-                source.requestRepaint();
                 if (saved.containsId(target)) {
                     item = saved.getItem(target);
                     item.getItemProperty(PROPERTY_HIRED).setValue(Boolean.TRUE);
-                    saved.requestRepaint();
                 }
                 getWindow().showNotification("Hired", "" + item);
 
@@ -234,15 +243,7 @@ public class TableExample extends CustomComponent implements Action.Handler,
             // loop each selected and copy to "saved" table
             final Set selected = (Set) source.getValue();
             int s = 0;
-
-            // The set can return the items in quite any order, but
-            // for testing purposes they always have to be in the
-            // same order.
-            List ordered = new LinkedList(selected);
-            java.util.Collections.sort(ordered);
-
-            // Now move the items to the other table
-            for (final Iterator it = ordered.iterator(); it.hasNext();) {
+            for (final Iterator it = selected.iterator(); it.hasNext();) {
                 final Object id = it.next();
                 if (!saved.containsId(id)) {
                     final Item item = source.getItem(id);
@@ -261,7 +262,6 @@ public class TableExample extends CustomComponent implements Action.Handler,
                 }
             }
             getWindow().showNotification("Saved " + s);
-            saved.requestRepaint();
 
         } else if (b == hireSelected) {
             // loop each selected and set property HIRED to true
@@ -273,14 +273,12 @@ public class TableExample extends CustomComponent implements Action.Handler,
                 final Property p = item.getItemProperty(PROPERTY_HIRED);
                 if (p.getValue() == Boolean.FALSE) {
                     p.setValue(Boolean.TRUE);
-                    source.requestRepaint();
                     s++;
                 }
                 if (saved.containsId(id)) {
                     // also update "saved" table
                     item = saved.getItem(id);
                     item.getItemProperty(PROPERTY_HIRED).setValue(Boolean.TRUE);
-                    saved.requestRepaint();
                 }
             }
             getWindow().showNotification("Hired " + s);
@@ -294,7 +292,6 @@ public class TableExample extends CustomComponent implements Action.Handler,
                 if (source.containsId(id)) {
                     s++;
                     source.removeItem(id);
-                    source.requestRepaint();
                 }
             }
             getWindow().showNotification("Deleted " + s);

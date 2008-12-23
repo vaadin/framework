@@ -5,6 +5,7 @@
 package com.itmill.toolkit.automatedtests.featurebrowser;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property;
@@ -17,15 +18,15 @@ import com.itmill.toolkit.ui.AbstractSelect;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.Embedded;
-import com.itmill.toolkit.ui.ExpandLayout;
+import com.itmill.toolkit.ui.HorizontalLayout;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Layout;
-import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Select;
 import com.itmill.toolkit.ui.SplitPanel;
 import com.itmill.toolkit.ui.TabSheet;
 import com.itmill.toolkit.ui.Table;
 import com.itmill.toolkit.ui.Tree;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
@@ -72,8 +73,11 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
             { "Getting started", "Choices, choices",
                     "Some variations of simple selects", SelectExample.class },
             // Layouts
-            { "Getting started", "Layouts", "Laying out components",
+            { "Layouts", "Basic layouts", "Laying out components",
                     LayoutExample.class },
+            // Layouts
+            { "Layouts", "Accordion", "Play the Accordion!",
+                    AccordionExample.class },
             // Wrangling data: ComboBox
             { "Wrangling data", "ComboBox", "ComboBox - the swiss army select",
                     ComboBoxExample.class },
@@ -83,6 +87,9 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
                     "Table (\"grid\")",
                     "Table with bells, whistles, editmode and actions (contextmenu)",
                     TableExample.class },
+            // Wrangling data: Form
+            { "Wrangling data", "Form", "Every application needs forms",
+                    FormExample.class },
             // Wrangling data: Tree
             { "Wrangling data", "Tree", "A hierarchy of things",
                     TreeExample.class },
@@ -105,6 +112,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
     // END
     };
 
+    @Override
     public void init() {
 
         // Need to set a theme for ThemeResources to work
@@ -158,6 +166,12 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         tree.addListener(this);
         tree.setImmediate(true);
         tree.expandItemsRecursively(rootId);
+        for (Iterator i = container.getItemIds().iterator(); i.hasNext();) {
+            Object id = i.next();
+            if (container.getChildren(id) == null) {
+                tree.setChildrenAllowed(id, false);
+            }
+        }
 
         split.addComponent(tree);
 
@@ -185,25 +199,25 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         table.setImmediate(true);
         split2.addComponent(table);
 
-        final ExpandLayout exp = new ExpandLayout();
+        final VerticalLayout exp = new VerticalLayout();
+        exp.setSizeFull();
         exp.setMargin(true);
         split2.addComponent(exp);
 
-        final OrderedLayout wbLayout = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        final HorizontalLayout wbLayout = new HorizontalLayout();
         Button b = new Button("Open in sub-window", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 Component component = (Component) ts.getComponentIterator()
                         .next();
                 String caption = ts.getTabCaption(component);
                 try {
-                    component = (Component) component.getClass().newInstance();
+                    component = component.getClass().newInstance();
                 } catch (Exception e) {
                     // Could not create
                     return;
                 }
                 Window w = new Window(caption);
-                w.setWidth(640);
+                w.setWidth("640px");
                 if (Layout.class.isAssignableFrom(component.getClass())) {
                     w.setLayout((Layout) component);
                 } else {
@@ -223,8 +237,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
                 Window w = getWindow(caption);
                 if (w == null) {
                     try {
-                        component = (Component) component.getClass()
-                                .newInstance();
+                        component = component.getClass().newInstance();
                     } catch (final Exception e) {
                         // Could not create
                         return;
@@ -246,22 +259,22 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         wbLayout.addComponent(b);
 
         exp.addComponent(wbLayout);
-        exp.setComponentAlignment(wbLayout, OrderedLayout.ALIGNMENT_RIGHT,
-                OrderedLayout.ALIGNMENT_TOP);
+        exp.setComponentAlignment(wbLayout, VerticalLayout.ALIGNMENT_RIGHT,
+                VerticalLayout.ALIGNMENT_TOP);
 
         ts = new TabSheet();
         ts.setSizeFull();
         ts.addTab(new Label(""), "Choose example", null);
         exp.addComponent(ts);
-        exp.expand(ts);
+        exp.setExpandRatio(ts, 1);
 
         final Label status = new Label(
                 "<a href=\"http://www.itmill.com/developers/\">Developer Area</a>"
                         + " | <a href=\"http://www.itmill.com/documentation/\">Documentation</a>");
         status.setContentMode(Label.CONTENT_XHTML);
         exp.addComponent(status);
-        exp.setComponentAlignment(status, OrderedLayout.ALIGNMENT_RIGHT,
-                OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
+        exp.setComponentAlignment(status, VerticalLayout.ALIGNMENT_RIGHT,
+                VerticalLayout.ALIGNMENT_VERTICAL_CENTER);
 
         // select initial section ("All")
         tree.setValue(rootId);
@@ -298,6 +311,9 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
     public void valueChange(ValueChangeEvent event) {
         if (event.getProperty() == tree) {
             final Object id = tree.getValue();
+            if (id == null) {
+                return;
+            }
             final Item item = tree.getItem(id);
             //
             String newSection;

@@ -4,16 +4,14 @@
 
 package com.itmill.toolkit.automatedtests.featurebrowser;
 
-import java.util.Date;
-
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.ui.AbstractSelect;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.NativeSelect;
-import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.RichTextArea;
 import com.itmill.toolkit.ui.TextField;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 import com.itmill.toolkit.ui.Button.ClickListener;
@@ -39,7 +37,9 @@ public class NotificationExample extends CustomComponent {
      */
     public NotificationExample() {
         // Main layout
-        final OrderedLayout main = new OrderedLayout();
+        final VerticalLayout main = new VerticalLayout();
+        main.setSizeUndefined();
+        main.setSpacing(true);
         main.setMargin(true); // use theme-specific margin
         setCompositionRoot(main);
 
@@ -86,11 +86,10 @@ public class NotificationExample extends CustomComponent {
                 getWindow().showNotification((String) caption.getValue(),
                         (String) message.getValue(),
                         ((Integer) type.getValue()).intValue());
-                getWindow().setCaption(new Date().toString());
             }
         });
         main.addComponent(b);
-        main.setComponentAlignment(b, OrderedLayout.ALIGNMENT_RIGHT,
-                OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
+        main.setComponentAlignment(b, VerticalLayout.ALIGNMENT_RIGHT,
+                VerticalLayout.ALIGNMENT_VERTICAL_CENTER);
     }
 }
