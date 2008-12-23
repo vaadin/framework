@@ -233,14 +233,16 @@ public abstract class AbstractComponentContainer extends AbstractComponent
 
     @Override
     public void setHeight(float height, int unit) {
-        if (getHeight() < 0 && height >= 0) {
+        float currentHeight = getHeight();
+        if (currentHeight < 0.0f && height >= 0.0f) {
             // height becoming defined -> relative height childs currently
             // painted undefined may become defined
             // TODO this could be optimized (subtree of only those components
             // which have undefined width due this component), currently just
             // repaints whole
             // subtree
-        } else if (getHeight() >= 0 && height < 0) {
+            requestRepaintAll();
+        } else if (currentHeight >= 0 && height < 0) {
             requestRepaintAll();
         }
         super.setHeight(height, unit);
