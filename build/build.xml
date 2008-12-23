@@ -29,7 +29,7 @@
 	<!-- 
 	Call one of package-* targets unless you understand what you are doing 
 	-->
-	<target name="package-all" depends="clean-all, init, build, docs, internal-package-mac, internal-package-windows, internal-package-linux, internal-package-war" description="Build public packages for Windows, Linux and Mac platforms.">
+	<target name="package-all" depends="clean-all, init, build, docs, internal-package-mac, internal-package-windows, internal-package-linux, internal-package-oophm, internal-package-war" description="Build public packages for Windows, Linux and Mac platforms.">
 	</target>
 
 	<target name="package-mac" depends="clean-all, init, build, docs, internal-package-mac" description="Create public tar.gz package for Mac.">
@@ -39,6 +39,9 @@
 	</target>
 
 	<target name="package-linux" depends="clean-all, init, build, docs, internal-package-linux" description="Create public tar.bz2 package for Linux.">
+	</target>
+
+	<target name="package-oophm" depends="clean-all, init-oophm, build, docs, internal-package-oophm" description="Create public tar.gz package for OOPHM.">
 	</target>
 
 	<target name="package-jar" depends="clean-all, init, libs" description="Create itmill-toolkit-x.y.z.jar file.">
@@ -103,6 +106,9 @@
 			</then>
 		</if>
 	</target>
+
+	<target name="init-oophm-platform"><property name="platform" value="oophm" /></target>
+	<target name="init-oophm" depends="init-oophm-platform,init"></target>
 
 	<!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<target name="init" depends="init-platform">
@@ -186,6 +192,25 @@
 			<!-- TODO use very slow but effective bzip2
 			<tar destfile="${result-path}/${product-file}-${package-platform}-${version}.tar.bz2" compression="bzip2" longfile="gnu">
 		-->
+			<tarfileset prefix="${product-file}-${package-platform}-${version}" dir="${result-path}/${product-file}-${version}">
+				<patternset>
+					<include name="**/*" />
+				</patternset>
+			</tarfileset>
+			<tarfileset prefix="${product-file}-${package-platform}-${version}/gwt" dir="${gwt-dir}/${package-platform}">
+				<patternset>
+					<include name="**/*" />
+				</patternset>
+			</tarfileset>
+		</tar>
+	</target>
+
+	<target name="internal-package-oophm">
+		<var name="package-platform" value="oophm" />
+		<echo>Creating package for ${package-platform} platform.</echo>
+		<var name="eclipse-launch-vmargs" value="-Xms256M -Xmx512M" />
+		<antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
+		<tar destfile="${result-path}/${product-file}-${package-platform}-${version}.tar.gz" compression="gzip" longfile="gnu">
 			<tarfileset prefix="${product-file}-${package-platform}-${version}" dir="${result-path}/${product-file}-${version}">
 				<patternset>
 					<include name="**/*" />
@@ -425,6 +450,21 @@
 			</then>
 		</if>
 		<if>
+			<equals arg1="${package-platform}" arg2="oophm" />
+			<then>
+				<copy todir="${output-dir}">
+					<fileset dir="build/package">
+						<include name="start.sh" />
+					</fileset>
+				</copy>
+				<chmod file="${output-dir}/start.sh" perm="ugo+x" />
+				<exec executable="chmod" failonerror="false">
+					<arg line="ugo+x" />
+					<arg line="${output-dir}/start.sh" />
+				</exec>
+			</then>
+		</if>
+		<if>
 			<equals arg1="${package-platform}" arg2="mac" />
 			<then>
 				<copy todir="${output-dir}">
@@ -609,6 +649,7 @@
 			<arg value="com.itmill.toolkit.terminal.gwt.DefaultWidgetSet" />
 			<arg value="-style" />
 			<arg value="OBF" />
+            <jvmarg value="-Xss8M"/>
             <jvmarg value="-Djava.awt.headless=true"/>
 			<classpath>
 				<pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
@@ -633,6 +674,7 @@
 			<arg value="com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet" />
 			<arg value="-style" />
 			<arg value="OBF" />
+            <jvmarg value="-Xss8M"/>
             <jvmarg value="-Djava.awt.headless=true"/>
 			<classpath>
 				<pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
@@ -655,6 +697,7 @@
 			<arg value="com.itmill.toolkit.demo.sampler.gwt.SamplerWidgetSet" />
 			<arg value="-style" />
 			<arg value="OBF" />
+            <jvmarg value="-Xss8M"/>
             <jvmarg value="-Djava.awt.headless=true"/>
 			<classpath>
 				<pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
@@ -675,6 +718,7 @@
 			<arg value="com.itmill.toolkit.demo.colorpicker.gwt.ColorPickerWidgetSet" />
 			<arg value="-style" />
 			<arg value="OBF" />
+            <jvmarg value="-Xss8M"/>
             <jvmarg value="-Djava.awt.headless=true"/>
 			<classpath>
 				<pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
