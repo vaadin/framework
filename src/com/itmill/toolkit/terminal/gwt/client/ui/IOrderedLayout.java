@@ -688,10 +688,9 @@ public class IOrderedLayout extends CellBasedLayout {
              * sizes
              */
             updateWidgetSizes();
-            calculateContainerSize();
 
-            /* Finally calculate new layout height */
-            calculateLayoutDimensions();
+            /* Update layout dimensions based on widget sizes */
+            recalculateLayout();
         }
 
         recalculateComponentSizesAndAlignments();
@@ -780,6 +779,14 @@ public class IOrderedLayout extends CellBasedLayout {
                 /* Must inform child components about possible size updates */
                 client.runDescendentsLayout(this);
             }
+            /*
+             * If the height changes as a consequence of this we must inform the
+             * parent also
+             */
+            if (isDynamicHeight() && sizeBefore.getHeight() != activeLayoutSize.getHeight()) {
+                Util.notifyParentOfSizeChange(this, false);
+            }
+
         }
     }
 

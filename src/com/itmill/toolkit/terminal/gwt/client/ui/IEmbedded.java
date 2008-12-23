@@ -16,7 +16,7 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
 public class IEmbedded extends HTML implements Paintable {
     private static String CLASSNAME = "i-embedded";
 
-    private String heigth;
+    private String height;
     private String width;
     private Element browserElement;
 
@@ -76,11 +76,11 @@ public class IEmbedded extends HTML implements Paintable {
         } else if (uidl.hasAttribute("mimetype")) {
             final String mime = uidl.getStringAttribute("mimetype");
             if (mime.equals("application/x-shockwave-flash")) {
-                setHTML("<object width=\"" + width + "\" height=\"" + heigth
+                setHTML("<object width=\"" + width + "\" height=\"" + height
                         + "\"><param name=\"movie\" value=\""
                         + getSrc(uidl, client) + "\"><embed src=\""
                         + getSrc(uidl, client) + "\" width=\"" + width
-                        + "\" height=\"" + heigth + "\"></embed></object>");
+                        + "\" height=\"" + height + "\"></embed></object>");
             } else {
                 ApplicationConnection.getConsole().log(
                         "Unknown Embedded mimetype '" + mime + "'");
@@ -113,11 +113,29 @@ public class IEmbedded extends HTML implements Paintable {
 
     public void setWidth(String width) {
         this.width = width;
-        super.setWidth(width);
+        if (isDynamicHeight()) {
+            int oldHeight = getOffsetHeight();
+            super.setWidth(width);
+            int newHeight = getOffsetHeight();
+            /*
+             * Must notify parent if the height changes as a result of a width
+             * change
+             */
+            if (oldHeight != newHeight) {
+                Util.notifyParentOfSizeChange(this, false);
+            }
+        } else {
+            super.setWidth(width);
+        }
+
+    }
+
+    private boolean isDynamicHeight() {
+        return height == null || height.equals("");
     }
 
     public void setHeight(String height) {
-        heigth = height;
+        this.height = height;
         super.setHeight(height);
     }
 
