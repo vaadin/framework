@@ -21,7 +21,7 @@
 </listAttribute>
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.gwt.dev.GWTShell"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-noserver -whitelist &quot;1localhost  ^http[:][/][/]localhost[:]8888&quot; -out WebContent/ITMILL/widgetsets http://localhost:8888/"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-noserver -out WebContent/ITMILL/widgetsets http://localhost:8888/"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="<eclipse-workspace-name></eclipse-workspace-name>"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="<eclipse-launch-vmargs></eclipse-launch-vmargs>"/>
 </launchConfiguration>
