@@ -144,7 +144,7 @@ public class GridLayout extends AbstractLayout implements
      *             if the new component overlaps with any of the components
      *             already in the grid.
      * @throws OutOfBoundsException
-     *             if the cells are outside of the grid area.
+     *             if the cells are outside the grid area.
      */
     public void addComponent(Component component, int column1, int row1,
             int column2, int row2) throws OverlapsException,
@@ -210,10 +210,8 @@ public class GridLayout extends AbstractLayout implements
                 cursorX = 0; // first col
                 // move one row down, or one row under the area
                 cursorY = (column1 == 0 ? row2 : row1) + 1;
-                if (cursorY >= rows) {
-                    // rows overflow, increase
-                    rows = cursorY + 1;
-                }
+            } else {
+            	cursorY = row1;
             }
         }
 
@@ -250,8 +248,14 @@ public class GridLayout extends AbstractLayout implements
      *            the column index.
      * @param row
      *            the row index.
+     * @throws OverlapsException
+     *             if the new component overlaps with any of the components
+     *             already in the grid.
+     * @throws OutOfBoundsException
+     *             if the cell is outside the grid area.
      */
-    public void addComponent(Component c, int column, int row) {
+    public void addComponent(Component c, int column, int row)
+            throws OverlapsException, OutOfBoundsException {
         this.addComponent(c, column, row, column, row);
     }
 
