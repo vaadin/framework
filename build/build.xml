@@ -29,7 +29,7 @@
 	<!-- 
 	Call one of package-* targets unless you understand what you are doing 
 	-->
-	<target name="package-all" depends="clean-all, init, build, docs, internal-package-mac, internal-package-windows, internal-package-linux, internal-package-oophm, internal-package-war" description="Build public packages for Windows, Linux and Mac platforms.">
+	<target name="package-all" depends="clean-all, init, build, docs, internal-package-mac, internal-package-windows, internal-package-linux, internal-package-war" description="Build public packages for Windows, Linux and Mac platforms.">
 	</target>
 
 	<target name="package-mac" depends="clean-all, init, build, docs, internal-package-mac" description="Create public tar.gz package for Mac.">
