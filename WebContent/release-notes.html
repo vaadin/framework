@@ -236,6 +236,29 @@ here.</p>
   
 <p>For up-to-date status of known problems, see the developer website <a href="http://dev.itmill.com/">dev.itmill.com</a>.</p>
 
+<h2>Package for the experimental GWT Out-of-Process Hosted Mode</h2>
+
+<p>
+  We provide a separate (platform independent) installation package
+  (<tt>itmill-toolkit-oophm-<version></version>.tar.gz</tt>) for the experimental Out of
+  Process Hosted Mode (OOPHM) of GWT, which allows debugging client-side code in GWT
+  Hosted Mode with a regular web browser. Using the OOPHM requires installing a browser
+  plugin (available for Mozilla Firefox, IE, and WebKit). See the manual section on OOPHM
+  for more details.
+</p>
+
+<p>
+  The Linux version of GWT Hosted Mode Browser is no longer compatible with IT Mill
+  Toolkit 5.3.0 (<a href="http://dev.itmill.com/ticket/2299">#2299</a>), so the OOPHM is
+  the only option for debugging in hosted mode in Linux.
+</p>
+
+<p>
+  As the OOPHM package is experimental, you should use it only for debugging purposes
+  during development. For production use, you should compile your custom widget sets with
+  the regular IT Mill Toolkit package for your platform.
+</p>
+
     <h2>Important known problems in <version></version></h2>
 
 <ul>
@@ -245,13 +268,10 @@ here.</p>
   other versions of Windows. Workaround: use <a href="http://www.7-zip.org/">7-Zip</a> or
   some other good unzip program for Windows.</li>
 
-  <li><a href="http://dev.itmill.com/ticket/1636">#1636</a> Incompatibility with some
-  versions of Firefox and other browsers based on Gekko 1.7. For example, the <i>hosted
-  mode browser of Google Web Toolkit 1.4.62 (included in IT Mill Toolkit) does not work
-  fully in Linux</i> so the the new feature for having multiple applications per page is
-  not possible. This is due to the new client-side loader code. For a workaround for
-  loading multiple applications per page, use a static HTML loader page, see for example
-  the <tt>multiapp.html</tt> demo page.</li>
+  <li><a href="http://dev.itmill.com/ticket/2299">#2299</a> The Hosted Mode Browser does
+  not work in Linux for debugging client-side GWT code. You need to install the
+  experimental OOPHM package instead (see above) for development. For production, you
+  should use the regular package for Linux.</li>
 </ul>
 
 <p>For other known problems, see open tickets at developer site <a href="http://dev.itmill.com/">dev.itmill.com</a>.</p>
