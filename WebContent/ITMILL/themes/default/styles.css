@@ -762,7 +762,7 @@ input.i-modified,
 	font-weight: bold;
 }
 
-.i-form .i-caption .i-required-field-indicator {
+.i-formlayout-captioncell .i-caption .i-required-field-indicator {
 	float: none;
 }
 
