@@ -45,7 +45,7 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
     private boolean immediate = false;
     private int extraHorizontalPixels = -1;
     private int extraVerticalPixels = -1;
-    private int maxLength;
+    private int maxLength = -1;
 
     public ITextField() {
         this(DOM.createInputText());
