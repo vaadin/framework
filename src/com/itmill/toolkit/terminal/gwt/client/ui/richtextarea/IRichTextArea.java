@@ -4,13 +4,16 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui.richtextarea;
 
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusListener;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
@@ -27,7 +30,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.Field;
  * 
  */
 public class IRichTextArea extends Composite implements Paintable, Field,
-        ChangeListener, FocusListener {
+        ChangeListener, FocusListener, KeyboardListener {
 
     /**
      * The input node CSS classname.
@@ -52,6 +55,8 @@ public class IRichTextArea extends Composite implements Paintable, Field,
 
     private int extraHorizontalPixels = -1;
     private int extraVerticalPixels = -1;
+
+    private int maxLength = -1;
 
     public IRichTextArea() {
         fp.add(formatter);
@@ -104,7 +109,18 @@ public class IRichTextArea extends Composite implements Paintable, Field,
         }
 
         immediate = uidl.getBooleanAttribute("immediate");
-
+        int newMaxLength = uidl.hasAttribute("maxLength") ? uidl
+                .getIntAttribute("maxLength") : -1;
+        if (newMaxLength >= 0) {
+            if (maxLength == -1) {
+                rta.addKeyboardListener(this);
+            }
+            maxLength = newMaxLength;
+        } else if (maxLength != -1) {
+            getElement().setAttribute("maxlength", "");
+            maxLength = -1;
+            rta.removeKeyboardListener(this);
+        }
     }
 
     public void onChange(Widget sender) {
@@ -204,6 +220,26 @@ public class IRichTextArea extends Composite implements Paintable, Field,
         } else {
             super.setWidth(width);
         }
+    }
+
+    public void onKeyDown(Widget sender, char keyCode, int modifiers) {
+        // NOP
+    }
+
+    public void onKeyPress(Widget sender, char keyCode, int modifiers) {
+        if (maxLength >= 0) {
+            DeferredCommand.addCommand(new Command() {
+                public void execute() {
+                    if (rta.getHTML().length() > maxLength) {
+                        rta.setHTML(rta.getHTML().substring(0, maxLength));
+                    }
+                }
+            });
+        }
+    }
+
+    public void onKeyUp(Widget sender, char keyCode, int modifiers) {
+        // NOP
     }
 
 }

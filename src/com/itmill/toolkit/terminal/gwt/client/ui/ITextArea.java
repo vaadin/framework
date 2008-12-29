@@ -4,8 +4,11 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
@@ -26,12 +29,17 @@ public class ITextArea extends ITextField {
         setStyleName(CLASSNAME);
     }
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         // Call parent renderer explicitly
         super.updateFromUIDL(uidl, client);
 
         if (uidl.hasAttribute("rows")) {
             setRows(new Integer(uidl.getStringAttribute("rows")).intValue());
+        }
+
+        if (getMaxLength() >= 0) {
+            sinkEvents(Event.ONKEYPRESS);
         }
     }
 
@@ -46,5 +54,19 @@ public class ITextArea extends ITextField {
                 e.rows = r;
     } catch (e) {}
     }-*/;
+
+    @Override
+    public void onBrowserEvent(Event event) {
+        if (getMaxLength() >= 0 && event.getTypeInt() == Event.ONKEYPRESS) {
+            DeferredCommand.addCommand(new Command() {
+                public void execute() {
+                    if (getText().length() > getMaxLength()) {
+                        setText(getText().substring(0, getMaxLength()));
+                    }
+                }
+            });
+        }
+        super.onBrowserEvent(event);
+    }
 
 }

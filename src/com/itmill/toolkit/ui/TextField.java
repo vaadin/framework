@@ -73,6 +73,11 @@ public class TextField extends AbstractField {
      */
     private boolean nullSettingAllowed = false;
 
+    /**
+     * Maximum character count in text field.
+     */
+    private int maxLength = -1;
+
     /* Constructors */
 
     /**
@@ -141,12 +146,17 @@ public class TextField extends AbstractField {
      * Paints this component. Don't add a JavaDoc comment here, we use the
      * default documentation from implemented interface.
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
 
         // Sets the secret attribute
         if (isSecret()) {
             target.addAttribute("secret", true);
+        }
+
+        if (getMaxLength() >= 0) {
+            target.addAttribute("maxLength", getMaxLength());
         }
 
         // Adds the number of column and rows
@@ -184,6 +194,7 @@ public class TextField extends AbstractField {
      * @see Format
      * @deprecated
      */
+    @Deprecated
     protected String getFormattedValue() {
         Object v = getValue();
         if (v == null) {
@@ -197,6 +208,7 @@ public class TextField extends AbstractField {
      * JavaDoc comment here, we use the default documentation from implemented
      * interface.
      */
+    @Override
     public Object getValue() {
         Object v = super.getValue();
         if (format == null || v == null) {
@@ -213,6 +225,7 @@ public class TextField extends AbstractField {
      * Gets the components UIDL tag string. Don't add a JavaDoc comment here, we
      * use the default documentation from implemented interface.
      */
+    @Override
     public String getTag() {
         return "textfield";
     }
@@ -222,6 +235,7 @@ public class TextField extends AbstractField {
      * comment here, we use the default documentation from implemented
      * interface.
      */
+    @Override
     public void changeVariables(Object source, Map variables) {
 
         super.changeVariables(source, variables);
@@ -232,6 +246,11 @@ public class TextField extends AbstractField {
             // Only do the setting if the string representation of the value
             // has been updated
             String newValue = (String) variables.get("text");
+
+            // server side check for max length
+            if (getMaxLength() != -1 && newValue.length() > getMaxLength()) {
+                newValue = newValue.substring(0, getMaxLength());
+            }
             final String oldValue = getFormattedValue();
             if (newValue != null
                     && (oldValue == null || isNullSettingAllowed())
@@ -336,6 +355,7 @@ public class TextField extends AbstractField {
      * Gets the edited property's type. Don't add a JavaDoc comment here, we use
      * the default documentation from implemented interface.
      */
+    @Override
     public Class getType() {
         return String.class;
     }
@@ -460,6 +480,7 @@ public class TextField extends AbstractField {
      * @return the Format used to format the value.
      * @deprecated
      */
+    @Deprecated
     public Format getFormat() {
         return format;
     }
@@ -472,13 +493,37 @@ public class TextField extends AbstractField {
      *            formatting.
      * @deprecated
      */
+    @Deprecated
     public void setFormat(Format format) {
         this.format = format;
         requestRepaint();
     }
 
+    @Override
     protected boolean isEmpty() {
         return super.isEmpty() || toString().length() == 0;
+    }
+
+    /**
+     * Returns the maximum number of characters in the field. Value -1 is
+     * considered unlimited. Terminal may however have some technical limits.
+     * 
+     * @return the maxLength
+     */
+    public int getMaxLength() {
+        return maxLength;
+    }
+
+    /**
+     * Sets the maximum number of characters in the field. Value -1 is
+     * considered unlimited. Terminal may however have some technical limits.
+     * 
+     * @param maxLength
+     *            the maxLength to set
+     */
+    public void setMaxLength(int maxLength) {
+        this.maxLength = maxLength;
+        requestRepaint();
     }
 
 }

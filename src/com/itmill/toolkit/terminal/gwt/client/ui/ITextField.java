@@ -45,6 +45,7 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
     private boolean immediate = false;
     private int extraHorizontalPixels = -1;
     private int extraVerticalPixels = -1;
+    private int maxLength;
 
     public ITextField() {
         this(DOM.createInputText());
@@ -63,6 +64,7 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
         sinkEvents(ITooltip.TOOLTIP_EVENTS);
     }
 
+    @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         if (client != null) {
@@ -84,6 +86,9 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
             setReadOnly(false);
         }
 
+        setMaxLength(uidl.hasAttribute("maxLength") ? uidl
+                .getIntAttribute("maxLength") : -1);
+
         immediate = uidl.getBooleanAttribute("immediate");
 
         if (uidl.hasAttribute("cols")) {
@@ -92,6 +97,29 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
 
         setText(uidl.getStringVariable("text"));
         valueBeforeEdit = uidl.getStringVariable("text");
+    }
+
+    private void setMaxLength(int newMaxLength) {
+        if (newMaxLength > 0) {
+            maxLength = newMaxLength;
+            if (getElement().getTagName().toLowerCase().equals("textarea")) {
+                // NOP no maxlenght property for textarea
+            } else {
+                getElement().setAttribute("maxlength", "" + maxLength);
+            }
+        } else if (maxLength != -1) {
+            if (getElement().getTagName().toLowerCase().equals("textarea")) {
+                // NOP no maxlenght property for textarea
+            } else {
+                getElement().setAttribute("maxlength", "");
+            }
+            maxLength = -1;
+        }
+
+    }
+
+    protected int getMaxLength() {
+        return maxLength;
     }
 
     public void onChange(Widget sender) {
