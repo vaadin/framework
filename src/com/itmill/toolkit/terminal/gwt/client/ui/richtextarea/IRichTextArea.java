@@ -21,7 +21,7 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
 import com.itmill.toolkit.terminal.gwt.client.ui.Field;
 
 /**
- * This class represents a basic text input field with one row.
+ * This class implements a basic client side rich text editor component.
  * 
  * @author IT Mill Ltd.
  * 
