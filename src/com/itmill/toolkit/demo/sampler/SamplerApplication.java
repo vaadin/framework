@@ -327,7 +327,7 @@ public class SamplerApplication extends Application {
             });
             logo.setDescription("↶ Home");
             logo.setStyleName(Button.STYLE_LINK);
-            logo.setIcon(new ThemeResource("sampler/logo.png"));
+            logo.setIcon(new ThemeResource("sampler/sampler.png"));
             logo.setWidth("160px");
             return logo;
         }
@@ -393,8 +393,10 @@ public class SamplerApplication extends Application {
             ModeSwitch m = new ModeSwitch();
             m.addMode(currentList, "", "View as Icons", new ThemeResource(
                     "sampler/grid.gif"));
-            m.addMode(currentList, "", "View as Icons", new ThemeResource(
+            /*- no CoverFlow yet
+            m.addMode(coverFlow, "", "View as Icons", new ThemeResource(
                     "sampler/flow.gif"));
+             */
             m.addMode(new FeatureTable(), "", "View as List",
                     new ThemeResource("sampler/list.gif"));
             m.addListener(new ModeSwitch.ModeSwitchListener() {
