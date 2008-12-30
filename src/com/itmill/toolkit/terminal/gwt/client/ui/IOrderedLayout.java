@@ -241,10 +241,13 @@ public class IOrderedLayout extends CellBasedLayout {
         if (remaining > 0) {
             // Some left-over pixels due to rounding errors
 
-            // Add extra pixels to first container
-            ChildComponentContainer firstChildContainer = getFirstChildComponentContainer();
-            if (firstChildContainer != null) {
-                firstChildContainer.expandExtra(orientation, remaining);
+            // Add one pixel to each container until there are no pixels left
+
+            Iterator<Widget> widgetIterator = iterator();
+            while (widgetIterator.hasNext() && remaining-- > 0) {
+                ChildComponentContainer childComponentContainer = (ChildComponentContainer) widgetIterator
+                        .next();
+                childComponentContainer.expandExtra(orientation, 1);
             }
         }
 
@@ -783,7 +786,8 @@ public class IOrderedLayout extends CellBasedLayout {
              * If the height changes as a consequence of this we must inform the
              * parent also
              */
-            if (isDynamicHeight() && sizeBefore.getHeight() != activeLayoutSize.getHeight()) {
+            if (isDynamicHeight()
+                    && sizeBefore.getHeight() != activeLayoutSize.getHeight()) {
                 Util.notifyParentOfSizeChange(this, false);
             }
 
