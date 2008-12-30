@@ -7,10 +7,10 @@ import com.itmill.toolkit.Application;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.Label;
-import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.TextField;
 import com.itmill.toolkit.ui.UriFragmentUtility;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 import com.itmill.toolkit.ui.UriFragmentUtility.FragmentChangedEvent;
@@ -18,10 +18,11 @@ import com.itmill.toolkit.ui.UriFragmentUtility.FragmentChangedEvent;
 public class Ticket34 extends Application {
 
     private Map<String, Component> views = new HashMap<String, Component>();
-    private OrderedLayout mainLayout;
+    private VerticalLayout mainLayout;
     private Component currentView;
     private UriFragmentUtility reader;
 
+    @Override
     public void init() {
 
         buildViews(new String[] { "main", "view2", "view3" });
@@ -38,7 +39,7 @@ public class Ticket34 extends Application {
             }
         });
 
-        mainLayout = new OrderedLayout();
+        mainLayout = new VerticalLayout();
         mainLayout.setSizeFull();
         final Window mainWin = new Window(
                 "Test app for URI fragment management/reading", mainLayout);
@@ -73,7 +74,7 @@ public class Ticket34 extends Application {
         for (String string : strings) {
             Panel p = new Panel(string);
             p.setSizeFull();
-            ((OrderedLayout) p.getLayout()).setSpacing(true);
+            ((VerticalLayout) p.getLayout()).setSpacing(true);
             p.addComponent(new Label("This is a simple test case for "
                     + "UriFragmentReader that can be used for"
                     + " adding linking, back/forward button "
