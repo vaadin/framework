@@ -20,6 +20,7 @@ import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.ParameterHandler;
 import com.itmill.toolkit.terminal.Resource;
+import com.itmill.toolkit.terminal.Sizeable;
 import com.itmill.toolkit.terminal.Terminal;
 import com.itmill.toolkit.terminal.URIHandler;
 
@@ -494,6 +495,15 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         if (getApplication() != null
                 && this == getApplication().getMainWindow()) {
             target.addAttribute("main", true);
+        }
+
+        if (getLayout() != null) {
+            if (getLayout().getHeightUnits() == Sizeable.UNITS_PERCENTAGE) {
+                target.addAttribute("layoutRelativeHeight", true);
+            }
+            if (getLayout().getWidthUnits() == Sizeable.UNITS_PERCENTAGE) {
+                target.addAttribute("layoutRelativeWidth", true);
+            }
         }
 
         // Open requested resource

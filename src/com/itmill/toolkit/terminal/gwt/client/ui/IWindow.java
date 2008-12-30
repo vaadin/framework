@@ -308,9 +308,9 @@ public class IWindow extends IToolkitOverlay implements Container,
         boolean dynamicHeight = !uidl.hasAttribute("height");
         boolean widthHasBeenFixed = false;
 
-        String layoutWidth = childUidl.getStringAttribute("width");
-        boolean layoutRelativeWidth = (layoutWidth != null && layoutWidth
-                .endsWith("%"));
+        boolean layoutRelativeWidth = uidl.hasAttribute("layoutRelativeWidth");
+        boolean layoutRelativeHeight = uidl
+                .hasAttribute("layoutRelativeHeight");
 
         if (dynamicWidth && layoutRelativeWidth) {
             /*
@@ -328,7 +328,7 @@ public class IWindow extends IToolkitOverlay implements Container,
              * be able to take scrollbars into account (layout gets narrower
              * space if it is higher than the window) -> only vertical scrollbar
              */
-            client.handleComponentRelativeSize((Widget) layout);
+            client.runDescendentsLayout(this);
         }
 
         /*
@@ -338,6 +338,26 @@ public class IWindow extends IToolkitOverlay implements Container,
         if (dynamicWidth && !widthHasBeenFixed) {
             setNaturalWidth();
             widthHasBeenFixed = true;
+        }
+
+        if (dynamicHeight && layoutRelativeHeight) {
+            /*
+             * Window height is undefined, layout is 100% high so the layout
+             * should define the initial window height but on resize the layout
+             * should be as high as the window. We fix the height immediately to
+             * deal with this.
+             */
+
+            int h = contents.getOffsetHeight() + getExtraHeight();
+            int w = contents.getOffsetWidth();
+
+            // Prevent resizing until height has been fixed
+            resizable = false;
+
+            client.updateVariable(id, "height", h, false);
+            client.updateVariable(id, "width", w, true);
+            // ApplicationConnection.getConsole().log("Fixing window size to " +
+            // w + "x" + h);
         }
 
         // we may have actions and notifications
