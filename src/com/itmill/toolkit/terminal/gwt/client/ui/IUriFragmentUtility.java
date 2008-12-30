@@ -50,6 +50,7 @@ public class IUriFragmentUtility extends Widget implements Paintable,
             }
         } else {
             if (uidlFragment != null && !uidlFragment.equals(fragment)) {
+                fragment = uidlFragment;
                 // normal fragment change from server, add new history item
                 History.newItem(uidlFragment, false);
             }
