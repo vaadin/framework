@@ -998,8 +998,10 @@ input.i-modified,
 
 .i-panel-caption .i-errorindicator {
 	float: none;
-	padding-right:18px;
+	padding-right:20px;
 	display:inline;
+	background: transparent url(icons/16/error.png) no-repeat bottom center;
+	
 }
 
 .i-panel-caption .i-icon {
