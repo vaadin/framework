@@ -124,15 +124,19 @@
     <!-- Check that we use the old Servlet API to catch incompatibilities.. -->
     <!-- This is unused at the moment. -->
     <target name="check-servlet-version">
-      <available classname="javax.servlet.ServletRequestListener" property="servlet.version.is-2.4" />
-      <fail if="servlet.version.is-2.4" message="IT Mill Toolkit must be compiled with exactly Java Servlet 2.3."/>
-      <echo>Java Servlet 2.3 used.</echo>
+      <available classpath="build/lib/servlet.jar" classname="javax.servlet.Servlet" property="servlet.available"/>
+      <fail unless="servlet.available" message="Java Servlet API library is not available."/>
+      <echo>Java Servlet API is available.</echo>
+
+      <available classpath="build/lib/servlet.jar" classname="javax.servlet.ServletRequestListener" property="servlet.version.is-2.4"/>
+      <fail if="servlet.version.is-2.4" message="Servlet API 2.3 detected. IT Mill Toolkit must be compiled exactly with Java Servlet 2.3."/>
+      <echo>Java Servlet API specification 2.3 used.</echo>
     </target>
 
     <!-- ================================================================== -->
 	<!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- ================================================================== -->
-	<target name="init" depends="check-java-version, init-platform">
+	<target name="init" depends="check-java-version, check-servlet-version, init-platform">
 
 		<property file="build/build.properties" />
 		<property file="build/VERSION.properties" />
@@ -177,7 +181,6 @@
 			<pathelement path="lib/reservr/gwt-maps.jar" />
 			<pathelement path="lib/jetty/jetty-6.1.7.jar" />
 			<pathelement path="lib/jetty/jetty-util-6.1.7.jar" />
-			<pathelement path="lib/jetty/servlet-api-2.5-6.1.7.jar" />
 			<pathelement path="lib/portlet/portal-kernel.jar" />
 			<pathelement path="lib/portlet/portal-service.jar" />
 			<pathelement path="lib/portlet/portlet.jar" />
@@ -918,7 +921,7 @@
    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<target name="dbdoclet" depends="preprocess-src">
 		<echo>Manual: DocBookDoclet</echo>
-		<javadoc access="public" charset="UTF-8" docencoding="UTF-8" encoding="ISO-8859-15" failonerror="yes" classpath="build/lib/servlet-api.jar" maxmemory="512m" source="1.5">
+		<javadoc access="public" charset="UTF-8" docencoding="UTF-8" encoding="ISO-8859-15" failonerror="yes" maxmemory="512m" source="1.5">
 			<packageset dir="${result-path}/src">
 				<include name="${toolkit-package}/**" />
 				<exclude name="${toolkit-package}/demo/**" />
