@@ -16,7 +16,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.Container;
-import com.itmill.toolkit.terminal.gwt.client.IErrorMessage;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.RenderInformation;
 import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
@@ -42,8 +41,6 @@ public class IPanel extends SimplePanel implements Container {
     private final Element contentNode = DOM.createDiv();
 
     private Element errorIndicatorElement;
-
-    private IErrorMessage errorMessage;
 
     private String height;
 
@@ -158,8 +155,6 @@ public class IPanel extends SimplePanel implements Container {
 
         setIconUri(uidl, client);
 
-        handleDescription(uidl);
-
         handleError(uidl);
 
         // Render content
@@ -207,7 +202,6 @@ public class IPanel extends SimplePanel implements Container {
 
     private void handleError(UIDL uidl) {
         if (uidl.hasAttribute("error")) {
-            final UIDL errorUidl = uidl.getErrors();
             if (errorIndicatorElement == null) {
                 errorIndicatorElement = DOM.createDiv();
                 DOM.setElementProperty(errorIndicatorElement, "className",
@@ -216,21 +210,10 @@ public class IPanel extends SimplePanel implements Container {
                 sinkEvents(Event.MOUSEEVENTS);
             }
             DOM.insertBefore(captionNode, errorIndicatorElement, captionText);
-            if (errorMessage == null) {
-                errorMessage = new IErrorMessage();
-            }
-            errorMessage.updateFromUIDL(errorUidl);
-
         } else if (errorIndicatorElement != null) {
             DOM.removeChild(captionNode, errorIndicatorElement);
             errorIndicatorElement = null;
         }
-    }
-
-    private void handleDescription(UIDL uidl) {
-        DOM.setElementProperty(captionText, "title", uidl
-                .hasAttribute("description") ? uidl
-                .getStringAttribute("description") : "");
     }
 
     private void setIconUri(UIDL uidl, ApplicationConnection client) {
@@ -268,7 +251,8 @@ public class IPanel extends SimplePanel implements Container {
              */
             DOM.setStyleAttribute(captionNode, "width", "1px");
 
-            int parentPadding = Util.measureHorizontalPaddingAndBorder(getElement(), 0);
+            int parentPadding = Util.measureHorizontalPaddingAndBorder(
+                    getElement(), 0);
 
             int parentWidthExcludingPadding = getElement().getOffsetWidth()
                     - parentPadding;
@@ -357,25 +341,9 @@ public class IPanel extends SimplePanel implements Container {
                 client.updateVariable(id, "scrollTop", scrollTop, false);
                 client.updateVariable(id, "scrollLeft", scrollLeft, false);
             }
-        } else if (errorIndicatorElement != null
-                && target == errorIndicatorElement) {
-            switch (type) {
-            case Event.ONMOUSEOVER:
-                if (errorMessage != null) {
-                    errorMessage.showAt(errorIndicatorElement);
-                }
-                break;
-            case Event.ONMOUSEOUT:
-                if (errorMessage != null) {
-                    errorMessage.hide();
-                }
-                break;
-            case Event.ONCLICK:
-                ApplicationConnection.getConsole().log(
-                        DOM.getInnerHTML(errorMessage.getElement()));
-                return;
-            default:
-                break;
+        } else if (captionNode.isOrHasChild(target)) {
+            if (client != null) {
+                client.handleTooltipEvent(event, this);
             }
         }
     }
@@ -465,8 +433,8 @@ public class IPanel extends SimplePanel implements Container {
 
         DOM.setStyleAttribute(contentNode, "overflow", "auto");
 
-        captionPaddingHorizontal = Util.measureHorizontalPaddingAndBorder(captionNode,
-                26);
+        captionPaddingHorizontal = Util.measureHorizontalPaddingAndBorder(
+                captionNode, 26);
 
         captionMarginLeft = Util.measureMarginLeft(captionNode);
         contentMarginLeft = Util.measureMarginLeft(contentNode);
