@@ -1,69 +1,72 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>IT Mill Toolkit 5</title>
-		<link rel="stylesheet" type="text/css" href="demo/css/styles.css" />
-		<!--[if IE]>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>IT Mill Toolkit 5</title>
+<link rel="stylesheet" type="text/css" href="demo/css/styles.css" />
+<!--[if IE]>
 		<link rel="stylesheet" type="text/css" href="demo/css/ie.css" />
 		<![endif]-->
-	</head>
-	<body>
-	
-	<div id="container">
-	
-		<div class="header">
-			<h1>Introducing IT Mill Toolkit 5</h1>
-			<em>Effortless web application development for Java-programmers.</em>
-			<div id="header-links">
-			  <a href="http://dev.itmill.com" title="Open dev.itmill.com">Visit developer site dev.itmill.com</a><br/>
-                            <a href="http://forum.itmill.com" title="Open forum.itmill.com">Visit support site forum.itmill.com</a>
-			</div>
-		</div> <!-- /Header -->
-		
-		<div class="content">
-			
-			<div>
-				<h2>Release Notes for IT Mill Toolkit Version <version></version></h2>
+</head>
+<body>
 
-<p>
-  Version 5.3.0 is the first stable release of IT Mill Toolkit 5, meaning that there are no
-  known major problems and the API will be kept backward compatible.
-</p>
+<div id="container">
 
-<h2 id="ClientsideiscompiledwithGWT1.5">Google Web Toolkit Upgraded to Version 1.5</h2>
+<div class="header">
+<h1>Introducing IT Mill Toolkit 5</h1>
+<em>Effortless web application development for Java-programmers.</em>
+<div id="header-links"><a href="http://dev.itmill.com"
+	title="Open dev.itmill.com">Visit developer site dev.itmill.com</a><br />
+<a href="http://forum.itmill.com" title="Open forum.itmill.com">Visit
+support site forum.itmill.com</a></div>
+</div>
+<!-- /Header -->
 
-<p>
-The GWT used in IT Mill Toolkit is upgraded to version 1.5. If you have made your own
-client side components, you will need to upgrade your GWT library. Many things have
-changed in GWT 1.5, but upgrading is rather straightforward and, as a bonus, you will get
-the nice features from Java 1.5. For more details on GWT 1.5, see the <a class="ext-link"
-href="http://code.google.com/webtoolkit/"><span class="icon">GWT web site</span></a>.
-</p>
+<div class="content">
+
+<div>
+<h2>Release Notes for IT Mill Toolkit Version <version></version></h2>
+
+<p>Version 5.3.0 is the first stable release of IT Mill Toolkit 5,
+meaning that there are no known major problems and the API will be kept
+backward compatible.</p>
+
+<h2 id="ClientsideiscompiledwithGWT1.5">Google Web Toolkit Upgraded
+to Version 1.5</h2>
+
+<p>The GWT used in IT Mill Toolkit is upgraded to version 1.5. If
+you have made your own client side components, you will need to upgrade
+your GWT library. Many things have changed in GWT 1.5, but upgrading is
+rather straightforward and, as a bonus, you will get the nice features
+from Java 1.5. For more details on GWT 1.5, see the <a class="ext-link"
+	href="http://code.google.com/webtoolkit/"><span class="icon">GWT
+web site</span></a>.</p>
 
 <h2 id="Java5isrequired">Java 5 Now Required</h2>
 
-<p>As GWT now requires Java 5, support for Java 1.4 is discontinued also in IT Mill
-Toolkit.</p>
+<p>As GWT now requires Java 5, support for Java 1.4 is discontinued
+also in IT Mill Toolkit.</p>
 
 <h2>Debug Mode Enabled by Default</h2>
 
-<p>The debug mode is now enabled by default, to allow debugging layout and other problems
-more easily. The debug mode:</p>
+<p>The debug mode is now enabled by default, to allow debugging
+layout and other problems more easily. The debug mode:</p>
 
 <ul>
-  <li>Displays debug data to the server console/log.</li>
+	<li>Displays debug data to the server console/log.</li>
 
-  <li>Allows showing the client-side logging window, which you can enable by adding the
-  request parameter "<tt>?debug=true</tt>" to the application URI.</li>
+	<li>Allows showing the client-side logging window, which you can
+	enable by adding the request parameter "<tt>?debug=true</tt>" to the
+	application URI.</li>
 
-  <li>Adds an "Analyze layouting" -button to the debug window: when pressed, it will show
-  red markers in potentially problematic layouts and show layout hint texts in the
-  browser-window and in <tt>System.out</tt>.</li>
+	<li>"Analyze layouts" -button in the debug window runs basic
+	checks on usage of relative units. Potentially problematic layouts will
+	be shown in the debug window and in <tt>System.out</tt>.</li>
 </ul>
 
-<p>You should disable the debug mode when releasing your application for production
-use. You can do this by including the following setting in your <tt>web.xml</tt>.</p>
+<p>You should disable the debug mode when releasing your application
+for production use. You can do this by including the following setting
+in your <tt>web.xml</tt>.</p>
 
 <pre class="wiki">  &lt;context-param&gt;
   	&lt;param-name&gt;productionMode&lt;/param-name&gt;
@@ -74,86 +77,81 @@ use. You can do this by including the following setting in your <tt>web.xml</tt>
 
 <h2 id="Layoutchanges">Layout Changes</h2>
 
-<p>The stable IT Mill Toolkit version 5.3 introduces a major rework of layout components
-since the beta versions 5.2.x and before.</p>
+<p>The stable IT Mill Toolkit version 5.3 introduces a major rework
+of layout components since the beta versions 5.2.x and before.</p>
 
 <p>Major changes include:</p>
 
 <ul>
-  <li>Layouts are stricter than before - <i>use of debug mode recommended</i></li>
-  <li><b>VerticalLayout</b> and <b>HorizontalLayout</b> obsolete <b><s>OrderedLayout</s></b></li>
-  <li><b>ExpandLayout</b> deprecated</li>
-  <li>Default changes changed</li>
+	<li>Layouts are stricter than before - <i>usage of debug mode
+	during development is recommended. Use "Analyze layouts" in client side
+	debug window if you encounter problems with relative size.</i></li>
+	<li><b>VerticalLayout</b> and <b>HorizontalLayout</b> obsolete <b>
+	<s>OrderedLayout</s></b></li>
+	<li><b>ExpandLayout</b> deprecated</li>
+	<li>Default changes changed</li>
 </ul>
-
-<p>These major changes are detailed below.</p>
-
-<h3 id="Usedebugmodeduringdevelopmentdebugging">Use debug mode during development / debugging</h3>
-
-<p>Layouts are now more strict than before and some components may even be invisible if
-you use relative sizes in a wrong way.</p>
-
-<p>The debug mode, which is now enabled by default (see above), will make Toolkit run some
-sanity checks for relatively sized components and print informative error messages to the
-server console. Invalid components are painted without their relative size and colored
-red.</p>
 
 <h3>OrderedLayout deprecated</h3>
 
 <p><b>VerticalLayout</b> and <b>HorizontalLayout</b> replace the old
 <b><s>OrderedLayout</s></b>, which is now deprecated.</p>
 
-<p>Essentially, this makes the creation of these basic layouts a bit tidier as you don't
-have to give the orientation as an ugly parameter to the constructor. You won't be able to
-change the orientation with <tt>setOrientation()</tt> any longer, though such need is rare
-anyhow.</p>
+<p>Essentially, this makes the creation of these basic layouts a bit
+tidier as you don't have to give the orientation as an ugly parameter to
+the constructor. You won't be able to change the orientation with <tt>setOrientation()</tt>
+any longer, though such need is rare anyhow.</p>
 
-<h3 id="HandlingofrelativesizeshavechangedExpandLayoutdeprecated">Handling of relative sizes has changed, ExpandLayout deprecated</h3>
+<h3 id="HandlingofrelativesizeshavechangedExpandLayoutdeprecated">Handling
+of relative sizes has changed, ExpandLayout deprecated</h3>
 
-<p><b><s>ExpandLayout</s></b> is deprecated. You can now define the relative sizes of
-components more flexibly with <tt>setExpandRatio()</tt> method available in
-<b>VerticalLayout</b> or <b>HorizontalLayout</b>.</p>
+<p><b><s>ExpandLayout</s></b> is deprecated. You can now define the
+relative sizes of components more flexibly with <tt>setExpandRatio()</tt>
+method available in <b>VerticalLayout</b> or <b>HorizontalLayout</b>.</p>
 
 <p>See the article on <a class="wiki"
-href="http://dev.itmill.com/wiki/DevDocs/RFC/RelativeSizes">Relative sizes in IT Mill
-Toolkit</a> for details.</p>
+	href="http://dev.itmill.com/wiki/DevDocs/RFC/RelativeSizes">Relative
+sizes in IT Mill Toolkit</a> for details.</p>
 
-<h3 id="Somecomponentsnowhavedefaultsizes">Some components now have default sizes</h3>
+<h3 id="Somecomponentsnowhavedefaultsizes">Some components now have
+default sizes</h3>
 
-<p>Previously, almost all components had undefined size by default. Now some containers
-have 100% width by default. These components are:</p>
+<p>Previously, almost all components had undefined size by default.
+Now some containers have 100% width by default. These components are:</p>
 
 <ul>
-  <li><b>VerticalLayout</b></li>
-  <li><b>Window</b></li>
-  <li><b>Panel</b></li>
-  <li><b>TabSheet</b></li>
-  <li><b>SplitPanel</b> (note that <b>SplitPanel</b> also has 100% height by default)</li>
-  <li><b>Form</b></li>
-  <li><b>FormLayout</b></li>
+	<li><b>VerticalLayout</b></li>
+	<li><b>Window</b></li>
+	<li><b>Panel</b></li>
+	<li><b>TabSheet</b></li>
+	<li><b>SplitPanel</b> (note that <b>SplitPanel</b> also has 100%
+	height by default)</li>
+	<li><b>Form</b></li>
+	<li><b>FormLayout</b></li>
 </ul>
 
 <h3>Miscellaneous Layout Changes</h3>
 
 <ul>
-  <li>You can now give component alignments inside layouts easily with
-  <tt>setComponentAlignment()</tt> as a string, such as "<tt>top left</tt>" or
-  "<tt>m,c</tt>" (for middle-center). See <a
-  href="http://dev.itmill.com/ticket/2279">#2279</a>.</li>
+	<li>You can now give component alignments inside layouts easily
+	with <tt>setComponentAlignment()</tt> as a string, such as "<tt>top
+	left</tt>" or "<tt>m,c</tt>" (for middle-center). See <a
+		href="http://dev.itmill.com/ticket/2279">#2279</a>.</li>
 
-  <li><b>Form</b> no longer copies all components from the old layout to the new one when
-  doing <tt>setLayout()</tt>, instead only fields belonging to the <b>Form</b> are
-  copied.</li>
+	<li><b>Form</b> no longer copies all components from the old
+	layout to the new one when doing <tt>setLayout()</tt>, instead only
+	fields belonging to the <b>Form</b> are copied.</li>
 </ul>
 
 
-<h2 id="Customtailoredclientsidecomponents">Custom Tailored Client-Side Components</h2>
+<h2 id="Customtailoredclientsidecomponents">Custom Tailored
+Client-Side Components</h2>
 
-<p>Due to the layout changes, all child component size changes (outside the
-<i>updateFromUIDL()</i> function) must be announced. Most commonly, this kind of change
-occurs when an image gets loaded inside a component. There is a helper method
-<i>componentSizeUpdated()</i> in the <b><i>Util</i></b> class for making the
-announcement:</p>
+<p>Due to the layout changes, all child component size changes
+(outside the <i>updateFromUIDL()</i> function) must be announced. Most
+commonly, this kind of change occurs when an image gets loaded inside a
+component. There is a helper method <i>componentSizeUpdated()</i> in the
+<b><i>Util</i></b> class for making the announcement:</p>
 
 <pre class="wiki">            Set&lt;Widget&gt; w = new HashSet&lt;Widget&gt;();
             w.add(this);
@@ -162,172 +160,188 @@ announcement:</p>
 
 <h2 id="Themes">Themes</h2>
 
-<p>Many components have changed significantly due to layout refactoring. Especially the
-DOM structures of the components have changed, which may break old themes.</p>
+<p>Many components have changed significantly due to layout
+refactoring. Especially the DOM structures of the components have
+changed, which may break old themes.</p>
 
-<p>Building themes for Toolkit is not the most straightforward process as there is quite a
-lot of JavaScript magic done while rendering the components, e.g., dimension measuring,
-etc. If you use unsupported CSS, a component may be rendered in an unexpected way in a
-browser. A "Theme builder's Handbook" is at the top of our TODO list. In the mean time, it
-is often safest to override the values defined in the default theme.</p>
+<p>Building themes for Toolkit is not the most straightforward
+process as there is quite a lot of JavaScript magic done while rendering
+the components, e.g., dimension measuring, etc. If you use unsupported
+CSS, a component may be rendered in an unexpected way in a browser. A
+"Theme builder's Handbook" is at the top of our TODO list. In the mean
+time, it is often safest to override the values defined in the default
+theme.</p>
 
-<p>Especially, if you encounter problems with margins or spacings, check the manual. Some
-CSS class names and conventions have changed as well. (Many of the changes are not yet
-included in the manual.)</p>
+<p>Especially, if you encounter problems with margins or spacings,
+check the manual. Some CSS class names and conventions have changed as
+well. (Many of the changes are not yet included in the manual.)</p>
 
-<p>If you have or get "broken" component on your screen, the first thing to do is to
-comment out all your custom theme. If it works, you may have the rework your CSS for that
-particular component. Below are a few things to check:</p>
+<p>If you have or get "broken" component on your screen, the first
+thing to do is to comment out all your custom theme. If it works, you
+may have the rework your CSS for that particular component. Below are a
+few things to check:</p>
 
 <ul>
 
-  <li>Do not use custom margins outside a component. In IT Mill Toolkit, no component
-  should have a margin defined. Settings width/height on the server-side would mean offset
-  width/height on client-side, so using custom margins for components using CSS may break
-  some features in the layouts.</li>
+	<li>Do not use custom margins outside a component. In IT Mill
+	Toolkit, no component should have a margin defined. Settings
+	width/height on the server-side would mean offset width/height on
+	client-side, so using custom margins for components using CSS may break
+	some features in the layouts.</li>
 
-  <li>The same goes for borders and paddings for the main element unless they are used for
-  the main element in the default theme. It is often safer to use borders in the same
-  elements that have borders in the default theme or in inner elements.</li>
+	<li>The same goes for borders and paddings for the main element
+	unless they are used for the main element in the default theme. It is
+	often safer to use borders in the same elements that have borders in
+	the default theme or in inner elements.</li>
 
 </ul>
 
-<p>The easiest and safest way to build a custom theme is, often, to override the values
-from the default theme.</p>
+<p>The easiest and safest way to build a custom theme is, often, to
+override the values from the default theme.</p>
 
-<h2 id="Browsersupportchangessince5.2.x">Browser support changes since 5.2.x</h2>
+<h2 id="Browsersupportchangessince5.2.x">Browser support changes
+since 5.2.x</h2>
 
-<p>Safari 2, Firefox 1.5, and versions of Opera prior to version 9.6 are no longer
-supported. Users of these browsers are strongly encouraged to upgrade to a newer
-version.</p>
+<p>Safari 2, Firefox 1.5, and versions of Opera prior to version 9.6
+are no longer supported. Users of these browsers are strongly encouraged
+to upgrade to a newer version.</p>
 
-<p>Google Chrome is not yet supported, but it is known to work rather well as it is a
-close relative to Safari.</p>
+<p>Google Chrome is not yet supported, but it is known to work
+rather well as it is a close relative to Safari.</p>
 
-<p>The GWT Hosted Mode Browser on Linux uses same Gecko version as FF 1.5 and is currently
-partially broken. Some layouts do not render properly. We hope to resolve these issues
-soon with next generation Hosted Mode Browser aka OOPHM or with minor hacks to the client
-side code.</p>
+<p>The GWT Hosted Mode Browser on Linux uses same Gecko version as
+FF 1.5 and is currently partially broken. Some layouts do not render
+properly. We hope to resolve these issues soon with next generation
+Hosted Mode Browser aka OOPHM or with minor hacks to the client side
+code.</p>
 
 <h2 id="MinorChanges">Miscellaneous Changes and Enhancements</h2>
 
-<p>Version 5.3 also contains a large number (more than 200) of small changes, which might
-not be worth mentioning in the release notes, but below are some of them. </p>
+<p>Version 5.3 also contains a large number (more than 200) of small
+changes, which might not be worth mentioning in the release notes, but
+below are some of them.</p>
 
 <ul>
-  <li>A new sub-window theme</li>
-  <li>The HTML structure of <b>TabSheet</b> has changed</li>
-  <li>Better shadow support for overlay elements</li>
-  <li>Row and column icons for <b>Table</b></li>
-  <li>New component: <b>PopupPanel</b>/<B>PopupView</b></li>
-  <li>Theme changing on-the-fly</li>
-  <li><b>Table</b> cellstyle and rowstyle generators</li>
-  <li>New component: <b>MenuBar</b></li>
-  <li>Security: double-cookie submission pattern</li>
-  <li>Low-level support for bookmarking and history</li>
-  <li>Sub-windows can be centered on screen. Modal windows are centered automatically</li>
-  <li>The <b>Link</b> component now behaves like a normal "weblink"</li>
+	<li>A new sub-window theme</li>
+	<li>The HTML structure of <b>TabSheet</b> has changed</li>
+	<li>Better shadow support for overlay elements</li>
+	<li>Row and column icons for <b>Table</b></li>
+	<li>New component: <b>PopupPanel</b>/<B>PopupView</b></li>
+	<li>Theme changing on-the-fly</li>
+	<li><b>Table</b> cellstyle and rowstyle generators</li>
+	<li>New component: <b>MenuBar</b></li>
+	<li>Security: double-cookie submission pattern</li>
+	<li>Low-level support for bookmarking and history</li>
+	<li>Sub-windows can be centered on screen. Modal windows are
+	centered automatically</li>
+	<li>The <b>Link</b> component now behaves like a normal "weblink"</li>
 </ul>
-        
-<p>The <version></version> release of IT Mill Toolkit includes new features and a large
-number of fixes to problems compared to the older 5.2.x version. Major enhancements and
-dozens of bug fixes have been implemented. Only the most significant issues are mentioned
-here.</p>
-  
-<p>For up-to-date status of known problems, see the developer website <a href="http://dev.itmill.com/">dev.itmill.com</a>.</p>
+
+<p>The <version></version> release of IT Mill Toolkit includes new
+features and a large number of fixes to problems compared to the older
+5.2.x version. Major enhancements and dozens of bug fixes have been
+implemented. Only the most significant issues are mentioned here.</p>
+
+<p>For up-to-date status of known problems, see the developer
+website <a href="http://dev.itmill.com/">dev.itmill.com</a>.</p>
 
 <h2>Package for the experimental GWT Out-of-Process Hosted Mode</h2>
 
-<p>
-  We provide a separate (platform independent) installation package
-  (<tt>itmill-toolkit-oophm-<version></version>.tar.gz</tt>) for the experimental Out of
-  Process Hosted Mode (OOPHM) of GWT, which allows debugging client-side code in GWT
-  Hosted Mode with a regular web browser. Using the OOPHM requires installing a browser
-  plugin (available for Mozilla Firefox, IE, and WebKit). See the manual section on OOPHM
-  for more details.
-</p>
+<p>We provide a separate (platform independent) installation package
+(<tt>itmill-toolkit-oophm-<version></version>.tar.gz</tt>) for the
+experimental Out of Process Hosted Mode (OOPHM) of GWT, which allows
+debugging client-side code in GWT Hosted Mode with a regular web
+browser. Using the OOPHM requires installing a browser plugin (available
+for Mozilla Firefox, IE, and WebKit). See the manual section on OOPHM
+for more details.</p>
 
-<p>
-  The Linux version of GWT Hosted Mode Browser is no longer compatible with IT Mill
-  Toolkit 5.3.0 (<a href="http://dev.itmill.com/ticket/2299">#2299</a>), so the OOPHM is
-  the only option for debugging in hosted mode in Linux.
-</p>
+<p>The Linux version of GWT Hosted Mode Browser is no longer
+compatible with IT Mill Toolkit 5.3.0 (<a
+	href="http://dev.itmill.com/ticket/2299">#2299</a>), so the OOPHM is
+the only option for debugging in hosted mode in Linux.</p>
 
-<p>
-  As the OOPHM package is experimental, you should use it only for debugging purposes
-  during development. For production use, you should compile your custom widget sets with
-  the regular IT Mill Toolkit package for your platform.
-</p>
+<p>As the OOPHM package is experimental, you should use it only for
+debugging purposes during development. For production use, you should
+compile your custom widget sets with the regular IT Mill Toolkit package
+for your platform.</p>
 
-    <h2>Important known problems in <version></version></h2>
+<h2>Important known problems in <version></version></h2>
 
 <ul>
-  <li><a href="http://dev.itmill.com/ticket/1155">#1155</a> Uncompressing the installation
-  package fails in Windows if using the default Zip uncompression. Uncompression gives (in
-  Windows Vista) an error message about too long filenames, and a more obscure message in
-  other versions of Windows. Workaround: use <a href="http://www.7-zip.org/">7-Zip</a> or
-  some other good unzip program for Windows.</li>
+	<li><a href="http://dev.itmill.com/ticket/1155">#1155</a>
+	Uncompressing the installation package fails in Windows if using the
+	default Zip uncompression. Uncompression gives (in Windows Vista) an
+	error message about too long filenames, and a more obscure message in
+	other versions of Windows. Workaround: use <a
+		href="http://www.7-zip.org/">7-Zip</a> or some other good unzip
+	program for Windows.</li>
 
-  <li><a href="http://dev.itmill.com/ticket/2299">#2299</a> The Hosted Mode Browser does
-  not work in Linux for debugging client-side GWT code. You need to install the
-  experimental OOPHM package instead (see above) for development. For production, you
-  should use the regular package for Linux.</li>
+	<li><a href="http://dev.itmill.com/ticket/2299">#2299</a> The
+	Hosted Mode Browser does not work in Linux for debugging client-side
+	GWT code. You need to install the experimental OOPHM package instead
+	(see above) for development. For production, you should use the regular
+	package for Linux.</li>
 </ul>
 
-<p>For other known problems, see open tickets at developer site <a href="http://dev.itmill.com/">dev.itmill.com</a>.</p>
+<p>For other known problems, see open tickets at developer site <a
+	href="http://dev.itmill.com/">dev.itmill.com</a>.</p>
 
-    <h2>Requirements</h2>
+<h2>Requirements</h2>
 
-  <p>IT Mill Toolkit is available for the following operating systems:</p>
+<p>IT Mill Toolkit is available for the following operating systems:</p>
 
-  <ul>
-    <li>Windows (see the Zip installation notice above)</li>
+<ul>
+	<li>Windows (see the Zip installation notice above)</li>
 
-    <li>Linux</li>
+	<li>Linux</li>
 
-    <li>Mac OS X Tiger (mac) or Leopard (leopard)</li>
+	<li>Mac OS X Tiger (mac) or Leopard (leopard)</li>
 
-    <li>Other UNIX operating systems such as Sun Solaris using the Linux installation package.</li>
-  </ul>
+	<li>Other UNIX operating systems such as Sun Solaris using the
+	Linux installation package.</li>
+</ul>
 
-  <p>IT Mill Toolkit supports the following browsers:</p>
+<p>IT Mill Toolkit supports the following browsers:</p>
 
-  <ul>
-    <li>Mozilla Firefox releases 2, and 3 (see notice above about Gecco 1.7).</li>
-    <li>Internet Explorer releases 6, 7, and 8.</li>
-    <li>Safari 3</li>
-    <li>Opera 9.6</li>
-  </ul>
+<ul>
+	<li>Mozilla Firefox releases 2, and 3 (see notice above about
+	Gecco 1.7).</li>
+	<li>Internet Explorer releases 6, 7, and 8.</li>
+	<li>Safari 3</li>
+	<li>Opera 9.6</li>
+</ul>
 
-  <p>There may be differences between the exact versions of the supported browsers that
-  may cause incompatibility with applications made with IT Mill Toolkit.</p>
+<p>There may be differences between the exact versions of the
+supported browsers that may cause incompatibility with applications made
+with IT Mill Toolkit.</p>
 
-  <p>The following browsers are not supported but have been found to work to a large degree:</p>
-  <ul>
-    <li>Safari 2</li>
-    <li>Firefox 1.5</li>
-    <li>iPhone</li>
-    <li>Galeon, Epiphany and other Gecco-based browsers (see notice about Gecco 1.7 above)</li>
-    <li>Nokia Internet Tablet N800 and N810 (ITOS 2008)</li>
-  </ul>
+<p>The following browsers are not supported but have been found to
+work to a large degree:</p>
+<ul>
+	<li>Safari 2</li>
+	<li>Firefox 1.5</li>
+	<li>iPhone</li>
+	<li>Galeon, Epiphany and other Gecco-based browsers (see notice
+	about Gecco 1.7 above)</li>
+	<li>Nokia Internet Tablet N800 and N810 (ITOS 2008)</li>
+</ul>
 
-  <p>Nokia E-series phones with at least 128MB of memory have been known to work with
-  older versions, but not with IT Mill Toolkit 5.2.x. Konqueror, the default browser in
-  many Linux distributions, is known to have limited usability.</p>
+<p>Nokia E-series phones with at least 128MB of memory have been
+known to work with older versions, but not with IT Mill Toolkit 5.2.x.
+Konqueror, the default browser in many Linux distributions, is known to
+have limited usability.</p>
 
-    <!-- h2>ChangeLog Between IT Mill Toolkit 5.1.2 and 5.2.0</h2 -->
+<!-- h2>ChangeLog Between IT Mill Toolkit 5.1.2 and 5.2.0</h2 --></div>
+<!-- /getting-started -->
 
-			</div> <!-- /getting-started -->
-			
-			<div class="clearer"></div>
-		</div> <!-- /content-->
-		
-		<div class="footer">
-			<a href="http://www.itmill.com">IT Mill Ltd.</a>
-			<em>Interfacing IT</em>
-		</div> <!-- /footer -->
-	
-	</div> <!-- /container -->
-	
-	</body>
+<div class="clearer"></div>
+</div>
+<!-- /content-->
+
+<div class="footer"><a href="http://www.itmill.com">IT Mill
+Ltd.</a> <em>Interfacing IT</em></div>
+<!-- /footer --></div>
+<!-- /container -->
+
+</body>
 </html>
