@@ -111,8 +111,10 @@
 	<target name="init-oophm" depends="init-oophm-platform,init"></target>
 
     <!-- ================================================================== -->
-    <!-- Check that Java version is 1.5.                                    -->
+    <!-- Check versions.                                                    -->
     <!-- ================================================================== -->
+
+    <!-- Java compiler version. -->
     <target name="check-java-version">
       <condition property="java.version.matches">
         <equals arg1="${ant.java.version}" arg2="1.5"/>
@@ -121,26 +123,28 @@
       <echo>Java version is ${ant.java.version} as required.</echo>
     </target>
 
-    <!-- Check that we use the old Servlet API to catch incompatibilities.. -->
-    <!-- This is unused at the moment. -->
+    <!-- Check Servlet API version. -->
+    <!-- We must use Servlet API 2.3 to catch incompatibilities.. -->
     <target name="check-servlet-version">
-      <available classpath="build/lib/servlet.jar" classname="javax.servlet.Servlet" property="servlet.available"/>
+      <available classpathref="compile.classpath" classname="javax.servlet.Servlet" property="servlet.available"/>
       <fail unless="servlet.available" message="Java Servlet API library is not available."/>
       <echo>Java Servlet API is available.</echo>
 
-      <available classpath="build/lib/servlet.jar" classname="javax.servlet.ServletRequestListener" property="servlet.version.is-2.4"/>
-      <fail if="servlet.version.is-2.4" message="Servlet API 2.3 detected. IT Mill Toolkit must be compiled exactly with Java Servlet 2.3."/>
+      <available classpathref="compile.classpath" classname="javax.servlet.ServletRequestListener" property="servlet.version.is-2.4"/>
+      <fail if="servlet.version.is-2.4" message="Java Servlet API 2.4 or later detected. IT Mill Toolkit must be compiled exactly with Servlet API 2.3."/>
       <echo>Java Servlet API specification 2.3 used.</echo>
     </target>
 
     <!-- ================================================================== -->
 	<!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- ================================================================== -->
-	<target name="init" depends="check-java-version, check-servlet-version, init-platform">
+	<target name="init" depends="check-java-version, init-platform">
 
 		<property file="build/build.properties" />
 		<property file="build/VERSION.properties" />
 		<property file="build/html-style.properties" />
+
+        <echo>Toolkit package is: ${toolkit-package}</echo>
 
 		<!-- Can run XEP only if license is available. -->
 		<available file="build/lib/XEP/license.xml" property="xep.license.available" />
@@ -175,8 +179,7 @@
 
 		<!-- Construct classpath used by java and javadoc compilation -->
 		<path id="compile.classpath">
-			<pathelement path="${gwt-dir}/${platform}/gwt-user.jar" />
-			<pathelement path="${gwt-dir}/${platform}/${lib-gwt-dev}" />
+			<pathelement path="build/lib/servlet.jar" />
 			<pathelement path="build/external/fileupload/classes" />
 			<pathelement path="lib/reservr/gwt-maps.jar" />
 			<pathelement path="lib/jetty/jetty-6.1.7.jar" />
@@ -185,7 +188,15 @@
 			<pathelement path="lib/portlet/portal-service.jar" />
 			<pathelement path="lib/portlet/portlet.jar" />
 		</path>
-
+		<path id="compile.classpath.server-side">
+            <path refid="compile.classpath"/>
+			<pathelement path="${result-path}/gwt" />
+		</path>
+		<path id="compile.classpath.client-side">
+            <path refid="compile.classpath"/>
+            <pathelement path="${gwt-dir}/${platform}/gwt-user.jar" />
+            <pathelement path="${gwt-dir}/${platform}/${lib-gwt-dev}" />
+		</path>
 	</target>
 
 	<target name="internal-package-windows">
@@ -641,11 +652,21 @@
 		<ant dir="build/external/fileupload" antfile="build.xml" target="compile" />
 	</target>
 
-	<target name="compile-java" depends="compile-fileupload, webcontent">
+	<target name="unpack-gwt" depends="init">
+        <!-- Unpack GWT from JARs. This is needed for excluding Servlet API 2.4. -->
+		<delete dir="${result-path}/gwt"/>
+        <unjar src="${gwt-dir}/${platform}/gwt-user.jar" dest="${result-path}/gwt/"/>
+        <unjar src="${gwt-dir}/${platform}/${lib-gwt-dev}" dest="${result-path}/gwt/"/>
+		<delete dir="${result-path}/gwt/javax/servlet"/>
+    </target>
+
+	<target name="compile-java" depends="init, unpack-gwt, check-servlet-version, compile-fileupload, webcontent">
 		<echo>Compiling src (server-side)</echo>
 		<!-- Compile -->
 		<mkdir dir="${result-path}/classes" />
-		<javac source="1.5" target="1.5" classpathref="compile.classpath" srcdir="${result-path}/src" destdir="${result-path}/classes" includes="${toolkit-package}/**" debug="true" encoding="UTF-8">
+		<javac source="1.5" target="1.5" classpathref="compile.classpath.server-side" destdir="${result-path}/classes" debug="true" encoding="UTF-8">
+             <src path="${result-path}/src"/>
+             <!-- This seems to be included by default: include name="${toolkit-package}/**"/ -->
 		</javac>
 	</target>
 
@@ -892,7 +913,7 @@
   Documentation: Add Javadoc to doc
    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<target name="javadoc" depends="preprocess-src">
-		<javadoc destdir="${output-dir}/WebContent/doc/api" author="true" version="true" use="true" windowtitle="${product-name}" classpathref="compile.classpath">
+		<javadoc destdir="${output-dir}/WebContent/doc/api" author="true" version="true" use="true" windowtitle="${product-name}" classpathref="compile.classpath.client-side">
 			<packageset dir="${result-path}/src">
 				<include name="${toolkit-package}/**" />
 				<exclude name="${toolkit-package}/demo/**" />
