@@ -105,7 +105,7 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
             if (getElement().getTagName().toLowerCase().equals("textarea")) {
                 // NOP no maxlenght property for textarea
             } else {
-                getElement().setAttribute("maxlength", "" + maxLength);
+                getElement().setPropertyInt("maxLength", maxLength);
             }
         } else if (maxLength != -1) {
             if (getElement().getTagName().toLowerCase().equals("textarea")) {
