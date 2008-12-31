@@ -29,25 +29,25 @@
 	<!-- 
 	Call one of package-* targets unless you understand what you are doing 
 	-->
-	<target name="package-all" depends="clean-all, init, build, docs, internal-package-mac, internal-package-windows, internal-package-linux, internal-package-war" description="Build public packages for Windows, Linux and Mac platforms.">
+	<target name="package-all" depends="clean-all, package-init, init, build, docs, internal-package-mac, internal-package-windows, internal-package-linux, internal-package-war" description="Build public packages for Windows, Linux and Mac platforms.">
 	</target>
 
-	<target name="package-mac" depends="clean-all, init, build, docs, internal-package-mac" description="Create public tar.gz package for Mac.">
+	<target name="package-mac" depends="clean-all, package-init, init, build, docs, internal-package-mac" description="Create public tar.gz package for Mac.">
 	</target>
 
-	<target name="package-windows" depends="clean-all, init, build, docs, internal-package-windows" description="Create public ZIP package for Windows.">
+	<target name="package-windows" depends="clean-all, package-init, init, build, docs, internal-package-windows" description="Create public ZIP package for Windows.">
 	</target>
 
-	<target name="package-linux" depends="clean-all, init, build, docs, internal-package-linux" description="Create public tar.bz2 package for Linux.">
+	<target name="package-linux" depends="clean-all, package-init, init, build, docs, internal-package-linux" description="Create public tar.bz2 package for Linux.">
 	</target>
 
-	<target name="package-oophm" depends="clean-all, init-oophm, build, docs, internal-package-oophm" description="Create public tar.gz package for OOPHM.">
+	<target name="package-oophm" depends="clean-all, package-init, init-oophm, build, docs, internal-package-oophm" description="Create public tar.gz package for OOPHM.">
 	</target>
 
-	<target name="package-jar" depends="clean-all, init, libs" description="Create itmill-toolkit-x.y.z.jar file.">
+	<target name="package-jar" depends="clean-all, package-init, init, libs" description="Create itmill-toolkit-x.y.z.jar file.">
 	</target>
 
-	<target name="package-war" depends="clean-all, init, build, docs, internal-package-mac, internal-package-war">
+	<target name="package-war" depends="clean-all, package-init, init, build, docs, internal-package-mac, internal-package-war">
 	</target>
 
 	<!-- internal tests for packaging -->
@@ -138,6 +138,12 @@
     <!-- ================================================================== -->
 	<!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- ================================================================== -->
+
+    <!-- Called only when building installation packages. -->
+	<target name="package-init">
+      <property name="build.sampler.disabled" value="true"/>
+    </target>
+
 	<target name="init" depends="check-java-version, init-platform">
 
 		<property file="build/build.properties" />
@@ -557,6 +563,7 @@
 					<include name="**/*.html" />
 					<include name="**/*.css" />
 					<include name="**/*.xml" />
+					<exclude name="**/demo/sampler/**" if="build.sampler.disabled" />
 				</patternset>
 			</fileset>
 		</copy>
@@ -575,6 +582,7 @@
 					<exclude name="**/*.html" />
 					<exclude name="**/*.css" />
 					<exclude name="**/*.xml" />
+					<exclude name="**/demo/sampler/**" if="build.sampler.disabled" />
 				</patternset>
 			</fileset>
 		</copy>
@@ -608,6 +616,7 @@
 		<copy todir="${output-dir}/WebContent/WEB-INF/src">
 			<fileset dir="${result-path}/src">
 				<include name="${toolkit-package}/demo/**/*" />
+				<exclude name="${toolkit-package}/demo/sampler/**" if="build.sampler.disabled" />
 			</fileset>
 		</copy>
 
@@ -624,6 +633,7 @@
 				<exclude name="ITMILL/themes/tests-magi/**/*" />
 				<exclude name="ITMILL/themes/tests-featurebrowser/**/*" />
 				<exclude name="ITMILL/themes/tests*/**/*" />
+				<exclude name="ITMILL/themes/sampler/**" if="build.sampler.disabled" />
 				<include name="demo/**/*" />
 				<include name="WEB-INF/lib/hsqldb.jar" />
 				<include name="ITMILL/themes/**/*" />
@@ -667,6 +677,7 @@
 		<javac source="1.5" target="1.5" classpathref="compile.classpath.server-side" destdir="${result-path}/classes" debug="true" encoding="UTF-8">
              <src path="${result-path}/src"/>
              <!-- This seems to be included by default: include name="${toolkit-package}/**"/ -->
+             <exclude name="${toolkit-package}/demo/sampler/**" if="build.sampler.disabled" />
 		</javac>
 	</target>
 
@@ -734,7 +745,8 @@
 		<echo>Compiled ReservationWidgetSet</echo>
 	</target>
 
-	<target name="compile-widgetset-sampler">
+    <!-- Building Sampler for installation package is disabled. -->
+	<target name="compile-widgetset-sampler" unless="build.sampler.disabled">
 		<echo>com.itmill.toolkit.demo.sampler.gwt.SamplerWidgetSet</echo>
 		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="-out" />
