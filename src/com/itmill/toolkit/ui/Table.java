@@ -1106,6 +1106,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @return the Value of property pageBuffering.
      */
+    @Deprecated
     public boolean isPageBufferingEnabled() {
         return true;
     }
@@ -1118,6 +1119,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param pageBuffering
      *            the New value of property pageBuffering.
      */
+    @Deprecated
     public void setPageBufferingEnabled(boolean pageBuffering) {
 
     }
@@ -1409,6 +1411,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @deprecated should not need to be used
      */
+    @Deprecated
     public void refreshCurrentPage() {
 
     }
@@ -1523,6 +1526,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /* Overriding select behavior */
 
+    @Override
     public void setValue(Object newValue) throws ReadOnlyException,
             ConversionException {
         // external selection change, need to truncate pageBuffer
@@ -1539,6 +1543,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.itmill.toolkit.data.Container.Viewer#setContainerDataSource(Container)
      */
+    @Override
     public void setContainerDataSource(Container newDataSource) {
 
         disableContentRefreshing();
@@ -1599,6 +1604,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.itmill.toolkit.ui.Select#changeVariables(java.lang.Object,
      *      java.util.Map)
      */
+    @Override
     public void changeVariables(Object source, Map variables) {
 
         boolean clientNeedsContentRefresh = false;
@@ -1790,7 +1796,7 @@ public class Table extends AbstractSelect implements Action.Container,
         isContentRefreshesEnabled = true;
         if (refreshContent) {
             refreshRenderedCells();
-            // Ensure that client gets a response 
+            // Ensure that client gets a response
             requestRepaint();
         }
     }
@@ -1802,6 +1808,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * com.itmill.toolkit.ui.AbstractSelect#paintContent(com.itmill.toolkit.
      * terminal.PaintTarget)
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
 
         // The tab ordering number
@@ -2149,6 +2156,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.itmill.toolkit.ui.AbstractSelect#getTag()
      */
+    @Override
     public String getTag() {
         return "table";
     }
@@ -2270,6 +2278,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.itmill.toolkit.data.Property.ValueChangeListener#valueChange(Property.ValueChangeEvent)
      */
+    @Override
     public void valueChange(Property.ValueChangeEvent event) {
         if (event.getProperty() == this) {
             super.valueChange(event);
@@ -2294,6 +2303,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.itmill.toolkit.ui.Component#attach()
      */
+    @Override
     public void attach() {
         super.attach();
 
@@ -2311,6 +2321,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.itmill.toolkit.ui.Component#detach()
      */
+    @Override
     public void detach() {
         super.detach();
 
@@ -2326,6 +2337,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.itmill.toolkit.data.Container#removeAllItems()
      */
+    @Override
     public boolean removeAllItems() {
         currentPageFirstItemId = null;
         currentPageFirstItemIndex = 0;
@@ -2337,6 +2349,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.itmill.toolkit.data.Container#removeItem(Object)
      */
+    @Override
     public boolean removeItem(Object itemId) {
         final Object nextItemId = ((Container.Ordered) items)
                 .nextItemId(itemId);
@@ -2356,6 +2369,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.itmill.toolkit.data.Container#removeContainerProperty(Object)
      */
+    @Override
     public boolean removeContainerProperty(Object propertyId)
             throws UnsupportedOperationException {
 
@@ -2380,6 +2394,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.itmill.toolkit.data.Container#addContainerProperty(Object,
      *      Class, Object)
      */
+    @Override
     public boolean addContainerProperty(Object propertyId, Class type,
             Object defaultValue) throws UnsupportedOperationException {
 
@@ -2478,15 +2493,17 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Removes a generated column previously added with addGeneratedColumn.
      * 
-     * @param id
+     * @param colunmId
      *            id of the generated column to remove
      * @return true if the column could be removed (existed in the Table)
      */
-    public boolean removeGeneratedColumn(Object id) {
-        if (columnGenerators.containsKey(id)) {
-            columnGenerators.remove(id);
-            if (!items.containsId(id)) {
-                visibleColumns.remove(id);
+    public boolean removeGeneratedColumn(Object colunmId) {
+        if (columnGenerators.containsKey(colunmId)) {
+            columnGenerators.remove(colunmId);
+            // remove column from visibleColumns list unless it exists in
+            // container (generator previously overrode this column)
+            if (!items.getContainerPropertyIds().contains(colunmId)) {
+                visibleColumns.remove(colunmId);
             }
             resetPageBuffer();
             refreshRenderedCells();
@@ -2501,6 +2518,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.itmill.toolkit.ui.Select#getVisibleItemIds()
      */
+    @Override
     public Collection getVisibleItemIds() {
 
         final LinkedList visible = new LinkedList();
@@ -2519,6 +2537,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.itmill.toolkit.data.Container.ItemSetChangeListener#containerItemSetChange(com.itmill.toolkit.data.Container.ItemSetChangeEvent)
      */
+    @Override
     public void containerItemSetChange(Container.ItemSetChangeEvent event) {
         super.containerItemSetChange(event);
         if (event instanceof IndexedContainer.ItemSetChangeEvent) {
@@ -2542,6 +2561,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.itmill.toolkit.data.Container.PropertySetChangeListener#containerPropertySetChange(com.itmill.toolkit.data.Container.PropertySetChangeEvent)
      */
+    @Override
     public void containerPropertySetChange(
             Container.PropertySetChangeEvent event) {
         super.containerPropertySetChange(event);
@@ -2557,6 +2577,7 @@ public class Table extends AbstractSelect implements Action.Container,
      *             if set to true.
      * @see com.itmill.toolkit.ui.Select#setNewItemsAllowed(boolean)
      */
+    @Override
     public void setNewItemsAllowed(boolean allowNewOptions)
             throws UnsupportedOperationException {
         if (allowNewOptions) {
@@ -2571,6 +2592,7 @@ public class Table extends AbstractSelect implements Action.Container,
      *             if invoked.
      * @see com.itmill.toolkit.ui.AbstractField#focus()
      */
+    @Override
     public void focus() throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
@@ -2918,6 +2940,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Override abstract fields to string method to avoid non-informative null's
      * in debugger
      */
+    @Override
     public String toString() {
         return "Table:" + getContainerPropertyIds() + ", rows "
                 + getContainerDataSource().size() + " ,value:"
@@ -3014,6 +3037,7 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     // Identical to AbstractCompoenentContainer.setEnabled();
+    @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         if (getParent() != null && !getParent().isEnabled()) {
