@@ -36,7 +36,7 @@ public class Ticket932 extends Application {
         mainWin.addComponent(b);
 
         final TextField tx2 = new TextField(
-                "Textfield with maxlenght 10, multirow");
+                "Textfield with maxlenght 10, multirow ");
         mainWin.addComponent(tx2);
         tx2.setImmediate(true);
         tx2.setRows(5);
