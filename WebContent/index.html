@@ -77,6 +77,22 @@
 						if(fb.value == fb._originalValue)
 							fb.value = "";
 					}
+
+					try {
+						
+					if(window.location.search && -1 != window.location.search.indexOf('gwt.hosted')) {
+						var hostedParam = window.location.search;
+						var demolinks = document.getElementsByTagName("a");
+						for (var k = 0; k < demolinks.length; k++) {
+							var link = demolinks[k];
+							if(link.className.indexOf
+									("demoapp") != -1) {
+								link.href = link.href + hostedParam;
+							}
+						}
+					}
+					} catch(e) {}
+
 				},
 				
 				togglePanel : function(which) {
@@ -156,10 +172,10 @@
 			<div id="demos">
 				<h2>Demos</h2>
 				<ul id="demo-buttons">
-					<li id="feature-browser"><a href="FeatureBrowser/">Feature browser</a></li>
-					<li id="notifications"><a href="NotificationDemo/">Notifications</a></li>
-					<li id="reservr"><a href="Reservr/">Reservation application</a></li>
-					<li id="windowed-demos"><a href="WindowedDemos">Windowed demos</a></li>
+					<li id="feature-browser"><a class="demoapp" href="FeatureBrowser/">Feature browser</a></li>
+					<li id="notifications"><a class="demoapp" href="NotificationDemo/">Notifications</a></li>
+					<li id="reservr"><a class="demoapp" href="Reservr/">Reservation application</a></li>
+					<li id="windowed-demos"><a class="demoapp" href="WindowedDemos">Windowed demos</a></li>
 					<li class="clearer"></li> <!-- // simplifies things in JavaScipt -->
 				</ul>
 				
@@ -172,12 +188,12 @@
 					
 					<div id="additional-demos-content"> <!-- For JavaScript hooking -->
 					<ul>
-						<li><a href="HelloWorld/">Hello world</a> (<a href="doc/example-source/com/itmill/toolkit/demo/HelloWorld.java.html">sources</a>)</li>
-						<li><a href="Calc/">Calculator</a> (<a href="doc/example-source/com/itmill/toolkit/demo/Calc.java.html">sources</a>)</li>
-						<li><a href="colorpicker/">How to make widgets demo</a> (<a href="doc/example-source/com/itmill/toolkit/demo/colorpicker">sources</a>)</li>
-						<li><a href="CachingDemo/">Widget caching demo</a> (<a href="doc/example-source/com/itmill/toolkit/demo/CachingDemo.java.html">sources</a>)</li>
-						<li><a href="KeyboardShortcut/">Keyboard shortcuts</a> (<a href="doc/example-source/com/itmill/toolkit/demo/KeyboardShortcut.java.html">sources</a>)</li>
-						<li><a href="BufferedComponents/">Buffered components</a> (<a href="doc/example-source/com/itmill/toolkit/demo/BufferedComponents.java.html">sources</a>)</li>
+						<li><a class="demoapp" href="HelloWorld/">Hello world</a> (<a href="doc/example-source/com/itmill/toolkit/demo/HelloWorld.java.html">sources</a>)</li>
+						<li><a class="demoapp" href="Calc/">Calculator</a> (<a href="doc/example-source/com/itmill/toolkit/demo/Calc.java.html">sources</a>)</li>
+						<li><a class="demoapp" href="colorpicker/">How to make widgets demo</a> (<a href="doc/example-source/com/itmill/toolkit/demo/colorpicker">sources</a>)</li>
+						<li><a class="demoapp" href="CachingDemo/">Widget caching demo</a> (<a href="doc/example-source/com/itmill/toolkit/demo/CachingDemo.java.html">sources</a>)</li>
+						<li><a class="demoapp" href="KeyboardShortcut/">Keyboard shortcuts</a> (<a href="doc/example-source/com/itmill/toolkit/demo/KeyboardShortcut.java.html">sources</a>)</li>
+						<li><a class="demoapp" href="BufferedComponents/">Buffered components</a> (<a href="doc/example-source/com/itmill/toolkit/demo/BufferedComponents.java.html">sources</a>)</li>
 					</ul>
 					</div>
 				
