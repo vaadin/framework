@@ -219,7 +219,7 @@ public class ITwinColSelect extends IOptionGroupBase {
 
     private void setRelativeInternalWidths() {
         DOM.setStyleAttribute(getElement(), "position", "relative");
-        buttons.setWidth("16%");
+        buttons.setWidth("15%");
         options.setWidth("42%");
         selections.setWidth("42%");
         widthSet = true;
