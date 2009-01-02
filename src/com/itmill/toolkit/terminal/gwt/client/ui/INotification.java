@@ -15,6 +15,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
+import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 
 public class INotification extends IToolkitOverlay {
@@ -70,6 +71,7 @@ public class INotification extends IToolkitOverlay {
         DOM.removeEventPreview(this);
         if (delayMsec > 0) {
             delay = new Timer() {
+                @Override
                 public void run() {
                     fade();
                 }
@@ -80,6 +82,7 @@ public class INotification extends IToolkitOverlay {
         }
     }
 
+    @Override
     public void show() {
         show(CENTERED);
     }
@@ -112,6 +115,7 @@ public class INotification extends IToolkitOverlay {
         setPosition(position);
     }
 
+    @Override
     public void hide() {
         DOM.removeEventPreview(this);
         cancelDelay();
@@ -132,6 +136,7 @@ public class INotification extends IToolkitOverlay {
             long timestamp = 0;
             int opacity = startOpacity;
 
+            @Override
             public void run() {
                 double adjust = (timestamp == 0 ? 1
                         : (new Date().getTime() - timestamp) / msec);
@@ -219,6 +224,7 @@ public class INotification extends IToolkitOverlay {
 
     }
 
+    @Override
     public void onBrowserEvent(Event event) {
         DOM.removeEventPreview(this);
         if (fader == null) {
@@ -226,6 +232,7 @@ public class INotification extends IToolkitOverlay {
         }
     }
 
+    @Override
     public boolean onEventPreview(Event event) {
         int type = DOM.eventGetType(event);
         // "modal"
@@ -254,12 +261,11 @@ public class INotification extends IToolkitOverlay {
                 startDelay();
             }
             break;
-        case Event.ONCLICK:
-        case Event.ONDBLCLICK:
-        case Event.KEYEVENTS:
-        case Event.ONSCROLL:
         default:
-            startDelay();
+            if (type != Event.ONMOUSEUP && type != Event.ONKEYUP) {
+                ApplicationConnection.getConsole().log(event.getType());
+                startDelay();
+            }
         }
         return true;
     }
