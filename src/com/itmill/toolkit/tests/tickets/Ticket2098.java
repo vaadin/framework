@@ -9,6 +9,7 @@ public class Ticket2098 extends Application {
 
     private static final String info = "First tab hidden, second should initially be selected";
 
+    @Override
     public void init() {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);

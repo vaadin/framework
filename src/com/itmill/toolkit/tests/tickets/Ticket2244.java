@@ -14,6 +14,7 @@ public class Ticket2244 extends Application {
 
     Form form;
 
+    @Override
     public void init() {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);

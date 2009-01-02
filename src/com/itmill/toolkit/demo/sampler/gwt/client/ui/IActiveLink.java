@@ -61,6 +61,7 @@ public class IActiveLink extends ILink {
         return !listening || opened;
     }
 
+    @Override
     public void onClick(Widget sender) {
 
         if (sendVariables()) {
@@ -69,6 +70,7 @@ public class IActiveLink extends ILink {
         }
     }
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         // Ensure correct implementation,
         // but don't let container manage caption etc.

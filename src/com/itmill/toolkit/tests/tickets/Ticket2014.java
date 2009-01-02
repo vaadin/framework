@@ -17,6 +17,7 @@ public class Ticket2014 extends Application {
     private Button b1;
     private Panel panel;
 
+    @Override
     public void init() {
         Window w = new Window(getClass().getName());
         setMainWindow(w);

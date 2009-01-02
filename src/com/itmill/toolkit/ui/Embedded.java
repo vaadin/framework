@@ -103,6 +103,7 @@ public class Embedded extends AbstractComponent {
      * 
      * @return the Component UIDL tag as string.
      */
+    @Override
     public String getTag() {
         return "embedded";
     }
@@ -110,6 +111,7 @@ public class Embedded extends AbstractComponent {
     /**
      * Invoked when the component state should be painted.
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
 
         switch (type) {

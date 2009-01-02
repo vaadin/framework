@@ -134,6 +134,7 @@ public class Ticket1362Login extends Application {
             setCompositionRoot(iframe);
         }
 
+        @Override
         public void attach() {
             super.attach();
             getApplication().addResource(loginPage);
@@ -141,6 +142,7 @@ public class Ticket1362Login extends Application {
             iframe.setSource(loginPage);
         }
 
+        @Override
         public void detach() {
             getApplication().removeResource(loginPage);
             getWindow().removeParameterHandler(paramHandler);
@@ -220,6 +222,7 @@ public class Ticket1362Login extends Application {
 
     private ExpandLayout el;
 
+    @Override
     public void init() {
 
         final Window mainWin = new Window(

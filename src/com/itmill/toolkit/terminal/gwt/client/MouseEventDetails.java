@@ -64,6 +64,7 @@ public class MouseEventDetails {
     private MouseEventDetails() {
     }
 
+    @Override
     public String toString() {
         return "" + button + DELIM + clientX + DELIM + clientY + DELIM + altKey
                 + DELIM + ctrlKey + DELIM + metaKey + DELIM + shiftKey + DELIM

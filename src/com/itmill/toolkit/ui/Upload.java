@@ -103,6 +103,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * 
      * @return Component type as string.
      */
+    @Override
     public String getTag() {
         return "upload";
     }
@@ -190,6 +191,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * @see com.itmill.toolkit.ui.AbstractComponent#changeVariables(java.lang.Object,
      *      java.util.Map)
      */
+    @Override
     public void changeVariables(Object source, Map variables) {
         // NOP
 
@@ -203,6 +205,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * @throws PaintException
      *             if the paint operation failed.
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         // The field should be focused
         if (focus) {
@@ -943,6 +946,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * @deprecated Use addListener(ProgressListener) instead.
      * @param progressListener
      */
+    @Deprecated
     public void setProgressListener(ProgressListener progressListener) {
         this.progressListener = progressListener;
     }
@@ -954,6 +958,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * @return listener
      * 
      */
+    @Deprecated
     public ProgressListener getProgressListener() {
         return progressListener;
     }
@@ -996,6 +1001,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * 
      * @see com.itmill.toolkit.ui.Component#attach()
      */
+    @Override
     public void attach() {
         super.attach();
         if (delayedFocus) {

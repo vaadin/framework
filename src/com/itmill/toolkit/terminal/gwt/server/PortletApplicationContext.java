@@ -82,6 +82,7 @@ public class PortletApplicationContext extends WebApplicationContext {
         return cx;
     }
 
+    @Override
     protected void removeApplication(Application application) {
         portletListeners.remove(application);
         for (Iterator it = portletToApplication.keySet().iterator(); it
@@ -94,6 +95,7 @@ public class PortletApplicationContext extends WebApplicationContext {
         super.removeApplication(application);
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (portletSession == null) {
             return super.equals(obj);
@@ -101,6 +103,7 @@ public class PortletApplicationContext extends WebApplicationContext {
         return portletSession.equals(obj);
     }
 
+    @Override
     public int hashCode() {
         if (portletSession == null) {
             return super.hashCode();

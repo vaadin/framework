@@ -58,6 +58,7 @@ public class FeatureTree extends Feature implements Action.Handler {
         }
     }
 
+    @Override
     protected Component getDemoComponent() {
 
         final OrderedLayout l = new OrderedLayout();
@@ -109,6 +110,7 @@ public class FeatureTree extends Feature implements Action.Handler {
         return l;
     }
 
+    @Override
     protected String getExampleSrc() {
         return "// Create tree\n"
                 + "t = new Tree(\"Organization Structure\");\n"
@@ -124,6 +126,7 @@ public class FeatureTree extends Feature implements Action.Handler {
                 + "		t.setChildrenAllowed(names[i], false);\n";
     }
 
+    @Override
     protected String getDescriptionXHTML() {
         return "A tree is a natural way to represent datasets that have"
                 + " hierarchical relationships, such as filesystems, message "
@@ -142,10 +145,12 @@ public class FeatureTree extends Feature implements Action.Handler {
                 + "affect the presentation of the tree component.";
     }
 
+    @Override
     protected String getImage() {
         return "icon_demo.png";
     }
 
+    @Override
     protected String getTitle() {
         return "Tree";
     }

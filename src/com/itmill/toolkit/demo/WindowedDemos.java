@@ -37,6 +37,7 @@ public class WindowedDemos extends com.itmill.toolkit.Application {
         servlets.put("Notification demo", "NotificationDemo/");
     }
 
+    @Override
     public void init() {
 
         // Create new window for the application and give the window a visible.

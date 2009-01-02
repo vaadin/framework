@@ -14,6 +14,7 @@ public class TestSplitPanel extends com.itmill.toolkit.Application {
     // SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
     SplitPanel verticalSplit = new SplitPanel(SplitPanel.ORIENTATION_VERTICAL);
 
+    @Override
     public void init() {
         final Window mainWindow = new Window("Feature Browser");
         setMainWindow(mainWindow);

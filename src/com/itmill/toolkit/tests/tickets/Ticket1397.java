@@ -18,6 +18,7 @@ public class Ticket1397 extends Application {
 
     Window main;
 
+    @Override
     public void init() {
         setTheme("default");
         main = new Window("PopupView test");
@@ -101,8 +102,9 @@ public class Ticket1397 extends Application {
 
         // Fifth test component
         Table table = new Table("Table for testing purposes");
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 5; i++) {
             table.addContainerProperty("" + (i + 1), String.class, "");
+        }
         table.addContainerProperty("" + 6, PopupView.class, null);
         table.addContainerProperty("" + 7, PopupView.class, null);
         table.setPageLength(20);

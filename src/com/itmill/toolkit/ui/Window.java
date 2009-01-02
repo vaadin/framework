@@ -201,6 +201,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * 
      * @return the parent window of the component.
      */
+    @Override
     public final Window getWindow() {
         return this;
     }
@@ -212,6 +213,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * 
      * @return the parent application of the component.
      */
+    @Override
     public final Application getApplication() {
         if (getParent() == null) {
             return application;
@@ -235,6 +237,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * 
      * @return the Value of property parent.
      */
+    @Override
     public final Component getParent() {
         return super.getParent();
     }
@@ -250,6 +253,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * @param parent
      *            the New value of property parent.
      */
+    @Override
     public void setParent(Component parent) {
         super.setParent(parent);
     }
@@ -259,6 +263,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * 
      * @return the Component UIDL tag as string.
      */
+    @Override
     public String getTag() {
         return "window";
     }
@@ -467,6 +472,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * @throws PaintException
      *             if the paint operation failed.
      */
+    @Override
     public synchronized void paintContent(PaintTarget target)
             throws PaintException {
 
@@ -846,6 +852,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * @see com.itmill.toolkit.terminal.VariableOwner#changeVariables(java.lang.Object,
      *      java.util.Map)
      */
+    @Override
     public void changeVariables(Object source, Map variables) {
         super.changeVariables(source, variables);
 
@@ -1411,6 +1418,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
          * @deprecated Use {@link #getDescription()} instead.
          * @return
          */
+        @Deprecated
         public String getMessage() {
             return description;
         }
@@ -1419,6 +1427,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
          * @deprecated Use {@link #setDescription(String)} instead.
          * @param description
          */
+        @Deprecated
         public void setMessage(String description) {
             this.description = description;
         }

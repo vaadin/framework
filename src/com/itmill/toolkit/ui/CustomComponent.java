@@ -102,6 +102,7 @@ public class CustomComponent extends AbstractComponentContainer {
 
     /* Basic component features ------------------------------------------ */
 
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         if (root == null) {
             throw new IllegalStateException("Composition root must be set to"
@@ -140,6 +141,7 @@ public class CustomComponent extends AbstractComponentContainer {
         this.componentType = componentType;
     }
 
+    @Override
     public String getTag() {
         return "customcomponent";
     }
@@ -180,6 +182,7 @@ public class CustomComponent extends AbstractComponentContainer {
      * 
      * @see com.itmill.toolkit.ui.AbstractComponentContainer#addComponent(com.itmill.toolkit.ui.Component)
      */
+    @Override
     public void addComponent(Component c) {
         throw new UnsupportedOperationException();
     }
@@ -189,6 +192,7 @@ public class CustomComponent extends AbstractComponentContainer {
      * 
      * @see com.itmill.toolkit.ui.AbstractComponentContainer#moveComponentsFrom(com.itmill.toolkit.ui.ComponentContainer)
      */
+    @Override
     public void moveComponentsFrom(ComponentContainer source) {
         throw new UnsupportedOperationException();
     }
@@ -198,6 +202,7 @@ public class CustomComponent extends AbstractComponentContainer {
      * 
      * @see com.itmill.toolkit.ui.AbstractComponentContainer#removeAllComponents()
      */
+    @Override
     public void removeAllComponents() {
         throw new UnsupportedOperationException();
     }
@@ -207,6 +212,7 @@ public class CustomComponent extends AbstractComponentContainer {
      * 
      * @see com.itmill.toolkit.ui.AbstractComponentContainer#removeComponent(com.itmill.toolkit.ui.Component)
      */
+    @Override
     public void removeComponent(Component c) {
         throw new UnsupportedOperationException();
     }

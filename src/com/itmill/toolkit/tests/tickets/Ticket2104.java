@@ -22,6 +22,7 @@ public class Ticket2104 extends Application {
     Tree tree = new Tree();
     Table table = new Table();
 
+    @Override
     public void init() {
         Window main = new Window();
         setMainWindow(main);

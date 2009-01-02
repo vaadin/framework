@@ -63,6 +63,7 @@ public class TestDateField extends CustomComponent {
         df4.setLocale(new Locale("fi", "FI"));
     }
 
+    @Override
     public void attach() {
         final ClassResource res = new ClassResource("m.gif", super
                 .getApplication());

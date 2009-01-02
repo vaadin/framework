@@ -16,6 +16,7 @@ public class Ticket1921 extends Application implements ParameterHandler {
     Button button;
     OrderedLayout outer, inner;
 
+    @Override
     public void init() {
 
         outer = new OrderedLayout();

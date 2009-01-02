@@ -63,6 +63,7 @@ public class CalendarField extends DateField implements Container.Viewer {
      * Gets the components UIDL tag string. Don't add a JavaDoc comment here, we
      * use the default documentation from implemented interface.
      */
+    @Override
     public String getTag() {
         return TAGNAME;
     }
@@ -80,6 +81,7 @@ public class CalendarField extends DateField implements Container.Viewer {
      *            the resolution to set.
      * @see com.itmill.toolkit.ui.DateField#setResolution(int)
      */
+    @Override
     public void setResolution(int resolution) {
         if (resolution != RESOLUTION_DAY && resolution != RESOLUTION_HOUR) {
             throw new IllegalArgumentException();
@@ -232,6 +234,7 @@ public class CalendarField extends DateField implements Container.Viewer {
      * @throws PaintException
      *             if the paint operation failed.
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
 

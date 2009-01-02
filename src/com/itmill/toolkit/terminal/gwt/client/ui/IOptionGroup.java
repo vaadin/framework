@@ -32,6 +32,7 @@ public class IOptionGroup extends IOptionGroupBase {
     /*
      * Return true if no elements were changed, false otherwise.
      */
+    @Override
     protected void buildOptions(UIDL uidl) {
         panel.clear();
         for (final Iterator it = uidl.getChildIterator(); it.hasNext();) {
@@ -54,10 +55,12 @@ public class IOptionGroup extends IOptionGroupBase {
         }
     }
 
+    @Override
     protected Object[] getSelectedItems() {
         return selectedKeys.toArray();
     }
 
+    @Override
     public void onClick(Widget sender) {
         super.onClick(sender);
         if (sender instanceof CheckBox) {
@@ -76,6 +79,7 @@ public class IOptionGroup extends IOptionGroupBase {
         }
     }
 
+    @Override
     protected void setTabIndex(int tabIndex) {
         for (Iterator iterator = panel.iterator(); iterator.hasNext();) {
             if (isMultiselect()) {

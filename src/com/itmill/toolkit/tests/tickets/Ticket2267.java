@@ -12,6 +12,7 @@ public class Ticket2267 extends Application {
 
     Label l = new Label("0");
 
+    @Override
     public void init() {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);

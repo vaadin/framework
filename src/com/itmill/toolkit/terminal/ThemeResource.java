@@ -54,6 +54,7 @@ public class ThemeResource implements Resource {
      *         <code>false</code> if not.
      * @see java.lang.Object#equals(Object)
      */
+    @Override
     public boolean equals(Object obj) {
         return obj instanceof ThemeResource
                 && resourceID.equals(((ThemeResource) obj).resourceID);
@@ -62,6 +63,7 @@ public class ThemeResource implements Resource {
     /**
      * @see java.lang.Object#hashCode()
      */
+    @Override
     public int hashCode() {
         return resourceID.hashCode();
     }
@@ -69,6 +71,7 @@ public class ThemeResource implements Resource {
     /**
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
         return resourceID.toString();
     }

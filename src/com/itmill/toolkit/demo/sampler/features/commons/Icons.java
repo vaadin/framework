@@ -7,7 +7,7 @@ import com.itmill.toolkit.ui.Component;
 
 public class Icons extends Feature {
 
-    
+    @Override
     public String getDescription() {
         return "Most components can have an <i>icon</i>,"
                 + " which is usually displayed next to the caption.<br/>"
@@ -16,18 +16,18 @@ public class Icons extends Feature {
                 + " Beware of overuse, which will have the opposite effect.";
     }
 
-    
+    @Override
     public APIResource[] getRelatedAPI() {
         return new APIResource[] { new APIResource(Component.class) };
     }
 
-    
+    @Override
     public Class[] getRelatedFeatures() {
         // TODO Auto-generated method stub
         return null;
     }
 
-    
+    @Override
     public NamedExternalResource[] getRelatedResources() {
         // TODO Auto-generated method stub
         return null;

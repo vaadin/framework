@@ -102,10 +102,12 @@ public class WebApplicationContext implements ApplicationContext,
         return cx;
     }
 
+    @Override
     public boolean equals(Object obj) {
         return session.equals(obj);
     }
 
+    @Override
     public int hashCode() {
         return session.hashCode();
     }

@@ -146,6 +146,7 @@ public class LoginForm extends CustomComponent {
                 .getBytes();
     }
 
+    @Override
     public void attach() {
         super.attach();
         getApplication().addResource(loginPage);
@@ -153,6 +154,7 @@ public class LoginForm extends CustomComponent {
         iframe.setSource(loginPage);
     }
 
+    @Override
     public void detach() {
         getApplication().removeResource(loginPage);
         getWindow().removeParameterHandler(paramHandler);

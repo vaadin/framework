@@ -13,6 +13,7 @@ public class Ticket2344 extends Application {
 
     private Panel p;
 
+    @Override
     public void init() {
         Window main = new Window("Quick test");
 

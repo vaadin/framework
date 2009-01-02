@@ -13,6 +13,7 @@ import com.itmill.toolkit.ui.Window;
 
 public class Ticket1857 extends Application implements Handler {
 
+    @Override
     public void init() {
 
         setTheme("tests-tickets");

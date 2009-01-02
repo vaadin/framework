@@ -12,6 +12,7 @@ public class Ticket1368 extends Application {
 
     private Table t;
 
+    @Override
     public void init() {
 
         final Window mainWin = new Window("Test app to #1368");

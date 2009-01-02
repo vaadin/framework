@@ -49,6 +49,7 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
         setCompositionRoot(main);
     }
 
+    @Override
     public void attach() {
         super.attach();
         createNewView();

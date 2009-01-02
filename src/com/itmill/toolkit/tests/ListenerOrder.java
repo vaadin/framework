@@ -26,6 +26,7 @@ public class ListenerOrder extends com.itmill.toolkit.Application implements
 
     HashMap buttonListeners = new HashMap();
 
+    @Override
     public void init() {
         createNewView();
     }

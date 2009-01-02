@@ -47,6 +47,7 @@ public class PerformanceTestBasicComponentRendering extends CustomComponent {
                 .getTestTable(5, 200);
 
         Table t2 = new Table("Test Table with 199 rows rendered initially") {
+            @Override
             public void changeVariables(Object source, Map variables) {
                 super.changeVariables(source, variables);
                 // end timing on cache row request

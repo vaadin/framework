@@ -8,6 +8,7 @@ import com.itmill.toolkit.ui.Window;
 
 public class Ticket1934 extends Application {
 
+    @Override
     public void init() {
         Window w = new Window(
                 "#1934 : Horizontal ExpandLayout completely broken");

@@ -12,6 +12,7 @@ public class Ticket2347 extends Application {
 
     private Button b1;
 
+    @Override
     public void init() {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);

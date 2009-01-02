@@ -628,6 +628,7 @@ public class FilesystemContainer implements Container.Hierarchical {
          * 
          * @return A locally unique hash-code as integer
          */
+        @Override
         public int hashCode() {
             return file.hashCode() ^ FilesystemContainer.this.hashCode();
         }
@@ -641,6 +642,7 @@ public class FilesystemContainer implements Container.Hierarchical {
          * @return <code>true</code> if the given object is the same as this
          *         object, <code>false</code> if not
          */
+        @Override
         public boolean equals(Object obj) {
             if (obj == null || !(obj instanceof FileItem)) {
                 return false;
@@ -698,6 +700,7 @@ public class FilesystemContainer implements Container.Hierarchical {
         /**
          * @see java.lang.Object#toString()
          */
+        @Override
         public String toString() {
             if ("".equals(file.getName())) {
                 return file.getAbsolutePath();

@@ -200,6 +200,7 @@ public class UIDL {
         return json.size() - 2;
     }
 
+    @Override
     public String toString() {
         String s = "<" + getTag();
 
@@ -270,6 +271,7 @@ public class UIDL {
 
         }
 
+        @Override
         protected boolean isKeyboardNavigationEnabled(TreeItem currentItem) {
             return false;
         }

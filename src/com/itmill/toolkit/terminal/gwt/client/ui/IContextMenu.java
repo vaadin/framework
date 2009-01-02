@@ -95,6 +95,7 @@ public class IContextMenu extends IToolkitOverlay {
             super(true);
         }
 
+        @Override
         public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
             super.onPopupClosed(sender, autoClosed);
             hide();

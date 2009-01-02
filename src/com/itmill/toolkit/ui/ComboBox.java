@@ -43,6 +43,7 @@ public class ComboBox extends Select {
         setNewItemsAllowed(false);
     }
 
+    @Override
     public void setMultiSelect(boolean multiSelect) {
         if (multiSelect && !isMultiSelect()) {
             throw new UnsupportedOperationException("Multiselect not supported");

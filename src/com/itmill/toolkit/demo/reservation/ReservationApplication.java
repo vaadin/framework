@@ -53,6 +53,7 @@ public class ReservationApplication extends Application {
 
     private GoogleMap map;
 
+    @Override
     public void init() {
         //
         db = new SampleDB();

@@ -17,6 +17,7 @@ public class TestForNativeWindowing extends Application {
 
     Window main = new Window("Windowing test");
 
+    @Override
     public void init() {
 
         setMainWindow(main);
@@ -96,6 +97,7 @@ public class TestForNativeWindowing extends Application {
                 "Commit (saves window state: size, place, scrollpos)"));
     }
 
+    @Override
     public Window getWindow(String name) {
 
         final Window w = super.getWindow(name);

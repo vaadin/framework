@@ -99,6 +99,7 @@ public class CustomLayout extends AbstractLayout {
      * 
      * @return the Component UIDL tag as string.
      */
+    @Override
     public String getTag() {
         return "customlayout";
     }
@@ -132,6 +133,7 @@ public class CustomLayout extends AbstractLayout {
      * @param c
      *            the component to be added.
      */
+    @Override
     public void addComponent(Component c) {
         this.addComponent(c, "");
     }
@@ -142,6 +144,7 @@ public class CustomLayout extends AbstractLayout {
      * @param c
      *            the component to be removed.
      */
+    @Override
     public void removeComponent(Component c) {
         if (c == null) {
             return;
@@ -191,6 +194,7 @@ public class CustomLayout extends AbstractLayout {
      * @throws PaintException
      *             if the paint operation failed.
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
 
@@ -250,6 +254,7 @@ public class CustomLayout extends AbstractLayout {
      * @param name
      *            template name
      */
+    @Override
     public void setStyle(String name) {
         setTemplateName(name);
     }
@@ -281,6 +286,7 @@ public class CustomLayout extends AbstractLayout {
      * 
      * @throws UnsupportedOperationException
      */
+    @Override
     public void setMargin(boolean enabled) {
         throw new UnsupportedOperationException(
                 "CustomLayout does not support margins.");
@@ -293,6 +299,7 @@ public class CustomLayout extends AbstractLayout {
      * 
      * @throws UnsupportedOperationException
      */
+    @Override
     public void setMargin(boolean topEnabled, boolean rightEnabled,
             boolean bottomEnabled, boolean leftEnabled) {
         throw new UnsupportedOperationException(

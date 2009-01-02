@@ -16,6 +16,7 @@ public class Ticket1598 extends Application {
 
     final MenuBar menuBar = new MenuBar();
 
+    @Override
     public void init() {
         setMainWindow(main);
         setTheme("default");
@@ -66,13 +67,14 @@ public class Ticket1598 extends Application {
         MenuItem third = (MenuItem) menuBar.getItems().get(2);
         third.setIcon(new ThemeResource("icons/16/document.png"));
 
-        for (int i = 2; i <= 3; i++)
+        for (int i = 2; i <= 3; i++) {
             ((MenuItem) menuBar.getItems().get(i)).setCommand(new Command() {
 
                 public void menuSelected(MenuItem selectedItem) {
                     main.showNotification("Action " + selectedItem.getText());
                 }
             });
+        }
 
         final MenuItem fourth = (MenuItem) menuBar.getItems().get(3);
         fourth.setText("Toggle animation");

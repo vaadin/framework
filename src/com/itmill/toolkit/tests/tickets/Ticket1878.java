@@ -35,6 +35,7 @@ public class Ticket1878 extends Application {
     private Button switchToOrderedButton;
     private Button switchToFormsButton;
 
+    @Override
     public void init() {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);

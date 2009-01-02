@@ -14,6 +14,7 @@ public class Ticket1819 extends com.itmill.toolkit.Application {
 
     LinkedList listOfAllFields = new LinkedList();
 
+    @Override
     public void init() {
 
         final Window main = new Window("#1819");

@@ -18,6 +18,7 @@ public class Ticket2119 extends Application {
 
     private ObjectProperty globalValue;
 
+    @Override
     public void init() {
         globalValue = new ObjectProperty(null, String.class);
         Window main = createWindow();

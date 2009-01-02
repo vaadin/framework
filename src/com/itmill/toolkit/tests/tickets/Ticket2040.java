@@ -9,6 +9,7 @@ public class Ticket2040 extends com.itmill.toolkit.Application {
 
     TextField f = new TextField();
 
+    @Override
     public void init() {
         Window main = new Window();
         setMainWindow(main);

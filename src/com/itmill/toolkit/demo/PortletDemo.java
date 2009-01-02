@@ -38,6 +38,7 @@ public class PortletDemo extends Application {
     Link portletMax = new Link();
     Link someAction = null;
 
+    @Override
     public void init() {
         main = new Window();
         setMainWindow(main);

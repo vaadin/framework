@@ -114,6 +114,7 @@ public class Button extends AbstractField {
      * 
      * @return the Component UIDL tag as string.
      */
+    @Override
     public String getTag() {
         return "button";
     }
@@ -128,6 +129,7 @@ public class Button extends AbstractField {
      * @throws PaintException
      *             if the paint operation failed.
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
 
@@ -144,6 +146,7 @@ public class Button extends AbstractField {
      * @param source
      * @param variables
      */
+    @Override
     public void changeVariables(Object source, Map variables) {
         super.changeVariables(source, variables);
 
@@ -222,6 +225,7 @@ public class Button extends AbstractField {
      * 
      * @see com.itmill.toolkit.ui.AbstractComponent#setImmediate(boolean)
      */
+    @Override
     public void setImmediate(boolean immediate) {
         // Push buttons are always immediate
         super.setImmediate(!isSwitchMode() || immediate);
@@ -232,6 +236,7 @@ public class Button extends AbstractField {
      * 
      * @see com.itmill.toolkit.data.Property#getType()
      */
+    @Override
     public Class getType() {
         return Boolean.class;
     }

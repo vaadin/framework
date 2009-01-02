@@ -52,6 +52,7 @@ public class UpgradingSample extends Application implements
     private final GridLayout layout = new GridLayout(2, 1);
 
     /* Initialize the application */
+    @Override
     public void init() {
 
         // Create the main window of the application
@@ -73,6 +74,7 @@ public class UpgradingSample extends Application implements
 
     // Overriding usetUser method is a simple way of updating application
     // privileges when the user is changed
+    @Override
     public void setUser(Object user) {
         super.setUser(user);
         if (user != null) {

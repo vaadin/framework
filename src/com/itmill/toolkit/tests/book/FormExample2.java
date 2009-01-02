@@ -29,7 +29,7 @@ public class FormExample2 extends CustomComponent {
     public class PersonBean {
         String name = "";
         String city = "";
-        
+
         public void setName(String name) {
             this.name = name;
         }
@@ -64,9 +64,9 @@ public class FormExample2 extends CustomComponent {
         public Field createField(Item item, Object propertyId,
                 Component uiContext) {
             String pid = (String) propertyId;
-            if (pid.equals("name"))
+            if (pid.equals("name")) {
                 return new TextField("Name");
-            else if (pid.equals("city")) {
+            } else if (pid.equals("city")) {
                 Select select = new Select("City");
                 select.addItem("Berlin");
                 select.addItem("Helsinki");
@@ -91,7 +91,8 @@ public class FormExample2 extends CustomComponent {
 
         // Set form caption and description texts
         form.setCaption("Contact Information");
-        form.setDescription("Please specify name of the person and the city where the person lives in.");
+        form
+                .setDescription("Please specify name of the person and the city where the person lives in.");
 
         // Use the custom field factory to create the fields in the form.
         form.setFieldFactory(new MyFieldFactory());
@@ -110,7 +111,7 @@ public class FormExample2 extends CustomComponent {
         order.add("name");
         order.add("city");
         form.setVisibleItemProperties(order);
-        
+
         form.getField("name").setRequired(true);
         form.getField("name").setRequiredError("You must enter a name.");
         form.getField("city").setRequired(true);
@@ -118,6 +119,6 @@ public class FormExample2 extends CustomComponent {
         OrderedLayout root = new OrderedLayout();
         root.setWidth(300, OrderedLayout.UNITS_PIXELS);
         root.addComponent(form);
-        this.setCompositionRoot(root);
+        setCompositionRoot(root);
     }
 }

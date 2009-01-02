@@ -10,6 +10,7 @@ import com.itmill.toolkit.ui.Window.Notification;
 
 public class Ticket2038 extends Application {
 
+    @Override
     public void init() {
         final Window w = new Window("Testing for #2038");
         setMainWindow(w);

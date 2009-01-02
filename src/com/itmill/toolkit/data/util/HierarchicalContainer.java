@@ -237,6 +237,7 @@ public class HierarchicalContainer extends IndexedContainer implements
      * 
      * @see com.itmill.toolkit.data.util.IndexedContainer#addItem()
      */
+    @Override
     public Object addItem() {
         final Object id = super.addItem();
         if (id != null && !roots.contains(id)) {
@@ -252,6 +253,7 @@ public class HierarchicalContainer extends IndexedContainer implements
      * @see
      * com.itmill.toolkit.data.util.IndexedContainer#addItem(java.lang.Object)
      */
+    @Override
     public Item addItem(Object itemId) {
         final Item item = super.addItem(itemId);
         if (item != null) {
@@ -265,6 +267,7 @@ public class HierarchicalContainer extends IndexedContainer implements
      * 
      * @see com.itmill.toolkit.data.util.IndexedContainer#removeAllItems()
      */
+    @Override
     public boolean removeAllItems() {
         final boolean success = super.removeAllItems();
 
@@ -284,6 +287,7 @@ public class HierarchicalContainer extends IndexedContainer implements
      * com.itmill.toolkit.data.util.IndexedContainer#removeItem(java.lang.Object
      * )
      */
+    @Override
     public boolean removeItem(Object itemId) {
         final boolean success = super.removeItem(itemId);
 

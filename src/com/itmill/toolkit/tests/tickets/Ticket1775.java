@@ -8,6 +8,7 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
 
 public class Ticket1775 extends com.itmill.toolkit.Application {
 
+    @Override
     public void init() {
 
         final Window main = new Window("#1775");

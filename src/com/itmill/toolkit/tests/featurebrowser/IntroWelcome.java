@@ -60,6 +60,7 @@ public class IntroWelcome extends Feature implements URIHandler,
         super();
     }
 
+    @Override
     protected Component getDemoComponent() {
 
         final OrderedLayout l = new OrderedLayout();
@@ -90,6 +91,7 @@ public class IntroWelcome extends Feature implements URIHandler,
         return l;
     }
 
+    @Override
     protected String getExampleSrc() {
         return ""
                 + "package com.itmill.toolkit.demo;\n"
@@ -103,14 +105,17 @@ public class IntroWelcome extends Feature implements URIHandler,
     }
 
     // not ready yet to give description, see paint instead
+    @Override
     protected String getDescriptionXHTML() {
         return description;
     }
 
+    @Override
     protected String getImage() {
         return "icon_intro.png";
     }
 
+    @Override
     protected String getTitle() {
         return "Welcome";
     }
@@ -120,6 +125,7 @@ public class IntroWelcome extends Feature implements URIHandler,
      * 
      * @see com.itmill.toolkit.ui.Component#attach()
      */
+    @Override
     public void attach() {
         super.attach();
         getWindow().addURIHandler(this);
@@ -131,6 +137,7 @@ public class IntroWelcome extends Feature implements URIHandler,
      * 
      * @see com.itmill.toolkit.ui.Component#detach()
      */
+    @Override
     public void detach() {
         super.detach();
         getWindow().removeURIHandler(this);

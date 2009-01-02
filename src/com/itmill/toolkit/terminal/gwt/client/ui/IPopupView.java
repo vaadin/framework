@@ -207,6 +207,7 @@ public class IPopupView extends HTML implements Paintable {
 
         // For some reason ONMOUSEOUT events are not always recieved, so we have
         // to use ONMOUSEMOVE that doesn't target the popup
+        @Override
         public boolean onEventPreview(Event event) {
 
             Element target = DOM.eventGetTarget(event);
@@ -234,6 +235,7 @@ public class IPopupView extends HTML implements Paintable {
             return super.onEventPreview(event);
         }
 
+        @Override
         public void hide() {
             // Notify children with focus
             if ((popupComponentWidget instanceof HasFocus)) {
@@ -251,6 +253,7 @@ public class IPopupView extends HTML implements Paintable {
             super.hide();
         }
 
+        @Override
         public boolean remove(Widget w) {
 
             unregisterPaintables();

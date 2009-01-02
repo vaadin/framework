@@ -8,13 +8,15 @@ import com.itmill.toolkit.ui.OrderedLayout;
 public class RobustnessSimple extends Robustness implements
         Button.ClickListener {
 
+    @Override
     public void create() {
         count++;
 
         // remove old stressLayout, all dependant components should be now
         // allowed for garbage collection.
-        if (stressLayout != null)
+        if (stressLayout != null) {
             main.removeComponent(stressLayout);
+        }
 
         // create new stress layout
         stressLayout = new OrderedLayout();

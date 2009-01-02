@@ -146,6 +146,7 @@ public class PopupView extends AbstractComponentContainer {
      * @see com.itmill.toolkit.ui.AbstractComponentContainer#removeAllComponents()
      * @throws UnsupportedOperationException
      */
+    @Override
     public void removeAllComponents() {
         throw new UnsupportedOperationException();
     }
@@ -156,6 +157,7 @@ public class PopupView extends AbstractComponentContainer {
      * @see com.itmill.toolkit.ui.AbstractComponentContainer#moveComponentsFrom(com.itmill.toolkit.ui.ComponentContainer)
      * @throws UnsupportedOperationException
      */
+    @Override
     public void moveComponentsFrom(ComponentContainer source)
             throws UnsupportedOperationException {
 
@@ -168,6 +170,7 @@ public class PopupView extends AbstractComponentContainer {
      * @see com.itmill.toolkit.ui.AbstractComponentContainer#addComponent(com.itmill.toolkit.ui.Component)
      * @throws UnsupportedOperationException
      */
+    @Override
     public void addComponent(Component c) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
 
@@ -191,6 +194,7 @@ public class PopupView extends AbstractComponentContainer {
      * 
      * @see com.itmill.toolkit.ui.AbstractComponentContainer#removeComponent(com.itmill.toolkit.ui.Component)
      */
+    @Override
     public void removeComponent(Component c)
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
@@ -204,6 +208,7 @@ public class PopupView extends AbstractComponentContainer {
     /**
      * @see com.itmill.toolkit.ui.AbstractComponent#getTag()
      */
+    @Override
     public java.lang.String getTag() {
         return "popupview";
     }
@@ -213,6 +218,7 @@ public class PopupView extends AbstractComponentContainer {
      * 
      * @see com.itmill.toolkit.ui.AbstractComponent#paintContent(com.itmill.toolkit.terminal.PaintTarget)
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         // Superclass writes any common attributes in the paint target.
         super.paintContent(target);
@@ -256,6 +262,7 @@ public class PopupView extends AbstractComponentContainer {
      * @see com.itmill.toolkit.ui.AbstractComponent#changeVariables(java.lang.Object,
      *      java.util.Map)
      */
+    @Override
     public void changeVariables(Object source, Map variables) {
         if (variables.containsKey("popupVisibility")) {
 

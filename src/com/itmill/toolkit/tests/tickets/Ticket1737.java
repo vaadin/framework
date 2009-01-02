@@ -14,6 +14,7 @@ import com.itmill.toolkit.ui.Window;
 public class Ticket1737 extends Application {
 
     Resource slowRes = new ClassResource(Calc.class, "m-bullet-blue.gif", this) {
+        @Override
         public DownloadStream getStream() {
             try {
                 Thread.sleep(4000);
@@ -24,6 +25,7 @@ public class Ticket1737 extends Application {
         }
     };
 
+    @Override
     public void init() {
 
         final Window main = new Window(getClass().getName().substring(

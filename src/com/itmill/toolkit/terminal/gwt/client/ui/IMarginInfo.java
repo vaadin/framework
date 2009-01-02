@@ -61,6 +61,7 @@ public class IMarginInfo {
         }
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof IMarginInfo)) {
             return false;

@@ -26,6 +26,7 @@ public class INativeSelect extends IOptionGroupBase implements Field {
 
     }
 
+    @Override
     protected void buildOptions(UIDL uidl) {
         select.setClient(client);
         select.setEnabled(!isDisabled() && !isReadonly());
@@ -53,6 +54,7 @@ public class INativeSelect extends IOptionGroupBase implements Field {
 
     }
 
+    @Override
     protected Object[] getSelectedItems() {
         final Vector selectedItemKeys = new Vector();
         for (int i = 0; i < select.getItemCount(); i++) {
@@ -63,6 +65,7 @@ public class INativeSelect extends IOptionGroupBase implements Field {
         return selectedItemKeys.toArray();
     }
 
+    @Override
     public void onChange(Widget sender) {
 
         if (select.isMultipleSelect()) {
@@ -78,16 +81,19 @@ public class INativeSelect extends IOptionGroupBase implements Field {
         }
     }
 
+    @Override
     public void setHeight(String height) {
         select.setHeight(height);
         super.setHeight(height);
     }
 
+    @Override
     public void setWidth(String width) {
         select.setWidth(width);
         super.setWidth(width);
     }
 
+    @Override
     protected void setTabIndex(int tabIndex) {
         ((TooltipListBox) optionsContainer).setTabIndex(tabIndex);
     }

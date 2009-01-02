@@ -8,6 +8,7 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
 
 public class Ticket1465ModalNotification extends Application {
 
+    @Override
     public void init() {
 
         final Window mainWin = new Window("ButtonPanel containing a table test");

@@ -29,7 +29,7 @@ public class Ticket1506_TestContainer2 implements Container {
                     "value " + i, String.class));
             item.addItemProperty(PROPERTY_2_ID, new ObjectProperty("name " + i,
                     String.class));
-            this.items.put(String.valueOf(i), item);
+            items.put(String.valueOf(i), item);
         }
     }
 

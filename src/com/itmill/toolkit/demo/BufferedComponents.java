@@ -20,6 +20,7 @@ public class BufferedComponents extends Application {
 
     private TextField text;
 
+    @Override
     public void init() {
 
         final Window w = new Window("Buffered UI components demo");

@@ -13,6 +13,7 @@ public class Ticket1973_2 extends Application {
     Window main = new Window();
     Table table = new Table();
 
+    @Override
     public void init() {
         setMainWindow(main);
 

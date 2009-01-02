@@ -168,11 +168,13 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     }
 
     /* Documented in interface */
+    @Override
     public String getTag() {
         return "form";
     }
 
     /* Documented in interface */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
         layout.paint(target);
@@ -191,6 +193,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * the calculation of the error message is separate from validation, because
      * validation fails also on empty errors.
      */
+    @Override
     public ErrorMessage getErrorMessage() {
 
         // Reimplement the checking of validation error by using
@@ -273,6 +276,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * Commit changes to the data source Don't add a JavaDoc comment here, we
      * use the default one from the interface.
      */
+    @Override
     public void commit() throws Buffered.SourceException {
 
         LinkedList problems = null;
@@ -327,6 +331,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * Discards local changes and refresh values from the data source Don't add
      * a JavaDoc comment here, we use the default one from the interface.
      */
+    @Override
     public void discard() throws Buffered.SourceException {
 
         LinkedList problems = null;
@@ -369,6 +374,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * Is the object modified but not committed? Don't add a JavaDoc comment
      * here, we use the default one from the interface.
      */
+    @Override
     public boolean isModified() {
         for (final Iterator i = propertyIds.iterator(); i.hasNext();) {
             final Field f = (Field) fields.get(i.next());
@@ -384,6 +390,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * Is the editor in a read-through mode? Don't add a JavaDoc comment here,
      * we use the default one from the interface.
      */
+    @Override
     public boolean isReadThrough() {
         return readThrough;
     }
@@ -392,6 +399,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * Is the editor in a write-through mode? Don't add a JavaDoc comment here,
      * we use the default one from the interface.
      */
+    @Override
     public boolean isWriteThrough() {
         return writeThrough;
     }
@@ -400,6 +408,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * Sets the editor's read-through mode to the specified status. Don't add a
      * JavaDoc comment here, we use the default one from the interface.
      */
+    @Override
     public void setReadThrough(boolean readThrough) {
         if (readThrough != this.readThrough) {
             this.readThrough = readThrough;
@@ -413,6 +422,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * Sets the editor's read-through mode to the specified status. Don't add a
      * JavaDoc comment here, we use the default one from the interface.
      */
+    @Override
     public void setWriteThrough(boolean writeThrough) {
         if (writeThrough != this.writeThrough) {
             this.writeThrough = writeThrough;
@@ -839,6 +849,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * 
      * @see com.itmill.toolkit.ui.Component#attach()
      */
+    @Override
     public void attach() {
         super.attach();
         layout.attach();
@@ -849,6 +860,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * 
      * @see com.itmill.toolkit.ui.Component#detach()
      */
+    @Override
     public void detach() {
         super.detach();
         layout.detach();
@@ -859,6 +871,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * 
      * @see com.itmill.toolkit.data.Validatable#isValid()
      */
+    @Override
     public boolean isValid() {
         boolean valid = true;
         for (final Iterator i = propertyIds.iterator(); i.hasNext();) {
@@ -872,6 +885,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * 
      * @see com.itmill.toolkit.data.Validatable#validate()
      */
+    @Override
     public void validate() throws InvalidValueException {
         super.validate();
         for (final Iterator i = propertyIds.iterator(); i.hasNext();) {
@@ -884,6 +898,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * 
      * @see com.itmill.toolkit.data.Validatable#isInvalidAllowed()
      */
+    @Override
     public boolean isInvalidAllowed() {
         return true;
     }
@@ -893,6 +908,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * 
      * @see com.itmill.toolkit.data.Validatable#setInvalidAllowed(boolean)
      */
+    @Override
     public void setInvalidAllowed(boolean invalidValueAllowed)
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
@@ -903,6 +919,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * 
      * @see com.itmill.toolkit.ui.Component#setReadOnly(boolean)
      */
+    @Override
     public void setReadOnly(boolean readOnly) {
         super.setReadOnly(readOnly);
         for (final Iterator i = propertyIds.iterator(); i.hasNext();) {
@@ -939,6 +956,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * 
      * @see com.itmill.toolkit.ui.AbstractField#getType()
      */
+    @Override
     public Class getType() {
         if (getPropertyDataSource() != null) {
             return getPropertyDataSource().getType();
@@ -953,6 +971,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * 
      * @see com.itmill.toolkit.ui.AbstractField#setInternalValue(java.lang.Object)
      */
+    @Override
     protected void setInternalValue(Object newValue) {
         // Stores the old value
         final Object oldValue = propertyValue;
@@ -1054,6 +1073,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * 
      * @see com.itmill.toolkit.ui.Component.Focusable#focus()
      */
+    @Override
     public void focus() {
         final Field f = getFirstField();
         if (f != null) {
@@ -1066,6 +1086,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * 
      * @see com.itmill.toolkit.ui.Component.Focusable#setTabIndex(int)
      */
+    @Override
     public void setTabIndex(int tabIndex) {
         super.setTabIndex(tabIndex);
         for (final Iterator i = getItemPropertyIds().iterator(); i.hasNext();) {
@@ -1077,6 +1098,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * Setting the form to be immediate also sets all the fields of the form to
      * the same state.
      */
+    @Override
     public void setImmediate(boolean immediate) {
         super.setImmediate(immediate);
         for (Iterator i = fields.values().iterator(); i.hasNext();) {
@@ -1088,6 +1110,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     }
 
     /** Form is empty if all of its fields are empty. */
+    @Override
     protected boolean isEmpty() {
 
         for (Iterator i = fields.values().iterator(); i.hasNext();) {
@@ -1107,6 +1130,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * 
      * Add the validators to form fields instead.
      */
+    @Override
     public void addValidator(Validator validator) {
         throw new UnsupportedOperationException();
     }
@@ -1139,6 +1163,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
         formFooter.setParent(this);
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         if (getParent() != null && !getParent().isEnabled()) {

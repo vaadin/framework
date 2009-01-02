@@ -17,6 +17,7 @@ public class IDateFieldCalendar extends IDateField {
         add(date);
     }
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         super.updateFromUIDL(uidl, client);
         date.updateCalendar();

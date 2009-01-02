@@ -65,6 +65,7 @@ public class KeyboardShortcut extends Application implements Handler {
 
     private TextField f;
 
+    @Override
     public void init() {
 
         final Window w = new Window("Keyboard shortcuts demo");
@@ -98,7 +99,7 @@ public class KeyboardShortcut extends Application implements Handler {
 
         loki = new VerticalLayout();
         main.addComponent(loki);
-        main.setExpandRatio(loki,1.0f);
+        main.setExpandRatio(loki, 1.0f);
 
         w.addActionHandler(this);
 

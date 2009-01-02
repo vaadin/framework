@@ -16,6 +16,7 @@ public class Ticket2099 extends Application {
     private OrderedLayout ol1, ol2, ol3;
     private Window popup;
 
+    @Override
     public void init() {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);

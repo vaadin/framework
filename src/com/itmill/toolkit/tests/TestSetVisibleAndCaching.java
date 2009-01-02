@@ -21,6 +21,7 @@ public class TestSetVisibleAndCaching extends com.itmill.toolkit.Application {
 
     int selectedPanel = 0;
 
+    @Override
     public void init() {
         final Window mainWindow = new Window("TestSetVisibleAndCaching");
         setMainWindow(mainWindow);

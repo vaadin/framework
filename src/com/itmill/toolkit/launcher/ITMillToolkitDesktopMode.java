@@ -99,6 +99,7 @@ public class ITMillToolkitDesktopMode {
                 + "</a><br>Close this window to shutdown the server.</center>"
                 + "</html>");
         link.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent e) {
                 BrowserLauncher.openBrowser(applicationUrl);
             }
@@ -136,6 +137,7 @@ public class ITMillToolkitDesktopMode {
         cancelButton.addActionListener(buttonListener);
 
         frame.addWindowListener(new WindowAdapter() {
+            @Override
             public void windowClosing(WindowEvent e) {
                 final Rectangle bounds = frame.getBounds();
                 frame.setTitle("Confirm close");

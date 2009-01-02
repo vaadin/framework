@@ -16,6 +16,7 @@ import com.itmill.toolkit.ui.Window;
  */
 public class Ticket1225 extends Application {
 
+    @Override
     public void init() {
 
         final Window mainWin = new Window(

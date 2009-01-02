@@ -16,6 +16,7 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
  */
 public class Ticket1983 extends Application {
 
+    @Override
     public void init() {
         Window main = new Window("Test for ticket 1983");
         main.setLayout(new TestLayout());

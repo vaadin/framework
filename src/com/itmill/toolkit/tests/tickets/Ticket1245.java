@@ -15,6 +15,7 @@ public class Ticket1245 extends com.itmill.toolkit.Application {
 
     TextField f = new TextField();
 
+    @Override
     public void init() {
         final Window main = new Window(getClass().getName().substring(
                 getClass().getName().lastIndexOf(".") + 1));

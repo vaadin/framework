@@ -15,6 +15,7 @@ public class Ticket1581 extends com.itmill.toolkit.Application {
     private ProgressIndicator poller;
     private Thread thread;
 
+    @Override
     public void init() {
         final Window main = new Window(getClass().getName().substring(
                 getClass().getName().lastIndexOf(".") + 1));
@@ -30,6 +31,7 @@ public class Ticket1581 extends com.itmill.toolkit.Application {
 
         thread = new Thread() {
 
+            @Override
             public void run() {
                 super.run();
                 while (true) {

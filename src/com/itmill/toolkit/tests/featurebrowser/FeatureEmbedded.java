@@ -16,6 +16,7 @@ public class FeatureEmbedded extends Feature {
         super();
     }
 
+    @Override
     protected Component getDemoComponent() {
 
         final OrderedLayout l = new OrderedLayout();
@@ -66,12 +67,14 @@ public class FeatureEmbedded extends Feature {
         return l;
     }
 
+    @Override
     protected String getExampleSrc() {
         return "// Load image from jpg-file, that is in the same package with the application\n"
                 + "Embedded e = new Embedded(\"Image title\",\n"
                 + "   new ClassResource(\"image.jpg\", getApplication()));";
     }
 
+    @Override
     protected String getDescriptionXHTML() {
         return "The embedding feature allows for adding images, multimedia and other non-specified "
                 + "content to your application. "
@@ -79,10 +82,12 @@ public class FeatureEmbedded extends Feature {
                 + "Actual support for embedded media types is left to the terminal.";
     }
 
+    @Override
     protected String getImage() {
         return "icon_demo.png";
     }
 
+    @Override
     protected String getTitle() {
         return "Embedded";
     }

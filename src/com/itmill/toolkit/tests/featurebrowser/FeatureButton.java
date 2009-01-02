@@ -16,6 +16,7 @@ public class FeatureButton extends Feature {
         super();
     }
 
+    @Override
     protected Component getDemoComponent() {
 
         final OrderedLayout l = new OrderedLayout();
@@ -37,6 +38,7 @@ public class FeatureButton extends Feature {
         return l;
     }
 
+    @Override
     protected String getExampleSrc() {
         return "Button b = new Button(\"Caption\");\n";
 
@@ -45,6 +47,7 @@ public class FeatureButton extends Feature {
     /**
      * @see com.itmill.toolkit.tests.featurebrowser.Feature#getDescriptionXHTML()
      */
+    @Override
     protected String getDescriptionXHTML() {
         return "In IT Mill Toolkit, boolean input values are represented by buttons. "
                 + "Buttons may function either as a push buttons or switches. (checkboxes)<br/><br/>"
@@ -56,10 +59,12 @@ public class FeatureButton extends Feature {
                 + "the presentation of the component.";
     }
 
+    @Override
     protected String getImage() {
         return "icon_demo.png";
     }
 
+    @Override
     protected String getTitle() {
         return "Button";
     }

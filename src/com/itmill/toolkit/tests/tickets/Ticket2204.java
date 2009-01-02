@@ -38,6 +38,7 @@ public class Ticket2204 extends Application {
     private final List<Class<? extends Component>> classes = new ArrayList<Class<? extends Component>>();
     protected RichTextArea formTextArea;
 
+    @Override
     public void init() {
         classes.add(OrderedLayout.class);
         classes.add(GridLayout.class);

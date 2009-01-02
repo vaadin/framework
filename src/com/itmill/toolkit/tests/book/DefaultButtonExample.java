@@ -7,7 +7,6 @@ package com.itmill.toolkit.tests.book;
 import com.itmill.toolkit.event.Action;
 import com.itmill.toolkit.event.ShortcutAction;
 import com.itmill.toolkit.event.Action.Handler;
-import com.itmill.toolkit.ui.AbstractField;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.FormLayout;
@@ -25,7 +24,8 @@ public class DefaultButtonExample extends CustomComponent implements Handler {
     TextField password = new TextField("Password");
     OrderedLayout buttons = new FormLayout();
 
-    // Create buttons and define their listener methods. Here we use parameterless
+    // Create buttons and define their listener methods. Here we use
+    // parameterless
     // methods so that we can use same methods for both click events and
     // keyboard actions.
     Button ok = new Button("OK", this, "okHandler");
@@ -33,13 +33,12 @@ public class DefaultButtonExample extends CustomComponent implements Handler {
 
     // Have the unmodified Enter key cause an event
     Action action_ok = new ShortcutAction("Default key",
-                                          ShortcutAction.KeyCode.ENTER,
-                                          null);
+            ShortcutAction.KeyCode.ENTER, null);
 
     // Have the C key modified with Alt cause an event
     Action action_cancel = new ShortcutAction("Alt+C",
-                                              ShortcutAction.KeyCode.C,
-                                              new int[] { ShortcutAction.ModifierKey.ALT });
+            ShortcutAction.KeyCode.C,
+            new int[] { ShortcutAction.ModifierKey.ALT });
 
     Window window = null;
 
@@ -73,7 +72,7 @@ public class DefaultButtonExample extends CustomComponent implements Handler {
      */
     public Action[] getActions(Object target, Object sender) {
         System.out.println("getActions()");
-        return new Action[] {action_ok, action_cancel};
+        return new Action[] { action_ok, action_cancel };
     }
 
     /**
@@ -81,22 +80,24 @@ public class DefaultButtonExample extends CustomComponent implements Handler {
      * the same listener methods that are called with ButtonClick events.
      */
     public void handleAction(Action action, Object sender, Object target) {
-        if (action == action_ok)
+        if (action == action_ok) {
             okHandler();
-        if (action == action_cancel)
+        }
+        if (action == action_cancel) {
             cancelHandler();
+        }
     }
 
     public void okHandler() {
         // Do something: report the click
-        formlayout.addComponent(new Label("OK clicked. "+
-                                          "User="+username.getValue()+
-                                          ", password="+password.getValue()));
+        formlayout.addComponent(new Label("OK clicked. " + "User="
+                + username.getValue() + ", password=" + password.getValue()));
         //  
     }
 
     public void cancelHandler() {
         // Do something: report the click
-        formlayout.addComponent(new Label("Cancel clicked. User="+username.getValue()+", password="+password.getValue()));
+        formlayout.addComponent(new Label("Cancel clicked. User="
+                + username.getValue() + ", password=" + password.getValue()));
     }
 }

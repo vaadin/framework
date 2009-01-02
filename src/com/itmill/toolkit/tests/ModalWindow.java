@@ -27,6 +27,7 @@ public class ModalWindow extends com.itmill.toolkit.Application implements
     private Window test;
     private Button reopen;
 
+    @Override
     public void init() {
 
         // Create main window

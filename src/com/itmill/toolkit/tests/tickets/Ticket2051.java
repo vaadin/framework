@@ -16,6 +16,7 @@ public class Ticket2051 extends Application {
     private static final Object P1 = new Object();
     private static final Object P2 = new Object();
 
+    @Override
     public void init() {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);

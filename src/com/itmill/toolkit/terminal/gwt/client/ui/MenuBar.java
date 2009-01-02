@@ -53,6 +53,7 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @deprecated
  */
+@Deprecated
 public class MenuBar extends Widget implements PopupListener {
 
     private final Element body;
@@ -210,6 +211,7 @@ public class MenuBar extends Widget implements PopupListener {
         return autoOpen;
     }
 
+    @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
 
@@ -304,6 +306,7 @@ public class MenuBar extends Widget implements PopupListener {
         return selectedItem;
     }
 
+    @Override
     protected void onDetach() {
         // When the menu is detached, make sure to close all of its children.
         if (popup != null) {
@@ -379,6 +382,7 @@ public class MenuBar extends Widget implements PopupListener {
                 item.getSubMenu().onShow();
             }
 
+            @Override
             public boolean onEventPreview(Event event) {
                 // Hook the popup panel's event preview. We use this to keep it
                 // from

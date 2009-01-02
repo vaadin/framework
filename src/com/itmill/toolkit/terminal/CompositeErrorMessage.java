@@ -159,6 +159,7 @@ public class CompositeErrorMessage implements ErrorMessage {
      * 
      * @return String, comma separated list of error messages.
      */
+    @Override
     public String toString() {
         String retval = "[";
         int pos = 0;

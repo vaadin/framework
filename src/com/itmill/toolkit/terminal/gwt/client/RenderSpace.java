@@ -27,6 +27,7 @@ public class RenderSpace extends Size {
      * Returns pixels available vertically for contained widget, including
      * possible scrollbars.
      */
+    @Override
     public int getHeight() {
         return super.getHeight();
     }
@@ -35,6 +36,7 @@ public class RenderSpace extends Size {
      * Returns pixels available horizontally for contained widget, including
      * possible scrollbars.
      */
+    @Override
     public int getWidth() {
         return super.getWidth();
     }

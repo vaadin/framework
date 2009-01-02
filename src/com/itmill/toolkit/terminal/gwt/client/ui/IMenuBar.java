@@ -67,7 +67,7 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
 
         Element table = DOM.createTable();
         Element tbody = DOM.createTBody();
-        DOM.appendChild(this.getElement(), table);
+        DOM.appendChild(getElement(), table);
         DOM.appendChild(table, tbody);
 
         if (!subMenu) {
@@ -103,8 +103,8 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
         uidlId = uidl.getId();
 
         // Empty the menu every time it receives new information
-        if (!this.getItems().isEmpty()) {
-            this.clearItems();
+        if (!getItems().isEmpty()) {
+            clearItems();
         }
 
         UIDL options = uidl.getChildUIDL(0);
@@ -199,7 +199,7 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
         if (collapseItems) {
             int topLevelWidth = 0;
 
-            int ourWidth = this.getOffsetWidth();
+            int ourWidth = getOffsetWidth();
 
             int i = 0;
             for (; i < getItems().size() && topLevelWidth < ourWidth; i++) {
@@ -207,7 +207,7 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
                 topLevelWidth += item.getOffsetWidth();
             }
 
-            if (topLevelWidth > this.getOffsetWidth()) {
+            if (topLevelWidth > getOffsetWidth()) {
                 ArrayList toBeCollapsed = new ArrayList();
                 IMenuBar collapsed = new IMenuBar(true);
                 for (int j = i - 2; j < getItems().size(); j++) {
@@ -345,6 +345,7 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
      * com.google.gwt.user.client.ui.Widget#onBrowserEvent(com.google.gwt.user
      * .client.Event)
      */
+    @Override
     public void onBrowserEvent(Event e) {
         super.onBrowserEvent(e);
 

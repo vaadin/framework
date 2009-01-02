@@ -22,6 +22,7 @@ public class Ticket2048 extends Application {
     private GridLayout gridLayout;
     private OrderedLayout orderedLayout;
 
+    @Override
     public void init() {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);

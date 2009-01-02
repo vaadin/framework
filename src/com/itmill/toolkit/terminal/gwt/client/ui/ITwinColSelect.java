@@ -66,6 +66,7 @@ public class ITwinColSelect extends IOptionGroupBase {
         panel.add(selections);
     }
 
+    @Override
     protected void buildOptions(UIDL uidl) {
         final boolean enabled = !isDisabled() && !isReadonly();
         options.setMultipleSelect(isMultiselect());
@@ -108,6 +109,7 @@ public class ITwinColSelect extends IOptionGroupBase {
 
     }
 
+    @Override
     protected Object[] getSelectedItems() {
         final Vector selectedItemKeys = new Vector();
         for (int i = 0; i < selections.getItemCount(); i++) {
@@ -140,6 +142,7 @@ public class ITwinColSelect extends IOptionGroupBase {
         return selectedIndexes;
     }
 
+    @Override
     public void onClick(Widget sender) {
         super.onClick(sender);
         if (sender == add) {
@@ -195,6 +198,7 @@ public class ITwinColSelect extends IOptionGroupBase {
         }
     }
 
+    @Override
     public void setHeight(String height) {
         super.setHeight(height);
         if ("".equals(height)) {
@@ -210,6 +214,7 @@ public class ITwinColSelect extends IOptionGroupBase {
         selections.setHeight("100%");
     }
 
+    @Override
     public void setWidth(String width) {
         super.setWidth(width);
         if (!"".equals(width) && width != null) {
@@ -225,6 +230,7 @@ public class ITwinColSelect extends IOptionGroupBase {
         widthSet = true;
     }
 
+    @Override
     protected void setTabIndex(int tabIndex) {
         options.setTabIndex(tabIndex);
         selections.setTabIndex(tabIndex);

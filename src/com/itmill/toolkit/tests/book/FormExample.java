@@ -30,9 +30,9 @@ import com.itmill.toolkit.ui.TextField;
 public class FormExample extends CustomComponent {
     /** Contact information data model. */
     public class Contact {
-        String name       = "";
-        String address    = "";
-        int    postalCode = 20540;
+        String name = "";
+        String address = "";
+        int postalCode = 20540;
         String city;
     }
 
@@ -59,20 +59,22 @@ public class FormExample extends CustomComponent {
 
         public void setPostalCode(String postalCode) {
             try {
-                if (postalCode != null)
+                if (postalCode != null) {
                     this.postalCode = Integer.parseInt(postalCode);
-                else
+                } else {
                     this.postalCode = 0;
+                }
             } catch (NumberFormatException e) {
                 this.postalCode = 0;
             }
         }
 
         public String getPostalCode() {
-            if (postalCode > 0)
+            if (postalCode > 0) {
                 return String.valueOf(postalCode);
-            else
+            } else {
                 return "";
+            }
         }
 
         public void setCity(String city) {
@@ -102,12 +104,14 @@ public class FormExample extends CustomComponent {
                 Component uiContext) {
             String pid = (String) propertyId;
 
-            if (pid.equals("name"))
+            if (pid.equals("name")) {
                 return new TextField("Name");
-            
-            if (pid.equals("address"))
+            }
+
+            if (pid.equals("address")) {
                 return new TextField("Street Address");
-            
+            }
+
             if (pid.equals("postalCode")) {
                 TextField field = new TextField("Postal Code");
                 field.setColumns(5);
@@ -121,7 +125,8 @@ public class FormExample extends CustomComponent {
                         return ((String) value).matches("[0-9]{5}");
                     }
 
-                    public void validate(Object value) throws InvalidValueException {
+                    public void validate(Object value)
+                            throws InvalidValueException {
                         if (!isValid(value)) {
                             throw new InvalidValueException(
                                     "Postal code must be a number 10000-99999.");
@@ -131,15 +136,16 @@ public class FormExample extends CustomComponent {
                 field.addValidator(postalCodeValidator);
                 return field;
             }
-            
+
             if (pid.equals("city")) {
                 Select select = new Select("City");
                 final String cities[] = new String[] { "Amsterdam", "Berlin",
                         "Helsinki", "Hong Kong", "London", "Luxemburg",
                         "New York", "Oslo", "Paris", "Rome", "Stockholm",
                         "Tokyo", "Turku" };
-                for (int i = 0; i < cities.length; i++)
+                for (int i = 0; i < cities.length; i++) {
                     select.addItem(cities[i]);
+                }
                 return select;
             }
             return null;
@@ -157,7 +163,8 @@ public class FormExample extends CustomComponent {
 
         // Set form caption and description texts.
         form.setCaption("Contact Information");
-        form.setDescription("Please enter valid name and address. Fields marked with * are required.");
+        form
+                .setDescription("Please enter valid name and address. Fields marked with * are required.");
 
         // Use custom field factory to create the fields in the form.
         form.setFieldFactory(new MyFieldFactory());
@@ -191,7 +198,7 @@ public class FormExample extends CustomComponent {
         // necessary for the validation of the fields to occur immediately when
         // the input focus changes and not just on commit.
         form.setImmediate(true);
-        
+
         // Set buffering so that commit() must be called for the form
         // before input is written to the data. (Input is not written
         // immediately through).
@@ -199,7 +206,8 @@ public class FormExample extends CustomComponent {
         form.setReadThrough(false);
 
         // Add Commit and Discard controls to the form.
-        ExpandLayout footer = new ExpandLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+        ExpandLayout footer = new ExpandLayout(
+                OrderedLayout.ORIENTATION_HORIZONTAL);
 
         // The Commit button calls form.commit().
         Button commit = new Button("Commit", form, "commit");
@@ -208,7 +216,7 @@ public class FormExample extends CustomComponent {
         Button discard = new Button("Discard", form, "discard");
         footer.addComponent(commit);
         footer.setComponentAlignment(commit, ExpandLayout.ALIGNMENT_RIGHT,
-                                     ExpandLayout.ALIGNMENT_TOP);
+                ExpandLayout.ALIGNMENT_TOP);
         footer.setHeight("25px");
         footer.addComponent(discard);
         form.setFooter(footer);

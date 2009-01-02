@@ -20,6 +20,7 @@ public class TestForApplicationLayoutThatUsesWholeBrosersSpace extends
 
     SplitPanel firstLevelSplit;
 
+    @Override
     public void init() {
         setMainWindow(main);
 

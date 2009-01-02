@@ -210,30 +210,37 @@ public class FeatureSet extends Feature {
         }
     }
 
+    @Override
     public String getDescription() {
         return desc;
     }
 
+    @Override
     public String getPathName() {
         return pathname;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public String getIconName() {
         return icon;
     }
 
+    @Override
     public APIResource[] getRelatedAPI() {
         return null;
     }
 
+    @Override
     public Class[] getRelatedFeatures() {
         return null;
     }
 
+    @Override
     public NamedExternalResource[] getRelatedResources() {
         return null;
     }

@@ -11,6 +11,7 @@ public class Ticket2337 extends Application {
 
     GridLayout gl = new GridLayout(3, 1);
 
+    @Override
     public void init() {
         Window w = new Window();
         setMainWindow(w);

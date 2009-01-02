@@ -611,12 +611,14 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
             } else if (param.equals("paging")) {
                 PagingTable table = new PagingTable();
                 table.addContainerProperty("Column 1", String.class, null);
-                for (int i = 0; i < 100; i++)
+                for (int i = 0; i < 100; i++) {
                     table.addItem(new Object[] { "Item " + i }, new Integer(i));
+                }
                 main.addComponent(table);
             }
-        } else
+        } else {
             main.addComponent(new TableExample1());
+        }
     }
 
     void example_Upload(Window main, String param) {
@@ -809,8 +811,9 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
             for (int i = 0; i < 9; i++) {
                 HorizontalLayout celllayout = new HorizontalLayout();
                 celllayout.addComponent((Component) cells[i][0]);
-                if (i == 0)
+                if (i == 0) {
                     celllayout.setExpandRatio((Component) cells[i][0], 1);
+                }
 
                 celllayout.setComponentAlignment((Component) cells[i][0],
                         ((Integer) cells[i][1]).intValue(),
@@ -890,8 +893,9 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
             form.getFooter().addComponent(okbar);
 
             main.addComponent(form);
-        } else
+        } else {
             main.addComponent(new FormExample());
+        }
     }
 
     void example_ExpandLayout(Window main, String param) {
@@ -1171,10 +1175,11 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
 
                             // Grow the progress value until it reaches 1.0.
                             current += 0.01;
-                            if (current > 1.0)
+                            if (current > 1.0) {
                                 indicator.setValue(new Float(1.0));
-                            else
+                            } else {
                                 indicator.setValue(new Float(current));
+                            }
 
                             // After the progress is full for a while, stop.
                             if (current > 1.2) {
@@ -1221,8 +1226,9 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
                 String items[] = new String[] { "-- Select --", "Mercury",
                         "Venus", "Earth", "Mars", "Jupiter", "Saturn",
                         "Uranus", "Neptune" };
-                for (int i = 0; i < items.length; i++)
+                for (int i = 0; i < items.length; i++) {
                     select.addItem(items[i]);
+                }
                 select.setNullSelectionItemId(items[0]);
 
                 // When an item is selected in the second window, add
@@ -1432,8 +1438,9 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
                 .getBrowserApplication();
 
         // Add a browser-dependent style name for the main window
-        if (browserApplication.indexOf("Firefox/2") != -1)
+        if (browserApplication.indexOf("Firefox/2") != -1) {
             main.addStyleName("firefox2");
+        }
 
         // Display the client identification string
         main.addComponent(new Label(browserApplication));

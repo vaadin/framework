@@ -41,6 +41,7 @@ public class Util {
     private static Timer lazySizeChangeTimer = new Timer() {
         private boolean lazySizeChangeTimerScheduled = false;
 
+        @Override
         public void run() {
             componentSizeUpdated(latelyChangedWidgets);
             latelyChangedWidgets.clear();
@@ -167,6 +168,7 @@ public class Util {
      * 
      * @return true if IE
      */
+    @Deprecated
     public static boolean isIE() {
         return BrowserInfo.get().isIE();
     }
@@ -178,6 +180,7 @@ public class Util {
      * 
      * @return true if IE6
      */
+    @Deprecated
     public static boolean isIE6() {
         return BrowserInfo.get().isIE6();
     }
@@ -186,6 +189,7 @@ public class Util {
      * @deprecated use BrowserInfo class instead
      * @return
      */
+    @Deprecated
     public static boolean isIE7() {
         return BrowserInfo.get().isIE7();
     }
@@ -194,6 +198,7 @@ public class Util {
      * @deprecated use BrowserInfo class instead
      * @return
      */
+    @Deprecated
     public static boolean isFF2() {
         return BrowserInfo.get().isFF2();
     }

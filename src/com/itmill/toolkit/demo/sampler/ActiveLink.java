@@ -33,6 +33,7 @@ public class ActiveLink extends Link {
         super(caption, resource);
     }
 
+    @Override
     public String getTag() {
         return TAG;
     }
@@ -84,6 +85,7 @@ public class ActiveLink extends Link {
         fireEvent(new LinkActivatedEvent(this, linkOpened));
     }
 
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
 
@@ -93,6 +95,7 @@ public class ActiveLink extends Link {
         }
     }
 
+    @Override
     public void changeVariables(Object source, Map variables) {
         super.changeVariables(source, variables);
         if (!isReadOnly() && variables.containsKey("activated")) {

@@ -88,6 +88,7 @@ public class Link extends AbstractComponent {
      * 
      * @return the Component UIDL tag as string.
      */
+    @Override
     public String getTag() {
         return "link";
     }
@@ -100,6 +101,7 @@ public class Link extends AbstractComponent {
      * @throws PaintException
      *             if the paint operation failed.
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
 
         if (resource != null) {

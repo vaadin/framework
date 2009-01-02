@@ -247,6 +247,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * @throws PaintException
      *             if the paint operation failed.
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
 
         // Paints field properties
@@ -354,6 +355,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * @see com.itmill.toolkit.ui.AbstractComponent#changeVariables(java.lang.Object,
      *      java.util.Map)
      */
+    @Override
     public void changeVariables(Object source, Map variables) {
         super.changeVariables(source, variables);
 
@@ -510,6 +512,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * 
      * @return the Component UIDL tag as string.
      */
+    @Override
     public String getTag() {
         return "select";
     }
@@ -536,6 +539,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * 
      * @return the Type of the property.
      */
+    @Override
     public Class getType() {
         if (isMultiSelect()) {
             return Set.class;
@@ -549,6 +553,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * 
      * @see com.itmill.toolkit.ui.AbstractField#getValue()
      */
+    @Override
     public Object getValue() {
         final Object retValue = super.getValue();
 
@@ -588,6 +593,7 @@ public abstract class AbstractSelect extends AbstractField implements
      *            the New selected item or collection of selected items.
      * @see com.itmill.toolkit.ui.AbstractField#setValue(java.lang.Object)
      */
+    @Override
     public void setValue(Object newValue) throws Property.ReadOnlyException,
             Property.ConversionException {
         if (newValue == null) {
@@ -613,6 +619,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * @see com.itmill.toolkit.ui.AbstractField#setValue(java.lang.Object,
      *      java.lang.Boolean)
      */
+    @Override
     protected void setValue(Object newValue, boolean repaintIsNotNeeded)
             throws Property.ReadOnlyException, Property.ConversionException {
 
@@ -1562,6 +1569,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * 
      * @see com.itmill.toolkit.ui.AbstractField#attach()
      */
+    @Override
     public void attach() {
         super.attach();
     }
@@ -1571,6 +1579,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * 
      * @see com.itmill.toolkit.ui.AbstractComponent#detach()
      */
+    @Override
     public void detach() {
         getCaptionChangeListener().clear();
         super.detach();

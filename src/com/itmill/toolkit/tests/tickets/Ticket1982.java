@@ -16,6 +16,7 @@ public class Ticket1982 extends Application {
 
     private List components = new ArrayList();
 
+    @Override
     public void init() {
         Window main = new Window();
         setMainWindow(main);

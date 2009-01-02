@@ -559,6 +559,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
      * 
      * @return String representation of the value stored in the Property
      */
+    @Override
     public String toString() {
         final Object value = getValue();
         if (value == null) {
@@ -734,6 +735,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
         /**
          * @see java.lang.Throwable#getCause()
          */
+        @Override
         public Throwable getCause() {
             return cause;
         }

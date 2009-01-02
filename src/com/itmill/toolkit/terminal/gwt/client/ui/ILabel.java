@@ -34,6 +34,7 @@ public class ILabel extends HTML implements Paintable {
         sinkEvents(ITooltip.TOOLTIP_EVENTS);
     }
 
+    @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         if (event.getTypeInt() == Event.ONLOAD) {

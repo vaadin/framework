@@ -198,6 +198,7 @@ public interface Buffered {
          *             is possible if the commit operation triggers more than
          *             one error at the same time.
          */
+        @Override
         public final Throwable getCause() {
             if (causes.length == 0) {
                 return null;

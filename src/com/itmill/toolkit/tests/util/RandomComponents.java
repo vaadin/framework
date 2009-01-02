@@ -47,7 +47,7 @@ public class RandomComponents {
     }
 
     public void setRandom(Random rand) {
-        this.seededRandom = rand;
+        seededRandom = rand;
     }
 
     /**

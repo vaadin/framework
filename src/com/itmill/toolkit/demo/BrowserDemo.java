@@ -27,6 +27,7 @@ public class BrowserDemo extends com.itmill.toolkit.Application implements
     // The embedded page
     Embedded emb = new Embedded();
 
+    @Override
     public void init() {
         // Create and set main window
         final Window browser = new Window("IT Mill Browser");

@@ -8,6 +8,7 @@ import com.itmill.toolkit.ui.Window;
 
 public class Ticket1916 extends Application {
 
+    @Override
     public void init() {
 
         OrderedLayout test = new OrderedLayout(

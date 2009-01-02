@@ -11,10 +11,12 @@ import com.itmill.toolkit.ui.Window.CloseEvent;
 
 public class Ticket1970 extends Application {
 
+    @Override
     public void init() {
         setMainWindow(createWindow());
     }
 
+    @Override
     public Window getWindow(String name) {
 
         // If we already have the requested window, use it

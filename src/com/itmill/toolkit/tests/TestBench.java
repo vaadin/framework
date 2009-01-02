@@ -63,6 +63,7 @@ public class TestBench extends com.itmill.toolkit.Application implements
 
     HashMap itemCaptions = new HashMap();
 
+    @Override
     public void init() {
 
         // Add testable classes to hierarchical container

@@ -14,6 +14,7 @@ public class Ticket1995 extends Application {
     private static final Object PROPERTY_1 = "Test";
     private Table table;
 
+    @Override
     public void init() {
         final Window mainWin = new Window(getClass().getName());
         setMainWindow(mainWin);

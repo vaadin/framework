@@ -86,6 +86,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
      * @throws PaintException
      *             if the paint operation failed.
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         if (isMultiSelect()) {
             // background compatibility hack. This object shouldn't be used for
@@ -326,6 +327,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
      * @see com.itmill.toolkit.ui.AbstractComponent#changeVariables(java.lang.Object,
      *      java.util.Map)
      */
+    @Override
     public void changeVariables(Object source, Map variables) {
 
         // Selection change
@@ -406,6 +408,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
 
     }
 
+    @Override
     public void requestRepaint() {
         super.requestRepaint();
         optionRequest = false;
@@ -422,6 +425,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
      * 
      * @return the Component UIDL tag as string.
      */
+    @Override
     public String getTag() {
         return "select";
     }
@@ -447,6 +451,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
      * @param columns
      *            the number of columns to set.
      */
+    @Deprecated
     public void setColumns(int columns) {
         if (columns < 0) {
             columns = 0;
@@ -462,6 +467,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
      * @deprecated see setter function
      * @return
      */
+    @Deprecated
     public int getColumns() {
         return columns;
     }

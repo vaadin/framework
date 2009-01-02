@@ -89,6 +89,7 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
 
     private RandomComponents randomComponents;
 
+    @Override
     public void init() {
         // addWindow(new Window("ATFTest", create()));
         final Window mainWindow = new Window("Testing", create());
@@ -338,6 +339,7 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
     /**
      * ErrorEvents are printed to default error stream and not in GUI.
      */
+    @Override
     public void terminalError(
             com.itmill.toolkit.terminal.Terminal.ErrorEvent event) {
         final Throwable e = event.getThrowable();

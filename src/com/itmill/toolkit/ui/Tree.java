@@ -189,6 +189,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         return true;
     }
 
+    @Override
     public void requestRepaint() {
         super.requestRepaint();
         partialUpdate = false;
@@ -320,6 +321,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * 
      * @see com.itmill.toolkit.ui.AbstractComponent#getTag()
      */
+    @Override
     public String getTag() {
         return "tree";
     }
@@ -331,6 +333,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * @see com.itmill.toolkit.terminal.VariableOwner#changeVariables(Object
      *      source, Map variables)
      */
+    @Override
     public void changeVariables(Object source, Map variables) {
 
         if (clickListenerCount > 0 && variables.containsKey("clickedKey")) {
@@ -404,6 +407,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * 
      * @see com.itmill.toolkit.ui.AbstractComponent#paintContent(PaintTarget)
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         initialPaint = false;
 
@@ -677,6 +681,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * 
      * @see com.itmill.toolkit.data.Container.Viewer#setContainerDataSource(Container)
      */
+    @Override
     public void setContainerDataSource(Container newDataSource) {
         if (newDataSource == null) {
             // Note: using wrapped IndexedContainer to match constructor (super
@@ -926,6 +931,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * 
      * @see com.itmill.toolkit.ui.Select#getVisibleItemIds()
      */
+    @Override
     public Collection getVisibleItemIds() {
 
         final LinkedList visible = new LinkedList();
@@ -969,6 +975,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * 
      * @see com.itmill.toolkit.ui.AbstractSelect#setNullSelectionItemId(java.lang.Object)
      */
+    @Override
     public void setNullSelectionItemId(Object nullSelectionItemId)
             throws UnsupportedOperationException {
         if (nullSelectionItemId != null) {
@@ -984,6 +991,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      *             if set to true.
      * @see com.itmill.toolkit.ui.Select#setNewItemsAllowed(boolean)
      */
+    @Override
     public void setNewItemsAllowed(boolean allowNewOptions)
             throws UnsupportedOperationException {
         if (allowNewOptions) {
@@ -998,6 +1006,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      *             if invoked.
      * @see com.itmill.toolkit.ui.AbstractField#focus()
      */
+    @Override
     public void focus() throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }

@@ -148,6 +148,7 @@ public class Label extends AbstractComponent implements Property,
      * 
      * @return the Component UIDL tag as string.
      */
+    @Override
     public String getTag() {
         return "label";
     }
@@ -158,6 +159,7 @@ public class Label extends AbstractComponent implements Property,
      * @param readOnly
      *            True to enable read-only mode, False to disable it.
      */
+    @Override
     public void setReadOnly(boolean readOnly) {
         if (dataSource == null) {
             throw new IllegalStateException(DATASOURCE_MUST_BE_SET);
@@ -171,6 +173,7 @@ public class Label extends AbstractComponent implements Property,
      * 
      * @return <code>true</code> if the component is in read only mode.
      */
+    @Override
     public boolean isReadOnly() {
         if (dataSource == null) {
             throw new IllegalStateException(DATASOURCE_MUST_BE_SET);
@@ -186,6 +189,7 @@ public class Label extends AbstractComponent implements Property,
      * @throws PaintException
      *             if the Paint Operation fails.
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         if (contentMode != CONTENT_TEXT) {
             target.addAttribute("mode", CONTENT_MODE_NAME[contentMode]);
@@ -244,6 +248,7 @@ public class Label extends AbstractComponent implements Property,
     /**
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
         if (dataSource == null) {
             throw new IllegalStateException(DATASOURCE_MUST_BE_SET);

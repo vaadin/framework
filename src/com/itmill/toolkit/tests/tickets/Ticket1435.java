@@ -18,6 +18,7 @@ public class Ticket1435 extends Application {
 
     private static final boolean useWorkaround = true;
 
+    @Override
     public void init() {
 
         final Window mainWin = new Window("ButtonPanel containing a table test");
@@ -169,6 +170,7 @@ public class Ticket1435 extends Application {
             container.setHeight("100%");
         }
 
+        @Override
         public void setHeight(String height) {
             root.setHeight(height);
             lastHeight = root.getHeight();
@@ -176,6 +178,7 @@ public class Ticket1435 extends Application {
             container.setHeight("100%");
         }
 
+        @Override
         public void setWidth(String width) {
             root.setWidth(width);
         }
@@ -184,6 +187,7 @@ public class Ticket1435 extends Application {
             root.setWidth(width, unit);
         }
 
+        @Override
         public void setSizeFull() {
             setWidth("100%");
             setHeight("100%");

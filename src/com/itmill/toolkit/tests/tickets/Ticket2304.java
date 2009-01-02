@@ -7,6 +7,7 @@ import com.itmill.toolkit.ui.Window;
 
 public class Ticket2304 extends Application {
 
+    @Override
     public void init() {
         final Window main = new Window(getClass().getName().substring(
                 getClass().getName().lastIndexOf(".") + 1));

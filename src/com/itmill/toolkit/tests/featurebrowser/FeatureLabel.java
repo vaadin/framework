@@ -15,6 +15,7 @@ public class FeatureLabel extends Feature {
         super();
     }
 
+    @Override
     protected Component getDemoComponent() {
 
         final OrderedLayout l = new OrderedLayout();
@@ -42,6 +43,7 @@ public class FeatureLabel extends Feature {
         return l;
     }
 
+    @Override
     protected String getExampleSrc() {
         return "Label l = new Label(\"Caption\");\n";
     }
@@ -49,6 +51,7 @@ public class FeatureLabel extends Feature {
     /**
      * @see com.itmill.toolkit.tests.featurebrowser.Feature#getDescriptionXHTML()
      */
+    @Override
     protected String getDescriptionXHTML() {
         return "Labels components are for captions and plain text. "
                 + "By default, it is a light-weight component for presenting "
@@ -63,10 +66,12 @@ public class FeatureLabel extends Feature {
                 + "the presentation of the component.";
     }
 
+    @Override
     protected String getImage() {
         return "icon_demo.png";
     }
 
+    @Override
     protected String getTitle() {
         return "Label";
     }

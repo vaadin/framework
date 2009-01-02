@@ -22,6 +22,7 @@ public class Ticket2106 extends Application {
         return msgs;
     }
 
+    @Override
     public void init() {
         setMainWindow(new Window("#2106"));
         getMainWindow().addComponent(

@@ -31,6 +31,7 @@ public class TreeFilesystem extends com.itmill.toolkit.Application implements
 
     private final Tree tree = new Tree();
 
+    @Override
     public void init() {
         final Window main = new Window("Tree filesystem demo");
         setMainWindow(main);

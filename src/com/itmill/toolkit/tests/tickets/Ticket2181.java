@@ -38,6 +38,7 @@ public class Ticket2181 extends Application implements Button.ClickListener {
         icons.add("icons/64/arrow-up.png");
     }
 
+    @Override
     public void init() {
         setMainWindow(main);
         OrderedLayout ol;

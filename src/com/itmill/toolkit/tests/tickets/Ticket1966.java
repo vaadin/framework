@@ -31,6 +31,7 @@ public class Ticket1966 extends Application {
         names.put(new Integer(TOP), "Top");
     }
 
+    @Override
     public void init() {
         Window w = new Window(getClass().getName());
         setMainWindow(w);

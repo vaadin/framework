@@ -59,6 +59,7 @@ public class NativeSelect extends AbstractSelect {
         return columns;
     }
 
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         target.addAttribute("type", "native");
         // Adds the number of columns
@@ -69,6 +70,7 @@ public class NativeSelect extends AbstractSelect {
         super.paintContent(target);
     }
 
+    @Override
     public void setMultiSelect(boolean multiSelect)
             throws UnsupportedOperationException {
         if (multiSelect == true) {
@@ -76,6 +78,7 @@ public class NativeSelect extends AbstractSelect {
         }
     }
 
+    @Override
     public void setNewItemsAllowed(boolean allowNewOptions)
             throws UnsupportedOperationException {
         if (allowNewOptions == true) {

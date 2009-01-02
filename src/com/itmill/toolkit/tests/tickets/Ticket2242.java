@@ -20,6 +20,7 @@ public class Ticket2242 extends Application implements ValueChangeListener {
     private String valueDataSource = "-";
     private ObjectProperty prop;
 
+    @Override
     public void init() {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);

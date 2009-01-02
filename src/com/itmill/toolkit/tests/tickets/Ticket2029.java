@@ -19,6 +19,7 @@ public class Ticket2029 extends Application {
     int DIM1, DIM2;
     Random r = new Random();
 
+    @Override
     public void init() {
         COMPONENTS = 5;
         DIM1 = 504;

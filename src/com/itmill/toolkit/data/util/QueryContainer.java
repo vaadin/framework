@@ -562,6 +562,7 @@ public class QueryContainer implements Container, Container.Ordered,
      * 
      * @see #close()
      */
+    @Override
     public void finalize() {
         try {
             close();

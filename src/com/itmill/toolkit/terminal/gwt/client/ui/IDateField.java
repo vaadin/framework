@@ -54,6 +54,7 @@ public class IDateField extends FlowPanel implements Paintable, Field {
         sinkEvents(ITooltip.TOOLTIP_EVENTS);
     }
 
+    @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         if (client != null) {

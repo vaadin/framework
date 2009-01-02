@@ -23,6 +23,7 @@ import com.itmill.toolkit.ui.Window;
  */
 public class CachingDemo extends com.itmill.toolkit.Application {
 
+    @Override
     public void init() {
 
         final Window main = new Window("Client-side caching example");
@@ -47,6 +48,7 @@ public class CachingDemo extends com.itmill.toolkit.Application {
         layout.setMargin(true);
         l = new Label(
                 "The first time you change to this tab, this label is very slow to produce (server-side).<br/> However, it will seem fast the second time you change to this tab, because it has not changed and is cached client-side.") {
+            @Override
             public void paintContent(PaintTarget target) throws PaintException {
                 try {
                     Thread.sleep(3000);

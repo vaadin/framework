@@ -7,10 +7,12 @@ import com.itmill.toolkit.ui.Window;
 
 public class Ticket2117 extends Application {
 
+    @Override
     public void init() {
         setMainWindow(createWindow());
     }
 
+    @Override
     public Window getWindow(String name) {
 
         // If we already have the requested window, use it

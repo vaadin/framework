@@ -13,6 +13,7 @@ public class Ticket1973 extends com.itmill.toolkit.Application {
     Window main = new Window();
     Table table = new Table();
 
+    @Override
     public void init() {
         setMainWindow(main);
 

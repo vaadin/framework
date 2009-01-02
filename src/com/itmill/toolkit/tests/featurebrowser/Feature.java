@@ -57,6 +57,7 @@ public abstract class Feature extends CustomComponent {
      * Feature component initialization is lazily done when the feature is
      * attached to application
      */
+    @Override
     public void attach() {
         super.attach();
 
@@ -186,6 +187,7 @@ public abstract class Feature extends CustomComponent {
     }
 
     // Fix for #512
+    @Override
     public String getDescription() {
         if (description != null && description.getValue() != null) {
             return description.getValue().toString();

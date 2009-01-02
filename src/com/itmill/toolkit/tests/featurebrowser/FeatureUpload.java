@@ -27,6 +27,7 @@ public class FeatureUpload extends Feature implements Upload.FinishedListener {
         super();
     }
 
+    @Override
     protected Component getDemoComponent() {
 
         final OrderedLayout l = new OrderedLayout();
@@ -48,6 +49,7 @@ public class FeatureUpload extends Feature implements Upload.FinishedListener {
         return l;
     }
 
+    @Override
     protected String getExampleSrc() {
         return "Upload u = new Upload(\"Upload a file:\", uploadReceiver);\n\n"
                 + "public class uploadReceiver \n"
@@ -58,16 +60,19 @@ public class FeatureUpload extends Feature implements Upload.FinishedListener {
 
     }
 
+    @Override
     protected String getDescriptionXHTML() {
         return "This demonstrates the use of the Upload component together with the Link component. "
                 + "This implementation does not actually store the file to disk, it only keeps it in a buffer. "
                 + "The example given on the <em>Code Sample</em>-tab on the other hand stores the file to disk and binds the link to that file.";
     }
 
+    @Override
     protected String getImage() {
         return "icon_demo.png";
     }
 
+    @Override
     protected String getTitle() {
         return "Upload";
     }

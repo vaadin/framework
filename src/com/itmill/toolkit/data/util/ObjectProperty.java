@@ -122,6 +122,7 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
      * @return <code>String</code> representation of the value stored in the
      *         ObjectProperty
      */
+    @Override
     public String toString() {
         final Object value = getValue();
         if (value != null) {

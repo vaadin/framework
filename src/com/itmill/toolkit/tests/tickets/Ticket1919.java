@@ -11,6 +11,7 @@ public class Ticket1919 extends com.itmill.toolkit.Application {
     private GridLayout lo;
     private boolean on = true;
 
+    @Override
     public void init() {
         final Window main = new Window(getClass().getName().substring(
                 getClass().getName().lastIndexOf(".") + 1));

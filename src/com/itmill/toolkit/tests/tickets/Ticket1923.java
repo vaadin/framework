@@ -11,6 +11,7 @@ public class Ticket1923 extends com.itmill.toolkit.Application {
 
     private Panel p;
 
+    @Override
     public void init() {
         final Window main = new Window(getClass().getName().substring(
                 getClass().getName().lastIndexOf(".") + 1));

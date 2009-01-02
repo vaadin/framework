@@ -25,6 +25,7 @@ public class UsingObjectsInSelect extends com.itmill.toolkit.Application
 
     public static Random random = new Random(1);
 
+    @Override
     public void init() {
         final Window main = new Window("Select demo");
         setMainWindow(main);
@@ -81,6 +82,7 @@ public class UsingObjectsInSelect extends com.itmill.toolkit.Application
             this.estimatedHours = estimatedHours;
         }
 
+        @Override
         public String toString() {
             return type + ", " + assignedTo;
         }

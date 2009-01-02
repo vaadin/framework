@@ -14,6 +14,7 @@ import com.itmill.toolkit.ui.Button.ClickListener;
 
 public class Ticket2221 extends Application {
 
+    @Override
     public void init() {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);

@@ -55,11 +55,13 @@ public class StatusServlet extends HttpServlet {
         VERSION_BUILD = digits[2];
     }
 
+    @Override
     public void init(javax.servlet.ServletConfig servletConfig)
             throws javax.servlet.ServletException {
         super.init(servletConfig);
     }
 
+    @Override
     protected void service(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         Writer w = response.getWriter();
@@ -72,8 +74,9 @@ public class StatusServlet extends HttpServlet {
 
         String p = "";
         p += "<p>StatusServlet " + dfHuman.format(new Date()) + "</p>";
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < 30; i++) {
             System.gc();
+        }
         long inUse = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime()
                 .freeMemory());
         p += "<p>Memory:<br />\n<memused>" + inUse

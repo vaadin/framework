@@ -48,6 +48,7 @@ public class ITextualDate extends IDateField implements Paintable, Field,
         add(text);
     }
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
         int origRes = currentResolution;
@@ -235,6 +236,7 @@ public class ITextualDate extends IDateField implements Paintable, Field,
         return format.trim();
     }
 
+    @Override
     public void setWidth(String newWidth) {
         if (!"".equals(newWidth) && (width == null || !newWidth.equals(width))) {
             if (BrowserInfo.get().isIE6()) {

@@ -50,6 +50,7 @@ public class SamplerApplication extends Application {
     // used when trying to guess theme location
     private static String APP_URL = null;
 
+    @Override
     public void init() {
         setTheme("sampler");
         setMainWindow(new SamplerWindow());
@@ -72,6 +73,7 @@ public class SamplerApplication extends Application {
     }
 
     // Supports multiple browser windows
+    @Override
     public Window getWindow(String name) {
         /*- REST code, using fragments
         if (features.getFeatureByPath(name) != null) {

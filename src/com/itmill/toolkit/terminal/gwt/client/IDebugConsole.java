@@ -188,6 +188,7 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
         }
     };
 
+    @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         switch (DOM.eventGetType(event)) {
@@ -280,6 +281,7 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
                 .getClientHeight() - 160);
     }
 
+    @Override
     public void setPixelSize(int width, int height) {
         panel.setHeight((height - 20) + "px");
         panel.setWidth((width - 2) + "px");

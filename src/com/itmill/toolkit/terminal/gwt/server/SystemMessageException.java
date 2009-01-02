@@ -50,6 +50,7 @@ public class SystemMessageException extends RuntimeException {
     /**
      * @see java.lang.Throwable#getCause()
      */
+    @Override
     public Throwable getCause() {
         return cause;
     }

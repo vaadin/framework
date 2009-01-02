@@ -37,6 +37,7 @@ public class TestSizeableIncomponents extends Application {
     private Button next;
     private Panel testPanel;
 
+    @Override
     public void init() {
 
         initComponentList();
@@ -144,6 +145,7 @@ public class TestSizeableIncomponents extends Application {
                         cont.addItem(t);
                         t = new Testable(c);
                         t.addConfiguration(new Configuration("100px*100px") {
+                            @Override
                             void configure(Component c) {
                                 c.setWidth(60);
                                 c.setHeight(60);
@@ -151,6 +153,7 @@ public class TestSizeableIncomponents extends Application {
                         });
                         t = new Testable(c);
                         t.addConfiguration(new Configuration("Width 50em") {
+                            @Override
                             void configure(Component c) {
                                 c.setWidth("50em");
                             }
@@ -158,12 +161,14 @@ public class TestSizeableIncomponents extends Application {
                         cont.addItem(t);
                         t = new Testable(c);
                         t.addConfiguration(new Configuration("Height 7cm") {
+                            @Override
                             void configure(Component c) {
                                 c.setHeight("7cm");
                             }
                         });
                         cont.addItem(t);
                         t = new Testable(c) {
+                            @Override
                             public Component getComponent()
                                     throws InstantiationException,
                                     IllegalAccessException {
@@ -183,6 +188,7 @@ public class TestSizeableIncomponents extends Application {
 
                         };
                         t.addConfiguration(new Configuration("100%*100%") {
+                            @Override
                             void configure(Component c) {
                                 c.setSizeFull();
                             }
@@ -286,6 +292,7 @@ public class TestSizeableIncomponents extends Application {
             return c;
         }
 
+        @Override
         public String toString() {
             return getTestableName();
         }
@@ -305,6 +312,7 @@ public class TestSizeableIncomponents extends Application {
 
         abstract void configure(Component c);
 
+        @Override
         public String toString() {
             return getDescription();
         }

@@ -143,6 +143,7 @@ public abstract class PropertyFormatter implements Property,
      * @return If the datasource returns null, this is null. Otherwise this is
      *         String given by format().
      */
+    @Override
     public String toString() {
         Object value = dataSource == null ? false : dataSource.getValue();
         if (value == null) {

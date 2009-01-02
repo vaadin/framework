@@ -35,6 +35,7 @@ public class FeatureParameters extends Feature implements URIHandler,
         params.addContainerProperty("Values", String.class, "");
     }
 
+    @Override
     protected Component getDemoComponent() {
 
         final OrderedLayout l = new OrderedLayout();
@@ -91,16 +92,19 @@ public class FeatureParameters extends Feature implements URIHandler,
         return l;
     }
 
+    @Override
     protected String getDescriptionXHTML() {
         return "This is a demonstration of how URL parameters can be recieved and handled."
                 + "Parameters and URL:s can be received trough the windows by registering "
                 + "URIHandler and ParameterHandler classes window.";
     }
 
+    @Override
     protected String getImage() {
         return "parameters.jpg";
     }
 
+    @Override
     protected String getTitle() {
         return "Parameters";
     }
@@ -110,6 +114,7 @@ public class FeatureParameters extends Feature implements URIHandler,
      * 
      * @see com.itmill.toolkit.ui.Component#attach()
      */
+    @Override
     public void attach() {
         super.attach();
         getWindow().addURIHandler(this);
@@ -121,6 +126,7 @@ public class FeatureParameters extends Feature implements URIHandler,
      * 
      * @see com.itmill.toolkit.ui.Component#detach()
      */
+    @Override
     public void detach() {
         super.detach();
         getWindow().removeURIHandler(this);

@@ -10,6 +10,7 @@ import com.itmill.toolkit.ui.Window;
 public class Ticket2062 extends Application {
     private static final Object P1 = new Object();
 
+    @Override
     public void init() {
         setMainWindow(new Window("Ticket2062"));
         getMainWindow().setSizeFull();

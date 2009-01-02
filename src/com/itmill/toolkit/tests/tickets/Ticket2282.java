@@ -12,6 +12,7 @@ public class Ticket2282 extends Application {
     private FormLayout layout1;
     private FormLayout layout2;
 
+    @Override
     public void init() {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);

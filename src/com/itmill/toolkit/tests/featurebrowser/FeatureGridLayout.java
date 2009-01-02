@@ -20,6 +20,7 @@ public class FeatureGridLayout extends Feature {
         super();
     }
 
+    @Override
     protected Component getDemoComponent() {
 
         final OrderedLayout l = new OrderedLayout();
@@ -46,6 +47,7 @@ public class FeatureGridLayout extends Feature {
         return l;
     }
 
+    @Override
     protected String getExampleSrc() {
         return "GridLayout gl = new GridLayout(2,2);\n"
                 + "gl.addComponent(new Label(\"Label 1 in GridLayout\"));\n"
@@ -57,6 +59,7 @@ public class FeatureGridLayout extends Feature {
     /**
      * @see com.itmill.toolkit.tests.featurebrowser.Feature#getDescriptionXHTML()
      */
+    @Override
     protected String getDescriptionXHTML() {
         return "This feature provides a container that lays out components "
                 + "into a grid of given width and height."
@@ -64,10 +67,12 @@ public class FeatureGridLayout extends Feature {
                 + "properties affect the presentation of the component.";
     }
 
+    @Override
     protected String getImage() {
         return "icon_demo.png";
     }
 
+    @Override
     protected String getTitle() {
         return "GridLayout";
     }

@@ -13,6 +13,7 @@ public class Ticket1953 extends Application {
     public static final String spacerStyle = "test-spacer";
     public static final String pageButtonStyle = "test-page-change";
 
+    @Override
     public void init() {
 
         final Window main = new Window(getClass().getName().substring(

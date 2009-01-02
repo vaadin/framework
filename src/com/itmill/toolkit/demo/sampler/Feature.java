@@ -57,8 +57,8 @@ abstract public class Feature {
      * May return null, if the example has no related resources.
      * </p>
      * <p>
-     * The name of the NamedExternalResource will be shown in the UI. <br/> Note
-     * that Javadoc should be referenced via {@link #getRelatedAPI()}.
+     * The name of the NamedExternalResource will be shown in the UI. <br/>
+     * Note that Javadoc should be referenced via {@link #getRelatedAPI()}.
      * </p>
      * 
      * @see #getThemeBase()
@@ -176,6 +176,7 @@ abstract public class Feature {
         return SamplerApplication.getThemeBase();
     }
 
+    @Override
     public String toString() {
         return getName();
     }

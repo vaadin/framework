@@ -29,6 +29,7 @@ public abstract class Robustness extends com.itmill.toolkit.Application
 
     RandomComponents randomComponents = new RandomComponents();
 
+    @Override
     public void init() {
         createNewView();
     }
@@ -56,9 +57,9 @@ public abstract class Robustness extends com.itmill.toolkit.Application
     }
 
     public void buttonClick(ClickEvent event) {
-        if (event.getButton() == create)
+        if (event.getButton() == create) {
             create();
-        else if (event.getButton() == remove) {
+        } else if (event.getButton() == remove) {
             main.removeAllComponents();
             close.removeListener(this);
             remove.removeListener(this);

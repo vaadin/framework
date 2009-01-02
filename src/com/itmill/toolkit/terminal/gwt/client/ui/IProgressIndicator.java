@@ -68,6 +68,7 @@ public class IProgressIndicator extends Widget implements Paintable {
         }
     }
 
+    @Override
     protected void onAttach() {
         super.onAttach();
         if (pollerSuspendedDueDetach) {
@@ -75,12 +76,14 @@ public class IProgressIndicator extends Widget implements Paintable {
         }
     }
 
+    @Override
     protected void onDetach() {
         super.onDetach();
         poller.cancel();
         pollerSuspendedDueDetach = true;
     }
 
+    @Override
     public void setVisible(boolean visible) {
         super.setVisible(visible);
         if (!visible) {
@@ -90,6 +93,7 @@ public class IProgressIndicator extends Widget implements Paintable {
 
     class Poller extends Timer {
 
+        @Override
         public void run() {
             client.sendPendingVariableChanges();
         }

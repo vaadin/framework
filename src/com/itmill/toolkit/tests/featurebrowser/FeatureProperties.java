@@ -38,6 +38,7 @@ public class FeatureProperties extends Feature {
         super();
     }
 
+    @Override
     protected Component getDemoComponent() {
 
         final OrderedLayout l = new OrderedLayout();
@@ -68,18 +69,22 @@ public class FeatureProperties extends Feature {
         return l;
     }
 
+    @Override
     protected String getExampleSrc() {
         return null;
     }
 
+    @Override
     protected String getDescriptionXHTML() {
         return null;
     }
 
+    @Override
     protected String getImage() {
         return null;
     }
 
+    @Override
     protected String getTitle() {
         return null;
     }

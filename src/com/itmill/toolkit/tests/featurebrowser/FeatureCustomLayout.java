@@ -27,6 +27,7 @@ public class FeatureCustomLayout extends Feature {
             + "<br /><br />The default theme handles the styles that are not defined by just drawing "
             + "the subcomponents with flowlayout.";
 
+    @Override
     protected Component getDemoComponent() {
         final OrderedLayout l = new OrderedLayout();
 
@@ -56,20 +57,24 @@ public class FeatureCustomLayout extends Feature {
         return l;
     }
 
+    @Override
     protected String getDescriptionXHTML() {
         return null;
     }
 
+    @Override
     protected String getExampleSrc() {
         return "CustomLayout c = new CustomLayout(\"mystyle\");\n"
                 + "c.addComponent(new Label(\"Example description\"),\"label1-location\");\n"
                 + "c.addComponent(new Button(\"Example action\"),\"example-action-location\");\n";
     }
 
+    @Override
     protected String getImage() {
         return null;
     }
 
+    @Override
     protected String getTitle() {
         return "Custom Layout";
     }

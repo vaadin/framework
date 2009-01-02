@@ -27,6 +27,7 @@ public class FormLayout extends OrderedLayout {
         setMargin(true, false, true, false);
     }
 
+    @Override
     public String getTag() {
         return "formlayout";
     }

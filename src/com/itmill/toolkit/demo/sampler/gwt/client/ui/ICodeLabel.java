@@ -11,6 +11,7 @@ public class ICodeLabel extends ILabel {
         super();
     }
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         super.updateFromUIDL(uidl, client);
         Element pre = getElement().getFirstChildElement();

@@ -24,6 +24,7 @@ public class ColorPickerApplication extends com.itmill.toolkit.Application {
     /* Another component. */
     Label colorname;
 
+    @Override
     public void init() {
         setMainWindow(main);
 

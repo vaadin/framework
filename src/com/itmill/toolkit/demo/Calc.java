@@ -24,6 +24,7 @@ public class Calc extends com.itmill.toolkit.Application {
     private final GridLayout layout = new GridLayout(4, 5);
 
     // Application initialization creates UI and connects it to business logic
+    @Override
     public void init() {
 
         // Place the layout to a floating dialog inside the browser main window

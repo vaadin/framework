@@ -30,6 +30,7 @@ public class FeatureValidators extends Feature {
         super();
     }
 
+    @Override
     protected Component getDemoComponent() {
 
         final OrderedLayout l = new OrderedLayout();
@@ -60,6 +61,7 @@ public class FeatureValidators extends Feature {
         return l;
     }
 
+    @Override
     protected String getExampleSrc() {
         return null;
     }
@@ -67,14 +69,17 @@ public class FeatureValidators extends Feature {
     /**
      * @see com.itmill.toolkit.tests.featurebrowser.Feature#getDescriptionXHTML()
      */
+    @Override
     protected String getDescriptionXHTML() {
         return null;
     }
 
+    @Override
     protected String getImage() {
         return null;
     }
 
+    @Override
     protected String getTitle() {
         return null;
     }

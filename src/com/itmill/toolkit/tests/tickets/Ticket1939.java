@@ -9,6 +9,7 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
 
 public class Ticket1939 extends Application {
 
+    @Override
     public void init() {
         Window w = new Window(getClass().getName());
         setMainWindow(w);

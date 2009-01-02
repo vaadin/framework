@@ -27,6 +27,7 @@ public abstract class AbstractLayout extends AbstractComponentContainer
      * 
      * @see com.itmill.toolkit.ui.AbstractComponent#getTag()
      */
+    @Override
     public abstract String getTag();
 
     /*
@@ -79,6 +80,7 @@ public abstract class AbstractLayout extends AbstractComponentContainer
      * com.itmill.toolkit.ui.AbstractComponent#paintContent(com.itmill.toolkit
      * .terminal.PaintTarget)
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
 
         // Add margin info. Defaults to false.

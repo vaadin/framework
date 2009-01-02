@@ -1116,6 +1116,7 @@ public class IndexedContainer implements Container, Container.Indexed,
          * 
          * @return <code>String</code> representation of the Item contents
          */
+        @Override
         public String toString() {
             String retValue = "";
 
@@ -1138,6 +1139,7 @@ public class IndexedContainer implements Container, Container.Indexed,
          * 
          * @return A locally unique hash-code as integer
          */
+        @Override
         public int hashCode() {
             return itemId.hashCode();
         }
@@ -1151,6 +1153,7 @@ public class IndexedContainer implements Container, Container.Indexed,
          * @return <code>true</code> if the given object is the same as this
          *         object, <code>false</code> if not
          */
+        @Override
         public boolean equals(Object obj) {
             if (obj == null
                     || !obj.getClass().equals(IndexedContainerItem.class)) {
@@ -1347,6 +1350,7 @@ public class IndexedContainer implements Container, Container.Indexed,
          * @return <code>String</code> representation of the value stored in the
          *         Property
          */
+        @Override
         public String toString() {
             final Object value = getValue();
             if (value == null) {
@@ -1364,6 +1368,7 @@ public class IndexedContainer implements Container, Container.Indexed,
          * 
          * @return A locally unique hash-code as integer
          */
+        @Override
         public int hashCode() {
             return itemId.hashCode() ^ propertyId.hashCode();
         }
@@ -1377,6 +1382,7 @@ public class IndexedContainer implements Container, Container.Indexed,
          * @return <code>true</code> if the given object is the same as this
          *         object, <code>false</code> if not
          */
+        @Override
         public boolean equals(Object obj) {
             if (obj == null
                     || !obj.getClass().equals(IndexedContainerProperty.class)) {
@@ -1533,6 +1539,7 @@ public class IndexedContainer implements Container, Container.Indexed,
      * @throws CloneNotSupportedException
      *             if an object cannot be cloned. .
      */
+    @Override
     public Object clone() throws CloneNotSupportedException {
 
         // Creates the clone
@@ -1589,6 +1596,7 @@ public class IndexedContainer implements Container, Container.Indexed,
      * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object obj) {
         return super.equals(obj);
     }
@@ -1608,6 +1616,7 @@ public class IndexedContainer implements Container, Container.Indexed,
             this.onlyMatchPrefix = onlyMatchPrefix;
         }
 
+        @Override
         public boolean equals(Object obj) {
 
             // Only ones of the objects of the same class can be equal
@@ -1635,6 +1644,7 @@ public class IndexedContainer implements Container, Container.Indexed,
             return true;
         }
 
+        @Override
         public int hashCode() {
             return (propertyId != null ? propertyId.hashCode() : 0)
                     ^ (filterString != null ? filterString.hashCode() : 0);

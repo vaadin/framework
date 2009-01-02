@@ -136,6 +136,7 @@ public class UserError implements ErrorMessage {
     }
 
     /* Documented in superclass */
+    @Override
     public String toString() {
         return msg;
     }

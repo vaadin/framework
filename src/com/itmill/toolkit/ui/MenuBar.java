@@ -29,11 +29,13 @@ public class MenuBar extends AbstractComponent {
     private MenuItem moreItem;
 
     /** Tag is the UIDL element name for client-server communications. */
+    @Override
     public java.lang.String getTag() {
         return "menubar";
     }
 
     /** Paint (serialize) the component for the client. */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
 
         // Superclass writes any common attributes in the paint target.
@@ -108,6 +110,7 @@ public class MenuBar extends AbstractComponent {
     }
 
     /** Deserialize changes received from client. */
+    @Override
     public void changeVariables(Object source, Map variables) {
         Stack items = new Stack();
         boolean found = false;

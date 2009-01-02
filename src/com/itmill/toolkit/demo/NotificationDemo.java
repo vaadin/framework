@@ -34,6 +34,7 @@ public class NotificationDemo extends com.itmill.toolkit.Application {
      * com.itmill.toolkit.service.Application class. It will be automatically
      * called by the framework when a user accesses the application.
      */
+    @Override
     public void init() {
 
         // Create new window for the application and give the window a visible.

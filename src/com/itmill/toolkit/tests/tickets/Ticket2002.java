@@ -26,6 +26,7 @@ public class Ticket2002 extends Application {
         this.long2 = long2;
     }
 
+    @Override
     public void init() {
         Window w = new Window(getClass().getName());
         setMainWindow(w);

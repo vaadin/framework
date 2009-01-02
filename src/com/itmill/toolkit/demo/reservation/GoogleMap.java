@@ -29,10 +29,12 @@ public class GoogleMap extends AbstractComponent implements Sizeable,
     private Object itemMarkerXPropertyId = new Object();
     private Object itemMarkerYPropertyId = new Object();
 
+    @Override
     public String getTag() {
         return "googlemap";
     }
 
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
         // Add size info as variables

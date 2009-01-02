@@ -8,6 +8,7 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
 
 public class Ticket1659 extends Application {
 
+    @Override
     public void init() {
         final Window mainWin = new Window();
         setMainWindow(mainWin);

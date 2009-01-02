@@ -35,6 +35,7 @@ public class Parameters extends com.itmill.toolkit.Application implements
 
     private final Table params = new Table();
 
+    @Override
     @SuppressWarnings("deprecation")
     public void init() {
         final Window main = new Window("Parameters demo");
@@ -96,6 +97,7 @@ public class Parameters extends com.itmill.toolkit.Application implements
      * 
      * @see com.itmill.toolkit.terminal.URIHandler#handleURI(URL, String)
      */
+    @Override
     public DownloadStream handleURI(URL context, String relativeUri) {
         this.context.setValue(context.toString());
         relative.setValue(relativeUri);

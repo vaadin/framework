@@ -42,6 +42,7 @@ public class TreeFilesystemContainer extends com.itmill.toolkit.Application
 
     private final Label fileProperties = new Label();
 
+    @Override
     public void init() {
         final Window w = new Window("Tree FilesystemContainer demo");
         setMainWindow(w);

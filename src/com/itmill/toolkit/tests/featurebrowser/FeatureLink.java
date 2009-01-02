@@ -16,6 +16,7 @@ public class FeatureLink extends Feature {
         super();
     }
 
+    @Override
     protected Component getDemoComponent() {
 
         final OrderedLayout l = new OrderedLayout();
@@ -40,10 +41,12 @@ public class FeatureLink extends Feature {
         return l;
     }
 
+    @Override
     protected String getExampleSrc() {
         return "Link link = new Link(\"Link caption\",new ExternalResource(\"http://www.itmill.com\"));\n";
     }
 
+    @Override
     protected String getDescriptionXHTML() {
         return "The link feature allows for making refences to both internal and external resources. "
                 + "The link can open the new resource in a new window, allowing for control of the newly "
@@ -53,10 +56,12 @@ public class FeatureLink extends Feature {
 
     }
 
+    @Override
     protected String getImage() {
         return "icon_demo.png";
     }
 
+    @Override
     protected String getTitle() {
         return "Link";
     }

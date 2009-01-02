@@ -16,6 +16,7 @@ public class Ticket1230 extends Application {
     private Select selectWithoutNullItem;
     private Select selectWithNullItem;
 
+    @Override
     public void init() {
         Window w = new Window(getClass().getName());
         setMainWindow(w);

@@ -9,6 +9,7 @@ import com.itmill.toolkit.ui.Window;
 
 public class Ticket2186 extends Application {
 
+    @Override
     public void init() {
         Window main = new Window("Quick test");
         setMainWindow(main);

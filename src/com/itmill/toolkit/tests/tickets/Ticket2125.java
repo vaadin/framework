@@ -12,6 +12,7 @@ import com.itmill.toolkit.ui.Table.ColumnGenerator;
 
 public class Ticket2125 extends Application {
 
+    @Override
     public void init() {
         setMainWindow(new MainWindow("Ticket2125"));
 

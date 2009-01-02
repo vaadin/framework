@@ -4,8 +4,6 @@
 
 package com.itmill.toolkit.tests.book;
 
-import java.text.MessageFormat;
-
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.Validator;
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
@@ -19,7 +17,8 @@ import com.itmill.toolkit.ui.TextField;
 public class SSNField extends CustomComponent implements
         Property.ValueChangeListener {
     OrderedLayout layout = new FormLayout();
-    // new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL); //;new FormLayout();
+    // new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL); //;new
+    // FormLayout();
     TextField myfield;
     Label myerror;
 
@@ -39,11 +38,13 @@ public class SSNField extends CustomComponent implements
         /** Validate the given SSN. */
         public void validate(Object value) throws InvalidValueException {
             final String ssn = (String) value;
-            if (ssn.length() == 0)
-            	return;
+            if (ssn.length() == 0) {
+                return;
+            }
 
-            if (ssn.length() != 11)
+            if (ssn.length() != 11) {
                 throw new InvalidValueException("Invalid SSN length");
+            }
 
             final String numbers = ssn.substring(0, 6) + ssn.substring(7, 10);
             final int checksum = new Integer(numbers).intValue() % 31;
@@ -66,8 +67,10 @@ public class SSNField extends CustomComponent implements
         /* Create and set the validator object for the field. */
         myfield.addValidator(new SSNValidator());
 
-        /* ValueChageEvent will be generated immediately when the component
-           loses focus. */
+        /*
+         * ValueChageEvent will be generated immediately when the component
+         * loses focus.
+         */
         myfield.setImmediate(true);
 
         /* Listen for ValueChangeEvent events. */

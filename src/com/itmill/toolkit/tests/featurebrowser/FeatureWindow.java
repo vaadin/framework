@@ -27,6 +27,7 @@ public class FeatureWindow extends Feature implements Window.CloseListener {
         super();
     }
 
+    @Override
     protected Component getDemoComponent() {
 
         final OrderedLayout layoutRoot = new OrderedLayout();
@@ -70,12 +71,14 @@ public class FeatureWindow extends Feature implements Window.CloseListener {
         return layoutRoot;
     }
 
+    @Override
     protected String getExampleSrc() {
         return "Window win = new Window();\n"
                 + "getApplication().addWindow(win);\n";
 
     }
 
+    @Override
     protected String getDescriptionXHTML() {
         return "The window support in IT Mill Toolkit allows for opening and closing windows, "
                 + "refreshing one window from another (for asynchronous terminals), "
@@ -84,10 +87,12 @@ public class FeatureWindow extends Feature implements Window.CloseListener {
                 + "this feature.";
     }
 
+    @Override
     protected String getImage() {
         return "icon_demo.png";
     }
 
+    @Override
     protected String getTitle() {
         return "Window";
     }

@@ -8,6 +8,7 @@ import com.itmill.toolkit.ui.Window;
 
 public class Ticket1904 extends Application {
 
+    @Override
     public void init() {
         setMainWindow(new Window("#1904"));
         setTheme("tests-tickets");

@@ -111,6 +111,7 @@ public class IEmbedded extends HTML implements Paintable {
         return url;
     }
 
+    @Override
     public void setWidth(String width) {
         this.width = width;
         if (isDynamicHeight()) {
@@ -134,11 +135,13 @@ public class IEmbedded extends HTML implements Paintable {
         return height == null || height.equals("");
     }
 
+    @Override
     public void setHeight(String height) {
         this.height = height;
         super.setHeight(height);
     }
 
+    @Override
     protected void onDetach() {
         // Force browser to fire unload event when component is detached from
         // the view (IE doesn't do this automatically)
@@ -148,6 +151,7 @@ public class IEmbedded extends HTML implements Paintable {
         super.onDetach();
     }
 
+    @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         if (DOM.eventGetType(event) == Event.ONLOAD) {

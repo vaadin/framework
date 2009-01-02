@@ -57,6 +57,7 @@ public class Ticket2279 extends Application {
 
     }
 
+    @Override
     public void init() {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);

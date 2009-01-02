@@ -16,6 +16,7 @@ public class FeatureOrderedLayout extends Feature {
         super();
     }
 
+    @Override
     protected Component getDemoComponent() {
 
         final OrderedLayout l = new OrderedLayout();
@@ -44,6 +45,7 @@ public class FeatureOrderedLayout extends Feature {
         return l;
     }
 
+    @Override
     protected String getExampleSrc() {
         return "OrderedLayout ol = new OrderedLayout(OrderedLayout.ORIENTATION_FLOW);\n"
                 + "ol.addComponent(new TextField(\"Textfield caption\"));\n"
@@ -54,6 +56,7 @@ public class FeatureOrderedLayout extends Feature {
     /**
      * @see com.itmill.toolkit.tests.featurebrowser.Feature#getDescriptionXHTML()
      */
+    @Override
     protected String getDescriptionXHTML() {
         return "This feature provides a container for laying out components either "
                 + "vertically, horizontally or flowingly. The orientation may be changed "
@@ -65,10 +68,12 @@ public class FeatureOrderedLayout extends Feature {
                 + "affect the presentation of the component.";
     }
 
+    @Override
     protected String getImage() {
         return "icon_demo.png";
     }
 
+    @Override
     protected String getTitle() {
         return "OrderedLayout";
     }

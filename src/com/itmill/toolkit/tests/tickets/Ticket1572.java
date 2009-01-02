@@ -14,6 +14,7 @@ public class Ticket1572 extends com.itmill.toolkit.Application {
     private GridLayout gl;
     private Label spacingstate;
 
+    @Override
     public void init() {
 
         final Window main = new Window(getClass().getName().substring(

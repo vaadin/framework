@@ -18,6 +18,7 @@ public class Ticket1975 extends Application {
     private CustomLayout cl1;
     private CustomLayout cl2;
 
+    @Override
     public void init() {
         Window w = new Window(getClass().getName());
         setMainWindow(w);

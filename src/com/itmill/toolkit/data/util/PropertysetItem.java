@@ -109,8 +109,9 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
     public boolean addItemProperty(Object id, Property property) {
 
         // Null ids are not accepted
-        if (id == null)
+        if (id == null) {
             throw new NullPointerException("Item property id can not be null");
+        }
 
         // Cant add a property twice
         if (map.containsKey(id)) {
@@ -135,6 +136,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      * 
      * @return <code>String</code> representation of the Item contents
      */
+    @Override
     public String toString() {
         String retValue = "";
 
@@ -243,6 +245,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      * 
      * @see java.lang.Object#clone()
      */
+    @Override
     public Object clone() throws CloneNotSupportedException {
 
         final PropertysetItem npsi = new PropertysetItem();
@@ -267,6 +270,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      *         otherwise <code>false</code>.
      * @see java.lang.Object#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object obj) {
 
         if (obj == null || !(obj instanceof PropertysetItem)) {
@@ -310,6 +314,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      * @return the hash code value.
      * @see java.lang.Object#hashCode()
      */
+    @Override
     public int hashCode() {
 
         return (list == null ? 0 : list.hashCode())

@@ -179,6 +179,7 @@ public class DateField extends AbstractField {
      * Paints this component. Don't add a JavaDoc comment here, we use the
      * default documentation from implemented interface.
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
 
@@ -237,6 +238,7 @@ public class DateField extends AbstractField {
      * Gets the components UIDL tag string. Don't add a JavaDoc comment here, we
      * use the default documentation from implemented interface.
      */
+    @Override
     public String getTag() {
         return "datefield";
     }
@@ -246,6 +248,7 @@ public class DateField extends AbstractField {
      * comment here, we use the default documentation from implemented
      * interface.
      */
+    @Override
     public void changeVariables(Object source, Map variables) {
         super.changeVariables(source, variables);
 
@@ -333,6 +336,7 @@ public class DateField extends AbstractField {
      * Gets the edited property's type. Don't add a JavaDoc comment here, we use
      * the default documentation from implemented interface.
      */
+    @Override
     public Class getType() {
         return Date.class;
     }
@@ -342,6 +346,7 @@ public class DateField extends AbstractField {
      * add a JavaDoc comment here, we use the default documentation from
      * implemented interface.
      */
+    @Override
     public String toString() {
         final Date value = (Date) getValue();
         if (value != null) {
@@ -354,11 +359,13 @@ public class DateField extends AbstractField {
      * Sets the value of the property. Don't add a JavaDoc comment here, we use
      * the default documentation from implemented interface.
      */
+    @Override
     public void setValue(Object newValue) throws Property.ReadOnlyException,
             Property.ConversionException {
         setValue(newValue, false);
     }
 
+    @Override
     public void setValue(Object newValue, boolean repaintIsNotNeeded)
             throws Property.ReadOnlyException, Property.ConversionException {
 
@@ -383,6 +390,7 @@ public class DateField extends AbstractField {
      * 
      * @see com.itmill.toolkit.data.Property.Viewer#setPropertyDataSource(Property)
      */
+    @Override
     public void setPropertyDataSource(Property newDataSource) {
         if (newDataSource == null
                 || Date.class.isAssignableFrom(newDataSource.getType())) {

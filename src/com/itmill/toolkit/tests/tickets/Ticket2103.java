@@ -12,6 +12,7 @@ import com.itmill.toolkit.ui.Window;
 public class Ticket2103 extends Application {
     private Window mainWindow;
 
+    @Override
     public void init() {
         mainWindow = new Window(getClass().getSimpleName());
         mainWindow.setLayout(new ExpandLayout());

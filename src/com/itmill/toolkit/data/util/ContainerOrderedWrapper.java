@@ -588,10 +588,12 @@ public class ContainerOrderedWrapper implements Container.Ordered,
 
         }
 
+        @Override
         public boolean equals(Object obj) {
             return obj == listener || (obj != null && obj.equals(listener));
         }
 
+        @Override
         public int hashCode() {
             return listener.hashCode();
         }

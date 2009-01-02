@@ -34,6 +34,7 @@ import com.google.gwt.user.client.ui.UIObject;
  * 
  * @deprecated
  */
+@Deprecated
 public class MenuItem extends UIObject implements HasHTML {
 
     private static final String DEPENDENT_STYLENAME_SELECTED_ITEM = "selected";

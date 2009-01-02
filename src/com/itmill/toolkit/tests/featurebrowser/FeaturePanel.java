@@ -17,6 +17,7 @@ public class FeaturePanel extends Feature {
         super();
     }
 
+    @Override
     protected Component getDemoComponent() {
 
         final OrderedLayout l = new OrderedLayout();
@@ -44,12 +45,14 @@ public class FeaturePanel extends Feature {
         return l;
     }
 
+    @Override
     protected String getExampleSrc() {
         return "Panel show = new Panel(\"Panel caption\");\n"
                 + "show.addComponent(new Label(\"This is an example Label component that is added into Panel.\"));";
 
     }
 
+    @Override
     protected String getDescriptionXHTML() {
         return "Panel is a container for other components, by default it draws a frame around it's "
                 + "extremities and may have a caption to clarify the nature of the contained components' purpose."
@@ -57,10 +60,12 @@ public class FeaturePanel extends Feature {
                 + "this layout may be switched on the fly.";
     }
 
+    @Override
     protected String getImage() {
         return "icon_demo.png";
     }
 
+    @Override
     protected String getTitle() {
         return "Panel";
     }

@@ -74,6 +74,7 @@ public class ProgressIndicator extends AbstractField implements Property,
      * 
      * @return the Component UIDL tag as string.
      */
+    @Override
     public String getTag() {
         return "progressindicator";
     }
@@ -85,6 +86,7 @@ public class ProgressIndicator extends AbstractField implements Property,
      * @param readOnly
      *            True to enable read-only mode, False to disable it.
      */
+    @Override
     public void setReadOnly(boolean readOnly) {
         if (dataSource == null) {
             throw new IllegalStateException("Datasource must be se");
@@ -98,6 +100,7 @@ public class ProgressIndicator extends AbstractField implements Property,
      * 
      * @return True if the component is in read only mode.
      */
+    @Override
     public boolean isReadOnly() {
         if (dataSource == null) {
             throw new IllegalStateException("Datasource must be se");
@@ -113,6 +116,7 @@ public class ProgressIndicator extends AbstractField implements Property,
      * @throws PaintException
      *             if the Paint Operation fails.
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         target.addAttribute("indeterminate", indeterminate);
         target.addAttribute("pollinginterval", pollingInterval);
@@ -126,6 +130,7 @@ public class ProgressIndicator extends AbstractField implements Property,
      * @return the Value of the ProgressIndicator.
      * @see com.itmill.toolkit.ui.AbstractField#getValue()
      */
+    @Override
     public Object getValue() {
         if (dataSource == null) {
             throw new IllegalStateException("Datasource must be se");
@@ -141,6 +146,7 @@ public class ProgressIndicator extends AbstractField implements Property,
      *            the New value of the ProgressIndicator.
      * @see com.itmill.toolkit.ui.AbstractField#setValue(java.lang.Object)
      */
+    @Override
     public void setValue(Object newValue) {
         if (dataSource == null) {
             throw new IllegalStateException("Datasource must be se");
@@ -151,6 +157,7 @@ public class ProgressIndicator extends AbstractField implements Property,
     /**
      * @see com.itmill.toolkit.ui.AbstractField#toString()
      */
+    @Override
     public String toString() {
         if (dataSource == null) {
             throw new IllegalStateException("Datasource must be se");
@@ -161,6 +168,7 @@ public class ProgressIndicator extends AbstractField implements Property,
     /**
      * @see com.itmill.toolkit.ui.AbstractField#getType()
      */
+    @Override
     public Class getType() {
         if (dataSource == null) {
             throw new IllegalStateException("Datasource must be se");
@@ -174,6 +182,7 @@ public class ProgressIndicator extends AbstractField implements Property,
      * @return the datasource.
      * @see com.itmill.toolkit.ui.AbstractField#getPropertyDataSource()
      */
+    @Override
     public Property getPropertyDataSource() {
         return dataSource;
     }
@@ -185,6 +194,7 @@ public class ProgressIndicator extends AbstractField implements Property,
      *            the new data source.
      * @see com.itmill.toolkit.ui.AbstractField#setPropertyDataSource(com.itmill.toolkit.data.Property)
      */
+    @Override
     public void setPropertyDataSource(Property newDataSource) {
         // Stops listening the old data source changes
         if (dataSource != null

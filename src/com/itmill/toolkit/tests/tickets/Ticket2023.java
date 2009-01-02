@@ -11,6 +11,7 @@ public class Ticket2023 extends com.itmill.toolkit.Application implements
 
     AbstractComponent c = new Button();
 
+    @Override
     public void init() {
         Window main = new Window();
         setMainWindow(main);

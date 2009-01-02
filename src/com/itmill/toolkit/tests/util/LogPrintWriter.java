@@ -15,11 +15,13 @@ public class LogPrintWriter extends PrintWriter {
         super(out);
     }
 
+    @Override
     public void print(String s) {
         result.append(s);
         super.print(s);
     }
 
+    @Override
     public void write(String s) {
         result.append(s);
         super.write(s);

@@ -28,6 +28,7 @@ public class LayoutDemo extends com.itmill.toolkit.Application {
     /**
      * Initialize Application. Demo components are added to main window.
      */
+    @Override
     public void init() {
         final Window mainWindow = new Window("Layout demo");
         setMainWindow(mainWindow);

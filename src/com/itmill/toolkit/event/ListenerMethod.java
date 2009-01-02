@@ -475,6 +475,7 @@ public class ListenerMethod implements EventListener {
                         .equals(this.method));
     }
 
+    @Override
     public int hashCode() {
         int hash = 7;
 
@@ -486,6 +487,7 @@ public class ListenerMethod implements EventListener {
         return hash;
     }
 
+    @Override
     public boolean equals(Object obj) {
 
         if (this == obj) {
@@ -546,6 +548,7 @@ public class ListenerMethod implements EventListener {
          *         is nonexistent or unknown.
          * @see java.lang.Throwable#getCause()
          */
+        @Override
         public Throwable getCause() {
             return cause;
         }
@@ -556,6 +559,7 @@ public class ListenerMethod implements EventListener {
          * @return the error message.
          * @see java.lang.Throwable#getMessage()
          */
+        @Override
         public String getMessage() {
             return message;
         }
@@ -563,6 +567,7 @@ public class ListenerMethod implements EventListener {
         /**
          * @see java.lang.Throwable#toString()
          */
+        @Override
         public String toString() {
             String msg = super.toString();
             if (cause != null) {

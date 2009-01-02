@@ -8,6 +8,7 @@ import com.itmill.toolkit.ui.Window;
 
 public class Ticket2364 extends Application {
 
+    @Override
     public void init() {
 
         Window main = new Window("The Main Window!!!");

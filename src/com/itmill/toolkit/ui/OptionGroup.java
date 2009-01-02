@@ -31,6 +31,7 @@ public class OptionGroup extends AbstractSelect {
         super(caption);
     }
 
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         target.addAttribute("type", "optiongroup");
         super.paintContent(target);

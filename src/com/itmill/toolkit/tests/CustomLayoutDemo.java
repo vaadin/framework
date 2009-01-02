@@ -46,6 +46,7 @@ public class CustomLayoutDemo extends com.itmill.toolkit.Application implements
     /**
      * Initialize Application. Demo components are added to main window.
      */
+    @Override
     public void init() {
         final Window mainWindow = new Window("CustomLayout demo");
         setMainWindow(mainWindow);

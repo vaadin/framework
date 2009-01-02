@@ -24,6 +24,7 @@ public class FeatureSelect extends Feature {
         super();
     }
 
+    @Override
     protected Component getDemoComponent() {
 
         final OrderedLayout l = new OrderedLayout();
@@ -50,6 +51,7 @@ public class FeatureSelect extends Feature {
         return l;
     }
 
+    @Override
     protected String getExampleSrc() {
         return "Select s = new Select(\"Select Car\");\n"
                 + "s.addItem(\"Audi\");\n" + "s.addItem(\"BMW\");\n"
@@ -60,6 +62,7 @@ public class FeatureSelect extends Feature {
     /**
      * @see com.itmill.toolkit.tests.featurebrowser.Feature#getDescriptionXHTML()
      */
+    @Override
     protected String getDescriptionXHTML() {
         return "The select component combines two different modes of item selection.  "
                 + "Firstly it presents the single selection mode, which is usually represented as "
@@ -74,10 +77,12 @@ public class FeatureSelect extends Feature {
                 + " presentation of the component.";
     }
 
+    @Override
     protected String getImage() {
         return "icon_demo.png";
     }
 
+    @Override
     protected String getTitle() {
         return "Select";
     }

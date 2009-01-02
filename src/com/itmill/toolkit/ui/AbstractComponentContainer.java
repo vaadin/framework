@@ -71,6 +71,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
      * 
      * @see com.itmill.toolkit.ui.Component#attach()
      */
+    @Override
     public void attach() {
         super.attach();
 
@@ -85,6 +86,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
      * 
      * @see com.itmill.toolkit.ui.Component#detach()
      */
+    @Override
     public void detach() {
         super.detach();
 
@@ -206,6 +208,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
         }
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         if (getParent() != null && !getParent().isEnabled()) {

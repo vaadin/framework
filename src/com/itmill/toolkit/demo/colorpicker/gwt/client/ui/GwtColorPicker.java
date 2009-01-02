@@ -40,11 +40,14 @@ public class GwtColorPicker extends Composite implements ClickListener {
 
                 // Set the button background colors.
                 DOM.setStyleAttribute(button.getElement(), "background",
-                                      colors[colornum]);
+                        colors[colornum]);
 
                 // For dark colors, the button label must be in white.
-                if ("black navy maroon blue purple".indexOf(colors[colornum]) != -1)
-                    DOM.setStyleAttribute(button.getElement(), "color", "white");
+                if ("black navy maroon blue purple".indexOf(colors[colornum]) != -1) {
+                    DOM
+                            .setStyleAttribute(button.getElement(), "color",
+                                    "white");
+                }
             }
         }
 
@@ -63,7 +66,7 @@ public class GwtColorPicker extends Composite implements ClickListener {
         // before the widget has been added to the horizontal panel.
         final Element panelcell = DOM.getParent(currentcolor.getElement());
         DOM.setElementProperty(panelcell, "className",
-                               "colorpicker-currentcolorbox");
+                "colorpicker-currentcolorbox");
 
         // Set initial color. This will be overridden with the value read from
         // server.
@@ -87,14 +90,15 @@ public class GwtColorPicker extends Composite implements ClickListener {
         // Obtain the DOM elements. This assumes that the <td> element
         // of the HorizontalPanel is the parent of the label element.
         final Element nameelement = currentcolor.getElement();
-        final Element cell        = DOM.getParent(nameelement);
+        final Element cell = DOM.getParent(nameelement);
 
         // Give feedback by changing the background color
-        DOM.setStyleAttribute(cell,        "background", newcolor);
+        DOM.setStyleAttribute(cell, "background", newcolor);
         DOM.setStyleAttribute(nameelement, "background", newcolor);
-        if ("black navy maroon blue purple".indexOf(newcolor) != -1)
+        if ("black navy maroon blue purple".indexOf(newcolor) != -1) {
             DOM.setStyleAttribute(nameelement, "color", "white");
-        else
+        } else {
             DOM.setStyleAttribute(nameelement, "color", "black");
+        }
     }
 }

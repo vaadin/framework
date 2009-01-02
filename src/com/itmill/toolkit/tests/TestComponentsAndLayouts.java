@@ -75,6 +75,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
     private final Action ACTION3 = new Action("Show history");
     private final Action[] actions = new Action[] { ACTION1, ACTION2, ACTION3 };
 
+    @Override
     public void init() {
         sampleDatabase = new SampleDatabase();
         createNewView();
@@ -95,7 +96,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
                                 + "All components are in immmediate mode. See source how to tweak this test."));
         main.addComponent(eventListenerFeedback);
 
-        ////////////////////////////////////////////////////////////////////////
+        // //////////////////////////////////////////////////////////////////////
         // ////
         if (false) {
             window = new Window("Components inside Window (TEST: Window)");
@@ -110,7 +111,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
             getMainWindow().addWindow(window);
         }
 
-        ////////////////////////////////////////////////////////////////////////
+        // //////////////////////////////////////////////////////////////////////
         // ////
         if (false) {
             target
@@ -123,7 +124,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
             target.addComponent(ol);
         }
 
-        ////////////////////////////////////////////////////////////////////////
+        // //////////////////////////////////////////////////////////////////////
         // ////
         if (false) {
             target
@@ -136,7 +137,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
             target.addComponent(ol2);
         }
 
-        ////////////////////////////////////////////////////////////////////////
+        // //////////////////////////////////////////////////////////////////////
         // ////
         if (false) {
             target.addComponent(new Label(
@@ -158,7 +159,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
             // test(expandLayout);
         }
 
-        ////////////////////////////////////////////////////////////////////////
+        // //////////////////////////////////////////////////////////////////////
         // ////
         if (true) {
             target.addComponent(new Label(
@@ -181,7 +182,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
             // test(expandLayout);
         }
 
-        ////////////////////////////////////////////////////////////////////////
+        // //////////////////////////////////////////////////////////////////////
         // ////
         if (false) {
             target.addComponent(new Label(
@@ -193,7 +194,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
             // test(gridLayout);
         }
 
-        ////////////////////////////////////////////////////////////////////////
+        // //////////////////////////////////////////////////////////////////////
         // ////
         if (false) {
             target
@@ -207,7 +208,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
             target.addComponent(el);
         }
 
-        ////////////////////////////////////////////////////////////////////////
+        // //////////////////////////////////////////////////////////////////////
         // ////
         if (false) {
             target.addComponent(new Label(
@@ -218,7 +219,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
             target.addComponent(panel);
         }
 
-        ////////////////////////////////////////////////////////////////////////
+        // //////////////////////////////////////////////////////////////////////
         // ////
         if (false) {
             target
@@ -239,7 +240,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
             target.addComponent(sp1l);
         }
 
-        ////////////////////////////////////////////////////////////////////////
+        // //////////////////////////////////////////////////////////////////////
         // ////
         if (false) {
             target

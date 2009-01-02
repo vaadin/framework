@@ -38,6 +38,7 @@ public class CalendarDemo extends com.itmill.toolkit.Application {
     /**
      * Initialize Application. Demo components are added to main window.
      */
+    @Override
     public void init() {
         final Window main = new Window("Calendar demo");
         setMainWindow(main);

@@ -29,6 +29,7 @@ public class FeatureForm extends Feature implements
 
     Select resetLayout = new Select("Restart");
 
+    @Override
     protected Component getDemoComponent() {
 
         if (demo == null) {
@@ -146,6 +147,7 @@ public class FeatureForm extends Feature implements
         }
     }
 
+    @Override
     protected String getDescriptionXHTML() {
         return "Form is a flexible, yet simple container for fields. "
                 + " It provides support for any layouts and provides buffering interface for"
@@ -167,10 +169,12 @@ public class FeatureForm extends Feature implements
                 + " all the Property-panels in demos are composed of Form-components.";
     }
 
+    @Override
     protected String getTitle() {
         return "Form";
     }
 
+    @Override
     protected String getImage() {
         return "icon_demo.png";
     }

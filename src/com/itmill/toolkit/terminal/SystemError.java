@@ -103,6 +103,7 @@ public class SystemError extends RuntimeException implements ErrorMessage {
      * @return the cause.
      * @see java.lang.Throwable#getCause()
      */
+    @Override
     public Throwable getCause() {
         return cause;
     }

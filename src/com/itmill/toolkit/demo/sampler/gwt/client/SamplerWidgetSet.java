@@ -9,6 +9,7 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class SamplerWidgetSet extends DefaultWidgetSet {
 
+    @Override
     public Paintable createWidget(UIDL uidl) {
         final Class classType = resolveWidgetType(uidl);
         if (IGoogleAnalytics.class == classType) {
@@ -22,6 +23,7 @@ public class SamplerWidgetSet extends DefaultWidgetSet {
         }
     }
 
+    @Override
     protected Class resolveWidgetType(UIDL uidl) {
         final String tag = uidl.getTag();
         if ("googleanalytics".equals(tag)) {

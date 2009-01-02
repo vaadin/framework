@@ -79,6 +79,7 @@ public class ListSelect extends AbstractSelect {
         }
     }
 
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         target.addAttribute("type", "list");
         // Adds the number of columns

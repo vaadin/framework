@@ -42,6 +42,7 @@ public class SimpleReserver extends Application {
 
     protected User user;
 
+    @Override
     public void init() {
         final Window w = new Window("Simple Reserver");
         w.addStyleName("simplereserver");
@@ -110,6 +111,7 @@ public class SimpleReserver extends Application {
         return db;
     }
 
+    @Override
     public Object getUser() {
         if (getContext() instanceof PortletApplicationContext) {
             try {

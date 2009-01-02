@@ -23,6 +23,7 @@ public class Ticket2240 extends Application {
             + " (and state) between several browser windows (the latter is most useful"
             + " for read-only views).</p><br/><p>This is the end.</p>";
 
+    @Override
     public void init() {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);

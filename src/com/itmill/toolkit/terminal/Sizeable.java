@@ -110,6 +110,7 @@ public interface Sizeable {
      *             separately (and components might have different default
      *             unit).
      */
+    @Deprecated
     public void setWidth(float width);
 
     /**
@@ -132,6 +133,7 @@ public interface Sizeable {
      *             but is error-prone since the unit must be set separately (and
      *             components might have different default unit).
      */
+    @Deprecated
     public void setHeight(float height);
 
     /**
@@ -150,6 +152,7 @@ public interface Sizeable {
      *             {@link #setWidth(String)} or {@link #setWidth(float, int)},
      *             which is less error-prone.
      */
+    @Deprecated
     public void setWidthUnits(int units);
 
     /**
@@ -168,6 +171,7 @@ public interface Sizeable {
      *             {@link #setHeight(String)} or {@link #setHeight(float, int)},
      *             which is less error-prone.
      */
+    @Deprecated
     public void setHeightUnits(int units);
 
     /**

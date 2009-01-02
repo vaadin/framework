@@ -12,6 +12,7 @@ public class Ticket1869 extends com.itmill.toolkit.Application {
 
     LinkedList listOfAllFields = new LinkedList();
 
+    @Override
     public void init() {
 
         GridLayout lo = new GridLayout(2, 1);

@@ -6,6 +6,7 @@ import com.itmill.toolkit.ui.Window;
 
 public class Ticket1663 extends com.itmill.toolkit.Application {
 
+    @Override
     public void init() {
 
         Window main = new Window("#1663");

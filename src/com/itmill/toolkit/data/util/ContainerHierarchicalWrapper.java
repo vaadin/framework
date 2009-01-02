@@ -440,8 +440,9 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
     public Item addItem(Object itemId) throws UnsupportedOperationException {
 
         // Null ids are not accepted
-        if (itemId == null)
+        if (itemId == null) {
             throw new NullPointerException("Container item id can not be null");
+        }
 
         final Item item = container.addItem(itemId);
         if (!hierarchical && item != null) {
@@ -672,10 +673,12 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
 
         }
 
+        @Override
         public boolean equals(Object obj) {
             return obj == listener || (obj != null && obj.equals(listener));
         }
 
+        @Override
         public int hashCode() {
             return listener.hashCode();
         }

@@ -30,6 +30,7 @@ public class FeatureItems extends Feature {
         super();
     }
 
+    @Override
     protected Component getDemoComponent() {
 
         final OrderedLayout l = new OrderedLayout();
@@ -60,6 +61,7 @@ public class FeatureItems extends Feature {
         return l;
     }
 
+    @Override
     protected String getExampleSrc() {
         return null;
     }
@@ -67,14 +69,17 @@ public class FeatureItems extends Feature {
     /**
      * @see com.itmill.toolkit.tests.featurebrowser.Feature#getDescriptionXHTML()
      */
+    @Override
     protected String getDescriptionXHTML() {
         return null;
     }
 
+    @Override
     protected String getImage() {
         return "icon_demo.png";
     }
 
+    @Override
     protected String getTitle() {
         return "Introduction of Data Model Item";
     }

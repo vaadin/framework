@@ -28,14 +28,14 @@ public class Ticket1506_TestContainer implements Container {
                 String.class));
         item1.addItemProperty(PROPERTY_2_ID, new ObjectProperty("name 1",
                 String.class));
-        this.items.put(ITEM_1_ID, item1);
+        items.put(ITEM_1_ID, item1);
 
         final PropertysetItem item2 = new PropertysetItem();
         item2.addItemProperty(PROPERTY_1_ID, new ObjectProperty("value 2",
                 String.class));
         item2.addItemProperty(PROPERTY_2_ID, new ObjectProperty("name 2",
                 String.class));
-        this.items.put(ITEM_2_ID, item2);
+        items.put(ITEM_2_ID, item2);
     }
 
     public Item getItem(Object itemId) {

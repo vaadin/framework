@@ -13,9 +13,10 @@ import com.itmill.toolkit.data.Property;
 /**
  * Default implementation of the the following Field types are used by default:
  * <p>
- * <b>Boolean</b>: Button(switchMode:true).<br/> <b>Date</b>:
- * DateField(resolution: day).<br/> <b>Item</b>: Form. <br/> <b>default field
- * type</b>: TextField.
+ * <b>Boolean</b>: Button(switchMode:true).<br/>
+ * <b>Date</b>: DateField(resolution: day).<br/>
+ * <b>Item</b>: Form. <br/>
+ * <b>default field type</b>: TextField.
  * <p>
  * 
  * @author IT Mill Ltd.

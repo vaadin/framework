@@ -8,6 +8,7 @@ import com.itmill.toolkit.ui.Window;
 
 public class FeaturesApplication extends com.itmill.toolkit.Application {
 
+    @Override
     public void init() {
         if (getProperty("statistics") != null) {
             FeatureUtil.setStatistics(true);
@@ -22,6 +23,7 @@ public class FeaturesApplication extends com.itmill.toolkit.Application {
     /**
      * ErrorEvents are printed to default error stream and not in GUI.
      */
+    @Override
     public void terminalError(
             com.itmill.toolkit.terminal.Terminal.ErrorEvent event) {
         final Throwable e = event.getThrowable();

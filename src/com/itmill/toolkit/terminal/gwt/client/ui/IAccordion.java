@@ -55,6 +55,7 @@ public class IAccordion extends ITabsheetBase implements
         }
     }
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         rendering = true;
         selectedUIDLItemIndex = -1;
@@ -89,6 +90,7 @@ public class IAccordion extends ITabsheetBase implements
         rendering = false;
     }
 
+    @Override
     protected void renderTab(UIDL tabUidl, int index, boolean selected,
             boolean hidden) {
         StackItem item;
@@ -153,6 +155,7 @@ public class IAccordion extends ITabsheetBase implements
 
     }
 
+    @Override
     protected void selectTab(final int index, final UIDL contentUidl) {
         StackItem item = stack.get(index);
         if (index != activeTabIndex) {
@@ -176,6 +179,7 @@ public class IAccordion extends ITabsheetBase implements
         }
     }
 
+    @Override
     public void setWidth(String width) {
         if (this.width.equals(width)) {
             return;
@@ -199,6 +203,7 @@ public class IAccordion extends ITabsheetBase implements
         }
     }
 
+    @Override
     public void setHeight(String height) {
         super.setHeight(height);
         this.height = height;
@@ -303,6 +308,7 @@ public class IAccordion extends ITabsheetBase implements
             }
         }
 
+        @Override
         public void setVisible(boolean visible) {
             super.setVisible(visible);
         }
@@ -377,6 +383,7 @@ public class IAccordion extends ITabsheetBase implements
             updateCaption(tabUidl);
         }
 
+        @Override
         public void onBrowserEvent(Event event) {
             onSelectTab(this);
         }
@@ -471,6 +478,7 @@ public class IAccordion extends ITabsheetBase implements
 
     }
 
+    @Override
     protected void clearPaintables() {
         stack.clear();
         clear();
@@ -484,6 +492,7 @@ public class IAccordion extends ITabsheetBase implements
         return width == null || width.equals("");
     }
 
+    @Override
     protected Iterator getPaintableIterator() {
         return paintables.iterator();
     }

@@ -11,6 +11,7 @@ import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class ReservationWidgetSet extends DefaultWidgetSet {
+    @Override
     public Paintable createWidget(UIDL uidl) {
         final Class type = resolveWidgetType(uidl);
         if (IGoogleMap.class == type) {
@@ -22,6 +23,7 @@ public class ReservationWidgetSet extends DefaultWidgetSet {
         return super.createWidget(uidl);
     }
 
+    @Override
     protected Class resolveWidgetType(UIDL uidl) {
         final String tag = uidl.getTag();
         if ("googlemap".equals(tag)) {

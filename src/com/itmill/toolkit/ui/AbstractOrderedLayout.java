@@ -43,6 +43,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * 
      * @return the Component UIDL tag as string.
      */
+    @Override
     public String getTag() {
         return "orderedlayout";
     }
@@ -54,6 +55,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * @param c
      *            the component to be added.
      */
+    @Override
     public void addComponent(Component c) {
         super.addComponent(c);
         components.add(c);
@@ -94,6 +96,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * @param c
      *            the component to be removed.
      */
+    @Override
     public void removeComponent(Component c) {
         super.removeComponent(c);
         components.remove(c);
@@ -120,6 +123,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * @throws PaintException
      *             if the paint operation failed.
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
 

@@ -56,6 +56,7 @@ public class ICalendarField extends IDateField {
         });
     }
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         super.updateFromUIDL(uidl, client);
         // We want to draw our own hour list

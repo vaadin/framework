@@ -15,6 +15,7 @@ public class FeatureTextField extends Feature {
         super();
     }
 
+    @Override
     protected Component getDemoComponent() {
 
         final OrderedLayout l = new OrderedLayout(
@@ -36,6 +37,7 @@ public class FeatureTextField extends Feature {
         return l;
     }
 
+    @Override
     protected String getExampleSrc() {
         return "TextField tf = new TextField(\"Caption\");\n"
                 + "tf.setValue(\"Contents\");";
@@ -44,6 +46,7 @@ public class FeatureTextField extends Feature {
     /**
      * @see com.itmill.toolkit.tests.featurebrowser.Feature#getDescriptionXHTML()
      */
+    @Override
     protected String getDescriptionXHTML() {
         return "TextField combines the logic of both the single line text-entry field and the multi-line "
                 + "text-area into one component. "
@@ -57,10 +60,12 @@ public class FeatureTextField extends Feature {
                 + "presentation of the component.";
     }
 
+    @Override
     protected String getImage() {
         return "icon_demo.png";
     }
 
+    @Override
     protected String getTitle() {
         return "TextField";
     }

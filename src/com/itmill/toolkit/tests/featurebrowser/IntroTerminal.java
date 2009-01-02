@@ -14,6 +14,7 @@ public class IntroTerminal extends Feature {
         super();
     }
 
+    @Override
     protected Component getDemoComponent() {
 
         final OrderedLayout l = new OrderedLayout();
@@ -28,6 +29,7 @@ public class IntroTerminal extends Feature {
         return l;
     }
 
+    @Override
     protected String getExampleSrc() {
         return null;
     }
@@ -35,14 +37,17 @@ public class IntroTerminal extends Feature {
     /**
      * @see com.itmill.toolkit.tests.featurebrowser.Feature#getDescriptionXHTML()
      */
+    @Override
     protected String getDescriptionXHTML() {
         return "";
     }
 
+    @Override
     protected String getImage() {
         return null;
     }
 
+    @Override
     protected String getTitle() {
         return "Introduction for terminals (TODO)";
     }

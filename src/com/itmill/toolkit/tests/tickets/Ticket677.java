@@ -38,6 +38,7 @@ public class Ticket677 extends Application {
     Form form;
     Table table;
 
+    @Override
     public void init() {
         Window main = new Window();
         setMainWindow(main);
@@ -110,6 +111,7 @@ public class Ticket677 extends Application {
         form.setCaption("Enabled");
         form.setFieldFactory(new BaseFieldFactory() {
 
+            @Override
             public Field createField(Item item, Object propertyId,
                     Component uiContext) {
                 Field f = super.createField(item, propertyId, uiContext);
@@ -132,6 +134,7 @@ public class Ticket677 extends Application {
 
         table.setFieldFactory(new BaseFieldFactory() {
 
+            @Override
             public Field createField(Container container, Object itemId,
                     Object propertyId, Component uiContext) {
                 Field f = super.createField(container, itemId, propertyId,

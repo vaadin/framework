@@ -71,6 +71,7 @@ public class TabSheet extends AbstractComponentContainer implements
      * @param c
      *            the component to be removed.
      */
+    @Override
     public void removeComponent(Component c) {
         if (c != null && tabs.contains(c)) {
             super.removeComponent(c);
@@ -95,6 +96,7 @@ public class TabSheet extends AbstractComponentContainer implements
      * @param c
      *            the component to be added.
      */
+    @Override
     public void addComponent(Component c) {
         addTab(c);
     }
@@ -147,6 +149,7 @@ public class TabSheet extends AbstractComponentContainer implements
      * 
      * @return the Component UIDL tag as string.
      */
+    @Override
     public String getTag() {
         return "tabsheet";
     }
@@ -158,6 +161,7 @@ public class TabSheet extends AbstractComponentContainer implements
      * @param source
      *            the container components are removed from.
      */
+    @Override
     public void moveComponentsFrom(ComponentContainer source) {
         for (final Iterator i = source.getComponentIterator(); i.hasNext();) {
             final Component c = (Component) i.next();
@@ -181,6 +185,7 @@ public class TabSheet extends AbstractComponentContainer implements
      * @throws PaintException
      *             if the paint operation failed.
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
 
         if (areTabsHidden()) {
@@ -343,6 +348,7 @@ public class TabSheet extends AbstractComponentContainer implements
      * @see com.itmill.toolkit.ui.AbstractComponent#changeVariables(java.lang.Object,
      *      java.util.Map)
      */
+    @Override
     public void changeVariables(Object source, Map variables) {
         if (variables.containsKey("selected")) {
             setSelectedTab((Component) keyMapper.get((String) variables
@@ -523,6 +529,7 @@ public class TabSheet extends AbstractComponentContainer implements
         }
     }
 
+    @Override
     public void detach() {
         super.detach();
         paintedTabs.clear();

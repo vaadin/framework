@@ -31,6 +31,7 @@ public class TreeAction extends Action {
      * 
      * Actions are always sent immediatedly to server.
      */
+    @Override
     public void execute() {
         owner.getClient().updateVariable(owner.getPaintableId(), "action",
                 targetKey + "," + actionKey, true);

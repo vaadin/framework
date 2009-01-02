@@ -68,10 +68,11 @@ public class Log {
             String clazz = st[3].getClassName() + ".java";
             key = "(" + clazz + ":" + line + ")" + " " + methodName;
             Integer value = (Integer) classMethodCallCounter.get(key);
-            if (value == null)
+            if (value == null) {
                 value = new Integer(1);
-            else
+            } else {
                 value = new Integer(value.intValue() + 1);
+            }
             classMethodCallCounter.put(key, value);
             return value.intValue() + ": " + key;
         } catch (Exception e) {
@@ -93,10 +94,11 @@ public class Log {
     public void add(int type, String message) {
         String source = getSource();
         if (type >= debug) {
-            if (showClassInformation)
+            if (showClassInformation) {
                 System.out.println(source + ": " + message);
-            else
+            } else {
                 System.out.println(message);
+            }
         }
     }
 

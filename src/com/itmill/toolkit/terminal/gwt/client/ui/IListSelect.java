@@ -35,6 +35,7 @@ public class IListSelect extends IOptionGroupBase {
         select.setVisibleItemCount(VISIBLE_COUNT);
     }
 
+    @Override
     protected void buildOptions(UIDL uidl) {
         select.setClient(client);
         select.setMultipleSelect(isMultiselect());
@@ -58,6 +59,7 @@ public class IListSelect extends IOptionGroupBase {
         }
     }
 
+    @Override
     protected Object[] getSelectedItems() {
         final Vector selectedItemKeys = new Vector();
         for (int i = 0; i < select.getItemCount(); i++) {
@@ -68,6 +70,7 @@ public class IListSelect extends IOptionGroupBase {
         return selectedItemKeys.toArray();
     }
 
+    @Override
     public void onChange(Widget sender) {
         final int si = select.getSelectedIndex();
         if (si == -1 && !isNullSelectionAllowed()) {
@@ -84,16 +87,19 @@ public class IListSelect extends IOptionGroupBase {
         }
     }
 
+    @Override
     public void setHeight(String height) {
         select.setHeight(height);
         super.setHeight(height);
     }
 
+    @Override
     public void setWidth(String width) {
         select.setWidth(width);
         super.setWidth(width);
     }
 
+    @Override
     protected void setTabIndex(int tabIndex) {
         ((TooltipListBox) optionsContainer).setTabIndex(tabIndex);
     }
@@ -125,6 +131,7 @@ class TooltipListBox extends ListBox {
         pntbl = s;
     }
 
+    @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         if (client != null) {

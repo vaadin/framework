@@ -26,6 +26,7 @@ public class SelectExample extends CustomComponent implements
             planetName = name;
         }
 
+        @Override
         public String toString() {
             return "The Planet " + planetName;
         }

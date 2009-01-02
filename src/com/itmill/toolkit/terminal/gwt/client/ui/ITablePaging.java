@@ -316,6 +316,7 @@ public class ITablePaging extends Composite implements Table, Paintable,
             setWidget(new Label(textContent));
         }
 
+        @Override
         public void onBrowserEvent(Event event) {
             System.out.println("CEll event: " + event.toString());
             switch (DOM.eventGetType(event)) {

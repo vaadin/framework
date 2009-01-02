@@ -14,6 +14,7 @@ public class Ticket1924ThemeChanging extends com.itmill.toolkit.Application {
     @SuppressWarnings("unused")
     private Panel p;
 
+    @Override
     public void init() {
         final Window main = new Window(getClass().getName().substring(
                 getClass().getName().lastIndexOf(".") + 1));

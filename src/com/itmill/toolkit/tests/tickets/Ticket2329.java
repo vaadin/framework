@@ -12,6 +12,7 @@ public class Ticket2329 extends Application {
     private Table table;
     private VerticalLayout mainLo;
 
+    @Override
     public void init() {
         Window mainw = new Window();
         setMainWindow(mainw);

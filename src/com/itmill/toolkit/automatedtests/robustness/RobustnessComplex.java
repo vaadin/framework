@@ -14,13 +14,15 @@ public class RobustnessComplex extends Robustness implements
     /**
      * Create complex layouts with components and listeners.
      */
+    @Override
     public void create() {
         count++;
 
         // remove old stressLayout, all dependant components should be now
         // allowed for garbage collection.
-        if (stressLayout != null)
+        if (stressLayout != null) {
             main.removeComponent(stressLayout);
+        }
 
         // create new stress layout
         stressLayout = randomComponents

@@ -17,6 +17,7 @@ public class Ticket2289 extends Application {
     TabSheet ts = null;
     Accordion acc = null;
 
+    @Override
     public void init() {
 
         Window w = new Window();

@@ -22,6 +22,7 @@ public class IntroDataHandling extends Feature {
         super();
     }
 
+    @Override
     protected Component getDemoComponent() {
 
         final OrderedLayout l = new OrderedLayout();
@@ -50,6 +51,7 @@ public class IntroDataHandling extends Feature {
         return l;
     }
 
+    @Override
     protected String getExampleSrc() {
         return null;
     }
@@ -57,15 +59,18 @@ public class IntroDataHandling extends Feature {
     /**
      * @see com.itmill.toolkit.tests.featurebrowser.Feature#getDescriptionXHTML()
      */
+    @Override
     protected String getDescriptionXHTML() {
         return "Please select <em>Embedded Objects</em> or <em>Upload</em>"
                 + " from the menu for more information.";
     }
 
+    @Override
     protected String getImage() {
         return null;
     }
 
+    @Override
     protected String getTitle() {
         return null;
     }

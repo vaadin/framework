@@ -127,6 +127,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * Paints the field. Don't add a JavaDoc comment here, we use the default
      * documentation from the implemented interface.
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
 
         // The tab ordering number
@@ -161,6 +162,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * The abstract field is read only also if the data source is in read only
      * mode.
      */
+    @Override
     public boolean isReadOnly() {
         return super.isReadOnly()
                 || (dataSource != null && dataSource.isReadOnly());
@@ -171,6 +173,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * 
      * @see com.itmill.toolkit.ui.Component#setReadOnly(boolean)
      */
+    @Override
     public void setReadOnly(boolean readOnly) {
         super.setReadOnly(readOnly);
         fireReadOnlyStatusChange();
@@ -352,6 +355,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * 
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
         final Object value = getValue();
         if (value == null) {
@@ -756,6 +760,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * 
      * @see com.itmill.toolkit.ui.AbstractComponent#getErrorMessage()
      */
+    @Override
     public ErrorMessage getErrorMessage() {
 
         // Check validation errors only if automatic validation is enabled.
@@ -931,6 +936,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         }
     }
 
+    @Override
     public void changeVariables(Object source, Map variables) {
         super.changeVariables(source, variables);
 
@@ -1024,6 +1030,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * 
      * @see com.itmill.toolkit.ui.Component#attach()
      */
+    @Override
     public void attach() {
         super.attach();
         if (delayedFocus) {

@@ -14,6 +14,7 @@ public class Ticket124 extends Application {
     private TextField tf;
     private GridLayout gl;
 
+    @Override
     public void init() {
         Window w = new Window("#124: Insert & remove row for GridLayout");
         setMainWindow(w);

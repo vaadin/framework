@@ -249,6 +249,7 @@ public class DefaultWidgetSet implements WidgetSet {
      * 
      * @deprecated use resolveWidgetType instead
      */
+    @Deprecated
     protected String resolveWidgetTypeName(UIDL uidl) {
         Class type = resolveWidgetType(uidl);
         return type.getName();

@@ -18,11 +18,13 @@ public class ColorPicker extends AbstractField {
     }
 
     /** The property value of the field is an Integer. */
+    @Override
     public Class getType() {
         return String.class;
     }
 
     /** Tag is the UIDL element name for client-server communications. */
+    @Override
     public String getTag() {
         return "colorpicker";
     }
@@ -41,6 +43,7 @@ public class ColorPicker extends AbstractField {
     }
 
     /** Paint (serialize) the component for the client. */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         // Superclass writes any common attributes in the paint target.
         super.paintContent(target);
@@ -51,6 +54,7 @@ public class ColorPicker extends AbstractField {
     }
 
     /** Deserialize changes received from client. */
+    @Override
     public void changeVariables(Object source, Map variables) {
         // Sets the currently selected color
         if (variables.containsKey("colorname") && !isReadOnly()) {

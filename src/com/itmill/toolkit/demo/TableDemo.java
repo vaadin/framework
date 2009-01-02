@@ -69,6 +69,7 @@ public class TableDemo extends com.itmill.toolkit.Application implements
     /**
      * Initialize Application. Demo components are added to main window.
      */
+    @Override
     public void init() {
         final Window main = new Window("Table demo");
         setMainWindow(main);

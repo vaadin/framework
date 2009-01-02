@@ -347,6 +347,7 @@ public class IFormLayout extends SimplePanel implements Container {
             return owner;
         }
 
+        @Override
         public void onBrowserEvent(Event event) {
             super.onBrowserEvent(event);
             if (client != null) {
@@ -383,6 +384,7 @@ public class IFormLayout extends SimplePanel implements Container {
             }
         }
 
+        @Override
         public void onBrowserEvent(Event event) {
             super.onBrowserEvent(event);
             if (owner != null) {

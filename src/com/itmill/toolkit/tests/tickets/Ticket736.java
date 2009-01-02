@@ -18,6 +18,7 @@ public class Ticket736 extends Application {
 
     Address address = new Address();
 
+    @Override
     public void init() {
 
         final Window mainWin = new Window("Test app for #736");
@@ -139,6 +140,7 @@ public class Ticket736 extends Application {
             this.country = country;
         }
 
+        @Override
         public String toString() {
             return name + "; " + street + "; " + city + " " + zip
                     + (state != null ? " " + state : "") + " " + country;

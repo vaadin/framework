@@ -14,6 +14,7 @@ public class Ticket1365 extends com.itmill.toolkit.Application implements
 
     Label status = new Label("ENTER and CTRL-S fires shortcut action.");
 
+    @Override
     public void init() {
         final Window main = new Window(getClass().getName().substring(
                 getClass().getName().lastIndexOf(".") + 1));

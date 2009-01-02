@@ -117,6 +117,7 @@ public class IUpload extends FormPanel implements Paintable, ClickListener,
          * changes from UploadStarted event. Will be cleared on complete.
          */
         t = new Timer() {
+            @Override
             public void run() {
                 client.sendPendingVariableChanges();
             }

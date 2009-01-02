@@ -211,7 +211,7 @@ public class GridLayout extends AbstractLayout implements
                 // move one row down, or one row under the area
                 cursorY = (column1 == 0 ? row2 : row1) + 1;
             } else {
-            	cursorY = row1;
+                cursorY = row1;
             }
         }
 

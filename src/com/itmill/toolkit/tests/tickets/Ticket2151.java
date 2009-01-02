@@ -12,6 +12,7 @@ public class Ticket2151 extends Application {
 
     private Label status;
 
+    @Override
     public void init() {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);

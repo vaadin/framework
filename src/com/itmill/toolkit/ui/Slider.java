@@ -81,6 +81,7 @@ public class Slider extends AbstractField {
      * 
      * @deprecated
      */
+    @Deprecated
     private int size = -1;
 
     /**
@@ -326,6 +327,7 @@ public class Slider extends AbstractField {
      * @return size in pixels or -1 for auto sizing.
      * @deprecated use standard getWidth/getHeight instead
      */
+    @Deprecated
     public int getSize() {
         return size;
     }
@@ -337,6 +339,7 @@ public class Slider extends AbstractField {
      *            in pixels, or -1 auto sizing.
      * @deprecated use standard setWidth/setHeight instead
      */
+    @Deprecated
     public void setSize(int size) {
         this.size = size;
         switch (orientation) {
@@ -395,10 +398,12 @@ public class Slider extends AbstractField {
         * public boolean isArrowsVisible() { return arrows; }
         */
 
+    @Override
     public String getTag() {
         return "slider";
     }
 
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
 
@@ -444,6 +449,7 @@ public class Slider extends AbstractField {
      * @param source
      * @param variables
      */
+    @Override
     public void changeVariables(Object source, Map variables) {
         super.changeVariables(source, variables);
         if (variables.containsKey("value")) {
@@ -499,6 +505,7 @@ public class Slider extends AbstractField {
 
     }
 
+    @Override
     public Class getType() {
         return Double.class;
     }

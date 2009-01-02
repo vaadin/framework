@@ -21,6 +21,7 @@ public class GoogleAnalytics extends AbstractComponent {
         this.domainName = domainName;
     }
 
+    @Override
     public String getTag() {
         return TAG;
     }
@@ -38,6 +39,7 @@ public class GoogleAnalytics extends AbstractComponent {
         requestRepaint();
     }
 
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
         target.addAttribute("trackerid", trackerId);

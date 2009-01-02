@@ -28,6 +28,7 @@ public class FeatureDateField extends Feature {
         super();
     }
 
+    @Override
     protected Component getDemoComponent() {
 
         final OrderedLayout l = new OrderedLayout();
@@ -70,11 +71,13 @@ public class FeatureDateField extends Feature {
         return l;
     }
 
+    @Override
     protected String getExampleSrc() {
         return "DateField df = new DateField(\"Caption\");\n"
                 + "df.setValue(new java.util.Date());\n";
     }
 
+    @Override
     protected String getDescriptionXHTML() {
         return "Representing Dates and times and providing a way to select "
                 + "or enter some specific date and/or time is an typical need in "
@@ -89,10 +92,12 @@ public class FeatureDateField extends Feature {
                 + "presentation of the component.";
     }
 
+    @Override
     protected String getImage() {
         return "icon_demo.png";
     }
 
+    @Override
     protected String getTitle() {
         return "DateField";
     }

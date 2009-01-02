@@ -7,7 +7,7 @@ import com.itmill.toolkit.ui.Window;
 
 public class NotificationError extends Feature {
 
-    
+    @Override
     public String getDescription() {
         return "Notifications are lightweight informational messages,"
                 + " used to inform the user of various events. The"
@@ -22,20 +22,20 @@ public class NotificationError extends Feature {
                 + " can proceed to correct the situation.";
     }
 
-    
+    @Override
     public APIResource[] getRelatedAPI() {
         return new APIResource[] { new APIResource(Window.class),
                 new APIResource(Window.Notification.class) };
     }
 
-    
+    @Override
     public Class[] getRelatedFeatures() {
         return new Class[] { NotificationHumanized.class,
                 NotificationTray.class, NotificationWarning.class,
                 NotificationCustom.class };
     }
 
-    
+    @Override
     public NamedExternalResource[] getRelatedResources() {
         return null;
     }

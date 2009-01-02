@@ -11,6 +11,7 @@ public class Ticket2406 extends Application {
 
     private Window w;
 
+    @Override
     public void init() {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);
@@ -39,7 +40,7 @@ public class Ticket2406 extends Application {
         l.addComponent(b);
 
         for (int i = 0; i < 5; i++) {
-            b = new Button("Button number "+(i+2));
+            b = new Button("Button number " + (i + 2));
             b.setSizeFull();
             l.addComponent(b);
         }
