@@ -15,7 +15,6 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
-import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 
 public class INotification extends IToolkitOverlay {
@@ -263,7 +262,6 @@ public class INotification extends IToolkitOverlay {
             break;
         default:
             if (type != Event.ONMOUSEUP && type != Event.ONKEYUP) {
-                ApplicationConnection.getConsole().log(event.getType());
                 startDelay();
             }
         }
