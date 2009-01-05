@@ -2493,17 +2493,17 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Removes a generated column previously added with addGeneratedColumn.
      * 
-     * @param colunmId
+     * @param columnId
      *            id of the generated column to remove
      * @return true if the column could be removed (existed in the Table)
      */
-    public boolean removeGeneratedColumn(Object colunmId) {
-        if (columnGenerators.containsKey(colunmId)) {
-            columnGenerators.remove(colunmId);
+    public boolean removeGeneratedColumn(Object columnId) {
+        if (columnGenerators.containsKey(columnId)) {
+            columnGenerators.remove(columnId);
             // remove column from visibleColumns list unless it exists in
             // container (generator previously overrode this column)
-            if (!items.getContainerPropertyIds().contains(colunmId)) {
-                visibleColumns.remove(colunmId);
+            if (!items.getContainerPropertyIds().contains(columnId)) {
+                visibleColumns.remove(columnId);
             }
             resetPageBuffer();
             refreshRenderedCells();
