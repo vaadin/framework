@@ -20,6 +20,11 @@ import com.itmill.toolkit.demo.sampler.features.notifications.NotificationError;
 import com.itmill.toolkit.demo.sampler.features.notifications.NotificationHumanized;
 import com.itmill.toolkit.demo.sampler.features.notifications.NotificationTray;
 import com.itmill.toolkit.demo.sampler.features.notifications.NotificationWarning;
+import com.itmill.toolkit.demo.sampler.features.selects.ComboBoxPlain;
+import com.itmill.toolkit.demo.sampler.features.selects.ListSelectMultiple;
+import com.itmill.toolkit.demo.sampler.features.selects.ListSelectSingle;
+import com.itmill.toolkit.demo.sampler.features.selects.NativeSelection;
+import com.itmill.toolkit.demo.sampler.features.selects.TwinColumnSelect;
 
 /**
  * Contains the FeatureSet implementation and the structure for the feature
@@ -61,6 +66,7 @@ public class FeatureSet extends Feature {
                     new Buttons(), //
                     new Links(), //
                     new Notifications(), //
+                    new Selects(), //
             });
         }
     }
@@ -111,6 +117,20 @@ public class FeatureSet extends Feature {
             //
                     new Tooltips(), // tooltips
                     new Icons(), // icons
+            });
+        }
+    }
+
+    public static class Selects extends FeatureSet {
+        public Selects() {
+            super("Selects", new Feature[] {
+            //
+                    new ListSelectSingle(), //  
+                    new ListSelectMultiple(), //
+                    new TwinColumnSelect(), //
+                    new NativeSelection(), //
+                    new ComboBoxPlain(), //
+
             });
         }
     }
