@@ -27,14 +27,4 @@ public class CodeLabel extends Label {
         }
     }
 
-    public String toString() {
-        // escape, seems to choke otherwise
-        String val = super.toString();
-        if (null != val) {
-            return val.replaceAll("<", "&lt;");
-        } else {
-            return null;
-        }
-    }
-
 }
