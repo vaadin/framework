@@ -271,7 +271,8 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                         Cell[] column = cells[i];
                         for (int j = 0; j < column.length; j++) {
                             Cell c = column[j];
-                            if (c != null && c.widthCanAffectHeight()) {
+                            if (c != null && c.cc != null
+                                    && c.widthCanAffectHeight()) {
                                 c.cc.setContainerSize(c.getAvailableWidth(), c
                                         .getAvailableHeight());
                                 client.handleComponentRelativeSize(c.cc
@@ -768,6 +769,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                 for (int j = 0; j < cells[i].length; j++) {
                     Cell cell = cells[i][j];
                     if (cell != null
+                            && cell.cc != null
                             && (cell.hasRelativeHeight() || cell
                                     .hasRelativeWidth())) {
                         client.handleComponentRelativeSize(cell.cc.getWidget());
