@@ -273,7 +273,13 @@ public class ApplicationConnection {
         return console;
     }
 
-    private native static boolean isDebugMode()
+    /**
+     * Checks if client side is in debug mode. Practically this is invoked by
+     * adding ?debug parameter to URI.
+     * 
+     * @return true if client side is currently been debugged
+     */
+    public native static boolean isDebugMode()
     /*-{
         if($wnd.itmill.debug) {
             var parameters = $wnd.location.search;
