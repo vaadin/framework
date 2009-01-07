@@ -12,6 +12,9 @@ import com.itmill.toolkit.demo.sampler.features.buttons.ButtonPush;
 import com.itmill.toolkit.demo.sampler.features.buttons.ButtonSwitch;
 import com.itmill.toolkit.demo.sampler.features.commons.Icons;
 import com.itmill.toolkit.demo.sampler.features.commons.Tooltips;
+import com.itmill.toolkit.demo.sampler.features.layouts.HorizontalLayoutBasic;
+import com.itmill.toolkit.demo.sampler.features.layouts.LayoutSpacing;
+import com.itmill.toolkit.demo.sampler.features.layouts.VerticalLayoutBasic;
 import com.itmill.toolkit.demo.sampler.features.link.LinkCurrentWindow;
 import com.itmill.toolkit.demo.sampler.features.link.LinkNoDecorations;
 import com.itmill.toolkit.demo.sampler.features.link.LinkSizedWindow;
@@ -67,6 +70,7 @@ public class FeatureSet extends Feature {
                     new Links(), //
                     new Notifications(), //
                     new Selects(), //
+                    new Layouts(), //
             });
         }
     }
@@ -124,13 +128,23 @@ public class FeatureSet extends Feature {
     public static class Selects extends FeatureSet {
         public Selects() {
             super("Selects", new Feature[] {
-            //
+                    //
                     new ListSelectSingle(), //  
                     new ListSelectMultiple(), //
                     new TwinColumnSelect(), //
                     new NativeSelection(), //
                     new ComboBoxPlain(), //
 
+            }); 
+        }   
+    }
+
+    public static class Layouts extends FeatureSet {
+        public Layouts() {
+            super("Layouts", new Feature[] {
+                    new VerticalLayoutBasic(), //
+                    new HorizontalLayoutBasic(), //
+                    new LayoutSpacing(), //
             });
         }
     }
