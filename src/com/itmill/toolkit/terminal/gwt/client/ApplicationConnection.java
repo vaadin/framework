@@ -1204,8 +1204,6 @@ public class ApplicationConnection {
      * @return true if the child has a relative size
      */
     public boolean handleComponentRelativeSize(Widget child) {
-        final boolean debugSizes = false;
-
         Widget widget = child;
         FloatSize relativeSize = getRelativeSize(child);
         if (relativeSize == null) {
@@ -1257,25 +1255,6 @@ public class ApplicationConnection {
                     height = 0;
                 }
 
-                if (debugSizes) {
-                    getConsole()
-                            .log(
-                                    "Widget "
-                                            + Util.getSimpleName(widget)
-                                            + "/"
-                                            + widget.hashCode()
-                                            + " relative height "
-                                            + relativeSize.getHeight()
-                                            + "% of "
-                                            + renderSpace.getHeight()
-                                            + "px (reported by "
-
-                                            + Util.getSimpleName(parent)
-                                            + "/"
-                                            + (parent == null ? "?" : parent
-                                                    .hashCode()) + ") : "
-                                            + height + "px");
-                }
                 widget.setHeight(height + "px");
             } else {
                 widget.setHeight(relativeSize.getHeight() + "%");
@@ -1316,24 +1295,6 @@ public class ApplicationConnection {
                     width = 0;
                 }
 
-                if (debugSizes) {
-                    getConsole()
-                            .log(
-                                    "Widget "
-                                            + Util.getSimpleName(widget)
-                                            + "/"
-                                            + widget.hashCode()
-                                            + " relative width "
-                                            + relativeSize.getWidth()
-                                            + "% of "
-                                            + renderSpace.getWidth()
-                                            + "px (reported by "
-                                            + Util.getSimpleName(parent)
-                                            + "/"
-                                            + (parent == null ? "?" : parent
-                                                    .hashCode()) + ") : "
-                                            + width + "px");
-                }
                 widget.setWidth(width + "px");
             } else {
                 widget.setWidth(relativeSize.getWidth() + "%");
