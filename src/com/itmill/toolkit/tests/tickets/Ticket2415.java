@@ -24,6 +24,17 @@ public class Ticket2415 extends Application {
             }
         });
 
+        final TextField tf2 = new TextField("Try to change me");
+        main.addComponent(tf2);
+
+        tf2.setImmediate(true);
+        tf2.addListener(new Property.ValueChangeListener() {
+
+            public void valueChange(ValueChangeEvent event) {
+                main.showNotification("New value = " + tf2);
+            }
+        });
+
     }
 
 }

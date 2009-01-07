@@ -1254,3 +1254,11 @@ padding:2px;
   border: none !important;
   color: #222222 !important;   
 }
+
+.dispnone {
+	display:none;
+}
+
+.redborder {
+	border: 1px solid red;
+}

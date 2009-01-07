@@ -27,7 +27,16 @@
 	width: 16px;
 	overflow: hidden; /* for IE6 */
 }
-.i-progressindicator-disabled-indeterminate {
+
+/* Hide obsolete elements in indeterminate mode */
+.i-progressindicator-indeterminate .i-progressindicator-wrapper,
+.i-progressindicator-indeterminate .i-progressindicator-indicator,
+.i-progressindicator-indeterminate-disabled .i-progressindicator-wrapper,
+.i-progressindicator-indeterminate-disabled .i-progressindicator-indicator {
+	display: none;
+}
+
+.i-progressindicator-indeterminate-disabled {
 	background: #dfe2e4 url(../common/img/blank.gif);
 	height: 16px;
 	width: 16px;

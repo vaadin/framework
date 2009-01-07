@@ -45,15 +45,12 @@ public class IProgressIndicator extends Widget implements Paintable {
 
         indeterminate = uidl.getBooleanAttribute("indeterminate");
 
-        String style = CLASSNAME;
-        if (uidl.getBooleanAttribute("disabled")) {
-            style += "-disabled";
-        }
-
         if (indeterminate) {
-            this.setStyleName(style + "-indeterminate");
+            String basename = CLASSNAME + "-indeterminate";
+            IProgressIndicator.setStyleName(getElement(), basename, true);
+            IProgressIndicator.setStyleName(getElement(), basename
+                    + "-disabled", uidl.getBooleanAttribute("disabled"));
         } else {
-            setStyleName(style);
             try {
                 final float f = Float.parseFloat(uidl
                         .getStringAttribute("state"));
