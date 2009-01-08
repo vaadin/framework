@@ -22,9 +22,8 @@ public class ComboBoxStartsWith extends Feature {
 
     @Override
     public Class[] getRelatedFeatures() {
-        return new Class[] { ComboBoxPlain.class, ListSelectSingle.class,
-                NativeSelection.class, ListSelectMultiple.class,
-                TwinColumnSelect.class };
+        return new Class[] { ComboBoxPlain.class, ComboBoxContains.class,
+                ComboBoxNewItems.class };
     }
 
     @Override

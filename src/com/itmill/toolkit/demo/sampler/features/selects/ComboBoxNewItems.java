@@ -5,12 +5,14 @@ import com.itmill.toolkit.demo.sampler.Feature;
 import com.itmill.toolkit.demo.sampler.NamedExternalResource;
 import com.itmill.toolkit.ui.ComboBox;
 
-public class ComboBoxPlain extends Feature {
+public class ComboBoxNewItems extends Feature {
 
     @Override
     public String getDescription() {
         return "A drop-down selection component with single item selection."
-                + " No special features used in this example";
+                + " This selection box also allows you to input your own"
+                + " choice. Your input will also be added to the selection"
+                + " of available choices.";
     }
 
     @Override
@@ -20,8 +22,8 @@ public class ComboBoxPlain extends Feature {
 
     @Override
     public Class[] getRelatedFeatures() {
-        return new Class[] { ComboBoxStartsWith.class, ComboBoxContains.class,
-                ComboBoxNewItems.class };
+        return new Class[] { ComboBoxPlain.class, ComboBoxStartsWith.class,
+                ComboBoxContains.class };
     }
 
     @Override

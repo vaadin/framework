@@ -23,7 +23,10 @@ import com.itmill.toolkit.demo.sampler.features.notifications.NotificationError;
 import com.itmill.toolkit.demo.sampler.features.notifications.NotificationHumanized;
 import com.itmill.toolkit.demo.sampler.features.notifications.NotificationTray;
 import com.itmill.toolkit.demo.sampler.features.notifications.NotificationWarning;
+import com.itmill.toolkit.demo.sampler.features.selects.ComboBoxContains;
+import com.itmill.toolkit.demo.sampler.features.selects.ComboBoxNewItems;
 import com.itmill.toolkit.demo.sampler.features.selects.ComboBoxPlain;
+import com.itmill.toolkit.demo.sampler.features.selects.ComboBoxStartsWith;
 import com.itmill.toolkit.demo.sampler.features.selects.ListSelectMultiple;
 import com.itmill.toolkit.demo.sampler.features.selects.ListSelectSingle;
 import com.itmill.toolkit.demo.sampler.features.selects.NativeSelection;
@@ -134,6 +137,9 @@ public class FeatureSet extends Feature {
                     new TwinColumnSelect(), //
                     new NativeSelection(), //
                     new ComboBoxPlain(), //
+                    new ComboBoxStartsWith(), //
+                    new ComboBoxContains(), //
+                    new ComboBoxNewItems(), //
 
             }); 
         }   

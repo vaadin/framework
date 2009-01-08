@@ -20,8 +20,8 @@ public class ListSelectSingle extends Feature {
 
     @Override
     public Class[] getRelatedFeatures() {
-        return new Class[] { ComboBoxPlain.class, NativeSelection.class,
-                ListSelectMultiple.class, TwinColumnSelect.class };
+        return new Class[] { NativeSelection.class, ListSelectMultiple.class,
+                TwinColumnSelect.class };
     }
 
     @Override

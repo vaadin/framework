@@ -25,8 +25,8 @@ public class TwinColumnSelect extends Feature {
 
     @Override
     public Class[] getRelatedFeatures() {
-        return new Class[] { ComboBoxPlain.class, NativeSelection.class,
-                ListSelectMultiple.class, ListSelectSingle.class };
+        return new Class[] { NativeSelection.class, ListSelectMultiple.class,
+                ListSelectSingle.class };
     }
 
     @Override

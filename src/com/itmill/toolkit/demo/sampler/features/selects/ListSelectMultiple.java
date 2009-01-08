@@ -22,8 +22,8 @@ public class ListSelectMultiple extends Feature {
 
     @Override
     public Class[] getRelatedFeatures() {
-        return new Class[] { ComboBoxPlain.class, NativeSelection.class,
-                ListSelectSingle.class, TwinColumnSelect.class };
+        return new Class[] { NativeSelection.class, ListSelectSingle.class,
+                TwinColumnSelect.class };
     }
 
     @Override
