@@ -1262,3 +1262,8 @@ padding:2px;
 .redborder {
 	border: 1px solid red;
 }
+
+/* #2434 */
+.i-table-bordered .i-table-body td {	
+	border-bottom: 1px solid red;
+}
