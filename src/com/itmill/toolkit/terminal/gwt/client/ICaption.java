@@ -229,7 +229,15 @@ public class ICaption extends HTML {
              */
             iconOnloadHandled = true;
 
-            setMaxWidth(maxWidth);
+            // if max width defined, recalculate
+            if (maxWidth != -1) {
+                setMaxWidth(maxWidth);
+            } else {
+                String width = getElement().getStyle().getProperty("width");
+                if (width != null && !width.equals("")) {
+                    setWidth(getRequiredWidth() + "px");
+                }
+            }
 
             /*
              * The size of the icon might affect the size of the component so we
