@@ -74,29 +74,22 @@
 	border-top: 0px;
 }
 
-.i-app-SamplerApplication .feature-main {
-	padding: 0px 5px 0px 5px;
-}
-.i-app-SamplerApplication .feature-controls {
-	padding-top: 10px;
-}
-.i-app-SamplerApplication .feature-controls .i-caption {
+.i-app-SamplerApplication .i-caption-feature-controls {
 	font-weight: bold;
 	font-size: 16px;
 	text-indent: 10px;
 }
-
 .i-app-SamplerApplication .feature-info {
 	background-color: #999;
 	color: white;
-	padding: 20px;
 	line-height: 20px;
 }
 .i-app-SamplerApplication .feature-info div.i-link a {
 	color: white;
 	line-height: 20px;
 }
-.i-app-SamplerApplication .feature-name {
+.i-app-SamplerApplication .feature-info .i-panel-caption {
+	color: #fff;
 	font-size: 22px;
 	font-weight: bold;
 	line-height: 35px;
@@ -106,11 +99,6 @@
 	font-weight: bold;
 	font-size: 16px;
 	line-height: 30px;
-	padding-top: 10px;
-}
-.i-app-SamplerApplication .feature-example {
-	padding: 10px;
-	padding-top: 20px;
 }
 
 .i-app-SamplerApplication .i-button-showcode {

@@ -8,19 +8,23 @@ import com.itmill.toolkit.demo.sampler.SamplerApplication.SamplerWindow;
 import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Component;
-import com.itmill.toolkit.ui.CustomLayout;
+import com.itmill.toolkit.ui.HorizontalLayout;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Link;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
-public class FeatureView extends CustomLayout {
+public class FeatureView extends HorizontalLayout {
 
     private static final String MSG_SHOW_SRC = "⊞ Show Java™ source";
     private static final String MSG_HIDE_SRC = "⊟ Hide Java™ source";
 
-    private OrderedLayout controls;
+    private Panel right;
+    private Panel left;
+
+    private VerticalLayout controls;
 
     private Panel sourcePanel;
     private Label sourceCode;
@@ -31,9 +35,26 @@ public class FeatureView extends CustomLayout {
     private Feature currentFeature;
 
     public FeatureView() {
-        super("featureview");
 
-        controls = new OrderedLayout();
+        setSizeFull();
+
+        left = new Panel();
+        left.setStyleName(Panel.STYLE_LIGHT);
+        left.addStyleName("feature-main");
+        left.setSizeFull();
+        ((VerticalLayout) left.getLayout()).setSpacing(true);
+        addComponent(left);
+        setExpandRatio(left, 1);
+
+        right = new Panel();
+        right.setStyleName(Panel.STYLE_LIGHT);
+        right.addStyleName("feature-info");
+        right.setWidth("350px");
+        right.setHeight("100%");
+        addComponent(right);
+
+        controls = new VerticalLayout();
+        controls.setStyleName("feature-controls");
         controls.setCaption("Live example");
         showCode = new Button(MSG_SHOW_SRC, new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
@@ -46,7 +67,6 @@ public class FeatureView extends CustomLayout {
         controls.addComponent(showCode);
 
         sourceCode = new CodeLabel();
-        sourceCode.setContentMode(Label.CONTENT_PREFORMATTED);
 
         sourcePanel = new Panel();
         sourcePanel.getLayout().setSizeUndefined();
@@ -71,19 +91,19 @@ public class FeatureView extends CustomLayout {
 
     public void setFeature(Feature feature) {
         if (feature != currentFeature) {
-            removeAllComponents();
+            right.removeAllComponents();
+            left.removeAllComponents();
             showSource(false);
 
-            addComponent(controls, "feature-controls");
+            left.addComponent(controls);
 
-            addComponent(getExampleFor(feature), "feature-example");
+            left.addComponent(getExampleFor(feature));
 
-            Label l = new Label(feature.getName());
-            addComponent(l, "feature-name");
+            right.setCaption(feature.getName());
 
-            l = new Label(feature.getDescription());
+            Label l = new Label(feature.getDescription());
             l.setContentMode(Label.CONTENT_XHTML);
-            addComponent(l, "feature-desc");
+            right.addComponent(l);
 
             sourceCode.setValue(feature.getSource());
 
@@ -94,17 +114,17 @@ public class FeatureView extends CustomLayout {
                 for (NamedExternalResource r : resources) {
                     res.addComponent(new Link(r.getName(), r));
                 }
-                addComponent(res, "feature-res");
+                right.addComponent(res);
             }
 
             APIResource[] apis = feature.getRelatedAPI();
             if (apis != null) {
                 OrderedLayout api = new OrderedLayout();
                 api.setCaption("API documentation");
-                addComponent(api, "feature-api");
                 for (APIResource r : apis) {
                     api.addComponent(new Link(r.getName(), r));
                 }
+                right.addComponent(api);
             }
 
             Class[] features = feature.getRelatedFeatures();
@@ -134,7 +154,7 @@ public class FeatureView extends CustomLayout {
                         rel.addComponent(al);
                     }
                 }
-                addComponent(rel, "feature-rel");
+                right.addComponent(rel);
             }
         }
 
