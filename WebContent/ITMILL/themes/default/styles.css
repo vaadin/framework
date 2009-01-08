@@ -382,6 +382,12 @@ input.i-modified,
 	vertical-align: middle;
 }
 
+.i-disabled a {
+	cursor: default;
+}
+
+
+
 .i-link img {
 	vertical-align: middle;
 }

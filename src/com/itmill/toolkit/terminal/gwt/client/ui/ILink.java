@@ -97,7 +97,6 @@ public class ILink extends HTML implements Paintable, ClickListener {
 
         // handle error
         if (uidl.hasAttribute("error")) {
-            final UIDL errorUidl = uidl.getErrors();
             if (errorIndicatorElement == null) {
                 errorIndicatorElement = DOM.createDiv();
                 DOM.setElementProperty(errorIndicatorElement, "className",
@@ -167,10 +166,14 @@ public class ILink extends HTML implements Paintable, ClickListener {
         if (client != null) {
             client.handleTooltipEvent(event, this);
         }
-        if (DOM.compare(target, captionElement)
-                || (icon != null && DOM.compare(target, icon.getElement()))) {
+        if (target == captionElement
+                || (icon != null && target == icon.getElement())) {
             super.onBrowserEvent(event);
         }
+        if (!enabled) {
+            event.preventDefault();
+        }
+
     }
 
 }
