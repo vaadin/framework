@@ -416,6 +416,14 @@ input.i-modified,
 .i-loading-indicator-wait {
 	background: transparent url(common/img/loading-indicator-wait.gif);
 }
+.i-loading-indicator,
+.i-loading-indicator-delay,
+.i-loading-indicator-wait {
+	position: absolute;
+	top:6px;
+	right: 5px;	
+	z-index:30000;
+}
 
 /* debug dialog */
 .i-debug-console {
