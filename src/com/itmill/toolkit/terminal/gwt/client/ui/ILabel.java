@@ -69,8 +69,6 @@ public class ILabel extends HTML implements Paintable {
             setHTML("");
             // add preformatted text to dom
             getElement().appendChild(preElement);
-        } else if ("uidl".equals(mode)) {
-            setHTML(uidl.getChildrenAsXML());
         } else if ("xhtml".equals(mode)) {
             setHTML(uidl.getChildUIDL(0).getChildUIDL(0).getChildString(0));
             sinkOnloads = true;
