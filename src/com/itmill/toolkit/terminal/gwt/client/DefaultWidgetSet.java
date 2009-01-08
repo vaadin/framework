@@ -16,6 +16,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IFilterSelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.IForm;
 import com.itmill.toolkit.terminal.gwt.client.ui.IFormLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IGridLayout;
+import com.itmill.toolkit.terminal.gwt.client.ui.IHorizontalLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.ILabel;
 import com.itmill.toolkit.terminal.gwt.client.ui.ILink;
 import com.itmill.toolkit.terminal.gwt.client.ui.IListSelect;
@@ -42,6 +43,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.ITwinColSelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.IUnknownComponent;
 import com.itmill.toolkit.terminal.gwt.client.ui.IUpload;
 import com.itmill.toolkit.terminal.gwt.client.ui.IUriFragmentUtility;
+import com.itmill.toolkit.terminal.gwt.client.ui.IVerticalLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IWindow;
 import com.itmill.toolkit.terminal.gwt.client.ui.richtextarea.IRichTextArea;
 
@@ -65,6 +67,10 @@ public class DefaultWidgetSet implements WidgetSet {
             return new IWindow();
         } else if (IOrderedLayout.class == classType) {
             return new IOrderedLayout();
+        } else if (IVerticalLayout.class == classType) {
+            return new IVerticalLayout();
+        } else if (IHorizontalLayout.class == classType) {
+            return new IHorizontalLayout();
         } else if (ILabel.class == classType) {
             return new ILabel();
         } else if (ILink.class == classType) {
@@ -151,6 +157,10 @@ public class DefaultWidgetSet implements WidgetSet {
             return IWindow.class;
         } else if ("orderedlayout".equals(tag)) {
             return IOrderedLayout.class;
+        } else if ("verticallayout".equals(tag)) {
+            return IVerticalLayout.class;
+        } else if ("horizontallayout".equals(tag)) {
+            return IHorizontalLayout.class;
         } else if ("label".equals(tag)) {
             return ILabel.class;
         } else if ("link".equals(tag)) {

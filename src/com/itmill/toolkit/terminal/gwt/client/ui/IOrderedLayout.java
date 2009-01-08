@@ -20,15 +20,10 @@ public class IOrderedLayout extends CellBasedLayout {
 
     public static final String CLASSNAME = "i-orderedlayout";
 
-    static {
-        STYLENAME_SPACING = "i-orderedlayout-spacing";
-        STYLENAME_MARGIN_TOP = "i-orderedlayout-margin-top";
-        STYLENAME_MARGIN_RIGHT = "i-orderedlayout-margin-right";
-        STYLENAME_MARGIN_BOTTOM = "i-orderedlayout-margin-bottom";
-        STYLENAME_MARGIN_LEFT = "i-orderedlayout-margin-left";
-    }
+    private int orientation;
 
-    private int orientation = ORIENTATION_HORIZONTAL;
+    // Can be removed once OrderedLayout is removed
+    private boolean allowOrientationUpdate = false;
 
     /**
      * Size of the layout excluding any margins.
@@ -40,7 +35,20 @@ public class IOrderedLayout extends CellBasedLayout {
     private String width = "";
 
     public IOrderedLayout() {
-        setStyleName(CLASSNAME);
+        this(CLASSNAME, ORIENTATION_VERTICAL);
+        allowOrientationUpdate = true;
+    }
+
+    protected IOrderedLayout(String className, int orientation) {
+        setStyleName(className);
+        this.orientation = orientation;
+
+        STYLENAME_SPACING = className + "-spacing";
+        STYLENAME_MARGIN_TOP = className + "-margin-top";
+        STYLENAME_MARGIN_RIGHT = className + "-margin-right";
+        STYLENAME_MARGIN_BOTTOM = className + "-margin-bottom";
+        STYLENAME_MARGIN_LEFT = className + "-margin-left";
+
     }
 
     @Override
@@ -55,7 +63,9 @@ public class IOrderedLayout extends CellBasedLayout {
             return;
         }
 
-        handleOrientationUpdate(uidl);
+        if (allowOrientationUpdate) {
+            handleOrientationUpdate(uidl);
+        }
 
         // IStopWatch w = new IStopWatch("OrderedLayout.updateFromUIDL");
 

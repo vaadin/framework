@@ -1,8 +1,5 @@
 package com.itmill.toolkit.ui;
 
-import com.itmill.toolkit.terminal.PaintException;
-import com.itmill.toolkit.terminal.PaintTarget;
-
 /**
  * Horizontal layout
  * 
@@ -21,12 +18,8 @@ public class HorizontalLayout extends AbstractOrderedLayout {
     }
 
     @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-        super.paintContent(target);
-
-        // Adds the attributes: orientation
-        target.addAttribute("orientation", "horizontal");
-
+    public String getTag() {
+        return "horizontallayout";
     }
 
 }

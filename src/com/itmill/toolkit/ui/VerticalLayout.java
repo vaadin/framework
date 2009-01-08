@@ -18,8 +18,9 @@ public class VerticalLayout extends AbstractOrderedLayout {
         setWidth("100%");
     }
 
-    /*
-     * An AbstractOrderedLayout is by default vertical so we do not need to
-     * override paintContent for that
-     */
+    @Override
+    public String getTag() {
+        return "verticallayout";
+    }
+
 }

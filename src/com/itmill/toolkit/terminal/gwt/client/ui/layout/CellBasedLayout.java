@@ -44,6 +44,12 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
 
     private boolean marginsNeedsRecalculation = false;
 
+    protected String STYLENAME_SPACING = "";
+    protected String STYLENAME_MARGIN_TOP = "";
+    protected String STYLENAME_MARGIN_RIGHT = "";
+    protected String STYLENAME_MARGIN_BOTTOM = "";
+    protected String STYLENAME_MARGIN_LEFT = "";
+
     public static class Spacing {
 
         public int hSpacing = 0;
@@ -120,12 +126,6 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
         handleDynamicDimensions(uidl);
 
     }
-
-    protected static String STYLENAME_SPACING = "";
-    protected static String STYLENAME_MARGIN_TOP = "";
-    protected static String STYLENAME_MARGIN_RIGHT = "";
-    protected static String STYLENAME_MARGIN_BOTTOM = "";
-    protected static String STYLENAME_MARGIN_LEFT = "";
 
     @Override
     public void setStyleName(String styleName) {
