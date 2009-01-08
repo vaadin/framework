@@ -22,16 +22,15 @@ import com.itmill.toolkit.ui.ComboBox;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.Embedded;
-import com.itmill.toolkit.ui.ExpandLayout;
 import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.HorizontalLayout;
 import com.itmill.toolkit.ui.Label;
-import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.SplitPanel;
 import com.itmill.toolkit.ui.Table;
 import com.itmill.toolkit.ui.Tree;
 import com.itmill.toolkit.ui.UriFragmentUtility;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 import com.itmill.toolkit.ui.Button.ClickListener;
@@ -143,8 +142,7 @@ public class SamplerApplication extends Application {
         private ObjectProperty currentFeature = new ObjectProperty(null,
                 Feature.class);
 
-        private OrderedLayout toggleBar = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        private HorizontalLayout toggleBar = new HorizontalLayout();
 
         private MainArea mainArea = new MainArea();
 
@@ -160,14 +158,13 @@ public class SamplerApplication extends Application {
 
         SamplerWindow() {
             // Main top/expanded-bottom layout
-            OrderedLayout mainExpand = new OrderedLayout();
+            VerticalLayout mainExpand = new VerticalLayout();
             setLayout(mainExpand);
             setSizeFull();
             mainExpand.setSizeFull();
 
             // topbar (navigation)
-            OrderedLayout nav = new OrderedLayout(
-                    OrderedLayout.ORIENTATION_HORIZONTAL);
+            HorizontalLayout nav = new HorizontalLayout();
             mainExpand.addComponent(nav);
             nav.setHeight("50px");
             nav.setWidth("100%");
@@ -178,14 +175,15 @@ public class SamplerApplication extends Application {
             // Upper left logo
             Component logo = createLogo();
             nav.addComponent(logo);
-            nav.setComponentAlignment(logo, ExpandLayout.ALIGNMENT_LEFT,
-                    ExpandLayout.ALIGNMENT_VERTICAL_CENTER);
+            nav.setComponentAlignment(logo, HorizontalLayout.ALIGNMENT_LEFT,
+                    HorizontalLayout.ALIGNMENT_VERTICAL_CENTER);
 
             // Breadcrumbs
             nav.addComponent(breadcrumbs);
             nav.setExpandRatio(breadcrumbs, 1);
-            nav.setComponentAlignment(breadcrumbs, ExpandLayout.ALIGNMENT_LEFT,
-                    ExpandLayout.ALIGNMENT_VERTICAL_CENTER);
+            nav.setComponentAlignment(breadcrumbs,
+                    HorizontalLayout.ALIGNMENT_LEFT,
+                    HorizontalLayout.ALIGNMENT_VERTICAL_CENTER);
 
             // invisible analytics -component
             nav.addComponent(webAnalytics);
@@ -202,20 +200,20 @@ public class SamplerApplication extends Application {
             // Previous sample
             Button b = createPrevButton();
             nav.addComponent(b);
-            nav.setComponentAlignment(b, ExpandLayout.ALIGNMENT_LEFT,
-                    ExpandLayout.ALIGNMENT_VERTICAL_CENTER);
+            nav.setComponentAlignment(b, HorizontalLayout.ALIGNMENT_LEFT,
+                    HorizontalLayout.ALIGNMENT_VERTICAL_CENTER);
             // Next sample
             b = createNextButton();
             nav.addComponent(b);
-            nav.setComponentAlignment(b, ExpandLayout.ALIGNMENT_LEFT,
-                    ExpandLayout.ALIGNMENT_VERTICAL_CENTER);
+            nav.setComponentAlignment(b, HorizontalLayout.ALIGNMENT_LEFT,
+                    HorizontalLayout.ALIGNMENT_VERTICAL_CENTER);
 
             // "Search" combobox
             // TODO add input prompt
             Component search = createSearch();
             nav.addComponent(search);
-            nav.setComponentAlignment(search, ExpandLayout.ALIGNMENT_LEFT,
-                    ExpandLayout.ALIGNMENT_VERTICAL_CENTER);
+            nav.setComponentAlignment(search, HorizontalLayout.ALIGNMENT_LEFT,
+                    HorizontalLayout.ALIGNMENT_VERTICAL_CENTER);
 
             // togglebar
             mainExpand.addComponent(toggleBar);
@@ -243,15 +241,15 @@ public class SamplerApplication extends Application {
             toggleBar.addComponent(treeSwitch);
             toggleBar.setExpandRatio(treeSwitch, 1);
             toggleBar.setComponentAlignment(treeSwitch,
-                    OrderedLayout.ALIGNMENT_RIGHT,
-                    OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
+                    HorizontalLayout.ALIGNMENT_RIGHT,
+                    HorizontalLayout.ALIGNMENT_VERTICAL_CENTER);
 
             // List/grid/coverflow
             Component mode = createModeSwitch();
             toggleBar.addComponent(mode);
             toggleBar.setComponentAlignment(mode,
-                    OrderedLayout.ALIGNMENT_RIGHT,
-                    OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
+                    HorizontalLayout.ALIGNMENT_RIGHT,
+                    HorizontalLayout.ALIGNMENT_VERTICAL_CENTER);
 
         }
 
@@ -281,19 +279,6 @@ public class SamplerApplication extends Application {
             Feature f = FeatureSet.FEATURES.getFeatureByPath(path);
             setFeature(f);
         }
-
-        // Handle REST -style urls
-        /*- USING FRAGMENTS
-        public DownloadStream handleURI(URL context, String relativeUri) {
-
-            Feature f = features.getFeatureByPath(relativeUri);
-            if (f != null) {
-                setFeature(f);
-                open(new ExternalResource(context));
-            }
-            return super.handleURI(context, relativeUri);
-        }
-        -*/
 
         /*
          * SamplerWindow helpers

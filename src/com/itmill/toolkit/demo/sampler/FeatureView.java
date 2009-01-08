@@ -11,7 +11,6 @@ import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.HorizontalLayout;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Link;
-import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Button.ClickEvent;
@@ -30,7 +29,7 @@ public class FeatureView extends HorizontalLayout {
     private Label sourceCode;
     private Button showCode;
 
-    private HashMap exampleCache = new HashMap();
+    private HashMap<Feature, Component> exampleCache = new HashMap<Feature, Component>();
 
     private Feature currentFeature;
 
@@ -109,7 +108,7 @@ public class FeatureView extends HorizontalLayout {
 
             NamedExternalResource[] resources = feature.getRelatedResources();
             if (resources != null) {
-                OrderedLayout res = new OrderedLayout();
+                VerticalLayout res = new VerticalLayout();
                 res.setCaption("Additional resources");
                 for (NamedExternalResource r : resources) {
                     res.addComponent(new Link(r.getName(), r));
@@ -119,7 +118,7 @@ public class FeatureView extends HorizontalLayout {
 
             APIResource[] apis = feature.getRelatedAPI();
             if (apis != null) {
-                OrderedLayout api = new OrderedLayout();
+                VerticalLayout api = new VerticalLayout();
                 api.setCaption("API documentation");
                 for (APIResource r : apis) {
                     api.addComponent(new Link(r.getName(), r));
@@ -129,7 +128,7 @@ public class FeatureView extends HorizontalLayout {
 
             Class[] features = feature.getRelatedFeatures();
             if (features != null) {
-                OrderedLayout rel = new OrderedLayout();
+                VerticalLayout rel = new VerticalLayout();
                 rel.setCaption("Related Samples");
                 for (Class c : features) {
                     final Feature f = SamplerApplication.getFeatureFor(c);
@@ -161,8 +160,7 @@ public class FeatureView extends HorizontalLayout {
     }
 
     private Component getExampleFor(Feature f) {
-
-        Component ex = (Component) exampleCache.get(f);
+        Component ex = exampleCache.get(f);
         if (ex == null) {
             ex = f.getExample();
             exampleCache.put(f, ex);
