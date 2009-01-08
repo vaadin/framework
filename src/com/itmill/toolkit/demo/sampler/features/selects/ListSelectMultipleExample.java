@@ -30,7 +30,6 @@ public class ListSelectMultipleExample extends VerticalLayout implements
     /*
      * Shows a notification when a selection is made.
      */
-    @Override
     public void valueChange(ValueChangeEvent event) {
         getWindow().showNotification("Selected cities: " + event.getProperty());
 

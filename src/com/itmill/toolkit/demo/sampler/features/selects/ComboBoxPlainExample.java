@@ -4,6 +4,7 @@ import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.ui.ComboBox;
 import com.itmill.toolkit.ui.VerticalLayout;
+import com.itmill.toolkit.ui.AbstractSelect.Filtering;
 
 public class ComboBoxPlainExample extends VerticalLayout implements
         Property.ValueChangeListener {
@@ -19,8 +20,7 @@ public class ComboBoxPlainExample extends VerticalLayout implements
             l.addItem(cities[i]);
         }
 
-        l.setNullSelectionAllowed(false);
-        l.setValue("Berlin");
+        l.setFilteringMode(Filtering.FILTERINGMODE_OFF);
         l.setImmediate(true);
         l.addListener(this);
 
@@ -30,7 +30,6 @@ public class ComboBoxPlainExample extends VerticalLayout implements
     /*
      * Shows a notification when a selection is made.
      */
-    @Override
     public void valueChange(ValueChangeEvent event) {
         getWindow().showNotification("Selected city: " + event.getProperty());
 

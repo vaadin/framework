@@ -30,7 +30,6 @@ public class NativeSelectionExample extends VerticalLayout implements
     /*
      * Shows a notification when a selection is made.
      */
-    @Override
     public void valueChange(ValueChangeEvent event) {
         getWindow().showNotification("Selected city: " + event.getProperty());
 

@@ -30,7 +30,6 @@ public class TwinColumnSelectExample extends VerticalLayout implements
     /*
      * Shows a notification when a selection is made.
      */
-    @Override
     public void valueChange(ValueChangeEvent event) {
         if (!event.getProperty().toString().equals("[]")) {
             getWindow().showNotification(
