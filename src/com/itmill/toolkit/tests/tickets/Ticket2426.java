@@ -21,9 +21,6 @@ public class Ticket2426 extends Application {
         w
                 .addComponent(new Label("CONTENT_TEXT: " + content,
                         Label.CONTENT_TEXT));
-        w
-                .addComponent(new Label("CONTENT_UIDL: " + content,
-                        Label.CONTENT_UIDL));
         w.addComponent(new Label("CONTENT_XML: " + content, Label.CONTENT_XML));
         w.addComponent(new Label("CONTENT_XHTML: " + content,
                 Label.CONTENT_XHTML));

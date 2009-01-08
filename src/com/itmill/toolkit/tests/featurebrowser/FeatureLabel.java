@@ -30,7 +30,6 @@ public class FeatureLabel extends Feature {
         ap.replaceWithSelect("contentMode", new Object[] {
                 new Integer(Label.CONTENT_PREFORMATTED),
                 new Integer(Label.CONTENT_TEXT),
-                new Integer(Label.CONTENT_UIDL),
                 new Integer(Label.CONTENT_XHTML),
                 new Integer(Label.CONTENT_XML) },
                 new Object[] { "Preformatted", "Text", "UIDL (Must be valid)",
