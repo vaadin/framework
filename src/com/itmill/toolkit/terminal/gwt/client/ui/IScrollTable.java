@@ -497,6 +497,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         client.updateVariable(paintableId, "columnorder", columnOrder, false);
     }
 
+    @Override
     protected void onAttach() {
         super.onAttach();
         if (initialContentReceived) {
@@ -504,6 +505,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         }
     }
 
+    @Override
     protected void onDetach() {
         rowRequestHandler.cancel();
         super.onDetach();
@@ -836,6 +838,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             this.reqRows = reqRows;
         }
 
+        @Override
         public void run() {
             if (client.hasActiveRequest()) {
                 // if client connection is busy, don't bother loading it more
@@ -1022,6 +1025,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         /**
          * Handle column reordering.
          */
+        @Override
         public void onBrowserEvent(Event event) {
             if (enabled && event != null) {
                 if (isResizing || event.getTarget() == colResizeWidget) {
@@ -1243,6 +1247,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             super("0", "");
         }
 
+        @Override
         protected void handleCaptionEvent(Event event) {
             // NOP: RowHeaders cannot be reordered
             // TODO It'd be nice to reset sorting here
@@ -1293,6 +1298,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             availableCells.put("0", new RowHeadersHeaderCell());
         }
 
+        @Override
         public void clear() {
             for (Iterator iterator = availableCells.keySet().iterator(); iterator
                     .hasNext();) {
@@ -1457,6 +1463,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             return visibleCells.iterator();
         }
 
+        @Override
         public boolean remove(Widget w) {
             if (visibleCells.contains(w)) {
                 visibleCells.remove(w);
@@ -1500,6 +1507,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             focusedSlot = -1;
         }
 
+        @Override
         public void onBrowserEvent(Event event) {
             if (enabled) {
                 if (event.getTarget() == columnSelector) {
@@ -1523,6 +1531,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                 caption = tHead.getHeaderCell(colKey).getCaption();
             }
 
+            @Override
             public void execute() {
                 client.getContextMenu().hide();
                 // toggle selected column
@@ -1547,6 +1556,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             /**
              * Override default method to distinguish on/off columns
              */
+            @Override
             public String getHTML() {
                 final StringBuffer buf = new StringBuffer();
                 if (collapsed) {
@@ -1861,10 +1871,12 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             return true;
         }
 
+        @Override
         public boolean remove(Widget w) {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         protected void onAttach() {
             super.onAttach();
             setContainerHeight();
@@ -1898,8 +1910,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                 return rowHeight;
             } else {
                 if (DOM.getChildCount(tBody) > 0) {
-                    rowHeight = DOM
-                            .getElementPropertyInt(tBody, "offsetHeight")
+                    rowHeight = tBody.getParentElement().getOffsetHeight()
                             / DOM.getChildCount(tBody);
                 } else {
                     return DEFAULT_ROW_HEIGHT;
@@ -2116,6 +2127,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                 return childWidgets.iterator();
             }
 
+            @Override
             public boolean remove(Widget w) {
                 if (childWidgets.contains(w)) {
                     orphan(w);
@@ -2162,6 +2174,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             /*
              * React on click that occur on content cells only
              */
+            @Override
             public void onBrowserEvent(Event event) {
                 final Element tdOrTr = DOM.getParent(DOM.eventGetTarget(event));
                 if (getElement() == tdOrTr
@@ -2332,6 +2345,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
 
     }
 
+    @Override
     public void setWidth(String width) {
         if (this.width.equals(width)) {
             return;
@@ -2419,6 +2433,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         return contentAreaBorderHeight;
     }
 
+    @Override
     public void setHeight(String height) {
         this.height = height;
         super.setHeight(height);
@@ -2430,6 +2445,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
      * lost). Example ITabPanel just set contained components invisible and back
      * when changing tabs.
      */
+    @Override
     public void setVisible(boolean visible) {
         if (isVisible() != visible) {
             super.setVisible(visible);
