@@ -307,8 +307,9 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
             final String key = (String) variables.get("action");
             final Action action = (Action) actionMapper.get(key);
             if (action != null && actionHandlers != null) {
-                for (final Iterator i = actionHandlers.iterator(); i.hasNext();) {
-                    ((Action.Handler) i.next())
+                Object[] array = actionHandlers.toArray();
+                for (int i = 0; i < array.length; i++) {
+                    ((Action.Handler) array[i])
                             .handleAction(action, this, this);
                 }
             }
