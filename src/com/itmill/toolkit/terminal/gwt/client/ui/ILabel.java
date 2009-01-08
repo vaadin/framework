@@ -4,8 +4,10 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.PreElement;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
@@ -61,7 +63,12 @@ public class ILabel extends HTML implements Paintable {
         if (mode == null || "text".equals(mode)) {
             setText(uidl.getChildString(0));
         } else if ("pre".equals(mode)) {
-            setHTML(uidl.getChildrenAsXML());
+            PreElement preElement = Document.get().createPreElement();
+            preElement.setInnerText(uidl.getChildUIDL(0).getChildString(0));
+            // clear existing content
+            setHTML("");
+            // add preformatted text to dom
+            getElement().appendChild(preElement);
         } else if ("uidl".equals(mode)) {
             setHTML(uidl.getChildrenAsXML());
         } else if ("xhtml".equals(mode)) {
