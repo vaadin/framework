@@ -17,6 +17,8 @@ public class Ticket2434 extends Application {
         Table t = TestForTablesInitialColumnWidthLogicRendering.getTestTable(3,
                 50);
 
+        t.setPageLength(0);
+
         t.addStyleName("bordered");
 
         w.addComponent(t);
