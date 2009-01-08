@@ -3028,7 +3028,7 @@ public class Table extends AbstractSelect implements Action.Container,
     public void removeListener(ItemClickListener listener) {
         removeListener(ItemClickEvent.class, listener,
                 ItemClickEvent.ITEM_CLICK_METHOD);
-        clickListenerCount++;
+        clickListenerCount--;
         // repaint needed only if click listening is not needed in client
         // anymore
         if (clickListenerCount == 0) {
