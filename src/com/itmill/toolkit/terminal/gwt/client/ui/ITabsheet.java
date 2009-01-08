@@ -151,7 +151,7 @@ public class ITabsheet extends ITabsheetBase {
     private final ITabsheetPanel tp = new ITabsheetPanel();
     private final Element contentNode, deco;
 
-    private final HashMap captions = new HashMap();
+    private final HashMap<String, ICaption> captions = new HashMap<String, ICaption>();
 
     private String height;
     private String width;
@@ -648,7 +648,7 @@ public class ITabsheet extends ITabsheetBase {
 
     public void updateCaption(Paintable component, UIDL uidl) {
         int i = tp.getWidgetIndex((Widget) component);
-        ICaption c = (ICaption) captions.get("" + i);
+        ICaption c = captions.get("" + i);
         boolean visible = c.isVisible();
         c.updateCaption(uidl);
         if (c.isVisible() != visible) {
