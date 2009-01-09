@@ -546,6 +546,10 @@ public class SamplerApplication extends Application {
                         public Component generateCell(Table source,
                                 Object itemId, Object columnId) {
                             Feature f = (Feature) itemId;
+                            if (f instanceof FeatureSet) {
+                                // no icon for sections
+                                return null;
+                            }
                             Resource res = new ClassResource(f.getClass(), f
                                     .getIconName(), SamplerApplication.this);
                             Embedded emb = new Embedded("", res);

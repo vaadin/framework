@@ -56,6 +56,10 @@
 	margin-left: -3px;
 }
 
+.i-app-SamplerApplication tr.i-table-row,
+.i-app-SamplerApplication tr.i-table-row-odd {
+	height: 50px;
+}
 .i-app-SamplerApplication tr.i-table-row-section {
 	color: #333366;
 	font-size: 18px;
