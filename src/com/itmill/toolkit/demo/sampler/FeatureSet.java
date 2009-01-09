@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.util.HierarchicalContainer;
+import com.itmill.toolkit.demo.sampler.features.accordions.AccordionDisabled;
+import com.itmill.toolkit.demo.sampler.features.accordions.AccordionIcons;
 import com.itmill.toolkit.demo.sampler.features.blueprints.ProminentPrimaryAction;
 import com.itmill.toolkit.demo.sampler.features.buttons.ButtonLink;
 import com.itmill.toolkit.demo.sampler.features.buttons.ButtonPush;
@@ -24,6 +26,8 @@ import com.itmill.toolkit.demo.sampler.features.notifications.NotificationError;
 import com.itmill.toolkit.demo.sampler.features.notifications.NotificationHumanized;
 import com.itmill.toolkit.demo.sampler.features.notifications.NotificationTray;
 import com.itmill.toolkit.demo.sampler.features.notifications.NotificationWarning;
+import com.itmill.toolkit.demo.sampler.features.panels.PanelBasic;
+import com.itmill.toolkit.demo.sampler.features.panels.PanelLight;
 import com.itmill.toolkit.demo.sampler.features.selects.ComboBoxContains;
 import com.itmill.toolkit.demo.sampler.features.selects.ComboBoxNewItems;
 import com.itmill.toolkit.demo.sampler.features.selects.ComboBoxPlain;
@@ -32,6 +36,9 @@ import com.itmill.toolkit.demo.sampler.features.selects.ListSelectMultiple;
 import com.itmill.toolkit.demo.sampler.features.selects.ListSelectSingle;
 import com.itmill.toolkit.demo.sampler.features.selects.NativeSelection;
 import com.itmill.toolkit.demo.sampler.features.selects.TwinColumnSelect;
+import com.itmill.toolkit.demo.sampler.features.tabsheets.TabSheetDisabled;
+import com.itmill.toolkit.demo.sampler.features.tabsheets.TabSheetIcons;
+import com.itmill.toolkit.demo.sampler.features.tabsheets.TabSheetScrolling;
 
 /**
  * Contains the FeatureSet implementation and the structure for the feature
@@ -75,6 +82,9 @@ public class FeatureSet extends Feature {
                     new Notifications(), //
                     new Selects(), //
                     new Layouts(), //
+                    new Tabsheets(), //
+                    new Accordions(), //
+                    new Panels(), //
             });
         }
     }
@@ -132,7 +142,7 @@ public class FeatureSet extends Feature {
     public static class Selects extends FeatureSet {
         public Selects() {
             super("Selects", new Feature[] {
-                    //
+            //
                     new ListSelectSingle(), //  
                     new ListSelectMultiple(), //
                     new TwinColumnSelect(), //
@@ -142,17 +152,49 @@ public class FeatureSet extends Feature {
                     new ComboBoxContains(), //
                     new ComboBoxNewItems(), //
 
-            }); 
-        }   
+            });
+        }
     }
 
     public static class Layouts extends FeatureSet {
         public Layouts() {
             super("Layouts", new Feature[] {
+            //
                     new VerticalLayoutBasic(), //
                     new HorizontalLayoutBasic(), //
                     new LayoutSpacing(), //
                     new LayoutAlignment(), //
+            });
+        }
+    }
+
+    public static class Tabsheets extends FeatureSet {
+        public Tabsheets() {
+            super("Tabsheets", new Feature[] {
+            //        
+                    new TabSheetIcons(), //
+                    new TabSheetScrolling(), //
+                    new TabSheetDisabled(), //
+            });
+        }
+    }
+
+    public static class Accordions extends FeatureSet {
+        public Accordions() {
+            super("Accordions", new Feature[] {
+            //        
+                    new AccordionIcons(), //
+                    new AccordionDisabled(), //
+            });
+        }
+    }
+
+    public static class Panels extends FeatureSet {
+        public Panels() {
+            super("Panels", new Feature[] {
+            //        
+                    new PanelBasic(), //
+                    new PanelLight(), //
             });
         }
     }
