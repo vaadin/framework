@@ -1,5 +1,7 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.user.client.DOM;
@@ -7,6 +9,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasFocus;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -60,12 +63,12 @@ public class IPopupView extends HTML implements Paintable {
         // ..and when we close it
         popup.addPopupListener(new PopupListener() {
             public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
+                ((CustomPopup) sender).syncChildren();
                 updateState(false);
             }
         });
 
         popup.setAnimationEnabled(true);
-
     }
 
     /**
@@ -172,6 +175,13 @@ public class IPopupView extends HTML implements Paintable {
         super.onDetach();
     }
 
+    private static native void nativeBlur(Element e)
+    /*-{ 
+        if(e.focus) {
+            e.blur();
+        }
+    }-*/;
+
     private class CustomPopup extends IToolkitOverlay implements Container {
 
         private Paintable popupComponentPaintable = null;
@@ -180,9 +190,11 @@ public class IPopupView extends HTML implements Paintable {
 
         private boolean hasHadMouseOver = false;
         private boolean hideOnMouseOut = true;
+        private final Set<Element> activeChildren;
 
         public CustomPopup() {
             super(true, false, true); // autoHide, not modal, dropshadow
+            activeChildren = new HashSet<Element>();
         }
 
         // For some reason ONMOUSEOUT events are not always recieved, so we have
@@ -192,6 +204,12 @@ public class IPopupView extends HTML implements Paintable {
             Element target = DOM.eventGetTarget(event);
             boolean eventTargetsPopup = DOM.isOrHasChild(getElement(), target);
             int type = DOM.eventGetType(event);
+
+            // Catch children that use keyboard, so we can unfocus them when
+            // hiding
+            if (eventTargetsPopup && type == Event.ONKEYPRESS) {
+                activeChildren.add(target);
+            }
 
             if (eventTargetsPopup && type == Event.ONMOUSEMOVE) {
                 hasHadMouseOver = true;
@@ -216,6 +234,26 @@ public class IPopupView extends HTML implements Paintable {
             }
             hasHadMouseOver = false;
             super.hide();
+        }
+
+        /**
+         * Try to sync all known active child widgets to server
+         */
+        public void syncChildren() {
+            // Notify children with focus
+            if ((popupComponentWidget instanceof HasFocus)) {
+                ((HasFocus) popupComponentWidget).setFocus(false);
+            }
+
+            // Notify children that have used the keyboard
+            for (Iterator<Element> iterator = activeChildren.iterator(); iterator
+                    .hasNext();) {
+                try {
+                    nativeBlur(iterator.next());
+                } catch (Exception ignored) {
+                }
+            }
+            activeChildren.clear();
         }
 
         @Override
