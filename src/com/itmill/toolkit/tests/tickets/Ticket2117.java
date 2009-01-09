@@ -2,8 +2,11 @@ package com.itmill.toolkit.tests.tickets;
 
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.terminal.ExternalResource;
+import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Window;
+import com.itmill.toolkit.ui.Button.ClickEvent;
+import com.itmill.toolkit.ui.Button.ClickListener;
 
 public class Ticket2117 extends Application {
 
@@ -34,14 +37,25 @@ public class Ticket2117 extends Application {
                 "This window has been created on fly for name: " + name));
         w.addComponent(new Label("It has also been redirected to " + w.getURL()
                 + " to support reloading"));
+        w.addComponent(new Button("button", new ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                w.showNotification("Button clicked");
+                w.addComponent(new Label("clicked"));
+            }
+        }));
         return w;
     }
 
     private Window createWindow() {
         final Window w = new Window();
-        w.addComponent(new Label("Open this link: <a href='"
-                + getURL().toExternalForm() + "'>" + getURL().toExternalForm()
-                + "</a> in another browser-window.", Label.CONTENT_XHTML));
+        w
+                .addComponent(new Label(
+                        "Click this link: <a target=\"_blank\" href='"
+                                + getURL().toExternalForm()
+                                + "'>"
+                                + getURL().toExternalForm()
+                                + "</a> which opens new windows to this uri. They should end up having a separate Window and URL.",
+                        Label.CONTENT_XHTML));
         return w;
     }
 }
