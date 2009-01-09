@@ -211,16 +211,25 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * method can be left as is. In case browser-level windows are needed, it is
      * recommended to create new window-objects on this method from their names
      * if the super.getWindow() does not find existing windows. See below for
-     * implementation example:
-     * <code>  // If we already have the requested window, use it
+     * implementation example: <code><pre>
+        // If we already have the requested window, use it
         Window w = super.getWindow(name);
         if (w == null) {
-
             // If no window found, create it
-            w = createNewWindow(name);
+            w = new Window(name);
+            // set windows name to the one requested
+            w.setName(name);
+            // add it to this application
+            addWindow(w);
+            // add some content
+            w.addComponent(new Label("Test window"));
         }
-        return w;</code>
+        return w;</pre></code>
      * </p>
+     * 
+     * <p>
+     * <strong>Note</strong> that all returned Window objects must be added to
+     * this application instance.
      * 
      * <p>
      * The method should return null if the window does not exists (and is not
