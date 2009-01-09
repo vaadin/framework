@@ -4,10 +4,10 @@
 .i-app-SamplerApplication {
 	background-color: white;
 }
-.i-app-SamplerApplication .i-orderedlayout-topbar {
+.i-app-SamplerApplication .i-horizontallayout-topbar {
 	border-bottom: 3px solid #ccc;
 }
-.i-app-SamplerApplication .i-orderedlayout-togglebar {
+.i-app-SamplerApplication .i-horizontallayout-togglebar {
 	border-bottom: 1px solid #eee;
 	background: transparent url(grayfade.png) repeat-x;
 }
@@ -22,10 +22,10 @@
 	font-weight: bold;	
 }
 
-.i-app-SamplerApplication .i-orderedlayout-topbar .i-button-link span {
+.i-app-SamplerApplication .i-horizontallayout-topbar .i-button-link span {
 	text-decoration: none;
 }
-.i-app-SamplerApplication .i-orderedlayout-topbar .i-button-link:hover span {
+.i-app-SamplerApplication .i-horizontallayout-topbar .i-button-link:hover span {
 	text-decoration: underline;
 }
 
