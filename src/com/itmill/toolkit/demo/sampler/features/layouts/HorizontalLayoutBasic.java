@@ -31,7 +31,11 @@ public class HorizontalLayoutBasic extends Feature {
 
     @Override
     public Class[] getRelatedFeatures() {
-        return new Class[] { VerticalLayoutBasic.class, LayoutSpacing.class };
+        return new Class[] {
+                VerticalLayoutBasic.class,
+                LayoutSpacing.class,
+                LayoutAlignment.class,
+                };
     }
 
     @Override

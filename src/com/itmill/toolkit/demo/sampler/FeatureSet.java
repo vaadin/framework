@@ -13,6 +13,7 @@ import com.itmill.toolkit.demo.sampler.features.buttons.ButtonSwitch;
 import com.itmill.toolkit.demo.sampler.features.commons.Icons;
 import com.itmill.toolkit.demo.sampler.features.commons.Tooltips;
 import com.itmill.toolkit.demo.sampler.features.layouts.HorizontalLayoutBasic;
+import com.itmill.toolkit.demo.sampler.features.layouts.LayoutAlignment;
 import com.itmill.toolkit.demo.sampler.features.layouts.LayoutSpacing;
 import com.itmill.toolkit.demo.sampler.features.layouts.VerticalLayoutBasic;
 import com.itmill.toolkit.demo.sampler.features.link.LinkCurrentWindow;
@@ -151,6 +152,7 @@ public class FeatureSet extends Feature {
                     new VerticalLayoutBasic(), //
                     new HorizontalLayoutBasic(), //
                     new LayoutSpacing(), //
+                    new LayoutAlignment(), //
             });
         }
     }
