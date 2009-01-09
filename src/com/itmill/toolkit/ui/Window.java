@@ -320,7 +320,12 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     }
 
     /**
-     * Handles uri recursively.
+     * Handles uri recursively. Windows uri handler passes uri to all
+     * {@link URIHandler}s added to it.
+     * <p>
+     * Note, that instead of overriding this method developer should consider
+     * using {@link Window#addURIHandler(URIHandler)} to add uri handler to
+     * Window.
      * 
      * @param context
      * @param relativeUri
