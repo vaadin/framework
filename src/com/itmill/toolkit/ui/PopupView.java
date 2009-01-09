@@ -95,6 +95,17 @@ public class PopupView extends AbstractComponentContainer {
     }
 
     /**
+     * Set the visibility of the popup. Does not hide the minimal
+     * representation.
+     * 
+     * @param visible
+     */
+    public void setPopupVisibility(boolean visible) {
+        popupVisible = visible;
+        requestRepaint();
+    }
+
+    /**
      * Return whether the popup is visible.
      * 
      * @return true if the popup is showing
