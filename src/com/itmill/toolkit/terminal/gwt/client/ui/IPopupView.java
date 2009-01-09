@@ -1,7 +1,6 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.user.client.DOM;
@@ -30,9 +29,6 @@ public class IPopupView extends HTML implements Paintable {
     /** For server-client communication */
     private String uidlId;
     private ApplicationConnection client;
-
-    /** For inner classes */
-    private final IPopupView hostReference = this;
 
     /** This variable helps to communicate popup visibility to the server */
     private boolean hostPopupVisible;
@@ -104,9 +100,9 @@ public class IPopupView extends HTML implements Paintable {
             UIDL popupUIDL = uidl.getChildUIDL(0);
 
             // showPopupOnTop(popup, hostReference);
-            preparePopup(popup, hostReference);
+            preparePopup(popup);
             popup.updateFromUIDL(popupUIDL, client);
-            showPopup(popup, hostReference);
+            showPopup(popup);
 
             // The popup shouldn't be visible, try to hide it.
         } else {
@@ -122,17 +118,17 @@ public class IPopupView extends HTML implements Paintable {
     private void updateState(boolean visible) {
         // If we know the server connection
         // then update the current situation
-        if (uidlId != null && client != null && this.isAttached()) {
+        if (uidlId != null && client != null && isAttached()) {
             client.updateVariable(uidlId, "popupVisibility", visible, true);
         }
     }
 
-    private void preparePopup(final CustomPopup popup, final Widget host) {
+    private void preparePopup(final CustomPopup popup) {
         popup.setVisible(false);
         popup.show();
     }
 
-    private void showPopup(final CustomPopup popup, final Widget host) {
+    private void showPopup(final CustomPopup popup) {
         int windowTop = RootPanel.get().getAbsoluteTop();
         int windowLeft = RootPanel.get().getAbsoluteLeft();
         int windowRight = windowLeft + RootPanel.get().getOffsetWidth();
@@ -141,10 +137,10 @@ public class IPopupView extends HTML implements Paintable {
         int offsetWidth = popup.getOffsetWidth();
         int offsetHeight = popup.getOffsetHeight();
 
-        int hostHorizontalCenter = host.getAbsoluteLeft()
-                + host.getOffsetWidth() / 2;
-        int hostVerticalCenter = host.getAbsoluteTop() + host.getOffsetHeight()
-                / 2;
+        int hostHorizontalCenter = IPopupView.this.getAbsoluteLeft()
+                + IPopupView.this.getOffsetWidth() / 2;
+        int hostVerticalCenter = IPopupView.this.getAbsoluteTop()
+                + IPopupView.this.getOffsetHeight() / 2;
 
         int left = hostHorizontalCenter - offsetWidth / 2;
         int top = hostVerticalCenter - offsetHeight / 2;
@@ -177,7 +173,7 @@ public class IPopupView extends HTML implements Paintable {
 
     private static native void nativeBlur(Element e)
     /*-{ 
-        if(e.focus) {
+        if(e && e.blur) {
             e.blur();
         }
     }-*/;
@@ -190,11 +186,10 @@ public class IPopupView extends HTML implements Paintable {
 
         private boolean hasHadMouseOver = false;
         private boolean hideOnMouseOut = true;
-        private final Set<Element> activeChildren;
+        private final Set<Element> activeChildren = new HashSet<Element>();
 
         public CustomPopup() {
             super(true, false, true); // autoHide, not modal, dropshadow
-            activeChildren = new HashSet<Element>();
         }
 
         // For some reason ONMOUSEOUT events are not always recieved, so we have
@@ -246,10 +241,9 @@ public class IPopupView extends HTML implements Paintable {
             }
 
             // Notify children that have used the keyboard
-            for (Iterator<Element> iterator = activeChildren.iterator(); iterator
-                    .hasNext();) {
+            for (Element e : activeChildren) {
                 try {
-                    nativeBlur(iterator.next());
+                    nativeBlur(e);
                 } catch (Exception ignored) {
                 }
             }
