@@ -73,7 +73,8 @@ public class AlignmentUtils {
                     "alignment for setComponentAlignment() cannot be null or empty");
         }
 
-        Integer currentAlignment = parent.getComponentAlignment(component);
+        Integer currentAlignment = parent.getComponentAlignment(component)
+                .getBitMask();
 
         if (alignment.length() == 1) {
             // Use short form "t","l",...
@@ -100,8 +101,8 @@ public class AlignmentUtils {
 
         int horizontalAlignment = currentAlignment & horizontalMask;
         int verticalAlignment = currentAlignment & verticalMask;
-        parent.setComponentAlignment(component, horizontalAlignment,
-                verticalAlignment);
+        parent.setComponentAlignment(component, new Alignment(
+                horizontalAlignment + verticalAlignment));
     }
 
     /**

@@ -17,19 +17,19 @@ import com.itmill.toolkit.terminal.Sizeable;
 public abstract class AbstractOrderedLayout extends AbstractLayout implements
         Layout.AlignmentHandler, Layout.SpacingHandler {
 
-    private static final int ALIGNMENT_DEFAULT = ALIGNMENT_TOP + ALIGNMENT_LEFT;
+    private static final Alignment ALIGNMENT_DEFAULT = Alignment.TOP_LEFT;
 
     /**
      * Custom layout slots containing the components.
      */
-    protected LinkedList components = new LinkedList();
+    protected LinkedList<Component> components = new LinkedList<Component>();
 
     /* Child component alignments */
 
     /**
      * Mapping from components to alignments (horizontal + vertical).
      */
-    private final Map componentToAlignment = new HashMap();
+    private final Map<Component, Alignment> componentToAlignment = new HashMap<Component, Alignment>();
 
     private final Map<Component, Float> componentToExpandRatio = new HashMap<Component, Float>();
 
@@ -157,7 +157,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
                 // Paint child component UIDL
                 c.paint(target);
                 alignmentsArray[index] = String
-                        .valueOf(getComponentAlignment(c));
+                        .valueOf(getComponentAlignment(c).getBitMask());
                 if (!equallyDivided) {
                     int myRatio = Math.round((getExpandRatio(c) / sum) * 1000);
                     expandRatioArray[index] = myRatio;
@@ -240,13 +240,26 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     public void setComponentAlignment(Component childComponent,
             int horizontalAlignment, int verticalAlignment) {
         if (components.contains(childComponent)) {
-            componentToAlignment.put(childComponent, new Integer(
+            // Alignments are bit masks
+            componentToAlignment.put(childComponent, new Alignment(
                     horizontalAlignment + verticalAlignment));
             requestRepaint();
         } else {
             throw new IllegalArgumentException(
                     "Component must be added to layout before using setComponentAlignment()");
         }
+    }
+
+    public void setComponentAlignment(Component childComponent,
+            Alignment alignment) {
+        if (components.contains(childComponent)) {
+            componentToAlignment.put(childComponent, alignment);
+            requestRepaint();
+        } else {
+            throw new IllegalArgumentException(
+                    "Component must be added to layout before using setComponentAlignment()");
+        }
+
     }
 
     /*
@@ -256,13 +269,12 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * com.itmill.toolkit.ui.Layout.AlignmentHandler#getComponentAlignment(com
      * .itmill.toolkit.ui.Component)
      */
-    public int getComponentAlignment(Component childComponent) {
-        final Integer bitMask = (Integer) componentToAlignment
-                .get(childComponent);
-        if (bitMask != null) {
-            return bitMask.intValue();
-        } else {
+    public Alignment getComponentAlignment(Component childComponent) {
+        Alignment alignment = componentToAlignment.get(childComponent);
+        if (alignment == null) {
             return ALIGNMENT_DEFAULT;
+        } else {
+            return alignment;
         }
     }
 

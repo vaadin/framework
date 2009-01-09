@@ -73,14 +73,14 @@ public class GridLayout extends AbstractLayout implements
     /**
      * Mapping from components to alignments (horizontal + vertical).
      */
-    private Map componentToAlignment = new HashMap();
+    private Map<Component, Alignment> componentToAlignment = new HashMap<Component, Alignment>();
 
     /**
      * Is spacing between contained components enabled. Defaults to false.
      */
     private boolean spacing = false;
 
-    private static final int ALIGNMENT_DEFAULT = ALIGNMENT_TOP + ALIGNMENT_LEFT;
+    private static final Alignment ALIGNMENT_DEFAULT = Alignment.TOP_LEFT;
 
     /**
      * Has there been rows inserted or deleted in the middle of the layout since
@@ -504,7 +504,8 @@ public class GridLayout extends AbstractLayout implements
                     area.getComponent().paint(target);
 
                     alignmentsArray[index++] = String
-                            .valueOf(getComponentAlignment(area.getComponent()));
+                            .valueOf(getComponentAlignment(area.getComponent())
+                                    .getBitMask());
 
                     target.endTag("gc");
 
@@ -625,13 +626,12 @@ public class GridLayout extends AbstractLayout implements
      * com.itmill.toolkit.ui.Layout.AlignmentHandler#getComponentAlignment(com
      * .itmill.toolkit.ui.Component)
      */
-    public int getComponentAlignment(Component childComponent) {
-        final Integer bitMask = (Integer) componentToAlignment
-                .get(childComponent);
-        if (bitMask != null) {
-            return bitMask.intValue();
-        } else {
+    public Alignment getComponentAlignment(Component childComponent) {
+        Alignment alignment = componentToAlignment.get(childComponent);
+        if (alignment == null) {
             return ALIGNMENT_DEFAULT;
+        } else {
+            return alignment;
         }
     }
 
@@ -1091,8 +1091,14 @@ public class GridLayout extends AbstractLayout implements
      */
     public void setComponentAlignment(Component childComponent,
             int horizontalAlignment, int verticalAlignment) {
-        componentToAlignment.put(childComponent, new Integer(
+        componentToAlignment.put(childComponent, new Alignment(
                 horizontalAlignment + verticalAlignment));
+        requestRepaint();
+    }
+
+    public void setComponentAlignment(Component childComponent,
+            Alignment alignment) {
+        componentToAlignment.put(childComponent, alignment);
         requestRepaint();
     }
 

@@ -4,8 +4,8 @@
 
 package com.itmill.toolkit.ui;
 
-import com.itmill.toolkit.terminal.gwt.client.ui.AlignmentInfo;
 import com.itmill.toolkit.terminal.gwt.client.ui.IMarginInfo;
+import com.itmill.toolkit.terminal.gwt.client.ui.AlignmentInfo.Bits;
 
 /**
  * Extension to the {@link ComponentContainer} interface which adds the
@@ -45,43 +45,65 @@ public interface Layout extends ComponentContainer {
             boolean left);
 
     /**
-     * TODO make javadocs, remove from implementing classes
+     * AlignmentHandler is most commonly an advanced {@link Layout} that can
+     * align its components.
      */
     public interface AlignmentHandler {
 
         /**
          * Contained component should be aligned horizontally to the left.
+         * 
+         * @deprecated Use of {@link Alignment} class and its constants
          */
-        public static final int ALIGNMENT_LEFT = AlignmentInfo.ALIGNMENT_LEFT;
+        @Deprecated
+        public static final int ALIGNMENT_LEFT = Bits.ALIGNMENT_LEFT;
 
         /**
          * Contained component should be aligned horizontally to the right.
+         * 
+         * @deprecated Use of {@link Alignment} class and its constants
          */
-        public static final int ALIGNMENT_RIGHT = AlignmentInfo.ALIGNMENT_RIGHT;
+        @Deprecated
+        public static final int ALIGNMENT_RIGHT = Bits.ALIGNMENT_RIGHT;
 
         /**
          * Contained component should be aligned vertically to the top.
+         * 
+         * @deprecated Use of {@link Alignment} class and its constants
          */
-        public static final int ALIGNMENT_TOP = AlignmentInfo.ALIGNMENT_TOP;
+        @Deprecated
+        public static final int ALIGNMENT_TOP = Bits.ALIGNMENT_TOP;
 
         /**
          * Contained component should be aligned vertically to the bottom.
+         * 
+         * @deprecated Use of {@link Alignment} class and its constants
          */
-        public static final int ALIGNMENT_BOTTOM = AlignmentInfo.ALIGNMENT_BOTTOM;
+        @Deprecated
+        public static final int ALIGNMENT_BOTTOM = Bits.ALIGNMENT_BOTTOM;
 
         /**
          * Contained component should be horizontally aligned to center.
+         * 
+         * @deprecated Use of {@link Alignment} class and its constants
          */
-        public static final int ALIGNMENT_HORIZONTAL_CENTER = AlignmentInfo.ALIGNMENT_HORIZONTAL_CENTER;
+        @Deprecated
+        public static final int ALIGNMENT_HORIZONTAL_CENTER = Bits.ALIGNMENT_HORIZONTAL_CENTER;
 
         /**
          * Contained component should be vertically aligned to center.
+         * 
+         * @deprecated Use of {@link Alignment} class and its constants
          */
-        public static final int ALIGNMENT_VERTICAL_CENTER = AlignmentInfo.ALIGNMENT_VERTICAL_CENTER;
+        @Deprecated
+        public static final int ALIGNMENT_VERTICAL_CENTER = Bits.ALIGNMENT_VERTICAL_CENTER;
 
         /**
          * Set alignment for one contained component in this layout. Alignment
          * is calculated as a bit mask of the two passed values.
+         * 
+         * @deprecated Use {@link #setComponentAlignment(Component, Alignment)}
+         *             instead
          * 
          * @param childComponent
          *            the component to align within it's layout cell.
@@ -92,15 +114,33 @@ public interface Layout extends ComponentContainer {
          *            the vertical alignment for the child component (top,
          *            center, bottom). Use ALIGNMENT constants.
          */
+        @Deprecated
         public void setComponentAlignment(Component childComponent,
                 int horizontalAlignment, int verticalAlignment);
 
         /**
+         * Set alignment for one contained component in this layout. Use
+         * predefined alignments from Alignment class.
+         * 
+         * Example: <code>
+         *      layout.setComponentAlignment(myComponent, Alignment.TOP_RIGHT);
+         * </code>
          * 
          * @param childComponent
-         * @return
+         *            the component to align within it's layout cell.
+         * @param alignment
+         *            the Alignment value to be set
          */
-        public int getComponentAlignment(Component childComponent);
+        public void setComponentAlignment(Component childComponent,
+                Alignment alignment);
+
+        /**
+         * Returns the current Alignment of given component.
+         * 
+         * @param childComponent
+         * @return the {@link Alignment}
+         */
+        public Alignment getComponentAlignment(Component childComponent);
 
     }
 
@@ -133,8 +173,6 @@ public interface Layout extends ComponentContainer {
 
     /**
      * This type of layout can enable margins.
-     * 
-     * TODO refine javadocs
      */
     public interface MarginHandler {
         /**

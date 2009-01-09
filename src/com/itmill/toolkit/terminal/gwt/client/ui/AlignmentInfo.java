@@ -4,27 +4,40 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
-public class AlignmentInfo {
+public final class AlignmentInfo {
+    /** Bitmask values for client server communication */
+    public static class Bits {
+        public static final int ALIGNMENT_LEFT = 1;
+        public static final int ALIGNMENT_RIGHT = 2;
+        public static final int ALIGNMENT_TOP = 4;
+        public static final int ALIGNMENT_BOTTOM = 8;
+        public static final int ALIGNMENT_HORIZONTAL_CENTER = 16;
+        public static final int ALIGNMENT_VERTICAL_CENTER = 32;
+    }
 
-    public static final int ALIGNMENT_LEFT = 1;
-    public static final int ALIGNMENT_RIGHT = 2;
-    public static final int ALIGNMENT_TOP = 4;
-    public static final int ALIGNMENT_BOTTOM = 8;
-    public static final int ALIGNMENT_HORIZONTAL_CENTER = 16;
-    public static final int ALIGNMENT_VERTICAL_CENTER = 32;
+    public static final AlignmentInfo LEFT = new AlignmentInfo(
+            Bits.ALIGNMENT_LEFT);
+    public static final AlignmentInfo RIGHT = new AlignmentInfo(
+            Bits.ALIGNMENT_RIGHT);
+    public static final AlignmentInfo TOP = new AlignmentInfo(
+            Bits.ALIGNMENT_TOP);
+    public static final AlignmentInfo BOTTOM = new AlignmentInfo(
+            Bits.ALIGNMENT_BOTTOM);
+    public static final AlignmentInfo CENTER = new AlignmentInfo(
+            Bits.ALIGNMENT_HORIZONTAL_CENTER);
+    public static final AlignmentInfo MIDDLE = new AlignmentInfo(
+            Bits.ALIGNMENT_VERTICAL_CENTER);
+    public static final AlignmentInfo TOP_LEFT = new AlignmentInfo(
+            Bits.ALIGNMENT_TOP + Bits.ALIGNMENT_LEFT);
 
-    private int bitMask;
+    private final int bitMask;
 
     public AlignmentInfo(int bitMask) {
         this.bitMask = bitMask;
     }
 
-    public AlignmentInfo(int horizontal, int vertical) {
-        setAlignment(horizontal, vertical);
-    }
-
-    public void setAlignment(int horiz, int vert) {
-        bitMask = horiz + vert;
+    public AlignmentInfo(AlignmentInfo horizontal, AlignmentInfo vertical) {
+        this(horizontal.getBitMask() + vertical.getBitMask());
     }
 
     public int getBitMask() {
@@ -32,27 +45,27 @@ public class AlignmentInfo {
     }
 
     public boolean isTop() {
-        return (bitMask & ALIGNMENT_TOP) == ALIGNMENT_TOP;
+        return (bitMask & Bits.ALIGNMENT_TOP) == Bits.ALIGNMENT_TOP;
     }
 
     public boolean isBottom() {
-        return (bitMask & ALIGNMENT_BOTTOM) == ALIGNMENT_BOTTOM;
+        return (bitMask & Bits.ALIGNMENT_BOTTOM) == Bits.ALIGNMENT_BOTTOM;
     }
 
     public boolean isLeft() {
-        return (bitMask & ALIGNMENT_LEFT) == ALIGNMENT_LEFT;
+        return (bitMask & Bits.ALIGNMENT_LEFT) == Bits.ALIGNMENT_LEFT;
     }
 
     public boolean isRight() {
-        return (bitMask & ALIGNMENT_RIGHT) == ALIGNMENT_RIGHT;
+        return (bitMask & Bits.ALIGNMENT_RIGHT) == Bits.ALIGNMENT_RIGHT;
     }
 
     public boolean isVerticalCenter() {
-        return (bitMask & ALIGNMENT_VERTICAL_CENTER) == ALIGNMENT_VERTICAL_CENTER;
+        return (bitMask & Bits.ALIGNMENT_VERTICAL_CENTER) == Bits.ALIGNMENT_VERTICAL_CENTER;
     }
 
     public boolean isHorizontalCenter() {
-        return (bitMask & ALIGNMENT_HORIZONTAL_CENTER) == ALIGNMENT_HORIZONTAL_CENTER;
+        return (bitMask & Bits.ALIGNMENT_HORIZONTAL_CENTER) == Bits.ALIGNMENT_HORIZONTAL_CENTER;
     }
 
     public String getVerticalAlignment() {

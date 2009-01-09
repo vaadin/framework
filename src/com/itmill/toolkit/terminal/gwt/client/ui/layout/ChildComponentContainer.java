@@ -46,8 +46,8 @@ public class ChildComponentContainer extends Panel {
     private int containerMarginLeft = 0;
     private int containerMarginTop = 0;
 
-    AlignmentInfo alignment = new AlignmentInfo(AlignmentInfo.ALIGNMENT_LEFT,
-            AlignmentInfo.ALIGNMENT_TOP);
+    AlignmentInfo alignment = AlignmentInfo.TOP_LEFT;
+
     private int alignmentLeftOffsetForWidget = 0;
     private int alignmentLeftOffsetForCaption = 0;
     /**

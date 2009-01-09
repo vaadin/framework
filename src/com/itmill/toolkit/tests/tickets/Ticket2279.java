@@ -27,19 +27,19 @@ public class Ticket2279 extends Application {
     private static Set<String> shortVerticalAlignments = new HashSet<String>();
 
     static {
-        expected.put("r", AlignmentInfo.ALIGNMENT_RIGHT);
-        expected.put("l", AlignmentInfo.ALIGNMENT_LEFT);
-        expected.put("c", AlignmentInfo.ALIGNMENT_HORIZONTAL_CENTER);
-        expected.put("t", AlignmentInfo.ALIGNMENT_TOP);
-        expected.put("b", AlignmentInfo.ALIGNMENT_BOTTOM);
-        expected.put("m", AlignmentInfo.ALIGNMENT_VERTICAL_CENTER);
+        expected.put("r", AlignmentInfo.Bits.ALIGNMENT_RIGHT);
+        expected.put("l", AlignmentInfo.Bits.ALIGNMENT_LEFT);
+        expected.put("c", AlignmentInfo.Bits.ALIGNMENT_HORIZONTAL_CENTER);
+        expected.put("t", AlignmentInfo.Bits.ALIGNMENT_TOP);
+        expected.put("b", AlignmentInfo.Bits.ALIGNMENT_BOTTOM);
+        expected.put("m", AlignmentInfo.Bits.ALIGNMENT_VERTICAL_CENTER);
 
-        expected.put("right", AlignmentInfo.ALIGNMENT_RIGHT);
-        expected.put("left", AlignmentInfo.ALIGNMENT_LEFT);
-        expected.put("center", AlignmentInfo.ALIGNMENT_HORIZONTAL_CENTER);
-        expected.put("top", AlignmentInfo.ALIGNMENT_TOP);
-        expected.put("bottom", AlignmentInfo.ALIGNMENT_BOTTOM);
-        expected.put("middle", AlignmentInfo.ALIGNMENT_VERTICAL_CENTER);
+        expected.put("right", AlignmentInfo.Bits.ALIGNMENT_RIGHT);
+        expected.put("left", AlignmentInfo.Bits.ALIGNMENT_LEFT);
+        expected.put("center", AlignmentInfo.Bits.ALIGNMENT_HORIZONTAL_CENTER);
+        expected.put("top", AlignmentInfo.Bits.ALIGNMENT_TOP);
+        expected.put("bottom", AlignmentInfo.Bits.ALIGNMENT_BOTTOM);
+        expected.put("middle", AlignmentInfo.Bits.ALIGNMENT_VERTICAL_CENTER);
 
         shortHorizontalAlignments.add("r");
         shortHorizontalAlignments.add("l");
@@ -178,8 +178,8 @@ public class Ticket2279 extends Application {
 
     private void checkAlignment(AlignmentHandler layout,
             String alignmentString, int expected) {
-        layout.setComponentAlignment(label, AlignmentInfo.ALIGNMENT_TOP,
-                AlignmentInfo.ALIGNMENT_LEFT);
+        layout.setComponentAlignment(label, AlignmentInfo.Bits.ALIGNMENT_TOP,
+                AlignmentInfo.Bits.ALIGNMENT_LEFT);
         if (layout instanceof AbstractOrderedLayout) {
             ((AbstractOrderedLayout) layout).setComponentAlignment(label,
                     alignmentString);
@@ -187,7 +187,7 @@ public class Ticket2279 extends Application {
             ((GridLayout) layout).setComponentAlignment(label, alignmentString);
         }
 
-        int actual = layout.getComponentAlignment(label);
+        int actual = layout.getComponentAlignment(label).getBitMask();
         if (actual != expected) {
             String error = "Error " + alignmentString
                     + " did not produce expected results";
