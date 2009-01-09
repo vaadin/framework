@@ -1,7 +1,5 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.user.client.DOM;
@@ -9,7 +7,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HasFocus;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -39,12 +36,6 @@ public class IPopupView extends HTML implements Paintable {
 
     private final CustomPopup popup;
     private final Label loading = new Label("Loading...");
-
-    // Browser window sizes
-    int windowTop;
-    int windowLeft;
-    int windowRight;
-    int windowBottom;
 
     /**
      * loading constructor
@@ -93,8 +84,6 @@ public class IPopupView extends HTML implements Paintable {
         this.client = client;
         uidlId = uidl.getId();
 
-        updateWindowSize();
-
         hostPopupVisible = uidl.getBooleanVariable("popupVisibility");
 
         setHTML(uidl.getStringAttribute("html"));
@@ -116,22 +105,22 @@ public class IPopupView extends HTML implements Paintable {
             popup.updateFromUIDL(popupUIDL, client);
             showPopup(popup, hostReference);
 
-            // The popup isn't visible so we should remove its child. The popup
-            // handles hiding so we don't need to hide it here.
+            // The popup shouldn't be visible, try to hide it.
         } else {
-            popup.clear();
+            popup.hide();
         }
     }// updateFromUIDL
 
     /**
+     * Update popup visibility to server
      * 
      * @param visibility
      */
-    private void updateState(boolean visibility) {
+    private void updateState(boolean visible) {
         // If we know the server connection
         // then update the current situation
-        if (uidlId != null && client != null) {
-            client.updateVariable(uidlId, "popupVisibility", visibility, true);
+        if (uidlId != null && client != null && this.isAttached()) {
+            client.updateVariable(uidlId, "popupVisibility", visible, true);
         }
     }
 
@@ -141,6 +130,11 @@ public class IPopupView extends HTML implements Paintable {
     }
 
     private void showPopup(final CustomPopup popup, final Widget host) {
+        int windowTop = RootPanel.get().getAbsoluteTop();
+        int windowLeft = RootPanel.get().getAbsoluteLeft();
+        int windowRight = windowLeft + RootPanel.get().getOffsetWidth();
+        int windowBottom = windowTop + RootPanel.get().getOffsetHeight();
+
         int offsetWidth = popup.getOffsetWidth();
         int offsetHeight = popup.getOffsetHeight();
 
@@ -163,32 +157,20 @@ public class IPopupView extends HTML implements Paintable {
 
         popup.setPopupPosition(left, top);
 
-        setVisible(true);
+        popup.setVisible(true);
     }
 
     /**
-     * This shows the popup on top of the widget below. This function allows us
-     * to position the popup before making it visible.
+     * Make sure that we remove the popup when the main widget is removed.
      * 
-     * @param popup
-     *            the popup to show
-     * @param host
-     *            the widget to draw the popup on
+     * @see com.google.gwt.user.client.ui.Widget#onUnload()
      */
-
-    public void updateWindowSize() {
-        windowTop = RootPanel.get().getAbsoluteTop();
-        windowLeft = RootPanel.get().getAbsoluteLeft();
-        windowRight = windowLeft + RootPanel.get().getOffsetWidth();
-        windowBottom = windowTop + RootPanel.get().getOffsetHeight();
+    @Override
+    protected void onDetach() {
+        popup.hide();
+        client.unregisterPaintable(popup);
+        super.onDetach();
     }
-
-    private static native void nativeBlur(Element e)
-    /*-{ 
-        if(e.focus) {
-            e.blur();
-        }
-    }-*/;
 
     private class CustomPopup extends IToolkitOverlay implements Container {
 
@@ -198,33 +180,24 @@ public class IPopupView extends HTML implements Paintable {
 
         private boolean hasHadMouseOver = false;
         private boolean hideOnMouseOut = true;
-        private final Set<Element> activeChildren;
 
         public CustomPopup() {
             super(true, false, true); // autoHide, not modal, dropshadow
-            activeChildren = new HashSet<Element>();
         }
 
         // For some reason ONMOUSEOUT events are not always recieved, so we have
         // to use ONMOUSEMOVE that doesn't target the popup
         @Override
         public boolean onEventPreview(Event event) {
-
             Element target = DOM.eventGetTarget(event);
             boolean eventTargetsPopup = DOM.isOrHasChild(getElement(), target);
             int type = DOM.eventGetType(event);
 
-            // Catch children that use keyboard, so we can unfocus them when
-            // hiding
-            if (type == Event.ONKEYPRESS) {
-                activeChildren.add(target);
-            }
-
-            if (eventTargetsPopup & type == Event.ONMOUSEMOVE) {
+            if (eventTargetsPopup && type == Event.ONMOUSEMOVE) {
                 hasHadMouseOver = true;
             }
 
-            if (!eventTargetsPopup & type == Event.ONMOUSEMOVE) {
+            if (!eventTargetsPopup && type == Event.ONMOUSEMOVE) {
 
                 if (hasHadMouseOver && hideOnMouseOut) {
                     hide();
@@ -237,26 +210,16 @@ public class IPopupView extends HTML implements Paintable {
 
         @Override
         public void hide() {
-            // Notify children with focus
-            if ((popupComponentWidget instanceof HasFocus)) {
-                ((HasFocus) popupComponentWidget).setFocus(false);
+            unregisterPaintables();
+            if (popupComponentWidget != null && popupComponentWidget != loading) {
+                remove(popupComponentWidget);
             }
-
-            // Notify children that have used the keyboard
-            for (Iterator<Element> iterator = activeChildren.iterator(); iterator
-                    .hasNext();) {
-                nativeBlur(iterator.next());
-            }
-            activeChildren.clear();
-            remove(popupComponentWidget);
             hasHadMouseOver = false;
             super.hide();
         }
 
         @Override
         public boolean remove(Widget w) {
-
-            unregisterPaintables();
 
             popupComponentPaintable = null;
             popupComponentWidget = null;
@@ -276,9 +239,8 @@ public class IPopupView extends HTML implements Paintable {
         public void replaceChildComponent(Widget oldComponent,
                 Widget newComponent) {
 
+            setWidget(newComponent);
             popupComponentWidget = newComponent;
-
-            setWidget(popupComponentWidget);
         }
 
         public void updateCaption(Paintable component, UIDL uidl) {
@@ -296,6 +258,8 @@ public class IPopupView extends HTML implements Paintable {
                 }
             }
 
+            popupComponentWidget = (Widget) component;
+            popupComponentPaintable = component;
         }
 
         public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -308,11 +272,10 @@ public class IPopupView extends HTML implements Paintable {
 
             if (newPopupComponent != popupComponentPaintable) {
 
-                unregisterPaintables();
+                setWidget((Widget) newPopupComponent);
 
                 popupComponentWidget = (Widget) newPopupComponent;
 
-                popup.setWidget(popupComponentWidget);
                 popupComponentPaintable = newPopupComponent;
             }
 
@@ -321,7 +284,7 @@ public class IPopupView extends HTML implements Paintable {
 
         }
 
-        private void unregisterPaintables() {
+        public void unregisterPaintables() {
             if (popupComponentPaintable != null) {
                 client.unregisterPaintable(popupComponentPaintable);
             }
@@ -332,7 +295,8 @@ public class IPopupView extends HTML implements Paintable {
         }
 
         public RenderSpace getAllocatedSpace(Widget child) {
-            return new RenderSpace(windowRight, windowBottom);
+            return new RenderSpace(RootPanel.get().getOffsetWidth(), RootPanel
+                    .get().getOffsetHeight());
         }
 
         public boolean isHideOnMouseOut() {
@@ -344,5 +308,4 @@ public class IPopupView extends HTML implements Paintable {
         }
 
     }// class CustomPopup
-
 }// class IPopupView
