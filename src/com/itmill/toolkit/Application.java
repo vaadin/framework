@@ -4,7 +4,6 @@
 
 package com.itmill.toolkit;
 
-import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.URL;
 import java.util.Collection;
@@ -699,39 +698,16 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
                 if (stream != null) {
                     stream.setCacheTime(resource.getCacheTime());
                     return stream;
-                }
-            }
-
-            // Resource requests override uri handling
-            return null;
-        }
-
-        // If the uri is in some window, handle the window uri
-        if (prefix != null && prefix.length() > 0) {
-            Window window = getWindow(prefix);
-            if (window != null) {
-                URL windowContext;
-                try {
-                    windowContext = new URL(context, prefix + "/");
-                    final String windowUri = relativeUri.length() > prefix
-                            .length() + 1 ? relativeUri.substring(prefix
-                            .length() + 1) : "";
-                    return window.handleURI(windowContext, windowUri);
-                } catch (final MalformedURLException e) {
-                    terminalError(new ApplicationError(e));
+                } else {
                     return null;
                 }
+            } else {
+                // Resource requests override uri handling
+                return null;
             }
+        } else {
+            return null;
         }
-
-        // If the uri was not pointing to a window, handle the
-        // uri in main window
-        Window window = getMainWindow();
-        if (window != null) {
-            return window.handleURI(context, relativeUri);
-        }
-
-        return null;
     }
 
     /**

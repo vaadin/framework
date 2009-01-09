@@ -139,6 +139,7 @@ public class ApplicationConnection {
             ApplicationConfiguration cnf) {
         this.widgetSet = widgetSet;
         configuration = cnf;
+        windowName = configuration.getInitialWindowName();
 
         if (isDebugMode()) {
             console = new IDebugConsole(this, cnf, !isQuietDebugMode());

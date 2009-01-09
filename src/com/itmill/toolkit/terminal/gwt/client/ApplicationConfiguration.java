@@ -13,6 +13,7 @@ public class ApplicationConfiguration {
     private String pathInfo;
     private String appUri;
     private JavaScriptObject versionInfo;
+    private String windowName;
 
     private static ArrayList<ApplicationConnection> unstartedApplications = new ArrayList<ApplicationConnection>();
     private static ArrayList<ApplicationConnection> runningApplications = new ArrayList<ApplicationConnection>();
@@ -37,6 +38,14 @@ public class ApplicationConfiguration {
         id = appId;
     }
 
+    public void setInitialWindowName(String name) {
+        windowName = name;
+    }
+
+    public String getInitialWindowName() {
+        return windowName;
+    }
+
     public JavaScriptObject getVersionInfoJSObject() {
         return versionInfo;
     }
@@ -54,6 +63,9 @@ public class ApplicationConfiguration {
             this.@com.itmill.toolkit.terminal.gwt.client.ApplicationConfiguration::appUri = uri;
             this.@com.itmill.toolkit.terminal.gwt.client.ApplicationConfiguration::pathInfo = jsobj.pathInfo;
             this.@com.itmill.toolkit.terminal.gwt.client.ApplicationConfiguration::themeUri = jsobj.themeUri;
+            if(jsobj.windowName) {
+                this.@com.itmill.toolkit.terminal.gwt.client.ApplicationConfiguration::windowName = jsobj.windowName;
+            }
             if(jsobj.versionInfo) {
                 this.@com.itmill.toolkit.terminal.gwt.client.ApplicationConfiguration::versionInfo = jsobj.versionInfo;
             }

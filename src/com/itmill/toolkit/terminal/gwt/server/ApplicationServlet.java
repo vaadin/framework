@@ -486,7 +486,7 @@ public class ApplicationServlet extends HttpServlet {
             DownloadStream download = null;
 
             // Handles the URI if the application is still running
-            download = handleURI(application, request, response);
+            download = handleURI(application, window, request, response);
 
             // If this is not a download request
             if (download == null) {
@@ -913,6 +913,9 @@ public class ApplicationServlet extends HttpServlet {
             page.write("itmill.toolkitConfigurations[\"" + appId + "\"] = {");
             page.write("appUri:'" + appUrl + "', ");
             page.write("pathInfo: '" + pathInfo + "', ");
+            if (window != application.getMainWindow()) {
+                page.write("windowName: '" + window.getName() + "', ");
+            }
             page.write("themeUri:");
             page.write(themeUri != null ? "'" + themeUri + "'" : "null");
             page.write(", versionInfo : {toolkitVersion:\"");
@@ -965,6 +968,9 @@ public class ApplicationServlet extends HttpServlet {
             page.write("itmill.toolkitConfigurations[\"" + appId + "\"] = {");
             page.write("appUri:'" + appUrl + "', ");
             page.write("pathInfo: '" + pathInfo + "', ");
+            if (window != application.getMainWindow()) {
+                page.write("windowName: '" + window.getName() + "', ");
+            }
             page.write("themeUri:");
             page.write(themeUri != null ? "'" + themeUri + "'" : "null");
             page.write(", versionInfo : {toolkitVersion:\"");
@@ -1090,7 +1096,7 @@ public class ApplicationServlet extends HttpServlet {
      *         processing should be suppressed, <code>false</code> otherwise.
      * @see com.itmill.toolkit.terminal.URIHandler
      */
-    private DownloadStream handleURI(Application application,
+    private DownloadStream handleURI(Application application, Window window,
             HttpServletRequest request, HttpServletResponse response) {
 
         String uri = request.getPathInfo();
@@ -1098,27 +1104,56 @@ public class ApplicationServlet extends HttpServlet {
         // If no URI is available
         if (uri == null) {
             uri = "";
-        }
-
-        // Removes the leading /
-        while (uri.startsWith("/") && uri.length() > 0) {
-            uri = uri.substring(1);
+        } else {
+            // Removes the leading /
+            while (uri.startsWith("/") && uri.length() > 0) {
+                uri = uri.substring(1);
+            }
         }
 
         // If using application runner, remove package and class name
         if (isApplicationRunnerServlet) {
-            uri = uri.replaceFirst(applicationRunnerClassname + "/", "");
+            if (uri.contains("/")) {
+                uri = uri.replaceFirst(applicationRunnerClassname + "/", "");
+            } else {
+                uri = "";
+            }
         }
 
         // Handles the uri
-        DownloadStream stream = null;
         try {
-            stream = application.handleURI(application.getURL(), uri);
+            URL context = application.getURL();
+            if (window == application.getMainWindow()) {
+                DownloadStream stream = null;
+                /*
+                 * Application.handleURI run first. Handles possible
+                 * ApplicationResources.
+                 */
+                stream = application.handleURI(context, uri);
+                if (stream == null) {
+                    stream = window.handleURI(context, uri);
+                }
+                return stream;
+            } else {
+                // Resolve the prefix end inded
+                final int index = uri.indexOf('/');
+                if (index > 0) {
+                    String prefix = uri.substring(0, index);
+                    URL windowContext;
+                    windowContext = new URL(context, prefix + "/");
+                    final String windowUri = (uri.length() > prefix.length() + 1) ? uri
+                            .substring(prefix.length() + 1)
+                            : "";
+                    return window.handleURI(windowContext, windowUri);
+                } else {
+                    return null;
+                }
+            }
+
         } catch (final Throwable t) {
             application.terminalError(new URIHandlerErrorImpl(application, t));
+            return null;
         }
-
-        return stream;
     }
 
     /**
