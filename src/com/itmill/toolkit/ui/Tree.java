@@ -617,8 +617,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     /**
-     * Tests if the Item specified with <code>itemId</code> has any child Items,
-     * that is, is it a leaf Item.
+     * Tests if the Item specified with <code>itemId</code> has child Items.
      * 
      * @see com.itmill.toolkit.data.Container.Hierarchical#hasChildren(Object)
      */

@@ -466,7 +466,7 @@ public interface Container {
                 throws UnsupportedOperationException;
 
         /**
-         * Tests if the Item with given ID can have any children.
+         * Tests if the Item with given ID can have children.
          * 
          * @param itemId
          *            ID of the Item in the container whose child capability is
@@ -523,10 +523,9 @@ public interface Container {
 
         /**
          * <p>
-         * Tests if the Item specified with <code>itemId</code> has any child
-         * Items, that is, is it a leaf Item. The
-         * {@link #getChildren(Object itemId)}method always returns
-         * <code>null</code> for leaf Items.
+         * Tests if the Item specified with <code>itemId</code> has child
+         * Items or if it is a leaf. The {@link #getChildren(Object itemId)}
+         * method always returns <code>null</code> for leaf Items.
          * </p>
          * 
          * <p>
@@ -536,9 +535,9 @@ public interface Container {
          * .
          * 
          * @param itemId
-         *            ID of the Item whose leaf status is to be tested
-         * @return <code>true</code> if the specified Item is a leaf,
-         *         <code>false</code> if not
+         *            ID of the Item to be tested
+         * @return <code>true</code> if the specified Item has children,
+         *         <code>false</code> if not (is a leaf)
          */
         public boolean hasChildren(Object itemId);
     }
