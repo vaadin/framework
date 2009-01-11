@@ -54,15 +54,15 @@ public class LayoutAlignmentExample extends VerticalLayout {
         
         Button middleleft = new Button("Middle Left");
         grid.addComponent(middleleft, 0, 1);
-        grid.setComponentAlignment(middleleft, new Alignment(Bits.ALIGNMENT_VERTICAL_CENTER + Bits.ALIGNMENT_LEFT));
+        grid.setComponentAlignment(middleleft, new Alignment(Bits.ALIGNMENT_VERTICAL_CENTER | Bits.ALIGNMENT_LEFT));
         
         Button middlecenter = new Button("Middle Center");
         grid.addComponent(middlecenter, 1, 1);
-        grid.setComponentAlignment(middlecenter, new Alignment(Bits.ALIGNMENT_VERTICAL_CENTER + Bits.ALIGNMENT_HORIZONTAL_CENTER));
+        grid.setComponentAlignment(middlecenter, new Alignment(Bits.ALIGNMENT_VERTICAL_CENTER | Bits.ALIGNMENT_HORIZONTAL_CENTER));
 
         Button middleright = new Button("Middle Right");
         grid.addComponent(middleright, 2, 1);
-        grid.setComponentAlignment(middleright, new Alignment(Bits.ALIGNMENT_VERTICAL_CENTER + Bits.ALIGNMENT_RIGHT));
+        grid.setComponentAlignment(middleright, new Alignment(Bits.ALIGNMENT_VERTICAL_CENTER | Bits.ALIGNMENT_RIGHT));
 
         // Here we again use constants:
         
