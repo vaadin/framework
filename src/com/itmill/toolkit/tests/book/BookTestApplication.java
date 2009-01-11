@@ -14,6 +14,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import javax.management.Notification;
+
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Validator;
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
@@ -500,18 +502,18 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
                 final FormLayout layout = new FormLayout();
                 main.addComponent(layout);
 
-                final TextField textfield = new TextField("Enter name");
+                final TextField textfield = new TextField("Enter code");
                 layout.addComponent(textfield);
                 textfield.setComponentError(null);
 
-                final Button button = new Button("Click me!");
+                final Button button = new Button("Ok!");
                 layout.addComponent(button);
 
                 button.addListener(new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
                         if (((String) textfield.getValue()).length() == 0) {
                             textfield.setComponentError(new UserError(
-                                    "Must not be empty"));
+                                    "Must be letters and numbers."));
                         } else {
                             textfield.setComponentError(null);
                         }
@@ -519,19 +521,31 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
                 });
             }
         } else {
-            final TextField textfield = new TextField("Enter name");
+            main.setLayout(new HorizontalLayout());
+            
+            // Create a field.
+            final TextField textfield = new TextField("Enter code");
             main.addComponent(textfield);
+            
+            // Let the component error be initially clear. (It actually is by default.)
             textfield.setComponentError(null);
-
-            final Button button = new Button("Click me!");
+            
+            // Have a button right of the field (and align it properly).
+            final Button button = new Button("Ok!");
             main.addComponent(button);
-
+            ((HorizontalLayout)main.getLayout()).setComponentAlignment(button,
+                    HorizontalLayout.ALIGNMENT_LEFT, HorizontalLayout.ALIGNMENT_BOTTOM);
+            
+            // Handle button clicks
             button.addListener(new Button.ClickListener() {
                 public void buttonClick(ClickEvent event) {
-                    if (((String) textfield.getValue()).length() == 0) {
-                        textfield.setComponentError(new UserError(
-                                "Must not be empty"));
+                    // If the field value is bad, set its error.
+                    // (Here the content must be only alphanumeric characters.)
+                    if (! ((String) textfield.getValue()).matches("^\\w*$")) {
+                        // Put the component in error state and set the error message.
+                        textfield.setComponentError(new UserError("Must be letters and numbers"));
                     } else {
+                        // Otherwise clear it. 
                         textfield.setComponentError(null);
                     }
                 }
@@ -666,6 +680,7 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
     void example_CheckBox(Window main, String param) {
         /* A check box with default state (not checked, i.e., false). */
         final CheckBox checkbox1 = new CheckBox("My CheckBox");
+        checkbox1.addStyleName("mybox");
         main.addComponent(checkbox1);
 
         /* Another check box with explicitly set checked state. */
@@ -1474,11 +1489,84 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
     }
 
     void example_Notification(final Window main, String param) {
-        final Window sub1 = new Window("");
-        main.addWindow(sub1);
+        //final Window sub1 = new Window("");
+        //main.addWindow(sub1);
+        if (param.equals("example")) {
+            main.showNotification("This is the caption",
+                                  "This is the description");
+            return;
+        } else if (param.equals("type")) {
+            main.showNotification("This is a warning",
+                                  "<br/>This is the <i>last</i> warning",
+                                  Window.Notification.TYPE_WARNING_MESSAGE);
+            return;
+        } else if (param.equals("pos")) {
+            // Create a notification with the default settings for a warning.
+            Window.Notification notif = new Window.Notification(
+                    "Be warned!", "This message lurks in the top-left corner!",
+                    Window.Notification.TYPE_WARNING_MESSAGE);
+            
+            // Set the position.
+            notif.setPosition(Window.Notification.POSITION_TOP_LEFT);
+            
+            // Let it stay there until the user clicks it
+            notif.setDelayMsec(-1);
+            
+            // Show it in the main window.
+            main.showNotification(notif);
+            return;
+        }
 
-        sub1.showNotification("The default notification");
-
+        main.setLayout(new HorizontalLayout());
+        
+        final Integer type_humanized = Window.Notification.TYPE_HUMANIZED_MESSAGE; 
+        final Integer type_warning   = Window.Notification.TYPE_WARNING_MESSAGE; 
+        final Integer type_error     = Window.Notification.TYPE_ERROR_MESSAGE; 
+        final Integer type_tray      = Window.Notification.TYPE_TRAY_NOTIFICATION; 
+        final NativeSelect types = new NativeSelect();
+        main.addComponent(types);
+        types.addItem(type_humanized);
+        types.addItem(type_warning);
+        types.addItem(type_error);
+        types.addItem(type_tray);
+        types.setItemCaption(type_humanized, "Humanized");
+        types.setItemCaption(type_warning,   "Warning");
+        types.setItemCaption(type_error,     "Error");
+        types.setItemCaption(type_tray,      "Tray");
+        
+        Button show = new Button("Show Notification");
+        main.addComponent(show);
+        
+        show.addListener(new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                String caption = "";
+                String description = "";
+                switch(((Integer)types.getValue()).intValue()) {
+                    case Window.Notification.TYPE_HUMANIZED_MESSAGE:
+                        caption = "Humanized message";
+                        description = "<br/>For minimal annoyance";
+                        break;
+                    case Window.Notification.TYPE_WARNING_MESSAGE:
+                        caption = "Warning message";
+                        description = "<br/>For notifications of medium importance";
+                        break;
+                    case Window.Notification.TYPE_ERROR_MESSAGE:
+                        caption = "Error message";
+                        description = "<br/>For important notifications";
+                        break;
+                    case Window.Notification.TYPE_TRAY_NOTIFICATION:
+                        caption = "Tray notification";
+                        description = "<br/>Stays up longer - but away";
+                }
+                // main.showNotification("The default notification");
+                Window.Notification notif = new Window.Notification(
+                        caption, description, (Integer)types.getValue());
+                //notif.setPosition(Window.Notification.POSITION_TOP_LEFT);
+                notif.setDelayMsec(-1);
+                main.showNotification(notif);
+            }
+        });
+        
         // Notification notif = new Notification("Title");
     }
 
