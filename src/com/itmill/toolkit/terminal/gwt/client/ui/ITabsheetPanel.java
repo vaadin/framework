@@ -72,20 +72,25 @@ public class ITabsheetPanel extends ComplexPanel {
      */
     public void insert(Widget w, int beforeIndex) {
         Element el = createContainerElement();
-        super.insert(w, el, beforeIndex, false);
         DOM.insertChild(getElement(), el, beforeIndex);
+        super.insert(w, el, beforeIndex, false);
     }
 
     @Override
     public boolean remove(Widget w) {
-        final int index = getWidgetIndex(w);
+        Element child = w.getElement();
+        Element parent = null;
+        if (child != null) {
+            parent = DOM.getParent(child);
+        }
         final boolean removed = super.remove(w);
         if (removed) {
             if (visibleWidget == w) {
                 visibleWidget = null;
             }
-            Element child = DOM.getChild(getElement(), index);
-            DOM.removeChild(getElement(), child);
+            if (parent != null) {
+                DOM.removeChild(getElement(), parent);
+            }
         }
         return removed;
     }

@@ -16,7 +16,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.ComplexPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.ICaption;
@@ -417,22 +416,60 @@ public class ITabsheet extends ITabsheetBase {
          */
         c.setWidth(c.getRequiredWidth() + "px");
         captions.put("" + index, c);
+
+        UIDL tabContentUIDL = null;
+        Paintable tabContent = null;
+        if (tabUidl.getChildCount() > 0) {
+            tabContentUIDL = tabUidl.getChildUIDL(0);
+            tabContent = client.getPaintable(tabContentUIDL);
+        }
+
+        if (tabContent != null) {
+            /* This is a tab with content information */
+
+            int oldIndex = tp.getWidgetIndex((Widget) tabContent);
+            if (oldIndex != -1 && oldIndex != index) {
+                /*
+                 * The tab has previously been rendered in another position so
+                 * we must move the cached content to correct position
+                 */
+                tp.insert((Widget) tabContent, index);
+            }
+        } else {
+            /* A tab whose content has not yet been loaded */
+
+            /*
+             * Make sure there is a corresponding empty tab in tp. The same
+             * operation as the moving above but for not-loaded tabs.
+             */
+            if (index < tp.getWidgetCount()) {
+                Widget oldWidget = tp.getWidget(index);
+                if (!(oldWidget instanceof PlaceHolder)) {
+                    tp.insert(new PlaceHolder(), index);
+                }
+            }
+
+        }
+
         if (selected) {
-            renderContent(tabUidl.getChildUIDL(0));
+            renderContent(tabContentUIDL);
             tb.selectTab(index);
         } else {
-            if (tabUidl.getChildCount() > 0) {
+            if (tabContentUIDL != null) {
                 // updating a drawn child on hidden tab
-                Paintable paintable = client.getPaintable(tabUidl
-                        .getChildUIDL(0));
-
-                if (tp.getWidgetIndex((Widget) paintable) < 0) {
-                    tp.insert((Widget) paintable, index);
+                if (tp.getWidgetIndex((Widget) tabContent) < 0) {
+                    tp.insert((Widget) tabContent, index);
                 }
-                paintable.updateFromUIDL(tabUidl.getChildUIDL(0), client);
+                tabContent.updateFromUIDL(tabContentUIDL, client);
             } else if (tp.getWidgetCount() <= index) {
-                tp.add(new Label(""));
+                tp.add(new PlaceHolder());
             }
+        }
+    }
+
+    public class PlaceHolder extends ILabel {
+        public PlaceHolder() {
+            super("");
         }
     }
 
@@ -707,6 +744,14 @@ public class ITabsheet extends ITabsheetBase {
     @Override
     protected int getTabCount() {
         return tb.getWidgetCount();
+    }
+
+    @Override
+    protected Paintable getTab(int index) {
+        if (tp.getWidgetCount() > index) {
+            return (Paintable) tp.getWidget(index);
+        }
+        return null;
     }
 
     @Override

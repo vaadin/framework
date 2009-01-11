@@ -45,6 +45,8 @@ abstract class ITabsheetBase extends ComplexPanel implements Container {
 
         // Render content
         final UIDL tabs = uidl.getChildUIDL(0);
+
+        // Paintables in the TabSheet before update
         ArrayList oldPaintables = new ArrayList();
         for (Iterator iterator = getPaintableIterator(); iterator.hasNext();) {
             oldPaintables.add(iterator.next());
@@ -70,10 +72,6 @@ abstract class ITabsheetBase extends ComplexPanel implements Container {
             if (selected) {
                 activeTabIndex = index;
             }
-            if (tab.getChildCount() > 0) {
-                Paintable p = client.getPaintable(tab.getChildUIDL(0));
-                oldPaintables.remove(p);
-            }
             renderTab(tab, index, selected, hidden);
             index++;
         }
@@ -83,6 +81,12 @@ abstract class ITabsheetBase extends ComplexPanel implements Container {
             removeTab(index);
         }
 
+        for (int i = 0; i < getTabCount(); i++) {
+            Paintable p = getTab(i);
+            oldPaintables.remove(p);
+        }
+
+        // Perform unregister for any paintables removed during update
         for (Iterator iterator = oldPaintables.iterator(); iterator.hasNext();) {
             Object oldPaintable = iterator.next();
             if (oldPaintable instanceof Paintable) {
@@ -125,6 +129,12 @@ abstract class ITabsheetBase extends ComplexPanel implements Container {
      * tabs currently rendered.
      */
     protected abstract int getTabCount();
+
+    /**
+     * Implement in extending classes. This method should return the Paintable
+     * corresponding to the given index.
+     */
+    protected abstract Paintable getTab(int index);
 
     /**
      * Implement in extending classes. This method should remove the rendered

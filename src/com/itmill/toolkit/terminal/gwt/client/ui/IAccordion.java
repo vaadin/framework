@@ -1,6 +1,5 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -26,8 +25,6 @@ public class IAccordion extends ITabsheetBase implements
         ContainerResizedListener {
 
     public static final String CLASSNAME = "i-accordion";
-
-    private ArrayList<StackItem> stack = new ArrayList<StackItem>();
 
     private Set<Paintable> paintables = new HashSet<Paintable>();
 
@@ -65,7 +62,7 @@ public class IAccordion extends ITabsheetBase implements
          * the content area is
          */
         if (selectedUIDLItemIndex >= 0) {
-            StackItem selectedItem = stack.get(selectedUIDLItemIndex);
+            StackItem selectedItem = getStackItem(selectedUIDLItemIndex);
             UIDL selectedTabUIDL = lazyUpdateMap.remove(selectedItem);
             open(selectedUIDLItemIndex);
 
@@ -95,17 +92,17 @@ public class IAccordion extends ITabsheetBase implements
             boolean hidden) {
         StackItem item;
         int itemIndex;
-        if (stack.size() <= index) {
+        if (getWidgetCount() <= index) {
             // Create stackItem and render caption
             item = new StackItem(tabUidl);
-            if (stack.size() == 0) {
+            if (getWidgetCount() == 0) {
                 item.addStyleDependentName("first");
             }
-            stack.add(item);
-            itemIndex = stack.size() - 1;
+            itemIndex = getWidgetCount();
             add(item, getElement());
         } else {
-            item = stack.get(index);
+            item = getStackItem(index);
+            item = moveStackItemIfNeeded(item, index, tabUidl);
             itemIndex = index;
             item.updateCaption(tabUidl);
         }
@@ -121,8 +118,72 @@ public class IAccordion extends ITabsheetBase implements
         }
     }
 
+    /**
+     * This method tries to find out if a tab has been rendered with a different
+     * index previously. If this is the case it re-orders the children so the
+     * same StackItem is used for rendering this time. E.g. if the first tab has
+     * been removed all tabs which contain cached content must be moved 1 step
+     * up to preserve the cached content.
+     * 
+     * @param item
+     * @param newIndex
+     * @param tabUidl
+     * @return
+     */
+    private StackItem moveStackItemIfNeeded(StackItem item, int newIndex,
+            UIDL tabUidl) {
+        UIDL tabContentUIDL = null;
+        Paintable tabContent = null;
+        if (tabUidl.getChildCount() > 0) {
+            tabContentUIDL = tabUidl.getChildUIDL(0);
+            tabContent = client.getPaintable(tabContentUIDL);
+        }
+
+        Widget itemWidget = item.getComponent();
+        if (tabContent != null) {
+            if (tabContent != itemWidget) {
+                /*
+                 * This is not the same widget as before, find out if it has
+                 * been moved
+                 */
+                int oldIndex = -1;
+                StackItem oldItem = null;
+                for (int i = 0; i < getWidgetCount(); i++) {
+                    Widget w = getWidget(i);
+                    oldItem = (StackItem) w;
+                    if (tabContent == oldItem.getComponent()) {
+                        oldIndex = i;
+                        break;
+                    }
+                }
+
+                if (oldIndex != -1 && oldIndex > newIndex) {
+                    /*
+                     * The tab has previously been rendered in another position
+                     * so we must move the cached content to correct position.
+                     * We move only items with oldIndex > newIndex to prevent
+                     * moving items already rendered in this update. If for
+                     * instance tabs 1,2,3 are removed and added as 3,2,1 we
+                     * cannot re-use "1" when we get to the third tab.
+                     */
+                    insert(oldItem, getElement(), newIndex, true);
+                    return oldItem;
+                }
+            }
+        } else {
+            // Tab which has never been loaded. Must assure we use an empty
+            // StackItem
+            Widget oldWidget = item.getComponent();
+            if (oldWidget != null) {
+                item = new StackItem(tabUidl);
+                insert(item, getElement(), newIndex, true);
+            }
+        }
+        return item;
+    }
+
     private void open(int itemIndex) {
-        StackItem item = stack.get(itemIndex);
+        StackItem item = (StackItem) getWidget(itemIndex);
         boolean alreadyOpen = false;
         if (openTab != null) {
             if (openTab.isOpen()) {
@@ -157,7 +218,7 @@ public class IAccordion extends ITabsheetBase implements
 
     @Override
     protected void selectTab(final int index, final UIDL contentUidl) {
-        StackItem item = stack.get(index);
+        StackItem item = getStackItem(index);
         if (index != activeTabIndex) {
             open(index);
             iLayout();
@@ -169,7 +230,7 @@ public class IAccordion extends ITabsheetBase implements
     }
 
     public void onSelectTab(StackItem item) {
-        final int index = stack.indexOf(item);
+        final int index = getWidgetIndex(item);
         if (index != activeTabIndex && !disabled && !readonly
                 && !disabledTabKeys.contains(tabKeys.get(index))) {
             addStyleDependentName("loading");
@@ -236,8 +297,8 @@ public class IAccordion extends ITabsheetBase implements
         // HEIGHT
         if (!isDynamicHeight()) {
             int usedPixels = 0;
-            for (Iterator iterator = stack.iterator(); iterator.hasNext();) {
-                StackItem item = (StackItem) iterator.next();
+            for (Widget w : getChildren()) {
+                StackItem item = (StackItem) w;
                 if (item == openTab) {
                     usedPixels += item.getCaptionHeight();
                 } else {
@@ -271,7 +332,8 @@ public class IAccordion extends ITabsheetBase implements
 
         if (isDynamicWidth()) {
             int maxWidth = 40;
-            for (StackItem si : stack) {
+            for (Widget w : getChildren()) {
+                StackItem si = (StackItem) w;
                 int captionWidth = si.getCaptionWidth();
                 if (captionWidth > maxWidth) {
                     maxWidth = captionWidth;
@@ -306,6 +368,13 @@ public class IAccordion extends ITabsheetBase implements
                                 + "px");
 
             }
+        }
+
+        public Widget getComponent() {
+            if (getWidgetCount() < 2) {
+                return null;
+            }
+            return getWidget(1);
         }
 
         @Override
@@ -480,7 +549,6 @@ public class IAccordion extends ITabsheetBase implements
 
     @Override
     protected void clearPaintables() {
-        stack.clear();
         clear();
     }
 
@@ -506,7 +574,8 @@ public class IAccordion extends ITabsheetBase implements
     }
 
     public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
-        for (StackItem item : stack) {
+        for (Widget w : getChildren()) {
+            StackItem item = (StackItem) w;
             if (item.getPaintable() == oldComponent) {
                 item.replacePaintable((Paintable) newComponent);
                 return;
@@ -515,8 +584,8 @@ public class IAccordion extends ITabsheetBase implements
     }
 
     public void updateCaption(Paintable component, UIDL uidl) {
-        for (Iterator iterator = stack.iterator(); iterator.hasNext();) {
-            StackItem si = (StackItem) iterator.next();
+        for (Widget w : getChildren()) {
+            StackItem si = (StackItem) w;
             if (si.getPaintable() == component) {
                 boolean visible = si.isVisible();
                 si.updateCaption(uidl);
@@ -567,13 +636,25 @@ public class IAccordion extends ITabsheetBase implements
 
     @Override
     protected int getTabCount() {
-        return stack.size();
+        return getWidgetCount();
     }
 
     @Override
     protected void removeTab(int index) {
-        StackItem item = stack.get(index);
+        StackItem item = getStackItem(index);
         remove(item);
     }
 
+    @Override
+    protected Paintable getTab(int index) {
+        if (index < getWidgetCount()) {
+            return (Paintable) (getStackItem(index)).getPaintable();
+        }
+
+        return null;
+    }
+
+    private StackItem getStackItem(int index) {
+        return (StackItem) getWidget(index);
+    }
 }
