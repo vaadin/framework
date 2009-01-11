@@ -8,6 +8,7 @@ import java.util.Date;
 
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
+import com.itmill.toolkit.ui.Alignment;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.Label;
@@ -54,8 +55,7 @@ public class JavaScriptAPIExample extends CustomComponent {
             }
         });
         main.addComponent(b);
-        main.setComponentAlignment(b, VerticalLayout.ALIGNMENT_RIGHT,
-                VerticalLayout.ALIGNMENT_VERTICAL_CENTER);
+        main.setComponentAlignment(b, Alignment.MIDDLE_RIGHT);
 
         // 
         Label l = new Label(

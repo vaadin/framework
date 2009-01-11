@@ -2,6 +2,7 @@ package com.itmill.toolkit.demo.sampler.features.notifications;
 
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property;
+import com.itmill.toolkit.ui.Alignment;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.NativeSelect;
 import com.itmill.toolkit.ui.OrderedLayout;
@@ -73,7 +74,7 @@ public class NotificationCustomExample extends OrderedLayout {
                     }
                 });
         addComponent(show);
-        setComponentAlignment(show, ALIGNMENT_RIGHT, ALIGNMENT_VERTICAL_CENTER);
+        setComponentAlignment(show, Alignment.MIDDLE_RIGHT);
 
     }
 

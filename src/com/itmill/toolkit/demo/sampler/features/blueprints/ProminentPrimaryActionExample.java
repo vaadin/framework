@@ -1,5 +1,6 @@
 package com.itmill.toolkit.demo.sampler.features.blueprints;
 
+import com.itmill.toolkit.ui.Alignment;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Button.ClickEvent;
@@ -33,8 +34,7 @@ public class ProminentPrimaryActionExample extends OrderedLayout implements
             Button secondary = new Button("or Sign in", this);
             secondary.setStyleName(Button.STYLE_LINK);
             horiz.addComponent(secondary);
-            horiz.setComponentAlignment(secondary, ALIGNMENT_LEFT,
-                    ALIGNMENT_VERTICAL_CENTER);
+            horiz.setComponentAlignment(secondary, Alignment.MIDDLE_LEFT);
         }
 
         { // Login / Forgot password?
@@ -45,14 +45,11 @@ public class ProminentPrimaryActionExample extends OrderedLayout implements
             addComponent(vert);
             Button primary = new Button("Login", this);
             vert.addComponent(primary);
-            vert.setComponentAlignment(primary, OrderedLayout.ALIGNMENT_RIGHT,
-                    OrderedLayout.ALIGNMENT_BOTTOM);
+            vert.setComponentAlignment(primary, Alignment.BOTTOM_RIGHT);
             Button secondary = new Button("Forgot your password?", this);
             secondary.setStyleName(Button.STYLE_LINK);
             vert.addComponent(secondary);
-            vert.setComponentAlignment(secondary,
-                    OrderedLayout.ALIGNMENT_RIGHT,
-                    OrderedLayout.ALIGNMENT_BOTTOM);
+            vert.setComponentAlignment(secondary, Alignment.BOTTOM_RIGHT);
         }
 
     }

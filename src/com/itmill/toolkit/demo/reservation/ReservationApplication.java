@@ -16,6 +16,7 @@ import com.itmill.toolkit.data.Container;
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.data.Property.ValueChangeListener;
+import com.itmill.toolkit.ui.Alignment;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.OrderedLayout;
@@ -106,9 +107,7 @@ public class ReservationApplication extends Application {
         reservationButton = new Button("Make reservation", this,
                 "makeReservation");
         infoLayout.addComponent(reservationButton);
-        infoLayout.setComponentAlignment(reservationButton,
-                OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER,
-                OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
+        infoLayout.setComponentAlignment(reservationButton, Alignment.MIDDLE_CENTER);
 
         map = new GoogleMap();
         map.setWidth("250px");

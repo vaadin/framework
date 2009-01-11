@@ -6,6 +6,7 @@ package com.itmill.toolkit.demo.featurebrowser;
 
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.ui.AbstractSelect;
+import com.itmill.toolkit.ui.Alignment;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.NativeSelect;
@@ -89,7 +90,6 @@ public class NotificationExample extends CustomComponent {
             }
         });
         main.addComponent(b);
-        main.setComponentAlignment(b, VerticalLayout.ALIGNMENT_RIGHT,
-                VerticalLayout.ALIGNMENT_VERTICAL_CENTER);
+        main.setComponentAlignment(b, Alignment.MIDDLE_RIGHT);
     }
 }

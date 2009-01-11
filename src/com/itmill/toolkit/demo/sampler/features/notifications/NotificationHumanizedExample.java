@@ -1,5 +1,6 @@
 package com.itmill.toolkit.demo.sampler.features.notifications;
 
+import com.itmill.toolkit.ui.Alignment;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.TextField;
@@ -29,7 +30,7 @@ public class NotificationHumanizedExample extends OrderedLayout {
                     }
                 });
         addComponent(show);
-        setComponentAlignment(show, ALIGNMENT_RIGHT, ALIGNMENT_VERTICAL_CENTER);
+        setComponentAlignment(show, Alignment.MIDDLE_RIGHT);
 
     }
 }

@@ -17,6 +17,7 @@ import com.itmill.toolkit.terminal.ClassResource;
 import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.terminal.Resource;
 import com.itmill.toolkit.terminal.ThemeResource;
+import com.itmill.toolkit.ui.Alignment;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.ComboBox;
 import com.itmill.toolkit.ui.Component;
@@ -175,15 +176,12 @@ public class SamplerApplication extends Application {
             // Upper left logo
             Component logo = createLogo();
             nav.addComponent(logo);
-            nav.setComponentAlignment(logo, HorizontalLayout.ALIGNMENT_LEFT,
-                    HorizontalLayout.ALIGNMENT_VERTICAL_CENTER);
+            nav.setComponentAlignment(logo, Alignment.MIDDLE_LEFT);
 
             // Breadcrumbs
             nav.addComponent(breadcrumbs);
             nav.setExpandRatio(breadcrumbs, 1);
-            nav.setComponentAlignment(breadcrumbs,
-                    HorizontalLayout.ALIGNMENT_LEFT,
-                    HorizontalLayout.ALIGNMENT_VERTICAL_CENTER);
+            nav.setComponentAlignment(breadcrumbs, Alignment.MIDDLE_LEFT);
 
             // invisible analytics -component
             nav.addComponent(webAnalytics);
@@ -200,20 +198,17 @@ public class SamplerApplication extends Application {
             // Previous sample
             Button b = createPrevButton();
             nav.addComponent(b);
-            nav.setComponentAlignment(b, HorizontalLayout.ALIGNMENT_LEFT,
-                    HorizontalLayout.ALIGNMENT_VERTICAL_CENTER);
+            nav.setComponentAlignment(b, Alignment.MIDDLE_LEFT);
             // Next sample
             b = createNextButton();
             nav.addComponent(b);
-            nav.setComponentAlignment(b, HorizontalLayout.ALIGNMENT_LEFT,
-                    HorizontalLayout.ALIGNMENT_VERTICAL_CENTER);
+            nav.setComponentAlignment(b, Alignment.MIDDLE_LEFT);
 
             // "Search" combobox
             // TODO add input prompt
             Component search = createSearch();
             nav.addComponent(search);
-            nav.setComponentAlignment(search, HorizontalLayout.ALIGNMENT_LEFT,
-                    HorizontalLayout.ALIGNMENT_VERTICAL_CENTER);
+            nav.setComponentAlignment(search, Alignment.MIDDLE_LEFT);
 
             // togglebar
             mainExpand.addComponent(toggleBar);
@@ -240,16 +235,12 @@ public class SamplerApplication extends Application {
             Component treeSwitch = createTreeSwitch();
             toggleBar.addComponent(treeSwitch);
             toggleBar.setExpandRatio(treeSwitch, 1);
-            toggleBar.setComponentAlignment(treeSwitch,
-                    HorizontalLayout.ALIGNMENT_RIGHT,
-                    HorizontalLayout.ALIGNMENT_VERTICAL_CENTER);
+            toggleBar.setComponentAlignment(treeSwitch, Alignment.MIDDLE_RIGHT);
 
             // List/grid/coverflow
             Component mode = createModeSwitch();
             toggleBar.addComponent(mode);
-            toggleBar.setComponentAlignment(mode,
-                    HorizontalLayout.ALIGNMENT_RIGHT,
-                    HorizontalLayout.ALIGNMENT_VERTICAL_CENTER);
+            toggleBar.setComponentAlignment(mode, Alignment.MIDDLE_RIGHT);
 
         }
 
@@ -648,15 +639,11 @@ public class SamplerApplication extends Application {
                         grid.setRows(grid.getCursorY() + 1);
                         grid.addComponent(title, 0, grid.getCursorY(), grid
                                 .getColumns() - 1, grid.getCursorY());
-                        grid.setComponentAlignment(title,
-                                GridLayout.ALIGNMENT_LEFT,
-                                GridLayout.ALIGNMENT_VERTICAL_CENTER);
+                        grid.setComponentAlignment(title, Alignment.MIDDLE_LEFT);
                     } else {
                         title.setStyleName("subsection");
                         grid.addComponent(title);
-                        grid.setComponentAlignment(title,
-                                GridLayout.ALIGNMENT_LEFT,
-                                GridLayout.ALIGNMENT_TOP);
+                        grid.setComponentAlignment(title, Alignment.MIDDLE_LEFT);
                     }
 
                 } else {

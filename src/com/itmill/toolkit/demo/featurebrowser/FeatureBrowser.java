@@ -15,6 +15,7 @@ import com.itmill.toolkit.data.util.IndexedContainer;
 import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.ui.AbstractSelect;
+import com.itmill.toolkit.ui.Alignment;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.Embedded;
@@ -258,8 +259,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         wbLayout.addComponent(b);
 
         exp.addComponent(wbLayout);
-        exp.setComponentAlignment(wbLayout, VerticalLayout.ALIGNMENT_RIGHT,
-                VerticalLayout.ALIGNMENT_TOP);
+        exp.setComponentAlignment(wbLayout, Alignment.TOP_RIGHT);
 
         ts = new TabSheet();
         ts.setSizeFull();
@@ -272,8 +272,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
                         + " | <a href=\"http://www.itmill.com/documentation/\">Documentation</a>");
         status.setContentMode(Label.CONTENT_XHTML);
         exp.addComponent(status);
-        exp.setComponentAlignment(status, VerticalLayout.ALIGNMENT_RIGHT,
-                VerticalLayout.ALIGNMENT_VERTICAL_CENTER);
+        exp.setComponentAlignment(status, Alignment.MIDDLE_RIGHT);
 
         // select initial section ("All")
         tree.setValue(rootId);
