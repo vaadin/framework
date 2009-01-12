@@ -93,10 +93,18 @@ public class FormExample extends CustomComponent {
             // here. The alternative way is to use custom field factory as shown
             // above.
             getField("name").setRequired(true);
+            getField("name").setDescription("Please enter name");
             getField("name").setRequiredError("Name is missing");
             getField("streetAddress").setRequired(true); // No error message
+            getField("streetAddress").setDescription(
+                    "Please enter street adderss.");
             getField("postalCode").setRequired(true); // No error message
+            getField("postalCode").setDescription(
+                    "Please enter postal code. Example: 12345.");
             replaceWithSelect("city", cities, cities).setNewItemsAllowed(true);
+            getField("city")
+                    .setDescription(
+                            "Select city from list or type it. City field is not required.");
 
             // Set the form to act immediately on user input. This is
             // automatically transports data between the client and the server
