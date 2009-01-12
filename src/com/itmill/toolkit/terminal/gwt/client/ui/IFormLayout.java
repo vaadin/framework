@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Container;
+import com.itmill.toolkit.terminal.gwt.client.ITooltip;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.StyleConstants;
@@ -256,6 +257,7 @@ public class IFormLayout extends SimplePanel implements Container {
             this.client = client;
             owner = component;
             setStyleName(CLASSNAME);
+            sinkEvents(ITooltip.TOOLTIP_EVENTS);
         }
 
         public void updateCaption(UIDL uidl) {
