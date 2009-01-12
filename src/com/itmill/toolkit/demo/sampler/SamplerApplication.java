@@ -75,20 +75,11 @@ public class SamplerApplication extends Application {
     // Supports multiple browser windows
     @Override
     public Window getWindow(String name) {
-        /*- REST code, using fragments
-        if (features.getFeatureByPath(name) != null) {
-            return null;
-        }
-        -*/
         Window w = super.getWindow(name);
         if (w == null) {
             w = new SamplerWindow();
             w.setName(name);
             addWindow(w);
-            // secondary windows will support normal reload if this is
-            // enabled, but the url gets ugly:
-            // w.open(new ExternalResource(w.getURL()));
-
         }
         return w;
 
@@ -242,6 +233,14 @@ public class SamplerApplication extends Application {
             toggleBar.addComponent(mode);
             toggleBar.setComponentAlignment(mode, Alignment.MIDDLE_RIGHT);
 
+            addListener(new CloseListener() {
+                public void windowClose(CloseEvent e) {
+                    if (getMainWindow() != SamplerWindow.this) {
+                        SamplerApplication.this
+                                .removeWindow(SamplerWindow.this);
+                    }
+                }
+            });
         }
 
         /**
@@ -639,11 +638,15 @@ public class SamplerApplication extends Application {
                         grid.setRows(grid.getCursorY() + 1);
                         grid.addComponent(title, 0, grid.getCursorY(), grid
                                 .getColumns() - 1, grid.getCursorY());
-                        grid.setComponentAlignment(title, Alignment.MIDDLE_LEFT);
+                        grid
+                                .setComponentAlignment(title,
+                                        Alignment.MIDDLE_LEFT);
                     } else {
                         title.setStyleName("subsection");
                         grid.addComponent(title);
-                        grid.setComponentAlignment(title, Alignment.MIDDLE_LEFT);
+                        grid
+                                .setComponentAlignment(title,
+                                        Alignment.MIDDLE_LEFT);
                     }
 
                 } else {
