@@ -434,7 +434,12 @@ public class IFilterSelect extends Composite implements Paintable, Field,
             }
             if (allowNewItem) {
 
-                if (!enteredItemValue.equals(emptyText)) {
+                if (!enteredItemValue.equals(emptyText)
+                        && !enteredItemValue.equals(lastNewItemString)) {
+                    /*
+                     * Store last sent new item string to avoid double sends
+                     */
+                    lastNewItemString = enteredItemValue;
                     client.updateVariable(paintableId, "newitem",
                             enteredItemValue, immediate);
                 }
@@ -520,6 +525,11 @@ public class IFilterSelect extends Composite implements Paintable, Field,
     private int suggestionPopupMinWidth = 0;
     private static final String CLASSNAME_EMPTY = "empty";
     private static final String ATTR_EMPTYTEXT = "emptytext";
+    /*
+     * Stores the last new item string to avoid double submissions. Cleared on
+     * uidl updates
+     */
+    private String lastNewItemString;
 
     public IFilterSelect() {
         selectedItemIcon.setVisible(false);
@@ -612,6 +622,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
         suggestionPopup.updateStyleNames(uidl);
 
         allowNewItem = uidl.hasAttribute("allownewitem");
+        lastNewItemString = null;
 
         currentSuggestions.clear();
         final UIDL options = uidl.getChildUIDL(0);
