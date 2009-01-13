@@ -2030,7 +2030,8 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
 
                 // row header
                 if (showRowHeaders) {
-                    addCell(buildCaptionHtmlSnippet(uidl), aligns[col++], "");
+                    addCell(buildCaptionHtmlSnippet(uidl), aligns[col++], "",
+                            true);
                 }
 
                 if (uidl.hasAttribute("al")) {
@@ -2050,7 +2051,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                     }
 
                     if (cell instanceof String) {
-                        addCell(cell.toString(), aligns[col++], style);
+                        addCell(cell.toString(), aligns[col++], style, false);
                     } else {
                         final Paintable cellContent = client
                                 .getPaintable((UIDL) cell);
@@ -2064,7 +2065,8 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                 }
             }
 
-            public void addCell(String text, char align, String style) {
+            public void addCell(String text, char align, String style,
+                    boolean textIsHTML) {
                 // String only content is optimized by not using Label widget
                 final Element td = DOM.createTD();
                 final Element container = DOM.createDiv();
@@ -2074,7 +2076,11 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                 }
 
                 DOM.setElementProperty(container, "className", className);
-                DOM.setInnerText(container, text);
+                if (textIsHTML) {
+                    DOM.setInnerHTML(container, text);
+                } else {
+                    DOM.setInnerText(container, text);
+                }
                 if (align != ALIGN_LEFT) {
                     switch (align) {
                     case ALIGN_CENTER:
