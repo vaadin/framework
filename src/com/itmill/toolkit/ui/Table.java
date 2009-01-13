@@ -2484,7 +2484,13 @@ public class Table extends AbstractSelect implements Action.Container,
                     "Can not add the same GeneratedColumn twice, id:" + id);
         } else {
             columnGenerators.put(id, generatedColumn);
-            visibleColumns.add(id);
+            /*
+             * add to visible column list unless already there (overriding
+             * column from DS)
+             */
+            if (!visibleColumns.contains(id)) {
+                visibleColumns.add(id);
+            }
             resetPageBuffer();
             refreshRenderedCells();
         }
