@@ -3,6 +3,8 @@ package com.itmill.toolkit.demo.sampler;
 import com.itmill.toolkit.data.Container;
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.util.IndexedContainer;
+import com.itmill.toolkit.terminal.Resource;
+import com.itmill.toolkit.terminal.ThemeResource;
 
 public final class ExampleUtil {
     private static final String[] iso3166 = new String[] { "AFGHANISTAN", "AF",
@@ -92,15 +94,20 @@ public final class ExampleUtil {
             "VI", "WALLIS AND FUTUNA", "WF", "WESTERN SAHARA", "EH", "YEMEN",
             "YE", "ZAMBIA", "ZM", "ZIMBABWE", "ZW" };
     public static final Object iso3166_PROPERTY_NAME = "name";
+    public static final Object iso3166_PROPERTY_FLAG = "flag";
     private static final IndexedContainer iso3166Container = new IndexedContainer();
     static {
         iso3166Container.addContainerProperty(iso3166_PROPERTY_NAME,
                 String.class, null);
+        iso3166Container.addContainerProperty(iso3166_PROPERTY_FLAG,
+                Resource.class, null);
         for (int i = 0; i < iso3166.length; i++) {
             String name = iso3166[i++];
             String id = iso3166[i];
             Item item = iso3166Container.addItem(id);
             item.getItemProperty(iso3166_PROPERTY_NAME).setValue(name);
+            item.getItemProperty(iso3166_PROPERTY_FLAG).setValue(
+                    new ThemeResource("flags/" + id.toLowerCase() + ".gif"));
         }
     }
 
