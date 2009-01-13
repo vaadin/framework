@@ -52,6 +52,15 @@ public class Label extends AbstractComponent implements Property,
     public static final int CONTENT_PREFORMATTED = 1;
 
     /**
+     * Formatted content mode, where the contents is XML restricted to the UIDL
+     * 1.0 formatting markups.
+     * 
+     * @deprecated Use CONTENT_XML instead.
+     */
+    @Deprecated
+    public static final int CONTENT_UIDL = 2;
+
+    /**
      * Content mode, where the label contains XHTML. Contents is then enclosed
      * in DIV elements having namespace of
      * "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd".
@@ -190,6 +199,8 @@ public class Label extends AbstractComponent implements Property,
         }
         if (contentMode == CONTENT_TEXT) {
             target.addText(toString());
+        } else if (contentMode == CONTENT_UIDL) {
+            target.addUIDL(toString());
         } else if (contentMode == CONTENT_XHTML) {
             target.startTag("data");
             target.addXMLSection("div", toString(),
@@ -482,14 +493,16 @@ public class Label extends AbstractComponent implements Property,
         String thisValue;
         String otherValue;
 
-        if (contentMode == CONTENT_XML || contentMode == CONTENT_XHTML) {
+        if (contentMode == CONTENT_XML || contentMode == CONTENT_UIDL
+                || contentMode == CONTENT_XHTML) {
             thisValue = stripTags(toString());
         } else {
             thisValue = toString();
         }
 
         if (other instanceof Label
-                && (((Label) other).getContentMode() == CONTENT_XML || ((Label) other)
+                && (((Label) other).getContentMode() == CONTENT_XML
+                        || ((Label) other).getContentMode() == CONTENT_UIDL || ((Label) other)
                         .getContentMode() == CONTENT_XHTML)) {
             otherValue = stripTags(other.toString());
         } else {
