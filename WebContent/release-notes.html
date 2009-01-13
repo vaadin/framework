@@ -88,8 +88,9 @@ of layout components since the beta versions 5.2.x and before.</p>
 	debug window if you encounter problems with relative size.</i></li>
 	<li><b>VerticalLayout</b> and <b>HorizontalLayout</b> obsolete <b>
 	<s>OrderedLayout</s></b></li>
-	<li><b>ExpandLayout</b> deprecated</li>
-	<li>Default changes changed</li>
+    <li>Layout cell alignment has changed</li>
+	<li><b><s>ExpandLayout</s></b> deprecated</li>
+	<li>Default sizes have changed</li>
 </ul>
 
 <h3>OrderedLayout deprecated</h3>
@@ -101,6 +102,21 @@ of layout components since the beta versions 5.2.x and before.</p>
 tidier as you don't have to give the orientation as an ugly parameter to
 the constructor. You won't be able to change the orientation with <tt>setOrientation()</tt>
 any longer, though such need is rare anyhow.</p>
+
+<h3>Layout Cell Alignment Changed</h3>
+
+<p>Previously, the alignment of components within layout cells was set with
+<i>setComponentAlignment()</i> with constants for <b><s>OrderedLayout</s></b> (now
+<b>VerticalLayout</b> and <b>HorizontalLayout</b>) and <b>GridLayout</b> separately, such
+as <tt>OrderedLayout.ALIGNMENT_TOP_LEFT</tt>. Now the method takes constants defined in
+<b>Alignment</b>.</p>
+
+<p>For example, aligning a component "top left" is now:</p>
+
+<pre>mylayout.setComponentAlignment(mycomponent, Alignment.TOP_LEFT);</pre>
+
+<p>You can also give an <b>Alignment</b> object as a parameter and give horizontal and
+vertical alignment separately with bitmask parameters.</p>
 
 <h3 id="HandlingofrelativesizeshavechangedExpandLayoutdeprecated">Handling
 of relative sizes has changed, ExpandLayout deprecated</h3>
