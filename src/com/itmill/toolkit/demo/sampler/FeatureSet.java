@@ -39,6 +39,9 @@ import com.itmill.toolkit.demo.sampler.features.selects.TwinColumnSelect;
 import com.itmill.toolkit.demo.sampler.features.tabsheets.TabSheetDisabled;
 import com.itmill.toolkit.demo.sampler.features.tabsheets.TabSheetIcons;
 import com.itmill.toolkit.demo.sampler.features.tabsheets.TabSheetScrolling;
+import com.itmill.toolkit.demo.sampler.features.windows.WindowChild;
+import com.itmill.toolkit.demo.sampler.features.windows.WindowNativeNew;
+import com.itmill.toolkit.demo.sampler.features.windows.WindowNativeShared;
 
 /**
  * Contains the FeatureSet implementation and the structure for the feature
@@ -85,6 +88,7 @@ public class FeatureSet extends Feature {
                     new Tabsheets(), //
                     new Accordions(), //
                     new Panels(), //
+                    new Windows(), //
             });
         }
     }
@@ -195,6 +199,17 @@ public class FeatureSet extends Feature {
             //        
                     new PanelBasic(), //
                     new PanelLight(), //
+            });
+        }
+    }
+
+    public static class Windows extends FeatureSet {
+        public Windows() {
+            super("Windows", new Feature[] {
+            //        
+                    new WindowNativeShared(), //
+                    new WindowNativeNew(), //
+                    new WindowChild(), //
             });
         }
     }

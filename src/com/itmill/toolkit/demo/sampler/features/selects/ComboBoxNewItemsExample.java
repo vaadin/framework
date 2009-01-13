@@ -2,16 +2,17 @@ package com.itmill.toolkit.demo.sampler.features.selects;
 
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
+import com.itmill.toolkit.ui.AbstractSelect;
 import com.itmill.toolkit.ui.ComboBox;
 import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.AbstractSelect.Filtering;
 
 public class ComboBoxNewItemsExample extends VerticalLayout implements
-        Property.ValueChangeListener {
-
+        Property.ValueChangeListener, AbstractSelect.NewItemHandler {
     private static final String[] cities = new String[] { "Berlin", "Brussels",
             "Helsinki", "Madrid", "Oslo", "Paris", "Stockholm" };
     private ComboBox l;
+    private Boolean lastAdded = false;
 
     public ComboBoxNewItemsExample() {
         setSpacing(true);
@@ -23,6 +24,7 @@ public class ComboBoxNewItemsExample extends VerticalLayout implements
 
         l.setFilteringMode(Filtering.FILTERINGMODE_OFF);
         l.setNewItemsAllowed(true);
+        l.setNewItemHandler(this);
         l.setImmediate(true);
         l.addListener(this);
 
@@ -33,18 +35,19 @@ public class ComboBoxNewItemsExample extends VerticalLayout implements
      * Shows a notification when a selection is made.
      */
     public void valueChange(ValueChangeEvent event) {
-        Boolean newItem = true;
-        String s = event.getProperty().toString();
-
-        for (int i = 0; i < cities.length; i++) {
-            if (s == null || s.equals(cities[i])) {
-                newItem = false;
-            }
+        if (!lastAdded) {
+            getWindow().showNotification(
+                    "Selected city: " + event.getProperty());
         }
-        if (newItem) {
-            getWindow().showNotification("Selected an added item: " + s);
-        } else {
-            getWindow().showNotification("Selected city: " + s);
+        lastAdded = false;
+    }
+
+    public void addNewItem(String newItemCaption) {
+        if (!l.containsId(newItemCaption)) {
+            getWindow().showNotification("Added city: " + newItemCaption);
+            lastAdded = true;
+            l.addItem(newItemCaption);
+            l.setValue(newItemCaption);
         }
     }
 }
