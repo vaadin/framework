@@ -12,8 +12,11 @@ import com.itmill.toolkit.demo.sampler.features.blueprints.ProminentPrimaryActio
 import com.itmill.toolkit.demo.sampler.features.buttons.ButtonLink;
 import com.itmill.toolkit.demo.sampler.features.buttons.ButtonPush;
 import com.itmill.toolkit.demo.sampler.features.buttons.ButtonSwitch;
+import com.itmill.toolkit.demo.sampler.features.commons.Errors;
 import com.itmill.toolkit.demo.sampler.features.commons.Icons;
 import com.itmill.toolkit.demo.sampler.features.commons.Tooltips;
+import com.itmill.toolkit.demo.sampler.features.commons.Validation;
+import com.itmill.toolkit.demo.sampler.features.form.FormBasic;
 import com.itmill.toolkit.demo.sampler.features.layouts.HorizontalLayoutBasic;
 import com.itmill.toolkit.demo.sampler.features.layouts.LayoutAlignment;
 import com.itmill.toolkit.demo.sampler.features.layouts.LayoutSpacing;
@@ -92,6 +95,7 @@ public class FeatureSet extends Feature {
                     new Tabsheets(), //
                     new Accordions(), //
                     new Panels(), //
+                    // new Forms(), not done yet
                     new Windows(), //
             });
         }
@@ -141,8 +145,10 @@ public class FeatureSet extends Feature {
         public Commons() {
             super("Commons", new Feature[] {
             //
-                    new Tooltips(), // tooltips
-                    new Icons(), // icons
+                    new Tooltips(), // 
+                    new Icons(), //
+                    new Errors(), //
+                    new Validation(), //
             });
         }
     }
@@ -204,6 +210,15 @@ public class FeatureSet extends Feature {
                     new PanelBasic(), //
                     new PanelLight(), //
             });
+        }
+    }
+
+    public static class Forms extends FeatureSet {
+        public Forms() {
+            super("Forms", new Feature[] {
+            //        
+                    new FormBasic(), //
+                    });
         }
     }
 

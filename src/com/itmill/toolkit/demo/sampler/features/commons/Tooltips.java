@@ -15,7 +15,7 @@ public class Tooltips extends Feature {
                 + "Note that <i>description</i> is more generic term than"
                 + " <i>tooltip</i> - a component might choose to show"
                 + " the description in another way, if that's more appropriate"
-                + " for that compoenent.)";
+                + " for that component.)";
     }
 
     @Override

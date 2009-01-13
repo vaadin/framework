@@ -51,7 +51,6 @@ public class NotificationCustomExample extends OrderedLayout {
         delay
                 .setDescription("Delay before fading<br/>Pull all the way to the left to get -1, which means forever (click to hide).");
         delay.setWidth("400px");
-        delay.setHeight("20px");
         delay.setMin(Notification.DELAY_FOREVER);
         delay.setMax(10000);
         addComponent(delay);
