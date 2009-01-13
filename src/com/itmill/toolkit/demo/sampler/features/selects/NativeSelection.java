@@ -6,6 +6,10 @@ import com.itmill.toolkit.demo.sampler.NamedExternalResource;
 import com.itmill.toolkit.ui.NativeSelect;
 
 public class NativeSelection extends Feature {
+    @Override
+    public String getName() {
+        return "Native select";
+    }
 
     @Override
     public String getDescription() {

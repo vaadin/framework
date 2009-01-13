@@ -6,6 +6,10 @@ import com.itmill.toolkit.demo.sampler.NamedExternalResource;
 import com.itmill.toolkit.ui.TabSheet;
 
 public class TabSheetDisabled extends Feature {
+    @Override
+    public String getName() {
+        return "Tabsheet - Disabling tabs";
+    }
 
     @Override
     public String getDescription() {

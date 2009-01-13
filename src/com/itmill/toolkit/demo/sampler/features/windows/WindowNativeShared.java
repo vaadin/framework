@@ -8,6 +8,11 @@ import com.itmill.toolkit.ui.Window;
 public class WindowNativeShared extends Feature {
 
     @Override
+    public String getName() {
+        return "Native window - Shared";
+    }
+
+    @Override
     public String getDescription() {
         return "Creates and opens a new native browser window with shared state. If the"
                 + " window object has already been created, it will only be reopened."
@@ -29,7 +34,9 @@ public class WindowNativeShared extends Feature {
 
     @Override
     public Class[] getRelatedFeatures() {
-        return new Class[] { WindowNativeNew.class, WindowChild.class };
+        return new Class[] { WindowNativeNew.class, WindowChild.class,
+                WindowChildAutosize.class, WindowChildModal.class,
+                WindowChildPositionSize.class, WindowChildScrollable.class };
     }
 
     @Override

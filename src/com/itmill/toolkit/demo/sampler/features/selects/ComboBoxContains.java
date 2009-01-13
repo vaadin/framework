@@ -6,6 +6,10 @@ import com.itmill.toolkit.demo.sampler.NamedExternalResource;
 import com.itmill.toolkit.ui.ComboBox;
 
 public class ComboBoxContains extends Feature {
+    @Override
+    public String getName() {
+        return "Combobox - Contains";
+    }
 
     @Override
     public String getDescription() {

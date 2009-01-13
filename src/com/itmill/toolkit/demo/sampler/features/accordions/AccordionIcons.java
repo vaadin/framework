@@ -6,6 +6,10 @@ import com.itmill.toolkit.demo.sampler.NamedExternalResource;
 import com.itmill.toolkit.ui.Accordion;
 
 public class AccordionIcons extends Feature {
+    @Override
+    public String getName() {
+        return "Accordion with icons";
+    }
 
     @Override
     public String getDescription() {

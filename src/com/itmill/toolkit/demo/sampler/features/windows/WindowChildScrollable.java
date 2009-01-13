@@ -5,18 +5,19 @@ import com.itmill.toolkit.demo.sampler.Feature;
 import com.itmill.toolkit.demo.sampler.NamedExternalResource;
 import com.itmill.toolkit.ui.Window;
 
-public class WindowChild extends Feature {
+public class WindowChildScrollable extends Feature {
 
     @Override
     public String getName() {
-        return "Child window";
+        return "Window - Scrollable";
     }
 
     @Override
     public String getDescription() {
-        return "Creates and opens a new floating child window with its own state."
-                + "<br>Child windows are typically used for Dialog Windows and"
-                + " Multiple Document Interface applications.";
+        return "Creates and opens a new floating child window with specified"
+                + " size and position attributes. The content for this window"
+                + " is too big to fit in the specified size. Therefore you can"
+                + " use the scrollbars to view different part of the content.";
     }
 
     @Override
@@ -27,8 +28,8 @@ public class WindowChild extends Feature {
     @Override
     public Class[] getRelatedFeatures() {
         return new Class[] { WindowNativeShared.class, WindowNativeNew.class,
-                WindowChildAutosize.class, WindowChildModal.class,
-                WindowChildPositionSize.class, WindowChildScrollable.class };
+                WindowChild.class, WindowChildAutosize.class,
+                WindowChildModal.class, WindowChildPositionSize.class };
     }
 
     @Override

@@ -8,6 +8,11 @@ import com.itmill.toolkit.ui.Window;
 public class WindowNativeNew extends Feature {
 
     @Override
+    public String getName() {
+        return "Native window - Unique";
+    }
+
+    @Override
     public String getDescription() {
         return "Creates and opens a new native browser window with its own state."
                 + "<br>Native browser"
@@ -27,7 +32,9 @@ public class WindowNativeNew extends Feature {
 
     @Override
     public Class[] getRelatedFeatures() {
-        return new Class[] { WindowNativeShared.class, WindowChild.class };
+        return new Class[] { WindowNativeShared.class, WindowChild.class,
+                WindowChildAutosize.class, WindowChildModal.class,
+                WindowChildPositionSize.class, WindowChildScrollable.class };
     }
 
     @Override

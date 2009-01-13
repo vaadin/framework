@@ -6,6 +6,10 @@ import com.itmill.toolkit.demo.sampler.NamedExternalResource;
 import com.itmill.toolkit.ui.Panel;
 
 public class PanelLight extends Feature {
+    @Override
+    public String getName() {
+        return "Panel - Light style";
+    }
 
     @Override
     public String getDescription() {

@@ -6,6 +6,10 @@ import com.itmill.toolkit.demo.sampler.NamedExternalResource;
 import com.itmill.toolkit.ui.ComboBox;
 
 public class ComboBoxPlain extends Feature {
+    @Override
+    public String getName() {
+        return "Combobox";
+    }
 
     @Override
     public String getDescription() {

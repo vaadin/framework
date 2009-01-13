@@ -40,6 +40,10 @@ import com.itmill.toolkit.demo.sampler.features.tabsheets.TabSheetDisabled;
 import com.itmill.toolkit.demo.sampler.features.tabsheets.TabSheetIcons;
 import com.itmill.toolkit.demo.sampler.features.tabsheets.TabSheetScrolling;
 import com.itmill.toolkit.demo.sampler.features.windows.WindowChild;
+import com.itmill.toolkit.demo.sampler.features.windows.WindowChildAutosize;
+import com.itmill.toolkit.demo.sampler.features.windows.WindowChildModal;
+import com.itmill.toolkit.demo.sampler.features.windows.WindowChildPositionSize;
+import com.itmill.toolkit.demo.sampler.features.windows.WindowChildScrollable;
 import com.itmill.toolkit.demo.sampler.features.windows.WindowNativeNew;
 import com.itmill.toolkit.demo.sampler.features.windows.WindowNativeShared;
 
@@ -210,6 +214,10 @@ public class FeatureSet extends Feature {
                     new WindowNativeShared(), //
                     new WindowNativeNew(), //
                     new WindowChild(), //
+                    new WindowChildAutosize(), //
+                    new WindowChildModal(), //
+                    new WindowChildPositionSize(), //
+                    new WindowChildScrollable(), //
             });
         }
     }

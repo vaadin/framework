@@ -5,18 +5,18 @@ import com.itmill.toolkit.demo.sampler.Feature;
 import com.itmill.toolkit.demo.sampler.NamedExternalResource;
 import com.itmill.toolkit.ui.Window;
 
-public class WindowChild extends Feature {
+public class WindowChildModal extends Feature {
 
     @Override
     public String getName() {
-        return "Child window";
+        return "Window modality";
     }
 
     @Override
     public String getDescription() {
-        return "Creates and opens a new floating child window with its own state."
-                + "<br>Child windows are typically used for Dialog Windows and"
-                + " Multiple Document Interface applications.";
+        return "Creates and opens a new modal child window with its own state."
+                + "<br>Child window modality means that you cannot access the"
+                + " underlying window(s) while the modal window is displayed.";
     }
 
     @Override
@@ -27,7 +27,7 @@ public class WindowChild extends Feature {
     @Override
     public Class[] getRelatedFeatures() {
         return new Class[] { WindowNativeShared.class, WindowNativeNew.class,
-                WindowChildAutosize.class, WindowChildModal.class,
+                WindowChild.class, WindowChildAutosize.class,
                 WindowChildPositionSize.class, WindowChildScrollable.class };
     }
 

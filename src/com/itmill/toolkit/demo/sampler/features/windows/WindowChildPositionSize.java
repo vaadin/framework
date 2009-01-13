@@ -5,18 +5,18 @@ import com.itmill.toolkit.demo.sampler.Feature;
 import com.itmill.toolkit.demo.sampler.NamedExternalResource;
 import com.itmill.toolkit.ui.Window;
 
-public class WindowChild extends Feature {
+public class WindowChildPositionSize extends Feature {
 
     @Override
     public String getName() {
-        return "Child window";
+        return "Window position and size";
     }
 
     @Override
     public String getDescription() {
-        return "Creates and opens a new floating child window with its own state."
-                + "<br>Child windows are typically used for Dialog Windows and"
-                + " Multiple Document Interface applications.";
+        return "Creates and opens a new floating child window with specified"
+                + " size and position attributes. This child window is also"
+                + " set to allow resizing.";
     }
 
     @Override
@@ -27,8 +27,8 @@ public class WindowChild extends Feature {
     @Override
     public Class[] getRelatedFeatures() {
         return new Class[] { WindowNativeShared.class, WindowNativeNew.class,
-                WindowChildAutosize.class, WindowChildModal.class,
-                WindowChildPositionSize.class, WindowChildScrollable.class };
+                WindowChild.class, WindowChildAutosize.class,
+                WindowChildModal.class, WindowChildScrollable.class };
     }
 
     @Override

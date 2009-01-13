@@ -6,6 +6,10 @@ import com.itmill.toolkit.demo.sampler.NamedExternalResource;
 import com.itmill.toolkit.ui.ListSelect;
 
 public class ListSelectMultiple extends Feature {
+    @Override
+    public String getName() {
+        return "Listselect - Multi";
+    }
 
     @Override
     public String getDescription() {

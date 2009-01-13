@@ -6,6 +6,10 @@ import com.itmill.toolkit.demo.sampler.NamedExternalResource;
 import com.itmill.toolkit.ui.TabSheet;
 
 public class TabSheetIcons extends Feature {
+    @Override
+    public String getName() {
+        return "Tabsheet with icons";
+    }
 
     @Override
     public String getDescription() {

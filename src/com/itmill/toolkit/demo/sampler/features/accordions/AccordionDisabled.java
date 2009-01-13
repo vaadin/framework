@@ -6,6 +6,10 @@ import com.itmill.toolkit.demo.sampler.NamedExternalResource;
 import com.itmill.toolkit.ui.Accordion;
 
 public class AccordionDisabled extends Feature {
+    @Override
+    public String getName() {
+        return "Accordion - Disabling tabs";
+    }
 
     @Override
     public String getDescription() {

@@ -6,6 +6,10 @@ import com.itmill.toolkit.demo.sampler.NamedExternalResource;
 import com.itmill.toolkit.ui.TwinColSelect;
 
 public class TwinColumnSelect extends Feature {
+    @Override
+    public String getName() {
+        return "Twin column select";
+    }
 
     @Override
     public String getDescription() {
