@@ -1,5 +1,6 @@
 package com.itmill.toolkit.tests.components.table;
 
+import com.itmill.toolkit.data.util.IndexedContainer;
 import com.itmill.toolkit.tests.components.TestBase;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Component;
@@ -23,12 +24,14 @@ public class ColumnGeneratorAddingOrder extends TestBase {
             }
         });
 
-        t.addContainerProperty("col1", String.class, "col1 ds data");
-        t.addContainerProperty("col2", String.class, "col2 ds data");
-        t.addContainerProperty("col3", String.class, "col3 ds data");
+        IndexedContainer c = new IndexedContainer();
+        c.addContainerProperty("col1", String.class, "col1 ds data");
+        c.addContainerProperty("col2", String.class, "col2 ds data");
+        c.addContainerProperty("col3", String.class, "col3 ds data");
         for (int i = 0; i < 100; i++) {
-            t.addItem();
+            c.addItem();
         }
+        t.setContainerDataSource(c);
 
         t.addGeneratedColumn("col1", new Table.ColumnGenerator() {
             public Component generateCell(Table source, Object itemId,
