@@ -42,6 +42,12 @@ import com.itmill.toolkit.demo.sampler.features.selects.TwinColumnSelect;
 import com.itmill.toolkit.demo.sampler.features.tabsheets.TabSheetDisabled;
 import com.itmill.toolkit.demo.sampler.features.tabsheets.TabSheetIcons;
 import com.itmill.toolkit.demo.sampler.features.tabsheets.TabSheetScrolling;
+import com.itmill.toolkit.demo.sampler.features.text.LabelPlain;
+import com.itmill.toolkit.demo.sampler.features.text.LabelPreformatted;
+import com.itmill.toolkit.demo.sampler.features.text.LabelRich;
+import com.itmill.toolkit.demo.sampler.features.text.RichTextEditor;
+import com.itmill.toolkit.demo.sampler.features.text.TextArea;
+import com.itmill.toolkit.demo.sampler.features.text.TextFieldSingle;
 import com.itmill.toolkit.demo.sampler.features.windows.WindowChild;
 import com.itmill.toolkit.demo.sampler.features.windows.WindowChildAutosize;
 import com.itmill.toolkit.demo.sampler.features.windows.WindowChildModal;
@@ -97,6 +103,7 @@ public class FeatureSet extends Feature {
                     new Panels(), //
                     // new Forms(), not done yet
                     new Windows(), //
+                    new Texts(), //
             });
         }
     }
@@ -233,6 +240,20 @@ public class FeatureSet extends Feature {
                     new WindowChildModal(), //
                     new WindowChildPositionSize(), //
                     new WindowChildScrollable(), //
+            });
+        }
+    }
+
+    public static class Texts extends FeatureSet {
+        public Texts() {
+            super("Texts", new Feature[] {
+            //        
+                    new LabelPlain(), //
+                    new LabelPreformatted(), //
+                    new LabelRich(), //
+                    new RichTextEditor(), //
+                    new TextFieldSingle(), //
+                    new TextArea(), //
             });
         }
     }
