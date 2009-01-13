@@ -148,7 +148,7 @@ public class FeatureSet extends Feature {
                     new Tooltips(), // 
                     new Icons(), //
                     new Errors(), //
-                    new Validation(), //
+                    new Validation(), // TODO this should point to Form instead
             });
         }
     }
