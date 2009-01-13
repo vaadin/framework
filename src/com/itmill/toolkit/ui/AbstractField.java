@@ -763,13 +763,14 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     @Override
     public ErrorMessage getErrorMessage() {
 
-        // Check validation errors only if automatic validation is enabled.
-        // As an exception, no validation messages are shown for empty
-        // required fields, as in those cases user is aware of the problem.
-        // Furthermore, non-required empty fields are obviously correct.
+        /*
+         * Check validation errors only if automatic validation is enabled.
+         * Empty, required fields will generate a validation error containing
+         * the requiredError string. For these fields the exclamation mark will
+         * be hidden but the error must still be sent to the client.
+         */
         ErrorMessage validationError = null;
-        if (isValidationVisible() && !(isEmpty() && isRequired())) {
-
+        if (isValidationVisible()) {
             try {
                 validate();
             } catch (Validator.InvalidValueException e) {
