@@ -39,6 +39,7 @@ import com.itmill.toolkit.demo.sampler.features.selects.ListSelectMultiple;
 import com.itmill.toolkit.demo.sampler.features.selects.ListSelectSingle;
 import com.itmill.toolkit.demo.sampler.features.selects.NativeSelection;
 import com.itmill.toolkit.demo.sampler.features.selects.TwinColumnSelect;
+import com.itmill.toolkit.demo.sampler.features.table.TableColumnReordering;
 import com.itmill.toolkit.demo.sampler.features.tabsheets.TabSheetDisabled;
 import com.itmill.toolkit.demo.sampler.features.tabsheets.TabSheetIcons;
 import com.itmill.toolkit.demo.sampler.features.tabsheets.TabSheetScrolling;
@@ -103,6 +104,7 @@ public class FeatureSet extends Feature {
                     new Panels(), //
                     // new Forms(), not done yet
                     new Windows(), //
+                    new Tables(),//
                     new Texts(), //
             });
         }
@@ -241,6 +243,15 @@ public class FeatureSet extends Feature {
                     new WindowChildPositionSize(), //
                     new WindowChildScrollable(), //
             });
+        }
+    }
+
+    public static class Tables extends FeatureSet {
+        public Tables() {
+            super("Table (Grid)", new Feature[] {
+            //        
+                    new TableColumnReordering(), //
+                    });
         }
     }
 

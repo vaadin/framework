@@ -94,10 +94,13 @@ public final class ExampleUtil {
             "VI", "WALLIS AND FUTUNA", "WF", "WESTERN SAHARA", "EH", "YEMEN",
             "YE", "ZAMBIA", "ZM", "ZIMBABWE", "ZW" };
     public static final Object iso3166_PROPERTY_NAME = "name";
+    public static final Object iso3166_PROPERTY_SHORT = "short";
     public static final Object iso3166_PROPERTY_FLAG = "flag";
     private static final IndexedContainer iso3166Container = new IndexedContainer();
     static {
         iso3166Container.addContainerProperty(iso3166_PROPERTY_NAME,
+                String.class, null);
+        iso3166Container.addContainerProperty(iso3166_PROPERTY_SHORT,
                 String.class, null);
         iso3166Container.addContainerProperty(iso3166_PROPERTY_FLAG,
                 Resource.class, null);
@@ -106,6 +109,7 @@ public final class ExampleUtil {
             String id = iso3166[i];
             Item item = iso3166Container.addItem(id);
             item.getItemProperty(iso3166_PROPERTY_NAME).setValue(name);
+            item.getItemProperty(iso3166_PROPERTY_SHORT).setValue(id);
             item.getItemProperty(iso3166_PROPERTY_FLAG).setValue(
                     new ThemeResource("flags/" + id.toLowerCase() + ".gif"));
         }
