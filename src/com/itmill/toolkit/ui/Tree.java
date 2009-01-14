@@ -658,11 +658,12 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         return success;
     }
 
-    /**
-     * Sets the parent of an Item.
+    /*
+     * (non-Javadoc)
      * 
-     * @see com.itmill.toolkit.data.Container.Hierarchical#setParent(Object,
-     *      Object)
+     * @see
+     * com.itmill.toolkit.data.Container.Hierarchical#setParent(java.lang.Object
+     * , java.lang.Object)
      */
     public boolean setParent(Object itemId, Object newParentId) {
         final boolean success = ((Container.Hierarchical) items).setParent(
