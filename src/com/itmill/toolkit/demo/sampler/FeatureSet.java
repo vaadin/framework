@@ -49,6 +49,8 @@ import com.itmill.toolkit.demo.sampler.features.text.LabelRich;
 import com.itmill.toolkit.demo.sampler.features.text.RichTextEditor;
 import com.itmill.toolkit.demo.sampler.features.text.TextArea;
 import com.itmill.toolkit.demo.sampler.features.text.TextFieldSingle;
+import com.itmill.toolkit.demo.sampler.features.trees.TreeMultiSelect;
+import com.itmill.toolkit.demo.sampler.features.trees.TreeSingleSelect;
 import com.itmill.toolkit.demo.sampler.features.windows.WindowChild;
 import com.itmill.toolkit.demo.sampler.features.windows.WindowChildAutosize;
 import com.itmill.toolkit.demo.sampler.features.windows.WindowChildModal;
@@ -106,6 +108,7 @@ public class FeatureSet extends Feature {
                     new Windows(), //
                     new Tables(),//
                     new Texts(), //
+                    new Trees(), //
             });
         }
     }
@@ -265,6 +268,16 @@ public class FeatureSet extends Feature {
                     new RichTextEditor(), //
                     new TextFieldSingle(), //
                     new TextArea(), //
+            });
+        }
+    }
+
+    public static class Trees extends FeatureSet {
+        public Trees() {
+            super("Trees", new Feature[] {
+            //        
+                    new TreeSingleSelect(), //
+                    new TreeMultiSelect(), //
             });
         }
     }

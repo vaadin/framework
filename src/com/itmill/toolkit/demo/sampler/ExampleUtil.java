@@ -2,6 +2,7 @@ package com.itmill.toolkit.demo.sampler;
 
 import com.itmill.toolkit.data.Container;
 import com.itmill.toolkit.data.Item;
+import com.itmill.toolkit.data.util.HierarchicalContainer;
 import com.itmill.toolkit.data.util.IndexedContainer;
 import com.itmill.toolkit.terminal.Resource;
 import com.itmill.toolkit.terminal.ThemeResource;
@@ -96,6 +97,7 @@ public final class ExampleUtil {
     public static final Object iso3166_PROPERTY_NAME = "name";
     public static final Object iso3166_PROPERTY_SHORT = "short";
     public static final Object iso3166_PROPERTY_FLAG = "flag";
+    public static final Object hw_PROPERTY_NAME = "name";
     private static final IndexedContainer iso3166Container = new IndexedContainer();
     static {
         iso3166Container.addContainerProperty(iso3166_PROPERTY_NAME,
@@ -115,8 +117,43 @@ public final class ExampleUtil {
         }
     }
 
+    private static final String[][] hardware = { //
+            { "Desktops", "Dell OptiPlex GX240", "Dell OptiPlex GX260",
+                    "Dell OptiPlex GX280" },
+            { "Monitors", "Benq T190HD", "Benq T220HD", "Benq T240HD" },
+            { "Laptops", "IBM ThinkPad T40", "IBM ThinkPad T43",
+                    "IBM ThinkPad T60" } };
+
     public static IndexedContainer getISO3166Container() {
         return iso3166Container;
+    }
+
+    public static HierarchicalContainer getHardwareContainer() {
+        Item item = null;
+        int itemId = 0; // Increasing numbering for itemId:s
+
+        // Create new container
+        HierarchicalContainer hwContainer = new HierarchicalContainer();
+        // Create containerproperty for name
+        hwContainer.addContainerProperty(hw_PROPERTY_NAME, String.class, null);
+        for (int i = 0; i < hardware.length; i++) {
+            // Add new item
+            item = hwContainer.addItem(itemId);
+            // Add name property for item
+            item.getItemProperty(hw_PROPERTY_NAME).setValue(hardware[i][0]);
+            // Allow children
+            hwContainer.setChildrenAllowed(itemId, true);
+            itemId++;
+            for (int j = 1; j < hardware[i].length; j++) {
+                // Add child items
+                item = hwContainer.addItem(itemId);
+                item.getItemProperty(hw_PROPERTY_NAME).setValue(hardware[i][j]);
+                hwContainer.setParent(itemId, itemId - j);
+                hwContainer.setChildrenAllowed(itemId, false);
+                itemId++;
+            }
+        }
+        return hwContainer;
     }
 
     public static void fillContainerWithEmailAddresses(Container c, int amount) {
