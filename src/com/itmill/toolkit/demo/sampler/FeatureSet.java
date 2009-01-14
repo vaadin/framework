@@ -39,7 +39,15 @@ import com.itmill.toolkit.demo.sampler.features.selects.ListSelectMultiple;
 import com.itmill.toolkit.demo.sampler.features.selects.ListSelectSingle;
 import com.itmill.toolkit.demo.sampler.features.selects.NativeSelection;
 import com.itmill.toolkit.demo.sampler.features.selects.TwinColumnSelect;
+import com.itmill.toolkit.demo.sampler.features.table.TableActions;
+import com.itmill.toolkit.demo.sampler.features.table.TableColumnAlignment;
+import com.itmill.toolkit.demo.sampler.features.table.TableColumnCollapsing;
+import com.itmill.toolkit.demo.sampler.features.table.TableColumnHeaders;
 import com.itmill.toolkit.demo.sampler.features.table.TableColumnReordering;
+import com.itmill.toolkit.demo.sampler.features.table.TableHeaderIcons;
+import com.itmill.toolkit.demo.sampler.features.table.TableLazyLoading;
+import com.itmill.toolkit.demo.sampler.features.table.TableRowHeaders;
+import com.itmill.toolkit.demo.sampler.features.table.TableSorting;
 import com.itmill.toolkit.demo.sampler.features.tabsheets.TabSheetDisabled;
 import com.itmill.toolkit.demo.sampler.features.tabsheets.TabSheetIcons;
 import com.itmill.toolkit.demo.sampler.features.tabsheets.TabSheetScrolling;
@@ -253,8 +261,16 @@ public class FeatureSet extends Feature {
         public Tables() {
             super("Table (Grid)", new Feature[] {
             //        
+                    new TableColumnHeaders(), //
+                    new TableRowHeaders(), //
+                    new TableHeaderIcons(), //
                     new TableColumnReordering(), //
-                    });
+                    new TableColumnCollapsing(), //
+                    new TableSorting(), //
+                    new TableColumnAlignment(), //
+                    new TableActions(), //
+                    new TableLazyLoading(), //
+            });
         }
     }
 
