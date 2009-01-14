@@ -28,7 +28,7 @@ public class TreeSingleSelect extends Feature {
 
     @Override
     public Class[] getRelatedFeatures() {
-        return new Class[] { TreeMultiSelect.class };
+        return new Class[] { TreeMultiSelect.class, TreeActions.class };
     }
 
     @Override

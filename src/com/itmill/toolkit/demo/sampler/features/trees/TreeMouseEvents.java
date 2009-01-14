@@ -5,10 +5,10 @@ import com.itmill.toolkit.demo.sampler.Feature;
 import com.itmill.toolkit.demo.sampler.NamedExternalResource;
 import com.itmill.toolkit.ui.Tree;
 
-public class TreeMultiSelect extends Feature {
+public class TreeMouseEvents extends Feature {
     @Override
     public String getName() {
-        return "Tree - Multiselect";
+        return "Tree - Mouse events";
     }
 
     @Override
@@ -16,9 +16,12 @@ public class TreeMultiSelect extends Feature {
         return "The Tree component allows a natural way to represent"
                 + " data that has hierarchical relationships, such as"
                 + " filesystems or message threads."
-                + "<br>In this example, you can select multiple tree nodes"
-                + " and delete your selection. You can also click your"
-                + " selections again, and have no selections made.";
+                + "<br>In this example, selecting items from the tree"
+                + " is disabled. Instead, another method of selection"
+                + " is used. Through ItemClickEvent we can update the"
+                + " label showing the selection."
+                + "<br>Try to click your left, right and middle mouse"
+                + "buttons on the tree items.";
     }
 
     @Override
@@ -28,8 +31,8 @@ public class TreeMultiSelect extends Feature {
 
     @Override
     public Class[] getRelatedFeatures() {
-        return new Class[] { TreeSingleSelect.class, TreeActions.class,
-                TreeMouseEvents.class };
+        return new Class[] { TreeSingleSelect.class, TreeMultiSelect.class,
+                TreeActions.class };
     }
 
     @Override

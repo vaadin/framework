@@ -57,6 +57,8 @@ import com.itmill.toolkit.demo.sampler.features.text.LabelRich;
 import com.itmill.toolkit.demo.sampler.features.text.RichTextEditor;
 import com.itmill.toolkit.demo.sampler.features.text.TextArea;
 import com.itmill.toolkit.demo.sampler.features.text.TextFieldSingle;
+import com.itmill.toolkit.demo.sampler.features.trees.TreeActions;
+import com.itmill.toolkit.demo.sampler.features.trees.TreeMouseEvents;
 import com.itmill.toolkit.demo.sampler.features.trees.TreeMultiSelect;
 import com.itmill.toolkit.demo.sampler.features.trees.TreeSingleSelect;
 import com.itmill.toolkit.demo.sampler.features.windows.WindowChild;
@@ -294,6 +296,8 @@ public class FeatureSet extends Feature {
             //        
                     new TreeSingleSelect(), //
                     new TreeMultiSelect(), //
+                    new TreeActions(), //
+                    new TreeMouseEvents(), //
             });
         }
     }

@@ -117,7 +117,7 @@ public class TreeSingleSelectExample extends VerticalLayout implements
             t.removeItem(target);
             // If the deleted object's parent has no more children, set it's
             // childrenallowed property to false
-            if (t.getChildren(parent).size() == 0) {
+            if (parent != null && t.getChildren(parent).size() == 0) {
                 t.setChildrenAllowed(parent, false);
             }
         }
