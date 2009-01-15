@@ -366,6 +366,7 @@ public class IFormLayout extends SimplePanel implements Container {
 
         public ErrorFlag() {
             setStyleName(CLASSNAME);
+            sinkEvents(ITooltip.TOOLTIP_EVENTS);
         }
 
         public void updateFromUIDL(UIDL uidl, Paintable component) {
