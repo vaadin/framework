@@ -16,6 +16,10 @@ import com.itmill.toolkit.demo.sampler.features.commons.Errors;
 import com.itmill.toolkit.demo.sampler.features.commons.Icons;
 import com.itmill.toolkit.demo.sampler.features.commons.Tooltips;
 import com.itmill.toolkit.demo.sampler.features.commons.Validation;
+import com.itmill.toolkit.demo.sampler.features.dates.DateInline;
+import com.itmill.toolkit.demo.sampler.features.dates.DateLocale;
+import com.itmill.toolkit.demo.sampler.features.dates.DatePopup;
+import com.itmill.toolkit.demo.sampler.features.dates.DateResolution;
 import com.itmill.toolkit.demo.sampler.features.form.FormBasic;
 import com.itmill.toolkit.demo.sampler.features.layouts.HorizontalLayoutBasic;
 import com.itmill.toolkit.demo.sampler.features.layouts.LayoutAlignment;
@@ -119,6 +123,7 @@ public class FeatureSet extends Feature {
                     new Tables(),//
                     new Texts(), //
                     new Trees(), //
+                    new Dates(), //
             });
         }
     }
@@ -298,6 +303,18 @@ public class FeatureSet extends Feature {
                     new TreeMultiSelect(), //
                     new TreeActions(), //
                     new TreeMouseEvents(), //
+            });
+        }
+    }
+
+    public static class Dates extends FeatureSet {
+        public Dates() {
+            super("Dates", new Feature[] {
+            //        
+                    new DatePopup(), //
+                    new DateInline(), //
+                    new DateLocale(), //
+                    new DateResolution(), //
             });
         }
     }

@@ -1,5 +1,7 @@
 package com.itmill.toolkit.demo.sampler;
 
+import java.util.Locale;
+
 import com.itmill.toolkit.data.Container;
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.util.HierarchicalContainer;
@@ -117,12 +119,36 @@ public final class ExampleUtil {
         }
     }
 
+    public static final Object locale_PROPERTY_LOCALE = "locale";
+    public static final Object locale_PROPERTY_NAME = "name";
+    private static final String[][] locales = { { "fi", "FI", "Finnish" },
+            { "de", "DE", "German" }, { "en", "US", "US - English" },
+            { "sv", "SE", "Swedish" } };
+    private static final IndexedContainer localeContainer = new IndexedContainer();
+    static {
+        localeContainer.addContainerProperty(locale_PROPERTY_LOCALE,
+                Locale.class, null);
+        localeContainer.addContainerProperty(locale_PROPERTY_NAME,
+                String.class, null);
+        for (int i = 0; i < locales.length; i++) {
+            String id = locales[i][2];
+            Item item = localeContainer.addItem(id);
+            item.getItemProperty(locale_PROPERTY_LOCALE).setValue(
+                    new Locale(locales[i][0], locales[i][1]));
+            item.getItemProperty(locale_PROPERTY_NAME).setValue(locales[i][2]);
+        }
+    }
+
     private static final String[][] hardware = { //
             { "Desktops", "Dell OptiPlex GX240", "Dell OptiPlex GX260",
                     "Dell OptiPlex GX280" },
             { "Monitors", "Benq T190HD", "Benq T220HD", "Benq T240HD" },
             { "Laptops", "IBM ThinkPad T40", "IBM ThinkPad T43",
                     "IBM ThinkPad T60" } };
+
+    public static IndexedContainer getLocaleContainer() {
+        return localeContainer;
+    }
 
     public static IndexedContainer getISO3166Container() {
         return iso3166Container;
