@@ -9,6 +9,11 @@ import com.itmill.toolkit.ui.ComboBox;
 public class ComboBoxItemIcon extends TestBase {
 
     @Override
+    protected Integer getTicketNumber() {
+        return 2455;
+    }
+
+    @Override
     protected String getDescription() {
         return "The items in the ComboBox should have icons - also when selected.";
     }

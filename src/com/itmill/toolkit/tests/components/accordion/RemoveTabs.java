@@ -24,6 +24,11 @@ public class RemoveTabs extends TestBase {
     private Button reorderTabs;
 
     @Override
+    protected Integer getTicketNumber() {
+        return 2425;
+    }
+
+    @Override
     protected String getDescription() {
         return "Tests the removal of individual tabs from an Accordion. No matter what is done in this test the tab caption \"Tab X\" should always match the content \"Tab X\". Use \"remove first\" and \"remove active\" buttons to remove the first or the active tab. The \"reorder\" button reverses the order by adding and removing all components.";
     }

@@ -9,6 +9,11 @@ import com.itmill.toolkit.ui.Window;
 public class RequiredErrorMessage extends TestBase {
 
     @Override
+    protected Integer getTicketNumber() {
+        return 2442;
+    }
+
+    @Override
     protected String getDescription() {
         return "This test verifies that the tooltip for a required field contains the requiredError message if such has been given. The tooltip for the first field should contain a message, the second field has no required error message set";
     }

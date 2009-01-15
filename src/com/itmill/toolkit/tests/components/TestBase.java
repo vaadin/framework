@@ -1,6 +1,7 @@
 package com.itmill.toolkit.tests.components;
 
 import com.itmill.toolkit.Application;
+import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Layout;
 import com.itmill.toolkit.ui.SplitPanel;
@@ -40,6 +41,12 @@ public abstract class TestBase extends Application {
 
     protected abstract String getDescription();
 
+    protected abstract Integer getTicketNumber();
+
     protected abstract void setup();
+
+    protected void addComponent(Component c) {
+        getLayout().addComponent(c);
+    }
 
 }

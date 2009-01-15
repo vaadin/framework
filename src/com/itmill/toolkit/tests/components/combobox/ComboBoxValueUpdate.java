@@ -8,6 +8,11 @@ import com.itmill.toolkit.ui.Label;
 
 public class ComboBoxValueUpdate extends TestBase {
 
+    @Override
+    protected Integer getTicketNumber() {
+        return 2451;
+    }
+
     private Label selectedLabel;
 
     @Override

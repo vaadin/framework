@@ -9,6 +9,11 @@ import com.itmill.toolkit.ui.Table;
 public class TableItemIcon extends TestBase {
 
     @Override
+    protected Integer getTicketNumber() {
+        return 2457;
+    }
+
+    @Override
     protected String getDescription() {
         return "The items in the Table should have icons in the first column (rowheader).";
     }

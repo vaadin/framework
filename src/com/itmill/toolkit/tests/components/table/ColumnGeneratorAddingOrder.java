@@ -9,6 +9,11 @@ import com.itmill.toolkit.ui.Table;
 public class ColumnGeneratorAddingOrder extends TestBase {
 
     @Override
+    protected Integer getTicketNumber() {
+        return 2457;
+    }
+
+    @Override
     protected String getDescription() {
         return "Column generator must be allowed to be added both before and after data source setting and overriding should work. Bugs in 5.3-rc7 if added after DS.";
     }
