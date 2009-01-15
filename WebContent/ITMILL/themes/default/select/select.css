@@ -112,6 +112,15 @@
 	background-position: top left;
 }
 
+.i-filterselect.i-readonly .i-filterselect-button {
+	display: none;
+}
+
+.i-filterselect.i-readonly .i-filterselect-input {
+	background: transparent;
+	color: black;
+}
+
 .i-filterselect-suggestpopup {
 	background: #f6f7f7;
 	border: 1px solid #b6bbbc;
