@@ -5,10 +5,10 @@ import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Link;
-import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
+import com.itmill.toolkit.ui.VerticalLayout;
 
-public class IconsExample extends OrderedLayout {
+public class IconsExample extends VerticalLayout {
 
     public IconsExample() {
         setSpacing(true);
