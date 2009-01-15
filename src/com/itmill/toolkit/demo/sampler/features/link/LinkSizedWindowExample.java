@@ -4,9 +4,9 @@ import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.terminal.Resource;
 import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.ui.Link;
-import com.itmill.toolkit.ui.OrderedLayout;
+import com.itmill.toolkit.ui.VerticalLayout;
 
-public class LinkSizedWindowExample extends OrderedLayout {
+public class LinkSizedWindowExample extends VerticalLayout {
 
     private static final String CAPTION = "Open Google in small window";
     private static final String TOOLTIP = "http://www.google.com (opens in small window)";

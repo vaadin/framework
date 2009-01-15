@@ -2,11 +2,11 @@ package com.itmill.toolkit.demo.sampler.features.notifications;
 
 import com.itmill.toolkit.ui.Alignment;
 import com.itmill.toolkit.ui.Button;
-import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.TextField;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
-public class NotificationHumanizedExample extends OrderedLayout {
+public class NotificationHumanizedExample extends VerticalLayout {
 
     public NotificationHumanizedExample() {
         setSpacing(true);

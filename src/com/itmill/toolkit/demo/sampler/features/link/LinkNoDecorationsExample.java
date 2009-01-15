@@ -3,9 +3,9 @@ package com.itmill.toolkit.demo.sampler.features.link;
 import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.ui.Link;
-import com.itmill.toolkit.ui.OrderedLayout;
+import com.itmill.toolkit.ui.VerticalLayout;
 
-public class LinkNoDecorationsExample extends OrderedLayout {
+public class LinkNoDecorationsExample extends VerticalLayout {
 
     private static final String CAPTION = "Open Google in new window";
     private static final String TOOLTIP = "http://www.google.com (opens in new window)";

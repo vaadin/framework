@@ -4,15 +4,16 @@ import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.ui.Alignment;
 import com.itmill.toolkit.ui.Button;
+import com.itmill.toolkit.ui.HorizontalLayout;
 import com.itmill.toolkit.ui.NativeSelect;
-import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.RichTextArea;
 import com.itmill.toolkit.ui.Slider;
 import com.itmill.toolkit.ui.TextField;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 import com.itmill.toolkit.ui.Window.Notification;
 
-public class NotificationCustomExample extends OrderedLayout {
+public class NotificationCustomExample extends VerticalLayout {
 
     private static final Object CAPTION_PROPERTY = new Object();
 
@@ -32,8 +33,7 @@ public class NotificationCustomExample extends OrderedLayout {
                 .setDescription("Additional information; try to keep it short.");
         addComponent(description);
 
-        OrderedLayout horiz = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        HorizontalLayout horiz = new HorizontalLayout();
         horiz.setSpacing(true);
         addComponent(horiz);
 

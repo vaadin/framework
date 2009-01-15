@@ -2,10 +2,10 @@ package com.itmill.toolkit.demo.sampler.features.buttons;
 
 import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.ui.Button;
-import com.itmill.toolkit.ui.OrderedLayout;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
-public class ButtonSwitchExample extends OrderedLayout implements
+public class ButtonSwitchExample extends VerticalLayout implements
         Button.ClickListener {
 
     private static final String CAPTION = "Allow HTML";

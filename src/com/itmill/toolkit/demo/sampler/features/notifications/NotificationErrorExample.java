@@ -2,12 +2,12 @@ package com.itmill.toolkit.demo.sampler.features.notifications;
 
 import com.itmill.toolkit.ui.Alignment;
 import com.itmill.toolkit.ui.Button;
-import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.TextField;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 import com.itmill.toolkit.ui.Window.Notification;
 
-public class NotificationErrorExample extends OrderedLayout {
+public class NotificationErrorExample extends VerticalLayout {
 
     public NotificationErrorExample() {
         setSpacing(true);
