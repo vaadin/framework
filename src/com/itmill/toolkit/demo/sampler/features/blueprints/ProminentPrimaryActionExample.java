@@ -2,17 +2,19 @@ package com.itmill.toolkit.demo.sampler.features.blueprints;
 
 import com.itmill.toolkit.ui.Alignment;
 import com.itmill.toolkit.ui.Button;
-import com.itmill.toolkit.ui.OrderedLayout;
+import com.itmill.toolkit.ui.HorizontalLayout;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
-public class ProminentPrimaryActionExample extends OrderedLayout implements
+public class ProminentPrimaryActionExample extends VerticalLayout implements
         Button.ClickListener {
 
     public ProminentPrimaryActionExample() {
         setSpacing(true);
 
         { // Cancel / Save
-            OrderedLayout horiz = new OrderedLayout(ORIENTATION_HORIZONTAL);
+            HorizontalLayout horiz = new HorizontalLayout();
+            horiz.setCaption("Save/cancel example:");
             horiz.setSpacing(true);
             horiz.setMargin(true);
             addComponent(horiz);
@@ -24,7 +26,8 @@ public class ProminentPrimaryActionExample extends OrderedLayout implements
         }
 
         { // Sign up / Sign in
-            OrderedLayout horiz = new OrderedLayout(ORIENTATION_HORIZONTAL);
+            HorizontalLayout horiz = new HorizontalLayout();
+            horiz.setCaption("Sign up example:");
             horiz.setSpacing(true);
             horiz.setMargin(true);
             addComponent(horiz);
@@ -38,7 +41,8 @@ public class ProminentPrimaryActionExample extends OrderedLayout implements
         }
 
         { // Login / Forgot password?
-            OrderedLayout vert = new OrderedLayout();
+            VerticalLayout vert = new VerticalLayout();
+            vert.setCaption("Login example:");
             vert.setSizeUndefined();
             vert.setSpacing(true);
             vert.setMargin(true);
