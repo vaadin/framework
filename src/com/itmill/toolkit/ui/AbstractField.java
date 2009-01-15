@@ -141,7 +141,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         }
 
         // Adds the required attribute
-        if (isRequired()) {
+        if (!isReadOnly() && isRequired()) {
             target.addAttribute("required", true);
         }
 
