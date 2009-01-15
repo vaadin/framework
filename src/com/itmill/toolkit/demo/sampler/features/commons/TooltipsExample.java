@@ -1,11 +1,11 @@
 package com.itmill.toolkit.demo.sampler.features.commons;
 
 import com.itmill.toolkit.ui.Button;
-import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.RichTextArea;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
-public class TooltipsExample extends OrderedLayout {
+public class TooltipsExample extends VerticalLayout {
 
     public TooltipsExample() {
         setSpacing(true);
