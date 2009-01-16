@@ -146,6 +146,45 @@ public final class ExampleUtil {
             { "Laptops", "IBM ThinkPad T40", "IBM ThinkPad T43",
                     "IBM ThinkPad T60" } };
 
+    public static final Object PERSON_PROPERTY_FIRSTNAME = "First Name";
+    public static final Object PERSON_PROPERTY_LASTNAME = "Last Name";
+    private static final String[] firstnames = new String[] { "John", "Mary",
+            "Joe", "Sarah", "Jeff", "Jane", "Peter", "Marc", "Robert", "Paula",
+            "Lenny", "Kenny", "Nathan", "Nicole", "Laura", "Jos", "Josie",
+            "Linus" };
+    private static final String[] lastnames = new String[] { "Torvalds",
+            "Smith", "Adams", "Black", "Wilson", "Richards", "Thompson",
+            "McGoff", "Halas", "Jones", "Beck", "Sheridan", "Picard", "Hill",
+            "Fielding", "Einstein" };
+    private static final IndexedContainer personContainer;
+    static {
+        personContainer = getPersonContainer();
+    }
+
+    public static IndexedContainer getPersonContainer() {
+        IndexedContainer contactContainer = new IndexedContainer();
+        contactContainer.addContainerProperty(PERSON_PROPERTY_FIRSTNAME,
+                String.class, "");
+        contactContainer.addContainerProperty(PERSON_PROPERTY_LASTNAME,
+                String.class, "");
+        for (int i = 0; i < 50;) {
+            String fn = firstnames[(int) (Math.random() * firstnames.length)];
+            String ln = lastnames[(int) (Math.random() * lastnames.length)];
+            String id = fn + ln;
+            Item item = contactContainer.addItem(id);
+            if (item != null) {
+                i++;
+                item.getItemProperty(PERSON_PROPERTY_FIRSTNAME).setValue(fn);
+                item.getItemProperty(PERSON_PROPERTY_LASTNAME).setValue(ln);
+            }
+        }
+        return contactContainer;
+    }
+
+    public static IndexedContainer getStaticPersonContainer() {
+        return personContainer;
+    }
+
     public static IndexedContainer getLocaleContainer() {
         return localeContainer;
     }

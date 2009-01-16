@@ -46,13 +46,16 @@ import com.itmill.toolkit.demo.sampler.features.selects.ListSelectSingle;
 import com.itmill.toolkit.demo.sampler.features.selects.NativeSelection;
 import com.itmill.toolkit.demo.sampler.features.selects.TwinColumnSelect;
 import com.itmill.toolkit.demo.sampler.features.table.TableActions;
+import com.itmill.toolkit.demo.sampler.features.table.TableCellStyling;
 import com.itmill.toolkit.demo.sampler.features.table.TableColumnAlignment;
 import com.itmill.toolkit.demo.sampler.features.table.TableColumnCollapsing;
 import com.itmill.toolkit.demo.sampler.features.table.TableColumnHeaders;
 import com.itmill.toolkit.demo.sampler.features.table.TableColumnReordering;
 import com.itmill.toolkit.demo.sampler.features.table.TableHeaderIcons;
 import com.itmill.toolkit.demo.sampler.features.table.TableLazyLoading;
+import com.itmill.toolkit.demo.sampler.features.table.TableMouseEvents;
 import com.itmill.toolkit.demo.sampler.features.table.TableRowHeaders;
+import com.itmill.toolkit.demo.sampler.features.table.TableRowStyling;
 import com.itmill.toolkit.demo.sampler.features.table.TableSorting;
 import com.itmill.toolkit.demo.sampler.features.tabsheets.TabSheetDisabled;
 import com.itmill.toolkit.demo.sampler.features.tabsheets.TabSheetIcons;
@@ -281,6 +284,9 @@ public class FeatureSet extends Feature {
                     new TableColumnAlignment(), //
                     new TableActions(), //
                     new TableLazyLoading(), //
+                    new TableRowStyling(), //
+                    new TableCellStyling(), //
+                    new TableMouseEvents(), //
             });
         }
     }
