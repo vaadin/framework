@@ -21,6 +21,8 @@ import com.itmill.toolkit.demo.sampler.features.dates.DateLocale;
 import com.itmill.toolkit.demo.sampler.features.dates.DatePopup;
 import com.itmill.toolkit.demo.sampler.features.dates.DateResolution;
 import com.itmill.toolkit.demo.sampler.features.form.FormBasic;
+import com.itmill.toolkit.demo.sampler.features.layouts.ExpandingComponent;
+import com.itmill.toolkit.demo.sampler.features.layouts.GridLayoutBasic;
 import com.itmill.toolkit.demo.sampler.features.layouts.HorizontalLayoutBasic;
 import com.itmill.toolkit.demo.sampler.features.layouts.LayoutAlignment;
 import com.itmill.toolkit.demo.sampler.features.layouts.LayoutSpacing;
@@ -203,8 +205,10 @@ public class FeatureSet extends Feature {
             //
                     new VerticalLayoutBasic(), //
                     new HorizontalLayoutBasic(), //
+                    new GridLayoutBasic(), //
                     new LayoutSpacing(), //
                     new LayoutAlignment(), //
+                    new ExpandingComponent(), //
             });
         }
     }
