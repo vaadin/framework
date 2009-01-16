@@ -2,3 +2,23 @@
 	color: red;
 	font-style: italic;
 }
+
+.i-table-contacts .i-table-row-red {
+	color: red;
+}
+.i-table-contacts .i-table-row-blue {
+	color: blue;
+}
+.i-table-contacts .i-table-row-green {
+	color: green;
+}
+
+.i-table-contacts .i-table-cell-content-marked {
+	background-color: #ffd;
+}
+
+.i-table-contacts .i-table-cell-content-email {
+	background-color: #ffd;
+	font-family: monospace;
+	margin: 0px;
+}
