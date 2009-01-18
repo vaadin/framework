@@ -605,13 +605,22 @@ public class ITabsheet extends ITabsheetBase {
          */
         int height = -1;
         int width = -1;
+        int minWidth = 0;
+
         if (!isDynamicHeight()) {
             height = renderSpace.getHeight();
         }
         if (!isDynamicWidth()) {
             width = renderSpace.getWidth();
+        } else {
+            /*
+             * If the tabbar is wider than the content we need to use the tabbar
+             * width as minimum width so scrollbars get placed correctly (at the
+             * right edge).
+             */
+            minWidth = tb.getOffsetWidth() - getContentAreaBorderWidth();
         }
-        tp.fixVisibleTabSize(width, height);
+        tp.fixVisibleTabSize(width, height, minWidth);
 
     }
 

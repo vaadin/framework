@@ -126,7 +126,7 @@ public class ITabsheetPanel extends ComplexPanel {
         DOM.setStyleAttribute(e, "visibility", "");
     }
 
-    public void fixVisibleTabSize(int width, int height) {
+    public void fixVisibleTabSize(int width, int height, int minWidth) {
         if (visibleWidget == null) {
             return;
         }
@@ -136,6 +136,9 @@ public class ITabsheetPanel extends ComplexPanel {
         }
         if (width < 0) {
             width = visibleWidget.getOffsetWidth();
+        }
+        if (width < minWidth) {
+            width = minWidth;
         }
 
         // i-tabsheet-tabsheetpanel height
