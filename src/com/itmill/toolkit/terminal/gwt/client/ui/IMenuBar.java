@@ -33,25 +33,19 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
     protected boolean collapseItems = true;
     protected CustomMenuItem moreItem = null;
 
-    protected static int number = 0;
-
     // Construct an empty command to be used when the item has no command
     // associated
     protected static final Command emptyCommand = null;
 
     /** Widget fields **/
-    boolean subMenu;
-    ArrayList items;
-    Element containerElement;
-    IToolkitOverlay popup;
-    IMenuBar visibleChildMenu;
-    IMenuBar parentMenu;
-    CustomMenuItem selected;
+    protected boolean subMenu;
+    protected ArrayList<CustomMenuItem> items;
+    protected Element containerElement;
+    protected IToolkitOverlay popup;
+    protected IMenuBar visibleChildMenu;
+    protected IMenuBar parentMenu;
+    protected CustomMenuItem selected;
 
-    /**
-     * The constructor should first call super() to initialize the component and
-     * then handle any initialization relevant to IT Mill Toolkit.
-     */
     public IMenuBar() {
         // Create an empty horizontal menubar
         this(false);
@@ -61,7 +55,7 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
         super();
         setElement(DOM.createDiv());
 
-        items = new ArrayList();
+        items = new ArrayList<CustomMenuItem>();
         popup = null;
         visibleChildMenu = null;
 
@@ -133,15 +127,15 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
             moreItem = new CustomMenuItem(itemHTML.toString(), emptyCommand);
         }
 
-        UIDL items = uidl.getChildUIDL(1);
-        Iterator itr = items.getChildIterator();
-        Stack iteratorStack = new Stack();
-        Stack menuStack = new Stack();
+        UIDL uidlItems = uidl.getChildUIDL(1);
+        Iterator<UIDL> itr = uidlItems.getChildIterator();
+        Stack<Iterator<UIDL>> iteratorStack = new Stack<Iterator<UIDL>>();
+        Stack<IMenuBar> menuStack = new Stack<IMenuBar>();
         IMenuBar currentMenu = this;
 
         while (itr.hasNext()) {
             UIDL item = (UIDL) itr.next();
-            CustomMenuItem currentItem = null; // For receiving the item
+            CustomMenuItem currentItem = null;
 
             String itemText = item.getStringAttribute("text");
             final int itemId = item.getIntAttribute("id");
@@ -168,7 +162,6 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
 
             Command cmd = null;
 
-            // Check if we need to create a command to this item
             if (itemHasCommand) {
                 // Construct a command that fires onMenuClick(int) with the
                 // item's id-number
@@ -190,7 +183,7 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
             }
 
             while (!itr.hasNext() && !iteratorStack.empty()) {
-                itr = (Iterator) iteratorStack.pop();
+                itr = iteratorStack.pop();
                 currentMenu = (IMenuBar) menuStack.pop();
             }
         }// while
@@ -208,7 +201,7 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
             }
 
             if (topLevelWidth > getOffsetWidth()) {
-                ArrayList toBeCollapsed = new ArrayList();
+                ArrayList<CustomMenuItem> toBeCollapsed = new ArrayList<CustomMenuItem>();
                 IMenuBar collapsed = new IMenuBar(true);
                 for (int j = i - 2; j < getItems().size(); j++) {
                     toBeCollapsed.add(getItems().get(j));
@@ -221,8 +214,9 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
                     // it's ugly, but we have to insert the submenu icon
                     if (item.getSubMenu() != null && submenuIcon != null) {
                         StringBuffer itemText = new StringBuffer(item.getHTML());
-                        itemText.append("<img src=\"" + submenuIcon
-                                + "\" align=\"right\" />");
+                        itemText.append("<img src=\"");
+                        itemText.append(submenuIcon);
+                        itemText.append("\" align=\"right\" />");
                         item.setHTML(itemText.toString());
                     }
 
@@ -243,6 +237,7 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
      *            id of the item that was clicked
      */
     public void onMenuClick(int clickedItemId) {
+        System.out.println("onMenuClick");
         // Updating the state to the server can not be done before
         // the server connection is known, i.e., before updateFromUIDL()
         // has been called.
@@ -258,7 +253,7 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
     /**
      * Returns a list of items in this menu
      */
-    public List getItems() {
+    public List<CustomMenuItem> getItems() {
         return items;
     }
 
@@ -366,13 +361,10 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
                 break;
 
             case Event.ONMOUSEOVER:
-
                 itemOver(targetItem);
-
                 break;
 
             case Event.ONMOUSEOUT:
-
                 itemOut(targetItem);
                 break;
             }
@@ -386,6 +378,7 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
      */
     public void itemClick(CustomMenuItem item) {
         if (item.getCommand() != null) {
+            System.out.println("itemClick, running command");
             setSelected(null);
 
             if (visibleChildMenu != null) {
@@ -410,11 +403,12 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
      * @param item
      */
     public void itemOver(CustomMenuItem item) {
+        System.out.println("ItemOver " + item.getText());
         setSelected(item);
 
         boolean menuWasVisible = visibleChildMenu != null;
 
-        if (visibleChildMenu != null && visibleChildMenu != item.getSubMenu()) {
+        if (menuWasVisible && visibleChildMenu != item.getSubMenu()) {
             popup.hide();
             visibleChildMenu = null;
         }
@@ -431,6 +425,7 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
      * @param item
      */
     public void itemOut(CustomMenuItem item) {
+        System.out.println("ItemOut " + item.getText());
         if (visibleChildMenu != item.getSubMenu() || visibleChildMenu == null) {
             hideChildMenu(item);
             setSelected(null);
@@ -504,6 +499,7 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
 
         if (visibleChildMenu != null) {
             popup.hide();
+            setSelected(null);
         }
 
         if (getParentMenu() != null) {
@@ -546,6 +542,11 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
      * @param item
      */
     public void setSelected(CustomMenuItem item) {
+        if (item != null) {
+            System.out.println("setSelected " + item.getText());
+        } else {
+            System.out.println("setSelected was null");
+        }
         // If we had something selected, unselect
         if (item != selected && selected != null) {
             selected.setSelected(false);
@@ -562,12 +563,12 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
      * Listener method, fired when this menu is closed
      */
     public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
-
+        System.out.println("onPopupClosed, auto: " + autoClosed);
         hideChildren();
         if (autoClosed) {
             hideParents();
         }
-        setSelected(null);
+        // setSelected(null);
         visibleChildMenu = null;
         popup = null;
 
@@ -602,6 +603,10 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
                 removeStyleDependentName("selected");
             }
         }
+
+        /*
+         * setters and getters for the fields
+         */
 
         public void setSubMenu(IMenuBar subMenu) {
             this.subMenu = subMenu;

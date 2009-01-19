@@ -11,19 +11,20 @@ import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Resource;
 
 /**
- * The top-level menu class. This can contain MenuItems, which in turn can
- * contain Submenus and MenuCommands.
- * 
+ * <p>
+ * A class representing a horizontal menu bar. The menu can contain MenuItem
+ * objects, which in turn can contain more MenuBars. These sub-level MenuBars
+ * are represented as vertical menu.
+ * </p>
  */
 public class MenuBar extends AbstractComponent {
 
     // Items of the top-level menu
-    private final List menuItems;
+    private final List<MenuItem> menuItems;
 
     // Number of items in this menu
     private static int numberOfItems = 0;
 
-    private boolean animationEnabled;
     private boolean collapseItems;
     private Resource submenuIcon;
     private MenuItem moreItem;
@@ -34,7 +35,7 @@ public class MenuBar extends AbstractComponent {
         return "menubar";
     }
 
-    /** Paint (serialize) the component for the client. */
+    /** Paint (serialise) the component for the client. */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
 
@@ -42,10 +43,9 @@ public class MenuBar extends AbstractComponent {
         super.paintContent(target);
 
         // Stack for list iterators
-        Stack iteratorStack = new Stack();
+        Stack<Iterator<MenuItem>> iteratorStack = new Stack<Iterator<MenuItem>>();
 
         target.startTag("options");
-        target.addAttribute("animationEnabled", animationEnabled);
 
         if (submenuIcon != null) {
             target.addAttribute("submenuIcon", submenuIcon);
@@ -65,7 +65,7 @@ public class MenuBar extends AbstractComponent {
         target.endTag("options");
         target.startTag("items");
 
-        Iterator itr = menuItems.iterator();
+        Iterator<MenuItem> itr = menuItems.iterator();
 
         // This generates the tree from the contents of the menu
         while (itr.hasNext()) {
@@ -100,7 +100,7 @@ public class MenuBar extends AbstractComponent {
 
             // The end submenu. More than one submenu may end at once.
             while (!itr.hasNext() && !iteratorStack.empty()) {
-                itr = (Iterator) iteratorStack.pop();
+                itr = iteratorStack.pop();
                 target.endTag("item");
             }
 
@@ -112,13 +112,13 @@ public class MenuBar extends AbstractComponent {
     /** Deserialize changes received from client. */
     @Override
     public void changeVariables(Object source, Map variables) {
-        Stack items = new Stack();
+        Stack<MenuItem> items = new Stack<MenuItem>();
         boolean found = false;
 
         if (variables.containsKey("clickedId")) {
 
             Integer clickedId = (Integer) variables.get("clickedId");
-            Iterator itr = getItems().iterator();
+            Iterator<MenuItem> itr = getItems().iterator();
             while (itr.hasNext()) {
                 items.push(itr.next());
             }
@@ -150,15 +150,14 @@ public class MenuBar extends AbstractComponent {
      * Constructs an empty, horizontal menu
      */
     public MenuBar() {
-        menuItems = new ArrayList();
-        setAnimation(false);
+        menuItems = new ArrayList<MenuItem>();
         setCollapse(true);
         setMoreMenuItem(null);
     }
 
     /**
-     * Add a new item to the menubar. Command can be null, but a caption must be
-     * given.
+     * Add a new item to the menu bar. Command can be null, but a caption must
+     * be given.
      * 
      * @param caption
      *            the text for the menu item
@@ -171,7 +170,7 @@ public class MenuBar extends AbstractComponent {
     }
 
     /**
-     * Add a new item to the menubar. Icon and command can be null, but a
+     * Add a new item to the menu bar. Icon and command can be null, but a
      * caption must be given.
      * 
      * @param caption
@@ -231,11 +230,11 @@ public class MenuBar extends AbstractComponent {
     }
 
     /**
-     * Returns a list with all the MenuItem objects in the menubar
+     * Returns a list with all the MenuItem objects in the menu bar
      * 
-     * @return a list containing the MenuItem objects in the menubar
+     * @return a list containing the MenuItem objects in the menu bar
      */
-    public java.util.List getItems() {
+    public List<MenuItem> getItems() {
         return menuItems;
     }
 
@@ -253,7 +252,7 @@ public class MenuBar extends AbstractComponent {
     }
 
     /**
-     * Empty the menubar
+     * Empty the menu bar
      */
     public void removeItems() {
         menuItems.clear();
@@ -267,28 +266,6 @@ public class MenuBar extends AbstractComponent {
      */
     public int getSize() {
         return menuItems.size();
-    }
-
-    /**
-     * Enable or disable animated menubar appearance. Animation is disabled by
-     * default. Currently does nothing.
-     * 
-     * @param hasAnimation
-     */
-    public void setAnimation(boolean animation) {
-        animationEnabled = animation;
-        requestRepaint();
-    }
-
-    /**
-     * Returns true if the animation is enabled. Animation of this class is
-     * disabled by default.
-     * 
-     * @return true if the animation is enabled
-     * 
-     */
-    public boolean hasAnimation() {
-        return animationEnabled;
     }
 
     /**
@@ -334,9 +311,10 @@ public class MenuBar extends AbstractComponent {
     }
 
     /**
-     * Set the item that is used when collapsing the top level menu. The item
-     * command will be ignored. If set to null, the default item with the "More"
-     * text will be used.
+     * Set the item that is used when collapsing the top level menu. All
+     * "overflowing" items will be added below this. The item command will be
+     * ignored. If set to null, the default item with the "More" text is be
+     * used.
      * 
      * @param item
      */
@@ -359,17 +337,21 @@ public class MenuBar extends AbstractComponent {
     }
 
     /**
-     * This interface contains the layer for menu commands of the MenuBar class
-     * . It's method will fire when the user clicks on the containing MenuItem.
-     * The selected item is given as an argument.
+     * This interface contains the layer for menu commands of the
+     * {@link com.itmill.toolkit.ui.MenuBar} class. It's method will fire when
+     * the user clicks on the containing
+     * {@link com.itmill.toolkit.ui.MenuBar.MenuItem}. The selected item is
+     * given as an argument.
      */
     public interface Command {
         public void menuSelected(MenuBar.MenuItem selectedItem);
     }
 
     /**
-     * A composite class for menu items and submenus. You can set commands to be
-     * fired on user click by implementing the MenuBar.Command interface.
+     * A composite class for menu items and sub-menus. You can set commands to
+     * be fired on user click by implementing the
+     * {@link com.itmill.toolkit.ui.MenuBar.Command} interface. You can also add
+     * multiple MenuItems to a MenuItem and create a sub-menu.
      * 
      */
     public class MenuItem {
@@ -378,7 +360,7 @@ public class MenuBar extends AbstractComponent {
         private final int itsId;
         private Command itsCommand;
         private String itsText;
-        private List itsChildren;
+        private List<MenuItem> itsChildren;
         private Resource itsIcon;
         private MenuItem itsParent;
 
@@ -404,7 +386,7 @@ public class MenuBar extends AbstractComponent {
         }
 
         /**
-         * Checks if the item has children (if it is a submenu).
+         * Checks if the item has children (if it is a sub-menu).
          * 
          * @return True if this item has children
          */
@@ -413,8 +395,8 @@ public class MenuBar extends AbstractComponent {
         }
 
         /**
-         * Add a new item inside this item, thus creating a submenu. Command can
-         * be null, but a caption must be given.
+         * Add a new item inside this item, thus creating a sub-menu. Command
+         * can be null, but a caption must be given.
          * 
          * @param caption
          *            the text for the menu item
@@ -426,7 +408,7 @@ public class MenuBar extends AbstractComponent {
         }
 
         /**
-         * Add a new item inside this item, thus creating a submenu. Icon and
+         * Add a new item inside this item, thus creating a sub-menu. Icon and
          * command can be null, but a caption must be given.
          * 
          * @param caption
@@ -443,7 +425,7 @@ public class MenuBar extends AbstractComponent {
             }
 
             if (itsChildren == null) {
-                itsChildren = new ArrayList();
+                itsChildren = new ArrayList<MenuItem>();
             }
 
             MenuItem newItem = new MenuItem(caption, icon, command);
@@ -512,9 +494,10 @@ public class MenuBar extends AbstractComponent {
 
         /**
          * For the containing item. This will return null if the item is in the
-         * top-level menubar.
+         * top-level menu bar.
          * 
-         * @return The containing MenuBar.MenuItem, or null if there is none
+         * @return The containing {@link com.itmill.toolkit.ui.MenuBar.MenuItem}
+         *         , or null if there is none
          */
         public MenuBar.MenuItem getParent() {
             return itsParent;
@@ -525,7 +508,7 @@ public class MenuBar extends AbstractComponent {
          * 
          * @return List of children items, or null if there are none
          */
-        public java.util.List getChildren() {
+        public List<MenuItem> getChildren() {
             return itsChildren;
         }
 
