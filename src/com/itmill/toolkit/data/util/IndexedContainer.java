@@ -23,13 +23,18 @@ import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property;
 
 /**
- * Indexed container implementation.
- * <p>
- * A list implementation of the <code>com.itmill.toolkit.data.Container</code>
- * interface. A list is a ordered collection wherein the user has a precise
- * control over where in the list each new Item is inserted. The user may access
- * the Items by their integer index (position in the list) or by their Item ID.
- * </p>
+ * An implementation of the <code>{@link Container.Indexed}</code> interface
+ * with all important features.</p>
+ * 
+ * Features:
+ * <ul>
+ * <li> {@link Container.Indexed}
+ * <li> {@link Container.Ordered}
+ * <li> {@link Container.Sortable}
+ * <li> {@link Container.Filterable}
+ * <li> {@link Cloneable}
+ * <li>Sends all needed events on content changes.
+ * </ul>
  * 
  * @see com.itmill.toolkit.data.Container
  * 
@@ -39,7 +44,7 @@ import com.itmill.toolkit.data.Property;
  * @since 3.0
  */
 
-public class IndexedContainer implements Container, Container.Indexed,
+public class IndexedContainer implements Container.Indexed,
         Container.ItemSetChangeNotifier, Container.PropertySetChangeNotifier,
         Property.ValueChangeNotifier, Container.Sortable, Comparator,
         Cloneable, Container.Filterable {
@@ -132,15 +137,10 @@ public class IndexedContainer implements Container, Container.Indexed,
 
     /* Container methods */
 
-    /**
-     * Gets the Item with the given Item ID from the list. If the list does not
-     * contain the requested Item (or it is filtered to be invisible),
-     * <code>null</code> is returned.
+    /*
+     * (non-Javadoc)
      * 
-     * @param itemId
-     *            the ID of the Item to retrieve.
-     * @return the Item with the given ID or <code>null</code> if the Item is
-     *         not found in the list
+     * @see com.itmill.toolkit.data.Container#getItem(java.lang.Object)
      */
     public Item getItem(Object itemId) {
 
@@ -156,11 +156,10 @@ public class IndexedContainer implements Container, Container.Indexed,
         return null;
     }
 
-    /**
-     * Gets the ID's of all Items stored in the list. The ID's are returned as a
-     * unmodifiable collection.
+    /*
+     * (non-Javadoc)
      * 
-     * @return unmodifiable collection of Item IDs
+     * @see com.itmill.toolkit.data.Container#getItemIds()
      */
     public Collection getItemIds() {
         if (filteredItemIds != null) {
@@ -169,11 +168,10 @@ public class IndexedContainer implements Container, Container.Indexed,
         return Collections.unmodifiableCollection(itemIds);
     }
 
-    /**
-     * Gets the ID's of all Properties stored in the list. The ID's are returned
-     * as a unmodifiable collection.
+    /*
+     * (non-Javadoc)
      * 
-     * @return unmodifiable collection of Property IDs
+     * @see com.itmill.toolkit.data.Container#getContainerPropertyIds()
      */
     public Collection getContainerPropertyIds() {
         return Collections.unmodifiableCollection(propertyIds);
@@ -190,19 +188,12 @@ public class IndexedContainer implements Container, Container.Indexed,
         return (Class) types.get(propertyId);
     }
 
-    /**
-     * Gets the Property identified by the given Item ID and Property ID from
-     * the lsit. If the list does not contain the Property, <code>null</code> is
-     * returned.
+    /*
+     * (non-Javadoc)
      * 
-     * @param itemId
-     *            the ID of the Item which contains the requested Property.
-     * @param propertyId
-     *            the ID of the Property to retrieve.
-     * @return Property with the given ID or <code>null</code>
-     * 
-     * @see com.itmill.toolkit.data.Container#getContainerProperty(Object,
-     *      Object)
+     * @see
+     * com.itmill.toolkit.data.Container#getContainerProperty(java.lang.Object,
+     * java.lang.Object)
      */
     public Property getContainerProperty(Object itemId, Object propertyId) {
         if (filteredItemIds == null) {
@@ -216,10 +207,10 @@ public class IndexedContainer implements Container, Container.Indexed,
         return new IndexedContainerProperty(itemId, propertyId);
     }
 
-    /**
-     * Gets the number of Items in the list.
+    /*
+     * (non-Javadoc)
      * 
-     * @return number of Items in the list
+     * @see com.itmill.toolkit.data.Container#size()
      */
     public int size() {
         if (filteredItemIds == null) {
@@ -228,13 +219,10 @@ public class IndexedContainer implements Container, Container.Indexed,
         return filteredItemIds.size();
     }
 
-    /**
-     * Tests if the list contains the specified Item
+    /*
+     * (non-Javadoc)
      * 
-     * @param itemId
-     *            the ID the of Item to be tested for.
-     * @return <code>true</code> if the operation succeeded, <code>false</code>
-     *         if not
+     * @see com.itmill.toolkit.data.Container#containsId(java.lang.Object)
      */
     public boolean containsId(Object itemId) {
         if (filteredItemIds != null) {
@@ -243,18 +231,12 @@ public class IndexedContainer implements Container, Container.Indexed,
         return items.containsKey(itemId);
     }
 
-    /**
-     * Adds a new Property to all Items in the list. The Property ID, data type
-     * and default value of the new Property are given as parameters.
+    /*
+     * (non-Javadoc)
      * 
-     * @param propertyId
-     *            the ID of the new Property.
-     * @param type
-     *            the Data type of the new Property.
-     * @param defaultValue
-     *            the value all created Properties are initialized to.
-     * @return <code>true</code> if the operation succeeded, <code>false</code>
-     *         if not
+     * @see
+     * com.itmill.toolkit.data.Container#addContainerProperty(java.lang.Object,
+     * java.lang.Class, java.lang.Object)
      */
     public boolean addContainerProperty(Object propertyId, Class type,
             Object defaultValue) {
@@ -293,14 +275,10 @@ public class IndexedContainer implements Container, Container.Indexed,
         return true;
     }
 
-    /**
-     * Removes all Items from the list.
-     * <p>
-     * Note : The Property ID and type information is preserved.
-     * </p>
+    /*
+     * (non-Javadoc)
      * 
-     * @return <code>true</code> if the operation succeeded, <code>false</code>
-     *         if not
+     * @see com.itmill.toolkit.data.Container#removeAllItems()
      */
     public boolean removeAllItems() {
 
@@ -317,14 +295,10 @@ public class IndexedContainer implements Container, Container.Indexed,
         return true;
     }
 
-    /**
-     * Creates a new Item into the list, and assign it an automatic ID. The new
-     * ID is returned, or <code>null</code> if the operation fails. After a
-     * successful call you can use the {@link #getItem(Object ItemId)
-     * <code>getItem</code>}method to fetch the Item.
+    /*
+     * (non-Javadoc)
      * 
-     * @return ID of the newly created Item, or <code>null</code> in case of a
-     *         failure
+     * @see com.itmill.toolkit.data.Container#addItem()
      */
     public Object addItem() {
 
@@ -337,15 +311,10 @@ public class IndexedContainer implements Container, Container.Indexed,
         return id;
     }
 
-    /**
-     * Creates a new Item with the given ID into the list. The new Item is
-     * returned, and it is ready to have its Properties modified. Returns
-     * <code>null</code> if the operation fails or the Container already
-     * contains a Item with the given ID.
+    /*
+     * (non-Javadoc)
      * 
-     * @param itemId
-     *            the ID of the Item to be created.
-     * @return Created new Item, or <code>null</code> in case of a failure
+     * @see com.itmill.toolkit.data.Container#addItem(java.lang.Object)
      */
     public Item addItem(Object itemId) {
 
@@ -393,13 +362,10 @@ public class IndexedContainer implements Container, Container.Indexed,
         }
     }
 
-    /**
-     * Removes the Item corresponding to the given Item ID from the list.
+    /*
+     * (non-Javadoc)
      * 
-     * @param itemId
-     *            the ID of the Item to remove.
-     * @return <code>true</code> if the operation succeeded, <code>false</code>
-     *         if not
+     * @see com.itmill.toolkit.data.Container#removeItem(java.lang.Object)
      */
     public boolean removeItem(Object itemId) {
 
@@ -416,14 +382,12 @@ public class IndexedContainer implements Container, Container.Indexed,
         return true;
     }
 
-    /**
-     * Removes a Property specified by the given Property ID from the list. Note
-     * that the Property will be removed from all Items in the list.
+    /*
+     * (non-Javadoc)
      * 
-     * @param propertyId
-     *            the ID of the Property to remove.
-     * @return <code>true</code> if the operation succeeded, <code>false</code>
-     *         if not
+     * @see
+     * com.itmill.toolkit.data.Container#removeContainerProperty(java.lang.Object
+     * )
      */
     public boolean removeContainerProperty(Object propertyId) {
 
@@ -450,10 +414,10 @@ public class IndexedContainer implements Container, Container.Indexed,
 
     /* Container.Ordered methods */
 
-    /**
-     * Gets the ID of the first Item in the list.
+    /*
+     * (non-Javadoc)
      * 
-     * @return ID of the first Item in the list
+     * @see com.itmill.toolkit.data.Container.Ordered#firstItemId()
      */
     public Object firstItemId() {
         try {
@@ -467,10 +431,10 @@ public class IndexedContainer implements Container, Container.Indexed,
         return null;
     }
 
-    /**
-     * Gets the ID of the last Item in the list.
+    /*
+     * (non-Javadoc)
      * 
-     * @return ID of the last Item in the list
+     * @see com.itmill.toolkit.data.Container.Ordered#lastItemId()
      */
     public Object lastItemId() {
         try {
@@ -488,14 +452,11 @@ public class IndexedContainer implements Container, Container.Indexed,
         return null;
     }
 
-    /**
-     * Gets the ID of the Item following the Item that corresponds to the
-     * itemId. If the given Item is the last or not found in the list,
-     * <code>null</code> is returned.
+    /*
+     * (non-Javadoc)
      * 
-     * @param itemId
-     *            the ID of an Item in the list.
-     * @return ID of the next Item or <code>null</code>
+     * @see
+     * com.itmill.toolkit.data.Container.Ordered#nextItemId(java.lang.Object)
      */
     public Object nextItemId(Object itemId) {
         if (filteredItemIds != null) {
@@ -521,14 +482,11 @@ public class IndexedContainer implements Container, Container.Indexed,
         }
     }
 
-    /**
-     * Gets the ID of the Item preceding the Item that corresponds to the
-     * itemId. If the given Item is the first or not found in the list,
-     * <code>null</code> is returned.
+    /*
+     * (non-Javadoc)
      * 
-     * @param itemId
-     *            the ID of an Item in the list.
-     * @return ID of the previous Item or <code>null</code>
+     * @see
+     * com.itmill.toolkit.data.Container.Ordered#prevItemId(java.lang.Object)
      */
     public Object prevItemId(Object itemId) {
         if (filteredItemIds != null) {
@@ -553,14 +511,11 @@ public class IndexedContainer implements Container, Container.Indexed,
         }
     }
 
-    /**
-     * Tests if the Item corresponding to the given Item ID is the first Item in
-     * the list.
+    /*
+     * (non-Javadoc)
      * 
-     * @param itemId
-     *            the ID of an Item in the list.
-     * @return <code>true</code> if the Item is first in the list,
-     *         <code>false</code> if not
+     * @see
+     * com.itmill.toolkit.data.Container.Ordered#isFirstId(java.lang.Object)
      */
     public boolean isFirstId(Object itemId) {
         if (filteredItemIds != null) {
@@ -574,14 +529,10 @@ public class IndexedContainer implements Container, Container.Indexed,
         return (size() >= 1 && itemIds.get(0).equals(itemId));
     }
 
-    /**
-     * Tests if the Item corresponding to the given Item ID is the last Item in
-     * the list.
+    /*
+     * (non-Javadoc)
      * 
-     * @param itemId
-     *            the ID of an Item in the list.
-     * @return <code>true</code> if the Item is last in the list,
-     *         <code>false</code> if not
+     * @see com.itmill.toolkit.data.Container.Ordered#isLastId(java.lang.Object)
      */
     public boolean isLastId(Object itemId) {
         if (filteredItemIds != null) {
@@ -599,9 +550,12 @@ public class IndexedContainer implements Container, Container.Indexed,
         return (s >= 1 && itemIds.get(s - 1).equals(itemId));
     }
 
-    /**
-     * @see com.itmill.toolkit.data.Container.Ordered#addItemAfter(Object,
-     *      Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.itmill.toolkit.data.Container.Ordered#addItemAfter(java.lang.Object,
+     * java.lang.Object)
      */
     public Item addItemAfter(Object previousItemId, Object newItemId) {
 
@@ -617,8 +571,11 @@ public class IndexedContainer implements Container, Container.Indexed,
         return addItemAt(index, newItemId);
     }
 
-    /**
-     * @see com.itmill.toolkit.data.Container.Ordered#addItemAfter(Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.itmill.toolkit.data.Container.Ordered#addItemAfter(java.lang.Object)
      */
     public Object addItemAfter(Object previousItemId) {
 
@@ -634,13 +591,10 @@ public class IndexedContainer implements Container, Container.Indexed,
         return addItemAt(index);
     }
 
-    /**
-     * Gets ID with the index. The following is true for the index: 0 <= index <
-     * size().
+    /*
+     * (non-Javadoc)
      * 
-     * @return ID in the given index.
-     * @param index
-     *            Index of the requested ID in the container.
+     * @see com.itmill.toolkit.data.Container.Indexed#getIdByIndex(int)
      */
     public Object getIdByIndex(int index) {
 
@@ -662,13 +616,11 @@ public class IndexedContainer implements Container, Container.Indexed,
         return itemIds.get(index);
     }
 
-    /**
-     * Gets the index of an id. The following is true for the index: 0 <= index
-     * < size().
+    /*
+     * (non-Javadoc)
      * 
-     * @return Index of the Item or -1 if the Item is not in the container.
-     * @param itemId
-     *            ID of an Item in the collection
+     * @see
+     * com.itmill.toolkit.data.Container.Indexed#indexOfId(java.lang.Object)
      */
     public int indexOfId(Object itemId) {
         if (filteredItemIds != null) {
@@ -689,8 +641,11 @@ public class IndexedContainer implements Container, Container.Indexed,
         return itemIds.indexOf(itemId);
     }
 
-    /**
-     * @see com.itmill.toolkit.data.Container.Indexed#addItemAt(int, Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.itmill.toolkit.data.Container.Indexed#addItemAt(int,
+     * java.lang.Object)
      */
     public Item addItemAt(int index, Object newItemId) {
 
@@ -714,7 +669,9 @@ public class IndexedContainer implements Container, Container.Indexed,
         return getItem(newItemId);
     }
 
-    /**
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.itmill.toolkit.data.Container.Indexed#addItemAt(int)
      */
     public Object addItemAt(int index) {
@@ -751,10 +708,12 @@ public class IndexedContainer implements Container, Container.Indexed,
             super(source);
         }
 
-        /**
-         * Gets the list whose Property set has changed.
+        /*
+         * (non-Javadoc)
          * 
-         * @return source object of the event as a Container
+         * @see
+         * com.itmill.toolkit.data.Container.PropertySetChangeEvent#getContainer
+         * ()
          */
         public Container getContainer() {
             return (Container) getSource();
@@ -784,10 +743,11 @@ public class IndexedContainer implements Container, Container.Indexed,
             this.addedItemIndex = addedItemIndex;
         }
 
-        /**
-         * Gets the list whose Item set has changed.
+        /*
+         * (non-Javadoc)
          * 
-         * @return source object of the event as a Container
+         * @see
+         * com.itmill.toolkit.data.Container.ItemSetChangeEvent#getContainer()
          */
         public Container getContainer() {
             return (Container) getSource();
@@ -826,10 +786,10 @@ public class IndexedContainer implements Container, Container.Indexed,
             super(source);
         }
 
-        /**
-         * Gets the Property whose value has changed.
+        /*
+         * (non-Javadoc)
          * 
-         * @return source object of the event as a Property
+         * @see com.itmill.toolkit.data.Property.ValueChangeEvent#getProperty()
          */
         public Property getProperty() {
             return (Property) getSource();
@@ -837,11 +797,12 @@ public class IndexedContainer implements Container, Container.Indexed,
 
     }
 
-    /**
-     * Registers a new Property set change listener for this list.
+    /*
+     * (non-Javadoc)
      * 
-     * @param listener
-     *            the new Listener to be registered.
+     * @see
+     * com.itmill.toolkit.data.Container.PropertySetChangeNotifier#addListener
+     * (com.itmill.toolkit.data.Container.PropertySetChangeListener)
      */
     public void addListener(Container.PropertySetChangeListener listener) {
         if (propertySetChangeListeners == null) {
@@ -850,11 +811,12 @@ public class IndexedContainer implements Container, Container.Indexed,
         propertySetChangeListeners.add(listener);
     }
 
-    /**
-     * Removes a previously registered Property set change listener.
+    /*
+     * (non-Javadoc)
      * 
-     * @param listener
-     *            the listener to be removed.
+     * @see
+     * com.itmill.toolkit.data.Container.PropertySetChangeNotifier#removeListener
+     * (com.itmill.toolkit.data.Container.PropertySetChangeListener)
      */
     public void removeListener(Container.PropertySetChangeListener listener) {
         if (propertySetChangeListeners != null) {
@@ -862,11 +824,12 @@ public class IndexedContainer implements Container, Container.Indexed,
         }
     }
 
-    /**
-     * Adds a Item set change listener for the list.
+    /*
+     * (non-Javadoc)
      * 
-     * @param listener
-     *            the listener to be added.
+     * @see
+     * com.itmill.toolkit.data.Container.ItemSetChangeNotifier#addListener(com
+     * .itmill.toolkit.data.Container.ItemSetChangeListener)
      */
     public void addListener(Container.ItemSetChangeListener listener) {
         if (itemSetChangeListeners == null) {
@@ -875,11 +838,12 @@ public class IndexedContainer implements Container, Container.Indexed,
         itemSetChangeListeners.add(listener);
     }
 
-    /**
-     * Removes a Item set change listener from the object.
+    /*
+     * (non-Javadoc)
      * 
-     * @param listener
-     *            the listener to be removed.
+     * @see
+     * com.itmill.toolkit.data.Container.ItemSetChangeNotifier#removeListener
+     * (com.itmill.toolkit.data.Container.ItemSetChangeListener)
      */
     public void removeListener(Container.ItemSetChangeListener listener) {
         if (itemSetChangeListeners != null) {
@@ -887,11 +851,12 @@ public class IndexedContainer implements Container, Container.Indexed,
         }
     }
 
-    /**
-     * Registers a new value change listener for this object.
+    /*
+     * (non-Javadoc)
      * 
-     * @param listener
-     *            the new Listener to be registered
+     * @see
+     * com.itmill.toolkit.data.Property.ValueChangeNotifier#addListener(com.
+     * itmill.toolkit.data.Property.ValueChangeListener)
      */
     public void addListener(Property.ValueChangeListener listener) {
         if (propertyValueChangeListeners == null) {
@@ -900,11 +865,12 @@ public class IndexedContainer implements Container, Container.Indexed,
         propertyValueChangeListeners.add(listener);
     }
 
-    /**
-     * Removes a previously registered value change listener.
+    /*
+     * (non-Javadoc)
      * 
-     * @param listener
-     *            the listener to be removed.
+     * @see
+     * com.itmill.toolkit.data.Property.ValueChangeNotifier#removeListener(com
+     * .itmill.toolkit.data.Property.ValueChangeListener)
      */
     public void removeListener(Property.ValueChangeListener listener) {
         if (propertyValueChangeListeners != null) {
@@ -1084,26 +1050,15 @@ public class IndexedContainer implements Container, Container.Indexed,
             this.itemId = itemId;
         }
 
-        /**
-         * Gets the Property corresponding to the given Property ID stored in
-         * the Item. If the Item does not contain the Property,
-         * <code>null</code> is returned.
+        /*
+         * (non-Javadoc)
          * 
-         * @param id
-         *            the identifier of the Property to get.
-         * @return the Property with the given ID or <code>null</code>
+         * @see com.itmill.toolkit.data.Item#getItemProperty(java.lang.Object)
          */
         public Property getItemProperty(Object id) {
             return new IndexedContainerProperty(itemId, id);
         }
 
-        /**
-         * Gets the collection containing the IDs of all Properties stored in
-         * the Item.
-         * 
-         * @return unmodifiable collection contaning IDs of the Properties
-         *         stored the Item
-         */
         public Collection getItemPropertyIds() {
             return Collections.unmodifiableCollection(propertyIds);
         }
@@ -1163,16 +1118,14 @@ public class IndexedContainer implements Container, Container.Indexed,
             return getHost() == li.getHost() && itemId.equals(li.itemId);
         }
 
-        /**
-         * 
-         * @return
-         */
         private IndexedContainer getHost() {
             return IndexedContainer.this;
         }
 
         /**
-         * Indexed container does not support adding new properties.
+         * IndexedContainerItem does not support adding new properties. Add
+         * properties at container level. See
+         * {@link IndexedContainer#addContainerProperty(Object, Class, Object)}
          * 
          * @see com.itmill.toolkit.data.Item#addProperty(Object, Property)
          */
@@ -1183,7 +1136,9 @@ public class IndexedContainer implements Container, Container.Indexed,
         }
 
         /**
-         * Indexed container does not support removing properties.
+         * Indexed container does not support removing properties. Remove
+         * properties at container level. See
+         * {@link IndexedContainer#removeContainerProperty(Object)}
          * 
          * @see com.itmill.toolkit.data.Item#removeProperty(Object)
          */
@@ -1196,8 +1151,9 @@ public class IndexedContainer implements Container, Container.Indexed,
     }
 
     /**
-     * A class implementing the com.itmill.toolkit.data.Property interface to be
-     * contained in the Items contained in the list.
+     * A class implementing the {@link Property} interface to be contained in
+     * the {@link IndexedContainerItem} contained in the
+     * {@link IndexedContainer}.
      * 
      * @author IT Mill Ltd.
      * 
@@ -1209,7 +1165,7 @@ public class IndexedContainer implements Container, Container.Indexed,
             Property.ValueChangeNotifier {
 
         /**
-         * ID of the Item, where the Property resides.
+         * ID of the Item, where this property resides.
          */
         private final Object itemId;
 
@@ -1219,8 +1175,7 @@ public class IndexedContainer implements Container, Container.Indexed,
         private final Object propertyId;
 
         /**
-         * Constructs a new ListProperty object and connect it to a ListItem and
-         * a ListContainer.
+         * Constructs a new {@link IndexedContainerProperty} object.
          * 
          * @param itemId
          *            the ID of the Item to connect the new Property to.
@@ -1240,48 +1195,37 @@ public class IndexedContainer implements Container, Container.Indexed,
             this.itemId = itemId;
         }
 
-        /**
-         * Returns the type of the Property. The methods <code>getValue</code>
-         * and <code>setValue</code> must be compatible with this type: one must
-         * be able to safely cast the value returned from <code>getValue</code>
-         * to the given type and pass any variable assignable to this type as a
-         * parameter to <code>setValue</code.
+        /*
+         * (non-Javadoc)
          * 
-         * @return the type of the Property.
+         * @see com.itmill.toolkit.data.Property#getType()
          */
         public Class getType() {
             return (Class) types.get(propertyId);
         }
 
-        /**
-         * Gets the value stored in the Property.
+        /*
+         * (non-Javadoc)
          * 
-         * @return the value stored in the Property.
+         * @see com.itmill.toolkit.data.Property#getValue()
          */
         public Object getValue() {
             return ((Hashtable) items.get(itemId)).get(propertyId);
         }
 
-        /**
-         * <p>
-         * Tests if the Property is in read-only mode. In read-only mode calls
-         * to the method <code>setValue</code> will throw
-         * <code>ReadOnlyException</code> s and will not modify the value of the
-         * Property.
-         * </p>
+        /*
+         * (non-Javadoc)
          * 
-         * @return <code>true</code> if the Property is in read-only mode,
-         *         <code>false</code> if it's not.
+         * @see com.itmill.toolkit.data.Property#isReadOnly()
          */
         public boolean isReadOnly() {
             return readOnlyProperties.contains(this);
         }
 
-        /**
-         * Sets the Property's read-only mode to the specified status.
+        /*
+         * (non-Javadoc)
          * 
-         * @param newStatus
-         *            the new read-only status of the Property.
+         * @see com.itmill.toolkit.data.Property#setReadOnly(boolean)
          */
         public void setReadOnly(boolean newStatus) {
             if (newStatus) {
@@ -1291,23 +1235,10 @@ public class IndexedContainer implements Container, Container.Indexed,
             }
         }
 
-        /**
-         * Sets the value of the Property. By default this method will try to
-         * assign the value directly, but if it is unassignable, it will try to
-         * use the <code>String</code> constructor of the internal data type to
-         * assign the value,
+        /*
+         * (non-Javadoc)
          * 
-         * @param newValue
-         *            the New value of the Property. This should be assignable
-         *            to the Property's internal type or support
-         *            <code>toString</code>.
-         * 
-         * @throws Property.ReadOnlyException
-         *             if the object is in read-only mode
-         * @throws Property.ConversionException
-         *             if <code>newValue</code> can't be converted into the
-         *             Property's native type directly or through
-         *             <code>String</code>
+         * @see com.itmill.toolkit.data.Property#setValue(java.lang.Object)
          */
         public void setValue(Object newValue)
                 throws Property.ReadOnlyException, Property.ConversionException {
@@ -1394,23 +1325,23 @@ public class IndexedContainer implements Container, Container.Indexed,
                     && lp.itemId.equals(itemId);
         }
 
-        /**
-         * Registers a new value change listener for this Property.
+        /*
+         * (non-Javadoc)
          * 
-         * @param listener
-         *            the new Listener to be registered.
-         * @see com.itmill.toolkit.data.Property.ValueChangeNotifier#addListener(ValueChangeListener)
+         * @see
+         * com.itmill.toolkit.data.Property.ValueChangeNotifier#addListener(
+         * com.itmill.toolkit.data.Property.ValueChangeListener)
          */
         public void addListener(Property.ValueChangeListener listener) {
             addSinglePropertyChangeListener(propertyId, itemId, listener);
         }
 
-        /**
-         * Removes a previously registered value change listener.
+        /*
+         * (non-Javadoc)
          * 
-         * @param listener
-         *            listener to be removed
-         * @see com.itmill.toolkit.data.Property.ValueChangeNotifier#removeListener(ValueChangeListener)
+         * @see
+         * com.itmill.toolkit.data.Property.ValueChangeNotifier#removeListener
+         * (com.itmill.toolkit.data.Property.ValueChangeListener)
          */
         public void removeListener(Property.ValueChangeListener listener) {
             removeSinglePropertyChangeListener(propertyId, itemId, listener);
@@ -1422,9 +1353,11 @@ public class IndexedContainer implements Container, Container.Indexed,
 
     }
 
-    /**
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.itmill.toolkit.data.Container.Sortable#sort(java.lang.Object[],
-     *      boolean[])
+     * boolean[])
      */
     public synchronized void sort(Object[] propertyId, boolean[] ascending) {
 
