@@ -444,9 +444,9 @@ public interface Container {
          * <p>
          * Sets the parent of an Item. The new parent item must exist and be
          * able to have children. (
-         * <code>canHaveChildren(newParentId) == true</code>). It is also
-         * possible to detach a node from the hierarchy (and thus make it root)
-         * by setting the parent <code>null</code>.
+         * <code>{@link #areChildrenAllowed(Object)} == true</code> ). It is
+         * also possible to detach a node from the hierarchy (and thus make it
+         * root) by setting the parent <code>null</code>.
          * </p>
          * 
          * <p>
@@ -481,8 +481,8 @@ public interface Container {
          * <p>
          * Sets the given Item's capability to have children. If the Item
          * identified with <code>itemId</code> already has children and
-         * <code>areChildrenAllowed</code> is false this method fails and
-         * <code>false</code> is returned.
+         * <code>{@link #areChildrenAllowed(Object)}</code> is false this method
+         * fails and <code>false</code> is returned.
          * </p>
          * <p>
          * The children must be first explicitly removed with
@@ -523,9 +523,9 @@ public interface Container {
 
         /**
          * <p>
-         * Tests if the Item specified with <code>itemId</code> has child
-         * Items or if it is a leaf. The {@link #getChildren(Object itemId)}
-         * method always returns <code>null</code> for leaf Items.
+         * Tests if the Item specified with <code>itemId</code> has child Items
+         * or if it is a leaf. The {@link #getChildren(Object itemId)} method
+         * always returns <code>null</code> for leaf Items.
          * </p>
          * 
          * <p>
