@@ -21,13 +21,13 @@ public class Ticket1598 extends Application {
         setMainWindow(main);
         setTheme("default");
 
-        List itemList = new ArrayList();
-        // Populate the menubar
-        for (int i = 0; i < 5; i++) {
+        List<MenuItem> itemList = new ArrayList<MenuItem>();
+        // Populate the menu bar
+        for (int i = 0; i < 6; i++) {
             itemList.add(menuBar.addItem(new String("Menu " + i), null, null));
         }
 
-        MenuItem first = (MenuItem) itemList.get(0);
+        MenuItem first = itemList.get(0);
 
         for (int i = 0; i < 5; i++) {
             first.addItem(new String("Submenu item" + i), null, new Command() {
@@ -38,10 +38,22 @@ public class Ticket1598 extends Application {
             });
         }
 
-        MenuItem firstSecond = (MenuItem) first.getChildren().get(1);
+        MenuItem firstSubItem1 = first.getChildren().get(1);
 
         for (int i = 0; i < 3; i++) {
-            firstSecond.addItem(new String("Subsubmenu item" + i), null,
+            firstSubItem1.addItem(new String("Subsubmenu item" + i), null,
+                    new Command() {
+
+                        public void menuSelected(MenuItem selected) {
+                            main.showNotification("Action "
+                                    + selected.getText());
+                        }
+                    });
+        }
+        MenuItem firstSubItem2 = first.getChildren().get(3);
+
+        for (int i = 0; i < 3; i++) {
+            firstSubItem2.addItem(new String("Subsubmenu item" + i), null,
                     new Command() {
 
                         public void menuSelected(MenuItem selected) {
@@ -51,7 +63,7 @@ public class Ticket1598 extends Application {
                     });
         }
 
-        MenuItem second = (MenuItem) menuBar.getItems().get(1);
+        MenuItem second = menuBar.getItems().get(1);
 
         for (int i = 0; i < 5; i++) {
             second.addItem(new String("Second submenu item" + i), null,
@@ -64,7 +76,7 @@ public class Ticket1598 extends Application {
                     });
         }
 
-        MenuItem third = (MenuItem) menuBar.getItems().get(2);
+        MenuItem third = menuBar.getItems().get(2);
         third.setIcon(new ThemeResource("icons/16/document.png"));
 
         for (int i = 2; i <= 3; i++) {
@@ -76,20 +88,21 @@ public class Ticket1598 extends Application {
             });
         }
 
-        final MenuItem fourth = (MenuItem) menuBar.getItems().get(3);
-        fourth.setText("Toggle animation");
+        final MenuItem fourth = menuBar.getItems().get(3);
+        fourth.setText("Add new item");
 
         fourth.setCommand(new Command() {
             public void menuSelected(MenuItem selected) {
-                menuBar
-                        .addItemBefore("No animation yet...", null, null,
-                                fourth);
-                // menuBar.setAnimation(!menuBar.hasAnimation());
+                menuBar.addItem("Newborn", null, null);
             }
         });
 
-        final MenuItem last = (MenuItem) menuBar.getItems().get(
-                menuBar.getSize() - 1);
+        final MenuItem fifth = menuBar.getItems().get(4);
+        for (int i = 0; i < 5; i++) {
+            fifth.addItem("Another subitem " + i, null);
+        }
+
+        final MenuItem last = menuBar.getItems().get(menuBar.getSize() - 1);
         last.setText("Remove me!");
 
         // A command for removing the selected menuitem
