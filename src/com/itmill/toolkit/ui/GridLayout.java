@@ -1215,6 +1215,7 @@ public class GridLayout extends AbstractLayout implements
      */
     public void setColumnExpandRatio(int columnIndex, float ratio) {
         columnExpandRatio.put(columnIndex, ratio);
+        requestRepaint();
     }
 
     /**
@@ -1248,6 +1249,7 @@ public class GridLayout extends AbstractLayout implements
      */
     public void setRowExpandRatio(int rowIndex, float ratio) {
         rowExpandRatio.put(rowIndex, ratio);
+        requestRepaint();
     }
 
     /**

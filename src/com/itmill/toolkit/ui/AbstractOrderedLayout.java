@@ -329,6 +329,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     public void setExpandRatio(Component component, float ratio) {
         if (components.contains(component)) {
             componentToExpandRatio.put(component, ratio);
+            requestRepaint();
         } else {
             throw new IllegalArgumentException(
                     "Component must be added to layout before using setExpandRatio()");
