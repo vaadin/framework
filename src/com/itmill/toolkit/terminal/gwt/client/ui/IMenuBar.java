@@ -237,7 +237,6 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
      *            id of the item that was clicked
      */
     public void onMenuClick(int clickedItemId) {
-        System.out.println("onMenuClick");
         // Updating the state to the server can not be done before
         // the server connection is known, i.e., before updateFromUIDL()
         // has been called.
@@ -378,7 +377,6 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
      */
     public void itemClick(CustomMenuItem item) {
         if (item.getCommand() != null) {
-            System.out.println("itemClick, running command");
             setSelected(null);
 
             if (visibleChildMenu != null) {
@@ -403,7 +401,6 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
      * @param item
      */
     public void itemOver(CustomMenuItem item) {
-        System.out.println("ItemOver " + item.getText());
         setSelected(item);
 
         boolean menuWasVisible = visibleChildMenu != null;
@@ -425,7 +422,6 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
      * @param item
      */
     public void itemOut(CustomMenuItem item) {
-        System.out.println("ItemOut " + item.getText());
         if (visibleChildMenu != item.getSubMenu() || visibleChildMenu == null) {
             hideChildMenu(item);
             setSelected(null);
@@ -542,11 +538,6 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
      * @param item
      */
     public void setSelected(CustomMenuItem item) {
-        if (item != null) {
-            System.out.println("setSelected " + item.getText());
-        } else {
-            System.out.println("setSelected was null");
-        }
         // If we had something selected, unselect
         if (item != selected && selected != null) {
             selected.setSelected(false);
@@ -563,7 +554,6 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
      * Listener method, fired when this menu is closed
      */
     public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
-        System.out.println("onPopupClosed, auto: " + autoClosed);
         hideChildren();
         if (autoClosed) {
             hideParents();
