@@ -1,117 +1,116 @@
-package com.itmill.toolkit.tests;
+package com.itmill.toolkit.tests.layouts;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.itmill.toolkit.Application;
 import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.terminal.UserError;
+import com.itmill.toolkit.tests.components.TestBase;
+import com.itmill.toolkit.ui.AbstractOrderedLayout;
+import com.itmill.toolkit.ui.Alignment;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Component;
+import com.itmill.toolkit.ui.HorizontalLayout;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Layout;
-import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.Select;
 import com.itmill.toolkit.ui.TextField;
-import com.itmill.toolkit.ui.Window;
+import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 import com.itmill.toolkit.ui.Button.ClickListener;
 import com.itmill.toolkit.ui.Layout.AlignmentHandler;
 
-public class TestOrderedLayout extends Application {
+public class OrderedLayoutBasics extends TestBase {
 
     String valignName[] = new String[] { "top", "middle", "bottom" };
-    int valign[] = new int[] { OrderedLayout.ALIGNMENT_TOP,
-            OrderedLayout.ALIGNMENT_VERTICAL_CENTER,
-            OrderedLayout.ALIGNMENT_BOTTOM };
+    int valign[] = new int[] { AlignmentHandler.ALIGNMENT_TOP,
+            AlignmentHandler.ALIGNMENT_VERTICAL_CENTER,
+            AlignmentHandler.ALIGNMENT_BOTTOM };
 
-    Set<OrderedLayout> layouts = new HashSet<OrderedLayout>();
-    private OrderedLayout layoutContainer;
+    Set<AbstractOrderedLayout> layouts = new HashSet<AbstractOrderedLayout>();
+    private AbstractOrderedLayout layoutContainer;
     private int suffix = 0;
 
-    public void init() {
-        Window w = new Window(getClass().getSimpleName());
-        setMainWindow(w);
-        // setTheme("tests-tickets");
-        // GridLayout layout = new OrderedLayout(1, 10);
-        // w.setLayout(layout);
-        w.getLayout().addComponent(new Button("Swap", new ClickListener() {
-
-            public void buttonClick(ClickEvent event) {
-                swapLayouts();
-            }
-
-        }));
-
-        layoutContainer = new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL);
-        createUI(layoutContainer);
-        w.getLayout().addComponent(layoutContainer);
-
-        // swapLayouts();
+    @Override
+    protected String getDescription() {
+        return "Various layout tests for VerticalLayout and HorizontalLayout";
     }
 
-    public void swapLayouts() {
-        OrderedLayout mainLayout = layoutContainer;
+    @Override
+    protected Integer getTicketNumber() {
+        return null;
+    }
 
-        int mainOrient = 1 - mainLayout.getOrientation();
-        mainLayout.setOrientation(mainOrient);
-        for (OrderedLayout ol : layouts) {
-            ol.setOrientation(1 - mainOrient);
-            float h = ol.getHeight();
-            int hUnit = ol.getHeightUnits();
-            float w = ol.getWidth();
-            int wUnit = ol.getWidthUnits();
-            ol.setWidth(h, hUnit);
-            ol.setHeight(w, wUnit);
+    @Override
+    public void setup() {
+        getMainWindow().getLayout().setHeight(null);
 
-        }
-
+        layoutContainer = new VerticalLayout();
+        createUI(layoutContainer);
+        addComponent(layoutContainer);
     }
 
     private void createUI(Layout layout) {
         layout
-                .addComponent(wrapLayout(layout_field_100pct_button_field(new OrderedLayout(
-                        OrderedLayout.ORIENTATION_HORIZONTAL))));
-        layout.addComponent(wrapLayout(layout_overfilled(new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL))));
+                .addComponent(wrapLayout(layout_field_100pct_button_field(new HorizontalLayout())));
         layout
-                .addComponent(wrapLayout(layout_overfilled_dynamic_height(new OrderedLayout(
-                        OrderedLayout.ORIENTATION_HORIZONTAL))));
+                .addComponent(wrapLayout(layout_field_100pct_button_field(new VerticalLayout())));
         layout
-                .addComponent(wrapLayout(layout_symmetric_fields(new OrderedLayout(
-                        OrderedLayout.ORIENTATION_HORIZONTAL))));
-        layout.addComponent(wrapLayout(layout_leftAndRight(new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL))));
-        layout.addComponent(wrapLayout(layout_fixed_filled(new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL))));
-        layout.addComponent(wrapLayout(layout_dynamic(new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL))));
-        layout.addComponent(wrapLayout(layout_labels(new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL))));
-        layout.addComponent(wrapLayout(layout_captions(new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL))));
+                .addComponent(wrapLayout(layout_overfilled(new HorizontalLayout())));
         layout
-                .addComponent(wrapLayout(layout_captions_fixed_size(new OrderedLayout(
-                        OrderedLayout.ORIENTATION_HORIZONTAL))));
+                .addComponent(wrapLayout(layout_overfilled(new VerticalLayout())));
         layout
-                .addComponent(wrapLayout(layout_captions_fixed_size_and_relative_size(new OrderedLayout(
-                        OrderedLayout.ORIENTATION_HORIZONTAL))));
+                .addComponent(wrapLayout(layout_overfilled_dynamic_height(new HorizontalLayout())));
         layout
-                .addComponent(wrapLayout(layout_captions_fixed_size_and_fixed_size(new OrderedLayout(
-                        OrderedLayout.ORIENTATION_HORIZONTAL))));
+                .addComponent(wrapLayout(layout_overfilled_dynamic_height(new VerticalLayout())));
         layout
-                .addComponent(wrapLayout(layout_add_remove_components(new OrderedLayout(
-                        OrderedLayout.ORIENTATION_HORIZONTAL))));
-        layout.addComponent(wrapLayout(layout_pctFilled(new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL))));
-        layout.addComponent(wrapLayout(layout_pctFilled(new OrderedLayout(
-                OrderedLayout.ORIENTATION_VERTICAL))));
-        layout.addComponent(wrapLayout(layout_underFilled(new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL))));
-        layout.addComponent(wrapLayout(layout_basic_test(new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL))));
+                .addComponent(wrapLayout(layout_symmetric_fields(new HorizontalLayout())));
+        layout
+                .addComponent(wrapLayout(layout_symmetric_fields(new VerticalLayout())));
+        layout
+                .addComponent(wrapLayout(layout_leftAndRight(new HorizontalLayout())));
+        layout
+                .addComponent(wrapLayout(layout_leftAndRight(new VerticalLayout())));
+        layout
+                .addComponent(wrapLayout(layout_fixed_filled(new HorizontalLayout())));
+        layout
+                .addComponent(wrapLayout(layout_fixed_filled(new VerticalLayout())));
+        layout.addComponent(wrapLayout(layout_dynamic(new HorizontalLayout())));
+        layout.addComponent(wrapLayout(layout_dynamic(new VerticalLayout())));
+        layout.addComponent(wrapLayout(layout_labels(new HorizontalLayout())));
+        layout.addComponent(wrapLayout(layout_labels(new VerticalLayout())));
+        layout
+                .addComponent(wrapLayout(layout_captions(new HorizontalLayout())));
+        layout.addComponent(wrapLayout(layout_captions(new VerticalLayout())));
+        layout
+                .addComponent(wrapLayout(layout_captions_fixed_size(new HorizontalLayout())));
+        layout
+                .addComponent(wrapLayout(layout_captions_fixed_size(new VerticalLayout())));
+        layout
+                .addComponent(wrapLayout(layout_captions_fixed_size_and_relative_size(new HorizontalLayout())));
+        layout
+                .addComponent(wrapLayout(layout_captions_fixed_size_and_relative_size(new VerticalLayout())));
+        layout
+                .addComponent(wrapLayout(layout_captions_fixed_size_and_fixed_size(new HorizontalLayout())));
+        layout
+                .addComponent(wrapLayout(layout_captions_fixed_size_and_fixed_size(new VerticalLayout())));
+        layout
+                .addComponent(wrapLayout(layout_add_remove_components(new HorizontalLayout())));
+        layout
+                .addComponent(wrapLayout(layout_add_remove_components(new VerticalLayout())));
+        layout
+                .addComponent(wrapLayout(layout_pctFilled(new HorizontalLayout())));
+        layout.addComponent(wrapLayout(layout_pctFilled(new VerticalLayout())));
+        layout
+                .addComponent(wrapLayout(layout_underFilled(new HorizontalLayout())));
+        layout
+                .addComponent(wrapLayout(layout_underFilled(new VerticalLayout())));
+        layout
+                .addComponent(wrapLayout(layout_basic_test(new HorizontalLayout())));
+        layout
+                .addComponent(wrapLayout(layout_basic_test(new VerticalLayout())));
     }
 
     private Layout wrapLayout(Layout ol) {
@@ -120,13 +119,13 @@ public class TestOrderedLayout extends Application {
         p.setCaption(ol.getCaption());
         ol.setCaption(null);
 
-        OrderedLayout l = new OrderedLayout();
+        VerticalLayout l = new VerticalLayout();
         l.setSizeUndefined();
         l.addComponent(p);
         // p.setWidth("600px");
 
-        if (ol instanceof OrderedLayout) {
-            layouts.add((OrderedLayout) ol);
+        if (ol instanceof AbstractOrderedLayout) {
+            layouts.add((AbstractOrderedLayout) ol);
         }
         return l;
     }
@@ -134,8 +133,7 @@ public class TestOrderedLayout extends Application {
     /* LAYOUTS */
 
     private Layout layout1() {
-        OrderedLayout ol = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        HorizontalLayout ol = new HorizontalLayout();
         ol.setHeight("200px");
         ol.setWidth("");
         ol.setCaption("Fixed height (200px) and dynamic width");
@@ -144,8 +142,7 @@ public class TestOrderedLayout extends Application {
         tf.setHeight("100px");
         tf.setWidth("");
         ol.addComponent(tf);
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_LEFT,
-                OrderedLayout.ALIGNMENT_BOTTOM);
+        ol.setComponentAlignment(tf, Alignment.BOTTOM_LEFT);
 
         Select s = new Select("100% high select");
         s.setMultiSelect(true);
@@ -163,8 +160,8 @@ public class TestOrderedLayout extends Application {
         // tf.setHeight("100%");
         // tf.setWidth("");
         // ol.addComponent(tf);
-        // ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT,
-        // OrderedLayout.ALIGNMENT_BOTTOM);
+        // ol.setComponentAlignment(tf, AlignmentHandler.ALIGNMENT_RIGHT,
+        // AlignmentHandler.ALIGNMENT_BOTTOM);
 
         // tf = new TextField("100% high, 200px wide TextField");
         // tf.setHeight("100%");
@@ -176,8 +173,7 @@ public class TestOrderedLayout extends Application {
     }
 
     private Layout layout2() {
-        OrderedLayout ol = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        HorizontalLayout ol = new HorizontalLayout();
         ol.setHeight("70px");
         ol.setWidth("");
         ol.setCaption("Fixed height (50px) and dynamic width");
@@ -187,24 +183,21 @@ public class TestOrderedLayout extends Application {
         tf.setHeight("100px");
         tf.setWidth("");
         ol.addComponent(tf);
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_LEFT,
-                OrderedLayout.ALIGNMENT_BOTTOM);
+        ol.setComponentAlignment(tf, Alignment.BOTTOM_LEFT);
 
         tf = new TextField(
                 "100% high, 50px wide TextField, valign: bottom, should fill full height");
         tf.setHeight("100%");
         tf.setWidth("50px");
         ol.addComponent(tf);
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_LEFT,
-                OrderedLayout.ALIGNMENT_BOTTOM);
+        ol.setComponentAlignment(tf, Alignment.BOTTOM_LEFT);
 
         Label l = new Label(
                 "100% high, 50px wide Label, valign: bottom, does not fill full height, only needed space");
         tf.setHeight("100%");
         tf.setWidth("50px");
         ol.addComponent(l);
-        ol.setComponentAlignment(l, OrderedLayout.ALIGNMENT_LEFT,
-                OrderedLayout.ALIGNMENT_BOTTOM);
+        ol.setComponentAlignment(l, Alignment.BOTTOM_LEFT);
 
         Select s = new Select("100% high select, should fit into layout");
         s.setMultiSelect(true);
@@ -226,8 +219,7 @@ public class TestOrderedLayout extends Application {
     }
 
     private Layout layout3() {
-        OrderedLayout ol = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        HorizontalLayout ol = new HorizontalLayout();
         ol.setHeight("");
         ol.setWidth("500px");
         ol.setCaption("Fixed width (500px) and dynamic height");
@@ -237,30 +229,26 @@ public class TestOrderedLayout extends Application {
         tf.setHeight("100px");
         tf.setWidth("100%");
         ol.addComponent(tf);
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_LEFT,
-                OrderedLayout.ALIGNMENT_BOTTOM);
+        ol.setComponentAlignment(tf, Alignment.BOTTOM_LEFT);
 
         tf = new TextField("100px high TextField, valign: top");
         tf.setHeight("100px");
         tf.setWidth("100%");
         ol.addComponent(tf);
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_LEFT,
-                OrderedLayout.ALIGNMENT_TOP);
+        ol.setComponentAlignment(tf, Alignment.TOP_LEFT);
 
         tf = new TextField("100% high, 50px wide TextField, valign: bottom");
         tf.setHeight("100%");
         tf.setWidth("50px");
         ol.addComponent(tf);
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_LEFT,
-                OrderedLayout.ALIGNMENT_BOTTOM);
+        ol.setComponentAlignment(tf, Alignment.BOTTOM_LEFT);
 
         Label l = new Label(
                 "100% high, 50px wide Label, valign: bottom, does not fill full height, only needed space");
         tf.setHeight("100%");
         tf.setWidth("50px");
         ol.addComponent(l);
-        ol.setComponentAlignment(l, OrderedLayout.ALIGNMENT_LEFT,
-                OrderedLayout.ALIGNMENT_BOTTOM);
+        ol.setComponentAlignment(l, Alignment.BOTTOM_LEFT);
 
         Select s = new Select("100% high select, should fit into layout");
         s.setMultiSelect(true);
@@ -282,8 +270,7 @@ public class TestOrderedLayout extends Application {
     }
 
     private Layout layout3New() {
-        OrderedLayout ol = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        AbstractOrderedLayout ol = new HorizontalLayout();
         ol.setHeight("300px");
         // ol.setWidth("500px");
         ol.setWidth("");
@@ -294,30 +281,26 @@ public class TestOrderedLayout extends Application {
         tf.setHeight("100px");
         tf.setWidth("100%");
         ol.addComponent(tf);
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_LEFT,
-                OrderedLayout.ALIGNMENT_BOTTOM);
+        ol.setComponentAlignment(tf, Alignment.BOTTOM_LEFT);
 
         tf = new TextField("100px high TextField, valign: top");
         tf.setHeight("100px");
         tf.setWidth("100%");
         ol.addComponent(tf);
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_LEFT,
-                OrderedLayout.ALIGNMENT_TOP);
+        ol.setComponentAlignment(tf, Alignment.TOP_LEFT);
 
         tf = new TextField("100% high, 50px wide TextField, valign: bottom");
         tf.setHeight("100%");
         tf.setWidth("50px");
         ol.addComponent(tf);
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_LEFT,
-                OrderedLayout.ALIGNMENT_BOTTOM);
+        ol.setComponentAlignment(tf, Alignment.BOTTOM_LEFT);
 
         Label l = new Label(
                 "100% high, 50px wide Label, valign: bottom, does not fill full height, only needed space");
         tf.setHeight("100%");
         tf.setWidth("50px");
         ol.addComponent(l);
-        ol.setComponentAlignment(l, OrderedLayout.ALIGNMENT_LEFT,
-                OrderedLayout.ALIGNMENT_BOTTOM);
+        ol.setComponentAlignment(l, Alignment.BOTTOM_LEFT);
 
         Select s = new Select("100% high select, should fit into layout");
         s.setMultiSelect(true);
@@ -338,7 +321,7 @@ public class TestOrderedLayout extends Application {
         return ol;
     }
 
-    private Layout layout4(OrderedLayout ol) {
+    private Layout layout4(AbstractOrderedLayout ol) {
         // ol.setHeight("300px");
         // ol.setWidth("500px");
         ol.setMargin(true);
@@ -374,7 +357,7 @@ public class TestOrderedLayout extends Application {
             tf.setWidth(w + "px");
             tf.setHeight(w + "px");
             ol.addComponent(tf);
-            ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_LEFT,
+            ol.setComponentAlignment(tf, AlignmentHandler.ALIGNMENT_LEFT,
                     valign[i % 3]);
 
         }
@@ -388,7 +371,7 @@ public class TestOrderedLayout extends Application {
         return ol;
     }
 
-    private Layout layout_field_100pct_button_field(OrderedLayout ol) {
+    private Layout layout_field_100pct_button_field(AbstractOrderedLayout ol) {
         ol.setHeight("500px");
         ol.setWidth("916px");
         ol.setMargin(false);
@@ -407,9 +390,8 @@ public class TestOrderedLayout extends Application {
         // tf.setSizeFull();
         tf.setHeight("300px");
         tf.setWidth("300px");
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_LEFT,
-                OrderedLayout.ALIGNMENT_TOP);
         ol.addComponent(tf);
+        ol.setComponentAlignment(tf, Alignment.TOP_LEFT);
 
         Button b;
         b = new Button("This is a 100%x50% valign middle button");
@@ -417,8 +399,7 @@ public class TestOrderedLayout extends Application {
         b.setHeight("50%");
         ol.addComponent(b);
         ol.setExpandRatio(b, 1.0f);
-        ol.setComponentAlignment(b, AlignmentHandler.ALIGNMENT_RIGHT,
-                AlignmentHandler.ALIGNMENT_VERTICAL_CENTER);
+        ol.setComponentAlignment(b, Alignment.MIDDLE_RIGHT);
 
         tf = new TextField("300px x 300px Field");
         // tf.setIcon(new ThemeResource("icons/16/document-add.png"));
@@ -427,13 +408,12 @@ public class TestOrderedLayout extends Application {
         // tf.setSizeFull();
         tf.setHeight("300px");
         tf.setWidth("300px");
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT,
-                OrderedLayout.ALIGNMENT_BOTTOM);
         ol.addComponent(tf);
+        ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
         return ol;
     }
 
-    private Layout layout_basic_test(OrderedLayout ol) {
+    private Layout layout_basic_test(AbstractOrderedLayout ol) {
         ol.setHeight("700px");
         ol.setWidth("900px");
         ol.setMargin(true);
@@ -452,9 +432,8 @@ public class TestOrderedLayout extends Application {
         // tf.setSizeFull();
         tf.setHeight("300px");
         tf.setWidth("300px");
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_LEFT,
-                OrderedLayout.ALIGNMENT_TOP);
         ol.addComponent(tf);
+        ol.setComponentAlignment(tf, Alignment.TOP_LEFT);
 
         Button b;
         // b = new Button("This is a 100%x50% valign middle button");
@@ -471,13 +450,12 @@ public class TestOrderedLayout extends Application {
         // tf.setSizeFull();
         tf.setHeight("300px");
         tf.setWidth("300px");
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT,
-                OrderedLayout.ALIGNMENT_BOTTOM);
         ol.addComponent(tf);
+        ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
         return ol;
     }
 
-    private Layout layout_symmetric_fields(OrderedLayout ol) {
+    private Layout layout_symmetric_fields(AbstractOrderedLayout ol) {
         ol.setHeight("900px");
         ol.setWidth("900px");
         ol.setMargin(false);
@@ -494,32 +472,29 @@ public class TestOrderedLayout extends Application {
         tf.setRows(2);
         tf.setHeight("300px");
         tf.setWidth("300px");
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_LEFT,
-                OrderedLayout.ALIGNMENT_TOP);
         ol.addComponent(tf);
+        ol.setComponentAlignment(tf, Alignment.TOP_LEFT);
 
         tf = new TextField("300px x 300px Field");
         tf.setValue("300x300 field");
         tf.setRows(2);
         tf.setHeight("300px");
         tf.setWidth("300px");
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER,
-                OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
         ol.addComponent(tf);
+        ol.setComponentAlignment(tf, Alignment.MIDDLE_CENTER);
 
         tf = new TextField("300px x 300px Field");
         tf.setValue("300x300 field");
         tf.setRows(2);
         tf.setHeight("300px");
         tf.setWidth("300px");
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT,
-                OrderedLayout.ALIGNMENT_BOTTOM);
         ol.addComponent(tf);
+        ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
 
         return ol;
     }
 
-    private Layout layout_leftAndRight(OrderedLayout ol) {
+    private Layout layout_leftAndRight(AbstractOrderedLayout ol) {
         ol.setHeight("700px");
         ol.setWidth("700px");
         ol.setMargin(true);
@@ -553,7 +528,7 @@ public class TestOrderedLayout extends Application {
         // tf.setHeight(w + "px");
         // ol.addComponent(tf);
         // ol.setComponentAlignment(tf,
-        // OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER, valign[i % 3]);
+        // AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER, valign[i % 3]);
         // }
         //
         // tf.setValue(tf.getValue().toString() + " (100% wide)");
@@ -569,8 +544,8 @@ public class TestOrderedLayout extends Application {
         // // tf.setSizeFull();
         // tf.setHeight("100%");
         // tf.setWidth("70px");
-        // ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT,
-        // OrderedLayout.ALIGNMENT_TOP);
+        // ol.setComponentAlignment(tf, AlignmentHandler.ALIGNMENT_RIGHT,
+        // AlignmentHandler.ALIGNMENT_TOP);
         // ol.addComponent(tf);
 
         tf = new TextField("300px x 300px Field");
@@ -580,9 +555,8 @@ public class TestOrderedLayout extends Application {
         // tf.setSizeFull();
         tf.setHeight("300px");
         tf.setWidth("300px");
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_LEFT,
-                OrderedLayout.ALIGNMENT_TOP);
         ol.addComponent(tf);
+        ol.setComponentAlignment(tf, Alignment.TOP_LEFT);
 
         tf = new TextField("300px x 300px Field");
         // tf.setIcon(new ThemeResource("icons/16/document-add.png"));
@@ -591,13 +565,12 @@ public class TestOrderedLayout extends Application {
         // tf.setSizeFull();
         tf.setHeight("300px");
         tf.setWidth("300px");
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT,
-                OrderedLayout.ALIGNMENT_BOTTOM);
         ol.addComponent(tf);
+        ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
         return ol;
     }
 
-    private Layout layout_fixed_filled(OrderedLayout ol) {
+    private Layout layout_fixed_filled(AbstractOrderedLayout ol) {
         ol.setHeight("700px");
         ol.setWidth("700px");
         ol.setMargin(true);
@@ -649,7 +622,7 @@ public class TestOrderedLayout extends Application {
         // tf.setHeight(w + "px");
         // ol.addComponent(tf);
         // ol.setComponentAlignment(tf,
-        // OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER, valign[i % 3]);
+        // AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER, valign[i % 3]);
         // }
         //
         // tf.setValue(tf.getValue().toString() + " (100% wide)");
@@ -665,8 +638,8 @@ public class TestOrderedLayout extends Application {
         // // tf.setSizeFull();
         // tf.setHeight("100%");
         // tf.setWidth("70px");
-        // ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT,
-        // OrderedLayout.ALIGNMENT_TOP);
+        // ol.setComponentAlignment(tf, AlignmentHandler.ALIGNMENT_RIGHT,
+        // AlignmentHandler.ALIGNMENT_TOP);
         // ol.addComponent(tf);
 
         tf = new TextField("200px x 200px Field");
@@ -676,9 +649,8 @@ public class TestOrderedLayout extends Application {
         // tf.setSizeFull();
         tf.setHeight("200px");
         tf.setWidth("200px");
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_LEFT,
-                OrderedLayout.ALIGNMENT_TOP);
         ol.addComponent(tf);
+        ol.setComponentAlignment(tf, Alignment.TOP_LEFT);
 
         tf = new TextField("200px x 200px Field");
         // tf.setIcon(new ThemeResource("icons/16/document-add.png"));
@@ -687,13 +659,12 @@ public class TestOrderedLayout extends Application {
         // tf.setSizeFull();
         tf.setHeight("200px");
         tf.setWidth("200px");
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT,
-                OrderedLayout.ALIGNMENT_BOTTOM);
         ol.addComponent(tf);
+        ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
         return ol;
     }
 
-    private Layout layout_overfilled(OrderedLayout ol) {
+    private Layout layout_overfilled(AbstractOrderedLayout ol) {
         ol.setHeight("300px");
         ol.setWidth("700px");
         ol.setMargin(true);
@@ -722,7 +693,7 @@ public class TestOrderedLayout extends Application {
         return ol;
     }
 
-    private Layout layout_overfilled_dynamic_height(OrderedLayout ol) {
+    private Layout layout_overfilled_dynamic_height(AbstractOrderedLayout ol) {
         ol.setHeight(null);
         ol.setWidth("700px");
         ol.setMargin(true);
@@ -751,7 +722,7 @@ public class TestOrderedLayout extends Application {
         return ol;
     }
 
-    // private Layout layout_add_components(OrderedLayout ol) {
+    // private Layout layout_add_components(AbstractOrderedLayout ol) {
     // ol.setHeight("600px");
     // ol.setWidth("600px");
     // ol.setMargin(true);
@@ -770,7 +741,7 @@ public class TestOrderedLayout extends Application {
     //
     // }
 
-    private Layout layout_add_remove_components(OrderedLayout ol) {
+    private Layout layout_add_remove_components(AbstractOrderedLayout ol) {
         ol.setHeight("600px");
         ol.setWidth("600px");
         ol.setMargin(true);
@@ -782,17 +753,16 @@ public class TestOrderedLayout extends Application {
                 + "px) / layout_add_remove_components");
 
         for (int i = 0; i < 2; i++) {
-            OrderedLayout inner = createAddRemove(ol, "", "");
+            AbstractOrderedLayout inner = createAddRemove(ol, "", "");
             ol.addComponent(inner);
-            ol.setComponentAlignment(inner, OrderedLayout.ALIGNMENT_RIGHT,
-                    OrderedLayout.ALIGNMENT_BOTTOM);
+            ol.setComponentAlignment(inner, Alignment.BOTTOM_RIGHT);
         }
 
         return ol;
 
     }
 
-    private Layout layout_dynamic(OrderedLayout ol) {
+    private Layout layout_dynamic(AbstractOrderedLayout ol) {
         ol.setMargin(true);
         ol.setSpacing(true);
 
@@ -813,7 +783,7 @@ public class TestOrderedLayout extends Application {
 
     }
 
-    private Layout layout_captions(OrderedLayout ol) {
+    private Layout layout_captions(AbstractOrderedLayout ol) {
         ol.setMargin(true);
         ol.setSpacing(true);
 
@@ -848,7 +818,7 @@ public class TestOrderedLayout extends Application {
 
     }
 
-    private Layout layout_captions_fixed_size(OrderedLayout ol) {
+    private Layout layout_captions_fixed_size(AbstractOrderedLayout ol) {
         ol.setWidth("700px");
         ol.setHeight("250px");
 
@@ -863,8 +833,7 @@ public class TestOrderedLayout extends Application {
         tf.setValue("Undefined width");
         tf.setComponentError(new UserError("123"));
         ol.addComponent(tf);
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT,
-                OrderedLayout.ALIGNMENT_BOTTOM);
+        ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
 
         tf = new TextField(
                 "A long caption which is probably much longer than the field");
@@ -872,8 +841,7 @@ public class TestOrderedLayout extends Application {
         tf.setRequired(true);
         tf.setComponentError(new UserError("123"));
         ol.addComponent(tf);
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT,
-                OrderedLayout.ALIGNMENT_BOTTOM);
+        ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
 
         tf = new TextField(
                 "A very long caption which is probably much longer than the field and includes indicators");
@@ -882,8 +850,7 @@ public class TestOrderedLayout extends Application {
         tf.setRequired(true);
         tf.setComponentError(new UserError("abc123"));
         ol.addComponent(tf);
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT,
-                OrderedLayout.ALIGNMENT_BOTTOM);
+        ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
 
         // for (int i = 0; i < 3; i++) {
         // Button b = new Button("Button " + i);
@@ -899,7 +866,8 @@ public class TestOrderedLayout extends Application {
 
     }
 
-    private Layout layout_captions_fixed_size_and_relative_size(OrderedLayout ol) {
+    private Layout layout_captions_fixed_size_and_relative_size(
+            AbstractOrderedLayout ol) {
         ol.setWidth("700px");
         ol.setHeight("250px");
 
@@ -916,8 +884,7 @@ public class TestOrderedLayout extends Application {
 
         tf.setComponentError(new UserError("123"));
         ol.addComponent(tf);
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT,
-                OrderedLayout.ALIGNMENT_BOTTOM);
+        ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
         ol.setExpandRatio(tf, 1);
 
         tf = new TextField(
@@ -927,8 +894,7 @@ public class TestOrderedLayout extends Application {
         tf.setRequired(true);
         tf.setComponentError(new UserError("123"));
         ol.addComponent(tf);
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT,
-                OrderedLayout.ALIGNMENT_BOTTOM);
+        ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
         ol.setExpandRatio(tf, 2);
 
         tf = new TextField(
@@ -939,8 +905,7 @@ public class TestOrderedLayout extends Application {
         tf.setRequired(true);
         tf.setComponentError(new UserError("abc123"));
         ol.addComponent(tf);
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT,
-                OrderedLayout.ALIGNMENT_BOTTOM);
+        ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
         ol.setExpandRatio(tf, 3);
 
         // for (int i = 0; i < 3; i++) {
@@ -957,7 +922,8 @@ public class TestOrderedLayout extends Application {
 
     }
 
-    private Layout layout_captions_fixed_size_and_fixed_size(OrderedLayout ol) {
+    private Layout layout_captions_fixed_size_and_fixed_size(
+            AbstractOrderedLayout ol) {
         ol.setWidth("700px");
         ol.setHeight("250px");
 
@@ -973,8 +939,7 @@ public class TestOrderedLayout extends Application {
         tf.setWidth("250px");
         tf.setComponentError(new UserError("123"));
         ol.addComponent(tf);
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT,
-                OrderedLayout.ALIGNMENT_BOTTOM);
+        ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
 
         tf = new TextField(
                 "A long caption which is probably much longer than the field");
@@ -983,8 +948,7 @@ public class TestOrderedLayout extends Application {
         tf.setRequired(true);
         tf.setComponentError(new UserError("123"));
         ol.addComponent(tf);
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT,
-                OrderedLayout.ALIGNMENT_BOTTOM);
+        ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
 
         tf = new TextField(
                 "A very long caption which is probably much longer than the field and includes indicators");
@@ -994,8 +958,7 @@ public class TestOrderedLayout extends Application {
         tf.setRequired(true);
         tf.setComponentError(new UserError("abc123"));
         ol.addComponent(tf);
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT,
-                OrderedLayout.ALIGNMENT_BOTTOM);
+        ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
 
         // for (int i = 0; i < 3; i++) {
         // Button b = new Button("Button " + i);
@@ -1011,7 +974,7 @@ public class TestOrderedLayout extends Application {
 
     }
 
-    private Layout layout_labels(OrderedLayout ol) {
+    private Layout layout_labels(AbstractOrderedLayout ol) {
         // ol.setWidth("700px");
         // ol.setHeight("200px");
 
@@ -1025,25 +988,24 @@ public class TestOrderedLayout extends Application {
         l = new Label(
                 "This is a long text and should remain on one line as there is nothing forcing line breaks");
         ol.addComponent(l);
-        // ol.setComponentAlignment(l, OrderedLayout.ALIGNMENT_RIGHT,
-        // OrderedLayout.ALIGNMENT_BOTTOM);
+        // ol.setComponentAlignment(l, AlignmentHandler.ALIGNMENT_RIGHT,
+        // AlignmentHandler.ALIGNMENT_BOTTOM);
 
         l = new Label("WTF OMG LOL");
         ol.addComponent(l);
-        // ol.setComponentAlignment(l, OrderedLayout.ALIGNMENT_RIGHT,
-        // OrderedLayout.ALIGNMENT_BOTTOM);
+        // ol.setComponentAlignment(l, AlignmentHandler.ALIGNMENT_RIGHT,
+        // AlignmentHandler.ALIGNMENT_BOTTOM);
 
         return ol;
 
     }
 
-    private OrderedLayout createAddRemove(OrderedLayout ol, String width,
-            String buttonSuffix) {
+    private AbstractOrderedLayout createAddRemove(AbstractOrderedLayout ol,
+            String width, String buttonSuffix) {
         Button b = createAddButton(ol);
         Button wb = createWideAddButton(ol);
         Button r = createRemoveButton(ol, buttonSuffix);
-        OrderedLayout inner = new OrderedLayout(
-                OrderedLayout.ORIENTATION_VERTICAL);
+        VerticalLayout inner = new VerticalLayout();
         inner.setCaption("Width: " + width);
         inner.setWidth(width);
 
@@ -1055,12 +1017,12 @@ public class TestOrderedLayout extends Application {
         return inner;
     }
 
-    private Button createAddButton(OrderedLayout ol) {
+    private Button createAddButton(AbstractOrderedLayout ol) {
         Button b = new Button("Add before", new ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-                addBefore((OrderedLayout) event.getButton().getData(), event
-                        .getButton().getParent(), "");
+                addBefore((AbstractOrderedLayout) event.getButton().getData(),
+                        event.getButton().getParent(), "");
             }
 
         });
@@ -1069,12 +1031,12 @@ public class TestOrderedLayout extends Application {
         return b;
     }
 
-    private Button createWideAddButton(OrderedLayout ol) {
+    private Button createWideAddButton(AbstractOrderedLayout ol) {
         Button b = new Button("Add 100% before", new ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-                addBefore((OrderedLayout) event.getButton().getData(), event
-                        .getButton().getParent(), "100%");
+                addBefore((AbstractOrderedLayout) event.getButton().getData(),
+                        event.getButton().getParent(), "100%");
             }
 
         });
@@ -1083,12 +1045,12 @@ public class TestOrderedLayout extends Application {
         return b;
     }
 
-    private Button createRemoveButton(OrderedLayout ol, String suffix) {
+    private Button createRemoveButton(AbstractOrderedLayout ol, String suffix) {
         Button b = new Button("Remove this " + suffix, new ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-                remove((OrderedLayout) event.getButton().getData(), event
-                        .getButton().getParent());
+                remove((AbstractOrderedLayout) event.getButton().getData(),
+                        event.getButton().getParent());
             }
 
         });
@@ -1098,12 +1060,12 @@ public class TestOrderedLayout extends Application {
         return b;
     }
 
-    protected void remove(OrderedLayout ol, Component c) {
+    protected void remove(AbstractOrderedLayout ol, Component c) {
         ol.removeComponent(c);
 
     }
 
-    protected void addBefore(OrderedLayout ol, Component c, String width) {
+    protected void addBefore(AbstractOrderedLayout ol, Component c, String width) {
         int index = 0;
         Iterator iter = ol.getComponentIterator();
         while (iter.hasNext()) {
@@ -1112,19 +1074,18 @@ public class TestOrderedLayout extends Application {
             }
             index++;
         }
-        OrderedLayout inner = createAddRemove(ol, width, String
+        AbstractOrderedLayout inner = createAddRemove(ol, width, String
                 .valueOf(suffix++));
         ol.addComponent(inner, index);
         if (width.contains("%")) {
             ol.setExpandRatio(inner, 1.0f);
         }
 
-        ol.setComponentAlignment(inner, OrderedLayout.ALIGNMENT_RIGHT,
-                OrderedLayout.ALIGNMENT_BOTTOM);
+        ol.setComponentAlignment(inner, Alignment.BOTTOM_RIGHT);
 
     }
 
-    private Layout layout_pctFilled(OrderedLayout ol) {
+    private Layout layout_pctFilled(AbstractOrderedLayout ol) {
         ol.setHeight("600px");
         ol.setWidth("600px");
         ol.setMargin(true);
@@ -1155,9 +1116,7 @@ public class TestOrderedLayout extends Application {
         tf.setHeight("100px");
         tf.setRows(2);
         ol.addComponent(tf);
-        ol.setComponentAlignment(tf,
-                AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER,
-                AlignmentHandler.ALIGNMENT_VERTICAL_CENTER);
+        ol.setComponentAlignment(tf, Alignment.MIDDLE_CENTER);
 
         //
 
@@ -1169,15 +1128,14 @@ public class TestOrderedLayout extends Application {
         ol.addComponent(tf);
         ol.setExpandRatio(tf, 40);
         // tf.setRequired(true);
-        ol.setComponentAlignment(tf, AlignmentHandler.ALIGNMENT_RIGHT,
-                AlignmentHandler.ALIGNMENT_BOTTOM);
+        ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
 
         tf.setRows(2);
 
         return ol;
     }
 
-    private Layout layout_pctFilled2(OrderedLayout ol) {
+    private Layout layout_pctFilled2(AbstractOrderedLayout ol) {
         ol.setHeight("600px");
         ol.setWidth("600px");
         ol.setMargin(true);
@@ -1208,8 +1166,7 @@ public class TestOrderedLayout extends Application {
         tf.setWidth("20%");
         tf.setHeight("60%");
         // tf.setRequired(true);
-        ol.setComponentAlignment(tf, AlignmentHandler.ALIGNMENT_RIGHT,
-                AlignmentHandler.ALIGNMENT_BOTTOM);
+        ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
 
         tf.setRows(2);
         ol.addComponent(tf);
@@ -1217,7 +1174,7 @@ public class TestOrderedLayout extends Application {
         return ol;
     }
 
-    private Layout layout_underFilled(OrderedLayout ol) {
+    private Layout layout_underFilled(AbstractOrderedLayout ol) {
         ol.setHeight("700px");
         ol.setWidth("700px");
         ol.setMargin(true);
@@ -1236,11 +1193,8 @@ public class TestOrderedLayout extends Application {
         tf.setRequired(true);
         tf.setRows(2);
 
-        ol.setComponentAlignment(tf,
-                AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER,
-                AlignmentHandler.ALIGNMENT_VERTICAL_CENTER);
-
         ol.addComponent(tf);
+        ol.setComponentAlignment(tf, Alignment.MIDDLE_CENTER);
 
         tf = new TextField("200px x 200px Field");
         // tf.setIcon(new ThemeResource("icons/16/document-add.png"));
@@ -1249,9 +1203,8 @@ public class TestOrderedLayout extends Application {
         // tf.setSizeFull();
         tf.setHeight("200px");
         tf.setWidth("200px");
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_LEFT,
-                OrderedLayout.ALIGNMENT_TOP);
         ol.addComponent(tf);
+        ol.setComponentAlignment(tf, Alignment.TOP_LEFT);
 
         tf = new TextField("200px x 200px Field");
         // tf.setIcon(new ThemeResource("icons/16/document-add.png"));
@@ -1260,9 +1213,9 @@ public class TestOrderedLayout extends Application {
         // tf.setSizeFull();
         tf.setHeight("200px");
         tf.setWidth("200px");
-        ol.setComponentAlignment(tf, OrderedLayout.ALIGNMENT_RIGHT,
-                OrderedLayout.ALIGNMENT_BOTTOM);
         ol.addComponent(tf);
+        ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
         return ol;
     }
+
 }
