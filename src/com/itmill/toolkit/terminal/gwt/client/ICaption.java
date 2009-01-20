@@ -289,17 +289,17 @@ public class ICaption extends HTML {
         int width = 0;
 
         if (icon != null) {
-            width += icon.getOffsetWidth();
+            width += Util.getRequiredWidth(icon.getElement());
         }
 
         if (captionText != null) {
-            width += captionText.getOffsetWidth();
+            width += Util.getRequiredWidth(captionText);
         }
         if (requiredFieldIndicator != null) {
-            width += requiredFieldIndicator.getOffsetWidth();
+            width += Util.getRequiredWidth(requiredFieldIndicator);
         }
         if (errorIndicatorElement != null) {
-            width += errorIndicatorElement.getOffsetWidth();
+            width += Util.getRequiredWidth(errorIndicatorElement);
         }
 
         return width;
@@ -310,16 +310,28 @@ public class ICaption extends HTML {
         int width = 0;
 
         if (icon != null) {
-            width += icon.getOffsetWidth();
+            width += Util.getRequiredWidth(icon.getElement());
         }
         if (captionText != null) {
-            width += captionText.getScrollWidth();
+            int textWidth = captionText.getScrollWidth();
+            if (BrowserInfo.get().isFF3()) {
+                /*
+                 * In Firefox3 the caption might require more space than the
+                 * scrollWidth returns as scrollWidth is rounded down.
+                 */
+                int requiredWidth = Util.getRequiredWidth(captionText);
+                if (requiredWidth > textWidth) {
+                    textWidth = requiredWidth;
+                }
+
+            }
+            width += textWidth;
         }
         if (requiredFieldIndicator != null) {
-            width += requiredFieldIndicator.getScrollWidth();
+            width += Util.getRequiredWidth(requiredFieldIndicator);
         }
         if (errorIndicatorElement != null) {
-            width += errorIndicatorElement.getScrollWidth();
+            width += Util.getRequiredWidth(errorIndicatorElement);
         }
 
         return width;
@@ -386,17 +398,11 @@ public class ICaption extends HTML {
 
             // DOM.setStyleAttribute(getElement(), "width", maxWidth + "px");
             if (requiredFieldIndicator != null) {
-                // ApplicationConnection.getConsole().log(
-                // "requiredFieldIndicator width: "
-                // + requiredFieldIndicator.getOffsetWidth());
-                availableWidth -= requiredFieldIndicator.getOffsetWidth();
+                availableWidth -= Util.getRequiredWidth(requiredFieldIndicator);
             }
 
             if (errorIndicatorElement != null) {
-                // ApplicationConnection.getConsole().log(
-                // "errorIndicatorElement width: "
-                // + errorIndicatorElement.getOffsetWidth());
-                availableWidth -= errorIndicatorElement.getOffsetWidth();
+                availableWidth -= Util.getRequiredWidth(errorIndicatorElement);
             }
 
             if (availableWidth < 0) {
@@ -404,28 +410,22 @@ public class ICaption extends HTML {
             }
 
             if (icon != null) {
-                if (availableWidth > icon.getOffsetWidth()) {
-                    // ApplicationConnection.getConsole().log(
-                    // "icon width: " + icon.getOffsetWidth());
-                    availableWidth -= icon.getOffsetWidth();
+                int iconRequiredWidth = Util
+                        .getRequiredWidth(icon.getElement());
+                if (availableWidth > iconRequiredWidth) {
+                    availableWidth -= iconRequiredWidth;
                 } else {
-                    // ApplicationConnection.getConsole().log(
-                    // "icon forced width: " + availableWidth);
                     DOM.setStyleAttribute(icon.getElement(), "width",
                             availableWidth + "px");
                     availableWidth = 0;
                 }
             }
             if (captionText != null) {
-                if (availableWidth > captionText.getOffsetWidth()) {
-                    // ApplicationConnection.getConsole().log(
-                    // "captionText width: "
-                    // + captionText.getOffsetWidth());
-                    availableWidth -= captionText.getOffsetWidth();
+                int captionWidth = Util.getRequiredWidth(captionText);
+                if (availableWidth > captionWidth) {
+                    availableWidth -= captionWidth;
 
                 } else {
-                    // ApplicationConnection.getConsole().log(
-                    // "captionText forced width: " + availableWidth);
                     DOM.setStyleAttribute(captionText, "width", availableWidth
                             + "px");
                     availableWidth = 0;
