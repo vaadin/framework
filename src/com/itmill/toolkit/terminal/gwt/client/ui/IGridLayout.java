@@ -414,7 +414,8 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                         cell.cc.updateWidgetSize();
                     }
                     if (cell.rowspan == 1) {
-                        if (rowHeights[j] < cell.getHeight()) {
+                        if (!cell.hasRelativeHeight()
+                                && rowHeights[j] < cell.getHeight()) {
                             rowHeights[j] = cell.getHeight();
                         }
                     } else {
