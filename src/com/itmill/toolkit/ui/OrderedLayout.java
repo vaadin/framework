@@ -40,7 +40,10 @@ public class OrderedLayout extends AbstractOrderedLayout {
     /**
      * Creates a new ordered layout. The order of the layout is
      * <code>ORIENTATION_VERTICAL</code>.
+     * 
+     * @deprecated Use VerticalLayout instead.
      */
+    @Deprecated
     public OrderedLayout() {
         this(ORIENTATION_VERTICAL);
     }
@@ -51,7 +54,10 @@ public class OrderedLayout extends AbstractOrderedLayout {
      * 
      * @param orientation
      *            the Orientation of the layout.
+     * 
+     * @deprecated Use VerticalLayout/HorizontalLayout instead.
      */
+    @Deprecated
     public OrderedLayout(int orientation) {
         this.orientation = orientation;
         if (orientation == ORIENTATION_VERTICAL) {
