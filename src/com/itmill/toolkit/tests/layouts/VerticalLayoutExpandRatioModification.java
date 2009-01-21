@@ -3,6 +3,7 @@ package com.itmill.toolkit.tests.layouts;
 import com.itmill.toolkit.tests.components.TestBase;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.TextField;
 import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Button.ClickEvent;
@@ -33,8 +34,9 @@ public class VerticalLayoutExpandRatioModification extends TestBase implements
 
         // The bottom layout
         vl2 = new VerticalLayout();
-        Label label2 = new Label("The bottom layout");
-        vl2.addComponent(label2);
+        TextField tf = new TextField("The bottom field");
+        tf.setHeight("100%");
+        vl2.addComponent(tf);
 
         // Add everything to the view
         mainLayout.addComponent(vl1);

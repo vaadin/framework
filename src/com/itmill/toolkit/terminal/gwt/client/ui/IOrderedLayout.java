@@ -151,6 +151,14 @@ public class IOrderedLayout extends CellBasedLayout {
 
             if (isDynamicWidth()) {
                 childComponentContainer.renderChild(childUIDL, client, 0);
+            } else if (Util.isCached(childUIDL)) {
+                /*
+                 * We must update the size of the relative sized component if
+                 * the expand ratio or something else in the layout changes
+                 * which affects the size of a relative sized component
+                 */
+                client.handleComponentRelativeSize(childComponentContainer
+                        .getWidget());
             } else {
                 childComponentContainer.renderChild(childUIDL, client,
                         activeLayoutSize.getWidth());
