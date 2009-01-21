@@ -26,6 +26,7 @@ import com.itmill.toolkit.demo.sampler.features.layouts.GridLayoutBasic;
 import com.itmill.toolkit.demo.sampler.features.layouts.HorizontalLayoutBasic;
 import com.itmill.toolkit.demo.sampler.features.layouts.LayoutAlignment;
 import com.itmill.toolkit.demo.sampler.features.layouts.LayoutSpacing;
+import com.itmill.toolkit.demo.sampler.features.layouts.SplitPanelBasic;
 import com.itmill.toolkit.demo.sampler.features.layouts.VerticalLayoutBasic;
 import com.itmill.toolkit.demo.sampler.features.link.LinkCurrentWindow;
 import com.itmill.toolkit.demo.sampler.features.link.LinkNoDecorations;
@@ -212,6 +213,7 @@ public class FeatureSet extends Feature {
                     new LayoutSpacing(), //
                     new LayoutAlignment(), //
                     new ExpandingComponent(), //
+                    new SplitPanelBasic(), //
             });
         }
     }

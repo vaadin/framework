@@ -33,7 +33,6 @@ public class ExpandingComponentExample extends VerticalLayout {
         if (nativeWindowURL == null) {
             getApplication().addWindow(createWindow());
         }
-        System.err.println(nativeWindowURL);
         getApplication().getMainWindow().open(
                 new ExternalResource(nativeWindowURL), "_blank");
     }
