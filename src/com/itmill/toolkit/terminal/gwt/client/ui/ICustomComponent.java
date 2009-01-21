@@ -13,6 +13,7 @@ import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.Util;
 
 public class ICustomComponent extends SimplePanel implements Container {
 
@@ -52,7 +53,33 @@ public class ICustomComponent extends SimplePanel implements Container {
         renderSpace.setWidth(getElement().getOffsetWidth());
         renderSpace.setHeight(getElement().getOffsetHeight());
 
+        updateDynamicSize();
+
         rendering = false;
+    }
+
+    private boolean updateDynamicSize() {
+        boolean updated = false;
+        if (isDynamicWidth()) {
+            int childWidth = Util.getRequiredWidth(getWidget());
+            getElement().getStyle().setPropertyPx("width", childWidth);
+            updated = true;
+        }
+        if (isDynamicHeight()) {
+            int childHeight = Util.getRequiredHeight(getWidget());
+            getElement().getStyle().setPropertyPx("height", childHeight);
+            updated = true;
+        }
+
+        return updated;
+    }
+
+    private boolean isDynamicWidth() {
+        return width == null || width.equals("");
+    }
+
+    private boolean isDynamicHeight() {
+        return height == null || height.equals("");
     }
 
     public boolean hasChildComponent(Widget component) {
@@ -77,8 +104,7 @@ public class ICustomComponent extends SimplePanel implements Container {
     }
 
     public boolean requestLayout(Set<Paintable> child) {
-        // TODO Auto-generated method stub
-        return false;
+        return !updateDynamicSize();
     }
 
     public RenderSpace getAllocatedSpace(Widget child) {
