@@ -745,7 +745,7 @@ public class ApplicationConnection {
       if (url) {
          $wnd.location = url;
       } else {
-          $wnd.location = $wnd.location;
+          $wnd.location.reload(false);
       }
      }-*/;
 
