@@ -1,29 +1,29 @@
-.i-horizontallayout, .i-verticallayout {
+.i-orderedlayout, .i-horizontallayout, .i-verticallayout {
 	overflow: hidden;
 }
 
-.i-horizontallayout-margin-top, .i-verticallayout-margin-top {
+.i-orderedlayout-margin-top, .i-horizontallayout-margin-top, .i-verticallayout-margin-top {
 	padding-top: 15px;
 }
 
-.i-horizontallayout-margin-right, .i-verticallayout-margin-right {
+.i-orderedlayout-margin-right, .i-horizontallayout-margin-right, .i-verticallayout-margin-right {
 	padding-right: 18px;
 }
 
-.i-horizontallayout-margin-bottom, .i-verticallayout-margin-bottom {
+.i-orderedlayout-margin-bottom, .i-horizontallayout-margin-bottom, .i-verticallayout-margin-bottom {
 	padding-bottom: 15px;
 }
 
-.i-horizontallayout-margin-left, .i-verticallayout-margin-left {
+.i-orderedlayout-margin-left, .i-horizontallayout-margin-left, .i-verticallayout-margin-left {
 	padding-left: 18px;
 }
 
-.i-horizontallayout-spacing-on, .i-verticallayout-spacing-on {
+.i-orderedlayout-spacing-on, .i-horizontallayout-spacing-on, .i-verticallayout-spacing-on {
 	padding-top: 8px;
 	padding-left: 8px;
 }
 /** This can be used to define spacing if spacing is off server side */
-.i-horizontallayout-spacing-off, .i-verticallayout-spacing-off {
+.i-orderedlayout-spacing-off, .i-horizontallayout-spacing-off, .i-verticallayout-spacing-off {
 	padding-top: 0px;
 	padding-left: 0px;
 }
