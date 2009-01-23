@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 
 import javax.imageio.ImageIO;
 
@@ -36,47 +37,62 @@ public class EmbeddedImageRefresh extends TestBase {
 
         // Attach it to a resource.
         final MyImageSource imageSource = new MyImageSource();
-        final StreamResource imageResource = new StreamResource(imageSource, "testimage.png", this);
+        final StreamResource imageResource = new StreamResource(imageSource,
+                "testimage.png", this);
         imageResource.setCacheTime(0);
         embedded.setSource(imageResource);
 
         // The button requests repainting the embedded.
-        Button button = new Button ("Click to Update");
+        Button button = new Button("refr");
         button.addListener(new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
-               embedded.requestRepaint();
-            } 
+                embedded.requestRepaint();
+            }
+        });
+        addComponent(button);
+        button = new Button("refr name");
+        button.addListener(new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                ((StreamResource) embedded.getSource()).setFilename(new Date()
+                        .getTime()
+                        + ".png");
+                embedded.requestRepaint();
+            }
+        });
+        addComponent(button);
+        button = new Button("200x200");
+        button.addListener(new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                embedded.setWidth("200px");
+                embedded.setHeight("200px");
+            }
+        });
+        addComponent(button);
+        button = new Button("undef");
+        button.addListener(new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                embedded.setSizeUndefined();
+            }
         });
         addComponent(button);
 
-        // Replace the resource. This is a workaround for
-        // the problem, but can't say it works very nicely either.
-        Button button2 = new Button ("Click to Replace");
-        button2.addListener(new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-               final StreamResource imageResource =
-                   new StreamResource(imageSource, "testimage.png",
-                                      getMainWindow().getApplication());
-               embedded.setSource(imageResource);
-            } 
-        });
-        addComponent(button2);
     }
 
     public class MyImageSource implements StreamResource.StreamSource {
         public MyImageSource() {
         }
-        
+
         int intervalPos(int pos, int resolution, int cells) {
-                return (int) Math.round(pos*resolution/(cells*1.0));
+            return (int) Math.round(pos * resolution / (cells * 1.0));
         }
 
         public InputStream getStream() {
             // Create an image and draw some background on it.
-            BufferedImage image = new BufferedImage (640, 480, BufferedImage.TYPE_INT_RGB);
+            BufferedImage image = new BufferedImage(640, 480,
+                    BufferedImage.TYPE_INT_RGB);
             Graphics drawable = image.getGraphics();
-                
-                // Background
+
+            // Background
             drawable.setColor(Color.white);
             drawable.fillRect(0, 0, 640, 480);
 
@@ -111,7 +127,7 @@ public class EmbeddedImageRefresh extends TestBase {
                         drawable.setColor(Color.black);
                     }
                     drawable.fillRect(gridx + 1, gridy + 1, gridxnext - gridx
-                                      - 1, gridynext - gridy - 1);
+                            - 1, gridynext - gridy - 1);
                 }
             }
 
