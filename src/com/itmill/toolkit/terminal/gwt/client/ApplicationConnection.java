@@ -328,12 +328,13 @@ public class ApplicationConnection {
         if (!forceSync) {
             final RequestBuilder rb = new RequestBuilder(RequestBuilder.POST,
                     uri);
+            // TODO enable timeout
+            // rb.setTimeoutMillis(timeoutMillis);
             rb.setHeader("Content-Type", "text/plain;charset=utf-8");
             try {
                 rb.sendRequest(requestData, new RequestCallback() {
                     public void onError(Request request, Throwable exception) {
-                        // TODO Better reporting to user
-                        console.error("Got error");
+                        showCommunicationError(exception.getMessage());
                         endRequest();
                         if (!applicationRunning) {
                             // start failed, let's try to start the next app
@@ -343,6 +344,16 @@ public class ApplicationConnection {
 
                     public void onResponseReceived(Request request,
                             Response response) {
+                        console.log("Server visit took "
+                                + String.valueOf((new Date()).getTime()
+                                        - requestStartTime.getTime()) + "ms");
+
+                        switch (response.getStatusCode()) {
+                        case 0:
+                            showCommunicationError("Invalid status code 0 (server down?)");
+                            return;
+                            // TODO could add more cases
+                        }
                         if ("init".equals(uidl_security_key)) {
                             // Read security key
                             String key = response
@@ -351,9 +362,6 @@ public class ApplicationConnection {
                                 uidl_security_key = key;
                             }
                         }
-                        console.log("Server visit took "
-                                + String.valueOf((new Date()).getTime()
-                                        - requestStartTime.getTime()) + "ms");
                         if (applicationRunning) {
                             handleReceivedJSONMessage(response);
                         } else {
@@ -403,6 +411,30 @@ public class ApplicationConnection {
             syncSendForce(((HTTPRequestImpl) GWT.create(HTTPRequestImpl.class))
                     .createXmlHTTPRequest(), uri, requestData);
         }
+    }
+
+    /**
+     * Shows the communication error notification. The 'details' only go to the
+     * console for now.
+     * 
+     * @param details
+     *            Optional details for debugging.
+     */
+    private void showCommunicationError(String details) {
+        console.error("Communication error: " + details);
+        String html = "";
+        if (configuration.getCommunicationErrorCaption() != null) {
+            html += "<h1>" + configuration.getCommunicationErrorCaption()
+                    + "</h1>";
+        }
+        if (configuration.getCommunicationErrorMessage() != null) {
+            html += "<p>" + configuration.getCommunicationErrorMessage()
+                    + "</p>";
+        }
+        INotification n = new INotification(1000 * 60 * 45);
+        n.addEventListener(new NotificationRedirect(configuration
+                .getCommunicationErrorUrl()));
+        n.show(html, INotification.CENTERED_TOP, INotification.STYLE_SYSTEM);
     }
 
     private native void syncSendForce(JavaScriptObject xmlHttpRequest,
@@ -551,7 +583,7 @@ public class ApplicationConnection {
             json = JSONParser.parse(jsonText);
         } catch (final com.google.gwt.json.client.JSONException e) {
             endRequest();
-            console.log(e.getMessage() + " - Original JSON-text:");
+            showCommunicationError(e.getMessage() + " - Original JSON-text:");
             console.log(jsonText);
             return;
         }

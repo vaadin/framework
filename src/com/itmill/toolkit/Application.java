@@ -1195,6 +1195,11 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
         protected String sessionExpiredCaption = "Session Expired";
         protected String sessionExpiredMessage = "Take note of any unsaved data, and <u>click here</u> to continue.";
 
+        protected String communicationErrorURL = null;
+        protected boolean communicationErrorNotificationEnabled = true;
+        protected String communicationErrorCaption = "Communication problem";
+        protected String communicationErrorMessage = "Take note of any unsaved data, and <u>click here</u> to continue.";
+
         protected String internalErrorURL = null;
         protected boolean internalErrorNotificationEnabled = true;
         protected String internalErrorCaption = "Internal Error";
@@ -1239,6 +1244,36 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
          */
         public String getSessionExpiredMessage() {
             return (sessionExpiredNotificationEnabled ? sessionExpiredMessage
+                    : null);
+        }
+
+        /**
+         * @return the URL to load on null for restart
+         */
+        public String getCommunicationErrorURL() {
+            return communicationErrorURL;
+        }
+
+        /**
+         * @return true = notification enabled, false = notification disabled
+         */
+        public boolean isCommunicationErrorNotificationEnabled() {
+            return communicationErrorNotificationEnabled;
+        }
+
+        /**
+         * @return the notification caption, or null for no caption
+         */
+        public String getCommunicationErrorCaption() {
+            return (communicationErrorNotificationEnabled ? communicationErrorCaption
+                    : null);
+        }
+
+        /**
+         * @return the notification message, or null for no message
+         */
+        public String getCommunicationErrorMessage() {
+            return (communicationErrorNotificationEnabled ? communicationErrorMessage
                     : null);
         }
 
@@ -1313,26 +1348,26 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * </p>
      * <p>
      * The default behavior is to show a notification, and restart the
-     * application the the user clicks the message. <br/>
-     * Instead of restarting the application, you can set a specific URL that
-     * the user is taken to.<br/>
-     * Setting both caption and message to null will restart the application (or
-     * go to the specified URL) without displaying a notification.
-     * set*NotificationEnabled(false) will achieve the same thing.
+     * application the the user clicks the message. <br/> Instead of restarting
+     * the application, you can set a specific URL that the user is taken
+     * to.<br/> Setting both caption and message to null will restart the
+     * application (or go to the specified URL) without displaying a
+     * notification. set*NotificationEnabled(false) will achieve the same thing.
      * </p>
      * <p>
      * The situations are:
      * <li>Session expired: the user session has expired, usually due to
      * inactivity.</li>
+     * <li>Communication error: the client failed to contact the server, or the
+     * server returned and invalid response.</li>
      * <li>Internal error: unhandled critical server error (e.g out of memory,
      * database crash)
      * <li>Out of sync: the client is not in sync with the server. E.g the user
-     * opens two windows showing the same application, and makes changes in one
-     * of the windows - the other window is no longer in sync, and (for
-     * instance) pressing a button that is no longer present in the UI will
-     * cause a out-of-sync -situation. You might want to disable the
-     * notification if silently ignoring a action (e.g button press) is not a
-     * problem in your application.
+     * opens two windows showing the same application, but the application does
+     * not support this and uses the same Window instance. When the user makes
+     * changes in one of the windows - the other window is no longer in sync,
+     * and (for instance) pressing a button that is no longer present in the UI
+     * will cause a out-of-sync -situation.
      * </p>
      */
 

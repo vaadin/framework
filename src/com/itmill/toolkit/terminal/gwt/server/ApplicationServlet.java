@@ -784,7 +784,8 @@ public class ApplicationServlet extends HttpServlet {
      */
     private void writeAjaxPage(HttpServletRequest request,
             HttpServletResponse response, Window window, String themeName,
-            Application application) throws IOException, MalformedURLException {
+            Application application) throws IOException, MalformedURLException,
+            ServletException {
 
         // e.g portlets only want a html fragment
         boolean fragment = (request.getAttribute(REQUEST_FRAGMENT) != null);
@@ -885,6 +886,15 @@ public class ApplicationServlet extends HttpServlet {
         // but indicates that it should not be used in CSS and such:
         appId = appId + appId.hashCode();
 
+        // Get system messages
+        Application.SystemMessages systemMessages = null;
+        try {
+            systemMessages = getSystemMessages();
+        } catch (SystemMessageException e) {
+            // failing to get the system messages is always a problem
+            throw new ServletException("CommunicationError!", e);
+        }
+
         if (isGecko17(request)) {
             // special start page for gecko 1.7 versions. Firefox 1.0 is not
             // supported, but the hack is make it possible to use linux and
@@ -923,7 +933,25 @@ public class ApplicationServlet extends HttpServlet {
             page.write(VERSION);
             page.write("\",applicationVersion:\"");
             page.write(application.getVersion());
-            page.write("\"}");
+            page.write("\"},");
+            if (systemMessages != null) {
+                // Write the CommunicationError -message to client
+                String caption = systemMessages.getCommunicationErrorCaption();
+                if (caption != null) {
+                    caption = "\"" + caption + "\"";
+                }
+                String message = systemMessages.getCommunicationErrorMessage();
+                if (message != null) {
+                    message = "\"" + message + "\"";
+                }
+                String url = systemMessages.getCommunicationErrorURL();
+                if (url != null) {
+                    url = "\"" + url + "\"";
+                }
+                page.write("\"comErrMsg\": {" + "\"caption\":" + caption + ","
+                        + "\"message\" : " + message + "," + "\"url\" : " + url
+                        + "}");
+            }
             page.write("};\n//]]>\n</script>\n");
 
             if (themeName != null) {
@@ -978,7 +1006,26 @@ public class ApplicationServlet extends HttpServlet {
             page.write(VERSION);
             page.write("\",applicationVersion:\"");
             page.write(application.getVersion());
-            page.write("\"}");
+            page.write("\"},");
+            if (systemMessages != null) {
+                // Write the CommunicationError -message to client
+                String caption = systemMessages.getCommunicationErrorCaption();
+                if (caption != null) {
+                    caption = "\"" + caption + "\"";
+                }
+                String message = systemMessages.getCommunicationErrorMessage();
+                if (message != null) {
+                    message = "\"" + message + "\"";
+                }
+                String url = systemMessages.getCommunicationErrorURL();
+                if (url != null) {
+                    url = "\"" + url + "\"";
+                }
+
+                page.write("\"comErrMsg\": {" + "\"caption\":" + caption + ","
+                        + "\"message\" : " + message + "," + "\"url\" : " + url
+                        + "}");
+            }
             page.write("};\n//]]>\n</script>\n");
 
             if (themeName != null) {

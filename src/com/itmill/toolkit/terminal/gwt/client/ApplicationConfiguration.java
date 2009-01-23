@@ -14,6 +14,9 @@ public class ApplicationConfiguration {
     private String appUri;
     private JavaScriptObject versionInfo;
     private String windowName;
+    private String communicationErrorCaption;
+    private String communicationErrorMessage;
+    private String communicationErrorUrl;
 
     private static ArrayList<ApplicationConnection> unstartedApplications = new ArrayList<ApplicationConnection>();
     private static ArrayList<ApplicationConnection> runningApplications = new ArrayList<ApplicationConnection>();
@@ -50,6 +53,18 @@ public class ApplicationConfiguration {
         return versionInfo;
     }
 
+    public String getCommunicationErrorCaption() {
+        return communicationErrorCaption;
+    }
+
+    public String getCommunicationErrorMessage() {
+        return communicationErrorMessage;
+    }
+
+    public String getCommunicationErrorUrl() {
+        return communicationErrorUrl;
+    }
+
     private native void loadFromDOM()
     /*-{
 
@@ -68,6 +83,11 @@ public class ApplicationConfiguration {
             }
             if(jsobj.versionInfo) {
                 this.@com.itmill.toolkit.terminal.gwt.client.ApplicationConfiguration::versionInfo = jsobj.versionInfo;
+            }
+            if(jsobj.comErrMsg) {
+                this.@com.itmill.toolkit.terminal.gwt.client.ApplicationConfiguration::communicationErrorCaption = jsobj.comErrMsg.caption;
+                this.@com.itmill.toolkit.terminal.gwt.client.ApplicationConfiguration::communicationErrorMessage = jsobj.comErrMsg.message;
+                this.@com.itmill.toolkit.terminal.gwt.client.ApplicationConfiguration::communicationErrorUrl = jsobj.comErrMsg.url;
             }
         
         } else {
