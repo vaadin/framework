@@ -4,6 +4,9 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -37,25 +40,46 @@ public class IEmbedded extends HTML implements Paintable {
         if (uidl.hasAttribute("type")) {
             final String type = uidl.getStringAttribute("type");
             if (type.equals("image")) {
+                Element el = null;
+                boolean created = false;
+                NodeList nodes = getElement().getChildNodes();
+                if (nodes != null && nodes.getLength() == 1) {
+                    Node n = nodes.getItem(0);
+                    if (n.getNodeType() == Node.ELEMENT_NODE) {
+                        Element e = (Element) n;
+                        if (e.getTagName().equals("IMG")) {
+                            el = e;
+                        }
+                    }
+                }
+                if (el == null) {
+                    setHTML("");
+                    el = DOM.createImg();
+                    created = true;
+                    client.addPngFix(el);
+                    DOM.sinkEvents(el, Event.ONLOAD);
+                }
+
+                // Set attributes
+                Style style = el.getStyle();
                 String w = uidl.getStringAttribute("width");
                 if (w != null) {
-                    w = " width=\"" + w + "\" ";
+                    style.setProperty("width", w);
                 } else {
-                    w = "";
+                    style.setProperty("width", "");
                 }
                 String h = uidl.getStringAttribute("height");
                 if (h != null) {
-                    h = " height=\"" + h + "\" ";
+                    style.setProperty("height", h);
                 } else {
-                    h = "";
+                    style.setProperty("height", "");
                 }
+                DOM.setElementProperty(el, "src", getSrc(uidl, client));
 
-                setHTML("<img src=\"" + getSrc(uidl, client) + "\"" + w + h
-                        + "/>");
-
-                Element el = DOM.getFirstChild(getElement());
-                DOM.sinkEvents(el, Event.ONLOAD);
-                client.addPngFix(el);
+                if (created) {
+                    // insert in dom late
+                    getElement().appendChild(el);
+                }
 
             } else if (type.equals("browser")) {
                 if (browserElement == null) {
