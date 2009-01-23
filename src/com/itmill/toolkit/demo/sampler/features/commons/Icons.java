@@ -3,6 +3,13 @@ package com.itmill.toolkit.demo.sampler.features.commons;
 import com.itmill.toolkit.demo.sampler.APIResource;
 import com.itmill.toolkit.demo.sampler.Feature;
 import com.itmill.toolkit.demo.sampler.NamedExternalResource;
+import com.itmill.toolkit.terminal.ApplicationResource;
+import com.itmill.toolkit.terminal.ClassResource;
+import com.itmill.toolkit.terminal.ExternalResource;
+import com.itmill.toolkit.terminal.FileResource;
+import com.itmill.toolkit.terminal.Resource;
+import com.itmill.toolkit.terminal.StreamResource;
+import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.ui.Component;
 
 public class Icons extends Feature {
@@ -18,7 +25,14 @@ public class Icons extends Feature {
 
     @Override
     public APIResource[] getRelatedAPI() {
-        return new APIResource[] { new APIResource(Component.class) };
+        return new APIResource[] { new APIResource(Component.class),
+                new APIResource(Resource.class),
+                new APIResource(ApplicationResource.class),
+                new APIResource(ClassResource.class),
+                new APIResource(ExternalResource.class),
+                new APIResource(FileResource.class),
+                new APIResource(StreamResource.class),
+                new APIResource(ThemeResource.class) };
     }
 
     @Override
