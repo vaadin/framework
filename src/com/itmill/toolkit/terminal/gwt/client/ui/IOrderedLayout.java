@@ -730,6 +730,9 @@ public class IOrderedLayout extends CellBasedLayout {
             ChildComponentContainer componentContainer = getComponentContainer((Widget) p);
             if (isDynamicWidth()) {
                 componentContainer.setUnlimitedContainerWidth();
+            } else {
+                componentContainer.setLimitedContainerWidth(activeLayoutSize
+                        .getWidth());
             }
 
             componentContainer.updateWidgetSize();

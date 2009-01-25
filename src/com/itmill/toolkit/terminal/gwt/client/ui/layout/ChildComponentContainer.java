@@ -172,7 +172,7 @@ public class ChildComponentContainer extends Panel {
          * is automatically calculated correctly (e.g. for Labels).
          */
         if (fixedWidth > 0) {
-            containerDIV.getStyle().setProperty("width", fixedWidth + "px");
+            setLimitedContainerWidth(fixedWidth);
         } else {
             setUnlimitedContainerWidth();
         }
@@ -181,7 +181,11 @@ public class ChildComponentContainer extends Panel {
     }
 
     public void setUnlimitedContainerWidth() {
-        containerDIV.getStyle().setProperty("width", "1000000px");
+        setLimitedContainerWidth(1000000);
+    }
+
+    public void setLimitedContainerWidth(int width) {
+        containerDIV.getStyle().setProperty("width", width + "px");
     }
 
     public void updateWidgetSize() {
