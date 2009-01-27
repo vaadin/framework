@@ -12,6 +12,10 @@
 	background: transparent url(grayfade.png) repeat-x;
 }
 
+.i-app-SamplerApplication .i-popupview-quickjump {
+	background: transparent url(quickjump.png) no-repeat 0px 1px;
+}
+
 .i-customcomponent-breadcrumbs .i-link a {
 	text-decoration: none;
 }

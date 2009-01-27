@@ -27,6 +27,7 @@ import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.HorizontalLayout;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Panel;
+import com.itmill.toolkit.ui.PopupView;
 import com.itmill.toolkit.ui.SplitPanel;
 import com.itmill.toolkit.ui.Table;
 import com.itmill.toolkit.ui.Tree;
@@ -186,20 +187,20 @@ public class SamplerApplication extends Application {
                 }
             });
 
-            // Previous sample
-            Button b = createPrevButton();
-            nav.addComponent(b);
-            nav.setComponentAlignment(b, Alignment.MIDDLE_LEFT);
-            // Next sample
-            b = createNextButton();
-            nav.addComponent(b);
-            nav.setComponentAlignment(b, Alignment.MIDDLE_LEFT);
-
             // "Search" combobox
             // TODO add input prompt
             Component search = createSearch();
             nav.addComponent(search);
             nav.setComponentAlignment(search, Alignment.MIDDLE_LEFT);
+
+            // Previous sample
+            Button b = createPrevButton();
+            nav.addComponent(b);
+            nav.setComponentAlignment(b, Alignment.MIDDLE_RIGHT);
+            // Next sample
+            b = createNextButton();
+            nav.addComponent(b);
+            nav.setComponentAlignment(b, Alignment.MIDDLE_LEFT);
 
             // togglebar
             mainExpand.addComponent(toggleBar);
@@ -293,7 +294,14 @@ public class SamplerApplication extends Application {
                 }
             });
             // TODO add icons for section/sample
-            return search;
+
+            PopupView pv = new PopupView("", search);
+            pv.setWidth("22px");
+            pv.setHeight("22px");
+            pv.setStyleName("quickjump");
+            pv.setDescription("Quick jump");
+
+            return pv;
         }
 
         private Component createLogo() {
@@ -310,7 +318,7 @@ public class SamplerApplication extends Application {
         }
 
         private Button createNextButton() {
-            Button b = new Button("Next sample →", new ClickListener() {
+            Button b = new Button("", new ClickListener() {
                 public void buttonClick(ClickEvent event) {
                     Object curr = currentFeature.getValue();
                     Object next = allFeatures.nextItemId(curr);
@@ -320,13 +328,16 @@ public class SamplerApplication extends Application {
                     currentFeature.setValue(next);
                 }
             });
+            b.setWidth("22px");
+            b.setHeight("22px");
+            b.setIcon(new ThemeResource("sampler/next.png"));
             b.setDescription("Jump to the next sample");
             b.setStyleName(Button.STYLE_LINK);
             return b;
         }
 
         private Button createPrevButton() {
-            Button b = new Button("← Previous sample", new ClickListener() {
+            Button b = new Button("", new ClickListener() {
                 public void buttonClick(ClickEvent event) {
                     Object curr = currentFeature.getValue();
                     Object prev = allFeatures.prevItemId(curr);
@@ -336,6 +347,9 @@ public class SamplerApplication extends Application {
                     currentFeature.setValue(prev);
                 }
             });
+            b.setWidth("22px");
+            b.setHeight("22px");
+            b.setIcon(new ThemeResource("sampler/prev.png"));
             b.setDescription("Jump to the previous sample");
             b.setStyleName(Button.STYLE_LINK);
             return b;
