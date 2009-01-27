@@ -122,14 +122,17 @@ public class LoginForm extends CustomComponent {
                 + "../ITMILL/themes/" + (theme == null ? "default" : theme)
                 + "/styles.css";
 
+        String appUri = getApplication().getURL().toString();
+
         return (""
                 + "<html>"
                 + "<head><script type='text/javascript'>"
                 + "var setTarget = function() {"
-                + "var uri = top.location.href;"
-                + "uri = uri.replace(/\\\\?.*/, '');"
-                + "uri += /loginHandler;"
-                + ".action = uri;document.forms[0].username.focus();};"
+                + "var uri = '"
+                + appUri
+                + "loginHandler"
+                + "'; var f = document.getElementById('loginf');"
+                + "document.forms[0].action = uri;document.forms[0].username.focus();};"
                 + "</script>"
                 + "<link rel='stylesheet' href='"
                 + guessedThemeUri
@@ -138,11 +141,12 @@ public class LoginForm extends CustomComponent {
                 + guessedThemeUri2
                 + "'/>"
                 + "</head><body onload='setTarget();' class='i-app i-app-loginpage' style='margin:0;padding:0;'>"
+                + "<iframe name='logintarget' style='width:0;height:0;"
+                + "border:0;margin:0;padding:0;'></iframe>"
                 + "<form id='loginf' target='logintarget'>"
                 + "Username<br/> <input class='i-textfield' type='text' name='username'><br/>"
                 + "Password<br/><input class='i-textfield' type='password' name='password'><br/>"
-                + "<input class='i-button' type='submit' value='Login'></form>"
-                + "<iframe name='logintarget' style='width:0;height:0;" + "border:0;margin:0;padding:0;'></iframe></body></html>")
+                + "<input class='i-button' type='submit' value='Login'></form>" + "</body></html>")
                 .getBytes();
     }
 
