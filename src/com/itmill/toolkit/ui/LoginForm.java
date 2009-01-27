@@ -17,15 +17,18 @@ import com.itmill.toolkit.terminal.URIHandler;
  * LoginForm is a Toolkit component to handle common problem among Ajax
  * applications: browsers password managers don't fill dynamically created forms
  * like all those UI elements created by IT Mill Toolkit.
- * 
+ * <p>
  * For developer it is easy to use: add component to a desired place in you UI
  * and add LoginListener to validate form input. Behind the curtain LoginForm
  * creates an iframe with static html that browsers detect.
- * 
+ * <p>
+ * Login form is by default 100% width and height, so consider using it inside a
+ * sized {@link Panel} or {@link Window}.
+ * <p>
  * Login page html can be overridden by replacing protected getLoginHTML method.
  * As the login page is actually an iframe, styles must be handled manually. By
  * default component tries to guess the right place for theme css.
- * 
+ * <p>
  * Note, this is a new Ajax terminal specific component and is likely to change.
  * 
  * @since 5.3
@@ -103,6 +106,7 @@ public class LoginForm extends CustomComponent {
     public LoginForm() {
         iframe.setType(Embedded.TYPE_BROWSER);
         iframe.setSizeFull();
+        setSizeFull();
         setCompositionRoot(iframe);
     }
 
@@ -124,11 +128,8 @@ public class LoginForm extends CustomComponent {
 
         String appUri = getApplication().getURL().toString();
 
-        return (""
-                + "<html>"
-                + "<head><script type='text/javascript'>"
-                + "var setTarget = function() {"
-                + "var uri = '"
+        return ("" + "<html>" + "<head><script type='text/javascript'>"
+                + "var setTarget = function() {" + "var uri = '"
                 + appUri
                 + "loginHandler"
                 + "'; var f = document.getElementById('loginf');"
@@ -140,13 +141,16 @@ public class LoginForm extends CustomComponent {
                 + "<link rel='stylesheet' href='"
                 + guessedThemeUri2
                 + "'/>"
-                + "</head><body onload='setTarget();' class='i-app i-app-loginpage' style='margin:0;padding:0;'>"
+                + "</head><body onload='setTarget();' style='margin:0;padding:0;'>"
+                + "<div class='i-app i-app-loginpage'>"
                 + "<iframe name='logintarget' style='width:0;height:0;"
                 + "border:0;margin:0;padding:0;'></iframe>"
                 + "<form id='loginf' target='logintarget'>"
-                + "Username<br/> <input class='i-textfield' type='text' name='username'><br/>"
-                + "Password<br/><input class='i-textfield' type='password' name='password'><br/>"
-                + "<input class='i-button' type='submit' value='Login'></form>" + "</body></html>")
+                + "<div>Username</div><div >"
+                + "<input class='i-textfield' style='display:block;' type='text' name='username'></div>"
+                + "<div>Password</div>"
+                + "<div><input class='i-textfield' style='display:block;' type='password' name='password'></div>"
+                + "<div><input class='i-button' type='submit' value='Login'></div></form></div>" + "</body></html>")
                 .getBytes();
     }
 
