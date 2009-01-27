@@ -1,6 +1,6 @@
 <module>
-	<!-- Inherit the NoEntry version to avoid multiple entrypoints -->
-	<inherits name="com.itmill.toolkit.terminal.gwt.DefaultWidgetSetNoEntry" /> 
+	<!-- Inherit the DefaultWidgetSet -->
+	<inherits name="com.itmill.toolkit.terminal.gwt.DefaultWidgetSet" /> 
 	
 	<!-- WidgetSet default theme -->	
 	<stylesheet src="sampler/styles.css"/>

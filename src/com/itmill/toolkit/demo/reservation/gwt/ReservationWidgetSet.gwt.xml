@@ -1,6 +1,6 @@
 <module>
-	<!-- Inherit the NoEntry version to avoid multiple entrypoints -->
-	<inherits name="com.itmill.toolkit.terminal.gwt.DefaultWidgetSetNoEntry" /> 
+	<!-- Inherit DefaultWidgetSet -->
+	<inherits name="com.itmill.toolkit.terminal.gwt.DefaultWidgetSet" /> 
 	
 	<!-- The googlemaps_gwt module -->
 	<inherits name="com.google.gwt.maps.GoogleMaps" />

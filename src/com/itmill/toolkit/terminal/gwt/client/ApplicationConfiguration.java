@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 
 public class ApplicationConfiguration {
+
+    // can only be inited once, to avoid multiple-entrypoint-problem
+    private static WidgetSet initedWidgetSet;
 
     private String id;
     private String themeUri;
@@ -105,6 +109,28 @@ public class ApplicationConfiguration {
      *            the widgetset that is running the apps
      */
     public static void initConfigurations(WidgetSet widgetset) {
+        String wsname = widgetset.getClass().getName();
+        String module = GWT.getModuleName();
+        int lastdot = module.lastIndexOf(".");
+        String base = module.substring(0, lastdot);
+        String simpleName = module.substring(lastdot + 1);
+        if (!wsname.startsWith(base) || !wsname.endsWith(simpleName)) {
+            // WidgetSet module name does not match implementation name;
+            // probably inherited WidgetSet with entry-point. Skip.
+            GWT.log("Ignored init for " + wsname + " when starting " + module,
+                    null);
+            return;
+        }
+
+        if (initedWidgetSet != null) {
+            // Something went wrong: multiple widgetsets inited
+            String msg = "Tried to init " + widgetset.getClass().getName()
+                    + ", but " + initedWidgetSet.getClass().getName()
+                    + " is already inited.";
+            System.err.println(msg);
+            throw new IllegalStateException(msg);
+        }
+        initedWidgetSet = widgetset;
         ArrayList appIds = new ArrayList();
         loadAppIdListFromDOM(appIds);
 
