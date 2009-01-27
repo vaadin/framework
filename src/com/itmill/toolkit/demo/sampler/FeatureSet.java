@@ -21,6 +21,8 @@ import com.itmill.toolkit.demo.sampler.features.dates.DateLocale;
 import com.itmill.toolkit.demo.sampler.features.dates.DatePopup;
 import com.itmill.toolkit.demo.sampler.features.dates.DateResolution;
 import com.itmill.toolkit.demo.sampler.features.form.FormBasic;
+import com.itmill.toolkit.demo.sampler.features.layouts.ApplicationLayout;
+import com.itmill.toolkit.demo.sampler.features.layouts.CustomLayouts;
 import com.itmill.toolkit.demo.sampler.features.layouts.ExpandingComponent;
 import com.itmill.toolkit.demo.sampler.features.layouts.GridLayoutBasic;
 import com.itmill.toolkit.demo.sampler.features.layouts.HorizontalLayoutBasic;
@@ -28,6 +30,7 @@ import com.itmill.toolkit.demo.sampler.features.layouts.LayoutAlignment;
 import com.itmill.toolkit.demo.sampler.features.layouts.LayoutSpacing;
 import com.itmill.toolkit.demo.sampler.features.layouts.SplitPanelBasic;
 import com.itmill.toolkit.demo.sampler.features.layouts.VerticalLayoutBasic;
+import com.itmill.toolkit.demo.sampler.features.layouts.WebLayout;
 import com.itmill.toolkit.demo.sampler.features.link.LinkCurrentWindow;
 import com.itmill.toolkit.demo.sampler.features.link.LinkNoDecorations;
 import com.itmill.toolkit.demo.sampler.features.link.LinkSizedWindow;
@@ -214,6 +217,9 @@ public class FeatureSet extends Feature {
                     new LayoutAlignment(), //
                     new ExpandingComponent(), //
                     new SplitPanelBasic(), //
+                    new WebLayout(), //
+                    new ApplicationLayout(), //
+                    new CustomLayouts(), //
             });
         }
     }
