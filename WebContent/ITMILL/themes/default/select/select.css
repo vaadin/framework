@@ -79,7 +79,8 @@
 	float: left;
 }
 .i-app .i-filterselect .i-filterselect-input,
-.i-window .i-filterselect .i-filterselect-input {
+.i-window .i-filterselect .i-filterselect-input,
+.i-popupview-popup .i-filterselect .i-filterselect-input {
 	background: transparent url(img/bg-center-filter.png) no-repeat 1px 0;
 	float: left;
 	border: none;
