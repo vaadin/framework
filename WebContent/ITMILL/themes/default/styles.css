@@ -372,25 +372,6 @@ input.i-modified,
 }
 
 /**
- * Link component styles 
- * (useless to move into a separate file)
- */
-.i-link a {
-	font-size: 13px;
-	line-height: 18px;
-	color: #464f52;
-	vertical-align: middle;
-}
-
-.i-disabled a {
-	cursor: default;
-}
-
-.i-link img {
-	vertical-align: middle;
-}
-
-/**
  * Label has tiny paddings to include contents margins.
  */
 .i-label {
@@ -818,6 +799,32 @@ input.i-modified,
 	overflow:hidden;
 }
 
+
+/* ./WebContent/ITMILL/themes/default/link/link.css */
+/**
+ * Link component styles 
+ * (useless to move into a separate file)
+ */
+.i-link a {
+	font-size: 13px;
+	line-height: 18px;
+	color: #464f52;
+	vertical-align: middle;
+	text-decoration: none;
+}
+
+.i-link span {
+	text-decoration: underline;
+}
+
+.i-disabled a {
+	cursor: default;
+}
+
+.i-link img {
+	vertical-align: middle;
+	border:none;
+}
 
 /* ./WebContent/ITMILL/themes/default/menubar/menubar.css */
 /*

@@ -1,0 +1,24 @@
+/**
+ * Link component styles 
+ * (useless to move into a separate file)
+ */
+.i-link a {
+	font-size: 13px;
+	line-height: 18px;
+	color: #464f52;
+	vertical-align: middle;
+	text-decoration: none;
+}
+
+.i-link span {
+	text-decoration: underline;
+}
+
+.i-disabled a {
+	cursor: default;
+}
+
+.i-link img {
+	vertical-align: middle;
+	border:none;
+}
