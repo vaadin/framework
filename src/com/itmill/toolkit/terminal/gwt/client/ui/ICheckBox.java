@@ -100,9 +100,8 @@ public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox implements
 
     @Override
     public void onBrowserEvent(Event event) {
-        if ((event.getTypeInt() == Event.ONCLICK)
+        if (icon != null && (event.getTypeInt() == Event.ONCLICK)
                 && (event.getTarget() == icon.getElement())) {
-            // react on icon clicks too
             setChecked(!isChecked());
         }
         super.onBrowserEvent(event);
