@@ -41,7 +41,9 @@ public class ILink extends HTML implements Paintable, ClickListener {
 
     private Element errorIndicatorElement;
 
-    private final Element captionElement = DOM.createAnchor();
+    private final Element anchor = DOM.createAnchor();
+
+    private final Element captionElement = DOM.createSpan();
 
     private Icon icon;
 
@@ -49,7 +51,8 @@ public class ILink extends HTML implements Paintable, ClickListener {
 
     public ILink() {
         super();
-        DOM.appendChild(getElement(), captionElement);
+        getElement().appendChild(anchor);
+        anchor.appendChild(captionElement);
         addClickListener(this);
         sinkEvents(ITooltip.TOOLTIP_EVENTS);
         setStyleName(CLASSNAME);
@@ -70,11 +73,11 @@ public class ILink extends HTML implements Paintable, ClickListener {
 
         if (uidl.hasAttribute("name")) {
             target = uidl.getStringAttribute("name");
-            captionElement.setAttribute("target", target);
+            anchor.setAttribute("target", target);
         }
         if (uidl.hasAttribute("src")) {
             src = client.translateToolkitUri(uidl.getStringAttribute("src"));
-            captionElement.setAttribute("href", src);
+            anchor.setAttribute("href", src);
         }
 
         if (uidl.hasAttribute("border")) {
@@ -93,7 +96,7 @@ public class ILink extends HTML implements Paintable, ClickListener {
                 .getIntAttribute("targetWidth") : -1;
 
         // Set link caption
-        DOM.setInnerText(captionElement, uidl.getStringAttribute("caption"));
+        captionElement.setInnerText(uidl.getStringAttribute("caption"));
 
         // handle error
         if (uidl.hasAttribute("error")) {
@@ -110,7 +113,7 @@ public class ILink extends HTML implements Paintable, ClickListener {
         if (uidl.hasAttribute("icon")) {
             if (icon == null) {
                 icon = new Icon(client);
-                DOM.insertChild(getElement(), icon.getElement(), 0);
+                anchor.insertBefore(icon.getElement(), captionElement);
             }
             icon.setUri(uidl.getStringAttribute("icon"));
         }
@@ -166,8 +169,7 @@ public class ILink extends HTML implements Paintable, ClickListener {
         if (client != null) {
             client.handleTooltipEvent(event, this);
         }
-        if (target == captionElement
-                || (icon != null && target == icon.getElement())) {
+        if (target == anchor || (icon != null && target == icon.getElement())) {
             super.onBrowserEvent(event);
         }
         if (!enabled) {
