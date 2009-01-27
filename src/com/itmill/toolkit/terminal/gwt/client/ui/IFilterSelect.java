@@ -21,6 +21,7 @@ import com.google.gwt.user.client.ui.FocusListener;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.KeyboardListener;
+import com.google.gwt.user.client.ui.LoadListener;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -104,7 +105,8 @@ public class IFilterSelect extends Composite implements Paintable, Field,
         private boolean isPagingEnabled = true;
 
         private long lastAutoClosed;
-        private int menuLeftMargin = -1;
+
+        private int popupOuterPadding = -1;
 
         SuggestionPopup() {
             super(true, false, true);
@@ -297,27 +299,25 @@ public class IFilterSelect extends Composite implements Paintable, Field,
             final int desiredWidth = getMainWidth();
             int naturalMenuWidth = DOM.getElementPropertyInt(DOM
                     .getFirstChild(menu.getElement()), "offsetWidth");
+
+            if (popupOuterPadding == -1) {
+                popupOuterPadding = Util.measureHorizontalPaddingAndBorder(
+                        getElement(), 2);
+            }
+
             if (naturalMenuWidth < desiredWidth) {
-                menu.setWidth(desiredWidth + "px");
+                menu.setWidth((desiredWidth - popupOuterPadding) + "px");
                 DOM.setStyleAttribute(DOM.getFirstChild(menu.getElement()),
                         "width", "100%");
                 naturalMenuWidth = desiredWidth;
             }
 
             if (BrowserInfo.get().isIE()) {
-                // Take left margin into account
-                if (menuLeftMargin == -1) {
-                    int menuOffsetLeft = menu.getElement().getOffsetLeft();
-                    int menuParentOffsetLeft = getContainerElement()
-                            .getOffsetLeft();
-                    menuLeftMargin = menuOffsetLeft - menuParentOffsetLeft;
-                }
-
                 /*
                  * IE requires us to specify the width for the container
                  * element. Otherwise it will be 100% wide
                  */
-                int rootWidth = naturalMenuWidth + menuLeftMargin;
+                int rootWidth = naturalMenuWidth - popupOuterPadding;
                 DOM.setStyleAttribute(getContainerElement(), "width", rootWidth
                         + "px");
             }
@@ -522,6 +522,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
     private boolean popupOpenerClicked;
     private String width = null;
     private int textboxPadding = -1;
+    private int componentPadding = -1;
     private int suggestionPopupMinWidth = 0;
     private static final String CLASSNAME_EMPTY = "empty";
     private static final String ATTR_EMPTYTEXT = "emptytext";
@@ -533,6 +534,17 @@ public class IFilterSelect extends Composite implements Paintable, Field,
 
     public IFilterSelect() {
         selectedItemIcon.setVisible(false);
+        selectedItemIcon.setStyleName("i-icon");
+        selectedItemIcon.addLoadListener(new LoadListener() {
+            public void onError(Widget sender) {
+            }
+
+            public void onLoad(Widget sender) {
+                updateSelectedIconPosition();
+                updateRootWidth();
+            }
+        });
+
         panel.add(selectedItemIcon);
         tb.sinkEvents(ITooltip.TOOLTIP_EVENTS);
         panel.add(tb);
@@ -719,7 +731,17 @@ public class IFilterSelect extends Composite implements Paintable, Field,
         } else {
             selectedItemIcon.setUrl(iconUri);
             selectedItemIcon.setVisible(true);
+            updateSelectedIconPosition();
         }
+        updateRootWidth();
+    }
+
+    private void updateSelectedIconPosition() {
+        // Position icon vertically to middle
+        int availableHeight = getOffsetHeight();
+        int iconHeight = Util.getRequiredHeight(selectedItemIcon);
+        DOM.setStyleAttribute(selectedItemIcon.getElement(), "marginTop",
+                (availableHeight - iconHeight) / 2 + "px");
     }
 
     public void onKeyDown(Widget sender, char keyCode, int modifiers) {
@@ -875,9 +897,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
         } else {
             this.width = width;
         }
-
-        super.setWidth(width);
-
+        Util.setWidthExcludingPaddingAndBorder(this, width, 4);
         updateRootWidth();
     }
 
@@ -910,7 +930,8 @@ public class IFilterSelect extends Composite implements Paintable, Field,
              * When the width is specified we also want to explicitly specify
              * widths for textbox and popupopener
              */
-            setTextboxWidth(getMainWidth());
+            int padding = getComponentPadding();
+            setTextboxWidth(getMainWidth() - padding);
 
         }
     }
@@ -925,25 +946,34 @@ public class IFilterSelect extends Composite implements Paintable, Field,
         } else {
             componentWidth = getOffsetWidth();
         }
-
         return componentWidth;
     }
 
     private void setTextboxWidth(int componentWidth) {
         int padding = getTextboxPadding();
         int popupOpenerWidth = Util.getRequiredWidth(popupOpener);
-        int textboxWidth = componentWidth - padding - popupOpenerWidth;
+        int iconWidth = Util.getRequiredWidth(selectedItemIcon);
+        int textboxWidth = componentWidth - padding - popupOpenerWidth
+                - iconWidth;
         if (textboxWidth < 0) {
             textboxWidth = 0;
         }
         tb.setWidth(textboxWidth + "px");
     }
 
-    public int getTextboxPadding() {
+    private int getTextboxPadding() {
         if (textboxPadding < 0) {
             textboxPadding = Util.measureHorizontalPaddingAndBorder(tb
                     .getElement(), 4);
         }
         return textboxPadding;
+    }
+
+    private int getComponentPadding() {
+        if (componentPadding < 0) {
+            componentPadding = Util.measureHorizontalPaddingAndBorder(
+                    getElement(), 3);
+        }
+        return componentPadding;
     }
 }

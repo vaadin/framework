@@ -71,16 +71,20 @@
 .i-filterselect {
 	height: 23px;
 	white-space: nowrap;
-	text-align: left /* Force default alignment */
-}
-
-.i-filterselect-input {
+	text-align: left; /* Force default alignment */
 	background: transparent url(img/bg-left-filter.png) no-repeat;
+	padding-left: 4px;
+}
+.i-filterselect .i-icon {
+	float: left;
+}
+.i-app .i-filterselect .i-filterselect-input {
+	background: transparent url(img/bg-center-filter.png) no-repeat 1px 0;
 	float: left;
 	border: none;
 	height: 20px;
 	margin: 0px;
-	padding: 3px 0 0 4px;
+	padding: 3px 0 0 2px;
 	font-size: 13px;
 }
 .i-filterselect-input:focus {
@@ -130,14 +134,19 @@
 	line-height: 18px;
 	margin-top: -1px;
 }
-.i-filterselect-suggestmenu {
-	margin-left: -2px;
+.i-filterselect-suggestmenu table {
+	border-collapse: collapse;
+	border: none;
 }
 .i-filterselect-suggestmenu .gwt-MenuItem {
-	padding: 1px 5px;
+	padding: 1px 6px;
 	cursor: pointer;
 	height: 18px;
 	white-space: nowrap;
+}
+
+.i-filterselect-suggestmenu .gwt-MenuItem .i-icon {
+	margin-right: 3px;
 }
 
 .i-filterselect-suggestmenu .gwt-MenuItem-selected {
@@ -206,15 +215,22 @@
 	border-top: 1px solid #b6bbbc;
 }
 
+
+/* Error styles (disabled by default)
+   ----------------------------------
+   
 .i-filterselect-error {
-	background: transparent url(img/bg-left-filter-error.png) no-repeat;
+	background-image: url(img/bg-left-filter-error.png);
+}
+
+.i-filterselect-error .i-filterselect-input {
+	background-image: url(img/bg-center-filter-error.png);
 }
 
 .i-filterselect-error .i-filterselect-button {
-	background: transparent url(img/bg-right-filter-error.png);
+	background-image: url(img/bg-right-filter-error.png);
 }
 
-/* Disabled by default
 .i-select-error .i-select-option,
 .i-select-error .i-select-select,
 .i-select-error .i-select-twincol-selections,
@@ -224,7 +240,9 @@
 }
 */
 
-/* Disabled by default
+/*  Required field styles (disabled by default)
+   --------------------------------------------
+   
 .i-select-required .i-select-option,
 .i-select-required .i-select-select,
 .i-select-required .i-select-twincol-selections,
@@ -233,10 +251,3 @@
 	background-color: #FFE0E0;
 }
 */
-
-/* IE specific styles */
-
-* html .i-filterselect {
-
-}
-
