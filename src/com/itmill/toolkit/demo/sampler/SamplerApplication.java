@@ -203,7 +203,7 @@ public class SamplerApplication extends Application {
             nav.setComponentAlignment(b, Alignment.MIDDLE_LEFT);
 
             // togglebar
-            mainExpand.addComponent(toggleBar);
+            // mainExpand.addComponent(toggleBar);
             toggleBar.setHeight("40px");
             toggleBar.setWidth("100%");
             toggleBar.setStyleName("togglebar");
@@ -216,12 +216,19 @@ public class SamplerApplication extends Application {
             mainExpand.addComponent(mainSplit);
             mainExpand.setExpandRatio(mainSplit, 1);
 
+            VerticalLayout rightLayout = new VerticalLayout();
+            rightLayout.setSizeFull();
+            rightLayout.addComponent(toggleBar);
+
             // Menu tree, initially hidden
             navigationTree = createMenuTree();
             mainSplit.addComponent(navigationTree);
 
             // Main Area
-            mainSplit.addComponent(mainArea);
+            mainSplit.addComponent(rightLayout);
+
+            rightLayout.addComponent(mainArea);
+            rightLayout.setExpandRatio(mainArea, 1);
 
             // Show / hide tree
             Component treeSwitch = createTreeSwitch();
