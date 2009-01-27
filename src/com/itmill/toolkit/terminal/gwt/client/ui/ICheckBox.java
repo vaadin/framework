@@ -45,6 +45,12 @@ public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox implements
 
         });
         sinkEvents(ITooltip.TOOLTIP_EVENTS);
+        Element el = DOM.getFirstChild(getElement());
+        while (el != null) {
+            DOM.sinkEvents(el,
+                    (DOM.getEventsSunk(el) | ITooltip.TOOLTIP_EVENTS));
+            el = DOM.getNextSibling(el);
+        }
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -76,6 +82,8 @@ public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox implements
             if (icon == null) {
                 icon = new Icon(client);
                 DOM.insertChild(getElement(), icon.getElement(), 1);
+                icon.sinkEvents(ITooltip.TOOLTIP_EVENTS);
+                icon.sinkEvents(Event.ONCLICK);
             }
             icon.setUri(uidl.getStringAttribute("icon"));
         } else if (icon != null) {
@@ -92,6 +100,11 @@ public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox implements
 
     @Override
     public void onBrowserEvent(Event event) {
+        if ((event.getTypeInt() == Event.ONCLICK)
+                && (event.getTarget() == icon.getElement())) {
+            // react on icon clicks too
+            setChecked(!isChecked());
+        }
         super.onBrowserEvent(event);
         if (event.getTypeInt() == Event.ONLOAD) {
             Util.notifyParentOfSizeChange(this, true);
