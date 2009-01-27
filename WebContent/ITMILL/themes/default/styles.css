@@ -1299,7 +1299,8 @@ input.i-modified,
 .i-filterselect .i-icon {
 	float: left;
 }
-.i-app .i-filterselect .i-filterselect-input {
+.i-app .i-filterselect .i-filterselect-input,
+.i-window .i-filterselect .i-filterselect-input {
 	background: transparent url(select/img/bg-center-filter.png) no-repeat 1px 0;
 	float: left;
 	border: none;
