@@ -95,10 +95,7 @@ public class PopupView extends AbstractComponentContainer {
     }
 
     /**
-     * Set the visibility of the popup. Does not hide the minimal
-     * representation.
-     * 
-     * @param visible
+     * @deprecated Use {@link #setPopupVisible()} instead.
      */
     public void setPopupVisibility(boolean visible) {
         popupVisible = visible;
@@ -106,11 +103,28 @@ public class PopupView extends AbstractComponentContainer {
     }
 
     /**
+     * @deprecated Use {@link #isPopupVisible()} instead.
+     */
+    public boolean getPopupVisibility() {
+        return isPopupVisible();
+    }
+
+    /**
+     * Set the visibility of the popup. Does not hide the minimal
+     * representation.
+     * 
+     * @param visible
+     */
+    public void setPopupVisible(boolean visible) {
+        setPopupVisible(visible);
+    }
+
+    /**
      * Return whether the popup is visible.
      * 
      * @return true if the popup is showing
      */
-    public boolean getPopupVisibility() {
+    public boolean isPopupVisible() {
         return popupVisible;
     }
 
