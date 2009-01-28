@@ -17,7 +17,7 @@ public class ComboBoxLargeIcons extends TestBase {
 
     @Override
     protected String getDescription() {
-        return "All items in the Combobox has large icons. The size of the dropdown should fit the contents, also when changing pages. The size of the shadow behind the dropdown must also be correctly sized. Note that the image URL change for every restart to keep the browser from using cached images.";
+        return "<p>All items in the Combobox has large icons. The size of the dropdown should fit the contents, also when changing pages. The height of the dropdown shouldn't exceed the browser's viewport, but fewer items should be visible then.</p><p>The size of the shadow behind the dropdown must also be correctly sized.</p><p>Note that the image URL change for every restart to keep the browser from using cached images.</p>";
     }
 
     @Override

@@ -16,7 +16,7 @@ public abstract class TestBase extends Application {
         setMainWindow(window);
         window.getLayout().setSizeFull();
 
-        Label label = new Label(getDescription());
+        Label label = new Label(getDescription(), Label.CONTENT_XHTML);
         label.setWidth("100%");
         window.getLayout().addComponent(label);
 
