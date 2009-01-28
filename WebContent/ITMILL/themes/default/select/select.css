@@ -149,6 +149,7 @@
 
 .i-filterselect-suggestmenu .gwt-MenuItem .i-icon {
 	margin-right: 3px;
+	vertical-align: middle;
 }
 
 .i-filterselect-suggestmenu .gwt-MenuItem-selected {
