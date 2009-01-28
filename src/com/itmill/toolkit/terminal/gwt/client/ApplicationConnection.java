@@ -64,13 +64,13 @@ public class ApplicationConnection {
 
     private static String uidl_security_key = "init";
 
-    private final HashMap resourcesMap = new HashMap();
+    private final HashMap<String, String> resourcesMap = new HashMap<String, String>();
 
     private static Console console;
 
     private static boolean testingMode;
 
-    private final Vector pendingVariables = new Vector();
+    private final Vector<String> pendingVariables = new Vector<String>();
 
     private final HashMap<String, Paintable> idToPaintable = new HashMap<String, Paintable>();
 
@@ -116,7 +116,7 @@ public class ApplicationConnection {
     private final ApplicationConfiguration configuration;
 
     /** List of pending variable change bursts that must be submitted in order */
-    private final Vector pendingVariableBursts = new Vector();
+    private final Vector<Vector<String>> pendingVariableBursts = new Vector<Vector<String>>();
 
     /** Timer for automatic refirect to SessionExpiredURL */
     private Timer redirectTimer;
@@ -496,11 +496,11 @@ public class ApplicationConnection {
     private void checkForPendingVariableBursts() {
         cleanVariableBurst(pendingVariables);
         if (pendingVariableBursts.size() > 0) {
-            for (Iterator iterator = pendingVariableBursts.iterator(); iterator
-                    .hasNext();) {
-                cleanVariableBurst((Vector) iterator.next());
+            for (Iterator<Vector<String>> iterator = pendingVariableBursts
+                    .iterator(); iterator.hasNext();) {
+                cleanVariableBurst(iterator.next());
             }
-            Vector nextBurst = (Vector) pendingVariableBursts.firstElement();
+            Vector<String> nextBurst = pendingVariableBursts.firstElement();
             pendingVariableBursts.remove(0);
             buildAndSendVariableBurst(nextBurst, false);
         }
@@ -512,9 +512,9 @@ public class ApplicationConnection {
      * 
      * @param variableBurst
      */
-    private void cleanVariableBurst(Vector variableBurst) {
+    private void cleanVariableBurst(Vector<String> variableBurst) {
         for (int i = 1; i < variableBurst.size(); i += 2) {
-            String id = (String) variableBurst.get(i);
+            String id = variableBurst.get(i);
             id = id.substring(0, id.indexOf(VAR_FIELD_SEPARATOR));
             if (!idToPaintable.containsKey(id)) {
                 // variable owner does not exist anymore
@@ -602,8 +602,9 @@ public class ApplicationConnection {
         // Store resources
         final JSONObject resources = (JSONObject) ((JSONObject) json)
                 .get("resources");
-        for (final Iterator i = resources.keySet().iterator(); i.hasNext();) {
-            final String key = (String) i.next();
+        for (final Iterator<String> i = resources.keySet().iterator(); i
+                .hasNext();) {
+            final String key = i.next();
             resourcesMap.put(key, ((JSONString) resources.get(key))
                     .stringValue());
         }
@@ -766,7 +767,7 @@ public class ApplicationConnection {
      */
     public void sendPendingVariableChangesSync() {
         pendingVariableBursts.add(pendingVariables);
-        Vector nextBurst = (Vector) pendingVariableBursts.firstElement();
+        Vector<String> nextBurst = pendingVariableBursts.firstElement();
         pendingVariableBursts.remove(0);
         buildAndSendVariableBurst(nextBurst, true);
     }
@@ -798,9 +799,9 @@ public class ApplicationConnection {
     }
 
     public void unregisterChildPaintables(HasWidgets container) {
-        final Iterator it = container.iterator();
+        final Iterator<Widget> it = container.iterator();
         while (it.hasNext()) {
-            final Widget w = (Widget) it.next();
+            final Widget w = it.next();
             if (w instanceof Paintable) {
                 unregisterPaintable((Paintable) w);
             } else if (w instanceof HasWidgets) {
@@ -847,13 +848,15 @@ public class ApplicationConnection {
      * "burst" to queue that will be purged after current request is handled.
      * 
      */
+    @SuppressWarnings("unchecked")
     public void sendPendingVariableChanges() {
         if (applicationRunning) {
             if (hasActiveRequest()) {
                 // skip empty queues if there are pending bursts to be sent
                 if (pendingVariables.size() > 0
                         || pendingVariableBursts.size() == 0) {
-                    Vector burst = (Vector) pendingVariables.clone();
+                    Vector<String> burst = (Vector<String>) pendingVariables
+                            .clone();
                     pendingVariableBursts.add(burst);
                     pendingVariables.clear();
                 }
@@ -875,7 +878,7 @@ public class ApplicationConnection {
      * @param forceSync
      *            Should we use synchronous request?
      */
-    private void buildAndSendVariableBurst(Vector pendingVariables,
+    private void buildAndSendVariableBurst(Vector<String> pendingVariables,
             boolean forceSync) {
         final StringBuffer req = new StringBuffer();
 
@@ -894,8 +897,7 @@ public class ApplicationConnection {
             pendingVariables.clear();
             // Append all the busts to this synchronous request
             if (forceSync && !pendingVariableBursts.isEmpty()) {
-                pendingVariables = (Vector) pendingVariableBursts
-                        .firstElement();
+                pendingVariables = pendingVariableBursts.firstElement();
                 pendingVariableBursts.remove(0);
                 req.append(VAR_BURST_SEPARATOR);
             }
@@ -1201,9 +1203,9 @@ public class ApplicationConnection {
     private void internalRunDescendentsLayout(HasWidgets container) {
         // getConsole().log(
         // "runDescendentsLayout(" + Util.getSimpleName(container) + ")");
-        final Iterator childWidgets = container.iterator();
+        final Iterator<Widget> childWidgets = container.iterator();
         while (childWidgets.hasNext()) {
-            final Widget child = (Widget) childWidgets.next();
+            final Widget child = childWidgets.next();
 
             if (child instanceof Paintable) {
 
@@ -1370,7 +1372,7 @@ public class ApplicationConnection {
     }
 
     public String getResource(String name) {
-        return (String) resourcesMap.get(name);
+        return resourcesMap.get(name);
     }
 
     /**
