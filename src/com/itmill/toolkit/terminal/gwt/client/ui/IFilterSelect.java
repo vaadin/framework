@@ -63,7 +63,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
             if (iconUri != null) {
                 sb.append("<img src=\"");
                 sb.append(iconUri);
-                sb.append("\" alt=\"icon\" class=\"i-icon\" />");
+                sb.append("\" alt=\"\" class=\"i-icon\" />");
             }
             sb.append(Util.escapeHTML(caption));
             return sb.toString();
@@ -86,13 +86,8 @@ public class IFilterSelect extends Composite implements Paintable, Field,
         }
     }
 
-    /**
-     * @author mattitahvonen
-     * 
-     */
     public class SuggestionPopup extends IToolkitOverlay implements
             PositionCallback, PopupListener {
-        private static final int EXTRASPACE = 8;
 
         private static final String Z_INDEX = "30000";
 
@@ -129,7 +124,8 @@ public class IFilterSelect extends Composite implements Paintable, Field,
             addPopupListener(this);
         }
 
-        public void showSuggestions(Collection currentSuggestions,
+        public void showSuggestions(
+                Collection<FilterSelectSuggestion> currentSuggestions,
                 int currentPage, int totalSuggestions) {
 
             if (ApplicationConnection.isTestingMode()) {
@@ -401,12 +397,12 @@ public class IFilterSelect extends Composite implements Paintable, Field,
             }
         }
 
-        public void setSuggestions(Collection suggestions) {
+        public void setSuggestions(
+                Collection<FilterSelectSuggestion> suggestions) {
             clearItems();
-            final Iterator it = suggestions.iterator();
+            final Iterator<FilterSelectSuggestion> it = suggestions.iterator();
             while (it.hasNext()) {
-                final FilterSelectSuggestion s = (FilterSelectSuggestion) it
-                        .next();
+                final FilterSelectSuggestion s = it.next();
                 final MenuItem mi = new MenuItem(s.getDisplayString(), true, s);
                 this.addItem(mi);
                 if (s == currentSuggestion) {
@@ -496,7 +492,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
 
     private int currentPage;
 
-    private final Collection currentSuggestions = new ArrayList();
+    private final Collection<FilterSelectSuggestion> currentSuggestions = new ArrayList<FilterSelectSuggestion>();
 
     private boolean immediate;
 
@@ -524,7 +520,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
     private int textboxPadding = -1;
     private int componentPadding = -1;
     private int suggestionPopupMinWidth = 0;
-    private static final String CLASSNAME_EMPTY = "empty";
+    // private static final String CLASSNAME_EMPTY = "empty";
     private static final String ATTR_EMPTYTEXT = "emptytext";
     /*
      * Stores the last new item string to avoid double submissions. Cleared on
@@ -910,8 +906,9 @@ public class IFilterSelect extends Composite implements Paintable, Field,
              */
             int tbWidth = Util.getRequiredWidth(tb);
             int openerWidth = Util.getRequiredWidth(popupOpener);
+            int iconWidth = Util.getRequiredWidth(selectedItemIcon);
 
-            int w = tbWidth + openerWidth;
+            int w = tbWidth + openerWidth + iconWidth;
             if (suggestionPopupMinWidth > w) {
                 setTextboxWidth(suggestionPopupMinWidth);
                 w = suggestionPopupMinWidth;
@@ -923,15 +920,17 @@ public class IFilterSelect extends Composite implements Paintable, Field,
                  */
                 tb.setWidth((tbWidth - getTextboxPadding()) + "px");
             }
-            super.setWidth(w + "px");
+            super.setWidth((w) + "px");
+            // Freeze the initial width, so that it won't change even if the
+            // icon size changes
+            width = w + "px";
 
         } else {
             /*
              * When the width is specified we also want to explicitly specify
              * widths for textbox and popupopener
              */
-            int padding = getComponentPadding();
-            setTextboxWidth(getMainWidth() - padding);
+            setTextboxWidth(getMainWidth() - getComponentPadding());
 
         }
     }
