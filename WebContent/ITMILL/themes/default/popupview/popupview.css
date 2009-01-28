@@ -1,16 +1,12 @@
-/*
- * PopupView styles
- */
-.i-popupview-popup{
-	border: 				1px solid #babfc0;
-	border-bottom: 			1px solid #dee2e3;
-	background-color:		white;
-	overflow: 				auto;
-	padding:				3px;
-	margin:					3px;
+.i-popupview-popup {
+	border: 1px solid #babfc0;
+	border-bottom: 1px solid #dee2e3;
+	background: #fff;
+	overflow: auto;
+	padding: 3px;
+	margin:	3px;
 }
 
 .i-popupview {
-	cursor: 				pointer; 
-	cursor: 				hand;
+	cursor: pointer;
 }

@@ -46,7 +46,7 @@ public class IPopupView extends HTML implements Paintable {
         setStyleName(CLASSNAME);
         popup.setStylePrimaryName(CLASSNAME + "-popup");
 
-        setHTML("PopupPanel");
+        setHTML("(No HTML defined for PopupView)");
         popup.setWidget(loading);
 
         // When we click to open the popup...

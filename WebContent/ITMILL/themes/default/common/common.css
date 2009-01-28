@@ -10,8 +10,7 @@
 
 .i-app {
 	background: #e9eced;
-	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana,
-		sans-serif;
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	color: #464f52;
 	font-size: 13px;
 	line-height: 18px;
@@ -57,18 +56,31 @@
 	}
 }
 
-.i-view:active,.i-view:focus {
+.i-view:active,
+.i-view:focus {
 	outline: none;
 }
 
-.i-app input,.i-window input,.i-app select,.i-window select,.i-app textarea,.i-window textarea,.i-app button,.i-window button
-	{
-	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana,
-		sans-serif;
+/* Global font styles */
+.i-app input,
+.i-app select,
+.i-app button,
+.i-app textarea,
+.i-window input,
+.i-window select,
+.i-window button,
+.i-window textarea,
+.i-popupview-popup input,
+.i-popupview-popup select,
+.i-popupview-popup button,
+.i-popupview-popup textarea {
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	color: #464f52;
+	font-size: 13px;
 }
 
-.i-app select,.i-window select {
+.i-app select,
+.i-window select {
 	padding: 0;
 	margin: 0;
 }
@@ -109,7 +121,9 @@ input.i-modified,
 	background:transparent;
 	background-color: #FFFFE0;
 }
-*/ /**
+*/
+
+/**
  * Custom tooltip
  */
 .i-tooltip {
@@ -159,8 +173,7 @@ input.i-modified,
  */
 .i-contextmenu {
 	background: #e9eced url(../tabsheet/img/tab-bg.png);
-	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana,
-		sans-serif;
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	background-color: #f6f7f7;
 	color: #464f52;
 	font-size: 12px;
@@ -215,8 +228,9 @@ input.i-modified,
  * Note: client side expects that loading indicator has a height. It depends on
  * this css property to ensure browsers have applied all required styles.
  */
-.i-loading-indicator,.i-loading-indicator-delay,.i-loading-indicator-wait
-	{
+.i-loading-indicator,
+.i-loading-indicator-delay,
+.i-loading-indicator-wait {
 	width: 31px;
 	height: 31px;
 	background: transparent url(img/loading-indicator.gif);
@@ -263,12 +277,16 @@ input.i-modified,
 }
 
 /* Debug style */
-.i-app .invalidlayout,.i-app .invalidlayout * {
+.i-app .invalidlayout,
+.i-app .invalidlayout * {
 	background: #f99 !important;
 }
 
 /* Fix for liferay. #2384 */
-.i-app input[type="text"],.i-app input[type="password"],.i-app input[type="reset"],.i-app select,.i-app textarea,.i-app .textarea
-	{
-	padding: 2px 2px;
+.i-app input[type="text"],
+.i-app input[type="password"],
+.i-app input[type="reset"],
+.i-app select,
+.i-app textarea {
+	padding: 2px;
 }
