@@ -72,15 +72,8 @@ public class ApplicationConnection {
 
     private final Vector<String> pendingVariables = new Vector<String>();
 
-    private final HashMap<String, Paintable> idToPaintable = new HashMap<String, Paintable>();
-
-    private final HashMap<Paintable, String> paintableToId = new HashMap<Paintable, String>();
-
-    /** Contains ExtendedTitleInfo by paintable id */
-    private final HashMap<Paintable, TooltipInfo> paintableToTitle = new HashMap<Paintable, TooltipInfo>();
-
-    private final HashMap<Widget, FloatSize> componentRelativeSizes = new HashMap<Widget, FloatSize>();
-    private final HashMap<Widget, Size> componentOffsetSizes = new HashMap<Widget, Size>();
+    private final ComponentDetailMap idToPaintableDetail = ComponentDetailMap
+            .create();
 
     private final WidgetSet widgetSet;
 
@@ -516,7 +509,7 @@ public class ApplicationConnection {
         for (int i = 1; i < variableBurst.size(); i += 2) {
             String id = variableBurst.get(i);
             id = id.substring(0, id.indexOf(VAR_FIELD_SEPARATOR));
-            if (!idToPaintable.containsKey(id)) {
+            if (!idToPaintableDetail.containsKey(id)) {
                 // variable owner does not exist anymore
                 variableBurst.remove(i - 1);
                 variableBurst.remove(i - 1);
@@ -622,8 +615,7 @@ public class ApplicationConnection {
             meta = ((JSONObject) json).get("meta").isObject();
             if (meta.containsKey("repaintAll")) {
                 view.clear();
-                idToPaintable.clear();
-                paintableToId.clear();
+                idToPaintableDetail.clear();
                 if (meta.containsKey("invalidLayouts")) {
                     validatingLayouts = true;
                     zeroWidthComponents = new HashSet<Paintable>();
@@ -667,12 +659,14 @@ public class ApplicationConnection {
                     // it partially did at some part but now broken.
                 }
                 final UIDL uidl = change.getChildUIDL(0);
+                // TODO optimize
                 final Paintable paintable = getPaintable(uidl.getId());
                 if (paintable != null) {
                     paintable.updateFromUIDL(uidl, this);
                     // paintable may have changed during render to another
                     // implementation, use the new one for updated widgets map
-                    updatedWidgets.add(idToPaintable.get(uidl.getId()));
+                    updatedWidgets.add(idToPaintableDetail.get(uidl.getId())
+                            .getComponent());
                 } else {
                     if (!uidl.getTag().equals("window")) {
                         ClientExceptionHandler
@@ -696,14 +690,15 @@ public class ApplicationConnection {
         sizeUpdatedWidgets.addAll(componentCaptionSizeChanges);
 
         for (Paintable paintable : updatedWidgets) {
+            ComponentDetail detail = idToPaintableDetail.get(getPid(paintable));
             Widget widget = (Widget) paintable;
-            Size oldSize = componentOffsetSizes.get(widget);
+            Size oldSize = detail.getOffsetSize();
             Size newSize = new Size(widget.getOffsetWidth(), widget
                     .getOffsetHeight());
 
             if (oldSize == null || !oldSize.equals(newSize)) {
                 sizeUpdatedWidgets.add(paintable);
-                componentOffsetSizes.put(widget, newSize);
+                detail.setOffsetSize(newSize);
             }
 
         }
@@ -753,7 +748,7 @@ public class ApplicationConnection {
         final long prosessingTime = (new Date().getTime()) - start.getTime();
         console.log(" Processing time was " + String.valueOf(prosessingTime)
                 + "ms for " + jsonText.length() + " characters of JSON");
-        console.log("Referenced paintables: " + idToPaintable.size());
+        console.log("Referenced paintables: " + idToPaintableDetail.size());
 
         endRequest();
     }
@@ -783,16 +778,29 @@ public class ApplicationConnection {
      }-*/;
 
     public void registerPaintable(String id, Paintable paintable) {
-        idToPaintable.put(id, paintable);
-        paintableToId.put(paintable, id);
+        ComponentDetail componentDetail = new ComponentDetail();
+        componentDetail.setComponent(paintable);
+        idToPaintableDetail.put(id, componentDetail);
+        setPid(((Widget) paintable).getElement(), id);
     }
 
-    public void unregisterPaintable(Paintable p) {
-        String id = paintableToId.get(p);
-        idToPaintable.remove(id);
-        paintableToTitle.remove(id);
-        paintableToId.remove(p);
+    private native void setPid(Element el, String pid)
+    /*-{
+        el.tkPid = pid;
+    }-*/;
 
+    private String getPid(Paintable paintable) {
+        return getPid(((Widget) paintable).getElement());
+    }
+
+    private native String getPid(Element el)
+    /*-{
+        return el.tkPid;
+    }-*/;
+
+    public void unregisterPaintable(Paintable p) {
+        String id = getPid(p);
+        idToPaintableDetail.remove(id);
         if (p instanceof HasWidgets) {
             unregisterChildPaintables((HasWidgets) p);
         }
@@ -817,7 +825,12 @@ public class ApplicationConnection {
      *            Paintable ID
      */
     public Paintable getPaintable(String id) {
-        return idToPaintable.get(id);
+        ComponentDetail componentDetail = idToPaintableDetail.get(id);
+        if (componentDetail == null) {
+            return null;
+        } else {
+            return componentDetail.getComponent();
+        }
     }
 
     private void addVariableToQueue(String paintableId, String variableName,
@@ -993,6 +1006,8 @@ public class ApplicationConnection {
      */
     public boolean updateComponent(Widget component, UIDL uidl,
             boolean manageCaption) {
+        ComponentDetail componentDetail = idToPaintableDetail
+                .get(getPid(component.getElement()));
 
         // If the server request that a cached instance should be used, do
         // nothing
@@ -1019,7 +1034,7 @@ public class ApplicationConnection {
         if (!visible) {
             // component is invisible, delete old size to notify parent, if
             // later make visible
-            componentOffsetSizes.remove(component);
+            componentDetail.setOffsetSize(null);
             return true;
         }
 
@@ -1079,7 +1094,7 @@ public class ApplicationConnection {
             styleBuf.append(MODIFIED_CLASSNAME);
         }
 
-        TooltipInfo tooltipInfo = getTitleInfo((Paintable) component);
+        TooltipInfo tooltipInfo = componentDetail.getTooltipInfo();
         if (uidl.hasAttribute("description")) {
             tooltipInfo.setTitle(uidl.getStringAttribute("description"));
         } else {
@@ -1124,12 +1139,12 @@ public class ApplicationConnection {
          * taken into account
          */
 
-        updateComponentSize(component, uidl);
+        updateComponentSize(componentDetail, uidl);
 
         return false;
     }
 
-    private void updateComponentSize(Widget component, UIDL uidl) {
+    private void updateComponentSize(ComponentDetail cd, UIDL uidl) {
         String w = uidl.hasAttribute("width") ? uidl
                 .getStringAttribute("width") : "";
 
@@ -1144,18 +1159,20 @@ public class ApplicationConnection {
             // One or both is relative
             FloatSize relativeSize = new FloatSize(relativeWidth,
                     relativeHeight);
-            if (componentRelativeSizes.put(component, relativeSize) == null
-                    && componentOffsetSizes.containsKey(component)) {
+            if (cd.getRelativeSize() == null && cd.getOffsetSize() != null) {
                 // The component has changed from absolute size to relative size
-                relativeSizeChanges.add((Paintable) component);
+                relativeSizeChanges.add(cd.getComponent());
             }
+            cd.setRelativeSize(relativeSize);
         } else if (relativeHeight < 0.0 && relativeWidth < 0.0) {
-            if (componentRelativeSizes.remove(component) != null) {
+            if (cd.getRelativeSize() != null) {
                 // The component has changed from relative size to absolute size
-                relativeSizeChanges.add((Paintable) component);
+                relativeSizeChanges.add(cd.getComponent());
             }
+            cd.setRelativeSize(null);
         }
 
+        Widget component = (Widget) cd.getComponent();
         // Set absolute sizes
         if (relativeHeight < 0.0) {
             component.setHeight(h);
@@ -1167,7 +1184,7 @@ public class ApplicationConnection {
         // Set relative sizes
         if (relativeHeight >= 0.0 || relativeWidth >= 0.0) {
             // One or both is relative
-            handleComponentRelativeSize(component);
+            handleComponentRelativeSize(cd);
         }
 
     }
@@ -1197,7 +1214,11 @@ public class ApplicationConnection {
      * development. Published to JavaScript.
      */
     public void forceLayout() {
-        Util.componentSizeUpdated(paintableToId.keySet());
+        Set<Paintable> set = new HashSet<Paintable>();
+        for (ComponentDetail cd : idToPaintableDetail.values()) {
+            set.add(cd.getComponent());
+        }
+        Util.componentSizeUpdated(set);
     }
 
     private void internalRunDescendentsLayout(HasWidgets container) {
@@ -1232,15 +1253,12 @@ public class ApplicationConnection {
         }
     }
 
-    /**
-     * Converts relative sizes into pixel sizes.
-     * 
-     * @param child
-     * @return true if the child has a relative size
-     */
-    public boolean handleComponentRelativeSize(Widget child) {
-        Widget widget = child;
-        FloatSize relativeSize = getRelativeSize(child);
+    private boolean handleComponentRelativeSize(ComponentDetail cd) {
+        if (cd == null) {
+            return false;
+        }
+        Widget widget = (Widget) cd.getComponent();
+        FloatSize relativeSize = cd.getRelativeSize();
         if (relativeSize == null) {
             return false;
         }
@@ -1281,7 +1299,7 @@ public class ApplicationConnection {
                     height -= renderSpace.getScrollbarSize();
                 }
                 if (validatingLayouts && height <= 0) {
-                    zeroHeightComponents.add((Paintable) child);
+                    zeroHeightComponents.add(cd.getComponent());
                 }
 
                 height = (int) (height * relativeSize.getHeight() / 100.0);
@@ -1321,7 +1339,7 @@ public class ApplicationConnection {
                     width -= renderSpace.getScrollbarSize();
                 }
                 if (validatingLayouts && width <= 0) {
-                    zeroWidthComponents.add((Paintable) child);
+                    zeroWidthComponents.add(cd.getComponent());
                 }
 
                 width = (int) (width * relativeSize.getWidth() / 100.0);
@@ -1341,11 +1359,23 @@ public class ApplicationConnection {
         }
 
         return true;
+    }
+
+    /**
+     * Converts relative sizes into pixel sizes.
+     * 
+     * @param child
+     * @return true if the child has a relative size
+     */
+    public boolean handleComponentRelativeSize(Widget child) {
+        return handleComponentRelativeSize(idToPaintableDetail.get(getPid(child
+                .getElement())));
 
     }
 
     public FloatSize getRelativeSize(Widget widget) {
-        return componentRelativeSizes.get(widget);
+        return idToPaintableDetail.get(getPid(widget.getElement()))
+                .getRelativeSize();
     }
 
     /**
@@ -1365,10 +1395,12 @@ public class ApplicationConnection {
         Paintable w = getPaintable(id);
         if (w != null) {
             return w;
+        } else {
+            w = widgetSet.createWidget(uidl);
+            registerPaintable(id, w);
+            return w;
+
         }
-        w = widgetSet.createWidget(uidl);
-        registerPaintable(id, w);
-        return w;
     }
 
     public String getResource(String name) {
@@ -1448,12 +1480,7 @@ public class ApplicationConnection {
      * 
      */
     public TooltipInfo getTitleInfo(Paintable titleOwner) {
-        TooltipInfo info = paintableToTitle.get(titleOwner);
-        if (info == null) {
-            info = new TooltipInfo();
-            paintableToTitle.put(titleOwner, info);
-        }
-        return info;
+        return idToPaintableDetail.get(getPid(titleOwner)).getTooltipInfo();
     }
 
     private final ITooltip tooltip = new ITooltip(this);

@@ -6,7 +6,6 @@ import java.util.Map;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
@@ -38,7 +37,7 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
 
     private boolean dynamicHeight;
 
-    private DivElement clearElement;
+    private final DivElement clearElement = Document.get().createDivElement();
 
     private String lastStyleName = "";
 
@@ -86,7 +85,6 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
 
         getElement().appendChild(root);
 
-        clearElement = Document.get().createDivElement();
         Style style = clearElement.getStyle();
         style.setProperty("width", "0px");
         style.setProperty("height", "0px");
@@ -163,9 +161,41 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
 
     protected void addOrMoveChild(ChildComponentContainer childComponent,
             int position) {
-        widgetToComponentContainer.put(childComponent.getWidget(),
-                childComponent);
-        super.insert(childComponent, (Element) root.cast(), position, true);
+        if (childComponent.getParent() == this) {
+            if (getWidgetIndex(childComponent) != position) {
+                // Detach from old position child.
+                childComponent.removeFromParent();
+
+                // Logical attach.
+                getChildren().insert(childComponent, position);
+
+                root.insertBefore(childComponent.getElement(), root
+                        .getChildNodes().getItem(position));
+
+                adopt(childComponent);
+            }
+        } else {
+            widgetToComponentContainer.put(childComponent.getWidget(),
+                    childComponent);
+
+            // Logical attach.
+            getChildren().insert(childComponent, position);
+
+            // avoid inserts (they are slower than appends)
+            boolean insert = true;
+            if (widgetToComponentContainer.size() == position) {
+                insert = false;
+            }
+            if (insert) {
+                root.insertBefore(childComponent.getElement(), root
+                        .getChildNodes().getItem(position));
+            } else {
+                root.insertBefore(childComponent.getElement(), clearElement);
+            }
+            // Adopt.
+            adopt(childComponent);
+
+        }
 
     }
 
