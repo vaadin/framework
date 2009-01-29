@@ -42,6 +42,14 @@ public class PerformanceTestLabelsAndOrderedLayouts extends CustomComponent {
                     }
                 }));
 
+        main.addComponent(new Button(
+                "Click for layout repaint (cached components)",
+                new ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        testContainer.requestRepaint();
+                    }
+                }));
+
         testContainer = new OrderedLayout();
 
         for (int i = 0; i < INITIAL_COMPONENTS; i++) {
