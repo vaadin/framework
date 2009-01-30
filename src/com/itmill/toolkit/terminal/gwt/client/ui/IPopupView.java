@@ -22,7 +22,7 @@ import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
-public class IPopupView extends HTML implements Paintable {
+public class IPopupView extends HTML implements Container {
 
     public static final String CLASSNAME = "i-popupview";
 
@@ -167,7 +167,7 @@ public class IPopupView extends HTML implements Paintable {
     @Override
     protected void onDetach() {
         popup.hide();
-        client.unregisterPaintable(popup);
+        client.unregisterPaintable(popup.popupComponentPaintable);
         super.onDetach();
     }
 
@@ -178,7 +178,7 @@ public class IPopupView extends HTML implements Paintable {
         }
     }-*/;
 
-    private class CustomPopup extends IToolkitOverlay implements Container {
+    private class CustomPopup extends IToolkitOverlay {
 
         private Paintable popupComponentPaintable = null;
         private Widget popupComponentWidget = null;
@@ -187,6 +187,7 @@ public class IPopupView extends HTML implements Paintable {
         private boolean hasHadMouseOver = false;
         private boolean hideOnMouseOut = true;
         private final Set<Element> activeChildren = new HashSet<Element>();
+        private boolean hiding = false;
 
         public CustomPopup() {
             super(true, false, true); // autoHide, not modal, dropshadow
@@ -223,6 +224,7 @@ public class IPopupView extends HTML implements Paintable {
 
         @Override
         public void hide() {
+            hiding = true;
             unregisterPaintables();
             if (popupComponentWidget != null && popupComponentWidget != loading) {
                 remove(popupComponentWidget);
@@ -260,40 +262,6 @@ public class IPopupView extends HTML implements Paintable {
             return super.remove(w);
         }
 
-        public boolean hasChildComponent(Widget component) {
-            if (popupComponentWidget != null) {
-                return popupComponentWidget.equals(component);
-            } else {
-                return false;
-            }
-        }
-
-        public void replaceChildComponent(Widget oldComponent,
-                Widget newComponent) {
-
-            setWidget(newComponent);
-            popupComponentWidget = newComponent;
-        }
-
-        public void updateCaption(Paintable component, UIDL uidl) {
-            if (ICaption.isNeeded(uidl)) {
-                if (captionWrapper != null) {
-                    captionWrapper.updateCaption(uidl);
-                } else {
-                    captionWrapper = new ICaptionWrapper(component, client);
-                    setWidget(captionWrapper);
-                    captionWrapper.updateCaption(uidl);
-                }
-            } else {
-                if (captionWrapper != null) {
-                    setWidget(popupComponentWidget);
-                }
-            }
-
-            popupComponentWidget = (Widget) component;
-            popupComponentPaintable = component;
-        }
-
         public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
             Paintable newPopupComponent = client.getPaintable(uidl
@@ -319,22 +287,79 @@ public class IPopupView extends HTML implements Paintable {
             }
         }
 
-        public boolean requestLayout(Set<Paintable> child) {
-            return true;
-        }
-
-        public RenderSpace getAllocatedSpace(Widget child) {
-            return new RenderSpace(RootPanel.get().getOffsetWidth(), RootPanel
-                    .get().getOffsetHeight());
-        }
-
-        public boolean isHideOnMouseOut() {
-            return hideOnMouseOut;
-        }
-
         public void setHideOnMouseOut(boolean hideOnMouseOut) {
             this.hideOnMouseOut = hideOnMouseOut;
         }
 
+        /*
+         * 
+         * We need a hack make popup act as a child of IPopupView in toolkits
+         * component tree, but work in default GWT manner when closing or
+         * opening.
+         * 
+         * (non-Javadoc)
+         * 
+         * @see com.google.gwt.user.client.ui.Widget#getParent()
+         */
+        @Override
+        public Widget getParent() {
+            if (!isAttached() || hiding) {
+                return super.getParent();
+            } else {
+                return IPopupView.this;
+            }
+        }
+
+        @Override
+        protected void onDetach() {
+            super.onDetach();
+            hiding = false;
+        }
+
     }// class CustomPopup
+
+    // Container methods
+
+    public RenderSpace getAllocatedSpace(Widget child) {
+        return new RenderSpace(RootPanel.get().getOffsetWidth(), RootPanel
+                .get().getOffsetHeight());
+    }
+
+    public boolean hasChildComponent(Widget component) {
+        if (popup.popupComponentWidget != null) {
+            return popup.popupComponentWidget == component;
+        } else {
+            return false;
+        }
+    }
+
+    public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
+
+        popup.setWidget(newComponent);
+        popup.popupComponentWidget = newComponent;
+    }
+
+    public boolean requestLayout(Set<Paintable> child) {
+        return true;
+    }
+
+    public void updateCaption(Paintable component, UIDL uidl) {
+        if (ICaption.isNeeded(uidl)) {
+            if (popup.captionWrapper != null) {
+                popup.captionWrapper.updateCaption(uidl);
+            } else {
+                popup.captionWrapper = new ICaptionWrapper(component, client);
+                popup.setWidget(popup.captionWrapper);
+                popup.captionWrapper.updateCaption(uidl);
+            }
+        } else {
+            if (popup.captionWrapper != null) {
+                popup.setWidget(popup.popupComponentWidget);
+            }
+        }
+
+        popup.popupComponentWidget = (Widget) component;
+        popup.popupComponentPaintable = component;
+    }
+
 }// class IPopupView
