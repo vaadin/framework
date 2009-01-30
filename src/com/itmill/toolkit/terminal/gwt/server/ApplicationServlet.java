@@ -854,6 +854,8 @@ public class ApplicationServlet extends HttpServlet {
                     + ">\n<head>\n");
             page
                     .write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>\n");
+            page
+                    .write("<meta http-equiv=\"X-UA-Compatible\" content=\"IE=7\" />\n");
             page.write("<style type=\"text/css\">"
                     + "html, body {height:100%;}</style>");
 
@@ -1071,6 +1073,8 @@ public class ApplicationServlet extends HttpServlet {
          *      .i-app-<simpleName for app class> 
          *      .i-theme-<themeName, remove non-alphanum>
          */
+        // FIXME Can themeName be null? This possibility is taken into account
+        // in other places
         page.write("<div id=\"" + appId
                 + "\" class=\"i-app i-app-loading i-theme-"
                 + themeName.replaceAll("[^a-zA-Z0-9]", "") + " i-app-"
