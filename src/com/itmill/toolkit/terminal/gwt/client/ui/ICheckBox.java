@@ -66,9 +66,12 @@ public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox implements
         if (uidl.hasAttribute("error")) {
             if (errorIndicatorElement == null) {
                 errorIndicatorElement = DOM.createDiv();
+                errorIndicatorElement.setInnerHTML("&nbsp;");
                 DOM.setElementProperty(errorIndicatorElement, "className",
                         "i-errorindicator");
                 DOM.appendChild(getElement(), errorIndicatorElement);
+                DOM.sinkEvents(errorIndicatorElement, ITooltip.TOOLTIP_EVENTS
+                        | Event.ONCLICK);
             }
         } else if (errorIndicatorElement != null) {
             DOM.setStyleAttribute(errorIndicatorElement, "display", "none");

@@ -77,6 +77,18 @@
 	text-decoration: underline;
 }
 
+.i-checkbox {
+	white-space: nowrap;	
+}
+	
+.i-checkbox .i-errorindicator {
+	float: none;
+	display:inline;
+	padding-left: 10px;
+	background-position:left;
+}
+
+
 /* fixes streched buttons in IE6 */
 * html .i-button {
 	width: 1px;
@@ -94,11 +106,11 @@
 
 /* Error indicator on checkbox fix for IE6 */
 * html .i-checkbox * { display: block; float: left;}
-* html .i-checkbox .i-errorindicator {padding-right:4px;}
+* html .i-checkbox .i-errorindicator {background-position:right;display: block; float: left; padding-left: 0px; padding-right:4px;}
 
 /* Error indicator on checkbox fix for IE7 */
 *+ html .i-checkbox * { display: block; float: left;}
-*+ html .i-checkbox .i-errorindicator {padding-right:7px;}
+*+ html .i-checkbox .i-errorindicator {background-position:right;display: block; float: left; padding-left: 0px;;padding-right:7px;}
 
 /* Error indicator on button fix for IE7 */
 *+ html button .i-errorindicator { display:inline; padding-right:5px; }
