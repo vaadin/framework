@@ -1103,4 +1103,149 @@
 	<!-- java2html converter -->
 	<taskdef name="java2html" classname="de.java2html.anttasks.Java2HtmlTask" classpath="build/lib/java2html.jar" />
 
+    <!-- ================================================================== -->
+    <!-- Build Application Tutorial.                                        -->
+    <!-- ================================================================== -->
+
+    <!-- Initialize properties especially for the Reference Tutorial. -->
+	<target name="init-tutorial" depends="">
+        <!-- Sets the current date as the publication date of the Tutorial. -->
+        <tstamp>
+            <format property="tutorial.pubdate" pattern="yyyy-MM-dd"/>
+        </tstamp>
+
+		<mkdir dir="${output-dir}/WebContent/doc/tutorial" />
+	</target>
+
+	<!-- Build PDF tutorial from sources or just copy it. -->
+	<target name="tutorial-pdf" depends="init, init-tutorial, build-tutorial-pdf, copy-tutorial-pdf">
+	</target>
+
+	<!-- Just copy a prebuilt PDF tutorial. -->
+	<target name="copy-tutorial-pdf" unless="xep.license.available">
+		<echo>PDF Tutorial: No XEP license available, just copy a prebuilt PDF.</echo>
+		<copy file="doc/tutorial/itmill-toolkit-tutorial.pdf" tofile="${output-dir}/WebContent/doc/itmill-toolkit-tutorial.pdf" />
+	</target>
+
+	<!-- XEP-based FO building -->
+	<target name="build-tutorial-pdf" if="xep.license.available">
+		<echo>PDF Tutorial: processing images (TBD)</echo>
+		<!-- TBD -->
+		<echo>PDF Tutorial: converting xml to fo</echo>
+
+        <echo>Publication date is ${tutorial.pubdate}</echo>
+
+		<java classname="org.apache.xalan.xslt.Process" failonerror="yes" fork="yes" maxmemory="512m">
+			<arg value="-xsl" />
+			<arg value="build/docbook/conf/custom-fo-docbook.xsl" />
+			<arg value="-in" />
+			<arg value="doc/tutorial/tutorial.xml" />
+			<arg value="-out" />
+			<arg value="${result-path}/itmill-toolkit-tutorial.fo" />
+			<arg value="-param" />
+			<arg value="section.autolabel" />
+			<arg value="1" />
+			<arg value="-param" />
+			<arg value="section.label.includes.component.label" />
+			<arg value="1" />
+			<arg value="-param" />
+			<arg value="section.autolabel.max.depth" />
+			<arg value="2" />
+			<arg value="-param" />
+			<arg value="draft.watermark.image" />
+			<arg value="''" />
+			<arg value="-param" />
+			<arg value="draft.mode" />
+			<arg value="'no'" />
+			<arg value="-param" />
+			<arg value="double.sided" />
+			<arg value="1" />
+			<arg value="-param" />
+			<arg value="manual.pubdate" />
+			<arg value="${tutorial.pubdate}" />
+			<arg value="-param" />
+			<arg value="manual.version" />
+			<arg value="${version}" />
+			<classpath>
+				<pathelement location="build/lib/xalan.jar" />
+				<pathelement location="build/lib/xercesImpl.jar" />
+				<pathelement location="build/lib/xml-apis.jar" />
+			</classpath>
+		</java>
+		<echo>PDF Tutorial: converting fo to pdf</echo>
+		<!-- Run XEP FO processor to convert FO to PDF -->
+		<java classname="com.renderx.xep.XSLDriver" error="${result-path}/xep-error.log" failonerror="yes" fork="yes" maxmemory="512m" input="${result-path}/itmill-toolkit-tutorial.fo" output="${output-dir}/WebContent/doc/itmill-toolkit-tutorial.pdf">
+			<arg value="-Dcom.renderx.xep.CONFIG=build/lib/XEP/xep.xml" />
+			<classpath>
+				<pathelement location="build/lib/XEP/lib/tools.jar" />
+				<pathelement location="build/lib/XEP/lib/xep.jar" />
+				<pathelement location="build/lib/XEP/lib/saxon.jar" />
+				<pathelement location="build/lib/XEP/lib/xt.jar" />
+			</classpath>
+		</java>
+	</target>
+
+	<target name="tutorial-html" depends="init, init-tutorial, preprocess-src">
+		<echo>Tutorial: HTML</echo>
+        <echo>Publication date is ${tutorial.pubdate}</echo>
+
+		<delete file="build/docbook/conf/temp.xsl" />
+		<copy file="build/docbook/conf/custom-html-docbook.xsl" tofile="build/docbook/conf/temp.xsl">
+			<filterchain>
+				<replacetokens>
+					<token key="BODYHEADER" value="${html.body.start1}${docbook.head.title}${html.body.start2}" />
+					<token key="BODYFOOTER" value="${html.body.end}" />
+				</replacetokens>
+			</filterchain>
+		</copy>
+		<path id="docbook-xsl.classpath">
+			<pathelement path="build/lib/fserializer.jar" />
+			<pathelement path="build/lib/xalan.jar" />
+			<pathelement path="build/lib/xercesImpl.jar" />
+			<pathelement path="build/lib/xml-apis.jar" />
+		</path>
+		<java classname="org.apache.xalan.xslt.Process" failonerror="yes" fork="yes" maxmemory="512m">
+			<arg value="-in" />
+			<arg value="doc/tutorial/tutorial.xml" />
+			<arg value="-xsl" />
+			<arg value="build/docbook/conf/temp.xsl" />
+			<arg value="-out" />
+			<arg value="${output-dir}/WebContent/doc/tutorial/index.html" />
+			<arg value="-param" />
+			<arg value="section.autolabel" />
+			<arg value="1" />
+			<arg value="-param" />
+			<arg value="section.label.includes.component.label" />
+			<arg value="1" />
+			<arg value="-param" />
+			<arg value="section.autolabel.max.depth" />
+			<arg value="2" />
+			<arg value="-param" />
+			<arg value="use.extensions" />
+			<arg value="1" />
+			<arg value="-param" />
+			<arg value="manual.pubdate" />
+			<arg value="${tutorial.pubdate}" />
+			<arg value="-param" />
+			<arg value="manual.version" />
+			<arg value="${version}" />
+			<classpath refid="docbook-xsl.classpath" />
+		</java>
+		<delete file="build/docbook/conf/temp.xsl" />
+		<copy todir="${output-dir}/WebContent/doc/tutorial/img">
+			<fileset dir="doc/tutorial/img">
+				<exclude name="**/.svn" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- ant contrib required for flow control (for loop, if, property override) -->
+	<taskdef resource="net/sf/antcontrib/antlib.xml">
+		<classpath>
+			<pathelement location="build/lib/ant-contrib-1.0b3.jar" />
+		</classpath>
+	</taskdef>
+
+	<!-- java2html converter -->
+	<taskdef name="java2html" classname="de.java2html.anttasks.Java2HtmlTask" classpath="build/lib/java2html.jar" />
 </project>
