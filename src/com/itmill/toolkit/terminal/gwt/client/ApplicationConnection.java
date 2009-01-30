@@ -424,10 +424,16 @@ public class ApplicationConnection {
             html += "<p>" + configuration.getCommunicationErrorMessage()
                     + "</p>";
         }
-        INotification n = new INotification(1000 * 60 * 45);
-        n.addEventListener(new NotificationRedirect(configuration
-                .getCommunicationErrorUrl()));
-        n.show(html, INotification.CENTERED_TOP, INotification.STYLE_SYSTEM);
+        if (html.length() > 0) {
+            INotification n = new INotification(1000 * 60 * 45);
+            n.addEventListener(new NotificationRedirect(configuration
+                    .getCommunicationErrorUrl()));
+            n
+                    .show(html, INotification.CENTERED_TOP,
+                            INotification.STYLE_SYSTEM);
+        } else {
+            redirect(configuration.getCommunicationErrorUrl());
+        }
     }
 
     private native void syncSendForce(JavaScriptObject xmlHttpRequest,

@@ -1423,6 +1423,52 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
         }
 
         /**
+         * Sets the URL to go to when there is a communication error.
+         * 
+         * @param communicationErrorURL
+         *            the URL to go to, or null to reload current
+         */
+        public void setCommunicationErrorURL(String communicationErrorURL) {
+            this.communicationErrorURL = communicationErrorURL;
+        }
+
+        /**
+         * Enables or disables the notification. If disabled, the set URL (or
+         * current) is loaded directly.
+         * 
+         * @param communicationErrorNotificationEnabled
+         *            true = enabled, false = disabled
+         */
+        public void setCommunicationErrorNotificationEnabled(
+                boolean communicationErrorNotificationEnabled) {
+            this.communicationErrorNotificationEnabled = communicationErrorNotificationEnabled;
+        }
+
+        /**
+         * Sets the caption of the notification. Set to null for no caption. If
+         * both caption and message is null, the notification is disabled;
+         * 
+         * @param communicationErrorCaption
+         *            the caption
+         */
+        public void setCommunicationErrorCaption(
+                String communicationErrorCaption) {
+            this.communicationErrorCaption = communicationErrorCaption;
+        }
+
+        /**
+         * Sets the message of the notification. Set to null for no message. If
+         * both caption and message is null, the notification is disabled;
+         * 
+         * @param communicationErrorMessage
+         *            the message
+         */
+        public void setCommunicationErrorMessage(
+                String communicationErrorMessage) {
+            this.communicationErrorMessage = communicationErrorMessage;
+        }
+
+        /**
          * Sets the URL to go to when an internal error occurs.
          * 
          * @param internalErrorURL
