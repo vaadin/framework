@@ -174,8 +174,28 @@ public class IView extends SimplePanel implements Container,
                 onWindowClosed();
                 goTo(url);
             } else {
-                // TODO width & height
-                Window.open(url, target != null ? target : null, "");
+                String options;
+                if (open.hasAttribute("border")) {
+                    if (open.getStringAttribute("border").equals("minimal")) {
+                        options = "menubar=yes,location=no,status=no";
+                    } else {
+                        options = "menubar=no,location=no,status=no";
+                    }
+
+                } else {
+                    options = "resizable=yes,menubar=yes,toolbar=yes,directories=yes,location=yes,scrollbars=yes,status=yes";
+                }
+
+                if (open.hasAttribute("width")) {
+                    int w = open.getIntAttribute("width");
+                    options += ",width=" + w;
+                }
+                if (open.hasAttribute("height")) {
+                    int h = open.getIntAttribute("height");
+                    options += ",height=" + h;
+                }
+
+                Window.open(url, target, options);
             }
             childIndex++;
         }
