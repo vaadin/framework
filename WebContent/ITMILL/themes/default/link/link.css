@@ -12,10 +12,11 @@
 
 .i-link span {
 	text-decoration: underline;
+	vertical-align: middle;
 }
 
 .i-disabled a {
-	cursor: default;
+	cursor: pointer;
 }
 
 .i-link img {

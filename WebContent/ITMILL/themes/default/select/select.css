@@ -152,6 +152,10 @@
 	vertical-align: middle;
 }
 
+.i-filterselect-suggestmenu .gwt-MenuItem span {
+	vertical-align: middle;
+}
+
 .i-filterselect-suggestmenu .gwt-MenuItem-selected {
 	background: #5daee8;
 	color: #fff;

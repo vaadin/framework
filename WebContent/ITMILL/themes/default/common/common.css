@@ -90,6 +90,10 @@
 	filter: Alpha(opacity = 30);
 }
 
+.i-disabled * {
+	cursor: pointer;
+}
+
 * html .i-disabled {
 	zoom: 1;
 }

@@ -34,6 +34,7 @@
 .i-caption .i-captiontext {
 	float: left;
 	overflow: hidden;
+	vertical-align: middle;
 }
 
 .i-caption .i-required-field-indicator {

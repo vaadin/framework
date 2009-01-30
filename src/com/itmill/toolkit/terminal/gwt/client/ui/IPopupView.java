@@ -295,9 +295,6 @@ public class IPopupView extends HTML implements Paintable {
         }
 
         public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-            if (client.updateComponent(this, uidl, false)) {
-                return;
-            }
 
             Paintable newPopupComponent = client.getPaintable(uidl
                     .getChildUIDL(0));

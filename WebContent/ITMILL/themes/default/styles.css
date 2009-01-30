@@ -170,6 +170,7 @@
 .i-caption .i-captiontext {
 	float: left;
 	overflow: hidden;
+	vertical-align: middle;
 }
 
 .i-caption .i-required-field-indicator {
@@ -267,6 +268,10 @@
 .i-disabled {
 	opacity: 0.3;
 	filter: Alpha(opacity = 30);
+}
+
+.i-disabled * {
+	cursor: pointer;
 }
 
 * html .i-disabled {
@@ -844,10 +849,11 @@ input.i-modified,
 
 .i-link span {
 	text-decoration: underline;
+	vertical-align: middle;
 }
 
 .i-disabled a {
-	cursor: default;
+	cursor: pointer;
 }
 
 .i-link img {
@@ -1402,6 +1408,10 @@ input.i-modified,
 
 .i-filterselect-suggestmenu .gwt-MenuItem .i-icon {
 	margin-right: 3px;
+	vertical-align: middle;
+}
+
+.i-filterselect-suggestmenu .gwt-MenuItem span {
 	vertical-align: middle;
 }
 
