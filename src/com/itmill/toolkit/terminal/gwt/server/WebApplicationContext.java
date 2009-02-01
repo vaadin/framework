@@ -104,11 +104,18 @@ public class WebApplicationContext implements ApplicationContext,
 
     @Override
     public boolean equals(Object obj) {
+        if (session == null) {
+            return false;
+        }
+
         return session.equals(obj);
     }
 
     @Override
     public int hashCode() {
+        if (session == null) {
+            return -1;
+        }
         return session.hashCode();
     }
 
