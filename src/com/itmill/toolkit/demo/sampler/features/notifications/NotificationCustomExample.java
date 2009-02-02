@@ -19,6 +19,7 @@ public class NotificationCustomExample extends VerticalLayout {
 
     public NotificationCustomExample() {
         setSpacing(true);
+        setWidth(null); // layout will grow with content
 
         final TextField caption = new TextField("Caption");
         caption
@@ -28,7 +29,6 @@ public class NotificationCustomExample extends VerticalLayout {
 
         final RichTextArea description = new RichTextArea();
         description.setCaption("Description");
-        description.setWidth("400px");
         description
                 .setDescription("Additional information; try to keep it short.");
         addComponent(description);
@@ -50,7 +50,7 @@ public class NotificationCustomExample extends VerticalLayout {
         final Slider delay = new Slider("Delay (msec), -1 means click to hide");
         delay
                 .setDescription("Delay before fading<br/>Pull all the way to the left to get -1, which means forever (click to hide).");
-        delay.setWidth("400px");
+        delay.setWidth("100%"); // 'description' will push width
         delay.setMin(Notification.DELAY_FOREVER);
         delay.setMax(10000);
         addComponent(delay);

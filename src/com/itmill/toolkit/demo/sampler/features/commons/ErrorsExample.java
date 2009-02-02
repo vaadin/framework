@@ -11,7 +11,7 @@ public class ErrorsExample extends VerticalLayout {
         setSpacing(true);
 
         Panel panel = new Panel("Configure this");
-        panel.setComponentError(new UserError("This panel contains errors"));
+        panel.setComponentError(new UserError("'Input' contains an error"));
         addComponent(panel);
 
         TextField input = new TextField("Input");

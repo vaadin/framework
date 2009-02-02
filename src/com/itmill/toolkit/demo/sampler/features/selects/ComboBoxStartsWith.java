@@ -13,10 +13,14 @@ public class ComboBoxStartsWith extends Feature {
 
     @Override
     public String getDescription() {
-        return "A drop-down selection component with single item selection."
-                + " A 'starts with' filter has been used with this combo box,"
-                + " so you can key in the beginning of your selection to narrow"
-                + " down the amount of choices.";
+        return "A drop-down selection component with single item selection.<br/>"
+                + " A 'starts-with' filter has been used in this example,"
+                + " so you can key in some text and only the options"
+                + " beginning with your input will be shown.<br/>"
+                + " Because there are so many options, they are loaded on-demand"
+                + " (\"lazy-loading\") from the server when paging or"
+                + " filtering. This behavior is built-in and requires no extra"
+                + " code.";
     }
 
     @Override

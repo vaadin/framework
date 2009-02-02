@@ -10,7 +10,13 @@ public class LinkSizedWindow extends Feature {
 
     @Override
     public String getDescription() {
-        return "A link that opens a small new window w/o decorations";
+        return "An basic HTML-style (external) link, opening a small window w/o"
+                + " decorations.<br/> A link changes"
+                + " the url of the browser w/o triggering a server-side event"
+                + " (like the link-styled Button).<br/> Links can open new"
+                + " browser windows, and configure the amount of browser"
+                + " features shown, such as toolbar and addressbar, and can also"
+                + " set the size of the window.";
     }
 
     @Override

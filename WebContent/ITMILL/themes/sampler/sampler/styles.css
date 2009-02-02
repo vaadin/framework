@@ -87,7 +87,7 @@
 }
 .i-app-SamplerApplication .i-caption-feature-controls {
 	font-weight: bold;
-	font-size: 16px;
+	font-size: 18px;
 	text-indent: 10px;
 }
 .i-app-SamplerApplication .feature-info {
@@ -100,14 +100,16 @@
 	line-height: 20px;
 }
 .i-app-SamplerApplication .feature-info .i-panel-caption {
-	color: #def;
-	font-size: 22px;
+	color: #fff;
+	font-size: 16px;
 	font-weight: bold;
 	line-height: 25px;
 }
+/*
 .i-app-SamplerApplication .feature-info .i-panel-content {
 	background: transparent url(finfofade.png) no-repeat 0px 5px;
 }
+*/
 .i-app-SamplerApplication .feature-info .i-caption {
 	font-weight: bold;
 	font-size: 16px;
@@ -115,13 +117,13 @@
 }
 
 .i-app-SamplerApplication .i-button-showcode {
-	border-bottom: 1px solid #eee;
-	padding-right: 10px;
+	border-bottom: 1px dotted #eee;
+	padding: 1px 0 1px 7px;
 }
 .i-app-SamplerApplication .i-button-showcode span {
-	float: right;
+	color: #999;
 	text-decoration: none;
-	font-style: italic;
+	font-style: italic;;
 }
 .i-app-SamplerApplication .i-button-showcode:hover span {
 	text-decoration: underline;

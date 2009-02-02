@@ -10,7 +10,10 @@ public class LinkCurrentWindow extends Feature {
 
     @Override
     public String getDescription() {
-        return "An external link.";
+        return "An external link - this is the basic HTML-style link, changing"
+                + " the url of the browser w/o triggering a server-side event"
+                + " (like the link-styled Button).<br/> By default, links open"
+                + " in the current browser window.";
     }
 
     @Override

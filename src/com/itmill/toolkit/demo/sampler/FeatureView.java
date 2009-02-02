@@ -17,8 +17,8 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
 
 public class FeatureView extends HorizontalLayout {
 
-    private static final String MSG_SHOW_SRC = "⊞ Show Java™ source";
-    private static final String MSG_HIDE_SRC = "⊟ Hide Java™ source";
+    private static final String MSG_SHOW_SRC = "Show Java™ source »";
+    private static final String MSG_HIDE_SRC = "Hide Java™ source";
 
     private Panel right;
     private Panel left;
@@ -51,10 +51,11 @@ public class FeatureView extends HorizontalLayout {
         right.setWidth("350px");
         right.setHeight("100%");
         addComponent(right);
+        right.getLayout().setMargin(false, true, true, true);
 
         controls = new VerticalLayout();
         controls.setStyleName("feature-controls");
-        controls.setCaption("Live example");
+        // controls.setCaption("Live example");
         showCode = new Button(MSG_SHOW_SRC, new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 toggleSource();
@@ -95,10 +96,11 @@ public class FeatureView extends HorizontalLayout {
             showSource(false);
 
             left.addComponent(controls);
+            controls.setCaption(feature.getName());
 
             left.addComponent(getExampleFor(feature));
 
-            right.setCaption(feature.getName());
+            right.setCaption("Description");
 
             Label l = new Label(feature.getDescription());
             l.setContentMode(Label.CONTENT_XHTML);

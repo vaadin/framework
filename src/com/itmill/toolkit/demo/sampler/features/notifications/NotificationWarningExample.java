@@ -11,6 +11,7 @@ public class NotificationWarningExample extends VerticalLayout {
 
     public NotificationWarningExample() {
         setSpacing(true);
+        setWidth(null); // layout will grow with content
 
         final TextField caption = new TextField("Caption", "Upload canceled");
         caption.setWidth("200px");

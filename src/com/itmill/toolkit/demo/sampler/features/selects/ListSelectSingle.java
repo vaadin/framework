@@ -13,8 +13,10 @@ public class ListSelectSingle extends Feature {
 
     @Override
     public String getDescription() {
-        return "A simple list select component with single item selection."
-                + " A null selection is not allowed in this example.";
+        return "A simple list select component with single item selection.<br/>"
+                + " You can allow or disallow <i>null selection</i> - i.e the"
+                + " possibility to make an empty selection. Null selection is"
+                + " not allowed in this example.";
     }
 
     @Override

@@ -13,10 +13,14 @@ public class ComboBoxContains extends Feature {
 
     @Override
     public String getDescription() {
-        return "A drop-down selection component with single item selection."
-                + " A 'contains' filter has been used with this combo box,"
+        return "A drop-down selection component with single item selection.<br/>"
+                + " A 'contains' filter has been used in this example,"
                 + " so you can key in some text and only the options"
-                + " containing your input will be shown.";
+                + " containing your input will be shown.<br/>"
+                + " Because there are so many options, they are loaded on-demand"
+                + " (\"lazy-loading\") from the server when paging or"
+                + " filtering. This behavior is built-in and requires no extra"
+                + " code.";
     }
 
     @Override

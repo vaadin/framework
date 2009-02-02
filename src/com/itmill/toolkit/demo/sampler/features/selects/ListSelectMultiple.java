@@ -14,8 +14,10 @@ public class ListSelectMultiple extends Feature {
     @Override
     public String getDescription() {
         return "A simple list select component with multiple item selection."
-                + " A null selection is also allowed in this example."
-                + "<br>You can select multiple items from the list by holding"
+                + " You can allow or disallow <i>null selection</i> - i.e the"
+                + " possibility to make an empty selection. Null selection is"
+                + " allowed in this example.<br/>"
+                + "You can select multiple items from the list by holding"
                 + " the CTRL of SHIFT key while clicking the items.";
     }
 

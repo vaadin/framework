@@ -14,7 +14,10 @@ public class ComboBoxPlain extends Feature {
     @Override
     public String getDescription() {
         return "A drop-down selection component with single item selection."
-                + " No special features used in this example";
+                + " Shown here is the most basic variant, which basically"
+                + " provides the same functionality as a NativeSelect with"
+                + " added lazy-loading if there are many options.<br/>"
+                + " See related examples for more advanced features.";
     }
 
     @Override

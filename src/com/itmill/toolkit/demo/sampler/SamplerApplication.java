@@ -36,6 +36,7 @@ import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 import com.itmill.toolkit.ui.Button.ClickListener;
+import com.itmill.toolkit.ui.PopupView.PopupVisibilityEvent;
 import com.itmill.toolkit.ui.UriFragmentUtility.FragmentChangedEvent;
 import com.itmill.toolkit.ui.UriFragmentUtility.FragmentChangedListener;
 
@@ -149,6 +150,9 @@ public class SamplerApplication extends Application {
         // breadcrumbs
         BreadCrumbs breadcrumbs = new BreadCrumbs();
 
+        Button previousSample;
+        Button nextSample;
+
         SamplerWindow() {
             // Main top/expanded-bottom layout
             VerticalLayout mainExpand = new VerticalLayout();
@@ -187,20 +191,19 @@ public class SamplerApplication extends Application {
                 }
             });
 
+            // Previous sample
+            previousSample = createPrevButton();
+            nav.addComponent(previousSample);
+            nav.setComponentAlignment(previousSample, Alignment.MIDDLE_RIGHT);
+            // Next sample
+            nextSample = createNextButton();
+            nav.addComponent(nextSample);
+            nav.setComponentAlignment(nextSample, Alignment.MIDDLE_LEFT);
             // "Search" combobox
             // TODO add input prompt
             Component search = createSearch();
             nav.addComponent(search);
             nav.setComponentAlignment(search, Alignment.MIDDLE_LEFT);
-
-            // Previous sample
-            Button b = createPrevButton();
-            nav.addComponent(b);
-            nav.setComponentAlignment(b, Alignment.MIDDLE_RIGHT);
-            // Next sample
-            b = createNextButton();
-            nav.addComponent(b);
-            nav.setComponentAlignment(b, Alignment.MIDDLE_LEFT);
 
             // togglebar
             // mainExpand.addComponent(toggleBar);
@@ -230,16 +233,16 @@ public class SamplerApplication extends Application {
             rightLayout.addComponent(mainArea);
             rightLayout.setExpandRatio(mainArea, 1);
 
-            // Show / hide tree
-            Component treeSwitch = createTreeSwitch();
-            toggleBar.addComponent(treeSwitch);
-            toggleBar.setExpandRatio(treeSwitch, 1);
-            toggleBar.setComponentAlignment(treeSwitch, Alignment.MIDDLE_RIGHT);
-
             // List/grid/coverflow
             Component mode = createModeSwitch();
             toggleBar.addComponent(mode);
             toggleBar.setComponentAlignment(mode, Alignment.MIDDLE_RIGHT);
+
+            // Show / hide tree
+            Component treeSwitch = createTreeSwitch();
+            nav.addComponent(treeSwitch);
+            // toggleBar.setExpandRatio(treeSwitch, 1);
+            nav.setComponentAlignment(treeSwitch, Alignment.MIDDLE_RIGHT);
 
             addListener(new CloseListener() {
                 public void windowClose(CloseEvent e) {
@@ -263,6 +266,10 @@ public class SamplerApplication extends Application {
             webAnalytics.trackPageview(path);
             uriFragmentUtility.setFragment(path, false);
             breadcrumbs.setPath(path);
+
+            previousSample.setEnabled(f != null);
+            nextSample.setEnabled(!allFeatures.isLastId(f));
+
             updateFeatureList(currentList);
         }
 
@@ -283,13 +290,21 @@ public class SamplerApplication extends Application {
          */
 
         private Component createSearch() {
-            ComboBox search = new ComboBox();
+            final ComboBox search = new ComboBox();
             search.setWidth("160px");
             search.setNewItemsAllowed(false);
             search.setFilteringMode(ComboBox.FILTERINGMODE_CONTAINS);
             search.setNullSelectionAllowed(true);
             search.setImmediate(true);
             search.setContainerDataSource(allFeatures);
+            for (Iterator it = allFeatures.getItemIds().iterator(); it
+                    .hasNext();) {
+                Object id = it.next();
+                if (id instanceof FeatureSet) {
+                    search.setItemIcon(id, new ClassResource("folder.gif",
+                            SamplerApplication.this));
+                }
+            }
             search.addListener(new ComboBox.ValueChangeListener() {
                 public void valueChange(ValueChangeEvent event) {
                     Feature f = (Feature) event.getProperty().getValue();
@@ -301,8 +316,20 @@ public class SamplerApplication extends Application {
                 }
             });
             // TODO add icons for section/sample
-
+            /*
+             * PopupView pv = new PopupView("", search) { public void
+             * changeVariables(Object source, Map variables) {
+             * super.changeVariables(source, variables); if (isPopupVisible()) {
+             * search.focus(); } } };
+             */
             PopupView pv = new PopupView("", search);
+            pv.addListener(new PopupView.PopupVisibilityListener() {
+                public void popupVisibilityChange(PopupVisibilityEvent event) {
+                    if (event.isPopupVisible()) {
+                        search.focus();
+                    }
+                }
+            });
             pv.setWidth("22px");
             pv.setHeight("22px");
             pv.setStyleName("quickjump");
@@ -332,7 +359,12 @@ public class SamplerApplication extends Application {
                     while (next != null && next instanceof FeatureSet) {
                         next = allFeatures.nextItemId(next);
                     }
-                    currentFeature.setValue(next);
+                    if (next != null) {
+                        currentFeature.setValue(next);
+                    } else {
+                        // could potentially occur if there is an empty section
+                        showNotification("Last sample");
+                    }
                 }
             });
             b.setWidth("22px");
@@ -354,6 +386,7 @@ public class SamplerApplication extends Application {
                     currentFeature.setValue(prev);
                 }
             });
+            b.setEnabled(false);
             b.setWidth("22px");
             b.setHeight("22px");
             b.setIcon(new ThemeResource("sampler/prev.png"));
@@ -471,7 +504,7 @@ public class SamplerApplication extends Application {
 
         public void show(Component c) {
             if (getCompositionRoot() != c) {
-                c.setSizeFull();
+                // c.setSizeFull();
                 setCompositionRoot(c);
             }
         }
@@ -508,7 +541,7 @@ public class SamplerApplication extends Application {
                     current += (i > 0 ? "/" : "") + parts[i];
                     Feature f = FeatureSet.FEATURES.getFeatureByPath(current);
                     link = new ActiveLink(f.getName(), new ExternalResource("#"
-                            + f.getPathName()));
+                            + getPathFor(f)));
                     link.setData(f);
                     link.addListener(this);
                     layout.addComponent(link);
@@ -634,12 +667,12 @@ public class SamplerApplication extends Application {
 
     private class FeatureGrid extends Panel implements FeatureList {
 
-        GridLayout grid = new GridLayout(5, 1);
+        GridLayout grid = new GridLayout(11, 1);
 
         FeatureGrid() {
             setSizeFull();
-            getLayout().setWidth("100%");
-            grid.setWidth("100%");
+            getLayout().setSizeUndefined();
+            // grid.setWidth("100%");
             grid.setSpacing(true);
             addComponent(grid);
             setStyleName(Panel.STYLE_LIGHT);
@@ -677,10 +710,10 @@ public class SamplerApplication extends Application {
                     Button b = new Button();
                     b.setStyleName(Button.STYLE_LINK);
                     b.addStyleName("screenshot");
-                    b.setIcon(new ClassResource(f.getClass(), f.getIconName(),
-                            SamplerApplication.this));
-                    b.setWidth("120px");
-                    b.setHeight("120px");
+                    b.setIcon(new ClassResource(f.getClass(), "75-"
+                            + f.getIconName(), SamplerApplication.this));
+                    b.setWidth("75px");
+                    b.setHeight("75px");
                     b.setDescription("<h3>" + f.getName() + "</h3>"
                             + f.getDescription());
                     b.addListener(new Button.ClickListener() {

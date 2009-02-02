@@ -11,6 +11,7 @@ public class NotificationTrayExample extends VerticalLayout {
 
     public NotificationTrayExample() {
         setSpacing(true);
+        setWidth(null); // layout will grow with content
 
         final TextField caption = new TextField("Caption", "New message");
         caption.setWidth("200px");

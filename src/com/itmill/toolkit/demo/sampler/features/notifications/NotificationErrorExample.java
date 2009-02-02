@@ -11,6 +11,7 @@ public class NotificationErrorExample extends VerticalLayout {
 
     public NotificationErrorExample() {
         setSpacing(true);
+        setWidth(null); // layout will grow with content
 
         final TextField caption = new TextField("Caption", "Upload failed");
         caption.setWidth("200px");

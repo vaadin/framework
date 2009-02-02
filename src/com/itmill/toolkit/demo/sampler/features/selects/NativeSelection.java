@@ -2,6 +2,7 @@ package com.itmill.toolkit.demo.sampler.features.selects;
 
 import com.itmill.toolkit.demo.sampler.APIResource;
 import com.itmill.toolkit.demo.sampler.Feature;
+import com.itmill.toolkit.demo.sampler.FeatureSet;
 import com.itmill.toolkit.demo.sampler.NamedExternalResource;
 import com.itmill.toolkit.ui.NativeSelect;
 
@@ -13,7 +14,15 @@ public class NativeSelection extends Feature {
 
     @Override
     public String getDescription() {
-        return "A native selection component provides a simple drop-down list for selecting one item.";
+        return "A NativeSelect is a a simple drop-down list"
+                + " for selecting one item. It is called <i>native</i>"
+                + " because it uses the look and feel from the browser in use.<br/>"
+                + " The ComboBox component is a much more versatile variant,"
+                + " but without the native look and feel.<br/>"
+                + " From a usability standpoint, you might also want to"
+                + " consider using a ListSelect in single-select-mode, so that"
+                + " the user can see all options right away.";
+
     }
 
     @Override
@@ -23,8 +32,8 @@ public class NativeSelection extends Feature {
 
     @Override
     public Class[] getRelatedFeatures() {
-        return new Class[] { ListSelectSingle.class, ListSelectMultiple.class,
-                TwinColumnSelect.class };
+        return new Class[] { ComboBoxPlain.class, ListSelectSingle.class,
+                FeatureSet.Selects.class };
     }
 
     @Override

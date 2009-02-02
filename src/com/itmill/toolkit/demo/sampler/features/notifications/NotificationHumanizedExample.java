@@ -10,6 +10,7 @@ public class NotificationHumanizedExample extends VerticalLayout {
 
     public NotificationHumanizedExample() {
         setSpacing(true);
+        setWidth(null); // layout will grow with content
 
         final TextField caption = new TextField("Caption", "Document saved");
         caption.setWidth("200px");
