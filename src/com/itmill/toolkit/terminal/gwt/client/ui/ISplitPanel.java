@@ -58,7 +58,7 @@ public class ISplitPanel extends ComplexPanel implements Container,
 
     private int origMouseY;
 
-    private boolean locked;
+    private boolean locked = false;
 
     private String splitterStyleName;
 
@@ -155,13 +155,7 @@ public class ISplitPanel extends ComplexPanel implements Container,
             return;
         }
 
-        locked = uidl.hasAttribute("locked");
-        if (locked) {
-            DOM.setElementProperty(splitter, "className", splitterStyleName
-                    + "-locked");
-        } else {
-            DOM.setElementProperty(splitter, "className", splitterStyleName);
-        }
+        setLocked(uidl.getBooleanAttribute("locked"));
 
         setSplitPosition(uidl.getStringAttribute("position"));
 
@@ -196,6 +190,21 @@ public class ISplitPanel extends ComplexPanel implements Container,
         }
         rendering = false;
 
+    }
+
+    private void setLocked(boolean newValue) {
+        if (locked != newValue) {
+            locked = newValue;
+            if (locked) {
+                DOM.setElementProperty(splitter, "className", splitterStyleName
+                        + "-locked");
+            } else {
+                DOM
+                        .setElementProperty(splitter, "className",
+                                splitterStyleName);
+            }
+            splitterSize = -1;
+        }
     }
 
     private void setSplitPosition(String pos) {
@@ -439,7 +448,7 @@ public class ISplitPanel extends ComplexPanel implements Container,
         }
     }
 
-    private static int splitterSize = -1;
+    private int splitterSize = -1;
 
     private int getSplitterSize() {
         if (splitterSize < 0) {
