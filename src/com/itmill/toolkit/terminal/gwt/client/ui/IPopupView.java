@@ -59,7 +59,6 @@ public class IPopupView extends HTML implements Container {
         // ..and when we close it
         popup.addPopupListener(new PopupListener() {
             public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
-                ((CustomPopup) sender).syncChildren();
                 updateState(false);
             }
         });
@@ -167,7 +166,6 @@ public class IPopupView extends HTML implements Container {
     @Override
     protected void onDetach() {
         popup.hide();
-        client.unregisterPaintable(popup.popupComponentPaintable);
         super.onDetach();
     }
 
@@ -193,7 +191,7 @@ public class IPopupView extends HTML implements Container {
             super(true, false, true); // autoHide, not modal, dropshadow
         }
 
-        // For some reason ONMOUSEOUT events are not always recieved, so we have
+        // For some reason ONMOUSEOUT events are not always received, so we have
         // to use ONMOUSEMOVE that doesn't target the popup
         @Override
         public boolean onEventPreview(Event event) {
@@ -225,12 +223,19 @@ public class IPopupView extends HTML implements Container {
         @Override
         public void hide() {
             hiding = true;
+            syncChildren();
             unregisterPaintables();
             if (popupComponentWidget != null && popupComponentWidget != loading) {
                 remove(popupComponentWidget);
             }
             hasHadMouseOver = false;
             super.hide();
+        }
+
+        @Override
+        public void show() {
+            hiding = false;
+            super.show();
         }
 
         /**
