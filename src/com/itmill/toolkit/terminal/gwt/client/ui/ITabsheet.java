@@ -27,6 +27,22 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
 
 public class ITabsheet extends ITabsheetBase {
 
+    private class TabSheetCaption extends ICaption {
+        TabSheetCaption() {
+            super(null, client);
+        }
+
+        @Override
+        public void onBrowserEvent(Event event) {
+            super.onBrowserEvent(event);
+            if (event.getTypeInt() == Event.ONLOAD && isDynamicWidth()) {
+                // icon onloads may change total width of tabsheet
+                updateDynamicWidth();
+            }
+        }
+
+    }
+
     class TabBar extends ComplexPanel implements ClickListener {
 
         private Element tr = DOM.createTR();
@@ -112,11 +128,11 @@ public class ITabsheet extends ITabsheetBase {
             return super.remove(w);
         }
 
-        public ICaption getTab(int index) {
+        public TabSheetCaption getTab(int index) {
             if (index >= getWidgetCount()) {
                 return null;
             }
-            return (ICaption) getWidget(index);
+            return (TabSheetCaption) getWidget(index);
         }
 
         public void setVisible(int index, boolean visible) {
@@ -401,9 +417,9 @@ public class ITabsheet extends ITabsheetBase {
     @Override
     protected void renderTab(final UIDL tabUidl, int index, boolean selected,
             boolean hidden) {
-        ICaption c = tb.getTab(index);
+        TabSheetCaption c = tb.getTab(index);
         if (c == null) {
-            c = new ICaption(null, client);
+            c = new TabSheetCaption();
             tb.addTab(c);
         }
         c.updateCaption(tabUidl);
