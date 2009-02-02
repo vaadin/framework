@@ -131,8 +131,11 @@ public class ITabsheetPanel extends ComplexPanel {
             return;
         }
 
+        boolean dynamicHeight = false;
+
         if (height < 0) {
             height = visibleWidget.getOffsetHeight();
+            dynamicHeight = true;
         }
         if (width < 0) {
             width = visibleWidget.getOffsetWidth();
@@ -141,14 +144,22 @@ public class ITabsheetPanel extends ComplexPanel {
             width = minWidth;
         }
 
+        Element wrapperDiv = (Element) visibleWidget.getElement()
+                .getParentElement();
+
+        // width first
+        getElement().getStyle().setPropertyPx("width", width);
+        wrapperDiv.getStyle().setPropertyPx("width", width);
+
+        if (dynamicHeight) {
+            // height of widget might have changed due wrapping
+            height = visibleWidget.getOffsetHeight();
+        }
         // i-tabsheet-tabsheetpanel height
         getElement().getStyle().setPropertyPx("height", height);
-        getElement().getStyle().setPropertyPx("width", width);
 
         // widget wrapper height
-        Element wrapperDiv = DOM.getParent(visibleWidget.getElement());
         wrapperDiv.getStyle().setPropertyPx("height", height);
-        wrapperDiv.getStyle().setPropertyPx("width", width);
     }
 
     public void runWebkitOverflowAutoFix() {

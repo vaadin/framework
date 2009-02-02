@@ -412,6 +412,7 @@ public class ITabsheet extends ITabsheetBase {
 
         contentNode.getStyle().setPropertyPx("width", contentWidth);
         super.setWidth(realWidth + "px");
+        updateOpenTabSize();
     }
 
     @Override
