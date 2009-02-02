@@ -19,6 +19,7 @@ import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.MouseEventDetails;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.Util;
 
 /**
  * 
@@ -27,19 +28,19 @@ public class ITree extends FlowPanel implements Paintable {
 
     public static final String CLASSNAME = "i-tree";
 
-    private Set selectedIds = new HashSet();
+    private Set<String> selectedIds = new HashSet<String>();
     private ApplicationConnection client;
     private String paintableId;
     private boolean selectable;
     private boolean isMultiselect;
 
-    private final HashMap keyToNode = new HashMap();
+    private final HashMap<String, TreeNode> keyToNode = new HashMap<String, TreeNode>();
 
     /**
      * This map contains captions and icon urls for actions like: * "33_c" ->
      * "Edit" * "33_i" -> "http://dom.com/edit.png"
      */
-    private final HashMap actionMap = new HashMap();
+    private final HashMap<String, String> actionMap = new HashMap<String, String>();
 
     private boolean immediate;
 
@@ -50,6 +51,8 @@ public class ITree extends FlowPanel implements Paintable {
     private boolean readonly;
 
     private boolean emitClickEvents;
+
+    private boolean rendering;
 
     public ITree() {
         super();
@@ -73,11 +76,11 @@ public class ITree extends FlowPanel implements Paintable {
     }
 
     public String getActionCaption(String actionKey) {
-        return (String) actionMap.get(actionKey + "_c");
+        return actionMap.get(actionKey + "_c");
     }
 
     public String getActionIcon(String actionKey) {
-        return (String) actionMap.get(actionKey + "_i");
+        return actionMap.get(actionKey + "_i");
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -86,10 +89,13 @@ public class ITree extends FlowPanel implements Paintable {
             return;
         }
 
+        rendering = true;
+
         this.client = client;
 
         if (uidl.hasAttribute("partialUpdate")) {
             handleUpdate(uidl);
+            rendering = false;
             return;
         }
 
@@ -120,10 +126,12 @@ public class ITree extends FlowPanel implements Paintable {
 
         selectedIds = uidl.getStringArrayVariableAsSet("selected");
 
+        rendering = false;
+
     }
 
     private void handleUpdate(UIDL uidl) {
-        final TreeNode rootNode = (TreeNode) keyToNode.get(uidl
+        final TreeNode rootNode = keyToNode.get(uidl
                 .getStringAttribute("rootKey"));
         if (rootNode != null) {
             if (!rootNode.getState()) {
@@ -139,8 +147,8 @@ public class ITree extends FlowPanel implements Paintable {
         if (selected) {
             if (!isMultiselect) {
                 while (selectedIds.size() > 0) {
-                    final String id = (String) selectedIds.iterator().next();
-                    final TreeNode oldSelection = (TreeNode) keyToNode.get(id);
+                    final String id = selectedIds.iterator().next();
+                    final TreeNode oldSelection = keyToNode.get(id);
                     if (oldSelection != null) {
                         // can be null if the node is not visible (parent
                         // expanded)
@@ -336,8 +344,10 @@ public class ITree extends FlowPanel implements Paintable {
                             new String[] { key }, true);
                 }
             }
-
             open = state;
+            if (!rendering) {
+                Util.notifyParentOfSizeChange(ITree.this, false);
+            }
         }
 
         private boolean getState() {
