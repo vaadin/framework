@@ -92,6 +92,8 @@
 
 	<target name="tutorial-html" depends="init, init-tutorial">
 		<echo message="Building tutorial" />
+        <echo>Publication date is ${tutorial.pubdate}</echo>
+
 		<delete file="build/docbook/conf/temp-tutorial.xsl" />
 		<copy file="build/docbook/www.itmill.com/custom-www.itmill.com-docbook.xsl" tofile="build/docbook/conf/temp-tutorial.xsl">
 
