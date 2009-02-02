@@ -21,6 +21,8 @@ import com.itmill.toolkit.terminal.gwt.client.ICaptionWrapper;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.Util;
+import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 
 public class IPopupView extends HTML implements Container {
 
@@ -221,7 +223,7 @@ public class IPopupView extends HTML implements Container {
         }
 
         @Override
-        public void hide() {
+        public void hide(boolean autoClosed) {
             hiding = true;
             syncChildren();
             unregisterPaintables();
@@ -229,7 +231,7 @@ public class IPopupView extends HTML implements Container {
                 remove(popupComponentWidget);
             }
             hasHadMouseOver = false;
-            super.hide();
+            super.hide(autoClosed);
         }
 
         @Override
@@ -321,13 +323,36 @@ public class IPopupView extends HTML implements Container {
             hiding = false;
         }
 
+        public Element getContainerElement() {
+            return super.getContainerElement();
+        }
+
     }// class CustomPopup
 
     // Container methods
 
     public RenderSpace getAllocatedSpace(Widget child) {
-        return new RenderSpace(RootPanel.get().getOffsetWidth(), RootPanel
-                .get().getOffsetHeight());
+        Size popupExtra = calculatePopupExtra();
+
+        return new RenderSpace(RootPanel.get().getOffsetWidth()
+                - popupExtra.getWidth(), RootPanel.get().getOffsetHeight()
+                - popupExtra.getHeight());
+    }
+
+    /**
+     * Calculate extra space taken by the popup decorations
+     * 
+     * @return
+     */
+    protected Size calculatePopupExtra() {
+        Element pe = popup.getElement();
+        Element ipe = popup.getContainerElement();
+
+        // border + padding
+        int width = Util.getRequiredWidth(pe) - Util.getRequiredWidth(ipe);
+        int height = Util.getRequiredHeight(pe) - Util.getRequiredHeight(ipe);
+
+        return new Size(width, height);
     }
 
     public boolean hasChildComponent(Widget component) {
@@ -339,7 +364,6 @@ public class IPopupView extends HTML implements Container {
     }
 
     public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
-
         popup.setWidget(newComponent);
         popup.popupComponentWidget = newComponent;
     }
