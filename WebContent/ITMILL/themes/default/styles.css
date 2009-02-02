@@ -271,7 +271,7 @@
 }
 
 .i-disabled * {
-	cursor: pointer;
+	cursor: default;
 }
 
 * html .i-disabled {
@@ -319,6 +319,7 @@ input.i-modified,
 	line-height: 13px;
 	font-family: arial, helvetica, tahoma, verdana, sans-serif;
 	color: #5d5444;
+	cursor: default;
 }
 
 .i-tooltip-text {
