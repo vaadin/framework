@@ -94,9 +94,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
 
     private final ArrayList dirtyPaintabletSet = new ArrayList();
 
-    private final HashMap paintableIdMap = new HashMap();
+    private final HashMap<Paintable, String> paintableIdMap = new HashMap<Paintable, String>();
 
-    private final HashMap idPaintableMap = new HashMap();
+    private final HashMap<String, Paintable> idPaintableMap = new HashMap<String, Paintable>();
 
     private int idSequence = 0;
 
@@ -1098,7 +1098,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
      */
     public String getPaintableId(Paintable paintable) {
 
-        String id = (String) paintableIdMap.get(paintable);
+        String id = paintableIdMap.get(paintable);
         if (id == null) {
             // use testing identifier as id if set
             id = paintable.getDebugId();

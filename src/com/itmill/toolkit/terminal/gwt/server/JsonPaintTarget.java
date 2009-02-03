@@ -37,9 +37,9 @@ public class JsonPaintTarget implements PaintTarget {
 
     private final static String UIDL_ARG_NAME = "name";
 
-    private final Stack mOpenTags;
+    private final Stack<String> mOpenTags;
 
-    private final Stack openJsonTags;
+    private final Stack<JsonTag> openJsonTags;
 
     private final PrintWriter uidlBuffer;
 
@@ -59,7 +59,9 @@ public class JsonPaintTarget implements PaintTarget {
 
     private boolean cacheEnabled = false;
 
-    private Collection paintedComponents = new HashSet();
+    private Collection<Paintable> paintedComponents = new HashSet<Paintable>();
+
+    private Collection<Paintable> identifiersCreatedDueRefPaint;
 
     /**
      * Creates a new XMLPrintWriter, without automatic line flushing.
@@ -80,8 +82,8 @@ public class JsonPaintTarget implements PaintTarget {
         uidlBuffer = outWriter;
 
         // Initialize tag-writing
-        mOpenTags = new Stack();
-        openJsonTags = new Stack();
+        mOpenTags = new Stack<String>();
+        openJsonTags = new Stack<JsonTag>();
         cacheEnabled = cachingRequired;
     }
 
@@ -156,11 +158,11 @@ public class JsonPaintTarget implements PaintTarget {
         }
 
         if (openJsonTags.size() > 0) {
-            final JsonTag parent = (JsonTag) openJsonTags.pop();
+            final JsonTag parent = openJsonTags.pop();
 
             String lastTag = "";
 
-            lastTag = (String) mOpenTags.pop();
+            lastTag = mOpenTags.pop();
             if (!tagName.equalsIgnoreCase(lastTag)) {
                 throw new PaintException("Invalid UIDL: wrong ending tag: '"
                         + tagName + "' expected: '" + lastTag + "'.");
@@ -769,7 +771,9 @@ public class JsonPaintTarget implements PaintTarget {
     public boolean startTag(Paintable paintable, String tagName)
             throws PaintException {
         startTag(tagName, true);
-        final boolean isPreviouslyPainted = manager.hasPaintableId(paintable);
+        final boolean isPreviouslyPainted = manager.hasPaintableId(paintable)
+                && (identifiersCreatedDueRefPaint == null || !identifiersCreatedDueRefPaint
+                        .contains(paintable));
         final String id = manager.getPaintableId(paintable);
         paintable.addListener(manager);
         addAttribute("id", id);
@@ -779,6 +783,12 @@ public class JsonPaintTarget implements PaintTarget {
 
     public void paintReference(Paintable paintable, String referenceName)
             throws PaintException {
+        if (!manager.hasPaintableId(paintable)) {
+            if (identifiersCreatedDueRefPaint == null) {
+                identifiersCreatedDueRefPaint = new HashSet<Paintable>();
+            }
+            identifiersCreatedDueRefPaint.add(paintable);
+        }
         final String id = manager.getPaintableId(paintable);
         addAttribute(referenceName, id);
     }
@@ -968,6 +978,7 @@ public class JsonPaintTarget implements PaintTarget {
             this.name = name;
         }
 
+        @Override
         public String getJsonPresentation() {
             return "\"" + name + "\":" + (value == true ? "true" : "false");
         }
@@ -982,6 +993,7 @@ public class JsonPaintTarget implements PaintTarget {
             this.name = name;
         }
 
+        @Override
         public String getJsonPresentation() {
             return "\"" + name + "\":\"" + value + "\"";
         }
@@ -996,6 +1008,7 @@ public class JsonPaintTarget implements PaintTarget {
             this.name = name;
         }
 
+        @Override
         public String getJsonPresentation() {
             return "\"" + name + "\":" + value;
         }
@@ -1009,6 +1022,7 @@ public class JsonPaintTarget implements PaintTarget {
             this.name = name;
         }
 
+        @Override
         public String getJsonPresentation() {
             return "\"" + name + "\":" + value;
         }
@@ -1022,6 +1036,7 @@ public class JsonPaintTarget implements PaintTarget {
             this.name = name;
         }
 
+        @Override
         public String getJsonPresentation() {
             return "\"" + name + "\":" + value;
         }
@@ -1035,6 +1050,7 @@ public class JsonPaintTarget implements PaintTarget {
             this.name = name;
         }
 
+        @Override
         public String getJsonPresentation() {
             return "\"" + name + "\":" + value;
         }
@@ -1048,6 +1064,7 @@ public class JsonPaintTarget implements PaintTarget {
             this.name = name;
         }
 
+        @Override
         public String getJsonPresentation() {
             String pres = "\"" + name + "\":[";
             for (int i = 0; i < value.length;) {
