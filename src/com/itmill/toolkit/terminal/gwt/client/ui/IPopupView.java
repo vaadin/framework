@@ -103,6 +103,22 @@ public class IPopupView extends HTML implements Container {
             // showPopupOnTop(popup, hostReference);
             preparePopup(popup);
             popup.updateFromUIDL(popupUIDL, client);
+            if (uidl.hasAttribute("style")) {
+                final String[] styles = uidl.getStringAttribute("style").split(
+                        " ");
+                final StringBuffer styleBuf = new StringBuffer();
+                final String primaryName = popup.getStylePrimaryName();
+                styleBuf.append(primaryName);
+                for (int i = 0; i < styles.length; i++) {
+                    styleBuf.append(" ");
+                    styleBuf.append(primaryName);
+                    styleBuf.append("-");
+                    styleBuf.append(styles[i]);
+                }
+                popup.setStyleName(styleBuf.toString());
+            } else {
+                popup.setStyleName(popup.getStylePrimaryName());
+            }
             showPopup(popup);
 
             // The popup shouldn't be visible, try to hide it.
@@ -323,6 +339,7 @@ public class IPopupView extends HTML implements Container {
             hiding = false;
         }
 
+        @Override
         public Element getContainerElement() {
             return super.getContainerElement();
         }
