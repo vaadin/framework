@@ -1,7 +1,6 @@
 package com.itmill.toolkit.ui;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -20,9 +19,8 @@ import com.itmill.toolkit.terminal.PaintTarget;
 public class PopupView extends AbstractComponentContainer {
 
     private Content content;
-    private boolean popupVisible;
     private boolean hideOnMouseOut;
-    private final ArrayList<Component> componentList;
+    private Component visibleComponent;
 
     private static final Method POPUP_VISIBILITY_METHOD;
     static {
@@ -71,9 +69,7 @@ public class PopupView extends AbstractComponentContainer {
      */
     public PopupView(PopupView.Content content) {
         super();
-        popupVisible = false;
         hideOnMouseOut = true;
-        componentList = new ArrayList<Component>(1);
         setContent(content);
     }
 
@@ -111,14 +107,15 @@ public class PopupView extends AbstractComponentContainer {
     /**
      * @deprecated Use {@link #setPopupVisible()} instead.
      */
+    @Deprecated
     public void setPopupVisibility(boolean visible) {
-        popupVisible = visible;
-        requestRepaint();
+        setPopupVisible(visible);
     }
 
     /**
      * @deprecated Use {@link #isPopupVisible()} instead.
      */
+    @Deprecated
     public boolean getPopupVisibility() {
         return isPopupVisible();
     }
@@ -130,7 +127,21 @@ public class PopupView extends AbstractComponentContainer {
      * @param visible
      */
     public void setPopupVisible(boolean visible) {
-        setPopupVisible(visible);
+        if (isPopupVisible() != visible) {
+            if (visible) {
+                visibleComponent = content.getPopupComponent();
+                if (visibleComponent == null) {
+                    throw new java.lang.IllegalStateException(
+                            "PopupView.Content did not return Component to set visible");
+                }
+                super.addComponent(visibleComponent);
+            } else {
+                super.removeComponent(visibleComponent);
+                visibleComponent = null;
+            }
+            fireEvent(new PopupVisibilityEvent(this));
+            requestRepaint();
+        }
     }
 
     /**
@@ -139,7 +150,7 @@ public class PopupView extends AbstractComponentContainer {
      * @return true if the popup is showing
      */
     public boolean isPopupVisible() {
-        return popupVisible;
+        return visibleComponent != null;
     }
 
     /**
@@ -175,7 +186,27 @@ public class PopupView extends AbstractComponentContainer {
      * @see com.itmill.toolkit.ui.ComponentContainer#getComponentIterator()
      */
     public Iterator<Component> getComponentIterator() {
-        return componentList.iterator();
+        return new Iterator<Component>() {
+
+            private boolean first = visibleComponent == null;
+
+            public boolean hasNext() {
+                return !first;
+            }
+
+            public Component next() {
+                if (!first) {
+                    first = true;
+                    return visibleComponent;
+                } else {
+                    return null;
+                }
+            }
+
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
 
     }
 
@@ -271,28 +302,13 @@ public class PopupView extends AbstractComponentContainer {
         target.addAttribute("hideOnMouseOut", hideOnMouseOut);
 
         // Only paint component to client if we know that the popup is showing
-        if (popupVisible) {
-            Component c = componentList.get(0);
-
-            if (c == null) {
-                c = content.getPopupComponent();
-                if (c != null) {
-                    componentList.add(c);
-                    super.addComponent(c);
-                }
-            }
-
-            if (c == null) {
-                throw new PaintException(
-                        "Received null when trying to paint popup component");
-            }
-
+        if (isPopupVisible()) {
             target.startTag("popupComponent");
-            c.paint(target);
+            visibleComponent.paint(target);
             target.endTag("popupComponent");
         }
 
-        target.addVariable(this, "popupVisibility", popupVisible);
+        target.addVariable(this, "popupVisibility", isPopupVisible());
     }
 
     /**
@@ -304,29 +320,8 @@ public class PopupView extends AbstractComponentContainer {
     @Override
     public void changeVariables(Object source, Map variables) {
         if (variables.containsKey("popupVisibility")) {
-
-            boolean oldVisibility = popupVisible;
-            popupVisible = ((Boolean) variables.get("popupVisibility"))
-                    .booleanValue();
-
-            if (popupVisible) {
-                if (componentList.isEmpty()) {
-                    Component c = content.getPopupComponent();
-                    if (c != null) {
-                        componentList.add(c);
-                        super.addComponent(c);
-                    } else {
-                        popupVisible = false;
-                    }
-                }
-            } else if (!componentList.isEmpty()) {
-                super.removeComponent(componentList.get(0));
-                componentList.clear();
-            }
-            if (oldVisibility != popupVisible) {
-                fireEvent(new PopupVisibilityEvent(this));
-            }
-            requestRepaint();
+            setPopupVisible(((Boolean) variables.get("popupVisibility"))
+                    .booleanValue());
         }
     }
 
