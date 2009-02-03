@@ -621,35 +621,36 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
             // Manage bursts one by one
             final String[] bursts = changes.split(VAR_BURST_SEPARATOR);
 
-            // Security: double cookie submission pattern
-            boolean nocheck = "true".equals(application2
-                    .getProperty("disable-xsrf-protection"));
-            if (bursts.length == 1 && "init".equals(bursts[0])) {
-                // initial request, no variable changes: send key
-                String seckey = (String) request.getSession().getAttribute(
-                        ApplicationConnection.UIDL_SECURITY_HEADER);
-                if (seckey == null) {
-                    seckey = "" + (int) (Math.random() * 1000000);
+            // Security: double cookie submission pattern unless disabled by
+            // property
+            if (!"true".equals(application2
+                    .getProperty("disable-xsrf-protection"))) {
+                if (bursts.length == 1 && "init".equals(bursts[0])) {
+                    // initial request, no variable changes: send key
+                    String seckey = (String) request.getSession().getAttribute(
+                            ApplicationConnection.UIDL_SECURITY_HEADER);
+                    if (seckey == null) {
+                        seckey = "" + (int) (Math.random() * 1000000);
+                    }
+                    /*
+                     * Cookie c = new Cookie(
+                     * ApplicationConnection.UIDL_SECURITY_COOKIE_NAME, uuid);
+                     * response.addCookie(c);
+                     */
+                    response.setHeader(
+                            ApplicationConnection.UIDL_SECURITY_HEADER, seckey);
+                    request.getSession().setAttribute(
+                            ApplicationConnection.UIDL_SECURITY_HEADER, seckey);
+                    return true;
+                } else {
+                    // check the key
+                    String sessId = (String) request.getSession().getAttribute(
+                            ApplicationConnection.UIDL_SECURITY_HEADER);
+                    if (sessId == null || !sessId.equals(bursts[0])) {
+                        throw new InvalidUIDLSecurityKeyException(
+                                "Security key mismatch");
+                    }
                 }
-                /*
-                 * Cookie c = new Cookie(
-                 * ApplicationConnection.UIDL_SECURITY_COOKIE_NAME, uuid);
-                 * response.addCookie(c);
-                 */
-                response.setHeader(ApplicationConnection.UIDL_SECURITY_HEADER,
-                        seckey);
-                request.getSession().setAttribute(
-                        ApplicationConnection.UIDL_SECURITY_HEADER, seckey);
-                return true;
-            } else if (!nocheck) {
-                // check the key
-                String sessId = (String) request.getSession().getAttribute(
-                        ApplicationConnection.UIDL_SECURITY_HEADER);
-                if (sessId == null || !sessId.equals(bursts[0])) {
-                    throw new InvalidUIDLSecurityKeyException(
-                            "Security key mismatch");
-                }
-
             }
 
             for (int bi = 1; bi < bursts.length; bi++) {

@@ -44,6 +44,7 @@ import com.itmill.toolkit.terminal.ParameterHandler;
 import com.itmill.toolkit.terminal.Terminal;
 import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.terminal.URIHandler;
+import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.ui.Window;
 
 /**
@@ -129,7 +130,7 @@ public class ApplicationServlet extends HttpServlet {
 
     // TODO This is session specific not servlet wide data. No need to store
     // this here, move it to Session from where it can be queried when required
-    protected static HashMap applicationToAjaxAppMgrMap = new HashMap();
+    protected static HashMap<Application, CommunicationManager> applicationToAjaxAppMgrMap = new HashMap<Application, CommunicationManager>();
 
     private static final String RESOURCE_URI = "/RES/";
 
@@ -523,47 +524,51 @@ public class ApplicationServlet extends HttpServlet {
         } catch (final SessionExpired e) {
             // Session has expired, notify user
             try {
-                Application.SystemMessages ci = getSystemMessages();
-                if (!UIDLrequest) {
-                    // 'plain' http req - e.g. browser reload;
-                    // just go ahead redirect the browser
-                    response.sendRedirect(ci.getSessionExpiredURL());
-                } else {
-                    // send uidl redirect
-                    criticalNotification(request, response, ci
-                            .getSessionExpiredCaption(), ci
-                            .getSessionExpiredMessage(), ci
-                            .getSessionExpiredURL());
-                    // Invalidate session (weird to have session if we're saying
-                    // that it's expired, and worse: portal integration will
-                    // fail since the session is not created by the portal.
-                    request.getSession().invalidate();
+                if (!isOnUnloadRequest(request)) {
+                    Application.SystemMessages ci = getSystemMessages();
+                    if (!UIDLrequest) {
+                        // 'plain' http req - e.g. browser reload;
+                        // just go ahead redirect the browser
+                        response.sendRedirect(ci.getSessionExpiredURL());
+                    } else {
+                        // send uidl redirect
+                        criticalNotification(request, response, ci
+                                .getSessionExpiredCaption(), ci
+                                .getSessionExpiredMessage(), ci
+                                .getSessionExpiredURL());
+                        // Invalidate session (weird to have session if we're
+                        // saying
+                        // that it's expired, and worse: portal integration will
+                        // fail since the session is not created by the portal.
+                        request.getSession().invalidate();
+                    }
                 }
             } catch (SystemMessageException ee) {
                 throw new ServletException(ee);
             }
 
         } catch (final GeneralSecurityException e) {
-            // TODO handle differently?
-            // Invalid security key, show session expired message for now.
-            try {
-                Application.SystemMessages ci = getSystemMessages();
-                if (!UIDLrequest) {
-                    // 'plain' http req - e.g. browser reload;
-                    // just go ahead redirect the browser
-                    response.sendRedirect(ci.getSessionExpiredURL());
-                } else {
-                    // send uidl redirect
-                    criticalNotification(request, response, ci
-                            .getSessionExpiredCaption(), ci
-                            .getSessionExpiredMessage(), ci
-                            .getSessionExpiredURL());
+            if (!isOnUnloadRequest(request)) {
+                // TODO handle differently?
+                // Invalid security key, show session expired message for now.
+                try {
+                    Application.SystemMessages ci = getSystemMessages();
+                    if (!UIDLrequest) {
+                        // 'plain' http req - e.g. browser reload;
+                        // just go ahead redirect the browser
+                        response.sendRedirect(ci.getSessionExpiredURL());
+                    } else {
+                        // send uidl redirect
+                        criticalNotification(request, response, ci
+                                .getSessionExpiredCaption(), ci
+                                .getSessionExpiredMessage(), ci
+                                .getSessionExpiredURL());
+                    }
+                    request.getSession().invalidate();
+                } catch (SystemMessageException ee) {
+                    throw new ServletException(ee);
                 }
-                request.getSession().invalidate();
-            } catch (SystemMessageException ee) {
-                throw new ServletException(ee);
             }
-
         } catch (final Throwable e) {
             // if this was an UIDL request, response UIDL back to client
             if (UIDLrequest) {
@@ -587,6 +592,10 @@ public class ApplicationServlet extends HttpServlet {
                         .endTransaction(application, request);
             }
         }
+    }
+
+    private boolean isOnUnloadRequest(HttpServletRequest request) {
+        return request.getParameter(ApplicationConnection.PARAM_UNLOADBURST) != null;
     }
 
     /** Get system messages from the current application class */
@@ -1690,8 +1699,7 @@ public class ApplicationServlet extends HttpServlet {
      * @return CommunicationManager
      */
     private CommunicationManager getApplicationManager(Application application) {
-        CommunicationManager mgr = (CommunicationManager) applicationToAjaxAppMgrMap
-                .get(application);
+        CommunicationManager mgr = applicationToAjaxAppMgrMap.get(application);
 
         if (mgr == null) {
             // Creates new manager

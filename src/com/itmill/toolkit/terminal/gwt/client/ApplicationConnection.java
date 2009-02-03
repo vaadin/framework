@@ -62,6 +62,8 @@ public class ApplicationConnection {
 
     public static final String UIDL_SECURITY_HEADER = "com.itmill.seckey";
 
+    public static final String PARAM_UNLOADBURST = "onunloadburst";
+
     private static String uidl_security_key = "init";
 
     private final HashMap<String, String> resourcesMap = new HashMap<String, String>();
@@ -402,7 +404,8 @@ public class ApplicationConnection {
             // Synchronized call, discarded response
 
             syncSendForce(((HTTPRequestImpl) GWT.create(HTTPRequestImpl.class))
-                    .createXmlHTTPRequest(), uri, requestData);
+                    .createXmlHTTPRequest(), uri + "&" + PARAM_UNLOADBURST
+                    + "=1", requestData);
         }
     }
 
@@ -474,7 +477,9 @@ public class ApplicationConnection {
     }
 
     private void endRequest() {
-        checkForPendingVariableBursts();
+        if (applicationRunning) {
+            checkForPendingVariableBursts();
+        }
         activeRequests--;
         // deferring to avoid flickering
         DeferredCommand.addCommand(new Command() {
@@ -767,10 +772,12 @@ public class ApplicationConnection {
      * windows - normally sendPendingVariableChanges() should be used.
      */
     public void sendPendingVariableChangesSync() {
-        pendingVariableBursts.add(pendingVariables);
-        Vector<String> nextBurst = pendingVariableBursts.firstElement();
-        pendingVariableBursts.remove(0);
-        buildAndSendVariableBurst(nextBurst, true);
+        if (applicationRunning) {
+            pendingVariableBursts.add(pendingVariables);
+            Vector<String> nextBurst = pendingVariableBursts.firstElement();
+            pendingVariableBursts.remove(0);
+            buildAndSendVariableBurst(nextBurst, true);
+        }
     }
 
     // Redirect browser, null reloads current page
