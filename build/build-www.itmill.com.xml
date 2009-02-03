@@ -9,7 +9,7 @@
 		<!-- Create result dir unless already exists -->
 		<mkdir dir="build/result" />
 
-		<property file="build/VERSION" />
+		<property file="build/VERSION.properties" />
 		<property name="product-file" value="itmill-toolkit" />
 		<property name="product-name" value="IT Mill Toolkit" />
 		<property name="toolkit-package" value="com/itmill/toolkit" />
@@ -28,7 +28,19 @@
 
 	</target>
 
-	<target name="manual-html" depends="init">
+    <!-- ================================================================== -->
+    <!-- Build Reference Manual.                                            -->
+    <!-- ================================================================== -->
+
+    <!-- Initialize properties especially for the Reference Manual. -->
+	<target name="init-manual" depends="">
+        <!-- Sets the current date as the publication date of the Manual. -->
+        <tstamp>
+            <format property="manual.pubdate" pattern="yyyy-MM-dd"/>
+        </tstamp>
+	</target>
+
+	<target name="manual-html" depends="init, init-manual">
 		<echo message="Building manual" />
 		<mkdir dir="build/result/www.itmill.com/manual" />
 		<delete file="build/docbook/conf/temp.xsl" />
@@ -55,8 +67,23 @@
 			<arg value="-out" />
 			<arg value="build/result/www.itmill.com/manual/index.html" />
 			<arg value="-param" />
+			<arg value="section.autolabel" />
+			<arg value="1" />
+			<arg value="-param" />
+			<arg value="section.label.includes.component.label" />
+			<arg value="1" />
+			<arg value="-param" />
+			<arg value="section.autolabel.max.depth" />
+			<arg value="2" />
+			<arg value="-param" />
 			<arg value="use.extensions" />
 			<arg value="1" />
+			<arg value="-param" />
+			<arg value="manual.pubdate" />
+			<arg value="${manual.pubdate}" />
+			<arg value="-param" />
+			<arg value="manual.version" />
+			<arg value="${version}" />
 			<classpath refid="docbook-xsl.classpath" />
 		</java>
 		<delete file="build/docbook/conf/temp.xsl" />
