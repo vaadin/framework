@@ -169,11 +169,11 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
 
         }
 
-        log("Toolkit application servlet version: " + cnf.getSerletVersion());
+        log("Toolkit application servlet version: " + cnf.getServletVersion());
         log("Widget set is built on version: " + VERSION);
         log("Application version: " + cnf.getApplicationVersion());
 
-        if (!cnf.getSerletVersion().equals(VERSION)) {
+        if (!cnf.getServletVersion().equals(VERSION)) {
             error("Warning: your widget set seems to be built with a different "
                     + "version than the one used on server. Unexpected "
                     + "behavior may occur.");

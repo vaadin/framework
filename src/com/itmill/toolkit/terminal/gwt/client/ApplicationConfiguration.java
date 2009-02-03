@@ -131,11 +131,11 @@ public class ApplicationConfiguration {
             throw new IllegalStateException(msg);
         }
         initedWidgetSet = widgetset;
-        ArrayList appIds = new ArrayList();
+        ArrayList<String> appIds = new ArrayList<String>();
         loadAppIdListFromDOM(appIds);
 
-        for (Iterator it = appIds.iterator(); it.hasNext();) {
-            String appId = (String) it.next();
+        for (Iterator<String> it = appIds.iterator(); it.hasNext();) {
+            String appId = it.next();
             ApplicationConfiguration appConf = getConfigFromDOM(appId);
             ApplicationConnection a = new ApplicationConnection(widgetset,
                     appConf);
@@ -166,9 +166,8 @@ public class ApplicationConfiguration {
         return runningApplications;
     }
 
-    private native static void loadAppIdListFromDOM(ArrayList list)
+    private native static void loadAppIdListFromDOM(ArrayList<String> list)
     /*-{
-     
          var j;
          for(j in $wnd.itmill.toolkitConfigurations) {
              list.@java.util.Collection::add(Ljava/lang/Object;)(j);
@@ -182,7 +181,7 @@ public class ApplicationConfiguration {
         return conf;
     }
 
-    public native String getSerletVersion()
+    public native String getServletVersion()
     /*-{
         return this.@com.itmill.toolkit.terminal.gwt.client.ApplicationConfiguration::versionInfo.toolkitVersion;
     }-*/;
