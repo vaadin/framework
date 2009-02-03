@@ -17,6 +17,7 @@ import com.itmill.toolkit.data.Buffered;
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.Validatable;
 import com.itmill.toolkit.data.Validator;
+import com.itmill.toolkit.data.Validator.InvalidValueException;
 import com.itmill.toolkit.terminal.CompositeErrorMessage;
 import com.itmill.toolkit.terminal.ErrorMessage;
 import com.itmill.toolkit.terminal.PaintException;
@@ -201,24 +202,28 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * Saves the current value to the data source Don't add a JavaDoc comment
      * here, we use the default documentation from the implemented interface.
      */
-    public void commit() throws Buffered.SourceException {
-        if (dataSource != null && (isInvalidCommitted() || isValid())
-                && !dataSource.isReadOnly()) {
-            final Object newValue = getValue();
-            try {
+    public void commit() throws Buffered.SourceException, InvalidValueException {
+        if (dataSource != null && !dataSource.isReadOnly()) {
+            if ((isInvalidCommitted() || isValid())) {
+                final Object newValue = getValue();
+                try {
 
-                // Commits the value to datasource.
-                dataSource.setValue(newValue);
+                    // Commits the value to datasource.
+                    dataSource.setValue(newValue);
 
-            } catch (final Throwable e) {
+                } catch (final Throwable e) {
 
-                // Sets the buffering state.
-                currentBufferedSourceException = new Buffered.SourceException(
-                        this, e);
-                requestRepaint();
+                    // Sets the buffering state.
+                    currentBufferedSourceException = new Buffered.SourceException(
+                            this, e);
+                    requestRepaint();
 
-                // Throws the source exception.
-                throw currentBufferedSourceException;
+                    // Throws the source exception.
+                    throw currentBufferedSourceException;
+                }
+            } else {
+                /* An invalid value and we don't allow them, throw the exception */
+                validate();
             }
         }
 
@@ -312,7 +317,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * implemented interface.
      */
     public void setWriteThrough(boolean writeTrough)
-            throws Buffered.SourceException {
+            throws Buffered.SourceException, InvalidValueException {
         if (writeTroughMode == writeTrough) {
             return;
         }

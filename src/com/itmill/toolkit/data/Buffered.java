@@ -4,6 +4,7 @@
 
 package com.itmill.toolkit.data;
 
+import com.itmill.toolkit.data.Validator.InvalidValueException;
 import com.itmill.toolkit.terminal.ErrorMessage;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
@@ -51,8 +52,11 @@ public interface Buffered {
      * @throws SourceException
      *             if the operation fails because of an exception is thrown by
      *             the data source. The cause is included in the exception.
+     * @throws InvalidValueException
+     *             if the operation fails because validation is enabled and the
+     *             values do not validate
      */
-    public void commit() throws SourceException;
+    public void commit() throws SourceException, InvalidValueException;
 
     /**
      * Discards all changes since last commit. The object updates its value from
@@ -85,9 +89,13 @@ public interface Buffered {
      * @throws SourceException
      *             If the operation fails because of an exception is thrown by
      *             the data source.
+     * @throws InvalidValueException
+     *             If the implicit commit operation fails because of a
+     *             validation error.
      * 
      */
-    public void setWriteThrough(boolean writeThrough) throws SourceException;
+    public void setWriteThrough(boolean writeThrough) throws SourceException,
+            InvalidValueException;
 
     /**
      * Tests if the object is in read-through mode. If the object is in

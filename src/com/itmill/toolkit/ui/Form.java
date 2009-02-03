@@ -277,10 +277,16 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
 
         // Only commit on valid state if so requested
         if (!isInvalidCommitted() && !isValid()) {
+            /*
+             * The values are not ok and we are told not to commit invalid
+             * values
+             */
             if (validationVisibleOnCommit) {
                 setValidationVisible(true);
             }
-            return;
+
+            // Find the first invalid value and throw the exception
+            validate();
         }
 
         // Try to commit all
@@ -417,7 +423,8 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * JavaDoc comment here, we use the default one from the interface.
      */
     @Override
-    public void setWriteThrough(boolean writeThrough) {
+    public void setWriteThrough(boolean writeThrough) throws SourceException,
+            InvalidValueException {
         if (writeThrough != this.writeThrough) {
             this.writeThrough = writeThrough;
             for (final Iterator i = propertyIds.iterator(); i.hasNext();) {
