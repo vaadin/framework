@@ -4,26 +4,87 @@
 .i-app-SamplerApplication {
 	background-color: white;
 }
+
 .i-app-SamplerApplication .i-horizontallayout-topbar {
-	border-bottom: 3px solid #ccc;
+	border-bottom: 1px solid #fff;
+	background: #5c5d60 url(top-bg.png) repeat-x;
 }
-.i-app-SamplerApplication .i-horizontallayout-togglebar {
-	border-bottom: 1px solid #eee;
-	background: transparent url(grayfade.png) repeat-x;
+
+.i-app-SamplerApplication .main-split {
+	background: transparent url(main-bg.png) repeat-x;
+}
+
+.i-app-SamplerApplication .topbar .logo {
+	width: 147px;
+	height: 44px;
+	margin: 0;
+	padding: 0;
+	background: transparent url(sampler.png) no-repeat;
+	overflow: hidden;
+}
+
+.i-app-SamplerApplication .topbar .logo img {
+	display: none;
 }
 
 .i-app-SamplerApplication .i-popupview-quickjump {
 	background: transparent url(quickjump.png) no-repeat 0px 1px;
 }
 
-.i-customcomponent-breadcrumbs .i-link a {
+.i-customcomponent-breadcrumbs {
+	font-family: helvetica, arial, verdana, sans-serif;
+}
+.i-customcomponent-breadcrumbs .i-horizontallayout-spacing-on {
+	padding-left: 5px;
+}
+
+.i-customcomponent-breadcrumbs .i-link a,
+.i-customcomponent-breadcrumbs .i-label {
+	text-decoration: none;
+	color: #1b252b;
+	text-shadow: 0 1px 0 #8f9193;
+	font-size: 11px;
+	line-height: 13px;
+	padding-top: 3px;
+	display: block;
+}
+.i-customcomponent-breadcrumbs .i-label {
+	font-size: 13px;
+	line-height: 12px;
+	padding: 4px 0 0 0;
+}
+.i-sa .i-customcomponent-breadcrumbs .i-label {
+	padding-top: 3px;
+}
+.i-customcomponent-breadcrumbs .i-link span {
 	text-decoration: none;
 }
 .i-customcomponent-breadcrumbs .i-link a:hover {
-	text-decoration: underline;
+	text-decoration: none;
+	color: #000;
+}
+.i-customcomponent-breadcrumbs .i-link-bold {
+	height: 20px;
+	padding: 0 0 0 9px;
+	background: transparent url(breadcrumb-current-left.png);
 }
 .i-customcomponent-breadcrumbs .i-link-bold a {
-	font-weight: bold;	
+	display: block;
+	height: 16px;
+	background: transparent url(breadcrumb-current-right.png) no-repeat right top;
+	font-size: 10px;
+	font-weight: bold;
+	color: #c2c4c6;
+	text-shadow: 0 1px 0 #3a3d43;
+	padding: 4px 9px 0 0;
+	cursor: default;
+}
+.i-sa .i-customcomponent-breadcrumbs .i-link-bold a {
+	height: 17px;
+	padding-top: 3px;
+}
+.i-customcomponent-breadcrumbs .i-link-bold a:hover {
+	color: #c2c4c6;
 }
 
 .i-app-SamplerApplication .i-horizontallayout-topbar .i-button-link span {
@@ -32,19 +93,80 @@
 .i-app-SamplerApplication .i-horizontallayout-topbar .i-button-link:hover span {
 	text-decoration: underline;
 }
+.i-app-SamplerApplication .i-horizontallayout-segment .i-button,
+.i-app-SamplerApplication .i-horizontallayout-segment .i-popupview {
+	width: 30px;
+	height: 24px;
+	overflow: hidden;
+	padding: 0;
+	border: none;
+	background: transparent url(segment.png) no-repeat;
+	cursor: default;
+}
+.i-app-SamplerApplication .i-horizontallayout-segment .i-button:active,
+.i-app-SamplerApplication .i-horizontallayout-segment .i-popupview:active {
+	background-position: left bottom;
+}
+.i-app-SamplerApplication .i-horizontallayout-segment .i-button-next,
+.i-app-SamplerApplication .i-horizontallayout-segment .i-button-tree-switch {
+	background-position: right top;
+}
+.i-app-SamplerApplication .i-horizontallayout-segment .i-button-next:active,
+.i-app-SamplerApplication .i-horizontallayout-segment .i-button-tree-switch:active {
+	background-position: right bottom;
+}
+.i-app-SamplerApplication .i-horizontallayout-segment .i-button-down {
+	background-position: right bottom;
+}
+.i-app-SamplerApplication .i-horizontallayout-segment .i-button span,
+.i-app-SamplerApplication .i-horizontallayout-segment .i-popupview span {
+	display: block;
+	height: 24px;
+	background-repeat: no-repeat;
+	background-position: 50% 40%;
+}
+.i-app-SamplerApplication .i-horizontallayout-segment .i-button-tree-switch span {
+	background-image: url(tree.png);
+}
+.i-app-SamplerApplication .i-horizontallayout-segment .i-popupview span {
+	background-image: url(magnifier.png);
+}
+.i-app-SamplerApplication .i-horizontallayout-segment .i-button-previous span {
+	background-image: url(prev.png);
+}
+.i-app-SamplerApplication .i-horizontallayout-segment .i-button-next span {
+	background-image: url(next.png);
+}
+.i-popupview-popup-quickjump {
+	background: transparent;
+	border: none;
+}
+
+.i-app-SamplerApplication .i-tree-menu {
+	font-family: helvetica, arial, verdana, sans-serif;
+	font-size: 12px;
+	line-height: 17px;
+	padding: 13px 0;
+}
 
 .i-app-SamplerApplication .i-label-section {
-	font-size: 18px;
+	font-family: "Helvetica Neue", helvetica, arial, verdana, sans-serif;
+	font-size: 24px;
 	font-weight: bold;
-	border-bottom: 3px solid #eee;
+	border-bottom: 1px solid #eee;
 	line-height: 35px;
 	text-indent: 15px;
+	text-shadow: 0 2px 1px #c0c1c2;
+	color: #1e2229;
+	
 }
 .i-app-SamplerApplication .i-label-subsection {
+	font-family: helvetica, arial, verdana, sans-serif;
 	font-size: 16px;
-	font-weight: bold;
+	font-weight: normal;
 	color: #666666;
 	text-indent: 15px;
+	padding-right: 20px;
 }
 .i-app-SamplerApplication .i-button-screenshot {
 	border: 3px solid #ccc;
@@ -82,55 +204,97 @@
 	border-top: 0px;
 }
 
-.i-app-SamplerApplication .i-panel-feature-main {
-	background: transparent url(grayfade.png) repeat-x;
+.i-app-SamplerApplication .i-horizontallayout-sample-view .i-horizontallayout-margin-top {
+	padding-top: 27px;
+}
+.i-app-SamplerApplication .i-horizontallayout-sample-view .i-horizontallayout-margin-bottom {
+	padding-bottom: 24px;
 }
 .i-app-SamplerApplication .i-caption-feature-controls {
+	font-family: "Helvetica Neue", helvetica, arial, sans-serif;
 	font-weight: bold;
-	font-size: 18px;
-	text-indent: 10px;
+	font-size: 24px;
+	line-height: 28px;
+	color: #1e2229;
+	letter-spacing: -0.015em;
+	text-shadow: 0 2px 1px #c0c1c2;
 }
 .i-app-SamplerApplication .feature-info {
-	background-color: #999;
-	color: white;
-	line-height: 20px;
+	background: #1e2123 url(info-bubble-bg.png) repeat-y;
+	color: #9d9ea0;
+	font-family: helvetica, arial, verdana, sans-serif;
+	font-size: 12px;
+	line-height: 19px;
 }
 .i-app-SamplerApplication .feature-info div.i-link a {
-	color: white;
-	line-height: 20px;
+	color: #b7c0c7;
+	font-size: 11px;
+	line-height: 18px;
+	background: transparent url(bullet.png) no-repeat 2px 60%;
+	padding-left: 8px;
+}
+.i-app-SamplerApplication .feature-info div.i-link a span {
+	text-decoration: none;
 }
 .i-app-SamplerApplication .feature-info .i-panel-caption {
 	color: #fff;
-	font-size: 16px;
+	font-family: "Helvetica Neue", helvetica, arial, verdana, sans-serif;
+	font-size: 14px;
 	font-weight: bold;
-	line-height: 25px;
+	line-height: normal;
+	text-shadow: 0 1px 0 #272a2b;
+	background: transparent url(info-bubble-top.png);
+	margin: 0;
+	padding-bottom: 10px;
+	padding-left: 28px;
 }
-/*
 .i-app-SamplerApplication .feature-info .i-panel-content {
-	background: transparent url(finfofade.png) no-repeat 0px 5px;
+	background: transparent url(info-bubble-top.png) no-repeat 0 -44px;
 }
-*/
+.i-app-SamplerApplication .i-panel-deco-feature-info {
+	height: 28px;
+	background: transparent url(info-bubble-bottom.png);
+	margin: 0;
+}
+
+.i-app-SamplerApplication .feature-info .i-verticallayout .i-verticallayout-margin-left {
+	padding-left: 28px;
+}
+.i-app-SamplerApplication .feature-info .i-verticallayout .i-verticallayout-margin-right {
+	padding-right: 20px;
+}
+
 .i-app-SamplerApplication .feature-info .i-caption {
 	font-weight: bold;
-	font-size: 16px;
+	font-size: 12px;
 	line-height: 30px;
+	color: #fff;
+	background: transparent url(info-bubble-separator.png) repeat-x 0 10px;
+}
+.i-app-SamplerApplication .feature-info .i-captiontext {
+	padding-top: 15px;
+}
+.i-app-SamplerApplication .feature-info .i-label {
+	padding-bottom: 9px;
 }
 
 .i-app-SamplerApplication .i-button-showcode {
-	border-bottom: 1px dotted #eee;
-	padding: 1px 0 1px 7px;
+	font-family: helvetica, arial, verdana, sans-serif;
+	display: inline;
+	font-size: 12px;
+	line-height: 20px;
+	height: 20px;
 }
 .i-app-SamplerApplication .i-button-showcode span {
-	color: #999;
+	color: #8b8e91;
 	text-decoration: none;
-	font-style: italic;;
 }
 .i-app-SamplerApplication .i-button-showcode:hover span {
-	text-decoration: underline;
+	color: #62696f;
 }
 .i-app-SamplerApplication .i-panel-content-source {
 	border: 1px solid #eee;
-	border-top: none;
+	background: #fff;
 }
 
 .i-customcomponent-ModeSwitch .i-button {

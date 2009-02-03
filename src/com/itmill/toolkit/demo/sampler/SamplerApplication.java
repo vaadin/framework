@@ -147,6 +147,7 @@ public class SamplerApplication extends Application {
                 "UA-658457-6", "none");
         // "backbutton"
         UriFragmentUtility uriFragmentUtility = new UriFragmentUtility();
+
         // breadcrumbs
         BreadCrumbs breadcrumbs = new BreadCrumbs();
 
@@ -163,11 +164,11 @@ public class SamplerApplication extends Application {
             // topbar (navigation)
             HorizontalLayout nav = new HorizontalLayout();
             mainExpand.addComponent(nav);
-            nav.setHeight("50px");
+            nav.setHeight("44px");
             nav.setWidth("100%");
             nav.setStyleName("topbar");
             nav.setSpacing(true);
-            nav.setMargin(false, true, false, true);
+            nav.setMargin(false, true, false, false);
 
             // Upper left logo
             Component logo = createLogo();
@@ -191,19 +192,26 @@ public class SamplerApplication extends Application {
                 }
             });
 
+            // Layouts for top area buttons
+            HorizontalLayout quicknav = new HorizontalLayout();
+            HorizontalLayout arrows = new HorizontalLayout();
+            nav.addComponent(quicknav);
+            nav.addComponent(arrows);
+            quicknav.setStyleName("segment");
+            arrows.setStyleName("segment");
+            nav.setComponentAlignment(quicknav, "middle");
+            nav.setComponentAlignment(arrows, "middle");
+
             // Previous sample
             previousSample = createPrevButton();
-            nav.addComponent(previousSample);
-            nav.setComponentAlignment(previousSample, Alignment.MIDDLE_RIGHT);
+            arrows.addComponent(previousSample);
             // Next sample
             nextSample = createNextButton();
-            nav.addComponent(nextSample);
-            nav.setComponentAlignment(nextSample, Alignment.MIDDLE_LEFT);
+            arrows.addComponent(nextSample);
             // "Search" combobox
             // TODO add input prompt
             Component search = createSearch();
-            nav.addComponent(search);
-            nav.setComponentAlignment(search, Alignment.MIDDLE_LEFT);
+            quicknav.addComponent(search);
 
             // togglebar
             // mainExpand.addComponent(toggleBar);
@@ -216,6 +224,7 @@ public class SamplerApplication extends Application {
             // Main left/right split; hidden menu tree
             mainSplit = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
             mainSplit.setSizeFull();
+            mainSplit.setStyleName("main-split");
             mainExpand.addComponent(mainSplit);
             mainExpand.setExpandRatio(mainSplit, 1);
 
@@ -240,9 +249,7 @@ public class SamplerApplication extends Application {
 
             // Show / hide tree
             Component treeSwitch = createTreeSwitch();
-            nav.addComponent(treeSwitch);
-            // toggleBar.setExpandRatio(treeSwitch, 1);
-            nav.setComponentAlignment(treeSwitch, Alignment.MIDDLE_RIGHT);
+            quicknav.addComponent(treeSwitch);
 
             addListener(new CloseListener() {
                 public void windowClose(CloseEvent e) {
@@ -322,7 +329,7 @@ public class SamplerApplication extends Application {
              * super.changeVariables(source, variables); if (isPopupVisible()) {
              * search.focus(); } } };
              */
-            PopupView pv = new PopupView("", search);
+            PopupView pv = new PopupView("<span></span>", search);
             pv.addListener(new PopupView.PopupVisibilityListener() {
                 public void popupVisibilityChange(PopupVisibilityEvent event) {
                     if (event.isPopupVisible()) {
@@ -330,8 +337,6 @@ public class SamplerApplication extends Application {
                     }
                 }
             });
-            pv.setWidth("22px");
-            pv.setHeight("22px");
             pv.setStyleName("quickjump");
             pv.setDescription("Quick jump");
 
@@ -346,8 +351,8 @@ public class SamplerApplication extends Application {
             });
             logo.setDescription("↶ Home");
             logo.setStyleName(Button.STYLE_LINK);
+            logo.addStyleName("logo");
             logo.setIcon(new ThemeResource("sampler/sampler.png"));
-            logo.setWidth("160px");
             return logo;
         }
 
@@ -367,11 +372,8 @@ public class SamplerApplication extends Application {
                     }
                 }
             });
-            b.setWidth("22px");
-            b.setHeight("22px");
-            b.setIcon(new ThemeResource("sampler/next.png"));
+            b.setStyleName("next");
             b.setDescription("Jump to the next sample");
-            b.setStyleName(Button.STYLE_LINK);
             return b;
         }
 
@@ -387,37 +389,33 @@ public class SamplerApplication extends Application {
                 }
             });
             b.setEnabled(false);
-            b.setWidth("22px");
-            b.setHeight("22px");
-            b.setIcon(new ThemeResource("sampler/prev.png"));
+            b.setStyleName("previous");
             b.setDescription("Jump to the previous sample");
-            b.setStyleName(Button.STYLE_LINK);
             return b;
         }
 
         private Component createTreeSwitch() {
-            ModeSwitch m = new ModeSwitch();
-            m.addMode(1, "", "Hide navigation", new ThemeResource(
-                    "sampler/hidetree.gif"));
-            m.addMode(2, "", "Show navigation", new ThemeResource(
-                    "sampler/showtree.gif"));
-            m.addListener(new ModeSwitch.ModeSwitchListener() {
-                public void componentEvent(Event event) {
-                    if (event instanceof ModeSwitchEvent) {
-                        if (((ModeSwitchEvent) event).getMode().equals(1)) {
-                            mainSplit.setSplitPosition(0);
-                            navigationTree.setVisible(false);
-                            mainSplit.setLocked(true);
-                        } else {
-                            mainSplit.setSplitPosition(20);
-                            mainSplit.setLocked(false);
-                            navigationTree.setVisible(true);
-                        }
+            final Button b = new Button();
+            b.setStyleName("tree-switch");
+            b.addListener(new Button.ClickListener() {
+                public void buttonClick(ClickEvent event) {
+                    if (b.getStyleName().contains("down")) {
+                        b.removeStyleName("down");
+                        mainSplit.setSplitPosition(0);
+                        navigationTree.setVisible(false);
+                        mainSplit.setLocked(true);
+                    } else {
+                        b.addStyleName("down");
+                        mainSplit.setSplitPosition(20);
+                        mainSplit.setLocked(false);
+                        navigationTree.setVisible(true);
                     }
                 }
             });
-            m.setMode(1);
-            return m;
+            mainSplit.setSplitPosition(0);
+            navigationTree.setVisible(false);
+            mainSplit.setLocked(true);
+            return b;
         }
 
         private Component createModeSwitch() {
@@ -445,6 +443,7 @@ public class SamplerApplication extends Application {
         private Tree createMenuTree() {
             final Tree tree = new Tree();
             tree.setImmediate(true);
+            tree.setStyleName("menu");
             tree.setContainerDataSource(allFeatures);
             currentFeature.addListener(new Property.ValueChangeListener() {
                 public void valueChange(ValueChangeEvent event) {
@@ -526,8 +525,8 @@ public class SamplerApplication extends Application {
             layout.removeAllComponents();
 
             { // home
-                ActiveLink link = new ActiveLink("⌂ Home",
-                        new ExternalResource("#"));
+                ActiveLink link = new ActiveLink("Home", new ExternalResource(
+                        "#"));
                 link.addListener(this);
                 layout.addComponent(link);
             }

@@ -35,23 +35,25 @@ public class FeatureView extends HorizontalLayout {
 
     public FeatureView() {
 
-        setSizeFull();
+        setWidth("100%");
+        setMargin(true);
+        setSpacing(true);
+        setStyleName("sample-view");
 
         left = new Panel();
         left.setStyleName(Panel.STYLE_LIGHT);
         left.addStyleName("feature-main");
         left.setSizeFull();
         ((VerticalLayout) left.getLayout()).setSpacing(true);
+        ((VerticalLayout) left.getLayout()).setMargin(false);
         addComponent(left);
         setExpandRatio(left, 1);
 
         right = new Panel();
         right.setStyleName(Panel.STYLE_LIGHT);
         right.addStyleName("feature-info");
-        right.setWidth("350px");
-        right.setHeight("100%");
+        right.setWidth("369px");
         addComponent(right);
-        right.getLayout().setMargin(false, true, true, true);
 
         controls = new VerticalLayout();
         controls.setStyleName("feature-controls");
@@ -63,7 +65,6 @@ public class FeatureView extends HorizontalLayout {
         });
         showCode.setStyleName(Button.STYLE_LINK);
         showCode.addStyleName("showcode");
-        showCode.setWidth("100%");
         controls.addComponent(showCode);
 
         sourceCode = new CodeLabel();
@@ -100,7 +101,7 @@ public class FeatureView extends HorizontalLayout {
 
             left.addComponent(getExampleFor(feature));
 
-            right.setCaption("Description");
+            right.setCaption("Description and Resources");
 
             Label l = new Label(feature.getDescription());
             l.setContentMode(Label.CONTENT_XHTML);
