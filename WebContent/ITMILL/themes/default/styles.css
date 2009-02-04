@@ -841,8 +841,6 @@ input.i-modified,
  * (useless to move into a separate file)
  */
 .i-link a {
-	font-size: 13px;
-	line-height: 18px;
 	color: #464f52;
 	vertical-align: middle;
 	text-decoration: none;
@@ -854,7 +852,7 @@ input.i-modified,
 }
 
 .i-disabled a {
-	cursor: pointer;
+	cursor: default;
 }
 
 .i-link img {
