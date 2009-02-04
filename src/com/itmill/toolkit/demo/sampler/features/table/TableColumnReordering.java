@@ -2,7 +2,9 @@ package com.itmill.toolkit.demo.sampler.features.table;
 
 import com.itmill.toolkit.demo.sampler.APIResource;
 import com.itmill.toolkit.demo.sampler.Feature;
+import com.itmill.toolkit.demo.sampler.FeatureSet;
 import com.itmill.toolkit.demo.sampler.NamedExternalResource;
+import com.itmill.toolkit.terminal.gwt.client.ui.Table;
 import com.itmill.toolkit.ui.Component;
 
 public class TableColumnReordering extends Feature {
@@ -14,24 +16,24 @@ public class TableColumnReordering extends Feature {
 
     @Override
     public String getDescription() {
-        return "The column headers can be reordered by the user using drag and drop. This feature can be turned on or off.";
+        return "Also known as a (Data)Grid, Table can be used to show data in"
+                + " a tabular fashion. It's well suited for showing large datasets.<br>"
+                + " The columns can be rearranged with drag&drop - a feature"
+                + " which can be enabled or disabled.";
     }
 
     @Override
     public APIResource[] getRelatedAPI() {
-        // TODO Auto-generated method stub
-        return null;
+        return new APIResource[] { new APIResource(Table.class) };
     }
 
     @Override
     public Class[] getRelatedFeatures() {
-        // TODO Auto-generated method stub
-        return null;
+        return new Class[] { FeatureSet.Tables.class };
     }
 
     @Override
     public NamedExternalResource[] getRelatedResources() {
-        // TODO Auto-generated method stub
         return null;
     }
 

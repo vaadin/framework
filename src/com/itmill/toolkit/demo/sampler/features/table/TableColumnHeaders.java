@@ -2,7 +2,9 @@ package com.itmill.toolkit.demo.sampler.features.table;
 
 import com.itmill.toolkit.demo.sampler.APIResource;
 import com.itmill.toolkit.demo.sampler.Feature;
+import com.itmill.toolkit.demo.sampler.FeatureSet;
 import com.itmill.toolkit.demo.sampler.NamedExternalResource;
+import com.itmill.toolkit.terminal.gwt.client.ui.Table;
 import com.itmill.toolkit.ui.Component;
 
 public class TableColumnHeaders extends Feature {
@@ -14,24 +16,24 @@ public class TableColumnHeaders extends Feature {
 
     @Override
     public String getDescription() {
-        return "A Table can optionally have column headers. The headers can contain a caption and an icon, and it's width can be changed by the user. A column can also (optionally) be moved by the user by dragging the column header, and (optionally) be sorted by clicking the header.";
+        return "Also known as a (Data)Grid, Table can be used to show data in"
+                + " a tabular fashion. It's well suited for showing large datasets.<br>"
+                + " A Table can have column headers, which support different modes"
+                + " with automatic or explicitly set caption and/or icon.";
     }
 
     @Override
     public APIResource[] getRelatedAPI() {
-        // TODO Auto-generated method stub
-        return null;
+        return new APIResource[] { new APIResource(Table.class) };
     }
 
     @Override
     public Class[] getRelatedFeatures() {
-        // TODO Auto-generated method stub
-        return null;
+        return new Class[] { FeatureSet.Tables.class };
     }
 
     @Override
     public NamedExternalResource[] getRelatedResources() {
-        // TODO Auto-generated method stub
         return null;
     }
 

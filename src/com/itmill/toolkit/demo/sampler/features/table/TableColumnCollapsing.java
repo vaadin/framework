@@ -2,7 +2,9 @@ package com.itmill.toolkit.demo.sampler.features.table;
 
 import com.itmill.toolkit.demo.sampler.APIResource;
 import com.itmill.toolkit.demo.sampler.Feature;
+import com.itmill.toolkit.demo.sampler.FeatureSet;
 import com.itmill.toolkit.demo.sampler.NamedExternalResource;
+import com.itmill.toolkit.terminal.gwt.client.ui.Table;
 import com.itmill.toolkit.ui.Component;
 
 public class TableColumnCollapsing extends Feature {
@@ -14,24 +16,27 @@ public class TableColumnCollapsing extends Feature {
 
     @Override
     public String getDescription() {
-        return "Columns can be 'collapsed', which means that it's not shown, but the user can make the column re-appear by using the menu in the upper right of the table.<br/>Columns can also be made invisible, in which case they can not be brought back by the user.";
+        return "Also known as a (Data)Grid, Table can be used to show data in"
+                + " a tabular fashion. It's well suited for showing large datasets.<br>"
+                + "Columns can be 'collapsed', which means that it's not shown,"
+                + " but the user can make the column re-appear by using the"
+                + " menu in the upper right of the table.<br/>"
+                + " Columns can also be made invisible, in which case they can"
+                + " not be brought back by the user.";
     }
 
     @Override
     public APIResource[] getRelatedAPI() {
-        // TODO Auto-generated method stub
-        return null;
+        return new APIResource[] { new APIResource(Table.class) };
     }
 
     @Override
     public Class[] getRelatedFeatures() {
-        // TODO Auto-generated method stub
-        return null;
+        return new Class[] { FeatureSet.Tables.class };
     }
 
     @Override
     public NamedExternalResource[] getRelatedResources() {
-        // TODO Auto-generated method stub
         return null;
     }
 
