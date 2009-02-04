@@ -64,6 +64,8 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
 
     private HashMap<Widget, ChildComponentContainer> nonRenderedWidgets;
 
+    private boolean sizeChangedDuringRendering = false;
+
     public IGridLayout() {
         super();
         getElement().appendChild(margin);
@@ -194,6 +196,8 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
         nonRenderedWidgets = null;
 
         rendering = false;
+        sizeChangedDuringRendering = false;
+
         boolean needsRelativeSizeCheck = false;
 
         if (mightToggleHScrollBar && wBeforeRender != canvas.getOffsetWidth()) {
@@ -246,7 +250,9 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
         super.setHeight(height);
         if (!height.equals(this.height)) {
             this.height = height;
-            if (!rendering) {
+            if (rendering) {
+                sizeChangedDuringRendering = true;
+            } else {
                 expandRows();
                 layoutCells();
                 for (Paintable c : paintableToCell.keySet()) {
@@ -261,7 +267,9 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
         super.setWidth(width);
         if (!width.equals(this.width)) {
             this.width = width;
-            if (!rendering) {
+            if (rendering) {
+                sizeChangedDuringRendering = true;
+            } else {
                 int[] oldWidths = cloneArray(columnWidths);
                 expandColumns();
                 boolean heightChanged = false;
@@ -912,6 +920,9 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                 }
             }
             cc.renderChild(childUidl, client, -1);
+            if (sizeChangedDuringRendering && Util.isCached(childUidl)) {
+                client.handleComponentRelativeSize(cc.getWidget());
+            }
             cc.updateWidgetSize();
             nonRenderedWidgets.remove(paintable);
         }

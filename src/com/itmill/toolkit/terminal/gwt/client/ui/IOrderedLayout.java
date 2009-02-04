@@ -34,6 +34,8 @@ public class IOrderedLayout extends CellBasedLayout {
 
     private String width = "";
 
+    private boolean sizeHasChangedDuringRendering = false;
+
     public IOrderedLayout() {
         this(CLASSNAME, ORIENTATION_VERTICAL);
         allowOrientationUpdate = true;
@@ -73,7 +75,6 @@ public class IOrderedLayout extends CellBasedLayout {
                 .getChildCount());
         ArrayList<ChildComponentContainer> relativeSizeComponents = new ArrayList<ChildComponentContainer>();
         ArrayList<UIDL> relativeSizeComponentUIDL = new ArrayList<UIDL>();
-        ArrayList<Widget> relativeSizeWidgets = new ArrayList<Widget>();
 
         int pos = 0;
         for (final Iterator<UIDL> it = uidl.getChildIterator(); it.hasNext();) {
@@ -104,13 +105,18 @@ public class IOrderedLayout extends CellBasedLayout {
             if (childComponentContainer.isComponentRelativeSized(orientation)) {
                 relativeSizeComponents.add(childComponentContainer);
                 relativeSizeComponentUIDL.add(childUIDL);
-                relativeSizeWidgets.add(widget);
             } else {
                 if (isDynamicWidth()) {
                     childComponentContainer.renderChild(childUIDL, client, 0);
                 } else {
                     childComponentContainer.renderChild(childUIDL, client,
                             activeLayoutSize.getWidth());
+                }
+                if (sizeHasChangedDuringRendering && Util.isCached(childUIDL)) {
+                    // notify cached relative sized component about size
+                    // chance
+                    client.handleComponentRelativeSize(childComponentContainer
+                            .getWidget());
                 }
             }
 
@@ -151,7 +157,12 @@ public class IOrderedLayout extends CellBasedLayout {
 
             if (isDynamicWidth()) {
                 childComponentContainer.renderChild(childUIDL, client, 0);
-            } else if (Util.isCached(childUIDL)) {
+            } else {
+                childComponentContainer.renderChild(childUIDL, client,
+                        activeLayoutSize.getWidth());
+            }
+
+            if (Util.isCached(childUIDL)) {
                 /*
                  * We must update the size of the relative sized component if
                  * the expand ratio or something else in the layout changes
@@ -159,10 +170,8 @@ public class IOrderedLayout extends CellBasedLayout {
                  */
                 client.handleComponentRelativeSize(childComponentContainer
                         .getWidget());
-            } else {
-                childComponentContainer.renderChild(childUIDL, client,
-                        activeLayoutSize.getWidth());
             }
+
             // childComponentContainer.updateWidgetSize();
         }
 
@@ -220,6 +229,7 @@ public class IOrderedLayout extends CellBasedLayout {
 
         // w.mark("runDescendentsLayout done");
         isRendering = false;
+        sizeHasChangedDuringRendering = false;
     }
 
     private void updateWidgetSizes() {
@@ -771,7 +781,9 @@ public class IOrderedLayout extends CellBasedLayout {
                     - activeMargins.getVertical());
         }
 
-        if (!isRendering) {
+        if (isRendering) {
+            sizeHasChangedDuringRendering = true;
+        } else {
             recalculateLayoutAndComponentSizes();
             boolean sameSize = (sizeBefore.equals(activeLayoutSize));
             if (!sameSize) {
@@ -796,7 +808,9 @@ public class IOrderedLayout extends CellBasedLayout {
                     - activeMargins.getHorizontal());
         }
 
-        if (!isRendering) {
+        if (isRendering) {
+            sizeHasChangedDuringRendering = true;
+        } else {
             recalculateLayoutAndComponentSizes();
             boolean sameSize = (sizeBefore.equals(activeLayoutSize));
             if (!sameSize) {
