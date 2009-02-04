@@ -180,6 +180,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
         for (Cell cell : relativeHeighted) {
             Widget widget2 = cell.cc.getWidget();
             client.handleComponentRelativeSize(widget2);
+            cell.cc.updateWidgetSize();
         }
 
         layoutCells();
