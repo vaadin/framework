@@ -70,6 +70,8 @@ public class IPanel extends SimplePanel implements Container {
 
     private int contentMarginLeft = -1;
 
+    private String previousStyleName;
+
     public IPanel() {
         super();
         DivElement captionWrap = Document.get().createDivElement();
@@ -198,6 +200,15 @@ public class IPanel extends SimplePanel implements Container {
 
         rendering = false;
 
+    }
+
+    @Override
+    public void setStyleName(String style) {
+        if (!style.equals(previousStyleName)) {
+            super.setStyleName(style);
+            detectContainerBorders();
+            previousStyleName = style;
+        }
     }
 
     private void handleError(UIDL uidl) {
