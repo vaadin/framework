@@ -2,30 +2,37 @@ package com.itmill.toolkit.demo.sampler.features.panels;
 
 import com.itmill.toolkit.demo.sampler.APIResource;
 import com.itmill.toolkit.demo.sampler.Feature;
+import com.itmill.toolkit.demo.sampler.FeatureSet;
 import com.itmill.toolkit.demo.sampler.NamedExternalResource;
+import com.itmill.toolkit.ui.Layout;
 import com.itmill.toolkit.ui.Panel;
 
 public class PanelLight extends Feature {
     @Override
     public String getName() {
-        return "Panel - Light style";
+        return "Panel, light style";
     }
 
     @Override
     public String getDescription() {
-        return "A lighter style for the Panel component is"
-                + " also available.";
+        return "Panel is a simple container that supports scrolling.<br/>"
+                + " It's internal layout (by default VerticalLayout) can be"
+                + " configured or exchanged to get desired results. Components"
+                + " that are added to the Panel will in effect be added to the"
+                + " layout.<br/>"
+                + "The 'light' version has less decorations than the regular one.";
 
     }
 
     @Override
     public APIResource[] getRelatedAPI() {
-        return new APIResource[] { new APIResource(Panel.class) };
+        return new APIResource[] { new APIResource(Panel.class),
+                new APIResource(Layout.class) };
     }
 
     @Override
     public Class[] getRelatedFeatures() {
-        return new Class[] { PanelBasic.class };
+        return new Class[] { PanelBasic.class, FeatureSet.Layouts.class };
     }
 
     @Override

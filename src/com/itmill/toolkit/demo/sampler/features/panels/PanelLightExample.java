@@ -9,33 +9,41 @@ import com.itmill.toolkit.ui.Button.ClickListener;
 
 public class PanelLightExample extends VerticalLayout implements ClickListener {
 
-    private Panel p;
+    private Panel panel;
 
     public PanelLightExample() {
         setSpacing(true);
 
-        // First panel uses layout in which the components are added
-        VerticalLayout vl = new VerticalLayout();
-        Label l = new Label("Push the button to toggle style.");
-        Button b = new Button("Toggle style");
-        b.addListener(this);
-        vl.setSpacing(true);
-        vl.addComponent(l);
-        vl.addComponent(b);
-        p = new Panel("This is a light Panel");
-        p.setStyleName("light");
-        p.setLayout(vl);
+        setSpacing(true);
 
-        addComponent(p);
+        // Panel 1 - with caption
+        panel = new Panel("This is a light Panel");
+        panel.setStyleName(Panel.STYLE_LIGHT);
+        panel.setHeight("200px"); // we want scrollbars
+
+        // let's adjust the panels default layout (a VerticalLayout)
+        VerticalLayout layout = (VerticalLayout) panel.getLayout();
+        layout.setMargin(true); // we want a margin
+        layout.setSpacing(true); // and spacing between components
+        addComponent(panel);
+
+        // Let's add a few rows to provoke scrollbars:
+        for (int i = 0; i < 20; i++) {
+            panel.addComponent(new Label(
+                    "The quick brown fox jumps over the lazy dog."));
+        }
+
+        // Caption toggle:
+        Button b = new Button("Toggle caption");
+        b.addListener(this);
+        addComponent(b);
     }
 
     public void buttonClick(ClickEvent event) {
-        if (p.getStyleName().contains("light")) {
-            p.removeStyleName("light");
-            p.setCaption("This is a standard Panel");
+        if (panel.getCaption().equals("")) {
+            panel.setCaption("This is a standard Panel");
         } else {
-            p.setStyleName("light");
-            p.setCaption("This is a light Panel");
+            panel.setCaption("");
         }
     }
 }

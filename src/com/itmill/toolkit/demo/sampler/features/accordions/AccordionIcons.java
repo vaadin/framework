@@ -2,6 +2,7 @@ package com.itmill.toolkit.demo.sampler.features.accordions;
 
 import com.itmill.toolkit.demo.sampler.APIResource;
 import com.itmill.toolkit.demo.sampler.Feature;
+import com.itmill.toolkit.demo.sampler.FeatureSet;
 import com.itmill.toolkit.demo.sampler.NamedExternalResource;
 import com.itmill.toolkit.ui.Accordion;
 
@@ -26,7 +27,8 @@ public class AccordionIcons extends Feature {
 
     @Override
     public Class[] getRelatedFeatures() {
-        return new Class[] { AccordionDisabled.class };
+        return new Class[] { AccordionDisabled.class,
+                FeatureSet.Tabsheets.class };
     }
 
     @Override

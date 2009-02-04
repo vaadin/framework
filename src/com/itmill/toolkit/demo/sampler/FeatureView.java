@@ -34,7 +34,7 @@ public class FeatureView extends HorizontalLayout {
     private Feature currentFeature;
 
     public FeatureView() {
-
+        setSizeFull();
         setWidth("100%");
         setMargin(true);
         setSpacing(true);
@@ -53,6 +53,7 @@ public class FeatureView extends HorizontalLayout {
         right.setStyleName(Panel.STYLE_LIGHT);
         right.addStyleName("feature-info");
         right.setWidth("369px");
+        right.setHeight("100%");
         addComponent(right);
 
         controls = new VerticalLayout();

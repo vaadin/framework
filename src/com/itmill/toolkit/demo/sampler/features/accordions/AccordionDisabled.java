@@ -2,6 +2,7 @@ package com.itmill.toolkit.demo.sampler.features.accordions;
 
 import com.itmill.toolkit.demo.sampler.APIResource;
 import com.itmill.toolkit.demo.sampler.Feature;
+import com.itmill.toolkit.demo.sampler.FeatureSet;
 import com.itmill.toolkit.demo.sampler.NamedExternalResource;
 import com.itmill.toolkit.ui.Accordion;
 
@@ -13,8 +14,10 @@ public class AccordionDisabled extends Feature {
 
     @Override
     public String getDescription() {
-        return "With an accordion component you can disable, enable,"
-                + " hide and show tabs, similary to a tabsheet.";
+        return "An accordion component is a specialized case of a"
+                + " tabsheet, with vertically organized tabs."
+                + " With an accordion component you can also disable, enable,"
+                + " hide and show tabs, similar to a tabsheet.";
     }
 
     @Override
@@ -24,7 +27,7 @@ public class AccordionDisabled extends Feature {
 
     @Override
     public Class[] getRelatedFeatures() {
-        return new Class[] { AccordionIcons.class };
+        return new Class[] { AccordionIcons.class, FeatureSet.Tabsheets.class };
     }
 
     @Override
