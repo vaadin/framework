@@ -57,8 +57,24 @@ public class FeatureView extends HorizontalLayout {
         addComponent(right);
 
         controls = new VerticalLayout();
+        controls.setWidth("100%");
         controls.setStyleName("feature-controls");
-        // controls.setCaption("Live example");
+
+        HorizontalLayout controlButtons = new HorizontalLayout();
+        controls.addComponent(controlButtons);
+
+        Button resetExample = new Button("Reset example",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        resetExample();
+                    }
+                });
+        resetExample.setStyleName(Button.STYLE_LINK);
+        resetExample.addStyleName("showcode");
+        controlButtons.addComponent(resetExample);
+
+        controlButtons.addComponent(new Label("|"));
+
         showCode = new Button(MSG_SHOW_SRC, new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 toggleSource();
@@ -66,7 +82,7 @@ public class FeatureView extends HorizontalLayout {
         });
         showCode.setStyleName(Button.STYLE_LINK);
         showCode.addStyleName("showcode");
-        controls.addComponent(showCode);
+        controlButtons.addComponent(showCode);
 
         sourceCode = new CodeLabel();
 
@@ -91,8 +107,18 @@ public class FeatureView extends HorizontalLayout {
         sourcePanel.setVisible(show);
     }
 
+    private void resetExample() {
+        if (currentFeature != null) {
+            Feature f = currentFeature;
+            currentFeature = null;
+            exampleCache.remove(f);
+            setFeature(f);
+        }
+    }
+
     public void setFeature(Feature feature) {
         if (feature != currentFeature) {
+            currentFeature = feature;
             right.removeAllComponents();
             left.removeAllComponents();
             showSource(false);
