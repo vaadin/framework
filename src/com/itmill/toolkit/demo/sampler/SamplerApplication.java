@@ -136,9 +136,9 @@ public class SamplerApplication extends Application {
         private ObjectProperty currentFeature = new ObjectProperty(null,
                 Feature.class);
 
-        private HorizontalLayout toggleBar = new HorizontalLayout();
-
         private MainArea mainArea = new MainArea();
+
+        private ModeSwitch mode;
 
         private SplitPanel mainSplit;
         private Tree navigationTree;
@@ -192,15 +192,21 @@ public class SamplerApplication extends Application {
                 }
             });
 
+            // List/grid/coverflow
+            mode = createModeSwitch();
+            mode.setMode(currentList);
+            nav.addComponent(mode);
+            nav.setComponentAlignment(mode, Alignment.MIDDLE_LEFT);
+
             // Layouts for top area buttons
             HorizontalLayout quicknav = new HorizontalLayout();
             HorizontalLayout arrows = new HorizontalLayout();
             nav.addComponent(quicknav);
             nav.addComponent(arrows);
+            nav.setComponentAlignment(quicknav, Alignment.MIDDLE_LEFT);
+            nav.setComponentAlignment(arrows, Alignment.MIDDLE_LEFT);
             quicknav.setStyleName("segment");
             arrows.setStyleName("segment");
-            nav.setComponentAlignment(quicknav, "middle");
-            nav.setComponentAlignment(arrows, "middle");
 
             // Previous sample
             previousSample = createPrevButton();
@@ -213,14 +219,6 @@ public class SamplerApplication extends Application {
             Component search = createSearch();
             quicknav.addComponent(search);
 
-            // togglebar
-            // mainExpand.addComponent(toggleBar);
-            toggleBar.setHeight("40px");
-            toggleBar.setWidth("100%");
-            toggleBar.setStyleName("togglebar");
-            toggleBar.setSpacing(true);
-            toggleBar.setMargin(false, true, false, true);
-
             // Main left/right split; hidden menu tree
             mainSplit = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
             mainSplit.setSizeFull();
@@ -228,24 +226,12 @@ public class SamplerApplication extends Application {
             mainExpand.addComponent(mainSplit);
             mainExpand.setExpandRatio(mainSplit, 1);
 
-            VerticalLayout rightLayout = new VerticalLayout();
-            rightLayout.setSizeFull();
-            rightLayout.addComponent(toggleBar);
-
             // Menu tree, initially hidden
             navigationTree = createMenuTree();
-            mainSplit.addComponent(navigationTree);
+            mainSplit.setFirstComponent(navigationTree);
 
             // Main Area
-            mainSplit.addComponent(rightLayout);
-
-            rightLayout.addComponent(mainArea);
-            rightLayout.setExpandRatio(mainArea, 1);
-
-            // List/grid/coverflow
-            Component mode = createModeSwitch();
-            toggleBar.addComponent(mode);
-            toggleBar.setComponentAlignment(mode, Alignment.MIDDLE_RIGHT);
+            mainSplit.setSecondComponent(mainArea);
 
             // Show / hide tree
             Component treeSwitch = createTreeSwitch();
@@ -397,6 +383,7 @@ public class SamplerApplication extends Application {
         private Component createTreeSwitch() {
             final Button b = new Button();
             b.setStyleName("tree-switch");
+            b.setDescription("Toggle sample tree visibility");
             b.addListener(new Button.ClickListener() {
                 public void buttonClick(ClickEvent event) {
                     if (b.getStyleName().contains("down")) {
@@ -418,7 +405,7 @@ public class SamplerApplication extends Application {
             return b;
         }
 
-        private Component createModeSwitch() {
+        private ModeSwitch createModeSwitch() {
             ModeSwitch m = new ModeSwitch();
             m.addMode(currentList, "", "View as Icons", new ThemeResource(
                     "sampler/grid.gif"));
@@ -436,7 +423,6 @@ public class SamplerApplication extends Application {
                     }
                 }
             });
-            m.setMode(currentList);
             return m;
         }
 
@@ -475,16 +461,16 @@ public class SamplerApplication extends Application {
             if (val == null) {
                 currentList.setFeatureContainer(allFeatures);
                 mainArea.show(currentList);
-                toggleBar.setVisible(true);
+                mode.setVisible(true);
             } else if (val instanceof FeatureSet) {
                 currentList.setFeatureContainer(((FeatureSet) val)
                         .getContainer(true));
                 mainArea.show(currentList);
-                toggleBar.setVisible(true);
+                mode.setVisible(true);
             } else {
                 mainArea.show(featureView);
                 featureView.setFeature(val);
-                toggleBar.setVisible(false);
+                mode.setVisible(false);
             }
 
         }

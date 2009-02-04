@@ -221,7 +221,7 @@
 }
 .i-app-SamplerApplication .feature-info {
 	background: #1e2123 url(info-bubble-bg.png) repeat-y;
-	color: #9d9ea0;
+	color: #b8bbbe;
 	font-family: helvetica, arial, verdana, sans-serif;
 	font-size: 12px;
 	line-height: 19px;
@@ -233,8 +233,15 @@
 	background: transparent url(bullet.png) no-repeat 2px 60%;
 	padding-left: 8px;
 }
+.i-app-SamplerApplication .feature-info div.i-link a:hover {
+	color: #dcebf6;
+}
 .i-app-SamplerApplication .feature-info div.i-link a span {
 	text-decoration: none;
+	border-bottom: 1px dotted #495964;
+}
+.i-app-SamplerApplication .feature-info div.i-link a:hover span {
+	border-bottom: 1px solid #dcebf6;
 }
 .i-app-SamplerApplication .feature-info .i-panel-caption {
 	color: #fff;
@@ -298,27 +305,31 @@
 }
 
 .i-customcomponent-ModeSwitch .i-button {
-	height: 28px;
+	height: 24px;
+	width: 30px;
 	border: none;
-	font-size: 6px;
+	background: transparent url(segment.png) no-repeat;
+	cursor: default;
+	padding: 0;
 }
-.i-customcomponent-ModeSwitch .i-button-first-on {
-	background: transparent url(left-on.gif) no-repeat;
+.i-customcomponent-ModeSwitch .i-button-first-on,
+.i-customcomponent-ModeSwitch .i-button-first:active {
+	background-position: left bottom;
 }
 .i-customcomponent-ModeSwitch .i-button-first {
-	background: transparent url(left.gif) no-repeat;
+	background-position: left top;
 }
+/*
 .i-customcomponent-ModeSwitch .i-button-mid-on {
 	background: transparent url(mid-on.gif) no-repeat;
 }
 .i-customcomponent-ModeSwitch .i-button-mid {
 	background: transparent url(mid.gif) no-repeat;
-}
-.i-customcomponent-ModeSwitch .i-button-last-on {
-	border: none;
-	background: transparent url(right-on.gif) no-repeat right top;
+}*/
+.i-customcomponent-ModeSwitch .i-button-last-on,
+.i-customcomponent-ModeSwitch .i-button-last:active {
+	background-position: right bottom;
 }
 .i-customcomponent-ModeSwitch .i-button-last {
-	border: none;
-	background: transparent url(right.gif) no-repeat right top;
+	background-position: right top;
 }

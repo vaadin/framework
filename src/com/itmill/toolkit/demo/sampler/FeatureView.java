@@ -43,7 +43,7 @@ public class FeatureView extends HorizontalLayout {
         left = new Panel();
         left.setStyleName(Panel.STYLE_LIGHT);
         left.addStyleName("feature-main");
-        left.setSizeFull();
+
         ((VerticalLayout) left.getLayout()).setSpacing(true);
         ((VerticalLayout) left.getLayout()).setMargin(false);
         addComponent(left);
