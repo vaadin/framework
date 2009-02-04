@@ -404,6 +404,19 @@ public class IFilterSelect extends Composite implements Paintable, Field,
             while (it.hasNext()) {
                 final FilterSelectSuggestion s = it.next();
                 final MenuItem mi = new MenuItem(s.getDisplayString(), true, s);
+
+                com.google.gwt.dom.client.Element child = mi.getElement()
+                        .getFirstChildElement();
+                while (child != null) {
+                    if (child.getNodeName().toLowerCase().equals("img")) {
+                        DOM
+                                .sinkEvents((Element) child.cast(),
+                                        (DOM.getEventsSunk((Element) child
+                                                .cast()) | Event.ONLOAD));
+                    }
+                    child = child.getNextSiblingElement();
+                }
+
                 this.addItem(mi);
                 if (s == currentSuggestion) {
                     selectItem(mi);
@@ -457,6 +470,19 @@ public class IFilterSelect extends Composite implements Paintable, Field,
                 }
             }
             suggestionPopup.hide();
+        }
+
+        @Override
+        public void onBrowserEvent(Event event) {
+            if (event.getTypeInt() == Event.ONLOAD) {
+                if (suggestionPopup.isVisible()) {
+                    setWidth("");
+                    DOM.setStyleAttribute(DOM.getFirstChild(getElement()),
+                            "width", "");
+                    suggestionPopup.setPopupPositionAndShow(suggestionPopup);
+                }
+            }
+            super.onBrowserEvent(event);
         }
     }
 
@@ -895,6 +921,12 @@ public class IFilterSelect extends Composite implements Paintable, Field,
         }
         Util.setWidthExcludingPaddingAndBorder(this, width, 4);
         updateRootWidth();
+    }
+
+    @Override
+    public void setHeight(String height) {
+        super.setHeight(height);
+        Util.setHeightExcludingPaddingAndBorder(tb, height, 3);
     }
 
     private void updateRootWidth() {
