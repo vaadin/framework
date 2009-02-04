@@ -1270,11 +1270,11 @@ public class ApplicationConnection {
         if (cd == null) {
             return false;
         }
-        Widget widget = (Widget) cd.getComponent();
         FloatSize relativeSize = cd.getRelativeSize();
         if (relativeSize == null) {
             return false;
         }
+        Widget widget = (Widget) cd.getComponent();
 
         boolean horizontalScrollBar = false;
         boolean verticalScrollBar = false;
