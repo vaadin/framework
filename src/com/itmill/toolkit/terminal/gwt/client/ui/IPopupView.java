@@ -18,6 +18,7 @@ import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.ICaptionWrapper;
+import com.itmill.toolkit.terminal.gwt.client.ITooltip;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
@@ -66,6 +67,7 @@ public class IPopupView extends HTML implements Container {
         });
 
         popup.setAnimationEnabled(true);
+        sinkEvents(ITooltip.TOOLTIP_EVENTS);
     }
 
     /**
@@ -87,10 +89,6 @@ public class IPopupView extends HTML implements Container {
         hostPopupVisible = uidl.getBooleanVariable("popupVisibility");
 
         setHTML(uidl.getStringAttribute("html"));
-
-        if (uidl.hasAttribute("description")) {
-            setTitle(uidl.getStringAttribute("description"));
-        }
 
         if (uidl.hasAttribute("hideOnMouseOut")) {
             popup.setHideOnMouseOut(uidl.getBooleanAttribute("hideOnMouseOut"));
@@ -406,6 +404,14 @@ public class IPopupView extends HTML implements Container {
 
         popup.popupComponentWidget = (Widget) component;
         popup.popupComponentPaintable = component;
+    }
+
+    @Override
+    public void onBrowserEvent(Event event) {
+        super.onBrowserEvent(event);
+        if (client != null) {
+            client.handleTooltipEvent(event, this);
+        }
     }
 
 }// class IPopupView
