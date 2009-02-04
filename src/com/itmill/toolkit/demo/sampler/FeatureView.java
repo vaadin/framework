@@ -21,7 +21,7 @@ public class FeatureView extends HorizontalLayout {
     private static final String MSG_HIDE_SRC = "Hide Java™ source";
 
     private Panel right;
-    private Panel left;
+    private VerticalLayout left;
 
     private VerticalLayout controls;
 
@@ -34,18 +34,16 @@ public class FeatureView extends HorizontalLayout {
     private Feature currentFeature;
 
     public FeatureView() {
-        setSizeFull();
+
         setWidth("100%");
         setMargin(true);
         setSpacing(true);
         setStyleName("sample-view");
 
-        left = new Panel();
-        left.setStyleName(Panel.STYLE_LIGHT);
-        left.addStyleName("feature-main");
-
-        ((VerticalLayout) left.getLayout()).setSpacing(true);
-        ((VerticalLayout) left.getLayout()).setMargin(false);
+        left = new VerticalLayout();
+        left.setWidth("100%");
+        left.setSpacing(true);
+        left.setMargin(false);
         addComponent(left);
         setExpandRatio(left, 1);
 
@@ -53,7 +51,6 @@ public class FeatureView extends HorizontalLayout {
         right.setStyleName(Panel.STYLE_LIGHT);
         right.addStyleName("feature-info");
         right.setWidth("369px");
-        right.setHeight("100%");
         addComponent(right);
 
         controls = new VerticalLayout();

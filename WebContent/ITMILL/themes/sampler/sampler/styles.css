@@ -10,8 +10,8 @@
 	background: #5c5d60 url(top-bg.png) repeat-x;
 }
 
-.i-app-SamplerApplication .main-split {
-	background: transparent url(main-bg.png) repeat-x;
+.i-app-SamplerApplication .i-horizontallayout-sample-view {
+	background: #fff url(main-bg.png) repeat-x;
 }
 
 .i-app-SamplerApplication .topbar .logo {
@@ -142,11 +142,31 @@
 	border: none;
 }
 
+.i-app-SamplerApplication .main-split .i-splitpanel-first-container {
+	background: #eaebec url(tree-bg.png) repeat-x fixed;
+}
+
+.i-app-SamplerApplication .main-split .i-splitpanel-hsplitter {
+	width: 1px;
+	background: #aeb0b5;
+}
+.i-app-SamplerApplication .main-split .i-splitpanel-hsplitter div {
+	width: 3px;
+	background: transparent;
+	border: none;
+	margin: 0 -1px;
+	padding: 0;
+}
+
 .i-app-SamplerApplication .i-tree-menu {
 	font-family: helvetica, arial, verdana, sans-serif;
 	font-size: 12px;
 	line-height: 17px;
 	padding: 13px 0;
+}
+.i-app-SamplerApplication .i-tree-menu .i-tree-node-selected span {
+	background: #7d8490;
+	padding: 1px;
 }
 
 .i-app-SamplerApplication .i-label-section {

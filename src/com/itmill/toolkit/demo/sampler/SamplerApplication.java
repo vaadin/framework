@@ -408,13 +408,13 @@ public class SamplerApplication extends Application {
         private ModeSwitch createModeSwitch() {
             ModeSwitch m = new ModeSwitch();
             m.addMode(currentList, "", "View as Icons", new ThemeResource(
-                    "sampler/grid.gif"));
+                    "sampler/grid.png"));
             /*- no CoverFlow yet
             m.addMode(coverFlow, "", "View as Icons", new ThemeResource(
                     "sampler/flow.gif"));
              */
             m.addMode(new FeatureTable(), "", "View as List",
-                    new ThemeResource("sampler/list.gif"));
+                    new ThemeResource("sampler/list.png"));
             m.addListener(new ModeSwitch.ModeSwitchListener() {
                 public void componentEvent(Event event) {
                     if (event instanceof ModeSwitchEvent) {
@@ -483,7 +483,7 @@ public class SamplerApplication extends Application {
      */
     private class MainArea extends CustomComponent {
         MainArea() {
-            setSizeFull();
+            setWidth("100%");
             setCompositionRoot(new Label());
         }
 
