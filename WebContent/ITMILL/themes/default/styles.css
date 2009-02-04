@@ -1999,6 +1999,9 @@ input.i-modified,
 	text-indent: 6px;
 }
 
+.i-table .i-link {
+	display: inline;
+}
 
 /* IE6 hack */
 * html .i-table-scrollposition {
@@ -2673,20 +2676,6 @@ input.i-modified,
 * html .i-window {
 	width: 0; /* min-size for IE6 */
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* Shadow for window */
 

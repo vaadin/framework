@@ -201,6 +201,9 @@
 	text-indent: 6px;
 }
 
+.i-table .i-link {
+	display: inline;
+}
 
 /* IE6 hack */
 * html .i-table-scrollposition {
