@@ -533,7 +533,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
          * Overflow pixels are added to last column.
          */
 
-        Iterator headCells = tHead.iterator();
+        Iterator<Widget> headCells = tHead.iterator();
         int i = 0;
         int totalExplicitColumnsWidths = 0;
         int total = 0;
@@ -593,11 +593,14 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                 scrollbarWidth = Util.getNativeScrollbarSize();
                 if (relativeWidth && totalWidthR >= scrollbarWidth) {
                     scrollbarWidthReserved = scrollbarWidth + 1; // 
-                    widths[tHead.getVisibleCellCount() - 1] += scrollbarWidthReserved;
-                    totalWidthR += scrollbarWidthReserved;
+                    int columnindex = tHead.getVisibleCellCount() - 1;
+                    widths[columnindex] += scrollbarWidthReserved;
+                    HeaderCell headerCell = tHead.getHeaderCell(columnindex);
+                    if (headerCell.getWidth() == -1) {
+                        totalWidthR += scrollbarWidthReserved;
+                    }
                     extraSpace -= scrollbarWidthReserved;
-                    scrollbarWidthReservedInColumn = tHead
-                            .getVisibleCellCount() - 1;
+                    scrollbarWidthReservedInColumn = columnindex;
                 }
 
                 // now we will share this sum relatively to those without
@@ -1258,9 +1261,9 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
 
         private static final int WRAPPER_WIDTH = 9000;
 
-        Vector visibleCells = new Vector();
+        Vector<Widget> visibleCells = new Vector<Widget>();
 
-        HashMap availableCells = new HashMap();
+        HashMap<String, HeaderCell> availableCells = new HashMap<String, HeaderCell>();
 
         Element div = DOM.createDiv();
         Element hTableWrapper = DOM.createDiv();
@@ -1300,9 +1303,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
 
         @Override
         public void clear() {
-            for (Iterator iterator = availableCells.keySet().iterator(); iterator
-                    .hasNext();) {
-                String cid = (String) iterator.next();
+            for (String cid : availableCells.keySet()) {
                 removeCell(cid);
             }
             availableCells.clear();
@@ -1311,7 +1312,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
 
         public void updateCellsFromUIDL(UIDL uidl) {
             Iterator it = uidl.getChildIterator();
-            HashSet updated = new HashSet();
+            HashSet<String> updated = new HashSet<String>();
             updated.add("0");
             while (it.hasNext()) {
                 final UIDL col = (UIDL) it.next();
@@ -1352,9 +1353,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                 }
             }
             // check for orphaned header cells
-            it = availableCells.keySet().iterator();
-            while (it.hasNext()) {
-                String cid = (String) it.next();
+            for (String cid : availableCells.keySet()) {
                 if (!updated.contains(cid)) {
                     removeCell(cid);
                     it.remove();
@@ -1445,7 +1444,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
          * @return HeaderCell
          */
         public HeaderCell getHeaderCell(String cid) {
-            return (HeaderCell) availableCells.get(cid);
+            return availableCells.get(cid);
         }
 
         public void moveCell(int oldIndex, int newIndex) {
@@ -1459,7 +1458,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             visibleCells.insertElementAt(hCell, newIndex);
         }
 
-        public Iterator iterator() {
+        public Iterator<Widget> iterator() {
             return visibleCells.iterator();
         }
 
