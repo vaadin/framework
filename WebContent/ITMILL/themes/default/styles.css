@@ -2624,6 +2624,8 @@ input.i-modified,
 	height: 8px;
 	margin-left: 9px;
 	background: transparent url(window/img/bottom-right.png) no-repeat right top;
+	/* IE7 bug fix */
+	position:relative;
 }
 
 .i-window-resizebox {
