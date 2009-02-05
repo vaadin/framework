@@ -166,9 +166,11 @@
 /* Progress indication */
 
 .i-tabsheet-loading .i-tabsheet-tabitem-selected .i-captiontext {
-	background: transparent url(../common/img/ajax-loader.gif) no-repeat;
+	background: transparent url(../common/img/ajax-loader.gif) no-repeat top right;
 	margin-left: -10px;
 	padding-left: 10px;
+	margin-right: -10px;
+	padding-right: 10px;
 	margin-top: -12px;
 	padding-top: 12px;
 }
