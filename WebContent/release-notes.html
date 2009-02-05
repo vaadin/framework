@@ -276,6 +276,11 @@ compatible with IT Mill Toolkit 5.3.0 (<a
 	href="http://dev.itmill.com/ticket/2299">#2299</a>), so the OOPHM is
 the only option for debugging in hosted mode in Linux.</p>
 
+<p>The compilation of OOPHM widget sets uses a large amount of stack memory, so if the
+JVM default is too small, you should set it explicitly in <tt>compile-widgetset.xml</tt>
+with the following parameter for the Java process (currently included in the example build
+script): <tt>&lt;jvmarg value="-Xss1024k"/&gt;</tt>.</p>
+
 <p>As the OOPHM package is experimental, you should use it only for
 debugging purposes during development. For production use, you should
 compile your custom widget sets with the regular IT Mill Toolkit package
