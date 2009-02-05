@@ -2,34 +2,33 @@ package com.itmill.toolkit.demo.sampler.features.text;
 
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
+import com.itmill.toolkit.ui.Button;
+import com.itmill.toolkit.ui.HorizontalLayout;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.TextField;
-import com.itmill.toolkit.ui.VerticalLayout;
 
-public class TextAreaExample extends VerticalLayout implements
+public class TextAreaExample extends HorizontalLayout implements
         Property.ValueChangeListener {
 
+    private static final String initialText = "The quick brown fox jumps over the lazy dog.";
+
     private Label plainText;
-    private final TextField editor = new TextField();
+    private final TextField editor;
 
     public TextAreaExample() {
         setSpacing(true);
 
-        plainText = new Label("Initial text.\n"
-                + "\nPlease note that within a textarea,"
-                + "\nthe enter key will not dispatch the"
-                + "\nchanges to the server. To fire a"
-                + "\nvaluechange event, you must deactivate"
-                + "\nthe textarea.");
-        plainText.setContentMode(Label.CONTENT_PREFORMATTED);
-
+        editor = new TextField("", initialText);
         editor.addListener(this);
         editor.setImmediate(true);
         editor.setColumns(20);
         editor.setRows(20);
-        // editor.setSecret(true);
-
         addComponent(editor);
+
+        addComponent(new Button(">>"));
+
+        plainText = new Label(initialText);
+        plainText.setContentMode(Label.CONTENT_XHTML);
         addComponent(plainText);
     }
 
@@ -38,6 +37,11 @@ public class TextAreaExample extends VerticalLayout implements
      * label component
      */
     public void valueChange(ValueChangeEvent event) {
-        plainText.setValue(editor.getValue());
+        String text = (String) editor.getValue();
+        if (text != null) {
+            // replace newline with BR, because we're using Label.CONTENT_XHTML
+            text = text.replaceAll("\n", "<br/>");
+        }
+        plainText.setValue(text);
     }
 }

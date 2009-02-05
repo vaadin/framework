@@ -15,14 +15,9 @@ public class TextArea extends Feature {
     public String getDescription() {
         return "A multi-line Textfield component allows you to input"
                 + " several lines of text."
-                + "<br>In this example the text will be shown in a"
-                + " label component after you press enter."
                 + "<br>The amount of columns and lines can be set, and both are set here to"
                 + " 20 characters. Note that this only affects the width and height of the"
-                + " component, not the allowed length of input."
-                + "<br>For sensitive data input, the textfield can"
-                + " also be set into secret mode where the input will not be"
-                + " echoed to display.";
+                + " component, not the allowed length of input.";
     }
 
     @Override

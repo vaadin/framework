@@ -16,6 +16,7 @@ public class LabelRichExample extends VerticalLayout implements ClickListener {
 
     public LabelRichExample() {
         setSpacing(true);
+        setSizeUndefined(); // let layout grow with content
 
         richText = new Label("<h1>Rich text label example</h1>"
                 + "<p>In this example, the content mode is set to "
@@ -25,20 +26,21 @@ public class LabelRichExample extends VerticalLayout implements ClickListener {
 
         addComponent(richText);
 
-        b = new Button("Edit label");
+        b = new Button("Edit");
         b.addListener(this);
         addComponent(b);
+        setComponentAlignment(b, "right");
     }
 
     public void buttonClick(ClickEvent event) {
         if (getComponentIterator().next() == richText) {
             editor.setValue(richText.getValue());
             replaceComponent(richText, editor);
-            b.setCaption("Show label");
+            b.setCaption("Apply");
         } else {
             richText.setValue(editor.getValue());
             replaceComponent(editor, richText);
-            b.setCaption("Edit label");
+            b.setCaption("Edit");
         }
     }
 

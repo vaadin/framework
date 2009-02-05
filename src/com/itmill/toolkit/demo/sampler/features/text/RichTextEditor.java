@@ -4,7 +4,7 @@ import com.itmill.toolkit.demo.sampler.APIResource;
 import com.itmill.toolkit.demo.sampler.Feature;
 import com.itmill.toolkit.demo.sampler.NamedExternalResource;
 import com.itmill.toolkit.ui.Component;
-import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.RichTextArea;
 
 public class RichTextEditor extends Feature {
     @Override
@@ -15,20 +15,19 @@ public class RichTextEditor extends Feature {
     @Override
     public String getDescription() {
         return "A RichTextArea component allows editing XHTML"
-                + " content. Click the edit button to open the"
+                + " content. <br/>Click the edit button to open the"
                 + " editor and the show button to show the edited"
                 + " result as an XHTML label.";
     }
 
     @Override
     public APIResource[] getRelatedAPI() {
-        return new APIResource[] { new APIResource(Label.class) };
+        return new APIResource[] { new APIResource(RichTextArea.class) };
     }
 
     @Override
     public Class[] getRelatedFeatures() {
-        return new Class[] { LabelPlain.class, LabelPreformatted.class,
-                LabelRich.class, TextFieldSingle.class, TextArea.class };
+        return new Class[] { TextArea.class, LabelRich.class };
     }
 
     @Override

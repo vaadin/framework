@@ -2,28 +2,22 @@ package com.itmill.toolkit.demo.sampler.features.text;
 
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
-import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.TextField;
 import com.itmill.toolkit.ui.VerticalLayout;
 
 public class TextFieldSingleExample extends VerticalLayout implements
         Property.ValueChangeListener {
 
-    private Label plainText;
-    private final TextField editor = new TextField();
+    private final TextField editor = new TextField("Echo this:");
 
     public TextFieldSingleExample() {
         setSpacing(true);
 
-        plainText = new Label("Initial text");
-        plainText.setContentMode(Label.CONTENT_TEXT);
-
         editor.addListener(this);
         editor.setImmediate(true);
-        editor.setColumns(5);
-        // editor.setSecret(true);
+        // editor.setColumns(5); // guarantees that at least 5 chars fit
+        // editor.setSecret(true); // e.g. for passwords
 
-        addComponent(plainText);
         addComponent(editor);
     }
 
@@ -32,6 +26,7 @@ public class TextFieldSingleExample extends VerticalLayout implements
      * label component
      */
     public void valueChange(ValueChangeEvent event) {
-        plainText.setValue(editor.getValue());
+        // Show the new value we received
+        getWindow().showNotification((String) editor.getValue());
     }
 }

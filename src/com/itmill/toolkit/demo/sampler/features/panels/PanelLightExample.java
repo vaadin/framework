@@ -40,10 +40,10 @@ public class PanelLightExample extends VerticalLayout implements ClickListener {
     }
 
     public void buttonClick(ClickEvent event) {
-        if (panel.getCaption().equals("")) {
-            panel.setCaption("This is a standard Panel");
+        if (panel.getCaption() == null) {
+            panel.setCaption("This is a light Panel");
         } else {
-            panel.setCaption("");
+            panel.setCaption(null);
         }
     }
 }
