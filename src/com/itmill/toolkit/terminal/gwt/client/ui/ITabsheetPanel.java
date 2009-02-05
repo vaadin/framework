@@ -160,6 +160,7 @@ public class ITabsheetPanel extends ComplexPanel {
 
         // widget wrapper height
         wrapperDiv.getStyle().setPropertyPx("height", height);
+        runWebkitOverflowAutoFix();
     }
 
     public void runWebkitOverflowAutoFix() {

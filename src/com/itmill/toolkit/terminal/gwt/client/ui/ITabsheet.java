@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.RenderInformation;
@@ -385,15 +386,16 @@ public class ITabsheet extends ITabsheetBase {
         Style style = tp.getElement().getStyle();
         String overflow = style.getProperty("overflow");
         style.setProperty("overflow", "hidden");
-        String width = style.getProperty("width");
-        style.setProperty("width", tabsWidth + "px");
+        style.setPropertyPx("width", tabsWidth);
+        Style wrapperstyle = tp.getWidget(tp.getVisibleWidget()).getElement()
+                .getParentElement().getStyle();
+        wrapperstyle.setPropertyPx("width", tabsWidth);
         // Get content width from actual widget
 
         int contentWidth = 0;
         if (tp.getWidgetCount() > 0) {
             contentWidth = tp.getWidget(tp.getVisibleWidget()).getOffsetWidth();
         }
-        style.setProperty("width", width);
         style.setProperty("overflow", overflow);
 
         // Set widths to max(tabs,content)
@@ -401,17 +403,14 @@ public class ITabsheet extends ITabsheetBase {
             tabsWidth = contentWidth;
         }
 
-        tabs.getStyle().setPropertyPx("width", tabsWidth);
+        int outerWidth = tabsWidth + getContentAreaBorderWidth();
 
-        /*
-         * tb width includes the spacerTd width so the content area will be as
-         * wide as the tab bar
-         */
-        int realWidth = tb.getOffsetWidth();
-        contentWidth = realWidth - getContentAreaBorderWidth();
+        tabs.getStyle().setPropertyPx("width", outerWidth);
+        style.setPropertyPx("width", tabsWidth);
+        wrapperstyle.setPropertyPx("width", tabsWidth);
 
-        contentNode.getStyle().setPropertyPx("width", contentWidth);
-        super.setWidth(realWidth + "px");
+        contentNode.getStyle().setPropertyPx("width", tabsWidth);
+        super.setWidth(outerWidth + "px");
         updateOpenTabSize();
     }
 
@@ -661,6 +660,14 @@ public class ITabsheet extends ITabsheetBase {
                     SCROLLER_CLASSNAME + (clipped ? "Next" : "Next-disabled"));
         } else {
             DOM.setStyleAttribute(scroller, "display", "none");
+        }
+
+        if (BrowserInfo.get().isSafari()) {
+            // fix tab height for safari, bugs sometimes if tabs contain icons
+            String property = tabs.getStyle().getProperty("height");
+            if (property == null || property.equals("")) {
+                tabs.getStyle().setPropertyPx("height", tb.getOffsetHeight());
+            }
         }
 
     }
