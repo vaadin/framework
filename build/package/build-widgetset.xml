@@ -80,6 +80,8 @@ See configure target to adjust this buildfile.
 			<arg value="-out" />
 			<arg value="${client-side-destination}" />
 			<arg value="com.itmill.toolkit.demo.colorpicker.gwt.ColorPickerWidgetSet" />
+            <jvmarg value="-Xss1024k"/>
+            <jvmarg value="-Djava.awt.headless=true"/>
 			<classpath>
 				<path refid="compile.classpath"/>
 			</classpath>
