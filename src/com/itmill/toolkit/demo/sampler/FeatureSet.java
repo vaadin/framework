@@ -98,9 +98,9 @@ public class FeatureSet extends Feature {
      */
     static final FeatureSet FEATURES = new FeatureSet("All", new Feature[] {
     // Main sets
-            new Blueprints(), //
+            // new Blueprints(), disabled for now, until more samples are ready
             new Components(), //
-    });
+            });
 
     /*
      * TOP LEVEL
