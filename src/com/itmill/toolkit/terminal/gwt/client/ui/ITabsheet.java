@@ -671,6 +671,18 @@ public class ITabsheet extends ITabsheetBase {
             if (property == null || property.equals("")) {
                 tabs.getStyle().setPropertyPx("height", tb.getOffsetHeight());
             }
+            /*
+             * another hack for webkits. tabscroller sometimes drops without
+             * "shaking it" reproducable in
+             * com.itmill.toolkit.tests.components.tabsheet.TabSheetIcons
+             */
+            final Style style = scroller.getStyle();
+            style.setProperty("whiteSpace", "normal");
+            DeferredCommand.addCommand(new Command() {
+                public void execute() {
+                    style.setProperty("whiteSpace", "");
+                }
+            });
         }
 
     }
