@@ -5,6 +5,7 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.animation.client.Animation;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.PopupListener;
@@ -236,6 +237,13 @@ public class IToolkitOverlay extends PopupPanel {
 
         int x = getAbsoluteLeft();
         int y = getAbsoluteTop();
+
+        /* This is needed for IE7 at least */
+        // Account for the difference between absolute position and the
+        // body's positioning context.
+        x -= Document.get().getBodyOffsetLeft();
+        y -= Document.get().getBodyOffsetTop();
+
         int width = getOffsetWidth();
         int height = getOffsetHeight();
 
