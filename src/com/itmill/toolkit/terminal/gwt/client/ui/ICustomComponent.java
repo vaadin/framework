@@ -53,7 +53,7 @@ public class ICustomComponent extends SimplePanel implements Container {
         }
 
         boolean updateDynamicSize = updateDynamicSize();
-        if (updateDynamicSize && width != null && width.contains("%")) {
+        if (updateDynamicSize) {
             DeferredCommand.addCommand(new Command() {
                 public void execute() {
                     // FIXME deferred relative size update needed to fix some
