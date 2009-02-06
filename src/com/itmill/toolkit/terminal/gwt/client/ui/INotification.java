@@ -260,10 +260,19 @@ public class INotification extends IToolkitOverlay {
                 startDelay();
             }
             break;
-        default:
-            if (type != Event.ONMOUSEUP && type != Event.ONKEYUP) {
-                startDelay();
+        case Event.ONMOUSEDOWN:
+        case Event.ONMOUSEWHEEL:
+        case Event.ONSCROLL:
+            startDelay();
+            break;
+        case Event.ONKEYDOWN:
+            if (event.getRepeat()) {
+                return true;
             }
+            startDelay();
+            break;
+        default:
+            break;
         }
         return true;
     }
