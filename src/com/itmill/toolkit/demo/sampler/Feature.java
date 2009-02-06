@@ -57,8 +57,8 @@ abstract public class Feature {
      * May return null, if the example has no related resources.
      * </p>
      * <p>
-     * The name of the NamedExternalResource will be shown in the UI. <br/> Note
-     * that Javadoc should be referenced via {@link #getRelatedAPI()}.
+     * The name of the NamedExternalResource will be shown in the UI. <br/>
+     * Note that Javadoc should be referenced via {@link #getRelatedAPI()}.
      * </p>
      * 
      * @see #getThemeBase()
@@ -132,8 +132,15 @@ abstract public class Feature {
             if (javaSource == null) {
                 StringBuffer src = new StringBuffer();
                 try {
+                    /*
+                     * Use package name + class name so the class loader won't
+                     * have to guess the package name.
+                     */
+                    String resourceName = "/"
+                            + getExample().getClass().getName().replace('.',
+                                    '/') + ".java";
                     InputStream is = getClass().getResourceAsStream(
-                            getExample().getClass().getSimpleName() + ".java");
+                            resourceName);
                     BufferedReader bis = new BufferedReader(
                             new InputStreamReader(is));
                     for (String line = bis.readLine(); null != line; line = bis
