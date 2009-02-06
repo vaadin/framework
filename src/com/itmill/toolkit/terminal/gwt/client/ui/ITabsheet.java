@@ -36,9 +36,12 @@ public class ITabsheet extends ITabsheetBase {
         @Override
         public void onBrowserEvent(Event event) {
             super.onBrowserEvent(event);
-            if (event.getTypeInt() == Event.ONLOAD && isDynamicWidth()) {
+            if (event.getTypeInt() == Event.ONLOAD) {
                 // icon onloads may change total width of tabsheet
-                updateDynamicWidth();
+                if (isDynamicWidth()) {
+                    updateDynamicWidth();
+                }
+                updateTabScroller();
             }
         }
 
