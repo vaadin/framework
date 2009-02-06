@@ -132,9 +132,6 @@ public class IToolkitOverlay extends PopupPanel {
     public void show() {
         super.show();
         if (shadow != null) {
-            DOM
-                    .insertBefore(RootPanel.get().getElement(), shadow,
-                            getElement());
             if (isAnimationEnabled()) {
                 ShadowAnimation sa = new ShadowAnimation();
                 sa.run(200);
@@ -211,10 +208,9 @@ public class IToolkitOverlay extends PopupPanel {
      */
     private void updateShadowSizeAndPosition(double progress) {
         // Don't do anything if overlay element is not attached
-        if (!isAttached()) {
+        if (!isAttached() || !isVisible()) {
             return;
         }
-
         // Calculate proper z-index
         String zIndex = null;
         try {
@@ -267,6 +263,12 @@ public class IToolkitOverlay extends PopupPanel {
         DOM.setStyleAttribute(shadow, "height", height + "px");
         DOM.setStyleAttribute(shadow, "top", y + "px");
         DOM.setStyleAttribute(shadow, "left", x + "px");
+
+        // attach to dom if not there already
+        if (shadow.getParentElement() == null) {
+            RootPanel.get().getElement().insertBefore(shadow, getElement());
+        }
+
     }
 
     protected class ShadowAnimation extends Animation {
