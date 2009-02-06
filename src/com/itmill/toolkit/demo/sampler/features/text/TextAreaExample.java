@@ -19,13 +19,15 @@ public class TextAreaExample extends HorizontalLayout implements
         setSpacing(true);
 
         editor = new TextField("", initialText);
+        editor.setRows(20); // this will make it an 'area', i.e multiline
+        editor.setColumns(20);
         editor.addListener(this);
         editor.setImmediate(true);
-        editor.setColumns(20);
-        editor.setRows(20);
         addComponent(editor);
 
-        addComponent(new Button(">>"));
+        // the TextArea is immediate, and it's valueCahnge updates the Label,
+        // so this button actually does nothing
+        addComponent(new Button(">"));
 
         plainText = new Label(initialText);
         plainText.setContentMode(Label.CONTENT_XHTML);

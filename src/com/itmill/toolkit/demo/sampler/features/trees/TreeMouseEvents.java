@@ -21,7 +21,8 @@ public class TreeMouseEvents extends Feature {
                 + " is used. Through ItemClickEvent we can update the"
                 + " label showing the selection."
                 + "<br>Try to click your left, right and middle mouse"
-                + "buttons on the tree items.";
+                + "buttons on the tree items. Any modifier keys will"
+                + " also be detected.";
     }
 
     @Override

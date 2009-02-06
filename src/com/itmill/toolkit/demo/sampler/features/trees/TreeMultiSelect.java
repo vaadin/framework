@@ -17,8 +17,7 @@ public class TreeMultiSelect extends Feature {
                 + " data that has hierarchical relationships, such as"
                 + " filesystems or message threads."
                 + "<br>In this example, you can select multiple tree nodes"
-                + " and delete your selection. You can also click your"
-                + " selections again, and have no selections made.";
+                + " and delete your selection. Click a selected item again to de-select it.";
     }
 
     @Override

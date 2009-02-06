@@ -10,72 +10,77 @@ import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.HorizontalLayout;
 import com.itmill.toolkit.ui.TextField;
 import com.itmill.toolkit.ui.Tree;
-import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
-public class TreeSingleSelectExample extends VerticalLayout implements
+public class TreeSingleSelectExample extends HorizontalLayout implements
         Property.ValueChangeListener, Button.ClickListener, Action.Handler {
 
+    // Actions for the context menu
     private static final Action ACTION_ADD = new Action("Add child item");
     private static final Action ACTION_DELETE = new Action("Delete");
     private static final Action[] ACTIONS = new Action[] { ACTION_ADD,
             ACTION_DELETE };
 
-    private Tree t;
+    private Tree tree;
+
+    HorizontalLayout editBar;
     private TextField editor;
     private Button change;
-    private int itemId;
 
     public TreeSingleSelectExample() {
         setSpacing(true);
 
-        // Create new Tree object using a hierarchical container from
-        // ExampleUtil class
-        t = new Tree("Hardware Inventory", ExampleUtil.getHardwareContainer());
+        // Create the Tree,a dd to layout
+        tree = new Tree("Hardware Inventory");
+        addComponent(tree);
+
+        // Contents from a (prefilled example) hierarchical container:
+        tree.setContainerDataSource(ExampleUtil.getHardwareContainer());
 
         // Add Valuechangelistener and Actionhandler
-        t.addListener(this);
-        t.addActionHandler(this);
+        tree.addListener(this);
 
-        t.setImmediate(true);
+        // Add actions (context menu)
+        tree.addActionHandler(this);
+
+        // Cause valueChange immediately when the user selects
+        tree.setImmediate(true);
 
         // Set tree to show the 'name' property as caption for items
-        t.setItemCaptionPropertyId(ExampleUtil.hw_PROPERTY_NAME);
-        t.setItemCaptionMode(AbstractSelect.ITEM_CAPTION_MODE_PROPERTY);
-
-        // Starting itemId # for new items
-        itemId = t.getContainerDataSource().size();
+        tree.setItemCaptionPropertyId(ExampleUtil.hw_PROPERTY_NAME);
+        tree.setItemCaptionMode(AbstractSelect.ITEM_CAPTION_MODE_PROPERTY);
 
         // Expand whole tree
-        for (int i = 0; i < itemId; i++) {
-            t.expandItemsRecursively(i);
+        for (Object id : tree.rootItemIds()) {
+            tree.expandItemsRecursively(id);
         }
 
         // Create the 'editor bar' (textfield and button in a horizontallayout)
-        editor = new TextField();
-        editor.setImmediate(true);
-        change = new Button("Apply", this, "buttonClick");
-        change.setEnabled(false);
-        HorizontalLayout editBar = new HorizontalLayout();
-        editBar.addComponent(editor);
-        editBar.addComponent(change);
-
+        editBar = new HorizontalLayout();
+        editBar.setMargin(false, false, false, true);
+        editBar.setEnabled(false);
         addComponent(editBar);
-        addComponent(t);
-
+        // textfield
+        editor = new TextField("Item name");
+        editor.setImmediate(true);
+        editBar.addComponent(editor);
+        // apply-button
+        change = new Button("Apply", this, "buttonClick");
+        editBar.addComponent(change);
+        editBar.setComponentAlignment(change, "bottom");
     }
 
     public void valueChange(ValueChangeEvent event) {
         if (event.getProperty().getValue() != null) {
             // If something is selected from the tree, get it's 'name' and
             // insert it into the textfield
-            editor.setValue(t.getItem(event.getProperty().getValue())
+            editor.setValue(tree.getItem(event.getProperty().getValue())
                     .getItemProperty(ExampleUtil.hw_PROPERTY_NAME));
             editor.requestRepaint();
-            change.setEnabled(true);
+            editBar.setEnabled(true);
         } else {
             editor.setValue("");
-            change.setEnabled(false);
+            editBar.setEnabled(false);
         }
     }
 
@@ -83,8 +88,9 @@ public class TreeSingleSelectExample extends VerticalLayout implements
         // If the edited value contains something, set it to be the item's new
         // 'name' property
         if (!editor.getValue().equals("")) {
-            t.getItem(t.getValue()).getItemProperty(
-                    ExampleUtil.hw_PROPERTY_NAME).setValue(editor.getValue());
+            Item item = tree.getItem(tree.getValue());
+            Property name = item.getItemProperty(ExampleUtil.hw_PROPERTY_NAME);
+            name.setValue(editor.getValue());
         }
     }
 
@@ -100,25 +106,27 @@ public class TreeSingleSelectExample extends VerticalLayout implements
      */
     public void handleAction(Action action, Object sender, Object target) {
         if (action == ACTION_ADD) {
-            // Allow children for the target item
-            t.setChildrenAllowed(target, true);
+            // Allow children for the target item, and expand it
+            tree.setChildrenAllowed(target, true);
+            tree.expandItem(target);
 
-            // Create new item, disallow children, add name, set parent
-            Item i = t.addItem(itemId);
-            t.setChildrenAllowed(itemId, false);
-            String newItemName = "New Item # " + itemId;
-            i.getItemProperty(ExampleUtil.hw_PROPERTY_NAME).setValue(
-                    newItemName);
-            t.setParent(itemId, target);
-            t.expandItem(target);
-            itemId++;
+            // Create new item, set parent, disallow children (= leaf node)
+            Object itemId = tree.addItem();
+            tree.setParent(itemId, target);
+            tree.setChildrenAllowed(itemId, false);
+
+            // Set the name for this item (we use it as item caption)
+            Item item = tree.getItem(itemId);
+            Property name = item.getItemProperty(ExampleUtil.hw_PROPERTY_NAME);
+            name.setValue("New Item");
+
         } else if (action == ACTION_DELETE) {
-            Object parent = t.getParent(target);
-            t.removeItem(target);
+            Object parent = tree.getParent(target);
+            tree.removeItem(target);
             // If the deleted object's parent has no more children, set it's
-            // childrenallowed property to false
-            if (parent != null && t.getChildren(parent).size() == 0) {
-                t.setChildrenAllowed(parent, false);
+            // childrenallowed property to false (= leaf node)
+            if (parent != null && tree.getChildren(parent).size() == 0) {
+                tree.setChildrenAllowed(parent, false);
             }
         }
     }

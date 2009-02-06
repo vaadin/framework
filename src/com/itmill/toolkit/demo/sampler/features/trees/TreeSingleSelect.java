@@ -17,8 +17,7 @@ public class TreeSingleSelect extends Feature {
                 + " data that has hierarchical relationships, such as"
                 + " filesystems or message threads."
                 + "<br>In this example, you can select any single tree node"
-                + " and modify its 'name' property. You can also click your"
-                + " selection again, and have no selections made.";
+                + " and modify its 'name' property. Click again to de-select.";
     }
 
     @Override
