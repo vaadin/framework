@@ -103,6 +103,8 @@ public class IFilterSelect extends Composite implements Paintable, Field,
 
         private int popupOuterPadding = -1;
 
+        private int topPosition;
+
         SuggestionPopup() {
             super(true, false, true);
             menu = new SuggestionMenu();
@@ -136,9 +138,10 @@ public class IFilterSelect extends Composite implements Paintable, Field,
 
             menu.setSuggestions(currentSuggestions);
             final int x = IFilterSelect.this.getAbsoluteLeft();
-            int y = tb.getAbsoluteTop();
-            y += tb.getOffsetHeight();
-            setPopupPosition(x, y);
+            topPosition = tb.getAbsoluteTop();
+            topPosition += tb.getOffsetHeight();
+            setPopupPosition(x, topPosition);
+
             final int first = currentPage * PAGELENTH
                     + (nullSelectionAllowed && currentPage > 0 ? 0 : 1);
             final int last = first + currentSuggestions.size() - 1;
@@ -328,6 +331,13 @@ public class IFilterSelect extends Composite implements Paintable, Field,
                 }
             } else {
                 top = getPopupTop();
+                /*
+                 * Take popup top margin into account. getPopupTop() returns the
+                 * top value including the margin but the value we give must not
+                 * include the margin.
+                 */
+                int topMargin = (top - topPosition);
+                top -= topMargin;
             }
 
             // fetch real width (mac FF bugs here due GWT popups overflow:auto )
