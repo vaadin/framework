@@ -6,6 +6,8 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.Set;
 
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
@@ -29,7 +31,7 @@ public class ICustomComponent extends SimplePanel implements Container {
         setStyleName(CLASSNAME);
     }
 
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+    public void updateFromUIDL(UIDL uidl, final ApplicationConnection client) {
         rendering = true;
         if (client.updateComponent(this, uidl, true)) {
             rendering = false;
@@ -50,10 +52,21 @@ public class ICustomComponent extends SimplePanel implements Container {
             p.updateFromUIDL(child, client);
         }
 
+        boolean updateDynamicSize = updateDynamicSize();
+        if (updateDynamicSize && width != null && width.contains("%")) {
+            DeferredCommand.addCommand(new Command() {
+                public void execute() {
+                    // FIXME deferred relative size update needed to fix some
+                    // scrollbar issues in sampler. This must be the wrong way
+                    // to do it. Might be that some other component is broken.
+                    client.handleComponentRelativeSize(ICustomComponent.this);
+
+                }
+            });
+        }
+
         renderSpace.setWidth(getElement().getOffsetWidth());
         renderSpace.setHeight(getElement().getOffsetHeight());
-
-        updateDynamicSize();
 
         rendering = false;
     }
