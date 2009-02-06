@@ -2,6 +2,7 @@ package com.itmill.toolkit.demo.sampler;
 
 import java.net.URI;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import com.itmill.toolkit.Application;
@@ -564,6 +565,8 @@ public class SamplerApplication extends Application {
      * Table -mode FeatureList. Displays the features in a Table.
      */
     private class FeatureTable extends Table implements FeatureList {
+        private HashMap<Object, Resource> iconCache = new HashMap<Object, Resource>();
+
         FeatureTable() {
             setStyleName("featuretable");
             alwaysRecalculateColumnWidths = true;
@@ -579,8 +582,14 @@ public class SamplerApplication extends Application {
                                 // no icon for sections
                                 return null;
                             }
-                            Resource res = new ClassResource(f.getClass(), f
-                                    .getIconName(), SamplerApplication.this);
+                            String resId = "75-" + f.getIconName();
+                            Resource res = iconCache.get(resId);
+                            if (res == null) {
+                                res = new ClassResource(f.getClass(), resId,
+                                        SamplerApplication.this);
+                                iconCache.put(resId, res);
+
+                            }
                             Embedded emb = new Embedded("", res);
                             emb.setWidth("48px");
                             emb.setHeight("48px");
@@ -653,6 +662,7 @@ public class SamplerApplication extends Application {
     private class FeatureGrid extends Panel implements FeatureList {
 
         GridLayout grid = new GridLayout(11, 1);
+        private HashMap<Object, Resource> iconCache = new HashMap<Object, Resource>();
 
         FeatureGrid() {
             setSizeFull();
@@ -695,8 +705,15 @@ public class SamplerApplication extends Application {
                     Button b = new Button();
                     b.setStyleName(Button.STYLE_LINK);
                     b.addStyleName("screenshot");
-                    b.setIcon(new ClassResource(f.getClass(), "75-"
-                            + f.getIconName(), SamplerApplication.this));
+                    String resId = "75-" + f.getIconName();
+                    Resource res = iconCache.get(resId);
+                    if (res == null) {
+                        res = new ClassResource(f.getClass(), resId,
+                                SamplerApplication.this);
+                        iconCache.put(resId, res);
+
+                    }
+                    b.setIcon(res);
                     b.setWidth("75px");
                     b.setHeight("75px");
                     b.setDescription("<h3>" + f.getName() + "</h3>"
