@@ -141,7 +141,7 @@
 
     <!-- Called only when building installation packages. -->
 	<target name="package-init">
-      <property name="build.sampler.disabled" value="true"/>
+      <!-- <property name="build.sampler.disabled" value="false"/> -->
     </target>
 
 	<target name="init" depends="check-java-version, init-platform">

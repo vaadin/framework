@@ -6,6 +6,7 @@
 <web-app>
 	<display-name>IT Mill Toolkit</display-name>
 	<description> IT Mill Toolkit examples </description>
+
 	<!--
 		Turn off productionMode (off by default). Setting productionMode=true
 		disables debug features. In when this is off, you can show debug
@@ -17,6 +18,7 @@
 		<param-value>false</param-value>
 		<description>IT Mill Toolkit production mode</description>
 	</context-param>
+
 	<!--
 		Permit use of IT Mill Testing Tools for this servlet continer. Do not
 		use this in production environment.
@@ -26,6 +28,7 @@
 		<param-value>true</param-value>
 		<description>IT Mill Testing Tools activation</description>
 	</context-param>
+
 	<!--
 		Specify the IT Mill Testing Tools server URI. Do not use this in
 		production environment.
@@ -35,6 +38,7 @@
 		<param-value>http://192.168.1.242:8099/TestingToolsServer</param-value>
 		<description>IT Mill Testing Tools URI</description>
 	</context-param>
+
 	<!--
 		Enable possibility to run any Java class as application from this
 		servlet. For example, if this servlet is mapped to /run, your foo.App
@@ -49,6 +53,7 @@
 			<param-value>true</param-value>
 		</init-param>
 	</servlet>
+
 	<!--  Feature Browser demo application -->
 	<servlet>
 		<servlet-name>FeatureBrowser</servlet-name>
@@ -58,6 +63,21 @@
 			<param-value>com.itmill.toolkit.demo.featurebrowser.FeatureBrowser</param-value>
 		</init-param>
 	</servlet>
+
+	<!--  Sampler demo application -->
+    <servlet>
+      <servlet-name>Sampler</servlet-name>
+      <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+      <init-param>
+        <param-name>application</param-name>
+        <param-value>com.itmill.toolkit.demo.sampler.SamplerApplication</param-value>
+      </init-param>
+      <init-param>
+        <param-name>widgetset</param-name>
+        <param-value>com.itmill.toolkit.demo.sampler.gwt.SamplerWidgetSet</param-value>
+      </init-param>
+    </servlet>
+
 	<!--  Reservr demo application -->
 	<servlet>
 		<servlet-name>Reservr</servlet-name>
@@ -71,6 +91,7 @@
 			<param-value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</param-value>
 		</init-param>
 	</servlet>
+
 	<!-- Version of the Reservr to be run  as a portlet -->
 	<servlet>
 		<servlet-name>SimpleReserver</servlet-name>
@@ -84,6 +105,7 @@
 			<param-value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</param-value>
 		</init-param>
 	</servlet>
+
 	<!--  Buffered components demo app (shown in Windowed demos) -->
 	<servlet>
 		<servlet-name>BufferedComponents</servlet-name>
@@ -93,6 +115,7 @@
 			<param-value>com.itmill.toolkit.demo.BufferedComponents</param-value>
 		</init-param>
 	</servlet>
+
 	<!-- Table demo application (shown in Windowed demos) -->
 	<servlet>
 		<servlet-name>TableDemo</servlet-name>
@@ -102,6 +125,7 @@
 			<param-value>com.itmill.toolkit.demo.TableDemo</param-value>
 		</init-param>
 	</servlet>
+
 	<!-- Calendar demo application (shown in Windowed demos) -->
 	<servlet>
 		<servlet-name>CalendarDemo</servlet-name>
@@ -115,6 +139,7 @@
 			<param-value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</param-value>
 		</init-param>
 	</servlet>
+
 	<!-- Filtering select demo -->
 	<servlet>
 		<servlet-name>FilterSelect</servlet-name>
@@ -124,6 +149,7 @@
 			<param-value>com.itmill.toolkit.demo.FilterSelect</param-value>
 		</init-param>
 	</servlet>
+
 	<!-- Hello world demo application -->
 	<servlet>
 		<servlet-name>HelloWorld</servlet-name>
@@ -133,6 +159,7 @@
 			<param-value>com.itmill.toolkit.demo.HelloWorld</param-value>
 		</init-param>
 	</servlet>
+
 	<!-- Calculator demo application -->
 	<servlet>
 		<servlet-name>Calc</servlet-name>
@@ -142,6 +169,7 @@
 			<param-value>com.itmill.toolkit.demo.Calc</param-value>
 		</init-param>
 	</servlet>
+
 	<!--  Keyboard shortcuts demo application -->
 	<servlet>
 		<servlet-name>KeyboardShortcut</servlet-name>
@@ -151,6 +179,7 @@
 			<param-value>com.itmill.toolkit.demo.KeyboardShortcut</param-value>
 		</init-param>
 	</servlet>
+
 	<!--
 		Color Picker demo application that demonstrates creation of custom
 		widgets
@@ -167,6 +196,7 @@
 			<param-value>com.itmill.toolkit.demo.colorpicker.gwt.ColorPickerWidgetSet</param-value>
 		</init-param>
 	</servlet>
+
 	<!-- Caching demo application that demonstrates paint optimization -->
 	<servlet>
 		<servlet-name>CachingDemo</servlet-name>
@@ -176,6 +206,7 @@
 			<param-value>com.itmill.toolkit.demo.CachingDemo</param-value>
 		</init-param>
 	</servlet>
+
 	<!-- Notification demo application -->
 	<servlet>
 		<servlet-name>NotificationDemo</servlet-name>
@@ -185,6 +216,7 @@
 			<param-value>com.itmill.toolkit.demo.NotificationDemo</param-value>
 		</init-param>
 	</servlet>
+
  	<!-- Select demo application (shown in Windowed demos) -->
 	<servlet>
 		<servlet-name>SelectDemo</servlet-name>
@@ -194,6 +226,7 @@
 			<param-value>com.itmill.toolkit.demo.SelectDemo</param-value>
 		</init-param>
 	</servlet>
+
 	<!-- Browser demo application -->
 	<servlet>
 		<servlet-name>BrowserDemo</servlet-name>
@@ -203,6 +236,7 @@
 			<param-value>com.itmill.toolkit.demo.BrowserDemo</param-value>
 		</init-param>
 	</servlet>
+
 	<!-- Windowed demos application -->
 	<servlet>
 		<servlet-name>WindowedDemos</servlet-name>
@@ -212,6 +246,7 @@
 			<param-value>com.itmill.toolkit.demo.WindowedDemos</param-value>
 		</init-param>
 	</servlet>
+
 	<!-- Portlet demo application -->
 	<servlet>
 		<servlet-name>PortletDemo</servlet-name>
@@ -221,6 +256,7 @@
 			<param-value>com.itmill.toolkit.demo.PortletDemo</param-value>
 		</init-param>
 	</servlet>
+
 	<!-- Servlet Mappings below - see servlets for comments -->
 	<servlet-mapping>
 		<servlet-name>PortletDemo</servlet-name>
@@ -274,6 +310,12 @@
 		<!-- Hint for the automatic deployment descriptor generator -->		
 	    <!-- portlet style=height:650px -->
 	</servlet-mapping>
+    <servlet-mapping>
+      <servlet-name>Sampler</servlet-name>
+      <url-pattern>/sampler/*</url-pattern>
+      <!-- Hint for the automatic deployment descriptor generator -->		
+      <!-- portlet style=height:650px -->
+    </servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>HelloWorld</servlet-name>
 		<url-pattern>/HelloWorld/*</url-pattern>
