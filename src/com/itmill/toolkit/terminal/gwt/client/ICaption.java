@@ -214,7 +214,7 @@ public class ICaption extends HTML {
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         final Element target = DOM.eventGetTarget(event);
-        if (client != null && !DOM.compare(target, getElement())) {
+        if (client != null && owner != null && target != getElement()) {
             client.handleTooltipEvent(event, owner);
         }
 
