@@ -11,7 +11,7 @@ import com.itmill.toolkit.demo.sampler.features.commons.Validation;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.Form;
 
-public class FormBasic extends Feature {
+public class FormPojo extends Feature {
 
     @Override
     public Component getExample() {
@@ -23,7 +23,11 @@ public class FormBasic extends Feature {
         return "The Form -component provides a convenient way to organize"
                 + " related fields visually.<br/> It is most useful when connected"
                 + " to a data source, and provides buffering and customization"
-                + " features to support that scenario.";
+                + " features to support that scenario.<br> It easily be used as"
+                + " a POJO or Bean editor by wrapping the bean using BeanItem."
+                + " The basic functionality only requires a couple of lines of"
+                + " code, then Validators and other customizations can be"
+                + " applied to taste.";
     }
 
     public APIResource[] getRelatedAPI() {

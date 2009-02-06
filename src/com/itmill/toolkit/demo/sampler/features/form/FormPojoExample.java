@@ -30,20 +30,24 @@ public class FormPojoExample extends VerticalLayout {
         person = new Person(); // a person POJO
         BeanItem personItem = new BeanItem(person); // item from POJO
 
-        // create the Form
+        // Create the Form
         final Form personForm = new Form();
         personForm.setWriteThrough(false); // we want explicit 'apply'
         personForm.setInvalidCommitted(false); // no invalid values in datamodel
+
         // FieldFactory for customizing the fields and adding validators
         personForm.setFieldFactory(new PersonFieldFactory());
         personForm.setItemDataSource(personItem); // bind to POJO via BeanItem
-        // determines which properties are shown, and in which order:
+
+        // Determines which properties are shown, and in which order:
         personForm.setVisibleItemProperties(Arrays.asList(new String[] {
                 "firstName", "lastName", "countryCode", "password",
                 "birthdate", "shoesize", "uuid" }));
-        addComponent(personForm); // add to layout
 
-        // the cancel / apply buttons
+        // Add form to layout
+        addComponent(personForm);
+
+        // The cancel / apply buttons
         HorizontalLayout buttons = new HorizontalLayout();
         buttons.setSpacing(true);
         Button discardChanges = new Button("Discard changes",
@@ -54,9 +58,14 @@ public class FormPojoExample extends VerticalLayout {
                 });
         discardChanges.setStyleName(Button.STYLE_LINK);
         buttons.addComponent(discardChanges);
+
         Button apply = new Button("Apply", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
-                personForm.commit();
+                try {
+                    personForm.commit();
+                } catch (Exception e) {
+                    // Ingnored, we'll let the Form handle the errors
+                }
             }
         });
         buttons.addComponent(apply);
@@ -70,7 +79,6 @@ public class FormPojoExample extends VerticalLayout {
                     }
                 });
         addComponent(showPojoState);
-        // showPojoState();
     }
 
     private void showPojoState() {
@@ -110,12 +118,14 @@ public class FormPojoExample extends VerticalLayout {
             if ("firstName".equals(propertyId)) {
                 TextField tf = (TextField) f;
                 tf.setRequired(true);
+                tf.setRequiredError("Please enter a First Name");
                 tf.setWidth("15em");
                 tf.addValidator(new StringLengthValidator(
                         "First Name must be 3-25 characters", 3, 25, false));
             } else if ("lastName".equals(propertyId)) {
                 TextField tf = (TextField) f;
                 tf.setRequired(true);
+                tf.setRequiredError("Please enter a Last Name");
                 tf.setWidth("20em");
                 tf.addValidator(new StringLengthValidator(
                         "Last Name must be 3-50 characters", 3, 50, false));
@@ -123,6 +133,7 @@ public class FormPojoExample extends VerticalLayout {
                 TextField tf = (TextField) f;
                 tf.setSecret(true);
                 tf.setRequired(true);
+                tf.setRequiredError("Please enter a password");
                 tf.setWidth("10em");
                 tf.addValidator(new StringLengthValidator(
                         "Password must be 6-20 characters", 6, 20, false));
