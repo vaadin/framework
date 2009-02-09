@@ -490,7 +490,11 @@ public class SamplerApplication extends Application {
 
         public void show(Component c) {
             if (getCompositionRoot() != c) {
-                // c.setSizeFull();
+                if (c instanceof FeatureTable) {
+                    setHeight("100%");
+                } else {
+                    setHeight(null);
+                }
                 setCompositionRoot(c);
             }
         }
