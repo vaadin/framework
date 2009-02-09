@@ -458,6 +458,7 @@
 				<include name="eclipse-project" />
 				<include name="eclipse*launch" />
 				<include name="build-widgetset.xml" />
+				<include name="eclipse-org.eclipse.core.resources.prefs" />
 			</fileset>
 		</copy>
 		<move file="${output-dir}/build-widgetset.xml" tofile="${output-dir}/WebContent/doc/example-source/build-widgetset.xml" />
@@ -465,6 +466,8 @@
 		<move file="${output-dir}/eclipse-project" tofile="${output-dir}/.project" />
 		<move file="${output-dir}/eclipse-IT Mill Toolkit Hosted Mode-launch" tofile="${output-dir}/IT Mill Toolkit Hosted Mode.launch" />
 		<move file="${output-dir}/eclipse-IT Mill Toolkit Web Mode-launch" tofile="${output-dir}/IT Mill Toolkit Web Mode.launch" />
+		<mkdir dir="${output-dir}/.settings" />
+		<move file="${output-dir}/eclipse-org.eclipse.core.resources.prefs" tofile="${output-dir}/.settings/org.eclipse.core.resources.prefs" />
 		<if>
 			<equals arg1="${package-platform}" arg2="windows" />
 			<then>
