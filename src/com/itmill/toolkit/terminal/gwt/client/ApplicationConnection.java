@@ -812,6 +812,11 @@ public class ApplicationConnection {
     }-*/;
 
     public void unregisterPaintable(Paintable p) {
+        if (p == null) {
+            ApplicationConnection.getConsole().error(
+                    "WARN: Trying to unregister null paintable");
+            return;
+        }
         String id = getPid(p);
         idToPaintableDetail.remove(id);
         if (p instanceof HasWidgets) {

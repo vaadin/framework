@@ -116,7 +116,10 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
         if (previous == widget) {
             return;
         }
-        remove(previous);
+
+        if (previous != null) {
+            remove(previous);
+        }
 
         // if template is missing add element in order
         if (!hasTemplate()) {
