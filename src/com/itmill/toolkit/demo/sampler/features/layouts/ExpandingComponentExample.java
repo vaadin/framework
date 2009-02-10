@@ -56,8 +56,9 @@ public class ExpandingComponentExample extends VerticalLayout {
     private HorizontalLayout createDemoLayout() {
         // Create a new layout
         HorizontalLayout expandDemoLayout = new HorizontalLayout();
-        // Enable spacing in the layout
+        // Enable spacing and margins in the layout
         expandDemoLayout.setSpacing(true);
+        expandDemoLayout.setMargin(true);
         expandDemoLayout.setSizeFull();
 
         // Create an example tree component, set to full size

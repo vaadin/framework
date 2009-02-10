@@ -110,6 +110,10 @@ public class SplitPanelBasicExample extends VerticalLayout {
         // Add sub-SplitPanel to main SplitPanel
         demoSP.addComponent(subSP);
 
+        // Enable margins in both SplitPanels
+        demoSP.setMargin(true);
+        subSP.setMargin(true);
+
         return demoSP;
     }
 }

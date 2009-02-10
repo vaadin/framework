@@ -59,8 +59,9 @@ public class WebLayoutExample extends VerticalLayout {
     private HorizontalLayout createDemoLayout() {
         // Create a new layout
         HorizontalLayout demoLayout = new HorizontalLayout();
-        // Enable spacing in the layout
+        // Enable spacing and margins in the layout
         demoLayout.setSpacing(true);
+        demoLayout.setMargin(true);
 
         // Create an example tree component, set to undefined size
         Tree t = new Tree("Hardware Inventory", ExampleUtil

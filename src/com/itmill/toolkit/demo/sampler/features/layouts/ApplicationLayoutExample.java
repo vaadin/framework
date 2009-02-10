@@ -61,6 +61,8 @@ public class ApplicationLayoutExample extends VerticalLayout {
         HorizontalLayout demoLayout = new HorizontalLayout();
         // Enable spacing in the layout
         demoLayout.setSpacing(true);
+        // Enable margins in the layout
+        demoLayout.setMargin(true);
 
         // Create an example tree component, set to full size
         Tree t = new Tree("Hardware Inventory", ExampleUtil
