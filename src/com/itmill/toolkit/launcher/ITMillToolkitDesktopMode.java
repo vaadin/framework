@@ -70,13 +70,21 @@ public class ITMillToolkitDesktopMode {
 
         // Open control dialog
         if (url != null) {
-            try {
-                openServerControlDialog(url);
-            } catch (HeadlessException e) {
-                // nop, starting from console
-            }
-        }
 
+            /*
+             * Swing components should never be manipulated outside the event
+             * dispatch thread.
+             */
+            java.awt.EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    try {
+                        openServerControlDialog(url);
+                    } catch (HeadlessException e) {
+                        // nop, starting from console
+                    }
+                }
+            });
+        }
     }
 
     /**
