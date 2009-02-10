@@ -579,20 +579,23 @@ public class SamplerApplication extends Application {
                 public Component generateCell(Table source, Object itemId,
                         Object columnId) {
                     final Feature feature = (Feature) itemId;
-                    ActiveLink b = new ActiveLink(
-                            (feature instanceof FeatureSet ? "View section ‣"
-                                    : "View sample ‣"), new ExternalResource(
-                                    "#" + getPathFor(feature)));
-                    b.addListener(new ActiveLink.LinkActivatedListener() {
-                        public void linkActivated(LinkActivatedEvent event) {
-                            if (!event.isLinkOpened()) {
-                                ((SamplerWindow) getWindow())
-                                        .setFeature(feature);
+                    if (feature instanceof FeatureSet) {
+                        return null;
+                    } else {
+                        ActiveLink b = new ActiveLink("View sample ‣",
+                                new ExternalResource("#" + getPathFor(feature)));
+                        b.addListener(new ActiveLink.LinkActivatedListener() {
+                            public void linkActivated(LinkActivatedEvent event) {
+                                if (!event.isLinkOpened()) {
+                                    ((SamplerWindow) getWindow())
+                                            .setFeature(feature);
+                                }
                             }
-                        }
-                    });
-                    b.setStyleName(Button.STYLE_LINK);
-                    return b;
+                        });
+
+                        b.setStyleName(Button.STYLE_LINK);
+                        return b;
+                    }
                 }
 
             });
