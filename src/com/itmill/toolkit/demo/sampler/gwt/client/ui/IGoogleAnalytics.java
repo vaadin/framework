@@ -14,6 +14,7 @@ public class IGoogleAnalytics extends Widget implements Paintable {
         if (BrowserInfo.get().isIE6()) {
             getElement().getStyle().setProperty("overflow", "hidden");
             getElement().getStyle().setProperty("height", "0");
+            getElement().getStyle().setProperty("width", "0");
         }
     }
 
