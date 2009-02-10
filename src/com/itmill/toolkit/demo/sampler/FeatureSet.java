@@ -308,9 +308,9 @@ public class FeatureSet extends Feature {
                     new LabelPlain(), //
                     new LabelPreformatted(), //
                     new LabelRich(), //
-                    new RichTextEditor(), //
                     new TextFieldSingle(), //
                     new TextArea(), //
+                    new RichTextEditor(), //
             });
         }
     }
