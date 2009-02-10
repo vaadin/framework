@@ -11,6 +11,11 @@ import com.itmill.toolkit.ui.Link;
 public class ProminentPrimaryAction extends Feature {
 
     @Override
+    public String getName() {
+        return "Prominent primary action";
+    }
+
+    @Override
     public String getDescription() {
         return "A primary action is an action that is clearly the"
                 + " default, and it should be visually more prominent"

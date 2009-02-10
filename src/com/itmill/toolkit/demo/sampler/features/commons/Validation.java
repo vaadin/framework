@@ -12,6 +12,11 @@ import com.itmill.toolkit.ui.Form;
 
 public class Validation extends Feature {
 
+    @Override
+    public String getName() {
+        return "Validation";
+    }
+
     private static final String desc = "Fields can have Validators that check"
             + " entered values. This is most useful when used within a Form, but"
             + " but can be used to validate single, stand-alone Fields as well.";

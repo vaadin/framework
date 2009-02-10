@@ -10,6 +10,11 @@ import com.itmill.toolkit.ui.Table;
 public class TableMouseEvents extends Feature {
 
     @Override
+    public String getName() {
+        return "Table, mouse events";
+    }
+
+    @Override
     public Component getExample() {
         return new TableStylingExample();
     }

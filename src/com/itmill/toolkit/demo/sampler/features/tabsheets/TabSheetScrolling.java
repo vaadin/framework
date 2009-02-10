@@ -8,7 +8,7 @@ import com.itmill.toolkit.ui.TabSheet;
 public class TabSheetScrolling extends Feature {
     @Override
     public String getName() {
-        return "Tabsheet - Scrolling tabs";
+        return "Tabsheet, scrolling tabs";
     }
 
     @Override

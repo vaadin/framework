@@ -8,7 +8,7 @@ import com.itmill.toolkit.ui.Tree;
 public class TreeSingleSelect extends Feature {
     @Override
     public String getName() {
-        return "Tree - Single select";
+        return "Tree, single selection";
     }
 
     @Override

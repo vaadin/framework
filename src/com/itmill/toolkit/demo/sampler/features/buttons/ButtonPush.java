@@ -9,6 +9,11 @@ import com.itmill.toolkit.ui.Button;
 public class ButtonPush extends Feature {
 
     @Override
+    public String getName() {
+        return "Push button";
+    }
+
+    @Override
     public String getDescription() {
         return "A basic push-button.";
     }

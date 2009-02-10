@@ -9,7 +9,7 @@ import com.itmill.toolkit.ui.PopupDateField;
 public class DatePopup extends Feature {
     @Override
     public String getName() {
-        return "Date selection pop-up";
+        return "Pop-up date selection";
     }
 
     @Override

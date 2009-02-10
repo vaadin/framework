@@ -8,7 +8,7 @@ import com.itmill.toolkit.ui.Label;
 public class LabelPlain extends Feature {
     @Override
     public String getName() {
-        return "Label - Plain text";
+        return "Label, plain text";
     }
 
     @Override

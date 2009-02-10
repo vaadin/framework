@@ -9,7 +9,7 @@ import com.itmill.toolkit.ui.Tree;
 public class TreeActions extends Feature {
     @Override
     public String getName() {
-        return "Tree - Actions";
+        return "Tree, context menu";
     }
 
     @Override

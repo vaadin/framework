@@ -10,6 +10,11 @@ import com.itmill.toolkit.ui.Table;
 public class TableRowHeaders extends Feature {
 
     @Override
+    public String getName() {
+        return "Table, row headers";
+    }
+
+    @Override
     public Component getExample() {
         return new TableMainFeaturesExample();
     }

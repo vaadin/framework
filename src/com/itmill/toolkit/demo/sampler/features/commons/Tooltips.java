@@ -8,6 +8,11 @@ import com.itmill.toolkit.ui.AbstractComponent;
 public class Tooltips extends Feature {
 
     @Override
+    public String getName() {
+        return "Tooltips";
+    }
+
+    @Override
     public String getDescription() {
         return "Most components can have a <i>description</i>,"
                 + " which is shown as a <i>\"tooltip\"</i>.<br/>"

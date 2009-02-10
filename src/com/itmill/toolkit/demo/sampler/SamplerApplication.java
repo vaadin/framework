@@ -693,8 +693,7 @@ public class SamplerApplication extends Application {
                     b.setIcon(res);
                     b.setWidth("75px");
                     b.setHeight("75px");
-                    b.setDescription("<h3>" + f.getName() + "</h3>"
-                            + f.getDescription());
+                    b.setDescription("<h3>" + f.getName() + "</h3>");
                     b.addListener(new Button.ClickListener() {
                         public void buttonClick(ClickEvent event) {
                             ((SamplerWindow) getWindow()).setFeature(f);

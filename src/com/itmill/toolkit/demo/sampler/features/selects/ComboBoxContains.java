@@ -8,7 +8,7 @@ import com.itmill.toolkit.ui.ComboBox;
 public class ComboBoxContains extends Feature {
     @Override
     public String getName() {
-        return "Combobox - Contains";
+        return "Combobox, suggesting (contains)";
     }
 
     @Override

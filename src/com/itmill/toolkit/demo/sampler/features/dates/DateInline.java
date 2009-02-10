@@ -9,7 +9,7 @@ import com.itmill.toolkit.ui.InlineDateField;
 public class DateInline extends Feature {
     @Override
     public String getName() {
-        return "Date selection inline";
+        return "Inline date selection";
     }
 
     @Override

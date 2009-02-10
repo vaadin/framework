@@ -10,6 +10,11 @@ import com.itmill.toolkit.ui.Table;
 public class TableHeaderIcons extends Feature {
 
     @Override
+    public String getName() {
+        return "Table, icons in headers";
+    }
+
+    @Override
     public Component getExample() {
         return new TableMainFeaturesExample();
     }

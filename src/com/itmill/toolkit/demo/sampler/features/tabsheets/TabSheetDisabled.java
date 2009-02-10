@@ -8,7 +8,7 @@ import com.itmill.toolkit.ui.TabSheet;
 public class TabSheetDisabled extends Feature {
     @Override
     public String getName() {
-        return "Tabsheet - Disabling tabs";
+        return "Tabsheet, disabled tabs";
     }
 
     @Override

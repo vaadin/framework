@@ -9,6 +9,11 @@ import com.itmill.toolkit.ui.Link;
 public class LinkCurrentWindow extends Feature {
 
     @Override
+    public String getName() {
+        return "Link";
+    }
+
+    @Override
     public String getDescription() {
         return "An external link - this is the basic HTML-style link, changing"
                 + " the url of the browser w/o triggering a server-side event"

@@ -8,7 +8,7 @@ import com.itmill.toolkit.ui.ListSelect;
 public class ListSelectMultiple extends Feature {
     @Override
     public String getName() {
-        return "Listselect - Multi";
+        return "List select, multiple selections";
     }
 
     @Override

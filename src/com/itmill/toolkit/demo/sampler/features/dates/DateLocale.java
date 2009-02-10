@@ -11,7 +11,7 @@ import com.itmill.toolkit.ui.InlineDateField;
 public class DateLocale extends Feature {
     @Override
     public String getName() {
-        return "Date selection - Locale";
+        return "Date selection, locale";
     }
 
     @Override

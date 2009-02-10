@@ -10,6 +10,11 @@ import com.itmill.toolkit.ui.Table;
 public class TableColumnCollapsing extends Feature {
 
     @Override
+    public String getName() {
+        return "Table, column collapsing";
+    }
+
+    @Override
     public Component getExample() {
         return new TableMainFeaturesExample();
     }

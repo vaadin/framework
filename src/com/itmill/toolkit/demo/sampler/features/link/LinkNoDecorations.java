@@ -9,6 +9,11 @@ import com.itmill.toolkit.ui.Link;
 public class LinkNoDecorations extends Feature {
 
     @Override
+    public String getName() {
+        return "Link, configure window";
+    }
+
+    @Override
     public String getDescription() {
         return "An basic HTML-style (external) link, opening a browser window"
                 + "w/o decorations. A Link changes"

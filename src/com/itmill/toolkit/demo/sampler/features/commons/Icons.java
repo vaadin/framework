@@ -15,6 +15,11 @@ import com.itmill.toolkit.ui.Component;
 public class Icons extends Feature {
 
     @Override
+    public String getName() {
+        return "Icons";
+    }
+
+    @Override
     public String getDescription() {
         return "Most components can have an <i>icon</i>,"
                 + " which is usually displayed next to the caption.<br/>"

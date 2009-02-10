@@ -8,7 +8,7 @@ import com.itmill.toolkit.ui.ComboBox;
 public class ComboBoxStartsWith extends Feature {
     @Override
     public String getName() {
-        return "Combobox - Starts with";
+        return "Combobox, suggesting (starts-with)";
     }
 
     @Override

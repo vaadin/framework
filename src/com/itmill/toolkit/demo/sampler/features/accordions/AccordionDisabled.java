@@ -9,7 +9,7 @@ import com.itmill.toolkit.ui.Accordion;
 public class AccordionDisabled extends Feature {
     @Override
     public String getName() {
-        return "Accordion - Disabling tabs";
+        return "Accordion, disabled tabs";
     }
 
     @Override

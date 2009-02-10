@@ -8,7 +8,7 @@ import com.itmill.toolkit.ui.Label;
 public class LabelPreformatted extends Feature {
     @Override
     public String getName() {
-        return "Label - Preformatted";
+        return "Label, preformatted";
     }
 
     @Override

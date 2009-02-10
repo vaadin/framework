@@ -10,6 +10,11 @@ import com.itmill.toolkit.ui.Table;
 public class TableSorting extends Feature {
 
     @Override
+    public String getName() {
+        return "Table, sorting";
+    }
+
+    @Override
     public Component getExample() {
         return new TableMainFeaturesExample();
     }

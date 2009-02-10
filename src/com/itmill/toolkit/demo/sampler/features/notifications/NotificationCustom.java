@@ -8,6 +8,11 @@ import com.itmill.toolkit.ui.Window;
 public class NotificationCustom extends Feature {
 
     @Override
+    public String getName() {
+        return "Customized notification";
+    }
+
+    @Override
     public String getDescription() {
         return "Notifications are lightweight informational messages,"
                 + " used to inform the user of various events.<br/>"

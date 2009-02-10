@@ -8,6 +8,11 @@ import com.itmill.toolkit.ui.Window;
 public class NotificationHumanized extends Feature {
 
     @Override
+    public String getName() {
+        return "Humanized notification";
+    }
+
+    @Override
     public String getDescription() {
         return "Notifications are lightweight informational messages,"
                 + " used to inform the user of various events. The"

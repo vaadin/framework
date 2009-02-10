@@ -9,7 +9,7 @@ import com.itmill.toolkit.ui.InlineDateField;
 public class DateResolution extends Feature {
     @Override
     public String getName() {
-        return "Date selection - Resolution";
+        return "Date selection, resolution";
     }
 
     @Override

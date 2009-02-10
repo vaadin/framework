@@ -10,7 +10,7 @@ import com.itmill.toolkit.ui.Panel;
 public class PanelBasic extends Feature {
     @Override
     public String getName() {
-        return "Panel with caption";
+        return "Panel";
     }
 
     @Override

@@ -119,21 +119,21 @@ public class FeatureSet extends Feature {
         public Components() {
             super("Components", new Feature[] {
             //
-                    new Commons(), //
+                    new Common(), //
+                    new Accordions(), //
                     new Buttons(), //
+                    new Dates(), //
+                    new Forms(), // 
+                    new Layouts(), //
                     new Links(), //
                     new Notifications(), //
-                    new Selects(), //
-                    new Layouts(), //
-                    new Tabsheets(), //
-                    new Accordions(), //
                     new Panels(), //
-                    new Forms(), // not done yet
-                    new Windows(), //
+                    new Selects(), //
                     new Tables(),//
+                    new Tabsheets(), //
                     new Texts(), //
                     new Trees(), //
-                    new Dates(), //
+                    new Windows(), //
             });
         }
     }
@@ -178,9 +178,9 @@ public class FeatureSet extends Feature {
         }
     }
 
-    public static class Commons extends FeatureSet {
-        public Commons() {
-            super("Commons", new Feature[] {
+    public static class Common extends FeatureSet {
+        public Common() {
+            super("Common", new Feature[] {
             //
                     new Tooltips(), // 
                     new Icons(), //
@@ -285,18 +285,18 @@ public class FeatureSet extends Feature {
         public Tables() {
             super("Table (Grid)", new Feature[] {
             //        
-                    new TableColumnHeaders(), //
-                    new TableRowHeaders(), //
                     new TableHeaderIcons(), //
+                    new TableColumnHeaders(), //
                     new TableColumnReordering(), //
                     new TableColumnCollapsing(), //
-                    new TableSorting(), //
                     new TableColumnAlignment(), //
-                    new TableActions(), //
-                    new TableLazyLoading(), //
-                    new TableRowStyling(), //
                     new TableCellStyling(), //
+                    new TableSorting(), //
+                    new TableRowHeaders(), //
+                    new TableRowStyling(), //
+                    new TableActions(), //
                     new TableMouseEvents(), //
+                    new TableLazyLoading(), //
             });
         }
     }

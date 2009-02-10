@@ -8,7 +8,7 @@ import com.itmill.toolkit.ui.ComboBox;
 public class ComboBoxNewItems extends Feature {
     @Override
     public String getName() {
-        return "Combobox - Add items";
+        return "Combobox, enter new items";
     }
 
     @Override

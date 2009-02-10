@@ -8,7 +8,7 @@ import com.itmill.toolkit.ui.ListSelect;
 public class ListSelectSingle extends Feature {
     @Override
     public String getName() {
-        return "Listselect - Single";
+        return "List select, single selection";
     }
 
     @Override

@@ -10,6 +10,11 @@ import com.itmill.toolkit.ui.Table;
 public class TableColumnReordering extends Feature {
 
     @Override
+    public String getName() {
+        return "Table, column drag&drop";
+    }
+
+    @Override
     public Component getExample() {
         return new TableMainFeaturesExample();
     }

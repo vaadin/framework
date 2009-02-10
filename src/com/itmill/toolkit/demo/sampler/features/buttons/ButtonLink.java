@@ -13,6 +13,11 @@ import com.itmill.toolkit.ui.Button;
 public class ButtonLink extends Feature {
 
     @Override
+    public String getName() {
+        return "Link button";
+    }
+
+    @Override
     public String getDescription() {
         return "A link-styled button; works like a Button but looks like a Link.<br/>"
                 + "I.e it does not actually link somewhere, but triggers a server-side event, just like a regular button.";

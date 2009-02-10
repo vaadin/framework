@@ -1,8 +1,11 @@
 package com.itmill.toolkit.demo.sampler.features.trees;
 
+import java.util.Iterator;
 import java.util.Set;
 
 import com.itmill.toolkit.data.Item;
+import com.itmill.toolkit.data.Property.ValueChangeEvent;
+import com.itmill.toolkit.data.Property.ValueChangeListener;
 import com.itmill.toolkit.demo.sampler.ExampleUtil;
 import com.itmill.toolkit.event.Action;
 import com.itmill.toolkit.ui.AbstractSelect;
@@ -12,58 +15,62 @@ import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
 public class TreeMultiSelectExample extends VerticalLayout implements
-        Button.ClickListener, Action.Handler {
+        Action.Handler {
 
     private static final Action ACTION_ADD = new Action("Add child item");
     private static final Action ACTION_DELETE = new Action("Delete");
     private static final Action[] ACTIONS = new Action[] { ACTION_ADD,
             ACTION_DELETE };
 
-    private Tree t;
-    private Button delete;
-    private int itemId;
+    private Tree tree;
+    private Button deleteButton;
 
     public TreeMultiSelectExample() {
         setSpacing(true);
 
         // Create new Tree object using a hierarchical container from
         // ExampleUtil class
-        t = new Tree("Hardware Inventory", ExampleUtil.getHardwareContainer());
+        tree = new Tree("Hardware Inventory", ExampleUtil
+                .getHardwareContainer());
+        // Set multiselect mode
+        tree.setMultiSelect(true);
+        tree.setImmediate(true);
+        tree.addListener(new ValueChangeListener() {
+            public void valueChange(ValueChangeEvent event) {
+                Tree t = (Tree) event.getProperty();
+                // enable if something is selected, returns a set
+                deleteButton.setEnabled(t.getValue() != null
+                        && ((Set) t.getValue()).size() > 0);
+            }
+        });
 
         // Add Actionhandler
-
-        t.addActionHandler(this);
-
-        t.setImmediate(true);
+        tree.addActionHandler(this);
 
         // Set tree to show the 'name' property as caption for items
-        t.setItemCaptionPropertyId(ExampleUtil.hw_PROPERTY_NAME);
-        t.setItemCaptionMode(AbstractSelect.ITEM_CAPTION_MODE_PROPERTY);
-
-        // Starting itemId # for new items
-        itemId = t.getContainerDataSource().size();
+        tree.setItemCaptionPropertyId(ExampleUtil.hw_PROPERTY_NAME);
+        tree.setItemCaptionMode(AbstractSelect.ITEM_CAPTION_MODE_PROPERTY);
 
         // Expand whole tree
-        for (int i = 0; i < itemId; i++) {
-            t.expandItemsRecursively(i);
+        for (Iterator it = tree.rootItemIds().iterator(); it.hasNext();) {
+            tree.expandItemsRecursively(it.next());
         }
 
-        // Create the 'delete button'
-        delete = new Button("Delete", this, "buttonClick");
+        // Create the 'delete button', inline click-listener
+        deleteButton = new Button("Delete", new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                // Delete all the selected objects
+                Object[] toDelete = ((Set<Object>) tree.getValue()).toArray();
+                for (int i = 0; i < toDelete.length; i++) {
+                    handleAction(ACTION_DELETE, tree, toDelete[i]);
+                }
+            }
+        });
+        deleteButton.setEnabled(false);
 
-        addComponent(delete);
-        addComponent(t);
+        addComponent(deleteButton);
+        addComponent(tree);
 
-        // Set multiselect mode
-        t.setMultiSelect(true);
-    }
-
-    public void buttonClick(ClickEvent event) {
-        // Delete all the selected objects
-        Object[] toDelete = ((Set<Object>) t.getValue()).toArray();
-        for (int i = 0; i < toDelete.length; i++) {
-            handleAction(ACTION_DELETE, t, toDelete[i]);
-        }
     }
 
     /*
@@ -79,24 +86,24 @@ public class TreeMultiSelectExample extends VerticalLayout implements
     public void handleAction(Action action, Object sender, Object target) {
         if (action == ACTION_ADD) {
             // Allow children for the target item
-            t.setChildrenAllowed(target, true);
+            tree.setChildrenAllowed(target, true);
 
             // Create new item, disallow children, add name, set parent
-            Item i = t.addItem(itemId);
-            t.setChildrenAllowed(itemId, false);
+            Object itemId = tree.addItem();
+            tree.setChildrenAllowed(itemId, false);
             String newItemName = "New Item # " + itemId;
-            i.getItemProperty(ExampleUtil.hw_PROPERTY_NAME).setValue(
+            Item item = tree.getItem(itemId);
+            item.getItemProperty(ExampleUtil.hw_PROPERTY_NAME).setValue(
                     newItemName);
-            t.setParent(itemId, target);
-            t.expandItem(target);
-            itemId++;
+            tree.setParent(itemId, target);
+            tree.expandItem(target);
         } else if (action == ACTION_DELETE) {
-            Object parent = t.getParent(target);
-            t.removeItem(target);
+            Object parent = tree.getParent(target);
+            tree.removeItem(target);
             // If the deleted object's parent has no more children, set it's
             // childrenallowed property to false
-            if (parent != null && t.getChildren(parent).size() == 0) {
-                t.setChildrenAllowed(parent, false);
+            if (parent != null && tree.getChildren(parent).size() == 0) {
+                tree.setChildrenAllowed(parent, false);
             }
         }
     }

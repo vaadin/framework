@@ -14,6 +14,11 @@ import com.itmill.toolkit.ui.Form;
 public class FormPojo extends Feature {
 
     @Override
+    public String getName() {
+        return "Bean-bound form";
+    }
+
+    @Override
     public Component getExample() {
         return new FormPojoExample();
     }

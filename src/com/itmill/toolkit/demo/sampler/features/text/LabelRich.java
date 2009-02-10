@@ -8,7 +8,7 @@ import com.itmill.toolkit.ui.Label;
 public class LabelRich extends Feature {
     @Override
     public String getName() {
-        return "Label - Rich text";
+        return "Label, rich text";
     }
 
     @Override

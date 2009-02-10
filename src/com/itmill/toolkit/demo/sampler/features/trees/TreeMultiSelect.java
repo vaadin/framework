@@ -8,7 +8,7 @@ import com.itmill.toolkit.ui.Tree;
 public class TreeMultiSelect extends Feature {
     @Override
     public String getName() {
-        return "Tree - Multiselect";
+        return "Tree, multiple selections";
     }
 
     @Override

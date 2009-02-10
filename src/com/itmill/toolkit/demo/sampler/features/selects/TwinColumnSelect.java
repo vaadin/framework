@@ -8,7 +8,7 @@ import com.itmill.toolkit.ui.TwinColSelect;
 public class TwinColumnSelect extends Feature {
     @Override
     public String getName() {
-        return "Twin column select";
+        return "Twin column select (list builder)";
     }
 
     @Override
@@ -35,8 +35,9 @@ public class TwinColumnSelect extends Feature {
 
     @Override
     public NamedExternalResource[] getRelatedResources() {
-        // TODO Auto-generated method stub
-        return null;
+        return new NamedExternalResource[] { new NamedExternalResource(
+                "Open Source Design Pattern Library; List Builder",
+                "http://www.uidesignpatterns.org/content/list-builder") };
     }
 
 }

@@ -10,6 +10,11 @@ import com.itmill.toolkit.ui.Table;
 public class TableActions extends Feature {
 
     @Override
+    public String getName() {
+        return "Table, context menu";
+    }
+
+    @Override
     public Component getExample() {
         return new TableMainFeaturesExample();
     }

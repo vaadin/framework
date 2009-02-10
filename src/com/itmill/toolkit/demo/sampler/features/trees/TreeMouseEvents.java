@@ -8,7 +8,7 @@ import com.itmill.toolkit.ui.Tree;
 public class TreeMouseEvents extends Feature {
     @Override
     public String getName() {
-        return "Tree - Mouse events";
+        return "Tree, mouse events";
     }
 
     @Override

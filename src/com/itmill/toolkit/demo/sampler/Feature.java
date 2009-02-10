@@ -28,14 +28,11 @@ abstract public class Feature {
     private String javaSource = null;
 
     /**
-     * Gets the name of this feature. Defaults to class simplename, override if
-     * needed. Try not to exceed 25 characters too much.
+     * Gets the name of this feature. Try not to exceed 25 characters too much.
      * 
      * @return
      */
-    public String getName() {
-        return getClass().getSimpleName();
-    }
+    abstract public String getName();
 
     /**
      * Gets the description for this feature. Should describe what the example
@@ -57,8 +54,8 @@ abstract public class Feature {
      * May return null, if the example has no related resources.
      * </p>
      * <p>
-     * The name of the NamedExternalResource will be shown in the UI. <br/>
-     * Note that Javadoc should be referenced via {@link #getRelatedAPI()}.
+     * The name of the NamedExternalResource will be shown in the UI. <br/> Note
+     * that Javadoc should be referenced via {@link #getRelatedAPI()}.
      * </p>
      * 
      * @see #getThemeBase()
@@ -166,7 +163,7 @@ abstract public class Feature {
 
     /**
      * Gets the name used when resolving the path for this feature. Usually no
-     * need to overrride.
+     * need to override.
      * 
      * @return
      */

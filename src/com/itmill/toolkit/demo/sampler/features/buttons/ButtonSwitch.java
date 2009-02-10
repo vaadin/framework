@@ -8,6 +8,11 @@ import com.itmill.toolkit.ui.Button;
 public class ButtonSwitch extends Feature {
 
     @Override
+    public String getName() {
+        return "Switch button";
+    }
+
+    @Override
     public String getDescription() {
         return "A switch button works like a regular button, triggering a server-side event, but it's state is 'sticky' - it toggles on or off, instead of popping right back out.<br/>Also know as a CheckBox.";
     }

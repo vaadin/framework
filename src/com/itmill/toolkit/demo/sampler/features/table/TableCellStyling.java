@@ -10,6 +10,11 @@ import com.itmill.toolkit.ui.Table;
 public class TableCellStyling extends Feature {
 
     @Override
+    public String getName() {
+        return "Table, styling cells";
+    }
+
+    @Override
     public Component getExample() {
         return new TableStylingExample();
     }

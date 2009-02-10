@@ -14,6 +14,11 @@ import com.itmill.toolkit.ui.Form;
 public class FormBasic extends Feature {
 
     @Override
+    public String getName() {
+        return "Form";
+    }
+
+    @Override
     public Component getExample() {
         return new FormPojoExample();
     }

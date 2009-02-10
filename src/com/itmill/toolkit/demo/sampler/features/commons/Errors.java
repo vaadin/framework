@@ -25,6 +25,11 @@ public class Errors extends Feature {
             + "If there is no component causing the error, consider using a"
             + " (styled) Label or a Notification to indicate the error.";
 
+    @Override
+    public String getName() {
+        return "Error indicator";
+    }
+
     public String getDescription() {
         return desc;
     }
