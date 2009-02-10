@@ -1,6 +1,7 @@
 package com.itmill.toolkit.demo.sampler.features.dates;
 
 import java.text.DateFormat;
+import java.util.Date;
 
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
@@ -33,8 +34,13 @@ public class DatePopupExample extends VerticalLayout implements
     public void valueChange(ValueChangeEvent event) {
         // Get the new value and format it to the current locale
         DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.SHORT);
-        String dateOut = dateFormatter.format(event.getProperty().getValue());
-        // Show notification
-        getWindow().showNotification("Starting date: " + dateOut);
+        Object value = event.getProperty().getValue();
+        if (value == null || !(value instanceof Date)) {
+            getWindow().showNotification("Invalid date entered");
+        } else {
+            String dateOut = dateFormatter.format(value);
+            // Show notification
+            getWindow().showNotification("Starting date: " + dateOut);
+        }
     }
 }
