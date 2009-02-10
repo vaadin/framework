@@ -137,8 +137,6 @@ public class SamplerApplication extends Application {
         private ObjectProperty currentFeature = new ObjectProperty(null,
                 Feature.class);
 
-        private MainArea mainArea = new MainArea();
-
         private ModeSwitch mode;
 
         private SplitPanel mainSplit;
@@ -193,6 +191,13 @@ public class SamplerApplication extends Application {
                 }
             });
 
+            // Main left/right split; hidden menu tree
+            mainSplit = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
+            mainSplit.setSizeFull();
+            mainSplit.setStyleName("main-split");
+            mainExpand.addComponent(mainSplit);
+            mainExpand.setExpandRatio(mainSplit, 1);
+
             // List/grid/coverflow
             mode = createModeSwitch();
             mode.setMode(currentList);
@@ -220,19 +225,9 @@ public class SamplerApplication extends Application {
             Component search = createSearch();
             quicknav.addComponent(search);
 
-            // Main left/right split; hidden menu tree
-            mainSplit = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
-            mainSplit.setSizeFull();
-            mainSplit.setStyleName("main-split");
-            mainExpand.addComponent(mainSplit);
-            mainExpand.setExpandRatio(mainSplit, 1);
-
             // Menu tree, initially hidden
             navigationTree = createMenuTree();
             mainSplit.setFirstComponent(navigationTree);
-
-            // Main Area
-            mainSplit.setSecondComponent(mainArea);
 
             // Show / hide tree
             Component treeSwitch = createTreeSwitch();
@@ -461,43 +456,21 @@ public class SamplerApplication extends Application {
             Feature val = (Feature) currentFeature.getValue();
             if (val == null) {
                 currentList.setFeatureContainer(allFeatures);
-                mainArea.show(currentList);
+                mainSplit.setSecondComponent(currentList);
                 mode.setVisible(true);
             } else if (val instanceof FeatureSet) {
                 currentList.setFeatureContainer(((FeatureSet) val)
                         .getContainer(true));
-                mainArea.show(currentList);
+                mainSplit.setSecondComponent(currentList);
                 mode.setVisible(true);
             } else {
-                mainArea.show(featureView);
+                mainSplit.setSecondComponent(featureView);
                 featureView.setFeature(val);
                 mode.setVisible(false);
             }
 
         }
 
-    }
-
-    /**
-     * Main area used to show Feature of FeatureList. In effect a one-component
-     * container, to minimize repaints.
-     */
-    private class MainArea extends CustomComponent {
-        MainArea() {
-            setWidth("100%");
-            setCompositionRoot(new Label());
-        }
-
-        public void show(Component c) {
-            if (getCompositionRoot() != c) {
-                if (c instanceof FeatureTable) {
-                    setHeight("100%");
-                } else {
-                    setHeight(null);
-                }
-                setCompositionRoot(c);
-            }
-        }
     }
 
     private class BreadCrumbs extends CustomComponent implements
