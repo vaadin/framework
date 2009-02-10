@@ -85,12 +85,17 @@
 	margin: 0;
 }
 
-.i-disabled {
+.i-disabled,
+.i-app .i-disabled,
+.i-window .i-disabled {
 	opacity: 0.3;
 	filter: Alpha(opacity = 30);
+	cursor: default;
 }
 
-.i-disabled * {
+.i-disabled *,
+.i-app .i-disabled *,
+.i-window .i-disabled * {
 	cursor: default;
 }
 
