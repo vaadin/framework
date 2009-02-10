@@ -4,8 +4,8 @@ import com.itmill.toolkit.demo.sampler.APIResource;
 import com.itmill.toolkit.demo.sampler.Feature;
 import com.itmill.toolkit.demo.sampler.FeatureSet;
 import com.itmill.toolkit.demo.sampler.NamedExternalResource;
-import com.itmill.toolkit.terminal.gwt.client.ui.Table;
 import com.itmill.toolkit.ui.Component;
+import com.itmill.toolkit.ui.Table;
 
 public class TableRowStyling extends Feature {
 
