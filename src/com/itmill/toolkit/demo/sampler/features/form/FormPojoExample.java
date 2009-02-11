@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import com.itmill.toolkit.data.Item;
+import com.itmill.toolkit.data.Validator;
 import com.itmill.toolkit.data.util.BeanItem;
 import com.itmill.toolkit.data.validator.StringLengthValidator;
 import com.itmill.toolkit.demo.sampler.ExampleUtil;
@@ -139,6 +140,8 @@ public class FormPojoExample extends VerticalLayout {
                         "Password must be 6-20 characters", 6, 20, false));
             } else if ("shoesize".equals(propertyId)) {
                 TextField tf = (TextField) f;
+                tf.addValidator(new IntegerValidator(
+                        "Shoe size must be an Integer"));
                 tf.setWidth("2em");
             } else if ("uuid".equals(propertyId)) {
                 TextField tf = (TextField) f;
@@ -212,6 +215,34 @@ public class FormPojoExample extends VerticalLayout {
 
         public void setCountryCode(String countryCode) {
             this.countryCode = countryCode;
+        }
+
+    }
+
+    public class IntegerValidator implements Validator {
+
+        private String message;
+
+        public IntegerValidator(String message) {
+            this.message = message;
+        }
+
+        public boolean isValid(Object value) {
+            if (value == null || !(value instanceof String)) {
+                return false;
+            }
+            try {
+                Integer.parseInt((String) value);
+            } catch (Exception e) {
+                return false;
+            }
+            return true;
+        }
+
+        public void validate(Object value) throws InvalidValueException {
+            if (!isValid(value)) {
+                throw new InvalidValueException(message);
+            }
         }
 
     }
