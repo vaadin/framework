@@ -14,11 +14,7 @@ public class DateInline extends Feature {
 
     @Override
     public String getDescription() {
-        return "The DateField component can be used to produce various"
-                + " date and time input fields with different resolutions."
-                + " The date and time format used with this component is"
-                + " reported to the Toolkit by the browser."
-                + "<br>In this example, the resolution is set to be one day"
+        return "In this example, the resolution is set to be one day"
                 + " and the DateField component is shown as an inline calendar"
                 + " component.";
     }

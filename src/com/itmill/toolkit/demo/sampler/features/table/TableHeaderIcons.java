@@ -21,9 +21,7 @@ public class TableHeaderIcons extends Feature {
 
     @Override
     public String getDescription() {
-        return "Also known as a (Data)Grid, Table can be used to show data in"
-                + " a tabular fashion. It's well suited for showing large datasets.<br>"
-                + " A Table can have icons in the column- and rowheaders. "
+        return "A Table can have icons in the column- and rowheaders. "
                 + " The rowheader icon can come from a item property, or be"
                 + " explicitly set.";
     }

@@ -14,18 +14,16 @@ public class NotificationHumanized extends Feature {
 
     @Override
     public String getDescription() {
-        return "Notifications are lightweight informational messages,"
-                + " used to inform the user of various events. The"
-                + " <i>Humanized</i> variant is an implementation of"
+        return "<p>The <i>Humanized</i> variant is an implementation of"
                 + " the <i>transparent message</i> -pattern, and is meant"
                 + " to indicate non-critical events while interrupting"
                 + " the user as little as possible.<br/>"
                 + "The <i>Humanized</i> message quickly fades away once"
                 + " the user interacts with the application (e.g. moves"
-                + " mouse, types)<br/> Candidates for a"
+                + " mouse, types)</p><p>Candidates for a"
                 + " <i>Humanized</i> notification include 'XYZ saved',"
                 + " 'Added XYZ', and other messages that the user can"
-                + " safely ignore, once the application is familliar.";
+                + " safely ignore, once the application is familliar.</p>";
     }
 
     @Override

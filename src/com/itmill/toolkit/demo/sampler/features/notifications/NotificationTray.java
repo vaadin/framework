@@ -14,18 +14,16 @@ public class NotificationTray extends Feature {
 
     @Override
     public String getDescription() {
-        return "Notifications are lightweight informational messages,"
-                + " used to inform the user of various events. The"
-                + " <i>Tray</i> variant shows up in the lower left corner,"
+        return "<p>The <i>Tray</i> variant shows up in the lower left corner,"
                 + " and is meant to interrupt the user as little as possible"
                 + " even if it's shown for a while. "
                 + "The <i>Tray</i> message fades away after a few moments"
                 + " once the user interacts with the application (e.g. moves"
-                + " mouse, types)<br/> Candidates for a"
+                + " mouse, types)</p><p>Candidates for a"
                 + " <i>Tray</i> notification include 'New message received',"
-                + " 'Job XYZ completed' - generally notifications about events"
+                + " 'Job XYZ completed' &ndash; generally notifications about events"
                 + " that have been delayed, or occur in the background"
-                + " (as opposed to being a direct result of the users last action.)";
+                + " (as opposed to being a direct result of the users last action.)</p>";
     }
 
     @Override

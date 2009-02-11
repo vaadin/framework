@@ -14,11 +14,7 @@ public class DateResolution extends Feature {
 
     @Override
     public String getDescription() {
-        return "The DateField component can be used to produce various"
-                + " date and time input fields with different resolutions."
-                + " The date and time format used with this component is"
-                + " reported to the Toolkit by the browser."
-                + "<br>In this example, you can select a different resolution"
+        return "In this example, you can select a different resolution"
                 + " from the combo box and see how the calendar component"
                 + " will change.";
     }

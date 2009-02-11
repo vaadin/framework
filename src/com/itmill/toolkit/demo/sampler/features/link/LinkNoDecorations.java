@@ -15,12 +15,7 @@ public class LinkNoDecorations extends Feature {
 
     @Override
     public String getDescription() {
-        return "An basic HTML-style (external) link, opening a browser window"
-                + "w/o decorations. A Link changes"
-                + " the url of the browser w/o triggering a server-side event"
-                + " (like the link-styled Button).<br/> Links can open new"
-                + " browser windows, and configure the amount of browser"
-                + " features shown, such as toolbar and addressbar.";
+        return "These links open a browser window without decorations.";
     }
 
     @Override

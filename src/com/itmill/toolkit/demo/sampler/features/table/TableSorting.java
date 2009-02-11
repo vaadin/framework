@@ -21,9 +21,7 @@ public class TableSorting extends Feature {
 
     @Override
     public String getDescription() {
-        return "Also known as a (Data)Grid, Table can be used to show data in"
-                + " a tabular fashion. It's well suited for showing large datasets.<br>"
-                + "The Table columns can (optionally) be sorted by clicking the"
+        return "The Table columns can (optionally) be sorted by clicking the"
                 + " column header - a sort direction indicator will appear."
                 + " Clicking again will change the sorting direction.";
 

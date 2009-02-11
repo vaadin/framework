@@ -14,11 +14,9 @@ public class NotificationCustom extends Feature {
 
     @Override
     public String getDescription() {
-        return "Notifications are lightweight informational messages,"
-                + " used to inform the user of various events.<br/>"
-                + "The notification can have a caption, a richtext"
+        return "A notification can have a caption, a richtext"
                 + " description, and an icon. Position and delay can"
-                + " also be customized.<br/> Not that more often than"
+                + " also be customized.<br/>Note that more often than"
                 + " not, less is more: try to make the messages short"
                 + " and to the point.";
     }

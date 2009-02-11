@@ -13,10 +13,7 @@ public class LabelRich extends Feature {
 
     @Override
     public String getDescription() {
-        return "A label is a simple component that allows you to add"
-                + " optionally formatted text components to your"
-                + " application."
-                + "<br>In this example the content mode is set to"
+        return "In this example the content mode is set to"
                 + " CONTENT_XHTML. This content mode assumes that the"
                 + " content set to the label will be valid XHTML.";
     }

@@ -13,10 +13,7 @@ public class TreeMultiSelect extends Feature {
 
     @Override
     public String getDescription() {
-        return "The Tree component allows a natural way to represent"
-                + " data that has hierarchical relationships, such as"
-                + " filesystems or message threads."
-                + "<br>In this example, you can select multiple tree nodes"
+        return "In this example, you can select multiple tree nodes"
                 + " and delete your selection. Click a selected item again to de-select it.";
     }
 

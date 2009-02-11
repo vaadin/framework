@@ -21,9 +21,7 @@ public class TableActions extends Feature {
 
     @Override
     public String getDescription() {
-        return "Also known as a (Data)Grid, Table can be used to show data in"
-                + " a tabular fashion. It's well suited for showing large datasets.<br>"
-                + "Actions can be added to each row, and are show in the a"
+        return "Actions can be added to each row, and are show in the a"
                 + " context menu when right-clicking.";
 
     }

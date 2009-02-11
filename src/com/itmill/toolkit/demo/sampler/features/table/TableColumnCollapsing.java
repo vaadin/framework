@@ -21,9 +21,7 @@ public class TableColumnCollapsing extends Feature {
 
     @Override
     public String getDescription() {
-        return "Also known as a (Data)Grid, Table can be used to show data in"
-                + " a tabular fashion. It's well suited for showing large datasets.<br>"
-                + "Columns can be 'collapsed', which means that it's not shown,"
+        return "Columns can be 'collapsed', which means that it's not shown,"
                 + " but the user can make the column re-appear by using the"
                 + " menu in the upper right of the table.<br/>"
                 + " Columns can also be made invisible, in which case they can"

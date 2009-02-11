@@ -6,6 +6,7 @@ import com.itmill.toolkit.demo.sampler.ActiveLink.LinkActivatedEvent;
 import com.itmill.toolkit.demo.sampler.ActiveLink.LinkActivatedListener;
 import com.itmill.toolkit.demo.sampler.SamplerApplication.SamplerWindow;
 import com.itmill.toolkit.terminal.ExternalResource;
+import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.HorizontalLayout;
@@ -48,6 +49,7 @@ public class FeatureView extends HorizontalLayout {
         setExpandRatio(left, 1);
 
         right = new Panel();
+        right.getLayout().setMargin(true, false, false, false);
         right.setStyleName(Panel.STYLE_LIGHT);
         right.addStyleName("feature-info");
         right.setWidth("369px");
@@ -127,18 +129,48 @@ public class FeatureView extends HorizontalLayout {
 
             right.setCaption("Description and Resources");
 
-            Label l = new Label(feature.getDescription());
-            l.setContentMode(Label.CONTENT_XHTML);
-            right.addComponent(l);
+            final Feature parent = (Feature) SamplerApplication
+                    .getAllFeatures().getParent(feature);
+            String desc = parent.getDescription();
+            boolean hasParentDesc = false;
+
+            if (desc != null && desc != "") {
+                Label l = new Label(parent.getDescription());
+                l.setContentMode(Label.CONTENT_XHTML);
+                right.addComponent(l);
+                hasParentDesc = true;
+            }
+
+            desc = feature.getDescription();
+            if (desc != null && desc != "") {
+                // Sample description uses additional decorations if a parent
+                // description is found
+                final Label l = new Label(
+                        "<div class=\"deco\"><span class=\"deco\"></span>"
+                                + desc + "</div>", Label.CONTENT_XHTML);
+                right.addComponent(l);
+                if (hasParentDesc) {
+                    l.setStyleName("sample-description");
+                }
+            }
 
             sourceCode.setValue(feature.getSource());
 
             NamedExternalResource[] resources = feature.getRelatedResources();
             if (resources != null) {
                 VerticalLayout res = new VerticalLayout();
-                res.setCaption("Additional resources");
+                Label caption = new Label("<span>Additional Resources</span>",
+                        Label.CONTENT_XHTML);
+                caption.setStyleName("section");
+                caption.setWidth("100%");
+                res.addComponent(caption);
+                res.setMargin(false, false, true, false);
                 for (NamedExternalResource r : resources) {
-                    res.addComponent(new Link(r.getName(), r));
+                    final Link l = new Link(r.getName(), r);
+                    l
+                            .setIcon(new ThemeResource(
+                                    "../default/icons/16/note.png"));
+                    res.addComponent(l);
                 }
                 right.addComponent(res);
             }
@@ -146,9 +178,17 @@ public class FeatureView extends HorizontalLayout {
             APIResource[] apis = feature.getRelatedAPI();
             if (apis != null) {
                 VerticalLayout api = new VerticalLayout();
-                api.setCaption("API documentation");
+                Label caption = new Label("<span>API Documentation</span>",
+                        Label.CONTENT_XHTML);
+                caption.setStyleName("section");
+                caption.setWidth("100%");
+                api.addComponent(caption);
+                api.setMargin(false, false, true, false);
                 for (APIResource r : apis) {
-                    api.addComponent(new Link(r.getName(), r));
+                    final Link l = new Link(r.getName(), r);
+                    l.setIcon(new ThemeResource(
+                            "../default/icons/16/document-txt.png"));
+                    api.addComponent(l);
                 }
                 right.addComponent(api);
             }
@@ -156,7 +196,12 @@ public class FeatureView extends HorizontalLayout {
             Class[] features = feature.getRelatedFeatures();
             if (features != null) {
                 VerticalLayout rel = new VerticalLayout();
-                rel.setCaption("Related Samples");
+                Label caption = new Label("<span>Related Samples</span>",
+                        Label.CONTENT_XHTML);
+                caption.setStyleName("section");
+                caption.setWidth("100%");
+                rel.addComponent(caption);
+                rel.setMargin(false, false, true, false);
                 for (Class c : features) {
                     final Feature f = SamplerApplication.getFeatureFor(c);
                     if (f != null) {
@@ -164,6 +209,7 @@ public class FeatureView extends HorizontalLayout {
                         ActiveLink al = new ActiveLink(f.getName(),
                                 new ExternalResource(getApplication().getURL()
                                         + "#" + path));
+                        al.setIcon(new ThemeResource("icons/sample.png"));
                         al.addListener(new LinkActivatedListener() {
                             public void linkActivated(LinkActivatedEvent event) {
                                 if (event.isLinkOpened()) {

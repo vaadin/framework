@@ -15,7 +15,7 @@
 }
 
 .i-app-SamplerApplication .topbar .logo {
-	width: 147px;
+	width: 167px;
 	height: 44px;
 	margin: 0;
 	padding: 0;
@@ -250,8 +250,7 @@
 	color: #b7c0c7;
 	font-size: 11px;
 	line-height: 18px;
-	background: transparent url(bullet.png) no-repeat 2px 60%;
-	padding-left: 8px;
+	margin-left: 28px;
 }
 .i-app-SamplerApplication .feature-info div.i-link a:hover {
 	color: #dcebf6;
@@ -291,18 +290,52 @@
 	padding-right: 20px;
 }
 
-.i-app-SamplerApplication .feature-info .i-caption {
+.i-app-SamplerApplication .feature-info .i-label {
+	padding: 0 20px 9px 28px;
+}
+
+.i-app-SamplerApplication .feature-info .i-label-section {
 	font-weight: bold;
 	font-size: 12px;
 	line-height: 30px;
 	color: #fff;
-	background: transparent url(info-bubble-separator.png) repeat-x 0 10px;
+	border: none;
+	text-indent: 0;
+	text-shadow: none;
+	padding: 0;
 }
-.i-app-SamplerApplication .feature-info .i-captiontext {
-	padding-top: 15px;
+
+.i-app-SamplerApplication .feature-info .i-label-section span {
+	display: block;
+	background: transparent url(info-bubble-separator.png) repeat-x;
+	padding: 5px 0 0 19px;
+	margin: 0 5px 0 9px;
 }
-.i-app-SamplerApplication .feature-info .i-label {
-	padding-bottom: 9px;
+
+.i-app-SamplerApplication .feature-info .i-label-sample-description {
+	margin: 0 5px 0 9px;
+	color: #e0ecff;
+	text-shadow: 0 1px 0 #19406b;
+	border: 1px solid #225792;
+	border-top: none;
+	border-bottom: 1px solid #2763ad;
+	padding: 5px 0 0 0;
+	width: 353px;
+}
+
+.i-app-SamplerApplication .feature-info .i-label-sample-description div.deco {
+	padding: 1px 19px 13px 19px;
+	background: #2a6bba url(sample-desc-bg.png) repeat-x;
+	border: 1px solid #478cca;
+	border-top: none;
+	border-bottom: none;
+}
+
+.i-app-SamplerApplication .feature-info .i-label-sample-description span.deco {
+	display: block;
+	height: 6px;
+	background: transparent url(sample-desc-arrow.png) no-repeat 50% 0;
+	margin: -6px 0 13px 0;
 }
 
 .i-app-SamplerApplication .i-button-showcode {

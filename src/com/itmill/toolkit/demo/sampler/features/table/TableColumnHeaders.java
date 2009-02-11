@@ -21,9 +21,7 @@ public class TableColumnHeaders extends Feature {
 
     @Override
     public String getDescription() {
-        return "Also known as a (Data)Grid, Table can be used to show data in"
-                + " a tabular fashion. It's well suited for showing large datasets.<br>"
-                + " A Table can have column headers, which support different modes"
+        return "A Table can have column headers, which support different modes"
                 + " with automatic or explicitly set caption and/or icon.";
     }
 

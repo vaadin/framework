@@ -14,10 +14,7 @@ public class TreeActions extends Feature {
 
     @Override
     public String getDescription() {
-        return "The Tree component allows a natural way to represent"
-                + " data that has hierarchical relationships, such as"
-                + " filesystems or message threads."
-                + "<br>In this example, actions have been attached to"
+        return "In this example, actions have been attached to"
                 + " the tree component. Try clicking the secondary mouse"
                 + " button on an item in the tree.";
     }

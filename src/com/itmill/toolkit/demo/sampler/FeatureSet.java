@@ -132,6 +132,7 @@ public class FeatureSet extends Feature {
                     new Tables(),//
                     new Tabsheets(), //
                     new Texts(), //
+                    new TextFields(), //
                     new Trees(), //
                     new Windows(), //
             });
@@ -155,26 +156,34 @@ public class FeatureSet extends Feature {
 
     public static class Links extends FeatureSet {
         public Links() {
-            super("Links", new Feature[] {
-            //
-                    new LinkCurrentWindow(), // basic
-                    new LinkNoDecorations(), // new win
-                    new LinkSizedWindow(), // new win
+            super(
+                    "Links",
+                    "Links",
+                    "An external link - this is the basic HTML-style link, changing the url of the browser w/o triggering a server-side event (like the link-styled Button).<br/>By default, links open in the current browser window. Links can open new browser windows, and configure the amount of browser features shown, such as toolbar and addressbar.",
+                    new Feature[] {
+                    //
+                            new LinkCurrentWindow(), // basic
+                            new LinkNoDecorations(), // new win
+                            new LinkSizedWindow(), // new win
 
-            });
+                    });
         }
     }
 
     public static class Notifications extends FeatureSet {
         public Notifications() {
-            super("Notifications", new Feature[] {
-            //
-                    new NotificationHumanized(), // humanized
-                    new NotificationWarning(), // warning
-                    new NotificationTray(), // tray
-                    new NotificationError(), // error
-                    new NotificationCustom(), // error
-            });
+            super(
+                    "Notifications",
+                    "Notifications",
+                    "Notifications are lightweight informational messages, used to inform the user of various events.",
+                    new Feature[] {
+                    //
+                            new NotificationHumanized(), // humanized
+                            new NotificationWarning(), // warning
+                            new NotificationTray(), // tray
+                            new NotificationError(), // error
+                            new NotificationCustom(), // error
+                    });
         }
     }
 
@@ -248,21 +257,32 @@ public class FeatureSet extends Feature {
 
     public static class Panels extends FeatureSet {
         public Panels() {
-            super("Panels", new Feature[] {
-            //        
-                    new PanelBasic(), //
-                    new PanelLight(), //
-            });
+            super(
+                    "Panels",
+                    "Panels",
+                    "Panel is a simple container that supports scrolling.<br/>It's internal layout (by default VerticalLayout) can be configured or exchanged to get desired results. Components that are added to the Panel will in effect be added to the layout.",
+                    new Feature[] {
+                    //        
+                            new PanelBasic(), //
+                            new PanelLight(), //
+                    });
         }
     }
 
     public static class Forms extends FeatureSet {
         public Forms() {
-            super("Forms", new Feature[] {
-            //        
-                    new FormBasic(), //
-                    new FormPojo(), //
-            });
+            super(
+                    "Forms",
+                    "Forms",
+                    "The Form -component provides a convenient way to organize"
+                            + " related fields visually.<br/><br/>It is most useful when connected"
+                            + " to a data source, and provides buffering and customization"
+                            + " features to support that scenario.",
+                    new Feature[] {
+                    //        
+                            new FormBasic(), //
+                            new FormPojo(), //
+                    });
         }
     }
 
@@ -283,59 +303,87 @@ public class FeatureSet extends Feature {
 
     public static class Tables extends FeatureSet {
         public Tables() {
-            super("Table (Grid)", new Feature[] {
-            //        
-                    new TableHeaderIcons(), //
-                    new TableColumnHeaders(), //
-                    new TableColumnReordering(), //
-                    new TableColumnCollapsing(), //
-                    new TableColumnAlignment(), //
-                    new TableCellStyling(), //
-                    new TableSorting(), //
-                    new TableRowHeaders(), //
-                    new TableRowStyling(), //
-                    new TableActions(), //
-                    new TableMouseEvents(), //
-                    new TableLazyLoading(), //
-            });
+            super(
+                    "Table (Grid)",
+                    "Table (Grid)",
+                    "Also known as a (Data)Grid, Table can be used to show data in a tabular fashion. It's well suited for showing large datasets.",
+                    new Feature[] {
+                    //        
+                            new TableHeaderIcons(), //
+                            new TableColumnHeaders(), //
+                            new TableColumnReordering(), //
+                            new TableColumnCollapsing(), //
+                            new TableColumnAlignment(), //
+                            new TableCellStyling(), //
+                            new TableSorting(), //
+                            new TableRowHeaders(), //
+                            new TableRowStyling(), //
+                            new TableActions(), //
+                            new TableMouseEvents(), //
+                            new TableLazyLoading(), //
+                    });
         }
     }
 
     public static class Texts extends FeatureSet {
         public Texts() {
-            super("Texts", new Feature[] {
-            //        
-                    new LabelPlain(), //
-                    new LabelPreformatted(), //
-                    new LabelRich(), //
-                    new TextFieldSingle(), //
-                    new TextArea(), //
-                    new RichTextEditor(), //
-            });
+            super(
+                    "Texts",
+                    "Texts",
+                    "A label is a simple component that allows you to add optionally formatted text components to your application.",
+                    new Feature[] {
+                    //      
+                            new LabelPlain(), //
+                            new LabelPreformatted(), //
+                            new LabelRich(), //
+                    });
+        }
+    }
+
+    public static class TextFields extends FeatureSet {
+        public TextFields() {
+            super(
+                    "TextFields",
+                    "Text inputs",
+                    "Text inputs are probably the most needed components in any application that require user input or editing.",
+                    new Feature[] {
+                    //      
+                            new TextFieldSingle(), //
+                            new TextArea(), //
+                            new RichTextEditor(), //
+                    });
         }
     }
 
     public static class Trees extends FeatureSet {
         public Trees() {
-            super("Trees", new Feature[] {
-            //        
-                    new TreeSingleSelect(), //
-                    new TreeMultiSelect(), //
-                    new TreeActions(), //
-                    new TreeMouseEvents(), //
-            });
+            super(
+                    "Trees",
+                    "Trees",
+                    "The Tree component allows a natural way to represent data that has hierarchical relationships, such as filesystems or message threads.",
+                    new Feature[] {
+                    //        
+                            new TreeSingleSelect(), //
+                            new TreeMultiSelect(), //
+                            new TreeActions(), //
+                            new TreeMouseEvents(), //
+                    });
         }
     }
 
     public static class Dates extends FeatureSet {
         public Dates() {
-            super("Dates", new Feature[] {
-            //        
-                    new DatePopup(), //
-                    new DateInline(), //
-                    new DateLocale(), //
-                    new DateResolution(), //
-            });
+            super(
+                    "Dates",
+                    "Dates",
+                    "The DateField component can be used to produce various date and time input fields with different resolutions. The date and time format used with this component is reported to the Toolkit by the browser.",
+                    new Feature[] {
+                    //        
+                            new DatePopup(), //
+                            new DateInline(), //
+                            new DateLocale(), //
+                            new DateResolution(), //
+                    });
         }
     }
 

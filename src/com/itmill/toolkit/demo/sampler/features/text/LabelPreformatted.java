@@ -13,10 +13,7 @@ public class LabelPreformatted extends Feature {
 
     @Override
     public String getDescription() {
-        return "A label is a simple component that allows you to add"
-                + " optionally formatted text components to your"
-                + " application."
-                + "<br>In this example the content mode is set to"
+        return "In this example the content mode is set to"
                 + " CONTENT_PREFORMATTED. The text for this content type"
                 + " is by default rendered with fixed-width font. Line breaks"
                 + " can be inserted with \\n and tabulator characters with \\t.";

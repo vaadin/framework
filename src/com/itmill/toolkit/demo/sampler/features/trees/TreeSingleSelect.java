@@ -13,10 +13,7 @@ public class TreeSingleSelect extends Feature {
 
     @Override
     public String getDescription() {
-        return "The Tree component allows a natural way to represent"
-                + " data that has hierarchical relationships, such as"
-                + " filesystems or message threads."
-                + "<br>In this example, you can select any single tree node"
+        return "In this example, you can select any single tree node"
                 + " and modify its 'name' property. Click again to de-select.";
     }
 

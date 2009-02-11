@@ -21,9 +21,7 @@ public class TableColumnReordering extends Feature {
 
     @Override
     public String getDescription() {
-        return "Also known as a (Data)Grid, Table can be used to show data in"
-                + " a tabular fashion. It's well suited for showing large datasets.<br>"
-                + " The columns can be rearranged with drag&drop - a feature"
+        return "The columns can be rearranged with drag&drop - a feature"
                 + " which can be enabled or disabled.";
     }
 

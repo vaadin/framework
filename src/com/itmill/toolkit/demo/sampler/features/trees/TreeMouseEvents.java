@@ -13,10 +13,7 @@ public class TreeMouseEvents extends Feature {
 
     @Override
     public String getDescription() {
-        return "The Tree component allows a natural way to represent"
-                + " data that has hierarchical relationships, such as"
-                + " filesystems or message threads."
-                + "<br>In this example, selecting items from the tree"
+        return "In this example, selecting items from the tree"
                 + " is disabled. Instead, another method of selection"
                 + " is used. Through ItemClickEvent we can update the"
                 + " label showing the selection."

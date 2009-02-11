@@ -21,9 +21,7 @@ public class TableRowStyling extends Feature {
 
     @Override
     public String getDescription() {
-        return "Also known as a (Data)Grid, Table can be used to show data in"
-                + " a tabular fashion. It's well suited for showing large datasets.<br>"
-                + "Rows can be styled in a Table by using a CellStyleGenerator."
+        return "Rows can be styled in a Table by using a CellStyleGenerator."
                 + " Regular CSS is used to create the actual style.<br/>Use the"
                 + " context menu (right-/ctrl-click) to apply a row style in"
                 + " the example.";

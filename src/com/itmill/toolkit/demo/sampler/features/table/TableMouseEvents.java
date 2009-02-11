@@ -19,10 +19,9 @@ public class TableMouseEvents extends Feature {
         return new TableStylingExample();
     }
 
+    @Override
     public String getDescription() {
-        return "Also known as a (Data)Grid, Table can be used to show data in"
-                + " a tabular fashion. It's well suited for showing large datasets.<br>"
-                + "An ItemClickListener can be used to react to mouse click"
+        return "An ItemClickListener can be used to react to mouse click"
                 + " events. Different buttons, double click, and modifier keys"
                 + " can be detected.<br/>Double-click a first or last name to"
                 + " toggle it's marked state.";

@@ -15,11 +15,7 @@ public class PanelBasic extends Feature {
 
     @Override
     public String getDescription() {
-        return "Panel is a simple container that supports scrolling.<br/>"
-                + " It's internal layout (by default VerticalLayout) can be"
-                + " configured or exchanged to get desired results. Components"
-                + " that are added to the Panel will in effect be added to the"
-                + " layout.";
+        return "";
 
     }
 

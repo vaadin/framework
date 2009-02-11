@@ -14,18 +14,16 @@ public class NotificationWarning extends Feature {
 
     @Override
     public String getDescription() {
-        return "Notifications are lightweight informational messages,"
-                + " used to inform the user of various events. The"
-                + " <i>Warning</i> variant is an implementation of"
+        return "<p>The <i>Warning</i> variant is an implementation of"
                 + " the <i>transparent message</i> -pattern, and is meant"
                 + " to interrupt the user as little as possible, while"
                 + " still drawing the needed attention."
                 + "The <i>Warning</i> message fades away after a few moments"
                 + " once the user interacts with the application (e.g. moves"
-                + " mouse, types)<br/> Candidates for a"
+                + " mouse, types)</p><p>Candidates for a"
                 + " <i>Warning</i> notification include 'You canceled XYZ',"
                 + " 'XYZ deleted', and other situations that the user should"
-                + " be made aware of, but are probably intentional.";
+                + " be made aware of, but are probably intentional.</p>";
     }
 
     @Override

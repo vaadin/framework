@@ -15,12 +15,7 @@ public class PanelLight extends Feature {
 
     @Override
     public String getDescription() {
-        return "Panel is a simple container that supports scrolling.<br/>"
-                + " It's internal layout (by default VerticalLayout) can be"
-                + " configured or exchanged to get desired results. Components"
-                + " that are added to the Panel will in effect be added to the"
-                + " layout.<br/>"
-                + "The 'light' version has less decorations than the regular one.";
+        return "The 'light' style version has less decorations than the regular Panel style.";
 
     }
 

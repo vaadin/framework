@@ -21,9 +21,7 @@ public class TableColumnAlignment extends Feature {
 
     @Override
     public String getDescription() {
-        return "Also known as a (Data)Grid, Table can be used to show data in"
-                + " a tabular fashion. It's well suited for showing large datasets.<br>"
-                + "Columns can be aligned left (default), center or right.";
+        return "Columns can be aligned left (default), center or right.";
 
     }
 

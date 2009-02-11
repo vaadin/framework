@@ -708,4 +708,8 @@ public class SamplerApplication extends Application {
         }
     }
 
+    public static HierarchicalContainer getAllFeatures() {
+        return allFeatures;
+    }
+
 }

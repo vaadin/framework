@@ -13,10 +13,7 @@ public class LabelPlain extends Feature {
 
     @Override
     public String getDescription() {
-        return "A label is a simple component that allows you to add"
-                + " optionally formatted text components to your"
-                + " application."
-                + "<br>In this example the content mode is set to"
+        return "In this example the content mode is set to"
                 + " CONTENT_TEXT, meaning that the label will contain"
                 + " only plain text.";
 

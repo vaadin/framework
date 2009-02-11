@@ -14,9 +14,7 @@ public class TextFieldSingle extends Feature {
 
     @Override
     public String getDescription() {
-        return "A single line Textfield component allows you to input"
-                + " one line of text.<br/>"
-                + "<br/>For sensitive data input, the textfield can"
+        return "For sensitive data input, the textfield can"
                 + " also be set into secret mode where the input will not be"
                 + " echoed to display.";
     }
