@@ -33,6 +33,9 @@ public class ComboBoxContainsExample extends VerticalLayout implements
         l.setImmediate(true);
         l.addListener(this);
 
+        // Disallow null selections
+        l.setNullSelectionAllowed(false);
+
         addComponent(l);
     }
 
