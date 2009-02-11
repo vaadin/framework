@@ -358,7 +358,15 @@ public class Embedded extends AbstractComponent {
         if (source != null && !source.equals(this.source)) {
             this.source = source;
             final String mt = source.getMIMEType();
-            if ((mt.substring(0, mt.indexOf("/")).equalsIgnoreCase("image"))) {
+
+            if (mimeType == null) {
+                mimeType = mt;
+            }
+
+            if (mt.equals("image/svg+xml")) {
+                type = TYPE_OBJECT;
+            } else if ((mt.substring(0, mt.indexOf("/"))
+                    .equalsIgnoreCase("image"))) {
                 type = TYPE_IMAGE;
             } else {
                 // Keep previous type

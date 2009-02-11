@@ -4,8 +4,12 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import java.util.Iterator;
+
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.ObjectElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -105,6 +109,25 @@ public class IEmbedded extends HTML implements Paintable {
                         + getSrc(uidl, client) + "\"><embed src=\""
                         + getSrc(uidl, client) + "\" width=\"" + width
                         + "\" height=\"" + height + "\"></embed></object>");
+            } else if (mime.equals("image/svg+xml")) {
+                String data;
+                if (getParameter("data", uidl) == null) {
+                    data = getSrc(uidl, client);
+                } else {
+                    data = "data:image/svg+xml," + getParameter("data", uidl);
+                }
+                setHTML("");
+                ObjectElement obj = Document.get().createObjectElement();
+                obj.setType(mime);
+                obj.setData(data);
+                if (width != null) {
+                    obj.getStyle().setProperty("width", "100%");
+                }
+                if (height != null) {
+                    obj.getStyle().setProperty("height", "100%");
+                }
+                getElement().appendChild(obj);
+
             } else {
                 ApplicationConnection.getConsole().log(
                         "Unknown Embedded mimetype '" + mime + "'");
@@ -118,6 +141,23 @@ public class IEmbedded extends HTML implements Paintable {
             browserElement = null;
         }
 
+    }
+
+    private static String getParameter(String paramName, UIDL uidl) {
+        Iterator childIterator = uidl.getChildIterator();
+        while (childIterator.hasNext()) {
+            Object child = childIterator.next();
+            if (child instanceof UIDL) {
+                UIDL childUIDL = (UIDL) child;
+                if (childUIDL.getTag().equals("embeddedparam")
+                        && childUIDL.getStringAttribute("name").equals(
+                                paramName)) {
+                    return childUIDL.getStringAttribute("value");
+                }
+
+            }
+        }
+        return null;
     }
 
     /**
