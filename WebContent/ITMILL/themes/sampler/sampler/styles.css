@@ -360,20 +360,26 @@
 	background: transparent url(sample-desc-arrow.png) no-repeat 50% 0;
 	margin: -6px 0 13px 0;
 }
-
-.i-app-SamplerApplication .i-button-showcode {
+.i-app-SamplerApplication .i-link-showcode {
+	margin-left: 3px;
+}
+.i-app-SamplerApplication .i-button-showcode,
+.i-app-SamplerApplication .i-link-showcode {
 	font-family: helvetica, arial, verdana, sans-serif;
 	display: inline;
 	font-size: 12px;
 	line-height: 20px;
 	height: 20px;
 }
-.i-app-SamplerApplication .i-button-showcode span {
+.i-app-SamplerApplication .i-button-showcode span,
+.i-app-SamplerApplication .i-link-showcode span {
 	color: #8b8e91;
 	text-decoration: none;
 }
-.i-app-SamplerApplication .i-button-showcode:hover span {
+.i-app-SamplerApplication .i-button-showcode:hover span,
+.i-app-SamplerApplication .i-link-showcode:hover span {
 	color: #62696f;
+	text-decoration: underline;
 }
 .i-app-SamplerApplication .i-panel-content-source {
 	border: 1px solid #eee;

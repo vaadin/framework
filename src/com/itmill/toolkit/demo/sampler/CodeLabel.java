@@ -7,7 +7,7 @@ public class CodeLabel extends Label {
     private static final String TAG = "codelabel";
 
     public CodeLabel() {
-        super.setContentMode(CONTENT_PREFORMATTED);
+        setContentMode(CONTENT_PREFORMATTED);
     }
 
     public CodeLabel(String content) {
@@ -21,10 +21,11 @@ public class CodeLabel extends Label {
 
     @Override
     public void setContentMode(int contentMode) {
-        if (contentMode != Label.CONTENT_PREFORMATTED) {
+        if (contentMode != CONTENT_PREFORMATTED) {
             throw new UnsupportedOperationException(
                     "Only preformatted content supported");
         }
+        super.setContentMode(CONTENT_PREFORMATTED);
     }
 
 }

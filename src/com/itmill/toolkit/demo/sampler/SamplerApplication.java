@@ -1,6 +1,7 @@
 package com.itmill.toolkit.demo.sampler;
 
 import java.net.URI;
+import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -15,9 +16,11 @@ import com.itmill.toolkit.demo.sampler.ModeSwitch.ModeSwitchEvent;
 import com.itmill.toolkit.event.ItemClickEvent;
 import com.itmill.toolkit.event.ItemClickEvent.ItemClickListener;
 import com.itmill.toolkit.terminal.ClassResource;
+import com.itmill.toolkit.terminal.DownloadStream;
 import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.terminal.Resource;
 import com.itmill.toolkit.terminal.ThemeResource;
+import com.itmill.toolkit.terminal.URIHandler;
 import com.itmill.toolkit.ui.Alignment;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.ComboBox;
@@ -80,8 +83,13 @@ public class SamplerApplication extends Application {
     public Window getWindow(String name) {
         Window w = super.getWindow(name);
         if (w == null) {
-            w = new SamplerWindow();
-            w.setName(name);
+            if (name.startsWith("src")) {
+                w = new SourceWindow();
+            } else {
+                w = new SamplerWindow();
+                w.setName(name);
+            }
+
             addWindow(w);
         }
         return w;
@@ -500,7 +508,8 @@ public class SamplerApplication extends Application {
                 String current = "";
                 ActiveLink link = null;
                 for (int i = 0; i < parts.length; i++) {
-                    layout.addComponent(new Label("‣"));
+                    layout.addComponent(new Label("&raquo;",
+                            Label.CONTENT_XHTML));
                     current += (i > 0 ? "/" : "") + parts[i];
                     Feature f = FeatureSet.FEATURES.getFeatureByPath(current);
                     link = new ActiveLink(f.getName(), new ExternalResource("#"
@@ -712,4 +721,28 @@ public class SamplerApplication extends Application {
         return allFeatures;
     }
 
+    public class SourceWindow extends Window {
+        public SourceWindow() {
+            addURIHandler(new URIHandler() {
+                public DownloadStream handleURI(URL context, String relativeUri) {
+                    Feature f = FeatureSet.FEATURES
+                            .getFeatureByPath(relativeUri);
+                    if (f != null) {
+                        addComponent(new CodeLabel(f.getSource()));
+                    } else {
+                        addComponent(new Label("Sorry, no source found for "
+                                + relativeUri));
+                    }
+                    return null;
+                }
+
+            });
+
+            addListener(new CloseListener() {
+                public void windowClose(CloseEvent e) {
+                    SamplerApplication.this.removeWindow(SourceWindow.this);
+                }
+            });
+        }
+    }
 }

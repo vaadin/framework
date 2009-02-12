@@ -14,21 +14,19 @@ import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Link;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.VerticalLayout;
+import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
 public class FeatureView extends HorizontalLayout {
 
     private static final String MSG_SHOW_SRC = "Show Java™ source »";
-    private static final String MSG_HIDE_SRC = "Hide Java™ source";
 
     private Panel right;
     private VerticalLayout left;
 
     private VerticalLayout controls;
 
-    private Panel sourcePanel;
-    private Label sourceCode;
-    private Button showCode;
+    private ActiveLink srcWin;
 
     private HashMap<Feature, Component> exampleCache = new HashMap<Feature, Component>();
 
@@ -74,36 +72,31 @@ public class FeatureView extends HorizontalLayout {
 
         controlButtons.addComponent(new Label("|"));
 
-        showCode = new Button(MSG_SHOW_SRC, new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                toggleSource();
+        srcWin = new ActiveLink();
+        srcWin
+                .setDescription("Right / middle / ctrl / shift -click for browser window/tab");
+        srcWin.addListener(new LinkActivatedListener() {
+
+            public void linkActivated(LinkActivatedEvent event) {
+                if (!event.isLinkOpened()) {
+                    Window w = new Window("Java™ source");
+                    ((VerticalLayout) w.getLayout()).setSizeUndefined();
+                    w.setWidth("70%");
+                    w.setHeight("60%");
+                    w.setPositionX(100);
+                    w.setPositionY(100);
+                    w.addComponent(new CodeLabel(currentFeature.getSource()));
+                    getWindow().addWindow(w);
+                }
+
             }
+
         });
-        showCode.setStyleName(Button.STYLE_LINK);
-        showCode.addStyleName("showcode");
-        controlButtons.addComponent(showCode);
+        srcWin.setCaption(MSG_SHOW_SRC);
+        srcWin.addStyleName("showcode");
+        srcWin.setTargetBorder(Link.TARGET_BORDER_NONE);
+        controlButtons.addComponent(srcWin);
 
-        sourceCode = new CodeLabel();
-
-        sourcePanel = new Panel();
-        sourcePanel.getLayout().setSizeUndefined();
-        sourcePanel.addStyleName(Panel.STYLE_LIGHT);
-        sourcePanel.addStyleName("source");
-        sourcePanel.addComponent(sourceCode);
-        sourcePanel.setVisible(false);
-        sourcePanel.setWidth("100%");
-        sourcePanel.setHeight("250px");
-
-        controls.addComponent(sourcePanel);
-    }
-
-    private void toggleSource() {
-        showSource(!sourcePanel.isVisible());
-    }
-
-    private void showSource(boolean show) {
-        showCode.setCaption((show ? MSG_HIDE_SRC : MSG_SHOW_SRC));
-        sourcePanel.setVisible(show);
     }
 
     private void resetExample() {
@@ -120,7 +113,6 @@ public class FeatureView extends HorizontalLayout {
             currentFeature = feature;
             right.removeAllComponents();
             left.removeAllComponents();
-            showSource(false);
 
             left.addComponent(controls);
             controls.setCaption(feature.getName());
@@ -154,7 +146,13 @@ public class FeatureView extends HorizontalLayout {
                 }
             }
 
-            sourceCode.setValue(feature.getSource());
+            { // open src in new window -link
+                String path = SamplerApplication.getPathFor(currentFeature);
+                srcWin.setTargetName(path);
+                srcWin.setResource(new ExternalResource(getApplication()
+                        .getURL()
+                        + "src/" + path));
+            }
 
             NamedExternalResource[] resources = feature.getRelatedResources();
             if (resources != null) {
