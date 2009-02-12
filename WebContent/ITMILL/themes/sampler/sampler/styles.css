@@ -201,6 +201,10 @@
 	margin-top: -2px;
 	margin-left: -3px;
 }
+.i-ie .i-app-SamplerApplication .i-button-screenshot img {
+	margin-left: -12px;
+}
+
 
 .i-app-SamplerApplication .i-table-featuretable tr.i-table-row,
 .i-app-SamplerApplication .i-table-featuretable tr.i-table-row-odd {
