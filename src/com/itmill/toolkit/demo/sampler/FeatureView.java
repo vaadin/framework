@@ -14,7 +14,6 @@ import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Link;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.VerticalLayout;
-import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
 public class FeatureView extends HorizontalLayout {
@@ -79,14 +78,8 @@ public class FeatureView extends HorizontalLayout {
 
             public void linkActivated(LinkActivatedEvent event) {
                 if (!event.isLinkOpened()) {
-                    Window w = new Window("Java™ source");
-                    ((VerticalLayout) w.getLayout()).setSizeUndefined();
-                    w.setWidth("70%");
-                    w.setHeight("60%");
-                    w.setPositionX(100);
-                    w.setPositionY(100);
-                    w.addComponent(new CodeLabel(currentFeature.getSource()));
-                    getWindow().addWindow(w);
+                    ((SamplerWindow) getWindow()).showSource(currentFeature
+                            .getSource());
                 }
 
             }
