@@ -47,6 +47,7 @@
 	line-height: 13px;
 	padding-top: 3px;
 	display: block;
+	float: left;
 }
 .i-customcomponent-breadcrumbs .i-label {
 	font-size: 13px;
@@ -55,6 +56,12 @@
 }
 .i-sa .i-customcomponent-breadcrumbs .i-label {
 	padding-top: 3px;
+}
+.i-ie .i-customcomponent-breadcrumbs .i-label {
+	margin-top: -1px;
+}
+.i-ff .i-customcomponent-breadcrumbs .i-label {
+	margin-top: -2px;
 }
 .i-customcomponent-breadcrumbs .i-link span {
 	text-decoration: none;
@@ -66,7 +73,11 @@
 .i-customcomponent-breadcrumbs .i-link-bold {
 	height: 20px;
 	padding: 0 0 0 9px;
-	background: transparent url(breadcrumb-current-left.png);
+	background: transparent url(breadcrumb-current-left.png) no-repeat;
+	float: left;
+}
+.i-ie .i-customcomponent-breadcrumbs .i-link-bold {
+	margin-top: 1px;
 }
 .i-customcomponent-breadcrumbs .i-link-bold a {
 	display: block;
@@ -82,6 +93,14 @@
 .i-sa .i-customcomponent-breadcrumbs .i-link-bold a {
 	height: 17px;
 	padding-top: 3px;
+}
+.i-ie .i-customcomponent-breadcrumbs .i-link-bold a {
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+.i-ff .i-customcomponent-breadcrumbs .i-link-bold a {
+	padding-top: 2px;
+	padding-bottom: 2px;
 }
 .i-customcomponent-breadcrumbs .i-link-bold a:hover {
 	color: #c2c4c6;
