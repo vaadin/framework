@@ -58,6 +58,8 @@ public class IRichTextArea extends Composite implements Paintable, Field,
 
     private int maxLength = -1;
 
+    private int toolbarNaturalWidth = 500;
+
     public IRichTextArea() {
         fp.add(formatter);
 
@@ -210,13 +212,17 @@ public class IRichTextArea extends Composite implements Paintable, Field,
             }
 
             super.setWidth(w + "px");
-        } else if (width.equals("") && BrowserInfo.get().isIE()) {
+        } else if (width.equals("")) {
             /*
              * IE cannot calculate the width of the 100% iframe correctly if
-             * there is no width specified for the parent so we use the width of
-             * the toolbar.
+             * there is no width specified for the parent. In this case we would
+             * use the toolbar but IE cannot calculate the width of that one
+             * correctly either in all cases. So we end up using a default width
+             * for a RichTextArea with no width definition in all browsers (for
+             * compatibility).
              */
-            super.setWidth(formatter.getOffsetWidth() + "px");
+
+            super.setWidth(toolbarNaturalWidth + "px");
         } else {
             super.setWidth(width);
         }
