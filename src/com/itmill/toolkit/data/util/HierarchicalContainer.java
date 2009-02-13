@@ -167,7 +167,7 @@ public class HierarchicalContainer extends IndexedContainer implements
 
         // Checks if no change is necessary
         if ((newParentId == null && oldParentId == null)
-                || newParentId.equals(oldParentId)) {
+                || ((newParentId != null) && newParentId.equals(oldParentId))) {
             return true;
         }
 
