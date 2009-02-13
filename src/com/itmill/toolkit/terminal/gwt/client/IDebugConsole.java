@@ -48,7 +48,7 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
 
     Element caption = DOM.createDiv();
 
-    private final Panel panel;
+    private Panel panel;
 
     private Button clear = new Button("Clear console");
     private Button restart = new Button("Restart app");
@@ -98,7 +98,6 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
             caption.setInnerHTML("Debug window");
             caption.setTitle(help);
 
-            setWidget(panel);
             show();
             minimize();
 
@@ -114,8 +113,13 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
 
             clear.addClickListener(new ClickListener() {
                 public void onClick(Widget sender) {
-                    panel.clear();
+                    int width = panel.getOffsetWidth();
+                    int height = panel.getOffsetHeight();
+                    panel = new FlowPanel();
+                    panel.setPixelSize(width, height);
+                    panel.setStyleName("i-debug-console-content");
                     panel.add(actions);
+                    setWidget(panel);
                 }
             });
 
