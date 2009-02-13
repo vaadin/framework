@@ -7,19 +7,17 @@ import com.itmill.toolkit.demo.sampler.NamedExternalResource;
 import com.itmill.toolkit.demo.sampler.features.selects.ComboBoxNewItems;
 import com.itmill.toolkit.ui.TextField;
 
-public class TextFieldSingle extends Feature {
+public class TextFieldSecret extends Feature {
     @Override
     public String getName() {
-        return "Text field";
+        return "Text field, secret (password)";
     }
 
     @Override
     public String getDescription() {
-        return "A single-line TextField is a fundamental UI building blocks"
-                + " with numerous uses.<br/>"
-                + "If the input would benefit from remembering previous values,"
-                + " you might want to consider using a ComboBox it it's "
-                + " 'suggesting mode' instead.";
+        return "For sensitive data input, such as passwords, the text field can"
+                + " also be set into secret mode where the input will not be"
+                + " echoed to display.";
     }
 
     @Override
@@ -30,7 +28,7 @@ public class TextFieldSingle extends Feature {
     @Override
     public Class[] getRelatedFeatures() {
         // TODO update CB -ref to 'suggest' pattern, when available
-        return new Class[] { TextFieldSecret.class, ComboBoxNewItems.class,
+        return new Class[] { TextFieldSingle.class, ComboBoxNewItems.class,
                 FeatureSet.Texts.class };
     }
 

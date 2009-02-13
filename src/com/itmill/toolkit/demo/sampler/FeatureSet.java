@@ -70,6 +70,7 @@ import com.itmill.toolkit.demo.sampler.features.text.LabelPreformatted;
 import com.itmill.toolkit.demo.sampler.features.text.LabelRich;
 import com.itmill.toolkit.demo.sampler.features.text.RichTextEditor;
 import com.itmill.toolkit.demo.sampler.features.text.TextArea;
+import com.itmill.toolkit.demo.sampler.features.text.TextFieldSecret;
 import com.itmill.toolkit.demo.sampler.features.text.TextFieldSingle;
 import com.itmill.toolkit.demo.sampler.features.trees.TreeActions;
 import com.itmill.toolkit.demo.sampler.features.trees.TreeMouseEvents;
@@ -349,6 +350,7 @@ public class FeatureSet extends Feature {
                     new Feature[] {
                     //      
                             new TextFieldSingle(), //
+                            new TextFieldSecret(), //
                             new TextArea(), //
                             new RichTextEditor(), //
                     });

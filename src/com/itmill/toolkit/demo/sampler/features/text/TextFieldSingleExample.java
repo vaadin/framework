@@ -16,7 +16,6 @@ public class TextFieldSingleExample extends VerticalLayout implements
         editor.addListener(this);
         editor.setImmediate(true);
         // editor.setColumns(5); // guarantees that at least 5 chars fit
-        // editor.setSecret(true); // e.g. for passwords
 
         addComponent(editor);
     }
