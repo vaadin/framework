@@ -513,6 +513,7 @@ public class SamplerApplication extends Application {
             layout.setSpacing(true);
             setCompositionRoot(layout);
             setStyleName("breadcrumbs");
+            setPath(null);
         }
 
         public void setPath(String path) {
