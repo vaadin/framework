@@ -2,6 +2,7 @@ package com.itmill.toolkit.demo.featurebrowser;
 
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Validator;
+import com.itmill.toolkit.data.Validator.InvalidValueException;
 import com.itmill.toolkit.data.util.BeanItem;
 import com.itmill.toolkit.ui.BaseFieldFactory;
 import com.itmill.toolkit.ui.Button;
@@ -13,6 +14,7 @@ import com.itmill.toolkit.ui.HorizontalLayout;
 import com.itmill.toolkit.ui.TextField;
 import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Button.ClickEvent;
+import com.itmill.toolkit.ui.Button.ClickListener;
 
 /**
  * This example demonstrates the most important features of the Form component:
@@ -70,7 +72,20 @@ public class FormExample extends CustomComponent {
             setFieldFactory(new MyFieldFactory());
 
             // Add Commit and Discard controls to the form.
-            Button commit = new Button("Save", this, "commit");
+
+            Button commit = new Button("Save", new ClickListener() {
+
+                public void buttonClick(ClickEvent event) {
+                    try {
+                        commit();
+                    } catch (InvalidValueException e) {
+                        // Failed to commit. The validation errors are
+                        // automatically shown to the user.
+                    }
+                }
+
+            });
+
             Button discard = new Button("Reset", this, "discard");
             HorizontalLayout footer = new HorizontalLayout();
             footer.addComponent(commit);
