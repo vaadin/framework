@@ -11,9 +11,10 @@ public class GridLayoutBasicExample extends VerticalLayout {
     public GridLayoutBasicExample() {
         // Create a grid layout
         final GridLayout grid = new GridLayout(3, 3);
+        grid.setSpacing(true);
 
         // The style allows us to visualize the cell borders in this example.
-        grid.addStyleName("example-alignment");
+        grid.addStyleName("gridexample");
 
         grid.setWidth(400, Sizeable.UNITS_PIXELS);
         grid.setHeight(400, Sizeable.UNITS_PIXELS);

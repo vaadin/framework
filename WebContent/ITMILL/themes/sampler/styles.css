@@ -6,6 +6,10 @@
 
 @import url(prominentprimaryaction/styles.css);
 
-@import url(layouts/styles.css);
+@import url(layouts/marginexample.css);
+
+@import url(layouts/spacingexample.css);
+
+@import url(layouts/gridexample.css);
 
 @import url(table/styles.css);

@@ -1,24 +1,48 @@
 package com.itmill.toolkit.demo.sampler.features.layouts;
 
-import com.itmill.toolkit.ui.Button;
-import com.itmill.toolkit.ui.CheckBox;
 import com.itmill.toolkit.ui.HorizontalLayout;
+import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.TextField;
-import com.itmill.toolkit.ui.VerticalLayout;
-import com.itmill.toolkit.ui.Button.ClickEvent;
 
-public class HorizontalLayoutBasicExample extends VerticalLayout {
+public class HorizontalLayoutBasicExample extends HorizontalLayout {
 
     public HorizontalLayoutBasicExample() {
-        // Create a horizontal layout.
-        final HorizontalLayout horizontal = new HorizontalLayout();
-        
-        // Populate the layout with components.
-        horizontal.addComponent(new TextField("Name"));
-        horizontal.addComponent(new TextField("Street address"));
-        horizontal.addComponent(new TextField("Postal code"));
-        
-        // Add the layout to the containing layout.
-        addComponent(horizontal);
+        // this is a HorizontalLayout
+
+        // First TextField
+        TextField tf = new TextField();
+        tf.setWidth("70px");
+        addComponent(tf);
+
+        // A dash
+        Label dash = new Label("-");
+        addComponent(dash);
+        setComponentAlignment(dash, "middle");
+
+        // Second TextField
+        tf = new TextField();
+        tf.setWidth("70px");
+        addComponent(tf);
+
+        // Another dash
+        dash = new Label("-");
+        addComponent(dash);
+        setComponentAlignment(dash, "middle");
+
+        // Third TextField
+        tf = new TextField();
+        tf.setWidth("70px");
+        addComponent(tf);
+
+        // Yet another dash
+        dash = new Label("-");
+        addComponent(dash);
+        setComponentAlignment(dash, "middle");
+
+        // Forth and last TextField
+        tf = new TextField();
+        tf.setWidth("70px");
+        addComponent(tf);
+
     }
 }

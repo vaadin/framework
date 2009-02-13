@@ -1,0 +1,9 @@
+.i-verticallayout-marginexample .i-verticallayout-margin-right {
+	/* increase the right margin */
+	padding-right: 100px;
+}
+
+.i-verticallayout-marginexample {
+	/* background for the layout, for clarity */
+	background-color: #ccc;
+}

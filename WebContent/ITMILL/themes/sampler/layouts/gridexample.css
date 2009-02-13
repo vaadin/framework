@@ -1,0 +1,13 @@
+.i-gridlayout-gridexample .i-gridlayout-spacing-on {
+	/* adjust spacing size */
+	padding: 1px;
+}
+
+/* visualize the grid cells */
+.i-gridlayout-gridexample div {
+	background-color: #fff;
+}
+
+.i-gridlayout-gridexample div div div {
+	background-color: #eee;
+}

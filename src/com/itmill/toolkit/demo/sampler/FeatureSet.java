@@ -28,6 +28,7 @@ import com.itmill.toolkit.demo.sampler.features.layouts.ExpandingComponent;
 import com.itmill.toolkit.demo.sampler.features.layouts.GridLayoutBasic;
 import com.itmill.toolkit.demo.sampler.features.layouts.HorizontalLayoutBasic;
 import com.itmill.toolkit.demo.sampler.features.layouts.LayoutAlignment;
+import com.itmill.toolkit.demo.sampler.features.layouts.LayoutMargin;
 import com.itmill.toolkit.demo.sampler.features.layouts.LayoutSpacing;
 import com.itmill.toolkit.demo.sampler.features.layouts.SplitPanelBasic;
 import com.itmill.toolkit.demo.sampler.features.layouts.VerticalLayoutBasic;
@@ -225,10 +226,12 @@ public class FeatureSet extends Feature {
         public Layouts() {
             super("Layouts", new Feature[] {
             //
+                    new LayoutMargin(), //
+                    new LayoutSpacing(), //
                     new VerticalLayoutBasic(), //
                     new HorizontalLayoutBasic(), //
                     new GridLayoutBasic(), //
-                    new LayoutSpacing(), //
+
                     new LayoutAlignment(), //
                     new ExpandingComponent(), //
                     new SplitPanelBasic(), //
