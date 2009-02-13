@@ -194,26 +194,24 @@ public class IOrderedLayout extends CellBasedLayout {
          */
         if ((isHorizontal() && isDynamicHeight())
                 || (isVertical() && isDynamicWidth())) {
-            Size oldSize = new Size(activeLayoutSize.getWidth(),
-                    activeLayoutSize.getHeight());
-            calculateLayoutDimensions();
-
-            /*
-             * If layout dimension is changed due to relative sized components
-             * we must also update container sizes
-             */
-            if (!oldSize.equals(activeLayoutSize)) {
-                calculateContainerSize();
-            }
-
+            layoutSizeMightHaveChanged();
         }
         // w.mark("Layout dimensions updated");
 
         /* Update component spacing */
         updateContainerMargins();
 
-        /* Recalculate component sizes and alignments */
-        recalculateComponentSizesAndAlignments();
+        /*
+         * Update component sizes for components with relative size in non-main
+         * direction
+         */
+        if (updateRelativeSizesInNonMainDirection()) {
+            // Sizes updated - might affect the other dimension so we need to
+            // recheck the widget sizes and recalculate layout dimensions
+            updateWidgetSizes();
+            layoutSizeMightHaveChanged();
+        }
+        calculateAlignments();
         // w.mark("recalculateComponentSizesAndAlignments done");
 
         setRootSize();
@@ -230,6 +228,19 @@ public class IOrderedLayout extends CellBasedLayout {
         // w.mark("runDescendentsLayout done");
         isRendering = false;
         sizeHasChangedDuringRendering = false;
+    }
+
+    private void layoutSizeMightHaveChanged() {
+        Size oldSize = new Size(activeLayoutSize.getWidth(), activeLayoutSize
+                .getHeight());
+        calculateLayoutDimensions();
+
+        /*
+         * If layout dimension changes we must also update container sizes
+         */
+        if (!oldSize.equals(activeLayoutSize)) {
+            calculateContainerSize();
+        }
     }
 
     private void updateWidgetSizes() {
@@ -298,44 +309,31 @@ public class IOrderedLayout extends CellBasedLayout {
 
     }
 
-    private void recalculateComponentSizesAndAlignments() {
-        if (widgetToComponentContainer.isEmpty()) {
-            return;
-        }
-
-        /*
-         * Update the height of relative height components in a horizontal
-         * layout or the width for relative width components in a vertical
-         * layout
-         */
-        updateRelativeSizesInNonMainDirection();
-
-        /* Calculate alignments */
-        calculateAlignments();
-
-    }
-
     /**
      * Updated components with relative height in horizontal layouts and
      * components with relative width in vertical layouts. This is only needed
      * if the height (horizontal layout) or width (vertical layout) has not been
      * specified.
      */
-    private void updateRelativeSizesInNonMainDirection() {
+    private boolean updateRelativeSizesInNonMainDirection() {
         int updateDirection = 1 - orientation;
         if ((updateDirection == ORIENTATION_HORIZONTAL && !isDynamicWidth())
                 || (updateDirection == ORIENTATION_VERTICAL && !isDynamicHeight())) {
-            return;
+            return false;
         }
 
+        boolean updated = false;
         for (ChildComponentContainer componentContainer : widgetToComponentContainer
                 .values()) {
             if (componentContainer.isComponentRelativeSized(updateDirection)) {
                 client.handleComponentRelativeSize(componentContainer
                         .getWidget());
             }
+
+            updated = true;
         }
 
+        return updated;
     }
 
     private int calculateLayoutDimensions() {
@@ -724,7 +722,8 @@ public class IOrderedLayout extends CellBasedLayout {
             recalculateLayout();
         }
 
-        recalculateComponentSizesAndAlignments();
+        updateRelativeSizesInNonMainDirection();
+        calculateAlignments();
 
         setRootSize();
     }
