@@ -29,28 +29,9 @@
 					// Fetch references
 					packageContent = document.getElementById("package-contents-content");
 					package = document.getElementById("package-contents");
-					demoArea = document.getElementById("demo-buttons");
-					demos = demoArea.getElementsByTagName("li");
-					additionalDemos = document.getElementById("additional-demos");
-					additionalDemosContent = document.getElementById("additional-demos-content");
 					
 					// Hide panel initially
 					packageContent.style.display = "none";
-					package.style.cssFloat = "right";
-					package.style.styleFloat = "right";
-					package.style.clear = "right";
-					package.style.marginTop = "-37px";
-					package.style.marginRight = "1px";
-					package.style.display = "inline";
-					additionalDemosContent.style.display = "none";
-					additionalDemos._smallHeight = additionalDemos.offsetHeight;
-					
-					// Enable additional demos panel hiding/showing
-					var toggle = additionalDemos.getElementsByTagName("h3")[0];
-					toggle.style.cursor = "pointer";
-					toggle.title = "Show/hide additional demos";
-					// Use the quick-n-dirty way to attach event listeners
-					toggle.onclick = function() {itmill.togglePanel(additionalDemosContent)};
 					
 					// Enable package contents panel hiding/showing
 					toggle = package.getElementsByTagName("h3")[0];
@@ -58,13 +39,6 @@
 					toggle.title = "Show/hide package contents";
 					// Use the quick-n-dirty way to attach event listeners
 					toggle.onclick = function() {itmill.togglePanel(packageContent)};
-					
-					// enable demo button hovers
-					for(var i=0; i < demos.length; i++) {
-						demos[i].onmouseover = this.focusDemo;
-					}
-					demoArea.onmouseout = this.blurDemos;
-					
 					
 					// feedback popup
 					var fb = document.getElementById("feedback").getElementsByTagName("textarea")[0];
@@ -76,10 +50,9 @@
 						fb.style.height = "50px";
 						if(fb.value == fb._originalValue)
 							fb.value = "";
-					}
+					};
 
 					try {
-						
 					if(window.location.search && -1 != window.location.search.indexOf('gwt.hosted')) {
 						var hostedParam = window.location.search;
 						var demolinks = document.getElementsByTagName("a");
@@ -102,50 +75,6 @@
 					} else {
 						which.style.display = "block";
 						which._open = true;
-					}
-					// Dirty fix to reposition package-content panel
-					if(which == additionalDemosContent) {
-						if(which._open) {
-							package.style.marginTop = "8px";
-						} else {
-							package.style.marginTop = "-37px";
-						}
-					}
-				},
-				
-				focusDemo : function(e) {
-					var evt = e ? e : window.event;
-					var target = evt.target ? evt.target.parentNode : evt.srcElement.parentNode; // Should be the LI element
-					if(target.nodeType != 1 || target.nodeName != "LI")
-						return;
-						
-					for(var i=0; i < demos.length; i++) {
-						var demo = demos[i];
-						if(demo != target) {
-							if(isIE)
-								demo.style.filter = "alpha(opacity=60)";
-							else 
-								demo.style.opacity = "0.6";
-							
-						} else {
-							if(isIE)
-								demo.style.filter = "";
-							else 
-								demo.style.opacity = "1";
-						}
-					}
-				},
-				
-				blurDemos : function(e) {
-					var evt = e ? e : window.event;
-					var target = evt.toElement || evt.relatedTarget;
-					if(target == demoArea || target.parentNode == demoArea || target.parentNode.parentNode == demoArea)
-						return;
-					for(var i=0; i < demos.length; i++) {
-						if(isIE)
-							demos[i].style.filter = "";
-						else 
-							demos[i].style.opacity = "1";
 					}
 				}
 				
@@ -171,34 +100,33 @@
 		
 			<div id="demos">
 				<h2>Demos</h2>
-				<ul id="demo-buttons">
-					<li id="feature-browser"><a class="demoapp" href="FeatureBrowser/">Feature browser</a></li>
-					<li id="notifications"><a class="demoapp" href="NotificationDemo/">Notifications</a></li>
-					<li id="reservr"><a class="demoapp" href="Reservr/">Reservation application</a></li>
-					<li id="windowed-demos"><a class="demoapp" href="WindowedDemos">Windowed demos</a></li>
-					<li class="clearer"></li> <!-- // simplifies things in JavaScipt -->
+				
+				<h4 id="sampler"><a class="demoapp" href="sampler/" title="Open Sampler">Open Sampler</a> <span>1.0</span></h4>
+				<h4>IT Mill Toolkit Sampler</h4>
+				<p><a href="sampler/" title="Open Sampler">Sampler</a> contains examples of most features, as well as combination examples and useful UI patterns that you can use simply by copy-pasting the code.</p>
+				
+				<h4 id="address-book"><a class="demoapp" href="http://itmill.com/documentation/itmill-toolkit-5-tutorial/" title="Open Address Book">Address Book</a></h4>
+				<h4>Address Book application</h4>
+				<p>A basic application for managing your contact informations. See the <a href="http://itmill.com/documentation/itmill-toolkit-5-tutorial/" title="Address Book Tutorial">accompanying tutorial</a> and learn how to build the same application.</p>
+				<ul class="links">
+					<li><a href="http://itmill.com/documentation/itmill-toolkit-5-tutorial/" class="more">Step-by-step tutorial</a></li>
 				</ul>
 				
-				<div class="clearer"></div>
 				
-				<div id="additional-demos" class="panel">
-					<div class="top"></div>
-					
-					<h3>&raquo; Additional demos</h3>
-					
-					<div id="additional-demos-content"> <!-- For JavaScript hooking -->
-					<ul>
-						<li><a class="demoapp" href="HelloWorld/">Hello world</a> (<a href="doc/example-source/com/itmill/toolkit/demo/HelloWorld.java.html">sources</a>)</li>
-						<li><a class="demoapp" href="Calc/">Calculator</a> (<a href="doc/example-source/com/itmill/toolkit/demo/Calc.java.html">sources</a>)</li>
-						<li><a class="demoapp" href="colorpicker/">How to make widgets demo</a> (<a href="doc/example-source/com/itmill/toolkit/demo/colorpicker">sources</a>)</li>
-						<li><a class="demoapp" href="CachingDemo/">Widget caching demo</a> (<a href="doc/example-source/com/itmill/toolkit/demo/CachingDemo.java.html">sources</a>)</li>
-						<li><a class="demoapp" href="KeyboardShortcut/">Keyboard shortcuts</a> (<a href="doc/example-source/com/itmill/toolkit/demo/KeyboardShortcut.java.html">sources</a>)</li>
-						<li><a class="demoapp" href="BufferedComponents/">Buffered components</a> (<a href="doc/example-source/com/itmill/toolkit/demo/BufferedComponents.java.html">sources</a>)</li>
-					</ul>
-					</div>
 				
-					<div class="bottom"></div>
-				</div> <!-- /additional-demos -->
+					
+				<h4>Additional demos</h4>
+				<p>Below is a collection of stand-alone demo applications that will help you get started with development.</p>
+				<ul>
+					<li><a class="demoapp" href="HelloWorld/">Hello world</a> &nbsp; (<a href="doc/example-source/com/itmill/toolkit/demo/HelloWorld.java.html">sources</a>)</li>
+					<li><a class="demoapp" href="Calc/">Calculator</a> &nbsp; (<a href="doc/example-source/com/itmill/toolkit/demo/Calc.java.html">sources</a>)</li>
+					<li><a class="demoapp" href="Reservr">Reservr &ndash; reservation application</a> &nbsp; (<a href="doc/example-source/com/itmill/toolkit/demo/reservr">sources</a>)</li>
+					<!-- 
+					<li><a class="demoapp" href="CoverFlow">CoverFlow &ndash; Flex integration</a> &nbsp; (<a href="doc/example-source/com/itmill/toolkit/demo/coverflow">sources</a>)</li>
+					<li><a class="demoapp" href="ToolkitTunes">ToolkitTunes &ndash; advanced layout &amp; theme</a> &nbsp; (<a href="doc/example-source/com/itmill/toolkit/demo/ToolkitTunes.java.html">sources</a>)</li>
+					-->
+				</ul>
+					
 			</div> <!-- /demos -->
 			
 			<div id="getting-started">
