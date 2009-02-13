@@ -18,10 +18,10 @@ public class LabelRichExample extends VerticalLayout implements ClickListener {
         setSpacing(true);
         setSizeUndefined(); // let layout grow with content
 
-        richText = new Label("<h1>Rich text label example</h1>"
-                + "<p>In this example, the content mode is set to "
-                + "<i>CONTENT_XHTML</i>.</p>"
-                + "<p>This text can be edited with the Edit-button</p>");
+        richText = new Label(
+                "<h1>Rich text example</h1>"
+                        + "<p>The <b>quick</b> brown fox jumps <sup>over</sup> the <b>lazy</b> dog.</p>"
+                        + "<p>This text can be edited with the <i>Edit</i> -button</p>");
         richText.setContentMode(Label.CONTENT_XHTML);
 
         addComponent(richText);

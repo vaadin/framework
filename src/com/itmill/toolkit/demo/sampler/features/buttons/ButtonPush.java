@@ -15,7 +15,9 @@ public class ButtonPush extends Feature {
 
     @Override
     public String getDescription() {
-        return "A basic push-button.";
+        return "A push-button, which can be considered a 'regular' button,"
+                + " returns to it's 'unclicked' state after emitting an event"
+                + " when the user clicks it.";
     }
 
     @Override

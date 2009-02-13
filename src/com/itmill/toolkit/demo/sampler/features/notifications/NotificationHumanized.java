@@ -14,13 +14,13 @@ public class NotificationHumanized extends Feature {
 
     @Override
     public String getDescription() {
-        return "<p>The <i>Humanized</i> variant is an implementation of"
-                + " the <i>transparent message</i> -pattern, and is meant"
+        return "<p>The <i>Humanized</i> notification is an implementation of"
+                + " the <i>transparent message</i> -pattern, and can be used"
                 + " to indicate non-critical events while interrupting"
                 + " the user as little as possible.<br/>"
                 + "The <i>Humanized</i> message quickly fades away once"
-                + " the user interacts with the application (e.g. moves"
-                + " mouse, types)</p><p>Candidates for a"
+                + " the user interacts with the application (i.e. moves"
+                + " mouse, types).</p><p>Candidates for a"
                 + " <i>Humanized</i> notification include 'XYZ saved',"
                 + " 'Added XYZ', and other messages that the user can"
                 + " safely ignore, once the application is familliar.</p>";

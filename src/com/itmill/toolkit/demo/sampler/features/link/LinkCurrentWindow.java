@@ -15,7 +15,7 @@ public class LinkCurrentWindow extends Feature {
 
     @Override
     public String getDescription() {
-        return "";
+        return "By default, links open in the current browser window (use the browser back-button to get back).";
     }
 
     @Override

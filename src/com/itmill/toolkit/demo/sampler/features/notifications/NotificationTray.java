@@ -14,7 +14,7 @@ public class NotificationTray extends Feature {
 
     @Override
     public String getDescription() {
-        return "<p>The <i>Tray</i> variant shows up in the lower left corner,"
+        return "<p>The <i>Tray</i> notification shows up in the lower right corner,"
                 + " and is meant to interrupt the user as little as possible"
                 + " even if it's shown for a while. "
                 + "The <i>Tray</i> message fades away after a few moments"

@@ -13,9 +13,7 @@ public class TabSheetDisabled extends Feature {
 
     @Override
     public String getDescription() {
-        return "With a tabsheet component you also have the"
-                + " ability to enable and disable as well as"
-                + " show and hide specific tabs.";
+        return "Individual tabs can be enabled, disabled, hidden or visible.";
     }
 
     @Override

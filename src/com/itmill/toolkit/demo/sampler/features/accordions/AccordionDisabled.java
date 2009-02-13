@@ -14,10 +14,7 @@ public class AccordionDisabled extends Feature {
 
     @Override
     public String getDescription() {
-        return "An accordion component is a specialized case of a"
-                + " tabsheet, with vertically organized tabs."
-                + " With an accordion component you can also disable, enable,"
-                + " hide and show tabs, similar to a tabsheet.";
+        return "You can disable, enable, hide and show accordion 'tabs'.";
     }
 
     @Override

@@ -25,7 +25,7 @@ public class FormPojo extends Feature {
 
     @Override
     public String getDescription() {
-        return "It can easily be used as a POJO or Bean editor by wrapping the"
+        return "A Form can easily be used as a POJO or Bean editor by wrapping the"
                 + " bean using BeanItem. The basic functionality only requires"
                 + " a couple of lines of code, then Validators and other"
                 + " customizations can be applied to taste.";

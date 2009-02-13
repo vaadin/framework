@@ -42,7 +42,7 @@ public class Icons extends Feature {
 
     @Override
     public Class[] getRelatedFeatures() {
-        // TODO Auto-generated method stub
+        // TODO link embedded sample
         return null;
     }
 

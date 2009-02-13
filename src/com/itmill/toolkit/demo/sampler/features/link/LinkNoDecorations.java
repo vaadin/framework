@@ -15,7 +15,7 @@ public class LinkNoDecorations extends Feature {
 
     @Override
     public String getDescription() {
-        return "These links open a browser window without decorations.";
+        return "Links can open new browser windows, and configure the amount of browser features shown, such as toolbar and addressbar.<br/>These links open a browser window without decorations.";
     }
 
     @Override

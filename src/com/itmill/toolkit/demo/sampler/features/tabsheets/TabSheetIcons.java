@@ -13,11 +13,7 @@ public class TabSheetIcons extends Feature {
 
     @Override
     public String getDescription() {
-        return "A tabsheet component with icons. Each tab can"
-                + " contain any component. In this simple example"
-                + " each tab contains a label."
-                + "<br> You can also attach a listener to the tab"
-                + " change event.";
+        return "Each tab can have an Icon in addition to the caption.";
     }
 
     @Override

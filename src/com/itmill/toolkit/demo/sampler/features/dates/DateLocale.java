@@ -18,7 +18,7 @@ public class DateLocale extends Feature {
     public String getDescription() {
         return "In this example, you can select a different locale"
                 + " from the combo box and see how the calendar component"
-                + " will be localized.";
+                + " is localized.";
     }
 
     @Override

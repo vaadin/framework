@@ -3,9 +3,9 @@ package com.itmill.toolkit.demo.sampler.features.commons;
 import com.itmill.toolkit.demo.sampler.APIResource;
 import com.itmill.toolkit.demo.sampler.Feature;
 import com.itmill.toolkit.demo.sampler.NamedExternalResource;
+import com.itmill.toolkit.demo.sampler.features.form.FormBasic;
 import com.itmill.toolkit.demo.sampler.features.notifications.NotificationError;
-import com.itmill.toolkit.ui.Component;
-import com.itmill.toolkit.ui.Window;
+import com.itmill.toolkit.ui.AbstractComponent;
 
 public class Errors extends Feature {
 
@@ -35,13 +35,13 @@ public class Errors extends Feature {
     }
 
     public APIResource[] getRelatedAPI() {
-        return new APIResource[] { new APIResource(Component.class),
-                new APIResource(Window.Notification.class) };
+        return new APIResource[] { new APIResource(AbstractComponent.class) };
     }
 
     public Class[] getRelatedFeatures() {
         // TODO link validation sample, form sample
-        return new Class[] { NotificationError.class };
+        return new Class[] { Validation.class, FormBasic.class,
+                NotificationError.class };
     }
 
     public NamedExternalResource[] getRelatedResources() {

@@ -14,7 +14,7 @@ public class NotificationWarning extends Feature {
 
     @Override
     public String getDescription() {
-        return "<p>The <i>Warning</i> variant is an implementation of"
+        return "<p>The <i>Warning</i> notification is an implementation of"
                 + " the <i>transparent message</i> -pattern, and is meant"
                 + " to interrupt the user as little as possible, while"
                 + " still drawing the needed attention."

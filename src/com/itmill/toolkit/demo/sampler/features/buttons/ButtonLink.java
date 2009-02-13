@@ -6,8 +6,6 @@ import com.itmill.toolkit.demo.sampler.FeatureSet;
 import com.itmill.toolkit.demo.sampler.NamedExternalResource;
 import com.itmill.toolkit.demo.sampler.features.blueprints.ProminentPrimaryAction;
 import com.itmill.toolkit.demo.sampler.features.link.LinkCurrentWindow;
-import com.itmill.toolkit.demo.sampler.features.link.LinkNoDecorations;
-import com.itmill.toolkit.demo.sampler.features.link.LinkSizedWindow;
 import com.itmill.toolkit.ui.Button;
 
 public class ButtonLink extends Feature {
@@ -19,8 +17,9 @@ public class ButtonLink extends Feature {
 
     @Override
     public String getDescription() {
-        return "A link-styled button; works like a Button but looks like a Link.<br/>"
-                + "I.e it does not actually link somewhere, but triggers a server-side event, just like a regular button.";
+        return "A link-styled button works like a push button, but looks like"
+                + " a Link.<br/> It does not actually link somewhere, but"
+                + " triggers a server-side event, just like a regular button.";
     }
 
     @Override
@@ -31,8 +30,7 @@ public class ButtonLink extends Feature {
     @Override
     public Class[] getRelatedFeatures() {
         return new Class[] { ButtonPush.class, ButtonSwitch.class,
-                LinkCurrentWindow.class, LinkNoDecorations.class,
-                LinkSizedWindow.class, ProminentPrimaryAction.class,
+                LinkCurrentWindow.class, ProminentPrimaryAction.class,
                 FeatureSet.Links.class };
     }
 

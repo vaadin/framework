@@ -15,12 +15,9 @@ public class Tooltips extends Feature {
     @Override
     public String getDescription() {
         return "Most components can have a <i>description</i>,"
-                + " which is shown as a <i>\"tooltip\"</i>.<br/>"
-                + "Descriptions may have rich content.<br/>"
-                + "Note that <i>description</i> is more generic term than"
-                + " <i>tooltip</i> - a component might choose to show"
-                + " the description in another way, if that's more appropriate"
-                + " for that component.)";
+                + " which is shown as a <i>\"tooltip\"</i>."
+                + " Descriptions may have formatted ('rich') content.<br/>"
+                + "";
     }
 
     @Override

@@ -145,13 +145,17 @@ public class FeatureSet extends Feature {
      */
     public static class Buttons extends FeatureSet {
         public Buttons() {
-            super("Buttons", new Feature[] {
-            //
-                    new ButtonPush(), // basic
-                    new ButtonLink(), // link
-                    new ButtonSwitch(), // switch/checkbox
+            super(
+                    "Buttons",
+                    "Buttons",
+                    "A button is one of the fundamental building blocks of any application.",
+                    new Feature[] {
+                    //
+                            new ButtonPush(), // basic
+                            new ButtonLink(), // link
+                            new ButtonSwitch(), // switch/checkbox
 
-            });
+                    });
         }
     }
 
@@ -160,7 +164,7 @@ public class FeatureSet extends Feature {
             super(
                     "Links",
                     "Links",
-                    "An external link - this is the basic HTML-style link, changing the url of the browser w/o triggering a server-side event (like the link-styled Button).<br/>By default, links open in the current browser window. Links can open new browser windows, and configure the amount of browser features shown, such as toolbar and addressbar.",
+                    "An external link. This is the basic HTML-style link, changing the url of the browser w/o triggering a server-side event (like the link-styled Button).",
                     new Feature[] {
                     //
                             new LinkCurrentWindow(), // basic
@@ -237,22 +241,32 @@ public class FeatureSet extends Feature {
 
     public static class Tabsheets extends FeatureSet {
         public Tabsheets() {
-            super("Tabsheets", new Feature[] {
-            //        
-                    new TabSheetIcons(), //
-                    new TabSheetScrolling(), //
-                    new TabSheetDisabled(), //
-            });
+            super(
+                    "Tabsheets",
+                    "Tabsheets",
+                    "A Tabsheet organizes multiple components so that only the one component associated with the currently selected 'tab' is shown. Typically a tab will contain a Layout, which in turn may contain many components.",
+                    new Feature[] {
+                    //        
+                            new TabSheetIcons(), //
+                            new TabSheetScrolling(), //
+                            new TabSheetDisabled(), //
+                    });
         }
     }
 
     public static class Accordions extends FeatureSet {
         public Accordions() {
-            super("Accordions", new Feature[] {
-            //        
-                    new AccordionIcons(), //
-                    new AccordionDisabled(), //
-            });
+            super(
+                    "Accordions",
+                    "Accordions",
+                    "An accordion component is a specialized case of a tabsheet."
+                            + " Within an accordion, the tabs are organized vertically,"
+                            + " and the content will be shown directly below the tab.",
+                    new Feature[] {
+                    //        
+                            new AccordionIcons(), //
+                            new AccordionDisabled(), //
+                    });
         }
     }
 
@@ -272,14 +286,9 @@ public class FeatureSet extends Feature {
 
     public static class Forms extends FeatureSet {
         public Forms() {
-            super(
-                    "Forms",
-                    "Forms",
+            super("Forms", "Forms",
                     "The Form -component provides a convenient way to organize"
-                            + " related fields visually.<br/><br/>It is most useful when connected"
-                            + " to a data source, and provides buffering and customization"
-                            + " features to support that scenario.",
-                    new Feature[] {
+                            + " related fields visually.", new Feature[] {
                     //        
                             new FormBasic(), //
                             new FormPojo(), //
@@ -307,7 +316,7 @@ public class FeatureSet extends Feature {
             super(
                     "Table (Grid)",
                     "Table (Grid)",
-                    "Also known as a (Data)Grid, Table can be used to show data in a tabular fashion. It's well suited for showing large datasets.",
+                    "A Table, also known as a (Data)Grid, can be used to show data in a tabular fashion. It's well suited for showing large datasets.",
                     new Feature[] {
                     //        
                             new TableHeaderIcons(), //
@@ -331,7 +340,7 @@ public class FeatureSet extends Feature {
             super(
                     "Texts",
                     "Texts",
-                    "A label is a simple component that allows you to add optionally formatted text components to your application.",
+                    "A label is a simple component that allows you to add (optionally formatted) text components to your application.",
                     new Feature[] {
                     //      
                             new LabelPlain(), //
@@ -362,7 +371,7 @@ public class FeatureSet extends Feature {
             super(
                     "Trees",
                     "Trees",
-                    "The Tree component allows a natural way to represent data that has hierarchical relationships, such as filesystems or message threads.",
+                    "The Tree component provides a natural way to represent data that has hierarchical relationships, such as filesystems or message threads.",
                     new Feature[] {
                     //        
                             new TreeSingleSelect(), //

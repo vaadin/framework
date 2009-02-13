@@ -34,20 +34,18 @@ public class TooltipsExample extends VerticalLayout {
                 .setValue("Click <b>Edit my tooltip</b> to edit this tooltip, then <b>Apply</b>");
         rte.setVisible(false); // hide editor initially
         addComponent(rte);
-        Button apply = new Button("Edit my tooltip",
-                new Button.ClickListener() {
-                    public void buttonClick(ClickEvent event) {
-                        if (rte.isVisible()) {
-                            rte.setVisible(false);
-                            event.getButton().setDescription(
-                                    (String) rte.getValue());
-                            event.getButton().setCaption("Edit my tooltip");
-                        } else {
-                            rte.setVisible(true);
-                            event.getButton().setCaption("Apply");
-                        }
-                    }
-                });
+        Button apply = new Button("Edit tooltip", new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                if (rte.isVisible()) {
+                    rte.setVisible(false);
+                    event.getButton().setDescription((String) rte.getValue());
+                    event.getButton().setCaption("Edit tooltip");
+                } else {
+                    rte.setVisible(true);
+                    event.getButton().setCaption("Apply");
+                }
+            }
+        });
         apply.setDescription((String) rte.getValue());
         addComponent(apply);
 

@@ -14,10 +14,7 @@ public class AccordionIcons extends Feature {
 
     @Override
     public String getDescription() {
-        return "An accordion component is a specialized case of a"
-                + " tabsheet. Within an accordion, the tabs are organized"
-                + " vertically, and the content will be shown directly"
-                + " below the tab.";
+        return "The accordion 'tabs' can contain icons in addition to the caption.";
     }
 
     @Override

@@ -15,7 +15,7 @@ public class LinkSizedWindow extends Feature {
 
     @Override
     public String getDescription() {
-        return "These links open a small, prefixed size window without decorations.";
+        return "Links can configure the size of the opened window.<br/>These links open a small fixed size window without decorations.";
     }
 
     @Override

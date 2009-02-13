@@ -21,7 +21,7 @@ public class TableActions extends Feature {
 
     @Override
     public String getDescription() {
-        return "Actions can be added to each row, and are show in the a"
+        return "Actions can be added to each row, and are show in a"
                 + " context menu when right-clicking.";
 
     }

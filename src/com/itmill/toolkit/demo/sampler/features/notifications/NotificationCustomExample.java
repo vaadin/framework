@@ -21,13 +21,14 @@ public class NotificationCustomExample extends VerticalLayout {
         setSpacing(true);
         setWidth(null); // layout will grow with content
 
-        final TextField caption = new TextField("Caption");
+        final TextField caption = new TextField("Caption", "Message sent");
         caption
                 .setDescription("Main info; a short caption-only notification is often most effective.");
         caption.setWidth("200px");
         addComponent(caption);
 
         final RichTextArea description = new RichTextArea();
+        description.setValue("<p>to <i>john.doe@example.com</i></p>");
         description.setCaption("Description");
         description
                 .setDescription("Additional information; try to keep it short.");

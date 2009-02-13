@@ -14,10 +14,9 @@ public class RichTextEditor extends Feature {
 
     @Override
     public String getDescription() {
-        return "A RichTextArea component allows editing XHTML"
-                + " content. <br/>Click the edit button to open the"
-                + " editor and the show button to show the edited"
-                + " result as an XHTML label.";
+        return "The RichTextArea allows 'rich' formatting of the input.<br/>"
+                + "Click the <i>Edit</i> button to edit the label content"
+                + " with the RichTextArea.";
     }
 
     @Override

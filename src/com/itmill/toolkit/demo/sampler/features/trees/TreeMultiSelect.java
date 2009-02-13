@@ -14,7 +14,7 @@ public class TreeMultiSelect extends Feature {
     @Override
     public String getDescription() {
         return "In this example, you can select multiple tree nodes"
-                + " and delete your selection. Click a selected item again to de-select it.";
+                + " and delete the selected items. Click a selected item again to de-select it.";
     }
 
     @Override

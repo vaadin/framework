@@ -13,9 +13,7 @@ public class TabSheetScrolling extends Feature {
 
     @Override
     public String getDescription() {
-        return "A tabsheet component with too many tabs to display"
-                + " within the width of the tabsheet. A scrolling"
-                + "feature will be added to the tab bar automatically.";
+        return "If the tabs are to many to be shown at once, a scrolling control will appear automatically.";
     }
 
     @Override

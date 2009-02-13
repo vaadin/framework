@@ -25,7 +25,10 @@ public class FormBasic extends Feature {
 
     @Override
     public String getDescription() {
-        return "";
+        return "A Form is most useful when connected to a data source, and"
+                + " provides buffering and customization features to support"
+                + " that scenario. <br/> Enter something and try discarding"
+                + " or applying.";
     }
 
     @Override

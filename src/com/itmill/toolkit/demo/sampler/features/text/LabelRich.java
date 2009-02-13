@@ -15,7 +15,8 @@ public class LabelRich extends Feature {
     public String getDescription() {
         return "In this example the content mode is set to"
                 + " CONTENT_XHTML. This content mode assumes that the"
-                + " content set to the label will be valid XHTML.";
+                + " content set to the label will be valid XHTML.<br/>"
+                + "Click the <i>Edit</i> button to edit the label content.";
     }
 
     @Override

@@ -15,7 +15,7 @@ public class PanelLight extends Feature {
 
     @Override
     public String getDescription() {
-        return "The 'light' style version has less decorations than the regular Panel style.";
+        return "The 'light' panel has less decorations than the regular Panel style.";
 
     }
 

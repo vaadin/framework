@@ -14,7 +14,7 @@ public class NotificationError extends Feature {
 
     @Override
     public String getDescription() {
-        return "<p>The <i>Error</i> variant is modal, and is to be used for"
+        return "<p>The <i>Error</i> notification is modal, and is to be used for"
                 + " messages that must be seen by the user.<br/>"
                 + " The <i>Error</i> message must be closed by clicking"
                 + " the notification.</p><p>Candidates for an"

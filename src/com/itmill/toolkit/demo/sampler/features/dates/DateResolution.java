@@ -16,7 +16,7 @@ public class DateResolution extends Feature {
     public String getDescription() {
         return "In this example, you can select a different resolution"
                 + " from the combo box and see how the calendar component"
-                + " will change.";
+                + " changes.";
     }
 
     @Override
