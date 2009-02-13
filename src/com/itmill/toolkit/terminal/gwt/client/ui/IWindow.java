@@ -778,6 +778,8 @@ public class IWindow extends IToolkitOverlay implements Container,
             pixelWidth = getElement().getOffsetWidth() - borderWidth;
             if (pixelWidth < MIN_WIDTH) {
                 pixelWidth = MIN_WIDTH;
+                int rootWidth = pixelWidth + borderWidth;
+                DOM.setStyleAttribute(getElement(), "width", rootWidth + "px");
             }
 
             renderSpace.setWidth(pixelWidth);
@@ -810,6 +812,10 @@ public class IWindow extends IToolkitOverlay implements Container,
             int pixels = getElement().getOffsetHeight() - getExtraHeight();
             if (pixels < MIN_HEIGHT) {
                 pixels = MIN_HEIGHT;
+                int rootHeight = pixels + getExtraHeight();
+                DOM.setStyleAttribute(getElement(), "height", (rootHeight)
+                        + "px");
+
             }
             renderSpace.setHeight(pixels);
             height = pixels + "px";
