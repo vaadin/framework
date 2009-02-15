@@ -28,11 +28,16 @@ public class Icon extends UIObject {
 
     public void setUri(String uidlUri) {
         if (!uidlUri.equals(myUri)) {
+            /*
+             * Start sinking onload events, widgets responsibility to react. We
+             * must do this BEFORE we set src as IE fires the event immediately
+             * if the image is found in cache (#2592).
+             */
+            sinkEvents(Event.ONLOAD);
+
             String uri = client.translateToolkitUri(uidlUri);
             DOM.setElementProperty(getElement(), "src", uri);
             myUri = uidlUri;
-            // start sinkin onload events, widgets responsibility to react
-            sinkEvents(Event.ONLOAD);
         }
     }
 

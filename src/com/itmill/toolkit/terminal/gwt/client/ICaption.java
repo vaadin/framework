@@ -95,8 +95,8 @@ public class ICaption extends HTML {
             }
             placedAfterComponent = false;
 
-            icon.setUri(uidl.getStringAttribute(ATTRIBUTE_ICON));
             iconOnloadHandled = false;
+            icon.setUri(uidl.getStringAttribute(ATTRIBUTE_ICON));
 
         } else if (icon != null) {
             // Remove existing
