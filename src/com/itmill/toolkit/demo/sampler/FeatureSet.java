@@ -224,21 +224,25 @@ public class FeatureSet extends Feature {
 
     public static class Layouts extends FeatureSet {
         public Layouts() {
-            super("Layouts", new Feature[] {
-            //
-                    new LayoutMargin(), //
-                    new LayoutSpacing(), //
-                    new VerticalLayoutBasic(), //
-                    new HorizontalLayoutBasic(), //
-                    new GridLayoutBasic(), //
+            super(
+                    "Layouts",
+                    "Layouts",
+                    "Making a usable, good looking, dynamic layout can be tricky, but with the right tools almost anything is possible.<br/>",
+                    new Feature[] {
+                    //
+                            new LayoutMargin(), //
+                            new LayoutSpacing(), //
+                            new VerticalLayoutBasic(), //
+                            new HorizontalLayoutBasic(), //
+                            new GridLayoutBasic(), //
 
-                    new LayoutAlignment(), //
-                    new ExpandingComponent(), //
-                    new SplitPanelBasic(), //
-                    new WebLayout(), //
-                    new ApplicationLayout(), //
-                    new CustomLayouts(), //
-            });
+                            new LayoutAlignment(), //
+                            new ExpandingComponent(), //
+                            new SplitPanelBasic(), //
+                            new WebLayout(), //
+                            new ApplicationLayout(), //
+                            new CustomLayouts(), //
+                    });
         }
     }
 

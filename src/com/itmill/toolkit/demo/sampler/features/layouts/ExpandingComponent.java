@@ -14,9 +14,12 @@ public class ExpandingComponent extends Feature {
 
     @Override
     public String getDescription() {
-        return "With the setExpandRatio() -method you can set varying expand"
-                + " ratios for the components inside a Layout.<br>Click the button to"
-                + " open an example in a new window.";
+        return "You can <i>expand</i> components to make them"
+                + " occupy the space left over by other components.<br/>"
+                + " If more than one component is expanded, the <i>ratio</i>"
+                + " determines how the leftover space is shared between the"
+                + " expanded components.<br/>Mousover each component for a"
+                + " description (tooltip).<br/> Also try resizing the window.";
     }
 
     @Override
