@@ -174,9 +174,6 @@ public class IForm extends ComplexPanel implements Container {
         renderInformation.setContentAreaWidth(renderInformation
                 .getRenderedSize().getWidth()
                 - borderPaddingHorizontal);
-        if (BrowserInfo.get().isIE6()) {
-            getElement().getStyle().setProperty("overflow", "auto");
-        }
     }
 
     public RenderSpace getAllocatedSpace(Widget child) {
