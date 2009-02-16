@@ -38,6 +38,9 @@ public class IGoogleAnalytics extends Widget implements Paintable {
     private native String trackPageview(String trackerId, String pageId,
             String domainName)
     /*-{
+        if (!$wnd._gat) {
+            return "Tracker not found (running offline?)";
+        }
         try {
             var pageTracker = $wnd._gat._getTracker(trackerId);
             if (domainName) {
