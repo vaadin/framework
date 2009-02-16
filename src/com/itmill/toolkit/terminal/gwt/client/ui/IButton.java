@@ -133,7 +133,8 @@ public class IButton extends Button implements Paintable {
         if (DOM.eventGetType(event) == Event.ONLOAD) {
             Util.notifyParentOfSizeChange(this, true);
 
-        } else if (DOM.eventGetType(event) == Event.ONMOUSEDOWN) {
+        } else if (DOM.eventGetType(event) == Event.ONMOUSEDOWN
+                && event.getButton() == Event.BUTTON_LEFT) {
             clickPending = true;
         } else if (DOM.eventGetType(event) == Event.ONMOUSEMOVE) {
             clickPending = false;
