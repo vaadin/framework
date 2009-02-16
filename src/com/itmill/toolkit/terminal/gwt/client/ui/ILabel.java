@@ -20,6 +20,8 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
 public class ILabel extends HTML implements Paintable {
 
     public static final String CLASSNAME = "i-label";
+    private static final String CLASSNAME_UNDEFINED_WIDTH = "i-label-undef-w";
+
     private ApplicationConnection client;
     private int verticalPaddingBorder = 0;
     private int horizontalPaddingBorder = 0;
@@ -72,7 +74,12 @@ public class ILabel extends HTML implements Paintable {
         } else if ("uidl".equals(mode)) {
             setHTML(uidl.getChildrenAsXML());
         } else if ("xhtml".equals(mode)) {
-            setHTML(uidl.getChildUIDL(0).getChildUIDL(0).getChildString(0));
+            UIDL content = uidl.getChildUIDL(0).getChildUIDL(0);
+            if (content.getChildCount() > 0) {
+                setHTML(content.getChildString(0));
+            } else {
+                setHTML("");
+            }
             sinkOnloads = true;
         } else if ("xml".equals(mode)) {
             setHTML(uidl.getChildUIDL(0).getChildString(0));
@@ -107,5 +114,10 @@ public class ILabel extends HTML implements Paintable {
     public void setWidth(String width) {
         horizontalPaddingBorder = Util.setWidthExcludingPaddingAndBorder(this,
                 width, horizontalPaddingBorder);
+        if (width == null || width.equals("")) {
+            setStyleName(getElement(), CLASSNAME_UNDEFINED_WIDTH, true);
+        } else {
+            setStyleName(getElement(), CLASSNAME_UNDEFINED_WIDTH, false);
+        }
     }
 }

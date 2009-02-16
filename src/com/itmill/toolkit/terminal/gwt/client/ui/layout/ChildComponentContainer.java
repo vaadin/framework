@@ -72,7 +72,7 @@ public class ChildComponentContainer extends Panel {
         setElement(containerDIV);
 
         containerDIV.getStyle().setProperty("height", "0");
-        // DOM.setStyleAttribute(containerDIV, "width", "0px");
+        containerDIV.getStyle().setProperty("width", "0px");
         containerDIV.getStyle().setProperty("overflow", "hidden");
 
         widgetDIV = Document.get().createDivElement();
@@ -171,12 +171,15 @@ public class ChildComponentContainer extends Panel {
          * For fixed width layouts we specify the width directly so that height
          * is automatically calculated correctly (e.g. for Labels).
          */
-        if (fixedWidth > 0) {
-            setLimitedContainerWidth(fixedWidth);
-        } else {
-            setUnlimitedContainerWidth();
-        }
-
+        /*
+         * This should no longer be needed (after #2563) as all components are
+         * such that they can be rendered inside a 0x0 DIV.
+         */
+        // if (fixedWidth > 0) {
+        // setLimitedContainerWidth(fixedWidth);
+        // } else {
+        // setUnlimitedContainerWidth();
+        // }
         ((Paintable) widget).updateFromUIDL(childUIDL, client);
     }
 

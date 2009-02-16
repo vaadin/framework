@@ -101,7 +101,7 @@ public class Label extends AbstractComponent implements Property,
      * Creates an empty Label.
      */
     public Label() {
-        setPropertyDataSource(new ObjectProperty("", String.class));
+        this("");
     }
 
     /**
@@ -110,7 +110,7 @@ public class Label extends AbstractComponent implements Property,
      * @param content
      */
     public Label(String content) {
-        setPropertyDataSource(new ObjectProperty(content, String.class));
+        this(content, CONTENT_DEFAULT);
     }
 
     /**
@@ -120,7 +120,7 @@ public class Label extends AbstractComponent implements Property,
      * @param contentSource
      */
     public Label(Property contentSource) {
-        setPropertyDataSource(contentSource);
+        this(contentSource, CONTENT_DEFAULT);
     }
 
     /**
@@ -130,8 +130,7 @@ public class Label extends AbstractComponent implements Property,
      * @param contentMode
      */
     public Label(String content, int contentMode) {
-        setPropertyDataSource(new ObjectProperty(content, String.class));
-        setContentMode(contentMode);
+        this(new ObjectProperty(content, String.class), contentMode);
     }
 
     /**
@@ -143,7 +142,10 @@ public class Label extends AbstractComponent implements Property,
      */
     public Label(Property contentSource, int contentMode) {
         setPropertyDataSource(contentSource);
-        setContentMode(contentMode);
+        if (contentMode != CONTENT_DEFAULT) {
+            setContentMode(contentMode);
+        }
+        setWidth(100, UNITS_PERCENTAGE);
     }
 
     /**
