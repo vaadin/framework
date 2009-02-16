@@ -234,6 +234,10 @@ input.i-modified,
 	padding-bottom: 1px;
 }
 
+.i-label-undef-w {
+	white-space: nowrap;
+}
+
 /* Loading indicator states
  * Note: client side expects that loading indicator has a height. It depends on
  * this css property to ensure browsers have applied all required styles.
