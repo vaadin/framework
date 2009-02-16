@@ -135,7 +135,9 @@ public class ITooltip extends IToolkitOverlay {
         @Override
         public void run() {
             TooltipInfo info = ac.getTitleInfo(tooltipOwner);
-            show(info);
+            if (null != info) {
+                show(info);
+            }
             opening = false;
         }
     };

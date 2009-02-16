@@ -1498,7 +1498,15 @@ public class ApplicationConnection {
      * 
      */
     public TooltipInfo getTitleInfo(Paintable titleOwner) {
-        return idToPaintableDetail.get(getPid(titleOwner)).getTooltipInfo();
+        if (null == titleOwner) {
+            return null;
+        }
+        ComponentDetail pd = idToPaintableDetail.get(getPid(titleOwner));
+        if (null != pd) {
+            return pd.getTooltipInfo();
+        } else {
+            return null;
+        }
     }
 
     private final ITooltip tooltip = new ITooltip(this);
