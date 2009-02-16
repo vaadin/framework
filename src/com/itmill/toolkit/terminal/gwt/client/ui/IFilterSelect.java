@@ -573,8 +573,8 @@ public class IFilterSelect extends Composite implements Paintable, Field,
             }
 
             public void onLoad(Widget sender) {
-                updateSelectedIconPosition();
                 updateRootWidth();
+                updateSelectedIconPosition();
             }
         });
 
@@ -769,20 +769,22 @@ public class IFilterSelect extends Composite implements Paintable, Field,
     private void setSelectedItemIcon(String iconUri) {
         if (iconUri == null) {
             selectedItemIcon.setVisible(false);
+            updateRootWidth();
         } else {
             selectedItemIcon.setUrl(iconUri);
             selectedItemIcon.setVisible(true);
+            updateRootWidth();
             updateSelectedIconPosition();
         }
-        updateRootWidth();
     }
 
     private void updateSelectedIconPosition() {
         // Position icon vertically to middle
         int availableHeight = getOffsetHeight();
         int iconHeight = Util.getRequiredHeight(selectedItemIcon);
+        int marginTop = (availableHeight - iconHeight) / 2;
         DOM.setStyleAttribute(selectedItemIcon.getElement(), "marginTop",
-                (availableHeight - iconHeight) / 2 + "px");
+                marginTop + "px");
     }
 
     public void onKeyDown(Widget sender, char keyCode, int modifiers) {
