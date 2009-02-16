@@ -2,6 +2,10 @@
  * Link component styles 
  * (useless to move into a separate file)
  */
+.i-link {
+	white-space: nowrap;	
+}
+
 .i-link a {
 	color: #464f52;
 	vertical-align: middle;
