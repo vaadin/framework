@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
@@ -713,9 +714,17 @@ public class IFilterSelect extends Composite implements Paintable, Field,
                 // we're paging w/ arrows
                 if (lastIndex == 0) {
                     // going up, select last item
-                    suggestionPopup.menu
-                            .selectItem((MenuItem) suggestionPopup.menu
-                                    .getItems().get(PAGELENTH - 1));
+                    int lastItem = PAGELENTH - 1;
+                    List items = suggestionPopup.menu.getItems();
+                    /*
+                     * The first page can contain less than 10 items if the null
+                     * selection item is filtered away
+                     */
+                    if (lastItem >= items.size()) {
+                        lastItem = items.size() - 1;
+                    }
+                    suggestionPopup.menu.selectItem((MenuItem) items
+                            .get(lastItem));
                 } else {
                     // going down, select first item
                     suggestionPopup.menu
