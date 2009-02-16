@@ -1,0 +1,316 @@
+@import url(../default/styles.css);
+
+.i-generated-body {
+	/* full height layout does not need scrollable body; 
+	avoids excess scrollbars if moving sub-window over the window area */
+	overflow:hidden;
+}
+
+/******************************************************************************
+ * For FormExample.java
+ ******************************************************************************/
+.i-form legend {
+	color: #464f52;
+}
+
+.i-orderedlayout-formroot td {
+	vertical-align: top;
+}
+
+/******************************************************************************
+ * For GeneratedColumnExample.java.
+ ******************************************************************************/
+/* Align columns generated with ValueColumnGenerator to right. */ 
+.i-label-column-type-value {
+    text-align: right;
+}
+
+/* The total value column is displayed in bold. */
+.i-label-column-total {
+	font-weight: bold;
+	text-align: right;
+}
+
+/* Display calculated values in blue color. */
+.i-label-column-price, .i-label-column-consumption, .i-label-column-dailycost {
+    color: blue;
+    text-align: right;
+}
+
+
+
+/******************************************************************************
+ * For ToolkitTunesLayout.java
+ ******************************************************************************/
+ 
+.tTunes, .tTunes select, .tTunes button {
+	font-size: 11px;
+	line-height: 14px;
+	color: #000;
+	font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+.tTunes .top {
+	background: transparent url(images/top-bg.png) repeat-x;
+}
+
+/* Hide all button captions */
+.tTunes .top .i-button span {
+	display: none;
+}
+
+.tTunes .playback .i-button {
+	width: 31px;
+	height: 32px;
+	overflow: hidden;
+	padding: 0;
+	border: none;
+}
+
+.tTunes .playback .play {
+	width: 37px;
+	height: 38px;
+	background: transparent url(images/play.png);
+}
+
+.tTunes .playback .prev {
+	background: transparent url(images/prev.png);
+}
+
+.tTunes .playback .next {
+	background: transparent url(images/next.png);
+}
+
+.tTunes .volume .mute {
+	width: 13px;
+	height: 14px;
+	background: transparent url(images/mute.png) no-repeat left bottom;
+	border: none;
+	padding: 0;
+	overflow: hidden;
+}
+
+.tTunes .volume .max {
+	width: 17px;
+	height: 14px;
+	background: transparent url(images/max.png) no-repeat right bottom;
+	border: none;
+	padding: 0;
+	overflow: hidden;
+}
+
+.tTunes .volume .i-slider {
+	border: none;
+}
+
+.tTunes .volume .i-slider-base {
+	background: transparent url(images/volume-bar.png) no-repeat 0 50%;
+	height: 6px;
+	border: none;
+	border-top: 1px solid #aaa;
+}
+
+.tTunes .volume .i-slider-handle {
+	background: transparent url(images/volume-knob.png) no-repeat;
+	margin-top: -3px;
+}
+
+.tTunes .status {
+	background: transparent url(images/status-bg.png) repeat-x;
+	line-height: 12px;
+	border-right: 1px solid #959985;
+	border-left: 1px solid #959985;
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+}
+
+.tTunes .status .i-orderedlayout-margin-top {
+	padding-top: 3px;
+}
+.tTunes .status .i-orderedlayout-margin-bottom {
+	padding-bottom: 3px;
+}
+.tTunes .status .i-orderedlayout-margin-left {
+	padding-left: 9px;
+}
+.tTunes .status .i-orderedlayout-margin-right {
+	padding-right: 9px;
+}
+
+.tTunes .status .i-label {
+	white-space: nowrap;
+}
+
+.tTunes .status .i-slider {
+	border: 1px solid #000;
+	border-left: none;
+	border-right: none;
+	height: 7px;
+	margin: 0;
+}
+
+.tTunes .status .i-slider-base {
+	border: none;
+	height: 7px;
+	border-left: 1px solid #000;
+	border-right: 1px solid #000;
+	background: transparent;
+}
+
+.tTunes .status .i-slider-handle {
+	margin: 0;
+	width: 7px;
+	height: 7px;
+	background: transparent url(images/progress-knob.png);
+}
+
+.tTunes .toggle-vis,
+.tTunes .jump {
+	width: 11px;
+	height: 11px;
+	overflow: hidden;
+	border: none;
+	background: transparent url(images/toggle-visualization.png);
+	padding: 0;
+}
+
+.tTunes .jump {en;
+	border: none;
+	background: transparent url(images/jump-to.png);
+}
+
+
+.tTunes .viewmode-table,
+.tTunes .viewmode-grid,
+.tTunes .viewmode-coverflow {
+	border: none;
+	width: 27px;
+	height: 22px;
+	overflow: hidden;
+}
+
+.tTunes .viewmode-table {
+	background: transparent url(images/table-view.png) no-repeat right top;
+}
+
+.tTunes .viewmode-grid {
+	background: transparent url(images/grid-view.png) no-repeat;
+}
+
+.tTunes .viewmode-coverflow {
+	background: transparent url(images/coverflow-view.png) no-repeat;
+}
+
+
+
+.tTunes .i-splitpanel-horizontal .i-splitpanel-hsplitter {
+	width: 1px;
+	background: #404040;
+}
+
+.tTunes .i-splitpanel-horizontal .i-splitpanel-hsplitter div {
+	width: 3px;
+	border: none;
+	background: transparent;
+}
+
+
+
+.tTunes .sidebar {
+	background: #d1d7e2;
+}
+
+.tTunes .sidebar .i-label {
+	padding: 7px 0 3px 10px;
+	font-weight: bold;
+	text-transform: uppercase;
+	color: #505d6d;
+	text-shadow: #fff 0 1px 0;
+}
+
+.tTunes .sidebar .i-button {
+	text-align: left;
+	border: none;
+	background: transparent;
+	line-height: 15px;
+	padding: 2px 0;
+}
+
+.tTunes .sidebar .i-button span {
+	padding-left: 25px;
+}
+
+.tTunes .sidebar .selected {
+	background: transparent url(images/selected-bg.png) repeat-x;
+	color: #fff;
+	font-weight: bold;
+	text-shadow: #384359 0 1px 0;
+	padding: 0;
+}
+
+.tTunes .sidebar .selected span {
+	display: block;
+	background: transparent url(images/icon-music.png) no-repeat 25px 1px;
+	padding: 2px 0 2px 45px;
+}
+
+.tTunes .sidebar .i-caption {
+	background: transparent url(images/table-header-bg.png) repeat-x;
+	padding: 1px 0;
+	font-weight: bold;
+	text-shadow: #eee 0 1px 0;
+	text-align: center;
+	color: #202020;
+	border-top: 1px solid #404040;
+	border-bottom: 1px solid #555;
+}
+
+.tTunes .sidebar .i-captiontext {
+	float: none;
+}
+
+
+.tTunes .i-table-header-wrap {
+	height: 16px;
+	border: none;
+	border-bottom: 1px solid #555;
+	background: transparent url(images/table-header-bg.png) repeat-x;
+}
+
+.tTunes .i-table-caption-container {
+	font-size: 11px;
+	color: #000;
+	font-weight: bold;
+	text-shadow: #fff 0 1px 0;
+	padding-top: 1px;
+}
+
+.tTunes .i-table-body {
+	border: none;
+}
+
+.tTunes .i-table-row-odd {
+	background: #f1f5fa;
+}
+
+.tTunes .i-table-row:hover {
+	background: #fff;
+}
+
+.tTunes .i-table-row-odd:hover {
+	background: #f1f5fa;
+}
+
+.tTunes .i-table .i-selected {
+	background: #3d80df;
+}
+
+.tTunes .i-table-cell-content {
+	padding: 0 0 0 3px;
+	line-height: normal;
+}
+
+.tTunes .i-table select {
+	padding: 0 2px;
+}

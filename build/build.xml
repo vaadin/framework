@@ -770,6 +770,27 @@
 		<echo>Compiled SamplerWidgetSet</echo>
 	</target>
 	
+	<target name="compile-widgetset-coverflow">
+		<echo>com.itmill.toolkit.demo.coverflow.gwt.CoverflowWidgetSet</echo>
+		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
+			<arg value="-out" />
+			<arg value="${output-dir}/WebContent/ITMILL/widgetsets" />
+			<arg value="com.itmill.toolkit.demo.coverflow.gwt.CoverflowWidgetSet" />
+			<arg value="-style" />
+			<arg value="OBF" />
+            <jvmarg value="-Xss8M"/>
+            <jvmarg value="-Djava.awt.headless=true"/>
+			<classpath>
+				<pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
+				<pathelement location="${gwt-dir}/${platform}/${lib-gwt-dev}" />
+				<pathelement location="${result-path}/src" />
+				<!-- demo widgetset sources -->
+				<pathelement path="${output-dir}/WebContent/WEB-INF/src" />
+			</classpath>
+		</java>
+		<echo>Compiled SamplerWidgetSet</echo>
+	</target>
+	
 	<target name="compile-widgetset-colorpicker">
 		<echo>com.itmill.toolkit.demo.colorpicker.gwt.ColorPickerWidgetSet</echo>
 		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
@@ -792,7 +813,7 @@
 	</target>
 
 	<!-- Builds the client-side engine, i.e., the widgetsets. -->
-	<target name="compile-client-side" depends="compile-widgetset-default, compile-widgetset-reserver, compile-widgetset-sampler, compile-widgetset-colorpicker">
+	<target name="compile-client-side" depends="compile-widgetset-default, compile-widgetset-reserver, compile-widgetset-sampler, compile-widgetset-colorpicker, compile-widgetset-coverflow">
         <!-- Building the widgetsets is currently done sequentially, because
             parallel compilation takes too much memory for most machines. -->
 	</target>
@@ -828,6 +849,10 @@
 
 	<!-- Builds the sampler widgetset locally, i.e., not for an installation package. -->
 	<target name="widgetset-sampler" depends="init-nonpackage, compile-widgetset-sampler">
+	</target>
+	
+	<!-- Builds the coverflow widgetset locally, i.e., not for an installation package. -->
+	<target name="widgetset-coverflow" depends="init-nonpackage, compile-widgetset-coverflow">
 	</target>
 	
 	<!-- Builds the reservation widgetset locally, i.e., not for an installation package. -->

@@ -3,642 +3,512 @@
     PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
     "http://java.sun.com/dtd/web-app_2_3.dtd">
 
-<!--
-	THIS IS THE DEVELOPMENT web.xml
-	
-	Package web.xml can be found in build/package, please update it too when 
-	making changes that should affect the package.
--->
+	<!--
+		THIS IS THE DEVELOPMENT web.xml Package web.xml can be found in
+		build/package, please update it too when making changes that should
+		affect the package.
+	-->
 
 
 <web-app>
-  <display-name>IT Mill Toolkit</display-name>
-  <description>IT Mill Toolkit examples</description>
-    
-  <context-param>
-  	<param-name>productionMode</param-name>
-  	<param-value>false</param-value>
-  	<description>IT Mill Toolkit production mode</description>
-  </context-param>
-    
-  <!-- Permit use of IT Mill Testing Tools for this servlet continer -->
-  <context-param>
-  	<param-name>testingToolsActive</param-name>
-  	<param-value>true</param-value>
-  	<description>IT Mill Testing Tools activation</description>
-  </context-param>
-  
-    <context-param>
-  	<param-name>testingToolsServerUri</param-name>
-  	<param-value>http://192.168.1.242:8099/TestingToolsServer</param-value>
-  	<description>IT Mill Testing Tools URI</description>
-  </context-param>
-  
-<servlet>
-    <servlet-name>ITMillToolkitApplicationRunner</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>applicationRunner</param-name>
-      <param-value>true</param-value>
-    </init-param>
-  </servlet>
-  
-  
-  <servlet>
-    <servlet-name>RobustnessComplex</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.tests.robustness.RobustnessComplex</param-value>
-    </init-param>
-  </servlet>
-  
-  <servlet>
-    <servlet-name>RobustnessSimple</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.tests.robustness.RobustnessSimple</param-value>
-    </init-param>
-  </servlet>
-  
-  
- <servlet>
-    <servlet-name>DemoTestBench</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.testbench.TestBench</param-value>
-    </init-param>
-  </servlet>
-  
- <servlet>
-    <servlet-name>TestForNativeWindowing</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.tests.TestForNativeWindowing</param-value>
-    </init-param>
-  </servlet>
-  
-<servlet>
-    <servlet-name>TestSplitPanel</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.tests.TestSplitPanel</param-value>
-    </init-param>
-  </servlet>
-  
-  <servlet>
-    <servlet-name>FeatureBrowser</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.featurebrowser.FeatureBrowser</param-value>
-    </init-param>
-  </servlet>
-  
-  <servlet>
-    <servlet-name>Sampler</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.sampler.SamplerApplication</param-value>
-    </init-param>
-    <init-param>
-      <param-name>widgetset</param-name>
-      <param-value>com.itmill.toolkit.demo.sampler.gwt.SamplerWidgetSet</param-value>
-    </init-param>
-    
-  </servlet>
-  
- <servlet>
-    <servlet-name>TestBench</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.tests.TestBench</param-value>
-    </init-param>
-  </servlet>
-  
-   <servlet>
-    <servlet-name>RandomLayoutStress</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.tests.RandomLayoutStress</param-value>
-    </init-param>
-  </servlet>
-  
-  <servlet>
-    <servlet-name>Reservr</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.reservation.ReservationApplication</param-value>
-    </init-param>
-    <init-param>
-      <param-name>widgetset</param-name>
-      <param-value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</param-value>
-    </init-param>
-  </servlet>
-  
-  <servlet>
-    <servlet-name>SimpleReserver</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.reservation.simple.SimpleReserver</param-value>
-    </init-param>
-    <init-param>
-      <param-name>widgetset</param-name>
-      <param-value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</param-value>
-    </init-param>
-  </servlet>
-  
-  <servlet>
-    <servlet-name>CalendarDemo</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.reservation.CalendarDemo</param-value>
-    </init-param>
-    <init-param>
-      <param-name>widgetset</param-name>
-      <param-value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</param-value>
-    </init-param>
-  </servlet>
-  
-  <servlet>
-    <servlet-name>SelectDemo</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.SelectDemo</param-value>
-    </init-param>
-  </servlet>
+	<display-name>IT Mill Toolkit</display-name>
+	<description>IT Mill Toolkit examples</description>
 
-  <servlet>
-    <servlet-name>BufferedComponents</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.BufferedComponents</param-value>
-    </init-param>
-  </servlet>
+	<context-param>
+		<param-name>productionMode</param-name>
+		<param-value>false</param-value>
+		<description>IT Mill Toolkit production mode</description>
+	</context-param>
+	<!-- Permit use of IT Mill Testing Tools for this servlet continer -->
+	<context-param>
+		<param-name>testingToolsActive</param-name>
+		<param-value>true</param-value>
+		<description>IT Mill Testing Tools activation</description>
+	</context-param>
 
-  <servlet>
-    <servlet-name>TableDemo</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.TableDemo</param-value>
-    </init-param>
-  </servlet>
+	<context-param>
+		<param-name>testingToolsServerUri</param-name>
+		<param-value>http://192.168.1.242:8099/TestingToolsServer</param-value>
+		<description>IT Mill Testing Tools URI</description>
+	</context-param>
 
-  <servlet>
-    <servlet-name>CustomLayoutDemo</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.tests.CustomLayoutDemo</param-value>
-    </init-param>
-  </servlet>
+	<servlet>
+		<servlet-name>ITMillToolkitApplicationRunner</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>applicationRunner</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</servlet>
 
-  <servlet>
-    <servlet-name>LayoutDemo</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.tests.LayoutDemo</param-value>
-    </init-param>
-  </servlet>
 
-  <servlet>
-    <servlet-name>FilterSelect</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.FilterSelect</param-value>
-    </init-param>
-  </servlet>
+	<servlet>
+		<servlet-name>RobustnessSimple</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.tests.robustness.RobustnessSimple</param-value>
+		</init-param>
+	</servlet>
 
-  <servlet>
-    <servlet-name>FeaturesApplication</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.tests.featurebrowser.FeaturesApplication</param-value>
-    </init-param>
-  </servlet>
 
-  <servlet>
-    <servlet-name>Parameters</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.tests.Parameters</param-value>
-    </init-param>
-  </servlet>
+	<servlet>
+		<servlet-name>DemoTestBench</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.demo.testbench.TestBench</param-value>
+		</init-param>
+	</servlet>
+	<servlet>
+		<servlet-name>TestForNativeWindowing</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.tests.TestForNativeWindowing</param-value>
+		</init-param>
+	</servlet>
 
-  <servlet>
-    <servlet-name>UpgradingSample</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.tests.UpgradingSample</param-value>
-    </init-param>
-  </servlet>
+	<servlet>
+		<servlet-name>TestSplitPanel</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.tests.TestSplitPanel</param-value>
+		</init-param>
+	</servlet>
 
-  <servlet>
-    <servlet-name>QueryContainerDemo</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.tests.QueryContainerDemo</param-value>
-    </init-param>
-  </servlet>
-  
-  <servlet>
-    <servlet-name>TreeFilesystemContainer</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.tests.TreeFilesystemContainer</param-value>
-    </init-param>
-    <!-- Set this property if demo cannot access context base directory
-      because of Application Server or Servlet Container security constraints-->
-    <!--
-    <init-param>
-      <param-name>sampleDirectory</param-name>
-      <param-value>/mySampleDirectory</param-value>
-    </init-param>
-    -->								
-  </servlet>
+	<servlet>
+		<servlet-name>FeatureBrowser</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.demo.featurebrowser.FeatureBrowser</param-value>
+		</init-param>
+	</servlet>
 
-  <servlet>
-    <servlet-name>TreeFilesystem</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.tests.TreeFilesystem</param-value>
-    </init-param>
-    <!-- Set this property if demo cannot access context base directory
-      because of Application Server or Servlet Container security constraints-->
-    <!--
-    <init-param>
-      <param-name>sampleDirectory</param-name>
-      <param-value>/mySampleDirectory</param-value>
-    </init-param>
-    -->
-  </servlet>
+	<servlet>
+		<servlet-name>Sampler</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.demo.sampler.SamplerApplication</param-value>
+		</init-param>
+		<init-param>
+			<param-name>widgetset</param-name>
+			<param-value>com.itmill.toolkit.demo.sampler.gwt.SamplerWidgetSet</param-value>
+		</init-param>
 
-  <servlet>
-    <servlet-name>ModalWindow</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.tests.ModalWindow</param-value>
-    </init-param>
-  </servlet>
+	</servlet>
 
-  <servlet>
-    <servlet-name>HelloWorld</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.HelloWorld</param-value>
-    </init-param>
-  </servlet>
+	<servlet>
+		<servlet-name>AddressBook</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.demo.tutorial.addressbook.AddressBookApplication</param-value>
+		</init-param>
 
-  <servlet>
-    <servlet-name>Calc</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.Calc</param-value>
-    </init-param>
-  </servlet>
+	</servlet>
 
-  <servlet>
-    <servlet-name>KeyboardShortcut</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.KeyboardShortcut</param-value>
-    </init-param>
-  </servlet>
+	<servlet>
+		<servlet-name>TestBench</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.tests.TestBench</param-value>
+		</init-param>
+	</servlet>
 
-  <servlet>
-    <servlet-name>CustomGwtComponentDemo</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.CustomGwtComponentDemo</param-value>
-    </init-param>
-  </servlet>
+	<servlet>
+		<servlet-name>RandomLayoutStress</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.tests.RandomLayoutStress</param-value>
+		</init-param>
+	</servlet>
 
-  <servlet>
-    <servlet-name>ColorPickerApplication</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.colorpicker.ColorPickerApplication</param-value>
-    </init-param>
-    <init-param>
-      <param-name>widgetset</param-name>
-      <param-value>com.itmill.toolkit.demo.colorpicker.gwt.ColorPickerWidgetSet</param-value>
-    </init-param>
-  </servlet>
- 
-   <servlet>
-    <servlet-name>CachingDemo</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.CachingDemo</param-value>
-    </init-param>
-  </servlet>
-  
-  <servlet>
-    <servlet-name>NotificationDemo</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.NotificationDemo</param-value>
-    </init-param>
-  </servlet>
+	<servlet>
+		<servlet-name>Reservr</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.demo.reservation.ReservationApplication</param-value>
+		</init-param>
+		<init-param>
+			<param-name>widgetset</param-name>
+			<param-value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</param-value>
+		</init-param>
+	</servlet>
 
-  <servlet>
-    <servlet-name>BookTestServlet</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.tests.book.BookTestApplication</param-value>
-    </init-param>
-  </servlet>
+	<servlet>
+		<servlet-name>SimpleReserver</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.demo.reservation.simple.SimpleReserver</param-value>
+		</init-param>
+		<init-param>
+			<param-name>widgetset</param-name>
+			<param-value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</param-value>
+		</init-param>
+	</servlet>
 
-  <servlet>
-    <servlet-name>WindowTestServlet</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.tests.book.WindowTestApplication</param-value>
-    </init-param>
-  </servlet>
+	<servlet>
+		<servlet-name>CalendarDemo</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.demo.reservation.CalendarDemo</param-value>
+		</init-param>
+		<init-param>
+			<param-name>widgetset</param-name>
+			<param-value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</param-value>
+		</init-param>
+	</servlet>
 
-  <servlet>
-    <servlet-name>ChatServlet</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.tests.book.ChatApplication</param-value>
-    </init-param>
-  </servlet>
+	<servlet>
+		<servlet-name>CustomLayoutDemo</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.tests.CustomLayoutDemo</param-value>
+		</init-param>
+	</servlet>
 
-  <servlet>
-    <servlet-name>BrowserDemo</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.BrowserDemo</param-value>
-    </init-param>
-  </servlet>
+	<servlet>
+		<servlet-name>LayoutDemo</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.tests.LayoutDemo</param-value>
+		</init-param>
+	</servlet>
 
-  <servlet>
-    <servlet-name>WindowedDemos</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.WindowedDemos</param-value>
-    </init-param>
-  </servlet>
-  
-   <servlet>
-    <servlet-name>PortletDemo</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.PortletDemo</param-value>
-    </init-param>
-  </servlet>
- <servlet-mapping>
-    <servlet-name>PortletDemo</servlet-name>
-    <url-pattern>/PortletDemo/*</url-pattern>
-    <!-- portlet -->
-  </servlet-mapping> 
-  
-  	<servlet-mapping>
-    <servlet-name>ITMillToolkitApplicationRunner</servlet-name>
-    <url-pattern>/run/*</url-pattern>
-  </servlet-mapping>
-  
-  	<servlet-mapping>
-    <servlet-name>DemoTestBench</servlet-name>
-    <url-pattern>/DemoTestBench/*</url-pattern>
-  </servlet-mapping>
-  
-        <servlet-mapping>
-    <servlet-name>TestForNativeWindowing</servlet-name>
-    <url-pattern>/TestForNativeWindowing/*</url-pattern>
-  </servlet-mapping>
-  
-  
-    <servlet-mapping>
-    <servlet-name>RobustnessSimple</servlet-name>
-    <url-pattern>/RobustnessSimple/*</url-pattern>
-  </servlet-mapping>
-  
-   <servlet-mapping>
-    <servlet-name>RobustnessComplex</servlet-name>
-    <url-pattern>/RobustnessComplex/*</url-pattern>
-  </servlet-mapping>
-  
-     <servlet-mapping>
-    <servlet-name>TestSplitPanel</servlet-name>
-    <url-pattern>/TestSplitPanel/*</url-pattern>
-  </servlet-mapping>
-  
-     <servlet-mapping>
-    <servlet-name>RandomLayoutStress</servlet-name>
-    <url-pattern>/RandomLayoutStress/*</url-pattern>
-  </servlet-mapping>
-  
-   <servlet-mapping>
-    <servlet-name>TestBench</servlet-name>
-    <url-pattern>/TestBench/*</url-pattern>
-  </servlet-mapping>
-   <servlet-mapping>
-    <servlet-name>TestBench</servlet-name>
-    <url-pattern>/t/*</url-pattern>
-  </servlet-mapping>
+	<servlet>
+		<servlet-name>ToolkitTunesLayout</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.demo.ToolkitTunesLayout</param-value>
+		</init-param>
+	</servlet>
 
-  <servlet-mapping>
-    <servlet-name>Reservr</servlet-name>
-    <url-pattern>/Reservr/*</url-pattern>
-  </servlet-mapping>
-  
- <servlet-mapping>
-    <servlet-name>SimpleReserver</servlet-name>
-    <url-pattern>/SimpleReserver/*</url-pattern>
-    <!-- portlet style=height:400px -->
-  </servlet-mapping>
-  
-  <servlet-mapping>
-    <servlet-name>CalendarDemo</servlet-name>
-    <url-pattern>/CalendarDemo/*</url-pattern>
-  </servlet-mapping>
+	<servlet>
+		<servlet-name>Coverflow</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.demo.coverflow.CoverflowApplication</param-value>
+		</init-param>
+		<init-param>
+			<param-name>widgetset</param-name>
+			<param-value>com.itmill.toolkit.demo.coverflow.gwt.CoverflowWidgetSet</param-value>
+		</init-param>
+	</servlet>
 
-  <servlet-mapping>
-    <servlet-name>SelectDemo</servlet-name>
-    <url-pattern>/SelectDemo/*</url-pattern>
-    <!-- portlet -->
-  </servlet-mapping>
+	<servlet>
+		<servlet-name>FeaturesApplication</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.tests.featurebrowser.FeaturesApplication</param-value>
+		</init-param>
+	</servlet>
 
-  <servlet-mapping>
-    <servlet-name>BufferedComponents</servlet-name>
-    <url-pattern>/BufferedComponents/*</url-pattern>
-  </servlet-mapping>
+	<servlet>
+		<servlet-name>Parameters</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.tests.Parameters</param-value>
+		</init-param>
+	</servlet>
 
-  <servlet-mapping>
-    <servlet-name>TableDemo</servlet-name>
-    <url-pattern>/TableDemo/*</url-pattern>
-    <!-- portlet -->
-  </servlet-mapping>
+	<servlet>
+		<servlet-name>UpgradingSample</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.tests.UpgradingSample</param-value>
+		</init-param>
+	</servlet>
 
-  <servlet-mapping>
-    <servlet-name>CustomLayoutDemo</servlet-name>
-    <url-pattern>/CustomLayoutDemo/*</url-pattern>
-  </servlet-mapping>
+	<servlet>
+		<servlet-name>QueryContainerDemo</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.tests.QueryContainerDemo</param-value>
+		</init-param>
+	</servlet>
 
-  <servlet-mapping>
-    <servlet-name>LayoutDemo</servlet-name>
-    <url-pattern>/LayoutDemo/*</url-pattern>
-  </servlet-mapping>
+	<servlet>
+		<servlet-name>TreeFilesystemContainer</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.tests.TreeFilesystemContainer</param-value>
+		</init-param>
+		<!--
+			Set this property if demo cannot access context base directory
+			because of Application Server or Servlet Container security
+			constraints
+		-->
+		<!--
+			<init-param> <param-name>sampleDirectory</param-name>
+			<param-value>/mySampleDirectory</param-value> </init-param>
+		-->
+	</servlet>
 
-  <servlet-mapping>
-    <servlet-name>FilterSelect</servlet-name>
-    <url-pattern>/FilterSelect/*</url-pattern>
-    <!-- portlet -->
-  </servlet-mapping>
+	<servlet>
+		<servlet-name>TreeFilesystem</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.tests.TreeFilesystem</param-value>
+		</init-param>
+		<!--
+			Set this property if demo cannot access context base directory
+			because of Application Server or Servlet Container security
+			constraints
+		-->
+		<!--
+			<init-param> <param-name>sampleDirectory</param-name>
+			<param-value>/mySampleDirectory</param-value> </init-param>
+		-->
+	</servlet>
 
-  <servlet-mapping>
-    <servlet-name>FeatureBrowser</servlet-name>
-    <url-pattern>/FeatureBrowser/*</url-pattern>
-    <!-- portlet style=height:650px -->
-  </servlet-mapping>
-  
-  <servlet-mapping>
-    <servlet-name>Sampler</servlet-name>
-    <url-pattern>/sampler/*</url-pattern>
-    <!-- portlet style=height:650px -->
-  </servlet-mapping>
+	<servlet>
+		<servlet-name>ModalWindow</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.tests.ModalWindow</param-value>
+		</init-param>
+	</servlet>
 
-  <servlet-mapping>
-    <servlet-name>FeaturesApplication</servlet-name>
-    <url-pattern>/FeaturesApplication/*</url-pattern>
-  </servlet-mapping>
-  
-  <servlet-mapping>
-    <servlet-name>Parameters</servlet-name>
-    <url-pattern>/Parameters/*</url-pattern>
-  </servlet-mapping>
+	<servlet>
+		<servlet-name>HelloWorld</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.demo.HelloWorld</param-value>
+		</init-param>
+	</servlet>
 
-  <servlet-mapping>
-    <servlet-name>UpgradingSample</servlet-name>
-    <url-pattern>/UpgradingSample/*</url-pattern>
-  </servlet-mapping>
+	<servlet>
+		<servlet-name>Calc</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.demo.Calc</param-value>
+		</init-param>
+	</servlet>
 
-  <servlet-mapping>
-    <servlet-name>QueryContainerDemo</servlet-name>
-    <url-pattern>/QueryContainerDemo/*</url-pattern>
-  </servlet-mapping>
-  
-  <servlet-mapping>
-    <servlet-name>TreeFilesystemContainer</servlet-name>
-    <url-pattern>/TreeFilesystemContainer/*</url-pattern>
-  </servlet-mapping>
+	<servlet>
+		<servlet-name>ColorPickerApplication</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.demo.colorpicker.ColorPickerApplication</param-value>
+		</init-param>
+		<init-param>
+			<param-name>widgetset</param-name>
+			<param-value>com.itmill.toolkit.demo.colorpicker.gwt.ColorPickerWidgetSet</param-value>
+		</init-param>
+	</servlet>
 
-  <servlet-mapping>
-    <servlet-name>TreeFilesystem</servlet-name>
-    <url-pattern>/TreeFilesystem/*</url-pattern>
-  </servlet-mapping>
+	<servlet>
+		<servlet-name>BookTestServlet</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.tests.book.BookTestApplication</param-value>
+		</init-param>
+	</servlet>
 
-  <servlet-mapping>
-    <servlet-name>ModalWindow</servlet-name>
-    <url-pattern>/ModalWindow/*</url-pattern>
-    <!-- portlet -->
-  </servlet-mapping>
+	<servlet>
+		<servlet-name>WindowTestServlet</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.tests.book.WindowTestApplication</param-value>
+		</init-param>
+	</servlet>
 
-  <servlet-mapping>
-    <servlet-name>HelloWorld</servlet-name>
-    <url-pattern>/HelloWorld/*</url-pattern>
-  </servlet-mapping>
+	<servlet>
+		<servlet-name>ChatServlet</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.tests.book.ChatApplication</param-value>
+		</init-param>
+	</servlet>
 
-  <servlet-mapping>
-    <servlet-name>Calc</servlet-name>
-    <url-pattern>/Calc/*</url-pattern>
-    <!-- portlet -->
-  </servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ITMillToolkitApplicationRunner</servlet-name>
+		<url-pattern>/run/*</url-pattern>
+	</servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>KeyboardShortcut</servlet-name>
-    <url-pattern>/KeyboardShortcut/*</url-pattern>
-  </servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>DemoTestBench</servlet-name>
+		<url-pattern>/DemoTestBench/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>TestForNativeWindowing</servlet-name>
+		<url-pattern>/TestForNativeWindowing/*</url-pattern>
+	</servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>CustomGwtComponentDemo</servlet-name>
-    <url-pattern>/customgwt/*</url-pattern>
-  </servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>ColorPickerApplication</servlet-name>
-    <url-pattern>/colorpicker/*</url-pattern>
-  </servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>RobustnessSimple</servlet-name>
+		<url-pattern>/RobustnessSimple/*</url-pattern>
+	</servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>CachingDemo</servlet-name>
-    <url-pattern>/CachingDemo/*</url-pattern>
-  </servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>TestSplitPanel</servlet-name>
+		<url-pattern>/TestSplitPanel/*</url-pattern>
+	</servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>NotificationDemo</servlet-name>
-    <url-pattern>/NotificationDemo/*</url-pattern>
-    <!-- portlet -->
-  </servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>RandomLayoutStress</servlet-name>
+		<url-pattern>/RandomLayoutStress/*</url-pattern>
+	</servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>BookTestServlet</servlet-name>
-    <url-pattern>/book/*</url-pattern>
-  </servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>TestBench</servlet-name>
+		<url-pattern>/TestBench/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>TestBench</servlet-name>
+		<url-pattern>/t/*</url-pattern>
+	</servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>WindowTestServlet</servlet-name>
-    <url-pattern>/windowtest/*</url-pattern>
-  </servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Reservr</servlet-name>
+		<url-pattern>/Reservr/*</url-pattern>
+	</servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>ChatServlet</servlet-name>
-    <url-pattern>/chat/*</url-pattern>
-    <!-- portlet -->
-  </servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>SimpleReserver</servlet-name>
+		<url-pattern>/SimpleReserver/*</url-pattern>
+		<!-- portlet style=height:400px -->
+	</servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>BrowserDemo</servlet-name>
-    <url-pattern>/BrowserDemo/*</url-pattern>
-    <!-- portlet style=height:650px -->
-  </servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>CalendarDemo</servlet-name>
+		<url-pattern>/CalendarDemo/*</url-pattern>
+	</servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>WindowedDemos</servlet-name>
-    <url-pattern>/WindowedDemos/*</url-pattern>
-  </servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>CustomLayoutDemo</servlet-name>
+		<url-pattern>/CustomLayoutDemo/*</url-pattern>
+	</servlet-mapping>
 
-  <welcome-file-list>
-    <welcome-file>index.jsp</welcome-file>
-    <welcome-file>index.html</welcome-file>
-    <welcome-file>index.htm</welcome-file>
-  </welcome-file-list>
+	<servlet-mapping>
+		<servlet-name>LayoutDemo</servlet-name>
+		<url-pattern>/LayoutDemo/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>ToolkitTunesLayout</servlet-name>
+		<url-pattern>/ToolkitTunesLayout/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Coverflow</servlet-name>
+		<url-pattern>/Coverflow/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>FeatureBrowser</servlet-name>
+		<url-pattern>/FeatureBrowser/*</url-pattern>
+		<!-- portlet style=height:650px -->
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Sampler</servlet-name>
+		<url-pattern>/sampler/*</url-pattern>
+		<!-- portlet style=height:650px -->
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>FeaturesApplication</servlet-name>
+		<url-pattern>/FeaturesApplication/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Parameters</servlet-name>
+		<url-pattern>/Parameters/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>UpgradingSample</servlet-name>
+		<url-pattern>/UpgradingSample/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>QueryContainerDemo</servlet-name>
+		<url-pattern>/QueryContainerDemo/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>TreeFilesystemContainer</servlet-name>
+		<url-pattern>/TreeFilesystemContainer/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>TreeFilesystem</servlet-name>
+		<url-pattern>/TreeFilesystem/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>ModalWindow</servlet-name>
+		<url-pattern>/ModalWindow/*</url-pattern>
+		<!-- portlet -->
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>HelloWorld</servlet-name>
+		<url-pattern>/HelloWorld/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Calc</servlet-name>
+		<url-pattern>/Calc/*</url-pattern>
+		<!-- portlet -->
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>ColorPickerApplication</servlet-name>
+		<url-pattern>/colorpicker/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>BookTestServlet</servlet-name>
+		<url-pattern>/book/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>WindowTestServlet</servlet-name>
+		<url-pattern>/windowtest/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>ChatServlet</servlet-name>
+		<url-pattern>/chat/*</url-pattern>
+		<!-- portlet -->
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>AddressBook</servlet-name>
+		<url-pattern>/AddressBook/*</url-pattern>
+	</servlet-mapping>
+
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+	</welcome-file-list>
 
 </web-app>

@@ -1,7 +1,3 @@
-/* 
-@ITMillApache2LicenseForJavaFiles@
- */
-
 package com.itmill.toolkit.demo;
 
 import com.itmill.toolkit.ui.Button;

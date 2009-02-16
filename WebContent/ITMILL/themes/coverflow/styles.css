@@ -1,0 +1,5 @@
+@import url(../default/styles.css);
+
+.i-app, body.i-generated-body {
+	background-color: black;
+}

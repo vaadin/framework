@@ -65,18 +65,28 @@
 	</servlet>
 
 	<!--  Sampler demo application -->
-    <servlet>
-      <servlet-name>Sampler</servlet-name>
-      <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-      <init-param>
-        <param-name>application</param-name>
-        <param-value>com.itmill.toolkit.demo.sampler.SamplerApplication</param-value>
-      </init-param>
-      <init-param>
-        <param-name>widgetset</param-name>
-        <param-value>com.itmill.toolkit.demo.sampler.gwt.SamplerWidgetSet</param-value>
-      </init-param>
-    </servlet>
+	<servlet>
+		<servlet-name>Sampler</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.demo.sampler.SamplerApplication</param-value>
+		</init-param>
+		<init-param>
+			<param-name>widgetset</param-name>
+			<param-value>com.itmill.toolkit.demo.sampler.gwt.SamplerWidgetSet</param-value>
+		</init-param>
+	</servlet>
+
+	<!--  AddressBook demo application -->
+	<servlet>
+		<servlet-name>AddressBook</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.demo.tutorial.addressbook.AddressBookApplication</param-value>
+		</init-param>
+	</servlet>
 
 	<!--  Reservr demo application -->
 	<servlet>
@@ -106,26 +116,6 @@
 		</init-param>
 	</servlet>
 
-	<!--  Buffered components demo app (shown in Windowed demos) -->
-	<servlet>
-		<servlet-name>BufferedComponents</servlet-name>
-		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.itmill.toolkit.demo.BufferedComponents</param-value>
-		</init-param>
-	</servlet>
-
-	<!-- Table demo application (shown in Windowed demos) -->
-	<servlet>
-		<servlet-name>TableDemo</servlet-name>
-		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.itmill.toolkit.demo.TableDemo</param-value>
-		</init-param>
-	</servlet>
-
 	<!-- Calendar demo application (shown in Windowed demos) -->
 	<servlet>
 		<servlet-name>CalendarDemo</servlet-name>
@@ -137,16 +127,6 @@
 		<init-param>
 			<param-name>widgetset</param-name>
 			<param-value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</param-value>
-		</init-param>
-	</servlet>
-
-	<!-- Filtering select demo -->
-	<servlet>
-		<servlet-name>FilterSelect</servlet-name>
-		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.itmill.toolkit.demo.FilterSelect</param-value>
 		</init-param>
 	</servlet>
 
@@ -170,16 +150,6 @@
 		</init-param>
 	</servlet>
 
-	<!--  Keyboard shortcuts demo application -->
-	<servlet>
-		<servlet-name>KeyboardShortcut</servlet-name>
-		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.itmill.toolkit.demo.KeyboardShortcut</param-value>
-		</init-param>
-	</servlet>
-
 	<!--
 		Color Picker demo application that demonstrates creation of custom
 		widgets
@@ -197,73 +167,31 @@
 		</init-param>
 	</servlet>
 
-	<!-- Caching demo application that demonstrates paint optimization -->
+	<!--  Layout demo (ToolkitTunes) -->
 	<servlet>
-		<servlet-name>CachingDemo</servlet-name>
+		<servlet-name>ToolkitTunesLayout</servlet-name>
 		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
 			<param-name>application</param-name>
-			<param-value>com.itmill.toolkit.demo.CachingDemo</param-value>
+			<param-value>com.itmill.toolkit.demo.ToolkitTunesLayout</param-value>
 		</init-param>
 	</servlet>
 
-	<!-- Notification demo application -->
+	<!--  Coverflow demo -->
 	<servlet>
-		<servlet-name>NotificationDemo</servlet-name>
+		<servlet-name>Coverflow</servlet-name>
 		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
 			<param-name>application</param-name>
-			<param-value>com.itmill.toolkit.demo.NotificationDemo</param-value>
+			<param-value>com.itmill.toolkit.demo.coverflow.CoverflowApplication</param-value>
 		</init-param>
-	</servlet>
-
- 	<!-- Select demo application (shown in Windowed demos) -->
-	<servlet>
-		<servlet-name>SelectDemo</servlet-name>
-		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.itmill.toolkit.demo.SelectDemo</param-value>
-		</init-param>
-	</servlet>
-
-	<!-- Browser demo application -->
-	<servlet>
-		<servlet-name>BrowserDemo</servlet-name>
-		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.itmill.toolkit.demo.BrowserDemo</param-value>
-		</init-param>
-	</servlet>
-
-	<!-- Windowed demos application -->
-	<servlet>
-		<servlet-name>WindowedDemos</servlet-name>
-		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.itmill.toolkit.demo.WindowedDemos</param-value>
-		</init-param>
-	</servlet>
-
-	<!-- Portlet demo application -->
-	<servlet>
-		<servlet-name>PortletDemo</servlet-name>
-		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.itmill.toolkit.demo.PortletDemo</param-value>
+			<param-name>widgetset</param-name>
+			<param-value>com.itmill.toolkit.demo.coverflow.gwt.CoverflowWidgetSet</param-value>
 		</init-param>
 	</servlet>
 
 	<!-- Servlet Mappings below - see servlets for comments -->
-	<servlet-mapping>
-		<servlet-name>PortletDemo</servlet-name>
-		<url-pattern>/PortletDemo/*</url-pattern>
-		<!-- Hint for the automatic deployment descriptor generator -->
-    	<!-- portlet -->
-	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>ITMillToolkitApplicationRunner</servlet-name>
 		<url-pattern>/run/*</url-pattern>
@@ -275,47 +203,31 @@
 	<servlet-mapping>
 		<servlet-name>SimpleReserver</servlet-name>
 		<url-pattern>/SimpleReserver/*</url-pattern>
-		<!-- Hint for the automatic deployment descriptor generator -->		
-    	<!-- portlet style=height:400px -->
+		<!-- Hint for the automatic deployment descriptor generator -->
+		<!-- portlet style=height:400px -->
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>CalendarDemo</servlet-name>
 		<url-pattern>/CalendarDemo/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>SelectDemo</servlet-name>
-		<url-pattern>/SelectDemo/*</url-pattern>
-		<!-- Hint for the automatic deployment descriptor generator -->		
-	    <!-- portlet -->
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>BufferedComponents</servlet-name>
-		<url-pattern>/BufferedComponents/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>TableDemo</servlet-name>
-		<url-pattern>/TableDemo/*</url-pattern>
-    	<!-- Hint for the automatic deployment descriptor generator -->		
-    	<!-- portlet -->
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>FilterSelect</servlet-name>
-		<url-pattern>/FilterSelect/*</url-pattern>
-		<!-- Hint for the automatic deployment descriptor generator -->		
-	    <!-- portlet -->
-	</servlet-mapping>
-	<servlet-mapping>
 		<servlet-name>FeatureBrowser</servlet-name>
 		<url-pattern>/FeatureBrowser/*</url-pattern>
-		<!-- Hint for the automatic deployment descriptor generator -->		
-	    <!-- portlet style=height:650px -->
+		<!-- Hint for the automatic deployment descriptor generator -->
+		<!-- portlet style=height:650px -->
 	</servlet-mapping>
-    <servlet-mapping>
-      <servlet-name>Sampler</servlet-name>
-      <url-pattern>/sampler/*</url-pattern>
-      <!-- Hint for the automatic deployment descriptor generator -->		
-      <!-- portlet style=height:650px -->
-    </servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Sampler</servlet-name>
+		<url-pattern>/sampler/*</url-pattern>
+		<!-- Hint for the automatic deployment descriptor generator -->
+		<!-- portlet style=height:650px -->
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>AddressBook</servlet-name>
+		<url-pattern>/AddressBook/*</url-pattern>
+		<!-- Hint for the automatic deployment descriptor generator -->
+		<!-- portlet style=height:650px -->
+	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>HelloWorld</servlet-name>
 		<url-pattern>/HelloWorld/*</url-pattern>
@@ -323,36 +235,20 @@
 	<servlet-mapping>
 		<servlet-name>Calc</servlet-name>
 		<url-pattern>/Calc/*</url-pattern>
-		<!-- Hint for the automatic deployment descriptor generator -->		
-	    <!-- portlet -->
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>KeyboardShortcut</servlet-name>
-		<url-pattern>/KeyboardShortcut/*</url-pattern>
+		<!-- Hint for the automatic deployment descriptor generator -->
+		<!-- portlet -->
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>ColorPickerApplication</servlet-name>
 		<url-pattern>/colorpicker/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>CachingDemo</servlet-name>
-		<url-pattern>/CachingDemo/*</url-pattern>
+		<servlet-name>ToolkitTunesLayout</servlet-name>
+		<url-pattern>/ToolkitTunesLayout/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>NotificationDemo</servlet-name>
-		<url-pattern>/NotificationDemo/*</url-pattern>
-		<!-- Hint for the automatic deployment descriptor generator -->		
-	    <!-- portlet -->
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>BrowserDemo</servlet-name>
-		<url-pattern>/BrowserDemo/*</url-pattern>
-		<!-- Hint for the automatic deployment descriptor generator -->		
-	    <!-- portlet style=height:650px -->
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>WindowedDemos</servlet-name>
-		<url-pattern>/WindowedDemos/*</url-pattern>
+		<servlet-name>Coverflow</servlet-name>
+		<url-pattern>/Coverflow/*</url-pattern>
 	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>

@@ -3,6 +3,7 @@ package com.itmill.toolkit.demo;
 import java.util.Random;
 
 import com.itmill.toolkit.Application;
+import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.ComboBox;
 import com.itmill.toolkit.ui.Embedded;
@@ -15,31 +16,30 @@ import com.itmill.toolkit.ui.Table;
 import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Window;
 
+/**
+ * Sample application layout, similar (almost identical) to Apple iTunes.
+ * 
+ * @author IT Mill Ltd.
+ * 
+ */
 public class ToolkitTunesLayout extends Application {
 
     @Override
     public void init() {
 
-        // We'll just build the whole UI here, since it will not contain any
-        // logic
+        /*
+         * We'll build the whole UI here, since the application will not contain
+         * any logic. Otherwise it would be more practical to separate parts of
+         * the UI into different classes and methods.
+         */
 
         // Main (browser) window, needed in all Toolkit applications
-        // final Window browser = new Window("ToolkitTunes Layout demo");
-        // setMainWindow(browser);
-
-        // Our player window. We'll make it fill almost the whole browser view,
-        // and we'll center it on the screen. Note, that the percentage
-        // dimensions in sub-windows only affect the initial render, after the
-        // dimensions will be in pixels and will not scale if the user resizes
-        // the actual browser window.
         final Window root = new Window("ToolkitTunes");
-        root.setWidth("90%");
-        root.setHeight("90%");
-        root.center();
 
-        // We'll attach the window to the browser view already here, so we won't
-        // forget it later.
-        // browser.addWindow(root);
+        /*
+         * We'll attach the window to the browser view already here, so we won't
+         * forget it later.
+         */
         setMainWindow(root);
 
         // Our root window contains one VerticalLayout by default, let's make
@@ -51,7 +51,7 @@ public class ToolkitTunesLayout extends Application {
         // modes and search
         HorizontalLayout top = new HorizontalLayout();
         top.setWidth("100%");
-        top.setMargin(true);
+        top.setMargin(false, true, false, true); // Enable horizontal margins
         top.setSpacing(true);
 
         // Let's attach that one straight away too
@@ -64,8 +64,7 @@ public class ToolkitTunesLayout extends Application {
         HorizontalLayout viewmodes = new HorizontalLayout();
         ComboBox search = new ComboBox();
 
-        // Add the components and align them properly (the status component will
-        // be the highest of them, so align other components to "middle")
+        // Add the components and align them properly
         top.addComponent(playback);
         top.addComponent(volume);
         top.addComponent(status);
@@ -73,14 +72,17 @@ public class ToolkitTunesLayout extends Application {
         top.addComponent(search);
         top.setComponentAlignment(playback, "middle");
         top.setComponentAlignment(volume, "middle");
+        top.setComponentAlignment(status, "middle");
         top.setComponentAlignment(viewmodes, "middle");
         top.setComponentAlignment(search, "middle");
 
-        // We want our status area to expand if the user resizes the root
-        // window, and we want it to accommodate as much space as there is
-        // available. All other components in the top layout should stay fixed
-        // sized, so we don't need to specify any expand ratios for them (they
-        // will automatically revert to zero after the following line).
+        /*
+         * We want our status area to expand if the user resizes the root
+         * window, and we want it to accommodate as much space as there is
+         * available. All other components in the top layout should stay fixed
+         * sized, so we don't need to specify any expand ratios for them (they
+         * will automatically revert to zero after the following line).
+         */
         top.setExpandRatio(status, 1.0F);
 
         // Playback controls
@@ -106,7 +108,7 @@ public class ToolkitTunesLayout extends Application {
         // Status area
         status.setWidth("80%");
         status.setSpacing(true);
-        top.setComponentAlignment(status, "center");
+        top.setComponentAlignment(status, "middle center");
 
         Button toggleVisualization = new Button("Mode");
         Label timeFromStart = new Label("0:00");
@@ -151,8 +153,10 @@ public class ToolkitTunesLayout extends Application {
         viewmodes.addComponent(viewAsGrid);
         viewmodes.addComponent(coverflow);
 
-        // That covers the top bar. Now let's move on to the sidebar and track
-        // listing
+        /*
+         * That covers the top bar. Now let's move on to the sidebar and track
+         * listing
+         */
 
         // We'll need one splitpanel to separate the sidebar and track listing
         SplitPanel bottom = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
@@ -160,7 +164,6 @@ public class ToolkitTunesLayout extends Application {
 
         // The splitpanel is by default 100% x 100%, but we'll need to adjust
         // our main window layout to accomodate the height
-        root.getLayout().setHeight("100%");
         ((VerticalLayout) root.getLayout()).setExpandRatio(bottom, 1.0F);
 
         // Give the sidebar less space than the listing
@@ -172,21 +175,28 @@ public class ToolkitTunesLayout extends Application {
         sidebar.setSizeFull();
         bottom.setFirstComponent(sidebar);
 
-        // Then we need some labels and buttons, and an album cover image
-        // The labels and buttons go into their own vertical layout, since we
-        // want the 'sidebar' layout to be expanding (cover image in the
-        // bottom).
+        /*
+         * Then we need some labels and buttons, and an album cover image The
+         * labels and buttons go into their own vertical layout, since we want
+         * the 'sidebar' layout to be expanding (cover image in the bottom).
+         * VerticalLayout is by default 100% wide.
+         */
         VerticalLayout selections = new VerticalLayout();
         Label library = new Label("Library");
         Button music = new Button("Music");
+        music.setWidth("100%");
 
         Label store = new Label("Store");
         Button toolkitTunesStore = new Button("ToolkitTunes Store");
+        toolkitTunesStore.setWidth("100%");
         Button purchased = new Button("Purchased");
+        purchased.setWidth("100%");
 
         Label playlists = new Label("Playlists");
         Button genius = new Button("Geniues");
+        genius.setWidth("100%");
         Button recent = new Button("Recently Added");
+        recent.setWidth("100%");
 
         // Lets add them to the 'selections' layout
         selections.addComponent(library);
@@ -202,20 +212,18 @@ public class ToolkitTunesLayout extends Application {
         sidebar.addComponent(selections);
         sidebar.setExpandRatio(selections, 1.0F);
 
-        // Then comes the cover artwork
-        Embedded cover = new Embedded();
-        // We don't have a source image for it yet, but we'll add it later in
-        // the theming example
-        // cover.setSource(new ThemeResource(""));
-        cover.setWidth("200px");
-        cover.setHeight("200px");
+        // Then comes the cover artwork (we'll add the actual image in the
+        // themeing section)
+        Embedded cover = new Embedded("Currently Playing");
         sidebar.addComponent(cover);
-        sidebar.setComponentAlignment(cover, "center");
 
-        // And lastly, we need the track listing table
-        // It should fill the whole left side of our bottom layout
+        /*
+         * And lastly, we need the track listing table It should fill the whole
+         * left side of our bottom layout
+         */
         Table listing = new Table();
         listing.setSizeFull();
+        listing.setSelectable(true);
         bottom.setSecondComponent(listing);
 
         // Add the table headers
@@ -264,6 +272,56 @@ public class ToolkitTunesLayout extends Application {
                     albums[new Random().nextInt(albums.length - 1)],
                     genres[new Random().nextInt(genres.length - 1)], s }, i);
         }
+
+        // We'll align the track time column to right as well
+        listing.setColumnAlignment("Time", Table.ALIGN_RIGHT);
+
+        // TODO the footer
+
+        // Now what's left to do? Themeing of course.
+        setTheme("toolkittunes");
+
+        /*
+         * Let's give a namespace to our application window. This way, if
+         * someone uses the same theme for different applications, we don't get
+         * unwanted style conflicts.
+         */
+        root.setStyleName("tTunes");
+
+        top.setStyleName("top");
+        top.setHeight("75px"); // Same as the background image height
+
+        playback.setStyleName("playback");
+        playback.setMargin(false, true, false, false); // Add right-side margin
+        play.setStyleName("play");
+        next.setStyleName("next");
+        prev.setStyleName("prev");
+        playback.setComponentAlignment(prev, "middle");
+        playback.setComponentAlignment(next, "middle");
+
+        volume.setStyleName("volume");
+        mute.setStyleName("mute");
+        max.setStyleName("max");
+        vol.setWidth("78px");
+
+        status.setStyleName("status");
+        status.setMargin(true);
+        status.setHeight("46px"); // Height of the background image
+
+        toggleVisualization.setStyleName("toggle-vis");
+        jumpToTrack.setStyleName("jump");
+
+        viewAsTable.setStyleName("viewmode-table");
+        viewAsGrid.setStyleName("viewmode-grid");
+        coverflow.setStyleName("viewmode-coverflow");
+
+        sidebar.setStyleName("sidebar");
+
+        music.setStyleName("selected");
+
+        cover.setSource(new ThemeResource("images/album-cover.jpg"));
+        // Because this is an image, it will retain it's aspect ratio
+        cover.setWidth("100%");
     }
 
 }

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<mx:Application 
+    xmlns:mx="http://www.adobe.com/2006/mxml" 
+    horizontalAlign="center" verticalAlign="middle" 
+    creationComplete="{ init(); }"
+    xmlns:custom="*"
+    paddingLeft="0"
+    paddingTop="10"
+    paddingBottom="0"
+    paddingRight="0"
+	>
+
+	<mx:Script>
+		<![CDATA[	
+		import mx.controls.Alert; 
+		
+	    private var coverflow:Coverflow = new Coverflow();
+      	      	
+		private function init():void {
+			coverflow.setBackgroundColor(Application.application.parameters.bgS, Application.application.parameters.bgE);
+			coverflow.toggleScrollbarVisibility(Application.application.parameters.sbVis);
+			coverflow.pid = Application.application.parameters.pid;
+									
+			container.addChild(coverflow);
+			
+		}	
+			           
+        ]]>
+	</mx:Script> 
+	
+	<mx:Box width="100%" height="100%" id="container"  />
+</mx:Application>
+

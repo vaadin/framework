@@ -1,0 +1,8 @@
+<module>
+	<!-- Inherit the NoEntry version to avoid multiple entrypoints -->
+	<inherits name="com.itmill.toolkit.terminal.gwt.DefaultWidgetSetNoEntry" /> 
+
+	<!-- Entry point -->
+	<entry-point class="com.itmill.toolkit.demo.coverflow.gwt.client.CoverflowWidgetSet"/>
+  
+</module>

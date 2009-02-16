@@ -1,0 +1,89 @@
+ @import url(../default/styles.css);
+
+/* Add some padding to the tree */
+.i-tree {
+      padding-top: 8px;
+      padding-left: 4px;
+}
+
+.toolbar .i-button {
+      display: block;
+      width: 65px;
+      height: 55px;
+      background: transparent;
+      border: none;
+      text-align: center;
+}
+ 
+.toolbar .i-button img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 5px;
+}
+
+.toolbar .i-button span {
+      font-size: x-small;
+      text-shadow: #fafafa 1px 1px 0;
+}
+
+.i-app {
+      background: #d0e2ec;
+      font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
+      color: #222;
+}
+
+.toolbar {
+      background: #ccc url(images/gradient.png) repeat-x bottom left;
+}
+
+.i-panel-caption-view {
+      color: #004b98;
+}
+ 
+.view {
+      background: white;     
+}
+
+ /* Theme table to look bit lighter */
+.i-table-header-wrap {
+      height: 20px;
+      border: none;
+      border-bottom: 1px solid #555;
+      background: transparent url(images/table-header-bg.png) repeat-x;
+}
+
+.i-table-caption-container {
+      font-size: 11px;
+      color: #000;
+      font-weight: bold;
+      text-shadow: #fff 0 1px 0;
+      padding-top: 1px;
+}
+ 
+.i-table-body {
+      border: none;
+}
+ 
+.i-table-row-odd {
+      background: #f1f5fa;
+}
+ 
+.i-table-row:hover {
+      background: #fff;
+}
+ 
+.i-table-row-odd:hover {
+      background: #f1f5fa;
+}
+ 
+.i-table .i-selected {
+      background: #3d80df;
+}
+ 
+.i-table-cell-content {
+      padding: 2px 0 2px 3px;
+      line-height: normal;
+      font-size: 85%;
+}
+
