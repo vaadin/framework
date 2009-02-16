@@ -119,10 +119,10 @@ public class FeatureView extends HorizontalLayout {
             String desc = parent.getDescription();
             boolean hasParentDesc = false;
 
+            final Label parentLabel = new Label(parent.getDescription());
             if (desc != null && desc != "") {
-                Label l = new Label(parent.getDescription());
-                l.setContentMode(Label.CONTENT_XHTML);
-                right.addComponent(l);
+                parentLabel.setContentMode(Label.CONTENT_XHTML);
+                right.addComponent(parentLabel);
                 hasParentDesc = true;
             }
 
@@ -131,11 +131,13 @@ public class FeatureView extends HorizontalLayout {
                 // Sample description uses additional decorations if a parent
                 // description is found
                 final Label l = new Label(
-                        "<div class=\"deco\"><span class=\"deco\"></span>"
-                                + desc + "</div>", Label.CONTENT_XHTML);
+                        "<div class=\"outer-deco\"><div class=\"deco\"><span class=\"deco\"></span>"
+                                + desc + "</div></div>", Label.CONTENT_XHTML);
                 right.addComponent(l);
                 if (hasParentDesc) {
                     l.setStyleName("sample-description");
+                } else {
+                    l.setStyleName("description");
                 }
             }
 
