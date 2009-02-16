@@ -420,16 +420,18 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      */
     public void setUser(Object user) {
         final Object prevUser = this.user;
-        if (user != prevUser && (user == null || !user.equals(prevUser))) {
-            this.user = user;
-            if (userChangeListeners != null) {
-                final Object[] listeners = userChangeListeners.toArray();
-                final UserChangeEvent event = new UserChangeEvent(this, user,
-                        prevUser);
-                for (int i = 0; i < listeners.length; i++) {
-                    ((UserChangeListener) listeners[i])
-                            .applicationUserChanged(event);
-                }
+        if (user == prevUser || (user != null && user.equals(prevUser))) {
+            return;
+        }
+
+        this.user = user;
+        if (userChangeListeners != null) {
+            final Object[] listeners = userChangeListeners.toArray();
+            final UserChangeEvent event = new UserChangeEvent(this, user,
+                    prevUser);
+            for (int i = 0; i < listeners.length; i++) {
+                ((UserChangeListener) listeners[i])
+                        .applicationUserChanged(event);
             }
         }
     }
@@ -1348,11 +1350,12 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * </p>
      * <p>
      * The default behavior is to show a notification, and restart the
-     * application the the user clicks the message. <br/> Instead of restarting
-     * the application, you can set a specific URL that the user is taken
-     * to.<br/> Setting both caption and message to null will restart the
-     * application (or go to the specified URL) without displaying a
-     * notification. set*NotificationEnabled(false) will achieve the same thing.
+     * application the the user clicks the message. <br/>
+     * Instead of restarting the application, you can set a specific URL that
+     * the user is taken to.<br/>
+     * Setting both caption and message to null will restart the application (or
+     * go to the specified URL) without displaying a notification.
+     * set*NotificationEnabled(false) will achieve the same thing.
      * </p>
      * <p>
      * The situations are:
