@@ -60,8 +60,8 @@ public class SampleDB {
                 + "_RESERVED_TO";
     }
 
-    // TODO -> param
-    private static final String DB_URL = "jdbc:hsqldb:file:reservation.db";
+    private static final String DEFAULT_JDBC_URL = "jdbc:hsqldb:file:reservation.db";
+    private static Object dbMutex = new Object();
 
     private static final String CREATE_TABLE_USER = "CREATE TABLE "
             + User.TABLE + " (" + " " + User.PROPERTY_ID_ID
@@ -99,10 +99,15 @@ public class SampleDB {
 
     /**
      * Create database.
+     * 
+     * @param jdbcUrl
      */
-    public SampleDB() {
+    public SampleDB(String jdbcUrl) {
+        if (jdbcUrl == null || jdbcUrl.equals("")) {
+            jdbcUrl = DEFAULT_JDBC_URL;
+        }
         // connect to SQL database
-        connect();
+        connect(jdbcUrl);
 
     }
 
@@ -129,11 +134,11 @@ public class SampleDB {
      * named database in implicitly created into system memory.
      * 
      */
-    private synchronized void connect() {
+    private synchronized void connect(String dbUrl) {
         if (connection == null) {
             try {
                 Class.forName("org.hsqldb.jdbcDriver").newInstance();
-                connection = DriverManager.getConnection(DB_URL);
+                connection = DriverManager.getConnection(dbUrl);
             } catch (final Exception e) {
                 throw new RuntimeException(e);
             }
@@ -313,7 +318,7 @@ public class SampleDB {
                 + Reservation.PROPERTY_ID_RESERVED_TO + ","
                 + Reservation.PROPERTY_ID_DESCRIPTION + ")"
                 + "VALUES (?,?,?,?,?)";
-        synchronized (DB_URL) {
+        synchronized (dbMutex) {
             try {
                 if (!isAvailableResource(resourceId, reservedFrom, reservedTo)) {
                     throw new ResourceNotAvailableException(

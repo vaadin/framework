@@ -57,7 +57,7 @@ public class ReservationApplication extends Application {
     @Override
     public void init() {
         //
-        db = new SampleDB();
+        db = new SampleDB(getProperty("jdbcUrl"));
 
         final Window mainWindow = new Window("Reservr ");
         setMainWindow(mainWindow);
