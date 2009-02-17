@@ -378,7 +378,10 @@
                 </security-role-ref>
         </portlet>
 
-        <!--<container-runtime-option>
+        <!--
+        This can be used to work around an issue in liferay 5.0-5.1.1
+        
+        <container-runtime-option>
                 <name>javax.portlet.escapeXml</name>
                 <value>false</value>
         </container-runtime-option>
