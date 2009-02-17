@@ -15,6 +15,7 @@ import com.itmill.toolkit.ui.SplitPanel;
 import com.itmill.toolkit.ui.Table;
 import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Window;
+import com.itmill.toolkit.ui.Window.Notification;
 
 /**
  * Sample application layout, similar (almost identical) to Apple iTunes.
@@ -41,6 +42,11 @@ public class ToolkitTunesLayout extends Application {
          * forget it later.
          */
         setMainWindow(root);
+
+        root
+                .showNotification(
+                        "This is an example of how you can do layouts in IT Mill Toolkit.<br/>It is not a working sound player.",
+                        Notification.TYPE_HUMANIZED_MESSAGE);
 
         // Our root window contains one VerticalLayout by default, let's make
         // sure it's 100% sized, and remove unwanted margins
