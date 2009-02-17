@@ -119,7 +119,7 @@
       <condition property="java.version.matches">
         <equals arg1="${ant.java.version}" arg2="1.5"/>
       </condition>
-      <fail unless="java.version.matches" message="IT Mill Toolkit must be compiled with genuine Java 1.5 compiler."/>
+      <fail unless="java.version.matches" message="IT Mill Toolkit must be compiled with genuine Java 1.5 compiler. You are trying to compile with version ${ant.java.version}."/>
       <echo>Java version is ${ant.java.version} as required.</echo>
     </target>
 
