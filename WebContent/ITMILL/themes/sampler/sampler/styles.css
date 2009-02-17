@@ -166,6 +166,7 @@
 	background: #eaebec url(tree-bg.png) repeat-x fixed;
 }
 
+/* Affects all inner splitpanels; can't use this until classnames are added
 .i-app-SamplerApplication .main-split .i-splitpanel-hsplitter {
 	width: 1px;
 	background: #aeb0b5;
@@ -177,6 +178,7 @@
 	margin: 0 -1px;
 	padding: 0;
 }
+*/
 
 .i-app-SamplerApplication .i-tree-menu {
 	font-family: arial, helvetica, verdana, sans-serif;
