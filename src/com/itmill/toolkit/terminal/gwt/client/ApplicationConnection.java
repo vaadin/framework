@@ -1024,8 +1024,23 @@ public class ApplicationConnection {
      */
     public boolean updateComponent(Widget component, UIDL uidl,
             boolean manageCaption) {
-        ComponentDetail componentDetail = idToPaintableDetail
-                .get(getPid(component.getElement()));
+        String pid = getPid(component.getElement());
+        if (pid == null) {
+            getConsole().error(
+                    "Trying to update an unregistered component: "
+                            + Util.getSimpleName(component));
+            return true;
+        }
+
+        ComponentDetail componentDetail = idToPaintableDetail.get(pid);
+
+        if (componentDetail == null) {
+            getConsole().error(
+                    "ComponentDetail not found for "
+                            + Util.getSimpleName(component) + " with PID "
+                            + pid + ". This should not happen.");
+            return true;
+        }
 
         // If the server request that a cached instance should be used, do
         // nothing
@@ -1271,10 +1286,18 @@ public class ApplicationConnection {
         }
     }
 
+    /**
+     * Converts relative sizes into pixel sizes.
+     * 
+     * @param child
+     * @return true if the child has a relative size
+     */
     private boolean handleComponentRelativeSize(ComponentDetail cd) {
         if (cd == null) {
             return false;
         }
+        boolean debugSizes = false;
+
         FloatSize relativeSize = cd.getRelativeSize();
         if (relativeSize == null) {
             return false;
@@ -1326,6 +1349,25 @@ public class ApplicationConnection {
                     height = 0;
                 }
 
+                if (debugSizes) {
+                    getConsole()
+                            .log(
+                                    "Widget "
+                                            + Util.getSimpleName(widget)
+                                            + "/"
+                                            + getPid(widget.getElement())
+                                            + " relative height "
+                                            + relativeSize.getHeight()
+                                            + "% of "
+                                            + renderSpace.getHeight()
+                                            + "px (reported by "
+
+                                            + Util.getSimpleName(parent)
+                                            + "/"
+                                            + (parent == null ? "?" : parent
+                                                    .hashCode()) + ") : "
+                                            + height + "px");
+                }
                 widget.setHeight(height + "px");
             } else {
                 widget.setHeight(relativeSize.getHeight() + "%");
@@ -1366,6 +1408,18 @@ public class ApplicationConnection {
                     width = 0;
                 }
 
+                if (debugSizes) {
+                    getConsole().log(
+                            "Widget " + Util.getSimpleName(widget) + "/"
+                                    + getPid(widget.getElement())
+                                    + " relative width "
+                                    + relativeSize.getWidth() + "% of "
+                                    + renderSpace.getWidth()
+                                    + "px (reported by "
+                                    + Util.getSimpleName(parent) + "/"
+                                    + (parent == null ? "?" : getPid(parent))
+                                    + ") : " + width + "px");
+                }
                 widget.setWidth(width + "px");
             } else {
                 widget.setWidth(relativeSize.getWidth() + "%");
