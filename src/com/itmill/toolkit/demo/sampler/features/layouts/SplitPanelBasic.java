@@ -9,15 +9,15 @@ public class SplitPanelBasic extends Feature {
 
     @Override
     public String getName() {
-        return "SplitPanel";
+        return "Split panel";
     }
 
     @Override
     public String getDescription() {
-        return "SplitPanel is a component container that can contain two components."
-                + " The split orientation can be either horizontal or vertical. Various"
-                + " settings regarding eg. region sizes and resizeability can be set."
-                + "<br>Click the button for a demo in a new window.";
+        return "The SplitPanel has two resizable component areas, either"
+                + " vertically or horizontally oriented. The split position"
+                + " can optionally be locked.<br/> By nesting split panels,"
+                + " one can make quite complicated, dynamic layouts.";
     }
 
     @Override
