@@ -23,6 +23,7 @@ public class LabelRichExample extends VerticalLayout implements ClickListener {
                         + "<p>The <b>quick</b> brown fox jumps <sup>over</sup> the <b>lazy</b> dog.</p>"
                         + "<p>This text can be edited with the <i>Edit</i> -button</p>");
         richText.setContentMode(Label.CONTENT_XHTML);
+        richText.setSizeUndefined();
 
         addComponent(richText);
 
