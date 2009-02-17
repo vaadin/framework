@@ -167,6 +167,16 @@
 		</init-param>
 	</servlet>
 
+	<!-- Portlet demo application -->
+	<servlet>
+		<servlet-name>PortletDemo</servlet-name>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.itmill.toolkit.demo.PortletDemo</param-value>
+		</init-param>
+	</servlet>
+
 	<!--  Layout demo (ToolkitTunes) -->
 	<servlet>
 		<servlet-name>ToolkitTunesLayout</servlet-name>
@@ -193,6 +203,12 @@
 
 	<!-- Servlet Mappings below - see servlets for comments -->
 	<servlet-mapping>
+		<servlet-name>PortletDemo</servlet-name>
+		<url-pattern>/PortletDemo/*</url-pattern>
+		<!-- Hint for the automatic deployment descriptor generator -->
+		<!-- portlet style= -->
+	</servlet-mapping>
+	<servlet-mapping>
 		<servlet-name>ITMillToolkitApplicationRunner</servlet-name>
 		<url-pattern>/run/*</url-pattern>
 	</servlet-mapping>
@@ -203,8 +219,6 @@
 	<servlet-mapping>
 		<servlet-name>SimpleReserver</servlet-name>
 		<url-pattern>/SimpleReserver/*</url-pattern>
-		<!-- Hint for the automatic deployment descriptor generator -->
-		<!-- portlet style=height:400px -->
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>CalendarDemo</servlet-name>
@@ -225,8 +239,6 @@
 	<servlet-mapping>
 		<servlet-name>AddressBook</servlet-name>
 		<url-pattern>/AddressBook/*</url-pattern>
-		<!-- Hint for the automatic deployment descriptor generator -->
-		<!-- portlet style=height:650px -->
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>HelloWorld</servlet-name>
@@ -236,7 +248,7 @@
 		<servlet-name>Calc</servlet-name>
 		<url-pattern>/Calc/*</url-pattern>
 		<!-- Hint for the automatic deployment descriptor generator -->
-		<!-- portlet -->
+		<!-- portlet style= -->
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>ColorPickerApplication</servlet-name>
