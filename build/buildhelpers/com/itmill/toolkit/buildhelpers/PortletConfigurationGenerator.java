@@ -71,11 +71,7 @@ public class PortletConfigurationGenerator {
             + "                <security-role-ref>\n"
             + "                        <role-name>user</role-name>\n"
             + "                </security-role-ref>\n" + "        </portlet>\n";
-    private static final String PORTLET_XML_FOOT = "\n"
-            + "        <container-runtime-option>\n"
-            + "                <name>javax.portlet.escapeXml</name>\n"
-            + "                <value>false</value>\n"
-            + "        </container-runtime-option>\n" + "</portlet-app>";
+    private static final String PORTLET_XML_FOOT = "\n" + "</portlet-app>";
 
     private static final String LIFERAY_PORTLET_XML_HEAD = "<?xml version=\"1.0\"?>\n"
             + "<!DOCTYPE liferay-portlet-app PUBLIC \"-//Liferay//DTD Portlet Application 4.3.0//EN\" \"http://www.liferay.com/dtd/liferay-portlet-app_4_3_0.dtd\">\n"
@@ -140,7 +136,7 @@ public class PortletConfigurationGenerator {
 
     /**
      * @param args
-     *            <path to directory with web.xml> [widgetset to use]
+     *            <path to directory with web.xml> [default widgetset to use]
      */
     public static void main(String[] args) {
         if (args.length < 1 || !new File(args[0]).isDirectory()) {
@@ -151,9 +147,7 @@ public class PortletConfigurationGenerator {
 
         String widgetset = "";
         if (args.length > 1) {
-            widgetset = "\n                "
-                    + "<init-param><name>widgetset</name><value>" + args[1]
-                    + "</value></init-param>";
+            widgetset = args[1];
         }
 
         /*
@@ -234,7 +228,7 @@ public class PortletConfigurationGenerator {
         } catch (FileNotFoundException e) {
             System.out.println(jbossObjectXmlFile + " not found!");
         }
-        // open jboss insrance.xml
+        // open jboss instance.xml
         File jbossInstanceXmlFile = new File(args[0] + File.separatorChar
                 + JBOSS_INSTANCE_FILE);
         OutputStreamWriter jiout = null;
@@ -257,30 +251,65 @@ public class PortletConfigurationGenerator {
             Pattern p1 = Pattern
                     .compile("<servlet-mapping>.*?<servlet-name>(.*?)<\\/servlet-name>.*?<url-pattern>(.*?)<\\/url-pattern>(.*?)<\\/servlet-mapping>");
             Pattern p2 = Pattern
-                    .compile(".*?<!--\\s+portlet\\s?style=(\\S+)?\\s+-->.*?");
+                    .compile(".*?<!--\\s+portlet\\s?style=([^ ]*)?\\s+-->.*?");
+            Pattern findWidgetset = Pattern
+                    .compile("<init-param>.*?<param-name>widgetset<\\/param-name>.*?<param-value>(.*?)<\\/param-value>");
+
             Matcher m = p1.matcher(webXml);
             while (m.find()) {
                 if (m.groupCount() < 3) {
                     // don't include
                     continue;
                 }
-                Matcher m2 = p2.matcher(m.group(3));
+
+                String name = m.group(1);
+                // remove leading- and trailing whitespace
+                name = name.replaceAll("^\\s*", "");
+                name = name.replaceAll("\\s*$", "");
+
+                String comment = m.group(3);
+                Matcher m2 = p2.matcher(comment);
                 if (!m2.find()) {
                     // don't include
                     continue;
                 }
 
                 String style = "";
-                if (m2.groupCount() == 1 && m2.group(1) != null) {
+                if (m2.groupCount() == 1 && m2.group(1) != null
+                        && !m2.group(1).equals("")) {
                     style = "<init-param><name>style</name><value>"
                             + m2.group(1) + "</value></init-param>";
                 }
-                style += widgetset;
 
-                String name = m.group(1);
-                // remove leading- and trailing whitespace
-                name = name.replaceAll("^\\s*", "");
-                name = name.replaceAll("\\s*$", "");
+                // Find widgetset
+                Pattern findServlet = Pattern
+                        .compile("<servlet>.*?<servlet-name>" + name
+                                + "<\\/servlet-name>(.*?)<\\/servlet>");
+                Matcher servletMatcher = findServlet.matcher(webXml);
+                if (servletMatcher.find()) {
+                    String servletXml = servletMatcher.group(1);
+                    Matcher widgetsetMatcher = findWidgetset
+                            .matcher(servletXml);
+                    if (widgetsetMatcher.find()) {
+                        String definedWidgetSet = widgetsetMatcher.group(1);
+                        if (!definedWidgetSet.equals(widgetset)) {
+                            System.err
+                                    .println("WARNING: Widgetset in web.xml ("
+                                            + definedWidgetSet
+                                            + ") does not match used ("
+                                            + widgetset + ")");
+                        }
+                    }
+                }
+
+                if (widgetset != null && !widgetset.equals("")) {
+                    System.err.println("Using widgetset: " + widgetset);
+                    style += "\n                "
+                            + "<init-param><name>widgetset</name><value>"
+                            + widgetset + "</value></init-param>";
+
+                }
+
                 String pname = name + "Portlet";
                 String url = m.group(2);
                 // remove leading- and trailing whitespace
