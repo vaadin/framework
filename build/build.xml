@@ -292,9 +292,6 @@
 			<fileset dir="${output-dir}/WebContent">
 				<include name="**/*" />
 			</fileset>
-			<lib dir="${output-dir}/WebContent/WEB-INF/lib">
-				<include name="${lib-jar-name}" />
-			</lib>
 		</war>
 	</target>
 
@@ -653,7 +650,7 @@
 		</copy>
 		<java classname="com.itmill.toolkit.buildhelpers.PortletConfigurationGenerator" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="${output-dir}/WebContent/WEB-INF" />
-			<arg value="com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet" />
+			<arg value="com.itmill.toolkit.demo.sampler.gwt.SamplerWidgetSet" />
 			<classpath>
 				<pathelement location="build/buildhelpers/" />
 			</classpath>
@@ -679,6 +676,9 @@
 		<mkdir dir="${result-path}/classes" />
 		<javac source="1.5" target="1.5" classpathref="compile.classpath.server-side" destdir="${result-path}/classes" debug="true" encoding="UTF-8">
              <src path="${result-path}/src"/>
+			<classpath>
+				<pathelement location="WebContent/WEB-INF/lib/beanitemcontainer-20090216.jar" />
+			</classpath>
              <!-- This seems to be included by default: include name="${toolkit-package}/**"/ -->
              <exclude name="${toolkit-package}/demo/sampler/**" if="build.sampler.disabled" />
 		</javac>
