@@ -636,6 +636,7 @@
 				<exclude name="ITMILL/themes/sampler/**" if="build.sampler.disabled" />
 				<include name="demo/**/*" />
 				<include name="WEB-INF/lib/hsqldb.jar" />
+				<include name="WEB-INF/lib/beanitemcontainer-20090216.jar" />
 				<include name="ITMILL/themes/**/*" />
 				<include name="META-INF/**/*" />
 			</fileset>
