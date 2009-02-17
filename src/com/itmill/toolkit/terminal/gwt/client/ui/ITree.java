@@ -16,6 +16,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.MouseEventDetails;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
@@ -319,6 +320,10 @@ public class ITree extends FlowPanel implements Paintable {
                     icon = null;
                 }
             }
+
+            if (BrowserInfo.get().isIE6() && isAttached()) {
+                fixWidth();
+            }
         }
 
         private void setState(boolean state, boolean notifyServer) {
@@ -336,6 +341,7 @@ public class ITree extends FlowPanel implements Paintable {
                 }
                 addStyleName(CLASSNAME + "-expanded");
                 childNodeContainer.setVisible(true);
+
             } else {
                 removeStyleName(CLASSNAME + "-expanded");
                 childNodeContainer.setVisible(false);
@@ -345,8 +351,13 @@ public class ITree extends FlowPanel implements Paintable {
                 }
             }
             open = state;
+
             if (!rendering) {
                 Util.notifyParentOfSizeChange(ITree.this, false);
+            }
+
+            if (BrowserInfo.get().isIE6() && isAttached()) {
+                fixWidth();
             }
         }
 
@@ -374,6 +385,10 @@ public class ITree extends FlowPanel implements Paintable {
                 childTree.updateFromUIDL(childUidl, client);
             }
             childrenLoaded = true;
+
+            if (BrowserInfo.get().isIE6() && isAttached()) {
+                fixWidth();
+            }
         }
 
         public boolean isChildrenLoaded() {
@@ -405,17 +420,17 @@ public class ITree extends FlowPanel implements Paintable {
         }
 
         /**
-         * Adds/removes IT Mill Toolkit spesific style name. This method ought
-         * to be called only from Tree.
+         * Adds/removes IT Mill Toolkit specific style name. This method ought
+         * to be called only from ITree.
          * 
          * @param selected
          */
-        public void setSelected(boolean selected) {
+        protected void setSelected(boolean selected) {
             // add style name to caption dom structure only, not to subtree
             setStyleName(nodeCaptionDiv, "i-tree-node-selected", selected);
         }
 
-        public boolean isSelected() {
+        protected boolean isSelected() {
             return ITree.this.isSelected(this);
         }
 
@@ -430,6 +445,27 @@ public class ITree extends FlowPanel implements Paintable {
                 }
                 event.cancelBubble(true);
                 event.preventDefault();
+            }
+        }
+
+        /*
+         * We need to fix the width of TreeNodes so that the float in
+         * ie6compatNode does not wrap (see ticket #1245)
+         */
+        private void fixWidth() {
+            nodeCaptionDiv.getStyle().setProperty("styleFloat", "left");
+            nodeCaptionDiv.getStyle().setProperty("display", "inline");
+            nodeCaptionDiv.getStyle().setProperty("marginLeft", "0");
+            final int captionWidth = ie6compatnode.getOffsetWidth()
+                    + nodeCaptionDiv.getOffsetWidth();
+            setWidth(captionWidth + "px");
+        }
+
+        @Override
+        public void onAttach() {
+            super.onAttach();
+            if (BrowserInfo.get().isIE6()) {
+                fixWidth();
             }
         }
     }
