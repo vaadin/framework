@@ -11,12 +11,12 @@ import java.io.InputStreamReader;
 
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.terminal.Resource;
-import com.itmill.toolkit.terminal.Sizeable;
 import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.ui.Alignment;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Embedded;
 import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Button.ClickEvent;
@@ -42,8 +42,14 @@ public class CoverflowApplication extends com.itmill.toolkit.Application {
         covers.setBackgroundColor(0, 0, 0, 100, 100, 100);
 
         // Initialize visible slide viewer
+        Panel slidePanel = new Panel();
+        slidePanel.setStyleName(Panel.STYLE_LIGHT);
+        slidePanel.setSizeFull();
         final Embedded visibleSlide = new Embedded();
-        visibleSlide.setHeight(100, Sizeable.UNITS_PERCENTAGE);
+        visibleSlide.setHeight("480px");
+        slidePanel.addComponent(visibleSlide);
+        ((VerticalLayout) slidePanel.getLayout()).setComponentAlignment(
+                visibleSlide, "center");
 
         // Listen to coverflow changes as change slides when needed
         covers.addListener(new Property.ValueChangeListener() {
@@ -53,7 +59,7 @@ public class CoverflowApplication extends com.itmill.toolkit.Application {
         });
 
         // Show sources button
-        Button showSrc = new Button("src", new Button.ClickListener() {
+        Button showSrc = new Button("Show source", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 Window srcWindow = new Window("Source code");
                 srcWindow.setWidth("700px");
@@ -64,15 +70,14 @@ public class CoverflowApplication extends com.itmill.toolkit.Application {
                 getMainWindow().addWindow(srcWindow);
             }
         });
-
+        showSrc.setStyleName(Button.STYLE_LINK);
         // Initialize main layout
         VerticalLayout layout = new VerticalLayout();
         layout.addComponent(showSrc);
         layout.setComponentAlignment(showSrc, Alignment.TOP_RIGHT);
-        layout.addComponent(visibleSlide);
-        layout.setComponentAlignment(visibleSlide, Alignment.TOP_CENTER);
+        layout.addComponent(slidePanel);
         layout.addComponent(covers);
-        layout.setExpandRatio(visibleSlide, 1);
+        layout.setExpandRatio(slidePanel, 1);
         layout.setSizeFull();
 
         return layout;
@@ -96,7 +101,7 @@ public class CoverflowApplication extends com.itmill.toolkit.Application {
     }
 
     private void addSlidesToCoverflow() {
-        for (int i = 1; i <= 22; i++) {
+        for (int i = 0; i < 20; i++) {
             String head = "images/";
             String tail = "slideshow-example.0" + ((i < 10) ? "0" : "") + i
                     + ".jpg";
