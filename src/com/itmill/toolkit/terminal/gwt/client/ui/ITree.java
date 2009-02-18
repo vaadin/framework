@@ -355,10 +355,6 @@ public class ITree extends FlowPanel implements Paintable {
             if (!rendering) {
                 Util.notifyParentOfSizeChange(ITree.this, false);
             }
-
-            if (BrowserInfo.get().isIE6() && isAttached()) {
-                fixWidth();
-            }
         }
 
         private boolean getState() {
@@ -385,10 +381,6 @@ public class ITree extends FlowPanel implements Paintable {
                 childTree.updateFromUIDL(childUidl, client);
             }
             childrenLoaded = true;
-
-            if (BrowserInfo.get().isIE6() && isAttached()) {
-                fixWidth();
-            }
         }
 
         public boolean isChildrenLoaded() {
