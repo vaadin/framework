@@ -60,7 +60,7 @@ public class ISplitPanel extends ComplexPanel implements Container,
 
     private boolean locked = false;
 
-    private String splitterStyleName;
+    private String[] componentStyleNames;
 
     private Element draggingCurtain;
 
@@ -113,9 +113,9 @@ public class ISplitPanel extends ComplexPanel implements Container,
         DOM.setStyleAttribute(wrapper, "width", "100%");
         DOM.setStyleAttribute(wrapper, "height", "100%");
 
-        DOM.appendChild(wrapper, splitter);
         DOM.appendChild(wrapper, secondContainer);
         DOM.appendChild(wrapper, firstContainer);
+        DOM.appendChild(wrapper, splitter);
 
         DOM.setStyleAttribute(splitter, "position", "absolute");
         DOM.setStyleAttribute(secondContainer, "position", "absolute");
@@ -129,18 +129,20 @@ public class ISplitPanel extends ComplexPanel implements Container,
         this.orientation = orientation;
         if (orientation == ORIENTATION_HORIZONTAL) {
             DOM.setStyleAttribute(splitter, "height", "100%");
+            DOM.setStyleAttribute(splitter, "top", "0");
             DOM.setStyleAttribute(firstContainer, "height", "100%");
             DOM.setStyleAttribute(secondContainer, "height", "100%");
         } else {
             DOM.setStyleAttribute(splitter, "width", "100%");
+            DOM.setStyleAttribute(splitter, "left", "0");
             DOM.setStyleAttribute(firstContainer, "width", "100%");
             DOM.setStyleAttribute(secondContainer, "width", "100%");
         }
 
-        splitterStyleName = CLASSNAME
-                + (orientation == ORIENTATION_HORIZONTAL ? "-hsplitter"
-                        : "-vsplitter");
-        DOM.setElementProperty(splitter, "className", splitterStyleName);
+        DOM.setElementProperty(firstContainer, "className", CLASSNAME
+                + "-first-container");
+        DOM.setElementProperty(secondContainer, "className", CLASSNAME
+                + "-second-container");
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -155,7 +157,15 @@ public class ISplitPanel extends ComplexPanel implements Container,
             return;
         }
 
+        if (uidl.hasAttribute("style")) {
+            componentStyleNames = uidl.getStringAttribute("style").split(" ");
+        } else {
+            componentStyleNames = new String[0];
+        }
+
         setLocked(uidl.getBooleanAttribute("locked"));
+
+        setStylenames();
 
         setSplitPosition(uidl.getStringAttribute("position"));
 
@@ -180,7 +190,7 @@ public class ISplitPanel extends ComplexPanel implements Container,
 
         renderInformation.updateSize(getElement());
 
-        if (Util.isIE7()) {
+        if (BrowserInfo.get().isIE7()) {
             // Part III of IE7 hack
             DeferredCommand.addCommand(new Command() {
                 public void execute() {
@@ -195,15 +205,8 @@ public class ISplitPanel extends ComplexPanel implements Container,
     private void setLocked(boolean newValue) {
         if (locked != newValue) {
             locked = newValue;
-            if (locked) {
-                DOM.setElementProperty(splitter, "className", splitterStyleName
-                        + "-locked");
-            } else {
-                DOM
-                        .setElementProperty(splitter, "className",
-                                splitterStyleName);
-            }
             splitterSize = -1;
+            setStylenames();
         }
     }
 
@@ -352,8 +355,7 @@ public class ISplitPanel extends ComplexPanel implements Container,
             return;
         }
         final Element trg = DOM.eventGetTarget(event);
-        if (DOM.compare(trg, splitter)
-                || DOM.compare(trg, DOM.getChild(splitter, 0))) {
+        if (trg == splitter || trg == DOM.getChild(splitter, 0)) {
             resizing = true;
             if (BrowserInfo.get().isGecko()) {
                 showDraggingCurtain();
@@ -538,8 +540,7 @@ public class ISplitPanel extends ComplexPanel implements Container,
     }
 
     public void updateCaption(Paintable component, UIDL uidl) {
-        // TODO Auto-generated method stub
-
+        // TODO Implement caption handling
     }
 
     /**
@@ -553,4 +554,31 @@ public class ISplitPanel extends ComplexPanel implements Container,
         client.updateVariable(id, "position", pos, immediate);
     }
 
+    private void setStylenames() {
+        final String splitterSuffix = (orientation == ORIENTATION_HORIZONTAL ? "-hsplitter"
+                : "-vsplitter");
+        final String firstContainerSuffix = "-first-container";
+        final String secondContainerSuffix = "-second-container";
+        String lockedSuffix = "";
+
+        String splitterStyle = CLASSNAME + splitterSuffix;
+        String firstStyle = CLASSNAME + firstContainerSuffix;
+        String secondStyle = CLASSNAME + secondContainerSuffix;
+
+        if (locked) {
+            splitterStyle = CLASSNAME + splitterSuffix + "-locked";
+            lockedSuffix = "-locked";
+        }
+        for (int i = 0; i < componentStyleNames.length; i++) {
+            splitterStyle += " " + CLASSNAME + splitterSuffix + "-"
+                    + componentStyleNames[i] + lockedSuffix;
+            firstStyle += " " + CLASSNAME + firstContainerSuffix + "-"
+                    + componentStyleNames[i];
+            secondStyle += " " + CLASSNAME + secondContainerSuffix + "-"
+                    + componentStyleNames[i];
+        }
+        DOM.setElementProperty(splitter, "className", splitterStyle);
+        DOM.setElementProperty(firstContainer, "className", firstStyle);
+        DOM.setElementProperty(secondContainer, "className", secondStyle);
+    }
 }
