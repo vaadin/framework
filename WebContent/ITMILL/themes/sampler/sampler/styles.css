@@ -162,23 +162,22 @@
 	border: none;
 }
 
-.i-app-SamplerApplication .main-split .i-splitpanel-first-container {
+.i-app-SamplerApplication .i-splitpanel-first-container-main-split {
 	background: #eaebec url(tree-bg.png) repeat-x fixed;
 }
 
-/* Affects all inner splitpanels; can't use this until classnames are added
-.i-app-SamplerApplication .main-split .i-splitpanel-hsplitter {
+.i-app-SamplerApplication .i-splitpanel-hsplitter-main-split {
 	width: 1px;
 	background: #aeb0b5;
 }
-.i-app-SamplerApplication .main-split .i-splitpanel-hsplitter div {
+.i-app-SamplerApplication .i-splitpanel-hsplitter-main-split div {
 	width: 3px;
 	background: transparent;
 	border: none;
 	margin: 0 -1px;
 	padding: 0;
 }
-*/
+
 
 .i-app-SamplerApplication .i-tree-menu {
 	font-family: arial, helvetica, verdana, sans-serif;
@@ -192,10 +191,6 @@
 .i-app-SamplerApplication .i-tree-menu .i-tree-node-selected span {
 	background: #7d8490;
 	padding: 1px;
-}
-.i-ie6 .i-tree-menu .i-tree-node-ie6compatnode {
-	height: 0;
-	overflow: hidden;
 }
 
 
