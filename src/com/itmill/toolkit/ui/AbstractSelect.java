@@ -955,7 +955,7 @@ public abstract class AbstractSelect extends AbstractField implements
     /**
      * Does the select allow adding new options by the user. If true, the new
      * options can be added to the Container. The text entered by the user is
-     * used as id. No that data-source must allow adding new items.
+     * used as id. Note that data-source must allow adding new items.
      * 
      * @return True if additions are allowed.
      */
