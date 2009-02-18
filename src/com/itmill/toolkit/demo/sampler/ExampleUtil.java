@@ -102,21 +102,7 @@ public final class ExampleUtil {
     public static final Object hw_PROPERTY_NAME = "name";
     private static final IndexedContainer iso3166Container = new IndexedContainer();
     static {
-        iso3166Container.addContainerProperty(iso3166_PROPERTY_NAME,
-                String.class, null);
-        iso3166Container.addContainerProperty(iso3166_PROPERTY_SHORT,
-                String.class, null);
-        iso3166Container.addContainerProperty(iso3166_PROPERTY_FLAG,
-                Resource.class, null);
-        for (int i = 0; i < iso3166.length; i++) {
-            String name = iso3166[i++];
-            String id = iso3166[i];
-            Item item = iso3166Container.addItem(id);
-            item.getItemProperty(iso3166_PROPERTY_NAME).setValue(name);
-            item.getItemProperty(iso3166_PROPERTY_SHORT).setValue(id);
-            item.getItemProperty(iso3166_PROPERTY_FLAG).setValue(
-                    new ThemeResource("flags/" + id.toLowerCase() + ".gif"));
-        }
+        fillIso3166Container(iso3166Container);
     }
 
     public static final Object locale_PROPERTY_LOCALE = "locale";
@@ -189,8 +175,34 @@ public final class ExampleUtil {
         return localeContainer;
     }
 
-    public static IndexedContainer getISO3166Container() {
+    public static IndexedContainer getStaticISO3166Container() {
         return iso3166Container;
+    }
+
+    public static IndexedContainer getISO3166Container() {
+        IndexedContainer c = new IndexedContainer();
+        fillIso3166Container(c);
+        return c;
+    }
+
+    private static void fillIso3166Container(IndexedContainer container) {
+        container.addContainerProperty(iso3166_PROPERTY_NAME, String.class,
+                null);
+        container.addContainerProperty(iso3166_PROPERTY_SHORT, String.class,
+                null);
+        container.addContainerProperty(iso3166_PROPERTY_FLAG, Resource.class,
+                null);
+        for (int i = 0; i < iso3166.length; i++) {
+            String name = iso3166[i++];
+            String id = iso3166[i];
+            Item item = container.addItem(id);
+            item.getItemProperty(iso3166_PROPERTY_NAME).setValue(name);
+            item.getItemProperty(iso3166_PROPERTY_SHORT).setValue(id);
+            item.getItemProperty(iso3166_PROPERTY_FLAG).setValue(
+                    new ThemeResource("flags/" + id.toLowerCase() + ".gif"));
+        }
+        container.sort(new Object[] { iso3166_PROPERTY_NAME },
+                new boolean[] { true });
     }
 
     public static HierarchicalContainer getHardwareContainer() {
