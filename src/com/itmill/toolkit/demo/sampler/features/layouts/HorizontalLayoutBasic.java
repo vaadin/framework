@@ -30,8 +30,6 @@ public class HorizontalLayoutBasic extends Feature {
 
     @Override
     public NamedExternalResource[] getRelatedResources() {
-        return new NamedExternalResource[] { new NamedExternalResource(
-                "Reference Manual: HorizontalLayout",
-                "/doc/manual/layout.components.orderedlayout.html"), };
+        return null;
     }
 }

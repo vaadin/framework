@@ -38,8 +38,6 @@ public class LayoutAlignment extends Feature {
 
     @Override
     public NamedExternalResource[] getRelatedResources() {
-        return new NamedExternalResource[] { new NamedExternalResource(
-                "Reference Manual: Layout Alignment",
-                "/doc/manual/layout.features.alignment.html"), };
+        return null;
     }
 }

@@ -38,8 +38,6 @@ public class LayoutSpacing extends Feature {
 
     @Override
     public NamedExternalResource[] getRelatedResources() {
-        return new NamedExternalResource[] { new NamedExternalResource(
-                "Reference Manual: Spacing",
-                "/doc/manual/layout.settings.spacing.html"), };
+        return null;
     }
 }
