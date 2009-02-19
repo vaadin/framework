@@ -139,8 +139,15 @@ public class ITextualDate extends IDateField implements Paintable, Field,
         if (sender == text) {
             if (!text.getText().equals("")) {
                 try {
-                    date = DateTimeFormat.getFormat(getFormatString()).parse(
-                            text.getText());
+                    DateTimeFormat format = DateTimeFormat
+                            .getFormat(getFormatString());
+                    date = format.parse(text.getText());
+                    long stamp = date.getTime();
+                    if (stamp == 0) {
+                        // If date parsing fails in firefox the stamp will be 0
+                        date = null;
+                    }
+
                     // remove possibly added invalid value indication
                     removeStyleName(PARSE_ERROR_CLASSNAME);
                 } catch (final Exception e) {
