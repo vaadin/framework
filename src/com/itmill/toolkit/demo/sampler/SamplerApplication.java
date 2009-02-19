@@ -161,8 +161,6 @@ public class SamplerApplication extends Application {
         Button previousSample;
         Button nextSample;
 
-        private Window srcWindow = null;
-
         SamplerWindow() {
             // Main top/expanded-bottom layout
             VerticalLayout mainExpand = new VerticalLayout();
@@ -253,23 +251,13 @@ public class SamplerApplication extends Application {
             });
         }
 
-        public void showSource(String source) {
-            hideSource();
-            Window w = new Window("Java™ source");
-            ((VerticalLayout) w.getLayout()).setSizeUndefined();
-            w.setWidth("70%");
-            w.setHeight("60%");
-            w.setPositionX(100);
-            w.setPositionY(100);
-            w.addComponent(new CodeLabel(source));
-            addWindow(w);
-            srcWindow = w;
-        }
-
-        public void hideSource() {
-            if (srcWindow != null) {
-                removeWindow(srcWindow);
-                srcWindow = null;
+        @SuppressWarnings("unchecked")
+        public void removeSubwindows() {
+            Collection<Window> wins = getChildWindows();
+            if (null != wins) {
+                for (Window w : wins) {
+                    removeWindow(w);
+                }
             }
         }
 
@@ -280,7 +268,7 @@ public class SamplerApplication extends Application {
          *            the Feature(Set) to show
          */
         public void setFeature(Feature f) {
-            hideSource();
+            removeSubwindows();
             currentFeature.setValue(f);
             String path = getPathFor(f);
             webAnalytics.trackPageview(path);

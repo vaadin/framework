@@ -14,6 +14,7 @@ import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Link;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.VerticalLayout;
+import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
 public class FeatureView extends HorizontalLayout {
@@ -25,11 +26,13 @@ public class FeatureView extends HorizontalLayout {
 
     private VerticalLayout controls;
 
-    private ActiveLink srcWin;
+    private ActiveLink showSrc;
 
     private HashMap<Feature, Component> exampleCache = new HashMap<Feature, Component>();
 
     private Feature currentFeature;
+
+    private Window srcWindow;
 
     public FeatureView() {
 
@@ -71,25 +74,41 @@ public class FeatureView extends HorizontalLayout {
 
         controlButtons.addComponent(new Label("|"));
 
-        srcWin = new ActiveLink();
-        srcWin
+        showSrc = new ActiveLink();
+        showSrc
                 .setDescription("Right / middle / ctrl / shift -click for browser window/tab");
-        srcWin.addListener(new LinkActivatedListener() {
+        showSrc.addListener(new LinkActivatedListener() {
 
             public void linkActivated(LinkActivatedEvent event) {
                 if (!event.isLinkOpened()) {
-                    ((SamplerWindow) getWindow()).showSource(currentFeature
-                            .getSource());
+                    showSource(currentFeature.getSource());
                 }
 
             }
 
         });
-        srcWin.setCaption(MSG_SHOW_SRC);
-        srcWin.addStyleName("showcode");
-        srcWin.setTargetBorder(Link.TARGET_BORDER_NONE);
-        controlButtons.addComponent(srcWin);
+        showSrc.setCaption(MSG_SHOW_SRC);
+        showSrc.addStyleName("showcode");
+        showSrc.setTargetBorder(Link.TARGET_BORDER_NONE);
+        controlButtons.addComponent(showSrc);
 
+    }
+
+    public void showSource(String source) {
+        if (srcWindow == null) {
+            srcWindow = new Window("Java™ source");
+            ((VerticalLayout) srcWindow.getLayout()).setSizeUndefined();
+            srcWindow.setWidth("70%");
+            srcWindow.setHeight("60%");
+            srcWindow.setPositionX(100);
+            srcWindow.setPositionY(100);
+        }
+        srcWindow.removeAllComponents();
+        srcWindow.addComponent(new CodeLabel(source));
+
+        if (srcWindow.getParent() == null) {
+            getWindow().addWindow(srcWindow);
+        }
     }
 
     private void resetExample() {
@@ -143,8 +162,8 @@ public class FeatureView extends HorizontalLayout {
 
             { // open src in new window -link
                 String path = SamplerApplication.getPathFor(currentFeature);
-                srcWin.setTargetName(path);
-                srcWin.setResource(new ExternalResource(getApplication()
+                showSrc.setTargetName(path);
+                showSrc.setResource(new ExternalResource(getApplication()
                         .getURL()
                         + "src/" + path));
             }
