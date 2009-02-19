@@ -125,8 +125,8 @@ public class Embedded extends AbstractComponent {
             break;
         }
 
-        if (source != null) {
-            target.addAttribute("src", source);
+        if (getSource() != null) {
+            target.addAttribute("src", getSource());
         }
 
         if (mimeType != null && !"".equals(mimeType)) {
