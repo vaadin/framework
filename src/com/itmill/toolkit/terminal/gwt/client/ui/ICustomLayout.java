@@ -223,12 +223,12 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
         // prefix all relative image elements to point to theme dir with a
         // regexp search
         template = template.replaceAll(
-                "<((?:img)|(?:IMG)) ([^>]*)src=\"((?![a-z]+:)[^/][^\"]+)\"",
+                "<((?:img)|(?:IMG))\\s([^>]*)src=\"((?![a-z]+:)[^/][^\"]+)\"",
                 "<$1 $2src=\"" + relImgPrefix + "$3\"");
         // also support src attributes without quotes
         template = template
                 .replaceAll(
-                        "<((?:img)|(?:IMG)) ([^>]*)src=[^\"]((?![a-z]+:)[^/][^ />]+)[ />]",
+                        "<((?:img)|(?:IMG))\\s([^>]*)src=[^\"]((?![a-z]+:)[^/][^ />]+)[ />]",
                         "<$1 $2src=\"" + relImgPrefix + "$3\"");
         // also prefix relative style="...url(...)..."
         template = template
