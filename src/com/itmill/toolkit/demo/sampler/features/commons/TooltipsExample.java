@@ -7,6 +7,9 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
 
 public class TooltipsExample extends VerticalLayout {
 
+    private static final String editTxt = "Edit tooltip";
+    private static final String applyTxt = "Apply";
+
     public TooltipsExample() {
         setSpacing(true);
 
@@ -30,19 +33,19 @@ public class TooltipsExample extends VerticalLayout {
 
         /* Edit */
         final RichTextArea rte = new RichTextArea();
-        rte
-                .setValue("Click <b>Edit my tooltip</b> to edit this tooltip, then <b>Apply</b>");
+        rte.setValue("Click <b>" + editTxt
+                + "</b> to edit this tooltip, then <b>" + applyTxt + "</b>");
         rte.setVisible(false); // hide editor initially
         addComponent(rte);
-        Button apply = new Button("Edit tooltip", new Button.ClickListener() {
+        Button apply = new Button(editTxt, new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 if (rte.isVisible()) {
                     rte.setVisible(false);
                     event.getButton().setDescription((String) rte.getValue());
-                    event.getButton().setCaption("Edit tooltip");
+                    event.getButton().setCaption(editTxt);
                 } else {
                     rte.setVisible(true);
-                    event.getButton().setCaption("Apply");
+                    event.getButton().setCaption(applyTxt);
                 }
             }
         });
