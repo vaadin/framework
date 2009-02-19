@@ -146,10 +146,11 @@ public class ITextualDate extends IDateField implements Paintable, Field,
                     if (stamp == 0) {
                         // If date parsing fails in firefox the stamp will be 0
                         date = null;
+                        addStyleName(PARSE_ERROR_CLASSNAME);
+                    } else {
+                        // remove possibly added invalid value indication
+                        removeStyleName(PARSE_ERROR_CLASSNAME);
                     }
-
-                    // remove possibly added invalid value indication
-                    removeStyleName(PARSE_ERROR_CLASSNAME);
                 } catch (final Exception e) {
                     ClientExceptionHandler.displayError(e.getMessage());
 
