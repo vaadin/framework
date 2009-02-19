@@ -225,11 +225,16 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
         template = template.replaceAll(
                 "<((?:img)|(?:IMG)) ([^>]*)src=\"((?![a-z]+:)[^/][^\"]+)\"",
                 "<$1 $2src=\"" + relImgPrefix + "$3\"");
-        // also support src attributes without quotas
+        // also support src attributes without quotes
         template = template
                 .replaceAll(
                         "<((?:img)|(?:IMG)) ([^>]*)src=[^\"]((?![a-z]+:)[^/][^ />]+)[ />]",
                         "<$1 $2src=\"" + relImgPrefix + "$3\"");
+        // also prefix relative style="...url(...)..."
+        template = template
+                .replaceAll(
+                        "(<[^>]+style=\"[^\"]*url\\()((?![a-z]+:)[^/][^\"]+)(\\)[^>]*>)",
+                        "$1 " + relImgPrefix + "$2 $3");
 
         getElement().setInnerHTML(template);
 
