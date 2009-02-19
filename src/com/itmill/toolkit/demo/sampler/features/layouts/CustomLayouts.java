@@ -14,15 +14,14 @@ public class CustomLayouts extends Feature {
 
     @Override
     public String getDescription() {
-        return "With the CustomLayout component, you can write your layout"
-                + " as a template in XHTML that provides locations of any contained"
-                + " components. The layout template must be included in a theme. This"
-                + " separation allows the layout to be designed separately from code,"
-                + " for example using WYSIWYG web designer tools."
-                + "<br>The client-side engine of IT Mill Toolkit will replace contents"
-                + " of the location elements with the components. The components are"
-                + " bound to the location elements by the location identifier given to"
-                + " addComponent().";
+        return "The CustomLayout allows you to make a layout in regular HTML,"
+                + " using styles and embedding images to suit your needs."
+                + " You can even make the layout using a WYSIWYG editor.<br/>"
+                + " Marking an area in the HTML as a named <i>location</i>"
+                + " will allow you to replace that area with a component later."
+                + "<br/>HTML prototypes can often be quickly converted into a"
+                + " working application this way, providing a clear path from"
+                + " design to implementation.";
     }
 
     @Override
@@ -38,7 +37,7 @@ public class CustomLayouts extends Feature {
     @Override
     public NamedExternalResource[] getRelatedResources() {
         return new NamedExternalResource[] { new NamedExternalResource(
-                "XHTML for the custom layout", getThemeBase()
-                        + "layouts/examplecustomlayout_forviewing.html") };
+                "Layout HTML (view source)", getThemeBase()
+                        + "layouts/examplecustomlayout.html") };
     }
 }

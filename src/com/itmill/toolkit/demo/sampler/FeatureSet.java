@@ -235,12 +235,11 @@ public class FeatureSet extends Feature {
                             new VerticalLayoutBasic(), //
                             new HorizontalLayoutBasic(), //
                             new GridLayoutBasic(), //
-
                             new LayoutAlignment(), //
                             new ExpandingComponent(), //
                             new SplitPanelBasic(), //
-                            new WebLayout(), //
                             new ApplicationLayout(), //
+                            new WebLayout(), //
                             new CustomLayouts(), //
                     });
         }

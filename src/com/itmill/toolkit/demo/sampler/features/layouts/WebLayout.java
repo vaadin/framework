@@ -15,11 +15,15 @@ public class WebLayout extends Feature {
 
     @Override
     public String getDescription() {
-        return "Web-style layout refers to a layout style where the"
-                + " content 'pushes' the layout to a reasonable size."
-                + " In some cases you should also define some limits for"
-                + " this 'pushing' so that the layout will stay reasonable."
-                + "<br>Please click the button for a demo in a new window.";
+        return "It can be helpful to distinguish between <i>web-style</i> and"
+                + " <i>application-style</i> layouting (although this is a"
+                + " simplification). Both styles are supported, and can be used"
+                + " simultaneously.<br/> Web-style layouting allows the content"
+                + " to dictate the size of the components by \"pushing\" the"
+                + " size, causing scrollbars to appear for the whole window"
+                + " when needed. This can be achieved by not setting the size"
+                + " for components, or setting an absolute size (e.g 200px)."
+                + "<br/>Try resizing the window to see how the content reacts.";
     }
 
     @Override

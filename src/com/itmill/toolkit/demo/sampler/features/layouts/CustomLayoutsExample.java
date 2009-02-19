@@ -8,6 +8,8 @@ import com.itmill.toolkit.ui.VerticalLayout;
 public class CustomLayoutsExample extends VerticalLayout {
 
     public CustomLayoutsExample() {
+        setMargin(true);
+
         // Create the custom layout and set it as a component in
         // the current layout
         CustomLayout custom = new CustomLayout("examplecustomlayout");
@@ -19,6 +21,7 @@ public class CustomLayoutsExample extends VerticalLayout {
         custom.addComponent(username, "username");
 
         TextField password = new TextField();
+        password.setSecret(true);
         custom.addComponent(password, "password");
 
         Button ok = new Button("Login");

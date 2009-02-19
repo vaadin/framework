@@ -15,12 +15,14 @@ public class ApplicationLayout extends Feature {
 
     @Override
     public String getDescription() {
-        return "Application-style layout refers to a layout style where the"
-                + " Toolkit application is designed to look similar to a traditional"
-                + " desktop application. Basically this means that the application"
-                + " should usually fill the whole window with UI elements, and it"
-                + " should also resize gracefully and resonably."
-                + "<br>Please click the button for a demo in a new window.";
+        return "It can be helpful to distinguish between <i>web-style</i> and"
+                + " <i>application-style</i> layouting (although this is a"
+                + " simplification). Both styles are supported, and can be used"
+                + " simultaneously.<br/> Application-style layouting uses relatively"
+                + " -sized components, growing dynamically with the window, and"
+                + " causing scrollbars to appear on well-defined areas within the"
+                + " window."
+                + "<br/>Try resizing the window to see how the content reacts.";
     }
 
     @Override
