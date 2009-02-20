@@ -78,7 +78,7 @@ public class ToolkitTunesLayout extends Application {
         top.addComponent(search);
         top.setComponentAlignment(playback, "middle");
         top.setComponentAlignment(volume, "middle");
-        top.setComponentAlignment(status, "middle");
+        top.setComponentAlignment(status, "middle center");
         top.setComponentAlignment(viewmodes, "middle");
         top.setComponentAlignment(search, "middle");
 
@@ -114,7 +114,6 @@ public class ToolkitTunesLayout extends Application {
         // Status area
         status.setWidth("80%");
         status.setSpacing(true);
-        top.setComponentAlignment(status, "middle center");
 
         Button toggleVisualization = new Button("Mode");
         Label timeFromStart = new Label("0:00");
@@ -125,6 +124,8 @@ public class ToolkitTunesLayout extends Application {
         trackDetails.setWidth("100%");
         Label track = new Label("Track Name");
         Label album = new Label("Album Name - Artist");
+        track.setWidth(null);
+        album.setWidth(null);
         Slider progress = new Slider();
         progress.setOrientation(Slider.ORIENTATION_HORIZONTAL);
         progress.setWidth("100%");

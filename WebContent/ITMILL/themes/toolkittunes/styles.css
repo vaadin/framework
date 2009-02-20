@@ -1,43 +1,5 @@
 @import url(../default/styles.css);
 
-.i-generated-body {
-	/* full height layout does not need scrollable body; 
-	avoids excess scrollbars if moving sub-window over the window area */
-	overflow:hidden;
-}
-
-/******************************************************************************
- * For FormExample.java
- ******************************************************************************/
-.i-form legend {
-	color: #464f52;
-}
-
-.i-orderedlayout-formroot td {
-	vertical-align: top;
-}
-
-/******************************************************************************
- * For GeneratedColumnExample.java.
- ******************************************************************************/
-/* Align columns generated with ValueColumnGenerator to right. */ 
-.i-label-column-type-value {
-    text-align: right;
-}
-
-/* The total value column is displayed in bold. */
-.i-label-column-total {
-	font-weight: bold;
-	text-align: right;
-}
-
-/* Display calculated values in blue color. */
-.i-label-column-price, .i-label-column-consumption, .i-label-column-dailycost {
-    color: blue;
-    text-align: right;
-}
-
-
 
 /******************************************************************************
  * For ToolkitTunesLayout.java
@@ -125,16 +87,16 @@
 	-moz-border-radius: 5px;
 }
 
-.tTunes .status .i-orderedlayout-margin-top {
+.tTunes .status .i-horizontallayout-margin-top {
 	padding-top: 3px;
 }
-.tTunes .status .i-orderedlayout-margin-bottom {
+.tTunes .status .i-horizontallayout-margin-bottom {
 	padding-bottom: 3px;
 }
-.tTunes .status .i-orderedlayout-margin-left {
+.tTunes .status .i-horizontallayout-margin-left {
 	padding-left: 9px;
 }
-.tTunes .status .i-orderedlayout-margin-right {
+.tTunes .status .i-horizontallayout-margin-right {
 	padding-right: 9px;
 }
 
