@@ -117,9 +117,12 @@
     <!-- Java compiler version. -->
     <target name="check-java-version">
       <condition property="java.version.matches">
-        <equals arg1="${ant.java.version}" arg2="1.5"/>
+        <or>
+          <equals arg1="${ant.java.version}" arg2="1.5"/>
+          <isset property="ignoreversion"/>
+        </or>
       </condition>
-      <fail unless="java.version.matches" message="IT Mill Toolkit must be compiled with genuine Java 1.5 compiler. You are trying to compile with version ${ant.java.version}."/>
+      <fail unless="java.version.matches" message="Java version is ${ant.java.version}, but IT Mill Toolkit must be compiled with genuine Java 1.5 compiler. Use -Dignoreversion=1 for ant to ignore the version check."/>
       <echo>Java version is ${ant.java.version} as required.</echo>
     </target>
 
