@@ -197,8 +197,13 @@ public class TabSheet extends AbstractComponentContainer implements
         for (final Iterator i = getComponentIterator(); i.hasNext();) {
             final Component c = (Component) i.next();
 
+            /*
+             * If we have no selection, if the current selection is invisible or
+             * if the current selection is disabled (but the whole component is
+             * not) we select this tab instead
+             */
             if (selected == null || !selected.isVisible()
-                    || !selected.isEnabled()) {
+                    || (!selected.isEnabled() && this.isEnabled())) {
                 selected = c;
             }
             target.startTag("tab");
