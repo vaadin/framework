@@ -15,7 +15,9 @@ import com.itmill.toolkit.ui.AbstractOrderedLayout;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.ComponentContainer;
 import com.itmill.toolkit.ui.CustomComponent;
+import com.itmill.toolkit.ui.Form;
 import com.itmill.toolkit.ui.GridLayout;
+import com.itmill.toolkit.ui.Layout;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.SplitPanel;
@@ -68,6 +70,14 @@ public class ComponentSizeValidator {
                 errors = validateComponentRelativeSizes((Component) it.next(),
                         errors, parent);
             }
+        } else if (component instanceof Form) {
+            Form form = (Form) component;
+            if (form.getLayout() != null)
+                errors = validateComponentRelativeSizes(form.getLayout(),
+                        errors, parent);
+            if (form.getFooter() != null)
+                errors = validateComponentRelativeSizes(form.getFooter(),
+                        errors, parent);
         }
 
         return errors;
@@ -541,9 +551,18 @@ public class ComponentSizeValidator {
                     // Other components define column width
                     return true;
                 }
+            } else if (parent instanceof Form) {
+                /*
+                 * If some other part of the form is not relative it determines
+                 * the component width
+                 */
+                return hasNonRelativeWidthComponent((Form) parent);
             } else if (parent instanceof SplitPanel
                     || parent instanceof TabSheet
                     || parent instanceof CustomComponent) {
+                // FIXME Could we use com.itmill.toolkit package name here and
+                // fail for all component containers? 
+                // FIXME Actually this should be moved to containers so it can be implemented for custom containers
                 // TODO vertical splitpanel with another non relative component?
                 return false;
             } else if (parent instanceof Window) {
@@ -571,6 +590,20 @@ public class ComponentSizeValidator {
             return true;
         }
 
+    }
+
+    private static boolean hasNonRelativeWidthComponent(Form form) {
+        Layout layout = form.getLayout();
+        Layout footer = form.getFooter();
+
+        if (layout != null && !hasRelativeWidth(layout)) {
+            return true;
+        }
+        if (footer != null && !hasRelativeWidth(footer)) {
+            return true;
+        }
+
+        return false;
     }
 
     private static Map<Object, FileLocation> creationLocations = new HashMap<Object, FileLocation>();
