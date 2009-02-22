@@ -23,9 +23,8 @@ public class Calc extends com.itmill.toolkit.Application {
     @Override
     public void init() {
 
-        // Place the layout to a floating dialog inside the browser main window
-        setMainWindow(new Window("Calculator Application"));
-        getMainWindow().addWindow(new Window("Calc", layout));
+        // Place the layout to the browser main window
+        setMainWindow(new Window("Calculator Application", layout));
 
         // Create and add the components to the layout
         layout.addComponent(display, 0, 0, 3, 0);
