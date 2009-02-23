@@ -23,7 +23,7 @@ public class ITooltip extends IToolkitOverlay {
     protected static final int MAX_WIDTH = 500;
     private static final int QUICK_OPEN_TIMEOUT = 1000;
     private static final int CLOSE_TIMEOUT = 300;
-    private static final int OPEN_DELAY = 1700;
+    private static final int OPEN_DELAY = 750;
     private static final int QUICK_OPEN_DELAY = 100;
     IErrorMessage em = new IErrorMessage();
     Element description = DOM.createDiv();
