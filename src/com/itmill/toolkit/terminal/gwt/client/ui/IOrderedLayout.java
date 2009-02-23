@@ -703,6 +703,9 @@ public class IOrderedLayout extends CellBasedLayout {
                     .values()) {
                 client.handleComponentRelativeSize(componentContainer
                         .getWidget());
+
+                // Update widget size from DOM
+                componentContainer.updateWidgetSize();
             }
         }
 
