@@ -874,6 +874,11 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                     if (lastToBeRendered >= totalRows) {
                         lastToBeRendered = totalRows - 1;
                     }
+                    // due Safari 3.1 bug (see #2607), verify reqrows, original
+                    // problem unknown, but this should catch the issue
+                    if (reqFirstRow + reqRows - 1 > lastToBeRendered) {
+                        reqRows = lastToBeRendered - reqFirstRow;
+                    }
                 }
 
                 client.updateVariable(paintableId, "firstToBeRendered",
