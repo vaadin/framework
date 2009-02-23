@@ -1935,6 +1935,14 @@ public class Table extends AbstractSelect implements Action.Container,
         int end = cells[0].length;
         if (reqRowsToPaint != -1) {
             end = start + reqRowsToPaint;
+            // Safari 3.1 sends invalid request sometimes. Cannot reproduce this
+            // with recent webkit. check for valid value and fallback to send
+            // rows to the end of buffer.
+            // TODO replace this with a client side workaround (this causes an
+            // empty screen). See #2607
+            if (end > cells[0].length) {
+                end = cells[0].length;
+            }
         }
         // sanity check
         if (lastToBeRenderedInClient != -1 && lastToBeRenderedInClient < end) {
