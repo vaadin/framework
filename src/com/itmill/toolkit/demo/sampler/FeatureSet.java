@@ -21,7 +21,6 @@ import com.itmill.toolkit.demo.sampler.features.dates.DateLocale;
 import com.itmill.toolkit.demo.sampler.features.dates.DatePopup;
 import com.itmill.toolkit.demo.sampler.features.dates.DateResolution;
 import com.itmill.toolkit.demo.sampler.features.form.FormBasic;
-import com.itmill.toolkit.demo.sampler.features.form.FormPojo;
 import com.itmill.toolkit.demo.sampler.features.layouts.ApplicationLayout;
 import com.itmill.toolkit.demo.sampler.features.layouts.CustomLayouts;
 import com.itmill.toolkit.demo.sampler.features.layouts.ExpandingComponent;
@@ -296,8 +295,7 @@ public class FeatureSet extends Feature {
                     "The Form -component provides a convenient way to organize"
                             + " related fields visually.", new Feature[] {
                     //        
-                            new FormBasic(), //
-                            new FormPojo(), //
+                    new FormBasic(), //
                     });
         }
     }

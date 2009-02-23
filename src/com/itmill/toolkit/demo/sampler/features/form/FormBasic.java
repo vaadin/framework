@@ -27,8 +27,12 @@ public class FormBasic extends Feature {
     public String getDescription() {
         return "A Form is most useful when connected to a data source, and"
                 + " provides buffering and customization features to support"
-                + " that scenario. <br/> Enter something and try discarding"
-                + " or applying.";
+                + " that scenario. A Form can easily be used as a POJO"
+                + " or Bean editor by wrapping the bean using BeanItem. <br/>"
+                + "The basic functionality only requires a couple of lines of"
+                + " code, then Validators and other customizations can be "
+                + "applied to taste. <br/>Enter something and try discarding or "
+                + "applying.";
     }
 
     @Override
