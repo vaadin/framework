@@ -19,6 +19,10 @@ public class IGoogleAnalytics extends Widget implements Paintable {
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        if (isLocalHostUrl()) {
+            // Do not track localhost page views
+            return;
+        }
         String trackerId = uidl.getStringAttribute("trackerid");
         String pageId = uidl.getStringAttribute("pageid");
         String domainName = uidl.getStringAttribute("domain");
@@ -34,6 +38,13 @@ public class IGoogleAnalytics extends Widget implements Paintable {
                             + "," + domainName + ") SUCCESS.");
         }
     }
+
+    private native boolean isLocalHostUrl()
+    /*-{
+        var location = $wnd.location;
+        var re = /^http:\/\/(localhost|127.0.0.1)/;
+        return re.test(location);
+    }-*/;
 
     private native String trackPageview(String trackerId, String pageId,
             String domainName)
