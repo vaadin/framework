@@ -100,8 +100,8 @@ public class Util {
         Map<Container, Set<Paintable>> childWidgets = new HashMap<Container, Set<Paintable>>();
 
         for (Paintable widget : widgets) {
-            ApplicationConnection.getConsole().log(
-                    "Widget " + Util.getSimpleName(widget) + " size updated");
+            // ApplicationConnection.getConsole().log(
+            // "Widget " + Util.getSimpleName(widget) + " size updated");
             Widget parent = ((Widget) widget).getParent();
             while (parent != null && !(parent instanceof Container)) {
                 parent = parent.getParent();
