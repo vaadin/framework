@@ -2,8 +2,8 @@ package com.itmill.toolkit.demo.sampler.features.windows;
 
 import com.itmill.toolkit.demo.sampler.APIResource;
 import com.itmill.toolkit.demo.sampler.Feature;
+import com.itmill.toolkit.demo.sampler.FeatureSet;
 import com.itmill.toolkit.demo.sampler.NamedExternalResource;
-import com.itmill.toolkit.demo.sampler.features.blueprints.ProminentPrimaryAction;
 import com.itmill.toolkit.ui.Window;
 
 public class SubwindowModal extends Feature {
@@ -15,8 +15,8 @@ public class SubwindowModal extends Feature {
 
     @Override
     public String getDescription() {
-        return "A <i>modal window</i> blocks access to the rest of the application, "
-                + "until the window is closed (or made non-modal).<br/>"
+        return "A <i>modal window</i> blocks access to the rest of the application"
+                + " until the window is closed (or made non-modal).<br/>"
                 + " Use modal windows when the user must finish the task in the"
                 + " window before continuing.";
     }
@@ -31,8 +31,7 @@ public class SubwindowModal extends Feature {
         return new Class[] {
         //
                 Subwindow.class, //
-                ProminentPrimaryAction.class, //
-        };
+                FeatureSet.Windows.class };
     }
 
     @Override

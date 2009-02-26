@@ -40,33 +40,37 @@ public class SubwindowPositionedExample extends VerticalLayout {
         layout.setComponentAlignment(close, "right bottom");
 
         // Add buttons for opening the subwindow
-        Button fifty = new Button("Open positioned window at 50x50",
+        Button fifty = new Button("Open window at position 50x50",
                 new Button.ClickListener() {
                     // inline click-listener
                     public void buttonClick(ClickEvent event) {
-                        subwindow.setPositionX(50);
-                        subwindow.setPositionY(50);
                         if (subwindow.getParent() == null) {
                             // Open the subwindow by adding it to the main
                             // window
                             getApplication().getMainWindow().addWindow(
                                     subwindow);
                         }
+
+                        // Set window position
+                        subwindow.setPositionX(50);
+                        subwindow.setPositionY(50);
                     }
                 });
         addComponent(fifty);
-        Button onefifty = new Button("Open positioned window at 150x150",
+        Button onefifty = new Button("Open window at position 150x200",
                 new Button.ClickListener() {
                     // inline click-listener
                     public void buttonClick(ClickEvent event) {
-                        subwindow.setPositionX(150);
-                        subwindow.setPositionY(150);
                         if (subwindow.getParent() == null) {
                             // Open the subwindow by adding it to the main
                             // window
                             getApplication().getMainWindow().addWindow(
                                     subwindow);
                         }
+
+                        // Set window position
+                        subwindow.setPositionX(150);
+                        subwindow.setPositionY(200);
                     }
                 });
         addComponent(onefifty);
@@ -74,13 +78,15 @@ public class SubwindowPositionedExample extends VerticalLayout {
                 new Button.ClickListener() {
                     // inline click-listener
                     public void buttonClick(ClickEvent event) {
-                        subwindow.center();
                         if (subwindow.getParent() == null) {
                             // Open the subwindow by adding it to the main
                             // window
                             getApplication().getMainWindow().addWindow(
                                     subwindow);
                         }
+
+                        // Center the window
+                        subwindow.center();
                     }
                 });
         addComponent(center);

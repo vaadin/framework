@@ -2,6 +2,7 @@ package com.itmill.toolkit.demo.sampler.features.windows;
 
 import com.itmill.toolkit.demo.sampler.APIResource;
 import com.itmill.toolkit.demo.sampler.Feature;
+import com.itmill.toolkit.demo.sampler.FeatureSet;
 import com.itmill.toolkit.demo.sampler.NamedExternalResource;
 import com.itmill.toolkit.ui.Window;
 
@@ -25,7 +26,7 @@ public class SubwindowSized extends Feature {
 
     @Override
     public Class[] getRelatedFeatures() {
-        return new Class[] { SubwindowModal.class };
+        return new Class[] { SubwindowAutoSized.class, FeatureSet.Windows.class };
     }
 
     @Override

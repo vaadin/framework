@@ -76,6 +76,7 @@ import com.itmill.toolkit.demo.sampler.features.trees.TreeActions;
 import com.itmill.toolkit.demo.sampler.features.trees.TreeMouseEvents;
 import com.itmill.toolkit.demo.sampler.features.trees.TreeMultiSelect;
 import com.itmill.toolkit.demo.sampler.features.trees.TreeSingleSelect;
+import com.itmill.toolkit.demo.sampler.features.windows.NativeWindow;
 import com.itmill.toolkit.demo.sampler.features.windows.Subwindow;
 import com.itmill.toolkit.demo.sampler.features.windows.SubwindowAutoSized;
 import com.itmill.toolkit.demo.sampler.features.windows.SubwindowClose;
@@ -304,7 +305,7 @@ public class FeatureSet extends Feature {
             super(
                     "Windows",
                     "Windows",
-                    "Windows can for instance organize the UI, save space (popup windows), focus attention (modal windows), provide multiple views for multitasking (native browser windows).",
+                    "Windows can (for instance) organize the UI, save space (popup windows), focus attention (modal windows), or provide multiple views for the same data for multitasking or dual screen setups (native browser windows).",
                     new Feature[] {
                     //        
                             new Subwindow(), //
@@ -313,7 +314,7 @@ public class FeatureSet extends Feature {
                             new SubwindowSized(), //
                             new SubwindowPositioned(), //
                             new SubwindowClose(), //
-                    // new NativeWindow(), // in progress
+                            new NativeWindow(), // 
                     });
         }
     }
