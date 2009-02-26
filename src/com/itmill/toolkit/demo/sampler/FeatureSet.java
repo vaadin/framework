@@ -76,13 +76,12 @@ import com.itmill.toolkit.demo.sampler.features.trees.TreeActions;
 import com.itmill.toolkit.demo.sampler.features.trees.TreeMouseEvents;
 import com.itmill.toolkit.demo.sampler.features.trees.TreeMultiSelect;
 import com.itmill.toolkit.demo.sampler.features.trees.TreeSingleSelect;
-import com.itmill.toolkit.demo.sampler.features.windows.WindowChild;
-import com.itmill.toolkit.demo.sampler.features.windows.WindowChildAutosize;
-import com.itmill.toolkit.demo.sampler.features.windows.WindowChildModal;
-import com.itmill.toolkit.demo.sampler.features.windows.WindowChildPositionSize;
-import com.itmill.toolkit.demo.sampler.features.windows.WindowChildScrollable;
-import com.itmill.toolkit.demo.sampler.features.windows.WindowNativeNew;
-import com.itmill.toolkit.demo.sampler.features.windows.WindowNativeShared;
+import com.itmill.toolkit.demo.sampler.features.windows.Subwindow;
+import com.itmill.toolkit.demo.sampler.features.windows.SubwindowAutoSized;
+import com.itmill.toolkit.demo.sampler.features.windows.SubwindowClose;
+import com.itmill.toolkit.demo.sampler.features.windows.SubwindowModal;
+import com.itmill.toolkit.demo.sampler.features.windows.SubwindowPositioned;
+import com.itmill.toolkit.demo.sampler.features.windows.SubwindowSized;
 
 /**
  * Contains the FeatureSet implementation and the structure for the feature
@@ -302,16 +301,20 @@ public class FeatureSet extends Feature {
 
     public static class Windows extends FeatureSet {
         public Windows() {
-            super("Windows", new Feature[] {
-            //        
-                    new WindowNativeShared(), //
-                    new WindowNativeNew(), //
-                    new WindowChild(), //
-                    new WindowChildAutosize(), //
-                    new WindowChildModal(), //
-                    new WindowChildPositionSize(), //
-                    new WindowChildScrollable(), //
-            });
+            super(
+                    "Windows",
+                    "Windows",
+                    "Windows can for instance organize the UI, save space (popup windows), focus attention (modal windows), provide multiple views for multitasking (native browser windows).",
+                    new Feature[] {
+                    //        
+                            new Subwindow(), //
+                            new SubwindowModal(), //
+                            new SubwindowAutoSized(), //
+                            new SubwindowSized(), //
+                            new SubwindowPositioned(), //
+                            new SubwindowClose(), //
+                    // new NativeWindow(), // in progress
+                    });
         }
     }
 

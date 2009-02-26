@@ -5,19 +5,16 @@ import com.itmill.toolkit.demo.sampler.Feature;
 import com.itmill.toolkit.demo.sampler.NamedExternalResource;
 import com.itmill.toolkit.ui.Window;
 
-public class WindowChildScrollable extends Feature {
+public class SubwindowPositioned extends Feature {
 
     @Override
     public String getName() {
-        return "Window - Scrollable";
+        return "Window position";
     }
 
     @Override
     public String getDescription() {
-        return "Creates and opens a new floating child window with specified"
-                + " size and position attributes. The content for this window"
-                + " is too big to fit in the specified size. Therefore you can"
-                + " use the scrollbars to view different part of the content.";
+        return "The position of a window can be specified, or it can be centered.";
     }
 
     @Override
@@ -27,14 +24,11 @@ public class WindowChildScrollable extends Feature {
 
     @Override
     public Class[] getRelatedFeatures() {
-        return new Class[] { WindowNativeShared.class, WindowNativeNew.class,
-                WindowChild.class, WindowChildAutosize.class,
-                WindowChildModal.class, WindowChildPositionSize.class };
+        return new Class[] { SubwindowModal.class };
     }
 
     @Override
     public NamedExternalResource[] getRelatedResources() {
-        // TODO Auto-generated method stub
         return null;
     }
 

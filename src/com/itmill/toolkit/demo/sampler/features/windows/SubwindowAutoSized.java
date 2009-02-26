@@ -5,18 +5,19 @@ import com.itmill.toolkit.demo.sampler.Feature;
 import com.itmill.toolkit.demo.sampler.NamedExternalResource;
 import com.itmill.toolkit.ui.Window;
 
-public class WindowChild extends Feature {
+public class SubwindowAutoSized extends Feature {
 
     @Override
     public String getName() {
-        return "Child window";
+        return "Window, automatic size";
     }
 
     @Override
     public String getDescription() {
-        return "Creates and opens a new floating child window with its own state."
-                + "<br>Child windows are typically used for Dialog Windows and"
-                + " Multiple Document Interface applications.";
+        return "The window will be automatically sized to fit the contents,"
+                + " if the size of the window (and it's layout) is undefined.<br/>"
+                + " Note that by default Window contains a VerticalLayout that"
+                + " is 100% wide.";
     }
 
     @Override
@@ -26,14 +27,11 @@ public class WindowChild extends Feature {
 
     @Override
     public Class[] getRelatedFeatures() {
-        return new Class[] { WindowNativeShared.class, WindowNativeNew.class,
-                WindowChildAutosize.class, WindowChildModal.class,
-                WindowChildPositionSize.class, WindowChildScrollable.class };
+        return new Class[] { SubwindowModal.class };
     }
 
     @Override
     public NamedExternalResource[] getRelatedResources() {
-        // TODO Auto-generated method stub
         return null;
     }
 

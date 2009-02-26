@@ -5,18 +5,16 @@ import com.itmill.toolkit.demo.sampler.Feature;
 import com.itmill.toolkit.demo.sampler.NamedExternalResource;
 import com.itmill.toolkit.ui.Window;
 
-public class WindowChildModal extends Feature {
+public class SubwindowClose extends Feature {
 
     @Override
     public String getName() {
-        return "Window modality";
+        return "Subwindow";
     }
 
     @Override
     public String getDescription() {
-        return "Creates and opens a new modal child window with its own state."
-                + "<br>Child window modality means that you cannot access the"
-                + " underlying window(s) while the modal window is displayed.";
+        return "Using a <i>CloseListener</i> one can detect when a window is closed.";
     }
 
     @Override
@@ -26,14 +24,11 @@ public class WindowChildModal extends Feature {
 
     @Override
     public Class[] getRelatedFeatures() {
-        return new Class[] { WindowNativeShared.class, WindowNativeNew.class,
-                WindowChild.class, WindowChildAutosize.class,
-                WindowChildPositionSize.class, WindowChildScrollable.class };
+        return new Class[] { SubwindowModal.class };
     }
 
     @Override
     public NamedExternalResource[] getRelatedResources() {
-        // TODO Auto-generated method stub
         return null;
     }
 
