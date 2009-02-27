@@ -15,6 +15,9 @@ public class SubwindowPositionedExample extends VerticalLayout {
 
         // Create the window
         subwindow = new Window("A positioned subwindow");
+        // let's give it a size (optional)
+        subwindow.setWidth("300px");
+        subwindow.setHeight("200px");
 
         // Configure the windws layout; by default a VerticalLayout
         VerticalLayout layout = (VerticalLayout) subwindow.getLayout();
