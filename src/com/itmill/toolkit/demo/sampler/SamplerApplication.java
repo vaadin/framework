@@ -667,10 +667,9 @@ public class SamplerApplication extends Application {
 
         FeatureGrid() {
             setSizeFull();
-            getLayout().setSizeUndefined();
-            // grid.setWidth("100%");
+            setLayout(grid);
+            grid.setSizeUndefined();
             grid.setSpacing(true);
-            addComponent(grid);
             setStyleName(Panel.STYLE_LIGHT);
         }
 
