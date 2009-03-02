@@ -190,7 +190,7 @@ public class IToolkitOverlay extends PopupPanel {
     /*
      * Extending classes should always call this method after they change the
      * size of overlay without using normal 'setWidth(String)' and
-     * 'setHeight(String)' methods.
+     * 'setHeight(String)' methods (if not calling super.setWidth/Height).
      */
     protected void updateShadowSizeAndPosition() {
         updateShadowSizeAndPosition(1.0);
@@ -218,8 +218,7 @@ public class IToolkitOverlay extends PopupPanel {
             // redundant try/catch block (See dev.itmill.com #2011)
             zIndex = DOM.getStyleAttribute(getElement(), "zIndex");
         } catch (Exception ignore) {
-            // Ignored, will cause no harm, other than a little eye-candy
-            // missing
+            // Ignored, will cause no harm
         }
         if (zIndex == null) {
             zIndex = "" + Z_INDEX;
@@ -256,15 +255,35 @@ public class IToolkitOverlay extends PopupPanel {
         width = (int) (width * progress);
         height = (int) (height * progress);
 
+        // Opera needs some shaking to get parts of the shadow showing properly
+        // (ticket #2704)
+        if (BrowserInfo.get().isOpera()) {
+            // Clear the height of all middle elements
+            DOM.getChild(shadow, 3).getStyle().setProperty("height", "auto");
+            DOM.getChild(shadow, 4).getStyle().setProperty("height", "auto");
+            DOM.getChild(shadow, 5).getStyle().setProperty("height", "auto");
+        }
+
         // Update correct values
-        DOM.setStyleAttribute(shadow, "display", progress < 0.9 ? "none" : "");
         DOM.setStyleAttribute(shadow, "zIndex", zIndex);
         DOM.setStyleAttribute(shadow, "width", width + "px");
         DOM.setStyleAttribute(shadow, "height", height + "px");
         DOM.setStyleAttribute(shadow, "top", y + "px");
         DOM.setStyleAttribute(shadow, "left", x + "px");
+        DOM.setStyleAttribute(shadow, "display", progress < 0.9 ? "none" : "");
 
-        // attach to dom if not there already
+        // Opera fix, part 2 (ticket #2704)
+        if (BrowserInfo.get().isOpera()) {
+            // We'll fix the height of all the middle elements
+            DOM.getChild(shadow, 3).getStyle().setPropertyPx("height",
+                    DOM.getChild(shadow, 3).getOffsetHeight());
+            DOM.getChild(shadow, 4).getStyle().setPropertyPx("height",
+                    DOM.getChild(shadow, 4).getOffsetHeight());
+            DOM.getChild(shadow, 5).getStyle().setPropertyPx("height",
+                    DOM.getChild(shadow, 5).getOffsetHeight());
+        }
+
+        // Attach to dom if not there already
         if (shadow.getParentElement() == null) {
             RootPanel.get().getElement().insertBefore(shadow, getElement());
         }
