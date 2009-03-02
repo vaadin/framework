@@ -48,6 +48,10 @@ public class IFormLayout extends SimplePanel implements Container {
 
     public class IFormLayoutTable extends FlexTable {
 
+        private static final int COLUMN_CAPTION = 0;
+        private static final int COLUMN_ERRORFLAG = 1;
+        private static final int COLUMN_WIDGET = 2;
+
         private HashMap<Paintable, Caption> componentToCaption = new HashMap<Paintable, Caption>();
         private HashMap<Paintable, ErrorFlag> componentToError = new HashMap<Paintable, ErrorFlag>();
 
@@ -89,24 +93,26 @@ public class IFormLayout extends SimplePanel implements Container {
                     error = new ErrorFlag();
                     componentToError.put(p, error);
                 }
-                prepareCell(i, 2);
-                final Paintable oldComponent = (Paintable) getWidget(i, 2);
+                prepareCell(i, COLUMN_WIDGET);
+                final Paintable oldComponent = (Paintable) getWidget(i,
+                        COLUMN_WIDGET);
                 if (oldComponent == null) {
-                    setWidget(i, 2, (Widget) p);
+                    setWidget(i, COLUMN_WIDGET, (Widget) p);
                 } else if (oldComponent != p) {
                     client.unregisterPaintable(oldComponent);
-                    setWidget(i, 2, (Widget) p);
+                    setWidget(i, COLUMN_WIDGET, (Widget) p);
                 }
-                getCellFormatter().setStyleName(i, 2,
+                getCellFormatter().setStyleName(i, COLUMN_WIDGET,
                         CLASSNAME + "-contentcell");
-                getCellFormatter().setStyleName(i, 0,
+                getCellFormatter().setStyleName(i, COLUMN_CAPTION,
                         CLASSNAME + "-captioncell");
-                setWidget(i, 0, caption);
+                setWidget(i, COLUMN_CAPTION, caption);
 
                 setContentWidth(i);
 
-                getCellFormatter().setStyleName(i, 1, CLASSNAME + "-errorcell");
-                setWidget(i, 1, error);
+                getCellFormatter().setStyleName(i, COLUMN_ERRORFLAG,
+                        CLASSNAME + "-errorcell");
+                setWidget(i, COLUMN_ERRORFLAG, error);
 
                 p.updateFromUIDL(childUidl, client);
 
@@ -123,7 +129,7 @@ public class IFormLayout extends SimplePanel implements Container {
             }
 
             while (getRowCount() > i) {
-                final Paintable p = (Paintable) getWidget(i, 2);
+                final Paintable p = (Paintable) getWidget(i, COLUMN_WIDGET);
                 client.unregisterPaintable(p);
                 componentToCaption.remove(p);
                 removeRow(i);
@@ -149,18 +155,27 @@ public class IFormLayout extends SimplePanel implements Container {
             if (!isDynamicWidth()) {
                 width = "100%";
             }
-            getCellFormatter().setWidth(row, 2, width);
+            getCellFormatter().setWidth(row, COLUMN_WIDGET, width);
         }
 
         public void replaceChildComponent(Widget oldComponent,
                 Widget newComponent) {
             int i;
             for (i = 0; i < getRowCount(); i++) {
-                if (oldComponent == getWidget(i, 1)) {
+                Widget candidate = getWidget(i, COLUMN_WIDGET);
+                if (oldComponent == candidate) {
                     final Caption newCap = new Caption(
                             (Paintable) newComponent, client);
-                    setWidget(i, 0, newCap);
-                    setWidget(i, 1, newComponent);
+                    componentToCaption.put((Paintable) newComponent, newCap);
+                    ErrorFlag error = componentToError.get(newComponent);
+                    if (error == null) {
+                        error = new ErrorFlag();
+                        componentToError.put((Paintable) newComponent, error);
+                    }
+
+                    setWidget(i, COLUMN_CAPTION, newCap);
+                    setWidget(i, COLUMN_ERRORFLAG, error);
+                    setWidget(i, COLUMN_WIDGET, newComponent);
                     break;
                 }
             }
