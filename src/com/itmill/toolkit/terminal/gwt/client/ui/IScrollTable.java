@@ -562,7 +562,12 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
 
         // fix "natural" height if height not set
         if (height == null || "".equals(height)) {
-            bodyContainer.setHeight((tBody.getRowHeight() * pageLength) + "px");
+            /*
+             * We must force an update of the row height as this point as it
+             * might have been (incorrectly) calculated earlier
+             */
+            bodyContainer.setHeight((tBody.getRowHeight(true) * pageLength)
+                    + "px");
         }
 
         // fix "natural" width if width not set
@@ -1910,7 +1915,11 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         }
 
         public int getRowHeight() {
-            if (initDone) {
+            return getRowHeight(false);
+        }
+
+        public int getRowHeight(boolean forceUpdate) {
+            if (initDone && !forceUpdate) {
                 return rowHeight;
             } else {
                 if (DOM.getChildCount(tBody) > 0) {
