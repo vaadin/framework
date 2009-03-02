@@ -934,6 +934,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      */
     public void setPositionX(int positionX) {
         this.positionX = positionX;
+        requestRepaint();
     }
 
     /**
@@ -961,6 +962,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      */
     public void setPositionY(int positionY) {
         this.positionY = positionY;
+        requestRepaint();
     }
 
     private static final Method WINDOW_CLOSE_METHOD;
@@ -1143,6 +1145,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      */
     public void center() {
         centerRequested = true;
+        requestRepaint();
     }
 
     /**
