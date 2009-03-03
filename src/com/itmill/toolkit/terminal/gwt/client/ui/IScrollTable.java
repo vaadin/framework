@@ -2159,21 +2159,24 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                 }
             }
 
-            private void handleClickEvent(Event event) {
+            private void handleClickEvent(Event event, Element targetTdOrTr) {
                 if (emitClickEvents) {
-                    boolean dbl = DOM.eventGetType(event) == Event.ONDBLCLICK;
-                    final Element tdOrTr = DOM.getParent(DOM
-                            .eventGetTarget(event));
+                    boolean doubleClick = (DOM.eventGetType(event) == Event.ONDBLCLICK);
+
+                    /* This row was clicked */
                     client.updateVariable(paintableId, "clickedKey", ""
                             + rowKey, false);
-                    if (getElement() == tdOrTr.getParentElement()) {
-                        int childIndex = DOM
-                                .getChildIndex(getElement(), tdOrTr);
+
+                    if (getElement() == targetTdOrTr.getParentElement()) {
+                        /* A specific column was clicked */
+                        int childIndex = DOM.getChildIndex(getElement(),
+                                targetTdOrTr);
                         String colKey = null;
                         colKey = tHead.getHeaderCell(childIndex).getColKey();
                         client.updateVariable(paintableId, "clickedColKey",
                                 colKey, false);
                     }
+
                     MouseEventDetails details = new MouseEventDetails(event);
                     // Note: the 'immediate' logic would need to be more
                     // involved (see #2104), but iscrolltable always sends
@@ -2185,7 +2188,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                                     paintableId,
                                     "clickEvent",
                                     details.toString(),
-                                    !(!dbl
+                                    !(!doubleClick
                                             && selectMode > Table.SELECT_MODE_NONE && immediate));
                 }
             }
@@ -2195,12 +2198,11 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
              */
             @Override
             public void onBrowserEvent(Event event) {
-                final Element tdOrTr = DOM.getParent(DOM.eventGetTarget(event));
-                if (getElement() == tdOrTr
-                        || getElement() == tdOrTr.getParentElement()) {
+                Element targetTdOrTr = getEventTargetTdOrTr(event);
+                if (targetTdOrTr != null) {
                     switch (DOM.eventGetType(event)) {
                     case Event.ONCLICK:
-                        handleClickEvent(event);
+                        handleClickEvent(event, targetTdOrTr);
                         if (selectMode > Table.SELECT_MODE_NONE) {
                             toggleSelection();
                             // Note: changing the immediateness of this might
@@ -2211,7 +2213,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                         }
                         break;
                     case Event.ONDBLCLICK:
-                        handleClickEvent(event);
+                        handleClickEvent(event, targetTdOrTr);
                         break;
                     case Event.ONCONTEXTMENU:
                         showContextMenu(event);
@@ -2221,6 +2223,60 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                     }
                 }
                 super.onBrowserEvent(event);
+            }
+
+            /**
+             * Finds the TD that the event interacts with. Returns null if the
+             * target of the event should not be handled. If the event target is
+             * the row directly this method returns the TR element instead of
+             * the TD.
+             * 
+             * @param event
+             * @return TD or TR element that the event targets (the actual event
+             *         target is this element or a child of it)
+             */
+            private Element getEventTargetTdOrTr(Event event) {
+                Element targetTdOrTr = null;
+
+                final Element eventTarget = DOM.eventGetTarget(event);
+                final Element eventTargetParent = DOM.getParent(eventTarget);
+                final Element eventTargetGrandParent = DOM
+                        .getParent(eventTargetParent);
+
+                final Element thisTrElement = getElement();
+
+                if (eventTarget == thisTrElement) {
+                    // This was a click on the TR element
+                    targetTdOrTr = eventTarget;
+                    // rowTarget = true;
+                } else if (thisTrElement == eventTargetParent) {
+                    // Target parent is the TR, so the actual target is the TD
+                    targetTdOrTr = eventTarget;
+                } else if (thisTrElement == eventTargetGrandParent) {
+                    // Target grand parent is the TR, so the parent is the TD
+                    targetTdOrTr = eventTargetParent;
+                } else {
+                    /*
+                     * This is a workaround to make Labels and Embedded in a
+                     * Table clickable (see #2688). It is really not a fix as it
+                     * does not work for a custom component (not extending
+                     * ILabel/IEmbedded) or for read only textfields etc.
+                     */
+                    Element tdElement = eventTargetParent;
+                    while (DOM.getParent(tdElement) != thisTrElement) {
+                        tdElement = DOM.getParent(tdElement);
+                    }
+
+                    Element componentElement = tdElement.getFirstChildElement()
+                            .getFirstChildElement().cast();
+                    Widget widget = (Widget) client
+                            .getPaintable(componentElement);
+                    if (widget instanceof ILabel || widget instanceof IEmbedded) {
+                        targetTdOrTr = tdElement;
+                    }
+                }
+
+                return targetTdOrTr;
             }
 
             public void showContextMenu(Event event) {

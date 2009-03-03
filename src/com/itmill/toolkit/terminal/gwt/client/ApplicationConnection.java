@@ -1475,6 +1475,16 @@ public class ApplicationConnection {
         }
     }
 
+    /**
+     * Returns a Paintable element by its root element
+     * 
+     * @param element
+     *            Root element of the paintable
+     */
+    public Paintable getPaintable(Element element) {
+        return getPaintable(getPid(element));
+    }
+
     public String getResource(String name) {
         return resourcesMap.get(name);
     }
