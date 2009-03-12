@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
@@ -76,7 +77,12 @@ public class ChildComponentContainer extends Panel {
         containerDIV.getStyle().setProperty("overflow", "hidden");
 
         widgetDIV = Document.get().createDivElement();
-        setFloat(widgetDIV, "left");
+        if (BrowserInfo.get().isFF2()) {
+            Style style = widgetDIV.getStyle();
+            style.setProperty("display", "table-cell");
+        } else {
+            setFloat(widgetDIV, "left");
+        }
 
         if (BrowserInfo.get().isIE()) {
             /*
