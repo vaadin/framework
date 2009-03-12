@@ -21,6 +21,7 @@ import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.terminal.Resource;
 import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.terminal.URIHandler;
+import com.itmill.toolkit.terminal.gwt.server.WebApplicationContext;
 import com.itmill.toolkit.ui.Alignment;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.ComboBox;
@@ -160,6 +161,15 @@ public class SamplerApplication extends Application {
 
         Button previousSample;
         Button nextSample;
+        private ComboBox search;
+
+        @Override
+        public void detach() {
+            super.detach();
+
+            search.setContainerDataSource(null);
+            navigationTree.setContainerDataSource(null);
+        }
 
         SamplerWindow() {
             // Main top/expanded-bottom layout
@@ -230,8 +240,8 @@ public class SamplerApplication extends Application {
             arrows.addComponent(nextSample);
             // "Search" combobox
             // TODO add input prompt
-            Component search = createSearch();
-            quicknav.addComponent(search);
+            Component searchComponent = createSearch();
+            quicknav.addComponent(searchComponent);
 
             // Menu tree, initially hidden
             navigationTree = createMenuTree();
@@ -298,7 +308,7 @@ public class SamplerApplication extends Application {
          */
 
         private Component createSearch() {
-            final ComboBox search = new ComboBox();
+            search = new ComboBox();
             search.setWidth("160px");
             search.setNewItemsAllowed(false);
             search.setFilteringMode(ComboBox.FILTERINGMODE_CONTAINS);
@@ -756,4 +766,12 @@ public class SamplerApplication extends Application {
             });
         }
     }
+
+    @Override
+    public void close() {
+        removeWindow(getMainWindow());
+
+        super.close();
+    }
+
 }

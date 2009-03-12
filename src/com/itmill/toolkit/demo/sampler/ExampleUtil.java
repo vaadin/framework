@@ -113,31 +113,12 @@ public final class ExampleUtil {
     public static final Object iso3166_PROPERTY_SHORT = "short";
     public static final Object iso3166_PROPERTY_FLAG = "flag";
     public static final Object hw_PROPERTY_NAME = "name";
-    private static final IndexedContainer iso3166Container = new IndexedContainer();
-    static {
-        fillIso3166Container(iso3166Container);
-    }
 
     public static final Object locale_PROPERTY_LOCALE = "locale";
     public static final Object locale_PROPERTY_NAME = "name";
     private static final String[][] locales = { { "fi", "FI", "Finnish" },
             { "de", "DE", "German" }, { "en", "US", "US - English" },
             { "sv", "SE", "Swedish" } };
-    private static final IndexedContainer localeContainer = new IndexedContainer();
-    static {
-        localeContainer.addContainerProperty(locale_PROPERTY_LOCALE,
-                Locale.class, null);
-        localeContainer.addContainerProperty(locale_PROPERTY_NAME,
-                String.class, null);
-        for (int i = 0; i < locales.length; i++) {
-            String id = locales[i][2];
-            Item item = localeContainer.addItem(id);
-            item.getItemProperty(locale_PROPERTY_LOCALE).setValue(
-                    new Locale(locales[i][0], locales[i][1]));
-            item.getItemProperty(locale_PROPERTY_NAME).setValue(locales[i][2]);
-        }
-    }
-
     private static final String[][] hardware = { //
             { "Desktops", "Dell OptiPlex GX240", "Dell OptiPlex GX260",
                     "Dell OptiPlex GX280" },
@@ -155,10 +136,6 @@ public final class ExampleUtil {
             "Smith", "Adams", "Black", "Wilson", "Richards", "Thompson",
             "McGoff", "Halas", "Jones", "Beck", "Sheridan", "Picard", "Hill",
             "Fielding", "Einstein" };
-    private static final IndexedContainer personContainer;
-    static {
-        personContainer = getPersonContainer();
-    }
 
     public static IndexedContainer getPersonContainer() {
         IndexedContainer contactContainer = new IndexedContainer();
@@ -180,16 +157,26 @@ public final class ExampleUtil {
         return contactContainer;
     }
 
-    public static IndexedContainer getStaticPersonContainer() {
-        return personContainer;
-    }
-
     public static IndexedContainer getLocaleContainer() {
+        IndexedContainer localeContainer = new IndexedContainer();
+        localeContainer.addContainerProperty(locale_PROPERTY_LOCALE,
+                Locale.class, null);
+        localeContainer.addContainerProperty(locale_PROPERTY_NAME,
+                String.class, null);
+        for (int i = 0; i < locales.length; i++) {
+            String id = locales[i][2];
+            Item item = localeContainer.addItem(id);
+            item.getItemProperty(locale_PROPERTY_LOCALE).setValue(
+                    new Locale(locales[i][0], locales[i][1]));
+            item.getItemProperty(locale_PROPERTY_NAME).setValue(locales[i][2]);
+        }
+
         return localeContainer;
     }
 
+    @Deprecated
     public static IndexedContainer getStaticISO3166Container() {
-        return iso3166Container;
+        return getISO3166Container();
     }
 
     public static IndexedContainer getISO3166Container() {
