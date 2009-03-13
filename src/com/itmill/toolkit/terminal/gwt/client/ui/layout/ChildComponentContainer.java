@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.TableElement;
 import com.google.gwt.user.client.ui.Panel;
@@ -143,7 +144,7 @@ public class ChildComponentContainer extends Panel {
         }
     }
 
-    private static void setFloat(DivElement div, String floatString) {
+    private static void setFloat(Element div, String floatString) {
         if (BrowserInfo.get().isIE()) {
             div.getStyle().setProperty("styleFloat", floatString);
             // IE requires display:inline for margin-left to work together
@@ -161,9 +162,9 @@ public class ChildComponentContainer extends Panel {
 
     public void setOrientation(int orientation) {
         if (orientation == CellBasedLayout.ORIENTATION_HORIZONTAL) {
-            setFloat(containerDIV, "left");
+            setFloat(getElement(), "left");
         } else {
-            setFloat(containerDIV, "");
+            setFloat(getElement(), "");
         }
         setHeight("0px");
         // setWidth("0px");
