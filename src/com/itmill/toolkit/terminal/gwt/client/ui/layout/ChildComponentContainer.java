@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.TableElement;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
@@ -70,18 +71,31 @@ public class ChildComponentContainer extends Panel {
         super();
 
         containerDIV = Document.get().createDivElement();
-        setElement(containerDIV);
-
-        containerDIV.getStyle().setProperty("height", "0");
-        containerDIV.getStyle().setProperty("width", "0px");
-        containerDIV.getStyle().setProperty("overflow", "hidden");
 
         widgetDIV = Document.get().createDivElement();
         if (BrowserInfo.get().isFF2()) {
             Style style = widgetDIV.getStyle();
-            style.setProperty("display", "table-cell");
+            // FF2 chokes on some floats very easily. Measuring size escpecially
+            // becomes terribly slow
+            TableElement tableEl = Document.get().createTableElement();
+            tableEl
+                    .setInnerHTML("<tbody><tr><td><div></div></td></tr></tbody>");
+            DivElement div = (DivElement) tableEl.getFirstChildElement()
+                    .getFirstChildElement().getFirstChildElement()
+                    .getFirstChildElement();
+            tableEl.setCellPadding(0);
+            tableEl.setCellSpacing(0);
+            tableEl.setBorder(0);
+            div.getStyle().setProperty("padding", "0");
+
+            setElement(tableEl);
+            containerDIV = div;
         } else {
             setFloat(widgetDIV, "left");
+            setElement(containerDIV);
+            containerDIV.getStyle().setProperty("height", "0");
+            containerDIV.getStyle().setProperty("width", "0px");
+            containerDIV.getStyle().setProperty("overflow", "hidden");
         }
 
         if (BrowserInfo.get().isIE()) {
@@ -157,8 +171,8 @@ public class ChildComponentContainer extends Panel {
         contSize.setWidth(0);
         containerMarginLeft = 0;
         containerMarginTop = 0;
-        getElement().getStyle().setProperty("paddingLeft", "0");
-        getElement().getStyle().setProperty("paddingTop", "0");
+        containerDIV.getStyle().setProperty("paddingLeft", "0");
+        containerDIV.getStyle().setProperty("paddingTop", "0");
 
         containerExpansion.setHeight(0);
         containerExpansion.setWidth(0);
@@ -215,12 +229,12 @@ public class ChildComponentContainer extends Panel {
 
     public void setMarginLeft(int marginLeft) {
         containerMarginLeft = marginLeft;
-        getElement().getStyle().setPropertyPx("paddingLeft", marginLeft);
+        containerDIV.getStyle().setPropertyPx("paddingLeft", marginLeft);
     }
 
     public void setMarginTop(int marginTop) {
         containerMarginTop = marginTop;
-        getElement().getStyle().setPropertyPx("paddingTop",
+        containerDIV.getStyle().setPropertyPx("paddingTop",
                 marginTop + alignmentTopOffset);
 
         updateContainerDOMSize();
