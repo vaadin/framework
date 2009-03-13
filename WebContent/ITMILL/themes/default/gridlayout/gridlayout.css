@@ -33,7 +33,13 @@
 	padding-top:0px;
 }
 
-.i-gridlayout {
+/* Ensure that resizing gridlayout works in IE */
+* html .i-gridlayout {
 	overflow:hidden;
 }
+
+*+html .i-gridlayout {
+	overflow:hidden;
+}
+
 

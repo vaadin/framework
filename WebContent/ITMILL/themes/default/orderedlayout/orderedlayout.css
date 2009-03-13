@@ -1,7 +1,3 @@
-.i-orderedlayout, .i-horizontallayout, .i-verticallayout {
-	overflow: hidden;
-}
-
 .i-orderedlayout-margin-top, .i-horizontallayout-margin-top, .i-verticallayout-margin-top {
 	padding-top: 15px;
 }
@@ -26,4 +22,14 @@
 .i-orderedlayout-spacing-off, .i-horizontallayout-spacing-off, .i-verticallayout-spacing-off {
 	padding-top: 0px;
 	padding-left: 0px;
+}
+
+/* 
+ * To make sure IE don't expand elmenents larger than they should
+ */
+* html .i-orderedlayout, * html .i-horizontallayout, * html .i-verticallayout {
+	overflow: hidden;
+}
+*+html .i-orderedlayout, *+html .i-horizontallayout, *+html .i-verticallayout {
+	overflow: hidden;
 }

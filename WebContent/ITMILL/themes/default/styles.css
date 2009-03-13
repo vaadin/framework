@@ -839,9 +839,15 @@ input.i-modified,
 	padding-top:0px;
 }
 
-.i-gridlayout {
+/* Ensure that resizing gridlayout works in IE */
+* html .i-gridlayout {
 	overflow:hidden;
 }
+
+*+html .i-gridlayout {
+	overflow:hidden;
+}
+
 
 
 /* ./WebContent/ITMILL/themes/default/link/link.css */
@@ -1015,10 +1021,6 @@ input.i-modified,
 }
 
 /* ./WebContent/ITMILL/themes/default/orderedlayout/orderedlayout.css */
-.i-orderedlayout, .i-horizontallayout, .i-verticallayout {
-	overflow: hidden;
-}
-
 .i-orderedlayout-margin-top, .i-horizontallayout-margin-top, .i-verticallayout-margin-top {
 	padding-top: 15px;
 }
@@ -1043,6 +1045,16 @@ input.i-modified,
 .i-orderedlayout-spacing-off, .i-horizontallayout-spacing-off, .i-verticallayout-spacing-off {
 	padding-top: 0px;
 	padding-left: 0px;
+}
+
+/* 
+ * To make sure IE don't expand elmenents larger than they should
+ */
+* html .i-orderedlayout, * html .i-horizontallayout, * html .i-verticallayout {
+	overflow: hidden;
+}
+*+html .i-orderedlayout, *+html .i-horizontallayout, *+html .i-verticallayout {
+	overflow: hidden;
 }
 
 /* ./WebContent/ITMILL/themes/default/panel/panel.css */
