@@ -86,6 +86,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
 
     public static final String VAR_BURST_SEPARATOR = "\u001d";
 
+    public static final String VAR_ARRAYITEM_SEPARATOR = "\u001c";
+
     private final HashSet currentlyOpenWindowsInClient = new HashSet();
 
     private static final int MAX_BUFFER_SIZE = 64 * 1024;
@@ -819,7 +821,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
         Object val = null;
         switch (variableType) {
         case 'a':
-            val = strValue.split(",");
+            val = strValue.split(VAR_ARRAYITEM_SEPARATOR);
             break;
         case 's':
             val = strValue;

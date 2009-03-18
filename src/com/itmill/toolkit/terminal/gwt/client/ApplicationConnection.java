@@ -60,6 +60,8 @@ public class ApplicationConnection {
 
     public static final String VAR_BURST_SEPARATOR = "\u001d";
 
+    public static final String VAR_ARRAYITEM_SEPARATOR = "\u001c";
+
     public static final String UIDL_SECURITY_HEADER = "com.itmill.seckey";
 
     public static final String PARAM_UNLOADBURST = "onunloadburst";
@@ -976,7 +978,7 @@ public class ApplicationConnection {
         final StringBuffer buf = new StringBuffer();
         for (int i = 0; i < values.length; i++) {
             if (i > 0) {
-                buf.append(",");
+                buf.append(VAR_ARRAYITEM_SEPARATOR);
             }
             buf.append(values[i].toString());
         }
