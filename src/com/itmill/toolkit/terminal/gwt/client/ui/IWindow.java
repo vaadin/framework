@@ -341,23 +341,8 @@ public class IWindow extends IToolkitOverlay implements Container,
         }
 
         if (dynamicHeight && layoutRelativeHeight) {
-            /*
-             * Window height is undefined, layout is 100% high so the layout
-             * should define the initial window height but on resize the layout
-             * should be as high as the window. We fix the height immediately to
-             * deal with this.
-             */
-
-            int h = contents.getOffsetHeight() + getExtraHeight();
-            int w = contents.getOffsetWidth();
-
             // Prevent resizing until height has been fixed
             resizable = false;
-
-            client.updateVariable(id, "height", h, false);
-            client.updateVariable(id, "width", w, true);
-            // ApplicationConnection.getConsole().log("Fixing window size to " +
-            // w + "x" + h);
         }
 
         // we may have actions and notifications
@@ -429,6 +414,22 @@ public class IWindow extends IToolkitOverlay implements Container,
         if (getOffsetHeight() > Window.getClientHeight()) {
             setHeight(Window.getClientHeight() + "px");
         }
+
+        if (dynamicHeight && layoutRelativeHeight) {
+            /*
+             * Window height is undefined, layout is 100% high so the layout
+             * should define the initial window height but on resize the layout
+             * should be as high as the window. We fix the height to deal with
+             * this.
+             */
+
+            int h = contents.getOffsetHeight() + getExtraHeight();
+            int w = contents.getOffsetWidth();
+
+            client.updateVariable(id, "height", h, false);
+            client.updateVariable(id, "width", w, true);
+        }
+
     }
 
     private void setNaturalWidth() {
