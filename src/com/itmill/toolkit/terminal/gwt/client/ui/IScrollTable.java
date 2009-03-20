@@ -560,16 +560,6 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
 
         tHead.disableBrowserIntelligence();
 
-        // fix "natural" height if height not set
-        if (height == null || "".equals(height)) {
-            /*
-             * We must force an update of the row height as this point as it
-             * might have been (incorrectly) calculated earlier
-             */
-            bodyContainer.setHeight((tBody.getRowHeight(true) * pageLength)
-                    + "px");
-        }
-
         // fix "natural" width if width not set
         if (width == null || "".equals(width)) {
             int w = total;
@@ -580,6 +570,13 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         int availW = tBody.getAvailableWidth();
         // Hey IE, are you really sure about this?
         availW = tBody.getAvailableWidth();
+
+        boolean verticalScrollbarVisible = (pageLength < totalRows);
+
+        if (verticalScrollbarVisible) {
+            // There will be a vertical scrollbar and its width is not included in availW
+            availW -= Util.getNativeScrollbarSize();
+        }
 
         boolean needsReLayout = false;
 
@@ -596,7 +593,9 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                  */
                 int scrollbarWidth = getScrollbarWidth();
                 scrollbarWidth = Util.getNativeScrollbarSize();
-                if (relativeWidth && totalWidthR >= scrollbarWidth) {
+                if (!verticalScrollbarVisible && relativeWidth
+                        && totalWidthR >= scrollbarWidth) {
+
                     scrollbarWidthReserved = scrollbarWidth + 1; // 
                     int columnindex = tHead.getVisibleCellCount() - 1;
                     widths[columnindex] += scrollbarWidthReserved;
@@ -641,6 +640,19 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         }
         if (needsReLayout) {
             tBody.reLayoutComponents();
+        }
+
+        /*
+         * Fix "natural" height if height is not set. This must be after width
+         * fixing so the components' widths have been adjusted.
+         */
+        if (height == null || "".equals(height)) {
+            /*
+             * We must force an update of the row height as this point as it
+             * might have been (incorrectly) calculated earlier
+             */
+            int bodyHeight = (tBody.getRowHeight(true) * pageLength);
+            bodyContainer.setHeight(bodyHeight + "px");
         }
 
         isNewBody = false;
