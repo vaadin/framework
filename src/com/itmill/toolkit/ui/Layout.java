@@ -145,44 +145,59 @@ public interface Layout extends ComponentContainer {
     }
 
     /**
-     * This type of layout can set spacing between its components on of off.
+     * This type of layout supports automatic addition of space between its
+     * components.
      * 
-     * TODO refine javadocs
      */
     public interface SpacingHandler {
         /**
          * Enable spacing between child components within this layout.
          * 
          * <p>
-         * <strong>NOTE:</strong> This will only affect spaces between
-         * components, not also all around spacing of the layout (i.e. do not
-         * mix this with HTML Table elements cellspacing-attribute). Use
-         * {@link #setMargin(boolean)} to add extra space around the layout.
+         * <strong>NOTE:</strong> This will only affect the space between
+         * components, not the space around all the components in the layout
+         * (i.e. do not confuse this with the cellspacing attribute of a HTML
+         * Table). Use {@link #setMargin(boolean)} to add space around the
+         * layout.
+         * </p>
+         * 
+         * <p>
+         * See the reference manual for more information about CSS rules for
+         * defining the amount of spacing to use.
          * </p>
          * 
          * @param enabled
+         *            true if spacing should be turned on, false if it should be
+         *            turned off
          */
         public void setSpacing(boolean enabled);
 
         /**
          * 
-         * @return true if spacing, layout leaves space between components
+         * @return true if spacing between child components within this layout
+         *         is enabled, false otherwise
          */
         public boolean isSpacingEnabled();
     }
 
     /**
-     * This type of layout can enable margins.
+     * This type of layout supports automatic addition of margins (space around
+     * its components).
      */
     public interface MarginHandler {
         /**
          * Enable margins for this layout.
          * 
          * <p>
-         * <strong>NOTE:</strong> This will only affect margins for the layout,
-         * not spacing between components inside the layout. Use
-         * {@link #setSpacing(boolean)} to add space between components in the
-         * layout.
+         * <strong>NOTE:</strong> This will only affect the space around the
+         * components in the layout, not space between the components in the
+         * layout. Use {@link #setSpacing(boolean)} to add space between the
+         * components in the layout.
+         * </p>
+         * 
+         * <p>
+         * See the reference manual for more information about CSS rules for
+         * defining the size of the margin.
          * </p>
          * 
          * @param marginInfo
