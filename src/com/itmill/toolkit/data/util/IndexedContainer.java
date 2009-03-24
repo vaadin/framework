@@ -144,12 +144,8 @@ public class IndexedContainer implements Container.Indexed,
      */
     public Item getItem(Object itemId) {
 
-        // Null ids are not accepted
-        if (itemId == null) {
-            throw new NullPointerException("Container item id can not be null");
-        }
-
-        if (items.containsKey(itemId)
+        if (itemId != null
+                && items.containsKey(itemId)
                 && (filteredItemIds == null || filteredItemIds.contains(itemId))) {
             return new IndexedContainerItem(itemId);
         }
@@ -196,7 +192,9 @@ public class IndexedContainer implements Container.Indexed,
      * java.lang.Object)
      */
     public Property getContainerProperty(Object itemId, Object propertyId) {
-        if (filteredItemIds == null) {
+        if (itemId == null) {
+            return null;
+        } else if (filteredItemIds == null) {
             if (!items.containsKey(itemId)) {
                 return null;
             }
@@ -225,6 +223,9 @@ public class IndexedContainer implements Container.Indexed,
      * @see com.itmill.toolkit.data.Container#containsId(java.lang.Object)
      */
     public boolean containsId(Object itemId) {
+        if (itemId == null) {
+            return false;
+        }
         if (filteredItemIds != null) {
             return filteredItemIds.contains(itemId);
         }
@@ -766,8 +767,8 @@ public class IndexedContainer implements Container.Indexed,
     }
 
     /**
-     * An <code>event</code> object specifying the Propery in a list whose value
-     * has changed.
+     * An <code>event</code> object specifying the Property in a list whose
+     * value has changed.
      * 
      * @author IT Mill Ltd.
      * @version

@@ -1767,8 +1767,11 @@ public class Table extends AbstractSelect implements Action.Container,
                 }
                 MouseEventDetails evt = MouseEventDetails
                         .deSerialize((String) variables.get("clickEvent"));
-                fireEvent(new ItemClickEvent(this, getItem(itemId), itemId,
-                        propertyId, evt));
+                Item item = getItem(itemId);
+                if (item != null) {
+                    fireEvent(new ItemClickEvent(this, item, itemId,
+                            propertyId, evt));
+                }
             }
         }
     }

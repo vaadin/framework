@@ -18,6 +18,7 @@ import java.util.Stack;
 import java.util.StringTokenizer;
 
 import com.itmill.toolkit.data.Container;
+import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.util.ContainerHierarchicalWrapper;
 import com.itmill.toolkit.data.util.IndexedContainer;
 import com.itmill.toolkit.event.Action;
@@ -342,7 +343,10 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
             Object id = itemIdMapper.get(key);
             MouseEventDetails details = MouseEventDetails
                     .deSerialize((String) variables.get("clickEvent"));
-            fireEvent(new ItemClickEvent(this, getItem(id), id, null, details));
+            Item item = getItem(id);
+            if (item != null) {
+                fireEvent(new ItemClickEvent(this, item, id, null, details));
+            }
         }
 
         if (!isSelectable() && variables.containsKey("selected")) {
