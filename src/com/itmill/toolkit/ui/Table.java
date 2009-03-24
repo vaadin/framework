@@ -2551,9 +2551,11 @@ public class Table extends AbstractSelect implements Action.Container,
         super.containerItemSetChange(event);
         if (event instanceof IndexedContainer.ItemSetChangeEvent) {
             IndexedContainer.ItemSetChangeEvent evt = (IndexedContainer.ItemSetChangeEvent) event;
+            // if the event is not a global one and the added item is outside
+            // the visible/buffered area, no need to do anything
             if (evt.getAddedItemIndex() != -1
-                    && firstToBeRenderedInClient <= evt.getAddedItemIndex()
-                    && lastToBeRenderedInClient >= evt.getAddedItemIndex()) {
+                    && (firstToBeRenderedInClient > evt.getAddedItemIndex() || lastToBeRenderedInClient < evt
+                            .getAddedItemIndex())) {
                 return;
             }
         }
