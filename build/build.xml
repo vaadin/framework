@@ -1369,9 +1369,13 @@
     <!-- Initialize a nightly build. -->
     <target name="nightly-init" depends="">
 
+        <!-- Mandatory parameters. -->
         <fail unless="version.minor" message="The version.minor property must be defined."/>
         <fail unless="build.number" message="The build.number property must be defined."/>
         <fail unless="nightly.publish" message="The nightly.publish property must be defined."/>
+
+        <!-- Optional parameters. -->
+        <property name="build.tag" value="dev"/>
 
         <!-- We need to create a symlink to the GWT directory, because we   -->
         <!-- are building automatically.                                    -->
@@ -1380,7 +1384,9 @@
         <!-- Create the link unless it already exists. -->
         <available file="gwt" property="gwt.link.available"/> 
 		<if>
-            <isset property="gwt.link.available"/>
+            <not>
+                <isset property="gwt.link.available"/>
+            </not>
 			<then>
                 <echo>${gwt.link.available}</echo>
                 <symlink link="gwt" resource="${gwt.link.target}" failonerror="false"/>
@@ -1391,7 +1397,7 @@
         <tstamp>
             <format property="nightly.date" pattern="yyyyMMdd"/>
         </tstamp>
-        <property name="version" value="${version.minor}-nightly-${nightly.date}-b${build.number}"/>
+        <property name="version" value="${version.minor}-${build.tag}-${nightly.date}-b${build.number}"/>
         <echo>##teamcity[buildNumber '${version}']</echo>
     </target>
 

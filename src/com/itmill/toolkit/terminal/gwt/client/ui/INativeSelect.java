@@ -8,7 +8,9 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import com.google.gwt.user.client.ui.Widget;
+import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.Util;
 
 public class INativeSelect extends IOptionGroupBase implements Field {
 
@@ -51,7 +53,11 @@ public class INativeSelect extends IOptionGroupBase implements Field {
             select.insertItem("", null, 0);
             select.setItemSelected(0, true);
         }
-
+        if (BrowserInfo.get().isIE6()) {
+            // lazy size change - IE6 uses naive dropdown that does not have a
+            // proper size yet
+            Util.notifyParentOfSizeChange(this, true);
+        }
     }
 
     @Override
