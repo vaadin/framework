@@ -1008,6 +1008,14 @@
         <tstamp>
             <format property="manual.pubdate" pattern="yyyy-MM-dd"/>
         </tstamp>
+
+        <!-- Classpath for running the XSLT processor. -->
+		<path id="docbook-xsl.classpath">
+			<pathelement path="build/lib/fserializer.jar" />
+			<pathelement path="build/lib/xalan.jar" />
+			<pathelement path="build/lib/xercesImpl.jar" />
+			<pathelement path="build/lib/xml-apis.jar" />
+		</path>
 	</target>
 
 	<!-- Build PDF manual from sources or just copy it. -->
@@ -1059,11 +1067,7 @@
 			<arg value="-param" />
 			<arg value="manual.version" />
 			<arg value="${version}" />
-			<classpath>
-				<pathelement location="build/lib/xalan.jar" />
-				<pathelement location="build/lib/xercesImpl.jar" />
-				<pathelement location="build/lib/xml-apis.jar" />
-			</classpath>
+			<classpath refid="docbook-xsl.classpath" />
 		</java>
 		<echo>PDF Manual: converting fo to pdf</echo>
 		<!-- Run XEP FO processor to convert FO to PDF -->
@@ -1078,10 +1082,18 @@
 		</java>
 	</target>
 
-	<target name="manual-html" depends="init, init-manual, preprocess-src">
-		<echo>Manual: HTML</echo>
-		<delete file="build/docbook/conf/temp.xsl" />
-		<copy file="build/docbook/conf/custom-html-docbook.xsl" tofile="build/docbook/conf/temp.xsl">
+    <!-- Common initialization tasks for a HTML manual.                                   -->
+    <!-- Some properties must be defined in the more specific HTML manual initialization. -->
+	<target name="init-manual-html-common" depends="preprocess-src">
+        <!-- Create the manual output directory if it doesn't already exist. -->
+        <mkdir dir="${manual.html.output.dir}"/>
+
+        <property name="manual.html.xsl.template"  value="build/docbook/conf/custom-html-template.xsl"/>
+        <property name="manual.html.xsl.processed" value="build/docbook/conf/custom-html-processed.xsl"/>
+
+        <!-- Replace tags in the HTML stylesheet template. -->
+		<delete file="${manual.html.xsl.processed}" />
+		<copy file="${manual.html.xsl.template}" tofile="${manual.html.xsl.processed}">
 			<filterchain>
 				<replacetokens>
 					<token key="BODYHEADER" value="${html.body.start1}${docbook.head.title}${html.body.start2}" />
@@ -1089,19 +1101,17 @@
 				</replacetokens>
 			</filterchain>
 		</copy>
-		<path id="docbook-xsl.classpath">
-			<pathelement path="build/lib/fserializer.jar" />
-			<pathelement path="build/lib/xalan.jar" />
-			<pathelement path="build/lib/xercesImpl.jar" />
-			<pathelement path="build/lib/xml-apis.jar" />
-		</path>
+    </target>
+
+	<target name="manual-html-build" depends="init-manual-html, init-manual-html-common">
 		<java classname="org.apache.xalan.xslt.Process" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="-in" />
 			<arg value="doc/manual/book.xml" />
 			<arg value="-xsl" />
-			<arg value="build/docbook/conf/temp.xsl" />
+			<arg value="${manual.html.xsl}" />
+            <!-- The output file will be empty for eclipse plugin. -->
 			<arg value="-out" />
-			<arg value="${output-dir}/WebContent/doc/manual/index.html" />
+			<arg value="${manual.html.output.index}" />
 			<arg value="-param" />
 			<arg value="section.autolabel" />
 			<arg value="1" />
@@ -1120,14 +1130,34 @@
 			<arg value="-param" />
 			<arg value="manual.version" />
 			<arg value="${version}" />
+            <!-- This is needed only for the Eclipse Help plugin. -->
+			<arg value="-param" />
+			<arg value="eclipse.plugin.version" />
+			<arg value="${eclipse.plugin.manual.version}" />
 			<classpath refid="docbook-xsl.classpath" />
 		</java>
-		<delete file="build/docbook/conf/temp.xsl" />
-		<copy todir="${output-dir}/WebContent/doc/manual/img">
+
+		<delete file="${manual.html.xsl.processed}" />
+		<copy todir="${output-dir}/WebContent/doc/eclipse/img">
 			<fileset dir="doc/manual/img">
 				<exclude name="**/.svn" />
 			</fileset>
 		</copy>
+    </target>
+
+    <!-- Configuration for building the regular HTML manual. -->
+	<target name="init-manual-html" depends="init, init-manual">
+        <property name="manual.html.xsl" value="build/docbook/conf/manual-html.xsl"/>
+        <property name="manual.html.output.dir" value="${output-dir}/WebContent/doc/manual"/>
+        <property name="manual.html.output.index" value="${manual.html.output.dir}/index.html"/>
+
+        <property name="output-dir-manual" value="${output-dir}/WebContent/doc/manual" />
+
+		<echo>Manual: HTML</echo>
+		<echo>Published: ${manual.pubdate}</echo>
+    </target>
+
+	<target name="manual-html" depends="init, init-manual, init-manual-html, init-manual-html-common, manual-html-build">
 	</target>
 
 	<!-- ant contrib required for flow control (for loop, if, property override) -->
@@ -1139,6 +1169,49 @@
 
 	<!-- java2html converter -->
 	<taskdef name="java2html" classname="de.java2html.anttasks.Java2HtmlTask" classpath="build/lib/java2html.jar" />
+
+	<target name="init-manual-eclipse" depends="">
+        <!-- Timestamp in YYYYMMDDHHMM format for plugin version number. -->
+        <tstamp>
+            <format property="eclipse.plugin.manual.pubtime" pattern="yyyyMMddkkmm"/>
+        </tstamp>
+
+        <property name="eclipse.plugin.manual.version" value="${version}.v${eclipse.plugin.manual.pubtime}" />
+		<echo>Manual: Eclipse Help Plugin (version ${eclipse.plugin.manual.version})</echo>
+
+        <property name="manual.html.xsl" value="build/docbook/conf/manual-eclipse-plugin.xsl"/>
+        <property name="manual.html.output.dir" value="${output-dir}/WebContent/doc/eclipse"/>
+        <property name="manual.html.output.index" value="${manual.html.output.dir}/index-eclipse.html"/>
+
+        <property name="output-dir-manual" value="${output-dir}/WebContent/doc/manual" />
+    </target>
+
+    <!-- Builds Eclipse Help plugin. Uses the manual-html-build target  -->
+    <!-- to build the HTML content of the manual.                       -->
+	<target name="manual-eclipse" depends="init, init-manual, init-manual-eclipse, init-manual-html-common, manual-html-build">
+        <!-- The index-eclipse.html file is empty. -->
+		<delete file="${manual.html.output.index}" />
+
+        <!-- Plugin JAR filename -->
+        <property name="eclipse.plugin.manual.jar-name"
+                 value="com.itmill.toolkit.manual_${eclipse.plugin.manual.version}.jar" />
+
+        <!-- Package the JAR. -->
+        <jar jarfile="${output-dir}/${eclipse.plugin.manual.jar-name}" compress="true">
+            <fileset dir="${manual.html.output.dir}">
+				<patternset>
+					<include name="**/*" />
+				</patternset>
+            </fileset>
+            <manifest>
+                <attribute name="Built-By" value="${user.name}"/>
+                <attribute name="Bundle-Name" value="IT Mill Toolkit Reference Manual"/>
+                <attribute name="Bundle-SymbolicName" value="com.itmill.toolkit.manual"/>
+                <attribute name="Bundle-Version" value="${eclipse.plugin.manual.version}"/>
+                <attribute name="Bundle-Vendor" value="IT Mill Inc."/>
+            </manifest>
+        </jar>
+	</target>
 
     <!-- ================================================================== -->
     <!-- Build Application Tutorial.                                        -->

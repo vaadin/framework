@@ -10,7 +10,9 @@ import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 
 /**
- * TODO comment
+ * A component for selecting a numerical value within a range. A Slider
+ * can have the appearance of a scroll bar or e.g. look like an Adobe Photoshop
+ * style of a slider.
  * 
  * Example code: <code>
  * 	class MyPlayer extends CustomComponent implements ValueChangeListener {
@@ -42,6 +44,7 @@ import com.itmill.toolkit.terminal.PaintTarget;
  *
  * </code>
  * 
+ * @author IT Mill Ltd.
  */
 public class Slider extends AbstractField {
 

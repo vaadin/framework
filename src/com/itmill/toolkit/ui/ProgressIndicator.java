@@ -133,7 +133,7 @@ public class ProgressIndicator extends AbstractField implements Property,
     @Override
     public Object getValue() {
         if (dataSource == null) {
-            throw new IllegalStateException("Datasource must be se");
+            throw new IllegalStateException("Datasource must be set");
         }
         return dataSource.getValue();
     }
@@ -149,7 +149,7 @@ public class ProgressIndicator extends AbstractField implements Property,
     @Override
     public void setValue(Object newValue) {
         if (dataSource == null) {
-            throw new IllegalStateException("Datasource must be se");
+            throw new IllegalStateException("Datasource must be set");
         }
         dataSource.setValue(newValue);
     }
@@ -160,7 +160,7 @@ public class ProgressIndicator extends AbstractField implements Property,
     @Override
     public String toString() {
         if (dataSource == null) {
-            throw new IllegalStateException("Datasource must be se");
+            throw new IllegalStateException("Datasource must be set");
         }
         return dataSource.toString();
     }
@@ -171,7 +171,7 @@ public class ProgressIndicator extends AbstractField implements Property,
     @Override
     public Class getType() {
         if (dataSource == null) {
-            throw new IllegalStateException("Datasource must be se");
+            throw new IllegalStateException("Datasource must be set");
         }
         return dataSource.getType();
     }

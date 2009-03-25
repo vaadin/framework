@@ -1473,7 +1473,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
             }
 
         } catch (final Throwable t) {
-            application.terminalError(new URIHandlerErrorImpl(application, t));
+            application.getErrorHandler().terminalError(
+                    new URIHandlerErrorImpl(application, t));
             return null;
         }
     }

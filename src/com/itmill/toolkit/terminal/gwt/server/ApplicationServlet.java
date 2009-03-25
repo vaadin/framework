@@ -577,7 +577,8 @@ public class ApplicationServlet extends HttpServlet {
                         .getInternalErrorCaption(), ci
                         .getInternalErrorMessage(), ci.getInternalErrorURL());
                 if (application != null) {
-                    application.terminalError(new RequestError(e));
+                    application.getErrorHandler().terminalError(
+                            new RequestError(e));
                 } else {
                     throw new ServletException(e);
                 }

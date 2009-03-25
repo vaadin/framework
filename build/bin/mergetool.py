@@ -25,7 +25,7 @@ def help(exitvalue = 0):
 	print "\t-author\tHTML output. (Include author in HTML log.)"
 	print "\t-milestone <ms>\tList tickets in milestone (For 'log' command.)"
 	print "\nCommands:"
-	print "massmerge <cfg> <src> <trg> [<from>] "
+	print "massmerge <cfg> <src> [<from>] "
 	print "                          - Merges changesets listed in the configuration"
 	print "                            file. The file is in svn log (text) format."
 	print "                            You can comment out unwanted changesets."
@@ -370,9 +370,26 @@ class Configuration:
 				if currentChange:
 					currentChange.addCommentLine(line)
 
-	def massMerge(self, trunkURI, dryrun=0):
-		for change in self.changes:
-			change.merge(trunkURI, dryrun=dryrun)
+	def massMerge(self, trunkURI, dryrun=0, allatonce=0):
+		if not allatonce:
+			# Merge one changeset at a time
+			for change in self.changes:
+				change.merge(trunkURI, dryrun=dryrun)
+		else:
+			# What is the first changeset in the merge?
+			smallest = 99999999
+			for change in self.changes:
+				if change.getNumber() < smallest:
+					smallest = change.getNumber()
+
+			drycmd = ""
+			if dryrun:
+				drycmd = "--dry-run"
+				
+			# Merge from the first changeset to HEAD
+			cmd = "svn merge --non-interactive %s -r %d:HEAD %s" % (drycmd, smallest, trunkURI)
+			print cmd
+			command(cmd)
 
 	def createLogComment(self):
 		# Create a log comment that lists all merged changesets with
@@ -563,9 +580,9 @@ def commandRevert():
 		print "Nothing to do."
 
 # Command: massmerge
-def commandMassmerge(cfgfilename, sourceuri, startfrom, dryrun=0):
+def commandMassmerge(cfgfilename, sourceuri, startfrom, dryrun=0, allatonce=0):
 	cfg = Configuration(cfgfilename, startfrom=startfrom)
-	cfg.massMerge(sourceuri, dryrun=dryrun)
+	cfg.massMerge(sourceuri, dryrun=dryrun, allatonce=allatonce)
 
 # Command: single
 def commandSingle(trunkuri, changeset, sourcebranch, targetbranch, onlymerge=0, onlycommit=0):
@@ -612,6 +629,7 @@ html_author = 0
 html_milestone = None
 onlymerge = 0
 onlycommit = 0
+all        = 0
 while len(sys.argv)>1 and sys.argv[1][0] == '-':
 	if sys.argv[1] == "-d":
 		dryrun = 1
@@ -637,6 +655,10 @@ while len(sys.argv)>1 and sys.argv[1][0] == '-':
 		onlycommit = 1
 		del sys.argv[1:2]
 
+	elif sys.argv[1] == "-all":
+		all = 1
+		del sys.argv[1:2]
+
 	else:
 		print "Invalid option '%s'." % (sys.argv[1])
 		sys.exit(1)
@@ -654,7 +676,7 @@ elif (len(sys.argv) == 4 or len(sys.argv)==5) and sys.argv[1] == "massmerge":
 	startfrom = None
 	if len(sys.argv)>4:
 		startfrom = int(sys.argv[4])
-	commandMassmerge(cfgfilename, sourceuri=REPOSITORY+sourcebranch, startfrom=startfrom, dryrun=dryrun)
+	commandMassmerge(cfgfilename, sourceuri=REPOSITORY+sourcebranch, startfrom=startfrom, dryrun=dryrun, allatonce=all)
 
 elif len(sys.argv) == 5 and sys.argv[1] == "single":
 	changeset = int(sys.argv[2])

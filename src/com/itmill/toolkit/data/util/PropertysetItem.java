@@ -259,15 +259,9 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
         return npsi;
     }
 
-    /**
-     * Returns <code>true</code> if and only if the argument is not
-     * <code>null</code> and is a Boolean object that represents the same
-     * boolean value as this object.
+    /*
+     * (non-Javadoc)
      * 
-     * @param obj
-     *            the object to compare with.
-     * @return <code>true</code> if the Boolean objects represent the same value
-     *         otherwise <code>false</code>.
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -308,10 +302,9 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
         return true;
     }
 
-    /**
-     * Returns the hash code value for this list.
+    /*
+     * (non-Javadoc)
      * 
-     * @return the hash code value.
      * @see java.lang.Object#hashCode()
      */
     @Override

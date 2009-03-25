@@ -1096,7 +1096,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * @see com.itmill.toolkit.terminal.Terminal.ErrorListener#terminalError(com.itmill.toolkit.terminal.Terminal.ErrorEvent)
      */
     public void terminalError(Terminal.ErrorEvent event) {
-        Throwable t = event.getThrowable();
+        final Throwable t = event.getThrowable();
         if (t instanceof SocketException) {
             // Most likely client browser closed socket
             System.err
@@ -1119,21 +1119,16 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 
         // Shows the error in AbstractComponent
         if (owner instanceof AbstractComponent) {
-            final Throwable e = event.getThrowable();
-            if (e instanceof ErrorMessage) {
-                ((AbstractComponent) owner).setComponentError((ErrorMessage) e);
+            if (t instanceof ErrorMessage) {
+                ((AbstractComponent) owner).setComponentError((ErrorMessage) t);
             } else {
                 ((AbstractComponent) owner)
-                        .setComponentError(new SystemError(e));
+                        .setComponentError(new SystemError(t));
             }
-        } else {
-            /*
-             * Can't show it to the user in any way so we print to standard
-             * error
-             */
-            t.printStackTrace();
-
         }
+
+        // also print the error on console
+        t.printStackTrace();
     }
 
     /**
