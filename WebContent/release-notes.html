@@ -331,7 +331,7 @@ for your platform.</p>
 </ul>
 
 <p>IT Mill Toolkit supports Java Servlet API 2.3 and later versions and should work with
-any Java application servers that conform to the standard. It supports the following
+any Java application server that conforms to the standard. It supports the following
 application servers:</p>
 
 <ul>
@@ -348,30 +348,46 @@ it:</p>
 
 <ul>
 	<li>Mozilla Firefox releases 2, and 3 (see notice above about
-	Gecco 1.7).</li>
-	<li>Internet Explorer releases 6, 7, and 8.</li>
+	Gecko 1.7).</li>
+	<li>Internet Explorer releases 6, 7, and 8<sup>&#8224;</sup>.</li>
 	<li>Safari 3</li>
-	<li>Opera 9.6</li>
+	<li>Opera 9.6<sup>&#8225;</sup></li>
 </ul>
 
-<p>There may be differences between the exact versions of the supported browsers that may
-cause incompatibility with applications made with IT Mill Toolkit. Support for Opera
-has currently some limitations, such as the front page of the Sampler demo.</p>
+<p style="font-size: 80%;">&#8224; Internet Explorer 8 RC1 may not be usable because of a
+serious bug in the RC1. <a href="http://dev.itmill.com/ticket/2578">#2578</a><br/>
+
+&#8225; The current support for Opera has some limitations, such as the front page of
+the Sampler demo. <a href="http://dev.itmill.com/ticket/2652">#2652</a></p>
+
+<p>The support for browsers follows the support by GWT. The browsers are supported on both
+Windows and Mac, if available. Firefox is supported also on Linux (Opera 10a1 works also
+on Linux though also suffers from <a
+href="http://dev.itmill.com/ticket/2652">#2652</a>). There may be differences between the
+exact versions of the supported browsers that may cause incompatibility with applications
+made with IT Mill Toolkit.</p>
 
 <p>The following browsers are not supported but have been found to
 work to a large degree:</p>
+
 <ul>
-	<li>Safari 2</li>
+	<li>Safari 2, and 4 beta</li>
 	<li>Firefox 1.5</li>
-	<li>iPhone</li>
-	<li>Epiphany, Galeon, and other Gecco-based browsers (see notice
-	about Gecco 1.7 above).</li>
+    <li>Google Chrome 1.0.x (available only for Windows)</li>
+	<li>iPhone (firmware 2.2)</li>
+    <li>Midori (0.1.2)</li>
+	<li>Epiphany (2.22.3), Galeon, and other Gecko-based browsers (see the notice
+	regarding Gecko 1.7 above). Also WebKit-based Epiphany (2.22.3) works.</li>
+    <li>Konqueror 4.2 (3.5.x does not work)</li>
     <li>Nokia Internet Tablet N800 and N810 (ITOS 2008, Opera-based browser).</li>
 </ul>
 
-<p>Nokia E-series phones with at least 128MB of memory have been known to work with older
-versions, but not with IT Mill Toolkit 5.2 and later.  Konqueror, the default browser in
-many Linux distributions, is known to not work.</p>
+<p>The reported versions are those that have been tested, though other versions may work
+as well.</p>
+
+<p>Nokia E-series phones, such as E90, have been known to work with older versions, but
+not with IT Mill Toolkit 5.2 and later. Links, Lynx, and other text-based browsers do not
+work.</p>
 
 <!-- h2>ChangeLog Between IT Mill Toolkit 5.1.2 and 5.2.0</h2 --></div>
 <!-- /getting-started -->
