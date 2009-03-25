@@ -50,7 +50,7 @@
 	<target name="package-war" depends="clean-all, package-init, init, build, docs, internal-package-mac, internal-package-war">
 	</target>
 
-    <target name="nightly" depends="clean-all, nightly-init, package-init, init, build, internal-package-linux">
+    <target name="nightly" depends="clean-all, nightly-init, package-init, init, libs, nightly-install">
     </target>
 
 	<!-- internal tests for packaging -->
@@ -549,7 +549,7 @@
 		</if>
 	</target>
 
-	<target name="build" depends="demo" description="Build package required files, without packing them.">
+	<target name="build" depends="libs, compile-client-side, demo" description="Build package required files, without packing them.">
 	</target>
 
 	<!-- Copy and preprocess sources for packaging 
@@ -875,7 +875,9 @@
 	<target name="widgetset-colorpicker" depends="init-nonpackage, compile-widgetset-colorpicker">
 	</target>
 
-	<target name="libs" depends="compile-java, webcontent, compile-client-side">
+    <!-- Compile the Toolkit library JAR.          -->
+    <!-- Only need the default widgetset for this. -->
+	<target name="libs" depends="compile-java, webcontent, compile-widgetset-default">
 		<echo>Creating libs (server-side) ${lib-jar-name}</echo>
 		<!-- Create Toolkit JAR -->
 		<jar jarfile="${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name}" compress="true">
@@ -1366,8 +1368,30 @@
     <!-- Nightly build.                                                     -->
     <!-- ================================================================== -->
 
+    <target name="gwt-symlink">
+        <!-- We need to create a symlink to the GWT directory, because we   -->
+        <!-- are building automatically.                                    -->
+        <property name="gwt.link.target" value="../../gwt-1.5"/>
+
+        <!-- Create the link unless it already exists. -->
+        <available file="build/gwt" property="gwt.link.available"/> 
+		<if>
+            <not>
+                <isset property="gwt.link.available"/>
+            </not>
+			<then>
+                <echo>Creating symlink to GWT installation directory.</echo>
+                <symlink link="gwt" resource="${gwt.link.target}" failonerror="false"/>
+			</then>
+            <else>
+                <echo>Symlink to GWT installation directory already exists</echo>
+            </else>
+		</if>
+
+    </target>
+
     <!-- Initialize a nightly build. -->
-    <target name="nightly-init" depends="">
+    <target name="nightly-init" depends="gwt-symlink">
 
         <!-- Mandatory parameters. -->
         <fail unless="version.minor" message="The version.minor property must be defined."/>
@@ -1377,32 +1401,33 @@
         <!-- Optional parameters. -->
         <property name="build.tag" value="dev"/>
 
-        <!-- We need to create a symlink to the GWT directory, because we   -->
-        <!-- are building automatically.                                    -->
-        <property name="gwt.link.target" value="../../gwt-1.5"/>
-
-        <!-- Create the link unless it already exists. -->
-        <available file="gwt" property="gwt.link.available"/> 
-		<if>
-            <not>
-                <isset property="gwt.link.available"/>
-            </not>
-			<then>
-                <echo>${gwt.link.available}</echo>
-                <symlink link="gwt" resource="${gwt.link.target}" failonerror="false"/>
-			</then>
-		</if>
+        <echo>Minor version: ${version.minor}</echo>
+        <echo>Build number: ${build.number}</echo>
+        <echo>Build tag: ${build.tag}</echo>
+        <echo>Publish target: ${nightly.publish}</echo>
 
         <!-- Set build number. -->
         <tstamp>
             <format property="nightly.date" pattern="yyyyMMdd"/>
         </tstamp>
-        <property name="version" value="${version.minor}-${build.tag}-${nightly.date}-b${build.number}"/>
-        <echo>##teamcity[buildNumber '${version}']</echo>
+        <property name="version" value="${version.minor}-${build.tag}-${nightly.date}-c${build.number}"/>
+
+        <!-- Tell TeamCity the build name. Have to do it this way, because   -->
+        <!-- this script needs to get the plain build number as a parameter. -->
+        <echo>##teamcity[buildNumber '${version.minor}-c${build.number}']</echo>
     </target>
 
     <!-- Copies the nightly build results to the download server. -->
-    <target name="nightly-install" depends="">
-        <echo>Installing to ${nightly.publish}</echo>
+    <target name="nightly-install">
+        <echo>Installing ${output-dir}/WebContent/${lib-jar-name} to ${nightly.publish}</echo>
+        <echo>Hopefully you have permissions for the copy operation with SSH.</echo>
+
+        <exec executable="scp" searchpath="true" resultproperty="nightly.install.scp.result">
+            <arg value="-B"/>
+            <arg value="${output-dir}/WebContent/${lib-jar-name}"/>
+            <arg value="${nightly.publish}"/>
+        </exec>
+
+        <echo>Result: ${nightly.install.scp.result}</echo>
     </target>
 </project>
