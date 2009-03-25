@@ -568,6 +568,7 @@
 					<include name="**/*.html" />
 					<include name="**/*.css" />
 					<include name="**/*.xml" />
+					<exclude name="**/tests/**"/>
 					<exclude name="**/demo/sampler/**" if="build.sampler.disabled" />
 				</patternset>
 			</fileset>
@@ -587,6 +588,7 @@
 					<exclude name="**/*.html" />
 					<exclude name="**/*.css" />
 					<exclude name="**/*.xml" />
+					<exclude name="**/tests/**"/>
 					<exclude name="**/demo/sampler/**" if="build.sampler.disabled" />
 				</patternset>
 			</fileset>
@@ -687,6 +689,7 @@
 			</classpath>
              <!-- This seems to be included by default: include name="${toolkit-package}/**"/ -->
              <exclude name="${toolkit-package}/demo/sampler/**" if="build.sampler.disabled" />
+             <exclude name="${toolkit-package}/tests/**"/>
 		</javac>
 	</target>
 
