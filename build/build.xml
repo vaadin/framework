@@ -24,6 +24,12 @@
 	${gwt-dir}/${platform} (linux|windows|mac) are used for
   	a) compile WebContent/ITMILL/widgetsets
 	b) creating platform specific release ZIP/TGZ packages.
+	
+	NOTE FOR USING OOPHM:
+	 * To build with oophm define the property platform=oophm
+	   * In Eclipse this is done in External Tools Configurations -> properties
+	 * If you are using windows you must use JDK 1.6 and not 1.5
+	   * To enable building with JDK 1.6, define ignoreversion=1
 	-->
 
 	<!-- 
