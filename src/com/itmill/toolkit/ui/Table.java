@@ -2554,6 +2554,8 @@ public class Table extends AbstractSelect implements Action.Container,
             // if the event is not a global one and the added item is outside
             // the visible/buffered area, no need to do anything
             if (evt.getAddedItemIndex() != -1
+                    && (firstToBeRenderedInClient >= 0)
+                    && (lastToBeRenderedInClient >= 0)
                     && (firstToBeRenderedInClient > evt.getAddedItemIndex() || lastToBeRenderedInClient < evt
                             .getAddedItemIndex())) {
                 return;
