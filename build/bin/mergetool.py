@@ -81,7 +81,11 @@ def listChangedFiles():
 		# Remove trailing newline
 		line = line[:-1]
 
+		# Remove possible space character in the beginning of line
+		line = line.lstrip()
+
 		# Extract the file state and name
+		print line
 		(filestate, filename) = re.split(r'[ \+]+', line)
 
 		# Ignore files in build directory
