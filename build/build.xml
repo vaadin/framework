@@ -1374,26 +1374,24 @@
     <!-- Nightly build.                                                     -->
     <!-- ================================================================== -->
 
+    <!-- Create symlink to GWT installation directory. -->
     <target name="gwt-symlink">
-        <!-- We need to create a symlink to the GWT directory, because we   -->
-        <!-- are building automatically.                                    -->
+
+        <!-- Optional property. -->
         <property name="gwt.link.target" value="../../gwt-1.5"/>
 
-        <!-- Create the link unless it already exists. -->
-        <available file="build/gwt" property="gwt.link.available"/> 
-		<if>
-            <not>
-                <isset property="gwt.link.available"/>
-            </not>
-			<then>
-                <echo>Creating symlink to GWT installation directory.</echo>
-                <symlink link="gwt" resource="${gwt.link.target}" failonerror="false"/>
-			</then>
-            <else>
-                <echo>Symlink to GWT installation directory already exists</echo>
-            </else>
-		</if>
+        <!-- Remove the old link, as the link target may have changed. -->
+        <exec executable="rm" dir="build" searchpath="true" failonerror="false">
+            <arg value="gwt"/>
+        </exec>
 
+        <echo>Creating symlink to GWT installation directory.</echo>
+        <exec executable="ln" dir="build" searchpath="true" failonerror="true">
+            <arg value="-s"/> <!-- Symlink.   -->
+            <arg value="-f"/> <!-- Overwrite. -->
+            <arg value="${gwt.link.target}"/>
+            <arg value="gwt"/>
+        </exec>
     </target>
 
     <!-- Initialize a nightly build. -->
@@ -1416,15 +1414,22 @@
         <tstamp>
             <format property="nightly.date" pattern="yyyyMMdd"/>
         </tstamp>
-        <property name="version" value="${version.minor}-${build.tag}-${nightly.date}-c${build.number}"/>
+        <property name="version" value="${version.minor}.${build.tag}-${nightly.date}-c${build.number}"/>
+        <echo>Version will be: ${version}</echo>
 
         <!-- Tell TeamCity the build name. Have to do it this way, because   -->
         <!-- this script needs to get the plain build number as a parameter. -->
         <echo>##teamcity[buildNumber '${version.minor}-c${build.number}']</echo>
     </target>
 
+    <target name="nightly-teamcity-publish">
+        <!-- Publish as a TeamCity artifact. -->
+        <echo>##teamcity[publishArtifacts '${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name}']</echo>
+    </target>
+
     <!-- Copies the nightly build results to the download server. -->
-    <target name="nightly-install">
+    <target name="nightly-download-publish" if="nightly.publish">
+        <!-- Publish to the download server. -->
         <echo>Installing ${output-dir}/WebContent/${lib-jar-name} to ${nightly.publish}</echo>
         <echo>Hopefully you have permissions for the copy operation with SSH.</echo>
 
@@ -1435,5 +1440,23 @@
         </exec>
 
         <echo>Result: ${nightly.install.scp.result}</echo>
+    </target>
+
+    <target name="nightly-install" depends="nightly-teamcity-publish, nightly-download-publish">
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Automated tests.                                                   -->
+    <!-- ================================================================== -->
+
+    <target name="tests">
+        <echo>##teamcity[testSuiteStarted name='com.itmill.toolkit.tests.test-framework']</echo>
+
+        <!-- A smoke test for testing the testing framework. -->
+        <echo>##teamcity[testStarted name='testingSmoketest']</echo>
+        <echo>##teamcity[testStdOut name='testingSmoketest' out='Here be some text related to the test.]</echo>
+        <echo>##teamcity[testFinished name='testingSmoketest']</echo>
+
+        <echo>##teamcity[testSuiteFinished name='com.itmill.toolkit.tests.test-framework']</echo>
     </target>
 </project>
