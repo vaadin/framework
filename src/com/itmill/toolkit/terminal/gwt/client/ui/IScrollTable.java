@@ -574,7 +574,8 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         boolean verticalScrollbarVisible = (pageLength < totalRows);
 
         if (verticalScrollbarVisible) {
-            // There will be a vertical scrollbar and its width is not included in availW
+            // There will be a vertical scrollbar and its width is not included
+            // in availW
             availW -= Util.getNativeScrollbarSize();
         }
 
@@ -651,8 +652,17 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
              * We must force an update of the row height as this point as it
              * might have been (incorrectly) calculated earlier
              */
-            int bodyHeight = (tBody.getRowHeight(true) * pageLength);
-            bodyContainer.setHeight(bodyHeight + "px");
+            if (pageLength == totalRows) {
+                /*
+                 * We want to show all rows so the bodyHeight should be equal to
+                 * the table height
+                 */
+                int bodyHeight = tBody.getTableHeight();
+                bodyContainer.setHeight(bodyHeight + "px");
+            } else {
+                int bodyHeight = (tBody.getRowHeight(true) * pageLength);
+                bodyContainer.setHeight(bodyHeight + "px");
+            }
         }
 
         isNewBody = false;
@@ -1935,14 +1945,17 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                 return rowHeight;
             } else {
                 if (DOM.getChildCount(tBody) > 0) {
-                    rowHeight = tBody.getParentElement().getOffsetHeight()
-                            / DOM.getChildCount(tBody);
+                    rowHeight = getTableHeight() / DOM.getChildCount(tBody);
                 } else {
                     return DEFAULT_ROW_HEIGHT;
                 }
                 initDone = true;
                 return rowHeight;
             }
+        }
+
+        public int getTableHeight() {
+            return table.getOffsetHeight();
         }
 
         public int getColWidth(int i) {
