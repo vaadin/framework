@@ -140,6 +140,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
     private final ArrayList lazyUnregistryBag = new ArrayList();
     private String height;
     private String width = "";
+    private boolean rendering = false;
 
     public IScrollTable() {
         bodyContainer.addScrollListener(this);
@@ -154,7 +155,9 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        rendering = true;
         if (client.updateComponent(this, uidl, true)) {
+            rendering = false;
             return;
         }
 
@@ -274,6 +277,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         }
         hideScrollPositionAnnotation();
         purgeUnregistryBag();
+        rendering = false;
     }
 
     /**
@@ -417,9 +421,9 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         return tHead.getHeaderCell(index).getColKey();
     }
 
-    private void setColWidth(int colIndex, int w) {
+    private void setColWidth(int colIndex, int w, boolean isDefinedWidth) {
         final HeaderCell cell = tHead.getHeaderCell(colIndex);
-        cell.setWidth(w);
+        cell.setWidth(w, isDefinedWidth);
         tBody.setColWidth(colIndex, w);
     }
 
@@ -549,9 +553,12 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                 // server has defined column width explicitly
                 totalExplicitColumnsWidths += w;
             } else {
+                // get and store greater of header width and column width, and
+                // store it as a minimumn natural col width
                 final int hw = hCell.getOffsetWidth();
                 final int cw = tBody.getColWidth(i);
                 w = (hw > cw ? hw : cw) + IScrollTableBody.CELL_EXTRA_WIDTH;
+                hCell.setNaturalMinimumColumnWidth(w);
             }
             widths[i] = w;
             total += w;
@@ -571,6 +578,8 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         // Hey IE, are you really sure about this?
         availW = tBody.getAvailableWidth();
 
+        // FIXME this may fail if pagelenth does not correlate well with actual
+        // height (via setHeight())
         boolean verticalScrollbarVisible = (pageLength < totalRows);
 
         if (verticalScrollbarVisible) {
@@ -603,6 +612,9 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                     HeaderCell headerCell = tHead.getHeaderCell(columnindex);
                     if (headerCell.getWidth() == -1) {
                         totalWidthR += scrollbarWidthReserved;
+                        headerCell.setNaturalMinimumColumnWidth(headerCell
+                                .getNaturalColumnWidth()
+                                + scrollbarWidthReserved);
                     }
                     extraSpace -= scrollbarWidthReserved;
                     scrollbarWidthReservedInColumn = columnindex;
@@ -635,7 +647,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             final HeaderCell hCell = (HeaderCell) headCells.next();
             if (isNewBody || hCell.getWidth() == -1) {
                 final int w = widths[i];
-                setColWidth(i, w);
+                setColWidth(i, w, false);
             }
             i++;
         }
@@ -982,10 +994,18 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
 
         private int width = -1;
 
+        private int naturalWidth = 0;
+
         private char align = ALIGN_LEFT;
+
+        boolean definedWidth = false;
 
         public void setSortable(boolean b) {
             sortable = b;
+        }
+
+        public void setNaturalMinimumColumnWidth(int w) {
+            naturalWidth = w;
         }
 
         public HeaderCell(String colId, String headerText) {
@@ -1016,7 +1036,13 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             setElement(td);
         }
 
-        public void setWidth(int w) {
+        public void setWidth(int w, boolean ensureDefinedWidth) {
+            if (ensureDefinedWidth) {
+                definedWidth = true;
+            }
+            if (width == w) {
+                return;
+            }
             if (width == -1) {
                 // go to default mode, clip content if necessary
                 DOM.setStyleAttribute(captionContainer, "overflow", "");
@@ -1031,6 +1057,21 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                         + "px");
                 setWidth(w + "px");
             }
+        }
+
+        public void setUndefinedWidth() {
+            definedWidth = false;
+            setWidth(-1, false);
+        }
+
+        /**
+         * Detects if width is fixed by developer on server side or resized to
+         * current width by user.
+         * 
+         * @return true if defined, false if "natural" width
+         */
+        public boolean isDefinedWidth() {
+            return definedWidth;
         }
 
         public int getWidth() {
@@ -1217,7 +1258,9 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             case Event.ONMOUSEUP:
                 isResizing = false;
                 DOM.releaseCapture(getElement());
-                tBody.reLayoutComponents();
+                // readjust undefined width columns
+                lazyAdjustColumnWidths.cancel();
+                lazyAdjustColumnWidths.schedule(1);
                 break;
             case Event.ONMOUSEMOVE:
                 if (isResizing) {
@@ -1230,7 +1273,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                     if (newWidth < MINIMUM_COL_WIDTH) {
                         newWidth = MINIMUM_COL_WIDTH;
                     }
-                    setColWidth(colIndex, newWidth);
+                    setColWidth(colIndex, newWidth, true);
                 }
                 break;
             default:
@@ -1267,6 +1310,21 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
 
         public char getAlign() {
             return align;
+        }
+
+        /**
+         * Detects the natural minimum width for the column of this header cell.
+         * If column is resized by user or the width is defined by server the
+         * actual width is returned. Else the natural min width is returned.
+         * 
+         * @return
+         */
+        public int getNaturalColumnWidth() {
+            if (isDefinedWidth()) {
+                return width;
+            } else {
+                return naturalWidth;
+            }
         }
 
     }
@@ -1379,9 +1437,9 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                 }
                 if (col.hasAttribute("width")) {
                     final String width = col.getStringAttribute("width");
-                    c.setWidth(Integer.parseInt(width));
+                    c.setWidth(Integer.parseInt(width), true);
                 } else if (recalcWidths) {
-                    c.setWidth(-1);
+                    c.setUndefinedWidth();
                 }
             }
             // check for orphaned header cells
@@ -2462,7 +2520,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                 int col = scrollbarWidthReservedInColumn;
                 String colKey = getColKeyByIndex(col);
                 setColWidth(scrollbarWidthReservedInColumn, getColWidth(colKey)
-                        - (oldWidth - newWidth));
+                        - (oldWidth - newWidth), false);
                 scrollbarWidthReservedInColumn = -1;
             }
 
@@ -2471,10 +2529,71 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                 innerPixels = 0;
             }
             setContentWidth(innerPixels);
+
+            if (!rendering) {
+                // readjust undefined width columns
+                lazyAdjustColumnWidths.cancel();
+                lazyAdjustColumnWidths.schedule(LAZY_COLUMN_ADJUST_TIMEOUT);
+            }
+
         } else {
             super.setWidth("");
         }
+
     }
+
+    private static final int LAZY_COLUMN_ADJUST_TIMEOUT = 300;
+
+    private final Timer lazyAdjustColumnWidths = new Timer() {
+        /**
+         * Check for column widths, and available width, to see if we can fix
+         * column widths "optimally". Doing this lazily to avoid expensive
+         * calculation when resizing is not yet finished.
+         */
+        @Override
+        public void run() {
+
+            Iterator<Widget> headCells = tHead.iterator();
+            int usedMinimumWidth = 0;
+            int totalExplicitColumnsWidths = 0;
+            while (headCells.hasNext()) {
+                final HeaderCell hCell = (HeaderCell) headCells.next();
+                usedMinimumWidth += hCell.getNaturalColumnWidth();
+                if (hCell.isDefinedWidth()) {
+                    totalExplicitColumnsWidths += hCell.getWidth();
+                }
+            }
+
+            int availW = tBody.getAvailableWidth();
+            // Hey IE, are you really sure about this?
+            availW = tBody.getAvailableWidth();
+
+            int extraSpace = availW - usedMinimumWidth;
+            if (extraSpace < 0) {
+                extraSpace = 0;
+            }
+            int totalWidthR = usedMinimumWidth - totalExplicitColumnsWidths;
+            if (totalWidthR < 0) {
+                totalWidthR = 0;
+            }
+
+            // we have some space that can be divided optimally
+            HeaderCell hCell;
+            int i = 0;
+            headCells = tHead.iterator();
+            while (headCells.hasNext()) {
+                hCell = (HeaderCell) headCells.next();
+                if (!hCell.isDefinedWidth()) {
+                    int w = hCell.getNaturalColumnWidth();
+                    final int newSpace = w + extraSpace * w / totalWidthR;
+                    setColWidth(i, newSpace, false);
+                }
+                i++;
+            }
+            Util.runWebkitOverflowAutoFix(bodyContainer.getElement());
+            tBody.reLayoutComponents();
+        }
+    };
 
     /**
      * helper to set pixel size of head and body part
