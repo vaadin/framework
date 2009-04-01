@@ -541,6 +541,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         int i = 0;
         int totalExplicitColumnsWidths = 0;
         int total = 0;
+        float expandRatioDivider = 0;
 
         final int[] widths = new int[tHead.visibleCells.size()];
 
@@ -553,11 +554,18 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                 // server has defined column width explicitly
                 totalExplicitColumnsWidths += w;
             } else {
-                // get and store greater of header width and column width, and
-                // store it as a minimumn natural col width
-                final int hw = hCell.getOffsetWidth();
-                final int cw = tBody.getColWidth(i);
-                w = (hw > cw ? hw : cw) + IScrollTableBody.CELL_EXTRA_WIDTH;
+                if (hCell.getExpandRatio() > 0) {
+                    expandRatioDivider += hCell.getExpandRatio();
+                    w = IScrollTableBody.CELL_EXTRA_WIDTH
+                            + IScrollTableBody.CELL_CONTENT_PADDING;
+                } else {
+                    // get and store greater of header width and column width,
+                    // and
+                    // store it as a minimumn natural col width
+                    final int hw = hCell.getOffsetWidth();
+                    final int cw = tBody.getColWidth(i);
+                    w = (hw > cw ? hw : cw) + IScrollTableBody.CELL_EXTRA_WIDTH;
+                }
                 hCell.setNaturalMinimumColumnWidth(w);
             }
             widths[i] = w;
@@ -596,7 +604,6 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             int totalWidthR = total - totalExplicitColumnsWidths;
             if (totalWidthR > 0) {
                 needsReLayout = true;
-
                 /*
                  * If the table has a relative width and there is enough space
                  * for a scrollbar we reserve this in the last column
@@ -619,23 +626,40 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                     extraSpace -= scrollbarWidthReserved;
                     scrollbarWidthReservedInColumn = columnindex;
                 }
-
-                // now we will share this sum relatively to those without
-                // explicit width
-                headCells = tHead.iterator();
-                i = 0;
-                HeaderCell hCell;
-                while (headCells.hasNext()) {
-                    hCell = (HeaderCell) headCells.next();
-                    if (hCell.getWidth() == -1) {
-                        int w = widths[i];
-                        final int newSpace = extraSpace * w / totalWidthR;
-                        w += newSpace;
-                        widths[i] = w;
+                if (expandRatioDivider > 0) {
+                    // visible columns have some active expand ratios, excess
+                    // space is divided according to them
+                    headCells = tHead.iterator();
+                    i = 0;
+                    while (headCells.hasNext()) {
+                        HeaderCell hCell = (HeaderCell) headCells.next();
+                        if (hCell.getExpandRatio() > 0) {
+                            int w = widths[i];
+                            final int newSpace = (int) (extraSpace * (hCell
+                                    .getExpandRatio() / expandRatioDivider));
+                            w += newSpace;
+                            widths[i] = w;
+                        }
+                        i++;
                     }
-                    i++;
+                } else {
+                    // now we will share this sum relatively to those without
+                    // explicit width
+                    headCells = tHead.iterator();
+                    i = 0;
+                    while (headCells.hasNext()) {
+                        HeaderCell hCell = (HeaderCell) headCells.next();
+                        if (hCell.getWidth() == -1) {
+                            int w = widths[i];
+                            final int newSpace = extraSpace * w / totalWidthR;
+                            w += newSpace;
+                            widths[i] = w;
+                        }
+                        i++;
+                    }
                 }
             }
+
         } else {
             // bodys size will be more than available and scrollbar will appear
         }
@@ -1000,6 +1024,8 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
 
         boolean definedWidth = false;
 
+        private float expandRatio = 0;
+
         public void setSortable(boolean b) {
             sortable = b;
         }
@@ -1039,6 +1065,8 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         public void setWidth(int w, boolean ensureDefinedWidth) {
             if (ensureDefinedWidth) {
                 definedWidth = true;
+                // on column resize expand ratio becomes zero
+                expandRatio = 0;
             }
             if (width == w) {
                 return;
@@ -1327,6 +1355,14 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             }
         }
 
+        public void setExpandRatio(float floatAttribute) {
+            expandRatio = floatAttribute;
+        }
+
+        public float getExpandRatio() {
+            return expandRatio;
+        }
+
     }
 
     /**
@@ -1440,6 +1476,9 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                     c.setWidth(Integer.parseInt(width), true);
                 } else if (recalcWidths) {
                     c.setUndefinedWidth();
+                }
+                if (col.hasAttribute("er")) {
+                    c.setExpandRatio(col.getFloatAttribute("er"));
                 }
             }
             // check for orphaned header cells
@@ -2556,11 +2595,14 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             Iterator<Widget> headCells = tHead.iterator();
             int usedMinimumWidth = 0;
             int totalExplicitColumnsWidths = 0;
+            float expandRatioDivider = 0;
             while (headCells.hasNext()) {
                 final HeaderCell hCell = (HeaderCell) headCells.next();
                 usedMinimumWidth += hCell.getNaturalColumnWidth();
                 if (hCell.isDefinedWidth()) {
                     totalExplicitColumnsWidths += hCell.getWidth();
+                } else {
+                    expandRatioDivider += hCell.getExpandRatio();
                 }
             }
 
@@ -2585,7 +2627,15 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                 hCell = (HeaderCell) headCells.next();
                 if (!hCell.isDefinedWidth()) {
                     int w = hCell.getNaturalColumnWidth();
-                    final int newSpace = w + extraSpace * w / totalWidthR;
+                    int newSpace;
+                    if (expandRatioDivider > 0) {
+                        // divide excess space by expand ratios
+                        newSpace = (int) (w + extraSpace
+                                * hCell.getExpandRatio() / expandRatioDivider);
+                    } else {
+                        // divide relatively to natural column widths
+                        newSpace = w + extraSpace * w / totalWidthR;
+                    }
                     setColWidth(i, newSpace, false);
                 }
                 i++;

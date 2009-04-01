@@ -189,9 +189,10 @@ public class Table extends AbstractSelect implements Action.Container,
     private HashMap<Object, String> columnAlignments = new HashMap<Object, String>();
 
     /**
-     * Holds column widths in pixels for visible columns (by propertyId).
+     * Holds column widths in pixels (Integer) or expand ratios (Float) for
+     * visible columns (by propertyId).
      */
-    private final HashMap<Object, Integer> columnWidths = new HashMap<Object, Integer>();
+    private final HashMap<Object, Object> columnWidths = new HashMap<Object, Object>();
 
     /**
      * Holds column generators
@@ -648,6 +649,10 @@ public class Table extends AbstractSelect implements Action.Container,
      * small or very big values. Setting width to -1 (default) means that theme
      * will make decision of width.
      * 
+     *<p>
+     * Column can either have a fixed width or expand ratio. The latter one set
+     * is used. See @link {@link #setColumnExpandRatio(Object, float)}.
+     * 
      * @param columnId
      *            colunmns property id
      * @param width
@@ -655,20 +660,78 @@ public class Table extends AbstractSelect implements Action.Container,
      * @since 4.0.3
      */
     public void setColumnWidth(Object columnId, int width) {
-        columnWidths.put(columnId, new Integer(width));
+        if (width < 0) {
+            columnWidths.remove(columnId);
+        } else {
+            columnWidths.put(columnId, new Integer(width));
+        }
     }
 
     /**
-     * Gets the width of column
+     * Sets the column expand ratio for given column.
+     * <p>
+     * Expand ratios can be defined to customize the way how excess space is
+     * divided among columns. Table can have excess space if it has its width
+     * defined and there is horizontally more space than columns consume
+     * naturally. Excess space is the space that is not used by columns with
+     * explicit width (see {@link #setColumnWidth(Object, int)}) or with natural
+     * width (no width nor expand ratio).
+     * 
+     * <p>
+     * By default (without expand ratios) the excess space is divided
+     * proportionally to columns natural widths.
+     * 
+     * <p>
+     * Only expand ratios of visible columns are used in final calculations.
+     * 
+     * <p>
+     * Column can either have a fixed width or expand ratio. The latter one set
+     * is used.
+     * 
+     * <p>
+     * A column with expand ratio is considered to be minimum width by default
+     * (if no excess space exists). The minimum width is defined by terminal
+     * implementation.
+     * 
+     * <p>
+     * If terminal implementation supports re-sizeable columns the column
+     * becomes fixed width column if users resizes the column.
+     * 
+     * @param columnId
+     *            colunmns property id
+     * @param expandRatio
+     *            the expandRatio used to divide excess space for this column
+     */
+    public void setColumnExpandRatio(Object columnId, float expandRatio) {
+        if (expandRatio < 0) {
+            columnWidths.remove(columnId);
+        } else {
+            columnWidths.put(columnId, new Float(expandRatio));
+        }
+    }
+
+    public float getColumnExpandRatio(Object propertyId) {
+        final Object width = columnWidths.get(propertyId);
+        if (width == null || !(width instanceof Float)) {
+            return -1;
+        }
+        final Float value = (Float) width;
+        return value.floatValue();
+
+    }
+
+    /**
+     * Gets the pixel width of column
      * 
      * @param propertyId
      * @return width of colun or -1 when value not set
      */
     public int getColumnWidth(Object propertyId) {
-        final Integer value = columnWidths.get(propertyId);
-        if (value == null) {
+        final Object width = columnWidths.get(propertyId);
+        if (width == null || !(width instanceof Integer)) {
             return -1;
         }
+        final Integer value = (Integer) width;
         return value.intValue();
     }
 
@@ -2157,11 +2220,15 @@ public class Table extends AbstractSelect implements Action.Container,
                 if (!ALIGN_LEFT.equals(getColumnAlignment(columnId))) {
                     target.addAttribute("align", getColumnAlignment(columnId));
                 }
-                if (getColumnWidth(columnId) > -1) {
-                    target.addAttribute("width", String
-                            .valueOf(getColumnWidth(columnId)));
+                if (columnWidths.containsKey(columnId)) {
+                    if (getColumnWidth(columnId) > -1) {
+                        target.addAttribute("width", String
+                                .valueOf(getColumnWidth(columnId)));
+                    } else {
+                        target.addAttribute("er",
+                                getColumnExpandRatio(columnId));
+                    }
                 }
-
                 target.endTag("column");
             }
         }
