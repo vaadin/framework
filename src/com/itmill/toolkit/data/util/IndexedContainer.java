@@ -16,6 +16,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.itmill.toolkit.data.Container;
@@ -461,13 +462,10 @@ public class IndexedContainer implements Container.Indexed,
      */
     public Object nextItemId(Object itemId) {
         if (filteredItemIds != null) {
-            if (!filteredItemIds.contains(itemId)) {
+            if (itemId == null || !filteredItemIds.contains(itemId)) {
                 return null;
             }
             final Iterator i = filteredItemIds.iterator();
-            if (itemId == null) {
-                return null;
-            }
             while (i.hasNext() && !itemId.equals(i.next())) {
                 ;
             }
@@ -629,15 +627,15 @@ public class IndexedContainer implements Container.Indexed,
             if (itemId == null) {
                 return -1;
             }
-            try {
-                for (final Iterator i = filteredItemIds.iterator(); itemId
-                        .equals(i.next());) {
-                    index++;
+            final Iterator i = filteredItemIds.iterator();
+            while (i.hasNext()) {
+                Object id = i.next();
+                if (itemId.equals(id)) {
+                    return index;
                 }
-                return index;
-            } catch (final NoSuchElementException e) {
-                return -1;
+                index++;
             }
+            return -1;
         }
         return itemIds.indexOf(itemId);
     }
@@ -655,6 +653,7 @@ public class IndexedContainer implements Container.Indexed,
             return null;
         }
 
+        // TODO should add based on a filtered index!
         // Adds the Item to container
         itemIds.add(index, newItemId);
         Hashtable t = new Hashtable();
@@ -1363,8 +1362,8 @@ public class IndexedContainer implements Container.Indexed,
     public synchronized void sort(Object[] propertyId, boolean[] ascending) {
 
         // Removes any non-sortable property ids
-        final ArrayList ids = new ArrayList();
-        final ArrayList orders = new ArrayList();
+        final List ids = new ArrayList();
+        final List<Boolean> orders = new ArrayList<Boolean>();
         final Collection sortable = getSortableContainerPropertyIds();
         for (int i = 0; i < propertyId.length; i++) {
             if (sortable.contains(propertyId[i])) {
@@ -1380,7 +1379,7 @@ public class IndexedContainer implements Container.Indexed,
         sortPropertyId = ids.toArray();
         sortDirection = new boolean[orders.size()];
         for (int i = 0; i < sortDirection.length; i++) {
-            sortDirection[i] = ((Boolean) orders.get(i)).booleanValue();
+            sortDirection[i] = (orders.get(i)).booleanValue();
         }
 
         // Sort
