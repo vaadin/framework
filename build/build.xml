@@ -652,7 +652,6 @@
 				<exclude name="ITMILL/themes/sampler/**" if="build.sampler.disabled" />
 				<include name="demo/**/*" />
 				<include name="WEB-INF/lib/hsqldb.jar" />
-				<include name="WEB-INF/lib/beanitemcontainer-20090216.jar" />
 				<include name="ITMILL/themes/**/*" />
 				<include name="META-INF/**/*" />
 			</fileset>
@@ -693,9 +692,6 @@
 		<mkdir dir="${result-path}/classes" />
 		<javac source="1.5" target="1.5" classpathref="compile.classpath.server-side" destdir="${result-path}/classes" debug="true" encoding="UTF-8">
              <src path="${result-path}/src"/>
-			<classpath>
-				<pathelement location="WebContent/WEB-INF/lib/beanitemcontainer-20090216.jar" />
-			</classpath>
              <!-- This seems to be included by default: include name="${toolkit-package}/**"/ -->
              <exclude name="${toolkit-package}/demo/sampler/**" if="build.sampler.disabled" />
              <exclude name="${toolkit-package}/tests/**"/>

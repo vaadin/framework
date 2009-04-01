@@ -3,7 +3,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="WebContent/WEB-INF/src"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/itmill-toolkit-<version></version>.jar"/>
-	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/beanitemcontainer-20090216.jar"/>
 	<classpathentry kind="lib" path="gwt/gwt-user.jar" />
 	<classpathentry kind="lib" path="gwt/gwt-servlet.jar" />
 	<classpathentry kind="lib" path="WebContent/demo/lib/reservr/gwt-maps.jar" />
