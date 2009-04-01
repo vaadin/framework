@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.itmill.toolkit.data.Container;
 import com.itmill.toolkit.data.Item;
@@ -16,23 +19,33 @@ import com.itmill.toolkit.data.Container.Filterable;
 import com.itmill.toolkit.data.Container.Indexed;
 import com.itmill.toolkit.data.Container.ItemSetChangeNotifier;
 import com.itmill.toolkit.data.Container.Sortable;
+import com.itmill.toolkit.data.Property.ValueChangeEvent;
+import com.itmill.toolkit.data.Property.ValueChangeListener;
+import com.itmill.toolkit.data.Property.ValueChangeNotifier;
 
 /**
  * An {@link ArrayList} backed container for {@link BeanItem}s.
  * <p>
- * Bean objects act as identifiers.
+ * Bean objects act as identifiers. For this reason, they should implement
+ * Object.equals(Object) and Object.hashCode() .
  * 
  * @param <BT>
+ * 
+ * @since 5.4
  */
 public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
-        ItemSetChangeNotifier {
+        ItemSetChangeNotifier, ValueChangeListener {
+    // filtered and unfiltered item IDs
     private ArrayList<BT> list = new ArrayList<BT>();
-    private final HashMap<BT, BeanItem> beanToItem = new HashMap<BT, BeanItem>();
+    private ArrayList<BT> allItems = new ArrayList<BT>();
+    private final Map<BT, BeanItem> beanToItem = new HashMap<BT, BeanItem>();
+
     private final Class<BT> type;
     private final BeanItem model;
-    private LinkedList<ItemSetChangeListener> itemSetChangeListeners;
-    private ArrayList<BT> allItems;
-    private HashSet<Filter> filters;
+
+    private List<ItemSetChangeListener> itemSetChangeListeners;
+
+    private Set<Filter> filters = new HashSet<Filter>();
 
     public BeanItemContainer(Class<BT> type) throws InstantiationException,
             IllegalAccessException {
@@ -65,15 +78,52 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         throw new UnsupportedOperationException();
     }
 
-    @SuppressWarnings("unchecked")
     public Item addItemAt(int index, Object newItemId)
             throws UnsupportedOperationException {
+        if (index < 0 || index > size()) {
+            return null;
+        } else if (index == 0) {
+            // add before any item, visible or not
+            return addItemAtInternalIndex(0, newItemId);
+        } else {
+            // if index==size(), adds immediately after last visible item
+            return addItemAfter(getIdByIndex(index - 1), newItemId);
+        }
+    }
+
+    /**
+     * Adds new item at given index of the internal (unfiltered) list.
+     * <p>
+     * The item is also added in the visible part of the list if it passes the
+     * filters.
+     * </p>
+     * 
+     * @param index
+     *            Internal index to add the new item.
+     * @param newItemId
+     *            Id of the new item to be added.
+     * @return Returns new item or null if the operation fails.
+     */
+    @SuppressWarnings("unchecked")
+    private Item addItemAtInternalIndex(int index, Object newItemId) {
+        // Make sure that the Item has not been created yet
+        if (allItems.contains(newItemId)) {
+            return null;
+        }
         if (newItemId.getClass().isAssignableFrom(type)) {
             BT pojo = (BT) newItemId;
-            list.add(index, pojo);
+            // "list" will be updated in filterAll()
+            allItems.add(index, pojo);
             BeanItem beanItem = new BeanItem(pojo);
             beanToItem.put(pojo, beanItem);
-            fireItemSetChange();
+            // add listeners to be able to update filtering on property changes
+            for (Filter filter : filters) {
+                // addValueChangeListener avoids adding duplicates
+                addValueChangeListener(beanItem, filter.propertyId);
+            }
+
+            // it is somewhat suboptimal to filter all items
+            filterAll();
             return beanItem;
         } else {
             return null;
@@ -95,15 +145,21 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
 
     public Item addItemAfter(Object previousItemId, Object newItemId)
             throws UnsupportedOperationException {
-        int index = indexOfId(previousItemId) + 1;
-        if (index > 0) {
-            addItemAt(index, newItemId);
+        // only add if the previous item is visible
+        if (list.contains(previousItemId)) {
+            return addItemAtInternalIndex(allItems.indexOf(previousItemId) + 1,
+                    newItemId);
+        } else {
+            return null;
         }
-        return null;
     }
 
     public Object firstItemId() {
-        return list.iterator().next();
+        if (list.size() > 0) {
+            return list.get(0);
+        } else {
+            return null;
+        }
     }
 
     public boolean isFirstId(Object itemId) {
@@ -115,26 +171,28 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     }
 
     public Object lastItemId() {
-        try {
+        if (list.size() > 0) {
             return list.get(list.size() - 1);
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } else {
             return null;
         }
     }
 
     public Object nextItemId(Object itemId) {
-        try {
-            return list.get(list.indexOf(itemId) + 1);
-        } catch (Exception e) {
+        int index = list.indexOf(itemId);
+        if (index >= 0 && index < list.size() - 1) {
+            return list.get(index + 1);
+        } else {
             // out of bounds
             return null;
         }
     }
 
     public Object prevItemId(Object itemId) {
-        try {
-            return list.get(list.indexOf(itemId) - 1);
-        } catch (Exception e) {
+        int index = list.indexOf(itemId);
+        if (index > 0) {
+            return list.get(index - 1);
+        } else {
             // out of bounds
             return null;
         }
@@ -151,14 +209,17 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     }
 
     public Item addItem(Object itemId) throws UnsupportedOperationException {
-        if (list.isEmpty()) {
-            return addItemAt(0, itemId);
+        if (list.size() > 0) {
+            // add immediately after last visible item
+            int lastIndex = allItems.indexOf(lastItemId());
+            return addItemAtInternalIndex(lastIndex + 1, itemId);
         } else {
-            return addItemAt(indexOfId(lastItemId()) + 1, itemId);
+            return addItemAtInternalIndex(0, itemId);
         }
     }
 
     public boolean containsId(Object itemId) {
+        // only look at visible items after filtering
         return list.contains(itemId);
     }
 
@@ -185,7 +246,12 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     }
 
     public boolean removeAllItems() throws UnsupportedOperationException {
+        allItems.clear();
         list.clear();
+        // detach listeners from all BeanItems
+        for (BeanItem item : beanToItem.values()) {
+            removeAllValueChangeListeners(item);
+        }
         beanToItem.clear();
         fireItemSetChange();
         return true;
@@ -198,13 +264,39 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
 
     public boolean removeItem(Object itemId)
             throws UnsupportedOperationException {
-        if (list.contains(itemId)) {
-            beanToItem.remove(itemId);
-            list.remove(itemId);
-            fireItemSetChange();
-            return true;
-        } else {
+        if (!allItems.remove(itemId)) {
             return false;
+        }
+        // detach listeners from Item
+        removeAllValueChangeListeners(beanToItem.get(itemId));
+        // remove item
+        beanToItem.remove(itemId);
+        list.remove(itemId);
+        fireItemSetChange();
+        return true;
+    }
+
+    private void addValueChangeListener(BeanItem beanItem, Object propertyId) {
+        Property property = beanItem.getItemProperty(propertyId);
+        if (property instanceof ValueChangeNotifier) {
+            // avoid multiple notifications for the same property if
+            // multiple filters are in use
+            ValueChangeNotifier notifier = (ValueChangeNotifier) property;
+            notifier.removeListener(this);
+            notifier.addListener(this);
+        }
+    }
+
+    private void removeValueChangeListener(BeanItem item, Object propertyId) {
+        Property property = item.getItemProperty(propertyId);
+        if (property instanceof ValueChangeNotifier) {
+            ((ValueChangeNotifier) property).removeListener(this);
+        }
+    }
+
+    private void removeAllValueChangeListeners(BeanItem item) {
+        for (Object propertyId : item.getItemPropertyIds()) {
+            removeValueChangeListener(item, propertyId);
         }
     }
 
@@ -227,7 +319,8 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         for (int i = 0; i < ascending.length; i++) {
             final boolean asc = ascending[i];
             final Object property = propertyId[i];
-            Collections.sort(list, new Comparator<BT>() {
+            // sort allItems, then filter and notify
+            Collections.sort(allItems, new Comparator<BT>() {
                 @SuppressWarnings("unchecked")
                 public int compare(BT a, BT b) {
                     Comparable va = (Comparable) beanToItem.get(a)
@@ -239,6 +332,8 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
                 }
             });
         }
+        // notifies if anything changes in the filtered list, including order
+        filterAll();
     }
 
     public void addListener(ItemSetChangeListener listener) {
@@ -256,14 +351,13 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
 
     private void fireItemSetChange() {
         if (itemSetChangeListeners != null) {
-            final Object[] l = itemSetChangeListeners.toArray();
             final Container.ItemSetChangeEvent event = new Container.ItemSetChangeEvent() {
                 public Container getContainer() {
                     return BeanItemContainer.this;
                 }
             };
-            for (int i = 0; i < l.length; i++) {
-                ((ItemSetChangeListener) l[i]).containerItemSetChange(event);
+            for (ItemSetChangeListener listener : itemSetChangeListeners) {
+                listener.containerItemSetChange(event);
             }
         }
     }
@@ -289,10 +383,12 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     @SuppressWarnings("unchecked")
     public void addContainerFilter(Object propertyId, String filterString,
             boolean ignoreCase, boolean onlyMatchPrefix) {
-        if (filters == null) {
-            allItems = list;
-            list = (ArrayList<BT>) list.clone();
-            filters = new HashSet<Filter>();
+        if (filters.isEmpty()) {
+            list = (ArrayList<BT>) allItems.clone();
+        }
+        // listen to change events to be able to update filtering
+        for (BeanItem item : beanToItem.values()) {
+            addValueChangeListener(item, propertyId);
         }
         Filter f = new Filter(propertyId, filterString, ignoreCase,
                 onlyMatchPrefix);
@@ -301,9 +397,34 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         fireItemSetChange();
     }
 
+    /**
+     * Filter the view to recreate the visible item list from the unfiltered
+     * items, and send a notification if the set of visible items changed in any
+     * way.
+     */
+    @SuppressWarnings("unchecked")
+    protected void filterAll() {
+        // avoid notification if the filtering had no effect
+        List<BT> originalItems = list;
+        // it is somewhat inefficient to do a (shallow) clone() every time
+        list = (ArrayList<BT>) allItems.clone();
+        for (Filter f : filters) {
+            filter(f);
+        }
+        // check if exactly the same items are there after filtering to avoid
+        // unnecessary notifications
+        // this may be slow in some cases as it uses BT.equals()
+        if (!originalItems.equals(list)) {
+            fireItemSetChange();
+        }
+    }
+
     protected void filter(Filter f) {
-        for (Iterator<BT> iterator = list.iterator(); iterator.hasNext();) {
+        Iterator<BT> iterator = list.iterator();
+        while (iterator.hasNext()) {
             BT bean = iterator.next();
+            // TODO #2517: should not swallow exceptions - requires several
+            // checks
             try {
                 String value = getContainerProperty(bean, f.propertyId)
                         .getValue().toString();
@@ -326,16 +447,18 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     }
 
     public void removeAllContainerFilters() {
-        if (filters != null) {
-            filters = null;
-            list = allItems;
-            fireItemSetChange();
+        if (!filters.isEmpty()) {
+            filters = new HashSet<Filter>();
+            // stop listening to change events for any property
+            for (BeanItem item : beanToItem.values()) {
+                removeAllValueChangeListeners(item);
+            }
+            filterAll();
         }
     }
 
-    @SuppressWarnings("unchecked")
     public void removeContainerFilters(Object propertyId) {
-        if (filters != null) {
+        if (!filters.isEmpty()) {
             for (Iterator<Filter> iterator = filters.iterator(); iterator
                     .hasNext();) {
                 Filter f = iterator.next();
@@ -343,12 +466,17 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
                     iterator.remove();
                 }
             }
-            list = (ArrayList<BT>) list.clone();
-            for (Filter f : filters) {
-                filter(f);
+            // stop listening to change events for the property
+            for (BeanItem item : beanToItem.values()) {
+                removeValueChangeListener(item, propertyId);
             }
-            fireItemSetChange();
+            filterAll();
         }
+    }
+
+    public void valueChange(ValueChangeEvent event) {
+        // if a property that is used in a filter is changed, refresh filtering
+        filterAll();
     }
 
 }

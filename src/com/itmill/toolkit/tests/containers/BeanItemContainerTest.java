@@ -25,7 +25,7 @@ public class BeanItemContainerTest {
 
         c = new BeanItemContainer<Hello>(col);
 
-        System.out.print(c + " contains " + c.size() + "objects");
+        System.out.print(c + " contains " + c.size() + " objects");
 
     }
 

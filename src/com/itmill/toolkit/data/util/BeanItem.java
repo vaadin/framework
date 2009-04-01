@@ -60,7 +60,7 @@ public class BeanItem extends PropertysetItem {
             for (int i = 0; i < pd.length; i++) {
                 final Method getMethod = pd[i].getReadMethod();
                 final Method setMethod = pd[i].getWriteMethod();
-                final Class type = pd[i].getPropertyType();
+                final Class<?> type = pd[i].getPropertyType();
                 final String name = pd[i].getName();
 
                 if ((getMethod != null)
@@ -103,14 +103,15 @@ public class BeanItem extends PropertysetItem {
             final PropertyDescriptor[] pd = info.getPropertyDescriptors();
 
             // Add all the bean properties as MethodProperties to this Item
-            for (final Iterator iter = propertyIds.iterator(); iter.hasNext();) {
+            final Iterator iter = propertyIds.iterator();
+            while (iter.hasNext()) {
                 final Object id = iter.next();
                 for (int i = 0; i < pd.length; i++) {
                     final String name = pd[i].getName();
                     if (name.equals(id)) {
                         final Method getMethod = pd[i].getReadMethod();
                         final Method setMethod = pd[i].getWriteMethod();
-                        final Class type = pd[i].getPropertyType();
+                        final Class<?> type = pd[i].getPropertyType();
                         if ((getMethod != null)) {
                             final Property p = new MethodProperty(type, bean,
                                     getMethod, setMethod);
