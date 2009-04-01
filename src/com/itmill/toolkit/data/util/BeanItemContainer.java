@@ -28,6 +28,7 @@ import com.itmill.toolkit.data.Property.ValueChangeNotifier;
  * <p>
  * Bean objects act as identifiers. For this reason, they should implement
  * Object.equals(Object) and Object.hashCode() .
+ * </p>
  * 
  * @param <BT>
  * 
@@ -362,24 +363,6 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         }
     }
 
-    class Filter {
-
-        private final Object propertyId;
-        private final String filterString;
-        private final boolean onlyMatchPrefix;
-        private final boolean ignoreCase;
-
-        public Filter(Object propertyId, String filterString,
-                boolean ignoreCase, boolean onlyMatchPrefix) {
-            this.propertyId = propertyId;
-            this.ignoreCase = ignoreCase;
-            this.filterString = ignoreCase ? filterString.toLowerCase()
-                    : filterString;
-            this.onlyMatchPrefix = onlyMatchPrefix;
-        }
-
-    }
-
     @SuppressWarnings("unchecked")
     public void addContainerFilter(Object propertyId, String filterString,
             boolean ignoreCase, boolean onlyMatchPrefix) {
@@ -423,24 +406,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         Iterator<BT> iterator = list.iterator();
         while (iterator.hasNext()) {
             BT bean = iterator.next();
-            // TODO #2517: should not swallow exceptions - requires several
-            // checks
-            try {
-                String value = getContainerProperty(bean, f.propertyId)
-                        .getValue().toString();
-                if (f.ignoreCase) {
-                    value = value.toLowerCase();
-                }
-                if (f.onlyMatchPrefix) {
-                    if (!value.startsWith(f.filterString)) {
-                        iterator.remove();
-                    }
-                } else {
-                    if (!value.contains(f.filterString)) {
-                        iterator.remove();
-                    }
-                }
-            } catch (Exception e) {
+            if (!f.passesFilter(getItem(bean))) {
                 iterator.remove();
             }
         }

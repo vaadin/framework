@@ -1566,57 +1566,6 @@ public class IndexedContainer implements Container.Indexed,
         return super.equals(obj);
     }
 
-    private class Filter {
-        Object propertyId;
-        String filterString;
-        boolean ignoreCase;
-        boolean onlyMatchPrefix;
-
-        Filter(Object propertyId, String filterString, boolean ignoreCase,
-                boolean onlyMatchPrefix) {
-            this.propertyId = propertyId;
-            ;
-            this.filterString = filterString;
-            this.ignoreCase = ignoreCase;
-            this.onlyMatchPrefix = onlyMatchPrefix;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-
-            // Only ones of the objects of the same class can be equal
-            if (!(obj instanceof Filter)) {
-                return false;
-            }
-            final Filter o = (Filter) obj;
-
-            // Checks the properties one by one
-            if (propertyId != o.propertyId && o.propertyId != null
-                    && !o.propertyId.equals(propertyId)) {
-                return false;
-            }
-            if (filterString != o.filterString && o.filterString != null
-                    && !o.filterString.equals(filterString)) {
-                return false;
-            }
-            if (ignoreCase != o.ignoreCase) {
-                return false;
-            }
-            if (onlyMatchPrefix != o.onlyMatchPrefix) {
-                return false;
-            }
-
-            return true;
-        }
-
-        @Override
-        public int hashCode() {
-            return (propertyId != null ? propertyId.hashCode() : 0)
-                    ^ (filterString != null ? filterString.hashCode() : 0);
-        }
-
-    }
-
     public void addContainerFilter(Object propertyId, String filterString,
             boolean ignoreCase, boolean onlyMatchPrefix) {
         if (filters == null) {
@@ -1705,22 +1654,8 @@ public class IndexedContainer implements Container.Indexed,
         final Iterator<Filter> i = filters.iterator();
         while (i.hasNext()) {
             final Filter f = i.next();
-            final String s1 = f.ignoreCase ? f.filterString.toLowerCase()
-                    : f.filterString;
-            final Property p = item.getItemProperty(f.propertyId);
-            if (p == null || p.toString() == null) {
+            if (!f.passesFilter(item)) {
                 return false;
-            }
-            final String s2 = f.ignoreCase ? p.toString().toLowerCase() : p
-                    .toString();
-            if (f.onlyMatchPrefix) {
-                if (s2.indexOf(s1) != 0) {
-                    return false;
-                }
-            } else {
-                if (s2.indexOf(s1) < 0) {
-                    return false;
-                }
             }
         }
         return true;
