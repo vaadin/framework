@@ -72,6 +72,8 @@ public class IView extends SimplePanel implements Container,
 
     private boolean scrollable;
 
+    private boolean immediate;
+
     public IView(String elementId) {
         super();
         setStyleName(CLASSNAME);
@@ -137,6 +139,8 @@ public class IView extends SimplePanel implements Container,
         id = uidl.getId();
         boolean firstPaint = connection == null;
         connection = client;
+
+        immediate = uidl.hasAttribute("immediate");
 
         String newTheme = uidl.getStringAttribute("theme");
         if (theme != null && !newTheme.equals(theme)) {
@@ -396,6 +400,8 @@ public class IView extends SimplePanel implements Container,
                                     .log(
                                             "Running layout functions due window resize");
                             connection.runDescendentsLayout(IView.this);
+
+                            sendClientResized();
                         }
                     }
                 };
@@ -419,8 +425,17 @@ public class IView extends SimplePanel implements Container,
             connection.runDescendentsLayout(this);
             Util.runWebkitOverflowAutoFix(getElement());
 
+            sendClientResized();
         }
 
+    }
+
+    /**
+     * Send new dimensions to the server.
+     */
+    private void sendClientResized() {
+        connection.updateVariable(id, "height", height, false);
+        connection.updateVariable(id, "width", width, immediate);
     }
 
     public native static void goTo(String url)

@@ -132,6 +132,8 @@ public class IWindow extends IToolkitOverlay implements Container,
 
     private String height;
 
+    private boolean immediate;
+
     public IWindow() {
         super(false, false, true); // no autohide, not modal, shadow
         // Different style of shadow for windows
@@ -248,6 +250,8 @@ public class IWindow extends IToolkitOverlay implements Container,
         if (client.updateComponent(this, uidl, false)) {
             return;
         }
+
+        immediate = uidl.hasAttribute("immediate");
 
         if (uidl.getBooleanAttribute("resizable") != resizable) {
             setResizable(!resizable);
@@ -756,7 +760,7 @@ public class IWindow extends IToolkitOverlay implements Container,
         if (updateVariables) {
             // sending width back always as pixels, no need for unit
             client.updateVariable(id, "width", w, false);
-            client.updateVariable(id, "height", h, false);
+            client.updateVariable(id, "height", h, immediate);
         }
 
         // Update child widget dimensions
