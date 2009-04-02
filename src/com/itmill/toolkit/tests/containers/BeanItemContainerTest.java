@@ -22,10 +22,17 @@ public class BeanItemContainerTest {
         for (int i = 0; i < 100; i++) {
             col.add(new Hello());
         }
+        col.add(new Hello2());
 
         c = new BeanItemContainer<Hello>(col);
 
-        System.out.print(c + " contains " + c.size() + " objects");
+        System.out.println(c + " contains " + c.size() + " objects");
+
+        // test that subclass properties are handled correctly
+        System.out.println(c + " item 0 second = "
+                + c.getContainerProperty(c.getIdByIndex(0), "second"));
+        System.out.println(c + " item 100 second = "
+                + c.getContainerProperty(c.getIdByIndex(100), "second"));
 
     }
 
@@ -57,4 +64,12 @@ public class BeanItemContainerTest {
 
     }
 
+    public static class Hello2 extends Hello {
+
+        @Override
+        public String getSecond() {
+            return "second";
+        }
+
+    }
 }

@@ -1,5 +1,6 @@
 package com.itmill.toolkit.data.util;
 
+import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -7,6 +8,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +29,7 @@ import com.itmill.toolkit.data.Property.ValueChangeNotifier;
  * An {@link ArrayList} backed container for {@link BeanItem}s.
  * <p>
  * Bean objects act as identifiers. For this reason, they should implement
- * Object.equals(Object) and Object.hashCode() .
+ * Object.equals(Object) and Object.hashCode().
  * </p>
  * 
  * @param <BT>
@@ -41,8 +43,9 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     private ArrayList<BT> allItems = new ArrayList<BT>();
     private final Map<BT, BeanItem> beanToItem = new HashMap<BT, BeanItem>();
 
+    // internal data model to obtain property IDs etc.
     private final Class<BT> type;
-    private final BeanItem model;
+    private final LinkedHashMap<String, PropertyDescriptor> model;
 
     private List<ItemSetChangeListener> itemSetChangeListeners;
 
@@ -51,8 +54,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     public BeanItemContainer(Class<BT> type) throws InstantiationException,
             IllegalAccessException {
         this.type = type;
-        BT pojomodel = type.newInstance();
-        model = new BeanItem(pojomodel);
+        model = BeanItem.getPropertyDescriptors(type);
     }
 
     /**
@@ -67,8 +69,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     public BeanItemContainer(Collection<BT> list)
             throws InstantiationException, IllegalAccessException {
         type = (Class<BT>) list.iterator().next().getClass();
-        BT pojomodel = type.newInstance();
-        model = new BeanItem(pojomodel);
+        model = BeanItem.getPropertyDescriptors(type);
         int i = 0;
         for (BT bt : list) {
             addItemAt(i++, bt);
@@ -111,11 +112,11 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         if (allItems.contains(newItemId)) {
             return null;
         }
-        if (newItemId.getClass().isAssignableFrom(type)) {
+        if (type.isAssignableFrom(newItemId.getClass())) {
             BT pojo = (BT) newItemId;
             // "list" will be updated in filterAll()
             allItems.add(index, pojo);
-            BeanItem beanItem = new BeanItem(pojo);
+            BeanItem beanItem = new BeanItem(pojo, model);
             beanToItem.put(pojo, beanItem);
             // add listeners to be able to update filtering on property changes
             for (Filter filter : filters) {
@@ -230,7 +231,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
 
     @SuppressWarnings("unchecked")
     public Collection getContainerPropertyIds() {
-        return model.getItemPropertyIds();
+        return model.keySet();
     }
 
     public Item getItem(Object itemId) {
@@ -243,7 +244,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     }
 
     public Class<?> getType(Object propertyId) {
-        return model.getItemProperty(propertyId).getType();
+        return model.get(propertyId).getPropertyType();
     }
 
     public boolean removeAllItems() throws UnsupportedOperationException {
