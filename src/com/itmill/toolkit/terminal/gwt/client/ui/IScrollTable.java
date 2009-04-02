@@ -2320,28 +2320,31 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
              */
             @Override
             public void onBrowserEvent(Event event) {
-                Element targetTdOrTr = getEventTargetTdOrTr(event);
-                if (targetTdOrTr != null) {
-                    switch (DOM.eventGetType(event)) {
-                    case Event.ONCLICK:
-                        handleClickEvent(event, targetTdOrTr);
-                        if (selectMode > Table.SELECT_MODE_NONE) {
-                            toggleSelection();
-                            // Note: changing the immediateness of this might
-                            // require changes to "clickEvent" immediateness
-                            // also.
-                            client.updateVariable(paintableId, "selected",
-                                    selectedRowKeys.toArray(), immediate);
+                if (enabled) {
+                    Element targetTdOrTr = getEventTargetTdOrTr(event);
+                    if (targetTdOrTr != null) {
+                        switch (DOM.eventGetType(event)) {
+                        case Event.ONCLICK:
+                            handleClickEvent(event, targetTdOrTr);
+                            if (selectMode > Table.SELECT_MODE_NONE) {
+                                toggleSelection();
+                                // Note: changing the immediateness of this
+                                // might
+                                // require changes to "clickEvent" immediateness
+                                // also.
+                                client.updateVariable(paintableId, "selected",
+                                        selectedRowKeys.toArray(), immediate);
+                            }
+                            break;
+                        case Event.ONDBLCLICK:
+                            handleClickEvent(event, targetTdOrTr);
+                            break;
+                        case Event.ONCONTEXTMENU:
+                            showContextMenu(event);
+                            break;
+                        default:
+                            break;
                         }
-                        break;
-                    case Event.ONDBLCLICK:
-                        handleClickEvent(event, targetTdOrTr);
-                        break;
-                    case Event.ONCONTEXTMENU:
-                        showContextMenu(event);
-                        break;
-                    default:
-                        break;
                     }
                 }
                 super.onBrowserEvent(event);
