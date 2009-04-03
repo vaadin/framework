@@ -6,8 +6,8 @@ package com.itmill.toolkit.data.validator;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import com.itmill.toolkit.data.Validator;
 
@@ -23,7 +23,7 @@ import com.itmill.toolkit.data.Validator;
  * @VERSION@
  * @since 3.0
  */
-public class CompositeValidator implements Validator {
+public class CompositeValidator extends AbstractValidator {
 
     /**
      * The validators are combined with <code>AND</code> clause: validity of the
@@ -53,26 +53,22 @@ public class CompositeValidator implements Validator {
     /**
      * List of contained validators.
      */
-    private final LinkedList validators = new LinkedList();
-
-    /**
-     * Error message.
-     */
-    private String errorMessage;
+    private final List<Validator> validators = new LinkedList<Validator>();
 
     /**
      * Construct a composite validator in <code>AND</code> mode without error
      * message.
      */
     public CompositeValidator() {
+        super("");
     }
 
     /**
      * Constructs a composite validator in given mode.
      */
     public CompositeValidator(int mode, String errorMessage) {
+        super(errorMessage);
         setMode(mode);
-        setErrorMessage(errorMessage);
     }
 
     /**
@@ -94,19 +90,20 @@ public class CompositeValidator implements Validator {
      * @throws Validator.InvalidValueException
      *             if the value is not valid.
      */
+    @Override
     public void validate(Object value) throws Validator.InvalidValueException {
         switch (mode) {
         case MODE_AND:
-            for (final Iterator i = validators.iterator(); i.hasNext();) {
-                ((Validator) i.next()).validate(value);
+            for (Validator validator : validators) {
+                validator.validate(value);
             }
             return;
 
         case MODE_OR:
             Validator.InvalidValueException first = null;
-            for (final Iterator i = validators.iterator(); i.hasNext();) {
+            for (Validator v : validators) {
                 try {
-                    ((Validator) i.next()).validate(value);
+                    v.validate(value);
                     return;
                 } catch (final Validator.InvalidValueException e) {
                     if (first == null) {
@@ -141,8 +138,7 @@ public class CompositeValidator implements Validator {
     public boolean isValid(Object value) {
         switch (mode) {
         case MODE_AND:
-            for (final Iterator i = validators.iterator(); i.hasNext();) {
-                final Validator v = (Validator) i.next();
+            for (Validator v : validators) {
                 if (!v.isValid(value)) {
                     return false;
                 }
@@ -150,8 +146,7 @@ public class CompositeValidator implements Validator {
             return true;
 
         case MODE_OR:
-            for (final Iterator i = validators.iterator(); i.hasNext();) {
-                final Validator v = (Validator) i.next();
+            for (Validator v : validators) {
                 if (v.isValid(value)) {
                     return true;
                 }
@@ -193,25 +188,15 @@ public class CompositeValidator implements Validator {
      * Gets the error message for the composite validator. If the error message
      * is null, original error messages of the sub-validators are used instead.
      */
+    @Override
     public String getErrorMessage() {
-        if (errorMessage != null) {
-            return errorMessage;
+        if (getErrorMessage() != null) {
+            return getErrorMessage();
         }
 
         // TODO Return composite error message
 
         return null;
-    }
-
-    /**
-     * Sets the error message for the composite validator. If the error message
-     * is null, original error messages of the sub-validators are used instead.
-     * 
-     * @param errorMessage
-     *            the Error Message to set.
-     */
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
     }
 
     /**
@@ -254,23 +239,22 @@ public class CompositeValidator implements Validator {
      * validators of given type null is returned.
      * </p>
      * 
-     * @return Collection of validators compatible with given type that must
-     *         apply or null if none fould.
+     * @return Collection<Validator> of validators compatible with given type
+     *         that must apply or null if none fould.
      */
-    public Collection getSubValidators(Class validatorType) {
+    public Collection<Validator> getSubValidators(Class validatorType) {
         if (mode != MODE_AND) {
             return null;
         }
 
-        final HashSet found = new HashSet();
-        for (final Iterator i = validators.iterator(); i.hasNext();) {
-            final Validator v = (Validator) i.next();
+        final HashSet<Validator> found = new HashSet<Validator>();
+        for (Validator v : validators) {
             if (validatorType.isAssignableFrom(v.getClass())) {
                 found.add(v);
             }
             if (v instanceof CompositeValidator
                     && ((CompositeValidator) v).getMode() == MODE_AND) {
-                final Collection c = ((CompositeValidator) v)
+                final Collection<Validator> c = ((CompositeValidator) v)
                         .getSubValidators(validatorType);
                 if (c != null) {
                     found.addAll(c);
