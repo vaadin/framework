@@ -131,11 +131,9 @@ public class IFilterSelect extends Composite implements Paintable, Field,
                 Collection<FilterSelectSuggestion> currentSuggestions,
                 int currentPage, int totalSuggestions) {
 
-            if (ApplicationConnection.isTestingMode()) {
-                // Add TT anchor point
-                DOM.setElementProperty(getElement(), "id", paintableId
-                        + "_OPTIONLIST");
-            }
+            // Add TT anchor point
+            DOM.setElementProperty(getElement(), "id",
+                    "TOOLKIT_COMBOBOX_OPTIONLIST");
 
             menu.setSuggestions(currentSuggestions);
             final int x = IFilterSelect.this.getAbsoluteLeft();

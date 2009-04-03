@@ -31,7 +31,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.WindowCloseListener;
 import com.google.gwt.user.client.impl.HTTPRequestImpl;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -72,8 +71,6 @@ public class ApplicationConnection {
 
     private static Console console;
 
-    private static boolean testingMode;
-
     private final Vector<String> pendingVariables = new Vector<String>();
 
     private final ComponentDetailMap idToPaintableDetail = ComponentDetailMap
@@ -91,21 +88,6 @@ public class ApplicationConnection {
     private final IView view;
 
     private boolean applicationRunning = false;
-
-    /**
-     * True if each Paintable objects id is injected to DOM. Used for Testing
-     * Tools.
-     */
-    private boolean usePaintableIdsInDOM = false;
-
-    /**
-     * Contains reference for client wrapper given to Testing Tools.
-     * 
-     * Used in JSNI functions
-     * 
-     */
-    @SuppressWarnings("unused")
-    private final JavaScriptObject ttClientWrapper = null;
 
     private int activeRequests = 0;
 
@@ -137,26 +119,19 @@ public class ApplicationConnection {
         this.widgetSet = widgetSet;
         configuration = cnf;
         windowName = configuration.getInitialWindowName();
-
         if (isDebugMode()) {
             console = new IDebugConsole(this, cnf, !isQuietDebugMode());
         } else {
             console = new NullConsole();
         }
 
-        if (checkTestingMode()) {
-            usePaintableIdsInDOM = true;
-            initializeTestingTools();
-            Window.addWindowCloseListener(new WindowCloseListener() {
-                public void onWindowClosed() {
-                    uninitializeTestingTools();
-                }
+        ComponentLocator componentLocator = new ComponentLocator(this);
 
-                public String onWindowClosing() {
-                    return null;
-                }
-            });
-        }
+        String appRootPanelName = cnf.getRootPanelId();
+        // remove the end (window name) of autogenarated rootpanel id
+        appRootPanelName = appRootPanelName.replaceFirst("-\\d+$", "");
+
+        initializeTestingToolsHooks(componentLocator, appRootPanelName);
 
         initializeClientHooks();
 
@@ -176,33 +151,8 @@ public class ApplicationConnection {
         makeUidlRequest("", true, false, false);
     }
 
-    /**
-     * Method to check if application is in testing mode. Can be used after
-     * application init.
-     * 
-     * @return true if in testing mode
-     */
-    public static boolean isTestingMode() {
-        return testingMode;
-    }
-
-    /**
-     * Check is application is run in testing mode.
-     * 
-     * @return true if in testing mode
-     */
-    private native static boolean checkTestingMode()
-    /*-{
-        try {
-            @com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::testingMode = $wnd.top.itmill && $wnd.top.itmill.registerToTT ? true : false;
-            return @com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::testingMode;
-        } catch(e) {
-            // if run in iframe SOP may cause exception, return false then
-            return false;
-        }
-    }-*/;
-
-    private native void initializeTestingTools()
+    private native void initializeTestingToolsHooks(
+            ComponentLocator componentLocator, String TTAppId)
     /*-{
          var ap = this;
          var client = {};
@@ -215,8 +165,19 @@ public class ApplicationConnection {
                  return vi;
              }
          }
-         $wnd.top.itmill.registerToTT(client);
-         this.@com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::ttClientWrapper = client;
+         
+         client.getElementByPath = function(id) {
+            return componentLocator.@com.itmill.toolkit.terminal.gwt.client.ComponentLocator::getElementByPath(Ljava/lang/String;)(id);
+         }
+         client.getPathForElement = function(element) {
+            return componentLocator.@com.itmill.toolkit.terminal.gwt.client.ComponentLocator::getPathForElement(Lcom/google/gwt/user/client/Element;)(element);
+         }
+
+         if(!$wnd.itmill.clients) {
+            $wnd.itmill.clients = {};
+         }
+         
+        $wnd.itmill.clients[TTAppId] = client;
     }-*/;
 
     /**
@@ -226,11 +187,6 @@ public class ApplicationConnection {
     private JavaScriptObject getVersionInfo() {
         return configuration.getVersionInfoJSObject();
     }
-
-    private native void uninitializeTestingTools()
-    /*-{
-         $wnd.top.itmill.unregisterFromTT(this.@com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::ttClientWrapper);
-    }-*/;
 
     /**
      * Publishes a JavaScript API for mash-up applications.
@@ -804,14 +760,18 @@ public class ApplicationConnection {
         el.tkPid = pid;
     }-*/;
 
-    private String getPid(Paintable paintable) {
+    public String getPid(Paintable paintable) {
         return getPid(((Widget) paintable).getElement());
     }
 
-    private native String getPid(Element el)
+    public native String getPid(Element el)
     /*-{
         return el.tkPid;
     }-*/;
+
+    public Element getElementByPid(String pid) {
+        return ((Widget) getPaintable(pid)).getElement();
+    }
 
     public void unregisterPaintable(Paintable p) {
         if (p == null) {
@@ -1165,8 +1125,9 @@ public class ApplicationConnection {
             }
         }
 
-        if (usePaintableIdsInDOM) {
-            DOM.setElementProperty(component.getElement(), "id", uidl.getId());
+        if (configuration.useDebugIdInDOM() && uidl.getId().startsWith("PID_S")) {
+            DOM.setElementProperty(component.getElement(), "id", uidl.getId()
+                    .substring(5));
         }
 
         /*
@@ -1499,10 +1460,8 @@ public class ApplicationConnection {
     public IContextMenu getContextMenu() {
         if (contextMenu == null) {
             contextMenu = new IContextMenu();
-            if (usePaintableIdsInDOM) {
-                DOM.setElementProperty(contextMenu.getElement(), "id",
-                        "PID_TOOLKIT_CM");
-            }
+            DOM.setElementProperty(contextMenu.getElement(), "id",
+                    "PID_TOOLKIT_CM");
         }
         return contextMenu;
     }
@@ -1660,4 +1619,9 @@ public class ApplicationConnection {
     public void analyzeLayouts() {
         makeUidlRequest("", true, false, true);
     }
+
+    public IView getView() {
+        return view;
+    }
+
 }

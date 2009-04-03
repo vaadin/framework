@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.Writer;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -165,10 +164,6 @@ public class ApplicationServlet extends HttpServlet {
 
     private ClassLoader classLoader;
 
-    private boolean testingToolsActive = false;
-
-    private String testingToolsServerUri = null;
-
     /**
      * Called by the servlet container to indicate to a servlet that the servlet
      * is being placed into service.
@@ -232,14 +227,6 @@ public class ApplicationServlet extends HttpServlet {
         if (!productionMode) {
             /* Print an information/warning message about running in debug mode */
             System.err.println(NOT_PRODUCTION_MODE_INFO);
-        }
-
-        // Gets Testing Tools parameters if feature is activated
-        if (getApplicationOrSystemProperty("testingToolsActive", "false")
-                .equals("true")) {
-            testingToolsActive = true;
-            testingToolsServerUri = getApplicationOrSystemProperty(
-                    "testingToolsServerUri", null);
         }
 
         // Gets custom class loader
@@ -844,9 +831,6 @@ public class ApplicationServlet extends HttpServlet {
             themeUri = staticFilePath + "/" + THEME_DIRECTORY_PATH + themeName;
         }
 
-        boolean testingApplication = testingToolsActive
-                && request.getParameter("TT") != null;
-
         if (!fragment) {
             // Window renders are not cacheable
             response.setHeader("Cache-Control", "no-cache");
@@ -879,12 +863,6 @@ public class ApplicationServlet extends HttpServlet {
 
             page.write("<title>" + title + "</title>");
 
-            if (testingApplication) {
-                // TT script needs to be in head as it needs to be the first
-                // to hook capturing event listeners
-                writeTestingToolsScripts(page, request);
-            }
-
             page
                     .write("\n</head>\n<body scroll=\"auto\" class=\"i-generated-body\">\n");
         }
@@ -896,7 +874,11 @@ public class ApplicationServlet extends HttpServlet {
         appId = appId.replaceAll("[^a-zA-Z0-9]", "");
         // Add hashCode to the end, so that it is still (sort of) predictable,
         // but indicates that it should not be used in CSS and such:
-        appId = appId + appId.hashCode();
+        int hashCode = appId.hashCode();
+        if (hashCode < 0) {
+            hashCode = -hashCode;
+        }
+        appId = appId + "-" + hashCode;
 
         // Get system messages
         Application.SystemMessages systemMessages = null;
@@ -1117,29 +1099,6 @@ public class ApplicationServlet extends HttpServlet {
             }
         }
         return false;
-    }
-
-    private void writeTestingToolsScripts(Writer page,
-            HttpServletRequest request) throws IOException {
-        // Testing Tools script and CSS files are served from Testing Tools
-        // Server
-        String ext = getTestingToolsUri(request);
-        ext = ext.substring(0, ext.lastIndexOf('/'));
-        page.write("<script src=\"" + ext + "/ext/TT.js"
-                + "\" type=\"text/javascript\"></script>\n");
-        page.write("<link rel=\"stylesheet\" href=\"" + ext + "/ext/TT.css"
-                + "\" type=\"text/css\" />\n");
-
-    }
-
-    private String getTestingToolsUri(HttpServletRequest request) {
-        if (testingToolsServerUri == null) {
-            // Default behavior is that Testing Tools Server application exists
-            // on same host as current application does in port 8099.
-            testingToolsServerUri = "http" + "://" + request.getServerName()
-                    + ":8099" + "/TestingToolsServer";
-        }
-        return testingToolsServerUri;
     }
 
     /**
