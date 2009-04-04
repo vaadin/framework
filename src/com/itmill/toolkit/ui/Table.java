@@ -1370,14 +1370,6 @@ public class Table extends AbstractSelect implements Action.Container,
                         // check in current pageBuffer already has row
                         int index = firstIndex + i;
                         if (p != null || isGenerated) {
-                            if (p instanceof Property.ValueChangeNotifier) {
-                                if (oldListenedProperties == null
-                                        || !oldListenedProperties.contains(p)) {
-                                    ((Property.ValueChangeNotifier) p)
-                                            .addListener(this);
-                                }
-                                listenedProperties.add(p);
-                            }
                             if (index < firstIndexNotInCache
                                     && index >= pageBufferFirstIndex) {
                                 // we have data already in our cache,
@@ -1397,6 +1389,32 @@ public class Table extends AbstractSelect implements Action.Container,
                                     value = p.getValue();
                                 } else if (p != null) {
                                     value = getPropertyValue(id, colids[j], p);
+                                    /*
+                                     * If returned value is Component (via
+                                     * fieldfactory or overridden
+                                     * getPropertyValue) we excpect it to listen
+                                     * property value changes. Otherwise if
+                                     * property emits value change events, table
+                                     * will start to listen them and refresh
+                                     * content when needed.
+                                     */
+                                    if (!(value instanceof Component)
+                                            && p instanceof Property.ValueChangeNotifier) {
+                                        // only add listener to property once
+                                        if (oldListenedProperties == null
+                                                || !oldListenedProperties
+                                                        .contains(p)) {
+                                            ((Property.ValueChangeNotifier) p)
+                                                    .addListener(this);
+                                        }
+                                        /*
+                                         * register listened properties, so we
+                                         * can do proper cleanup to free memory.
+                                         * Essential if table has loads of data
+                                         * and it is used for a long time.
+                                         */
+                                        listenedProperties.add(p);
+                                    }
                                 } else {
                                     value = getPropertyValue(id, colids[j],
                                             null);
