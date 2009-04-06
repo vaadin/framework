@@ -27,13 +27,18 @@
 	border-color: #5daee8;
 }
 
+input.i-textfield-prompt,
+textarea.i-textarea-prompt {
+	color: #999;
+	font-style: italic;
+}
+
 .i-textfield.i-readonly,
 .i-textarea.i-readonly {
 	background: transparent;
 	color: #222;
 	border: none;
 }
-
 
 .i-richtextarea {
 	border: 1px solid #b6b6b6;

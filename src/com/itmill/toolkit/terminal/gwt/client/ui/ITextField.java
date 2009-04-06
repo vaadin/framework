@@ -47,6 +47,11 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
     private int extraVerticalPixels = -1;
     private int maxLength = -1;
 
+    private static final String CLASSNAME_PROMPT = "prompt";
+    private static final String ATTR_INPUTPROMPT = "prompt";
+    private String inputPrompt = null;
+    private boolean prompting = false;
+
     public ITextField() {
         this(DOM.createInputText());
     }
@@ -86,6 +91,8 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
             setReadOnly(false);
         }
 
+        inputPrompt = uidl.getStringAttribute(ATTR_INPUTPROMPT);
+
         setMaxLength(uidl.hasAttribute("maxLength") ? uidl
                 .getIntAttribute("maxLength") : -1);
 
@@ -95,7 +102,15 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
             setColumns(new Integer(uidl.getStringAttribute("cols")).intValue());
         }
 
-        setText(uidl.getStringVariable("text"));
+        String text = uidl.getStringVariable("text");
+        prompting = inputPrompt != null && (text == null || text.equals(""));
+        if (prompting) {
+            setText(inputPrompt);
+            addStyleDependentName(CLASSNAME_PROMPT);
+        } else {
+            setText(text);
+            removeStyleDependentName(CLASSNAME_PROMPT);
+        }
         valueBeforeEdit = uidl.getStringVariable("text");
     }
 
@@ -103,13 +118,13 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
         if (newMaxLength > 0) {
             maxLength = newMaxLength;
             if (getElement().getTagName().toLowerCase().equals("textarea")) {
-                // NOP no maxlenght property for textarea
+                // NOP no maxlength property for textarea
             } else {
                 getElement().setPropertyInt("maxLength", maxLength);
             }
         } else if (maxLength != -1) {
             if (getElement().getTagName().toLowerCase().equals("textarea")) {
-                // NOP no maxlenght property for textarea
+                // NOP no maxlength property for textarea
             } else {
                 getElement().setAttribute("maxlength", "");
             }
@@ -125,7 +140,8 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
     public void onChange(Widget sender) {
         if (client != null && id != null) {
             String newText = getText();
-            if (newText != null && !newText.equals(valueBeforeEdit)) {
+            if (!prompting && newText != null
+                    && !newText.equals(valueBeforeEdit)) {
                 client.updateVariable(id, "text", getText(), immediate);
                 valueBeforeEdit = newText;
             }
@@ -142,12 +158,22 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
 
     public void onFocus(Widget sender) {
         addStyleDependentName(CLASSNAME_FOCUS);
+        if (prompting) {
+            setText("");
+            removeStyleDependentName(CLASSNAME_PROMPT);
+        }
         focusedTextField = this;
     }
 
     public void onLostFocus(Widget sender) {
         removeStyleDependentName(CLASSNAME_FOCUS);
         focusedTextField = null;
+        String text = getText();
+        prompting = inputPrompt != null && (text == null || "".equals(text));
+        if (prompting) {
+            setText(inputPrompt);
+            addStyleDependentName(CLASSNAME_PROMPT);
+        }
         onChange(sender);
     }
 

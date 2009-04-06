@@ -43,6 +43,7 @@ import com.itmill.toolkit.demo.sampler.features.notifications.NotificationWarnin
 import com.itmill.toolkit.demo.sampler.features.panels.PanelBasic;
 import com.itmill.toolkit.demo.sampler.features.panels.PanelLight;
 import com.itmill.toolkit.demo.sampler.features.selects.ComboBoxContains;
+import com.itmill.toolkit.demo.sampler.features.selects.ComboBoxInputPrompt;
 import com.itmill.toolkit.demo.sampler.features.selects.ComboBoxNewItems;
 import com.itmill.toolkit.demo.sampler.features.selects.ComboBoxPlain;
 import com.itmill.toolkit.demo.sampler.features.selects.ComboBoxStartsWith;
@@ -70,6 +71,7 @@ import com.itmill.toolkit.demo.sampler.features.text.LabelPreformatted;
 import com.itmill.toolkit.demo.sampler.features.text.LabelRich;
 import com.itmill.toolkit.demo.sampler.features.text.RichTextEditor;
 import com.itmill.toolkit.demo.sampler.features.text.TextArea;
+import com.itmill.toolkit.demo.sampler.features.text.TextFieldInputPrompt;
 import com.itmill.toolkit.demo.sampler.features.text.TextFieldSecret;
 import com.itmill.toolkit.demo.sampler.features.text.TextFieldSingle;
 import com.itmill.toolkit.demo.sampler.features.trees.TreeActions;
@@ -213,6 +215,7 @@ public class FeatureSet extends Feature {
                     new TwinColumnSelect(), //
                     new NativeSelection(), //
                     new ComboBoxPlain(), //
+                    new ComboBoxInputPrompt(), //
                     new ComboBoxStartsWith(), //
                     new ComboBoxContains(), //
                     new ComboBoxNewItems(), //
@@ -368,6 +371,7 @@ public class FeatureSet extends Feature {
                     //      
                             new TextFieldSingle(), //
                             new TextFieldSecret(), //
+                            new TextFieldInputPrompt(), //
                             new TextArea(), //
                             new RichTextEditor(), //
                     });

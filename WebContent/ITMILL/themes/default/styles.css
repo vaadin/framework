@@ -1384,7 +1384,11 @@ input.i-modified,
 	outline: 5px auto -webkit-focus-ring-color;
 	outline-offset: -4px;
 }
-
+.i-filterselect-prompt .i-filterselect-input {
+	/* input prompt active, i.e empty select */
+	color: #999;
+	font-style: italic;
+}
 .i-filterselect-button {
 	float: right;
 	width: 25px;
@@ -2483,13 +2487,18 @@ input.i-modified,
 	border-color: #5daee8;
 }
 
+input.i-textfield-prompt,
+textarea.i-textarea-prompt {
+	color: #999;
+	font-style: italic;
+}
+
 .i-textfield.i-readonly,
 .i-textarea.i-readonly {
 	background: transparent;
 	color: #222;
 	border: none;
 }
-
 
 .i-richtextarea {
 	border: 1px solid #b6b6b6;
@@ -2651,8 +2660,9 @@ input.i-modified,
 .i-window-footer {
 	height: 8px;
 	margin-left: 9px;
-	background: transparent url(window/img/bottom-right.png) no-repeat right top;
-	/* IE7 bug fix */
+	background: transparent url(window/img/bottom-right.png) no-repeat right top;  
+}
+.i-ie7 .i-window-footer {
 	position:relative;
 }
 

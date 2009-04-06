@@ -73,6 +73,8 @@ public class TextField extends AbstractField {
      */
     private boolean nullSettingAllowed = false;
 
+    private String inputPrompt = null;
+
     /**
      * Maximum character count in text field.
      */
@@ -157,6 +159,10 @@ public class TextField extends AbstractField {
 
         if (getMaxLength() >= 0) {
             target.addAttribute("maxLength", getMaxLength());
+        }
+
+        if (inputPrompt != null) {
+            target.addAttribute("prompt", inputPrompt);
         }
 
         // Adds the number of column and rows
@@ -472,6 +478,26 @@ public class TextField extends AbstractField {
      */
     public void setNullSettingAllowed(boolean nullSettingAllowed) {
         this.nullSettingAllowed = nullSettingAllowed;
+    }
+
+    /**
+     * Gets the current input prompt.
+     * 
+     * @see #setInputPrompt(String)
+     * @return the current input prompt, or null if not enabled
+     */
+    public String getInputPrompt() {
+        return inputPrompt;
+    }
+
+    /**
+     * Sets the input prompt - a textual prompt that is displayed when the field
+     * would otherwise be empty, to prompt the user for input.
+     * 
+     * @param inputPrompt
+     */
+    public void setInputPrompt(String inputPrompt) {
+        this.inputPrompt = inputPrompt;
     }
 
     /**

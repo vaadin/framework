@@ -452,8 +452,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
             }
             if (allowNewItem) {
 
-                if (!enteredItemValue.equals(emptyText)
-                        && !enteredItemValue.equals(lastNewItemString)) {
+                if (!prompting && !enteredItemValue.equals(lastNewItemString)) {
                     /*
                      * Store last sent new item string to avoid double sends
                      */
@@ -469,13 +468,18 @@ public class IFilterSelect extends Composite implements Paintable, Field,
             } else {
                 if (currentSuggestion != null) {
                     String text = currentSuggestion.getReplacementString();
-                    tb.setText((text.equals("") ? emptyText : text));
-                    // TODO add/remove class CLASSNAME_EMPTY
+                    /*- TODO?
+                    if (text.equals("")) {
+                        tb.setText(inputPrompt);
+                        prompting = true;
+                        addStyleDependentName(CLASSNAME_PROMPT);
+                    } else {
+                        tb.setText(text);
+                        prompting = false;
+                        removeStyleDependentName(CLASSNAME_PROMPT);
+                    }
+                    -*/
                     selectedOptionKey = currentSuggestion.key;
-                } else {
-                    tb.setText(emptyText);
-                    // TODO add class CLASSNAME_EMPTY
-                    selectedOptionKey = null;
                 }
             }
             suggestionPopup.hide();
@@ -546,7 +550,11 @@ public class IFilterSelect extends Composite implements Paintable, Field,
     private boolean enabled;
 
     // shown in unfocused empty field, disappears on focus (e.g "Search here")
-    private String emptyText = "";
+    private static final String CLASSNAME_PROMPT = "prompt";
+    private static final String ATTR_INPUTPROMPT = "prompt";
+    private String inputPrompt = "";
+    private boolean prompting = false;
+
     // Set true when popupopened has been clicked. Cleared on each UIDL-update.
     // This handles the special case where are not filtering yet and the
     // selected value has changed on the server-side. See #2119
@@ -555,8 +563,6 @@ public class IFilterSelect extends Composite implements Paintable, Field,
     private int textboxPadding = -1;
     private int componentPadding = -1;
     private int suggestionPopupMinWidth = 0;
-    // private static final String CLASSNAME_EMPTY = "empty";
-    private static final String ATTR_EMPTYTEXT = "emptytext";
     /*
      * Stores the last new item string to avoid double submissions. Cleared on
      * uidl updates
@@ -656,9 +662,11 @@ public class IFilterSelect extends Composite implements Paintable, Field,
 
         currentPage = uidl.getIntVariable("page");
 
-        if (uidl.hasAttribute(ATTR_EMPTYTEXT)) {
-            // "emptytext" changed from server
-            emptyText = uidl.getStringAttribute(ATTR_EMPTYTEXT);
+        if (uidl.hasAttribute(ATTR_INPUTPROMPT)) {
+            // input prompt changed from server
+            inputPrompt = uidl.getStringAttribute(ATTR_INPUTPROMPT);
+        } else {
+            inputPrompt = "";
         }
 
         suggestionPopup.setPagingEnabled(true);
@@ -671,7 +679,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
         final UIDL options = uidl.getChildUIDL(0);
         totalMatches = uidl.getIntAttribute("totalMatches");
 
-        String captions = emptyText;
+        String captions = inputPrompt;
 
         for (final Iterator i = options.getChildIterator(); i.hasNext();) {
             final UIDL optionUidl = (UIDL) i.next();
@@ -697,9 +705,12 @@ public class IFilterSelect extends Composite implements Paintable, Field,
         if ((!filtering || popupOpenerClicked) && uidl.hasVariable("selected")
                 && uidl.getStringArrayVariable("selected").length == 0) {
             // select nulled
-            tb.setText(emptyText);
+            if (!filtering || !popupOpenerClicked) {
+                tb.setText(inputPrompt);
+                prompting = true;
+                addStyleDependentName(CLASSNAME_PROMPT);
+            }
             selectedOptionKey = null;
-            // TODO add class CLASSNAME_EMPTY
         }
 
         if (filtering
@@ -751,9 +762,17 @@ public class IFilterSelect extends Composite implements Paintable, Field,
             // normal selection
             newKey = String.valueOf(suggestion.getOptionKey());
         }
+
         String text = suggestion.getReplacementString();
-        tb.setText(text.equals("") ? emptyText : text);
-        // TODO add/remove class CLASSNAME_EMPTY
+        if ("".equals(newKey)) {
+            tb.setText(inputPrompt);
+            prompting = true;
+            addStyleDependentName(CLASSNAME_PROMPT);
+        } else {
+            tb.setText(text);
+            prompting = false;
+            removeStyleDependentName(CLASSNAME_PROMPT);
+        }
         setSelectedItemIcon(suggestion.getIconUri());
         if (!newKey.equals(selectedOptionKey)) {
             selectedOptionKey = newKey;
@@ -844,12 +863,14 @@ public class IFilterSelect extends Composite implements Paintable, Field,
             case KeyboardListener.KEY_ESCAPE:
                 if (currentSuggestion != null) {
                     String text = currentSuggestion.getReplacementString();
-                    tb.setText((text.equals("") ? emptyText : text));
-                    // TODO add/remove class CLASSNAME_EMPTY
+                    tb.setText(text);
+                    prompting = false;
+                    removeStyleDependentName(CLASSNAME_PROMPT);
                     selectedOptionKey = currentSuggestion.key;
                 } else {
-                    tb.setText(emptyText);
-                    // TODO add class CLASSNAME_EMPTY
+                    tb.setText(inputPrompt);
+                    prompting = true;
+                    addStyleDependentName(CLASSNAME_PROMPT);
                     selectedOptionKey = null;
                 }
                 lastFilter = "";
@@ -868,12 +889,14 @@ public class IFilterSelect extends Composite implements Paintable, Field,
     public void onClick(Widget sender) {
         if (enabled) {
             // ask suggestionPopup if it was just closed, we are using GWT
-            // Popup's
-            // auto close feature
+            // Popup's auto close feature
             if (!suggestionPopup.isJustClosed()) {
                 filterOptions(-1, "");
                 popupOpenerClicked = true;
                 lastFilter = "";
+            } else if (selectedOptionKey == null) {
+                tb.setText(inputPrompt);
+                prompting = true;
             }
             DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
             tb.setFocus(true);
@@ -888,13 +911,13 @@ public class IFilterSelect extends Composite implements Paintable, Field,
     private native int minWidth(String captions)
     /*-{
         if(!captions || captions.length <= 0)
-        	return 0;
+                return 0;
         captions = captions.split("|");
         var d = $wnd.document.createElement("div");
         var html = "";
         for(var i=0; i < captions.length; i++) {
-        	html += "<div>" + captions[i] + "</div>";
-        	// TODO apply same CSS classname as in suggestionmenu
+                html += "<div>" + captions[i] + "</div>";
+                // TODO apply same CSS classname as in suggestionmenu
         }
         d.style.position = "absolute";
         d.style.top = "0";
@@ -908,9 +931,9 @@ public class IFilterSelect extends Composite implements Paintable, Field,
     }-*/;
 
     public void onFocus(Widget sender) {
-        if (emptyText.equals(tb.getText())) {
+        if (prompting) {
             tb.setText("");
-            // TODO remove class CLASSNAME_EMPTY
+            removeStyleDependentName(CLASSNAME_PROMPT);
         }
         addStyleDependentName("focus");
     }
@@ -920,14 +943,20 @@ public class IFilterSelect extends Composite implements Paintable, Field,
             // typing so fast the popup was never opened, or it's just closed
             suggestionPopup.menu.doSelectedItemAction();
         }
-        if ("".equals(tb.getText())) {
-            tb.setText(emptyText);
-            // TODO add CLASSNAME_EMPTY
+        if (selectedOptionKey == null) {
+            tb.setText(inputPrompt);
+            prompting = true;
+            addStyleDependentName(CLASSNAME_PROMPT);
         }
         removeStyleDependentName("focus");
     }
 
     public void focus() {
+        if (prompting) {
+            tb.setText("");
+            prompting = false;
+            removeStyleDependentName(CLASSNAME_PROMPT);
+        }
         tb.setFocus(true);
     }
 

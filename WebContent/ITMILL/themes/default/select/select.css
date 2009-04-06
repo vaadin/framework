@@ -102,7 +102,11 @@
 	outline: 5px auto -webkit-focus-ring-color;
 	outline-offset: -4px;
 }
-
+.i-filterselect-prompt .i-filterselect-input {
+	/* input prompt active, i.e empty select */
+	color: #999;
+	font-style: italic;
+}
 .i-filterselect-button {
 	float: right;
 	width: 25px;
