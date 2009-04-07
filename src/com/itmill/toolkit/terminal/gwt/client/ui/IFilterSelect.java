@@ -468,17 +468,17 @@ public class IFilterSelect extends Composite implements Paintable, Field,
             } else {
                 if (currentSuggestion != null) {
                     String text = currentSuggestion.getReplacementString();
-                    /*- TODO?
+                    /* TODO?
                     if (text.equals("")) {
+                        addStyleDependentName(CLASSNAME_PROMPT);
                         tb.setText(inputPrompt);
                         prompting = true;
-                        addStyleDependentName(CLASSNAME_PROMPT);
                     } else {
                         tb.setText(text);
                         prompting = false;
                         removeStyleDependentName(CLASSNAME_PROMPT);
                     }
-                    -*/
+                    */
                     selectedOptionKey = currentSuggestion.key;
                 }
             }
@@ -568,6 +568,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
      * uidl updates
      */
     private String lastNewItemString;
+    private boolean focused = false;
 
     public IFilterSelect() {
         selectedItemIcon.setVisible(false);
@@ -706,9 +707,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
                 && uidl.getStringArrayVariable("selected").length == 0) {
             // select nulled
             if (!filtering || !popupOpenerClicked) {
-                tb.setText(inputPrompt);
-                prompting = true;
-                addStyleDependentName(CLASSNAME_PROMPT);
+                setPromptingOn();
             }
             selectedOptionKey = null;
         }
@@ -752,6 +751,18 @@ public class IFilterSelect extends Composite implements Paintable, Field,
         updateRootWidth();
     }
 
+    private void setPromptingOn() {
+        prompting = true;
+        addStyleDependentName(CLASSNAME_PROMPT);
+        tb.setText(inputPrompt);
+    }
+
+    private void setPromptingOff(String text) {
+        tb.setText(text);
+        prompting = false;
+        removeStyleDependentName(CLASSNAME_PROMPT);
+    }
+
     public void onSuggestionSelected(FilterSelectSuggestion suggestion) {
         currentSuggestion = suggestion;
         String newKey;
@@ -764,14 +775,10 @@ public class IFilterSelect extends Composite implements Paintable, Field,
         }
 
         String text = suggestion.getReplacementString();
-        if ("".equals(newKey)) {
-            tb.setText(inputPrompt);
-            prompting = true;
-            addStyleDependentName(CLASSNAME_PROMPT);
+        if ("".equals(newKey) && !focused) {
+            setPromptingOn();
         } else {
-            tb.setText(text);
-            prompting = false;
-            removeStyleDependentName(CLASSNAME_PROMPT);
+            setPromptingOff(text);
         }
         setSelectedItemIcon(suggestion.getIconUri());
         if (!newKey.equals(selectedOptionKey)) {
@@ -863,14 +870,10 @@ public class IFilterSelect extends Composite implements Paintable, Field,
             case KeyboardListener.KEY_ESCAPE:
                 if (currentSuggestion != null) {
                     String text = currentSuggestion.getReplacementString();
-                    tb.setText(text);
-                    prompting = false;
-                    removeStyleDependentName(CLASSNAME_PROMPT);
+                    setPromptingOff(text);
                     selectedOptionKey = currentSuggestion.key;
                 } else {
-                    tb.setText(inputPrompt);
-                    prompting = true;
-                    addStyleDependentName(CLASSNAME_PROMPT);
+                    setPromptingOn();
                     selectedOptionKey = null;
                 }
                 lastFilter = "";
@@ -931,31 +934,29 @@ public class IFilterSelect extends Composite implements Paintable, Field,
     }-*/;
 
     public void onFocus(Widget sender) {
+        focused = true;
         if (prompting) {
-            tb.setText("");
-            removeStyleDependentName(CLASSNAME_PROMPT);
+            setPromptingOff("");
         }
         addStyleDependentName("focus");
     }
 
     public void onLostFocus(Widget sender) {
+        focused = false;
         if (!suggestionPopup.isAttached() || suggestionPopup.isJustClosed()) {
             // typing so fast the popup was never opened, or it's just closed
             suggestionPopup.menu.doSelectedItemAction();
         }
         if (selectedOptionKey == null) {
-            tb.setText(inputPrompt);
-            prompting = true;
-            addStyleDependentName(CLASSNAME_PROMPT);
+            setPromptingOn();
         }
         removeStyleDependentName("focus");
     }
 
     public void focus() {
+        focused = true;
         if (prompting) {
-            tb.setText("");
-            prompting = false;
-            removeStyleDependentName(CLASSNAME_PROMPT);
+            setPromptingOff("");
         }
         tb.setFocus(true);
     }
