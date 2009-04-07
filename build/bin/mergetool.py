@@ -79,14 +79,12 @@ def listChangedFiles():
 	changed  = []
 	for line in lines:
 		# Remove trailing newline
-		line = line[:-1]
-
-		# Remove possible space character in the beginning of line
-		line = line.lstrip()
-
-		# Extract the file state and name
+		line = line.rstrip()
 		print line
-		(filestate, filename) = re.split(r'[ \+]+', line)
+		
+		# Extract the file state and name
+		filestate = line[0:2].strip()
+		filename  = line[7:].strip()
 
 		# Ignore files in build directory
 		if (filename.startswith("build/merge/") \
@@ -545,7 +543,8 @@ def commandRevert():
 		line = line[:-1]
 
 		# Extract the file state and name
-		(filestate, filename) = re.split(r'[ \+]+', line)
+		filestate = line[0:2].strip()
+		filename  = line[7:].strip()
 
 		# Ignore files in build directory
 		if (filename.startswith("build/merge/") \
