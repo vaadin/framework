@@ -46,17 +46,15 @@ public class ValidationExample extends VerticalLayout {
                     throw new Validator.InvalidValueException("Username "
                             + value + " already in use");
                 }
-                usernames.add(value);
             }
         });
         username.addListener(new ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
                 TextField tf = (TextField) event.getProperty();
                 tf.validate();
-                if (tf.isValid()) {
-                    addComponent(new Label("Added " + tf.getValue()
-                            + " to usernames"));
-                }
+                usernames.add(tf.getValue());
+                addComponent(new Label("Added " + tf.getValue()
+                        + " to usernames"));
             }
         });
 

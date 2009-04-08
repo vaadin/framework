@@ -639,12 +639,10 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      */
     public boolean isValid() {
 
-        if (isRequired()) {
-            if (isEmpty()) {
+        if (isEmpty()) {
+            if (isRequired()) {
                 return false;
-            }
-        } else {
-            if (isEmpty()) {
+            } else {
                 return true;
             }
         }
@@ -675,9 +673,11 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      */
     public void validate() throws Validator.InvalidValueException {
 
-        if (isRequired()) {
-            if (isEmpty()) {
+        if (isEmpty()) {
+            if (isRequired()) {
                 throw new Validator.EmptyValueException(requiredError);
+            } else {
+                return;
             }
         }
 

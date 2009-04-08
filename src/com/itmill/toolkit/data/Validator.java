@@ -17,6 +17,9 @@ import com.itmill.toolkit.terminal.PaintTarget;
  * {@link Validator.InvalidValueException} if the given value is not valid by
  * its standards.
  * 
+ * Validators should not have side effects on other objects as they can be
+ * called from Paintable.paint().
+ * 
  * @author IT Mill Ltd.
  * @version
  * @VERSION@
