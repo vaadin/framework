@@ -155,6 +155,7 @@ public class ITextualDate extends IDateField implements Paintable, Field,
                     ClientExceptionHandler.displayError(e.getMessage());
 
                     addStyleName(PARSE_ERROR_CLASSNAME);
+                    // this is a hack that may eventually be removed
                     client.updateVariable(id, "lastInvalidDateString", text
                             .getText(), false);
                     date = null;
@@ -164,6 +165,8 @@ public class ITextualDate extends IDateField implements Paintable, Field,
                 // remove possibly added invalid value indication
                 removeStyleName(PARSE_ERROR_CLASSNAME);
             }
+            // always send the date string
+            client.updateVariable(id, "dateString", text.getText(), false);
 
             if (date != null) {
                 showingDate = new Date(date.getTime());

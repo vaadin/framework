@@ -21,6 +21,7 @@ public class ApplicationConfiguration {
     private String communicationErrorCaption;
     private String communicationErrorMessage;
     private String communicationErrorUrl;
+    private boolean useDebugIdInDom = true;
 
     private static ArrayList<ApplicationConnection> unstartedApplications = new ArrayList<ApplicationConnection>();
     private static ArrayList<ApplicationConnection> runningApplications = new ArrayList<ApplicationConnection>();
@@ -84,6 +85,9 @@ public class ApplicationConfiguration {
             this.@com.itmill.toolkit.terminal.gwt.client.ApplicationConfiguration::themeUri = jsobj.themeUri;
             if(jsobj.windowName) {
                 this.@com.itmill.toolkit.terminal.gwt.client.ApplicationConfiguration::windowName = jsobj.windowName;
+            }
+            if('useDebugIdInDom' in jsobj && typeof(jsobj.useDebugIdInDom) == "boolean") {
+                this.@com.itmill.toolkit.terminal.gwt.client.ApplicationConfiguration::useDebugIdInDom = jsobj.useDebugIdInDom;
             }
             if(jsobj.versionInfo) {
                 this.@com.itmill.toolkit.terminal.gwt.client.ApplicationConfiguration::versionInfo = jsobj.versionInfo;
@@ -190,4 +194,8 @@ public class ApplicationConfiguration {
     /*-{
         return this.@com.itmill.toolkit.terminal.gwt.client.ApplicationConfiguration::versionInfo.applicationVersion;
     }-*/;
+
+    public boolean useDebugIdInDOM() {
+        return useDebugIdInDom;
+    }
 }

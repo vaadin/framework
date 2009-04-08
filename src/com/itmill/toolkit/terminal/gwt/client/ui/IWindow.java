@@ -115,12 +115,24 @@ public class IWindow extends IToolkitOverlay implements Container,
 
     private boolean readonly;
 
+    boolean dynamicWidth = false;
+    boolean dynamicHeight = false;
+    boolean layoutRelativeWidth = false;
+    boolean layoutRelativeHeight = false;
+
+    // If centered (via UIDL), the window should stay in the centered -mode
+    // until a position is received from the server, or the user moves or
+    // resizes the window.
+    boolean centered = false;
+
     private RenderSpace renderSpace = new RenderSpace(MIN_WIDTH, MIN_HEIGHT,
             true);
 
     private String width;
 
     private String height;
+
+    private boolean immediate;
 
     public IWindow() {
         super(false, false, true); // no autohide, not modal, shadow
@@ -239,6 +251,8 @@ public class IWindow extends IToolkitOverlay implements Container,
             return;
         }
 
+        immediate = uidl.hasAttribute("immediate");
+
         if (uidl.getBooleanAttribute("resizable") != resizable) {
             setResizable(!resizable);
         }
@@ -304,20 +318,17 @@ public class IWindow extends IToolkitOverlay implements Container,
             layout = lo;
         }
 
-        boolean dynamicWidth = !uidl.hasAttribute("width");
-        boolean dynamicHeight = !uidl.hasAttribute("height");
-        boolean widthHasBeenFixed = false;
+        dynamicWidth = !uidl.hasAttribute("width");
+        dynamicHeight = !uidl.hasAttribute("height");
 
-        boolean layoutRelativeWidth = uidl.hasAttribute("layoutRelativeWidth");
-        boolean layoutRelativeHeight = uidl
-                .hasAttribute("layoutRelativeHeight");
+        layoutRelativeWidth = uidl.hasAttribute("layoutRelativeWidth");
+        layoutRelativeHeight = uidl.hasAttribute("layoutRelativeHeight");
 
         if (dynamicWidth && layoutRelativeWidth) {
             /*
              * Relative layout width, fix window width before rendering (width
              * according to caption)
              */
-            widthHasBeenFixed = true;
             setNaturalWidth();
         }
 
@@ -335,9 +346,8 @@ public class IWindow extends IToolkitOverlay implements Container,
          * No explicit width is set and the layout does not have relative width
          * so fix the size according to the layout.
          */
-        if (dynamicWidth && !widthHasBeenFixed) {
+        if (dynamicWidth && !layoutRelativeWidth) {
             setNaturalWidth();
-            widthHasBeenFixed = true;
         }
 
         if (dynamicHeight && layoutRelativeHeight) {
@@ -402,7 +412,12 @@ public class IWindow extends IToolkitOverlay implements Container,
         // This has to be here because we might not know the content size before
         // everything is painted into the window
         if (uidl.getBooleanAttribute("center")) {
+            // mark as centered - this is unset on move/resize
+            centered = true;
             center();
+        } else {
+            // don't try to center the window anymore
+            centered = false;
         }
 
         updateShadowSizeAndPosition();
@@ -444,7 +459,12 @@ public class IWindow extends IToolkitOverlay implements Container,
             naturalWidth = getElement().getOffsetWidth();
             headerText.getStyle().setProperty("width", headerW);
         } else {
-            naturalWidth = getElement().getOffsetWidth();
+            // use max(layout width, window width)
+            // i.e layout content width or caption width
+            int lowidth = contentPanel.getElement().getScrollWidth()
+                    + borderWidth; // layout does not know about border
+            int elwidth = getElement().getOffsetWidth();
+            naturalWidth = (lowidth > elwidth ? lowidth : elwidth);
         }
 
         setWidth(naturalWidth + "px");
@@ -711,6 +731,7 @@ public class IWindow extends IToolkitOverlay implements Container,
                 resizing = false;
             case Event.ONMOUSEMOVE:
                 if (resizing) {
+                    centered = false;
                     setSize(event, false);
                     event.preventDefault();
                 }
@@ -739,7 +760,7 @@ public class IWindow extends IToolkitOverlay implements Container,
         if (updateVariables) {
             // sending width back always as pixels, no need for unit
             client.updateVariable(id, "width", w, false);
-            client.updateVariable(id, "height", h, false);
+            client.updateVariable(id, "height", h, immediate);
         }
 
         // Update child widget dimensions
@@ -859,6 +880,7 @@ public class IWindow extends IToolkitOverlay implements Container,
             break;
         case Event.ONMOUSEMOVE:
             if (dragging) {
+                centered = false;
                 final int x = DOM.eventGetScreenX(event) - startX + origX;
                 final int y = DOM.eventGetScreenY(event) - startY + origY;
                 setPopupPosition(x, y);
@@ -962,6 +984,12 @@ public class IWindow extends IToolkitOverlay implements Container,
     }
 
     public boolean requestLayout(Set<Paintable> child) {
+        if (dynamicWidth && !layoutRelativeWidth) {
+            setNaturalWidth();
+        }
+        if (centered) {
+            center();
+        }
         updateShadowSizeAndPosition();
         return true;
     }

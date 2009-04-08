@@ -10,7 +10,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 import com.itmill.toolkit.data.Property;
 
@@ -47,30 +47,35 @@ public class BeanItem extends PropertysetItem {
      * 
      */
     public BeanItem(Object bean) {
+        this(bean, getPropertyDescriptors(bean.getClass()));
+    }
+
+    /**
+     * <p>
+     * Creates a new instance of <code>BeanItem</code> using a pre-computed set
+     * of properties. The properties are identified by their respective bean
+     * names.
+     * </p>
+     * 
+     * @param bean
+     *            the Java Bean to copy properties from.
+     * @param propertyDescriptors
+     *            pre-computed property descriptors
+     */
+    BeanItem(Object bean,
+            LinkedHashMap<String, PropertyDescriptor> propertyDescriptors) {
 
         this.bean = bean;
 
-        // Try to introspect, if it fails, we just have an empty Item
-        try {
-            // Create bean information
-            final BeanInfo info = Introspector.getBeanInfo(bean.getClass());
-            final PropertyDescriptor[] pd = info.getPropertyDescriptors();
+        for (PropertyDescriptor pd : propertyDescriptors.values()) {
+            final Method getMethod = pd.getReadMethod();
+            final Method setMethod = pd.getWriteMethod();
+            final Class<?> type = pd.getPropertyType();
+            final String name = pd.getName();
+            final Property p = new MethodProperty(type, bean, getMethod,
+                    setMethod);
+            addItemProperty(name, p);
 
-            // Add all the bean properties as MethodProperties to this Item
-            for (int i = 0; i < pd.length; i++) {
-                final Method getMethod = pd[i].getReadMethod();
-                final Method setMethod = pd[i].getWriteMethod();
-                final Class type = pd[i].getPropertyType();
-                final String name = pd[i].getName();
-
-                if ((getMethod != null)
-                        && getMethod.getDeclaringClass() != Object.class) {
-                    final Property p = new MethodProperty(type, bean,
-                            getMethod, setMethod);
-                    addItemProperty(name, p);
-                }
-            }
-        } catch (final java.beans.IntrospectionException ignored) {
         }
     }
 
@@ -96,31 +101,22 @@ public class BeanItem extends PropertysetItem {
 
         this.bean = bean;
 
-        // Try to introspect, if it fails, we just have an empty Item
-        try {
-            // Create bean information
-            final BeanInfo info = Introspector.getBeanInfo(bean.getClass());
-            final PropertyDescriptor[] pd = info.getPropertyDescriptors();
+        // Create bean information
+        LinkedHashMap<String, PropertyDescriptor> pds = getPropertyDescriptors(bean
+                .getClass());
 
-            // Add all the bean properties as MethodProperties to this Item
-            for (final Iterator iter = propertyIds.iterator(); iter.hasNext();) {
-                final Object id = iter.next();
-                for (int i = 0; i < pd.length; i++) {
-                    final String name = pd[i].getName();
-                    if (name.equals(id)) {
-                        final Method getMethod = pd[i].getReadMethod();
-                        final Method setMethod = pd[i].getWriteMethod();
-                        final Class type = pd[i].getPropertyType();
-                        if ((getMethod != null)) {
-                            final Property p = new MethodProperty(type, bean,
-                                    getMethod, setMethod);
-                            addItemProperty(name, p);
-                        }
-                    }
-                }
+        // Add all the bean properties as MethodProperties to this Item
+        for (Object id : propertyIds) {
+            PropertyDescriptor pd = pds.get(id);
+            if (pd != null) {
+                final String name = pd.getName();
+                final Method getMethod = pd.getReadMethod();
+                final Method setMethod = pd.getWriteMethod();
+                final Class<?> type = pd.getPropertyType();
+                final Property p = new MethodProperty(type, bean, getMethod,
+                        setMethod);
+                addItemProperty(name, p);
             }
-
-        } catch (final java.beans.IntrospectionException ignored) {
         }
 
     }
@@ -145,6 +141,44 @@ public class BeanItem extends PropertysetItem {
      */
     public BeanItem(Object bean, String[] propertyIds) {
         this(bean, Arrays.asList(propertyIds));
+    }
+
+    /**
+     * <p>
+     * Perform introspection on a Java Bean class to find its properties.
+     * </p>
+     * 
+     * <p>
+     * Note : This version only supports introspectable bean properties and
+     * their getter and setter methods. Stand-alone <code>is</code> and
+     * <code>are</code> methods are not supported.
+     * </p>
+     * 
+     * @param beanClass
+     *            the Java Bean class to get properties for.
+     * @return an ordered map from property names to property descriptors
+     */
+    static LinkedHashMap<String, PropertyDescriptor> getPropertyDescriptors(
+            final Class<?> beanClass) {
+        final LinkedHashMap<String, PropertyDescriptor> pdMap = new LinkedHashMap<String, PropertyDescriptor>();
+
+        // Try to introspect, if it fails, we just have an empty Item
+        try {
+            final BeanInfo info = Introspector.getBeanInfo(beanClass);
+            final PropertyDescriptor[] pds = info.getPropertyDescriptors();
+
+            // Add all the bean properties as MethodProperties to this Item
+            for (int i = 0; i < pds.length; i++) {
+                final Method getMethod = pds[i].getReadMethod();
+                if ((getMethod != null)
+                        && getMethod.getDeclaringClass() != Object.class) {
+                    pdMap.put(pds[i].getName(), pds[i]);
+                }
+            }
+        } catch (final java.beans.IntrospectionException ignored) {
+        }
+
+        return pdMap;
     }
 
     /**

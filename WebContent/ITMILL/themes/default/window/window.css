@@ -58,8 +58,9 @@
 .i-window-footer {
 	height: 8px;
 	margin-left: 9px;
-	background: transparent url(img/bottom-right.png) no-repeat right top;
-	/* IE7 bug fix */
+	background: transparent url(img/bottom-right.png) no-repeat right top;  
+}
+.i-ie7 .i-window-footer {
 	position:relative;
 }
 

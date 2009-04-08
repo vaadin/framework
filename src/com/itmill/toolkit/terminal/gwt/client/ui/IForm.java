@@ -52,6 +52,8 @@ public class IForm extends ComplexPanel implements Container {
 
     private int borderPaddingVertical;
 
+    private boolean rendering = false;
+
     public IForm() {
         setElement(DOM.createDiv());
         DOM.appendChild(getElement(), fieldSet);
@@ -72,6 +74,8 @@ public class IForm extends ComplexPanel implements Container {
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        rendering = true;
+
         if (this.client == null) {
             this.client = client;
             borderPaddingVertical = getOffsetHeight();
@@ -79,6 +83,7 @@ public class IForm extends ComplexPanel implements Container {
         }
 
         if (client.updateComponent(this, uidl, false)) {
+            rendering = false;
             return;
         }
 
@@ -159,6 +164,8 @@ public class IForm extends ComplexPanel implements Container {
                 client.unregisterPaintable(footer);
             }
         }
+
+        rendering = false;
     }
 
     public void updateSize() {
@@ -266,7 +273,7 @@ public class IForm extends ComplexPanel implements Container {
 
         updateSize();
 
-        if (height.equals("")) {
+        if (!rendering && height.equals("")) {
             // Width might affect height
             Util.updateRelativeChildrenAndSendSizeUpdateEvent(client, this);
         }

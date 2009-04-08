@@ -1110,8 +1110,25 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
             } else {
                 id = "PID_S" + id;
             }
+            Paintable old = idPaintableMap.put(id, paintable);
+            if (old != null && old != paintable) {
+                /*
+                 * Two paintables have the same id. We still make sure the old
+                 * one is a component which is still attached to the
+                 * application. This is just a precaution and should not be
+                 * absolutely necessary.
+                 */
+
+                if (old instanceof Component
+                        && ((Component) old).getApplication() != null) {
+                    throw new IllegalStateException("Two paintables ("
+                            + paintable.getClass().getSimpleName() + ","
+                            + old.getClass().getSimpleName()
+                            + ") have been assigned the same id: "
+                            + paintable.getDebugId());
+                }
+            }
             paintableIdMap.put(paintable, id);
-            idPaintableMap.put(id, paintable);
         }
 
         return id;
@@ -1456,7 +1473,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
             }
 
         } catch (final Throwable t) {
-            application.terminalError(new URIHandlerErrorImpl(application, t));
+            application.getErrorHandler().terminalError(
+                    new URIHandlerErrorImpl(application, t));
             return null;
         }
     }

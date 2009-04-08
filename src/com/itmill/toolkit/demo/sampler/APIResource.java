@@ -2,7 +2,7 @@ package com.itmill.toolkit.demo.sampler;
 
 /**
  * A NamedExternalResource pointing to the javadoc for the given class. Knows
- * where the javadocs are located for som common APIs, but one can also specify
+ * where the javadocs are located for some common APIs, but one can also specify
  * a javadoc baseurl. The name will be set to the class simpleName.
  * 
  */

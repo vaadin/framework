@@ -7,6 +7,8 @@ package com.itmill.toolkit.ui;
 import java.util.Collection;
 
 import com.itmill.toolkit.data.Container;
+import com.itmill.toolkit.terminal.PaintException;
+import com.itmill.toolkit.terminal.PaintTarget;
 
 /**
  * A filtering dropdown single-select. Suitable for newItemsAllowed, but it's
@@ -18,7 +20,7 @@ import com.itmill.toolkit.data.Container;
  */
 public class ComboBox extends Select {
 
-    private String emptyText = null;
+    private String inputPrompt = null;
 
     public ComboBox() {
         setMultiSelect(false);
@@ -51,21 +53,32 @@ public class ComboBox extends Select {
         super.setMultiSelect(multiSelect);
     }
 
-    /*- TODO enable and test this - client impl exists
-    public String getEmptyText() {
-        return emptyText;
+    /**
+     * Gets the current input prompt.
+     * 
+     * @see #setInputPrompt(String)
+     * @return the current input prompt, or null if not enabled
+     */
+    public String getInputPrompt() {
+        return inputPrompt;
     }
 
-    public void setEmptyText(String emptyText) {
-        this.emptyText = emptyText;
+    /**
+     * Sets the input prompt - a textual prompt that is displayed when the
+     * select would otherwise be empty, to prompt the user for input.
+     * 
+     * @param inputPrompt
+     *            the desired input prompt, or null to disable
+     */
+    public void setInputPrompt(String inputPrompt) {
+        this.inputPrompt = inputPrompt;
     }
 
     public void paintContent(PaintTarget target) throws PaintException {
-        if (emptyText != null) {
-            target.addAttribute("emptytext", emptyText);
+        if (inputPrompt != null) {
+            target.addAttribute("prompt", inputPrompt);
         }
         super.paintContent(target);
     }
-    -*/
 
 }

@@ -859,6 +859,21 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      */
     @Override
     public void changeVariables(Object source, Map variables) {
+
+        boolean sizeHasChanged = false;
+        // size is handled in super class, but resize events only in windows ->
+        // so detect if size change occurs before super.changeVariables()
+        if (variables.containsKey("height")
+                && (getHeightUnits() != UNITS_PIXELS || (Integer) variables
+                        .get("height") != getHeight())) {
+            sizeHasChanged = true;
+        }
+        if (variables.containsKey("width")
+                && (getWidthUnits() != UNITS_PIXELS || (Integer) variables
+                        .get("width") != getWidth())) {
+            sizeHasChanged = true;
+        }
+
         super.changeVariables(source, variables);
 
         // Positioning
@@ -880,6 +895,12 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
                 close();
             }
         }
+
+        // fire event if size has really changed
+        if (sizeHasChanged) {
+            fireResize();
+        }
+
     }
 
     /**
@@ -1028,6 +1049,83 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     protected void fireClose() {
         fireEvent(new Window.CloseEvent(this));
+    }
+
+    /**
+     * Method for the resize event.
+     */
+    private static final Method WINDOW_RESIZE_METHOD;
+    static {
+        try {
+            WINDOW_RESIZE_METHOD = ResizeListener.class.getDeclaredMethod(
+                    "windowResized", new Class[] { ResizeEvent.class });
+        } catch (final java.lang.NoSuchMethodException e) {
+            // This should never happen
+            throw new java.lang.RuntimeException(
+                    "Internal error, window resized method not found");
+        }
+    }
+
+    /**
+     * Resize events are fired whenever the client-side fires a resize-event
+     * (e.g. the browser window is resized). The frequency may vary across
+     * browsers.
+     */
+    public class ResizeEvent extends Component.Event {
+
+        // Generated serial
+        private static final long serialVersionUID = 8569831802323447687L;
+
+        /**
+         * 
+         * @param source
+         */
+        public ResizeEvent(Component source) {
+            super(source);
+        }
+
+        /**
+         * Get the window form which this event originated
+         * 
+         * @return the window
+         */
+        public Window getWindow() {
+            return (Window) getSource();
+        }
+    }
+
+    /**
+     * Listener for window resize events.
+     * 
+     * @see com.itmill.toolkit.ui.Window.ResizeEvent
+     */
+    public interface ResizeListener {
+        public void windowResized(ResizeEvent e);
+    }
+
+    /**
+     * Add a resize listener.
+     * 
+     * @param listener
+     */
+    public void addListener(ResizeListener listener) {
+        addListener(ResizeEvent.class, listener, WINDOW_RESIZE_METHOD);
+    }
+
+    /**
+     * Remove a resize listener.
+     * 
+     * @param listener
+     */
+    public void removeListener(ResizeListener listener) {
+        removeListener(ResizeEvent.class, this);
+    }
+
+    /**
+     * Fire the resize event.
+     */
+    protected void fireResize() {
+        fireEvent(new ResizeEvent(this));
     }
 
     private void attachWindow(Window w) {

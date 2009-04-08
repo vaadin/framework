@@ -73,6 +73,8 @@ public class TextField extends AbstractField {
      */
     private boolean nullSettingAllowed = false;
 
+    private String inputPrompt = null;
+
     /**
      * Maximum character count in text field.
      */
@@ -157,6 +159,10 @@ public class TextField extends AbstractField {
 
         if (getMaxLength() >= 0) {
             target.addAttribute("maxLength", getMaxLength());
+        }
+
+        if (inputPrompt != null) {
+            target.addAttribute("prompt", inputPrompt);
         }
 
         // Adds the number of column and rows
@@ -409,7 +415,7 @@ public class TextField extends AbstractField {
      * 
      * <p>
      * If this property is true, writing null-representation string to text
-     * field allways sets the field value to real null. If this property is
+     * field always sets the field value to real null. If this property is
      * false, null setting is not made, but the null values are maintained.
      * Maintenance of null-values is made by only converting the textfield
      * contents to real null, if the text field matches the null-string
@@ -420,7 +426,7 @@ public class TextField extends AbstractField {
      * By default this setting is false
      * </p>
      * 
-     * @return boolean Should the null-string represenation be allways converted
+     * @return boolean Should the null-string represenation be always converted
      *         to null-values.
      * @see TextField#getNullRepresentation()
      */
@@ -454,7 +460,7 @@ public class TextField extends AbstractField {
      * 
      * <p>
      * If this property is true, writing null-representation string to text
-     * field allways sets the field value to real null. If this property is
+     * field always sets the field value to real null. If this property is
      * false, null setting is not made, but the null values are maintained.
      * Maintenance of null-values is made by only converting the textfield
      * contents to real null, if the text field matches the null-string
@@ -466,12 +472,32 @@ public class TextField extends AbstractField {
      * </p>
      * 
      * @param nullSettingAllowed
-     *            Should the null-string represenation be allways converted to
+     *            Should the null-string represenation be always converted to
      *            null-values.
      * @see TextField#getNullRepresentation()
      */
     public void setNullSettingAllowed(boolean nullSettingAllowed) {
         this.nullSettingAllowed = nullSettingAllowed;
+    }
+
+    /**
+     * Gets the current input prompt.
+     * 
+     * @see #setInputPrompt(String)
+     * @return the current input prompt, or null if not enabled
+     */
+    public String getInputPrompt() {
+        return inputPrompt;
+    }
+
+    /**
+     * Sets the input prompt - a textual prompt that is displayed when the field
+     * would otherwise be empty, to prompt the user for input.
+     * 
+     * @param inputPrompt
+     */
+    public void setInputPrompt(String inputPrompt) {
+        this.inputPrompt = inputPrompt;
     }
 
     /**

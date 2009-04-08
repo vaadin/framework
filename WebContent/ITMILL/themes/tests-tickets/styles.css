@@ -1,5 +1,7 @@
 @import url(../default/styles.css);
 
+/* DO NOT ADD GENERIC RULES LIKE .i-table IN THIS FILE */
+
 /*****************************************************************************/
 /* Ticket 1904                                                               */
 /*****************************************************************************/
@@ -442,10 +444,12 @@ padding:2px;
 .i-table-row:hover, .i-table-row-odd:hover {
     background: #c8def9;
 }
+/*
 .i-table-header-wrap {
     background: #d4e7fe url(img/table/column_header_bg.png) top left repeat-x;
     height: 25px;
 }
+*/
 .i-table-header-cell:hover, 
 .i-table-header-cell-asc:hover, 
 .i-table-header-cell-desc:hover {
@@ -456,7 +460,7 @@ padding:2px;
     border-right: 1px solid #e3e7f0; 
     margin: 0;
     padding: 2px 2px 2px 3px;
-    height: 20px;
+/*    height: 20px;*/
 }
 .i-table-header-cell-asc .i-table-caption-container {
     background: url(img/table/order_asc.png) right 50% no-repeat;  
@@ -1267,3 +1271,9 @@ padding:2px;
 .i-table-bordered .i-table-body td {	
 	border-bottom: 1px solid red;
 }
+
+/* #2747 */
+.i-button-nowraplink span {
+   white-space: normal;
+}
+   

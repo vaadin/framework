@@ -4,8 +4,6 @@
 
 package com.itmill.toolkit.data.validator;
 
-import com.itmill.toolkit.data.Validator;
-
 /**
  * This <code>StringLengthValidator</code> is used to validate the length of
  * strings.
@@ -15,15 +13,13 @@ import com.itmill.toolkit.data.Validator;
  * @VERSION@
  * @since 3.0
  */
-public class StringLengthValidator implements Validator {
+public class StringLengthValidator extends AbstractValidator {
 
     private int minLength = -1;
 
     private int maxLength = -1;
 
     private boolean allowNull = true;
-
-    private String errorMessage;
 
     /**
      * Creates a new StringLengthValidator with a given error message.
@@ -32,7 +28,7 @@ public class StringLengthValidator implements Validator {
      *            the message to display in case the value does not validate.
      */
     public StringLengthValidator(String errorMessage) {
-        setErrorMessage(errorMessage);
+        super(errorMessage);
     }
 
     /**
@@ -42,11 +38,12 @@ public class StringLengthValidator implements Validator {
      * @param errorMessage
      *            the message to display in case the value does not validate.
      * @param minLength
-     *            the minimum permissable length of the string.
+     *            the minimum permissible length of the string.
      * @param maxLength
-     *            the maximum permissable length of the string.
+     *            the maximum permissible length of the string.
      * @param allowNull
-     *            Are null strings permissable?
+     *            Are null strings permissible? This can be handled better by
+     *            setting a field as required or not.
      */
     public StringLengthValidator(String errorMessage, int minLength,
             int maxLength, boolean allowNull) {
@@ -54,37 +51,6 @@ public class StringLengthValidator implements Validator {
         setMinLength(minLength);
         setMaxLength(maxLength);
         setNullAllowed(allowNull);
-    }
-
-    /**
-     * Validates the value.
-     * 
-     * @param value
-     *            the value to validate.
-     * @throws Validator.InvalidValueException
-     *             if the value was invalid.
-     */
-    public void validate(Object value) throws Validator.InvalidValueException {
-        if (value == null) {
-            if (allowNull) {
-                return;
-            } else {
-                throw new Validator.InvalidValueException(errorMessage);
-            }
-        }
-        final String s = value.toString();
-        if (s == null) {
-            if (allowNull) {
-                return;
-            } else {
-                throw new Validator.InvalidValueException(errorMessage);
-            }
-        }
-        final int len = s.length();
-        if ((minLength >= 0 && len < minLength)
-                || (maxLength >= 0 && len > maxLength)) {
-            throw new Validator.InvalidValueException(errorMessage);
-        }
     }
 
     /**
@@ -116,12 +82,13 @@ public class StringLengthValidator implements Validator {
      * @return <code>true</code> if allows null string, otherwise
      *         <code>false</code>.
      */
+    @Deprecated
     public final boolean isNullAllowed() {
         return allowNull;
     }
 
     /**
-     * Gets the maximum permissable length of the string.
+     * Gets the maximum permissible length of the string.
      * 
      * @return the maximum length of the string.
      */
@@ -130,7 +97,7 @@ public class StringLengthValidator implements Validator {
     }
 
     /**
-     * Gets the minimum permissable length of the string.
+     * Gets the minimum permissible length of the string.
      * 
      * @return the minimum length of the string.
      */
@@ -139,14 +106,16 @@ public class StringLengthValidator implements Validator {
     }
 
     /**
-     * Sets whether null-strings are to be allowed.
+     * Sets whether null-strings are to be allowed. This can be better handled
+     * by setting a field as required or not.
      */
+    @Deprecated
     public void setNullAllowed(boolean allowNull) {
         this.allowNull = allowNull;
     }
 
     /**
-     * Sets the maximum permissable length of the string.
+     * Sets the maximum permissible length of the string.
      * 
      * @param maxLength
      *            the length to set.
@@ -159,7 +128,7 @@ public class StringLengthValidator implements Validator {
     }
 
     /**
-     * Sets the minimum permissable length.
+     * Sets the minimum permissible length.
      * 
      * @param minLength
      *            the length to set.
@@ -169,25 +138,6 @@ public class StringLengthValidator implements Validator {
             minLength = -1;
         }
         this.minLength = minLength;
-    }
-
-    /**
-     * Gets the message to be displayed in case the value does not validate.
-     * 
-     * @return the Error Message.
-     */
-    public String getErrorMessage() {
-        return errorMessage;
-    }
-
-    /**
-     * Sets the message to be displayer in case the value does not validate.
-     * 
-     * @param errorMessage
-     *            the Error Message to set.
-     */
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
     }
 
 }

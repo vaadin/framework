@@ -142,6 +142,11 @@ public class ITree extends FlowPanel implements Paintable {
             rootNode.renderChildNodes(uidl.getChildIterator());
         }
 
+        if (uidl.hasVariable("selected")) {
+            // update selection in case selected nodes were not visible
+            selectedIds = uidl.getStringArrayVariableAsSet("selected");
+        }
+
     }
 
     public void setSelected(TreeNode treeNode, boolean selected) {
@@ -152,7 +157,7 @@ public class ITree extends FlowPanel implements Paintable {
                     final TreeNode oldSelection = keyToNode.get(id);
                     if (oldSelection != null) {
                         // can be null if the node is not visible (parent
-                        // expanded)
+                        // collapsed)
                         oldSelection.setSelected(false);
                     }
                     selectedIds.remove(id);

@@ -31,13 +31,13 @@ See configure target to adjust this buildfile.
 		<property name="base" value="../../../" />
 		
 		<!-- which platform we are in, possible values are windows, linux and mac -->
-		<property name="gwt-platform" value="<platform></platform>" />
+		<property name="gwt-platform" value="@platform@" />
 		
 		<!-- where platform specific GWT distribution is located -->
 		<property name="gwt-location" value="${base}gwt" />
 		
 		<!-- where Toolkit jar is located -->
-		<property name="toolkit-jar-location" value="${base}WebContent/WEB-INF/lib/itmill-toolkit-<version></version>.jar" />
+		<property name="toolkit-jar-location" value="${base}WebContent/WEB-INF/lib/itmill-toolkit-@version@.jar" />
 		
 		<!-- where project client-side widgetset source files are located -->
 		<property name="client-side-src-location" value="${base}WebContent/WEB-INF/src" />

@@ -16,6 +16,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.itmill.toolkit.data.Container;
@@ -118,7 +119,7 @@ public class IndexedContainer implements Container.Indexed,
      * Filters that are applied to the container to limit the items visible in
      * it
      */
-    private HashSet filters;
+    private HashSet<Filter> filters;
 
     private HashMap<Object, Object> defaultPropertyValues;
 
@@ -144,12 +145,8 @@ public class IndexedContainer implements Container.Indexed,
      */
     public Item getItem(Object itemId) {
 
-        // Null ids are not accepted
-        if (itemId == null) {
-            throw new NullPointerException("Container item id can not be null");
-        }
-
-        if (items.containsKey(itemId)
+        if (itemId != null
+                && items.containsKey(itemId)
                 && (filteredItemIds == null || filteredItemIds.contains(itemId))) {
             return new IndexedContainerItem(itemId);
         }
@@ -196,7 +193,9 @@ public class IndexedContainer implements Container.Indexed,
      * java.lang.Object)
      */
     public Property getContainerProperty(Object itemId, Object propertyId) {
-        if (filteredItemIds == null) {
+        if (itemId == null) {
+            return null;
+        } else if (filteredItemIds == null) {
             if (!items.containsKey(itemId)) {
                 return null;
             }
@@ -225,6 +224,9 @@ public class IndexedContainer implements Container.Indexed,
      * @see com.itmill.toolkit.data.Container#containsId(java.lang.Object)
      */
     public boolean containsId(Object itemId) {
+        if (itemId == null) {
+            return false;
+        }
         if (filteredItemIds != null) {
             return filteredItemIds.contains(itemId);
         }
@@ -318,23 +320,20 @@ public class IndexedContainer implements Container.Indexed,
      */
     public Item addItem(Object itemId) {
 
-        // Null ids are not accepted
-        if (itemId == null) {
-            throw new NullPointerException("Container item id can not be null");
-        }
-
-        // Makes sure that the Item has not been created yet
-        if (items.containsKey(itemId)) {
+        // Make sure that the Item is valid and has not been created yet
+        if (itemId == null || items.containsKey(itemId)) {
             return null;
         }
 
-        // Adds the Item to container
+        // Adds the Item to container (at the end of the unfiltered list)
         itemIds.add(itemId);
         Hashtable t = new Hashtable();
         items.put(itemId, t);
 
         addDefaultValues(t);
 
+        // this optimization is why some code is duplicated with
+        // addItemAtInternalIndex()
         final Item item = new IndexedContainerItem(itemId);
         if (filteredItemIds != null) {
             if (passesFilters(item)) {
@@ -460,13 +459,10 @@ public class IndexedContainer implements Container.Indexed,
      */
     public Object nextItemId(Object itemId) {
         if (filteredItemIds != null) {
-            if (!filteredItemIds.contains(itemId)) {
+            if (itemId == null || !filteredItemIds.contains(itemId)) {
                 return null;
             }
             final Iterator i = filteredItemIds.iterator();
-            if (itemId == null) {
-                return null;
-            }
             while (i.hasNext() && !itemId.equals(i.next())) {
                 ;
             }
@@ -560,7 +556,7 @@ public class IndexedContainer implements Container.Indexed,
     public Item addItemAfter(Object previousItemId, Object newItemId) {
 
         // Get the index of the addition
-        int index = 0;
+        int index = -1;
         if (previousItemId != null) {
             index = 1 + indexOfId(previousItemId);
             if (index <= 0 || index > size()) {
@@ -579,16 +575,10 @@ public class IndexedContainer implements Container.Indexed,
      */
     public Object addItemAfter(Object previousItemId) {
 
-        // Get the index of the addition
-        int index = 0;
-        if (previousItemId != null) {
-            index = 1 + indexOfId(previousItemId);
-            if (index <= 0 || index > size()) {
-                return null;
-            }
-        }
+        // Creates a new id
+        final Object id = new Object();
 
-        return addItemAt(index);
+        return addItemAfter(previousItemId, id);
     }
 
     /*
@@ -628,15 +618,15 @@ public class IndexedContainer implements Container.Indexed,
             if (itemId == null) {
                 return -1;
             }
-            try {
-                for (final Iterator i = filteredItemIds.iterator(); itemId
-                        .equals(i.next());) {
-                    index++;
+            final Iterator i = filteredItemIds.iterator();
+            while (i.hasNext()) {
+                Object id = i.next();
+                if (itemId.equals(id)) {
+                    return index;
                 }
-                return index;
-            } catch (final NoSuchElementException e) {
-                return -1;
+                index++;
             }
+            return -1;
         }
         return itemIds.indexOf(itemId);
     }
@@ -649,24 +639,26 @@ public class IndexedContainer implements Container.Indexed,
      */
     public Item addItemAt(int index, Object newItemId) {
 
-        // Make sure that the Item has not been created yet
-        if (items.containsKey(newItemId)) {
+        // add item based on a filtered index
+        int internalIndex = -1;
+        if (filteredItemIds == null) {
+            internalIndex = index;
+        } else if (index == 0) {
+            internalIndex = 0;
+        } else if (index == size()) {
+            // add just after the last item
+            Object id = getIdByIndex(index - 1);
+            internalIndex = itemIds.indexOf(id) + 1;
+        } else if (index > 0 && index < size()) {
+            // map the index of the visible item to its unfiltered index
+            Object id = getIdByIndex(index);
+            internalIndex = itemIds.indexOf(id);
+        }
+        if (internalIndex >= 0) {
+            return addItemAtInternalIndex(internalIndex, newItemId);
+        } else {
             return null;
         }
-
-        // Adds the Item to container
-        itemIds.add(index, newItemId);
-        Hashtable t = new Hashtable();
-        items.put(newItemId, t);
-        addDefaultValues(t);
-
-        if (filteredItemIds != null) {
-            updateContainerFiltering();
-        } else {
-            fireContentsChange(index);
-        }
-
-        return getItem(newItemId);
     }
 
     /*
@@ -686,6 +678,43 @@ public class IndexedContainer implements Container.Indexed,
     }
 
     /* Event notifiers */
+
+    /**
+     * Adds new item at given index of the internal (unfiltered) list.
+     * <p>
+     * The item is also added in the visible part of the list if it passes the
+     * filters.
+     * </p>
+     * 
+     * @param index
+     *            Internal index to add the new item.
+     * @param newItemId
+     *            Id of the new item to be added.
+     * @return Returns new item or null if the operation fails.
+     */
+    private Item addItemAtInternalIndex(int index, Object newItemId) {
+        // Make sure that the Item is valid and has not been created yet
+        if (index < 0 || index > itemIds.size() || newItemId == null
+                || items.containsKey(newItemId)) {
+            return null;
+        }
+
+        // Adds the Item to container
+        itemIds.add(index, newItemId);
+        Hashtable t = new Hashtable();
+        items.put(newItemId, t);
+        addDefaultValues(t);
+
+        if (filteredItemIds != null) {
+            // when the item data is set later (IndexedContainerProperty),
+            // filtering is updated
+            updateContainerFiltering();
+        } else {
+            fireContentsChange(index);
+        }
+
+        return new IndexedContainerItem(newItemId);
+    }
 
     /**
      * An <code>event</code> object specifying the list whose Property set has
@@ -766,8 +795,8 @@ public class IndexedContainer implements Container.Indexed,
     }
 
     /**
-     * An <code>event</code> object specifying the Propery in a list whose value
-     * has changed.
+     * An <code>event</code> object specifying the Property in a list whose
+     * value has changed.
      * 
      * @author IT Mill Ltd.
      * @version
@@ -1270,6 +1299,9 @@ public class IndexedContainer implements Container.Indexed,
                 }
             }
 
+            // update the container filtering if this property is being filtered
+            updateContainerFiltering(propertyId);
+
             firePropertyValueChange(this);
         }
 
@@ -1359,11 +1391,11 @@ public class IndexedContainer implements Container.Indexed,
      * @see com.itmill.toolkit.data.Container.Sortable#sort(java.lang.Object[],
      * boolean[])
      */
-    public synchronized void sort(Object[] propertyId, boolean[] ascending) {
+    public void sort(Object[] propertyId, boolean[] ascending) {
 
         // Removes any non-sortable property ids
-        final ArrayList ids = new ArrayList();
-        final ArrayList orders = new ArrayList();
+        final List ids = new ArrayList();
+        final List<Boolean> orders = new ArrayList<Boolean>();
         final Collection sortable = getSortableContainerPropertyIds();
         for (int i = 0; i < propertyId.length; i++) {
             if (sortable.contains(propertyId[i])) {
@@ -1379,7 +1411,7 @@ public class IndexedContainer implements Container.Indexed,
         sortPropertyId = ids.toArray();
         sortDirection = new boolean[orders.size()];
         for (int i = 0; i < sortDirection.length; i++) {
-            sortDirection[i] = ((Boolean) orders.get(i)).booleanValue();
+            sortDirection[i] = (orders.get(i)).booleanValue();
         }
 
         // Sort
@@ -1503,7 +1535,7 @@ public class IndexedContainer implements Container.Indexed,
                 .clone() : null;
         nc.types = types != null ? (Hashtable) types.clone() : null;
 
-        nc.filters = filters == null ? null : (HashSet) filters.clone();
+        nc.filters = filters == null ? null : (HashSet<Filter>) filters.clone();
 
         nc.filteredItemIds = filteredItemIds == null ? null
                 : (LinkedHashSet) filteredItemIds.clone();
@@ -1534,61 +1566,10 @@ public class IndexedContainer implements Container.Indexed,
         return super.equals(obj);
     }
 
-    private class Filter {
-        Object propertyId;
-        String filterString;
-        boolean ignoreCase;
-        boolean onlyMatchPrefix;
-
-        Filter(Object propertyId, String filterString, boolean ignoreCase,
-                boolean onlyMatchPrefix) {
-            this.propertyId = propertyId;
-            ;
-            this.filterString = filterString;
-            this.ignoreCase = ignoreCase;
-            this.onlyMatchPrefix = onlyMatchPrefix;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-
-            // Only ones of the objects of the same class can be equal
-            if (!(obj instanceof Filter)) {
-                return false;
-            }
-            final Filter o = (Filter) obj;
-
-            // Checks the properties one by one
-            if (propertyId != o.propertyId && o.propertyId != null
-                    && !o.propertyId.equals(propertyId)) {
-                return false;
-            }
-            if (filterString != o.filterString && o.filterString != null
-                    && !o.filterString.equals(filterString)) {
-                return false;
-            }
-            if (ignoreCase != o.ignoreCase) {
-                return false;
-            }
-            if (onlyMatchPrefix != o.onlyMatchPrefix) {
-                return false;
-            }
-
-            return true;
-        }
-
-        @Override
-        public int hashCode() {
-            return (propertyId != null ? propertyId.hashCode() : 0)
-                    ^ (filterString != null ? filterString.hashCode() : 0);
-        }
-
-    }
-
     public void addContainerFilter(Object propertyId, String filterString,
             boolean ignoreCase, boolean onlyMatchPrefix) {
         if (filters == null) {
-            filters = new HashSet();
+            filters = new HashSet<Filter>();
         }
         filters.add(new Filter(propertyId, filterString, ignoreCase,
                 onlyMatchPrefix));
@@ -1607,13 +1588,30 @@ public class IndexedContainer implements Container.Indexed,
         if (filters == null || propertyId == null) {
             return;
         }
-        for (final Iterator i = filters.iterator(); i.hasNext();) {
-            final Filter f = (Filter) i.next();
+        final Iterator<Filter> i = filters.iterator();
+        while (i.hasNext()) {
+            final Filter f = i.next();
             if (propertyId.equals(f.propertyId)) {
                 i.remove();
             }
         }
         updateContainerFiltering();
+    }
+
+    private void updateContainerFiltering(Object propertyId) {
+        if (filters == null || propertyId == null) {
+            return;
+        }
+        // update container filtering if there is a filter for the given
+        // property
+        final Iterator<Filter> i = filters.iterator();
+        while (i.hasNext()) {
+            final Filter f = i.next();
+            if (propertyId.equals(f.propertyId)) {
+                updateContainerFiltering();
+                return;
+            }
+        }
     }
 
     private void updateContainerFiltering() {
@@ -1628,7 +1626,7 @@ public class IndexedContainer implements Container.Indexed,
             return;
         }
 
-        // Reset filteres list
+        // Reset filtered list
         if (filteredItemIds == null) {
             filteredItemIds = new LinkedHashSet();
         } else {
@@ -1653,24 +1651,11 @@ public class IndexedContainer implements Container.Indexed,
         if (item == null) {
             return false;
         }
-        for (final Iterator i = filters.iterator(); i.hasNext();) {
-            final Filter f = (Filter) i.next();
-            final String s1 = f.ignoreCase ? f.filterString.toLowerCase()
-                    : f.filterString;
-            final Property p = item.getItemProperty(f.propertyId);
-            if (p == null || p.toString() == null) {
+        final Iterator<Filter> i = filters.iterator();
+        while (i.hasNext()) {
+            final Filter f = i.next();
+            if (!f.passesFilter(item)) {
                 return false;
-            }
-            final String s2 = f.ignoreCase ? p.toString().toLowerCase() : p
-                    .toString();
-            if (f.onlyMatchPrefix) {
-                if (s2.indexOf(s1) != 0) {
-                    return false;
-                }
-            } else {
-                if (s2.indexOf(s1) < 0) {
-                    return false;
-                }
             }
         }
         return true;

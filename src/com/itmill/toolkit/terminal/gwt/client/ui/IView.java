@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
@@ -71,6 +73,8 @@ public class IView extends SimplePanel implements Container,
     private boolean rendering;
 
     private boolean scrollable;
+
+    private boolean immediate;
 
     public IView(String elementId) {
         super();
@@ -137,6 +141,8 @@ public class IView extends SimplePanel implements Container,
         id = uidl.getId();
         boolean firstPaint = connection == null;
         connection = client;
+
+        immediate = uidl.hasAttribute("immediate");
 
         String newTheme = uidl.getStringAttribute("theme");
         if (theme != null && !newTheme.equals(theme)) {
@@ -396,6 +402,8 @@ public class IView extends SimplePanel implements Container,
                                     .log(
                                             "Running layout functions due window resize");
                             connection.runDescendentsLayout(IView.this);
+
+                            sendClientResized();
                         }
                     }
                 };
@@ -419,8 +427,17 @@ public class IView extends SimplePanel implements Container,
             connection.runDescendentsLayout(this);
             Util.runWebkitOverflowAutoFix(getElement());
 
+            sendClientResized();
         }
 
+    }
+
+    /**
+     * Send new dimensions to the server.
+     */
+    private void sendClientResized() {
+        connection.updateVariable(id, "height", height, false);
+        connection.updateVariable(id, "width", width, immediate);
     }
 
     public native static void goTo(String url)
@@ -459,13 +476,31 @@ public class IView extends SimplePanel implements Container,
         }
 
         private void detectExcessSize() {
+            // TODO define that iview cannot be themed and decorations should
+            // get to parent element, then get rid of this expensive and error
+            // prone function
             final String overflow = getElement().getStyle().getProperty(
                     "overflow");
             getElement().getStyle().setProperty("overflow", "hidden");
+            if (BrowserInfo.get().isIE()
+                    && getElement().getPropertyInt("clientWidth") == 0) {
+                // can't detect possibly themed border/padding width in some
+                // situations (with some layout configurations), use empty div
+                // to measure width properly
+                DivElement div = Document.get().createDivElement();
+                div.setInnerHTML("&nbsp;");
+                div.getStyle().setProperty("overflow", "hidden");
+                div.getStyle().setProperty("height", "1px");
+                getElement().appendChild(div);
+                excessWidth = getElement().getOffsetWidth()
+                        - div.getOffsetWidth();
+                getElement().removeChild(div);
+            } else {
+                excessWidth = getElement().getOffsetWidth()
+                        - getElement().getPropertyInt("clientWidth");
+            }
             excessHeight = getElement().getOffsetHeight()
                     - getElement().getPropertyInt("clientHeight");
-            excessWidth = getElement().getOffsetWidth()
-                    - getElement().getPropertyInt("clientWidth");
 
             getElement().getStyle().setProperty("overflow", overflow);
         }
