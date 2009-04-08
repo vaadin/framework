@@ -107,6 +107,12 @@ public class DateField extends AbstractField {
      */
     private String dateFormat;
 
+    /**
+     * Read-only content of an ITextualDate field - null for other types of date
+     * fields.
+     */
+    private String dateString;
+
     /* Constructors */
 
     /**
@@ -258,12 +264,22 @@ public class DateField extends AbstractField {
                         || variables.containsKey("day")
                         || variables.containsKey("hour")
                         || variables.containsKey("min")
-                        || variables.containsKey("sec") || variables
-                        .containsKey("msec"))) {
+                        || variables.containsKey("sec")
+                        || variables.containsKey("msec") || variables
+                        .containsKey("dateString"))) {
 
             // Old and new dates
             final Date oldDate = (Date) getValue();
+            final String oldDateString = dateString;
             Date newDate = null;
+
+            // this enables analyzing invalid input on the server
+            Object o = variables.get("dateString");
+            if (o != null) {
+                dateString = o.toString();
+            } else {
+                dateString = null;
+            }
 
             // Gets the new date in parts
             // Null values are converted to negative values.
@@ -326,8 +342,37 @@ public class DateField extends AbstractField {
                     && (newDate == null || !newDate.equals(oldDate))) {
                 setValue(newDate, true); // Don't require a repaint, client
                 // updates itself
+            } else if (dateString != null && !"".equals(dateString)
+                    && !dateString.equals(oldDateString)) {
+                setValue(handleUnparsableDateString(dateString));
             }
         }
+    }
+
+    /**
+     * This method is called to handle the date string from the client if the
+     * client could not parse it as a Date.
+     * 
+     * By default, null is returned. If an exception is thrown, the current
+     * value will not be modified.
+     * 
+     * This can be overridden to handle conversions or to throw an exception, or
+     * to fire an event.
+     * 
+     * The default behavior is likely to change in the next major version of the
+     * toolkit - a Property.ConversionException will be thrown.
+     * 
+     * @param dateString
+     * @return parsed Date
+     * @throws Property.ConversionException
+     *             to keep the old value and indicate an error
+     */
+    protected Date handleUnparsableDateString(String dateString)
+            throws Property.ConversionException {
+        // TODO in the next major version, this should throw an exception to be
+        // consistent with other fields
+        // throw new Property.ConversionException();
+        return null;
     }
 
     /* Property features */
