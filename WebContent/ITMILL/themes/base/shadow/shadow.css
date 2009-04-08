@@ -1,0 +1,85 @@
+.i-shadow {
+	position: absolute;
+}
+
+.i-shadow .top-left {
+    position: absolute; overflow: hidden;
+    top: -3px;             left: -4px;
+    width: 8px;         height: 8px;
+    background: transparent url(img/top-left.png);
+}
+
+.i-shadow .top {
+    position: absolute; overflow: hidden;
+    top: -3px;             left: 4px;
+    height: 8px;           right: 4px;
+    background: transparent url(img/top.png);
+}
+
+.i-shadow .top-right {
+    position: absolute; overflow: hidden;
+    top: -3px;             right: -4px;
+    width: 8px;         height: 8px;
+    background: transparent url(img/top-right.png);
+}
+
+.i-shadow .left {
+    position: absolute; overflow: hidden;
+    top: 5px;           left: -4px;
+    width: 8px;
+    bottom: 3px;
+    background: transparent url(img/left.png);
+}
+
+.i-shadow .center {
+    position: absolute; overflow: hidden;
+    top: 5px;           left: 4px;
+    bottom: 3px;        right: 4px;
+    background: transparent url(img/center.png);
+}
+
+.i-shadow .right {
+    position: absolute; overflow: hidden;
+    top: 5px;           right: -4px;
+    width: 8px;
+    bottom: 3px;
+    background: transparent url(img/right.png);
+}
+
+.i-shadow .bottom-left {
+    position: absolute; overflow: hidden;
+    bottom: -5px;           left: -4px;
+    width: 8px;          height: 8px;
+    background: transparent url(img/bottom-left.png);
+}
+
+.i-shadow .bottom {
+    position: absolute; overflow: hidden;
+    bottom: -5px;           left: 4px;
+    right: 4px;          height: 8px;
+    background: transparent url(img/bottom.png);
+}
+
+.i-shadow .bottom-right {
+    position: absolute; overflow: hidden;
+    bottom: -5px;           right: -4px;
+    width: 8px;          height: 8px;
+    background: transparent url(img/bottom-right.png);
+}
+
+
+
+
+
+/* For IE6 (no transparent png's, we use a blur filter) */
+
+* html .i-shadow * {
+	display: none;
+}
+
+* html .i-shadow {
+	background: #000;
+	filter: progid:DXImageTransform.Microsoft.Blur(pixelRadius=2) alpha(opacity=20);
+	margin-top: -3px;
+	margin-left: -4px;
+}  

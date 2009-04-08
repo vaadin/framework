@@ -1,0 +1,122 @@
+.i-table {
+	overflow: hidden;
+	text-align: left /* Force default alignment */
+}
+
+.i-table-header-wrap {
+	background: #efefef;
+	border: 1px solid #ddd;
+	overflow: hidden;
+}
+
+.i-table-header table,
+.i-table-table {
+	border-collapse: collapse;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.i-table-header td,
+.i-table-table td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.i-table-header td {
+	cursor: pointer;
+}
+
+.i-table-resizer {
+	display: block;
+	height: 1em;
+	float: right;
+	background: #ddd;
+	cursor: col-resize;
+}
+
+.i-table-caption-container {
+	float: right;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+.i-table-row-spacer {
+	height: 10px;
+	overflow: hidden; /* IE hack to allow < one line height divs */
+}
+
+.i-table-row,
+.i-table-row-odd {
+	border: 0;
+	margin: 0;
+	padding: 0;
+}
+
+.i-table .i-selected {
+	background: #999;
+	color: #fff;
+}
+
+.i-table-row td,
+.i-table-row-odd td {
+	padding: 0;
+}
+.i-table-cell-content {
+	white-space: nowrap;
+	overflow: hidden;
+	padding: 3px 0 3px 3px;
+	margin-right: 5px;
+}
+
+.i-table-column-selector {
+	float: right;
+	background: #ddd;
+	margin: -1em 0 0 0;
+	height: 1em;
+	width: 0.5em;
+	position: relative; /* hide this from IE, it works without it */
+}
+
+.i-ie .i-table-column-selector {
+	position: static;
+}
+
+.i-table-focus-slot-left {
+	border-left: 2px solid #999;
+	margin-right: -2px;
+}
+.i-table-focus-slot-right {
+	border-right: 2px solid #999;
+	margin-left: -2px;
+}
+
+.i-table-header-drag {
+	position: absolute;
+	background: #efefef;
+	border: 1px solid #eee;
+	opacity: 0.5;
+	filter: alpha(opacity=50);
+	margin-top: 20px;
+	z-index: 30000;
+}
+
+.i-table-scrollposition {
+	width: 160px;
+	background: #eee;
+}
+
+.i-table-scrollposition span {
+	display: block;
+	text-align: center;
+}
+
+
+/* row in column selector */
+.i-on div {
+	
+}
+.i-off div {
+	color: #ddd;
+}

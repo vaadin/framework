@@ -1,0 +1,34 @@
+.i-progressindicator-wrapper {
+	overflow: hidden; /* for IE6 */
+	height: 9px;
+}
+
+.i-progressindicator {
+	background: #eee;
+	overflow: hidden; /* for IE6 */
+	width: 150px;
+}
+.i-progressindicator-disabled {
+	background: #efefef;
+	height: 9px;
+	overflow: hidden; /* for IE6 */
+}
+
+.i-progressindicator-indicator {
+	background: #ddd;
+	height: 9px;
+	overflow: hidden; /* for IE6 */
+}
+
+.i-progressindicator-indeterminate {
+	background: #eee;
+	height: 16px;
+	width: 16px;
+	overflow: hidden; /* for IE6 */
+}
+.i-progressindicator-disabled-indeterminate {
+	background: #efefef;
+	height: 16px;
+	width: 16px;
+	overflow: hidden; /* for IE6 */
+}

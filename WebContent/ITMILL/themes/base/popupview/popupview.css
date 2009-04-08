@@ -1,0 +1,8 @@
+.i-popupview {
+	cursor: pointer;
+}
+
+.i-popupview-popup {
+	background:	white;
+	overflow: auto;
+}

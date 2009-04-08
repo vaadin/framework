@@ -1,0 +1,11 @@
+.i-textfield {
+	text-align: left /* Force default alignment */
+}
+
+.i-richtextarea {
+	overflow: hidden;
+}
+
+.i-richtextarea iframe {
+	border: 0;
+}

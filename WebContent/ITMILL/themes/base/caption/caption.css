@@ -1,0 +1,24 @@
+.i-captionwrapper {
+	text-align: left /* Force default alignment */
+}
+
+.i-caption {
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+.i-errorindicator {
+	float: left;
+}
+
+.i-caption .i-icon {
+	float: left;
+}
+.i-caption .i-captiontext {
+	float: left;
+	overflow: hidden;
+}
+
+.i-caption .i-required-field-indicator {
+	float: left;
+}

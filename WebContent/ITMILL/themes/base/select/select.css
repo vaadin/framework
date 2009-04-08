@@ -1,0 +1,137 @@
+.i-select {
+	text-align: left /* Force default alignment */
+}
+
+.i-select-optiongroup .i-select-option {
+	display: block;
+	white-space: nowrap;
+}
+
+.i-ie .i-select-optiongroup .i-select-option {
+	zoom: 1;
+}
+
+.i-select-select {
+	display: block;
+}
+
+/* Twincol style */
+.i-select-twincol {
+	white-space: nowrap;
+}
+.i-select-twincol-options {
+	float: left;
+}
+.i-select-twincol-selections {
+	font-weight: bold;
+}
+
+.i-select-twincol-buttons {
+	float: left;
+	padding: 2px; /* does not work in first render in FF ? */
+	text-align: center;
+}
+
+.i-select-twincol-buttons .i-select-twincol-deco {
+	clear:both;
+}
+
+.i-select-twincol .i-textfield {
+	display: block;
+	float: left;
+	clear: left;
+}
+
+.i-select-twincol .i-button {
+	display: block;
+	float: left;
+}
+
+.i-select-twincol-buttons .i-button {
+	display: inline;
+	float: none;
+}
+
+/** Filterselect aka ComboBox styles */
+
+.i-filterselect {
+	white-space: nowrap;
+	text-align: left /* Force default alignment */
+}
+
+.i-filterselect-input {
+	float: left;
+	margin: 0;
+}
+
+.i-filterselect-button {
+	float: right;
+	width: 1em;
+	height: 1em;
+	cursor: pointer;
+	background: #ddd;
+}
+
+.i-filterselect-suggestpopup {
+	background: #eee;
+	border: 1px solid #ddd;
+}
+
+.i-filterselect-suggestmenu table {
+	border-collapse: collapse;
+	border: none;
+	padding: 0;
+	margin: 0;
+}
+
+.i-filterselect-suggestmenu .gwt-MenuItem {
+	cursor: pointer;
+	height: 1em;
+	white-space: nowrap;
+}
+
+.i-filterselect-suggestmenu .gwt-MenuItem-selected {
+	background: #999;
+	color: #fff;
+}
+
+.i-filterselect-nextpage,
+.i-filterselect-nextpage-off,
+.i-filterselect-prevpage-off,
+.i-filterselect-prevpage {
+	overflow: hidden;
+}
+
+.i-filterselect-nextpage span,
+.i-filterselect-nextpage-off span,
+.i-filterselect-prevpage-off span,
+.i-filterselect-prevpage span {
+	display: block;
+	background: #ddd;
+	cursor: pointer;
+	overflow: hidden;
+	text-align: center;
+}
+
+.i-filterselect-nextpage-off,
+.i-filterselect-prevpage-off {
+	opacity: 0.5;
+	filter: Alpha(opacity=50);
+}
+.i-filterselect-nextpage-off span,
+.i-filterselect-prevpage-off span {
+	cursor: default;
+}
+
+.i-filterselect-status {
+	white-space: nowrap;
+	text-align: center;
+}
+
+.i-filterselect-error {
+	background: #ff2222;
+}
+
+.i-filterselect-error .i-filterselect-button {
+	background: red;
+}

@@ -1,0 +1,76 @@
+.i-datefield {
+	white-space: nowrap;
+}
+
+.i-datefield-calendarpanel {
+	width: 19em;
+	font-size: 12px;
+}
+
+.i-datefield-popup .i-datefield-calendarpanel {
+	width: 16em;
+}
+
+.i-datefield-calendarpanel table {
+	width: 100%;
+}
+
+.i-datefield-calendarpanel td {
+	text-align: right;
+	width: 14.2%;
+	padding: 0;
+	margin: 0;
+}
+
+.i-datefield-calendarpanel td span {
+	display: block;
+}
+
+.i-datefield-calendarpanel-month {
+	white-space: nowrap;
+}
+
+.i-datefield-calendarpanel-day,
+.i-datefield-calendarpanel-day-today {
+	cursor: pointer;
+}
+
+.i-disabled .i-datefield-calendarpanel-day,
+.i-disabled .i-datefield-calendarpanel-day-today {
+	cursor: default;
+}
+
+.i-datefield-calendarpanel-day-entry {
+	color: #999;
+}
+
+.i-datefield-calendarpanel-day-disabled {
+	color: #ddd;
+}
+
+.i-datefield-calendarpanel-day-entry.i-datefield-calendarpanel-day-disabled {
+	color: #bbb;
+}
+
+.i-datefield-calendarpanel-day-selected {
+	font-weight: bold;
+	cursor: default;
+}
+
+.i-datefield-time {
+	white-space: nowrap;
+}
+
+.i-datefield-time .i-label {
+	display: inline;
+}
+
+.i-datefield-rendererror .i-textfield {
+	background: #ff9999;
+}
+
+/* IE somehow loses generic i-disabled alpha. See #1960 */
+.i-ie .i-disabled .i-datefield-button,
+.i-ie .i-disabled .i-datefield-textfield {
+	filter: alpha(opacity=30);
+}

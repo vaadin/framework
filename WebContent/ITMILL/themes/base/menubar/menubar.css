@@ -1,0 +1,24 @@
+/*Top menu */
+.i-menubar table {
+ 	white-space: nowrap;
+}
+
+.i-menubar .menuitem{
+	 cursor : default;
+ }
+
+.i-menubar .menuitem-selected {
+	background: #eee;
+ }
+
+.i-menubar-submenu {
+	 white-space: nowrap;
+}
+
+.i-menubar-submenu .menuitem { 
+    cursor: default;
+}
+
+.i-menubar-submenu .menuitem-selected {
+	background: #eee;
+}

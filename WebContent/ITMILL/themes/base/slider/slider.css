@@ -1,0 +1,75 @@
+/*--------------------------
+  Default (horizontal) styles
+  --------------------------*/
+
+.i-slider {
+	height: 12px;
+	width: 200px;
+	margin: 5px 0;	
+}
+
+.i-slider-base {
+	/* changing the borders will require adjustments to ISlider.java (offsetHeight should be 3px, 1px borders on the sides) */
+	height: 3px;
+	background: #efefef;
+	border-left: 1px solid #eee;
+	border-right: 1px solid #eee;
+	
+}
+
+.i-slider-handle {
+	background: #ddd;
+	width: 12px;
+	height: 12px;
+	margin-top: -5px;
+	font-size: 0;
+	cursor: pointer;
+}
+
+
+/*-----------------
+  Vertical styles 
+  -----------------*/
+
+.i-slider-vertical {
+	width: 3px;
+	height: auto;
+	margin: 0 5px;
+	border: none;
+	border-left: 1px solid #eee;
+	border-right: 1px solid #eee;
+}
+
+.i-slider-vertical .i-slider-base {
+	width: 3px;
+	border-left: none;
+	border-right: none;
+	background: #efefef;
+	border-top: 1px solid #eee;
+	border-bottom: 1px solid #eee;	
+}
+
+.i-slider-vertical .i-slider-handle {
+	background: #ddd;
+	width: 12px;
+	height: 12px;
+	font-size: 0;
+	cursor: pointer;
+	margin-left: -5px;
+}
+
+
+/* IE specific styles */
+
+.i-ie6 .i-slider,
+.i-ie6 .i-slider-vertical {
+	margin: 0;
+}
+
+.i-ie6 .i-slider .i-slider-handle {
+	margin: -1px 0;
+}
+
+.i-ie6 .i-slider-vertical .i-slider-handle {
+	margin: 0 -1px;
+}

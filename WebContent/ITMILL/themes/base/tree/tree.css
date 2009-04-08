@@ -1,0 +1,42 @@
+.i-tree {
+	text-align: left /* Force default alignment */
+}
+
+/* ie6compatnode is hidden from non ie6 browsers, because ie6 
+ * uses weird hack to sink all events properly 
+ */
+.i-tree-node-ie6compatnode {
+	display: none;
+}
+
+.i-ie6 .i-tree-node-ie6compatnode {
+	display: inline;
+	float: left;
+	background: #000;
+	margin: 0;
+	width: 14px;
+	height: 10px;
+	padding: 1px;
+	filter: Alpha(opacity=0);
+}
+
+.i-ie6 .i-tree-node {
+	clear: both;
+}
+
+.i-tree-node-caption {
+	margin-left: 16px;
+}
+
+.i-tree-node span {
+	cursor: pointer;
+	white-space: nowrap;
+}
+.i-tree-node-selected span {
+	background: #999;
+	color: #fff;
+	cursor: pointer;
+}
+.i-tree-node-children {
+	padding-left: 16px;
+}

@@ -1,0 +1,36 @@
+/* Margin values if defined from server side */
+.i-gridlayout-margin-top {
+	padding-top: 15px;
+}
+.i-gridlayout-margin-bottom {
+	padding-bottom: 15px;
+}
+.i-gridlayout-margin-left {
+	padding-left: 18px;
+} 
+.i-gridlayout-margin-right {
+	padding-right: 18px;
+}
+
+/* 
+ * Spacing values used by IGridLayout. (element does not exist in DOM)
+ * Use padding-left for horizontal spacing and padding-top for vertical.
+ */
+.i-gridlayout-spacing-on {
+	padding-left:8px;
+	padding-top:8px;
+}
+.i-gridlayout-spacing-off {
+	padding-left:0px;
+	padding-top:0px;
+}
+
+.i-gridlayout-spacing,
+.i-gridlayout-spacing-off {
+	padding-left:0px;
+	padding-top:0px;
+}
+
+.i-gridlayout {
+	overflow:hidden;
+}
