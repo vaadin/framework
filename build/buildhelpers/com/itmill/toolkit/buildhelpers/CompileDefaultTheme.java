@@ -19,16 +19,18 @@ import java.util.Comparator;
 public class CompileDefaultTheme {
 
     private static final String THEME_DIR = "./WebContent/ITMILL/themes/";
-    private static final String BONES = "bones";
+    private static final String BASE = "base";
     private static final String DEFAULT = "default";
+    private static final String REINDEER = "reindeer";
 
     /**
      * @param args
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
-        // combineTheme(new String[] { BONES });
-        combineTheme(new String[] { DEFAULT });
+        combineTheme(new String[] { BASE });
+        combineTheme(new String[] { BASE, DEFAULT });
+        combineTheme(new String[] { BASE, REINDEER });
     }
 
     /**
