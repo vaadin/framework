@@ -1,5 +1,8 @@
 package com.itmill.toolkit.tests.layouts;
 
+import java.io.File;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -179,6 +182,88 @@ public class TestAbsoluteLayout extends TestBase {
 
             addComponent(componentChooser);
 
+            Button addComp = new Button("add component");
+            addComp.addListener(new Button.ClickListener() {
+                public void buttonClick(ClickEvent event) {
+                    final Window chooser = new Window(
+                            "Choose component type to add");
+                    chooser.getLayout().setSizeUndefined();
+                    chooser.setModal(true);
+
+                    NativeSelect select = new NativeSelect(
+                            "Choose component to edit");
+
+                    select.setNullSelectionAllowed(false);
+
+                    IndexedContainer container = new IndexedContainer();
+
+                    URL resource = AbstractComponent.class.getResource(".");
+                    File directory = new File(resource.getFile());
+                    if (directory.exists()) {
+                        // Get the list of the files contained in the
+                        // package
+                        final String[] files = directory.list();
+                        for (int j = 0; j < files.length; j++) {
+                            // we are only interested in .class files
+                            if (files[j].endsWith(".class")) {
+                                // removes the .class extension
+                                String p = resource.toString()
+                                        + files[j].substring(0, files[j]
+                                                .length() - 6);
+                                p = p.replaceAll(".*classes/", "");
+                                p = p.replaceAll("/", ".");
+                                Class c;
+                                try {
+                                    c = Class.forName(p);
+                                    if (AbstractComponent.class
+                                            .isAssignableFrom(c)
+                                            && !p.toLowerCase().contains(
+                                                    "layout")
+                                            && !p.toLowerCase().contains(
+                                                    "abstract")) {
+                                        container.addItem(c);
+                                    }
+                                } catch (ClassNotFoundException e) {
+                                    // TODO Auto-generated catch block
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+                    select.setContainerDataSource(container);
+                    select.setImmediate(true);
+
+                    select.addListener(new ValueChangeListener() {
+                        public void valueChange(ValueChangeEvent event) {
+                            Class c = (Class) event.getProperty().getValue();
+
+                            try {
+                                Component newInstance = (Component) c
+                                        .newInstance();
+                                l.addComponent(newInstance);
+                                editcomponent(newInstance);
+                                getMainWindow().removeWindow(chooser);
+                            } catch (InstantiationException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            } catch (IllegalAccessException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                    });
+
+                    chooser.addComponent(select);
+
+                    getMainWindow().addWindow(chooser);
+
+                }
+            });
+
+            addComponent(addComp);
+
             componentEditor = new Form();
             componentEditor.setWriteThrough(false);
             componentEditor.setCaption("Component properties:");
@@ -204,22 +289,24 @@ public class TestAbsoluteLayout extends TestBase {
         private void editcomponent(Component value) {
 
             BeanItem beanItem = new BeanItem(value);
-            componentEditor.setItemDataSource(beanItem, Arrays
-                    .asList(new String[] { "width", "widthUnits", "height",
-                            "heightUnits", "caption", "styleName" }));
-
-            beanItem = new BeanItem(l.getPosition(value));
             String c = "Component properties for "
                     + value.getClass().getSimpleName();
+            ArrayList<String> fields = new ArrayList<String>(Arrays
+                    .asList(new String[] { "width", "widthUnits", "height",
+                            "heightUnits", "caption", "styleName" }));
             if (value instanceof Label) {
                 c += "(" + ((Label) value).getValue() + ")";
+                fields.add("value");
             }
+
+            componentEditor.setItemDataSource(beanItem, fields);
+
+            beanItem = new BeanItem(l.getPosition(value));
             componentEditor.setCaption(c);
 
             positionEditor.setItemDataSource(beanItem);
 
         }
-
     }
 
 }
