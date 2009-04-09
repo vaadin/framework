@@ -5,6 +5,7 @@
 package com.itmill.toolkit.terminal.gwt.client;
 
 import com.google.gwt.user.client.ui.Widget;
+import com.itmill.toolkit.terminal.gwt.client.ui.IAbsoluteLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IAccordion;
 import com.itmill.toolkit.terminal.gwt.client.ui.IButton;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICheckBox;
@@ -139,6 +140,8 @@ public class DefaultWidgetSet implements WidgetSet {
             return new IPopupView();
         } else if (IUriFragmentUtility.class == classType) {
             return new IUriFragmentUtility();
+        } else if (IAbsoluteLayout.class == classType) {
+            return new IAbsoluteLayout();
         }
 
         return new IUnknownComponent();
@@ -249,6 +252,8 @@ public class DefaultWidgetSet implements WidgetSet {
             return IPopupView.class;
         } else if ("urifragment".equals(tag)) {
             return IUriFragmentUtility.class;
+        } else if (IAbsoluteLayout.TAGNAME.equals(tag)) {
+            return IAbsoluteLayout.class;
         }
 
         return IUnknownComponent.class;

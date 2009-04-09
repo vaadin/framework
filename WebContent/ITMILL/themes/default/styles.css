@@ -1,5 +1,11 @@
 /* Automatically compiled css file from subdirectories. */
 
+/* ./WebContent/ITMILL/themes/default/absolutelayout/absolutelayout.css */
+.i-absolutelayout-wrapper {
+	position: absolute;
+	overflow:hidden;
+}
+
 /* ./WebContent/ITMILL/themes/default/accordion/accordion.css */
 .i-accordion {
 	position: relative;

@@ -1276,4 +1276,16 @@ padding:2px;
 .i-button-nowraplink span {
    white-space: normal;
 }
+
+.cyan {
+	background:cyan;	
+}
+   
+.yellow {
+	background:yellow;	
+}
+   
+.green {
+	background:green;	
+}
    
