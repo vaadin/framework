@@ -3,7 +3,6 @@ package com.itmill.toolkit.tests.layouts;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import com.itmill.toolkit.data.Container;
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
@@ -20,6 +19,7 @@ import com.itmill.toolkit.ui.Field;
 import com.itmill.toolkit.ui.FieldFactory;
 import com.itmill.toolkit.ui.Form;
 import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.Layout;
 import com.itmill.toolkit.ui.NativeSelect;
 import com.itmill.toolkit.ui.TextField;
 import com.itmill.toolkit.ui.Window;
@@ -28,12 +28,6 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
 public class TestAbsoluteLayout extends TestBase {
 
     private static class MFieldFactory extends BaseFieldFactory {
-        @Override
-        public Field createField(Container container, Object itemId,
-                Object propertyId, Component uiContext) {
-            // TODO Auto-generated method stub
-            return super.createField(container, itemId, propertyId, uiContext);
-        }
 
         @Override
         public Field createField(Item item, Object propertyId,
@@ -44,7 +38,20 @@ public class TestAbsoluteLayout extends TestBase {
                 f.setHeight("8em");
                 f.setCaption("CSS string");
                 return f;
+            } else if (((String) propertyId).contains("Units")) {
+                NativeSelect s = new NativeSelect() {
+                };
+                s.addContainerProperty("caption", String.class, "");
+                s.setItemCaptionPropertyId("caption");
+                s.setNullSelectionAllowed(false);
+                for (int i = 0; i < Layout.UNIT_SYMBOLS.length; i++) {
+                    Item unitItem = s.addItem(i);
+                    unitItem.getItemProperty("caption").setValue(
+                            Layout.UNIT_SYMBOLS[i]);
+                }
+                return s;
             }
+
             return super.createField(item, propertyId, uiContext);
         }
 
@@ -202,6 +209,12 @@ public class TestAbsoluteLayout extends TestBase {
                             "heightUnits", "caption", "styleName" }));
 
             beanItem = new BeanItem(l.getPosition(value));
+            String c = "Component properties for "
+                    + value.getClass().getSimpleName();
+            if (value instanceof Label) {
+                c += "(" + ((Label) value).getValue() + ")";
+            }
+            componentEditor.setCaption(c);
 
             positionEditor.setItemDataSource(beanItem);
 
