@@ -2,8 +2,8 @@ package com.itmill.toolkit.ui;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
 
 import com.itmill.toolkit.terminal.PaintException;
@@ -17,7 +17,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IAbsoluteLayout;
  */
 public class AbsoluteLayout extends AbstractLayout {
 
-    private Collection<Component> components = new HashSet<Component>();
+    private Collection<Component> components = new LinkedHashSet<Component>();
     private Map<Component, ComponentPosition> componentToCoordinates = new HashMap<Component, ComponentPosition>();
 
     public AbsoluteLayout() {
@@ -99,10 +99,18 @@ public class AbsoluteLayout extends AbstractLayout {
             for (int i = 0; i < cssProperties.length; i++) {
                 String[] keyValuePair = cssProperties[i].split(":");
                 String key = keyValuePair[0].trim();
+                if (key.equals("")) {
+                    continue;
+                }
                 if (key.equals("z-index")) {
                     zIndex = Integer.parseInt(keyValuePair[1]);
                 } else {
-                    String value = keyValuePair[1].trim();
+                    String value;
+                    if (keyValuePair.length > 1) {
+                        value = keyValuePair[1].trim();
+                    } else {
+                        value = "";
+                    }
                     String unit = value.replaceAll("[0-9\\.]+", "");
                     if (!unit.equals("")) {
                         value = value.substring(0, value.indexOf(unit)).trim();
