@@ -16,6 +16,8 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
 
 public class ComponentsInTable extends CustomComponent {
 
+    private static final long serialVersionUID = 7179313717613510935L;
+
     public ComponentsInTable(int cols, int rows) {
         final OrderedLayout main = new OrderedLayout();
         setCompositionRoot(main);

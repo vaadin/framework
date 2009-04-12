@@ -16,6 +16,7 @@ import com.itmill.toolkit.terminal.PaintTarget;
  * "native" select without all the bells-and-whistles of the ComboBox is a
  * better choice.
  */
+@SuppressWarnings("serial")
 public class NativeSelect extends AbstractSelect {
 
     // width in characters, mimics TextField

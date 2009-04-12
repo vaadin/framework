@@ -4,6 +4,8 @@
 
 package com.itmill.toolkit.data;
 
+import java.io.Serializable;
+
 import com.itmill.toolkit.terminal.ErrorMessage;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
@@ -25,7 +27,7 @@ import com.itmill.toolkit.terminal.PaintTarget;
  * @VERSION@
  * @since 3.0
  */
-public interface Validator {
+public interface Validator extends Serializable {
 
     /**
      * Checks the given value against this validator. If the value is valid this

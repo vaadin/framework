@@ -5,6 +5,7 @@
 package com.itmill.toolkit.service;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.Collection;
 
 import com.itmill.toolkit.Application;
@@ -19,7 +20,7 @@ import com.itmill.toolkit.Application;
  * @VERSION@
  * @since 3.1
  */
-public interface ApplicationContext {
+public interface ApplicationContext extends Serializable {
 
     /**
      * Returns application context base directory.
@@ -68,7 +69,7 @@ public interface ApplicationContext {
      * between the client and the application.
      * 
      */
-    public interface TransactionListener {
+    public interface TransactionListener extends Serializable {
 
         /**
          * Invoked at the beginning of every transaction.

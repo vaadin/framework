@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -70,7 +71,9 @@ import com.itmill.toolkit.ui.Window;
  * @VERSION@
  * @since 5.0
  */
-public class CommunicationManager implements Paintable.RepaintRequestListener {
+@SuppressWarnings("serial")
+public class CommunicationManager implements Paintable.RepaintRequestListener,
+        Serializable {
 
     private static String GET_PARAM_REPAINT_ALL = "repaintAll";
 
@@ -776,8 +779,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
         return success;
     }
 
-    public class ErrorHandlerErrorEvent implements ErrorEvent {
-
+    public class ErrorHandlerErrorEvent implements ErrorEvent, Serializable {
         private final Throwable throwable;
 
         public ErrorHandlerErrorEvent(Throwable throwable) {
@@ -1207,7 +1209,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
         p.requestRepaintRequests();
     }
 
-    private final class SingleValueMap implements Map {
+    private final class SingleValueMap implements Map<Object, Object>,
+            Serializable {
+
         private final String name;
 
         private final Object value;
@@ -1298,7 +1302,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
     /**
      * Implementation of URIHandler.ErrorEvent interface.
      */
-    public class URIHandlerErrorImpl implements URIHandler.ErrorEvent {
+    public class URIHandlerErrorImpl implements URIHandler.ErrorEvent,
+            Serializable {
 
         private final URIHandler owner;
 
@@ -1356,7 +1361,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
      * FileUpload can determine content length. Used to detect files total size,
      * uploads progress can be tracked inside upload.
      */
-    private class UploadProgressListener implements ProgressListener {
+    private class UploadProgressListener implements ProgressListener,
+            Serializable {
+
         Upload uploadComponent;
 
         boolean updated = false;

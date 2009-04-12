@@ -31,6 +31,7 @@ import com.itmill.toolkit.data.Property;
  * @author IT Mill Ltd.
  * @since 5.3.0
  */
+@SuppressWarnings("serial")
 public abstract class PropertyFormatter implements Property,
         Property.ValueChangeNotifier, Property.ValueChangeListener,
         Property.ReadOnlyStatusChangeListener,
@@ -229,11 +230,6 @@ public abstract class PropertyFormatter implements Property,
             Property.ValueChangeEvent {
 
         /**
- * 
- */
-        private static final long serialVersionUID = -489631310964258710L;
-
-        /**
          * Constructs a new value change event for this object.
          * 
          * @param source
@@ -262,11 +258,6 @@ public abstract class PropertyFormatter implements Property,
      */
     private class ReadOnlyStatusChangeEvent extends java.util.EventObject
             implements Property.ReadOnlyStatusChangeEvent {
-
-        /**
- * 
- */
-        private static final long serialVersionUID = 8329395774911454548L;
 
         /**
          * Constructs a new read-only status change event for this object.

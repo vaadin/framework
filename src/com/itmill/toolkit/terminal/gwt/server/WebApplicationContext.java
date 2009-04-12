@@ -6,9 +6,11 @@ package com.itmill.toolkit.terminal.gwt.server;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -30,16 +32,19 @@ import com.itmill.toolkit.service.ApplicationContext;
  * @VERSION@
  * @since 3.1
  */
+@SuppressWarnings("serial")
 public class WebApplicationContext implements ApplicationContext,
-        HttpSessionBindingListener {
+        HttpSessionBindingListener, Serializable {
 
     protected List listeners;
 
-    protected HttpSession session;
+    protected transient HttpSession session;
 
     protected final HashSet applications = new HashSet();
 
     protected WebBrowser browser = new WebBrowser();
+
+    protected HashMap<Application, CommunicationManager> applicationToAjaxAppMgrMap = new HashMap<Application, CommunicationManager>();
 
     /**
      * Creates a new Web Application Context.
@@ -230,7 +235,7 @@ public class WebApplicationContext implements ApplicationContext,
                 final Application app = (Application) applications.iterator()
                         .next();
                 app.close();
-                ApplicationServlet.applicationToAjaxAppMgrMap.remove(app);
+                applicationToAjaxAppMgrMap.remove(app);
                 removeApplication(app);
             }
         } catch (Exception e) {
@@ -257,4 +262,25 @@ public class WebApplicationContext implements ApplicationContext,
     public WebBrowser getBrowser() {
         return browser;
     }
+
+    /**
+     * Gets communication manager for an application.
+     * 
+     * If this application has not been running before, new manager is created.
+     * 
+     * @param application
+     * @return CommunicationManager
+     */
+    protected CommunicationManager getApplicationManager(
+            Application application, ApplicationServlet servlet) {
+        CommunicationManager mgr = applicationToAjaxAppMgrMap.get(application);
+
+        if (mgr == null) {
+            // Creates new manager
+            mgr = new CommunicationManager(application, servlet);
+            applicationToAjaxAppMgrMap.put(application, mgr);
+        }
+        return mgr;
+    }
+
 }

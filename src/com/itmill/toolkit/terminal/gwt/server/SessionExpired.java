@@ -1,7 +1,6 @@
 package com.itmill.toolkit.terminal.gwt.server;
 
+@SuppressWarnings("serial")
 public class SessionExpired extends Exception {
-
-    private static final long serialVersionUID = -2211425033877155423L;
 
 }

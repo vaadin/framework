@@ -23,6 +23,7 @@ import com.itmill.toolkit.terminal.PaintTarget;
  * @VERSION@
  * @since 4
  */
+@SuppressWarnings("serial")
 public class ProgressIndicator extends AbstractField implements Property,
         Property.Viewer, Property.ValueChangeListener {
 

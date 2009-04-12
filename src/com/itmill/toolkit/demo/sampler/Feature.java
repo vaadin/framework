@@ -3,6 +3,7 @@ package com.itmill.toolkit.demo.sampler;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 
 import com.itmill.toolkit.ui.Component;
 
@@ -13,7 +14,7 @@ import com.itmill.toolkit.ui.Component;
  * </p>
  * 
  */
-abstract public class Feature {
+abstract public class Feature implements Serializable {
 
     public static final Object PROPERTY_ICON = "Icon";
     public static final Object PROPERTY_NAME = "Name";
@@ -54,8 +55,8 @@ abstract public class Feature {
      * May return null, if the example has no related resources.
      * </p>
      * <p>
-     * The name of the NamedExternalResource will be shown in the UI. <br/> Note
-     * that Javadoc should be referenced via {@link #getRelatedAPI()}.
+     * The name of the NamedExternalResource will be shown in the UI. <br/>
+     * Note that Javadoc should be referenced via {@link #getRelatedAPI()}.
      * </p>
      * 
      * @see #getThemeBase()

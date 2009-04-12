@@ -4,6 +4,7 @@
 
 package com.itmill.toolkit.terminal;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -20,7 +21,7 @@ import java.util.Map;
  * @VERSION@
  * @since 3.0
  */
-public interface VariableOwner {
+public interface VariableOwner extends Serializable {
 
     /**
      * Called when one or more variables handled by the implementing class are

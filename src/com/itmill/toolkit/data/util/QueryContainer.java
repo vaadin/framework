@@ -46,6 +46,7 @@ import com.itmill.toolkit.data.Property;
  * @since 4.0
  */
 
+@SuppressWarnings("serial")
 public class QueryContainer implements Container, Container.Ordered,
         Container.Indexed {
 

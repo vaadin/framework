@@ -7,6 +7,7 @@ package com.itmill.toolkit.data.util;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +36,7 @@ import com.itmill.toolkit.terminal.Resource;
  * @author mattitahvonen
  * 
  */
+@SuppressWarnings("serial")
 public class FilesystemContainer implements Container.Hierarchical {
 
     /**
@@ -62,13 +64,13 @@ public class FilesystemContainer implements Container.Hierarchical {
      */
     public static Collection FILE_PROPERTIES;
 
-    private static Method FILEITEM_LASTMODIFIED;
+    private final static Method FILEITEM_LASTMODIFIED;
 
-    private static Method FILEITEM_NAME;
+    private final static Method FILEITEM_NAME;
 
-    private static Method FILEITEM_ICON;
+    private final static Method FILEITEM_ICON;
 
-    private static Method FILEITEM_SIZE;
+    private final static Method FILEITEM_SIZE;
 
     static {
 
@@ -741,7 +743,7 @@ public class FilesystemContainer implements Container.Hierarchical {
      * @VERSION@
      * @since 3.0
      */
-    public class FileExtensionFilter implements FilenameFilter {
+    public class FileExtensionFilter implements FilenameFilter, Serializable {
 
         private final String filter;
 

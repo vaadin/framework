@@ -34,6 +34,7 @@ import com.itmill.toolkit.data.Property;
  * @VERSION@
  * @since 3.0
  */
+@SuppressWarnings("serial")
 public class ContainerHierarchicalWrapper implements Container.Hierarchical,
         Container.ItemSetChangeNotifier, Container.PropertySetChangeNotifier {
 

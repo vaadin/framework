@@ -4,6 +4,7 @@
 
 package com.itmill.toolkit.automatedtests.util;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,7 +18,7 @@ import java.util.Iterator;
  * figure out what went wrong.
  * 
  */
-public class Log {
+public class Log implements Serializable {
 
     // 3 (errors only)
     // 2 (+ warnings)

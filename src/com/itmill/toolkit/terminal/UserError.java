@@ -13,6 +13,7 @@ package com.itmill.toolkit.terminal;
  * @VERSION@
  * @since 3.0
  */
+@SuppressWarnings("serial")
 public class UserError implements ErrorMessage {
 
     /**

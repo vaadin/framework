@@ -22,6 +22,7 @@ import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
  * @VERSION@
  * @since 5.0
  */
+@SuppressWarnings("serial")
 public class SplitPanel extends AbstractLayout {
 
     /* Predefined orientations */

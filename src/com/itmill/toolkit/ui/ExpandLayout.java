@@ -18,6 +18,7 @@ package com.itmill.toolkit.ui;
  * 
  * @deprecated Deprecated in favor of the new OrderedLayout
  */
+@SuppressWarnings("serial")
 @Deprecated
 public class ExpandLayout extends OrderedLayout {
 

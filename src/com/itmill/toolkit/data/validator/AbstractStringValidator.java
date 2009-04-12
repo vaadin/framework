@@ -15,6 +15,7 @@ package com.itmill.toolkit.data.validator;
  * @VERSION@
  * @since 5.4
  */
+@SuppressWarnings("serial")
 public abstract class AbstractStringValidator extends AbstractValidator {
 
     /**

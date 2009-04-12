@@ -14,6 +14,7 @@ import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Sizeable;
 
+@SuppressWarnings("serial")
 public abstract class AbstractOrderedLayout extends AbstractLayout implements
         Layout.AlignmentHandler, Layout.SpacingHandler {
 

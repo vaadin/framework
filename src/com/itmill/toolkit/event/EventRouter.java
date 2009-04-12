@@ -20,6 +20,7 @@ import java.util.Set;
  * @VERSION@
  * @since 3.0
  */
+@SuppressWarnings("serial")
 public class EventRouter implements MethodEventSource {
 
     /**

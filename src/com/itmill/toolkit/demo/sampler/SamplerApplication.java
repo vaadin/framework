@@ -21,7 +21,6 @@ import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.terminal.Resource;
 import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.terminal.URIHandler;
-import com.itmill.toolkit.terminal.gwt.server.WebApplicationContext;
 import com.itmill.toolkit.ui.Alignment;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.ComboBox;
@@ -45,6 +44,7 @@ import com.itmill.toolkit.ui.PopupView.PopupVisibilityEvent;
 import com.itmill.toolkit.ui.UriFragmentUtility.FragmentChangedEvent;
 import com.itmill.toolkit.ui.UriFragmentUtility.FragmentChangedListener;
 
+@SuppressWarnings("serial")
 public class SamplerApplication extends Application {
 
     // All features in one container

@@ -17,6 +17,7 @@ import com.itmill.toolkit.ui.Layout.MarginHandler;
  * @VERSION@
  * @since 5.0
  */
+@SuppressWarnings("serial")
 public abstract class AbstractLayout extends AbstractComponentContainer
         implements Layout, MarginHandler {
 

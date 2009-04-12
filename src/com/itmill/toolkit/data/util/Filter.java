@@ -1,5 +1,7 @@
 package com.itmill.toolkit.data.util;
 
+import java.io.Serializable;
+
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property;
 
@@ -9,7 +11,8 @@ import com.itmill.toolkit.data.Property;
  * 
  * @since 5.4
  */
-public class Filter {
+@SuppressWarnings("serial")
+public class Filter implements Serializable {
     final Object propertyId;
     final String filterString;
     final boolean ignoreCase;

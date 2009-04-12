@@ -22,6 +22,7 @@ import com.itmill.toolkit.data.Item;
  * @VERSION@
  * @since 3.0
  */
+@SuppressWarnings("serial")
 public class HierarchicalContainer extends IndexedContainer implements
         Container.Hierarchical {
 

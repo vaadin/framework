@@ -1,5 +1,6 @@
 package com.itmill.toolkit.demo.sampler;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Map;
@@ -149,7 +150,7 @@ public class ActiveLink extends Link {
     /**
      * ActiveLink click listener
      */
-    public interface LinkActivatedListener {
+    public interface LinkActivatedListener extends Serializable {
 
         /**
          * ActiveLink has been activated.

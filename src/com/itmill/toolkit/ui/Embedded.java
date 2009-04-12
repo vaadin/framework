@@ -19,6 +19,7 @@ import com.itmill.toolkit.terminal.Resource;
  * @VERSION@
  * @since 3.0
  */
+@SuppressWarnings("serial")
 public class Embedded extends AbstractComponent {
 
     /**

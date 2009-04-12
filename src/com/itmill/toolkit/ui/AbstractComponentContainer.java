@@ -19,6 +19,7 @@ import java.util.LinkedList;
  * @VERSION@
  * @since 3.0
  */
+@SuppressWarnings("serial")
 public abstract class AbstractComponentContainer extends AbstractComponent
         implements ComponentContainer {
 

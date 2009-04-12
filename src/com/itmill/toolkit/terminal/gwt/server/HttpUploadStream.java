@@ -14,6 +14,7 @@ import java.io.InputStream;
  * @VERSION@
  * @since 5.0
  */
+@SuppressWarnings("serial")
 public class HttpUploadStream implements
         com.itmill.toolkit.terminal.UploadStream {
 

@@ -4,6 +4,8 @@
 
 package com.itmill.toolkit.terminal;
 
+import java.io.Serializable;
+
 /**
  * Interface for rendering error messages to terminal. All the visible errors
  * shown to user must implement this interface.
@@ -13,7 +15,7 @@ package com.itmill.toolkit.terminal;
  * @VERSION@
  * @since 3.0
  */
-public interface ErrorMessage extends Paintable {
+public interface ErrorMessage extends Paintable, Serializable {
 
     /**
      * Error code for system errors and bugs.

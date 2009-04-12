@@ -11,6 +11,8 @@ import com.itmill.toolkit.ui.VerticalLayout;
  * the tab contents between the vertical tabs.
  */
 public class AccordionExample extends CustomComponent {
+    private static final long serialVersionUID = 7172404542359409349L;
+
     public AccordionExample() {
         // Create a new accordion
         final Accordion accordion = new Accordion();

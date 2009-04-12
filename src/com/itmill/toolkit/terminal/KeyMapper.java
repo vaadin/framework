@@ -4,6 +4,7 @@
 
 package com.itmill.toolkit.terminal;
 
+import java.io.Serializable;
 import java.util.Hashtable;
 
 /**
@@ -15,7 +16,8 @@ import java.util.Hashtable;
  * @VERSION@
  * @since 3.0
  */
-public class KeyMapper {
+@SuppressWarnings("serial")
+public class KeyMapper implements Serializable {
 
     private int lastKey = 0;
 

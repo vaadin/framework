@@ -24,6 +24,8 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
 public class ButtonExample extends CustomComponent implements
         Button.ClickListener {
 
+    private static final long serialVersionUID = -3934416497726624080L;
+
     public ButtonExample() {
 
         final VerticalLayout main = new VerticalLayout();

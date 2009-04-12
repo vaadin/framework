@@ -4,6 +4,7 @@
 
 package com.itmill.toolkit.ui;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,6 +36,7 @@ import com.itmill.toolkit.terminal.gwt.server.ComponentSizeValidator;
  * @VERSION@
  * @since 3.0
  */
+@SuppressWarnings("serial")
 public abstract class AbstractComponent implements Component, MethodEventSource {
 
     /* Private members */
@@ -1236,7 +1238,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     public interface ComponentErrorEvent extends Terminal.ErrorEvent {
     }
 
-    public interface ComponentErrorHandler {
+    public interface ComponentErrorHandler extends Serializable {
         /**
          * Handle the component error
          * 

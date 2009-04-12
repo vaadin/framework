@@ -4,6 +4,8 @@
 
 package com.itmill.toolkit.ui;
 
+import java.io.Serializable;
+
 import com.itmill.toolkit.data.Container;
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property;
@@ -17,7 +19,7 @@ import com.itmill.toolkit.data.Property;
  * @VERSION@
  * @since 3.1
  */
-public interface FieldFactory {
+public interface FieldFactory extends Serializable {
 
     /**
      * Creates a field based on type of data.

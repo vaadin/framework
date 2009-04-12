@@ -6,6 +6,7 @@ package com.itmill.toolkit.terminal.gwt.server;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -28,7 +29,9 @@ import com.itmill.toolkit.Application;
  * @author marc
  * 
  */
-public class PortletApplicationContext extends WebApplicationContext {
+@SuppressWarnings("serial")
+public class PortletApplicationContext extends WebApplicationContext implements
+        Serializable {
 
     protected PortletSession portletSession;
 
@@ -182,7 +185,7 @@ public class PortletApplicationContext extends WebApplicationContext {
         }
     }
 
-    public interface PortletListener {
+    public interface PortletListener extends Serializable {
         public void handleRenderRequest(RenderRequest request,
                 RenderResponse response);
 
@@ -190,7 +193,8 @@ public class PortletApplicationContext extends WebApplicationContext {
                 ActionResponse response);
     }
 
-    private class RestrictedRenderResponse implements RenderResponse {
+    private class RestrictedRenderResponse implements RenderResponse,
+            Serializable {
 
         private RenderResponse response;
 

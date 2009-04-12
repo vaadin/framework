@@ -1,5 +1,6 @@
 package com.itmill.toolkit.ui;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +24,8 @@ import com.itmill.toolkit.ui.Layout.AlignmentHandler;
  * r,right for right alignment
  * 
  */
-public class AlignmentUtils {
+@SuppressWarnings("serial")
+public class AlignmentUtils implements Serializable {
 
     private static int horizontalMask = AlignmentHandler.ALIGNMENT_LEFT
             | AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER

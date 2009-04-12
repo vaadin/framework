@@ -4,6 +4,8 @@
 
 package com.itmill.toolkit.terminal;
 
+import java.io.Serializable;
+
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.service.FileTypeResolver;
 
@@ -20,7 +22,8 @@ import com.itmill.toolkit.service.FileTypeResolver;
  * @VERSION@
  * @since 3.0
  */
-public class ClassResource implements ApplicationResource {
+@SuppressWarnings("serial")
+public class ClassResource implements ApplicationResource, Serializable {
 
     /**
      * Default buffer size for this stream resource.

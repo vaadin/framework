@@ -4,6 +4,8 @@
 
 package com.itmill.toolkit.terminal;
 
+import java.io.Serializable;
+
 /**
  * <p>
  * This interface is implemented by all visual objects that can be scrolled. The
@@ -15,7 +17,7 @@ package com.itmill.toolkit.terminal;
  * @VERSION@
  * @since 3.0
  */
-public interface Scrollable {
+public interface Scrollable extends Serializable {
 
     /**
      * Gets scroll left offset.

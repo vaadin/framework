@@ -24,6 +24,7 @@ import com.itmill.toolkit.terminal.Scrollable;
  * @VERSION@
  * @since 3.0
  */
+@SuppressWarnings("serial")
 public class Panel extends AbstractComponentContainer implements Scrollable,
         ComponentContainer.ComponentAttachListener,
         ComponentContainer.ComponentDetachListener, Action.Container {

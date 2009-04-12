@@ -2,6 +2,7 @@ package com.itmill.toolkit.terminal.gwt.server;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -26,7 +27,8 @@ import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.GridLayout.Area;
 
-public class ComponentSizeValidator {
+@SuppressWarnings("serial")
+public class ComponentSizeValidator implements Serializable {
 
     private final static int LAYERS_SHOWN = 4;
 
@@ -72,12 +74,14 @@ public class ComponentSizeValidator {
             }
         } else if (component instanceof Form) {
             Form form = (Form) component;
-            if (form.getLayout() != null)
+            if (form.getLayout() != null) {
                 errors = validateComponentRelativeSizes(form.getLayout(),
                         errors, parent);
-            if (form.getFooter() != null)
+            }
+            if (form.getFooter() != null) {
                 errors = validateComponentRelativeSizes(form.getFooter(),
                         errors, parent);
+            }
         }
 
         return errors;
@@ -148,7 +152,7 @@ public class ComponentSizeValidator {
         }
     }
 
-    public static class InvalidLayout {
+    public static class InvalidLayout implements Serializable {
 
         private Component component;
 
@@ -265,7 +269,7 @@ public class ComponentSizeValidator {
         }
     }
 
-    private static class ComponentInfo {
+    private static class ComponentInfo implements Serializable {
         Component component;
         String info;
 
@@ -561,8 +565,9 @@ public class ComponentSizeValidator {
                     || parent instanceof TabSheet
                     || parent instanceof CustomComponent) {
                 // FIXME Could we use com.itmill.toolkit package name here and
-                // fail for all component containers? 
-                // FIXME Actually this should be moved to containers so it can be implemented for custom containers
+                // fail for all component containers?
+                // FIXME Actually this should be moved to containers so it can
+                // be implemented for custom containers
                 // TODO vertical splitpanel with another non relative component?
                 return false;
             } else if (parent instanceof Window) {
@@ -610,7 +615,7 @@ public class ComponentSizeValidator {
     private static Map<Object, FileLocation> widthLocations = new HashMap<Object, FileLocation>();
     private static Map<Object, FileLocation> heightLocations = new HashMap<Object, FileLocation>();
 
-    public static class FileLocation {
+    public static class FileLocation implements Serializable {
         public String method;
         public String file;
         public String className;

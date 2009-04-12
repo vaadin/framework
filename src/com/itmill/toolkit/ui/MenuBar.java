@@ -1,5 +1,6 @@
 package com.itmill.toolkit.ui;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -17,6 +18,7 @@ import com.itmill.toolkit.terminal.Resource;
  * are represented as vertical menu.
  * </p>
  */
+@SuppressWarnings("serial")
 public class MenuBar extends AbstractComponent {
 
     // Items of the top-level menu
@@ -70,7 +72,7 @@ public class MenuBar extends AbstractComponent {
         // This generates the tree from the contents of the menu
         while (itr.hasNext()) {
 
-            MenuItem item = (MenuItem) itr.next();
+            MenuItem item = itr.next();
 
             target.startTag("item");
 
@@ -127,7 +129,7 @@ public class MenuBar extends AbstractComponent {
 
             // Go through all the items in the menu
             while (!found && !items.empty()) {
-                tmpItem = (MenuItem) items.pop();
+                tmpItem = items.pop();
                 found = (clickedId.intValue() == tmpItem.getId());
 
                 if (tmpItem.hasChildren()) {
@@ -343,7 +345,7 @@ public class MenuBar extends AbstractComponent {
      * {@link com.itmill.toolkit.ui.MenuBar.MenuItem}. The selected item is
      * given as an argument.
      */
-    public interface Command {
+    public interface Command extends Serializable {
         public void menuSelected(MenuBar.MenuItem selectedItem);
     }
 
@@ -354,7 +356,7 @@ public class MenuBar extends AbstractComponent {
      * multiple MenuItems to a MenuItem and create a sub-menu.
      * 
      */
-    public class MenuItem {
+    public class MenuItem implements Serializable {
 
         /** Private members * */
         private final int itsId;

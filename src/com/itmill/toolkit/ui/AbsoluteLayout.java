@@ -1,5 +1,6 @@
 package com.itmill.toolkit.ui;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -15,6 +16,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IAbsoluteLayout;
  * positioning.
  * 
  */
+@SuppressWarnings("serial")
 public class AbsoluteLayout extends AbstractLayout {
 
     private Collection<Component> components = new LinkedHashSet<Component>();
@@ -72,7 +74,7 @@ public class AbsoluteLayout extends AbstractLayout {
      * in generic java tools
      * 
      */
-    public class ComponentPosition {
+    public class ComponentPosition implements Serializable {
 
         private int zIndex = -1;
         private float top = -1;

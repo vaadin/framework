@@ -1,5 +1,7 @@
 package com.itmill.toolkit.automatedtests.featurebrowser;
 
+import java.io.Serializable;
+
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Validator;
 import com.itmill.toolkit.data.util.BeanItem;
@@ -25,6 +27,7 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
  */
 public class FormExample extends CustomComponent {
 
+    private static final long serialVersionUID = -5382205369084031674L;
     static final String cities[] = { "Amsterdam", "Berlin", "Helsinki",
             "Hong Kong", "London", "Luxemburg", "New York", "Oslo", "Paris",
             "Rome", "Stockholm", "Tokyo", "Turku" };
@@ -36,6 +39,7 @@ public class FormExample extends CustomComponent {
         final Address dataModel = new Address();
         Button peekDataModelState = new Button("Show the data model state",
                 new Button.ClickListener() {
+                    private static final long serialVersionUID = -9128707564903086213L;
 
                     public void buttonClick(ClickEvent event) {
                         getWindow().showNotification(
@@ -61,6 +65,9 @@ public class FormExample extends CustomComponent {
     }
 
     public static class AddressForm extends Form {
+
+        private static final long serialVersionUID = -1356475197391501301L;
+
         public AddressForm(String caption) {
 
             setCaption(caption);
@@ -114,7 +121,10 @@ public class FormExample extends CustomComponent {
      * This is example on how to customize field creation. Any kind of field
      * components could be created on the fly.
      */
-    static class MyFieldFactory extends BaseFieldFactory {
+    static class MyFieldFactory extends BaseFieldFactory implements
+            Serializable {
+
+        private static final long serialVersionUID = 4993348078809959988L;
 
         @Override
         public Field createField(Item item, Object propertyId,
@@ -138,6 +148,8 @@ public class FormExample extends CustomComponent {
      */
     static class PostalCodeValidator implements Validator {
 
+        private static final long serialVersionUID = -7635596091609806427L;
+
         public boolean isValid(Object value) {
             if (value == null || !(value instanceof String)) {
                 return false;
@@ -159,7 +171,9 @@ public class FormExample extends CustomComponent {
      * it would be a good idea to implement Item -interface for the datamodel to
      * make it directly bindable to form (without BeanItem wrapper)
      */
-    public static class Address {
+    public static class Address implements Serializable {
+
+        private static final long serialVersionUID = 6238878890199428556L;
         String name = "";
         String streetAddress = "";
         String postalCode = "";

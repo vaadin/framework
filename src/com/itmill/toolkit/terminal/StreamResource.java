@@ -20,6 +20,7 @@ import com.itmill.toolkit.service.FileTypeResolver;
  * @VERSION@
  * @since 3.0
  */
+@SuppressWarnings("serial")
 public class StreamResource implements ApplicationResource {
 
     /**

@@ -1,6 +1,7 @@
 package com.itmill.toolkit.data.util;
 
 import java.beans.PropertyDescriptor;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -36,6 +37,7 @@ import com.itmill.toolkit.data.Property.ValueChangeNotifier;
  * 
  * @since 5.4
  */
+@SuppressWarnings("serial")
 public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         ItemSetChangeNotifier, ValueChangeListener {
     // filtered and unfiltered item IDs
@@ -45,11 +47,18 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
 
     // internal data model to obtain property IDs etc.
     private final Class<BT> type;
-    private final LinkedHashMap<String, PropertyDescriptor> model;
+    private transient LinkedHashMap<String, PropertyDescriptor> model;
 
     private List<ItemSetChangeListener> itemSetChangeListeners;
 
     private Set<Filter> filters = new HashSet<Filter>();
+
+    /* Special serialization to handle method references */
+    private void readObject(java.io.ObjectInputStream in) throws IOException,
+            ClassNotFoundException {
+        in.defaultReadObject();
+        model = BeanItem.getPropertyDescriptors(type);
+    }
 
     public BeanItemContainer(Class<BT> type) throws InstantiationException,
             IllegalAccessException {
@@ -65,7 +74,6 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    @SuppressWarnings("unchecked")
     public BeanItemContainer(Collection<BT> list)
             throws InstantiationException, IllegalAccessException {
         type = (Class<BT>) list.iterator().next().getClass();
@@ -106,7 +114,6 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
      *            Id of the new item to be added.
      * @return Returns new item or null if the operation fails.
      */
-    @SuppressWarnings("unchecked")
     private Item addItemAtInternalIndex(int index, Object newItemId) {
         // Make sure that the Item has not been created yet
         if (allItems.contains(newItemId)) {
@@ -364,7 +371,6 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         }
     }
 
-    @SuppressWarnings("unchecked")
     public void addContainerFilter(Object propertyId, String filterString,
             boolean ignoreCase, boolean onlyMatchPrefix) {
         if (filters.isEmpty()) {
@@ -386,7 +392,6 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
      * items, and send a notification if the set of visible items changed in any
      * way.
      */
-    @SuppressWarnings("unchecked")
     protected void filterAll() {
         // avoid notification if the filtering had no effect
         List<BT> originalItems = list;

@@ -4,6 +4,7 @@
 
 package com.itmill.toolkit.terminal;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -24,7 +25,7 @@ import java.util.Map;
  * @VERSION@
  * @since 3.0
  */
-public interface ParameterHandler {
+public interface ParameterHandler extends Serializable{
 
     /**
      * <p>

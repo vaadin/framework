@@ -18,6 +18,7 @@ import com.itmill.toolkit.terminal.PaintTarget;
  * can not turn on multi-select mode.
  * 
  */
+@SuppressWarnings("serial")
 public class ComboBox extends Select {
 
     private String inputPrompt = null;
@@ -74,6 +75,7 @@ public class ComboBox extends Select {
         this.inputPrompt = inputPrompt;
     }
 
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         if (inputPrompt != null) {
             target.addAttribute("prompt", inputPrompt);

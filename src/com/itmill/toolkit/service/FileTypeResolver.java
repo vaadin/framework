@@ -5,6 +5,7 @@
 package com.itmill.toolkit.service;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Map;
@@ -25,7 +26,8 @@ import com.itmill.toolkit.terminal.ThemeResource;
  * @VERSION@
  * @since 3.0
  */
-public class FileTypeResolver {
+@SuppressWarnings("serial")
+public class FileTypeResolver implements Serializable {
 
     /**
      * Default icon given if no icon is specified for a mime-type.

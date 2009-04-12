@@ -4,6 +4,7 @@
 
 package com.itmill.toolkit.ui;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -49,6 +50,7 @@ import com.itmill.toolkit.terminal.gwt.client.MouseEventDetails;
  * @VERSION@
  * @since 3.0
  */
+@SuppressWarnings("serial")
 public class Table extends AbstractSelect implements Action.Container,
         Container.Ordered, Container.Sortable, ItemClickSource {
 
@@ -3067,7 +3069,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Table.addGeneratedColumn along with an id for the column to be generated.
      * 
      */
-    public interface ColumnGenerator {
+    public interface ColumnGenerator extends Serializable {
 
         /**
          * Called by Table when a cell in a generated column needs to be
@@ -3112,7 +3114,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * to the cell content is <tt>i-table-cell-content-[style name]</tt>, and
      * the row style will be <tt>i-table-row-[style name]</tt>.
      */
-    public interface CellStyleGenerator {
+    public interface CellStyleGenerator extends Serializable {
 
         /**
          * Called by Table when a cell (and row) is painted.

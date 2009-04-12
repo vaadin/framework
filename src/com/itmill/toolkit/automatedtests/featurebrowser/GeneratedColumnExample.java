@@ -37,6 +37,7 @@ import com.itmill.toolkit.ui.Button.ClickListener;
  * @author magi
  */
 public class GeneratedColumnExample extends CustomComponent {
+
     /**
      * The business model: fill-up at a gas station.
      */
@@ -116,12 +117,13 @@ public class GeneratedColumnExample extends CustomComponent {
      * implementations, as they are not needed in this example.
      */
     public class MySimpleIndexedContainer implements Container, Indexed {
-        Vector items;
+
+        Vector<BeanItem> items;
         Object itemtemplate;
 
         public MySimpleIndexedContainer(Object itemtemplate) {
             this.itemtemplate = itemtemplate;
-            items = new Vector(); // Yeah this is just a test
+            items = new Vector<BeanItem>(); // Yeah this is just a test
         }
 
         public boolean addContainerProperty(Object propertyId, Class type,
@@ -164,7 +166,7 @@ public class GeneratedColumnExample extends CustomComponent {
             if (itemId instanceof Integer) {
                 int pos = ((Integer) itemId).intValue();
                 if (pos >= 0 && pos < items.size()) {
-                    Item item = (Item) items.get(pos);
+                    Item item = items.get(pos);
 
                     // The BeanItem provides the property objects for the items.
                     return item.getItemProperty(propertyId);
@@ -185,7 +187,7 @@ public class GeneratedColumnExample extends CustomComponent {
             if (itemId instanceof Integer) {
                 int pos = ((Integer) itemId).intValue();
                 if (pos >= 0 && pos < items.size()) {
-                    return (Item) items.get(pos);
+                    return items.get(pos);
                 }
             }
             return null;
@@ -365,6 +367,9 @@ public class GeneratedColumnExample extends CustomComponent {
 
     /** Table column generator for calculating consumption column. */
     class ConsumptionColumnGenerator implements Table.ColumnGenerator {
+
+        private static final long serialVersionUID = -1077081052659001251L;
+
         /**
          * Generates a cell containing value calculated from the item.
          */
@@ -408,6 +413,7 @@ public class GeneratedColumnExample extends CustomComponent {
 
     /** Table column generator for calculating daily cost column. */
     class DailyCostColumnGenerator extends ConsumptionColumnGenerator {
+
         @Override
         public Component generateCell(FillUp fillup, FillUp prev) {
             double dailycost = fillup.dailyCost(prev);

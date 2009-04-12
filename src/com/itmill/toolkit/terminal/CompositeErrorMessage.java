@@ -4,6 +4,7 @@
 
 package com.itmill.toolkit.terminal;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -17,7 +18,8 @@ import java.util.List;
  * @VERSION@
  * @since 3.0
  */
-public class CompositeErrorMessage implements ErrorMessage {
+@SuppressWarnings("serial")
+public class CompositeErrorMessage implements ErrorMessage, Serializable {
 
     /**
      * Array of all the errors.

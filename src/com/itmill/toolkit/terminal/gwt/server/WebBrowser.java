@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.itmill.toolkit.terminal.Terminal;
 
+@SuppressWarnings("serial")
 public class WebBrowser implements Terminal {
 
     private int screenHeight = 0;

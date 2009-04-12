@@ -4,6 +4,7 @@
 
 package com.itmill.toolkit.data;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 /**
@@ -19,7 +20,7 @@ import java.util.Collection;
  * @since 3.0
  * @see com.itmill.toolkit.data.Validator
  */
-public interface Validatable {
+public interface Validatable extends Serializable {
 
     /**
      * <p>
@@ -54,7 +55,7 @@ public interface Validatable {
      * 
      * @return collection of validators or <code>null</code>
      */
-    public Collection getValidators();
+    public Collection<?> getValidators();
 
     /**
      * <p>

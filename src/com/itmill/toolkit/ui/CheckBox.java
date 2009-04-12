@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 
 import com.itmill.toolkit.data.Property;
 
+@SuppressWarnings("serial")
 public class CheckBox extends Button {
     /**
      * Creates a new switch button.

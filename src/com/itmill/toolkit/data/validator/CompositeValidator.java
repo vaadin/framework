@@ -23,6 +23,7 @@ import com.itmill.toolkit.data.Validator;
  * @VERSION@
  * @since 3.0
  */
+@SuppressWarnings("serial")
 public class CompositeValidator extends AbstractValidator {
 
     /**

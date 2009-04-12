@@ -1,41 +1,43 @@
 package com.itmill.toolkit.demo.tutorial.addressbook.data;
 
-public class SearchFilter {
+import java.io.Serializable;
 
-	private final String term;
-	private final Object propertyId;
-	private String searchName;
+public class SearchFilter implements Serializable {
 
-	public SearchFilter(Object propertyId, String searchTerm, String name) {
-		this.propertyId = propertyId;
-		this.term = searchTerm;
-		this.searchName = name;
-	}
+    private final String term;
+    private final Object propertyId;
+    private String searchName;
 
-	/**
-	 * @return the term
-	 */
-	public String getTerm() {
-		return term;
-	}
+    public SearchFilter(Object propertyId, String searchTerm, String name) {
+        this.propertyId = propertyId;
+        term = searchTerm;
+        searchName = name;
+    }
 
-	/**
-	 * @return the propertyId
-	 */
-	public Object getPropertyId() {
-		return propertyId;
-	}
+    /**
+     * @return the term
+     */
+    public String getTerm() {
+        return term;
+    }
 
-	/**
-	 * @return the name of the search
-	 */
-	public String getSearchName() {
-		return searchName;
-	}
+    /**
+     * @return the propertyId
+     */
+    public Object getPropertyId() {
+        return propertyId;
+    }
 
-	@Override
-	public String toString() {
-		return getSearchName();
-	}
+    /**
+     * @return the name of the search
+     */
+    public String getSearchName() {
+        return searchName;
+    }
+
+    @Override
+    public String toString() {
+        return getSearchName();
+    }
 
 }

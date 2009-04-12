@@ -4,6 +4,7 @@
 
 package com.itmill.toolkit.terminal;
 
+import java.io.Serializable;
 import java.net.URL;
 
 /**
@@ -19,7 +20,7 @@ import java.net.URL;
  * @VERSION@
  * @since 3.0
  */
-public interface URIHandler {
+public interface URIHandler extends Serializable {
 
     /**
      * Handles a given relative URI. If the URI handling wants to emit a

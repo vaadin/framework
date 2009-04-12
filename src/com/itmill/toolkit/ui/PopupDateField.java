@@ -21,6 +21,7 @@ import com.itmill.toolkit.data.Property;
  * @VERSION@
  * @since 5.0
  */
+@SuppressWarnings("serial")
 public class PopupDateField extends DateField {
 
     public PopupDateField() {
