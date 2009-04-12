@@ -17,6 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.security.GeneralSecurityException;
+import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -854,10 +855,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
          * -----------------------------
          */
 
-        // Store JVM default locale for later restoration
-        // (we'll have to change the default locale for a while)
-        final Locale jvmDefault = Locale.getDefault();
-
         // Send locale informations to client
         outWriter.print(", \"locales\":[");
         for (; pendingLocalesIndex < locales.size(); pendingLocalesIndex++) {
@@ -916,10 +913,17 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             /*
              * Date formatting (MM/DD/YYYY etc.)
              */
-            // Force our locale as JVM default for a while (SimpleDateFormat
-            // uses JVM default)
-            Locale.setDefault(l);
-            final String df = new SimpleDateFormat().toPattern();
+
+            DateFormat dateFormat = DateFormat.getDateTimeInstance(
+                    DateFormat.SHORT, DateFormat.SHORT, l);
+            if (!(dateFormat instanceof SimpleDateFormat)) {
+                System.err
+                        .println("Unable to get default date pattern for locale "
+                                + l.toString());
+                dateFormat = new SimpleDateFormat();
+            }
+            final String df = ((SimpleDateFormat) dateFormat).toPattern();
+
             int timeStart = df.indexOf("H");
             if (timeStart < 0) {
                 timeStart = df.indexOf("h");
@@ -963,9 +967,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             }
         }
         outWriter.print("]"); // Close locales
-
-        // Restore JVM default locale
-        Locale.setDefault(jvmDefault);
     }
 
     /**
