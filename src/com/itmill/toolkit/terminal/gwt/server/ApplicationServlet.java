@@ -578,6 +578,11 @@ public class ApplicationServlet extends HttpServlet {
                 ((WebApplicationContext) application.getContext())
                         .endTransaction(application, request);
             }
+
+            // Work-around for GAE session problem. Explicitly touch session so
+            // it is re-serialized.
+            request.getSession().setAttribute("sessionUpdated",
+                    new Date().getTime());
         }
     }
 
