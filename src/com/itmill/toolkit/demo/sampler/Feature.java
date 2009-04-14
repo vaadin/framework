@@ -186,4 +186,18 @@ abstract public class Feature implements Serializable {
         return getName();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        // A feature is uniquely identified by its class name
+        if (obj == null) {
+            return false;
+        }
+        return obj.getClass() == getClass();
+    }
+
+    @Override
+    public int hashCode() {
+        // A feature is uniquely identified by its class name
+        return getClass().hashCode();
+    }
 }
