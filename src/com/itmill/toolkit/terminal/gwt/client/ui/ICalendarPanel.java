@@ -318,6 +318,9 @@ public class ICalendarPanel extends FlexTable implements MouseListener {
                 datefield.getClient().updateVariable(datefield.getId(), "year",
                         datefield.getCurrentDate().getYear() + 1900,
                         datefield.isImmediate());
+
+                /* Must update the value in the textfield also */
+                updateCalendar();
             }
         }
     }
