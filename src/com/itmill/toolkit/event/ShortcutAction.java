@@ -170,6 +170,8 @@ public class ShortcutAction extends Action {
         public static final int NUM8 = 56;
 
         public static final int NUM9 = 57;
+
+        public static final int SPACEBAR = 32;
     }
 
     /**
