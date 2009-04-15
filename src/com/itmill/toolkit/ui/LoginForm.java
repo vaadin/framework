@@ -92,14 +92,18 @@ public class LoginForm extends CustomComponent {
                 + "</script></body></html>";
 
         public DownloadStream handleURI(URL context, String relativeUri) {
-            if (window != null) {
-                window.removeURIHandler(this);
+            if (relativeUri != null && relativeUri.contains("loginHandler")) {
+                if (window != null) {
+                    window.removeURIHandler(this);
+                }
+                DownloadStream downloadStream = new DownloadStream(
+                        new ByteArrayInputStream(responce.getBytes()),
+                        "text/html", "loginSuccesfull");
+                downloadStream.setCacheTime(-1);
+                return downloadStream;
+            } else {
+                return null;
             }
-            DownloadStream downloadStream = new DownloadStream(
-                    new ByteArrayInputStream(responce.getBytes()), "text/html",
-                    "loginSuccesfull");
-            downloadStream.setCacheTime(-1);
-            return downloadStream;
         }
     };
 
