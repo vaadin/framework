@@ -612,17 +612,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
         boolean success = true;
 
         if (request.getContentLength() > 0) {
-
-            byte[] buffer = new byte[request.getContentLength()];
-            ServletInputStream inputStream = request.getInputStream();
-            int totalBytesRead = 0;
-            int bytesRead;
-            while ((bytesRead = inputStream.read(buffer, totalBytesRead,
-                    MAX_BUFFER_SIZE)) != -1) {
-                totalBytesRead += bytesRead;
-            }
-
-            String changes = new String(buffer, "utf-8");
+            String changes = readRequest(request);
 
             // Manage bursts one by one
             final String[] bursts = changes.split(VAR_BURST_SEPARATOR);
@@ -778,6 +768,39 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             }
         }
         return success;
+    }
+
+    /**
+     * Reads the request data from the HttpServletRequest and returns it
+     * converted to an UTF-8 string.
+     * 
+     * @param request
+     * @return
+     * @throws IOException
+     */
+    private static String readRequest(HttpServletRequest request)
+            throws IOException {
+
+        int requestLength = request.getContentLength();
+
+        byte[] buffer = new byte[requestLength];
+        ServletInputStream inputStream = request.getInputStream();
+
+        int bytesRemaining = requestLength;
+        while (bytesRemaining >= 0) {
+            int bytesToRead = Math.min(bytesRemaining, MAX_BUFFER_SIZE);
+            int bytesRead = inputStream.read(buffer, requestLength
+                    - bytesRemaining, bytesToRead);
+            if (bytesRead == -1) {
+                break;
+            }
+
+            bytesRemaining -= bytesRead;
+        }
+
+        String result = new String(buffer, "utf-8");
+
+        return result;
     }
 
     public class ErrorHandlerErrorEvent implements ErrorEvent, Serializable {
