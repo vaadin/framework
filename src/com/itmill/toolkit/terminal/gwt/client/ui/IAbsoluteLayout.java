@@ -32,7 +32,7 @@ public class IAbsoluteLayout extends ComplexPanel implements Container {
 
     private DivElement marginElement;
 
-    private Element canvas;
+    protected final Element canvas = DOM.createDiv();
 
     private int excessPixelsHorizontal;
 
@@ -42,7 +42,7 @@ public class IAbsoluteLayout extends ComplexPanel implements Container {
 
     private Map<String, AbsoluteWrapper> pidToComponentWrappper = new HashMap<String, AbsoluteWrapper>();
 
-    private ApplicationConnection client;
+    protected ApplicationConnection client;
 
     private boolean rendering;
 
@@ -50,7 +50,6 @@ public class IAbsoluteLayout extends ComplexPanel implements Container {
         setElement(Document.get().createDivElement());
         setStyleName(CLASSNAME);
         marginElement = Document.get().createDivElement();
-        canvas = DOM.createDiv();
         canvas.getStyle().setProperty("position", "relative");
         marginElement.appendChild(canvas);
         getElement().appendChild(marginElement);
