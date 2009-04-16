@@ -867,6 +867,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
         case 'b':
             val = Boolean.valueOf(strValue);
             break;
+        case 'p':
+            val = idPaintableMap.get(strValue);
+            break;
         }
 
         return val;
