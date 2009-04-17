@@ -14,9 +14,8 @@ import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Table;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
+@SuppressWarnings("serial")
 public class ComponentsInTable extends CustomComponent {
-
-    private static final long serialVersionUID = 7179313717613510935L;
 
     public ComponentsInTable(int cols, int rows) {
         final OrderedLayout main = new OrderedLayout();
@@ -42,7 +41,6 @@ public class ComponentsInTable extends CustomComponent {
             content.add(new Button("b" + i, new Button.ClickListener() {
 
                 public void buttonClick(ClickEvent event) {
-                    Button b = event.getButton();
                     System.out.println(event.getButton().getCaption()
                             + " click: " + (new Date()).toGMTString());
                     System.out.println(event.getButton().getApplication());

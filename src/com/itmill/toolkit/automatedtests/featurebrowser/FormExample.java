@@ -25,9 +25,9 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
  * more complex than real use, as it tries to demonstrate more features than
  * needed in general case.
  */
+@SuppressWarnings("serial")
 public class FormExample extends CustomComponent {
 
-    private static final long serialVersionUID = -5382205369084031674L;
     static final String cities[] = { "Amsterdam", "Berlin", "Helsinki",
             "Hong Kong", "London", "Luxemburg", "New York", "Oslo", "Paris",
             "Rome", "Stockholm", "Tokyo", "Turku" };
@@ -39,7 +39,6 @@ public class FormExample extends CustomComponent {
         final Address dataModel = new Address();
         Button peekDataModelState = new Button("Show the data model state",
                 new Button.ClickListener() {
-                    private static final long serialVersionUID = -9128707564903086213L;
 
                     public void buttonClick(ClickEvent event) {
                         getWindow().showNotification(
@@ -65,8 +64,6 @@ public class FormExample extends CustomComponent {
     }
 
     public static class AddressForm extends Form {
-
-        private static final long serialVersionUID = -1356475197391501301L;
 
         public AddressForm(String caption) {
 
@@ -124,8 +121,6 @@ public class FormExample extends CustomComponent {
     static class MyFieldFactory extends BaseFieldFactory implements
             Serializable {
 
-        private static final long serialVersionUID = 4993348078809959988L;
-
         @Override
         public Field createField(Item item, Object propertyId,
                 Component uiContext) {
@@ -147,8 +142,6 @@ public class FormExample extends CustomComponent {
      * input validation.
      */
     static class PostalCodeValidator implements Validator {
-
-        private static final long serialVersionUID = -7635596091609806427L;
 
         public boolean isValid(Object value) {
             if (value == null || !(value instanceof String)) {
@@ -173,7 +166,6 @@ public class FormExample extends CustomComponent {
      */
     public static class Address implements Serializable {
 
-        private static final long serialVersionUID = 6238878890199428556L;
         String name = "";
         String streetAddress = "";
         String postalCode = "";

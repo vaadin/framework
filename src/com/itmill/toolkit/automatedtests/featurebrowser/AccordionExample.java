@@ -10,8 +10,8 @@ import com.itmill.toolkit.ui.VerticalLayout;
  * Accordion is a derivative of TabSheet, a vertical tabbed layout that places
  * the tab contents between the vertical tabs.
  */
+@SuppressWarnings("serial")
 public class AccordionExample extends CustomComponent {
-    private static final long serialVersionUID = 7172404542359409349L;
 
     public AccordionExample() {
         // Create a new accordion

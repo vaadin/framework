@@ -14,9 +14,8 @@ import com.itmill.toolkit.ui.AbstractSelect.Filtering;
 /**
  * 
  */
+@SuppressWarnings("serial")
 public class ComboBoxExample extends CustomComponent {
-
-    private static final long serialVersionUID = 1580175413996261572L;
 
     private static final String[] firstnames = new String[] { "John", "Mary",
             "Joe", "Sarah", "Jeff", "Jane", "Peter", "Marc", "Robert", "Paula",

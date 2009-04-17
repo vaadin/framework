@@ -36,6 +36,7 @@ import com.itmill.toolkit.ui.Button.ClickListener;
  * 
  * @author magi
  */
+@SuppressWarnings("serial")
 public class GeneratedColumnExample extends CustomComponent {
 
     /**
@@ -367,8 +368,6 @@ public class GeneratedColumnExample extends CustomComponent {
 
     /** Table column generator for calculating consumption column. */
     class ConsumptionColumnGenerator implements Table.ColumnGenerator {
-
-        private static final long serialVersionUID = -1077081052659001251L;
 
         /**
          * Generates a cell containing value calculated from the item.

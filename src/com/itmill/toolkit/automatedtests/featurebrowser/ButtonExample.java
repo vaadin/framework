@@ -21,10 +21,9 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
  * 
  * @author IT Mill Ltd.
  */
+@SuppressWarnings("serial")
 public class ButtonExample extends CustomComponent implements
         Button.ClickListener {
-
-    private static final long serialVersionUID = -3934416497726624080L;
 
     public ButtonExample() {
 

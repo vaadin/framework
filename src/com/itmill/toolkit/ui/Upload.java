@@ -293,8 +293,6 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      */
     public class FinishedEvent extends Component.Event {
 
-        private static final long serialVersionUID = 3257288015385670969L;
-
         /**
          * Length of the received file.
          */
@@ -378,8 +376,6 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      */
     public class FailedEvent extends FinishedEvent {
 
-        private static final long serialVersionUID = 3833746590157386293L;
-
         private Exception reason = null;
 
         /**
@@ -425,8 +421,6 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      */
     public class NoOutputStreamEvent extends FailedEvent {
 
-        private static final long serialVersionUID = 4745219890852396500L;
-
         /**
          * 
          * @param source
@@ -444,8 +438,6 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * FailedEvent that indicates that an input stream could not be obtained.
      */
     public class NoInputStreamEvent extends FailedEvent {
-
-        private static final long serialVersionUID = -529960205445737170L;
 
         /**
          * 
@@ -471,8 +463,6 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      */
     public class SucceededEvent extends FinishedEvent {
 
-        private static final long serialVersionUID = 3256445798169524023L;
-
         /**
          * 
          * @param source
@@ -497,7 +487,6 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      */
     public class StartedEvent extends Component.Event {
 
-        private static final long serialVersionUID = -3984393770487403525L;
         private final String filename;
         private final String type;
 

@@ -15,9 +15,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@SuppressWarnings("serial")
 public class StatusServlet extends HttpServlet {
-
-    private static final long serialVersionUID = -6764317622536660947L;
 
     public static DateFormat dfHuman = new SimpleDateFormat(
             "yyyy-MM-dd HH:mm:ss");

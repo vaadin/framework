@@ -13,6 +13,7 @@ import com.itmill.toolkit.ui.Link;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 import com.itmill.toolkit.ui.Button.ClickListener;
 
+@SuppressWarnings("serial")
 public class ActiveLink extends Link {
 
     private static final String TAG = "activelink";
@@ -110,8 +111,6 @@ public class ActiveLink extends Link {
     }
 
     public class LinkActivatedEvent extends Component.Event {
-
-        private static final long serialVersionUID = -6406243194818230362L;
 
         private boolean linkOpened;
 

@@ -9,9 +9,8 @@ import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
+@SuppressWarnings("serial")
 public class Ticket695 extends Application {
-
-    private static final long serialVersionUID = 3803150085397590662L;
 
     @Override
     public void init() {

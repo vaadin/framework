@@ -36,10 +36,10 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
  * @author IT Mill Ltd.
  * @see com.itmill.toolkit.ui.Window
  */
+@SuppressWarnings("serial")
 public class FeatureBrowser extends com.itmill.toolkit.Application implements
         Select.ValueChangeListener {
 
-    private static final long serialVersionUID = -4653905515159295197L;
     // Property IDs
 
     private static final Object PROPERTY_ID_CATEGORY = "Category";
@@ -209,7 +209,6 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
 
         final HorizontalLayout wbLayout = new HorizontalLayout();
         Button b = new Button("Open in sub-window", new Button.ClickListener() {
-            private static final long serialVersionUID = -9168589977880405848L;
 
             public void buttonClick(ClickEvent event) {
                 Component component = (Component) ts.getComponentIterator()
@@ -235,8 +234,6 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         b.setStyleName(Button.STYLE_LINK);
         wbLayout.addComponent(b);
         b = new Button("Open in native window", new Button.ClickListener() {
-
-            private static final long serialVersionUID = 3847765713639897223L;
 
             public void buttonClick(ClickEvent event) {
                 Component component = (Component) ts.getComponentIterator()

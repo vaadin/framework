@@ -21,10 +21,9 @@ import com.itmill.toolkit.ui.Window.Notification;
  * @author IT Mill Ltd.
  * @see com.itmill.toolkit.ui.Window
  */
+@SuppressWarnings("serial")
 public class EmbeddedBrowserExample extends VerticalLayout implements
         Select.ValueChangeListener {
-
-    private static final long serialVersionUID = -6209869808788169597L;
 
     // Default URL to open.
     private static final String DEFAULT_URL = "http://www.itmill.com/index_itmill_toolkit.htm";
