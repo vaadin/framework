@@ -98,10 +98,20 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
         out.writeObject(instance);
         out.writeObject(setArgs);
         out.writeObject(getArgs);
-        out.writeObject(setMethod.getName());
-        out.writeObject(setMethod.getParameterTypes());
-        out.writeObject(getMethod.getName());
-        out.writeObject(getMethod.getParameterTypes());
+        if (setMethod != null) {
+            out.writeObject(setMethod.getName());
+            out.writeObject(setMethod.getParameterTypes());
+        } else {
+            out.writeObject("");
+            out.writeObject("");
+        }
+        if (getMethod != null) {
+            out.writeObject(getMethod.getName());
+            out.writeObject(getMethod.getParameterTypes());
+        } else {
+            out.writeObject("");
+            out.writeObject("");
+        }
     };
 
     /* Special serialization to handle method references */
@@ -114,10 +124,18 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
             getArgs = (Object[]) in.readObject();
             String name = (String) in.readObject();
             Class<?>[] paramTypes = (Class<?>[]) in.readObject();
-            setMethod = instance.getClass().getMethod(name, paramTypes);
+            if (name != null && !name.equals("")) {
+                setMethod = instance.getClass().getMethod(name, paramTypes);
+            } else {
+                setMethod = null;
+            }
             name = (String) in.readObject();
             paramTypes = (Class<?>[]) in.readObject();
-            getMethod = instance.getClass().getMethod(name, paramTypes);
+            if (name != null && !name.equals("")) {
+                getMethod = instance.getClass().getMethod(name, paramTypes);
+            } else {
+                getMethod = null;
+            }
         } catch (SecurityException e) {
             System.err.println("Internal deserialization error");
             e.printStackTrace();
