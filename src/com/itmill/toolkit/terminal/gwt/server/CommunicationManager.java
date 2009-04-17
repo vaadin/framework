@@ -787,7 +787,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
         ServletInputStream inputStream = request.getInputStream();
 
         int bytesRemaining = requestLength;
-        while (bytesRemaining >= 0) {
+        while (bytesRemaining > 0) {
             int bytesToRead = Math.min(bytesRemaining, MAX_BUFFER_SIZE);
             int bytesRead = inputStream.read(buffer, requestLength
                     - bytesRemaining, bytesToRead);
