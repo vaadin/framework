@@ -60,8 +60,13 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         model = BeanItem.getPropertyDescriptors(type);
     }
 
-    public BeanItemContainer(Class<BT> type) throws InstantiationException,
-            IllegalAccessException {
+    /**
+     * Constructs BeanItemContainer for beans of a given type.
+     * 
+     * @param type
+     *            the class of beans to be used with this containers.
+     */
+    public BeanItemContainer(Class<BT> type) {
         this.type = type;
         model = BeanItem.getPropertyDescriptors(type);
     }
@@ -71,11 +76,8 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
      * 
      * @param list
      *            non empty {@link Collection} of beans.
-     * @throws IllegalAccessException
-     * @throws InstantiationException
      */
-    public BeanItemContainer(Collection<BT> list)
-            throws InstantiationException, IllegalAccessException {
+    public BeanItemContainer(Collection<BT> list) {
         type = (Class<BT>) list.iterator().next().getClass();
         model = BeanItem.getPropertyDescriptors(type);
         int i = 0;
@@ -84,10 +86,22 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         }
     }
 
+    /**
+     * Unsupported operation.
+     * 
+     * @see com.itmill.toolkit.data.Container.Indexed#addItemAt(int)
+     */
     public Object addItemAt(int index) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Adds new item at given index.
+     * 
+     * The bean is used both as the item contents and as the item identifier.
+     * 
+     * @see com.itmill.toolkit.data.Container.Indexed#addItemAt(int, Object)
+     */
     public Item addItemAt(int index, Object newItemId)
             throws UnsupportedOperationException {
         if (index < 0 || index > size()) {
@@ -139,7 +153,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         }
     }
 
-    public Object getIdByIndex(int index) {
+    public BT getIdByIndex(int index) {
         return list.get(index);
     }
 
@@ -147,11 +161,24 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         return list.indexOf(itemId);
     }
 
+    /**
+     * Unsupported operation.
+     * 
+     * @see com.itmill.toolkit.data.Container.Ordered#addItemAfter(Object)
+     */
     public Object addItemAfter(Object previousItemId)
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Adds new item after the given item.
+     * 
+     * The bean is used both as the item contents and as the item identifier.
+     * 
+     * @see com.itmill.toolkit.data.Container.Ordered#addItemAfter(Object,
+     *      Object)
+     */
     public Item addItemAfter(Object previousItemId, Object newItemId)
             throws UnsupportedOperationException {
         // only add if the previous item is visible
@@ -163,7 +190,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         }
     }
 
-    public Object firstItemId() {
+    public BT firstItemId() {
         if (list.size() > 0) {
             return list.get(0);
         } else {
@@ -179,7 +206,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         return lastItemId() == itemId;
     }
 
-    public Object lastItemId() {
+    public BT lastItemId() {
         if (list.size() > 0) {
             return list.get(list.size() - 1);
         } else {
@@ -187,7 +214,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         }
     }
 
-    public Object nextItemId(Object itemId) {
+    public BT nextItemId(Object itemId) {
         int index = list.indexOf(itemId);
         if (index >= 0 && index < list.size() - 1) {
             return list.get(index + 1);
@@ -197,7 +224,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         }
     }
 
-    public Object prevItemId(Object itemId) {
+    public BT prevItemId(Object itemId) {
         int index = list.indexOf(itemId);
         if (index > 0) {
             return list.get(index - 1);
@@ -213,10 +240,22 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Unsupported operation.
+     * 
+     * @see com.itmill.toolkit.data.Container#addItem()
+     */
     public Object addItem() throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Creates a new Item with the bean into the Container.
+     * 
+     * The bean is used both as the item contents and as the item identifier.
+     * 
+     * @see com.itmill.toolkit.data.Container#addItem(Object)
+     */
     public Item addItem(Object itemId) throws UnsupportedOperationException {
         if (list.size() > 0) {
             // add immediately after last visible item
