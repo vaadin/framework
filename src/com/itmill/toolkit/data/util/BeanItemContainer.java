@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.itmill.toolkit.data.Container;
-import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.Container.Filterable;
 import com.itmill.toolkit.data.Container.Indexed;
@@ -65,23 +64,38 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
      * 
      * @param type
      *            the class of beans to be used with this containers.
+     * @throws IllegalArgumentException
+     *             If the type is null
      */
     public BeanItemContainer(Class<BT> type) {
+        if (type == null) {
+            throw new IllegalArgumentException(
+                    "The type passed to BeanItemContainer must not be null");
+        }
         this.type = type;
         model = BeanItem.getPropertyDescriptors(type);
     }
 
     /**
-     * Constructs BeanItemContainer with given collection of beans in it.
+     * Constructs BeanItemContainer with given collection of beans in it. The
+     * collection must not be empty or an IllegalArgument is thrown.
      * 
-     * @param list
+     * @param collection
      *            non empty {@link Collection} of beans.
+     * @throws IllegalArgumentException
+     *             If the collection is null or empty.
      */
-    public BeanItemContainer(Collection<BT> list) {
-        type = (Class<BT>) list.iterator().next().getClass();
+    public BeanItemContainer(Collection<BT> collection)
+            throws IllegalArgumentException {
+        if (collection == null || collection.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "The collection passed to BeanItemContainer must not be null or empty");
+        }
+
+        type = (Class<BT>) collection.iterator().next().getClass();
         model = BeanItem.getPropertyDescriptors(type);
         int i = 0;
-        for (BT bt : list) {
+        for (BT bt : collection) {
             addItemAt(i++, bt);
         }
     }
@@ -102,7 +116,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
      * 
      * @see com.itmill.toolkit.data.Container.Indexed#addItemAt(int, Object)
      */
-    public Item addItemAt(int index, Object newItemId)
+    public BeanItem addItemAt(int index, Object newItemId)
             throws UnsupportedOperationException {
         if (index < 0 || index > size()) {
             return null;
@@ -128,7 +142,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
      *            Id of the new item to be added.
      * @return Returns new item or null if the operation fails.
      */
-    private Item addItemAtInternalIndex(int index, Object newItemId) {
+    private BeanItem addItemAtInternalIndex(int index, Object newItemId) {
         // Make sure that the Item has not been created yet
         if (allItems.contains(newItemId)) {
             return null;
@@ -179,7 +193,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
      * @see com.itmill.toolkit.data.Container.Ordered#addItemAfter(Object,
      *      Object)
      */
-    public Item addItemAfter(Object previousItemId, Object newItemId)
+    public BeanItem addItemAfter(Object previousItemId, Object newItemId)
             throws UnsupportedOperationException {
         // only add if the previous item is visible
         if (list.contains(previousItemId)) {
@@ -256,7 +270,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
      * 
      * @see com.itmill.toolkit.data.Container#addItem(Object)
      */
-    public Item addItem(Object itemId) throws UnsupportedOperationException {
+    public BeanItem addItem(Object itemId) throws UnsupportedOperationException {
         if (list.size() > 0) {
             // add immediately after last visible item
             int lastIndex = allItems.indexOf(lastItemId());
@@ -275,18 +289,16 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         return beanToItem.get(itemId).getItemProperty(propertyId);
     }
 
-    @SuppressWarnings("unchecked")
-    public Collection getContainerPropertyIds() {
+    public Collection<String> getContainerPropertyIds() {
         return model.keySet();
     }
 
-    public Item getItem(Object itemId) {
+    public BeanItem getItem(Object itemId) {
         return beanToItem.get(itemId);
     }
 
-    @SuppressWarnings("unchecked")
-    public Collection getItemIds() {
-        return (Collection) list.clone();
+    public Collection<BT> getItemIds() {
+        return (Collection<BT>) list.clone();
     }
 
     public Class<?> getType(Object propertyId) {
