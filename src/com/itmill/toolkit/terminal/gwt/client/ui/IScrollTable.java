@@ -21,7 +21,6 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollListener;
@@ -91,9 +90,14 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
 
     private int selectMode = Table.SELECT_MODE_NONE;
 
-    private final HashSet selectedRowKeys = new HashSet();
+    private final HashSet<String> selectedRowKeys = new HashSet<String>();
 
     private boolean initializedAndAttached = false;
+
+    /**
+     * Flag to indicate if a column width recalculation is needed due update.
+     */
+    private boolean headerChangedDuringUpdate = false;
 
     private final TableHead tHead = new TableHead();
 
@@ -114,7 +118,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
      * This map contains captions and icon urls for actions like: * "33_c" ->
      * "Edit" * "33_i" -> "http://dom.com/edit.png"
      */
-    private final HashMap actionMap = new HashMap();
+    private final HashMap<Object, String> actionMap = new HashMap<Object, String>();
     private String[] visibleColOrder;
     private boolean initialContentReceived = false;
     private Element scrollPositionElement;
@@ -137,7 +141,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
     int scrollbarWidthReserved = -1;
     boolean relativeWidth = false;
 
-    private final ArrayList lazyUnregistryBag = new ArrayList();
+    private final ArrayList<Panel> lazyUnregistryBag = new ArrayList<Panel>();
     private String height;
     private String width = "";
     private boolean rendering = false;
@@ -154,6 +158,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
 
     }
 
+    @SuppressWarnings("unchecked")
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         rendering = true;
         if (client.updateComponent(this, uidl, true)) {
@@ -211,11 +216,11 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         }
 
         if (uidl.hasVariable("selected")) {
-            final Set selectedKeys = uidl
+            final Set<String> selectedKeys = uidl
                     .getStringArrayVariableAsSet("selected");
             selectedRowKeys.clear();
-            for (final Iterator it = selectedKeys.iterator(); it.hasNext();) {
-                selectedRowKeys.add(it.next());
+            for (String string : selectedKeys) {
+                selectedRowKeys.add(string);
             }
         }
 
@@ -260,6 +265,9 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         if (!recalcWidths && initializedAndAttached) {
             updateBody(rowData, uidl.getIntAttribute("firstrow"), uidl
                     .getIntAttribute("rows"));
+            if (headerChangedDuringUpdate) {
+                lazyAdjustColumnWidths.schedule(1);
+            }
         } else {
             if (tBody != null) {
                 tBody.removeFromParent();
@@ -278,6 +286,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         hideScrollPositionAnnotation();
         purgeUnregistryBag();
         rendering = false;
+        headerChangedDuringUpdate = false;
     }
 
     /**
@@ -286,15 +295,15 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
      * "subtreecaching" logic.
      */
     private void purgeUnregistryBag() {
-        for (Iterator iterator = lazyUnregistryBag.iterator(); iterator
+        for (Iterator<Panel> iterator = lazyUnregistryBag.iterator(); iterator
                 .hasNext();) {
-            client.unregisterChildPaintables((HasWidgets) iterator.next());
+            client.unregisterChildPaintables(iterator.next());
         }
         lazyUnregistryBag.clear();
     }
 
     private void updateActionMap(UIDL c) {
-        final Iterator it = c.getChildIterator();
+        final Iterator<?> it = c.getChildIterator();
         while (it.hasNext()) {
             final UIDL action = (UIDL) it.next();
             final String key = action.getStringAttribute("key");
@@ -310,11 +319,11 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
     }
 
     public String getActionCaption(String actionKey) {
-        return (String) actionMap.get(actionKey + "_c");
+        return actionMap.get(actionKey + "_c");
     }
 
     public String getActionIcon(String actionKey) {
-        return (String) actionMap.get(actionKey + "_i");
+        return actionMap.get(actionKey + "_i");
     }
 
     private void updateHeader(String[] strings) {
@@ -432,7 +441,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
     }
 
     private IScrollTableRow getRenderedRowByKey(String key) {
-        final Iterator it = tBody.iterator();
+        final Iterator<Widget> it = tBody.iterator();
         IScrollTableRow r = null;
         while (it.hasNext()) {
             r = (IScrollTableRow) it.next();
@@ -1351,6 +1360,22 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             if (isDefinedWidth()) {
                 return width;
             } else {
+                if (naturalWidth == 0) {
+                    // This is recently revealed column. Try to detect a proper
+                    // value (greater of header and data
+                    // cols)
+                    final int hw = getOffsetWidth();
+                    int i = 0;
+                    for (Iterator<Widget> it = tHead.iterator(); it.hasNext(); i++) {
+                        if (it.next() == this) {
+                            break;
+                        }
+                    }
+                    final int cw = tBody.getColWidth(i);
+                    naturalWidth = (hw > cw ? hw : cw)
+                            + IScrollTableBody.CELL_EXTRA_WIDTH;
+
+                }
                 return naturalWidth;
             }
         }
@@ -1437,7 +1462,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         }
 
         public void updateCellsFromUIDL(UIDL uidl) {
-            Iterator it = uidl.getChildIterator();
+            Iterator<?> it = uidl.getChildIterator();
             HashSet<String> updated = new HashSet<String>();
             updated.add("0");
             while (it.hasNext()) {
@@ -1495,14 +1520,8 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             final HeaderCell c = getHeaderCell(cid);
             if (!c.isEnabled() || getHeaderCell(index) != c) {
                 setHeaderCell(index, c);
-                if (c.getWidth() == -1) {
-                    if (initializedAndAttached) {
-                        // column is not drawn before,
-                        // we will need a column width recalculation
-                        initializedAndAttached = false;
-                        initialContentReceived = false;
-                        isNewBody = true;
-                    }
+                if (initializedAndAttached) {
+                    headerChangedDuringUpdate = true;
                 }
             }
         }
@@ -1668,6 +1687,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                 } else {
                     tHead.removeCell(colKey);
                     collapsedColumns.add(colKey);
+                    lazyAdjustColumnWidths.schedule(1);
                 }
 
                 // update variable to server
@@ -1717,7 +1737,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                 for (i = 0; i < visibleColOrder.length; i++) {
                     cols[i] = visibleColOrder[i];
                 }
-                for (final Iterator it = collapsedColumns.iterator(); it
+                for (final Iterator<String> it = collapsedColumns.iterator(); it
                         .hasNext();) {
                     cols[i++] = it.next();
                 }
@@ -1782,7 +1802,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
 
         private int rowHeight = -1;
 
-        private final List renderedRows = new Vector();
+        private final List<Widget> renderedRows = new Vector<Widget>();
 
         private boolean initDone = false;
 
@@ -1970,7 +1990,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             renderedRows.add(row);
         }
 
-        public Iterator iterator() {
+        public Iterator<Widget> iterator() {
             return renderedRows.iterator();
         }
 
@@ -2605,6 +2625,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                 if (hCell.isDefinedWidth()) {
                     totalExplicitColumnsWidths += hCell.getWidth();
                 } else {
+                    totalExplicitColumnsWidths += hCell.getNaturalColumnWidth();
                     expandRatioDivider += hCell.getExpandRatio();
                 }
             }
@@ -2636,8 +2657,12 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                         newSpace = (int) (w + extraSpace
                                 * hCell.getExpandRatio() / expandRatioDivider);
                     } else {
-                        // divide relatively to natural column widths
-                        newSpace = w + extraSpace * w / totalWidthR;
+                        if (totalWidthR != 0) {
+                            // divide relatively to natural column widths
+                            newSpace = w + extraSpace * w / totalWidthR;
+                        } else {
+                            newSpace = w;
+                        }
                     }
                     setColWidth(i, newSpace, false);
                 }
