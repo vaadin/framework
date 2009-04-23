@@ -270,6 +270,17 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
      * 
      * @see com.itmill.toolkit.data.Container#addItem(Object)
      */
+    public BeanItem addBean(BT bean) {
+        return addItem(bean);
+    }
+
+    /**
+     * Creates a new Item with the bean into the Container.
+     * 
+     * The bean is used both as the item contents and as the item identifier.
+     * 
+     * @see com.itmill.toolkit.data.Container#addItem(Object)
+     */
     public BeanItem addItem(Object itemId) throws UnsupportedOperationException {
         if (list.size() > 0) {
             // add immediately after last visible item
