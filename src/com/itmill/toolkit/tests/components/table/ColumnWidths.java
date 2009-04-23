@@ -14,7 +14,8 @@ public class ColumnWidths extends TestBase {
                 + "columns (by server or user (dragged)) columns "
                 + "must consume the excess space. Space is divided "
                 + "by default according to natural widths of columns."
-                + " Lastname should get 1/3 of excess spsace, the las column 2/3.";
+                + "In example last column is fixed width. Other columns"
+                + " should divide excess space relatively to 'natural' width unless user has resized column.";
 
     }
 
@@ -58,7 +59,7 @@ public class ColumnWidths extends TestBase {
         table.setContainerDataSource(idx);
 
         table.setColumnHeader("firstname", "FirstName");
-        table.setColumnHeader("lastname", "LastName");
+        table.setColumnHeader("lastname", "LastName with long header");
 
         table.setColumnWidth("150pxfixedCol", 150);
 
