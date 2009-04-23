@@ -1,3 +1,27 @@
+
+/* Table theme building instructions
+ * 
+ * Toolkit scroll table is very complex widget with dozens of features. These 
+ * features set some limitations for theme builder. To keep things working, it
+ * is safest to try to just override values used in default theme and comfort to
+ * these instructions.
+ * 
+ *
+ * Table cells in body:
+ *  - padding/border for cells is to be defined for td elements (class name: .i-table-cell-content)
+ *  - in default theme there are no borders, but they should work. Just set border-right or border-bottom
+ *  - no padding or border is allowed for div inside cells (class name : .i-table-cell-wrapper) element
+ *  - background is allowed for both elements
+ *
+ * Table headers:
+ *  - table cells in header contain .i-table-resizer and 
+ *	  .i-table-caption-container div elements, which are both floated to right
+ *  - to align header caption to body content resizer width + .i-table-caption-container
+ *    padding right should be equal to content cells padding-right and border-right.
+ *  - Possible cell border in header must be themed into column resizer.
+ *
+ */
+
 .i-table {
 	overflow: hidden;
 	text-align: left /* Force default alignment */
@@ -23,14 +47,13 @@
 
 .i-table-header table,
 .i-table-table {
-	border-collapse: collapse;
 	margin: 0;
 	padding: 0;
 	border: 0;
+	border-spacing:0;
 }
 
-.i-table-header td,
-.i-table-table td {
+.i-table-header td {
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -43,6 +66,7 @@
 .i-table-resizer {
 	display: block;
 	height: 36px;
+	width:4px;
 	float: right;
 	background: transparent url(img/resizer-bg.png) repeat-y 50% 50%;
 	cursor: col-resize;
@@ -56,6 +80,11 @@
 	font-size: 15px;
 	padding-top: 9px;
 	text-shadow: #ffffff 2px 2px 0;
+	/* To align captions and content to same place resizer width + caption 
+	 * container padding-right must be equal to table cell 
+	 * padding-right + border-righ 
+	 */
+	padding-right:2px;
 }
 
 .i-table-header-cell-asc .i-table-caption-container {
@@ -69,7 +98,6 @@
 .i-table-header-cell-desc:hover {
 	background: transparent url(img/header-bg-over.png) repeat-x;
 }
-
 
 .i-table-body {
 	background: #fff;
@@ -100,15 +128,17 @@
 	background: #57a7ed;
 	color: #fff;
 }
-.i-table-row td,
-.i-table-row-odd td {
-	padding: 0;
-}
+
 .i-table-cell-content {
+	padding-top: 3px;
+	padding-left: 3px;
+	padding-right: 5px;
+	border-right:1px solid #f6f7f7;
+}
+
+.i-table-cell-wrapper {
 	white-space: nowrap;
 	overflow: hidden;
-	padding: 3px 0 3px 3px;
-	margin-right: 5px;
 	line-height: 23px;
 }
 

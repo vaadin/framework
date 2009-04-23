@@ -22,3 +22,9 @@
 	font-family: monospace;
 	margin: 0px;
 }
+
+.i-table .i-icon {
+	/* explicitly set icon width for fast browsers
+	 * to properly detect row header width */
+	width: 16px;
+}
