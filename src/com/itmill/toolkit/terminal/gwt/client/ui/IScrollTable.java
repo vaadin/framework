@@ -578,11 +578,27 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
 
         tHead.disableBrowserIntelligence();
 
+        boolean willHaveScrollbarz = false;
+        if (!(height != null && !height.equals(""))) {
+            if (pageLength < totalRows) {
+                willHaveScrollbarz = true;
+            }
+        } else {
+            int fakeheight = tBody.getRowHeight() * totalRows;
+            int availableHeight = bodyContainer.getElement().getPropertyInt(
+                    "clientHeight");
+            if (fakeheight > availableHeight) {
+                willHaveScrollbarz = true;
+            }
+        }
+
         // fix "natural" width if width not set
         if (width == null || "".equals(width)) {
             int w = total;
             w += tBody.getCellExtraWidth() * visibleColOrder.length;
-            w += getScrollbarWidth();
+            if (willHaveScrollbarz) {
+                w += Util.getNativeScrollbarSize();
+            }
             setContentWidth(w);
         }
 
@@ -591,10 +607,8 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         availW = tBody.getAvailableWidth();
         availW -= tBody.getCellExtraWidth() * visibleColOrder.length;
 
-        if (!(height != null && !height.equals(""))) {
-            if (pageLength < totalRows) {
-                availW -= Util.getNativeScrollbarSize();
-            }
+        if (willHaveScrollbarz) {
+            availW -= Util.getNativeScrollbarSize();
         }
 
         boolean needsReLayout = false;
@@ -2000,14 +2014,18 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                 index = renderedRows.size() - 1;
                 lastRendered--;
             }
-            final IScrollTableRow toBeRemoved = (IScrollTableRow) renderedRows
-                    .get(index);
-            lazyUnregistryBag.add(toBeRemoved);
-            tBodyElement.removeChild(toBeRemoved.getElement());
-            orphan(toBeRemoved);
-            renderedRows.remove(index);
-            fixSpacers();
-            return true;
+            if (index >= 0) {
+                final IScrollTableRow toBeRemoved = (IScrollTableRow) renderedRows
+                        .get(index);
+                lazyUnregistryBag.add(toBeRemoved);
+                tBodyElement.removeChild(toBeRemoved.getElement());
+                orphan(toBeRemoved);
+                renderedRows.remove(index);
+                fixSpacers();
+                return true;
+            } else {
+                return false;
+            }
         }
 
         @Override
