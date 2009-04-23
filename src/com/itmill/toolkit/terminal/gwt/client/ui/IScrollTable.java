@@ -2057,7 +2057,16 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                     rowHeight = getTableHeight()
                             / tBodyElement.getRows().getLength();
                 } else {
-                    return DEFAULT_ROW_HEIGHT;
+                    if (isAttached()) {
+                        // measure row height by adding a dummy row
+                        IScrollTableRow scrollTableRow = new IScrollTableRow();
+                        tBodyElement.appendChild(scrollTableRow.getElement());
+                        getRowHeight(forceUpdate);
+                        tBodyElement.removeChild(scrollTableRow.getElement());
+                    } else {
+                        // TODO investigate if this can never happen anymore
+                        return DEFAULT_ROW_HEIGHT;
+                    }
                 }
                 tBodyMeasurementsDone = true;
                 return rowHeight;
@@ -2071,15 +2080,21 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         /**
          * Returns the width available for column content.
          * 
-         * @param i
+         * @param columnIndex
          * @return
          */
-        public int getColWidth(int i) {
+        public int getColWidth(int columnIndex) {
             if (tBodyMeasurementsDone) {
-                final Element wrapper = (Element) tBodyElement
-                        .getFirstChildElement().getChildNodes().getItem(i)
-                        .getFirstChild();
-                return wrapper.getOffsetWidth();
+                NodeList<TableRowElement> rows = tBodyElement.getRows();
+                if (rows.getLength() == 0) {
+                    // no rows yet rendered
+                    return 0;
+                } else {
+                    com.google.gwt.dom.client.Element wrapperdiv = rows
+                            .getItem(0).getCells().getItem(columnIndex)
+                            .getFirstChildElement();
+                    return wrapperdiv.getOffsetWidth();
+                }
             } else {
                 return 0;
             }
@@ -2111,7 +2126,6 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         }
 
         private int cellExtraWidth = -1;
-        private int cellMarginLeft = -1;
 
         /**
          * Method to return the space used for cell paddings + border.
@@ -2124,13 +2138,21 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         }
 
         private void detectExtrawidth() {
-            com.google.gwt.dom.client.Element firstTD = tBodyElement
-                    .getFirstChildElement().getFirstChildElement();
-            com.google.gwt.dom.client.Element wrapper = firstTD
-                    .getFirstChildElement();
-            cellExtraWidth = firstTD.getOffsetWidth()
-                    - wrapper.getOffsetWidth();
-            cellMarginLeft = wrapper.getOffsetLeft();
+            NodeList<TableRowElement> rows = tBodyElement.getRows();
+            if (rows.getLength() == 0) {
+                /* need to temporary add empty row and detect */
+                IScrollTableRow scrollTableRow = new IScrollTableRow();
+                tBodyElement.appendChild(scrollTableRow.getElement());
+                detectExtrawidth();
+                tBodyElement.removeChild(scrollTableRow.getElement());
+            } else {
+                TableRowElement item = rows.getItem(0);
+                TableCellElement firstTD = item.getCells().getItem(0);
+                com.google.gwt.dom.client.Element wrapper = firstTD
+                        .getFirstChildElement();
+                cellExtraWidth = firstTD.getOffsetWidth()
+                        - wrapper.getOffsetWidth();
+            }
         }
 
         private void reLayoutComponents() {
@@ -2175,10 +2197,12 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             private List<UIDL> pendingComponentPaints;
 
             private String[] actionKeys = null;
+            private TableRowElement rowElement;
 
             private IScrollTableRow(int rowKey) {
                 this.rowKey = rowKey;
-                setElement(DOM.createElement("tr"));
+                rowElement = Document.get().createTRElement();
+                setElement(rowElement);
                 DOM.sinkEvents(getElement(), Event.ONCLICK | Event.ONDBLCLICK
                         | Event.ONCONTEXTMENU);
             }
@@ -2256,6 +2280,15 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                 if (uidl.hasAttribute("selected") && !isSelected()) {
                     toggleSelection();
                 }
+            }
+
+            /**
+             * Add a dummy row, used for measurements if Table is empty.
+             */
+            public IScrollTableRow() {
+                this(0);
+                addStyleName(CLASSNAME + "-row");
+                addCell("_", 'b', "", true);
             }
 
             public void addCell(String text, char align, String style,
@@ -2545,14 +2578,13 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             private int getColIndexOf(Widget child) {
                 com.google.gwt.dom.client.Element widgetCell = child
                         .getElement().getParentElement().getParentElement();
-                com.google.gwt.dom.client.Element td = getElement()
-                        .getFirstChildElement();
-                int index = 0;
-                while (td != widgetCell && td.getNextSiblingElement() != null) {
-                    index++;
-                    td = td.getNextSiblingElement();
+                NodeList<TableCellElement> cells = rowElement.getCells();
+                for (int i = 0; i < cells.getLength(); i++) {
+                    if (cells.getItem(i) == widgetCell) {
+                        return i;
+                    }
                 }
-                return index;
+                return -1;
             }
 
             public boolean hasChildComponent(Widget component) {
