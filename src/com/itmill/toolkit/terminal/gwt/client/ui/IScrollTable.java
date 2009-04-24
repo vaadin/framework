@@ -15,6 +15,7 @@ import java.util.Vector;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
@@ -603,8 +604,10 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         }
 
         int availW = tBody.getAvailableWidth();
-        // Hey IE, are you really sure about this?
-        availW = tBody.getAvailableWidth();
+        if (BrowserInfo.get().isIE()) {
+            // Hey IE, are you really sure about this?
+            availW = tBody.getAvailableWidth();
+        }
         availW -= tBody.getCellExtraWidth() * visibleColOrder.length;
 
         if (willHaveScrollbarz) {
@@ -689,6 +692,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                  */
                 int bodyHeight = tBody.getTableHeight();
                 bodyContainer.setHeight(bodyHeight + "px");
+                Util.runWebkitOverflowAutoFix(bodyContainer.getElement());
             } else {
                 int bodyHeight = (tBody.getRowHeight(true) * pageLength);
                 bodyContainer.setHeight(bodyHeight + "px");
@@ -724,16 +728,6 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             }
         }
         initializedAndAttached = true;
-    }
-
-    private int getScrollbarWidth() {
-        if (BrowserInfo.get().isIE6()) {
-            return Util.measureHorizontalBorder(bodyContainer.getElement());
-        }
-
-        return bodyContainer.getOffsetWidth()
-                - DOM.getElementPropertyInt(bodyContainer.getElement(),
-                        "clientWidth");
     }
 
     /**
@@ -1844,7 +1838,12 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         }
 
         public int getAvailableWidth() {
-            return preSpacer.getOffsetWidth();
+            Style style = bodyContainer.getElement().getStyle();
+            style.setProperty("overflow", "hidden");
+            int w = bodyContainer.getElement().getPropertyInt("clientWidth");
+            style.setProperty("overflow", "auto");
+            return w;
+            // return preSpacer.getOffsetWidth();
         }
 
         public void renderInitialRows(UIDL rowData, int firstIndex, int rows) {
