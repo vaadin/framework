@@ -8,6 +8,9 @@ import com.itmill.toolkit.ui.Table;
 
 public class TableRowHeight2 extends TestBase {
 
+    private static final int TABLE_EXTRA = 2; // borders
+    private static final int COLEXTRASPACE = 6; // cell margins by theme
+
     @Override
     protected String getDescription() {
         return "The table contains 2 rows, which both should be shown completely as the table height is undefined.";
@@ -25,10 +28,16 @@ public class TableRowHeight2 extends TestBase {
         vl.setSizeFull();
 
         Table table = new Table();
-        table.setWidth("300px");
+
+        int COL_TITLE_W = 200;
+        int COL_TEST_W = 98;
+
+        table
+                .setWidth((COL_TEST_W + COL_TITLE_W + 2 * COLEXTRASPACE + TABLE_EXTRA)
+                        + "px");
         table.setPageLength(0);
-        table.setColumnWidth("title", 200);
-        table.setColumnWidth("test", 98);
+        table.setColumnWidth("title", COL_TITLE_W);
+        table.setColumnWidth("test", COL_TEST_W);
         table.addContainerProperty("title", Button.class, "");
         table.addContainerProperty("test", Button.class, "");
         for (int i = 0; i < 2; i++) {
