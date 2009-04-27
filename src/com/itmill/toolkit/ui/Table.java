@@ -822,8 +822,23 @@ public class Table extends AbstractSelect implements Action.Container,
             }
         }
 
-        // If the search for item index was successfull
+        // If the search for item index was successful
         if (index >= 0) {
+            /*
+             * The table is not capable of displaying an item in the container
+             * as the first if there are not enough items following the selected
+             * item so the whole table (pagelength) is filled.
+             */
+            int maxIndex = size() - pageLength;
+            if (maxIndex < 0) {
+                maxIndex = 0;
+            }
+
+            if (index > maxIndex) {
+                setCurrentPageFirstItemIndex(maxIndex);
+                return;
+            }
+
             this.currentPageFirstItemId = currentPageFirstItemId;
             currentPageFirstItemIndex = index;
         }
@@ -1087,12 +1102,24 @@ public class Table extends AbstractSelect implements Action.Container,
 
     private void setCurrentPageFirstItemIndex(int newIndex,
             boolean needsPageBufferReset) {
-        // Ensures that the new value is valid
-        if (newIndex >= size()) {
-            newIndex = size() - pageLength;
-        }
+
         if (newIndex < 0) {
             newIndex = 0;
+        }
+
+        /*
+         * The table is not capable of displaying an item in the container as
+         * the first if there are not enough items following the selected item
+         * so the whole table (pagelength) is filled.
+         */
+        int maxIndex = size() - pageLength;
+        if (maxIndex < 0) {
+            maxIndex = 0;
+        }
+
+        // Ensures that the new value is valid
+        if (newIndex > maxIndex) {
+            newIndex = maxIndex;
         }
 
         // Refresh first item id
