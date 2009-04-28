@@ -70,13 +70,15 @@ public class INotification extends IToolkitOverlay {
     public void startDelay() {
         DOM.removeEventPreview(this);
         if (delayMsec > 0) {
-            delay = new Timer() {
-                @Override
-                public void run() {
-                    fade();
-                }
-            };
-            delay.schedule(delayMsec);
+            if (delay == null) {
+                delay = new Timer() {
+                    @Override
+                    public void run() {
+                        fade();
+                    }
+                };
+                delay.schedule(delayMsec);
+            }
         } else if (delayMsec == 0) {
             fade();
         }
