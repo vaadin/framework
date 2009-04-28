@@ -34,6 +34,7 @@ public class INotification extends IToolkitOverlay {
     private static final int mouseMoveThreshold = 7;
     private static final int Z_INDEX_BASE = 20000;
     public static final String STYLE_SYSTEM = "system";
+    private static final int FADE_ANIMATION_INTERVAL = 50; // == 20 fps
 
     private int startOpacity = 90;
     private int fadeMsec = 400;
@@ -47,7 +48,7 @@ public class INotification extends IToolkitOverlay {
 
     private String temporaryStyle;
 
-    private ArrayList listeners;
+    private ArrayList<EventListener> listeners;
 
     public INotification() {
         setStylePrimaryName(STYLENAME);
@@ -130,17 +131,20 @@ public class INotification extends IToolkitOverlay {
     public void fade() {
         DOM.removeEventPreview(this);
         cancelDelay();
-        final int msec = fadeMsec / (startOpacity / 5);
         fader = new Timer() {
-            long timestamp = 0;
-            int opacity = startOpacity;
+            private final long start = new Date().getTime();
 
             @Override
             public void run() {
-                double adjust = (timestamp == 0 ? 1
-                        : (new Date().getTime() - timestamp) / msec);
-                opacity -= adjust * 5d;
-                setOpacity(getElement(), opacity);
+                /*
+                 * To make animation smooth, don't count that event happens on
+                 * time. Reduce opacity according to the actual time spent
+                 * instead of fixed decrement.
+                 */
+                long now = new Date().getTime();
+                long timeEplaced = now - start;
+                float remainingFraction = 1 - timeEplaced / (float) fadeMsec;
+                int opacity = (int) (startOpacity * remainingFraction);
                 if (opacity <= 0) {
                     cancel();
                     hide();
@@ -150,12 +154,12 @@ public class INotification extends IToolkitOverlay {
                         DOM.setStyleAttribute(getElement(), "width", "");
                         DOM.setStyleAttribute(getElement(), "height", "");
                     }
-
+                } else {
+                    setOpacity(getElement(), opacity);
                 }
-                timestamp = new Date().getTime();
             }
         };
-        fader.scheduleRepeating(msec);
+        fader.scheduleRepeating(FADE_ANIMATION_INTERVAL);
     }
 
     public void setPosition(int position) {
@@ -219,8 +223,10 @@ public class INotification extends IToolkitOverlay {
 
     private void setOpacity(Element el, int opacity) {
         DOM.setStyleAttribute(el, "opacity", "" + (opacity / 100.0));
-        DOM.setStyleAttribute(el, "filter", "Alpha(opacity=" + opacity + ")");
-
+        if (BrowserInfo.get().isIE()) {
+            DOM.setStyleAttribute(el, "filter", "Alpha(opacity=" + opacity
+                    + ")");
+        }
     }
 
     @Override
@@ -279,7 +285,7 @@ public class INotification extends IToolkitOverlay {
 
     public void addEventListener(EventListener listener) {
         if (listeners == null) {
-            listeners = new ArrayList();
+            listeners = new ArrayList<EventListener>();
         }
         listeners.add(listener);
     }
@@ -293,14 +299,17 @@ public class INotification extends IToolkitOverlay {
 
     private void fireEvent(HideEvent event) {
         if (listeners != null) {
-            for (Iterator it = listeners.iterator(); it.hasNext();) {
-                EventListener l = (EventListener) it.next();
+            for (Iterator<EventListener> it = listeners.iterator(); it
+                    .hasNext();) {
+                EventListener l = it.next();
                 l.notificationHidden(event);
             }
         }
     }
 
     public class HideEvent extends EventObject {
+        private static final long serialVersionUID = 4428671753988459560L;
+
         public HideEvent(Object source) {
             super(source);
         }
