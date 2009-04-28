@@ -135,7 +135,7 @@ public class IWindow extends IToolkitOverlay implements Container,
     private boolean immediate;
 
     public IWindow() {
-        super(false, false, true); // no autohide, not vaadinModality, shadow
+        super(false, false, true); // no autohide, not modal, shadow
         // Different style of shadow for windows
         setShadowStyle("window");
 
@@ -239,7 +239,7 @@ public class IWindow extends IToolkitOverlay implements Container,
         }
 
         if (!uidl.hasAttribute("cached")) {
-            if (uidl.getBooleanAttribute("vaadinModality") != vaadinModality) {
+            if (uidl.getBooleanAttribute("modal") != vaadinModality) {
                 setVaadinModality(!vaadinModality);
             }
             if (!isAttached()) {
@@ -901,7 +901,7 @@ public class IWindow extends IToolkitOverlay implements Container,
             onResizeEvent(event);
             return false;
         } else if (vaadinModality) {
-            // return false when vaadinModality and outside window
+            // return false when modal and outside window
             final Element target = event.getTarget().cast();
             if (!DOM.isOrHasChild(getElement(), target)) {
                 return false;
