@@ -1108,11 +1108,17 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         /*
+         * minimize Container.size() calls which may be expensive. For example
+         * it may cause sql query.
+         */
+        final int size = size();
+
+        /*
          * The table is not capable of displaying an item in the container as
          * the first if there are not enough items following the selected item
          * so the whole table (pagelength) is filled.
          */
-        int maxIndex = size() - pageLength;
+        int maxIndex = size - pageLength;
         if (maxIndex < 0) {
             maxIndex = 0;
         }
@@ -1150,7 +1156,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
             // If we did hit the border
             if (((Container.Ordered) items).isLastId(currentPageFirstItemId)) {
-                currentPageFirstItemIndex = size() - 1;
+                currentPageFirstItemIndex = size - 1;
             }
 
             // Go backwards in the middle of the list (respect borders)
@@ -1179,7 +1185,7 @@ public class Table extends AbstractSelect implements Action.Container,
             // If for some reason we do hit border again, override
             // the user index request
             if (((Container.Ordered) items).isLastId(currentPageFirstItemId)) {
-                newIndex = currentPageFirstItemIndex = size() - 1;
+                newIndex = currentPageFirstItemIndex = size - 1;
             }
         }
         if (needsPageBufferReset) {
