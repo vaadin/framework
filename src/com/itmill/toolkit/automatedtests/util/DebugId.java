@@ -4,11 +4,12 @@
 
 package com.itmill.toolkit.automatedtests.util;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 import com.itmill.toolkit.ui.Component;
 
-public class DebugId {
+public class DebugId implements Serializable {
 
     private static HashMap debugIds = new HashMap();
 

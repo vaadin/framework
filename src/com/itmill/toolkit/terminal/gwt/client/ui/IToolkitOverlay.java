@@ -84,7 +84,9 @@ public class IToolkitOverlay extends PopupPanel {
 
             addPopupListener(new PopupListener() {
                 public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
-                    DOM.removeChild(RootPanel.get().getElement(), shadow);
+                    if (shadow.getParentElement() != null) {
+                        shadow.getParentElement().removeChild(shadow);
+                    }
                 }
             });
         }
@@ -141,6 +143,15 @@ public class IToolkitOverlay extends PopupPanel {
         }
         if (BrowserInfo.get().isIE6()) {
             adjustIE6Frame(getElement(), getZIndex());
+        }
+    }
+
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+        if (shadow != null) {
+            shadow.getStyle().setProperty("visibility",
+                    visible ? "visible" : "hidden");
         }
     }
 
@@ -206,16 +217,16 @@ public class IToolkitOverlay extends PopupPanel {
      *            A value between 0.0 and 1.0, indicating the progress of the
      *            animation (0=start, 1=end).
      */
-    private void updateShadowSizeAndPosition(double progress) {
+    private void updateShadowSizeAndPosition(final double progress) {
         // Don't do anything if overlay element is not attached
-        if (!isAttached() || !isVisible()) {
+        if (!isAttached()) {
             return;
         }
         // Calculate proper z-index
         String zIndex = null;
         try {
-            // Odd behaviour with Windows Hosted Mode forces us to use this
-            // redundant try/catch block (See dev.itmill.com #2011)
+            // Odd behaviour with Windows Hosted Mode forces us to use
+            // this redundant try/catch block (See dev.itmill.com #2011)
             zIndex = DOM.getStyleAttribute(getElement(), "zIndex");
         } catch (Exception ignore) {
             // Ignored, will cause no harm
@@ -255,7 +266,8 @@ public class IToolkitOverlay extends PopupPanel {
         width = (int) (width * progress);
         height = (int) (height * progress);
 
-        // Opera needs some shaking to get parts of the shadow showing properly
+        // Opera needs some shaking to get parts of the shadow showing
+        // properly
         // (ticket #2704)
         if (BrowserInfo.get().isOpera()) {
             // Clear the height of all middle elements

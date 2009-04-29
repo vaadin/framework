@@ -23,6 +23,7 @@ import com.itmill.toolkit.ui.Window.Notification;
  * @author IT Mill Ltd.
  * 
  */
+@SuppressWarnings("serial")
 public class ToolkitTunesLayout extends Application {
 
     @Override

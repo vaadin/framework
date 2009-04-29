@@ -899,6 +899,12 @@ public class ApplicationConnection {
     }
 
     public void updateVariable(String paintableId, String variableName,
+            Paintable newValue, boolean immediate) {
+        String pid = (newValue != null) ? getPid(newValue) : null;
+        addVariableToQueue(paintableId, variableName, pid, immediate, 'p');
+    }
+
+    public void updateVariable(String paintableId, String variableName,
             String newValue, boolean immediate) {
         addVariableToQueue(paintableId, variableName, newValue, immediate, 's');
     }

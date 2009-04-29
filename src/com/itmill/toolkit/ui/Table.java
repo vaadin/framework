@@ -4,6 +4,7 @@
 
 package com.itmill.toolkit.ui;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -49,6 +50,7 @@ import com.itmill.toolkit.terminal.gwt.client.MouseEventDetails;
  * @VERSION@
  * @since 3.0
  */
+@SuppressWarnings("serial")
 public class Table extends AbstractSelect implements Action.Container,
         Container.Ordered, Container.Sortable, ItemClickSource {
 
@@ -820,8 +822,23 @@ public class Table extends AbstractSelect implements Action.Container,
             }
         }
 
-        // If the search for item index was successfull
+        // If the search for item index was successful
         if (index >= 0) {
+            /*
+             * The table is not capable of displaying an item in the container
+             * as the first if there are not enough items following the selected
+             * item so the whole table (pagelength) is filled.
+             */
+            int maxIndex = size() - pageLength;
+            if (maxIndex < 0) {
+                maxIndex = 0;
+            }
+
+            if (index > maxIndex) {
+                setCurrentPageFirstItemIndex(maxIndex);
+                return;
+            }
+
             this.currentPageFirstItemId = currentPageFirstItemId;
             currentPageFirstItemIndex = index;
         }
@@ -1085,12 +1102,30 @@ public class Table extends AbstractSelect implements Action.Container,
 
     private void setCurrentPageFirstItemIndex(int newIndex,
             boolean needsPageBufferReset) {
-        // Ensures that the new value is valid
-        if (newIndex >= size()) {
-            newIndex = size() - pageLength;
-        }
+
         if (newIndex < 0) {
             newIndex = 0;
+        }
+
+        /*
+         * minimize Container.size() calls which may be expensive. For example
+         * it may cause sql query.
+         */
+        final int size = size();
+
+        /*
+         * The table is not capable of displaying an item in the container as
+         * the first if there are not enough items following the selected item
+         * so the whole table (pagelength) is filled.
+         */
+        int maxIndex = size - pageLength;
+        if (maxIndex < 0) {
+            maxIndex = 0;
+        }
+
+        // Ensures that the new value is valid
+        if (newIndex > maxIndex) {
+            newIndex = maxIndex;
         }
 
         // Refresh first item id
@@ -1121,7 +1156,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
             // If we did hit the border
             if (((Container.Ordered) items).isLastId(currentPageFirstItemId)) {
-                currentPageFirstItemIndex = size() - 1;
+                currentPageFirstItemIndex = size - 1;
             }
 
             // Go backwards in the middle of the list (respect borders)
@@ -1150,7 +1185,7 @@ public class Table extends AbstractSelect implements Action.Container,
             // If for some reason we do hit border again, override
             // the user index request
             if (((Container.Ordered) items).isLastId(currentPageFirstItemId)) {
-                newIndex = currentPageFirstItemIndex = size() - 1;
+                newIndex = currentPageFirstItemIndex = size - 1;
             }
         }
         if (needsPageBufferReset) {
@@ -3067,7 +3102,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Table.addGeneratedColumn along with an id for the column to be generated.
      * 
      */
-    public interface ColumnGenerator {
+    public interface ColumnGenerator extends Serializable {
 
         /**
          * Called by Table when a cell in a generated column needs to be
@@ -3112,7 +3147,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * to the cell content is <tt>i-table-cell-content-[style name]</tt>, and
      * the row style will be <tt>i-table-row-[style name]</tt>.
      */
-    public interface CellStyleGenerator {
+    public interface CellStyleGenerator extends Serializable {
 
         /**
          * Called by Table when a cell (and row) is painted.

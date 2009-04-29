@@ -1,5 +1,6 @@
 package com.itmill.toolkit.demo.sampler.features.form;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.UUID;
@@ -21,6 +22,7 @@ import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
+@SuppressWarnings("serial")
 public class FormPojoExample extends VerticalLayout {
 
     // the 'POJO' we're editing
@@ -101,7 +103,8 @@ public class FormPojoExample extends VerticalLayout {
 
         public PersonFieldFactory() {
             countries.setWidth("30em");
-            countries.setContainerDataSource(ExampleUtil.getStaticISO3166Container());
+            countries.setContainerDataSource(ExampleUtil
+                    .getStaticISO3166Container());
             countries
                     .setItemCaptionPropertyId(ExampleUtil.iso3166_PROPERTY_NAME);
             countries.setItemIconPropertyId(ExampleUtil.iso3166_PROPERTY_FLAG);
@@ -152,7 +155,8 @@ public class FormPojoExample extends VerticalLayout {
         }
     }
 
-    public class Person {
+    public class Person implements Serializable {
+
         private String firstName = "";
         private String lastName = "";
         private Date birthdate;

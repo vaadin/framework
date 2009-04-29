@@ -16,6 +16,7 @@ import com.itmill.toolkit.terminal.Resource;
  * @VERSION@
  * @since 3.0
  */
+@SuppressWarnings("serial")
 public class Link extends AbstractComponent {
 
     /* Target window border type constant: No window border */

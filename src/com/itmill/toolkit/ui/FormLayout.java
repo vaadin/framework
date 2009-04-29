@@ -19,6 +19,7 @@ package com.itmill.toolkit.ui;
  * bottom are by default on.
  * 
  */
+@SuppressWarnings( { "deprecation", "serial" })
 public class FormLayout extends OrderedLayout {
 
     public FormLayout() {

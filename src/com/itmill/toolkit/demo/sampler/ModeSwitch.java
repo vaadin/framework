@@ -9,6 +9,7 @@ import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
+@SuppressWarnings("serial")
 public class ModeSwitch extends CustomComponent {
 
     GridLayout layout = new GridLayout(3, 1);
@@ -92,7 +93,6 @@ public class ModeSwitch extends CustomComponent {
     }
 
     public class ModeSwitchEvent extends Event {
-        private static final long serialVersionUID = -576318750089478453L;
 
         public ModeSwitchEvent() {
             super(ModeSwitch.this);

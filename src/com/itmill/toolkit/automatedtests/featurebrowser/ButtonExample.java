@@ -21,6 +21,7 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
  * 
  * @author IT Mill Ltd.
  */
+@SuppressWarnings("serial")
 public class ButtonExample extends CustomComponent implements
         Button.ClickListener {
 

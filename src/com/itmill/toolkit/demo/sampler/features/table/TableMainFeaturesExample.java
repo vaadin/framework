@@ -69,6 +69,7 @@ public class TableMainFeaturesExample extends VerticalLayout {
                 Table.ALIGN_CENTER);
 
         // Column width
+        table.setColumnExpandRatio(ExampleUtil.iso3166_PROPERTY_NAME, 1);
         table.setColumnWidth(ExampleUtil.iso3166_PROPERTY_SHORT, 70);
 
         // Collapse one column - the user can make it visible again

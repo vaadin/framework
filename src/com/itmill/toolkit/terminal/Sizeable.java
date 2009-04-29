@@ -4,6 +4,8 @@
 
 package com.itmill.toolkit.terminal;
 
+import java.io.Serializable;
+
 /**
  * Interface to be implemented by components wishing to display some object that
  * may be dynamically resized during runtime.
@@ -13,7 +15,7 @@ package com.itmill.toolkit.terminal;
  * @VERSION@
  * @since 3.0
  */
-public interface Sizeable {
+public interface Sizeable extends Serializable{
 
     /**
      * Unit code representing pixels.

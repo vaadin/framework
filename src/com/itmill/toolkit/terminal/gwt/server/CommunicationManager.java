@@ -12,10 +12,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.security.GeneralSecurityException;
+import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -70,7 +72,9 @@ import com.itmill.toolkit.ui.Window;
  * @VERSION@
  * @since 5.0
  */
-public class CommunicationManager implements Paintable.RepaintRequestListener {
+@SuppressWarnings("serial")
+public class CommunicationManager implements Paintable.RepaintRequestListener,
+        Serializable {
 
     private static String GET_PARAM_REPAINT_ALL = "repaintAll";
 
@@ -608,17 +612,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
         boolean success = true;
 
         if (request.getContentLength() > 0) {
-
-            byte[] buffer = new byte[request.getContentLength()];
-            ServletInputStream inputStream = request.getInputStream();
-            int totalBytesRead = 0;
-            int bytesRead;
-            while ((bytesRead = inputStream.read(buffer, totalBytesRead,
-                    MAX_BUFFER_SIZE)) != -1) {
-                totalBytesRead += bytesRead;
-            }
-
-            String changes = new String(buffer, "utf-8");
+            String changes = readRequest(request);
 
             // Manage bursts one by one
             final String[] bursts = changes.split(VAR_BURST_SEPARATOR);
@@ -776,8 +770,40 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
         return success;
     }
 
-    public class ErrorHandlerErrorEvent implements ErrorEvent {
+    /**
+     * Reads the request data from the HttpServletRequest and returns it
+     * converted to an UTF-8 string.
+     * 
+     * @param request
+     * @return
+     * @throws IOException
+     */
+    private static String readRequest(HttpServletRequest request)
+            throws IOException {
 
+        int requestLength = request.getContentLength();
+
+        byte[] buffer = new byte[requestLength];
+        ServletInputStream inputStream = request.getInputStream();
+
+        int bytesRemaining = requestLength;
+        while (bytesRemaining > 0) {
+            int bytesToRead = Math.min(bytesRemaining, MAX_BUFFER_SIZE);
+            int bytesRead = inputStream.read(buffer, requestLength
+                    - bytesRemaining, bytesToRead);
+            if (bytesRead == -1) {
+                break;
+            }
+
+            bytesRemaining -= bytesRead;
+        }
+
+        String result = new String(buffer, "utf-8");
+
+        return result;
+    }
+
+    public class ErrorHandlerErrorEvent implements ErrorEvent, Serializable {
         private final Throwable throwable;
 
         public ErrorHandlerErrorEvent(Throwable throwable) {
@@ -841,6 +867,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
         case 'b':
             val = Boolean.valueOf(strValue);
             break;
+        case 'p':
+            val = idPaintableMap.get(strValue);
+            break;
         }
 
         return val;
@@ -851,10 +880,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
          * ----------------------------- Sending Locale sensitive date
          * -----------------------------
          */
-
-        // Store JVM default locale for later restoration
-        // (we'll have to change the default locale for a while)
-        final Locale jvmDefault = Locale.getDefault();
 
         // Send locale informations to client
         outWriter.print(", \"locales\":[");
@@ -914,10 +939,17 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
             /*
              * Date formatting (MM/DD/YYYY etc.)
              */
-            // Force our locale as JVM default for a while (SimpleDateFormat
-            // uses JVM default)
-            Locale.setDefault(l);
-            final String df = new SimpleDateFormat().toPattern();
+
+            DateFormat dateFormat = DateFormat.getDateTimeInstance(
+                    DateFormat.SHORT, DateFormat.SHORT, l);
+            if (!(dateFormat instanceof SimpleDateFormat)) {
+                System.err
+                        .println("Unable to get default date pattern for locale "
+                                + l.toString());
+                dateFormat = new SimpleDateFormat();
+            }
+            final String df = ((SimpleDateFormat) dateFormat).toPattern();
+
             int timeStart = df.indexOf("H");
             if (timeStart < 0) {
                 timeStart = df.indexOf("h");
@@ -961,9 +993,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
             }
         }
         outWriter.print("]"); // Close locales
-
-        // Restore JVM default locale
-        Locale.setDefault(jvmDefault);
     }
 
     /**
@@ -1207,7 +1236,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
         p.requestRepaintRequests();
     }
 
-    private final class SingleValueMap implements Map {
+    private final class SingleValueMap implements Map<Object, Object>,
+            Serializable {
+
         private final String name;
 
         private final Object value;
@@ -1298,7 +1329,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
     /**
      * Implementation of URIHandler.ErrorEvent interface.
      */
-    public class URIHandlerErrorImpl implements URIHandler.ErrorEvent {
+    public class URIHandlerErrorImpl implements URIHandler.ErrorEvent,
+            Serializable {
 
         private final URIHandler owner;
 
@@ -1356,7 +1388,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
      * FileUpload can determine content length. Used to detect files total size,
      * uploads progress can be tracked inside upload.
      */
-    private class UploadProgressListener implements ProgressListener {
+    private class UploadProgressListener implements ProgressListener,
+            Serializable {
+
         Upload uploadComponent;
 
         boolean updated = false;

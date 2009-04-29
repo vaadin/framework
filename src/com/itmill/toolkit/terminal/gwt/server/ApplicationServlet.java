@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -19,7 +20,6 @@ import java.security.GeneralSecurityException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
@@ -55,9 +55,8 @@ import com.itmill.toolkit.ui.Window;
  * @since 5.0
  */
 
+@SuppressWarnings("serial")
 public class ApplicationServlet extends HttpServlet {
-
-    private static final long serialVersionUID = -4937882979845826574L;
 
     /**
      * Version number of this release. For example "5.0.0".
@@ -127,10 +126,6 @@ public class ApplicationServlet extends HttpServlet {
 
     private static final int MAX_BUFFER_SIZE = 64 * 1024;
 
-    // TODO This is session specific not servlet wide data. No need to store
-    // this here, move it to Session from where it can be queried when required
-    protected static HashMap<Application, CommunicationManager> applicationToAjaxAppMgrMap = new HashMap<Application, CommunicationManager>();
-
     private static final String RESOURCE_URI = "/RES/";
 
     private static final String AJAX_UIDL_URI = "/UIDL";
@@ -161,8 +156,6 @@ public class ApplicationServlet extends HttpServlet {
 
     // If servlet is application runner, store request's classname
     String applicationRunnerClassname = null;
-
-    private ClassLoader classLoader;
 
     /**
      * Called by the servlet container to indicate to a servlet that the servlet
@@ -229,28 +222,6 @@ public class ApplicationServlet extends HttpServlet {
             System.err.println(NOT_PRODUCTION_MODE_INFO);
         }
 
-        // Gets custom class loader
-        final String classLoaderName = getApplicationOrSystemProperty(
-                "ClassLoader", null);
-        ClassLoader classLoader;
-        if (classLoaderName == null) {
-            classLoader = getClass().getClassLoader();
-        } else {
-            try {
-                final Class classLoaderClass = getClass().getClassLoader()
-                        .loadClass(classLoaderName);
-                final Constructor c = classLoaderClass
-                        .getConstructor(new Class[] { ClassLoader.class });
-                classLoader = (ClassLoader) c
-                        .newInstance(new Object[] { getClass().getClassLoader() });
-            } catch (final Exception e) {
-                throw new ServletException(
-                        "Could not find specified class loader: "
-                                + classLoaderName, e);
-            }
-        }
-        this.classLoader = classLoader;
-
         // Loads the application class using the same class loader
         // as the servlet itself
         if (!isApplicationRunnerServlet) {
@@ -262,7 +233,8 @@ public class ApplicationServlet extends HttpServlet {
                         "Application not specified in servlet parameters");
             }
             try {
-                applicationClass = classLoader.loadClass(applicationClassName);
+                applicationClass = getClassLoader().loadClass(
+                        applicationClassName);
             } catch (final ClassNotFoundException e) {
                 throw new ServletException("Failed to load application class: "
                         + applicationClassName);
@@ -272,6 +244,30 @@ public class ApplicationServlet extends HttpServlet {
             // later to create Applications based on URL
         }
 
+    }
+
+    private ClassLoader getClassLoader() throws ServletException {
+        // Gets custom class loader
+        final String classLoaderName = getApplicationOrSystemProperty(
+                "ClassLoader", null);
+        ClassLoader classLoader;
+        if (classLoaderName == null) {
+            classLoader = getClass().getClassLoader();
+        } else {
+            try {
+                final Class<?> classLoaderClass = getClass().getClassLoader()
+                        .loadClass(classLoaderName);
+                final Constructor<?> c = classLoaderClass
+                        .getConstructor(new Class[] { ClassLoader.class });
+                classLoader = (ClassLoader) c
+                        .newInstance(new Object[] { getClass().getClassLoader() });
+            } catch (final Exception e) {
+                throw new ServletException(
+                        "Could not find specified class loader: "
+                                + classLoaderName, e);
+            }
+        }
+        return classLoader;
     }
 
     /**
@@ -371,8 +367,9 @@ public class ApplicationServlet extends HttpServlet {
                 // note: endTransaction is called on finalize below
                 ((WebApplicationContext) application.getContext())
                         .startTransaction(application, request);
-                getApplicationManager(application).handleFileUpload(request,
-                        response);
+                ((WebApplicationContext) application.getContext())
+                        .getApplicationManager(application, this)
+                        .handleFileUpload(request, response);
                 return;
             }
 
@@ -417,8 +414,9 @@ public class ApplicationServlet extends HttpServlet {
                             .startTransaction(application, request);
 
                     // Handle UIDL request
-                    getApplicationManager(application).handleUidlRequest(
-                            request, response, this);
+                    ((WebApplicationContext) application.getContext())
+                            .getApplicationManager(application, this)
+                            .handleUidlRequest(request, response, this);
                     return;
                 }
             }
@@ -432,7 +430,7 @@ public class ApplicationServlet extends HttpServlet {
                     application.close();
                     final HttpSession session = request.getSession(false);
                     if (session != null) {
-                        ApplicationServlet.applicationToAjaxAppMgrMap
+                        WebApplicationContext.getApplicationContext(session).applicationToAjaxAppMgrMap
                                 .remove(application);
                         WebApplicationContext.getApplicationContext(session)
                                 .removeApplication(application);
@@ -474,8 +472,9 @@ public class ApplicationServlet extends HttpServlet {
             DownloadStream download = null;
 
             // Handles the URI if the application is still running
-            download = getApplicationManager(application).handleURI(window,
-                    request, response);
+            download = ((WebApplicationContext) application.getContext())
+                    .getApplicationManager(application, this).handleURI(window,
+                            request, response);
 
             // If this is not a download request
             if (download == null) {
@@ -579,6 +578,11 @@ public class ApplicationServlet extends HttpServlet {
                 ((WebApplicationContext) application.getContext())
                         .endTransaction(application, request);
             }
+
+            // Work-around for GAE session problem. Explicitly touch session so
+            // it is re-serialized.
+            request.getSession().setAttribute("sessionUpdated",
+                    new Date().getTime());
         }
     }
 
@@ -623,9 +627,10 @@ public class ApplicationServlet extends HttpServlet {
      * @param request
      * @param response
      * @throws IOException
+     * @throws ServletException
      */
     private void serveStaticResourcesInITMILL(String filename,
-            HttpServletResponse response) throws IOException {
+            HttpServletResponse response) throws IOException, ServletException {
 
         final ServletContext sc = getServletContext();
         InputStream is = sc.getResourceAsStream(filename);
@@ -634,7 +639,7 @@ public class ApplicationServlet extends HttpServlet {
 
             // strip leading "/" otherwise stream from JAR wont work
             filename = filename.substring(1);
-            is = classLoader.getResourceAsStream(filename);
+            is = getClassLoader().getResourceAsStream(filename);
 
             if (is == null) {
                 // cannot serve requested file
@@ -1430,10 +1435,12 @@ public class ApplicationServlet extends HttpServlet {
      * @throws SAXException
      * @throws IllegalAccessException
      * @throws InstantiationException
+     * @throws ServletException
      */
     private Application getNewApplication(HttpServletRequest request,
             HttpServletResponse response) throws MalformedURLException,
-            SAXException, IllegalAccessException, InstantiationException {
+            SAXException, IllegalAccessException, InstantiationException,
+            ServletException {
 
         // Create application
         final WebApplicationContext context = WebApplicationContext
@@ -1446,7 +1453,8 @@ public class ApplicationServlet extends HttpServlet {
             applicationUrl = new URL(getApplicationUrl(request).toString()
                     + applicationClassname + "/");
             try {
-                applicationClass = classLoader.loadClass(applicationClassname);
+                applicationClass = getClassLoader().loadClass(
+                        applicationClassname);
             } catch (final ClassNotFoundException e) {
                 throw new InstantiationException(
                         "Failed to load application class: "
@@ -1586,7 +1594,7 @@ public class ApplicationServlet extends HttpServlet {
      * Implementation of ParameterHandler.ErrorEvent interface.
      */
     public class ParameterHandlerErrorImpl implements
-            ParameterHandler.ErrorEvent {
+            ParameterHandler.ErrorEvent, Serializable {
 
         private ParameterHandler owner;
 
@@ -1615,7 +1623,8 @@ public class ApplicationServlet extends HttpServlet {
     /**
      * Implementation of URIHandler.ErrorEvent interface.
      */
-    public class URIHandlerErrorImpl implements URIHandler.ErrorEvent {
+    public class URIHandlerErrorImpl implements URIHandler.ErrorEvent,
+            Serializable {
 
         private final URIHandler owner;
 
@@ -1651,25 +1660,6 @@ public class ApplicationServlet extends HttpServlet {
     }
 
     /**
-     * Gets communication manager for an application.
-     * 
-     * If this application has not been running before, new manager is created.
-     * 
-     * @param application
-     * @return CommunicationManager
-     */
-    private CommunicationManager getApplicationManager(Application application) {
-        CommunicationManager mgr = applicationToAjaxAppMgrMap.get(application);
-
-        if (mgr == null) {
-            // Creates new manager
-            mgr = new CommunicationManager(application, this);
-            applicationToAjaxAppMgrMap.put(application, mgr);
-        }
-        return mgr;
-    }
-
-    /**
      * Gets resource path using different implementations. Required to
      * supporting different servlet container implementations (application
      * servers).
@@ -1697,7 +1687,7 @@ public class ApplicationServlet extends HttpServlet {
         return resultPath;
     }
 
-    public class RequestError implements Terminal.ErrorEvent {
+    public class RequestError implements Terminal.ErrorEvent, Serializable {
 
         private final Throwable throwable;
 

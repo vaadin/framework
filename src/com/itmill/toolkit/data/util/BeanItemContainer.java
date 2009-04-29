@@ -1,6 +1,7 @@
 package com.itmill.toolkit.data.util;
 
 import java.beans.PropertyDescriptor;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -15,7 +16,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.itmill.toolkit.data.Container;
-import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.Container.Filterable;
 import com.itmill.toolkit.data.Container.Indexed;
@@ -36,6 +36,7 @@ import com.itmill.toolkit.data.Property.ValueChangeNotifier;
  * 
  * @since 5.4
  */
+@SuppressWarnings("serial")
 public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         ItemSetChangeNotifier, ValueChangeListener {
     // filtered and unfiltered item IDs
@@ -45,42 +46,77 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
 
     // internal data model to obtain property IDs etc.
     private final Class<BT> type;
-    private final LinkedHashMap<String, PropertyDescriptor> model;
+    private transient LinkedHashMap<String, PropertyDescriptor> model;
 
     private List<ItemSetChangeListener> itemSetChangeListeners;
 
     private Set<Filter> filters = new HashSet<Filter>();
 
-    public BeanItemContainer(Class<BT> type) throws InstantiationException,
-            IllegalAccessException {
+    /* Special serialization to handle method references */
+    private void readObject(java.io.ObjectInputStream in) throws IOException,
+            ClassNotFoundException {
+        in.defaultReadObject();
+        model = BeanItem.getPropertyDescriptors(type);
+    }
+
+    /**
+     * Constructs BeanItemContainer for beans of a given type.
+     * 
+     * @param type
+     *            the class of beans to be used with this containers.
+     * @throws IllegalArgumentException
+     *             If the type is null
+     */
+    public BeanItemContainer(Class<BT> type) {
+        if (type == null) {
+            throw new IllegalArgumentException(
+                    "The type passed to BeanItemContainer must not be null");
+        }
         this.type = type;
         model = BeanItem.getPropertyDescriptors(type);
     }
 
     /**
-     * Constructs BeanItemContainer with given collection of beans in it.
+     * Constructs BeanItemContainer with given collection of beans in it. The
+     * collection must not be empty or an IllegalArgument is thrown.
      * 
-     * @param list
+     * @param collection
      *            non empty {@link Collection} of beans.
-     * @throws IllegalAccessException
-     * @throws InstantiationException
+     * @throws IllegalArgumentException
+     *             If the collection is null or empty.
      */
-    @SuppressWarnings("unchecked")
-    public BeanItemContainer(Collection<BT> list)
-            throws InstantiationException, IllegalAccessException {
-        type = (Class<BT>) list.iterator().next().getClass();
+    public BeanItemContainer(Collection<BT> collection)
+            throws IllegalArgumentException {
+        if (collection == null || collection.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "The collection passed to BeanItemContainer must not be null or empty");
+        }
+
+        type = (Class<BT>) collection.iterator().next().getClass();
         model = BeanItem.getPropertyDescriptors(type);
         int i = 0;
-        for (BT bt : list) {
+        for (BT bt : collection) {
             addItemAt(i++, bt);
         }
     }
 
+    /**
+     * Unsupported operation.
+     * 
+     * @see com.itmill.toolkit.data.Container.Indexed#addItemAt(int)
+     */
     public Object addItemAt(int index) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
-    public Item addItemAt(int index, Object newItemId)
+    /**
+     * Adds new item at given index.
+     * 
+     * The bean is used both as the item contents and as the item identifier.
+     * 
+     * @see com.itmill.toolkit.data.Container.Indexed#addItemAt(int, Object)
+     */
+    public BeanItem addItemAt(int index, Object newItemId)
             throws UnsupportedOperationException {
         if (index < 0 || index > size()) {
             return null;
@@ -106,8 +142,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
      *            Id of the new item to be added.
      * @return Returns new item or null if the operation fails.
      */
-    @SuppressWarnings("unchecked")
-    private Item addItemAtInternalIndex(int index, Object newItemId) {
+    private BeanItem addItemAtInternalIndex(int index, Object newItemId) {
         // Make sure that the Item has not been created yet
         if (allItems.contains(newItemId)) {
             return null;
@@ -132,7 +167,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         }
     }
 
-    public Object getIdByIndex(int index) {
+    public BT getIdByIndex(int index) {
         return list.get(index);
     }
 
@@ -140,12 +175,25 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         return list.indexOf(itemId);
     }
 
+    /**
+     * Unsupported operation.
+     * 
+     * @see com.itmill.toolkit.data.Container.Ordered#addItemAfter(Object)
+     */
     public Object addItemAfter(Object previousItemId)
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
-    public Item addItemAfter(Object previousItemId, Object newItemId)
+    /**
+     * Adds new item after the given item.
+     * 
+     * The bean is used both as the item contents and as the item identifier.
+     * 
+     * @see com.itmill.toolkit.data.Container.Ordered#addItemAfter(Object,
+     *      Object)
+     */
+    public BeanItem addItemAfter(Object previousItemId, Object newItemId)
             throws UnsupportedOperationException {
         // only add if the previous item is visible
         if (list.contains(previousItemId)) {
@@ -156,7 +204,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         }
     }
 
-    public Object firstItemId() {
+    public BT firstItemId() {
         if (list.size() > 0) {
             return list.get(0);
         } else {
@@ -172,7 +220,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         return lastItemId() == itemId;
     }
 
-    public Object lastItemId() {
+    public BT lastItemId() {
         if (list.size() > 0) {
             return list.get(list.size() - 1);
         } else {
@@ -180,7 +228,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         }
     }
 
-    public Object nextItemId(Object itemId) {
+    public BT nextItemId(Object itemId) {
         int index = list.indexOf(itemId);
         if (index >= 0 && index < list.size() - 1) {
             return list.get(index + 1);
@@ -190,7 +238,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         }
     }
 
-    public Object prevItemId(Object itemId) {
+    public BT prevItemId(Object itemId) {
         int index = list.indexOf(itemId);
         if (index > 0) {
             return list.get(index - 1);
@@ -206,11 +254,34 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Unsupported operation.
+     * 
+     * @see com.itmill.toolkit.data.Container#addItem()
+     */
     public Object addItem() throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
-    public Item addItem(Object itemId) throws UnsupportedOperationException {
+    /**
+     * Creates a new Item with the bean into the Container.
+     * 
+     * The bean is used both as the item contents and as the item identifier.
+     * 
+     * @see com.itmill.toolkit.data.Container#addItem(Object)
+     */
+    public BeanItem addBean(BT bean) {
+        return addItem(bean);
+    }
+
+    /**
+     * Creates a new Item with the bean into the Container.
+     * 
+     * The bean is used both as the item contents and as the item identifier.
+     * 
+     * @see com.itmill.toolkit.data.Container#addItem(Object)
+     */
+    public BeanItem addItem(Object itemId) throws UnsupportedOperationException {
         if (list.size() > 0) {
             // add immediately after last visible item
             int lastIndex = allItems.indexOf(lastItemId());
@@ -229,18 +300,16 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         return beanToItem.get(itemId).getItemProperty(propertyId);
     }
 
-    @SuppressWarnings("unchecked")
-    public Collection getContainerPropertyIds() {
+    public Collection<String> getContainerPropertyIds() {
         return model.keySet();
     }
 
-    public Item getItem(Object itemId) {
+    public BeanItem getItem(Object itemId) {
         return beanToItem.get(itemId);
     }
 
-    @SuppressWarnings("unchecked")
-    public Collection getItemIds() {
-        return (Collection) list.clone();
+    public Collection<BT> getItemIds() {
+        return (Collection<BT>) list.clone();
     }
 
     public Class<?> getType(Object propertyId) {
@@ -364,7 +433,6 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         }
     }
 
-    @SuppressWarnings("unchecked")
     public void addContainerFilter(Object propertyId, String filterString,
             boolean ignoreCase, boolean onlyMatchPrefix) {
         if (filters.isEmpty()) {
@@ -386,7 +454,6 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
      * items, and send a notification if the set of visible items changed in any
      * way.
      */
-    @SuppressWarnings("unchecked")
     protected void filterAll() {
         // avoid notification if the filtering had no effect
         List<BT> originalItems = list;

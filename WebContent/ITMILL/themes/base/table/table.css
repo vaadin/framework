@@ -1,88 +1,115 @@
+/* Table theme building instructions
+ * 
+ * Toolkit scroll table is very complex widget with dozens of features. These 
+ * features set some limitations for theme builder. To keep things working, it
+ * is safest to try to just override values used in default theme and comfort to
+ * these instructions.
+ * 
+ * Borders in table header and in table body need to be same width
+ * - specify vertical borders on .i-table-header-wrap and .i-table-body
+ *
+ * Table cells in body:
+ *  - padding/border for cells is to be defined for td elements (class name: .i-table-cell-content)
+ *  - in default theme there are no borders, but they should work. Just set border-right or border-bottom
+ *  - no padding or border is allowed for div inside cells (class name: .i-table-cell-wrapper) element
+ *  - background is allowed for both elements
+ *
+ * Table headers:
+ *  - table cells in header contain .i-table-resizer and 
+ *	  .i-table-caption-container div elements, which are both floated to right
+ *  - to align header caption to body content resizer width + .i-table-caption-container
+ *    padding right should be equal to content cells padding-right and border-right.
+ *  - Possible cell border in header must be themed into column resizer.
+ *
+ */
 .i-table {
 	overflow: hidden;
-	text-align: left /* Force default alignment */
+	text-align: left; /* Force default alignment */
 }
-
 .i-table-header-wrap {
-	background: #efefef;
-	border: 1px solid #ddd;
 	overflow: hidden;
+	border: 1px solid #aaa;
+	border-bottom: none;
+	background: #efefef;
 }
-
 .i-table-header table,
 .i-table-table {
-	border-collapse: collapse;
+	border-spacing: 0;
 	margin: 0;
 	padding: 0;
 	border: 0;
 }
-
-.i-table-header td,
-.i-table-table td {
-	margin: 0;
-	padding: 0;
-	border: 0;
-}
-
 .i-table-header td {
+	padding: 0;
+}
+.i-table-header-cell,
+.i-table-header-cell-asc,
+.i-table-header-cell-desc {
 	cursor: pointer;
 }
-
 .i-table-resizer {
 	display: block;
-	height: 1em;
+	height: 1.2em;
 	float: right;
-	background: #ddd;
+	background: #aaa;
 	cursor: col-resize;
+	width: 1px;
+	overflow: hidden;
 }
-
 .i-table-caption-container {
 	float: right;
 	overflow: hidden;
 	white-space: nowrap;
+	padding-right: 6px;
 }
-
+.i-table-header-cell-asc .i-table-caption-container {
+	background: transparent url(../common/img/sprites.png) no-repeat right 6px;
+}
+.i-table-header-cell-desc .i-table-caption-container {
+	background: transparent url(../common/img/sprites.png) no-repeat right -10px;
+}
+.i-table-body {
+	border: 1px solid #aaa;
+}
 .i-table-row-spacer {
 	height: 10px;
 	overflow: hidden; /* IE hack to allow < one line height divs */
 }
-
 .i-table-row,
 .i-table-row-odd {
 	border: 0;
 	margin: 0;
 	padding: 0;
+	cursor: default;
 }
-
 .i-table .i-selected {
 	background: #999;
 	color: #fff;
 }
-
-.i-table-row td,
-.i-table-row-odd td {
-	padding: 0;
-}
 .i-table-cell-content {
 	white-space: nowrap;
 	overflow: hidden;
-	padding: 3px 0 3px 3px;
-	margin-right: 5px;
+	padding: 0 6px;
+	border-right: 1px solid #aaa;
 }
-
+.i-table-cell-wrapper {
+	/* Do not specify any margins, paddings or borders here */
+	white-space: nowrap;
+	overflow: hidden;
+}
 .i-table-column-selector {
 	float: right;
-	background: #ddd;
-	margin: -1em 0 0 0;
-	height: 1em;
-	width: 0.5em;
+	background: transparent url(../common/img/sprites.png) no-repeat 4px -37px;
+	margin: -1.2em 0 0 0;
+	height: 1.2em;
+	width: 14px;
 	position: relative; /* hide this from IE, it works without it */
+	cursor: pointer;
 }
-
-.i-ie .i-table-column-selector {
+.i-ie6 .i-table-column-selector,
+.i-ie7 .i-table-column-selector {
 	position: static;
 }
-
 .i-table-focus-slot-left {
 	border-left: 2px solid #999;
 	margin-right: -2px;
@@ -91,28 +118,24 @@
 	border-right: 2px solid #999;
 	margin-left: -2px;
 }
-
 .i-table-header-drag {
 	position: absolute;
 	background: #efefef;
 	border: 1px solid #eee;
-	opacity: 0.5;
-	filter: alpha(opacity=50);
+	opacity: 0.9;
+	filter: alpha(opacity=90);
 	margin-top: 20px;
 	z-index: 30000;
 }
-
 .i-table-scrollposition {
 	width: 160px;
 	background: #eee;
+	border: 1px solid #aaa;
 }
-
 .i-table-scrollposition span {
 	display: block;
 	text-align: center;
 }
-
-
 /* row in column selector */
 .i-on div {
 	

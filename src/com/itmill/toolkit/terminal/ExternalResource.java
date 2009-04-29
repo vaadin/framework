@@ -4,6 +4,7 @@
 
 package com.itmill.toolkit.terminal;
 
+import java.io.Serializable;
 import java.net.URL;
 
 import com.itmill.toolkit.service.FileTypeResolver;
@@ -18,7 +19,7 @@ import com.itmill.toolkit.service.FileTypeResolver;
  * @VERSION@
  * @since 3.0
  */
-public class ExternalResource implements Resource {
+public class ExternalResource implements Resource, Serializable {
 
     /**
      * Url of the download.

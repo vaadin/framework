@@ -14,6 +14,7 @@ import com.itmill.toolkit.terminal.PaintTarget;
  * Multiselect component with two lists: left side for available items and right
  * side for selected items.
  */
+@SuppressWarnings("serial")
 public class TwinColSelect extends AbstractSelect {
 
     private int columns = 0;

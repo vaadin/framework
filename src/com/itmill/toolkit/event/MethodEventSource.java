@@ -4,6 +4,7 @@
 
 package com.itmill.toolkit.event;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 
 /**
@@ -22,7 +23,7 @@ import java.lang.reflect.Method;
  * @VERSION@
  * @since 3.0
  */
-public interface MethodEventSource {
+public interface MethodEventSource extends Serializable {
 
     /**
      * <p>

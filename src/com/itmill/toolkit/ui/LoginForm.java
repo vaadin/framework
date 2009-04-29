@@ -1,6 +1,7 @@
 package com.itmill.toolkit.ui;
 
 import java.io.ByteArrayInputStream;
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.HashMap;
@@ -33,6 +34,7 @@ import com.itmill.toolkit.terminal.URIHandler;
  * 
  * @since 5.3
  */
+@SuppressWarnings("serial")
 public class LoginForm extends CustomComponent {
 
     private Embedded iframe = new Embedded();
@@ -90,14 +92,18 @@ public class LoginForm extends CustomComponent {
                 + "</script></body></html>";
 
         public DownloadStream handleURI(URL context, String relativeUri) {
-            if (window != null) {
-                window.removeURIHandler(this);
+            if (relativeUri != null && relativeUri.contains("loginHandler")) {
+                if (window != null) {
+                    window.removeURIHandler(this);
+                }
+                DownloadStream downloadStream = new DownloadStream(
+                        new ByteArrayInputStream(responce.getBytes()),
+                        "text/html", "loginSuccesfull");
+                downloadStream.setCacheTime(-1);
+                return downloadStream;
+            } else {
+                return null;
             }
-            DownloadStream downloadStream = new DownloadStream(
-                    new ByteArrayInputStream(responce.getBytes()), "text/html",
-                    "loginSuccesfull");
-            downloadStream.setCacheTime(-1);
-            return downloadStream;
         }
     };
 
@@ -185,8 +191,6 @@ public class LoginForm extends CustomComponent {
      */
     public class LoginEvent extends Event {
 
-        private static final long serialVersionUID = 1966036438671224308L;
-
         private Map params;
 
         private LoginEvent(Map params) {
@@ -213,7 +217,7 @@ public class LoginForm extends CustomComponent {
      * Login listener is a class capable to listen LoginEvents sent from
      * LoginBox
      */
-    public interface LoginListener {
+    public interface LoginListener extends Serializable {
         /**
          * This method is fired on each login form post.
          * 

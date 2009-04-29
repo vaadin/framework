@@ -4,6 +4,7 @@
 
 package com.itmill.toolkit.automatedtests.util;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
@@ -41,7 +42,7 @@ import com.itmill.toolkit.ui.Select;
 import com.itmill.toolkit.ui.TabSheet;
 import com.itmill.toolkit.ui.TextField;
 
-public class RandomComponents {
+public class RandomComponents implements Serializable {
 
     private Random rand = null;
 

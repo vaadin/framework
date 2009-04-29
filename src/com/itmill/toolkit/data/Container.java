@@ -4,6 +4,7 @@
 
 package com.itmill.toolkit.data;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 /**
@@ -51,7 +52,7 @@ import java.util.Collection;
  * @VERSION@
  * @since 3.0
  */
-public interface Container {
+public interface Container extends Serializable {
 
     /**
      * Gets the Item with the given Item ID from the Container. If the Container
@@ -70,7 +71,7 @@ public interface Container {
      * 
      * @return unmodifiable collection of Property IDs
      */
-    public Collection getContainerPropertyIds();
+    public Collection<?> getContainerPropertyIds();
 
     /**
      * Gets the ID's of all Items stored in the Container. The ID's are returned
@@ -78,7 +79,7 @@ public interface Container {
      * 
      * @return unmodifiable collection of Item IDs
      */
-    public Collection getItemIds();
+    public Collection<?> getItemIds();
 
     /**
      * Gets the Property identified by the given itemId and propertyId from the
@@ -100,7 +101,7 @@ public interface Container {
      *            ID identifying the Properties
      * @return data type of the Properties
      */
-    public Class getType(Object propertyId);
+    public Class<?> getType(Object propertyId);
 
     /**
      * Gets the number of Items in the Container.
@@ -181,7 +182,7 @@ public interface Container {
      * @return <code>true</code> if the operation succeeded, <code>false</code>
      *         if not
      */
-    public boolean addContainerProperty(Object propertyId, Class type,
+    public boolean addContainerProperty(Object propertyId, Class<?> type,
             Object defaultValue) throws UnsupportedOperationException;
 
     /**
@@ -334,7 +335,7 @@ public interface Container {
          * 
          * @return The sortable field ids.
          */
-        Collection getSortableContainerPropertyIds();
+        Collection<?> getSortableContainerPropertyIds();
 
     }
 
@@ -418,7 +419,7 @@ public interface Container {
          *         containing the IDs of all other Items that are children in
          *         the container hierarchy
          */
-        public Collection getChildren(Object itemId);
+        public Collection<?> getChildren(Object itemId);
 
         /**
          * Gets the ID of the parent Item of the specified Item.
@@ -438,7 +439,7 @@ public interface Container {
          * @return An unmodifiable {@link java.util.Collection collection}
          *         containing IDs of all root elements of the container
          */
-        public Collection rootItemIds();
+        public Collection<?> rootItemIds();
 
         /**
          * <p>
@@ -568,7 +569,7 @@ public interface Container {
      * 
      * @since 5.0
      */
-    public interface Filterable extends Container {
+    public interface Filterable extends Container, Serializable {
 
         /**
          * Add a filter for given property.
@@ -600,7 +601,7 @@ public interface Container {
      * Interface implemented by viewer classes capable of using a Container as a
      * data source.
      */
-    public interface Viewer {
+    public interface Viewer extends Serializable {
 
         /**
          * Sets the Container that serves as the data source of the viewer.
@@ -631,7 +632,7 @@ public interface Container {
      * internally.
      * </p>
      */
-    public interface Editor extends Container.Viewer {
+    public interface Editor extends Container.Viewer, Serializable {
 
     }
 
@@ -641,7 +642,7 @@ public interface Container {
      * An <code>Event</code> object specifying the Container whose Item set has
      * changed.
      */
-    public interface ItemSetChangeEvent {
+    public interface ItemSetChangeEvent extends Serializable {
 
         /**
          * Gets the Property where the event occurred.
@@ -652,7 +653,7 @@ public interface Container {
     }
 
     /** Container Item set change listener interface. */
-    public interface ItemSetChangeListener {
+    public interface ItemSetChangeListener extends Serializable {
 
         /**
          * Lets the listener know a Containers Item set has changed.
@@ -677,7 +678,7 @@ public interface Container {
      * be able to implement an interface.
      * </p>
      */
-    public interface ItemSetChangeNotifier {
+    public interface ItemSetChangeNotifier extends Serializable {
 
         /**
          * Adds an Item set change listener for the object.
@@ -702,7 +703,7 @@ public interface Container {
      * An <code>Event</code> object specifying the Container whose Property set
      * has changed.
      */
-    public interface PropertySetChangeEvent {
+    public interface PropertySetChangeEvent extends Serializable {
 
         /**
          * Retrieves the Container whose contents have been modified.
@@ -716,7 +717,7 @@ public interface Container {
      * The listener interface for receiving <code>PropertySetChangeEvent</code>
      * objects.
      */
-    public interface PropertySetChangeListener {
+    public interface PropertySetChangeListener extends Serializable {
 
         /**
          * Notifies this listener that the Containers contents has changed.
@@ -744,7 +745,7 @@ public interface Container {
      * be able to implement an interface.
      * </p>
      */
-    public interface PropertySetChangeNotifier {
+    public interface PropertySetChangeNotifier extends Serializable {
 
         /**
          * Registers a new Property set change listener for this Container.

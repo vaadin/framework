@@ -2,6 +2,7 @@ package com.itmill.toolkit.terminal.gwt.server;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Serializable;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -15,7 +16,8 @@ import javax.portlet.RenderResponse;
 
 import com.itmill.toolkit.Application;
 
-public class ApplicationPortlet implements Portlet {
+@SuppressWarnings("serial")
+public class ApplicationPortlet implements Portlet, Serializable {
     // The application to show
     protected String app = null;
     // some applications might require forced height (and, more seldom, width)

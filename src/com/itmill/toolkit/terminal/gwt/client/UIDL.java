@@ -417,9 +417,9 @@ public class UIDL {
         return s;
     }
 
-    public Set getStringArrayVariableAsSet(String name) {
+    public Set<String> getStringArrayVariableAsSet(String name) {
         final JSONArray a = getArrayVariable(name);
-        final HashSet s = new HashSet();
+        final HashSet<String> s = new HashSet<String>();
         for (int i = 0; i < a.size(); i++) {
             s.add(((JSONString) a.get(i)).stringValue());
         }

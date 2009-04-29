@@ -22,6 +22,7 @@ import com.itmill.toolkit.data.Property;
  * @VERSION@
  * @since 3.0
  */
+@SuppressWarnings("serial")
 public class BeanItem extends PropertysetItem {
 
     /**
@@ -97,7 +98,7 @@ public class BeanItem extends PropertysetItem {
      * @param propertyIds
      *            id of the property.
      */
-    public BeanItem(Object bean, Collection propertyIds) {
+    public BeanItem(Object bean, Collection<?> propertyIds) {
 
         this.bean = bean;
 

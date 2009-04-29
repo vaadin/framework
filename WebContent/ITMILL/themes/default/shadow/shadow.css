@@ -65,21 +65,4 @@
     bottom: -5px;           right: -4px;
     width: 8px;          height: 8px;
     background: transparent url(img/bottom-right.png);
-}
-
-
-
-
-
-/* For IE6 (no transparent png's, we use a blur filter) */
-
-* html .i-shadow * {
-	display: none;
-}
-
-* html .i-shadow {
-	background: #000;
-	filter: progid:DXImageTransform.Microsoft.Blur(pixelRadius=2) alpha(opacity=20);
-	margin-top: -3px;
-	margin-left: -4px;
-}  
+} 

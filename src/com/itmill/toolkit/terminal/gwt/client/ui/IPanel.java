@@ -106,13 +106,13 @@ public class IPanel extends SimplePanel implements Container {
         rendering = true;
         if (!uidl.hasAttribute("cached")) {
             // Handle caption displaying and style names, prior generics.
-            // Affects size
-            // calculations
+            // Affects size calculations
 
             // Restore default stylenames
+            captionNode.setClassName(CLASSNAME + "-caption");
             contentNode.setClassName(CLASSNAME + "-content");
             bottomDecoration.setClassName(CLASSNAME + "-deco");
-            captionNode.setClassName(CLASSNAME + "-caption");
+
             boolean hasCaption = false;
             if (uidl.hasAttribute("caption")
                     && !uidl.getStringAttribute("caption").equals("")) {

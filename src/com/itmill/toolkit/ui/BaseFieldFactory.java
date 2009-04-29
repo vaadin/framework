@@ -25,6 +25,7 @@ import com.itmill.toolkit.data.Property;
  * @since 3.1
  */
 
+@SuppressWarnings("serial")
 public class BaseFieldFactory implements FieldFactory {
 
     /**

@@ -14,6 +14,7 @@ import com.itmill.toolkit.terminal.PaintTarget;
  * This is a simple list select without, for instance, support for new items,
  * lazyloading, and other advanced features.
  */
+@SuppressWarnings("serial")
 public class ListSelect extends AbstractSelect {
 
     private int columns = 0;

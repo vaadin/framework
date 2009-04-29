@@ -36,10 +36,12 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
  * @author IT Mill Ltd.
  * @see com.itmill.toolkit.ui.Window
  */
+@SuppressWarnings("serial")
 public class FeatureBrowser extends com.itmill.toolkit.Application implements
         Select.ValueChangeListener {
 
     // Property IDs
+
     private static final Object PROPERTY_ID_CATEGORY = "Category";
     private static final Object PROPERTY_ID_NAME = "Name";
     private static final Object PROPERTY_ID_DESC = "Description";
@@ -167,7 +169,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         tree.addListener(this);
         tree.setImmediate(true);
         tree.expandItemsRecursively(rootId);
-        for (Iterator i = container.getItemIds().iterator(); i.hasNext();) {
+        for (Iterator<?> i = container.getItemIds().iterator(); i.hasNext();) {
             Object id = i.next();
             if (container.getChildren(id) == null) {
                 tree.setChildrenAllowed(id, false);
@@ -207,6 +209,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
 
         final HorizontalLayout wbLayout = new HorizontalLayout();
         Button b = new Button("Open in sub-window", new Button.ClickListener() {
+
             public void buttonClick(ClickEvent event) {
                 Component component = (Component) ts.getComponentIterator()
                         .next();
@@ -231,6 +234,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         b.setStyleName(Button.STYLE_LINK);
         wbLayout.addComponent(b);
         b = new Button("Open in native window", new Button.ClickListener() {
+
             public void buttonClick(ClickEvent event) {
                 Component component = (Component) ts.getComponentIterator()
                         .next();
@@ -348,8 +352,8 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
                 tree.setValue(table.getValue());
                 table.addListener(this);
                 final Item item = table.getItem(table.getValue());
-                final Class c = (Class) item.getItemProperty(PROPERTY_ID_CLASS)
-                        .getValue();
+                final Class<?> c = (Class<?>) item.getItemProperty(
+                        PROPERTY_ID_CLASS).getValue();
                 final Component component = getComponent(c);
                 if (component != null) {
                     final String caption = (String) item.getItemProperty(
@@ -369,7 +373,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
 
     }
 
-    private Component getComponent(Class componentClass) {
+    private Component getComponent(Class<?> componentClass) {
         if (!exampleInstances.containsKey(componentClass)) {
             try {
                 final Component c = (Component) componentClass.newInstance();

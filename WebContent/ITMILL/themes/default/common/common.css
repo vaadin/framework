@@ -1,66 +1,18 @@
-/* body tag created by servlet */
 .i-generated-body {
 	background: #e9eced;
-	width: 100%;
-	height: 100%;
-	border: 0;
-	margin: 0;
-	overflow: hidden;
 }
-
 .i-app {
 	background: #e9eced;
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	color: #464f52;
 	font-size: 13px;
 	line-height: 18px;
-	height: 100%;
 }
-
 .i-app-loading {
 	background-image: url(img/loading-indicator.gif);
 	background-repeat: no-repeat;
 	background-position: 50%;
 }
-
-.i-view {
-	height: 100%;
-	width: 100%;
-	overflow: auto;
-	/* avoid scrollbars with margins in root layout */
-	outline: none;
-	margin-top: -1px;
-	border-top: 1px solid transparent;
-	position: relative;
-}
-
-/**
- * Try to cope printing somehow. Reasonable printing support 
- * needs application specific planning and CSS tuning.
- */
-@media print {
-	.i-generated-body {
-		height: auto;
-		min-height: 20cm;
-		overflow: visible;
-	}
-	.i-app {
-		height: auto;
-		min-height: 20cm;
-	}
-	.i-view {
-		overflow: visible;
-	}
-	.i-gridlayout {
-		overflow: visible !important;
-	}
-}
-
-.i-view:active,
-.i-view:focus {
-	outline: none;
-}
-
 /* Global font styles */
 .i-app input,
 .i-app select,
@@ -78,63 +30,11 @@
 	color: #464f52;
 	font-size: 13px;
 }
-
 .i-app select,
 .i-window select {
 	padding: 0;
-	margin: 0;
 }
-
-.i-disabled,
-.i-app .i-disabled,
-.i-window .i-disabled {
-	opacity: 0.3;
-	filter: Alpha(opacity = 30);
-	cursor: default;
-}
-
-.i-disabled *,
-.i-app .i-disabled *,
-.i-window .i-disabled * {
-	cursor: default;
-}
-
-* html .i-disabled {
-	zoom: 1;
-}
-
-*+html .i-disabled {
-	zoom: 1;
-}
-
-.i-disabled .i-disabled {
-	opacity: 1.0;
-}
-
-.i-required-field-indicator {
-	padding-left: 2px;
-	color: red;
-}
-
-/* Field modified */ /* Disabled by default
-input.i-modified,
-.i-richtextarea.i-modified iframe.gwt-RichTextArea,
-.i-checkbox.i-modified,
-.i-modified .i-select-option,
-.i-modified .i-textfield,
-.i-modified .i-datefield-calendarpanel,
-.i-modified .i-select-select,
-.i-modified .i-select-twincol-selections,
-.i-modified .i-select-twincol-options,
-.i-modified .i-slider-base {
-	background:transparent;
-	background-color: #FFFFE0;
-}
-*/
-
-/**
- * Custom tooltip
- */
+/* Custom tooltip */
 .i-tooltip {
 	background-color: #fffcdd;
 	border: 1px solid #b8b295;
@@ -144,17 +44,13 @@ input.i-modified,
 	line-height: 13px;
 	font-family: arial, helvetica, tahoma, verdana, sans-serif;
 	color: #5d5444;
-	cursor: default;
 }
-
 .i-tooltip-text {
 	padding: 2px 4px;
 	border: none;
 	border-top: 1px solid #fffef5;
 	border-bottom: 1px solid #fbf8d9;
-	overflow: auto;
 }
-
 .i-tooltip .i-errormessage {
 	padding: 3px 4px 3px 4px;
 	background: #ffecc6;
@@ -162,25 +58,18 @@ input.i-modified,
 	border: none;
 	border-top: 1px solid #fff3dc;
 	border-bottom: 1px solid #ead7b1;
-	overflow: auto;
 }
-
 .i-tooltip .i-errormessage h2 {
 	font-size: 16px;
 	font-weight: normal;
 	color: #ab3101;
 	margin: 2px 0 8px 0;
 }
-
 .i-tooltip .i-errormessage h3 {
 	font-size: 13px;
 	font-weight: bold;
 	margin: 1px 0 4px 0;
 }
-
-/**
- * Context menu styles 
- */
 .i-contextmenu {
 	background: #e9eced url(../tabsheet/img/tab-bg.png);
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
@@ -189,59 +78,25 @@ input.i-modified,
 	font-size: 12px;
 	line-height: 14px;
 }
-
 .i-contextmenu .gwt-MenuBar {
 	border-right: 1px solid #c6cbcc;
 	border-bottom: 1px solid #c6cbcc;
 	border-top: 1px solid #d0d4d5;
 	border-left: 1px solid #d0d4d5;
 }
-
 .i-contextmenu .gwt-MenuItem {
 	padding: 2px 0;
-	cursor: pointer;
-	vertical-align: middle;
 }
-
-.i-contextmenu .gwt-MenuItem div { /*border: 1px solid #f6f7f7;*/
+.i-contextmenu .gwt-MenuItem div {
 	padding: 1px 20px 1px 8px;
-	cursor: pointer;
-	vertical-align: middle;
-	white-space: nowrap;
 }
-
 .i-contextmenu .gwt-MenuItem-selected div {
 	color: #fff;
 	background: #5daee8;
 }
-
-.i-contextmenu table {
-	border-collapse: collapse;
-	margin: 0;
-	padding: 0;
-}
-
 .i-contextmenu .gwt-MenuItem img {
 	margin-right: 10px;
-	vertical-align: middle;
 }
-
-/**
- * Label has tiny paddings to include contents margins.
- */
-.i-label {
-	padding-top: 1px;
-	padding-bottom: 1px;
-}
-
-.i-label-undef-w {
-	white-space: nowrap;
-}
-
-/* Loading indicator states
- * Note: client side expects that loading indicator has a height. It depends on
- * this css property to ensure browsers have applied all required styles.
- */
 .i-loading-indicator,
 .i-loading-indicator-delay,
 .i-loading-indicator-wait {
@@ -249,58 +104,9 @@ input.i-modified,
 	height: 31px;
 	background: transparent url(img/loading-indicator.gif);
 }
-
 .i-loading-indicator-delay {
-	background: transparent url(img/loading-indicator-delay.gif);
+	background-image: url(img/loading-indicator-delay.gif);
 }
-
 .i-loading-indicator-wait {
-	background: transparent url(img/loading-indicator-wait.gif);
-}
-.i-loading-indicator,
-.i-loading-indicator-delay,
-.i-loading-indicator-wait {
-	position: absolute;
-	top:6px;
-	right: 5px;	
-	z-index:30000;
-}
-
-/* debug dialog */
-.i-debug-console {
-	background: white;
-	opacity: 0.85;
-	border: 1px solid black;
-	font-family: sans-serif;
-}
-
-.i-debug-console-caption {
-	background: black;
-	border-bottom: 1px solid grey;
-	color: white;
-	font-weight: bold;
-}
-
-.i-debug-console-content {
-	font-size: x-small;
-	overflow: auto;
-}
-
-.i-debug-console-content input {
-	font-size: xx-small;
-}
-
-/* Debug style */
-.i-app .invalidlayout,
-.i-app .invalidlayout * {
-	background: #f99 !important;
-}
-
-/* Fix for liferay. #2384 */
-.i-app input[type="text"],
-.i-app input[type="password"],
-.i-app input[type="reset"],
-.i-app select,
-.i-app textarea {
-	padding: 2px;
+	background-image: url(img/loading-indicator-wait.gif);
 }

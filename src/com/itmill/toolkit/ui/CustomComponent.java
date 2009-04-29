@@ -4,6 +4,7 @@
 
 package com.itmill.toolkit.ui;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
 import com.itmill.toolkit.terminal.PaintException;
@@ -23,6 +24,7 @@ import com.itmill.toolkit.terminal.PaintTarget;
  * @VERSION@
  * @since 3.0
  */
+@SuppressWarnings("serial")
 public class CustomComponent extends AbstractComponentContainer {
 
     /**
@@ -146,23 +148,26 @@ public class CustomComponent extends AbstractComponentContainer {
         return "customcomponent";
     }
 
+    private class ComponentIterator implements Iterator, Serializable {
+        boolean first = getCompositionRoot() != null;
+
+        public boolean hasNext() {
+            return first;
+        }
+
+        public Object next() {
+            first = false;
+            return root;
+        }
+
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
     public Iterator getComponentIterator() {
-        return new Iterator() {
-            boolean first = getCompositionRoot() != null;
-
-            public boolean hasNext() {
-                return first;
-            }
-
-            public Object next() {
-                first = false;
-                return root;
-            }
-
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        };
+        return new ComponentIterator();
     }
 
     /**

@@ -5,6 +5,7 @@
 package com.itmill.toolkit.terminal;
 
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -17,7 +18,8 @@ import java.util.Map;
  * @VERSION@
  * @since 3.0
  */
-public class DownloadStream {
+@SuppressWarnings("serial")
+public class DownloadStream implements Serializable {
 
     /**
      * Maximum cache time.

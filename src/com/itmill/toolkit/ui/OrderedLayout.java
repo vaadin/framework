@@ -18,6 +18,7 @@ import com.itmill.toolkit.terminal.PaintTarget;
  *             OrderedLayout but AbstractOrderedLayout (which also OrderedLayout
  *             extends).
  */
+@SuppressWarnings("serial")
 @Deprecated
 public class OrderedLayout extends AbstractOrderedLayout {
     /* Predefined orientations */

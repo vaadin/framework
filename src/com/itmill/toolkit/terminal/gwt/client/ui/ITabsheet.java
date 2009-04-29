@@ -124,6 +124,14 @@ public class ITabsheet extends ITabsheetBase {
              */
 
             DOM.removeChild(tr, td);
+
+            /*
+             * If this widget was selected we need to unmark it as the last
+             * selected
+             */
+            if (w == oldSelected) {
+                oldSelected = null;
+            }
         }
 
         @Override

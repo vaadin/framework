@@ -104,7 +104,7 @@ public class IWindow extends IToolkitOverlay implements Container,
     /** Last known positiony read from UIDL or updated to application connection */
     private int uidlPositionY = -1;
 
-    private boolean modal = false;
+    private boolean vaadinModality = false;
 
     private boolean resizable = true;
 
@@ -175,7 +175,7 @@ public class IWindow extends IToolkitOverlay implements Container,
     @Override
     protected void setZIndex(int zIndex) {
         super.setZIndex(zIndex);
-        if (modal) {
+        if (vaadinModality) {
             DOM.setStyleAttribute(modalityCurtain, "zIndex", "" + zIndex);
         }
     }
@@ -239,8 +239,8 @@ public class IWindow extends IToolkitOverlay implements Container,
         }
 
         if (!uidl.hasAttribute("cached")) {
-            if (uidl.getBooleanAttribute("modal") != modal) {
-                setModal(!modal);
+            if (uidl.getBooleanAttribute("modal") != vaadinModality) {
+                setVaadinModality(!vaadinModality);
             }
             if (!isAttached()) {
                 show();
@@ -485,7 +485,7 @@ public class IWindow extends IToolkitOverlay implements Container,
 
     @Override
     public void show() {
-        if (modal) {
+        if (vaadinModality) {
             showModalityCurtain();
         }
         super.show();
@@ -529,15 +529,15 @@ public class IWindow extends IToolkitOverlay implements Container,
 
     @Override
     public void hide() {
-        if (modal) {
+        if (vaadinModality) {
             hideModalityCurtain();
         }
         super.hide();
     }
 
-    private void setModal(boolean modality) {
-        modal = modality;
-        if (modal) {
+    private void setVaadinModality(boolean modality) {
+        vaadinModality = modality;
+        if (vaadinModality) {
             modalityCurtain = DOM.createDiv();
             DOM.setElementProperty(modalityCurtain, "className", CLASSNAME
                     + "-modalitycurtain");
@@ -547,7 +547,7 @@ public class IWindow extends IToolkitOverlay implements Container,
             } else {
                 DeferredCommand.addCommand(new Command() {
                     public void execute() {
-                        // modal window must on top of others
+                        // vaadinModality window must on top of others
                         bringToFront();
                     }
                 });
@@ -900,7 +900,7 @@ public class IWindow extends IToolkitOverlay implements Container,
         } else if (resizing) {
             onResizeEvent(event);
             return false;
-        } else if (modal) {
+        } else if (vaadinModality) {
             // return false when modal and outside window
             final Element target = event.getTarget().cast();
             if (!DOM.isOrHasChild(getElement(), target)) {

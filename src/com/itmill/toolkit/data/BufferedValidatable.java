@@ -4,6 +4,8 @@
 
 package com.itmill.toolkit.data;
 
+import java.io.Serializable;
+
 /**
  * <p>
  * This interface defines the combination of <code>Validatable</code> and
@@ -16,7 +18,8 @@ package com.itmill.toolkit.data;
  * @VERSION@
  * @since 3.0
  */
-public interface BufferedValidatable extends Buffered, Validatable {
+public interface BufferedValidatable extends Buffered, Validatable,
+        Serializable {
 
     /**
      * Tests if the invalid data is committed to datasource. The default is

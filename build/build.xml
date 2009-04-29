@@ -186,9 +186,6 @@
 
         <echo>Toolkit package is: ${toolkit-package}</echo>
 
-		<!-- Can run XEP only if license is available. -->
-		<available file="build/lib/XEP/license.xml" property="xep.license.available" />
-
 		<!-- Create result dir unless already exists -->
 		<mkdir dir="${result-path}" />
 
@@ -734,6 +731,11 @@
 		<echo>TEST TARGET CALLED</echo>
 	</target>
 
+	<target name="remove-widgetset-gwt-tmp">
+		<echo>Removing widgetset temp files</echo>
+		<delete dir="${output-dir}/WebContent/ITMILL/widgetsets/.gwt-tmp" includeemptydirs="true"/>
+	</target>
+
 	<target name="compile-widgetset-default">
 		<echo>Compiling src (client-side)</echo>
 		<echo>com.itmill.toolkit.terminal.gwt.DefaultWidgetSet</echo>
@@ -751,6 +753,7 @@
 				<pathelement location="${result-path}/src" />
 			</classpath>
 		</java>
+		<antcall target="remove-widgetset-gwt-tmp"/>
 		<echo>Compiled DefaultWidgetSet</echo>
 	</target>
 
@@ -780,6 +783,7 @@
 				<pathelement path="${output-dir}/WebContent/WEB-INF/src" />
 			</classpath>
 		</java>
+		<antcall target="remove-widgetset-gwt-tmp"/>
 		<echo>Compiled ReservationWidgetSet</echo>
 	</target>
 
@@ -802,6 +806,7 @@
 				<pathelement path="${output-dir}/WebContent/WEB-INF/src" />
 			</classpath>
 		</java>
+		<antcall target="remove-widgetset-gwt-tmp"/>
 		<echo>Compiled SamplerWidgetSet</echo>
 	</target>
 	
@@ -823,7 +828,8 @@
 				<pathelement path="${output-dir}/WebContent/WEB-INF/src" />
 			</classpath>
 		</java>
-		<echo>Compiled SamplerWidgetSet</echo>
+		<antcall target="remove-widgetset-gwt-tmp"/>
+		<echo>Compiled CoverflowWidgetSet</echo>
 	</target>
 	
 	<target name="compile-widgetset-colorpicker">
@@ -844,6 +850,7 @@
 				<pathelement path="${output-dir}/WebContent/WEB-INF/src" />
 			</classpath>
 		</java>
+		<antcall target="remove-widgetset-gwt-tmp"/>
 		<echo>Compiled ColorPickerWidgetSet</echo>
 	</target>
 
@@ -965,6 +972,18 @@
     <!-- Manual: Build from external repository.                            -->
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
 
+    <target name="manual-init">
+		<!-- Can run XEP only if license is available. -->
+		<available file="build/lib/XEP/license.xml" property="xep.license.available" />
+
+        <!-- Path to installed XEP license. -->
+        <property name="xep.license.path.installed" value="/opt/RenderX/XEP/license.xml"/>
+        <echo>XEP license expected to be installed as ${xep.license.path.installed}</echo>
+
+		<!-- Can copy XEP license only if it is available. -->
+		<available file="${xep.license.path.installed}" property="xep.license.installed"/>
+    </target>
+
     <!-- Checkout doc repository. -->
     <target name="manual-checkout" unless="docdir">
         <mkdir dir="${checkout-path}"/>
@@ -976,13 +995,15 @@
         </exec>
 
         <property name="docdir" value="${checkout-path}/doc"/>
+    </target>
 
-        <!-- If we have a XEP license, copy it to proper place. -->
-        <copy file="/opt/RenderX/XEP/license.xml" todir="${docdir}/build/lib/XEP"/>
+    <!-- If the XEP is installed, copy it to proper place. -->
+    <target name="xep-license-copy" if="xep.license.installed">
+        <copy file="${xep.license.path.installed}" todir="${docdir}/build/lib/XEP"/>
     </target>
 
     <!-- Build manual. -->
-    <target name="manual-build">
+    <target name="manual-build" depends="xep-license-copy">
       <ant dir="${docdir}" antfile="build/build.xml" inheritAll="false">
           <property name="version" value="${version}"/>
       </ant>
@@ -999,7 +1020,7 @@
         </copy>
     </target>
 
-	<target name="manual" depends="init, manual-checkout, manual-build, manual-copy">
+	<target name="manual" depends="init, manual-init, manual-checkout, manual-build, manual-copy">
     </target>        
 
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
@@ -1110,7 +1131,7 @@
         <echo>Installing ${output-dir}/WebContent/${lib-jar-name} to ${nightly.publish}</echo>
         <echo>Hopefully you have permissions for the copy operation with SSH.</echo>
 
-        <!-- The test task will need this. -->
+        <!-- Only Linux tests allowed. TODO: Generalize this. -->
         <property name="package.linux.filename" value="${result-path}/${product-file}-${package-platform}-${version}.tar.gz"/>
 
         <!-- Copy the linux installation package and the JAR. -->
@@ -1127,15 +1148,36 @@
     <target name="nightly-install" depends="nightly-teamcity-publish, nightly-download-publish">
     </target>
 
-    <target name="testingtools-test">
-      <!-- Run the separate test script. -->
-      <ant antfile="build/testing/test.xml" inheritall="true">
-      </ant>
-    </target>
-
     <!-- ================================================================== -->
     <!-- Automated tests.                                                   -->
     <!-- ================================================================== -->
+
+    <target name="tests" depends="ant-tests, testingtools-tests">
+    </target>
+
+    <target name="testingtools-tests" depends="init">
+      <fail unless="product-file" message="The 'product-file' property must be defined."/>
+      <fail unless="package-platform" message="The 'package-platform' property must be defined."/>
+      <fail unless="version" message="The 'version' property must be defined."/>
+
+      <!-- Parameters for the test.xml script. -->
+      <fail unless="testingtools.tester.host" message="The 'testingtools.tester.host' property must be defined."/>
+      <fail unless="testingtools.deployment.url" message="The 'testingtools.deployment.url' property must be defined."/>
+
+      <property name="package.platform.name" value="${product-file}-${package-platform}-${version}"/>
+
+      <!-- Only Linux tests allowed. TODO: Generalize this. -->
+      <property name="package.linux.filename" value="${result-path}/${package.platform.name}.tar.gz"/>
+
+      <!-- Run the separate test script. -->
+      <ant antfile="tests/test.xml" target="test-package" inheritall="false" inheritrefs="true">
+          <property name="package.filename" value="${package.linux.filename}"/>
+          <property name="testing.testarea" value="/tmp/testarea"/>
+          <property name="package.name" value="${package.platform.name}"/>
+          <property name="testingtools.tester.host" value="${testingtools.tester.host}"/>
+          <property name="testingtools.deployment.url" value="${testingtools.deployment.url}"/>
+      </ant>
+    </target>
 
     <target name="ant-tests">
         <echo>##teamcity[testSuiteStarted name='com.itmill.toolkit.tests.test-framework']</echo>

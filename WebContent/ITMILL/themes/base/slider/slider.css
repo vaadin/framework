@@ -1,24 +1,17 @@
-/*--------------------------
-  Default (horizontal) styles
-  --------------------------*/
-
 .i-slider {
-	height: 12px;
-	width: 200px;
-	margin: 5px 0;	
+	margin: 5px 0;
 }
-
 .i-slider-base {
-	/* changing the borders will require adjustments to ISlider.java (offsetHeight should be 3px, 1px borders on the sides) */
-	height: 3px;
-	background: #efefef;
-	border-left: 1px solid #eee;
+	/* changing the borders will require adjustments to ISlider.java */
+	height: 2px;
+	border-top: 1px solid #ddd;
+	background: #eee;
+	border-left: 1px solid #ddd;
 	border-right: 1px solid #eee;
 	
 }
-
 .i-slider-handle {
-	background: #ddd;
+	background: #aaa;
 	width: 12px;
 	height: 12px;
 	margin-top: -5px;
@@ -26,31 +19,20 @@
 	cursor: pointer;
 }
 
-
-/*-----------------
-  Vertical styles 
-  -----------------*/
-
 .i-slider-vertical {
-	width: 3px;
+	width: 2px;
 	height: auto;
 	margin: 0 5px;
 	border: none;
-	border-left: 1px solid #eee;
-	border-right: 1px solid #eee;
+	border-left: 1px solid #cccfd0;
+	border-right: 1px solid #cccfd0;
 }
-
 .i-slider-vertical .i-slider-base {
-	width: 3px;
-	border-left: none;
+	width: 2px;
+	border-bottom: 1px solid #eee;
 	border-right: none;
-	background: #efefef;
-	border-top: 1px solid #eee;
-	border-bottom: 1px solid #eee;	
 }
-
 .i-slider-vertical .i-slider-handle {
-	background: #ddd;
 	width: 12px;
 	height: 12px;
 	font-size: 0;
@@ -58,18 +40,25 @@
 	margin-left: -5px;
 }
 
+/* Disabled by default
+.i-slider-error .i-slider-base {
+	background: #FFE0E0;
+}
+*/
+/* Disabled by default
+.i-slider-required .i-slider-base {
+	background: #FFE0E0;
+}
+*/
 
 /* IE specific styles */
-
 .i-ie6 .i-slider,
 .i-ie6 .i-slider-vertical {
 	margin: 0;
 }
-
 .i-ie6 .i-slider .i-slider-handle {
 	margin: -1px 0;
 }
-
 .i-ie6 .i-slider-vertical .i-slider-handle {
 	margin: 0 -1px;
 }

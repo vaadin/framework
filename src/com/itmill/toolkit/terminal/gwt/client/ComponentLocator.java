@@ -10,12 +10,21 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IView;
 import com.itmill.toolkit.terminal.gwt.client.ui.SubPartAware;
 
 /**
- * Helper class for TestingTools that builds appropriate locators for browser
- * bot.
+ * ComponentLocator provides methods for uniquely identifying DOM elements using
+ * string expressions. This class is EXPERIMENTAL and subject to change.
  */
 public class ComponentLocator {
 
+    /**
+     * Separator used in the string expression between a parent and a child
+     * widget.
+     */
     private static final String PARENTCHILD_SEPARATOR = "/";
+
+    /**
+     * Separator used in the string expression between a widget and the widget's
+     * sub part. NOT CURRENTLY IN USE.
+     */
     private static final String SUBPART_SEPARATOR = "#";
 
     private ApplicationConnection client;
@@ -24,6 +33,19 @@ public class ComponentLocator {
         this.client = client;
     }
 
+    /**
+     * EXPERIMENTAL.
+     * 
+     * Generates a string expression (path) which uniquely identifies the target
+     * element . The getElementByPath method can be used for the inverse
+     * operation, i.e. locating an element based on the string expression.
+     * 
+     * @since 5.4
+     * @param targetElement
+     *            The element to generate a path for.
+     * @return A string expression uniquely identifying the target element or
+     *         null if a string expression could not be created.
+     */
     public String getPathForElement(Element targetElement) {
         String pid = null;
 
@@ -130,6 +152,21 @@ public class ComponentLocator {
         return path;
     }
 
+    /**
+     * EXPERIMENTAL.
+     * 
+     * Locates an element by using a string expression (path) which uniquely
+     * identifies the element. The getPathForElement method can be used for the
+     * inverse operation, i.e. generating a string expression for a target
+     * element.
+     * 
+     * @since 5.4
+     * @param path
+     *            The string expression which uniquely identifies the target
+     *            element.
+     * @return The DOM element identified by the path or null if the element
+     *         could not be located.
+     */
     public Element getElementByPath(String path) {
         // ApplicationConnection.getConsole()
         // .log("getElementByPath(" + path + ")");
@@ -169,6 +206,10 @@ public class ComponentLocator {
     }
 
     private String getPathForWidget(Widget w) {
+        if (w == null) {
+            return "";
+        }
+
         String pid = client.getPid(w.getElement());
         if (isStaticPid(pid)) {
             return pid;

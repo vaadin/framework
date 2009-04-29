@@ -4,6 +4,8 @@
 
 package com.itmill.toolkit.event;
 
+import java.io.Serializable;
+
 import com.itmill.toolkit.terminal.Resource;
 
 /**
@@ -13,6 +15,7 @@ import com.itmill.toolkit.terminal.Resource;
  * @version
  * @since 4.0.1
  */
+@SuppressWarnings("serial")
 public class ShortcutAction extends Action {
 
     private final int keyCode;
@@ -43,7 +46,7 @@ public class ShortcutAction extends Action {
      * Key codes that can be used for shortcuts
      * 
      */
-    public interface KeyCode {
+    public interface KeyCode extends Serializable {
         public static final int ENTER = 13;
 
         public static final int ESCAPE = 27;
@@ -167,13 +170,15 @@ public class ShortcutAction extends Action {
         public static final int NUM8 = 56;
 
         public static final int NUM9 = 57;
+
+        public static final int SPACEBAR = 32;
     }
 
     /**
      * Modifier key constants
      * 
      */
-    public interface ModifierKey {
+    public interface ModifierKey extends Serializable {
         public static final int SHIFT = 16;
 
         public static final int CTRL = 17;

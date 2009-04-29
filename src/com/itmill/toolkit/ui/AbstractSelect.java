@@ -4,6 +4,7 @@
 
 package com.itmill.toolkit.ui;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -41,6 +42,7 @@ import com.itmill.toolkit.terminal.Resource;
  * @VERSION@
  * @since 5.0
  */
+@SuppressWarnings("serial")
 public abstract class AbstractSelect extends AbstractField implements
         Container, Container.Viewer, Container.PropertySetChangeListener,
         Container.PropertySetChangeNotifier, Container.ItemSetChangeNotifier,
@@ -90,7 +92,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * caption. <code>FILTERINGMODE_CONTAINS</code> (1) matches anywhere in the
      * caption.
      */
-    public interface Filtering {
+    public interface Filtering extends Serializable {
         public static final int FILTERINGMODE_OFF = 0;
         public static final int FILTERINGMODE_STARTSWITH = 1;
         public static final int FILTERINGMODE_CONTAINS = 2;
@@ -459,7 +461,7 @@ public abstract class AbstractSelect extends AbstractField implements
         return newItemHandler;
     }
 
-    public interface NewItemHandler {
+    public interface NewItemHandler extends Serializable {
         void addNewItem(String newItemCaption);
     }
 
@@ -1464,7 +1466,8 @@ public abstract class AbstractSelect extends AbstractField implements
     /**
      * Implementation of item set change event.
      */
-    private class ItemSetChangeEvent implements Container.ItemSetChangeEvent {
+    private class ItemSetChangeEvent implements Serializable,
+            Container.ItemSetChangeEvent {
 
         /**
          * Gets the Property where the event occurred.
@@ -1481,7 +1484,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * Implementation of property set change event.
      */
     private class PropertySetChangeEvent implements
-            Container.PropertySetChangeEvent {
+            Container.PropertySetChangeEvent, Serializable {
 
         /**
          * Retrieves the Container whose contents have been modified.

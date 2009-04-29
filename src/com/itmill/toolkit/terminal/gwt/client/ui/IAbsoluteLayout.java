@@ -32,7 +32,7 @@ public class IAbsoluteLayout extends ComplexPanel implements Container {
 
     private DivElement marginElement;
 
-    private Element canvas;
+    protected final Element canvas = DOM.createDiv();
 
     private int excessPixelsHorizontal;
 
@@ -42,7 +42,7 @@ public class IAbsoluteLayout extends ComplexPanel implements Container {
 
     private Map<String, AbsoluteWrapper> pidToComponentWrappper = new HashMap<String, AbsoluteWrapper>();
 
-    private ApplicationConnection client;
+    protected ApplicationConnection client;
 
     private boolean rendering;
 
@@ -50,7 +50,6 @@ public class IAbsoluteLayout extends ComplexPanel implements Container {
         setElement(Document.get().createDivElement());
         setStyleName(CLASSNAME);
         marginElement = Document.get().createDivElement();
-        canvas = DOM.createDiv();
         canvas.getStyle().setProperty("position", "relative");
         marginElement.appendChild(canvas);
         getElement().appendChild(marginElement);
@@ -180,8 +179,20 @@ public class IAbsoluteLayout extends ComplexPanel implements Container {
         // inside marginals)
         canvas.getStyle().setProperty("width", width);
 
-        if (!rendering && BrowserInfo.get().isIE6()) {
-            relayoutWrappersForIe6();
+        if (!rendering) {
+            if (BrowserInfo.get().isIE6()) {
+                relayoutWrappersForIe6();
+            }
+            relayoutRelativeChildren();
+        }
+    }
+
+    private void relayoutRelativeChildren() {
+        for (Widget widget : getChildren()) {
+            if (widget instanceof Paintable) {
+                Paintable new_name = (Paintable) widget;
+                client.handleComponentRelativeSize(widget);
+            }
         }
     }
 
@@ -192,8 +203,11 @@ public class IAbsoluteLayout extends ComplexPanel implements Container {
         // inside marginals)
         canvas.getStyle().setProperty("height", height);
 
-        if (!rendering && BrowserInfo.get().isIE6()) {
-            relayoutWrappersForIe6();
+        if (!rendering) {
+            if (BrowserInfo.get().isIE6()) {
+                relayoutWrappersForIe6();
+            }
+            relayoutRelativeChildren();
         }
     }
 
@@ -228,7 +242,14 @@ public class IAbsoluteLayout extends ComplexPanel implements Container {
             if (getWidget() != paintable) {
                 setWidget((Widget) paintable);
             }
-            paintable.updateFromUIDL(componentUIDL.getChildUIDL(0), client);
+            UIDL childUIDL = componentUIDL.getChildUIDL(0);
+            paintable.updateFromUIDL(childUIDL, client);
+            if (childUIDL.hasAttribute("cached")) {
+                // child may need relative size adjustment if wrapper details
+                // have changed this could be optimized (check if wrapper size
+                // has changed)
+                client.handleComponentRelativeSize((Widget) paintable);
+            }
         }
 
         public void setPosition(String stringAttribute) {

@@ -1,9 +1,10 @@
 package com.itmill.toolkit.ui;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
 
 import com.itmill.toolkit.terminal.PaintException;
@@ -15,9 +16,10 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IAbsoluteLayout;
  * positioning.
  * 
  */
+@SuppressWarnings("serial")
 public class AbsoluteLayout extends AbstractLayout {
 
-    private Collection<Component> components = new HashSet<Component>();
+    private Collection<Component> components = new LinkedHashSet<Component>();
     private Map<Component, ComponentPosition> componentToCoordinates = new HashMap<Component, ComponentPosition>();
 
     public AbsoluteLayout() {
@@ -72,13 +74,13 @@ public class AbsoluteLayout extends AbstractLayout {
      * in generic java tools
      * 
      */
-    public class ComponentPosition {
+    public class ComponentPosition implements Serializable {
 
         private int zIndex = -1;
-        private float top = -1;
-        private float right = -1;
-        private float bottom = -1;
-        private float left = -1;
+        private float topValue = -1;
+        private float rightValue = -1;
+        private float bottomValue = -1;
+        private float leftValue = -1;
 
         private int topUnits;
         private int rightUnits;
@@ -99,10 +101,18 @@ public class AbsoluteLayout extends AbstractLayout {
             for (int i = 0; i < cssProperties.length; i++) {
                 String[] keyValuePair = cssProperties[i].split(":");
                 String key = keyValuePair[0].trim();
+                if (key.equals("")) {
+                    continue;
+                }
                 if (key.equals("z-index")) {
                     zIndex = Integer.parseInt(keyValuePair[1]);
                 } else {
-                    String value = keyValuePair[1].trim();
+                    String value;
+                    if (keyValuePair.length > 1) {
+                        value = keyValuePair[1].trim();
+                    } else {
+                        value = "";
+                    }
                     String unit = value.replaceAll("[0-9\\.]+", "");
                     if (!unit.equals("")) {
                         value = value.substring(0, value.indexOf(unit)).trim();
@@ -110,16 +120,16 @@ public class AbsoluteLayout extends AbstractLayout {
                     float v = Float.parseFloat(value);
                     int unitInt = parseCssUnit(unit);
                     if (key.equals("top")) {
-                        top = v;
+                        topValue = v;
                         topUnits = unitInt;
                     } else if (key.equals("right")) {
-                        right = v;
+                        rightValue = v;
                         rightUnits = unitInt;
                     } else if (key.equals("bottom")) {
-                        bottom = v;
+                        bottomValue = v;
                         bottomUnits = unitInt;
                     } else if (key.equals("left")) {
-                        left = v;
+                        leftValue = v;
                         leftUnits = unitInt;
                     }
                 }
@@ -138,17 +148,17 @@ public class AbsoluteLayout extends AbstractLayout {
 
         public String getCSSString() {
             String s = "";
-            if (top >= 0) {
-                s += "top:" + top + UNIT_SYMBOLS[topUnits] + ";";
+            if (topValue >= 0) {
+                s += "top:" + topValue + UNIT_SYMBOLS[topUnits] + ";";
             }
-            if (right >= 0) {
-                s += "right:" + right + UNIT_SYMBOLS[rightUnits] + ";";
+            if (rightValue >= 0) {
+                s += "right:" + rightValue + UNIT_SYMBOLS[rightUnits] + ";";
             }
-            if (bottom >= 0) {
-                s += "bottom:" + bottom + UNIT_SYMBOLS[bottomUnits] + ";";
+            if (bottomValue >= 0) {
+                s += "bottom:" + bottomValue + UNIT_SYMBOLS[bottomUnits] + ";";
             }
-            if (left >= 0) {
-                s += "left:" + left + UNIT_SYMBOLS[leftUnits] + ";";
+            if (leftValue >= 0) {
+                s += "left:" + leftValue + UNIT_SYMBOLS[leftUnits] + ";";
             }
             if (zIndex >= 0) {
                 s += "z-index:" + zIndex + ";";
@@ -158,28 +168,28 @@ public class AbsoluteLayout extends AbstractLayout {
 
         public void setTop(float topValue, int topUnits) {
             validateLength(topValue, topUnits);
-            top = topValue;
+            this.topValue = topValue;
             this.topUnits = topUnits;
             requestRepaint();
         }
 
         public void setRight(float rightValue, int rightUnits) {
             validateLength(rightValue, rightUnits);
-            right = rightValue;
+            this.rightValue = rightValue;
             this.rightUnits = rightUnits;
             requestRepaint();
         }
 
         public void setBottom(float bottomValue, int units) {
             validateLength(bottomValue, units);
-            bottom = bottomValue;
+            this.bottomValue = bottomValue;
             bottomUnits = units;
             requestRepaint();
         }
 
         public void setLeft(float leftValue, int units) {
             validateLength(leftValue, units);
-            left = leftValue;
+            this.leftValue = leftValue;
             leftUnits = units;
             requestRepaint();
         }
@@ -187,6 +197,142 @@ public class AbsoluteLayout extends AbstractLayout {
         public void setZIndex(int zIndex) {
             this.zIndex = zIndex;
             requestRepaint();
+        }
+
+        public void setTopValue(float topValue) {
+            validateLength(topValue, topUnits);
+            this.topValue = topValue;
+            requestRepaint();
+        }
+
+        public float getTopValue() {
+            return topValue;
+        }
+
+        /**
+         * @return the rightValue
+         */
+        public float getRightValue() {
+            return rightValue;
+        }
+
+        /**
+         * @param rightValue
+         *            the rightValue to set
+         */
+        public void setRightValue(float rightValue) {
+            validateLength(rightValue, rightUnits);
+            this.rightValue = rightValue;
+            requestRepaint();
+        }
+
+        /**
+         * @return the bottomValue
+         */
+        public float getBottomValue() {
+            return bottomValue;
+        }
+
+        /**
+         * @param bottomValue
+         *            the bottomValue to set
+         */
+        public void setBottomValue(float bottomValue) {
+            validateLength(bottomValue, bottomUnits);
+            this.bottomValue = bottomValue;
+            requestRepaint();
+        }
+
+        /**
+         * @return the leftValue
+         */
+        public float getLeftValue() {
+            return leftValue;
+        }
+
+        /**
+         * @param leftValue
+         *            the leftValue to set
+         */
+        public void setLeftValue(float leftValue) {
+            validateLength(leftValue, leftUnits);
+            this.leftValue = leftValue;
+            requestRepaint();
+        }
+
+        /**
+         * @return the topUnits
+         */
+        public int getTopUnits() {
+            return topUnits;
+        }
+
+        /**
+         * @param topUnits
+         *            the topUnits to set
+         */
+        public void setTopUnits(int topUnits) {
+            validateLength(topValue, topUnits);
+            this.topUnits = topUnits;
+            requestRepaint();
+        }
+
+        /**
+         * @return the rightUnits
+         */
+        public int getRightUnits() {
+            return rightUnits;
+        }
+
+        /**
+         * @param rightUnits
+         *            the rightUnits to set
+         */
+        public void setRightUnits(int rightUnits) {
+            validateLength(rightValue, rightUnits);
+            this.rightUnits = rightUnits;
+            requestRepaint();
+        }
+
+        /**
+         * @return the bottomUnits
+         */
+        public int getBottomUnits() {
+            return bottomUnits;
+        }
+
+        /**
+         * @param bottomUnits
+         *            the bottomUnits to set
+         */
+        public void setBottomUnits(int bottomUnits) {
+            validateLength(bottomValue, bottomUnits);
+            this.bottomUnits = bottomUnits;
+            requestRepaint();
+        }
+
+        /**
+         * @return the leftUnits
+         */
+        public int getLeftUnits() {
+            return leftUnits;
+        }
+
+        /**
+         * @param leftUnits
+         *            the leftUnits to set
+         */
+        public void setLeftUnits(int leftUnits) {
+            validateLength(leftValue, leftUnits);
+            this.leftUnits = leftUnits;
+            requestRepaint();
+        }
+
+        /**
+         * @return the zIndex
+         */
+        public int getZIndex() {
+            return zIndex;
         }
 
     }

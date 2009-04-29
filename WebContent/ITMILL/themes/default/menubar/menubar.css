@@ -1,56 +1,32 @@
-/*
- *MenuBar styles
- */
- 
-/*Top menu */
-.i-menubar table {
-	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
-
-	border-style:ridge;
-	border-width:thin;
-	border-color:	#D3D3D3;
-
- 	background-color : white;
- 	white-space: nowrap;
- 
+.i-menubar {
+	color: #464f52;
+	border: 1px solid #c6cbcc;
+	border-right: none;
 }
-
-.i-menubar .menuitem{
-	 cursor : default;
-	
-	 padding : 0px 10px;
-	 margin : 0px 10px;
-	
-	 background-color : white;
- }
-
+.i-menubar .menuitem {
+	padding: 0 10px;
+	margin: 0 10px;
+	border-right: 1px solid #c6cbcc;
+}
 .i-menubar .menuitem-selected {
-	 background-color : 	#EEEEFF;
- }
-
-/*Submenu*/
+	color: #fff;
+	background: #5daee8;
+}
 .i-menubar-submenu {
-	 font-size: 13px;
-	 padding : 3px;
-	 
-	 font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
-	 background-color : white;
-	 white-space: nowrap;
-		
-	 border-style:ridge;
-	 border-width:thin;
-	 border-color:	#D3D3D3;
-	 
-
+	background: #e9eced url(../tabsheet/img/tab-bg.png);
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+	color: #464f52;
+	font-size: 12px;
+	line-height: 14px;
+	border-right: 1px solid #c6cbcc;
+	border-bottom: 1px solid #c6cbcc;
+	border-top: 1px solid #d0d4d5;
+	border-left: 1px solid #d0d4d5;
 }
-
-.i-menubar-submenu .menuitem { 
-    cursor                      :   default;
-
-    background-color            :   white;
-    padding                     :   2px 10px;
+.i-menubar-submenu .menuitem {
+	padding: 2px 10px;
 }
-
 .i-menubar-submenu .menuitem-selected {
-	background-color : 	#EEEEFF;
+	color: #fff;
+	background: #5daee8;
 }

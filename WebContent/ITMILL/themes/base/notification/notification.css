@@ -15,26 +15,21 @@
 	white-space: nowrap;
 	margin: 0 0.5em 0 0;
 }
-
 .i-Notification.warning {
 	background: orange;
 }
-
 .i-Notification.error {
 	background: red;
 }
-
-
 .i-Notification.tray h1 {
 	display: block;
 }
 .i-Notification.tray p {
 	display: block;
 }
-
 .i-Notification.system {
 	background-color: red;
-	opacity: 0.7;
+	opacity: .7;
 	filter: alpha(opacity=70);
 }
 .i-Notification.system h1 {

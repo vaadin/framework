@@ -4,6 +4,8 @@
 
 package com.itmill.toolkit.terminal;
 
+import java.io.Serializable;
+
 import com.itmill.toolkit.Application;
 
 /**
@@ -21,7 +23,7 @@ import com.itmill.toolkit.Application;
  * @VERSION@
  * @since 3.0
  */
-public interface ApplicationResource extends Resource {
+public interface ApplicationResource extends Resource, Serializable {
 
     /**
      * Default cache time.

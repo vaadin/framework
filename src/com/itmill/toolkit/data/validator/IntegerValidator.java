@@ -10,6 +10,7 @@ package com.itmill.toolkit.data.validator;
  * @VERSION@
  * @since 5.4
  */
+@SuppressWarnings("serial")
 public class IntegerValidator extends AbstractStringValidator {
 
     /**

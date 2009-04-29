@@ -15,6 +15,7 @@ import com.itmill.toolkit.data.Validator;
  * @VERSION@
  * @since 5.4
  */
+@SuppressWarnings("serial")
 public abstract class AbstractValidator implements Validator {
 
     /**

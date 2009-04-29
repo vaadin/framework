@@ -4,6 +4,8 @@
 
 package com.itmill.toolkit.ui;
 
+import java.io.Serializable;
+
 import com.itmill.toolkit.terminal.gwt.client.ui.IMarginInfo;
 import com.itmill.toolkit.terminal.gwt.client.ui.AlignmentInfo.Bits;
 
@@ -18,7 +20,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.AlignmentInfo.Bits;
  * @VERSION@
  * @since 3.0
  */
-public interface Layout extends ComponentContainer {
+public interface Layout extends ComponentContainer, Serializable {
 
     /**
      * Enable layout margins. Affects all four sides of the layout. This will
@@ -48,7 +50,7 @@ public interface Layout extends ComponentContainer {
      * AlignmentHandler is most commonly an advanced {@link Layout} that can
      * align its components.
      */
-    public interface AlignmentHandler {
+    public interface AlignmentHandler extends Serializable {
 
         /**
          * Contained component should be aligned horizontally to the left.
@@ -149,7 +151,7 @@ public interface Layout extends ComponentContainer {
      * components.
      * 
      */
-    public interface SpacingHandler {
+    public interface SpacingHandler extends Serializable {
         /**
          * Enable spacing between child components within this layout.
          * 
@@ -184,7 +186,7 @@ public interface Layout extends ComponentContainer {
      * This type of layout supports automatic addition of margins (space around
      * its components).
      */
-    public interface MarginHandler {
+    public interface MarginHandler extends Serializable {
         /**
          * Enable margins for this layout.
          * 
@@ -212,7 +214,8 @@ public interface Layout extends ComponentContainer {
         public MarginInfo getMargin();
     }
 
-    public static class MarginInfo extends IMarginInfo {
+    @SuppressWarnings("serial")
+    public static class MarginInfo extends IMarginInfo implements Serializable {
 
         public MarginInfo(boolean enabled) {
             super(enabled, enabled, enabled, enabled);

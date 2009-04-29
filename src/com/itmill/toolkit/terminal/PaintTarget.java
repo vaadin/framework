@@ -4,6 +4,8 @@
 
 package com.itmill.toolkit.terminal;
 
+import java.io.Serializable;
+
 /**
  * This interface defines the methods for painting XML to the UIDL stream.
  * 
@@ -12,7 +14,7 @@ package com.itmill.toolkit.terminal;
  * @VERSION@
  * @since 3.0
  */
-public interface PaintTarget {
+public interface PaintTarget extends Serializable{
 
     /**
      * Prints single XMLsection.

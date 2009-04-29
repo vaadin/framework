@@ -14,6 +14,7 @@ import com.itmill.toolkit.terminal.PaintTarget;
  * {@link RichTextArea} may produce unexpected results as formatting is counted
  * into length of field.
  */
+@SuppressWarnings("serial")
 public class RichTextArea extends TextField {
 
     @Override

@@ -31,6 +31,7 @@ import com.itmill.toolkit.data.Property;
  * @VERSION@
  * @since 3.0
  */
+@SuppressWarnings("serial")
 public class ContainerOrderedWrapper implements Container.Ordered,
         Container.ItemSetChangeNotifier, Container.PropertySetChangeNotifier {
 

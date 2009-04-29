@@ -48,7 +48,7 @@ public class ISlider extends Widget implements Paintable, Field,
 
     /* DOM element for slider's base */
     private final Element base;
-    private final int BASE_BORDER_WIDTH = 1;
+    protected final int BASE_BORDER_WIDTH = 1;
 
     /* DOM element for slider's handle */
     private final Element handle;

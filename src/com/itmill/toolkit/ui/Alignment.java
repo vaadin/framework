@@ -1,12 +1,15 @@
 package com.itmill.toolkit.ui;
 
+import java.io.Serializable;
+
 import com.itmill.toolkit.terminal.gwt.client.ui.AlignmentInfo.Bits;
 
 /**
  * Class containing information about alignment of a component. Use the
  * pre-instantiated classes.
  */
-public final class Alignment {
+@SuppressWarnings("serial")
+public final class Alignment implements Serializable {
 
     public static final Alignment TOP_RIGHT = new Alignment(Bits.ALIGNMENT_TOP
             + Bits.ALIGNMENT_RIGHT);

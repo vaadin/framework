@@ -21,6 +21,7 @@ import com.itmill.toolkit.ui.Window.Notification;
  * @author IT Mill Ltd.
  * @see com.itmill.toolkit.ui.Window
  */
+@SuppressWarnings("serial")
 public class EmbeddedBrowserExample extends VerticalLayout implements
         Select.ValueChangeListener {
 

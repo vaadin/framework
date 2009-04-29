@@ -21,6 +21,7 @@ import com.itmill.toolkit.ui.VerticalLayout;
  * 
  * @author IT Mill Ltd.
  */
+@SuppressWarnings("serial")
 public class ClientCachingExample extends CustomComponent {
 
     private static final String msg = "This example is a (simple) demonstration of client-side caching."
@@ -52,6 +53,7 @@ public class ClientCachingExample extends CustomComponent {
         layout = new VerticalLayout();
         layout.setMargin(true);
         l = new Label("Slow label - until cached client side.") {
+
             @Override
             public void paintContent(PaintTarget target) throws PaintException {
                 try {

@@ -63,14 +63,12 @@ public class ITMillToolkitDesktopMode {
         final String url = ITMillToolkitWebMode.runServer(serverArgs,
                 "Desktop Mode");
 
-        // Open browser into application URL
-        if (url != null) {
+        if (!serverArgs.containsKey("nogui") && url != null) {
+			
+            // Open browser into application URL
             BrowserLauncher.openBrowser(url);
-        }
 
-        // Open control dialog
-        if (url != null) {
-
+            // Open control dialog
             /*
              * Swing components should never be manipulated outside the event
              * dispatch thread.

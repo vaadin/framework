@@ -4,6 +4,8 @@
 
 package com.itmill.toolkit.terminal;
 
+import java.io.Serializable;
+
 /**
  * Interface for different terminal types.
  * 
@@ -12,7 +14,7 @@ package com.itmill.toolkit.terminal;
  * @VERSION@
  * @since 3.0
  */
-public interface Terminal {
+public interface Terminal extends Serializable {
 
     /**
      * Gets the name of the default theme.
@@ -38,7 +40,7 @@ public interface Terminal {
     /**
      * Terminal error event.
      */
-    public interface ErrorEvent {
+    public interface ErrorEvent extends Serializable{
 
         /**
          * Gets the contained throwable.
@@ -50,7 +52,7 @@ public interface Terminal {
     /**
      * Terminal error listener interface.
      */
-    public interface ErrorListener {
+    public interface ErrorListener extends Serializable{
 
         /**
          * Invoked when terminal error occurs.

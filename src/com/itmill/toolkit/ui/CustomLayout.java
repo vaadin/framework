@@ -40,6 +40,7 @@ import com.itmill.toolkit.terminal.PaintTarget;
  * @VERSION@
  * @since 3.0
  */
+@SuppressWarnings("serial")
 public class CustomLayout extends AbstractLayout {
 
     private static final int BUFFER_SIZE = 10000;

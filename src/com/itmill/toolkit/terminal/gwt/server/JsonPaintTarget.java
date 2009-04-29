@@ -5,6 +5,7 @@
 package com.itmill.toolkit.terminal.gwt.server;
 
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -31,6 +32,7 @@ import com.itmill.toolkit.ui.Component;
  * @VERSION@
  * @since 5.0
  */
+@SuppressWarnings("serial")
 public class JsonPaintTarget implements PaintTarget {
 
     /* Document type declarations */
@@ -813,7 +815,7 @@ public class JsonPaintTarget implements PaintTarget {
      * @author mattitahvonen
      * 
      */
-    class JsonTag {
+    class JsonTag implements Serializable {
         boolean firstField = false;
 
         Vector variables = new Vector();
@@ -963,14 +965,14 @@ public class JsonPaintTarget implements PaintTarget {
         }
     }
 
-    abstract class Variable {
+    abstract class Variable implements Serializable {
 
         String name;
 
         public abstract String getJsonPresentation();
     }
 
-    class BooleanVariable extends Variable {
+    class BooleanVariable extends Variable implements Serializable {
         boolean value;
 
         public BooleanVariable(VariableOwner owner, String name, boolean v) {
@@ -985,7 +987,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     }
 
-    class StringVariable extends Variable {
+    class StringVariable extends Variable implements Serializable {
         String value;
 
         public StringVariable(VariableOwner owner, String name, String v) {
@@ -1000,7 +1002,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     }
 
-    class IntVariable extends Variable {
+    class IntVariable extends Variable implements Serializable {
         int value;
 
         public IntVariable(VariableOwner owner, String name, int v) {
@@ -1014,7 +1016,7 @@ public class JsonPaintTarget implements PaintTarget {
         }
     }
 
-    class LongVariable extends Variable {
+    class LongVariable extends Variable implements Serializable {
         long value;
 
         public LongVariable(VariableOwner owner, String name, long v) {
@@ -1028,7 +1030,7 @@ public class JsonPaintTarget implements PaintTarget {
         }
     }
 
-    class FloatVariable extends Variable {
+    class FloatVariable extends Variable implements Serializable {
         float value;
 
         public FloatVariable(VariableOwner owner, String name, float v) {
@@ -1042,7 +1044,7 @@ public class JsonPaintTarget implements PaintTarget {
         }
     }
 
-    class DoubleVariable extends Variable {
+    class DoubleVariable extends Variable implements Serializable {
         double value;
 
         public DoubleVariable(VariableOwner owner, String name, double v) {
@@ -1056,7 +1058,7 @@ public class JsonPaintTarget implements PaintTarget {
         }
     }
 
-    class ArrayVariable extends Variable {
+    class ArrayVariable extends Variable implements Serializable {
         String[] value;
 
         public ArrayVariable(VariableOwner owner, String name, String[] v) {

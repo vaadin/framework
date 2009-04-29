@@ -1,5 +1,6 @@
 package com.itmill.toolkit.ui;
 
+@SuppressWarnings("serial")
 public class Accordion extends TabSheet {
 
     @Override

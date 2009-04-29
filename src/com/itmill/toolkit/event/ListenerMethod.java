@@ -4,6 +4,9 @@
 
 package com.itmill.toolkit.event;
 
+import java.io.IOException;
+import java.io.NotSerializableException;
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.EventListener;
@@ -35,24 +38,25 @@ import java.util.EventObject;
  * @VERSION@
  * @since 3.0
  */
-public class ListenerMethod implements EventListener {
+@SuppressWarnings("serial")
+public class ListenerMethod implements EventListener, Serializable {
 
     /**
      * Type of the event that should trigger this listener. Also the subclasses
      * of this class are accepted to trigger the listener.
      */
-    private final Class eventType;
+    private final Class<?> eventType;
 
     /**
      * The object containing the trigger method.
      */
-    private final Object object;
+    private Object object;
 
     /**
      * The trigger method to call when an event passing the given criteria
      * fires.
      */
-    private final Method method;
+    private transient Method method;
 
     /**
      * Optional argument set to pass to the trigger method.
@@ -65,6 +69,67 @@ public class ListenerMethod implements EventListener {
      * trigger method.
      */
     private int eventArgumentIndex;
+
+    /* Special serialization to handle method references */
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+        try {
+            out.defaultWriteObject();
+            String name = method.getName();
+            Class<?>[] paramTypes = method.getParameterTypes();
+            out.writeObject(name);
+            out.writeObject(paramTypes);
+        } catch (NotSerializableException e) {
+            System.err
+                    .println("Fatal error in serialization of the application: Class "
+                            + object.getClass().getName()
+                            + " must implement serialization.");
+            throw e;
+        }
+
+    };
+
+    /* Special serialization to handle method references */
+    private void readObject(java.io.ObjectInputStream in) throws IOException,
+            ClassNotFoundException {
+        in.defaultReadObject();
+        try {
+            String name = (String) in.readObject();
+            Class<?>[] paramTypes = (Class<?>[]) in.readObject();
+            // We can not use getMethod directly as we want to support anonymous
+            // inner classes
+            method = findHighestMethod(object.getClass(), name, paramTypes);
+        } catch (SecurityException e) {
+            System.err.println("Internal deserialization error");
+            e.printStackTrace();
+        }
+    };
+
+    private static Method findHighestMethod(Class<?> cls, String method,
+            Class<?>[] paramTypes) {
+        Class<?>[] ifaces = cls.getInterfaces();
+        for (int i = 0; i < ifaces.length; i++) {
+            Method ifaceMethod = findHighestMethod(ifaces[i], method,
+                    paramTypes);
+            if (ifaceMethod != null) {
+                return ifaceMethod;
+            }
+        }
+        if (cls.getSuperclass() != null) {
+            Method parentMethod = findHighestMethod(cls.getSuperclass(),
+                    method, paramTypes);
+            if (parentMethod != null) {
+                return parentMethod;
+            }
+        }
+        Method[] methods = cls.getMethods();
+        for (int i = 0; i < methods.length; i++) {
+            // we ignore parameter types for now - you need to add this
+            if (methods[i].getName().equals(method)) {
+                return methods[i];
+            }
+        }
+        return null;
+    }
 
     /**
      * <p>
@@ -98,7 +163,7 @@ public class ListenerMethod implements EventListener {
      *             if <code>method</code> is not a member of <code>object</code>
      *             .
      */
-    public ListenerMethod(Class eventType, Object object, Method method,
+    public ListenerMethod(Class<?> eventType, Object object, Method method,
             Object[] arguments, int eventArgumentIndex)
             throws java.lang.IllegalArgumentException {
 
@@ -157,7 +222,7 @@ public class ListenerMethod implements EventListener {
      *             unless exactly one match <code>methodName</code> is found in
      *             <code>object</code>.
      */
-    public ListenerMethod(Class eventType, Object object, String methodName,
+    public ListenerMethod(Class<?> eventType, Object object, String methodName,
             Object[] arguments, int eventArgumentIndex)
             throws java.lang.IllegalArgumentException {
 
@@ -218,7 +283,7 @@ public class ListenerMethod implements EventListener {
      *             if <code>method</code> is not a member of <code>object</code>
      *             .
      */
-    public ListenerMethod(Class eventType, Object object, Method method,
+    public ListenerMethod(Class<?> eventType, Object object, Method method,
             Object[] arguments) throws java.lang.IllegalArgumentException {
 
         // Check that the object is of correct type
@@ -262,7 +327,7 @@ public class ListenerMethod implements EventListener {
      *             unless exactly one match <code>methodName</code> is found in
      *             <code>object</code>.
      */
-    public ListenerMethod(Class eventType, Object object, String methodName,
+    public ListenerMethod(Class<?> eventType, Object object, String methodName,
             Object[] arguments) throws java.lang.IllegalArgumentException {
 
         // Find the correct method
@@ -307,7 +372,7 @@ public class ListenerMethod implements EventListener {
      *             if <code>method</code> is not a member of <code>object</code>
      *             .
      */
-    public ListenerMethod(Class eventType, Object object, Method method)
+    public ListenerMethod(Class<?> eventType, Object object, Method method)
             throws java.lang.IllegalArgumentException {
 
         // Checks that the object is of correct type
@@ -320,7 +385,7 @@ public class ListenerMethod implements EventListener {
         this.method = method;
         eventArgumentIndex = -1;
 
-        final Class[] params = method.getParameterTypes();
+        final Class<?>[] params = method.getParameterTypes();
 
         if (params.length == 0) {
             arguments = new Object[0];
@@ -358,7 +423,7 @@ public class ListenerMethod implements EventListener {
      *             unless exactly one match <code>methodName</code> is found in
      *             <code>object</code>.
      */
-    public ListenerMethod(Class eventType, Object object, String methodName)
+    public ListenerMethod(Class<?> eventType, Object object, String methodName)
             throws java.lang.IllegalArgumentException {
 
         // Finds the correct method
@@ -378,7 +443,7 @@ public class ListenerMethod implements EventListener {
         this.method = method;
         eventArgumentIndex = -1;
 
-        final Class[] params = method.getParameterTypes();
+        final Class<?>[] params = method.getParameterTypes();
 
         if (params.length == 0) {
             arguments = new Object[0];
@@ -447,7 +512,7 @@ public class ListenerMethod implements EventListener {
      *         the one stored in this object and <code>eventType</code> equals
      *         the event type stored in this object. *
      */
-    public boolean matches(Class eventType, Object target) {
+    public boolean matches(Class<?> eventType, Object target) {
         return (target == object) && (eventType.equals(this.eventType));
     }
 
@@ -469,7 +534,7 @@ public class ListenerMethod implements EventListener {
      *         the event type stored in this object and <code>method</code>
      *         equals with the method stored in this object
      */
-    public boolean matches(Class eventType, Object target, Method method) {
+    public boolean matches(Class<?> eventType, Object target, Method method) {
         return (target == object)
                 && (eventType.equals(this.eventType) && method
                         .equals(this.method));
@@ -524,12 +589,8 @@ public class ListenerMethod implements EventListener {
      * @VERSION@
      * @since 3.0
      */
-    public class MethodException extends RuntimeException {
-
-        /**
-         * Serial generated by eclipse.
-         */
-        private static final long serialVersionUID = 3257005445242894135L;
+    public class MethodException extends RuntimeException implements
+            Serializable {
 
         private final Throwable cause;
 

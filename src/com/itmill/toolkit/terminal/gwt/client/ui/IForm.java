@@ -75,16 +75,23 @@ public class IForm extends ComplexPanel implements Container {
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         rendering = true;
-
+        boolean measure = false;
         if (this.client == null) {
             this.client = client;
-            borderPaddingVertical = getOffsetHeight();
-            borderPaddingHorizontal = getOffsetWidth() - desc.getOffsetWidth();
+            measure = true;
         }
 
         if (client.updateComponent(this, uidl, false)) {
             rendering = false;
             return;
+        }
+
+        if (measure) {
+            // Measure the border when the style names have been set
+            borderPaddingVertical = getOffsetHeight();
+            int ow = getOffsetWidth();
+            int dow = desc.getOffsetWidth();
+            borderPaddingHorizontal = ow - dow;
         }
 
         boolean legendEmpty = true;

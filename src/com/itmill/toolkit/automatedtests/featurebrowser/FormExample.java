@@ -1,5 +1,7 @@
 package com.itmill.toolkit.automatedtests.featurebrowser;
 
+import java.io.Serializable;
+
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Validator;
 import com.itmill.toolkit.data.util.BeanItem;
@@ -23,6 +25,7 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
  * more complex than real use, as it tries to demonstrate more features than
  * needed in general case.
  */
+@SuppressWarnings("serial")
 public class FormExample extends CustomComponent {
 
     static final String cities[] = { "Amsterdam", "Berlin", "Helsinki",
@@ -61,6 +64,7 @@ public class FormExample extends CustomComponent {
     }
 
     public static class AddressForm extends Form {
+
         public AddressForm(String caption) {
 
             setCaption(caption);
@@ -114,7 +118,8 @@ public class FormExample extends CustomComponent {
      * This is example on how to customize field creation. Any kind of field
      * components could be created on the fly.
      */
-    static class MyFieldFactory extends BaseFieldFactory {
+    static class MyFieldFactory extends BaseFieldFactory implements
+            Serializable {
 
         @Override
         public Field createField(Item item, Object propertyId,
@@ -159,7 +164,8 @@ public class FormExample extends CustomComponent {
      * it would be a good idea to implement Item -interface for the datamodel to
      * make it directly bindable to form (without BeanItem wrapper)
      */
-    public static class Address {
+    public static class Address implements Serializable {
+
         String name = "";
         String streetAddress = "";
         String postalCode = "";

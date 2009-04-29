@@ -13,6 +13,7 @@ package com.itmill.toolkit.data.validator;
  * @VERSION@
  * @since 3.0
  */
+@SuppressWarnings("serial")
 public class StringLengthValidator extends AbstractValidator {
 
     private int minLength = -1;

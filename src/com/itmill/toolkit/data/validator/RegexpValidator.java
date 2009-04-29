@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
  * @VERSION@
  * @since 5.4
  */
+@SuppressWarnings("serial")
 public class RegexpValidator extends AbstractStringValidator {
 
     private Pattern pattern;

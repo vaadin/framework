@@ -5,6 +5,7 @@ import java.util.Map;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.AbstractComponent.ComponentErrorEvent;
 
+@SuppressWarnings("serial")
 public class ChangeVariablesErrorEvent implements ComponentErrorEvent {
 
     private Throwable throwable;

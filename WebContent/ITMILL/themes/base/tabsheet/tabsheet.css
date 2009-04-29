@@ -4,7 +4,6 @@
 	outline: none; /* Prevent selection outline which might break layouts or cause scrollbars */
 	text-align: left /* Force default alignment */
 }
-
 .i-tabsheet-tabs {
 	empty-cells: hide;
 	border-collapse: collapse;
@@ -12,63 +11,75 @@
 	padding: 0;
 	border: 0;
 	width: 100%;
-	overflow: hidden;
-	border-bottom: 1px solid #ddd;
+	overflow:hidden;
 }
-
-.i-tabsheet-tabs td {
-	margin:0;
-	padding:0;
+.i-tabsheet-tabitemcell,
+.i-tabsheet-spacertd {
+	margin: 0;
+	padding: 0;
 	vertical-align: bottom;
 }
-
 .i-tabsheet-spacertd {
 	width: 100%;
 }
-
+.i-tabsheet-spacertd div {
+	border-left: 1px solid #aaa;
+	border-bottom: 1px solid #aaa;
+	height: 1em;
+	padding: 0.2em 0;
+}
 .i-tabsheet-hidetabs .i-tabsheet-tabcontainer {
 	display: none;
 }
-
 .i-tabsheet-scroller {
 	white-space: nowrap;
 	text-align: right;
 	margin-top: -1em;
 }
-
 .i-tabsheet-scrollerPrev,
-.i-tabsheet-scrollerNext {
-	border: none;
-	width: 0.5em;
+.i-tabsheet-scrollerNext,
+.i-tabsheet-scrollerPrev-disabled,
+.i-tabsheet-scrollerNext-disabled {
+	border: 1px solid #aaa;
+	background: #fff;
+	width: 12px;
 	height: 1em;
-	background: #ddd;
 	cursor: pointer;
 }
 .i-tabsheet-scrollerPrev-disabled,
 .i-tabsheet-scrollerNext-disabled {
-	border: none;
-	width: 0.5em;
-	height: 1em;
-	background: #efefef;
+	opacity: 0.5;
+	cursor: default;
 }
-
-.i-tabsheet-tabs .i-caption {
-	white-space: nowrap;
-}
-
-/* for IE (does not inherit) */
+.i-tabsheet-tabs .i-caption,
 .i-tabsheet-tabs .i-caption span {
 	white-space: nowrap;
 }
-
 .i-tabsheet-tabitem {
+	border: 1px solid #aaa;
+	border-right: none;
 	cursor: pointer;
+	padding: 0.2em 0.5em;
 }
-
 .i-tabsheet-tabitem-selected {
-	background: #ddd;
+	cursor: default;
+	border-bottom-color: #fff;
 }
-
 .i-tabsheet-content {
+	border: 1px solid #aaa;
+	/* Vertical borders are not supported, use i-tabsheet-tabcontainer and i-tabsheet-deco to present these borders */
+	border-top: none;
+	border-bottom: none;
 	position: relative;
+}
+.i-tabsheet-deco {
+	height: 1px;
+	background: #aaa;
+	overflow: hidden;
+}
+.i-tabsheet-hidetabs .i-tabsheet-content {
+	border: none;
+}
+.i-tabsheet-hidetabs .i-tabsheet-deco {
+	height: 0;
 }

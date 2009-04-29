@@ -1,11 +1,52 @@
 .i-textfield {
 	text-align: left /* Force default alignment */
 }
-
+.i-textarea {
+}
+.i-textfield-focus,
+.i-textarea-focus {
+}
+input.i-textfield-prompt,
+textarea.i-textarea-prompt {
+	color: #999;
+	font-style: italic;
+}
+.i-textfield.i-readonly,
+.i-textarea.i-readonly {
+	background: transparent;
+	color: #222;
+	border: none;
+}
 .i-richtextarea {
+	border: 1px solid #aaa;
 	overflow: hidden;
 }
-
+.i-richtextarea .gwt-RichTextToolbar .gwt-ToggleButton,
+.i-richtextarea .gwt-RichTextToolbar .gwt-PushButton {
+	float: left;
+}
+.i-richtextarea .gwt-RichTextToolbar {
+	white-space: nowrap;
+}
 .i-richtextarea iframe {
 	border: 0;
+}
+/* Disabled by default
+.i-textarea-error,
+.i-textfield-error,
+.i-richtextarea-error iframe.gwt-RichTextArea {
+	background: #FFE0E0;	
+}
+*/
+/* Disabled by default
+.i-textarea-required,
+.i-textfield-required,
+.i-richtextarea-required iframe.gwt-RichTextArea {
+	background: #FFE0E0;	
+}
+*/
+/* Safari focus glow fix */
+.i-sa input:focus, 
+.i-sa textarea:focus {
+	outline-width: medium;
 }

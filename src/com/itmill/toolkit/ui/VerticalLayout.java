@@ -12,6 +12,7 @@ package com.itmill.toolkit.ui;
  * @VERSION@
  * @since 5.3
  */
+@SuppressWarnings("serial")
 public class VerticalLayout extends AbstractOrderedLayout {
 
     public VerticalLayout() {

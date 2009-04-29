@@ -13,6 +13,7 @@ import com.itmill.toolkit.terminal.PaintTarget;
 /**
  * Configures select to be used as an option group.
  */
+@SuppressWarnings("serial")
 public class OptionGroup extends AbstractSelect {
 
     public OptionGroup() {

@@ -1,29 +1,42 @@
-.i-orderedlayout {
-	overflow: hidden;
+.i-orderedlayout-margin-top,
+.i-horizontallayout-margin-top,
+.i-verticallayout-margin-top {
+	padding-top: 2em;
 }
-
-.i-orderedlayout-margin-top {
-	padding-top: 15px;
+.i-orderedlayout-margin-right,
+.i-horizontallayout-margin-right,
+.i-verticallayout-margin-right {
+	padding-right: 2em;
 }
-
-.i-orderedlayout-margin-right {
-	padding-right: 18px;
+.i-orderedlayout-margin-bottom,
+.i-horizontallayout-margin-bottom,
+.i-verticallayout-margin-bottom {
+	padding-bottom: 2em;
 }
-
-.i-orderedlayout-margin-bottom {
-	padding-bottom: 15px;
+.i-orderedlayout-margin-left,
+.i-horizontallayout-margin-left,
+.i-verticallayout-margin-left {
+	padding-left: 2em;
 }
-
-.i-orderedlayout-margin-left {
-	padding-left: 18px;
+.i-orderedlayout-spacing-on,
+.i-horizontallayout-spacing-on,
+.i-verticallayout-spacing-on {
+	padding-top: 1em;
+	padding-left: 1em;
 }
-
-.i-orderedlayout-spacing-on {
-	padding-top: 8px;
-	padding-left: 8px;
-}
-/** This can be used to define spacing if spacing is off server side */
-.i-orderedlayout-spacing-off {
+/* This can be used to define spacing if spacing is off server side */
+.i-orderedlayout-spacing-off,
+.i-horizontallayout-spacing-off,
+.i-verticallayout-spacing-off {
 	padding-top: 0;
 	padding-left: 0;
+}
+/* To make sure IE don't expand elements larger than they should */
+.i-ie6 .i-orderedlayout,
+.i-ie6 .i-horizontallayout,
+.i-ie6 .i-verticallayout,
+.i-ie7 .i-orderedlayout,
+.i-ie7 .i-horizontallayout,
+.i-ie7 .i-verticallayout {
+	overflow: hidden;
 }

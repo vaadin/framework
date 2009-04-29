@@ -1,36 +1,30 @@
-/* Margin values if defined from server side */
 .i-gridlayout-margin-top {
-	padding-top: 15px;
+	padding-top: 2em;
 }
 .i-gridlayout-margin-bottom {
-	padding-bottom: 15px;
+	padding-bottom: 2em;
 }
 .i-gridlayout-margin-left {
-	padding-left: 18px;
+	padding-left: 2em;
 } 
 .i-gridlayout-margin-right {
-	padding-right: 18px;
+	padding-right: 2em;
 }
-
-/* 
- * Spacing values used by IGridLayout. (element does not exist in DOM)
- * Use padding-left for horizontal spacing and padding-top for vertical.
- */
 .i-gridlayout-spacing-on {
-	padding-left:8px;
-	padding-top:8px;
+	padding-left: 1em;
+	padding-top: 1em;
+	overflow: hidden;
 }
-.i-gridlayout-spacing-off {
-	padding-left:0px;
-	padding-top:0px;
-}
-
 .i-gridlayout-spacing,
 .i-gridlayout-spacing-off {
-	padding-left:0px;
-	padding-top:0px;
+	padding-left: 0;
+	padding-top: 0;
 }
-
-.i-gridlayout {
-	overflow:hidden;
+.i-gridlayout-spacing-off {
+	overflow: hidden;
+}
+/* Ensure that resizing gridlayout works in IE */
+.i-ie6 .i-gridlayout,
+.i-ie7 .i-gridlayout {
+	overflow: hidden;
 }

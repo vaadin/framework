@@ -4,6 +4,7 @@
 
 package com.itmill.toolkit.data;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 /**
@@ -18,7 +19,7 @@ import java.util.Collection;
  * @VERSION@
  * @since 3.0
  */
-public interface Item {
+public interface Item extends Serializable {
 
     /**
      * Gets the Property corresponding to the given Property ID stored in the
@@ -37,7 +38,7 @@ public interface Item {
      * @return unmodifiable collection containing IDs of the Properties stored
      *         the Item
      */
-    public Collection getItemPropertyIds();
+    public Collection<?> getItemPropertyIds();
 
     /**
      * Tries to add a new Property into the Item.
@@ -78,7 +79,7 @@ public interface Item {
      * Interface implemented by viewer classes capable of using an Item as a
      * data source.
      */
-    public interface Viewer {
+    public interface Viewer extends Serializable {
 
         /**
          * Sets the Item that serves as the data source of the viewer.
@@ -105,7 +106,7 @@ public interface Item {
      * restrict the class from editing the contents of an internally.
      * </p>
      */
-    public interface Editor extends Item.Viewer {
+    public interface Editor extends Item.Viewer, Serializable {
 
     }
 
@@ -119,7 +120,7 @@ public interface Item {
      * this event.
      * </p>
      */
-    public interface PropertySetChangeEvent {
+    public interface PropertySetChangeEvent extends Serializable {
 
         /**
          * Retrieves the Item whose contents has been modified.
@@ -133,7 +134,7 @@ public interface Item {
      * The listener interface for receiving <code>PropertySetChangeEvent</code>
      * objects.
      */
-    public interface PropertySetChangeListener {
+    public interface PropertySetChangeListener extends Serializable {
 
         /**
          * Notifies this listener that the Item's property set has changed.
@@ -158,7 +159,7 @@ public interface Item {
      * be able to implement an interface.
      * </p>
      */
-    public interface PropertySetChangeNotifier {
+    public interface PropertySetChangeNotifier extends Serializable {
 
         /**
          * Registers a new property set change listener for this Item.

@@ -33,6 +33,7 @@ import com.itmill.toolkit.terminal.PaintTarget;
  * @VERSION@
  * @since 3.0
  */
+@SuppressWarnings("serial")
 public class DateField extends AbstractField {
 
     /* Private members */

@@ -4,6 +4,8 @@
 
 package com.itmill.toolkit.event;
 
+import java.io.Serializable;
+
 import com.itmill.toolkit.terminal.Resource;
 
 /**
@@ -16,7 +18,8 @@ import com.itmill.toolkit.terminal.Resource;
  * @VERSION@
  * @since 3.0
  */
-public class Action {
+@SuppressWarnings("serial")
+public class Action implements Serializable {
 
     /**
      * Action title.
@@ -77,7 +80,7 @@ public class Action {
      * @VERSION@
      * @since 3.0
      */
-    public interface Handler {
+    public interface Handler extends Serializable {
 
         /**
          * Gets the list of actions applicable to this handler.
@@ -120,7 +123,7 @@ public class Action {
      * @VERSION@
      * @since 3.0
      */
-    public interface Container {
+    public interface Container extends Serializable {
 
         /**
          * Registers a new action handler for this container

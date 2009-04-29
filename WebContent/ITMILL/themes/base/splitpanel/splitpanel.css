@@ -2,12 +2,10 @@
 .i-splitpanel-vertical {
 	overflow: hidden;
 }
-
 .i-splitpanel-horizontal .i-splitpanel-hsplitter {
 	width: 6px;
 	font-size: 1px; /* for IE6 */
 }
-
 .i-splitpanel-horizontal .i-splitpanel-hsplitter div {
 	width: 6px;
 	font-size: 1px; /* for IE6 */
@@ -17,25 +15,17 @@
 	background: #ddd;
 	cursor: e-resize;
 }
-
 .i-splitpanel-vertical .i-splitpanel-vsplitter {
 	height: 6px;
 	font-size: 1px; /* for IE6 */
 }
-
 .i-splitpanel-vertical .i-splitpanel-vsplitter div {
 	height: 6px;
 	font-size: 1px; /* for IE6 */
 	background: #ddd;
 	cursor: n-resize;
 }
-
-
-
-
-
 /* IE specific styles */
-
 .i-ie6 .i-splitpanel-horizontal .i-splitpanel-hsplitter div {
 	height: 99%;
 }

@@ -5,6 +5,7 @@
 package com.itmill.toolkit.terminal;
 
 import java.io.InputStream;
+import java.io.Serializable;
 
 /**
  * Defines a variable type, that is used for passing uploaded files from
@@ -16,7 +17,7 @@ import java.io.InputStream;
  * @VERSION@
  * @since 3.0
  */
-public interface UploadStream {
+public interface UploadStream extends Serializable {
 
     /**
      * Gets the name of the stream.
