@@ -578,19 +578,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
 
         tHead.disableBrowserIntelligence();
 
-        boolean willHaveScrollbarz = false;
-        if (!(height != null && !height.equals(""))) {
-            if (pageLength < totalRows) {
-                willHaveScrollbarz = true;
-            }
-        } else {
-            int fakeheight = tBody.getRowHeight() * totalRows;
-            int availableHeight = bodyContainer.getElement().getPropertyInt(
-                    "clientHeight");
-            if (fakeheight > availableHeight) {
-                willHaveScrollbarz = true;
-            }
-        }
+        boolean willHaveScrollbarz = willHaveScrollbars();
 
         // fix "natural" width if width not set
         if (width == null || "".equals(width)) {
@@ -729,6 +717,22 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             }
         }
         initializedAndAttached = true;
+    }
+
+    private boolean willHaveScrollbars() {
+        if (!(height != null && !height.equals(""))) {
+            if (pageLength < totalRows) {
+                return true;
+            }
+        } else {
+            int fakeheight = tBody.getRowHeight() * totalRows;
+            int availableHeight = bodyContainer.getElement().getPropertyInt(
+                    "clientHeight");
+            if (fakeheight > availableHeight) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -2708,6 +2712,9 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             // Hey IE, are you really sure about this?
             availW = tBody.getAvailableWidth();
             availW -= tBody.getCellExtraWidth() * visibleColOrder.length;
+            if (willHaveScrollbars()) {
+                availW -= Util.getNativeScrollbarSize();
+            }
 
             int extraSpace = availW - usedMinimumWidth;
             if (extraSpace < 0) {
