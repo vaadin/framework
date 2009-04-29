@@ -15,7 +15,6 @@ import java.util.Vector;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NodeList;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
@@ -687,10 +686,12 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
              */
             if (pageLength == totalRows) {
                 /*
-                 * We want to show all rows so the bodyHeight should be equal to
-                 * the table height
+                 * A hack to support variable height rows when paging is off.
+                 * Generally this is not supported by scrolltable. We want to
+                 * show all rows so the bodyHeight should be equal to the table
+                 * height.
                  */
-                int bodyHeight = tBody.getTableHeight();
+                int bodyHeight = tBody.getOffsetHeight();
                 bodyContainer.setHeight(bodyHeight + "px");
                 Util.runWebkitOverflowAutoFix(bodyContainer.getElement());
             } else {
@@ -1838,12 +1839,8 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         }
 
         public int getAvailableWidth() {
-            Style style = bodyContainer.getElement().getStyle();
-            style.setProperty("overflow", "hidden");
-            int w = bodyContainer.getElement().getPropertyInt("clientWidth");
-            style.setProperty("overflow", "auto");
-            return w;
-            // return preSpacer.getOffsetWidth();
+            int availW = bodyContainer.getOffsetWidth() - getBorderWidth();
+            return availW;
         }
 
         public void renderInitialRows(UIDL rowData, int firstIndex, int rows) {
