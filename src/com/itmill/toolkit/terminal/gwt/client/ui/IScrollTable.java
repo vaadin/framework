@@ -1067,6 +1067,9 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                 DOM.setStyleAttribute(captionContainer, "width", "");
                 setWidth("");
             } else {
+
+                ApplicationConnection.getConsole().log("DEB2 " + w + " ");
+
                 captionContainer.getStyle().setPropertyPx("width", w);
 
                 /*
@@ -1948,8 +1951,10 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             final int cells = DOM.getChildCount(row.getElement());
             for (int i = 0; i < cells; i++) {
                 final Element cell = DOM.getChild(row.getElement(), i);
-                final int w = IScrollTable.this
-                        .getColWidth(getColKeyByIndex(i));
+                int w = IScrollTable.this.getColWidth(getColKeyByIndex(i));
+                if (w < 0) {
+                    w = 0;
+                }
                 cell.getFirstChildElement().getStyle()
                         .setPropertyPx("width", w);
                 cell.getStyle().setPropertyPx("width", w);
