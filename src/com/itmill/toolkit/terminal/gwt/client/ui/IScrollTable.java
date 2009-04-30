@@ -756,8 +756,6 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
 
         firstRowInViewPort = (int) Math.ceil(scrollTop
                 / (double) tBody.getRowHeight());
-        // ApplicationConnection.getConsole().log(
-        // "At scrolltop: " + scrollTop + " At row " + firstRowInViewPort);
 
         int postLimit = (int) (firstRowInViewPort + pageLength + pageLength
                 * CACHE_REACT_RATE);
@@ -784,8 +782,6 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         if (firstRowInViewPort - pageLength * CACHE_RATE > lastRendered
                 || firstRowInViewPort + pageLength + pageLength * CACHE_RATE < firstRendered) {
             // need a totally new set
-            // ApplicationConnection.getConsole().log(
-            // "Table: need a totally new set");
             rowRequestHandler
                     .setReqFirstRow((int) (firstRowInViewPort - pageLength
                             * CACHE_RATE));
@@ -801,10 +797,6 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         }
         if (preLimit < firstRendered) {
             // need some rows to the beginning of the rendered area
-            // ApplicationConnection
-            // .getConsole()
-            // .log(
-            // "Table: need some rows to the beginning of the rendered area");
             rowRequestHandler
                     .setReqFirstRow((int) (firstRowInViewPort - pageLength
                             * CACHE_RATE));
@@ -816,8 +808,6 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         }
         if (postLimit > lastRendered) {
             // need some rows to the end of the rendered area
-            // ApplicationConnection.getConsole().log(
-            // "need some rows to the end of the rendered area");
             rowRequestHandler.setReqFirstRow(lastRendered + 1);
             rowRequestHandler.setReqRows((int) ((firstRowInViewPort
                     + pageLength + pageLength * CACHE_RATE) - lastRendered));
@@ -902,12 +892,8 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             if (client.hasActiveRequest()) {
                 // if client connection is busy, don't bother loading it more
                 schedule(250);
-                ApplicationConnection.getConsole().log(
-                        "Table: AC is busy, deferring cache row fetch..");
 
             } else {
-                ApplicationConnection.getConsole().log(
-                        "Getting " + reqRows + " rows from " + reqFirstRow);
 
                 int firstToBeRendered = tBody.firstRendered;
                 if (reqFirstRow < firstToBeRendered) {
@@ -1068,8 +1054,6 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                 setWidth("");
             } else {
 
-                ApplicationConnection.getConsole().log("DEB2 " + w + " ");
-
                 captionContainer.getStyle().setPropertyPx("width", w);
 
                 /*
@@ -1176,29 +1160,19 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
         protected void handleCaptionEvent(Event event) {
             switch (DOM.eventGetType(event)) {
             case Event.ONMOUSEDOWN:
-                ApplicationConnection.getConsole().log(
-                        "HeaderCaption: mouse down");
                 if (columnReordering) {
                     dragging = true;
                     moved = false;
                     colIndex = getColIndexByKey(cid);
                     DOM.setCapture(getElement());
                     headerX = tHead.getAbsoluteLeft();
-                    ApplicationConnection
-                            .getConsole()
-                            .log(
-                                    "HeaderCaption: Caption set to capture mouse events");
                     DOM.eventPreventDefault(event); // prevent selecting text
                 }
                 break;
             case Event.ONMOUSEUP:
-                ApplicationConnection.getConsole()
-                        .log("HeaderCaption: mouseUP");
                 if (columnReordering) {
                     dragging = false;
                     DOM.releaseCapture(getElement());
-                    ApplicationConnection.getConsole().log(
-                            "HeaderCaption: Stopped column reordering");
                     if (moved) {
                         hideFloatingCopy();
                         tHead.removeSlotFocus();
@@ -1238,8 +1212,6 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                 break;
             case Event.ONMOUSEMOVE:
                 if (dragging) {
-                    ApplicationConnection.getConsole().log(
-                            "HeaderCaption: Dragging column, optimal index...");
                     if (!moved) {
                         createFloatingCopy();
                         moved = true;
@@ -1269,7 +1241,6 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                     tHead.focusSlot(closestSlot);
 
                     updateFloatingCopysPosition(DOM.eventGetClientX(event), -1);
-                    ApplicationConnection.getConsole().log("" + closestSlot);
                 }
                 break;
             default:
