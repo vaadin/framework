@@ -1411,11 +1411,14 @@ div.i-tree-node-leaf {
 	padding: 0.3em 1em;
 	height: 1em;
 }
+.i-window-header {
+	font-weight: bold;
+}
+/* A more specific selector to make sure padding isn't so easily overridden */
 div.i-window-header {
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	overflow: hidden;
-	font-weight: bold;
 	padding: 0;
 }
 .i-ie6 .i-window-header {

@@ -81,9 +81,9 @@
 }
 .i-table-column-selector {
 	background: transparent url(img/colsel.png) no-repeat;
-	margin: -36px 1px 0 0;
+	margin: -36px 0 0 0;
 	height: 36px;
-	width: 14px;
+	width: 15px;
 }
 .i-table-focus-slot-left {
 	border-color: #b6bbbc;

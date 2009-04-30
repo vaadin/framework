@@ -103,6 +103,8 @@
 	width: 31px;
 	height: 31px;
 	background: transparent url(img/loading-indicator.gif);
+	margin-right: 5px;
+	margin-top: 5px;
 }
 .i-loading-indicator-delay {
 	background-image: url(img/loading-indicator-delay.gif);
