@@ -104,8 +104,8 @@ public class IAccordion extends ITabsheetBase implements
             item = getStackItem(index);
             item = moveStackItemIfNeeded(item, index, tabUidl);
             itemIndex = index;
-            item.updateCaption(tabUidl);
         }
+        item.updateCaption(tabUidl);
 
         item.setVisible(!hidden);
 
@@ -448,8 +448,6 @@ public class IAccordion extends ITabsheetBase implements
             DOM.setElementProperty(captionNode, "className", CLASSNAME
                     + "-item-caption");
             close();
-
-            updateCaption(tabUidl);
         }
 
         @Override
