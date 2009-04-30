@@ -1,0 +1,139 @@
+/** sprite: buttons; sprite-image: url('img/buttons.png'); sprite-layout: vertical */
+
+/* IE6 gets native buttons, since it doesn't support the adjacent child selector (>) that is needed to position i-icon properly */
+div > .i-button,
+.i-ie7 .i-button,
+.i-ie8 .i-button {
+	height: 26px;
+	padding: 0 0 0 6px;
+	background-color: transparent;
+	background-repeat: none;
+	background-image: url(img/left.png); /** sprite-ref: buttons */
+	border: none;
+	cursor: default;
+}
+div > .i-button span,
+.i-ie7 .i-button span,
+.i-ie8 .i-button span {
+	display: inline-block;
+	height: 21px;
+	padding: 5px 15px 0 9px;
+	background-color: transparent;
+	background-repeat: no-repeat;
+	background-position: right top;
+	background-image: url(img/right.png);  /** sprite-ref: buttons; sprite-alignment: right */
+	text-shadow: #fff 0 1px 0;
+	font-weight: bold;
+	float: none;
+	line-height: 16px;
+}
+.i-ie7 .i-button span,
+.i-ie8 .i-button span {
+	padding: 5px 15px 0 9px;
+	height: 21px;
+}
+.i-button:focus {
+	background-image: url(img/left-focus.png); /** sprite-ref: buttons */
+	outline: none;
+}
+.i-button:focus span {
+	background-image: url(img/right-focus.png); /** sprite-ref: buttons; sprite-alignment: right */
+	outline: none;
+}
+.i-button:active {
+	background-image: url(img/left-pressed.png); /** sprite-ref: buttons */
+	outline: none;
+}
+.i-button:active span {
+	background-image: url(img/right-pressed.png); /** sprite-ref: buttons; sprite-alignment: right */
+	outline: none;
+}
+/* FF3 & FF2 */
+.i-button::-moz-focus-inner {
+	border: none;
+	padding: 0;
+}
+.i-ff2 .i-button span {
+	display: -moz-inline-box;
+}
+/* IE7 */
+.i-ie7 .i-button.i-pressed,
+.i-ie8 .i-button.i-pressed {
+	background-image: url(img/left-pressed.png); /** sprite-ref: buttons */
+}
+.i-ie7 .i-button.i-pressed span,
+.i-ie8 .i-button.i-pressed span {
+	background-image: url(img/right-pressed.png); /** sprite-ref: buttons; sprite-alignment: right */
+	position: relative;
+}
+.i-ie7 .i-button.i-pressed .i-icon,
+.i-ie8 .i-button.i-pressed .i-icon {
+	position: relative;
+	z-index: 2;
+}
+/* IE8 */
+/* TODO
+.i-ie8 .i-button:active {
+	background-position: 1px -39px;
+}
+.i-ie8 .i-button:active span {
+	position: relative;
+}
+*/
+/* Opera */
+.i-op .i-button:active span {
+	margin-top: -1px;
+	margin-left: -1px;
+}
+/* Modifications for buttons with icons */
+div > .i-button .i-icon,
+.i-ie7 .i-button .i-icon,
+.i-ie8 .i-button .i-icon {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	overflow: hidden;
+	position: relative;
+	margin: 0 3px 0 0;
+}
+.i-ff2 .i-button .i-icon {
+	display: block;
+	float: left;
+	margin-top: 4px;
+}
+.i-ff2 .i-button-link .i-icon {
+	margin: 0;
+}
+.i-button .i-icon + span {
+	margin-left: -19px;
+	padding-left: 19px;
+}
+.i-ie7 .i-button .i-icon + span,
+.i-ie8 .i-button .i-icon + span {
+	margin-left: -23px;
+	padding-left: 23px;
+}
+/* Link style buttons */
+.i-button.i-button-link,
+.i-ie .i-button-link.i-pressed {
+	background: transparent;
+	height: auto;
+	padding: 0;
+	cursor: pointer;
+}
+.i-button.i-button-link span,
+.i-ie .i-button-link.i-pressed span {
+	background: transparent;
+	height: auto;
+	padding: 0;
+	display: inline;
+	font-weight: normal;
+	color: #1b699f;
+}
+.i-button.i-button-link .i-icon + span {
+	margin: 0;
+	padding: 0;
+}
+.i-button-link:focus {
+	outline: 1px dotted #1b699f;
+}

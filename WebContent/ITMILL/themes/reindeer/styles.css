@@ -40,6 +40,9 @@
 	white-space: nowrap;
 	margin: 0;
 }
+.i-button span {
+	white-space: nowrap;
+}
 .i-checkbox input {
 	vertical-align: middle;
 }
@@ -49,7 +52,8 @@
 	vertical-align: middle;
 	margin-right: 3px;
 }
-.i-button span, .i-checkbox label {
+.i-button span,
+.i-checkbox label {
 	vertical-align: middle;
 }
 .i-button-link {
@@ -74,22 +78,17 @@
 	padding-left: 1em;
 	background-position: left;
 }
-
-/* Fixes streched buttons in IE6 */
+/* Fixes streched buttons in IE6 and IE7*/
 .i-ie6 .i-button {
 	width: 1px;
+}
+.i-ie6 .i-button,
+.i-ie7 .i-button,
+.i-ie8 .i-button {
 	overflow: visible;
 	padding-left: 1em;
 	padding-right: 1em;
 }
-
-/* Fixes streched buttons in IE7 */
-.i-ie7 .i-button {
-	overflow: visible;
-	padding-left: 1em;
-	padding-right: 1em;
-}
-
 /* Error indicator on checkbox fix for IE6 */
 .i-ie6 .i-checkbox * {
 	float: left;
@@ -102,32 +101,30 @@
 	padding-left: 0; 
 	padding-right: 0.4em;
 }
-
 /* Error indicator on checkbox fix for IE7 */
-.i-ie7 .i-checkbox * {
+.i-ie7 .i-checkbox *,
+.i-ie8 .i-checkbox * {
 	float: left;
 }
-.i-ie7 .i-checkbox .i-errorindicator {
+.i-ie7 .i-checkbox .i-errorindicator,
+.i-ie8 .i-checkbox .i-errorindicator {
 	background-position: right;
 	float: left;
 	padding-left: 0;
 	padding-right: 0.7em;
 }
-
 /* Error indicator on button fix for IE */
 .i-ie6 button .i-errorindicator,
-.i-ie7 button .i-errorindicator {
+.i-ie7 button .i-errorindicator,
+.i-ie8 button .i-errorindicator {
 	display: inline;
 	padding-right: 0.5em;
 }
-
-
 /* Disabled by default
 .i-checkbox-error {
 	background: #ffe0e0;
 }
 */
-
 /* Disabled by default
 .i-checkbox-required {
 	background: #ffe0e0;
@@ -1418,6 +1415,7 @@ div.i-tree-node-leaf {
 div.i-window-header {
 	white-space: nowrap;
 	text-overflow: ellipsis;
+	-ms-text-overflow: ellipsis;
 	overflow: hidden;
 	padding: 0;
 }
@@ -1555,3 +1553,182 @@ div.i-window-header {
 /* Automatically compiled css file from subdirectories. */
 
 /* ./WebContent/ITMILL/themes/reindeer/button/button.css */
+/* IE6 gets native buttons, since it doesn't support the adjacent child selector (>) that is needed to position i-icon properly */
+div > .i-button,
+.i-ie7 .i-button,
+.i-ie8 .i-button {
+	height: 26px;
+	padding: 0 0 0 6px; /* Left side padding width the same amount as left.png  */
+	background: transparent url(button/img/left.png) no-repeat;
+	border: none;
+	cursor: default;
+}
+div > .i-button span,
+.i-ie7 .i-button span,
+.i-ie8 .i-button span {
+	display: inline-block;
+	height: 21px;
+	padding: 5px 15px 0 9px;
+	background: transparent url(button/img/right.png) no-repeat right top;
+	text-shadow: #fff 0 1px 0;
+	font-weight: bold;
+	float: none;
+	line-height: 16px;
+}
+.i-ie7 .i-button span,
+.i-ie8 .i-button span {
+	padding: 5px 15px 0 9px;
+	height: 21px;
+}
+.i-button:focus {
+	background-image: url(button/img/left-focus.png);
+	outline: none;
+}
+.i-button:focus span {
+	background-image: url(button/img/right-focus.png);
+	outline: none;
+}
+.i-button:active {
+	background-image: url(button/img/left-pressed.png);
+	outline: none;
+}
+.i-button:active span {
+	background-image: url(button/img/right-pressed.png);
+	outline: none;
+}
+/* FF3 & FF2 */
+.i-button::-moz-focus-inner {
+	border: none;
+	padding: 0;
+}
+.i-ff2 .i-button span {
+	display: -moz-inline-box;
+}
+/* IE7 */
+.i-ie7 .i-button.i-pressed,
+.i-ie8 .i-button.i-pressed {
+	background-image: url(button/img/left-pressed.png);
+}
+.i-ie7 .i-button.i-pressed span,
+.i-ie8 .i-button.i-pressed span {
+	background-image: url(button/img/right-pressed.png);
+	position: relative;
+}
+.i-ie7 .i-button.i-pressed .i-icon,
+.i-ie8 .i-button.i-pressed .i-icon {
+	position: relative;
+	z-index: 2;
+}
+/* IE8 */
+/* TODO
+.i-ie8 .i-button:active {
+	background-position: 1px -39px;
+}
+.i-ie8 .i-button:active span {
+	position: relative;
+}
+*/
+/* Opera */
+.i-op .i-button:active span {
+	margin-top: -1px;
+	margin-left: -1px;
+}
+/* Modifications for buttons with icons */
+div > .i-button .i-icon,
+.i-ie7 .i-button .i-icon,
+.i-ie8 .i-button .i-icon {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	overflow: hidden;
+	position: relative;
+	margin: 0 3px 0 0;
+}
+.i-ff2 .i-button .i-icon {
+	display: block;
+	float: left;
+	margin-top: 4px;
+}
+.i-ff2 .i-button-link .i-icon {
+	margin: 0;
+}
+.i-button .i-icon + span {
+	margin-left: -19px;
+	padding-left: 19px;
+}
+.i-ie7 .i-button .i-icon + span,
+.i-ie8 .i-button .i-icon + span {
+	margin-left: -23px;
+	padding-left: 23px;
+}
+/* Link style buttons */
+.i-button.i-button-link,
+.i-ie .i-button-link.i-pressed {
+	background: transparent;
+	height: auto;
+	padding: 0;
+	cursor: pointer;
+}
+.i-button.i-button-link span,
+.i-ie .i-button-link.i-pressed span {
+	background: transparent;
+	height: auto;
+	padding: 0;
+	display: inline;
+	font-weight: normal;
+	color: #1b699f;
+}
+.i-button.i-button-link .i-icon + span {
+	margin: 0;
+	padding: 0;
+}
+.i-button-link:focus {
+	outline: 1px dotted #1b699f;
+}
+
+/* ./WebContent/ITMILL/themes/reindeer/common/common.css */
+.i-generated-body,
+.i-app {
+	background: #f5f5f5;
+}
+/* Global font styles */
+.i-app,
+.i-window,
+.i-popupview-popup,
+.i-tooltip,
+.i-app input,
+.i-app select,
+.i-app button,
+.i-app textarea,
+.i-window input,
+.i-window select,
+.i-window button,
+.i-window textarea,
+.i-popupview-popup input,
+.i-popupview-popup select,
+.i-popupview-popup button,
+.i-popupview-popup textarea {
+	font-family: Arial, Helvetica, Tahoma, Verdana, sans-serif;
+	font-size: 12px;
+	line-height: normal;
+	color: #222;
+}
+/* Fonts for Safari, exchange Helvetica for Arial */
+.i-sa .i-app,
+.i-sa .i-window,
+.i-sa .i-popupview-popup,
+.i-sa .i-tooltip,
+.i-sa .i-app input,
+.i-sa .i-app select,
+.i-sa .i-app button,
+.i-sa .i-app textarea,
+.i-sa .i-window input,
+.i-sa .i-window select,
+.i-sa .i-window button,
+.i-sa .i-window textarea,
+.i-sa .i-popupview-popup input,
+.i-sa .i-popupview-popup select,
+.i-sa .i-popupview-popup button,
+.i-sa .i-popupview-popup textarea {
+	font-family: Helvetica, Arial, "Lucida Grande", Geneva, Tahoma, Verdana, sans-serif;
+}

@@ -40,6 +40,9 @@
 	white-space: nowrap;
 	margin: 0;
 }
+.i-button span {
+	white-space: nowrap;
+}
 .i-checkbox input {
 	vertical-align: middle;
 }
@@ -49,7 +52,8 @@
 	vertical-align: middle;
 	margin-right: 3px;
 }
-.i-button span, .i-checkbox label {
+.i-button span,
+.i-checkbox label {
 	vertical-align: middle;
 }
 .i-button-link {
@@ -74,22 +78,17 @@
 	padding-left: 1em;
 	background-position: left;
 }
-
-/* Fixes streched buttons in IE6 */
+/* Fixes streched buttons in IE6 and IE7*/
 .i-ie6 .i-button {
 	width: 1px;
+}
+.i-ie6 .i-button,
+.i-ie7 .i-button,
+.i-ie8 .i-button {
 	overflow: visible;
 	padding-left: 1em;
 	padding-right: 1em;
 }
-
-/* Fixes streched buttons in IE7 */
-.i-ie7 .i-button {
-	overflow: visible;
-	padding-left: 1em;
-	padding-right: 1em;
-}
-
 /* Error indicator on checkbox fix for IE6 */
 .i-ie6 .i-checkbox * {
 	float: left;
@@ -102,32 +101,30 @@
 	padding-left: 0; 
 	padding-right: 0.4em;
 }
-
 /* Error indicator on checkbox fix for IE7 */
-.i-ie7 .i-checkbox * {
+.i-ie7 .i-checkbox *,
+.i-ie8 .i-checkbox * {
 	float: left;
 }
-.i-ie7 .i-checkbox .i-errorindicator {
+.i-ie7 .i-checkbox .i-errorindicator,
+.i-ie8 .i-checkbox .i-errorindicator {
 	background-position: right;
 	float: left;
 	padding-left: 0;
 	padding-right: 0.7em;
 }
-
 /* Error indicator on button fix for IE */
 .i-ie6 button .i-errorindicator,
-.i-ie7 button .i-errorindicator {
+.i-ie7 button .i-errorindicator,
+.i-ie8 button .i-errorindicator {
 	display: inline;
 	padding-right: 0.5em;
 }
-
-
 /* Disabled by default
 .i-checkbox-error {
 	background: #ffe0e0;
 }
 */
-
 /* Disabled by default
 .i-checkbox-required {
 	background: #ffe0e0;
@@ -1418,6 +1415,7 @@ div.i-tree-node-leaf {
 div.i-window-header {
 	white-space: nowrap;
 	text-overflow: ellipsis;
+	-ms-text-overflow: ellipsis;
 	overflow: hidden;
 	padding: 0;
 }
@@ -1634,6 +1632,8 @@ div.i-window-header {
 	background-position: 50%;
 }
 /* Global font styles */
+.i-window,
+.i-popupview-popup,
 .i-app input,
 .i-app select,
 .i-app button,
@@ -2174,15 +2174,18 @@ div.i-window-header {
 	background: transparent;
 }
 .i-ie6 .i-panel-content,
-.i-ie7 .i-panel-content {
+.i-ie7 .i-panel-content,
+.i-ie8 .i-panel-content {
 	border-bottom: 1px solid #babfc0;
 }
 .i-ie6 .i-panel-content-light,
-.i-ie7 .i-panel-content-light {
+.i-ie7 .i-panel-content-light,
+.i-ie8 .i-panel-content-light {
 	border-bottom: none;
 }
 .i-ie6 .i-panel-deco,
-.i-ie7 .i-panel-deco {
+.i-ie7 .i-panel-deco,
+.i-ie8 .i-panel-deco {
 	height: 0;
 	overflow: hidden;
 }
@@ -2849,12 +2852,10 @@ div.i-window-header {
 	padding-top: 12px;
 }
 /* IE specific styles */
-.i-ie6 .i-tabsheet-tabs,
-.i-ie7 .i-tabsheet-tabs {
+.i-ie6 .i-tabsheet-tabs {
 	height: 46px;
 }
-.i-ie6 .i-tabsheet-tabitem-selected,
-.i-ie7 .i-tabsheet-tabitem-selected {
+.i-ie6 .i-tabsheet-tabitem-selected {
 	border: 1px solid #babfc0;
 	border-bottom: none;
 	background: #fff;
@@ -2864,24 +2865,26 @@ div.i-window-header {
 	cursor: default;
 	color: #ee5311;
 }
-.i-ie6 .i-tabsheet-tabitem-selected .i-caption,
-.i-ie7 .i-tabsheet-tabitem-selected .i-caption {
+.i-ie6 .i-tabsheet-tabitem-selected .i-caption {
 	background: transparent;
 	padding: 0;
 	margin: 0;
 }
 .i-ie6 .i-tabsheet-content,
-.i-ie7 .i-tabsheet-content {
+.i-ie7 .i-tabsheet-content,
+.i-ie8 .i-tabsheet-content {
 	border-bottom: none;
 }
 .i-ie6 .i-tabsheet-deco,
-.i-ie7 .i-tabsheet-deco {
+.i-ie7 .i-tabsheet-deco,
+.i-ie8 .i-tabsheet-deco {
 	height: 1px;
 	background: #babfc0;
 	overflow: hidden;
 	margin: 0;
 }
-.i-ie7 .i-tabsheet-deco {
+.i-ie7 .i-tabsheet-deco,
+.i-ie8 .i-tabsheet-deco {
 	width: 100%;
 }
 /* Light-style */
@@ -2995,7 +2998,8 @@ div.i-window-header {
 	padding: 9px 11px 0 11px;
 }
 .i-ie6 .i-tabsheet-deco-light,
-.i-ie6 .i-tabsheet-deco-light {
+.i-ie7 .i-tabsheet-deco-light,
+.i-ie8 .i-tabsheet-deco-light {
 	height: 0;
 }
 

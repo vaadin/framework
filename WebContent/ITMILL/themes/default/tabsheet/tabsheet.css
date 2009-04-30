@@ -117,12 +117,10 @@
 	padding-top: 12px;
 }
 /* IE specific styles */
-.i-ie6 .i-tabsheet-tabs,
-.i-ie7 .i-tabsheet-tabs {
+.i-ie6 .i-tabsheet-tabs {
 	height: 46px;
 }
-.i-ie6 .i-tabsheet-tabitem-selected,
-.i-ie7 .i-tabsheet-tabitem-selected {
+.i-ie6 .i-tabsheet-tabitem-selected {
 	border: 1px solid #babfc0;
 	border-bottom: none;
 	background: #fff;
@@ -132,24 +130,26 @@
 	cursor: default;
 	color: #ee5311;
 }
-.i-ie6 .i-tabsheet-tabitem-selected .i-caption,
-.i-ie7 .i-tabsheet-tabitem-selected .i-caption {
+.i-ie6 .i-tabsheet-tabitem-selected .i-caption {
 	background: transparent;
 	padding: 0;
 	margin: 0;
 }
 .i-ie6 .i-tabsheet-content,
-.i-ie7 .i-tabsheet-content {
+.i-ie7 .i-tabsheet-content,
+.i-ie8 .i-tabsheet-content {
 	border-bottom: none;
 }
 .i-ie6 .i-tabsheet-deco,
-.i-ie7 .i-tabsheet-deco {
+.i-ie7 .i-tabsheet-deco,
+.i-ie8 .i-tabsheet-deco {
 	height: 1px;
 	background: #babfc0;
 	overflow: hidden;
 	margin: 0;
 }
-.i-ie7 .i-tabsheet-deco {
+.i-ie7 .i-tabsheet-deco,
+.i-ie8 .i-tabsheet-deco {
 	width: 100%;
 }
 /* Light-style */
@@ -263,6 +263,7 @@
 	padding: 9px 11px 0 11px;
 }
 .i-ie6 .i-tabsheet-deco-light,
-.i-ie6 .i-tabsheet-deco-light {
+.i-ie7 .i-tabsheet-deco-light,
+.i-ie8 .i-tabsheet-deco-light {
 	height: 0;
 }

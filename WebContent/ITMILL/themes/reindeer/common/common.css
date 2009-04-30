@@ -1,0 +1,45 @@
+.i-generated-body,
+.i-app {
+	background: #f5f5f5;
+}
+/* Global font styles */
+.i-app,
+.i-window,
+.i-popupview-popup,
+.i-tooltip,
+.i-app input,
+.i-app select,
+.i-app button,
+.i-app textarea,
+.i-window input,
+.i-window select,
+.i-window button,
+.i-window textarea,
+.i-popupview-popup input,
+.i-popupview-popup select,
+.i-popupview-popup button,
+.i-popupview-popup textarea {
+	font-family: Arial, Helvetica, Tahoma, Verdana, sans-serif;
+	font-size: 12px;
+	line-height: normal;
+	color: #222;
+}
+/* Fonts for Safari, exchange Helvetica for Arial */
+.i-sa .i-app,
+.i-sa .i-window,
+.i-sa .i-popupview-popup,
+.i-sa .i-tooltip,
+.i-sa .i-app input,
+.i-sa .i-app select,
+.i-sa .i-app button,
+.i-sa .i-app textarea,
+.i-sa .i-window input,
+.i-sa .i-window select,
+.i-sa .i-window button,
+.i-sa .i-window textarea,
+.i-sa .i-popupview-popup input,
+.i-sa .i-popupview-popup select,
+.i-sa .i-popupview-popup button,
+.i-sa .i-popupview-popup textarea {
+	font-family: Helvetica, Arial, "Lucida Grande", Geneva, Tahoma, Verdana, sans-serif;
+}

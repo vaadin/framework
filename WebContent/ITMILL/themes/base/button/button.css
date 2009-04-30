@@ -3,6 +3,9 @@
 	white-space: nowrap;
 	margin: 0;
 }
+.i-button span {
+	white-space: nowrap;
+}
 .i-checkbox input {
 	vertical-align: middle;
 }
@@ -12,7 +15,8 @@
 	vertical-align: middle;
 	margin-right: 3px;
 }
-.i-button span, .i-checkbox label {
+.i-button span,
+.i-checkbox label {
 	vertical-align: middle;
 }
 .i-button-link {
@@ -37,22 +41,17 @@
 	padding-left: 1em;
 	background-position: left;
 }
-
-/* Fixes streched buttons in IE6 */
+/* Fixes streched buttons in IE6 and IE7*/
 .i-ie6 .i-button {
 	width: 1px;
+}
+.i-ie6 .i-button,
+.i-ie7 .i-button,
+.i-ie8 .i-button {
 	overflow: visible;
 	padding-left: 1em;
 	padding-right: 1em;
 }
-
-/* Fixes streched buttons in IE7 */
-.i-ie7 .i-button {
-	overflow: visible;
-	padding-left: 1em;
-	padding-right: 1em;
-}
-
 /* Error indicator on checkbox fix for IE6 */
 .i-ie6 .i-checkbox * {
 	float: left;
@@ -65,32 +64,30 @@
 	padding-left: 0; 
 	padding-right: 0.4em;
 }
-
 /* Error indicator on checkbox fix for IE7 */
-.i-ie7 .i-checkbox * {
+.i-ie7 .i-checkbox *,
+.i-ie8 .i-checkbox * {
 	float: left;
 }
-.i-ie7 .i-checkbox .i-errorindicator {
+.i-ie7 .i-checkbox .i-errorindicator,
+.i-ie8 .i-checkbox .i-errorindicator {
 	background-position: right;
 	float: left;
 	padding-left: 0;
 	padding-right: 0.7em;
 }
-
 /* Error indicator on button fix for IE */
 .i-ie6 button .i-errorindicator,
-.i-ie7 button .i-errorindicator {
+.i-ie7 button .i-errorindicator,
+.i-ie8 button .i-errorindicator {
 	display: inline;
 	padding-right: 0.5em;
 }
-
-
 /* Disabled by default
 .i-checkbox-error {
 	background: #ffe0e0;
 }
 */
-
 /* Disabled by default
 .i-checkbox-required {
 	background: #ffe0e0;

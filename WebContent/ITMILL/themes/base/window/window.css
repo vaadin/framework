@@ -13,6 +13,7 @@
 div.i-window-header {
 	white-space: nowrap;
 	text-overflow: ellipsis;
+	-ms-text-overflow: ellipsis;
 	overflow: hidden;
 	padding: 0;
 }

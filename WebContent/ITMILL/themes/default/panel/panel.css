@@ -82,15 +82,18 @@
 	background: transparent;
 }
 .i-ie6 .i-panel-content,
-.i-ie7 .i-panel-content {
+.i-ie7 .i-panel-content,
+.i-ie8 .i-panel-content {
 	border-bottom: 1px solid #babfc0;
 }
 .i-ie6 .i-panel-content-light,
-.i-ie7 .i-panel-content-light {
+.i-ie7 .i-panel-content-light,
+.i-ie8 .i-panel-content-light {
 	border-bottom: none;
 }
 .i-ie6 .i-panel-deco,
-.i-ie7 .i-panel-deco {
+.i-ie7 .i-panel-deco,
+.i-ie8 .i-panel-deco {
 	height: 0;
 	overflow: hidden;
 }
