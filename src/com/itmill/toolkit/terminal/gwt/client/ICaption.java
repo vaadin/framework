@@ -436,4 +436,8 @@ public class ICaption extends HTML {
         }
     }
 
+    protected Element getTextElement() {
+        return captionText;
+    }
+
 }

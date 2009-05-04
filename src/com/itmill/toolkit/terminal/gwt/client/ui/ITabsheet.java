@@ -45,6 +45,29 @@ public class ITabsheet extends ITabsheetBase {
             }
         }
 
+        @Override
+        public void setWidth(String width) {
+            super.setWidth(width);
+            if (BrowserInfo.get().isIE7()) {
+                /*
+                 * IE7 apparently has problems with calculating width for
+                 * floated elements inside a DIV with padding. Set the width
+                 * explicitly for the caption.
+                 */
+                fixTextWidth();
+            }
+        }
+
+        private void fixTextWidth() {
+            Element captionText = getTextElement();
+            int captionWidth = Util.getRequiredWidth(captionText);
+            int scrollWidth = captionText.getScrollWidth();
+            if (scrollWidth > captionWidth) {
+                captionWidth = scrollWidth;
+            }
+            captionText.getStyle().setPropertyPx("width", captionWidth);
+        }
+
     }
 
     class TabBar extends ComplexPanel implements ClickListener {
