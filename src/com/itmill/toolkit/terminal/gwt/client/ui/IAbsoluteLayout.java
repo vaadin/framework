@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.Container;
+import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.RenderSpace;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
@@ -113,8 +114,9 @@ public class IAbsoluteLayout extends ComplexPanel implements Container {
     }
 
     public void updateCaption(Paintable component, UIDL uidl) {
-        // TODO Auto-generated method stub
-
+        AbsoluteWrapper parent2 = (AbsoluteWrapper) ((Widget) component)
+                .getParent();
+        parent2.updateCaption(uidl);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -189,9 +191,10 @@ public class IAbsoluteLayout extends ComplexPanel implements Container {
 
     private void relayoutRelativeChildren() {
         for (Widget widget : getChildren()) {
-            if (widget instanceof Paintable) {
-                Paintable new_name = (Paintable) widget;
-                client.handleComponentRelativeSize(widget);
+            if (widget instanceof AbsoluteWrapper) {
+                AbsoluteWrapper w = (AbsoluteWrapper) widget;
+                client.handleComponentRelativeSize(w.getWidget());
+                w.updateCaptionPosition();
             }
         }
     }
@@ -213,7 +216,9 @@ public class IAbsoluteLayout extends ComplexPanel implements Container {
 
     private void relayoutWrappersForIe6() {
         for (Widget wrapper : getChildren()) {
-            ((AbsoluteWrapper) wrapper).ie6Layout();
+            if (wrapper instanceof AbsoluteWrapper) {
+                ((AbsoluteWrapper) wrapper).ie6Layout();
+            }
         }
     }
 
@@ -226,13 +231,35 @@ public class IAbsoluteLayout extends ComplexPanel implements Container {
         private String zIndex;
 
         private Paintable paintable;
+        private ICaption caption;
 
         public AbsoluteWrapper(Paintable paintable) {
             this.paintable = paintable;
             setStyleName(CLASSNAME + "-wrapper");
         }
 
+        public void updateCaption(UIDL uidl) {
+
+            boolean captionIsNeeded = ICaption.isNeeded(uidl);
+            if (captionIsNeeded) {
+                if (caption == null) {
+                    caption = new ICaption(paintable, client);
+                    IAbsoluteLayout.this.add(caption);
+                }
+                caption.updateCaption(uidl);
+                updateCaptionPosition();
+            } else {
+                if (caption != null) {
+                    caption.removeFromParent();
+                    caption = null;
+                }
+            }
+        }
+
         public void destroy() {
+            if (caption != null) {
+                caption.removeFromParent();
+            }
             client.unregisterPaintable(paintable);
             removeFromParent();
         }
@@ -285,7 +312,17 @@ public class IAbsoluteLayout extends ComplexPanel implements Container {
                     ie6Layout();
                 }
             }
+            updateCaptionPosition();
+        }
 
+        private void updateCaptionPosition() {
+            if (caption != null) {
+                Style style = caption.getElement().getStyle();
+                style.setProperty("position", "absolute");
+                style.setPropertyPx("left", getElement().getOffsetLeft());
+                style.setPropertyPx("top", getElement().getOffsetTop()
+                        - caption.getHeight());
+            }
         }
 
         private void ie6Layout() {
