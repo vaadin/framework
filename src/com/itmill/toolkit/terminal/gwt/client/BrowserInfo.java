@@ -74,6 +74,11 @@ public class BrowserInfo {
                 ieVersionString = ieVersionString.substring(0, ieVersionString
                         .indexOf(";"));
                 version = Float.parseFloat(ieVersionString);
+
+                if (version == 8 && isIE8InIE7CompatibilityMode()) {
+                    version = 7;
+                }
+
             }
         } catch (Exception e) {
             ClientExceptionHandler.displayError(e);
@@ -100,7 +105,6 @@ public class BrowserInfo {
      */
     public String getCSSClass() {
         String prefix = "i-";
-        boolean ie8 = false;
 
         if (cssClass == null) {
             String bs = getBrowserString().toLowerCase();
@@ -122,28 +126,31 @@ public class BrowserInfo {
                 b = "ie";
                 int i = bs.indexOf(" msie ") + 6;
                 String ieVersion = bs.substring(i, i + 1);
-                v = b + ieVersion;
 
-                // This adds .i-ie7 for ie8 also.
-                // TODO Remove this when IE8 is no longer run in compatibility
-                // mode
-                if (ieVersion != null && ieVersion.equals("8")) {
-                    ie8 = true;
+                if (ieVersion != null && ieVersion.equals("8")
+                        && isIE8InIE7CompatibilityMode()) {
+                    ieVersion = "7";
                 }
 
+                v = b + ieVersion;
             } else if (bs.indexOf("opera/") != -1) {
                 b = "op";
                 int i = bs.indexOf("opera/") + 6;
                 v = b + bs.substring(i, i + 3).replace(".", "");
             }
             cssClass = prefix + b + " " + prefix + v;
-            if (ie8) {
-                cssClass += " " + prefix + "ie7";
-            }
         }
 
         return cssClass;
     }
+
+    private native boolean isIE8InIE7CompatibilityMode()
+    /*-{
+        var mode = $wnd.document.documentMode;
+        if (!mode)
+            return false;
+        return (mode == 7);
+    }-*/;
 
     public boolean isIE() {
         return isIE;
@@ -159,6 +166,10 @@ public class BrowserInfo {
 
     public boolean isIE7() {
         return isIE && version == 7;
+    }
+
+    public boolean isIE8() {
+        return isIE && version == 8;
     }
 
     public boolean isGecko() {
@@ -201,6 +212,7 @@ public class BrowserInfo {
         c.log("isIE() " + get().isIE());
         c.log("isIE6() " + get().isIE6());
         c.log("isIE7() " + get().isIE7());
+        c.log("isIE8() " + get().isIE8());
         c.log("isFF2() " + get().isFF2());
         c.log("isSafari() " + get().isSafari());
         c.log("getGeckoVersion() " + get().getGeckoVersion());
