@@ -96,12 +96,12 @@ public class BrowserInfo {
      * Examples: Internet Explorer 6: ".i-ie .i-ie6", Firefox 3.0.4:
      * ".i-ff .i-ff3", Opera 9.60: ".i-op .i-op96"
      * 
-     * @param prefix
-     *            a prefix to add to the classnames
      * @return
      */
     public String getCSSClass() {
         String prefix = "i-";
+        boolean ie8 = false;
+
         if (cssClass == null) {
             String bs = getBrowserString().toLowerCase();
             String b = "";
@@ -121,13 +121,25 @@ public class BrowserInfo {
             } else if (bs.indexOf(" msie ") != -1) {
                 b = "ie";
                 int i = bs.indexOf(" msie ") + 6;
-                v = b + bs.substring(i, i + 1);
+                String ieVersion = bs.substring(i, i + 1);
+                v = b + ieVersion;
+
+                // This adds .i-ie7 for ie8 also.
+                // TODO Remove this when IE8 is no longer run in compatibility
+                // mode
+                if (ieVersion != null && ieVersion.equals("8")) {
+                    ie8 = true;
+                }
+
             } else if (bs.indexOf("opera/") != -1) {
                 b = "op";
                 int i = bs.indexOf("opera/") + 6;
                 v = b + bs.substring(i, i + 3).replace(".", "");
             }
             cssClass = prefix + b + " " + prefix + v;
+            if (ie8) {
+                cssClass += " " + prefix + "ie7";
+            }
         }
 
         return cssClass;
