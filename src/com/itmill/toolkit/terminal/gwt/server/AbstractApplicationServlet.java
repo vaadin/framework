@@ -43,6 +43,20 @@ import com.itmill.toolkit.terminal.URIHandler;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.ui.Window;
 
+/**
+ * Abstract implementation of the ApplicationServlet which handles all
+ * communication between the client and the server.
+ * 
+ * It is possible to extend this class to provide own functionality but in most
+ * cases this is unnecessary.
+ * 
+ * 
+ * @author IT Mill Ltd.
+ * @version
+ * @VERSION@
+ * @since 6.0
+ */
+
 @SuppressWarnings("serial")
 public abstract class AbstractApplicationServlet extends HttpServlet {
     /**
