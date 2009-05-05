@@ -1,6 +1,6 @@
 package com.itmill.toolkit.launcher;
 
-import com.google.gwt.dev.Compiler;
+import com.google.gwt.dev.GWTCompiler;
 
 /**
  * A wrapper for the GWT 1.6 compiler that runs the compiler in a new thread.
@@ -9,11 +9,12 @@ import com.google.gwt.dev.Compiler;
  * stack size for the main thread. Thus, larger widgetsets can be compiled.
  * 
  * This class takes the same command line arguments as the
- * com.google.gwt.dev.Compiler class.
+ * com.google.gwt.dev.GWTCompiler class. The old and deprecated compiler is used
+ * for compatibility with GWT 1.5.
  * 
  * A typical invocation would use e.g. the following arguments
  * 
- * "-workDir WebContent/ITMILL/widgetsets com.itmill.toolkit.terminal.gwt.DefaultWidgetSet"
+ * "-out WebContent/ITMILL/widgetsets com.itmill.toolkit.terminal.gwt.DefaultWidgetSet"
  * 
  * In addition, larger memory usage settings for the VM should be used, e.g.
  * 
@@ -40,7 +41,7 @@ public class WidgetsetCompiler {
 
             Runnable runCompiler = new Runnable() {
                 public void run() {
-                    Compiler.main(args);
+                    GWTCompiler.main(args);
                 }
             };
             Thread runThread = new Thread(runCompiler);
