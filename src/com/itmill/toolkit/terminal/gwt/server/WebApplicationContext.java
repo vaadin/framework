@@ -36,11 +36,11 @@ import com.itmill.toolkit.service.ApplicationContext;
 public class WebApplicationContext implements ApplicationContext,
         HttpSessionBindingListener, Serializable {
 
-    protected List listeners;
+    protected List<TransactionListener> listeners;
 
     protected transient HttpSession session;
 
-    protected final HashSet applications = new HashSet();
+    protected final HashSet<Application> applications = new HashSet<Application>();
 
     protected WebBrowser browser = new WebBrowser();
 
@@ -131,7 +131,7 @@ public class WebApplicationContext implements ApplicationContext,
      */
     public void addTransactionListener(TransactionListener listener) {
         if (listeners == null) {
-            listeners = new LinkedList();
+            listeners = new LinkedList<TransactionListener>();
         }
         listeners.add(listener);
     }
@@ -179,14 +179,14 @@ public class WebApplicationContext implements ApplicationContext,
             return;
         }
 
-        LinkedList exceptions = null;
+        LinkedList<Exception> exceptions = null;
         for (final Iterator i = listeners.iterator(); i.hasNext();) {
             try {
                 ((ApplicationContext.TransactionListener) i.next())
                         .transactionEnd(application, request);
             } catch (final RuntimeException t) {
                 if (exceptions == null) {
-                    exceptions = new LinkedList();
+                    exceptions = new LinkedList<Exception>();
                 }
                 exceptions.add(t);
             }
@@ -232,8 +232,7 @@ public class WebApplicationContext implements ApplicationContext,
         // closing
         try {
             while (!applications.isEmpty()) {
-                final Application app = (Application) applications.iterator()
-                        .next();
+                final Application app = applications.iterator().next();
                 app.close();
                 applicationToAjaxAppMgrMap.remove(app);
                 removeApplication(app);
@@ -266,13 +265,14 @@ public class WebApplicationContext implements ApplicationContext,
     /**
      * Gets communication manager for an application.
      * 
-     * If this application has not been running before, new manager is created.
+     * If this application has not been running before, a new manager is
+     * created.
      * 
      * @param application
      * @return CommunicationManager
      */
     protected CommunicationManager getApplicationManager(
-            Application application, ApplicationServlet servlet) {
+            Application application, AbstractApplicationServlet servlet) {
         CommunicationManager mgr = applicationToAjaxAppMgrMap.get(application);
 
         if (mgr == null) {
