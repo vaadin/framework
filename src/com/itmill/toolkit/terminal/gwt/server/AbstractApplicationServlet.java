@@ -1569,11 +1569,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
             String requestApplicationPath = getApplicationUrl(request)
                     .getPath();
 
-            // FIXME: remove
-            System.out.println("Comparing " + requestApplicationPath + " and "
-                    + sessionApplicationPath);
             if (requestApplicationPath.equals(sessionApplicationPath)) {
-                System.out.println("- OK");
                 // Found a running application
                 if (sessionApplication.isRunning()) {
                     return sessionApplication;
