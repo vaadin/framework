@@ -1,0 +1,26 @@
+.i-label {
+	line-height: 18px;
+}
+.i-label-h1,
+.i-label-h2,
+.i-caption-h1,
+.i-caption-h2 {
+	font-size: 24px;
+	line-height: 30px;
+	font-weight: bold;
+	color: #44698b;
+}
+.i-ie6 .i-label-h1 {
+	font-size: 1px;
+	line-height: normal;
+}
+.i-label-h2,
+.i-caption-h2 {
+	font-size: 16px;
+	line-height: 22px;
+}
+.i-label-light {
+	font-size: 11px;
+	line-height: 13px;
+	color: #707070;
+}

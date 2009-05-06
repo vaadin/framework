@@ -219,11 +219,7 @@
 .i-window select {
 	margin: 0;
 }
-.i-disabled
-/*,
-.i-app .i-disabled,
-.i-window .i-disabled,
-.i-popupview-popup .i-disabled*/ {
+.i-disabled {
 	opacity: .3;
 	filter: alpha(opacity=30);
 	cursor: default;
@@ -1553,48 +1549,60 @@ div.i-window-header {
 /* Automatically compiled css file from subdirectories. */
 
 /* ./WebContent/ITMILL/themes/reindeer/button/button.css */
-/* IE6 gets native buttons, since it doesn't support the adjacent child selector (>) that is needed to position i-icon properly */
+/** sprite: buttons; sprite-image: url(button/img/buttons.png); sprite-layout: vertical */
+
+/* We serve simpler buttons for IE6, since it doesn't support the adjacent 
+ * sibling selector (+) that is needed to position .i-icon properly.
+ */
 div > .i-button,
-.i-ie7 .i-button,
-.i-ie8 .i-button {
+.i-ie7 .i-button {
 	height: 26px;
-	padding: 0 0 0 6px; /* Left side padding width the same amount as left.png  */
-	background: transparent url(button/img/left.png) no-repeat;
+	padding: 0 0 0 6px;
+	background-color: transparent;
+	background-repeat: no-repeat;
+	background-image: url(button/img/left.png); /** sprite-ref: buttons */
 	border: none;
 	cursor: default;
 }
 div > .i-button span,
-.i-ie7 .i-button span,
-.i-ie8 .i-button span {
+.i-ie7 .i-button span {
 	display: inline-block;
-	height: 21px;
-	padding: 5px 15px 0 9px;
-	background: transparent url(button/img/right.png) no-repeat right top;
+	height: 22px;
+	padding: 4px 15px 0 9px;
+	background-color: transparent;
+	background-repeat: no-repeat;
+	background-position: right top;
+	background-image: url(button/img/right.png);  /** sprite-ref: buttons; sprite-alignment: right */
 	text-shadow: #fff 0 1px 0;
 	font-weight: bold;
-	float: none;
+	font-size: 11px;
 	line-height: 16px;
+	float: none;
 }
-.i-ie7 .i-button span,
-.i-ie8 .i-button span {
-	padding: 5px 15px 0 9px;
+.i-sa .i-button span {
 	height: 21px;
+	padding-top: 5px;
 }
 .i-button:focus {
-	background-image: url(button/img/left-focus.png);
+	background-image: url(button/img/left-focus.png); /** sprite-ref: buttons */
 	outline: none;
 }
 .i-button:focus span {
-	background-image: url(button/img/right-focus.png);
+	background-image: url(button/img/right-focus.png); /** sprite-ref: buttons; sprite-alignment: right */
 	outline: none;
 }
-.i-button:active {
-	background-image: url(button/img/left-pressed.png);
+.i-button:active,
+.i-ie7 .i-button.i-pressed {
+	background-image: url(button/img/left-pressed.png); /** sprite-ref: buttons */
 	outline: none;
 }
-.i-button:active span {
-	background-image: url(button/img/right-pressed.png);
+.i-button:active span,
+.i-ie7 .i-button.i-pressed span {
+	background-image: url(button/img/right-pressed.png); /** sprite-ref: buttons; sprite-alignment: right */
 	outline: none;
+}
+.i-ie7 .i-button.i-pressed span {
+	position: relative;
 }
 /* FF3 & FF2 */
 .i-button::-moz-focus-inner {
@@ -1605,29 +1613,10 @@ div > .i-button span,
 	display: -moz-inline-box;
 }
 /* IE7 */
-.i-ie7 .i-button.i-pressed,
-.i-ie8 .i-button.i-pressed {
-	background-image: url(button/img/left-pressed.png);
-}
-.i-ie7 .i-button.i-pressed span,
-.i-ie8 .i-button.i-pressed span {
-	background-image: url(button/img/right-pressed.png);
-	position: relative;
-}
-.i-ie7 .i-button.i-pressed .i-icon,
-.i-ie8 .i-button.i-pressed .i-icon {
+.i-ie7 .i-button.i-pressed .i-icon {
 	position: relative;
 	z-index: 2;
 }
-/* IE8 */
-/* TODO
-.i-ie8 .i-button:active {
-	background-position: 1px -39px;
-}
-.i-ie8 .i-button:active span {
-	position: relative;
-}
-*/
 /* Opera */
 .i-op .i-button:active span {
 	margin-top: -1px;
@@ -1635,8 +1624,7 @@ div > .i-button span,
 }
 /* Modifications for buttons with icons */
 div > .i-button .i-icon,
-.i-ie7 .i-button .i-icon,
-.i-ie8 .i-button .i-icon {
+.i-ie7 .i-button .i-icon {
 	display: inline-block;
 	width: 16px;
 	height: 16px;
@@ -1652,25 +1640,44 @@ div > .i-button .i-icon,
 .i-ff2 .i-button-link .i-icon {
 	margin: 0;
 }
-.i-button .i-icon + span {
+.i-button .i-icon + span,
+.i-button .i-icon + .i-errorindicator + span {
 	margin-left: -19px;
 	padding-left: 19px;
 }
 .i-ie7 .i-button .i-icon + span,
-.i-ie8 .i-button .i-icon + span {
+.i-ie7 .i-button .i-icon + .i-errorindicator + span {
 	margin-left: -23px;
 	padding-left: 23px;
 }
+/* Buttons with error indicator */
+div > .i-button .i-errorindicator,
+.i-ie7 .i-button .i-errorindicator {
+	display: inline;
+	position: absolute;
+	width: 5px;
+	height: 26px;
+	background: transparent url(../default/icons/16/error.png) no-repeat 50%;
+	overflow: hidden;
+}
+.i-ie6 .i-button .i-errorindicator {
+	position: absolute;
+	width: 5px;
+	height: 18px;
+	background: transparent url(../default/icons/16/error.gif) no-repeat 50%;
+	overflow: hidden;
+	margin-left: -10px;
+}
 /* Link style buttons */
 .i-button.i-button-link,
-.i-ie .i-button-link.i-pressed {
+.i-ie7 .i-button-link.i-pressed {
 	background: transparent;
 	height: auto;
 	padding: 0;
 	cursor: pointer;
 }
 .i-button.i-button-link span,
-.i-ie .i-button-link.i-pressed span {
+.i-ie7 .i-button-link.i-pressed span {
 	background: transparent;
 	height: auto;
 	padding: 0;
@@ -1684,6 +1691,92 @@ div > .i-button .i-icon,
 }
 .i-button-link:focus {
 	outline: 1px dotted #1b699f;
+}
+/**
+ * Default action button style --------------------------
+ */
+div > .i-button-primary,
+.i-ie7 .i-button-primary {
+	background-image: url(button/img/primary-left.png); /** sprite-ref: buttons */
+}
+div > .i-button-primary span,
+.i-ie7 .i-button-primary span {
+	background-image: url(button/img/primary-right.png); /** sprite-ref: buttons; sprite-alignment: right */
+}
+.i-button-primary:focus {
+	background-image: url(button/img/primary-left-focus.png); /** sprite-ref: buttons */
+}
+.i-button-primary:focus span {
+	background-image: url(button/img/primary-right-focus.png); /** sprite-ref: buttons; sprite-alignment: right */
+}
+.i-button-primary:active,
+.i-ie7 .i-button-primary.i-pressed {
+	background-image: url(button/img/primary-left-pressed.png); /** sprite-ref: buttons */
+}
+.i-button-primary:active span,
+.i-ie7 .i-button-primary.i-pressed span {
+	background-image: url(button/img/primary-right-pressed.png); /** sprite-ref: buttons; sprite-alignment: right */
+}
+/* 
+ * Small-style --------------------------
+ */
+div > .i-button-small,
+.i-ie7 .i-button-small {
+	background-image: url(button/img/small-left.png); /** sprite-ref: buttons */
+	height: 20px;
+}
+div > .i-button-small span,
+.i-ie7 .i-button-small span {
+	background-image: url(button/img/small-right.png); /** sprite-ref: buttons; sprite-alignment: right */
+	height: 19px;
+	padding: 1px 11px 0 5px;
+	font-weight: normal;
+}
+.i-sa .i-button-small span {
+	height: 18px;
+	padding-top: 2px;
+}
+.i-button-small:focus {
+	background-image: url(button/img/small-left-focus.png); /** sprite-ref: buttons */
+}
+.i-button-small:focus span {
+	background-image: url(button/img/small-right-focus.png); /** sprite-ref: buttons; sprite-alignment: right */
+}
+.i-button-small:active,
+.i-ie7 .i-button-small.i-pressed {
+	background-image: url(button/img/small-left-pressed.png); /** sprite-ref: buttons */
+}
+.i-button-small:active span,
+.i-ie7 .i-button-small.i-pressed span {
+	background-image: url(button/img/small-right-pressed.png); /** sprite-ref: buttons; sprite-alignment: right */
+}
+
+/**
+ * IE6 buttons --------------------------
+ */
+.i-ie6 .i-button {
+	border: 1px solid #b3b3b3;
+	border-bottom-color: #9a9a9a;
+	background: transparent url(button/img/right.png) no-repeat 0 -1px;
+	padding: 3px 15px 2px 15px;
+	font-weight: bold;
+	font-size: 11px;
+	line-height: 16px;
+	height: 16px;
+	outline: none;
+}
+.i-ie6 .i-button-primary {
+	background-image: url(button/img/primary-right.png);
+}
+.i-ie6 .i-button-small {
+	font-weight: normal;
+	padding: 1px 11px 0 11px;
+	height: 12px;
+	line-height: normal;
+	background-image: url(button/img/small-right.png);
+}
+.i-ie6 .i-button.i-pressed {
+	background: transparent url(button/img/right-pressed.png) no-repeat 0 -1px;
 }
 
 /* ./WebContent/ITMILL/themes/reindeer/common/common.css */
@@ -1731,4 +1824,121 @@ div > .i-button .i-icon,
 .i-sa .i-popupview-popup button,
 .i-sa .i-popupview-popup textarea {
 	font-family: Helvetica, Arial, "Lucida Grande", Geneva, Tahoma, Verdana, sans-serif;
+}
+
+/* ./WebContent/ITMILL/themes/reindeer/label/label.css */
+.i-label {
+	line-height: 18px;
+}
+.i-label-h1,
+.i-label-h2,
+.i-caption-h1,
+.i-caption-h2 {
+	font-size: 24px;
+	line-height: 30px;
+	font-weight: bold;
+	color: #44698b;
+}
+.i-ie6 .i-label-h1 {
+	font-size: 1px;
+	line-height: normal;
+}
+.i-label-h2,
+.i-caption-h2 {
+	font-size: 16px;
+	line-height: 22px;
+}
+.i-label-light {
+	font-size: 11px;
+	line-height: 13px;
+	color: #707070;
+}
+
+/* ./WebContent/ITMILL/themes/reindeer/layouts/layouts.css */
+.i-orderedlayout-margin-top,
+.i-horizontallayout-margin-top,
+.i-verticallayout-margin-top {
+	padding-top: 18px;
+}
+.i-orderedlayout-margin-right,
+.i-horizontallayout-margin-right,
+.i-verticallayout-margin-right {
+	padding-right: 18px;
+}
+.i-orderedlayout-margin-bottom,
+.i-horizontallayout-margin-bottom,
+.i-verticallayout-margin-bottom {
+	padding-bottom: 18px;
+}
+.i-orderedlayout-margin-left,
+.i-horizontallayout-margin-left,
+.i-verticallayout-margin-left {
+	padding-left: 18px;
+}
+.i-orderedlayout-spacing-on,
+.i-horizontallayout-spacing-on,
+.i-verticallayout-spacing-on {
+	padding-top: 7px;
+	padding-left: 6px;
+}
+
+/* ./WebContent/ITMILL/themes/reindeer/panel/panel.css */
+.i-panel-caption,
+.i-panel-nocaption {
+	border-bottom: 1px solid #dcdcdc;
+	line-height: 16px; /* accommodate minimum icon size */
+}
+.i-sa .i-panel-caption,
+.i-sa .i-panel-nocaption,
+.i-ff3 .i-panel-caption,
+.i-ff3 .i-panel-nocaption {
+	border-bottom-color: rgba(0,0,0,.1);
+}
+.i-panel-caption {
+	padding-bottom: 2px;
+}
+.i-panel-content {
+	border: 1px solid #dcdcdc;
+	border-bottom: none;
+	border-top: none;
+	background: #fff;
+}
+.i-sa .i-panel-content,
+.i-ff3 .i-panel-content {
+	border-color: rgba(0,0,0,.1);
+}
+.i-panel-deco {
+	height: 1px;
+	border-top: 1px solid #bebebe;
+	background: #e2e2e2;
+	overflow: hidden;
+}
+.i-sa .i-panel-deco,
+.i-ff3 .i-panel-deco {
+	border-top-color: rgba(0,0,0,.1);
+	background: rgba(0,0,0,.08);
+}
+
+/* ./WebContent/ITMILL/themes/reindeer/tabsheet/tabsheet.css */
+.i-tabsheet-spacertd div {
+	border-color: #bfbfbf;
+	border-left: none;
+}
+.i-tabsheet-tabitem {
+	border: none;
+	border-bottom: 1px solid #bfbfbf;
+	padding: 5px 16px;
+	color: #4d748f;
+}
+.i-tabsheet-tabitem-selected {
+	border: 1px solid #bfbfbf;
+	border-bottom: none;
+	color: #222;
+	padding: 4px 15px 6px 15px;
+}
+.i-tabsheet-content {
+	border: none;
+}
+.i-tabsheet-deco {
+	height: 0;
 }

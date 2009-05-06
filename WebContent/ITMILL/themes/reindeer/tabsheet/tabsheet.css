@@ -1,0 +1,22 @@
+.i-tabsheet-spacertd div {
+	border-color: #bfbfbf;
+	border-left: none;
+}
+.i-tabsheet-tabitem {
+	border: none;
+	border-bottom: 1px solid #bfbfbf;
+	padding: 5px 16px;
+	color: #4d748f;
+}
+.i-tabsheet-tabitem-selected {
+	border: 1px solid #bfbfbf;
+	border-bottom: none;
+	color: #222;
+	padding: 4px 15px 6px 15px;
+}
+.i-tabsheet-content {
+	border: none;
+}
+.i-tabsheet-deco {
+	height: 0;
+}

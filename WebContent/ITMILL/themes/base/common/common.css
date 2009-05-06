@@ -52,11 +52,7 @@
 .i-window select {
 	margin: 0;
 }
-.i-disabled
-/*,
-.i-app .i-disabled,
-.i-window .i-disabled,
-.i-popupview-popup .i-disabled*/ {
+.i-disabled {
 	opacity: .3;
 	filter: alpha(opacity=30);
 	cursor: default;
