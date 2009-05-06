@@ -1,5 +1,6 @@
 package com.itmill.toolkit.terminal.gwt.client;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.google.gwt.user.client.DOM;
@@ -7,6 +8,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.IView;
+import com.itmill.toolkit.terminal.gwt.client.ui.IWindow;
 import com.itmill.toolkit.terminal.gwt.client.ui.SubPartAware;
 
 /**
@@ -217,6 +219,12 @@ public class ComponentLocator {
 
         if (w instanceof IView) {
             return "";
+        } else if (w instanceof IWindow) {
+            IWindow win = (IWindow) w;
+            ArrayList<IWindow> subWindowList = client.getView()
+                    .getSubWindowList();
+            int indexOfSubWindow = subWindowList.indexOf(win);
+            return PARENTCHILD_SEPARATOR + "IWindow[" + indexOfSubWindow + "]";
         }
 
         Widget parent = w.getParent();
@@ -225,7 +233,7 @@ public class ComponentLocator {
 
         String simpleName = Util.getSimpleName(w);
 
-        Iterator i = ((HasWidgets) parent).iterator();
+        Iterator<Widget> i = ((HasWidgets) parent).iterator();
         int pos = 0;
         while (i.hasNext()) {
             Object child = i.next();
@@ -262,12 +270,16 @@ public class ComponentLocator {
             } else if (w instanceof HasWidgets) {
                 HasWidgets parent = (HasWidgets) w;
 
-                String simpleName = Util.getSimpleName(parent);
+                String[] split = part.split("\\[");
 
-                Iterator i = parent.iterator();
+                Iterator<? extends Widget> i;
+                if (split[0].equals("IWindow")) {
+                    i = client.getView().getSubWindowList().iterator();
+                } else {
+                    i = parent.iterator();
+                }
 
                 boolean ok = false;
-                String[] split = part.split("\\[");
                 int pos = Integer.parseInt(split[1].substring(0, split[1]
                         .length() - 1));
                 // ApplicationConnection.getConsole().log(
@@ -275,7 +287,7 @@ public class ComponentLocator {
                 while (i.hasNext()) {
                     // ApplicationConnection.getConsole().log("- child found");
 
-                    Widget child = (Widget) i.next();
+                    Widget child = i.next();
                     String simpleName2 = Util.getSimpleName(child);
 
                     if (split[0].equals(simpleName2)) {
