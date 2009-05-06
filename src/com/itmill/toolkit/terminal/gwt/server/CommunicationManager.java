@@ -92,13 +92,13 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
     public static final String VAR_ARRAYITEM_SEPARATOR = "\u001c";
 
-    private final HashSet currentlyOpenWindowsInClient = new HashSet();
+    private final HashSet<String> currentlyOpenWindowsInClient = new HashSet<String>();
 
     private static final int MAX_BUFFER_SIZE = 64 * 1024;
 
     private static final String GET_PARAM_ANALYZE_LAYOUTS = "analyzeLayouts";
 
-    private final ArrayList dirtyPaintabletSet = new ArrayList();
+    private final ArrayList<Paintable> dirtyPaintabletSet = new ArrayList<Paintable>();
 
     private final HashMap<Paintable, String> paintableIdMap = new HashMap<Paintable, String>();
 
@@ -106,7 +106,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
     private int idSequence = 0;
 
-    private final ApplicationServlet applicationServlet;
+    private final AbstractApplicationServlet applicationServlet;
 
     private final Application application;
 
@@ -114,14 +114,14 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
     // thus should be thread-safe.
     private String closingWindowName = null;
 
-    private List locales;
+    private List<String> locales;
 
     private int pendingLocalesIndex;
 
     private int timeoutInterval = -1;
 
     public CommunicationManager(Application application,
-            ApplicationServlet applicationServlet) {
+            AbstractApplicationServlet applicationServlet) {
         this.application = application;
         requireLocale(application.getLocale().toString());
         this.applicationServlet = applicationServlet;
@@ -228,9 +228,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
      * @throws ServletException
      */
     public void handleUidlRequest(HttpServletRequest request,
-            HttpServletResponse response, ApplicationServlet applicationServlet)
-            throws IOException, ServletException,
-            InvalidUIDLSecurityKeyException {
+            HttpServletResponse response,
+            AbstractApplicationServlet applicationServlet) throws IOException,
+            ServletException, InvalidUIDLSecurityKeyException {
 
         // repaint requested or session has timed out and new one is created
         boolean repaintAll = (request.getParameter(GET_PARAM_REPAINT_ALL) != null)
@@ -317,7 +317,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
     private void paintAfterVariablechanges(HttpServletRequest request,
             HttpServletResponse response,
-            ApplicationServlet applicationServlet, boolean repaintAll,
+            AbstractApplicationServlet applicationServlet, boolean repaintAll,
             final PrintWriter outWriter, Window window, boolean analyzeLayouts)
             throws IOException, ServletException, PaintException {
 
@@ -394,8 +394,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                 // We need to avoid painting children before parent.
                 // This is ensured by ordering list by depth in component
                 // tree
-                Collections.sort(paintables, new Comparator() {
-                    public int compare(Object o1, Object o2) {
+                Collections.sort(paintables, new Comparator<Paintable>() {
+                    public int compare(Paintable o1, Paintable o2) {
                         Component c1 = (Component) o1;
                         Component c2 = (Component) o2;
                         int d1 = 0;
@@ -885,8 +885,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
         outWriter.print(", \"locales\":[");
         for (; pendingLocalesIndex < locales.size(); pendingLocalesIndex++) {
 
-            final Locale l = generateLocale((String) locales
-                    .get(pendingLocalesIndex));
+            final Locale l = generateLocale(locales.get(pendingLocalesIndex));
             // Locale name
             outWriter.print("{\"name\":\"" + l.toString() + "\",");
 
@@ -1034,12 +1033,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
         if (window == null) {
 
             // Get the path from URL
-            String path = request.getPathInfo();
-            if (applicationServlet.isApplicationRunnerServlet) {
-                path = path
-                        .substring(1 + applicationServlet.applicationRunnerClassname
-                                .length());
-            }
+            String path = applicationServlet.getRequestPathInfo(request);
             path = path.substring("/UIDL".length());
 
             // If the path is specified, create name from it
@@ -1175,8 +1169,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
      *            root window for which dirty components is to be fetched
      * @return
      */
-    private ArrayList getDirtyVisibleComponents(Window w) {
-        final ArrayList resultset = new ArrayList(dirtyPaintabletSet);
+    private ArrayList<Paintable> getDirtyVisibleComponents(Window w) {
+        final ArrayList<Paintable> resultset = new ArrayList<Paintable>(
+                dirtyPaintabletSet);
 
         // The following algorithm removes any components that would be painted
         // as a direct descendant of other components from the dirty components
@@ -1363,7 +1358,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
     public void requireLocale(String value) {
         if (locales == null) {
-            locales = new ArrayList();
+            locales = new ArrayList<String>();
             locales.add(application.getLocale().toString());
             pendingLocalesIndex = 0;
         }
@@ -1452,7 +1447,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
     DownloadStream handleURI(Window window, HttpServletRequest request,
             HttpServletResponse response) {
 
-        String uri = request.getPathInfo();
+        String uri = applicationServlet.getRequestPathInfo(request);
 
         // If no URI is available
         if (uri == null) {
@@ -1461,18 +1456,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             // Removes the leading /
             while (uri.startsWith("/") && uri.length() > 0) {
                 uri = uri.substring(1);
-            }
-        }
-
-        // If using application runner, remove package and class name
-        if (applicationServlet.isApplicationRunnerServlet) {
-            if (uri.contains("/")) {
-                uri = uri
-                        .replaceFirst(
-                                applicationServlet.applicationRunnerClassname
-                                        + "/", "");
-            } else {
-                uri = "";
             }
         }
 
