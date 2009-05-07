@@ -59,7 +59,7 @@
 	<target name="package-war" depends="clean-result, package-init, init, build, docs, internal-package-mac, internal-package-war">
 	</target>
 
-    <target name="package-test" depends="clean-result, nightly-init, package-init, init, build, docs, internal-package-linux, nightly-install">
+    <target name="package-test" depends="clean-result, nightly-init, package-init, init, build, docs, internal-package-linux, nightly-publish">
     </target>
 
     <!-- ant contrib required for flow control (for loop, if, property override)   -->
@@ -1076,7 +1076,7 @@
     <!-- ================================================================== -->
 
     <!-- Main target for the nightly build. -->
-    <target name="nightly" depends="clean-result, nightly-init, package-init, init, build, internal-package-linux, nightly-install">
+    <target name="nightly" depends="clean-result, nightly-init, package-init, init, build, internal-package-linux">
     </target>
 
     <!-- Create symlink to GWT installation directory. -->
@@ -1153,7 +1153,7 @@
         <echo>Result: ${nightly.install.scp.result}</echo>
     </target>
 
-    <target name="nightly-install" depends="nightly-teamcity-publish, nightly-download-publish">
+    <target name="nightly-publish" depends="nightly-teamcity-publish, nightly-download-publish">
     </target>
 
     <!-- ================================================================== -->
