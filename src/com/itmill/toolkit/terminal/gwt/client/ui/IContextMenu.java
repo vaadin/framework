@@ -4,12 +4,17 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.TableRowElement;
+import com.google.gwt.dom.client.TableSectionElement;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 
-public class IContextMenu extends IToolkitOverlay {
+public class IContextMenu extends IToolkitOverlay implements SubPartAware {
 
     private ActionOwner actionOwner;
 
@@ -111,5 +116,43 @@ public class IContextMenu extends IToolkitOverlay {
          * 
          * super.onBrowserEvent(event); }
          */
+    }
+
+    public Element getSubPartElement(String subPart) {
+        int index = Integer.parseInt(subPart.substring(6));
+        ApplicationConnection.getConsole().log(
+                "Searching element for selection index " + index);
+        Element wrapperdiv = menu.getElement();
+        com.google.gwt.dom.client.TableSectionElement tBody = (TableSectionElement) wrapperdiv
+                .getFirstChildElement().getFirstChildElement();
+        TableRowElement item = tBody.getRows().getItem(index);
+        com.google.gwt.dom.client.Element clickableDivElement = item
+                .getFirstChildElement().getFirstChildElement();
+        return clickableDivElement.cast();
+    }
+
+    public String getSubPartName(Element subElement) {
+        if (getElement().isOrHasChild(subElement)) {
+            com.google.gwt.dom.client.Element e = subElement;
+            {
+                while (e != null && !e.getTagName().toLowerCase().equals("tr")) {
+                    e = e.getParentElement();
+                    ApplicationConnection.getConsole().log("Found row");
+                }
+            }
+            com.google.gwt.dom.client.TableSectionElement parentElement = (TableSectionElement) e
+                    .getParentElement();
+            NodeList<TableRowElement> rows = parentElement.getRows();
+            for (int i = 0; i < rows.getLength(); i++) {
+                if (rows.getItem(i) == e) {
+                    ApplicationConnection.getConsole().log(
+                            "Found index for row" + 1);
+                    return "option" + i;
+                }
+            }
+            return null;
+        } else {
+            return null;
+        }
     }
 }

@@ -66,6 +66,15 @@ public class ComponentLocator {
         }
 
         if (e == null || pid == null) {
+
+            // Still test for context menu option
+            String subPartName = client.getContextMenu().getSubPartName(
+                    targetElement);
+            if (subPartName != null) {
+                // IContextMenu, singleton attached directly to rootpanel
+                return "/IContextMenu[0]" + SUBPART_SEPARATOR + subPartName;
+
+            }
             return null;
         }
 
@@ -273,8 +282,11 @@ public class ComponentLocator {
                 String[] split = part.split("\\[");
 
                 Iterator<? extends Widget> i;
-                if (split[0].equals("IWindow")) {
+                String widgetClassName = split[0];
+                if (widgetClassName.equals("IWindow")) {
                     i = client.getView().getSubWindowList().iterator();
+                } else if (widgetClassName.equals("IContextMenu")) {
+                    return client.getContextMenu();
                 } else {
                     i = parent.iterator();
                 }
@@ -290,7 +302,7 @@ public class ComponentLocator {
                     Widget child = i.next();
                     String simpleName2 = Util.getSimpleName(child);
 
-                    if (split[0].equals(simpleName2)) {
+                    if (widgetClassName.equals(simpleName2)) {
                         if (pos == 0) {
                             w = child;
                             ok = true;
