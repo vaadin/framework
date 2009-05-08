@@ -34,11 +34,7 @@
 
 	<servlet>
 		<servlet-name>ITMillToolkitApplicationRunner</servlet-name>
-		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>applicationRunner</param-name>
-			<param-value>true</param-value>
-		</init-param>
+		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationRunnerServlet</servlet-class>
 	</servlet>
 
 

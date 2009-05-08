@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+
+<project name="Testing Testing Tools" basedir="." default="run-and-clean-up">
+    <!-- ================================================================== -->
+    <!-- Configuration                                                      -->
+    <!-- ================================================================== -->
+	<property name="lib.dir" value="../lib/testingtools" />
+	<property name="class-dir" value="../build/classes" />
+	<property name="test-output-dir" value="../build/test-output" />
+	<property name="test-browsers" value="firefox,ie" />
+
+	<path id="classpath">
+		<fileset dir="${lib.dir}" includes="**/*.jar" />
+		<pathelement path="${class-dir}" />
+	</path>
+
+	<fileset dir="../tests" id="html-test-files">
+		<include name="**/*test**.html" />
+	</fileset>
+
+    <!-- ================================================================== -->
+    <!-- Building Tests                                                     -->
+    <!-- ================================================================== -->
+
+	<target name="create-tests">
+		<fileset id="tests">
+			<include />
+		</fileset>
+		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
+
+		<java classname="com.vaadin.testingtools.util.TestConverter" classpathref="classpath">
+			<arg value="${test-output-dir}" />
+			<arg value="${test-browsers}" />
+			<arg line="${testfiles}" />
+		</java>
+	</target>
+
+	<target name="compile-tests" depends="create-tests">
+        <mkdir dir="${class-dir}"/>
+		<javac srcdir="${test-output-dir}" destdir="${class-dir}" debug="on">
+			<classpath>
+				<path refid="classpath" />
+			</classpath>
+		</javac>
+	</target>
+
+    <!-- ================================================================== -->
+    <!-- Toolkit Server Management                                          -->
+    <!-- ================================================================== -->
+
+    <target name="server-start">
+        <fail unless="package.name" message="The 'package.name' property must be defined."/>
+        <fail unless="package.filename" message="The 'package.filename' property must be defined."/>
+        <fail unless="testing.testarea" message="The 'testing.testarea' property must be defined."/>
+
+        <echo>Package name: ${package.name}</echo>
+        <echo>Package filename: ${package.filename}</echo>
+        <echo>Testing area: ${testing.testarea}</echo>
+
+        <exec executable="python" searchpath="true" dir=".."  resultproperty="server.start.result">
+            <arg value="build/testing/toolkit-server.py"/>
+            <arg value="start"/>
+            <arg value="${package.name}"/>
+            <arg value="${package.filename}"/>
+            <arg value="${testing.testarea}"/>
+        </exec>
+
+        <condition property="server.start.succeeded">
+            <equals arg1="${server.start.result}" arg2="0"/>
+        </condition>
+    </target>
+
+    <target name="server-stop">
+        <exec executable="python" dir=".." searchpath="true" resultproperty="server.stop.result">
+            <arg value="build/testing/toolkit-server.py"/>
+            <arg value="stop"/>
+        </exec>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Running Tests                                                      -->
+    <!-- ================================================================== -->
+
+	<target name="check-parameters">
+        <fail unless="testingtools.tester.host" message="The 'testingtools.tester.host' property must be defined."/>
+        <fail unless="testingtools.deployment.url" message="The 'testingtools.deployment.url' property must be defined."/>
+    </target>
+
+	<target name="run-tests" if="server.start.succeeded" depends="execute-tests">
+	</target>
+
+	<target name="execute-tests" depends="compile-tests">
+		<junit fork="yes">
+			<classpath>
+				<path refid="classpath" />
+			</classpath>
+			<jvmarg value="-Dtestingtools.tester.host=${testingtools.tester.host}" />
+			<jvmarg value="-Dtestingtools.deployment.url=${testingtools.deployment.url}" />
+
+			<batchtest>
+				<fileset dir="${test-output-dir}">
+					<include name="**/**.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+
+	</target>
+
+	<target name="remove-temp-files">
+		<!-- test java files -->
+		<delete>
+			<fileset dir="${test-output-dir}">
+				<include name="**/**.java" />
+			</fileset>
+		</delete>
+	</target>
+
+    <!-- ================================================================== -->
+    <!-- Main Targets                                                       -->
+    <!-- ================================================================== -->
+
+    <!-- The default target. -->
+	<target name="run-and-clean-up" depends="check-parameters, run-tests,remove-temp-files">
+	</target>
+
+    <!-- Also starts the server. -->
+    <target name="test-package" depends="server-start, run-and-clean-up, server-stop">
+    </target>
+
+</project>
