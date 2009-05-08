@@ -394,12 +394,31 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
             Collections.sort(allItems, new Comparator<BT>() {
                 @SuppressWarnings("unchecked")
                 public int compare(BT a, BT b) {
-                    Comparable va = (Comparable) beanToItem.get(a)
-                            .getItemProperty(property).getValue();
-                    Comparable vb = (Comparable) beanToItem.get(b)
-                            .getItemProperty(property).getValue();
+                    Comparable va, vb;
+                    if (asc) {
+                        va = (Comparable) beanToItem.get(a).getItemProperty(
+                                property).getValue();
+                        vb = (Comparable) beanToItem.get(b).getItemProperty(
+                                property).getValue();
+                    } else {
+                        va = (Comparable) beanToItem.get(b).getItemProperty(
+                                property).getValue();
+                        vb = (Comparable) beanToItem.get(a).getItemProperty(
+                                property).getValue();
+                    }
 
-                    return asc ? va.compareTo(vb) : vb.compareTo(va);
+                    /*
+                     * Null values are considered less than all others. The
+                     * compareTo method cannot handle null values for the
+                     * standard types.
+                     */
+                    if (va == null) {
+                        return (vb == null) ? 0 : -1;
+                    } else if (vb == null) {
+                        return (va == null) ? 0 : 1;
+                    }
+
+                    return va.compareTo(vb);
                 }
             });
         }
