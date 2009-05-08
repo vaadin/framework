@@ -1,5 +1,3 @@
-/** sprite: buttons; sprite-image: url(img/buttons.png); sprite-layout: vertical */
-
 /* We serve simpler buttons for IE6, since it doesn't support the adjacent 
  * sibling selector (+) that is needed to position .i-icon properly.
  */
@@ -60,6 +58,8 @@ div > .i-button span,
 }
 .i-ff2 .i-button span {
 	display: -moz-inline-box;
+	padding-top: 6px;
+	height: 20px;
 }
 /* IE7 */
 .i-ie7 .i-button.i-pressed .i-icon {
@@ -180,6 +180,10 @@ div > .i-button-small span,
 	height: 19px;
 	padding: 1px 11px 0 5px;
 	font-weight: normal;
+}
+.i-ff2 .i-button-small span {
+	height: 17px;
+	padding-top: 3px;
 }
 .i-sa .i-button-small span {
 	height: 18px;

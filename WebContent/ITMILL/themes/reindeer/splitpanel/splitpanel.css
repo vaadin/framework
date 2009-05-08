@@ -1,0 +1,24 @@
+.i-splitpanel-horizontal .i-splitpanel-hsplitter {
+	width: 7px;
+	background-repeat: repeat-y;
+	background-image: url(img/hor-bg.png); /** sprite-ref: horizontals; sprite-alignment: repeat */
+}
+.i-splitpanel-horizontal .i-splitpanel-hsplitter div {
+	width: 7px;
+	background: transparent;
+	background-repeat: no-repeat;
+	background-position: 50%;
+	background-image: url(img/hor-handle.png); /** sprite-ref: horizontals; sprite-alignment: middle */
+}
+.i-splitpanel-vertical .i-splitpanel-vsplitter {
+	height: 7px;
+	background-repeat: repeat-x;
+	background-image: url(img/ver-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+}
+.i-splitpanel-vertical .i-splitpanel-vsplitter div {
+	height: 7px;
+	background: transparent;
+	background-repeat: no-repeat;
+	background-position: 50%;
+	background-image: url(img/ver-handle.png); /** sprite-ref: verticals; sprite-alignment: center */
+}

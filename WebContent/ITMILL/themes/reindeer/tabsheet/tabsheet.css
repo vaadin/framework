@@ -20,3 +20,33 @@
 .i-tabsheet-deco {
 	height: 0;
 }
+.i-tabsheet-tabs .i-icon,
+.i-tabsheet-tabs .i-captiontext,
+.i-tabsheet-tabs .i-errorindicator {
+	display: inline;
+	float: none;
+}
+.i-sa .i-tabsheet-tabs .i-captiontext {
+	display: inline-block;
+}
+.i-tabsheet-tabs .i-icon {
+	width: 16px !important;
+	height: 16px !important;
+}
+.i-tabsheet-tabs .i-errorindicator {
+	display: inline-block;
+	width: 5px;
+	height: 16px;
+	background: transparent url(../../default/icons/16/error.png) no-repeat -1px 50%;
+}
+.i-ff2 .i-tabsheet-tabs .i-icon,
+.i-ff2 .i-tabsheet-tabs .i-errorindicator {
+	display: -moz-inline-stack;
+}
+.i-ie6 .i-tabsheet-tabs .i-errorindicator {
+	background-image: url(../../default/icons/16/error.gif);
+}
+.i-ie .i-tabsheet-tabs .i-errorindicator {
+	zoom:1;
+	display:inline;
+}

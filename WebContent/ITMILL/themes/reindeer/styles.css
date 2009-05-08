@@ -1548,9 +1548,11 @@ div.i-window-header {
 }
 /* Automatically compiled css file from subdirectories. */
 
-/* ./WebContent/ITMILL/themes/reindeer/button/button.css */
-/** sprite: buttons; sprite-image: url(button/img/buttons.png); sprite-layout: vertical */
+/* ./WebContent/ITMILL/themes/reindeer/a-sprite-definitions/a-sprite-definitions.css */
 
+
+
+/* ./WebContent/ITMILL/themes/reindeer/button/button.css */
 /* We serve simpler buttons for IE6, since it doesn't support the adjacent 
  * sibling selector (+) that is needed to position .i-icon properly.
  */
@@ -1560,7 +1562,9 @@ div > .i-button,
 	padding: 0 0 0 6px;
 	background-color: transparent;
 	background-repeat: no-repeat;
-	background-image: url(button/img/left.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -0px;
 	border: none;
 	cursor: default;
 }
@@ -1572,7 +1576,9 @@ div > .i-button span,
 	background-color: transparent;
 	background-repeat: no-repeat;
 	background-position: right top;
-	background-image: url(button/img/right.png);  /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -26px;
 	text-shadow: #fff 0 1px 0;
 	font-weight: bold;
 	font-size: 11px;
@@ -1584,21 +1590,29 @@ div > .i-button span,
 	padding-top: 5px;
 }
 .i-button:focus {
-	background-image: url(button/img/left-focus.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -52px;
 	outline: none;
 }
 .i-button:focus span {
-	background-image: url(button/img/right-focus.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -78px;
 	outline: none;
 }
 .i-button:active,
 .i-ie7 .i-button.i-pressed {
-	background-image: url(button/img/left-pressed.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -104px;
 	outline: none;
 }
 .i-button:active span,
 .i-ie7 .i-button.i-pressed span {
-	background-image: url(button/img/right-pressed.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -130px;
 	outline: none;
 }
 .i-ie7 .i-button.i-pressed span {
@@ -1611,6 +1625,8 @@ div > .i-button span,
 }
 .i-ff2 .i-button span {
 	display: -moz-inline-box;
+	padding-top: 6px;
+	height: 20px;
 }
 /* IE7 */
 .i-ie7 .i-button.i-pressed .i-icon {
@@ -1697,58 +1713,86 @@ div > .i-button .i-errorindicator,
  */
 div > .i-button-primary,
 .i-ie7 .i-button-primary {
-	background-image: url(button/img/primary-left.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -156px;
 }
 div > .i-button-primary span,
 .i-ie7 .i-button-primary span {
-	background-image: url(button/img/primary-right.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -182px;
 }
 .i-button-primary:focus {
-	background-image: url(button/img/primary-left-focus.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -208px;
 }
 .i-button-primary:focus span {
-	background-image: url(button/img/primary-right-focus.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -234px;
 }
 .i-button-primary:active,
 .i-ie7 .i-button-primary.i-pressed {
-	background-image: url(button/img/primary-left-pressed.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -260px;
 }
 .i-button-primary:active span,
 .i-ie7 .i-button-primary.i-pressed span {
-	background-image: url(button/img/primary-right-pressed.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -286px;
 }
 /* 
  * Small-style --------------------------
  */
 div > .i-button-small,
 .i-ie7 .i-button-small {
-	background-image: url(button/img/small-left.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -312px;
 	height: 20px;
 }
 div > .i-button-small span,
 .i-ie7 .i-button-small span {
-	background-image: url(button/img/small-right.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -332px;
 	height: 19px;
 	padding: 1px 11px 0 5px;
 	font-weight: normal;
+}
+.i-ff2 .i-button-small span {
+	height: 17px;
+	padding-top: 3px;
 }
 .i-sa .i-button-small span {
 	height: 18px;
 	padding-top: 2px;
 }
 .i-button-small:focus {
-	background-image: url(button/img/small-left-focus.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -352px;
 }
 .i-button-small:focus span {
-	background-image: url(button/img/small-right-focus.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -372px;
 }
 .i-button-small:active,
 .i-ie7 .i-button-small.i-pressed {
-	background-image: url(button/img/small-left-pressed.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -392px;
 }
 .i-button-small:active span,
 .i-ie7 .i-button-small.i-pressed span {
-	background-image: url(button/img/small-right-pressed.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -412px;
 }
 
 /**
@@ -1919,6 +1963,36 @@ div > .i-button-small span,
 	background: rgba(0,0,0,.08);
 }
 
+/* ./WebContent/ITMILL/themes/reindeer/splitpanel/splitpanel.css */
+.i-splitpanel-horizontal .i-splitpanel-hsplitter {
+	width: 7px;
+	background-repeat: repeat-y;
+  background-image: url(common/img/horizontal-sprites.png);
+  background-position: -0px top;
+}
+.i-splitpanel-horizontal .i-splitpanel-hsplitter div {
+	width: 7px;
+	background: transparent;
+	background-repeat: no-repeat;
+	background-position: 50%;
+  background-image: url(common/img/horizontal-sprites.png);
+  background-position: -7px center;
+}
+.i-splitpanel-vertical .i-splitpanel-vsplitter {
+	height: 7px;
+	background-repeat: repeat-x;
+  background-image: url(common/img/vertical-sprites.png);
+  background-position: left -0px;
+}
+.i-splitpanel-vertical .i-splitpanel-vsplitter div {
+	height: 7px;
+	background: transparent;
+	background-repeat: no-repeat;
+	background-position: 50%;
+  background-image: url(common/img/vertical-sprites.png);
+  background-position: center -7px;
+}
+
 /* ./WebContent/ITMILL/themes/reindeer/tabsheet/tabsheet.css */
 .i-tabsheet-spacertd div {
 	border-color: #bfbfbf;
@@ -1941,4 +2015,34 @@ div > .i-button-small span,
 }
 .i-tabsheet-deco {
 	height: 0;
+}
+.i-tabsheet-tabs .i-icon,
+.i-tabsheet-tabs .i-captiontext,
+.i-tabsheet-tabs .i-errorindicator {
+	display: inline;
+	float: none;
+}
+.i-sa .i-tabsheet-tabs .i-captiontext {
+	display: inline-block;
+}
+.i-tabsheet-tabs .i-icon {
+	width: 16px !important;
+	height: 16px !important;
+}
+.i-tabsheet-tabs .i-errorindicator {
+	display: inline-block;
+	width: 5px;
+	height: 16px;
+	background: transparent url(../default/icons/16/error.png) no-repeat -1px 50%;
+}
+.i-ff2 .i-tabsheet-tabs .i-icon,
+.i-ff2 .i-tabsheet-tabs .i-errorindicator {
+	display: -moz-inline-stack;
+}
+.i-ie6 .i-tabsheet-tabs .i-errorindicator {
+	background-image: url(../default/icons/16/error.gif);
+}
+.i-ie .i-tabsheet-tabs .i-errorindicator {
+	zoom:1;
+	display:inline;
 }
