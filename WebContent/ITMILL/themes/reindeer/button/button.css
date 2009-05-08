@@ -210,7 +210,7 @@ div > .i-button-small span,
 .i-ie6 .i-button {
 	border: 1px solid #b3b3b3;
 	border-bottom-color: #9a9a9a;
-	background: transparent url(img/right.png) no-repeat 0 -1px;
+	background: #d8d8d8 url(img/right.png) no-repeat 0 -1px;
 	padding: 3px 15px 2px 15px;
 	font-weight: bold;
 	font-size: 11px;
@@ -230,4 +230,10 @@ div > .i-button-small span,
 }
 .i-ie6 .i-button.i-pressed {
 	background: transparent url(img/right-pressed.png) no-repeat 0 -1px;
+}
+/* Buttons on blue background */
+.i-ie6 .blue .i-button {
+	border-color: #84949c;
+	border-top-color: #83939b;
+	border-bottom-color: #888d91;
 }

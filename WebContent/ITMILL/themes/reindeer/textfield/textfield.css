@@ -1,0 +1,36 @@
+.i-textfield {
+	line-height: normal;
+	height: 19px;
+	border: 1px solid #bcbdbe;
+	border-top-color: #a2a3a4;
+	border-bottom-color: #d2d3d4;
+	background: #fff;
+	background-repeat: repeat-x;
+	background-image: url(img/bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+	-moz-border-radius: 3px;
+}
+/* Need more specific selector because of #2384 fixes in base/common/common.css */
+.i-app input.i-textfield {
+	padding: 3px 3px 0 3px;
+}
+/* Textfield on blue background */
+.blue .i-textfield {
+	border-color: #92a2aa;
+	border-top-color: #7c8a90;
+	border-bottom-color: #a1b3bc;
+}
+/* Capable browsers get fancier border images */
+.i-sa input.i-textfield,
+.i-ff35 input.i-textfield,
+.i-op input.i-textfield {
+	-moz-border-radius: 0;
+	border: none;
+	background: transparent;
+	border-width: 0 3px 0 3px;
+	padding: 4px 0 0 0;
+	height: 20px;
+	-webkit-border-image: url(img/bg-border-image.png) 0 3 0 3 stretch stretch;
+	-moz-border-image: url(img/bg-border-image.png) 0 3 0 3 stretch stretch;
+	-o-border-image: url(img/bg-border-image.png) 0 3 0 3 stretch stretch;
+	
+}

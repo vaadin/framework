@@ -50,3 +50,9 @@
 	zoom:1;
 	display:inline;
 }
+/* Tabsheet on blue background */
+.blue .i-tabsheet-spacertd div,
+.blue .i-tabsheet-tabitem,
+.blue .i-tabsheet-tabitem-selected  {
+	border-color: #7c8a91;
+}

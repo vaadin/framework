@@ -24,3 +24,9 @@
 	padding-top: 7px;
 	padding-left: 6px;
 }
+/* Blue background */
+.i-verticallayout-blue,
+.i-horizontallayout-blue,
+.i-orderedlayout-blue {
+	background-color: #bcd3de;
+}

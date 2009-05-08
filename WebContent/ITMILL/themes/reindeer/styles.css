@@ -1801,7 +1801,7 @@ div > .i-button-small span,
 .i-ie6 .i-button {
 	border: 1px solid #b3b3b3;
 	border-bottom-color: #9a9a9a;
-	background: transparent url(button/img/right.png) no-repeat 0 -1px;
+	background: #d8d8d8 url(button/img/right.png) no-repeat 0 -1px;
 	padding: 3px 15px 2px 15px;
 	font-weight: bold;
 	font-size: 11px;
@@ -1821,6 +1821,12 @@ div > .i-button-small span,
 }
 .i-ie6 .i-button.i-pressed {
 	background: transparent url(button/img/right-pressed.png) no-repeat 0 -1px;
+}
+/* Buttons on blue background */
+.i-ie6 .blue .i-button {
+	border-color: #84949c;
+	border-top-color: #83939b;
+	border-bottom-color: #888d91;
 }
 
 /* ./WebContent/ITMILL/themes/reindeer/common/common.css */
@@ -1924,6 +1930,12 @@ div > .i-button-small span,
 .i-verticallayout-spacing-on {
 	padding-top: 7px;
 	padding-left: 6px;
+}
+/* Blue background */
+.i-verticallayout-blue,
+.i-horizontallayout-blue,
+.i-orderedlayout-blue {
+	background-color: #bcd3de;
 }
 
 /* ./WebContent/ITMILL/themes/reindeer/panel/panel.css */
@@ -2045,4 +2057,49 @@ div > .i-button-small span,
 .i-ie .i-tabsheet-tabs .i-errorindicator {
 	zoom:1;
 	display:inline;
+}
+/* Tabsheet on blue background */
+.blue .i-tabsheet-spacertd div,
+.blue .i-tabsheet-tabitem,
+.blue .i-tabsheet-tabitem-selected  {
+	border-color: #7c8a91;
+}
+
+/* ./WebContent/ITMILL/themes/reindeer/textfield/textfield.css */
+.i-textfield {
+	line-height: normal;
+	height: 19px;
+	border: 1px solid #bcbdbe;
+	border-top-color: #a2a3a4;
+	border-bottom-color: #d2d3d4;
+	background: #fff;
+	background-repeat: repeat-x;
+  background-image: url(common/img/vertical-sprites.png);
+  background-position: left -14px;
+	-moz-border-radius: 3px;
+}
+/* Need more specific selector because of #2384 fixes in base/common/common.css */
+.i-app input.i-textfield {
+	padding: 3px 3px 0 3px;
+}
+/* Textfield on blue background */
+.blue .i-textfield {
+	border-color: #92a2aa;
+	border-top-color: #7c8a90;
+	border-bottom-color: #a1b3bc;
+}
+/* Capable browsers get fancier border images */
+.i-sa input.i-textfield,
+.i-ff35 input.i-textfield,
+.i-op input.i-textfield {
+	-moz-border-radius: 0;
+	border: none;
+	background: transparent;
+	border-width: 0 3px 0 3px;
+	padding: 4px 0 0 0;
+	height: 20px;
+	-webkit-border-image: url(textfield/img/bg-border-image.png) 0 3 0 3 stretch stretch;
+	-moz-border-image: url(textfield/img/bg-border-image.png) 0 3 0 3 stretch stretch;
+	-o-border-image: url(textfield/img/bg-border-image.png) 0 3 0 3 stretch stretch;
+	
 }
