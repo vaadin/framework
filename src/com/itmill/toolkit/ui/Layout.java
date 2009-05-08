@@ -178,8 +178,17 @@ public interface Layout extends ComponentContainer, Serializable {
          * 
          * @return true if spacing between child components within this layout
          *         is enabled, false otherwise
+         * @deprecated Use {@link #isSpacing()} instead.
          */
+        @Deprecated
         public boolean isSpacingEnabled();
+
+        /**
+         * 
+         * @return true if spacing between child components within this layout
+         *         is enabled, false otherwise
+         */
+        public boolean isSpacing();
     }
 
     /**

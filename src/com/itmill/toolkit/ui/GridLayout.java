@@ -1107,9 +1107,19 @@ public class GridLayout extends AbstractLayout implements
     /*
      * (non-Javadoc)
      * 
-     * @see com.itmill.toolkit.ui.Layout.SpacingHandler#isSpacingEnabled()
+     * @see com.itmill.toolkit.ui.Layout.SpacingHandler#isSpacing()
      */
+    @Deprecated
     public boolean isSpacingEnabled() {
+        return spacing;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.itmill.toolkit.ui.Layout.SpacingHandler#isSpacing()
+     */
+    public boolean isSpacing() {
         return spacing;
     }
 
