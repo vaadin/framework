@@ -1,37 +1,21 @@
 .i-formlayout-cell .i-errorindicator {
 	width: 10px;
 	height: 16px;
-	display: block;
 	background: transparent url(../icons/16/error.png) no-repeat top right;
 }
 .i-formlayout-captioncell {
 	text-align:right;
 	white-space: nowrap;
 }
-.i-formlayout-captioncell .i-caption {
-	overflow: visible;
-}
-
-.i-formlayout-contentcell {
-}
-
 .i-formlayout-error-indicator {
 	/* fix width so layout is not jumpy when error disapear */
 	width: 12px;
 }
-
 .i-formlayout-spacing .i-formlayout-row .i-formlayout-captioncell, 
 .i-formlayout-spacing .i-formlayout-row .i-formlayout-contentcell,
 .i-formlayout-spacing .i-formlayout-row .i-formlayout-errorcell {
 	padding-top: 8px;
 }
-
-.i-formlayout-spacing .i-formlayout-firstrow .i-formlayout-captioncell, 
-.i-formlayout-spacing .i-formlayout-firstrow .i-formlayout-contentcell,
-.i-formlayout-spacing .i-formlayout-firstrow .i-formlayout-errorcell {
-	padding-top: 0;
-}
-
 .i-formlayout-margin-top .i-formlayout-firstrow .i-formlayout-captioncell, 
 .i-formlayout-margin-top .i-formlayout-firstrow .i-formlayout-contentcell,
 .i-formlayout-margin-top .i-formlayout-firstrow .i-formlayout-errorcell {
@@ -48,9 +32,7 @@
 .i-formlayout-margin-right .i-formlayout-contentcell {
 	padding-right: 18px;
 }
-
 /* form */
-
 .i-form-errormessage {
 	background: transparent url(../icons/16/error.png) no-repeat top left;
 	padding-left: 20px;
@@ -58,22 +40,15 @@
 	margin-top: 5px;
 	min-height: 20px;
 }
-
-* html .i-form-errormessage {
+.i-ie6 .i-form-errormessage {
 	height: 20px
 }
-
 .i-form fieldset {
 	border: none;
 	border-top: 1px solid #babfc0;
 }
-
 .i-form legend {
 	margin: 0;
 	padding: 0 4px 0.3em 4px;
 	font-weight: bold;
-}
-
-.i-formlayout-captioncell .i-caption .i-required-field-indicator {
-	float: none;
 }

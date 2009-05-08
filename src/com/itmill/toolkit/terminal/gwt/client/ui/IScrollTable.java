@@ -1469,7 +1469,10 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                     } else {
                         c.setSorted(false);
                     }
+                } else {
+                    c.setSortable(false);
                 }
+
                 if (col.hasAttribute("align")) {
                     c.setAlign(col.getStringAttribute("align").charAt(0));
                 }

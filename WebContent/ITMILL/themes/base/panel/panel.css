@@ -1,0 +1,35 @@
+.i-panel,
+.i-panel-caption,
+.i-panel-content,
+.i-panel-deco,
+.i-panel-light,
+.i-panel-caption-light,
+.i-panel-content-light,
+.i-panel-deco-light {
+	outline: none; /* Prevent selection outline which might break layouts or cause scrollbars */
+	text-align: left /* Force default alignment */
+}
+.i-panel-caption .i-errorindicator {
+	float: none;
+	display: inline;
+}
+.i-panel-caption .i-icon {
+	display: inline;
+	vertical-align: middle;
+}
+.i-panel-caption span {
+	vertical-align: middle;
+}
+.i-panel-caption {
+	white-space: nowrap;
+	overflow:hidden;
+	font-weight: bold;
+}
+.i-panel-nocaption {
+	overflow: hidden;
+}
+.i-panel-content {
+	overflow: auto;
+}
+.i-panel-deco {
+}

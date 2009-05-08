@@ -143,13 +143,14 @@
 	display: block;
 	height: 24px;
 	background-repeat: no-repeat;
-	background-position: 50% 40%;
+	background-position: 50% 30%;
 }
 .i-app-SamplerApplication .i-horizontallayout-segment .i-button-tree-switch span {
 	background-image: url(tree.png);
 }
 .i-app-SamplerApplication .i-horizontallayout-segment .i-popupview span {
 	background-image: url(magnifier.png);
+	background-position: 50% 40%;
 }
 .i-app-SamplerApplication .i-horizontallayout-segment .i-button-previous span {
 	background-image: url(prev.png);
@@ -303,8 +304,9 @@
 	text-shadow: 0 1px 0 #272a2b;
 	background: transparent url(info-bubble-top.png);
 	margin: 0;
-	padding-bottom: 10px;
+	padding-bottom: 12px;
 	padding-left: 28px;
+	padding-top: 15px;
 }
 .i-app-SamplerApplication .feature-info .i-panel-content {
 	background: transparent url(info-bubble-top.png) no-repeat 0 -44px;

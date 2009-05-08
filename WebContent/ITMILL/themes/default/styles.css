@@ -1,214 +1,185 @@
 /* Automatically compiled css file from subdirectories. */
 
-/* ./WebContent/ITMILL/themes/default/absolutelayout/absolutelayout.css */
+/* ./WebContent/ITMILL/themes/base/absolutelayout/absolutelayout.css */
 .i-absolutelayout-wrapper {
 	position: absolute;
-	overflow:hidden;
+	overflow: hidden;
 }
 
-/* ./WebContent/ITMILL/themes/default/accordion/accordion.css */
+/* ./WebContent/ITMILL/themes/base/accordion/accordion.css */
 .i-accordion {
 	position: relative;
 	outline: none;
 	overflow: hidden;
 	text-align: left /* Force default alignment */
 }
-
 .i-accordion-item {
-	position: relative; 
-	background-color: #fff;
+	position: relative;
 }
-
 .i-accordion-item-caption {
-	height: 31px;
 	overflow: hidden;
 	white-space: nowrap;
-	background: #edf0f0 url(tabsheet/img/tab-bg.png);
-	font-size: 15px;
-	color: #656d73;
-	border-top: 1px solid #c8cccd;
+	background: #eee;
+	border-bottom: 1px solid #ddd;
 }
-
 .i-accordion-item-caption .i-caption {
-	padding: 7px 0 6px 18px;
 	cursor: pointer;
 }
-
-.i-accordion-item-open .i-accordion-item-caption {
-	color: #3b4b57;
-	background: #d5dee2 url(accordion/img/selected-bg.png);
-	border-top-color: #cbd7de;
-	border-bottom-color: #bfc9d4;
-	text-shadow: #fafafa 1px 1px 0;
-	border-bottom: 1px solid #c8cccd;
+.i-accordion-item-open .i-accordion-item-caption .i-caption {
 	cursor: default;
 }
-
-
 .i-accordion-item-content {
 	position: absolute;
 	overflow: auto;
 	width: 100%;
 }
 
-/* ./WebContent/ITMILL/themes/default/button/button.css */
+/* ./WebContent/ITMILL/themes/base/button/button.css */
 .i-button {
 	cursor: pointer;
-	font-size: 13px;
 	white-space: nowrap;
-	margin: 0px;
+	margin: 0;
+}
+.i-button span {
+	white-space: nowrap;
 }
 .i-checkbox input {
 	vertical-align: middle;
 }
-.i-button img, .i-checkbox img {
-	display:inline;
+.i-button img,
+.i-checkbox img {
+	display: inline;
 	vertical-align: middle;
 	margin-right: 3px;
 }
-.i-button span, .i-checkbox label {
+.i-button span,
+.i-checkbox label {
 	vertical-align: middle;
 }
-
 .i-button-link {
 	border: none;
 	text-align: left;
 	background: none;
 	padding: 0;
 }
+/* Inset Safari focus outline a bit */
 .i-sa .i-button-link:focus {
 	outline-offset: -3px;
 }
 .i-button-link span {
 	text-decoration: underline;
 }
-
 .i-checkbox {
 	white-space: nowrap;	
 }
-	
 .i-checkbox .i-errorindicator {
 	float: none;
-	display:inline;
-	padding-left: 10px;
-	background-position:left;
+	display: inline;
+	padding-left: 1em;
+	background-position: left;
 }
-
-
-/* fixes streched buttons in IE6 */
-* html .i-button {
+/* Fixes streched buttons in IE6 and IE7*/
+.i-ie6 .i-button {
 	width: 1px;
-	overflow: visible;
-	padding-left: 10px;
-	padding-right: 10px;
 }
-
-/* fixes streched buttons in IE7 */
-*+html .i-button {
+.i-ie6 .i-button,
+.i-ie7 .i-button,
+.i-ie8 .i-button {
 	overflow: visible;
-	padding-left: 10px;
-	padding-right: 10px;
+	padding-left: 1em;
+	padding-right: 1em;
 }
-
 /* Error indicator on checkbox fix for IE6 */
-* html .i-checkbox * { display: block; float: left;}
-* html .i-checkbox .i-errorindicator {background-position:right;display: block; float: left; padding-left: 0px; padding-right:4px;}
-
+.i-ie6 .i-checkbox * {
+	float: left;
+	display: inline; /* In effect, does nothing, since float:left forces block-rendering, but will fix "double-float-margin-bug" */
+}
+.i-ie6 .i-checkbox .i-errorindicator {
+	background-position: right;
+	display: inline;
+	float: left;
+	padding-left: 0; 
+	padding-right: 0.4em;
+}
 /* Error indicator on checkbox fix for IE7 */
-*+ html .i-checkbox * { display: block; float: left;}
-*+ html .i-checkbox .i-errorindicator {background-position:right;display: block; float: left; padding-left: 0px;;padding-right:7px;}
-
-/* Error indicator on button fix for IE7 */
-*+ html button .i-errorindicator { display:inline; padding-right:5px; }
-
-/* Error indicator on button fix for IE6 */
-* html button .i-errorindicator { display:inline; padding-right:5px;}
-
-
+.i-ie7 .i-checkbox *,
+.i-ie8 .i-checkbox * {
+	float: left;
+}
+.i-ie7 .i-checkbox .i-errorindicator,
+.i-ie8 .i-checkbox .i-errorindicator {
+	background-position: right;
+	float: left;
+	padding-left: 0;
+	padding-right: 0.7em;
+}
+/* Error indicator on button fix for IE */
+.i-ie6 button .i-errorindicator,
+.i-ie7 button .i-errorindicator,
+.i-ie8 button .i-errorindicator {
+	display: inline;
+	padding-right: 0.5em;
+}
 /* Disabled by default
 .i-checkbox-error {
-	background:transparent;
-	background-color: #FFE0E0;
+	background: #ffe0e0;
 }
 */
-
 /* Disabled by default
 .i-checkbox-required {
-	background:transparent;
-	background-color: #FFE0E0;
+	background: #ffe0e0;
 }
 */
 
-/* ./WebContent/ITMILL/themes/default/caption/caption.css */
-/* Provide some extra whitespace for wrapped elements
-   (these elements usually need the extra space, since 
-   they aren't even handling their own caption) */
+/* ./WebContent/ITMILL/themes/base/caption/caption.css */
 .i-captionwrapper {
-	margin: 0.3em 0 0 0;
-	text-align: left /* Force default alignment */
+	text-align: left; /* Force default alignment */
 }
-
 .i-caption {
 	overflow: hidden;
 	white-space: nowrap;
 }
-
 .i-errorindicator {
-	width: 12px;
-	height: 16px;
 	float: left;
-	background: transparent url(icons/16/error.png) no-repeat top right;
-}
-
-* html .i-errorindicator {
-	background: transparent none;
-	/* gif for transparency */
-	background: transparent url(icons/16/error.gif) no-repeat top right;
-}
-*+html .i-errorindicator {
-	margin-left:-3px;
 }
 .i-caption .i-icon {
+	float: left;
 	padding-right: 2px;
 	vertical-align: middle;
-	float: left;
 }
 .i-caption .i-captiontext {
 	float: left;
 	overflow: hidden;
 	vertical-align: middle;
 }
-
 .i-caption .i-required-field-indicator {
 	float: left;
 }
 
-/* ./WebContent/ITMILL/themes/default/common/common.css */
-/* body tag created by servlet */
+/* Fix IE6 "double-float-margin-bug" */
+.i-ie6 .i-errorindicator,
+.i-ie6 .i-icon,
+.i-ie6 .i-captiontext,
+.i-ie6 .i-required-field-indicator {
+	display: inline;
+}
+
+/* ./WebContent/ITMILL/themes/base/common/common.css */
+/* References the BODY tag generated by Vaadin application servlet */
 .i-generated-body {
-	background: #e9eced;
 	width: 100%;
 	height: 100%;
 	border: 0;
 	margin: 0;
 	overflow: hidden;
 }
-
 .i-app {
-	background: #e9eced;
-	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
-	color: #464f52;
-	font-size: 13px;
-	line-height: 18px;
 	height: 100%;
 }
-
 .i-app-loading {
-	background-image: url(common/img/loading-indicator.gif);
-	background-repeat: no-repeat;
-	background-position: 50%;
+	/* You can use this to provide indication for the user that the application is loading. */
+	/* It is applied to the same element as .i-app */
 }
-
 .i-view {
 	height: 100%;
 	width: 100%;
@@ -219,9 +190,8 @@
 	border-top: 1px solid transparent;
 	position: relative;
 }
-
 /**
- * Try to cope printing somehow. Reasonable printing support 
+ * Try to handle printing somehow. Reasonable printing support 
  * needs application specific planning and CSS tuning.
  */
 @media print {
@@ -241,13 +211,1431 @@
 		overflow: visible !important;
 	}
 }
-
 .i-view:active,
 .i-view:focus {
 	outline: none;
 }
+.i-app select,
+.i-window select {
+	margin: 0;
+}
+.i-disabled {
+	opacity: .3;
+	filter: alpha(opacity=30);
+	cursor: default;
+}
+.i-disabled * {
+	cursor: default;
+}
+* html .i-disabled {
+	zoom: 1;
+}
+*+html .i-disabled {
+	zoom: 1;
+}
+.i-disabled .i-disabled {
+	opacity: 1;
+}
+.i-required-field-indicator {
+	padding-left: 2px;
+	color: red;
+}
 
+/* Field modified */ /* Disabled by default
+.i-modified,
+.i-richtextarea.i-modified iframe.gwt-RichTextArea,
+.i-checkbox.i-modified,
+.i-modified .i-select-option,
+.i-modified .i-textfield,
+.i-modified .i-datefield-calendarpanel,
+.i-modified .i-select-select,
+.i-modified .i-select-twincol-selections,
+.i-modified .i-select-twincol-options,
+.i-modified .i-slider-base {
+	background: #ffffe0;
+}
+*/
+.i-tooltip {
+	cursor: default;
+	background: #fff;
+}
+.i-tooltip-text {
+	overflow: auto;
+}
+.i-tooltip .i-errormessage {
+	overflow: auto;
+}
+.i-contextmenu {
+	background: #fff;
+}
+.i-contextmenu .gwt-MenuItem {
+	cursor: pointer;
+	vertical-align: middle;
+	padding: 0;
+	border: 0;
+	margin: 0;
+}
+.i-contextmenu .gwt-MenuItem div {
+	cursor: pointer;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+.i-contextmenu .gwt-MenuItem-selected div {
+	background: #aaa;
+	color: #fff;
+}
+.i-contextmenu table {
+	border-collapse: collapse;
+	margin: 0;
+	padding: 0;
+}
+.i-contextmenu .gwt-MenuItem img {
+	margin-right: 1em;
+	vertical-align: middle;
+}
+/* Label has tiny paddings to include possible content margins */
+.i-label {
+	padding-top: 1px;
+	padding-bottom: 1px;
+}
+/* A label with undefined width is always considered to be on one line */
+.i-label-undef-w {
+	white-space: nowrap;
+}
+/* Loading indicator states
+ * Note: client side expects that loading indicator has a height. It depends on
+ * this css property to ensure browsers have applied all required styles.
+ */
+.i-loading-indicator,
+.i-loading-indicator-delay,
+.i-loading-indicator-wait {
+	height: 16px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 30000;
+}
+/* Debug dialog */
+.i-debug-console {
+	background: #fff;
+	opacity: .9;
+	border: 1px solid #000;
+	font-family: sans-serif;
+}
+.i-debug-console-caption {
+	background: #000;
+	border-bottom: 1px solid grey;
+	color: white;
+	font-weight: bold;
+}
+.i-debug-console-content {
+	font-size: x-small;
+	overflow: auto;
+}
+.i-debug-console-content input {
+	font-size: xx-small;
+}
+/* Debug style */
+.i-app .invalidlayout,
+.i-app .invalidlayout * {
+	background: #f99 !important;
+}
+/* Fix for Liferay, issue #2384 */
+.i-app input[type="text"],
+.i-app input[type="password"],
+.i-app input[type="reset"],
+.i-app select,
+.i-app textarea {
+	padding: 2px;
+}
+
+/* ./WebContent/ITMILL/themes/base/customcomponent/customcomponent.css */
+.i-customcomponent {
+	overflow: hidden;
+}
+
+/* ./WebContent/ITMILL/themes/base/customlayout/customlayout.css */
+.i-customlayout {
+	overflow: hidden;
+}
+
+/* ./WebContent/ITMILL/themes/base/datefield/datefield.css */
+.i-datefield {
+	white-space: nowrap;
+}
+.i-datefield-textfield {
+	vertical-align: top;
+}
+.i-datefield-button {
+	cursor: pointer;
+}
+.i-datefield-calendarpanel table {
+	width: 100%;
+}
+.i-datefield-calendarpanel td {
+	width: 14.2%;
+	padding: 0;
+	margin: 0;
+}
+.i-datefield-calendarpanel-header td {
+	text-align: center;
+}
+.i-datefield-calendarpanel-month {
+	text-align: center;
+	white-space: nowrap;
+}
+.i-datefield-calendarpanel-day,
+.i-datefield-calendarpanel-day-today {
+	cursor: pointer;
+}
+.i-datefield-calendarpanel-day-today {
+	border: 1px solid #ddd;
+}
+.i-disabled .i-datefield-calendarpanel-day,
+.i-disabled .i-datefield-calendarpanel-day-today {
+	cursor: default;
+}
+.i-datefield-calendarpanel-day-disabled {
+	cursor: default;
+	opacity: .5;
+}
+.i-datefield-calendarpanel-day-selected {
+	cursor: default;
+	background: #333;
+	color: #fff;
+}
+.i-datefield-time {
+	white-space: nowrap;
+}
+.i-datefield-time .i-label {
+	display: inline;
+}
+/* Disabled by default
+.i-datefield-error .i-textfield,
+.i-datefield-error .i-datefield-calendarpanel {
+	background: #ffe0e0;
+}
+*/
+
+/* Disabled by default
+.i-datefield-required .i-textfield,
+.i-datefield-required .i-datefield-calendarpanel {
+	background:transparent;
+	background-color: #ffe0e0;
+}
+*/
+/* IE somehow loses generic i-disabled alpha. See #1960 */
+.i-ie6 .i-disabled .i-datefield-button,
+.i-ie6 .i-disabled .i-datefield-textfield,
+.i-ie7 .i-disabled .i-datefield-button,
+.i-ie7 .i-disabled .i-datefield-textfield {
+	filter: alpha(opacity=30);
+}
+
+/* ./WebContent/ITMILL/themes/base/formlayout/formlayout.css */
+.i-formlayout-cell .i-errorindicator {
+	display: block;
+}
+.i-formlayout-captioncell {
+	text-align:right;
+	white-space: nowrap;
+}
+.i-formlayout-captioncell .i-caption {
+	overflow: visible;
+}
+.i-formlayout-spacing .i-formlayout-row .i-formlayout-captioncell, 
+.i-formlayout-spacing .i-formlayout-row .i-formlayout-contentcell,
+.i-formlayout-spacing .i-formlayout-row .i-formlayout-errorcell {
+	padding-top: 1em;
+}
+.i-formlayout-spacing .i-formlayout-firstrow .i-formlayout-captioncell, 
+.i-formlayout-spacing .i-formlayout-firstrow .i-formlayout-contentcell,
+.i-formlayout-spacing .i-formlayout-firstrow .i-formlayout-errorcell {
+	padding-top: 0;
+}
+.i-formlayout-margin-top .i-formlayout-firstrow .i-formlayout-captioncell, 
+.i-formlayout-margin-top .i-formlayout-firstrow .i-formlayout-contentcell,
+.i-formlayout-margin-top .i-formlayout-firstrow .i-formlayout-errorcell {
+	padding-top: 2em;
+}
+.i-formlayout-margin-bottom .i-formlayout-lastrow .i-formlayout-captioncell,
+.i-formlayout-margin-bottom .i-formlayout-lastrow .i-formlayout-contentcell,
+.i-formlayout-margin-bottom .i-formlayout-lastrow .i-formlayout-errorcell {
+	padding-bottom: 2em;
+}
+.i-formlayout-margin-left .i-formlayout-captioncell {
+	padding-left: 2em;
+} 
+.i-formlayout-margin-right .i-formlayout-contentcell {
+	padding-right: 2em;
+}
+.i-formlayout-captioncell .i-caption .i-required-field-indicator {
+	float: none;
+}
+
+/* ./WebContent/ITMILL/themes/base/gridlayout/gridlayout.css */
+.i-gridlayout-margin-top {
+	padding-top: 2em;
+}
+.i-gridlayout-margin-bottom {
+	padding-bottom: 2em;
+}
+.i-gridlayout-margin-left {
+	padding-left: 2em;
+} 
+.i-gridlayout-margin-right {
+	padding-right: 2em;
+}
+.i-gridlayout-spacing-on {
+	padding-left: 1em;
+	padding-top: 1em;
+	overflow: hidden;
+}
+.i-gridlayout-spacing,
+.i-gridlayout-spacing-off {
+	padding-left: 0;
+	padding-top: 0;
+}
+.i-gridlayout-spacing-off {
+	overflow: hidden;
+}
+/* Ensure that resizing gridlayout works in IE */
+.i-ie6 .i-gridlayout,
+.i-ie7 .i-gridlayout {
+	overflow: hidden;
+}
+
+/* ./WebContent/ITMILL/themes/base/link/link.css */
+.i-link {
+	white-space: nowrap;	
+}
+.i-link a {
+	vertical-align: middle;
+	text-decoration: none;
+}
+.i-link span {
+	text-decoration: underline;
+	vertical-align: middle;
+}
+.i-disabled a {
+	cursor: default;
+}
+.i-link img {
+	vertical-align: middle;
+	border:none;
+}
+
+/* ./WebContent/ITMILL/themes/base/menubar/menubar.css */
+.i-menubar table {
+	white-space: nowrap;
+	border-collapse: collapse;
+	padding: 0;
+	margin: 0;
+}
+.i-menubar table {
+	white-space: nowrap;
+	border-collapse: collapse;
+	padding: 0;
+	margin: 0;
+}
+.i-menubar .menuitem {
+	cursor : default;
+}
+.i-menubar-submenu {
+	background: #fff;
+}
+.i-menubar-submenu table {
+	white-space: nowrap;
+	border-collapse: collapse;
+	padding: 0;
+	margin: 0;
+}
+.i-menubar-submenu table td {
+	white-space: nowrap;
+	padding: 0;
+	margin: 0;
+}
+.i-menubar .menuitem-selected,
+.i-menubar-submenu .menuitem-selected {
+	background: #333;
+	color: #fff;
+}
+.i-menubar-submenu .menuitem { 
+	cursor: default;
+}
+
+/* ./WebContent/ITMILL/themes/base/notification/notification.css */
+.i-Notification {
+	background: #999;
+	color: #fff;
+	cursor: pointer;
+	overflow: hidden;
+	padding: 1em;
+}
+.i-Notification h1,
+.i-Notification p,
+.i-Notification.error h1,
+.i-Notification.error p,
+.i-Notification.warning h1,
+.i-Notification.warning p {
+	display: inline;
+	white-space: nowrap;
+	margin: 0 0.5em 0 0;
+}
+.i-Notification.warning {
+	background: orange;
+}
+.i-Notification.error {
+	background: red;
+}
+.i-Notification.tray h1 {
+	display: block;
+}
+.i-Notification.tray p {
+	display: block;
+}
+.i-Notification.system {
+	background-color: red;
+	opacity: .7;
+	filter: alpha(opacity=70);
+}
+.i-Notification.system h1 {
+	display: block;
+	margin: 0;
+}
+.i-Notification.system p {
+	white-space: nowrap;
+}
+
+/* ./WebContent/ITMILL/themes/base/orderedlayout/orderedlayout.css */
+.i-orderedlayout-margin-top,
+.i-horizontallayout-margin-top,
+.i-verticallayout-margin-top {
+	padding-top: 2em;
+}
+.i-orderedlayout-margin-right,
+.i-horizontallayout-margin-right,
+.i-verticallayout-margin-right {
+	padding-right: 2em;
+}
+.i-orderedlayout-margin-bottom,
+.i-horizontallayout-margin-bottom,
+.i-verticallayout-margin-bottom {
+	padding-bottom: 2em;
+}
+.i-orderedlayout-margin-left,
+.i-horizontallayout-margin-left,
+.i-verticallayout-margin-left {
+	padding-left: 2em;
+}
+.i-orderedlayout-spacing-on,
+.i-horizontallayout-spacing-on,
+.i-verticallayout-spacing-on {
+	padding-top: 1em;
+	padding-left: 1em;
+}
+/* This can be used to define spacing if spacing is off server side */
+.i-orderedlayout-spacing-off,
+.i-horizontallayout-spacing-off,
+.i-verticallayout-spacing-off {
+	padding-top: 0;
+	padding-left: 0;
+}
+/* To make sure IE don't expand elements larger than they should */
+.i-ie6 .i-orderedlayout,
+.i-ie6 .i-horizontallayout,
+.i-ie6 .i-verticallayout,
+.i-ie7 .i-orderedlayout,
+.i-ie7 .i-horizontallayout,
+.i-ie7 .i-verticallayout {
+	overflow: hidden;
+}
+
+/* ./WebContent/ITMILL/themes/base/panel/panel.css */
+.i-panel,
+.i-panel-caption,
+.i-panel-content,
+.i-panel-deco,
+.i-panel-light,
+.i-panel-caption-light,
+.i-panel-content-light,
+.i-panel-deco-light {
+	outline: none; /* Prevent selection outline which might break layouts or cause scrollbars */
+	text-align: left /* Force default alignment */
+}
+.i-panel-caption .i-errorindicator {
+	float: none;
+	display: inline;
+}
+.i-panel-caption .i-icon {
+	display: inline;
+	vertical-align: middle;
+}
+.i-panel-caption span {
+	vertical-align: middle;
+}
+.i-panel-caption {
+	white-space: nowrap;
+	overflow:hidden;
+	font-weight: bold;
+}
+.i-panel-nocaption {
+	overflow: hidden;
+}
+.i-panel-content {
+	overflow: auto;
+}
+.i-panel-deco {
+}
+
+/* ./WebContent/ITMILL/themes/base/popupview/popupview.css */
+.i-popupview {
+	cursor: pointer;
+	width: 5px;
+	height: 5px;
+	background: #aaa;
+}
+.i-popupview-popup {
+	overflow: auto;
+}
+
+/* ./WebContent/ITMILL/themes/base/progressindicator/progressindicator.css */
+.i-progressindicator {
+	overflow: hidden; /* for IE6 */
+	width: 150px;
+}
+.i-progressindicator-wrapper {
+	overflow: hidden; /* for IE6 */
+	height: 9px;
+	border: 1px solid #ddd;
+}
+.i-progressindicator-disabled {
+	height: 9px;
+	overflow: hidden; /* for IE6 */
+}
+.i-progressindicator-indicator {
+	height: 9px;
+	overflow: hidden; /* for IE6 */
+	background: #ddd;
+}
+.i-progressindicator-indeterminate {
+	height: 16px;
+	width: 16px;
+	overflow: hidden; /* for IE6 */
+}
+/* Hide obsolete elements in indeterminate mode */
+.i-progressindicator-indeterminate .i-progressindicator-wrapper,
+.i-progressindicator-indeterminate .i-progressindicator-indicator,
+.i-progressindicator-indeterminate-disabled .i-progressindicator-wrapper,
+.i-progressindicator-indeterminate-disabled .i-progressindicator-indicator {
+	display: none;
+}
+.i-progressindicator-indeterminate-disabled {
+	height: 16px;
+	width: 16px;
+	overflow: hidden; /* for IE6 */
+}
+
+/* ./WebContent/ITMILL/themes/base/select/select.css */
+.i-select {
+	text-align: left;
+}
+.i-select-optiongroup .i-select-option {
+	display: block;
+	white-space: nowrap;
+}
+.i-ie .i-select-optiongroup .i-select-option {
+	zoom: 1;
+}
+.i-select-select {
+	display: block;
+}
+.i-select-twincol {
+	white-space: nowrap;
+}
+.i-select-twincol-options {
+	float: left;
+}
+.i-select-twincol-selections {
+	font-weight: bold;
+}
+.i-select-twincol-buttons {
+	float: left;
+	text-align: center;
+}
+.i-select-twincol-buttons .i-select-twincol-deco {
+	clear: both;
+}
+.i-select-twincol .i-textfield {
+	display: block;
+	float: left;
+	clear: left;
+}
+.i-select-twincol .i-button {
+	display: block;
+	float: left;
+}
+.i-select-twincol-buttons .i-button {
+	display: inline;
+	float: none;
+}
+.i-filterselect {
+	white-space: nowrap;
+	text-align: left;
+}
+.i-filterselect .i-icon {
+	float: left;
+}
+.i-app .i-filterselect-input,
+.i-window .i-filterselect-input,
+.i-popupview-popup .i-filterselect-input {
+	float: left;
+}
+.i-filterselect-prompt .i-filterselect-input {
+	color: #999;
+	font-style: italic;
+}
+.i-filterselect-button {
+	float: right;
+	cursor: pointer;
+}
+.i-filterselect.i-readonly .i-filterselect-button {
+	display: none;
+}
+.i-filterselect-suggestpopup {
+	background: #fff;
+	border: 1px solid #eee;
+}
+.i-filterselect-suggestmenu table {
+	border-collapse: collapse;
+	border: none;
+}
+.i-filterselect-suggestmenu .gwt-MenuItem {
+	white-space: nowrap;
+}
+.i-filterselect-suggestmenu .gwt-MenuItem .i-icon {
+	margin-right: 3px;
+	vertical-align: middle;
+}
+.i-filterselect-suggestmenu .gwt-MenuItem span {
+	vertical-align: middle;
+}
+.i-filterselect-suggestmenu .gwt-MenuItem-selected {
+	background: #333;
+	color: #fff;
+}
+.i-filterselect-nextpage,
+.i-filterselect-nextpage-off,
+.i-filterselect-prevpage-off,
+.i-filterselect-prevpage {
+	width: 100%;
+	background: #aaa;
+	text-align: center;
+	overflow: hidden;
+	cursor: pointer;
+}
+.i-filterselect-nextpage-off,
+.i-filterselect-prevpage-off {
+	color: #666;
+	opacity: .5;
+	filter: alpha(opacity=50);
+	cursor: default;
+}
+.i-filterselect-nextpage-off span,
+.i-filterselect-prevpage-off span {
+	cursor: default;
+}
+.i-filterselect-status {
+	white-space: nowrap;
+	text-align: center;
+}
+
+/* Error styles (disabled by default)
+
+.i-filterselect-error .i-filterselect-input,
+.i-select-error .i-select-option,
+.i-select-error .i-select-select,
+.i-select-error .i-select-twincol-selections,
+.i-select-error .i-select-twincol-options {
+	background: #ffaaaa;
+}
+*/
+
+/*  Required field styles (disabled by default)
+   
+.i-filterselect-error .i-filterselect-input,
+.i-select-required .i-select-option,
+.i-select-required .i-select-select,
+.i-select-required .i-select-twincol-selections,
+.i-select-required .i-select-twincol-options {
+	background: #ffaaaa;
+}
+*/
+
+/* ./WebContent/ITMILL/themes/base/shadow/shadow.css */
+.i-shadow {
+	position: absolute;
+}
+
+.i-shadow .top-left {
+    position: absolute; overflow: hidden;
+    top: -3px;             left: -5px;
+    width: 10px;         height: 10px;
+    background: transparent url(../base/shadow/img/top-left.png);
+}
+
+.i-shadow .top {
+    position: absolute; overflow: hidden;
+    top: -3px;             left: 5px;
+    height: 10px;           right: 5px;
+    background: transparent url(../base/shadow/img/top.png);
+}
+
+.i-shadow .top-right {
+    position: absolute; overflow: hidden;
+    top: -3px;             right: -5px;
+    width: 10px;         height: 10px;
+    background: transparent url(../base/shadow/img/top-right.png);
+}
+
+.i-shadow .left {
+    position: absolute; overflow: hidden;
+    top: 7px;           left: -5px;
+    width: 10px;
+    bottom: 3px;
+    background: transparent url(../base/shadow/img/left.png);
+}
+
+.i-shadow .center {
+    position: absolute; overflow: hidden;
+    top: 7px;           left: 5px;
+    bottom: 3px;        right: 5px;
+    background: transparent url(../base/shadow/img/center.png);
+}
+
+.i-shadow .right {
+    position: absolute; overflow: hidden;
+    top: 7px;           right: -5px;
+    width: 10px;
+    bottom: 3px;
+    background: transparent url(../base/shadow/img/right.png);
+}
+
+.i-shadow .bottom-left {
+    position: absolute; overflow: hidden;
+    bottom: -7px;           left: -5px;
+    width: 10px;          height: 10px;
+    background: transparent url(../base/shadow/img/bottom-left.png);
+}
+
+.i-shadow .bottom {
+    position: absolute; overflow: hidden;
+    bottom: -7px;           left: 5px;
+    right: 5px;          height: 10px;
+    background: transparent url(../base/shadow/img/bottom.png);
+}
+
+.i-shadow .bottom-right {
+    position: absolute; overflow: hidden;
+    bottom: -7px;           right: -5px;
+    width: 10px;          height: 10px;
+    background: transparent url(../base/shadow/img/bottom-right.png);
+}
+
+
+
+
+
+/* For IE6 (no transparent png's, we use a blur filter) */
+
+.i-ie6 .i-shadow * {
+	display: none;
+}
+
+.i-ie6 .i-shadow {
+	background: #000;
+	filter: progid:DXImageTransform.Microsoft.Blur(pixelRadius=2) alpha(opacity=20);
+	margin-top: -3px;
+	margin-left: -4px;
+}  
+
+/* ./WebContent/ITMILL/themes/base/slider/slider.css */
+.i-slider {
+	margin: 5px 0;
+}
+.i-slider-base {
+	/* changing the borders will require adjustments to ISlider.java */
+	height: 2px;
+	border-top: 1px solid #ddd;
+	background: #eee;
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #eee;
+	
+}
+.i-slider-handle {
+	background: #aaa;
+	width: 12px;
+	height: 12px;
+	margin-top: -5px;
+	font-size: 0;
+	cursor: pointer;
+}
+
+.i-slider-vertical {
+	width: 2px;
+	height: auto;
+	margin: 0 5px;
+	border: none;
+	border-left: 1px solid #cccfd0;
+	border-right: 1px solid #cccfd0;
+}
+.i-slider-vertical .i-slider-base {
+	width: 2px;
+	border-bottom: 1px solid #eee;
+	border-right: none;
+}
+.i-slider-vertical .i-slider-handle {
+	width: 12px;
+	height: 12px;
+	font-size: 0;
+	cursor: pointer;
+	margin-left: -5px;
+}
+
+/* Disabled by default
+.i-slider-error .i-slider-base {
+	background: #FFE0E0;
+}
+*/
+/* Disabled by default
+.i-slider-required .i-slider-base {
+	background: #FFE0E0;
+}
+*/
+
+/* IE specific styles */
+.i-ie6 .i-slider,
+.i-ie6 .i-slider-vertical {
+	margin: 0;
+}
+.i-ie6 .i-slider .i-slider-handle {
+	margin: -1px 0;
+}
+.i-ie6 .i-slider-vertical .i-slider-handle {
+	margin: 0 -1px;
+}
+
+/* ./WebContent/ITMILL/themes/base/splitpanel/splitpanel.css */
+.i-splitpanel-horizontal,
+.i-splitpanel-vertical {
+	overflow: hidden;
+}
+.i-splitpanel-horizontal .i-splitpanel-hsplitter {
+	width: 6px;
+	font-size: 1px; /* for IE6 */
+}
+.i-splitpanel-horizontal .i-splitpanel-hsplitter div {
+	width: 6px;
+	font-size: 1px; /* for IE6 */
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	background: #ddd;
+	cursor: e-resize;
+}
+.i-splitpanel-vertical .i-splitpanel-vsplitter {
+	height: 6px;
+	font-size: 1px; /* for IE6 */
+}
+.i-splitpanel-vertical .i-splitpanel-vsplitter div {
+	height: 6px;
+	font-size: 1px; /* for IE6 */
+	background: #ddd;
+	cursor: n-resize;
+}
+/* IE specific styles */
+.i-ie6 .i-splitpanel-horizontal .i-splitpanel-hsplitter div {
+	height: 99%;
+}
+
+/* ./WebContent/ITMILL/themes/base/table/table.css */
+/* Table theme building instructions
+ * 
+ * Toolkit scroll table is very complex widget with dozens of features. These 
+ * features set some limitations for theme builder. To keep things working, it
+ * is safest to try to just override values used in default theme and comfort to
+ * these instructions.
+ * 
+ * Borders in table header and in table body need to be same width
+ * - specify vertical borders on .i-table-header-wrap and .i-table-body
+ *
+ * Table cells in body:
+ *  - padding/border for cells is to be defined for td elements (class name: .i-table-cell-content)
+ *  - in default theme there are no borders, but they should work. Just set border-right or border-bottom
+ *  - no padding or border is allowed for div inside cells (class name: .i-table-cell-wrapper) element
+ *  - background is allowed for both elements
+ *
+ * Table headers:
+ *  - table cells in header contain .i-table-resizer and 
+ *	  .i-table-caption-container div elements, which are both floated to right
+ *  - to align header caption to body content resizer width + .i-table-caption-container
+ *    padding right should be equal to content cells padding-right and border-right.
+ *  - Possible cell border in header must be themed into column resizer.
+ *
+ */
+.i-table {
+	overflow: hidden;
+	text-align: left; /* Force default alignment */
+}
+.i-table-header-wrap {
+	overflow: hidden;
+	border: 1px solid #aaa;
+	border-bottom: none;
+	background: #efefef;
+}
+.i-table-header table,
+.i-table-table {
+	border-spacing: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+.i-table-header td {
+	padding: 0;
+}
+.i-table-header-cell,
+.i-table-header-cell-asc,
+.i-table-header-cell-desc {
+	cursor: pointer;
+}
+.i-table-resizer {
+	display: block;
+	height: 1.2em;
+	float: right;
+	background: #aaa;
+	cursor: col-resize;
+	width: 1px;
+	overflow: hidden;
+}
+.i-table-caption-container {
+	float: right;
+	overflow: hidden;
+	white-space: nowrap;
+	padding-right: 6px;
+}
+.i-table-header-cell-asc .i-table-caption-container {
+	background: transparent url(../base/common/img/sprites.png) no-repeat right 6px;
+}
+.i-table-header-cell-desc .i-table-caption-container {
+	background: transparent url(../base/common/img/sprites.png) no-repeat right -10px;
+}
+.i-table-body {
+	border: 1px solid #aaa;
+}
+.i-table-row-spacer {
+	height: 10px;
+	overflow: hidden; /* IE hack to allow < one line height divs */
+}
+.i-table-row,
+.i-table-row-odd {
+	border: 0;
+	margin: 0;
+	padding: 0;
+	cursor: default;
+}
+.i-table .i-selected {
+	background: #999;
+	color: #fff;
+}
+.i-table-cell-content {
+	white-space: nowrap;
+	overflow: hidden;
+	padding: 0 6px;
+	border-right: 1px solid #aaa;
+}
+.i-table-cell-wrapper {
+	/* Do not specify any margins, paddings or borders here */
+	white-space: nowrap;
+	overflow: hidden;
+}
+.i-table-column-selector {
+	float: right;
+	background: transparent url(../base/common/img/sprites.png) no-repeat 4px -37px;
+	margin: -1.2em 0 0 0;
+	height: 1.2em;
+	width: 14px;
+	position: relative; /* hide this from IE, it works without it */
+	cursor: pointer;
+}
+.i-ie6 .i-table-column-selector,
+.i-ie7 .i-table-column-selector {
+	position: static;
+}
+.i-table-focus-slot-left {
+	border-left: 2px solid #999;
+	margin-right: -2px;
+}
+.i-table-focus-slot-right {
+	border-right: 2px solid #999;
+	margin-left: -2px;
+}
+.i-table-header-drag {
+	position: absolute;
+	background: #efefef;
+	border: 1px solid #eee;
+	opacity: 0.9;
+	filter: alpha(opacity=90);
+	margin-top: 20px;
+	z-index: 30000;
+}
+.i-table-scrollposition {
+	width: 160px;
+	background: #eee;
+	border: 1px solid #aaa;
+}
+.i-table-scrollposition span {
+	display: block;
+	text-align: center;
+}
+/* row in column selector */
+.i-on div {
+	
+}
+.i-off div {
+	color: #ddd;
+}
+
+/* ./WebContent/ITMILL/themes/base/tabsheet/tabsheet.css */
+.i-tabsheet,
+.i-tabsheet-content,
+.i-tabsheet-deco {
+	outline: none; /* Prevent selection outline which might break layouts or cause scrollbars */
+	text-align: left /* Force default alignment */
+}
+.i-tabsheet-tabs {
+	empty-cells: hide;
+	border-collapse: collapse;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	width: 100%;
+	overflow:hidden;
+}
+.i-tabsheet-tabitemcell,
+.i-tabsheet-spacertd {
+	margin: 0;
+	padding: 0;
+	vertical-align: bottom;
+}
+.i-tabsheet-spacertd {
+	width: 100%;
+}
+.i-tabsheet-spacertd div {
+	border-left: 1px solid #aaa;
+	border-bottom: 1px solid #aaa;
+	height: 1em;
+	padding: 0.2em 0;
+}
+.i-tabsheet-hidetabs .i-tabsheet-tabcontainer {
+	display: none;
+}
+.i-tabsheet-scroller {
+	white-space: nowrap;
+	text-align: right;
+	margin-top: -1em;
+}
+.i-tabsheet-scrollerPrev,
+.i-tabsheet-scrollerNext,
+.i-tabsheet-scrollerPrev-disabled,
+.i-tabsheet-scrollerNext-disabled {
+	border: 1px solid #aaa;
+	background: #fff;
+	width: 12px;
+	height: 1em;
+	cursor: pointer;
+}
+.i-tabsheet-scrollerPrev-disabled,
+.i-tabsheet-scrollerNext-disabled {
+	opacity: 0.5;
+	cursor: default;
+}
+.i-tabsheet-tabs .i-caption,
+.i-tabsheet-tabs .i-caption span {
+	white-space: nowrap;
+}
+.i-tabsheet-tabitem {
+	border: 1px solid #aaa;
+	border-right: none;
+	cursor: pointer;
+	padding: 0.2em 0.5em;
+}
+.i-tabsheet-tabitem-selected {
+	cursor: default;
+	border-bottom-color: #fff;
+}
+.i-tabsheet-content {
+	border: 1px solid #aaa;
+	/* Vertical borders are not supported, use i-tabsheet-tabcontainer and i-tabsheet-deco to present these borders */
+	border-top: none;
+	border-bottom: none;
+	position: relative;
+}
+.i-tabsheet-deco {
+	height: 1px;
+	background: #aaa;
+	overflow: hidden;
+}
+.i-tabsheet-hidetabs .i-tabsheet-content {
+	border: none;
+}
+.i-tabsheet-hidetabs .i-tabsheet-deco {
+	height: 0;
+}
+
+/* ./WebContent/ITMILL/themes/base/textfield/textfield.css */
+.i-textfield {
+	text-align: left /* Force default alignment */
+}
+.i-textarea {
+}
+.i-textfield-focus,
+.i-textarea-focus {
+}
+input.i-textfield-prompt,
+textarea.i-textarea-prompt {
+	color: #999;
+	font-style: italic;
+}
+.i-textfield.i-readonly,
+.i-textarea.i-readonly {
+	background: transparent;
+	color: #222;
+	border: none;
+}
+.i-richtextarea {
+	border: 1px solid #aaa;
+	overflow: hidden;
+}
+.i-richtextarea .gwt-RichTextToolbar .gwt-ToggleButton,
+.i-richtextarea .gwt-RichTextToolbar .gwt-PushButton {
+	float: left;
+}
+.i-richtextarea .gwt-RichTextToolbar {
+	white-space: nowrap;
+}
+.i-richtextarea iframe {
+	border: 0;
+}
+/* Disabled by default
+.i-textarea-error,
+.i-textfield-error,
+.i-richtextarea-error iframe.gwt-RichTextArea {
+	background: #FFE0E0;	
+}
+*/
+/* Disabled by default
+.i-textarea-required,
+.i-textfield-required,
+.i-richtextarea-required iframe.gwt-RichTextArea {
+	background: #FFE0E0;	
+}
+*/
+/* Safari focus glow fix */
+.i-sa input:focus, 
+.i-sa textarea:focus {
+	outline-width: medium;
+}
+
+/* ./WebContent/ITMILL/themes/base/tree/tree.css */
+.i-tree {
+	text-align: left /* Force default alignment */
+}
+.i-tree-node {
+	background: transparent url(../base/common/img/sprites.png) no-repeat 5px -37px;
+}
+.i-tree-node-expanded {
+	background-position: -5px -10px;
+}
+div.i-tree-node-leaf {
+	background: none;
+}
+.i-tree-node-caption {
+	margin-left: 1em;
+}
+.i-tree-node span {
+	cursor: pointer;
+	white-space: nowrap;
+}
+.i-tree-node-selected span {
+	background: #999;
+	color: #fff;
+}
+.i-tree-node-children {
+	padding-left: 1em;
+}
+/* ie6compatnode is hidden from non ie6 browsers, for ie6 
+ * uses weird hack to sink all events properly 
+ */
+.i-tree-node-ie6compatnode {
+	display: none;
+}
+/* IMPORTANT keep the offsetWidth of this element the same as the margin-left of i-tree-node-caption */
+.i-ie6 .i-tree-node-ie6compatnode {
+	display: inline;
+	float: left;
+	background: orange;
+	margin: 0;
+	width: 0.8em;
+	height: 0.8em;
+	padding: 0.1em;
+	filter: alpha(opacity=0);
+}
+.i-ie6 .i-tree-node,
+.i-ie6 .i-tree-node-children {
+	clear: left;
+}
+
+/* ./WebContent/ITMILL/themes/base/window/window.css */
+.i-window {
+	background: #fff;
+}
+.i-window-outerheader {
+	cursor: move;
+	padding: 0.3em 1em;
+	height: 1em;
+}
+.i-window-header {
+	font-weight: bold;
+}
+/* A more specific selector to make sure padding isn't so easily overridden */
+div.i-window-header {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	-ms-text-overflow: ellipsis;
+	overflow: hidden;
+	padding: 0;
+}
+.i-ie6 .i-window-header {
+	width: 100%;
+}
+.i-window-header .i-icon {
+	vertical-align: middle; /* This has to be 'middle', not 'bottom', to allow larger icons than 16px */
+}
+/* Partial fix for bug #1106 */
+/* Target Firefox 2 (somehow this will force almost all window borders on top of a Flash object) */
+.i-window-contents, x:-moz-any-link {
+	overflow: hidden;
+}
+/* Target Firefox 3 (it doesn't need any trickery, so revert the previous) */
+.i-window-contents, x:-moz-any-link, x:default {
+	overflow: visible;
+}
+.i-window-footer {
+	overflow: hidden;
+}
+.i-window-resizebox {
+	display: inline; /* fix IE6 double float margin bug */
+	float: right;
+	width: 10px;
+	height: 10px;
+	cursor: se-resize;
+	background: #ddd;
+	overflow: hidden;
+}
+.i-window-resizebox-disabled {
+	cursor: default;
+	display: none;
+}
+.i-window-closebox {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 1em;
+	height: 1em;
+	background: red;
+	cursor: pointer;
+	overflow: hidden;
+}
+.i-window-modalitycurtain {
+	top: 0;
+	left: 0;
+	background: #999;
+	opacity: 0.5;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	filter: alpha(opacity=50);
+}
+/* IE6 workaround for position:fixed; */
+.i-ie6 .i-window-modalitycurtain { 
+	position: absolute;
+	top: expression(document.documentElement.scrollTop + "px"); 
+}
+/* min-width for IE6 */
+.i-ie6 .i-window {
+	width: 0; /*  */
+}
+/* Shadow for window */
+.i-shadow-window {
+	position: absolute;
+}
+.i-shadow-window .top-left {
+    position: absolute; overflow: hidden;
+    top: -10px;             left: -15px;
+    width: 28px;         height: 28px;
+    background: transparent url(../base/window/img/shadow/top-left.png);
+}
+.i-shadow-window .top {
+    position: absolute; overflow: hidden;
+    top: -10px;             left: 13px;
+    height: 28px;
+    right: 13px;
+    background: transparent url(../base/window/img/shadow/top.png);
+}
+.i-shadow-window .top-right {
+    position: absolute; overflow: hidden;
+    top: -10px;             right: -15px;
+    width: 28px;         height: 28px;
+    background: transparent url(../base/window/img/shadow/top-right.png);
+}
+.i-shadow-window .left {
+    position: absolute; overflow: hidden;
+    top: 18px;           left: -15px;
+    width: 28px;
+    bottom: 10px;
+    background: transparent url(../base/window/img/shadow/left.png);
+}
+.i-shadow-window .center {
+    position: absolute; overflow: hidden;
+    top: 18px;           left: 13px;
+    bottom: 10px;        right: 13px;
+    background: transparent url(../base/window/img/shadow/center.png);
+}
+.i-shadow-window .right {
+    position: absolute; overflow: hidden;
+    top: 18px;           right: -15px;
+    width: 28px;
+    bottom: 10px;
+    background: transparent url(../base/window/img/shadow/right.png);
+}
+.i-shadow-window .bottom-left {
+    position: absolute; overflow: hidden;
+    bottom: -18px;           left: -15px;
+    width: 28px;          height: 28px;
+    background: transparent url(../base/window/img/shadow/bottom-left.png);
+}
+.i-shadow-window .bottom {
+    position: absolute; overflow: hidden;
+    bottom: -18px;           left: 13px;
+    right: 13px;          height: 28px;
+    background: transparent url(../base/window/img/shadow/bottom.png);
+}
+.i-shadow-window .bottom-right {
+    position: absolute; overflow: hidden;
+    bottom: -18px;           right: -15px;
+    width: 28px;          height: 28px;
+    background: transparent url(../base/window/img/shadow/bottom-right.png);
+}
+/* For IE6 (no transparent png's, we use a blur filter) */
+.i-ie6 .i-shadow-window * {
+	display: none;
+}
+.i-ie6 .i-shadow-window {
+	background: #000;
+	filter: progid:DXImageTransform.Microsoft.Blur(pixelRadius=5) alpha(opacity=20);
+	margin-top: 2px;
+	margin-left: 2px;
+}
+/* Automatically compiled css file from subdirectories. */
+
+/* ./WebContent/ITMILL/themes/default/absolutelayout/absolutelayout.css */
+.i-absolutelayout-wrapper {
+	position: absolute;
+	overflow:hidden;
+}
+
+/* ./WebContent/ITMILL/themes/default/accordion/accordion.css */
+.i-accordion-item {
+	background-color: #fff;
+}
+.i-accordion-item-caption {
+	height: 31px;
+	background: #edf0f0 url(tabsheet/img/tab-bg.png);
+	font-size: 15px;
+	color: #656d73;
+	border-top: 1px solid #c8cccd;
+}
+.i-accordion-item-caption .i-caption {
+	padding: 7px 0 6px 18px;
+}
+.i-accordion-item-open .i-accordion-item-caption {
+	color: #3b4b57;
+	background: #d5dee2 url(accordion/img/selected-bg.png);
+	border-top-color: #cbd7de;
+	border-bottom-color: #bfc9d4;
+	text-shadow: #fafafa 0 1px 0;
+	border-bottom: 1px solid #c8cccd;
+}
+
+/* ./WebContent/ITMILL/themes/default/button/button.css */
+.i-button {
+	font-size: 13px;
+}
+.i-checkbox .i-errorindicator {
+	padding-left: 10px;
+}
+.i-ie6 .i-button,
+.i-ie7 .i-button {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+.i-ie6 .i-checkbox .i-errorindicator {
+	padding-right: 4px;
+}
+.i-ie7 .i-checkbox .i-errorindicator {
+	padding-right: 7px;
+}
+.i-ie6 .i-button .i-errorindicator,
+.i-ie7 .i-button .i-errorindicator {
+	padding-right: 5px;
+}
+
+/* ./WebContent/ITMILL/themes/default/caption/caption.css */
+.i-captionwrapper {
+	margin: 0.3em 0 0 0;
+}
+.i-errorindicator {
+	width: 12px;
+	height: 16px;
+	background: transparent url(icons/16/error.png) no-repeat top right;
+}
+.i-ie6 .i-errorindicator {
+	/* gif for transparency */
+	background-image: url(icons/16/error.gif);
+}
+.i-ie7 .i-errorindicator {
+	margin-left: -3px;
+}
+
+/* ./WebContent/ITMILL/themes/default/common/common.css */
+.i-generated-body {
+	background: #e9eced;
+}
+.i-app {
+	background: #e9eced;
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+	color: #464f52;
+	font-size: 13px;
+	line-height: 18px;
+}
+.i-app-loading {
+	background-image: url(common/img/loading-indicator.gif);
+	background-repeat: no-repeat;
+	background-position: 50%;
+}
 /* Global font styles */
+.i-window,
+.i-popupview-popup,
 .i-app input,
 .i-app select,
 .i-app button,
@@ -264,63 +1652,11 @@
 	color: #464f52;
 	font-size: 13px;
 }
-
 .i-app select,
 .i-window select {
 	padding: 0;
-	margin: 0;
 }
-
-.i-disabled,
-.i-app .i-disabled,
-.i-window .i-disabled {
-	opacity: 0.3;
-	filter: Alpha(opacity = 30);
-	cursor: default;
-}
-
-.i-disabled *,
-.i-app .i-disabled *,
-.i-window .i-disabled * {
-	cursor: default;
-}
-
-* html .i-disabled {
-	zoom: 1;
-}
-
-*+html .i-disabled {
-	zoom: 1;
-}
-
-.i-disabled .i-disabled {
-	opacity: 1.0;
-}
-
-.i-required-field-indicator {
-	padding-left: 2px;
-	color: red;
-}
-
-/* Field modified */ /* Disabled by default
-input.i-modified,
-.i-richtextarea.i-modified iframe.gwt-RichTextArea,
-.i-checkbox.i-modified,
-.i-modified .i-select-option,
-.i-modified .i-textfield,
-.i-modified .i-datefield-calendarpanel,
-.i-modified .i-select-select,
-.i-modified .i-select-twincol-selections,
-.i-modified .i-select-twincol-options,
-.i-modified .i-slider-base {
-	background:transparent;
-	background-color: #FFFFE0;
-}
-*/
-
-/**
- * Custom tooltip
- */
+/* Custom tooltip */
 .i-tooltip {
 	background-color: #fffcdd;
 	border: 1px solid #b8b295;
@@ -330,17 +1666,13 @@ input.i-modified,
 	line-height: 13px;
 	font-family: arial, helvetica, tahoma, verdana, sans-serif;
 	color: #5d5444;
-	cursor: default;
 }
-
 .i-tooltip-text {
 	padding: 2px 4px;
 	border: none;
 	border-top: 1px solid #fffef5;
 	border-bottom: 1px solid #fbf8d9;
-	overflow: auto;
 }
-
 .i-tooltip .i-errormessage {
 	padding: 3px 4px 3px 4px;
 	background: #ffecc6;
@@ -348,25 +1680,18 @@ input.i-modified,
 	border: none;
 	border-top: 1px solid #fff3dc;
 	border-bottom: 1px solid #ead7b1;
-	overflow: auto;
 }
-
 .i-tooltip .i-errormessage h2 {
 	font-size: 16px;
 	font-weight: normal;
 	color: #ab3101;
 	margin: 2px 0 8px 0;
 }
-
 .i-tooltip .i-errormessage h3 {
 	font-size: 13px;
 	font-weight: bold;
 	margin: 1px 0 4px 0;
 }
-
-/**
- * Context menu styles 
- */
 .i-contextmenu {
 	background: #e9eced url(tabsheet/img/tab-bg.png);
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
@@ -375,141 +1700,42 @@ input.i-modified,
 	font-size: 12px;
 	line-height: 14px;
 }
-
 .i-contextmenu .gwt-MenuBar {
 	border-right: 1px solid #c6cbcc;
 	border-bottom: 1px solid #c6cbcc;
 	border-top: 1px solid #d0d4d5;
 	border-left: 1px solid #d0d4d5;
 }
-
 .i-contextmenu .gwt-MenuItem {
 	padding: 2px 0;
-	cursor: pointer;
-	vertical-align: middle;
 }
-
-.i-contextmenu .gwt-MenuItem div { /*border: 1px solid #f6f7f7;*/
+.i-contextmenu .gwt-MenuItem div {
 	padding: 1px 20px 1px 8px;
-	cursor: pointer;
-	vertical-align: middle;
-	white-space: nowrap;
 }
-
 .i-contextmenu .gwt-MenuItem-selected div {
 	color: #fff;
 	background: #5daee8;
 }
-
-.i-contextmenu table {
-	border-collapse: collapse;
-	margin: 0;
-	padding: 0;
-}
-
 .i-contextmenu .gwt-MenuItem img {
 	margin-right: 10px;
-	vertical-align: middle;
 }
-
-/**
- * Label has tiny paddings to include contents margins.
- */
-.i-label {
-	padding-top: 1px;
-	padding-bottom: 1px;
-}
-
-.i-label-undef-w {
-	white-space: nowrap;
-}
-
-/* Loading indicator states
- * Note: client side expects that loading indicator has a height. It depends on
- * this css property to ensure browsers have applied all required styles.
- */
 .i-loading-indicator,
 .i-loading-indicator-delay,
 .i-loading-indicator-wait {
 	width: 31px;
 	height: 31px;
 	background: transparent url(common/img/loading-indicator.gif);
+	margin-right: 5px;
+	margin-top: 5px;
 }
-
 .i-loading-indicator-delay {
-	background: transparent url(common/img/loading-indicator-delay.gif);
+	background-image: url(common/img/loading-indicator-delay.gif);
 }
-
 .i-loading-indicator-wait {
-	background: transparent url(common/img/loading-indicator-wait.gif);
-}
-.i-loading-indicator,
-.i-loading-indicator-delay,
-.i-loading-indicator-wait {
-	position: absolute;
-	top:6px;
-	right: 5px;	
-	z-index:30000;
-}
-
-/* debug dialog */
-.i-debug-console {
-	background: white;
-	opacity: 0.85;
-	border: 1px solid black;
-	font-family: sans-serif;
-}
-
-.i-debug-console-caption {
-	background: black;
-	border-bottom: 1px solid grey;
-	color: white;
-	font-weight: bold;
-}
-
-.i-debug-console-content {
-	font-size: x-small;
-	overflow: auto;
-}
-
-.i-debug-console-content input {
-	font-size: xx-small;
-}
-
-/* Debug style */
-.i-app .invalidlayout,
-.i-app .invalidlayout * {
-	background: #f99 !important;
-}
-
-/* Fix for liferay. #2384 */
-.i-app input[type="text"],
-.i-app input[type="password"],
-.i-app input[type="reset"],
-.i-app select,
-.i-app textarea {
-	padding: 2px;
-}
-
-/* ./WebContent/ITMILL/themes/default/customcomponent/customcomponent.css */
-.i-customcomponent {
-	overflow: hidden;
-}
-
-/* ./WebContent/ITMILL/themes/default/customlayout/customlayout.css */
-.i-customlayout {
-	overflow: hidden;
+	background-image: url(common/img/loading-indicator-wait.gif);
 }
 
 /* ./WebContent/ITMILL/themes/default/datefield/datefield.css */
-.i-datefield {
-	white-space: nowrap;
-}
-
-.i-datefield-textfield {
-	vertical-align: top;
-}
-
 .i-datefield-button {
 	font-size:13px;
 	width: 22px;
@@ -519,9 +1745,7 @@ input.i-modified,
 	border: none;
 	background: transparent url(datefield/img/open-button.png) no-repeat right 0;
 	vertical-align: top;
-	cursor: pointer;
 }
-
 .i-datefield-popup {
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	color: #464f52;
@@ -530,56 +1754,34 @@ input.i-modified,
 	border: 1px solid #b6bbbc;
 	padding: 6px;
 }
-
 .i-datefield-calendarpanel {
 	width: 19em;
 	font-size: 12px;
 }
-
 .i-datefield-popup .i-datefield-calendarpanel {
 	width: 16em;
 }
-
-.i-datefield-calendarpanel table {
-	width: 100%;
-}
-
 .i-datefield-calendarpanel td {
 	text-align: right;
-	width: 14.2%;
-	padding: 0;
-	margin: 0;
 }
-
 .i-datefield-calendarpanel td span {
 	display: block;
 }
-
 .i-datefield-calendarpanel-header {
 	height: 30px;
 }
-
 .i-datefield-calendarpanel-header,
 .i-datefield-calendarpanel strong {
 	font-size: 13px;
 }
-
 .i-datefield-popup .i-datefield-calendarpanel-header,
 .i-datefield-popup .i-datefield-calendarpanel strong {
 	font-size: 12px;
 }
-
-.i-datefield-calendarpanel-header td {
-	text-align: center;
-}
-
 .i-datefield-calendarpanel-month {
 	font-weight: bold;
-	text-align: center;
 	text-shadow: #ffffff 2px 2px 0;
-	white-space: nowrap;
 }
-
 /* Year buttons */
 .i-datefield-calendarpanel .i-button-prevyear,
 .i-datefield-calendarpanel .i-button-nextyear {
@@ -599,7 +1801,6 @@ input.i-modified,
 .i-datefield-calendarpanel .i-button-nextyear:hover {
 	background-position: left bottom;
 }
-
 /* Month buttons */
 .i-datefield-calendarpanel .i-button-prevmonth,
 .i-datefield-calendarpanel .i-button-nextmonth {
@@ -619,47 +1820,32 @@ input.i-modified,
 .i-datefield-calendarpanel .i-button-nextmonth:hover {
 	background-position: left bottom;
 }
-
 .i-datefield-calendarpanel strong {
 	color: #ee5311;
 	display: block;
 	width: 20px;
 }
-
 .i-datefield-calendarpanel-day,
 .i-datefield-calendarpanel-day-today {
-	cursor: pointer;
 	padding: 1px 3px;
 	width: 14px;
 	height: 16px;
 }
-
 .i-datefield-calendarpanel-day-today {
 	border: 1px solid #429ce9;
 	width: 12px;
 	height: 14px
 }
-
-.i-disabled .i-datefield-calendarpanel-day,
-.i-disabled .i-datefield-calendarpanel-day-today {
-	cursor: default;
-}
-
 .i-datefield-calendarpanel-day-entry {
 	color: #6a98b5;
 }
-
 .i-datefield-calendarpanel-day-disabled {
 	font-weight: normal;
 	color: #dddddd;
-	cursor: default;
-	opacity: 0.5;
 }
-
 .i-datefield-calendarpanel-day-entry.i-datefield-calendarpanel-day-disabled {
 	color: #afd6f8;
 }
-
 .i-datefield-calendarpanel-day-selected {
 	font-weight: bold;
 	width: 14px;
@@ -667,102 +1853,45 @@ input.i-modified,
 	color: #fff;
 	padding: 1px 3px;
 	background: transparent url(datefield/img/selected-bg.png) no-repeat 50% 50%;
-	cursor: default;
 	border: none;
 }
-
 .i-datefield-time {
-	white-space: nowrap;
 	font-size: 11px;
 }
-
-.i-datefield-time .i-label {
-	display: inline;
-}
-
 .i-datefield-time .i-select {
 	font-size: 10px;
 	padding: 0;
 	margin: 0;
 }
-
-/* Disabled by default
-.i-datefield-error .i-textfield,
-.i-datefield-error .i-datefield-calendarpanel {
-	background:transparent;
-	background-color: #FFE0E0;
-}
-*/
-
-/* Disabled by default
-.i-datefield-required .i-textfield,
-.i-datefield-required .i-datefield-calendarpanel {
-	background:transparent;
-	background-color: #FFE0E0;
-}
-*/
-
 .i-datefield-rendererror .i-textfield {
 	background: #ff9999;
 }
-
-
-
-
 /* IE specific styles */
-
-*+html .i-datefield-button {
+.i-ie7 .i-datefield-button {
 	background-position: right 1px;
 	height: 25px;
 	margin: 0;
 }
 
-/* IE somehow loses generic i-disabled alpha. See #1960 */
-* html .i-disabled .i-datefield-button,
-* html .i-disabled .i-datefield-textfield {
-	filter: alpha(opacity=30);
-}
-*+ html .i-disabled .i-datefield-button,
-*+ html .i-disabled .i-datefield-textfield {
-	filter: alpha(opacity=30);
-}
-
-
 /* ./WebContent/ITMILL/themes/default/formlayout/formlayout.css */
 .i-formlayout-cell .i-errorindicator {
 	width: 10px;
 	height: 16px;
-	display: block;
 	background: transparent url(icons/16/error.png) no-repeat top right;
 }
 .i-formlayout-captioncell {
 	text-align:right;
 	white-space: nowrap;
 }
-.i-formlayout-captioncell .i-caption {
-	overflow: visible;
-}
-
-.i-formlayout-contentcell {
-}
-
 .i-formlayout-error-indicator {
 	/* fix width so layout is not jumpy when error disapear */
 	width: 12px;
 }
-
 .i-formlayout-spacing .i-formlayout-row .i-formlayout-captioncell, 
 .i-formlayout-spacing .i-formlayout-row .i-formlayout-contentcell,
 .i-formlayout-spacing .i-formlayout-row .i-formlayout-errorcell {
 	padding-top: 8px;
 }
-
-.i-formlayout-spacing .i-formlayout-firstrow .i-formlayout-captioncell, 
-.i-formlayout-spacing .i-formlayout-firstrow .i-formlayout-contentcell,
-.i-formlayout-spacing .i-formlayout-firstrow .i-formlayout-errorcell {
-	padding-top: 0;
-}
-
 .i-formlayout-margin-top .i-formlayout-firstrow .i-formlayout-captioncell, 
 .i-formlayout-margin-top .i-formlayout-firstrow .i-formlayout-contentcell,
 .i-formlayout-margin-top .i-formlayout-firstrow .i-formlayout-errorcell {
@@ -779,9 +1908,7 @@ input.i-modified,
 .i-formlayout-margin-right .i-formlayout-contentcell {
 	padding-right: 18px;
 }
-
 /* form */
-
 .i-form-errormessage {
 	background: transparent url(icons/16/error.png) no-repeat top left;
 	padding-left: 20px;
@@ -789,28 +1916,20 @@ input.i-modified,
 	margin-top: 5px;
 	min-height: 20px;
 }
-
-* html .i-form-errormessage {
+.i-ie6 .i-form-errormessage {
 	height: 20px
 }
-
 .i-form fieldset {
 	border: none;
 	border-top: 1px solid #babfc0;
 }
-
 .i-form legend {
 	margin: 0;
 	padding: 0 4px 0.3em 4px;
 	font-weight: bold;
 }
 
-.i-formlayout-captioncell .i-caption .i-required-field-indicator {
-	float: none;
-}
-
 /* ./WebContent/ITMILL/themes/default/gridlayout/gridlayout.css */
-/* Margin values if defined from server side */
 .i-gridlayout-margin-top {
 	padding-top: 15px;
 }
@@ -823,128 +1942,51 @@ input.i-modified,
 .i-gridlayout-margin-right {
 	padding-right: 18px;
 }
-
-/* 
- * Spacing values used by IGridLayout. (element does not exist in DOM)
- * Use padding-left for horizontal spacing and padding-top for vertical.
- */
 .i-gridlayout-spacing-on {
-	padding-left:8px;
-	padding-top:8px;
-	overflow:hidden;
+	padding-left: 8px;
+	padding-top: 8px;
 }
-.i-gridlayout-spacing-off {
-	padding-left:0px;
-	padding-top:0px;
-	overflow:hidden;
-}
-
-.i-gridlayout-spacing,
-.i-gridlayout-spacing-off {
-	padding-left:0px;
-	padding-top:0px;
-}
-
-/* Ensure that resizing gridlayout works in IE */
-* html .i-gridlayout {
-	overflow:hidden;
-}
-
-*+html .i-gridlayout {
-	overflow:hidden;
-}
-
-
 
 /* ./WebContent/ITMILL/themes/default/link/link.css */
-/**
- * Link component styles 
- * (useless to move into a separate file)
- */
-.i-link {
-	white-space: nowrap;	
-}
-
 .i-link a {
 	color: #464f52;
-	vertical-align: middle;
-	text-decoration: none;
-}
-
-.i-link span {
-	text-decoration: underline;
-	vertical-align: middle;
-}
-
-.i-disabled a {
-	cursor: default;
-}
-
-.i-link img {
-	vertical-align: middle;
-	border:none;
 }
 
 /* ./WebContent/ITMILL/themes/default/menubar/menubar.css */
-/*
- *MenuBar styles
- */
- 
-/*Top menu */
-.i-menubar table {
-	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
-
-	border-style:ridge;
-	border-width:thin;
-	border-color:	#D3D3D3;
-
- 	background-color : white;
- 	white-space: nowrap;
- 
+.i-menubar {
+	color: #464f52;
+	border: 1px solid #c6cbcc;
+	border-right: none;
 }
-
-.i-menubar .menuitem{
-	 cursor : default;
-	
-	 padding : 0px 10px;
-	 margin : 0px 10px;
-	
-	 background-color : white;
- }
-
+.i-menubar .menuitem {
+	padding: 0 10px;
+	margin: 0 10px;
+	border-right: 1px solid #c6cbcc;
+}
 .i-menubar .menuitem-selected {
-	 background-color : 	#EEEEFF;
- }
-
-/*Submenu*/
+	color: #fff;
+	background: #5daee8;
+}
 .i-menubar-submenu {
-	 font-size: 13px;
-	 padding : 3px;
-	 
-	 font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
-	 background-color : white;
-	 white-space: nowrap;
-		
-	 border-style:ridge;
-	 border-width:thin;
-	 border-color:	#D3D3D3;
-	 
-
+	background: #e9eced url(tabsheet/img/tab-bg.png);
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+	color: #464f52;
+	font-size: 12px;
+	line-height: 14px;
+	border-right: 1px solid #c6cbcc;
+	border-bottom: 1px solid #c6cbcc;
+	border-top: 1px solid #d0d4d5;
+	border-left: 1px solid #d0d4d5;
 }
-
-.i-menubar-submenu .menuitem { 
-    cursor                      :   default;
-
-    background-color            :   white;
-    padding                     :   2px 10px;
+.i-menubar-submenu .menuitem {
+	padding: 2px 10px;
 }
-
 .i-menubar-submenu .menuitem-selected {
-	background-color : 	#EEEEFF;
+	color: #fff;
+	background: #5daee8;
 }
 
 /* ./WebContent/ITMILL/themes/default/notification/notification.css */
-
 .i-Notification {
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	background-color: #818e92;
@@ -967,7 +2009,6 @@ input.i-modified,
 	white-space: nowrap;
 	margin: 0 10px 0 0;
 }
-
 .i-Notification.warning {
 	background: #fff1e4;
 	color: #dd3400;
@@ -977,7 +2018,6 @@ input.i-modified,
 	border-radius: 5px;
 	opacity: 1;
 }
-
 .i-Notification.error {
 	background: #f23d00 url(notification/img/close-error.png) no-repeat right 5px;
 	padding-right: 30px;
@@ -986,8 +2026,6 @@ input.i-modified,
 	-webkit-border-radius: 6px;
 	border-radius: 6px;
 }
-
-
 .i-Notification.tray {
 	background: #575e60;
 	padding: 0.5em;
@@ -1012,7 +2050,6 @@ input.i-modified,
 	margin: 8px 10px 5px 10px;
 	color: #e4e7ea;
 }
-
 .i-Notification.system {
 	background-color: #ff0a0a;
 	opacity: 0.7;
@@ -1027,75 +2064,42 @@ input.i-modified,
 }
 
 /* ./WebContent/ITMILL/themes/default/orderedlayout/orderedlayout.css */
-.i-orderedlayout-margin-top, .i-horizontallayout-margin-top, .i-verticallayout-margin-top {
+.i-orderedlayout-margin-top,
+.i-horizontallayout-margin-top,
+.i-verticallayout-margin-top {
 	padding-top: 15px;
 }
-
-.i-orderedlayout-margin-right, .i-horizontallayout-margin-right, .i-verticallayout-margin-right {
+.i-orderedlayout-margin-right,
+.i-horizontallayout-margin-right,
+.i-verticallayout-margin-right {
 	padding-right: 18px;
 }
-
-.i-orderedlayout-margin-bottom, .i-horizontallayout-margin-bottom, .i-verticallayout-margin-bottom {
+.i-orderedlayout-margin-bottom,
+.i-horizontallayout-margin-bottom,
+.i-verticallayout-margin-bottom {
 	padding-bottom: 15px;
 }
-
-.i-orderedlayout-margin-left, .i-horizontallayout-margin-left, .i-verticallayout-margin-left {
+.i-orderedlayout-margin-left,
+.i-horizontallayout-margin-left,
+.i-verticallayout-margin-left {
 	padding-left: 18px;
 }
-
-.i-orderedlayout-spacing-on, .i-horizontallayout-spacing-on, .i-verticallayout-spacing-on {
+.i-orderedlayout-spacing-on,
+.i-horizontallayout-spacing-on,
+.i-verticallayout-spacing-on {
 	padding-top: 8px;
 	padding-left: 8px;
 }
-/** This can be used to define spacing if spacing is off server side */
-.i-orderedlayout-spacing-off, .i-horizontallayout-spacing-off, .i-verticallayout-spacing-off {
-	padding-top: 0px;
-	padding-left: 0px;
-}
-
-/* 
- * To make sure IE don't expand elmenents larger than they should
- */
-* html .i-orderedlayout, * html .i-horizontallayout, * html .i-verticallayout {
-	overflow: hidden;
-}
-*+html .i-orderedlayout, *+html .i-horizontallayout, *+html .i-verticallayout {
-	overflow: hidden;
-}
 
 /* ./WebContent/ITMILL/themes/default/panel/panel.css */
-.i-panel,
-.i-panel-caption,
-.i-panel-content,
-.i-panel-deco,
-.i-panel-light,
-.i-panel-caption-light,
-.i-panel-content-light,
-.i-panel-deco-light {
-	outline: none; /* Prevent selection outline which might break layouts or cause scrollbars */
-	text-align: left /* Force default alignment */
-}
-
 .i-panel {
 	background: transparent url(panel/img/top-left.png) no-repeat;
 }
-
 .i-panel-caption .i-errorindicator {
-	float: none;
-	padding-right:20px;
-	display:inline;
+	padding-right: 20px;
 	background: transparent url(icons/16/error.png) no-repeat bottom center;
 	
 }
-
-.i-panel-caption .i-icon {
-	display:inline;
-	vertical-align: middle;
-}
-.i-panel-caption span {
-	vertical-align: middle;
-}
-
 .i-panel-caption,
 .i-panel-caption-light {
 	font-size: 18px;
@@ -1103,34 +2107,26 @@ input.i-modified,
 	font-weight: normal;
 	letter-spacing: -0.03em;
 	color: #f14c1a;
-	white-space: nowrap;
 	height: 18px;
 	padding: 15px 18px 14px 8px;
 	margin-left: 10px;
 	background: transparent url(panel/img/top-right.png) no-repeat right top;
-	overflow:hidden;
 }
-
 .i-panel-nocaption {
 	height: 9px;
 	margin-left: 10px;
 	background: transparent url(panel/img/top-right.png) no-repeat right top;
-	overflow: hidden;
 }
-
 .i-panel-content {
 	border: 1px solid #babfc0;
 	border-bottom: 1px solid #dee2e3;
 	background-color: #fff;
-	overflow: auto;
 }
-
 .i-panel-deco {
 	height: 9px;
 	background: transparent url(panel/img/bottom-right.png) repeat-x right top;
 	margin-left: 9px;
 }
-
 .i-panel-deco:before {
 	display: block;
 	content: "";
@@ -1139,89 +2135,59 @@ input.i-modified,
 	margin-left: -9px;
 	background: transparent url(panel/img/bottom-left.png) no-repeat;
 }
-
-
-
-
-
-
 /* Light panel style */
-
 .i-panel-light,
 .i-panel-caption-light {
 	background: transparent;
 }
-
 .i-panel-nocaption-light {
 	background: transparent;
 	height: 0;
 	margin: 0;
 }
-
 .i-panel-content-light {
 	border: none;
 	border-top: 1px solid #babfc0;
 	background: transparent;
 }
-
 .i-panel-deco-light {
 	height: 0;
 	overflow: hidden;
 }
-
-
-
-
-
-
-
-
-/* IE specific rules (different selectors for IE6 and IE7.
- * These selectors must be separate because IE6 won't 
- * apply them if they are grouped together 
- * (it doesn't recognize the '+' selector).
-*/
-* html .i-panel {
+/* IE specific rules */
+.i-ie6 .i-panel {
 	background: transparent;
 }
-* html .i-panel-caption {
+.i-ie6 .i-panel-caption {
 	border: 1px solid #babfc0;
 	border-bottom: none;
 	background: #fff;
 	margin: 0;
 	padding-left: 18px
 }
-* html .i-panel-nocaption {
+.i-ie6 .i-panel-nocaption {
 	border: none;
 	background: transparent;
 	margin: 0;
 	height: 0;
 }
-
-* html .i-panel-caption-light {
+.i-ie6 .i-panel-caption-light {
 	border: none;
 	background: transparent;
 }
-
-* html .i-panel-content {
+.i-ie6 .i-panel-content,
+.i-ie7 .i-panel-content,
+.i-ie8 .i-panel-content {
 	border-bottom: 1px solid #babfc0;
 }
-*+html .i-panel-content {
-	border-bottom: 1px solid #babfc0;
-}
-
-* html .i-panel-content-light {
+.i-ie6 .i-panel-content-light,
+.i-ie7 .i-panel-content-light,
+.i-ie8 .i-panel-content-light {
 	border-bottom: none;
 }
-*+html .i-panel-content-light {
-	border-bottom: none;
-}
-
-* html .i-panel-deco {
-	height: 0;
-	overflow: hidden;
-}
-*+html .i-panel-deco {
+.i-ie6 .i-panel-deco,
+.i-ie7 .i-panel-deco,
+.i-ie8 .i-panel-deco {
 	height: 0;
 	overflow: hidden;
 }
@@ -1231,155 +2197,66 @@ input.i-modified,
 	border: 1px solid #babfc0;
 	border-bottom: 1px solid #dee2e3;
 	background: #fff;
-	overflow: auto;
 	padding: 3px;
-}
-
-.i-popupview {
-	cursor: pointer;
 }
 
 /* ./WebContent/ITMILL/themes/default/progressindicator/progressindicator.css */
 .i-progressindicator {
-	background: #dfe2e4 url(progressindicator/img/base.gif);
-	overflow: hidden; /* for IE6 */
-	width: 150px;
+	background: #dfe2e4 url(progressindicator/img/base.gif) repeat-x 0 1px;
 }
 .i-progressindicator-wrapper {
 	border: 1px solid #b6bbbc;
-	overflow: hidden; /* for IE6 */
-	height: 9px;
 }
 .i-progressindicator-disabled {
 	background: #dfe2e4 url(progressindicator/img/disabled.gif);
-	height: 9px;
 	border: 1px solid #b6bbbc;
-	overflow: hidden; /* for IE6 */
 }
-
 .i-progressindicator-indicator {
 	background: #f7f9f9 url(progressindicator/img/progress.png);
-	height: 9px;
-	overflow: hidden; /* for IE6 */
 }
-
 .i-progressindicator-indeterminate {
 	background: #dfe2e4 url(common/img/ajax-loader-medium.gif);
-	height: 16px;
-	width: 16px;
-	overflow: hidden; /* for IE6 */
 }
-
-/* Hide obsolete elements in indeterminate mode */
-.i-progressindicator-indeterminate .i-progressindicator-wrapper,
-.i-progressindicator-indeterminate .i-progressindicator-indicator,
-.i-progressindicator-indeterminate-disabled .i-progressindicator-wrapper,
-.i-progressindicator-indeterminate-disabled .i-progressindicator-indicator {
-	display: none;
-}
-
 .i-progressindicator-indeterminate-disabled {
 	background: #dfe2e4 url(common/img/blank.gif);
-	height: 16px;
-	width: 16px;
-	overflow: hidden; /* for IE6 */
 }
 
 /* ./WebContent/ITMILL/themes/default/select/select.css */
-.i-select {
-	text-align: left /* Force default alignment */
-}
-.i-select-option {
-
-}
-
-.i-select-optiongroup {
-
-}
-
-.i-select-optiongroup .i-select-option {
-	display: block;
-	white-space: nowrap;
-	/* really mean block for IE */
-	zoom: 1;
-}
-
 .i-select-select {
-	/*
-	border: 1px solid #b6b6b6;
-	border-bottom-color: #9d9d9d;
-	border-top-color: #d6d6d6;
-	border-left-color: #d6d6d6;
-	*/
-	display: block;
 	font-size: 13px;
 }
-
 /* Twincol style */
-.i-select-twincol {
-	white-space: nowrap;
-}
-.i-select-twincol-options {
-	float: left;
-	font-size: 13px;
-}
+.i-select-twincol-options,
 .i-select-twincol-selections {
 	font-size: 13px;
-	font-weight: bold;
 }
-
 .i-select-twincol-buttons {
-	float: left;
 	padding: 2px; /* does not work in first render in FF ? */
-	text-align: center;
-}
-
-.i-select-twincol-buttons .i-select-twincol-deco {
-	clear:both;
-}
-
-.i-select-twincol .i-textfield {
-	display: block;
-	float: left;
-	clear: left;
-}
-
-.i-select-twincol .i-button {
-	display: block;
-	float: left;
-}
-
-.i-select-twincol-buttons .i-button {
-	display: inline;
-	float: none;
 }
 
 /** Filterselect aka ComboBox styles */
 
 .i-filterselect {
 	height: 23px;
-	white-space: nowrap;
-	text-align: left; /* Force default alignment */
 	background: transparent url(select/img/bg-left-filter.png) no-repeat;
 	padding-left: 4px;
-}
-.i-filterselect .i-icon {
-	float: left;
 }
 .i-app .i-filterselect .i-filterselect-input,
 .i-window .i-filterselect .i-filterselect-input,
 .i-popupview-popup .i-filterselect .i-filterselect-input {
 	background: transparent url(select/img/bg-center-filter.png) no-repeat 1px 0;
-	float: left;
 	border: none;
 	height: 20px;
-	margin: 0px;
+	margin: 0;
 	padding: 3px 0 0 2px;
 	font-size: 13px;
 }
+.i-filterselect-prompt .i-filterselect-input {
+	font-style: normal;
+}
 .i-filterselect-input:focus {
 	/* remove safari/mac outline from this element */
-	outline: 0px;
+	outline: none;
 }
 .i-filterselect-focus {
 	outline: 1px solid #5daee8;
@@ -1390,16 +2267,9 @@ input.i-modified,
 	outline: 5px auto -webkit-focus-ring-color;
 	outline-offset: -4px;
 }
-.i-filterselect-prompt .i-filterselect-input {
-	/* input prompt active, i.e empty select */
-	color: #999;
-	font-style: italic;
-}
 .i-filterselect-button {
-	float: right;
 	width: 25px;
 	height: 23px;
-	cursor: pointer;
 	background: transparent url(select/img/bg-right-filter.png);
 }
 .i-filterselect-button:hover {
@@ -1409,16 +2279,10 @@ input.i-modified,
 .i-readonly .i-filterselect-button:hover {
 	background-position: top left;
 }
-
-.i-filterselect.i-readonly .i-filterselect-button {
-	display: none;
-}
-
 .i-filterselect.i-readonly .i-filterselect-input {
 	background: transparent;
 	color: black;
 }
-
 .i-filterselect-suggestpopup {
 	background: #f6f7f7;
 	border: 1px solid #b6bbbc;
@@ -1428,31 +2292,18 @@ input.i-modified,
 	line-height: 18px;
 	margin-top: -1px;
 }
-.i-filterselect-suggestmenu table {
-	border-collapse: collapse;
-	border: none;
-}
 .i-filterselect-suggestmenu .gwt-MenuItem {
 	padding: 1px 6px;
 	cursor: pointer;
 	height: 18px;
-	white-space: nowrap;
 }
-
 .i-filterselect-suggestmenu .gwt-MenuItem .i-icon {
 	margin-right: 3px;
-	vertical-align: middle;
 }
-
-.i-filterselect-suggestmenu .gwt-MenuItem span {
-	vertical-align: middle;
-}
-
 .i-filterselect-suggestmenu .gwt-MenuItem-selected {
 	background: #5daee8;
 	color: #fff;
 }
-
 .i-filterselect-nextpage,
 .i-filterselect-nextpage-off,
 .i-filterselect-prevpage-off,
@@ -1460,9 +2311,7 @@ input.i-modified,
 	height: 11px;
 	width:100%;
 	background: transparent url(select/img/button-bg.png) no-repeat 50% 0;
-	text-align: center;
 	margin: 2px 0 0 0;
-	overflow:hidden;
 }
 .i-filterselect-prevpage,
 .i-filterselect-prevpage-off {
@@ -1491,51 +2340,33 @@ input.i-modified,
 .i-filterselect-nextpage-off span {
 	background: transparent url(select/img/arrow-down.png) no-repeat 50% 60%;
 }
-
-.i-filterselect-nextpage-off,
-.i-filterselect-prevpage-off {
-	color: #666;
-	opacity: 0.5;
-	filter: Alpha(opacity=50);
-}
-.i-filterselect-nextpage-off span,
-.i-filterselect-prevpage-off span {
-	cursor: default;
-}
-
 .i-filterselect-status {
 	font-size: 11px;
 	line-height: 11px;
-	width:100%;
+	width: 100%;
 	padding: 4px 0px;
 	height: 11px;
-	white-space: nowrap;
-	text-align: center;
 	border-top: 1px solid #b6bbbc;
 }
 
 
 /* Error styles (disabled by default)
    ----------------------------------
-   
+
 .i-filterselect-error {
 	background-image: url(select/img/bg-left-filter-error.png);
 }
-
 .i-filterselect-error .i-filterselect-input {
 	background-image: url(select/img/bg-center-filter-error.png);
 }
-
 .i-filterselect-error .i-filterselect-button {
 	background-image: url(select/img/bg-right-filter-error.png);
 }
-
 .i-select-error .i-select-option,
 .i-select-error .i-select-select,
 .i-select-error .i-select-twincol-selections,
 .i-select-error .i-select-twincol-options {
-	background:transparent;
-	background-color: #FFE0E0;
+	background: #FFE0E0;
 }
 */
 
@@ -1546,8 +2377,7 @@ input.i-modified,
 .i-select-required .i-select-select,
 .i-select-required .i-select-twincol-selections,
 .i-select-required .i-select-twincol-options {
-	background:transparent;
-	background-color: #FFE0E0;
+	background: #FFE0E0;
 }
 */
 
@@ -1619,58 +2449,32 @@ input.i-modified,
     bottom: -5px;           right: -4px;
     width: 8px;          height: 8px;
     background: transparent url(shadow/img/bottom-right.png);
-}
-
-
-
-
-
-/* For IE6 (no transparent png's, we use a blur filter) */
-
-* html .i-shadow * {
-	display: none;
-}
-
-* html .i-shadow {
-	background: #000;
-	filter: progid:DXImageTransform.Microsoft.Blur(pixelRadius=2) alpha(opacity=20);
-	margin-top: -3px;
-	margin-left: -4px;
-}  
+} 
 
 /* ./WebContent/ITMILL/themes/default/slider/slider.css */
-/*--------------------------
-  Default (horizontal) styles
-  --------------------------*/
-
 .i-slider {
 	border-top: 1px solid #cccfd0;
 	border-bottom: 1px solid #cccfd0;
 	margin: 5px 0;
-	width:200px;	
 }
-
 .i-slider-base {
 	/* changing the borders will require adjustments to ISlider.java */
 	height: 2px;
-	border-top: 1px solid #cbcdce;
 	background: #f3f3f4;
+	border-top: 1px solid #cbcdce;
 	border-left: 1px solid #cccfd0;
 	border-right: 1px solid #cccfd0;
-	
 }
 .i-slider-handle {
 	background: transparent url(slider/img/handle-horizontal.png);
 	width: 12px;
 	height: 12px;
 	margin-top: -5px;
-	font-size: 0;
 	cursor: pointer;
 }
 .i-slider-handle:hover {
 	background-position: left bottom;
 }
-
 .i-slider-scrollbar .i-slider-handle,
 .i-slider-scrollbar.i-slider-vertical .i-slider-handle {
 	background: #ffffff;
@@ -1678,45 +2482,10 @@ input.i-modified,
 	border-radius: 6px;
 	-moz-border-radius: 6px;
 	-webkit-border-radius: 6px;
-	
 }
-
-/* TODO
-.i-slider-bigger {
-	background: #dde4ef url(slider/img/arrow-right.png);
-	float: right;
-	width: 14px;
-	height: 14px;
-	overflow: hidden;
-	margin: 0 0 0 1px;
-}
-
-.i-slider-bigger:hover {
-	background-image: url(slider/img/arrow-right-over.png);
-}
-
-.i-slider-smaller {
-	background: #dde4ef url(slider/img/arrow-left.png);
-	float: left;
-	width: 14px;
-	height: 14px;
-	overflow: hidden;
-	margin: 0 1px 0 0;
-}
-
-.i-slider-smaller:hover {
-	background-image: url(slider/img/arrow-left-over.png);
-}
-*/
-
-
-/*-----------------
-  Vertical styles 
-  -----------------*/
 
 .i-slider-vertical {
 	width: 3px;
-	height: auto;
 	margin: 0 5px;
 	border: none;
 	border-left: 1px solid #cccfd0;
@@ -1734,18 +2503,10 @@ input.i-modified,
 	background: transparent url(slider/img/handle-vertical.png);
 	width: 12px;
 	height: 12px;
-	font-size: 0;
-	cursor: pointer;
 	margin-left: -5px;
 }
 .i-slider-vertical .i-slider-handle:hover {
 	background-position: left bottom;
-}
-.i-slider-vertical .i-slider-bigger {
-
-}
-.i-slider-vertical .i-slider-smaller {
-
 }
 
 /* Disabled by default
@@ -1764,14 +2525,14 @@ input.i-modified,
 
 /* IE specific styles */
 
-* html .i-slider,
-* html .i-slider-vertical {
+.i-ie6 .i-slider,
+.i-ie6 .i-slider-vertical {
 	margin: 0;
 }
-* html .i-slider .i-slider-handle {
+.i-ie6 .i-slider .i-slider-handle {
 	margin: -1px 0;
 }
-* html .i-slider-vertical .i-slider-handle {
+.i-ie6 .i-slider-vertical .i-slider-handle {
 	margin: 0 -1px;
 }
 
@@ -1831,95 +2592,27 @@ input.i-modified,
 
 
 /* ./WebContent/ITMILL/themes/default/table/table.css */
-
-/* Table theme building instructions
- * 
- * Toolkit scroll table is very complex widget with dozens of features. These 
- * features set some limitations for theme builder. To keep things working, it
- * is safest to try to just override values used in default theme and comfort to
- * these instructions.
- * 
- *
- * Table cells in body:
- *  - padding/border for cells is to be defined for td elements (class name: .i-table-cell-content)
- *  - in default theme there are no borders, but they should work. Just set border-right or border-bottom
- *  - no padding or border is allowed for div inside cells (class name : .i-table-cell-wrapper) element
- *  - background is allowed for both elements
- *
- * Table headers:
- *  - table cells in header contain .i-table-resizer and 
- *	  .i-table-caption-container div elements, which are both floated to right
- *  - to align header caption to body content resizer width + .i-table-caption-container
- *    padding right should be equal to content cells padding-right and border-right.
- *  - Possible cell border in header must be themed into column resizer.
- *
- */
-
-.i-table {
-	overflow: hidden;
-	text-align: left /* Force default alignment */
-}
-
-.i-table.table-inline .i-table-header-wrap {
-	border-left: none;
-	border-right: none;
-	/*margin: -16px -18px 0 -18px;*/
-}
-
 .i-table-header-wrap {
 	height: 36px;
-	background: #e7edf3 url(table/img/header-bg.png) repeat-x;
 	border: 1px solid #b6bbbc;
 	border-bottom: none;
-	overflow: hidden;
+	background: #e7edf3 url(table/img/header-bg.png) repeat-x;
 }
-
 .i-table-header {
 	height: 36px;
 }
-
-.i-table-header table,
-.i-table-table {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	border-spacing:0;
-}
-
-.i-table-header td {
-	margin: 0;
-	padding: 0;
-	border: 0;
-}
-
-.i-table-header td {
-	cursor: pointer;
-}
-
 .i-table-resizer {
-	display: block;
 	height: 36px;
-	width:4px;
-	float: right;
+	width: 4px;
 	background: transparent url(table/img/resizer-bg.png) repeat-y 50% 50%;
-	cursor: col-resize;
 }
-
 .i-table-caption-container {
-	float: right;
-	overflow: hidden;
-	white-space: nowrap;
 	color: #393a3c;
 	font-size: 15px;
 	padding-top: 9px;
-	text-shadow: #ffffff 2px 2px 0;
-	/* To align captions and content to same place resizer width + caption 
-	 * container padding-right must be equal to table cell 
-	 * padding-right + border-righ 
-	 */
-	padding-right:2px;
+	text-shadow: #ffffff 0 1px 0;
+	padding-right: 2px; /* See themes/base/table.css for explanation */
 }
-
 .i-table-header-cell-asc .i-table-caption-container {
 	background: transparent url(table/img/sort-asc.png) no-repeat right 80%;
 }
@@ -1931,24 +2624,13 @@ input.i-modified,
 .i-table-header-cell-desc:hover {
 	background: transparent url(table/img/header-bg-over.png) repeat-x;
 }
-
 .i-table-body {
 	background: #fff;
 	border: 1px solid #b6bbbc;
 }
-
-.i-table-row-spacer {
-	height: 10px;
-	overflow: hidden; /* IE hack to allow < one line height divs */
-}
-
 .i-table-row,
 .i-table-row-odd {
-	border: 0;
-	margin: 0;
-	padding: 0;
 	background-color: #fff;
-	cursor: default;
 }
 .i-table-row-odd {
 	background-color: #f6f7f7;
@@ -1961,29 +2643,26 @@ input.i-modified,
 	background: #57a7ed;
 	color: #fff;
 }
-
 .i-table-cell-content {
-	padding-top: 3px;
-	padding-left: 3px;
-	padding-right: 6px;
+	padding: 0 6px 0 4px;
+	border-right: none;
 }
-
 .i-table-cell-wrapper {
 	white-space: nowrap;
 	overflow: hidden;
 	line-height: 23px;
+	/* Do not specify horizontal padding here */
+	padding: 3px 0 0 0;
 }
-
 /* Fix textfield size to correspond label size inside table */
 .i-table-cell-content .i-textfield,
 .i-table-cell-content .i-button {
-	margin: -2px 0 -2px -3px;
+	margin: -3px 0 0 0;
 }
 .i-table-cell-content .i-textfield,
 .i-table-cell-content .i-datefield {
 	width: 97%; /* approximate */
 }
-
 /* ...but not for datefield textarea */
 .i-table-cell-content .i-datefield .i-textfield {
 	width: auto;
@@ -1992,57 +2671,35 @@ input.i-modified,
 /* datefield button is too high for table cell */
 .i-table-cell-content .i-datefield-button {
 	height: 25px;
-	margin: -2px 0;
+	margin: -3px 0 0 0;
 }
-
-
-
 .i-table-column-selector {
-	float: right;
 	background: transparent url(table/img/colsel.png) no-repeat;
 	margin: -36px 0 0 0;
 	height: 36px;
 	width: 15px;
-	position: relative; /* hide this from IE, it works without it */
 }
-
-* html .i-table-column-selector {
-	position: static;
-}
-
-*+html .i-table-column-selector  {
-	position: static;
-}
-
 .i-table-focus-slot-left {
-	border-left: 2px solid #b6bbbc;
-	margin-right: -2px;
+	border-color: #b6bbbc;
 }
 .i-table-focus-slot-right {
-	border-right: 2px solid #b6bbbc;
-	margin-left: -2px;
+	border-color: #b6bbbc;
 }
-
 .i-table-header-drag {
-	position: absolute;
 	background: #e7edf3 url(table/img/header-bg.png) repeat-x;
 	border: 1px solid #b6bbbc;
 	padding: 4px;
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	color: #464f52;
 	font-size: 15px;
-	opacity: 0.5;
-	filter: alpha(opacity=50);
 	margin-top: 20px;
-	z-index: 20000;
 }
-
 .i-table-scrollposition {
 	width: 160px;
 	height: 39px;
 	background: transparent url(table/img/scroll-position-bg.png);
+	border: none;
 }
-
 .i-table-scrollposition span {
 	display: block;
 	margin-top: 8px;
@@ -2052,8 +2709,6 @@ input.i-modified,
 	font-size: 15px;
 	text-shadow: #ffffff 2px 2px 0;
 }
-
-
 /* row in column selector */
 .i-on div {
 	background: transparent url(table/img/check.gif) no-repeat 2px 50%;
@@ -2062,18 +2717,16 @@ input.i-modified,
 .i-off div {
 	text-indent: 6px;
 }
-
 .i-table .i-link {
 	display: inline;
 }
-
 /* IE6 hack */
-* html .i-table-scrollposition {
+.i-ie6 .i-table-scrollposition {
 	background: transparent;
 	/* 
 	AlphaImageLoader uses src attribute relative to host page, not CSS
 	We need multiple different filters because we cannot be sure how host page is served compared to theme resources
-	TODO: This actually does not work as expected, since only the last filter is applied.
+	TODO: This actually does not work as expected, since only the last filter is applied. Can we chain filters together (i.e. contain all versions on one line)?
 	 */
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/themes/default/table/img/scroll-position-bg.png", sizingMethod="scale");
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/themes/default/table/img/scroll-position-bg.png", sizingMethod="scale");
@@ -2082,49 +2735,19 @@ input.i-modified,
 }
 
 /* ./WebContent/ITMILL/themes/default/tabsheet/tabsheet.css */
-.i-tabsheet,
-.i-tabsheet-content,
-.i-tabsheet-deco {
-	outline: none; /* Prevent selection outline which might break layouts or cause scrollbars */
-	text-align: left /* Force default alignment */
-}
-
 .i-tabsheet-tabs {
-	empty-cells: hide;
-	border-collapse: collapse;
-	margin:0;
-	padding:0;
-	border:0;
 	height: 48px;
-	width: 100%;
-	overflow:hidden;
 }
 
-.i-tabsheet-tabs td {
-	margin:0;
-	padding:0;
-	vertical-align: bottom;
-}
-
-.i-tabsheet-spacertd {
-	width: 100%;
-}
 .i-tabsheet-spacertd div {
 	height: 37px;
 	border: 1px solid #b6bbbc;
 	background: transparent url(tabsheet/img/tab-bg.png);
+	padding: 0;
 }
-
-.i-tabsheet-hidetabs .i-tabsheet-tabcontainer {
-	display: none;
-}
-
 .i-tabsheet-scroller {
-	white-space: nowrap;
-	text-align: right;
 	margin-top: -37px;
 }
-
 .i-tabsheet-scrollerPrev,
 .i-tabsheet-scrollerNext {
 	border: none;
@@ -2141,7 +2764,6 @@ input.i-modified,
 	margin-top: -1px;
 	opacity: 0.9999;
 }
-
 .i-tabsheet-scrollerNext,
 .i-tabsheet-scrollerNext-disabled {
 	background: transparent url(tabsheet/img/next.png) no-repeat;
@@ -2162,18 +2784,6 @@ input.i-modified,
 .i-tabsheet-scrollerNext-disabled:hover {
 	background-position: -12px 0px;
 }
-
-.i-tabsheet-tabs .i-caption {
-	white-space: nowrap;
-}
-
-/* for IE (does not inherit) */
-.i-tabsheet-tabs .i-caption span {
-	white-space: nowrap;
-}
-
-
-
 .i-tabsheet-tabitem {
 	border: 1px solid #b6bbbc;
 	border-right: none;
@@ -2184,32 +2794,25 @@ input.i-modified,
 	font-size: 15px;
 	line-height: 18px;
 	background: #f8f9f9 url(tabsheet/img/tab-bg.png);
-	cursor: pointer;
 }
-
 .i-tabsheet-tabitem .i-caption {
 	height: 20px;
 	padding: 9px 15px 8px 15px;
 }
-
 .i-tabsheet-tabitem-selected {
 	border: none;
 	background: transparent url(panel/img/top-left.png) no-repeat;
 	margin: 0;
 	padding: 0;
 	height: 48px;
-	cursor: default;
 	color: #ee5311;
 }
-
 .i-tabsheet-tabitem:hover {
 	color: #4b5257;
 }
-
 .i-tabsheet-tabitem-selected:hover {
 	color: #ee5311;
 }
-
 .i-tabsheet-tabitem-selected .i-caption {
 	background: transparent url(panel/img/top-right.png) repeat-x right top;
 	margin: 0 -1px 0 9px;
@@ -2217,25 +2820,21 @@ input.i-modified,
 	padding: 16px 16px 14px 7px;
 	overflow: visible;
 }
-
 .i-tabsheet-content {
 	border: 1px solid #babfc0;
 	background-color: #fff;
 	border-bottom: 1px solid #dee2e3;
 	border-top: none;
-	position: relative;
 }
-
 .i-tabsheet-hidetabs .i-tabsheet-content {
 	border-top: 1px solid #b5babb;
 }
-
 .i-tabsheet-deco {
 	height: 10px;
 	background: transparent url(panel/img/bottom-right.png) repeat-x right top;
 	margin-left: 9px;
+	overflow: visible;
 }
-
 .i-tabsheet-deco:before {
 	display: block;
 	content: "";
@@ -2244,11 +2843,7 @@ input.i-modified,
 	margin-left: -9px;
 	background: transparent url(panel/img/bottom-left.png) no-repeat;
 }
-
-
-
 /* Progress indication */
-
 .i-tabsheet-loading .i-tabsheet-tabitem-selected .i-captiontext {
 	background: transparent url(common/img/ajax-loader.gif) no-repeat top right;
 	margin-left: -10px;
@@ -2258,18 +2853,11 @@ input.i-modified,
 	margin-top: -12px;
 	padding-top: 12px;
 }
-
-
 /* IE specific styles */
-
-* html .i-tabsheet-tabs {
+.i-ie6 .i-tabsheet-tabs {
 	height: 46px;
 }
-*+html .i-tabsheet-tabs {
-	height: 46px;
-}
-
-* html .i-tabsheet-tabitem-selected {
+.i-ie6 .i-tabsheet-tabitem-selected {
 	border: 1px solid #babfc0;
 	border-bottom: none;
 	background: #fff;
@@ -2279,82 +2867,44 @@ input.i-modified,
 	cursor: default;
 	color: #ee5311;
 }
-*+html .i-tabsheet-tabitem-selected {
-	border: 1px solid #babfc0;
-	border-bottom: none;
-	background: #fff;
-	margin-top: 0;
-	height: 23px;
-	padding: 18px 14px 6px 15px;
-	cursor: default;
-	color: #ee5311;
-}
-
-* html .i-tabsheet-tabitem-selected .i-caption {
+.i-ie6 .i-tabsheet-tabitem-selected .i-caption {
 	background: transparent;
 	padding: 0;
 	margin: 0;
 }
-*+html .i-tabsheet-tabitem-selected .i-caption {
-	background: transparent;
-	padding: 0;
-	margin: 0;
-}
-
-* html .i-tabsheet-content {
+.i-ie6 .i-tabsheet-content,
+.i-ie7 .i-tabsheet-content,
+.i-ie8 .i-tabsheet-content {
 	border-bottom: none;
 }
-*+html .i-tabsheet-content {
-	border-bottom: none;
-}
-
-* html .i-tabsheet-deco {
+.i-ie6 .i-tabsheet-deco,
+.i-ie7 .i-tabsheet-deco,
+.i-ie8 .i-tabsheet-deco {
 	height: 1px;
 	background: #babfc0;
 	overflow: hidden;
 	margin: 0;
 }
-*+html .i-tabsheet-deco {
-	height: 1px;
-	background: #babfc0;
-	overflow: hidden;
-	margin: 0;
+.i-ie7 .i-tabsheet-deco,
+.i-ie8 .i-tabsheet-deco {
 	width: 100%;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* Inline style */
-
+/* Light-style */
 .i-tabsheet-light .i-tabsheet-tabcontainer {
 	height: 32px;
 }
-
 .i-tabsheet-tabs-light {
 	height: 32px;
 	width: 100%;
 	overflow:hidden;
 	background: transparent url(tabsheet/img/inline-tab-bg.png) repeat-x;
 }
-
 .i-tabsheet-light .i-tabsheet-spacertd div {
 	height: 31px;
 	border: none;
 	border-bottom: 1px solid #b6bbbc;
 	background: transparent;
 }
-
 .i-tabsheet-light .i-tabsheet-tabitem {
 	border: none;
 	border-bottom: 1px solid #b6bbbc;
@@ -2368,16 +2918,13 @@ input.i-modified,
 	cursor: pointer;
 	text-shadow: #fff 0 1px 0;
 }
-
 .i-tabsheet-light .i-tabsheet-tabitemcell-first .i-caption {
 	margin-left: 6px;
 }
-
 .i-tabsheet-light .i-tabsheet-tabitem .i-caption {
 	height: 24px;
 	padding: 8px 9px 0 9px;
 }
-
 .i-tabsheet-light .i-tabsheet-tabitem-selected {
 	border: none;
 	background: #fff url(tabsheet/img/inline-tab-right.png) no-repeat right top;
@@ -2388,15 +2935,12 @@ input.i-modified,
 	color: #ee5311;
 	text-shadow: none;
 }
-
 .i-tabsheet-light .i-tabsheet-tabitem:hover {
 	color: #4b5257;
 }
-
 .i-tabsheet-light .i-tabsheet-tabitem-selected:hover {
 	color: #ee5311;
 }
-
 .i-tabsheet-light .i-tabsheet-tabitem-selected .i-caption {
 	background: transparent url(tabsheet/img/inline-tab-left.png) no-repeat -7px 0;
 	margin: 0;
@@ -2404,33 +2948,25 @@ input.i-modified,
 	padding: 9px 11px 0 11px;
 	overflow: visible;
 }
-
 .i-tabsheet-light .i-tabsheet-tabitemcell-first .i-tabsheet-tabitem-selected .i-caption {
 	background: transparent url(tabsheet/img/inline-tab-left.png) no-repeat -3px 0;
 	padding-left: 15px;
 }
-
 .i-tabsheet-light .i-tabsheet-content {
 	border: none;
 	background: transparent;
 }
-
 .i-tabsheet-light .i-tabsheet-hidetabs .i-tabsheet-content {
 	border: none;
 }
-
 .i-tabsheet-deco-light {
 	height: 0;
 	overflow: hidden;
 }
-
 .i-tabsheet-deco-light:before {
 	display: none;
 }
-
-
 /* Scroller */
-
 .i-tabsheet-light .i-tabsheet-scrollerPrev,
 .i-tabsheet-light .i-tabsheet-scrollerNext {
 	margin-top: 2px;
@@ -2441,54 +2977,31 @@ input.i-modified,
 	margin-top: 2px;
 	height: 34px;
 }
-
-
-
-
 /* Progress indication */
-
 .i-tabsheet-loading .i-tabsheet-tabs-light .i-tabsheet-tabitem-selected .i-captiontext {
 	margin-left: -3px;
 	padding-left: 3px;
 }
-
-
-
 /* IE specific styles */
-
-* html .i-tabsheet-tabs-light {
+.i-ie6 .i-tabsheet-tabs-light,
+.i-ie7 .i-tabsheet-tabs-light {
 	height: 32px;
 }
-*+html .i-tabsheet-tabs-light {
-	height: 32px;
-}
-
-* html .i-tabsheet-light .i-tabsheet-tabitem-selected {
+.i-ie6 .i-tabsheet-light .i-tabsheet-tabitem-selected,
+.i-ie7 .i-tabsheet-light .i-tabsheet-tabitem-selected {
 	border: none;
 	background: #fff url(tabsheet/img/inline-tab-right.png) no-repeat right top;
 	padding: 0;
 	height: 32px;
 }
-*+html .i-tabsheet-light .i-tabsheet-tabitem-selected {
-	border: none;
-	background: #fff url(tabsheet/img/inline-tab-right.png) no-repeat right top;
-	padding: 0;
-	height: 32px;
-}
-
-* html .i-tabsheet-light .i-tabsheet-tabitem-selected .i-caption {
+.i-ie6 .i-tabsheet-light .i-tabsheet-tabitem-selected .i-caption,
+.i-ie7 .i-tabsheet-light .i-tabsheet-tabitem-selected .i-caption {
 	background: transparent url(tabsheet/img/inline-tab-left.png) no-repeat -7px 0;
 	padding: 9px 11px 0 11px;
 }
-*+html .i-tabsheet-light .i-tabsheet-tabitem-selected .i-caption {
-	background: transparent url(tabsheet/img/inline-tab-left.png) no-repeat -7px 0;
-	padding: 9px 11px 0 11px;
-}
-
-* html .i-tabsheet-deco-light {
-	height: 0;
-}
-*+html .i-tabsheet-deco-light {
+.i-ie6 .i-tabsheet-deco-light,
+.i-ie7 .i-tabsheet-deco-light,
+.i-ie8 .i-tabsheet-deco-light {
 	height: 0;
 }
 
@@ -2503,9 +3016,7 @@ input.i-modified,
 	margin: 0;
 	font-size: 13px;
 	height: 18px;
-	text-align: left /* Force default alignment */
 }
-
 .i-textarea {
 	background: #fff url(textfield/img/bg.png) repeat-x;
 	padding: 2px;
@@ -2516,122 +3027,48 @@ input.i-modified,
 	margin: 0;
 	font-size: 13px;
 }
-
 .i-textfield-focus,
 .i-textarea-focus {
 	border-color: #5daee8;
 }
-
 input.i-textfield-prompt,
 textarea.i-textarea-prompt {
 	color: #999;
-	font-style: italic;
+	font-style: normal;
 }
-
-.i-textfield.i-readonly,
-.i-textarea.i-readonly {
-	background: transparent;
-	color: #222;
-	border: none;
-}
-
 .i-richtextarea {
 	border: 1px solid #b6b6b6;
-	overflow: hidden;
-}
-.i-richtextarea .gwt-RichTextToolbar .gwt-ToggleButton,
-.i-richtextarea .gwt-RichTextToolbar .gwt-PushButton {
-	float:left;
-}
-.i-richtextarea .gwt-RichTextToolbar {
-	white-space: nowrap;
 }
 .i-richtextarea .gwt-RichTextArea {
 	background: #fff url(textfield/img/bg.png) repeat-x;
 }
-.i-richtextarea iframe {
-	border: 0;
-}
-
-/* Disabled by default
-.i-textarea-error,
-.i-textfield-error,
-.i-richtextarea-error iframe.gwt-RichTextArea {
-	background:transparent;
-	background-color: #FFE0E0;	
-}
-*/
-
-/* Disabled by default
-.i-textarea-required,
-.i-textfield-required,
-.i-richtextarea-required iframe.gwt-RichTextArea {
-	background:transparent;
-	background-color: #FFE0E0;	
-}
-*/
-
-/* Safari focus glow fix */
-.i-sa input:focus, 
-.i-sa textarea:focus{
-	outline-width: medium;
-}
 
 /* ./WebContent/ITMILL/themes/default/tree/tree.css */
-.i-tree {
-	text-align: left /* Force default alignment */
-}
-
 .i-tree-node {
 	background: transparent url(tree/img/collapsed.png) no-repeat 2px 1px;
 }
 .i-tree-node-expanded {
 	background: transparent url(tree/img/expanded.png) no-repeat 2px 1px;
 }
-.i-tree-node-leaf {
-	background-image: none;
-}
 .i-tree-node-caption {
 	margin-left: 16px;
 }
-
 .i-tree-node span {
 	padding: 0 2px;
-	cursor: pointer;
-	white-space: nowrap;
 }
 .i-tree-node-selected span {
 	background: #5daee8;
 	color: #fff;
 	padding: 0 2px;
-	cursor: pointer;
 }
 .i-tree-node-children {
 	padding-left: 16px;
 }
-
-
-/* ie6compatnode is hidden from non ie6 browsers, for ie6 
- * uses weird hack to sink all events properly 
- */
-.i-tree-node-ie6compatnode {
-	display: none;
-}
-
-/* IMPORTANT keep the offsetWidth of this element the same as the margin-left of i-tree-node-caption */
+/* IMPORTANT keep the offsetWidth (width + padding) of this element the same as the margin-left of i-tree-node-caption */
 .i-ie6 .i-tree-node-ie6compatnode {
-	display: inline;
-	float: left;
-	background: orange;
-	margin: 0;
 	width: 14px;
 	height: 10px;
 	padding: 1px;
-	filter: Alpha(opacity=0);
-}
-.i-ie6 .i-tree-node,
-.i-ie6 .i-tree-node-children {
-	clear: left;
 }
 
 /* ./WebContent/ITMILL/themes/default/window/window.css */
@@ -2642,81 +3079,50 @@ textarea.i-textarea-prompt {
 	line-height: 18px;
 	background: transparent url(window/img/bottom-left.png) no-repeat left bottom;
 }
-
 .i-window-wrap {
 	background: transparent url(window/img/top-left.png) no-repeat;
 }
-
 .i-window-outerheader {
 	height: 23px;
 	margin-left: 9px;
 	padding: 15px 40px 11px 12px;
 	background: transparent url(window/img/top-right.png) no-repeat right top;
-	cursor: move;
 }
-
 .i-window-header {
 	font-size: 18px;
 	line-height: 1.2;
 	font-weight: normal;
 	letter-spacing: -0.03em;
 	color: #f14c1a;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	overflow: hidden;
 	text-shadow: 0 1px 0 #fff;
+	/* This element is 100% wide in IE6 */
 }
-
-* html .i-window-header {
-	width: 100%;
-}
-
-.i-window-header .i-icon {
-	vertical-align: middle; /* This has to be 'middle', not 'bottom', to allow larger icons than 16px */
-}
-
 .i-window-contents {
 	background: #fff;
 	border: 2px solid #acb2b3;
 	border-top: none;
 	border-bottom: none;
 }
-
-/* Partial fix for bug #1106 */
-/* Target Firefox 2 (somehow this will force almost all window borders on top of a Flash object) */
-.i-window-contents, x:-moz-any-link {
-	overflow: hidden;
-}
-/* Target Firefox 3 (it doesn't need any trickery, so revert the previous) */
-.i-window-contents, x:-moz-any-link, x:default {
-	overflow: visible;
-}
-
 .i-window-footer {
 	height: 8px;
 	margin-left: 9px;
 	background: transparent url(window/img/bottom-right.png) no-repeat right top;  
 }
 .i-ie7 .i-window-footer {
-	position:relative;
+	position: relative;
 }
-
 .i-window-resizebox {
-	position: absolute; /* Needed to position the element over ScrollPanel, which is also relatively positioned */
+	position: absolute; /* Needed to position the element over ScrollPanel, which is relatively positioned */
 	right: 5px;
 	width: 10px;
 	height: 10px;
 	margin-top: -7px;
-	cursor: se-resize;
 	background: transparent url(window/img/resize.png);
-	overflow: hidden;
 }
-
 .i-window-resizebox-disabled {
-	cursor: default;
 	background: transparent;
+	display: block;
 }
-
 .i-window-closebox {
 	position: absolute;
 	top: 21px;
@@ -2724,118 +3130,59 @@ textarea.i-textarea-prompt {
 	width: 12px;
 	height: 12px;
 	background: transparent url(window/img/close.png);
-	cursor: pointer;
-	overflow: hidden;
 }
 .i-window-closebox:hover {
 	background-position: 0 -12px;
 }
-
 .i-window-modalitycurtain {
-	top: 0;
-	left: 0;
-	background: white;
-	opacity: 0.5;
-	position: fixed;
-	width: 100%;
-	height: 100%;
-	filter: alpha(opacity=50);
+	background: #fff;
 }
-
-/* IE6 workaround for position:fixed; */
-* html .i-window-modalitycurtain { 
-	position: absolute;
-	top: expression(document.documentElement.scrollTop + "px"); 
-}
-
-/* IE specific styles */
-
-* html .i-window {
-	width: 0; /* min-size for IE6 */
-}
-
 /* Shadow for window */
-
-.i-shadow-window {
-	position: absolute;
-}
-
 .i-shadow-window .top-left {
-    position: absolute; overflow: hidden;
     top: -13px;             left: -20px;
     width: 39px;         height: 39px;
     background: transparent url(window/img/shadow/top-left.png);
 }
-
 .i-shadow-window .top {
-    position: absolute; overflow: hidden;
     top: -13px;             left: 19px;
     height: 39px;
     right: 19px;
     background: transparent url(window/img/shadow/top.png);
 }
-
 .i-shadow-window .top-right {
-    position: absolute; overflow: hidden;
     top: -13px;             right: -20px;
     width: 39px;         height: 39px;
     background: transparent url(window/img/shadow/top-right.png);
 }
-
 .i-shadow-window .left {
-    position: absolute; overflow: hidden;
     top: 26px;           left: -20px;
     width: 39px;
     bottom: 12px;
     background: transparent url(window/img/shadow/left.png);
 }
-
 .i-shadow-window .center {
-    position: absolute; overflow: hidden;
     top: 26px;           left: 19px;
     bottom: 12px;        right: 19px;
     background: transparent url(window/img/shadow/center.png);
 }
-
 .i-shadow-window .right {
-    position: absolute; overflow: hidden;
     top: 26px;           right: -20px;
     width: 39px;
     bottom: 12px;
     background: transparent url(window/img/shadow/right.png);
 }
-
 .i-shadow-window .bottom-left {
-    position: absolute; overflow: hidden;
     bottom: -27px;           left: -20px;
     width: 39px;          height: 39px;
     background: transparent url(window/img/shadow/bottom-left.png);
 }
-
 .i-shadow-window .bottom {
-    position: absolute; overflow: hidden;
     bottom: -27px;           left: 19px;
     right: 19px;          height: 39px;
     background: transparent url(window/img/shadow/bottom.png);
 }
-
 .i-shadow-window .bottom-right {
-    position: absolute; overflow: hidden;
     bottom: -27px;           right: -20px;
     width: 39px;          height: 39px;
     background: transparent url(window/img/shadow/bottom-right.png);
-}
-
-
-/* For IE6 (no transparent png's, we use a blur filter) */
-
-* html .i-shadow-window * {
-	display: none;
-}
-
-* html .i-shadow-window {
-	background: #000;
-	filter: progid:DXImageTransform.Microsoft.Blur(pixelRadius=5) alpha(opacity=20);
-	margin-top: 2px;
-	margin-left: 2px;
 }

@@ -10,9 +10,7 @@ import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 
 /**
- * A component for selecting a numerical value within a range. A Slider can have
- * the appearance of a scroll bar or e.g. look like an Adobe Photoshop style of
- * a slider.
+ * A component for selecting a numerical value within a range.
  * 
  * Example code: <code>
  * 	class MyPlayer extends CustomComponent implements ValueChangeListener {
@@ -21,19 +19,20 @@ import com.itmill.toolkit.terminal.PaintTarget;
  * 		Slider slider;
  * 		
  * 		public MyPlayer() {
- * 			OrderedLayout ol = new OrderedLayout();
- * 			setCompositionRoot(ol);
+ * 			VerticalLayout vl = new VerticalLayout();
+ * 			setCompositionRoot(vl);
  * 			slider = new Slider("Volume", 0, 100);
  * 			slider.setImmediate(true);
- * 			ol.addComponent(slider);
- * 			ol.addComponent(volumeIndicator);
- * 			volumeIndicator.setValue(new Double(50));
+ *                      slider.setValue(new Double(50));
+ * 			vl.addComponent(slider);
+ * 			vl.addComponent(volumeIndicator);
+ * 			volumeIndicator.setValue("Current volume:" + 50.0);
  * 			slider.addListener(this);
  * 			
  * 		}
  * 		
  * 		public void setVolume(double d) {
- * 			volumeIndicator.setValue("Current volume : " + d);
+ * 			volumeIndicator.setValue("Current volume: " + d);
  * 		}
  * 
  * 		public void valueChange(ValueChangeEvent event) {
@@ -59,6 +58,7 @@ public class Slider extends AbstractField {
      * common slider found e.g. in Adobe Photoshop. The client side
      * implementation dictates how different styles will look.
      */
+    @Deprecated
     public static final String STYLE_SCROLLBAR = "scrollbar";
 
     /** Minimum value of slider */
@@ -93,7 +93,10 @@ public class Slider extends AbstractField {
      * size. Must be a value between 1-99. Other values are converted to nearest
      * bound. A negative value sets the width to auto (client-side
      * implementation calculates).
+     * 
+     * @deprecated The size is dictated by the current theme.
      */
+    @Deprecated
     private int handleSize = -1;
 
     /**
@@ -101,6 +104,7 @@ public class Slider extends AbstractField {
      * (client-side implementation decides the increment, usually somewhere
      * between 5-10% of slide range).
      */
+    @Deprecated
     private final boolean arrows = false;
 
     /**
@@ -361,7 +365,9 @@ public class Slider extends AbstractField {
      * Get the handle size of this Slider.
      * 
      * @return handle size in percentages.
+     * @deprecated The size is dictated by the current theme.
      */
+    @Deprecated
     public int getHandleSize() {
         return handleSize;
     }
@@ -371,7 +377,9 @@ public class Slider extends AbstractField {
      * 
      * @param handleSize
      *            in percentages relative to slider base size.
+     * @deprecated The size is dictated by the current theme.
      */
+    @Deprecated
     public void setHandleSize(int handleSize) {
         if (handleSize < 0) {
             this.handleSize = -1;
@@ -384,23 +392,6 @@ public class Slider extends AbstractField {
         }
         requestRepaint();
     }
-
-    /*
-     * Show or hide slider arrows.
-     * 
-     * @param visible
-     *//*
-        * public void setArrows(boolean visible) { arrows = visible;
-        * requestRepaint(); }
-        */
-
-    /*
-     * Does the slider have arrows?
-     * 
-     * @return arrows visible
-     *//*
-        * public boolean isArrowsVisible() { return arrows; }
-        */
 
     @Override
     public String getTag() {

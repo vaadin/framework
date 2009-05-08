@@ -1,0 +1,31 @@
+.i-captionwrapper {
+	text-align: left; /* Force default alignment */
+}
+.i-caption {
+	overflow: hidden;
+	white-space: nowrap;
+}
+.i-errorindicator {
+	float: left;
+}
+.i-caption .i-icon {
+	float: left;
+	padding-right: 2px;
+	vertical-align: middle;
+}
+.i-caption .i-captiontext {
+	float: left;
+	overflow: hidden;
+	vertical-align: middle;
+}
+.i-caption .i-required-field-indicator {
+	float: left;
+}
+
+/* Fix IE6 "double-float-margin-bug" */
+.i-ie6 .i-errorindicator,
+.i-ie6 .i-icon,
+.i-ie6 .i-captiontext,
+.i-ie6 .i-required-field-indicator {
+	display: inline;
+}

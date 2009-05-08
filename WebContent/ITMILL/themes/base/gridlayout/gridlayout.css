@@ -1,0 +1,30 @@
+.i-gridlayout-margin-top {
+	padding-top: 2em;
+}
+.i-gridlayout-margin-bottom {
+	padding-bottom: 2em;
+}
+.i-gridlayout-margin-left {
+	padding-left: 2em;
+} 
+.i-gridlayout-margin-right {
+	padding-right: 2em;
+}
+.i-gridlayout-spacing-on {
+	padding-left: 1em;
+	padding-top: 1em;
+	overflow: hidden;
+}
+.i-gridlayout-spacing,
+.i-gridlayout-spacing-off {
+	padding-left: 0;
+	padding-top: 0;
+}
+.i-gridlayout-spacing-off {
+	overflow: hidden;
+}
+/* Ensure that resizing gridlayout works in IE */
+.i-ie6 .i-gridlayout,
+.i-ie7 .i-gridlayout {
+	overflow: hidden;
+}

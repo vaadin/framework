@@ -1,0 +1,95 @@
+.i-button {
+	cursor: pointer;
+	white-space: nowrap;
+	margin: 0;
+}
+.i-button span {
+	white-space: nowrap;
+}
+.i-checkbox input {
+	vertical-align: middle;
+}
+.i-button img,
+.i-checkbox img {
+	display: inline;
+	vertical-align: middle;
+	margin-right: 3px;
+}
+.i-button span,
+.i-checkbox label {
+	vertical-align: middle;
+}
+.i-button-link {
+	border: none;
+	text-align: left;
+	background: none;
+	padding: 0;
+}
+/* Inset Safari focus outline a bit */
+.i-sa .i-button-link:focus {
+	outline-offset: -3px;
+}
+.i-button-link span {
+	text-decoration: underline;
+}
+.i-checkbox {
+	white-space: nowrap;	
+}
+.i-checkbox .i-errorindicator {
+	float: none;
+	display: inline;
+	padding-left: 1em;
+	background-position: left;
+}
+/* Fixes streched buttons in IE6 and IE7*/
+.i-ie6 .i-button {
+	width: 1px;
+}
+.i-ie6 .i-button,
+.i-ie7 .i-button,
+.i-ie8 .i-button {
+	overflow: visible;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+/* Error indicator on checkbox fix for IE6 */
+.i-ie6 .i-checkbox * {
+	float: left;
+	display: inline; /* In effect, does nothing, since float:left forces block-rendering, but will fix "double-float-margin-bug" */
+}
+.i-ie6 .i-checkbox .i-errorindicator {
+	background-position: right;
+	display: inline;
+	float: left;
+	padding-left: 0; 
+	padding-right: 0.4em;
+}
+/* Error indicator on checkbox fix for IE7 */
+.i-ie7 .i-checkbox *,
+.i-ie8 .i-checkbox * {
+	float: left;
+}
+.i-ie7 .i-checkbox .i-errorindicator,
+.i-ie8 .i-checkbox .i-errorindicator {
+	background-position: right;
+	float: left;
+	padding-left: 0;
+	padding-right: 0.7em;
+}
+/* Error indicator on button fix for IE */
+.i-ie6 button .i-errorindicator,
+.i-ie7 button .i-errorindicator,
+.i-ie8 button .i-errorindicator {
+	display: inline;
+	padding-right: 0.5em;
+}
+/* Disabled by default
+.i-checkbox-error {
+	background: #ffe0e0;
+}
+*/
+/* Disabled by default
+.i-checkbox-required {
+	background: #ffe0e0;
+}
+*/

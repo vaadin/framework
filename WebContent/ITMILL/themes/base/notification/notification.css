@@ -1,0 +1,41 @@
+.i-Notification {
+	background: #999;
+	color: #fff;
+	cursor: pointer;
+	overflow: hidden;
+	padding: 1em;
+}
+.i-Notification h1,
+.i-Notification p,
+.i-Notification.error h1,
+.i-Notification.error p,
+.i-Notification.warning h1,
+.i-Notification.warning p {
+	display: inline;
+	white-space: nowrap;
+	margin: 0 0.5em 0 0;
+}
+.i-Notification.warning {
+	background: orange;
+}
+.i-Notification.error {
+	background: red;
+}
+.i-Notification.tray h1 {
+	display: block;
+}
+.i-Notification.tray p {
+	display: block;
+}
+.i-Notification.system {
+	background-color: red;
+	opacity: .7;
+	filter: alpha(opacity=70);
+}
+.i-Notification.system h1 {
+	display: block;
+	margin: 0;
+}
+.i-Notification.system p {
+	white-space: nowrap;
+}

@@ -1,35 +1,11 @@
-.i-panel,
-.i-panel-caption,
-.i-panel-content,
-.i-panel-deco,
-.i-panel-light,
-.i-panel-caption-light,
-.i-panel-content-light,
-.i-panel-deco-light {
-	outline: none; /* Prevent selection outline which might break layouts or cause scrollbars */
-	text-align: left /* Force default alignment */
-}
-
 .i-panel {
 	background: transparent url(img/top-left.png) no-repeat;
 }
-
 .i-panel-caption .i-errorindicator {
-	float: none;
-	padding-right:20px;
-	display:inline;
+	padding-right: 20px;
 	background: transparent url(../icons/16/error.png) no-repeat bottom center;
 	
 }
-
-.i-panel-caption .i-icon {
-	display:inline;
-	vertical-align: middle;
-}
-.i-panel-caption span {
-	vertical-align: middle;
-}
-
 .i-panel-caption,
 .i-panel-caption-light {
 	font-size: 18px;
@@ -37,34 +13,26 @@
 	font-weight: normal;
 	letter-spacing: -0.03em;
 	color: #f14c1a;
-	white-space: nowrap;
 	height: 18px;
 	padding: 15px 18px 14px 8px;
 	margin-left: 10px;
 	background: transparent url(img/top-right.png) no-repeat right top;
-	overflow:hidden;
 }
-
 .i-panel-nocaption {
 	height: 9px;
 	margin-left: 10px;
 	background: transparent url(img/top-right.png) no-repeat right top;
-	overflow: hidden;
 }
-
 .i-panel-content {
 	border: 1px solid #babfc0;
 	border-bottom: 1px solid #dee2e3;
 	background-color: #fff;
-	overflow: auto;
 }
-
 .i-panel-deco {
 	height: 9px;
 	background: transparent url(img/bottom-right.png) repeat-x right top;
 	margin-left: 9px;
 }
-
 .i-panel-deco:before {
 	display: block;
 	content: "";
@@ -73,89 +41,59 @@
 	margin-left: -9px;
 	background: transparent url(img/bottom-left.png) no-repeat;
 }
-
-
-
-
-
-
 /* Light panel style */
-
 .i-panel-light,
 .i-panel-caption-light {
 	background: transparent;
 }
-
 .i-panel-nocaption-light {
 	background: transparent;
 	height: 0;
 	margin: 0;
 }
-
 .i-panel-content-light {
 	border: none;
 	border-top: 1px solid #babfc0;
 	background: transparent;
 }
-
 .i-panel-deco-light {
 	height: 0;
 	overflow: hidden;
 }
-
-
-
-
-
-
-
-
-/* IE specific rules (different selectors for IE6 and IE7.
- * These selectors must be separate because IE6 won't 
- * apply them if they are grouped together 
- * (it doesn't recognize the '+' selector).
-*/
-* html .i-panel {
+/* IE specific rules */
+.i-ie6 .i-panel {
 	background: transparent;
 }
-* html .i-panel-caption {
+.i-ie6 .i-panel-caption {
 	border: 1px solid #babfc0;
 	border-bottom: none;
 	background: #fff;
 	margin: 0;
 	padding-left: 18px
 }
-* html .i-panel-nocaption {
+.i-ie6 .i-panel-nocaption {
 	border: none;
 	background: transparent;
 	margin: 0;
 	height: 0;
 }
-
-* html .i-panel-caption-light {
+.i-ie6 .i-panel-caption-light {
 	border: none;
 	background: transparent;
 }
-
-* html .i-panel-content {
+.i-ie6 .i-panel-content,
+.i-ie7 .i-panel-content,
+.i-ie8 .i-panel-content {
 	border-bottom: 1px solid #babfc0;
 }
-*+html .i-panel-content {
-	border-bottom: 1px solid #babfc0;
-}
-
-* html .i-panel-content-light {
+.i-ie6 .i-panel-content-light,
+.i-ie7 .i-panel-content-light,
+.i-ie8 .i-panel-content-light {
 	border-bottom: none;
 }
-*+html .i-panel-content-light {
-	border-bottom: none;
-}
-
-* html .i-panel-deco {
-	height: 0;
-	overflow: hidden;
-}
-*+html .i-panel-deco {
+.i-ie6 .i-panel-deco,
+.i-ie7 .i-panel-deco,
+.i-ie8 .i-panel-deco {
 	height: 0;
 	overflow: hidden;
 }

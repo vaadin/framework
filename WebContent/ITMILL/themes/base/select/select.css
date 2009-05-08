@@ -1,0 +1,134 @@
+.i-select {
+	text-align: left;
+}
+.i-select-optiongroup .i-select-option {
+	display: block;
+	white-space: nowrap;
+}
+.i-ie .i-select-optiongroup .i-select-option {
+	zoom: 1;
+}
+.i-select-select {
+	display: block;
+}
+.i-select-twincol {
+	white-space: nowrap;
+}
+.i-select-twincol-options {
+	float: left;
+}
+.i-select-twincol-selections {
+	font-weight: bold;
+}
+.i-select-twincol-buttons {
+	float: left;
+	text-align: center;
+}
+.i-select-twincol-buttons .i-select-twincol-deco {
+	clear: both;
+}
+.i-select-twincol .i-textfield {
+	display: block;
+	float: left;
+	clear: left;
+}
+.i-select-twincol .i-button {
+	display: block;
+	float: left;
+}
+.i-select-twincol-buttons .i-button {
+	display: inline;
+	float: none;
+}
+.i-filterselect {
+	white-space: nowrap;
+	text-align: left;
+}
+.i-filterselect .i-icon {
+	float: left;
+}
+.i-app .i-filterselect-input,
+.i-window .i-filterselect-input,
+.i-popupview-popup .i-filterselect-input {
+	float: left;
+}
+.i-filterselect-prompt .i-filterselect-input {
+	color: #999;
+	font-style: italic;
+}
+.i-filterselect-button {
+	float: right;
+	cursor: pointer;
+}
+.i-filterselect.i-readonly .i-filterselect-button {
+	display: none;
+}
+.i-filterselect-suggestpopup {
+	background: #fff;
+	border: 1px solid #eee;
+}
+.i-filterselect-suggestmenu table {
+	border-collapse: collapse;
+	border: none;
+}
+.i-filterselect-suggestmenu .gwt-MenuItem {
+	white-space: nowrap;
+}
+.i-filterselect-suggestmenu .gwt-MenuItem .i-icon {
+	margin-right: 3px;
+	vertical-align: middle;
+}
+.i-filterselect-suggestmenu .gwt-MenuItem span {
+	vertical-align: middle;
+}
+.i-filterselect-suggestmenu .gwt-MenuItem-selected {
+	background: #333;
+	color: #fff;
+}
+.i-filterselect-nextpage,
+.i-filterselect-nextpage-off,
+.i-filterselect-prevpage-off,
+.i-filterselect-prevpage {
+	width: 100%;
+	background: #aaa;
+	text-align: center;
+	overflow: hidden;
+	cursor: pointer;
+}
+.i-filterselect-nextpage-off,
+.i-filterselect-prevpage-off {
+	color: #666;
+	opacity: .5;
+	filter: alpha(opacity=50);
+	cursor: default;
+}
+.i-filterselect-nextpage-off span,
+.i-filterselect-prevpage-off span {
+	cursor: default;
+}
+.i-filterselect-status {
+	white-space: nowrap;
+	text-align: center;
+}
+
+/* Error styles (disabled by default)
+
+.i-filterselect-error .i-filterselect-input,
+.i-select-error .i-select-option,
+.i-select-error .i-select-select,
+.i-select-error .i-select-twincol-selections,
+.i-select-error .i-select-twincol-options {
+	background: #ffaaaa;
+}
+*/
+
+/*  Required field styles (disabled by default)
+   
+.i-filterselect-error .i-filterselect-input,
+.i-select-required .i-select-option,
+.i-select-required .i-select-select,
+.i-select-required .i-select-twincol-selections,
+.i-select-required .i-select-twincol-options {
+	background: #ffaaaa;
+}
+*/

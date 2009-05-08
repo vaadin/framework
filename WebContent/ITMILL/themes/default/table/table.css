@@ -1,92 +1,24 @@
-
-/* Table theme building instructions
- * 
- * Toolkit scroll table is very complex widget with dozens of features. These 
- * features set some limitations for theme builder. To keep things working, it
- * is safest to try to just override values used in default theme and comfort to
- * these instructions.
- * 
- *
- * Table cells in body:
- *  - padding/border for cells is to be defined for td elements (class name: .i-table-cell-content)
- *  - in default theme there are no borders, but they should work. Just set border-right or border-bottom
- *  - no padding or border is allowed for div inside cells (class name : .i-table-cell-wrapper) element
- *  - background is allowed for both elements
- *
- * Table headers:
- *  - table cells in header contain .i-table-resizer and 
- *	  .i-table-caption-container div elements, which are both floated to right
- *  - to align header caption to body content resizer width + .i-table-caption-container
- *    padding right should be equal to content cells padding-right and border-right.
- *  - Possible cell border in header must be themed into column resizer.
- *
- */
-
-.i-table {
-	overflow: hidden;
-	text-align: left /* Force default alignment */
-}
-
-.i-table.table-inline .i-table-header-wrap {
-	border-left: none;
-	border-right: none;
-	/*margin: -16px -18px 0 -18px;*/
-}
-
 .i-table-header-wrap {
 	height: 36px;
-	background: #e7edf3 url(img/header-bg.png) repeat-x;
 	border: 1px solid #b6bbbc;
 	border-bottom: none;
-	overflow: hidden;
+	background: #e7edf3 url(img/header-bg.png) repeat-x;
 }
-
 .i-table-header {
 	height: 36px;
 }
-
-.i-table-header table,
-.i-table-table {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	border-spacing:0;
-}
-
-.i-table-header td {
-	margin: 0;
-	padding: 0;
-	border: 0;
-}
-
-.i-table-header td {
-	cursor: pointer;
-}
-
 .i-table-resizer {
-	display: block;
 	height: 36px;
-	width:4px;
-	float: right;
+	width: 4px;
 	background: transparent url(img/resizer-bg.png) repeat-y 50% 50%;
-	cursor: col-resize;
 }
-
 .i-table-caption-container {
-	float: right;
-	overflow: hidden;
-	white-space: nowrap;
 	color: #393a3c;
 	font-size: 15px;
 	padding-top: 9px;
-	text-shadow: #ffffff 2px 2px 0;
-	/* To align captions and content to same place resizer width + caption 
-	 * container padding-right must be equal to table cell 
-	 * padding-right + border-righ 
-	 */
-	padding-right:2px;
+	text-shadow: #ffffff 0 1px 0;
+	padding-right: 2px; /* See themes/base/table.css for explanation */
 }
-
 .i-table-header-cell-asc .i-table-caption-container {
 	background: transparent url(img/sort-asc.png) no-repeat right 80%;
 }
@@ -98,24 +30,13 @@
 .i-table-header-cell-desc:hover {
 	background: transparent url(img/header-bg-over.png) repeat-x;
 }
-
 .i-table-body {
 	background: #fff;
 	border: 1px solid #b6bbbc;
 }
-
-.i-table-row-spacer {
-	height: 10px;
-	overflow: hidden; /* IE hack to allow < one line height divs */
-}
-
 .i-table-row,
 .i-table-row-odd {
-	border: 0;
-	margin: 0;
-	padding: 0;
 	background-color: #fff;
-	cursor: default;
 }
 .i-table-row-odd {
 	background-color: #f6f7f7;
@@ -128,29 +49,26 @@
 	background: #57a7ed;
 	color: #fff;
 }
-
 .i-table-cell-content {
-	padding-top: 3px;
-	padding-left: 3px;
-	padding-right: 6px;
+	padding: 0 6px 0 4px;
+	border-right: none;
 }
-
 .i-table-cell-wrapper {
 	white-space: nowrap;
 	overflow: hidden;
 	line-height: 23px;
+	/* Do not specify horizontal padding here */
+	padding: 3px 0 0 0;
 }
-
 /* Fix textfield size to correspond label size inside table */
 .i-table-cell-content .i-textfield,
 .i-table-cell-content .i-button {
-	margin: -2px 0 -2px -3px;
+	margin: -3px 0 0 0;
 }
 .i-table-cell-content .i-textfield,
 .i-table-cell-content .i-datefield {
 	width: 97%; /* approximate */
 }
-
 /* ...but not for datefield textarea */
 .i-table-cell-content .i-datefield .i-textfield {
 	width: auto;
@@ -159,57 +77,35 @@
 /* datefield button is too high for table cell */
 .i-table-cell-content .i-datefield-button {
 	height: 25px;
-	margin: -2px 0;
+	margin: -3px 0 0 0;
 }
-
-
-
 .i-table-column-selector {
-	float: right;
 	background: transparent url(img/colsel.png) no-repeat;
 	margin: -36px 0 0 0;
 	height: 36px;
 	width: 15px;
-	position: relative; /* hide this from IE, it works without it */
 }
-
-* html .i-table-column-selector {
-	position: static;
-}
-
-*+html .i-table-column-selector  {
-	position: static;
-}
-
 .i-table-focus-slot-left {
-	border-left: 2px solid #b6bbbc;
-	margin-right: -2px;
+	border-color: #b6bbbc;
 }
 .i-table-focus-slot-right {
-	border-right: 2px solid #b6bbbc;
-	margin-left: -2px;
+	border-color: #b6bbbc;
 }
-
 .i-table-header-drag {
-	position: absolute;
 	background: #e7edf3 url(img/header-bg.png) repeat-x;
 	border: 1px solid #b6bbbc;
 	padding: 4px;
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	color: #464f52;
 	font-size: 15px;
-	opacity: 0.5;
-	filter: alpha(opacity=50);
 	margin-top: 20px;
-	z-index: 20000;
 }
-
 .i-table-scrollposition {
 	width: 160px;
 	height: 39px;
 	background: transparent url(img/scroll-position-bg.png);
+	border: none;
 }
-
 .i-table-scrollposition span {
 	display: block;
 	margin-top: 8px;
@@ -219,8 +115,6 @@
 	font-size: 15px;
 	text-shadow: #ffffff 2px 2px 0;
 }
-
-
 /* row in column selector */
 .i-on div {
 	background: transparent url(img/check.gif) no-repeat 2px 50%;
@@ -229,18 +123,16 @@
 .i-off div {
 	text-indent: 6px;
 }
-
 .i-table .i-link {
 	display: inline;
 }
-
 /* IE6 hack */
-* html .i-table-scrollposition {
+.i-ie6 .i-table-scrollposition {
 	background: transparent;
 	/* 
 	AlphaImageLoader uses src attribute relative to host page, not CSS
 	We need multiple different filters because we cannot be sure how host page is served compared to theme resources
-	TODO: This actually does not work as expected, since only the last filter is applied.
+	TODO: This actually does not work as expected, since only the last filter is applied. Can we chain filters together (i.e. contain all versions on one line)?
 	 */
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/themes/default/table/img/scroll-position-bg.png", sizingMethod="scale");
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/themes/default/table/img/scroll-position-bg.png", sizingMethod="scale");

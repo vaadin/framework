@@ -22,6 +22,9 @@ public class IButton extends Button implements Paintable {
     private String width = null;
 
     public static final String CLASSNAME = "i-button";
+    
+    // Used only for IE, because it doesn't support :active CSS selector
+    private static final String CLASSNAME_DOWN = "i-pressed";
 
     String id;
 
@@ -136,13 +139,25 @@ public class IButton extends Button implements Paintable {
         } else if (DOM.eventGetType(event) == Event.ONMOUSEDOWN
                 && event.getButton() == Event.BUTTON_LEFT) {
             clickPending = true;
+            if (BrowserInfo.get().isIE()) {
+            	// Only for IE, because it doesn't support :active CSS selector
+            	// Simple check is cheaper than DOM manipulation
+                addStyleName(CLASSNAME_DOWN);
+            }
         } else if (DOM.eventGetType(event) == Event.ONMOUSEMOVE) {
             clickPending = false;
         } else if (DOM.eventGetType(event) == Event.ONMOUSEOUT) {
             if (clickPending) {
                 click();
             }
+            if (BrowserInfo.get().isIE()) {
+                removeStyleName(CLASSNAME_DOWN);
+            }
             clickPending = false;
+        } else if (DOM.eventGetType(event) == Event.ONMOUSEUP) {
+            if (BrowserInfo.get().isIE()) {
+                removeStyleName(CLASSNAME_DOWN);
+            }
         }
 
         if (client != null) {

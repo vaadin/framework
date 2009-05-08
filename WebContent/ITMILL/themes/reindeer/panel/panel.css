@@ -1,0 +1,35 @@
+.i-panel-caption,
+.i-panel-nocaption {
+	border-bottom: 1px solid #dcdcdc;
+	line-height: 16px; /* accommodate minimum icon size */
+}
+.i-sa .i-panel-caption,
+.i-sa .i-panel-nocaption,
+.i-ff3 .i-panel-caption,
+.i-ff3 .i-panel-nocaption {
+	border-bottom-color: rgba(0,0,0,.1);
+}
+.i-panel-caption {
+	padding-bottom: 2px;
+}
+.i-panel-content {
+	border: 1px solid #dcdcdc;
+	border-bottom: none;
+	border-top: none;
+	background: #fff;
+}
+.i-sa .i-panel-content,
+.i-ff3 .i-panel-content {
+	border-color: rgba(0,0,0,.1);
+}
+.i-panel-deco {
+	height: 1px;
+	border-top: 1px solid #bebebe;
+	background: #e2e2e2;
+	overflow: hidden;
+}
+.i-sa .i-panel-deco,
+.i-ff3 .i-panel-deco {
+	border-top-color: rgba(0,0,0,.1);
+	background: rgba(0,0,0,.08);
+}

@@ -1,0 +1,239 @@
+/* We serve simpler buttons for IE6, since it doesn't support the adjacent 
+ * sibling selector (+) that is needed to position .i-icon properly.
+ */
+div > .i-button,
+.i-ie7 .i-button {
+	height: 26px;
+	padding: 0 0 0 6px;
+	background-color: transparent;
+	background-repeat: no-repeat;
+	background-image: url(img/left.png); /** sprite-ref: buttons */
+	border: none;
+	cursor: default;
+}
+div > .i-button span,
+.i-ie7 .i-button span {
+	display: inline-block;
+	height: 22px;
+	padding: 4px 15px 0 9px;
+	background-color: transparent;
+	background-repeat: no-repeat;
+	background-position: right top;
+	background-image: url(img/right.png);  /** sprite-ref: buttons; sprite-alignment: right */
+	text-shadow: #fff 0 1px 0;
+	font-weight: bold;
+	font-size: 11px;
+	line-height: 16px;
+	float: none;
+}
+.i-sa .i-button span {
+	height: 21px;
+	padding-top: 5px;
+}
+.i-button:focus {
+	background-image: url(img/left-focus.png); /** sprite-ref: buttons */
+	outline: none;
+}
+.i-button:focus span {
+	background-image: url(img/right-focus.png); /** sprite-ref: buttons; sprite-alignment: right */
+	outline: none;
+}
+.i-button:active,
+.i-ie7 .i-button.i-pressed {
+	background-image: url(img/left-pressed.png); /** sprite-ref: buttons */
+	outline: none;
+}
+.i-button:active span,
+.i-ie7 .i-button.i-pressed span {
+	background-image: url(img/right-pressed.png); /** sprite-ref: buttons; sprite-alignment: right */
+	outline: none;
+}
+.i-ie7 .i-button.i-pressed span {
+	position: relative;
+}
+/* FF3 & FF2 */
+.i-button::-moz-focus-inner {
+	border: none;
+	padding: 0;
+}
+.i-ff2 .i-button span {
+	display: -moz-inline-box;
+	padding-top: 6px;
+	height: 20px;
+}
+/* IE7 */
+.i-ie7 .i-button.i-pressed .i-icon {
+	position: relative;
+	z-index: 2;
+}
+/* Opera */
+.i-op .i-button:active span {
+	margin-top: -1px;
+	margin-left: -1px;
+}
+/* Modifications for buttons with icons */
+div > .i-button .i-icon,
+.i-ie7 .i-button .i-icon {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	overflow: hidden;
+	position: relative;
+	margin: 0 3px 0 0;
+}
+.i-ff2 .i-button .i-icon {
+	display: block;
+	float: left;
+	margin-top: 4px;
+}
+.i-ff2 .i-button-link .i-icon {
+	margin: 0;
+}
+.i-button .i-icon + span,
+.i-button .i-icon + .i-errorindicator + span {
+	margin-left: -19px;
+	padding-left: 19px;
+}
+.i-ie7 .i-button .i-icon + span,
+.i-ie7 .i-button .i-icon + .i-errorindicator + span {
+	margin-left: -23px;
+	padding-left: 23px;
+}
+/* Buttons with error indicator */
+div > .i-button .i-errorindicator,
+.i-ie7 .i-button .i-errorindicator {
+	display: inline;
+	position: absolute;
+	width: 5px;
+	height: 26px;
+	background: transparent url(../../default/icons/16/error.png) no-repeat 50%;
+	overflow: hidden;
+}
+.i-ie6 .i-button .i-errorindicator {
+	position: absolute;
+	width: 5px;
+	height: 18px;
+	background: transparent url(../../default/icons/16/error.gif) no-repeat 50%;
+	overflow: hidden;
+	margin-left: -10px;
+}
+/* Link style buttons */
+.i-button.i-button-link,
+.i-ie7 .i-button-link.i-pressed {
+	background: transparent;
+	height: auto;
+	padding: 0;
+	cursor: pointer;
+}
+.i-button.i-button-link span,
+.i-ie7 .i-button-link.i-pressed span {
+	background: transparent;
+	height: auto;
+	padding: 0;
+	display: inline;
+	font-weight: normal;
+	color: #1b699f;
+}
+.i-button.i-button-link .i-icon + span {
+	margin: 0;
+	padding: 0;
+}
+.i-button-link:focus {
+	outline: 1px dotted #1b699f;
+}
+/**
+ * Default action button style --------------------------
+ */
+div > .i-button-primary,
+.i-ie7 .i-button-primary {
+	background-image: url(img/primary-left.png); /** sprite-ref: buttons */
+}
+div > .i-button-primary span,
+.i-ie7 .i-button-primary span {
+	background-image: url(img/primary-right.png); /** sprite-ref: buttons; sprite-alignment: right */
+}
+.i-button-primary:focus {
+	background-image: url(img/primary-left-focus.png); /** sprite-ref: buttons */
+}
+.i-button-primary:focus span {
+	background-image: url(img/primary-right-focus.png); /** sprite-ref: buttons; sprite-alignment: right */
+}
+.i-button-primary:active,
+.i-ie7 .i-button-primary.i-pressed {
+	background-image: url(img/primary-left-pressed.png); /** sprite-ref: buttons */
+}
+.i-button-primary:active span,
+.i-ie7 .i-button-primary.i-pressed span {
+	background-image: url(img/primary-right-pressed.png); /** sprite-ref: buttons; sprite-alignment: right */
+}
+/* 
+ * Small-style --------------------------
+ */
+div > .i-button-small,
+.i-ie7 .i-button-small {
+	background-image: url(img/small-left.png); /** sprite-ref: buttons */
+	height: 20px;
+}
+div > .i-button-small span,
+.i-ie7 .i-button-small span {
+	background-image: url(img/small-right.png); /** sprite-ref: buttons; sprite-alignment: right */
+	height: 19px;
+	padding: 1px 11px 0 5px;
+	font-weight: normal;
+}
+.i-ff2 .i-button-small span {
+	height: 17px;
+	padding-top: 3px;
+}
+.i-sa .i-button-small span {
+	height: 18px;
+	padding-top: 2px;
+}
+.i-button-small:focus {
+	background-image: url(img/small-left-focus.png); /** sprite-ref: buttons */
+}
+.i-button-small:focus span {
+	background-image: url(img/small-right-focus.png); /** sprite-ref: buttons; sprite-alignment: right */
+}
+.i-button-small:active,
+.i-ie7 .i-button-small.i-pressed {
+	background-image: url(img/small-left-pressed.png); /** sprite-ref: buttons */
+}
+.i-button-small:active span,
+.i-ie7 .i-button-small.i-pressed span {
+	background-image: url(img/small-right-pressed.png); /** sprite-ref: buttons; sprite-alignment: right */
+}
+
+/**
+ * IE6 buttons --------------------------
+ */
+.i-ie6 .i-button {
+	border: 1px solid #b3b3b3;
+	border-bottom-color: #9a9a9a;
+	background: #d8d8d8 url(img/right.png) no-repeat 0 -1px;
+	padding: 3px 15px 2px 15px;
+	font-weight: bold;
+	font-size: 11px;
+	line-height: 16px;
+	height: 16px;
+	outline: none;
+}
+.i-ie6 .i-button-primary {
+	background-image: url(img/primary-right.png);
+}
+.i-ie6 .i-button-small {
+	font-weight: normal;
+	padding: 1px 11px 0 11px;
+	height: 12px;
+	line-height: normal;
+	background-image: url(img/small-right.png);
+}
+.i-ie6 .i-button.i-pressed {
+	background: transparent url(img/right-pressed.png) no-repeat 0 -1px;
+}
+/* Buttons on blue background */
+.i-ie6 .blue .i-button {
+	border-color: #84949c;
+	border-top-color: #83939b;
+	border-bottom-color: #888d91;
+}
