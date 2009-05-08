@@ -59,7 +59,7 @@
 	<target name="package-war" depends="clean-result, package-init, init, build, docs, internal-package-mac, internal-package-war">
 	</target>
 
-    <target name="package-test" depends="clean-result, nightly-init, package-init, init, build, docs, internal-package-linux, nightly-install">
+    <target name="package-test" depends="clean-result, nightly-init, package-init, init, build, docs, internal-package-linux, nightly-publish">
     </target>
 
     <!-- ant contrib required for flow control (for loop, if, property override)   -->
@@ -182,6 +182,7 @@
 
 		<property file="build/build.properties" />
 		<property file="build/VERSION.properties" />
+		<property file="build/GWT-VERSION.properties" />
 		<property file="build/html-style.properties" />
 
         <echo>Toolkit package is: ${toolkit-package}</echo>
@@ -192,7 +193,7 @@
 		<!-- required when compiling WebContent/ITMILL/widgetsets (and also Java server-side classes) -->
 		<property name="lib-gwt-dev" value="gwt-dev-${platform}.jar" />
 
-		<echo>We are on ${platform} platform (${os.name} ${os.version}), using ${gwt-dir}/${platform}/${lib-gwt-dev}.</echo>
+		<echo>We are on ${platform} platform (${os.name} ${os.version}), using ${gwt-dir}/${platform}/${lib-gwt-dev} (${gwt-version}).</echo>
 
 		<!-- Destination files -->
 		<property name="lib-jar-name" value="${product-file}-${version}.jar" />
@@ -863,6 +864,7 @@
 	<!-- Definitions for building local components, i.e., not for an installation package. -->
 	<target name="init-nonpackage" depends="init-platform">
 		<property file="build/VERSION.properties" />
+		<property file="build/GWT-VERSION.properties" />
 
 		<!-- Definitions for building the client-side. -->
 		<property name="output-dir" value="." />
@@ -910,7 +912,13 @@
 	<target name="libs" depends="compile-java, webcontent, compile-widgetset-default">
 		<echo>Creating libs (server-side) ${lib-jar-name}</echo>
 		<!-- Create Toolkit JAR -->
+		<mkdir dir="${output-dir}/META-INF"/>
+		<echo file="${output-dir}/META-INF/VERSION">${version}</echo> 
+		<echo file="${output-dir}/META-INF/GWT-VERSION">${gwt-version}</echo> 
+		
 		<jar jarfile="${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name}" compress="true">
+			<metainf dir="${output-dir}/META-INF"/>
+			
 			<fileset dir="${result-path}/classes">
 				<patternset>
 					<exclude name="${toolkit-package}/demo/**" />
@@ -1068,7 +1076,7 @@
     <!-- ================================================================== -->
 
     <!-- Main target for the nightly build. -->
-    <target name="nightly" depends="clean-result, nightly-init, package-init, init, build, internal-package-linux, nightly-install">
+    <target name="nightly" depends="clean-result, nightly-init, package-init, init, build, internal-package-linux">
     </target>
 
     <!-- Create symlink to GWT installation directory. -->
@@ -1145,7 +1153,7 @@
         <echo>Result: ${nightly.install.scp.result}</echo>
     </target>
 
-    <target name="nightly-install" depends="nightly-teamcity-publish, nightly-download-publish">
+    <target name="nightly-publish" depends="nightly-teamcity-publish, nightly-download-publish">
     </target>
 
     <!-- ================================================================== -->
