@@ -52,6 +52,7 @@ public class AbsoluteLayout extends AbstractLayout {
     public void removeComponent(Component c) {
         components.remove(c);
         super.removeComponent(c);
+        requestRepaint();
     }
 
     public void addComponent(Component c, String cssPosition) {
