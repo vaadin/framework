@@ -738,6 +738,7 @@ public class TabSheet extends AbstractComponentContainer implements
 
         public void setCaption(String caption) {
             this.caption = caption;
+            requestRepaint();
         }
 
         public Resource getIcon() {
@@ -746,6 +747,7 @@ public class TabSheet extends AbstractComponentContainer implements
 
         public void setIcon(Resource icon) {
             this.icon = icon;
+            requestRepaint();
         }
 
         public boolean isEnabled() {
@@ -754,6 +756,7 @@ public class TabSheet extends AbstractComponentContainer implements
 
         public void setEnabled(boolean enabled) {
             this.enabled = enabled;
+            requestRepaint();
         }
 
         public boolean isVisible() {
@@ -762,6 +765,7 @@ public class TabSheet extends AbstractComponentContainer implements
 
         public void setVisible(boolean visible) {
             this.visible = visible;
+            requestRepaint();
         }
 
         public String getDescription() {
@@ -770,7 +774,7 @@ public class TabSheet extends AbstractComponentContainer implements
 
         public void setDescription(String description) {
             this.description = description;
-
+            requestRepaint();
         }
 
         public ErrorMessage getComponentError() {
@@ -779,6 +783,7 @@ public class TabSheet extends AbstractComponentContainer implements
 
         public void setComponentError(ErrorMessage componentError) {
             this.componentError = componentError;
+            requestRepaint();
         }
 
     }
