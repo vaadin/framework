@@ -8,6 +8,7 @@ import com.itmill.toolkit.ui.TabSheet;
 import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 import com.itmill.toolkit.ui.TabSheet.SelectedTabChangeEvent;
+import com.itmill.toolkit.ui.TabSheet.Tab;
 
 public class TabSheetDisabledExample extends VerticalLayout implements
         TabSheet.SelectedTabChangeListener, Button.ClickListener {
@@ -24,6 +25,7 @@ public class TabSheetDisabledExample extends VerticalLayout implements
     private VerticalLayout l1;
     private VerticalLayout l2;
     private VerticalLayout l3;
+    private Tab t1, t2, t3;
 
     public TabSheetDisabledExample() {
         setSpacing(true);
@@ -44,9 +46,9 @@ public class TabSheetDisabledExample extends VerticalLayout implements
         t = new TabSheet();
         t.setHeight("200px");
         t.setWidth("400px");
-        t.addTab(l1, "Saved actions", icon1);
-        t.addTab(l2, "Notes", icon2);
-        t.addTab(l3, "Issues", icon3);
+        t1 = t.addTab(l1, "Saved actions", icon1);
+        t2 = t.addTab(l2, "Notes", icon2);
+        t3 = t.addTab(l3, "Issues", icon3);
         t.addListener(this);
 
         toggleEnabled = new Button("Disable 'Notes' tab");
@@ -65,21 +67,21 @@ public class TabSheetDisabledExample extends VerticalLayout implements
     }
 
     public void selectedTabChange(SelectedTabChangeEvent event) {
-        String c = t.getTabCaption(event.getTabSheet().getSelectedTab());
+        String c = t.getTab(event.getTabSheet().getSelectedTab()).getCaption();
         getWindow().showNotification("Selected tab: " + c);
     }
 
     public void buttonClick(ClickEvent event) {
         if (toggleEnabled.equals(event.getButton())) {
             // toggleEnabled clicked
-            l2.setEnabled(!l2.isEnabled());
-            toggleEnabled.setCaption((l2.isEnabled() ? "Disable" : "Enable")
+            t2.setEnabled(!t2.isEnabled());
+            toggleEnabled.setCaption((t2.isEnabled() ? "Disable" : "Enable")
                     + " 'Notes' tab");
 
         } else {
             // toggleVisible clicked
-            l3.setVisible(!l3.isVisible());
-            toggleVisible.setCaption((l3.isVisible() ? "Hide" : "Show")
+            t3.setVisible(!t3.isVisible());
+            toggleVisible.setCaption((t3.isVisible() ? "Hide" : "Show")
                     + " 'Issues' tab");
 
         }

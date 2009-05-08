@@ -1,5 +1,7 @@
 package com.itmill.toolkit.tests.components.tabsheet;
 
+import java.util.Date;
+
 import com.itmill.toolkit.tests.components.TestBase;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Label;
@@ -25,20 +27,29 @@ public class TabSheetCaptions extends TestBase {
     protected void setup() {
         final TabSheet tabSheet = new TabSheet();
 
-        panel1 = new Panel("tab 1");
+        panel1 = new Panel("Panel initial caption (should also be tab caption)");
         panel1.setSizeFull();
         panel1.getLayout().setSizeFull();
-        panel1.addComponent(new Label("This is first panel"));
+        panel1.addComponent(new Label("This is a panel"));
         tabSheet.addTab(panel1);
 
         Button button = new Button("Update tab caption");
         button.addListener(new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
-                tabSheet.setTabCaption(panel1, "This is a new caption");
+                tabSheet.setTabCaption(panel1, "This is a new tab caption "
+                        + new Date());
+            }
+        });
+
+        Button button2 = new Button("Update panel caption");
+        button2.addListener(new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                panel1.setCaption("This is a new panel caption " + new Date());
             }
         });
 
         addComponent(tabSheet);
         addComponent(button);
+        addComponent(button2);
     }
 }
