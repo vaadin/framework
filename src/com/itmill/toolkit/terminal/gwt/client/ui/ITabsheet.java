@@ -763,14 +763,7 @@ public class ITabsheet extends ITabsheetBase {
     }
 
     public void updateCaption(Paintable component, UIDL uidl) {
-        int i = tp.getWidgetIndex((Widget) component);
-        ICaption c = captions.get("" + i);
-        boolean visible = c.isVisible();
-        c.updateCaption(uidl);
-        if (c.isVisible() != visible) {
-            tb.setVisible(i, c.isVisible());
-            c.setWidth(c.getRequiredWidth() + "px");
-        }
+        /* Tabsheet does not render its children's captions */
     }
 
     public boolean requestLayout(Set<Paintable> child) {

@@ -21,7 +21,8 @@ public class TabSheetDisabling extends TestBase {
                         new ClickListener() {
 
                             public void buttonClick(ClickEvent event) {
-                                event.getButton().setEnabled(false);
+                                Button b = event.getButton();
+                                tabSheet.getTab(b).setEnabled(false);
 
                             }
 
@@ -30,8 +31,8 @@ public class TabSheetDisabling extends TestBase {
                 buttons[i] = new Button("Hide this tab", new ClickListener() {
 
                     public void buttonClick(ClickEvent event) {
-                        event.getButton().setVisible(false);
-
+                        Button b = event.getButton();
+                        tabSheet.getTab(b).setVisible(false);
                     }
 
                 });

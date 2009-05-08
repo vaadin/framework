@@ -6,10 +6,12 @@ package com.itmill.toolkit.ui;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
+import com.itmill.toolkit.terminal.ErrorMessage;
 import com.itmill.toolkit.terminal.KeyMapper;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
@@ -31,7 +33,12 @@ public class TabSheet extends AbstractComponentContainer implements
     /**
      * Linked list of component tabs.
      */
-    private final LinkedList tabs = new LinkedList();
+    private final LinkedList components = new LinkedList();
+
+    /**
+     * Map containing information related to the tabs (caption, icon etc).
+     */
+    private final HashMap<Component, Tab> tabs = new HashMap<Component, Tab>();
 
     /**
      * Selected tab.
@@ -64,7 +71,7 @@ public class TabSheet extends AbstractComponentContainer implements
      * @return the Iterator of the components inside the container.
      */
     public Iterator getComponentIterator() {
-        return java.util.Collections.unmodifiableList(tabs).iterator();
+        return java.util.Collections.unmodifiableList(components).iterator();
     }
 
     /**
@@ -75,15 +82,16 @@ public class TabSheet extends AbstractComponentContainer implements
      */
     @Override
     public void removeComponent(Component c) {
-        if (c != null && tabs.contains(c)) {
+        if (c != null && components.contains(c)) {
             super.removeComponent(c);
             keyMapper.remove(c);
+            components.remove(c);
             tabs.remove(c);
             if (c.equals(selected)) {
-                if (tabs.isEmpty()) {
+                if (components.isEmpty()) {
                     selected = null;
                 } else {
-                    selected = (Component) tabs.getFirst();
+                    selected = (Component) components.getFirst();
                     fireSelectedTabChange();
                 }
             }
@@ -114,16 +122,23 @@ public class TabSheet extends AbstractComponentContainer implements
      * @param icon
      *            the icon to be set for the component and used rendered in tab
      *            bar
+     * @return the created tab
      */
-    public void addTab(Component c, String caption, Resource icon) {
+    public Tab addTab(Component c, String caption, Resource icon) {
         if (c != null) {
-            if (caption != null) {
-                c.setCaption(caption);
+            components.addLast(c);
+            Tab tab = new TabSheetTabImpl(caption, icon);
+
+            tabs.put(c, tab);
+            if (selected == null) {
+                selected = c;
+                fireSelectedTabChange();
             }
-            if (icon != null) {
-                c.setIcon(icon);
-            }
-            addTab(c);
+            super.addComponent(c);
+            requestRepaint();
+            return tab;
+        } else {
+            return null;
         }
     }
 
@@ -133,17 +148,13 @@ public class TabSheet extends AbstractComponentContainer implements
      * 
      * @param c
      *            the component to be added onto tab.
+     * @return the created tab
      */
-    public void addTab(Component c) {
+    public Tab addTab(Component c) {
         if (c != null) {
-            tabs.addLast(c);
-            if (selected == null) {
-                selected = c;
-                fireSelectedTabChange();
-            }
-            super.addComponent(c);
-            requestRepaint();
+            return addTab(c, c.getCaption(), c.getIcon());
         }
+        return null;
     }
 
     /**
@@ -197,54 +208,70 @@ public class TabSheet extends AbstractComponentContainer implements
         target.startTag("tabs");
 
         for (final Iterator i = getComponentIterator(); i.hasNext();) {
-            final Component c = (Component) i.next();
+            final Component component = (Component) i.next();
+            Tab tab = tabs.get(component);
 
             /*
              * If we have no selection, if the current selection is invisible or
              * if the current selection is disabled (but the whole component is
              * not) we select this tab instead
              */
-            if (selected == null || !selected.isVisible()
-                    || (!selected.isEnabled() && isEnabled())) {
-                selected = c;
+            Tab selectedTabInfo = null;
+            if (selected != null) {
+                selectedTabInfo = tabs.get(selected);
+            }
+            if (selected == null || selectedTabInfo == null
+                    || !selectedTabInfo.isVisible()
+                    || !selectedTabInfo.isEnabled()) {
+
+                // The current selection is not valid so we need to change it
+                if (tab.isEnabled() && tab.isVisible()) {
+                    selected = component;
+                } else {
+                    /*
+                     * The current selection is not valid but this tab cannot be
+                     * selected either.
+                     */
+                    selected = null;
+                }
             }
             target.startTag("tab");
-            if (!c.isEnabled() && c.isVisible()) {
+            if (!tab.isEnabled() && tab.isVisible()) {
                 target.addAttribute("disabled", true);
             }
 
-            if (!c.isVisible()) {
+            if (!tab.isVisible()) {
                 target.addAttribute("hidden", true);
             }
 
-            final Resource icon = getTabIcon(c);
+            final Resource icon = tab.getIcon();
             if (icon != null) {
                 target.addAttribute("icon", icon);
             }
-            final String caption = getTabCaption(c);
+            final String caption = tab.getCaption();
             if (caption != null && caption.length() > 0) {
                 target.addAttribute("caption", caption);
             }
 
-            if (c instanceof AbstractComponent) {
-                AbstractComponent ac = (AbstractComponent) c;
-                if (ac.getDescription() != null) {
-                    target.addAttribute("description", ac.getDescription());
-                }
-                if (ac.getComponentError() != null) {
-                    ac.getComponentError().paint(target);
-                }
+            final String description = tab.getDescription();
+            if (description != null) {
+                target.addAttribute("description", description);
             }
 
-            target.addAttribute("key", keyMapper.key(c));
-            if (c.equals(selected)) {
+            final ErrorMessage componentError = tab.getComponentError();
+            if (componentError != null) {
+                componentError.paint(target);
+            }
+
+            target.addAttribute("key", keyMapper.key(component));
+            if (component.equals(selected)) {
                 target.addAttribute("selected", true);
-                c.paint(target);
-                paintedTabs.add(c);
-            } else if (paintedTabs.contains(c)) {
-                c.paint(target);
+                component.paint(target);
+                paintedTabs.add(component);
+            } else if (paintedTabs.contains(component)) {
+                component.paint(target);
             } else {
-                c.requestRepaintRequests();
+                component.requestRepaintRequests();
             }
             target.endTag("tab");
         }
@@ -281,12 +308,16 @@ public class TabSheet extends AbstractComponentContainer implements
      * 
      * @param c
      *            the component.
+     * @deprecated Use {@link #getTab(Component)} and {@link Tab#getCaption()}
+     *             instead.
      */
+    @Deprecated
     public String getTabCaption(Component c) {
-        if (c.getCaption() == null) {
+        Tab info = tabs.get(c);
+        if (info == null) {
             return "";
         } else {
-            return c.getCaption();
+            return info.getCaption();
         }
     }
 
@@ -297,10 +328,15 @@ public class TabSheet extends AbstractComponentContainer implements
      *            the component.
      * @param caption
      *            the caption to set.
+     * @deprecated Use {@link #getTab(Component)} and
+     *             {@link Tab#setCaption(String)} instead.
      */
+    @Deprecated
     public void setTabCaption(Component c, String caption) {
-        if (tabs.contains(c)) {
-            c.setCaption(caption);
+        Tab info = tabs.get(c);
+        if (info != null) {
+            info.setCaption(caption);
+            requestRepaint();
         }
     }
 
@@ -309,23 +345,50 @@ public class TabSheet extends AbstractComponentContainer implements
      * 
      * @param c
      *            the component.
+     * @deprecated Use {@link #getTab(Component)} and {@link Tab#getIcon()}
+     *             instead.
      */
+    @Deprecated
     public Resource getTabIcon(Component c) {
-        return c.getIcon();
+        Tab info = tabs.get(c);
+        if (info == null) {
+            return null;
+        } else {
+            return info.getIcon();
+        }
     }
 
     /**
-     * Sets overridden icon for given component.
+     * Sets icon for the given component.
      * 
      * Normally TabSheet uses icon from component
      * 
      * @param c
+     *            the component
      * @param icon
+     *            the icon to set
+     * @deprecated Use {@link #getTab(Component)} and
+     *             {@link Tab#setIcon(Resource)} instead.
      */
+    @Deprecated
     public void setTabIcon(Component c, Resource icon) {
-        if (tabs.contains(c)) {
-            c.setIcon(icon);
+        Tab info = tabs.get(c);
+        if (info != null) {
+            info.setIcon(icon);
+            requestRepaint();
         }
+    }
+
+    /**
+     * Returns the Tab for the component. The Tab object can be used for setting
+     * caption,icon, etc for the tab.
+     * 
+     * @param c
+     *            the component
+     * @return
+     */
+    public Tab getTab(Component c) {
+        return tabs.get(c);
     }
 
     /**
@@ -334,7 +397,7 @@ public class TabSheet extends AbstractComponentContainer implements
      * @param c
      */
     public void setSelectedTab(Component c) {
-        if (c != null && tabs.contains(c) && !selected.equals(c)) {
+        if (c != null && components.contains(c) && !selected.equals(c)) {
             selected = c;
             fireSelectedTabChange();
             requestRepaint();
@@ -372,17 +435,33 @@ public class TabSheet extends AbstractComponentContainer implements
             selected = newComponent;
         }
 
+        Tab newTab = tabs.get(newComponent);
+        Tab oldTab = tabs.get(oldComponent);
+
         // Gets the captions
-        final String oldCaption = getTabCaption(oldComponent);
-        final Resource oldIcon = getTabIcon(oldComponent);
-        final String newCaption = getTabCaption(newComponent);
-        final Resource newIcon = getTabIcon(newComponent);
+        String oldCaption = null;
+        Resource oldIcon = null;
+        String newCaption = null;
+        Resource newIcon = null;
+
+        if (oldTab != null) {
+            oldCaption = oldTab.getCaption();
+            oldIcon = oldTab.getIcon();
+        }
+
+        if (newTab != null) {
+            newCaption = newTab.getCaption();
+            newIcon = newTab.getIcon();
+        } else {
+            newCaption = newComponent.getCaption();
+            newIcon = newComponent.getIcon();
+        }
 
         // Gets the locations
         int oldLocation = -1;
         int newLocation = -1;
         int location = 0;
-        for (final Iterator i = tabs.iterator(); i.hasNext();) {
+        for (final Iterator i = components.iterator(); i.hasNext();) {
             final Component component = (Component) i.next();
 
             if (component == oldComponent) {
@@ -400,27 +479,34 @@ public class TabSheet extends AbstractComponentContainer implements
         } else if (newLocation == -1) {
             removeComponent(oldComponent);
             keyMapper.remove(oldComponent);
-            addComponent(newComponent);
-            tabs.remove(newComponent);
-            tabs.add(oldLocation, newComponent);
-            setTabCaption(newComponent, oldCaption);
-            setTabIcon(newComponent, oldIcon);
+            newTab = addTab(newComponent);
+            components.remove(newComponent);
+            components.add(oldLocation, newComponent);
+            newTab.setCaption(oldCaption);
+            newTab.setIcon(oldIcon);
         } else {
             if (oldLocation > newLocation) {
-                tabs.remove(oldComponent);
-                tabs.add(newLocation, oldComponent);
-                tabs.remove(newComponent);
-                tabs.add(oldLocation, newComponent);
+                components.remove(oldComponent);
+                components.add(newLocation, oldComponent);
+                components.remove(newComponent);
+                components.add(oldLocation, newComponent);
             } else {
-                tabs.remove(newComponent);
-                tabs.add(oldLocation, newComponent);
-                tabs.remove(oldComponent);
-                tabs.add(newLocation, oldComponent);
+                components.remove(newComponent);
+                components.add(oldLocation, newComponent);
+                components.remove(oldComponent);
+                components.add(newLocation, oldComponent);
             }
-            setTabCaption(newComponent, oldCaption);
-            setTabIcon(newComponent, oldIcon);
-            setTabCaption(oldComponent, newCaption);
-            setTabIcon(oldComponent, newIcon);
+
+            if (newTab != null) {
+                // This should always be true
+                newTab.setCaption(oldCaption);
+                newTab.setIcon(oldIcon);
+            }
+            if (oldTab != null) {
+                // This should always be true
+                oldTab.setCaption(newCaption);
+                oldTab.setIcon(newIcon);
+            }
 
             requestRepaint();
         }
@@ -538,4 +624,167 @@ public class TabSheet extends AbstractComponentContainer implements
         paintedTabs.clear();
     }
 
+    /**
+     *
+     */
+    public interface Tab extends Serializable {
+        /**
+         * Returns the visible status for the tab.
+         * 
+         * @return true for visible, false for hidden
+         */
+        public boolean isVisible();
+
+        /**
+         * Sets the visible status for the tab.
+         * 
+         * @param visible
+         *            true for visible, false for hidden
+         */
+        public void setVisible(boolean visible);
+
+        /**
+         * Returns the enabled status for the tab.
+         * 
+         * @return true for enabled, false for disabled
+         */
+        public boolean isEnabled();
+
+        /**
+         * Sets the enabled status for the tab.
+         * 
+         * @param enabled
+         *            true for enabled, false for disabled
+         */
+        public void setEnabled(boolean enabled);
+
+        /**
+         * Sets the caption for the tab.
+         * 
+         * @param caption
+         *            the caption to set
+         */
+        public void setCaption(String caption);
+
+        /**
+         * Gets the caption for the tab.
+         * 
+         */
+        public String getCaption();
+
+        /**
+         * Gets the icon for the tab.
+         * 
+         */
+        public Resource getIcon();
+
+        /**
+         * Sets the icon for the tab.
+         * 
+         * @param icon
+         *            the icon to set
+         */
+        public void setIcon(Resource icon);
+
+        /**
+         * Gets the description for the tab. The description can be used to
+         * briefly describe the state of the tab to the user.
+         * 
+         * @return the description for the tab
+         */
+        public String getDescription();
+
+        /**
+         * Sets the description for the tab.
+         * 
+         * @param description
+         *            the new description string for the tab.
+         */
+        public void setDescription(String description);
+
+        public void setComponentError(ErrorMessage componentError);
+
+        public ErrorMessage getComponentError();
+
+    }
+
+    /**
+     * TabSheet's implementation of Tab
+     * 
+     */
+    public class TabSheetTabImpl implements Tab {
+
+        private String caption = "";
+        private Resource icon = null;
+        private boolean enabled = true;
+        private boolean visible = true;
+        private String description = null;
+        private ErrorMessage componentError = null;
+
+        public TabSheetTabImpl(String caption, Resource icon) {
+            if (caption == null) {
+                caption = "";
+            }
+            this.caption = caption;
+            this.icon = icon;
+        }
+
+        /**
+         * Returns the tab caption. Can never be null.
+         */
+        public String getCaption() {
+            return caption;
+        }
+
+        public void setCaption(String caption) {
+            this.caption = caption;
+            requestRepaint();
+        }
+
+        public Resource getIcon() {
+            return icon;
+        }
+
+        public void setIcon(Resource icon) {
+            this.icon = icon;
+            requestRepaint();
+        }
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+            requestRepaint();
+        }
+
+        public boolean isVisible() {
+            return visible;
+        }
+
+        public void setVisible(boolean visible) {
+            this.visible = visible;
+            requestRepaint();
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+            requestRepaint();
+        }
+
+        public ErrorMessage getComponentError() {
+            return componentError;
+        }
+
+        public void setComponentError(ErrorMessage componentError) {
+            this.componentError = componentError;
+            requestRepaint();
+        }
+
+    }
 }

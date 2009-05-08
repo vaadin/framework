@@ -582,18 +582,7 @@ public class IAccordion extends ITabsheetBase implements
     }
 
     public void updateCaption(Paintable component, UIDL uidl) {
-        for (Widget w : getChildren()) {
-            StackItem si = (StackItem) w;
-            if (si.getPaintable() == component) {
-                boolean visible = si.isVisible();
-                si.updateCaption(uidl);
-                if (si.isCaptionVisible() != visible) {
-                    si.setVisible(si.isCaptionVisible());
-                }
-
-                return;
-            }
-        }
+        /* Accordion does not render its children's captions */
     }
 
     public boolean requestLayout(Set<Paintable> child) {

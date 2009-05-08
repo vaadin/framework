@@ -4,8 +4,10 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import com.google.gwt.dom.client.DivElement;
@@ -44,7 +46,7 @@ public class IView extends SimplePanel implements Container,
 
     private Paintable layout;
 
-    private final HashSet subWindows = new HashSet();
+    private final LinkedHashSet<IWindow> subWindows = new LinkedHashSet<IWindow>();
 
     private String id;
 
@@ -231,7 +233,8 @@ public class IView extends SimplePanel implements Container,
         layout.updateFromUIDL(childUidl, client);
 
         // Update subwindows
-        final HashSet removedSubWindows = new HashSet(subWindows);
+        final HashSet<IWindow> removedSubWindows = new HashSet<IWindow>(
+                subWindows);
 
         // Open new windows
         while ((childUidl = uidl.getChildUIDL(childIndex++)) != null) {
@@ -240,7 +243,7 @@ public class IView extends SimplePanel implements Container,
                 if (subWindows.contains(w)) {
                     removedSubWindows.remove(w);
                 } else {
-                    subWindows.add(w);
+                    subWindows.add((IWindow) w);
                 }
                 w.updateFromUIDL(childUidl, client);
             } else if ("actions".equals(childUidl.getTag())) {
@@ -282,8 +285,9 @@ public class IView extends SimplePanel implements Container,
         }
 
         // Close old windows
-        for (final Iterator rem = removedSubWindows.iterator(); rem.hasNext();) {
-            final IWindow w = (IWindow) rem.next();
+        for (final Iterator<IWindow> rem = removedSubWindows.iterator(); rem
+                .hasNext();) {
+            final IWindow w = rem.next();
             client.unregisterPaintable(w);
             subWindows.remove(w);
             w.hide();
@@ -551,7 +555,21 @@ public class IView extends SimplePanel implements Container,
     }
 
     public void updateCaption(Paintable component, UIDL uidl) {
-        // TODO Auto-generated method stub
+        // NOP Subwindows never draw caption for their first child (layout)
+    }
+
+    /**
+     * Return an iterator for current subwindows. This method is meant for
+     * testing purposes only.
+     * 
+     * @return
+     */
+    public ArrayList<IWindow> getSubWindowList() {
+        ArrayList<IWindow> windows = new ArrayList<IWindow>(subWindows.size());
+        for (IWindow widget : subWindows) {
+            windows.add(widget);
+        }
+        return windows;
     }
 
 }

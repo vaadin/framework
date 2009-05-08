@@ -8,6 +8,7 @@ import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.VerticalLayout;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 import com.itmill.toolkit.ui.TabSheet.SelectedTabChangeEvent;
+import com.itmill.toolkit.ui.TabSheet.Tab;
 
 public class AccordionDisabledExample extends VerticalLayout implements
         Accordion.SelectedTabChangeListener, Button.ClickListener {
@@ -18,6 +19,9 @@ public class AccordionDisabledExample extends VerticalLayout implements
     private Label l1;
     private Label l2;
     private Label l3;
+    private Tab t1;
+    private Tab t2;
+    private Tab t3;
 
     private static final ThemeResource icon1 = new ThemeResource(
             "icons/action_save.gif");
@@ -36,9 +40,9 @@ public class AccordionDisabledExample extends VerticalLayout implements
         a = new Accordion();
         a.setHeight("300px");
         a.setWidth("400px");
-        a.addTab(l1, "Saved actions", icon1);
-        a.addTab(l2, "Notes", icon2);
-        a.addTab(l3, "Issues", icon3);
+        t1 = a.addTab(l1, "Saved actions", icon1);
+        t2 = a.addTab(l2, "Notes", icon2);
+        t3 = a.addTab(l3, "Issues", icon3);
         a.addListener(this);
 
         b1 = new Button("Disable 'Notes' tab");
@@ -56,25 +60,25 @@ public class AccordionDisabledExample extends VerticalLayout implements
     }
 
     public void selectedTabChange(SelectedTabChangeEvent event) {
-        String c = a.getTabCaption(event.getTabSheet().getSelectedTab());
+        String c = a.getTab(event.getTabSheet().getSelectedTab()).getCaption();
         getWindow().showNotification("Selected tab: " + c);
     }
 
     public void buttonClick(ClickEvent event) {
         if (b1.equals(event.getButton())) { // b1 clicked
-            if (l2.isEnabled()) {
-                l2.setEnabled(false);
+            if (t2.isEnabled()) {
+                t2.setEnabled(false);
                 b1.setCaption("Enable 'Notes' tab");
             } else {
-                l2.setEnabled(true);
+                t2.setEnabled(true);
                 b1.setCaption("Disable 'Notes' tab");
             }
         } else { // b2 clicked
-            if (l3.isVisible()) {
-                l3.setVisible(false);
+            if (t3.isVisible()) {
+                t3.setVisible(false);
                 b2.setCaption("Show 'Issues' tab");
             } else {
-                l3.setVisible(true);
+                t3.setVisible(true);
                 b2.setCaption("Hide 'Issues' tab");
             }
         }

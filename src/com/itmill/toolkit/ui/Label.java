@@ -372,8 +372,10 @@ public class Label extends AbstractComponent implements Property,
      *            the New content mode of the label.
      */
     public void setContentMode(int contentMode) {
-        if (contentMode >= CONTENT_TEXT && contentMode <= CONTENT_RAW) {
+        if (contentMode != this.contentMode && contentMode >= CONTENT_TEXT
+                && contentMode <= CONTENT_RAW) {
             this.contentMode = contentMode;
+            requestRepaint();
         }
     }
 
