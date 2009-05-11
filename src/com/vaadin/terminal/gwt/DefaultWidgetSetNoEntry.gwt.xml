@@ -1,0 +1,6 @@
+<module>
+	<!--
+		"NoEntry" -concept deprecated, inherit DefaultWidgetSet instead.
+	-->
+	<inherits name="com.vaadin.terminal.gwt.DefaultWidgetSet" />
+</module>

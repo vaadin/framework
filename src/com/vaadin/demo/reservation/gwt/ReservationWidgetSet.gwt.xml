@@ -1,0 +1,29 @@
+<module>
+	<!-- Inherit DefaultWidgetSet -->
+	<inherits name="com.vaadin.terminal.gwt.DefaultWidgetSet" /> 
+	
+	<!-- The googlemaps_gwt module -->
+	<inherits name="com.google.gwt.maps.GoogleMaps" />
+	
+	<!-- WidgetSet default theme -->	
+	<stylesheet src="reservr/styles.css"/>
+
+	<!-- 
+		Google Maps needs an API key if you're not running this demo on "localhost". 		
+		You can get a Google Maps API key here:
+			http://www.google.com/apis/maps/signup.html
+		
+		Append your Google Maps API key to the src -attribute below, like so:
+			src="http://maps.google.com/maps?gwt=1&amp;file=api&amp;v=2.x&key=XXXXXXXX"
+		where the X:s represent your key.
+	-->
+	<!-- Works w/o key for localhost:
+		<script src="http://maps.google.com/maps?gwt=1&amp;file=api&amp;v=2.x" />
+	-->
+	<!-- Using key for http://toolkit.itmill.com: -->
+	<script src="http://maps.google.com/maps?gwt=1&amp;file=api&amp;v=2.x&amp;key=ABQIAAAA4q5gw_y_N1Anvvn1KqbLwRTHuC2ERVOT66iQW8-FqpCQQUlHqBTZ0rGKdlKh9fxQOKN87TCwVNlIXQ" />
+
+	<!-- Entry point -->
+	<entry-point class="com.vaadin.demo.reservation.gwt.client.ReservationWidgetSet"/>
+  
+</module>

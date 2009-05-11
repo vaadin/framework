@@ -1,0 +1,8 @@
+<module>
+	<!-- Inherit the NoEntry version to avoid multiple entrypoints -->
+	<inherits name="com.vaadin.terminal.gwt.DefaultWidgetSetNoEntry" /> 
+
+	<!-- Entry point -->
+	<entry-point class="com.vaadin.demo.coverflow.gwt.client.CoverflowWidgetSet"/>
+  
+</module>

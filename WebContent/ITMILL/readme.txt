@@ -20,7 +20,7 @@ command below in the top project directory:
 
   ant -f build-widgetsets.xml
 
-See build-widgetsets.xml, com.itmill.toolkit.demo.colorpicker package, and the
+See build-widgetsets.xml, com.vaadin.demo.colorpicker package, and the
 Reference Manual for more information regarding widget sets.
 
 ---------------------------

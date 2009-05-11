@@ -47,7 +47,7 @@
 	-->
 	<servlet>
 		<servlet-name>ITMillToolkitApplicationRunner</servlet-name>
-		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
 			<param-name>applicationRunner</param-name>
 			<param-value>true</param-value>
@@ -57,96 +57,96 @@
 	<!--  Feature Browser demo application -->
 	<servlet>
 		<servlet-name>FeatureBrowser</servlet-name>
-		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
 			<param-name>application</param-name>
-			<param-value>com.itmill.toolkit.demo.featurebrowser.FeatureBrowser</param-value>
+			<param-value>com.vaadin.demo.featurebrowser.FeatureBrowser</param-value>
 		</init-param>
 	</servlet>
 
 	<!--  Sampler demo application -->
 	<servlet>
 		<servlet-name>Sampler</servlet-name>
-		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
 			<param-name>application</param-name>
-			<param-value>com.itmill.toolkit.demo.sampler.SamplerApplication</param-value>
+			<param-value>com.vaadin.demo.sampler.SamplerApplication</param-value>
 		</init-param>
 		<init-param>
 			<param-name>widgetset</param-name>
-			<param-value>com.itmill.toolkit.demo.sampler.gwt.SamplerWidgetSet</param-value>
+			<param-value>com.vaadin.demo.sampler.gwt.SamplerWidgetSet</param-value>
 		</init-param>
 	</servlet>
 
 	<!--  AddressBook demo application -->
 	<servlet>
 		<servlet-name>AddressBook</servlet-name>
-		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
 			<param-name>application</param-name>
-			<param-value>com.itmill.toolkit.demo.tutorial.addressbook.AddressBookApplication</param-value>
+			<param-value>com.vaadin.demo.tutorial.addressbook.AddressBookApplication</param-value>
 		</init-param>
 	</servlet>
 
 	<!--  Reservr demo application -->
 	<servlet>
 		<servlet-name>Reservr</servlet-name>
-		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
 			<param-name>application</param-name>
-			<param-value>com.itmill.toolkit.demo.reservation.ReservationApplication</param-value>
+			<param-value>com.vaadin.demo.reservation.ReservationApplication</param-value>
 		</init-param>
 		<init-param>
 			<param-name>widgetset</param-name>
-			<param-value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</param-value>
+			<param-value>com.vaadin.demo.reservation.gwt.ReservationWidgetSet</param-value>
 		</init-param>
 	</servlet>
 
 	<!-- Version of the Reservr to be run  as a portlet -->
 	<servlet>
 		<servlet-name>SimpleReserver</servlet-name>
-		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
 			<param-name>application</param-name>
-			<param-value>com.itmill.toolkit.demo.reservation.simple.SimpleReserver</param-value>
+			<param-value>com.vaadin.demo.reservation.simple.SimpleReserver</param-value>
 		</init-param>
 		<init-param>
 			<param-name>widgetset</param-name>
-			<param-value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</param-value>
+			<param-value>com.vaadin.demo.reservation.gwt.ReservationWidgetSet</param-value>
 		</init-param>
 	</servlet>
 
 	<!-- Calendar demo application (shown in Windowed demos) -->
 	<servlet>
 		<servlet-name>CalendarDemo</servlet-name>
-		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
 			<param-name>application</param-name>
-			<param-value>com.itmill.toolkit.demo.reservation.CalendarDemo</param-value>
+			<param-value>com.vaadin.demo.reservation.CalendarDemo</param-value>
 		</init-param>
 		<init-param>
 			<param-name>widgetset</param-name>
-			<param-value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</param-value>
+			<param-value>com.vaadin.demo.reservation.gwt.ReservationWidgetSet</param-value>
 		</init-param>
 	</servlet>
 
 	<!-- Hello world demo application -->
 	<servlet>
 		<servlet-name>HelloWorld</servlet-name>
-		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
 			<param-name>application</param-name>
-			<param-value>com.itmill.toolkit.demo.HelloWorld</param-value>
+			<param-value>com.vaadin.demo.HelloWorld</param-value>
 		</init-param>
 	</servlet>
 
 	<!-- Calculator demo application -->
 	<servlet>
 		<servlet-name>Calc</servlet-name>
-		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
 			<param-name>application</param-name>
-			<param-value>com.itmill.toolkit.demo.Calc</param-value>
+			<param-value>com.vaadin.demo.Calc</param-value>
 		</init-param>
 	</servlet>
 
@@ -156,48 +156,48 @@
 	-->
 	<servlet>
 		<servlet-name>ColorPickerApplication</servlet-name>
-		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
 			<param-name>application</param-name>
-			<param-value>com.itmill.toolkit.demo.colorpicker.ColorPickerApplication</param-value>
+			<param-value>com.vaadin.demo.colorpicker.ColorPickerApplication</param-value>
 		</init-param>
 		<init-param>
 			<param-name>widgetset</param-name>
-			<param-value>com.itmill.toolkit.demo.colorpicker.gwt.ColorPickerWidgetSet</param-value>
+			<param-value>com.vaadin.demo.colorpicker.gwt.ColorPickerWidgetSet</param-value>
 		</init-param>
 	</servlet>
 
 	<!-- Portlet demo application -->
 	<servlet>
 		<servlet-name>PortletDemo</servlet-name>
-		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
 			<param-name>application</param-name>
-			<param-value>com.itmill.toolkit.demo.PortletDemo</param-value>
+			<param-value>com.vaadin.demo.PortletDemo</param-value>
 		</init-param>
 	</servlet>
 
 	<!--  Layout demo (ToolkitTunes) -->
 	<servlet>
 		<servlet-name>ToolkitTunesLayout</servlet-name>
-		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
 			<param-name>application</param-name>
-			<param-value>com.itmill.toolkit.demo.ToolkitTunesLayout</param-value>
+			<param-value>com.vaadin.demo.ToolkitTunesLayout</param-value>
 		</init-param>
 	</servlet>
 
 	<!--  Coverflow demo -->
 	<servlet>
 		<servlet-name>Coverflow</servlet-name>
-		<servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
 			<param-name>application</param-name>
-			<param-value>com.itmill.toolkit.demo.coverflow.CoverflowApplication</param-value>
+			<param-value>com.vaadin.demo.coverflow.CoverflowApplication</param-value>
 		</init-param>
 		<init-param>
 			<param-name>widgetset</param-name>
-			<param-value>com.itmill.toolkit.demo.coverflow.gwt.CoverflowWidgetSet</param-value>
+			<param-value>com.vaadin.demo.coverflow.gwt.CoverflowWidgetSet</param-value>
 		</init-param>
 	</servlet>
 

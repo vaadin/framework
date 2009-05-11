@@ -1,0 +1,29 @@
+<module>
+	<!--
+		This GWT module defines the IT Mill Toolkit DefaultWidgetSet. This is
+		the module you want to extend when creating an extended widget set, or
+		when creating a specialized widget set with a subset of the
+		components.
+	-->
+	<!--
+		NOTE that your WidgetSet entry-point (.java) should have the same
+		"logical" name (a.k.a SimpleName) as the specification (.gwt.xml).
+	-->
+	<!--
+		E.g: com/example/gwt/MyWidgetSet.gwt.xml should point to the
+		entry-point
+		com.example.gwt.client[.some.package].MyWidgetSet.java
+	-->
+
+	<inherits name="com.google.gwt.user.User" />
+
+	<inherits name="com.google.gwt.http.HTTP" />
+
+	<inherits name="com.google.gwt.xml.XML" />
+
+	<inherits name="com.google.gwt.json.JSON" />
+
+	<source path="client" />
+
+	<entry-point class="com.vaadin.terminal.gwt.client.DefaultWidgetSet" />
+</module>

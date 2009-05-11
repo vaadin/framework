@@ -683,9 +683,9 @@
 				<include name="**/*" />
 			</fileset>
 		</copy>
-		<java classname="com.itmill.toolkit.buildhelpers.PortletConfigurationGenerator" failonerror="yes" fork="yes" maxmemory="512m">
+		<java classname="com.vaadin.buildhelpers.PortletConfigurationGenerator" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="${output-dir}/WebContent/WEB-INF" />
-			<arg value="com.itmill.toolkit.demo.sampler.gwt.SamplerWidgetSet" />
+			<arg value="com.vaadin.demo.sampler.gwt.SamplerWidgetSet" />
 			<classpath>
 				<pathelement location="build/buildhelpers/" />
 			</classpath>
@@ -721,7 +721,7 @@
 		<echo>Combining default themes css files</echo>
 		<!-- ensure buildhelpers are compiled -->
 		<javac source="1.5" target="1.5" srcdir="build/buildhelpers" />
-		<java classname="com.itmill.toolkit.buildhelpers.CompileDefaultTheme" failonerror="yes" fork="yes">
+		<java classname="com.vaadin.buildhelpers.CompileDefaultTheme" failonerror="yes" fork="yes">
 			<classpath>
 				<pathelement location="build/buildhelpers" />
 			</classpath>
@@ -739,11 +739,11 @@
 
 	<target name="compile-widgetset-default">
 		<echo>Compiling src (client-side)</echo>
-		<echo>com.itmill.toolkit.terminal.gwt.DefaultWidgetSet</echo>
+		<echo>com.vaadin.terminal.gwt.DefaultWidgetSet</echo>
 		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="-out" />
 			<arg value="${output-dir}/WebContent/ITMILL/widgetsets" />
-			<arg value="com.itmill.toolkit.terminal.gwt.DefaultWidgetSet" />
+			<arg value="com.vaadin.terminal.gwt.DefaultWidgetSet" />
 			<arg value="-style" />
 			<arg value="OBF" />
             <jvmarg value="-Xss8M"/>
@@ -765,11 +765,11 @@
 		<condition property="googlemaps-jar" value="lib/reservr/gwt-maps.jar">
 			<available file="lib/reservr/gwt-maps.jar" />
 		</condition>
-		<echo>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</echo>
+		<echo>com.vaadin.demo.reservation.gwt.ReservationWidgetSet</echo>
 		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="-out" />
 			<arg value="${output-dir}/WebContent/ITMILL/widgetsets" />
-			<arg value="com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet" />
+			<arg value="com.vaadin.demo.reservation.gwt.ReservationWidgetSet" />
 			<arg value="-style" />
 			<arg value="OBF" />
             <jvmarg value="-Xss8M"/>
@@ -790,11 +790,11 @@
 
     <!-- Building Sampler for installation package is disabled. -->
 	<target name="compile-widgetset-sampler" unless="build.sampler.disabled">
-		<echo>com.itmill.toolkit.demo.sampler.gwt.SamplerWidgetSet</echo>
+		<echo>com.vaadin.demo.sampler.gwt.SamplerWidgetSet</echo>
 		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="-out" />
 			<arg value="${output-dir}/WebContent/ITMILL/widgetsets" />
-			<arg value="com.itmill.toolkit.demo.sampler.gwt.SamplerWidgetSet" />
+			<arg value="com.vaadin.demo.sampler.gwt.SamplerWidgetSet" />
 			<arg value="-style" />
 			<arg value="OBF" />
             <jvmarg value="-Xss8M"/>
@@ -812,11 +812,11 @@
 	</target>
 	
 	<target name="compile-widgetset-coverflow">
-		<echo>com.itmill.toolkit.demo.coverflow.gwt.CoverflowWidgetSet</echo>
+		<echo>com.vaadin.demo.coverflow.gwt.CoverflowWidgetSet</echo>
 		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="-out" />
 			<arg value="${output-dir}/WebContent/ITMILL/widgetsets" />
-			<arg value="com.itmill.toolkit.demo.coverflow.gwt.CoverflowWidgetSet" />
+			<arg value="com.vaadin.demo.coverflow.gwt.CoverflowWidgetSet" />
 			<arg value="-style" />
 			<arg value="OBF" />
             <jvmarg value="-Xss8M"/>
@@ -834,11 +834,11 @@
 	</target>
 	
 	<target name="compile-widgetset-colorpicker">
-		<echo>com.itmill.toolkit.demo.colorpicker.gwt.ColorPickerWidgetSet</echo>
+		<echo>com.vaadin.demo.colorpicker.gwt.ColorPickerWidgetSet</echo>
 		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="-out" />
 			<arg value="${output-dir}/WebContent/ITMILL/widgetsets" />
-			<arg value="com.itmill.toolkit.demo.colorpicker.gwt.ColorPickerWidgetSet" />
+			<arg value="com.vaadin.demo.colorpicker.gwt.ColorPickerWidgetSet" />
 			<arg value="-style" />
 			<arg value="OBF" />
             <jvmarg value="-Xss8M"/>
@@ -940,7 +940,7 @@
 			</fileset>
 			<fileset dir="${output-dir}/WebContent">
 				<patternset>
-					<include name="ITMILL/widgetsets/com.itmill.toolkit.terminal.gwt.DefaultWidgetSet/**/*" />
+					<include name="ITMILL/widgetsets/com.vaadin.terminal.gwt.DefaultWidgetSet/**/*" />
 					<include name="ITMILL/themes/default/**/*" />
 				</patternset>
 			</fileset>
@@ -1188,13 +1188,13 @@
     </target>
 
     <target name="ant-tests">
-        <echo>##teamcity[testSuiteStarted name='com.itmill.toolkit.tests.test-framework']</echo>
+        <echo>##teamcity[testSuiteStarted name='com.vaadin.tests.test-framework']</echo>
 
         <!-- A smoke test for testing the testing framework. -->
         <echo>##teamcity[testStarted name='testingSmoketest']</echo>
         <echo>##teamcity[testStdOut name='testingSmoketest' out='Here be some text related to the test.]</echo>
         <echo>##teamcity[testFinished name='testingSmoketest']</echo>
 
-        <echo>##teamcity[testSuiteFinished name='com.itmill.toolkit.tests.test-framework']</echo>
+        <echo>##teamcity[testSuiteFinished name='com.vaadin.tests.test-framework']</echo>
     </target>
 </project>

@@ -1,6 +1,0 @@
-<module>
-	<!--
-		"NoEntry" -concept deprecated, inherit DefaultWidgetSet instead.
-	-->
-	<inherits name="com.itmill.toolkit.terminal.gwt.DefaultWidgetSet" />
-</module>

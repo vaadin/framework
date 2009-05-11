@@ -74,12 +74,12 @@ See configure target to adjust this buildfile.
 	
 	<!-- NOTE: Modify this example to compile your own widgetset  -->
 	<target name="compile-widgetset" depends="init">
-		<echo>Compiling com.itmill.toolkit.demo.colorpicker.gwt.ColorPickerWidgetSet.</echo>
+		<echo>Compiling com.vaadin.demo.colorpicker.gwt.ColorPickerWidgetSet.</echo>
 		<echo>Modify this example ant-script to compile your own widgetsets.</echo>
 		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="256m">
 			<arg value="-out" />
 			<arg value="${client-side-destination}" />
-			<arg value="com.itmill.toolkit.demo.colorpicker.gwt.ColorPickerWidgetSet" />
+			<arg value="com.vaadin.demo.colorpicker.gwt.ColorPickerWidgetSet" />
             <jvmarg value="-Xss1024k"/>
             <jvmarg value="-Djava.awt.headless=true"/>
 			<classpath>

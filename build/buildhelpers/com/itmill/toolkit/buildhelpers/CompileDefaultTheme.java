@@ -1,4 +1,4 @@
-package com.itmill.toolkit.buildhelpers;
+package com.vaadin.buildhelpers;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

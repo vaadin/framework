@@ -1,0 +1,15 @@
+<module>
+	<!-- Inherit the DefaultWidgetSet -->
+	<inherits name="com.vaadin.terminal.gwt.DefaultWidgetSet" /> 
+	
+	<!-- Tracker -->
+	<script src="http://www.google-analytics.com/ga.js" />
+	
+	<!-- Prettify  -->
+	<stylesheet src="prettify/prettify.css"/>
+	<script src="prettify/prettify.js" />
+
+	<!-- Entry point -->
+	<entry-point class="com.vaadin.demo.sampler.gwt.client.SamplerWidgetSet"/>
+  
+</module>

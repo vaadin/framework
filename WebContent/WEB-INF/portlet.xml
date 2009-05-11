@@ -6,13 +6,13 @@
         <portlet>
                 <portlet-name>PortletDemoPortlet</portlet-name>
                 <display-name>IT Mill Toolkit PortletDemo</display-name>
-                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <portlet-class>com.vaadin.terminal.gwt.server.ApplicationPortlet</portlet-class>
                 <init-param>
                         <name>application</name>
                         <value>PortletDemo</value>
                 </init-param>
                 
-                <init-param><name>widgetset</name><value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</value></init-param>
+                <init-param><name>widgetset</name><value>com.vaadin.demo.reservation.gwt.ReservationWidgetSet</value></init-param>
                 <supports>
                         <mime-type>text/html</mime-type>
                         <portlet-mode>view</portlet-mode>
@@ -40,13 +40,13 @@
         <portlet>
                 <portlet-name>SimpleReserverPortlet</portlet-name>
                 <display-name>IT Mill Toolkit SimpleReserver</display-name>
-                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <portlet-class>com.vaadin.terminal.gwt.server.ApplicationPortlet</portlet-class>
                 <init-param>
                         <name>application</name>
                         <value>SimpleReserver</value>
                 </init-param>
                 <init-param><name>style</name><value>style=height:400px</value></init-param>
-                <init-param><name>widgetset</name><value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</value></init-param>
+                <init-param><name>widgetset</name><value>com.vaadin.demo.reservation.gwt.ReservationWidgetSet</value></init-param>
                 <supports>
                         <mime-type>text/html</mime-type>
                         <portlet-mode>view</portlet-mode>
@@ -74,13 +74,13 @@
         <portlet>
                 <portlet-name>FeatureBrowserPortlet</portlet-name>
                 <display-name>IT Mill Toolkit FeatureBrowser</display-name>
-                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <portlet-class>com.vaadin.terminal.gwt.server.ApplicationPortlet</portlet-class>
                 <init-param>
                         <name>application</name>
                         <value>FeatureBrowser</value>
                 </init-param>
                 <init-param><name>style</name><value>style=height:650px</value></init-param>
-                <init-param><name>widgetset</name><value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</value></init-param>
+                <init-param><name>widgetset</name><value>com.vaadin.demo.reservation.gwt.ReservationWidgetSet</value></init-param>
                 <supports>
                         <mime-type>text/html</mime-type>
                         <portlet-mode>view</portlet-mode>
@@ -108,13 +108,13 @@
         <portlet>
                 <portlet-name>ChatServletPortlet</portlet-name>
                 <display-name>IT Mill Toolkit ChatServlet</display-name>
-                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <portlet-class>com.vaadin.terminal.gwt.server.ApplicationPortlet</portlet-class>
                 <init-param>
                         <name>application</name>
                         <value>chat</value>
                 </init-param>
                 
-                <init-param><name>widgetset</name><value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</value></init-param>
+                <init-param><name>widgetset</name><value>com.vaadin.demo.reservation.gwt.ReservationWidgetSet</value></init-param>
                 <supports>
                         <mime-type>text/html</mime-type>
                         <portlet-mode>view</portlet-mode>
@@ -142,13 +142,13 @@
         <portlet>
                 <portlet-name>BrowserDemoPortlet</portlet-name>
                 <display-name>IT Mill Toolkit BrowserDemo</display-name>
-                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <portlet-class>com.vaadin.terminal.gwt.server.ApplicationPortlet</portlet-class>
                 <init-param>
                         <name>application</name>
                         <value>BrowserDemo</value>
                 </init-param>
                 <init-param><name>style</name><value>style=height:650px</value></init-param>
-                <init-param><name>widgetset</name><value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</value></init-param>
+                <init-param><name>widgetset</name><value>com.vaadin.demo.reservation.gwt.ReservationWidgetSet</value></init-param>
                 <supports>
                         <mime-type>text/html</mime-type>
                         <portlet-mode>view</portlet-mode>

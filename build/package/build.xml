@@ -13,7 +13,7 @@ Creates two packages:
 		<echo message="Creating two packages:" />
 		<echo message="1. WAR package that can be deployed to application server or servlet container." />
 		<echo message="2. JAR package which requires JRE only, includes embedded web server." />
-		<property name="server.main.class" value="com.itmill.toolkit.demo.DesktopServer" />
+		<property name="server.main.class" value="com.vaadin.demo.DesktopServer" />
 		<property name="webserver.jar" value="WebServer/winstone-0.9.9.jar" />
 		<property file="build.properties" />
 		<mkdir dir="build" />

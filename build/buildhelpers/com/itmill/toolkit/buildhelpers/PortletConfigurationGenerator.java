@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.itmill.toolkit.buildhelpers;
+package com.vaadin.buildhelpers;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -43,7 +43,7 @@ public class PortletConfigurationGenerator {
     private static final String PORTLET_XML_SECTION = "        <portlet>\n"
             + "                <portlet-name>%PORTLETNAME%</portlet-name>\n"
             + "                <display-name>IT Mill Toolkit %NAME%</display-name>\n"
-            + "                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>\n"
+            + "                <portlet-class>com.vaadin.terminal.gwt.server.ApplicationPortlet</portlet-class>\n"
             + "                <init-param>\n"
             + "                        <name>application</name>\n"
             + "                        <value>%URL%</value>\n"
