@@ -63,7 +63,7 @@ public class ComponentSizeValidator implements Serializable {
 
         if (component instanceof Panel) {
             Panel panel = (Panel) component;
-            errors = validateComponentRelativeSizes(panel.getLayout(), errors,
+            errors = validateComponentRelativeSizes(panel.getContent(), errors,
                     parent);
         } else if (component instanceof ComponentContainer) {
             ComponentContainer lo = (ComponentContainer) component;

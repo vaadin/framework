@@ -455,7 +455,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                     if (analyzeLayouts) {
                         invalidComponentRelativeSizes = ComponentSizeValidator
                                 .validateComponentRelativeSizes(((Window) p)
-                                        .getLayout(), null, null);
+                                        .getContent(), null, null);
                     }
                 }
             }
