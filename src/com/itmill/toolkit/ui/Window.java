@@ -174,15 +174,10 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * @param layout
      *            the Layout of the window.
      */
-    public Window(String caption, Layout layout) {
-        super(caption, layout);
+    public Window(String caption, ComponentContainer content) {
+        super(caption, content);
         setScrollable(true);
         setSizeUndefined();
-    }
-
-    @Override
-    public void setLayout(Layout newLayout) {
-        super.setLayout(newLayout);
     }
 
     /**
@@ -510,11 +505,11 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
             target.addAttribute("main", true);
         }
 
-        if (getLayout() != null) {
-            if (getLayout().getHeightUnits() == Sizeable.UNITS_PERCENTAGE) {
+        if (getContent() != null) {
+            if (getContent().getHeightUnits() == Sizeable.UNITS_PERCENTAGE) {
                 target.addAttribute("layoutRelativeHeight", true);
             }
-            if (getLayout().getWidthUnits() == Sizeable.UNITS_PERCENTAGE) {
+            if (getContent().getWidthUnits() == Sizeable.UNITS_PERCENTAGE) {
                 target.addAttribute("layoutRelativeWidth", true);
             }
         }

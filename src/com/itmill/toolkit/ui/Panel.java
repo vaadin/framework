@@ -32,9 +32,9 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     public static final String STYLE_LIGHT = "light";
 
     /**
-     * Layout of the panel.
+     * Content of the panel.
      */
-    private Layout layout;
+    private ComponentContainer content;
 
     /**
      * Scroll X position.
@@ -58,21 +58,22 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     private KeyMapper actionMapper = null;
 
     /**
-     * Creates a new empty panel. Ordered layout is used.
+     * Creates a new empty panel. A VerticalLayout is used as content.
      */
     public Panel() {
-        this((Layout) null);
+        this((ComponentContainer) null);
     }
 
     /**
-     * Creates a new empty panel with given layout. Layout must be non-null.
+     * Creates a new empty panel which contains the given content. The content
+     * cannot be null.
      * 
-     * @param layout
-     *            the layout used in the panel.
+     * @param content
+     *            the content for the panel.
      */
-    public Panel(Layout layout) {
+    public Panel(ComponentContainer content) {
+        setContent(content);
         setWidth(100, UNITS_PERCENTAGE);
-        setLayout(layout);
     }
 
     /**
@@ -86,15 +87,15 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     }
 
     /**
-     * Creates a new empty panel with caption.
+     * Creates a new empty panel with the given caption and content.
      * 
      * @param caption
      *            the caption of the panel.
-     * @param layout
-     *            the layout used in the panel.
+     * @param content
+     *            the content used in the panel.
      */
-    public Panel(String caption, Layout layout) {
-        this(layout);
+    public Panel(String caption, ComponentContainer content) {
+        this(content);
         setCaption(caption);
     }
 
@@ -102,9 +103,19 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * Gets the current layout of the panel.
      * 
      * @return the Current layout of the panel.
+     * @deprecated A Panel can now contain a ComponentContainer which is not
+     *             necessarily a Layout. Use {@link #getContent()} instead.
      */
+    @Deprecated
     public Layout getLayout() {
-        return layout;
+        if (content instanceof Layout) {
+            return (Layout) content;
+        } else if (content == null) {
+            return null;
+        }
+
+        throw new IllegalStateException(
+                "Panel does not contain a Layout. Use getContent() instead of getLayout().");
     }
 
     /**
@@ -118,41 +129,83 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * 
      * @param newLayout
      *            the New layout of the panel.
+     * @deprecated A Panel can now contain a ComponentContainer which is not
+     *             necessarily a Layout. Use
+     *             {@link #setContent(ComponentContainer)} instead.
      */
+    @Deprecated
     public void setLayout(Layout newLayout) {
+        setContent(newLayout);
+    }
 
-        // Only allow non-null layouts
-        if (newLayout == null) {
-            newLayout = new VerticalLayout();
-            // Force margins by default
-            newLayout.setMargin(true);
+    /**
+     * Returns the content of the Panel.
+     * 
+     * @return
+     */
+    public ComponentContainer getContent() {
+        return content;
+    }
+
+    /**
+     * 
+     * Set the content of the Panel. If null is given as the new content then a
+     * layout is automatically created and set as the content.
+     * 
+     * @param content
+     *            The new content
+     */
+    public void setContent(ComponentContainer newContent) {
+
+        // If the content is null we create the default content
+        if (newContent == null) {
+            newContent = createDefaultContent();
         }
 
-        if (newLayout == layout) {
-            // don't set the same layout twice
+        // if (newContent == null) {
+        // throw new IllegalArgumentException("Content cannot be null");
+        // }
+
+        if (newContent == content) {
+            // don't set the same content twice
             return;
         }
 
-        // detach old layout if present
-        if (layout != null) {
-            layout.setParent(null);
-            layout
+        // detach old content if present
+        if (content != null) {
+            content.setParent(null);
+            content
                     .removeListener((ComponentContainer.ComponentAttachListener) this);
-            layout
+            content
                     .removeListener((ComponentContainer.ComponentDetachListener) this);
         }
 
-        // Sets the panel to be parent for the layout
-        newLayout.setParent(this);
+        // Sets the panel to be parent for the content
+        newContent.setParent(this);
 
-        // Sets the new layout
-        layout = newLayout;
+        // Sets the new content
+        content = newContent;
 
-        // Adds the event listeners for new layout
-        newLayout
+        // Adds the event listeners for new content
+        newContent
                 .addListener((ComponentContainer.ComponentAttachListener) this);
-        newLayout
+        newContent
                 .addListener((ComponentContainer.ComponentDetachListener) this);
+
+        content = newContent;
+    }
+
+    /**
+     * Create a ComponentContainer which is added by default to the Panel if
+     * user does not specify any content.
+     * 
+     * @return
+     */
+    private ComponentContainer createDefaultContent() {
+        VerticalLayout layout = new VerticalLayout();
+        // Force margins by default
+        layout.setMargin(true);
+        return layout;
     }
 
     /**
@@ -165,7 +218,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        layout.paint(target);
+        content.paint(target);
 
         if (isScrollable()) {
             target.addVariable(this, "scrollLeft", getScrollLeft());
@@ -216,8 +269,8 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     public void requestRepaintAll() {
         // Panel has odd structure, delegate to layout
         requestRepaint();
-        if (getLayout() != null) {
-            getLayout().requestRepaintAll();
+        if (getContent() != null) {
+            getContent().requestRepaintAll();
         }
     }
 
@@ -240,7 +293,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      */
     @Override
     public void addComponent(Component c) {
-        layout.addComponent(c);
+        content.addComponent(c);
         // No repaint request is made as we except the underlying container to
         // request repaints
     }
@@ -254,7 +307,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      */
     @Override
     public void removeComponent(Component c) {
-        layout.removeComponent(c);
+        content.removeComponent(c);
         // No repaint request is made as we except the underlying container to
         // request repaints
     }
@@ -267,7 +320,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * @see com.itmill.toolkit.ui.ComponentContainer#getComponentIterator()
      */
     public Iterator getComponentIterator() {
-        return layout.getComponentIterator();
+        return content.getComponentIterator();
     }
 
     /**
@@ -402,7 +455,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     /* Documented in superclass */
     public void replaceComponent(Component oldComponent, Component newComponent) {
 
-        layout.replaceComponent(oldComponent, newComponent);
+        content.replaceComponent(oldComponent, newComponent);
     }
 
     /**
@@ -411,7 +464,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * @see com.itmill.toolkit.ui.ComponentContainer.ComponentAttachListener#componentAttachedToContainer(com.itmill.toolkit.ui.ComponentContainer.ComponentAttachEvent)
      */
     public void componentAttachedToContainer(ComponentAttachEvent event) {
-        if (event.getContainer() == layout) {
+        if (event.getContainer() == content) {
             fireComponentAttachEvent(event.getAttachedComponent());
         }
     }
@@ -422,7 +475,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * @see com.itmill.toolkit.ui.ComponentContainer.ComponentDetachListener#componentDetachedFromContainer(com.itmill.toolkit.ui.ComponentContainer.ComponentDetachEvent)
      */
     public void componentDetachedFromContainer(ComponentDetachEvent event) {
-        if (event.getContainer() == layout) {
+        if (event.getContainer() == content) {
             fireComponentDetachEvent(event.getDetachedComponent());
         }
     }
@@ -436,8 +489,8 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     public void attach() {
         // can't call parent here as this is Panels hierarchy is a hack
         requestRepaint();
-        if (layout != null) {
-            layout.attach();
+        if (content != null) {
+            content.attach();
         }
     }
 
@@ -449,8 +502,8 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     @Override
     public void detach() {
         // can't call parent here as this is Panels hierarchy is a hack
-        if (layout != null) {
-            layout.detach();
+        if (content != null) {
+            content.detach();
         }
     }
 
@@ -461,7 +514,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      */
     @Override
     public void removeAllComponents() {
-        layout.removeAllComponents();
+        content.removeAllComponents();
     }
 
     public void addActionHandler(Handler actionHandler) {
