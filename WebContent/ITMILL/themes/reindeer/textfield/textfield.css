@@ -19,6 +19,10 @@
 	border-bottom-color: #5ca0df;
 	outline: none;
 }
+input.i-textfield-prompt {
+	font-style: normal;
+	color: #999;
+}
 /* Textfield on blue background */
 .blue .i-textfield {
 	border-color: #92a2aa;
@@ -46,4 +50,17 @@
 	-webkit-border-image: url(img/bg-border-image-focus.png) 0 3 0 3 stretch stretch;
 	-moz-border-image: url(img/bg-border-image-focus.png) 0 3 0 3 stretch stretch;
 	-o-border-image: url(img/bg-border-image-focus.png) 0 3 0 3 stretch stretch;
+}
+/* Small style textfield */
+.i-app input.i-textfield-small,
+.i-sa input.i-textfield-small,
+.i-ff35 input.i-textfield-small,
+.i-op input.i-textfield-small {
+	font-size: 11px;
+	height: 15px;
+}
+.i-sa input.i-textfield-small,
+.i-ff35 input.i-textfield-small,
+.i-op input.i-textfield-small {
+	height: 16px;
 }
