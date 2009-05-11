@@ -5,13 +5,18 @@
 .i-tabsheet-tabitem {
 	border: none;
 	border-bottom: 1px solid #bfbfbf;
-	padding: 5px 16px;
 	color: #4d748f;
+	padding: 0;
+}
+.i-tabsheet-tabitem .i-caption {
+	padding: 5px 16px;
 }
 .i-tabsheet-tabitem-selected {
 	border: 1px solid #bfbfbf;
 	border-bottom: none;
 	color: #222;
+}
+.i-tabsheet-tabitem-selected .i-caption {
 	padding: 4px 15px 6px 15px;
 }
 .i-tabsheet-content {
@@ -47,8 +52,8 @@
 	background-image: url(../../default/icons/16/error.gif);
 }
 .i-ie .i-tabsheet-tabs .i-errorindicator {
-	zoom:1;
-	display:inline;
+	zoom: 1;
+	display: inline;
 }
 /* Tabsheet on blue background */
 .blue .i-tabsheet-spacertd div,

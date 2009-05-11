@@ -45,3 +45,15 @@
 .i-sa .i-filterselect-suggestpopup {
 	font-family: Helvetica, Arial, "Lucida Grande", Geneva, Tahoma, Verdana, sans-serif;
 }
+.i-errorindicator {
+	width: 12px;
+	height: 16px;
+	background: transparent url(../../default/icons/16/error.png) no-repeat top right;
+}
+.i-ie6 .i-errorindicator {
+	/* gif for transparency */
+	background-image: url(../../default/icons/16/error.gif);
+}
+.i-ie7 .i-errorindicator {
+	margin-left: -3px;
+}

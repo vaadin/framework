@@ -136,7 +136,7 @@
 	width: 100%;
 	overflow: hidden;
 	text-indent: -99999px;
-	background-position: center top;
+	background-position: center 3px;
 	background-repeat: no-repeat;
 	background-image: url(img/arrow-down.png); /** sprite-ref: verticals; sprite-margin-top: 3px; sprite-margin-bottom: 3px; sprite-alignment: center */
 	user-select: none;

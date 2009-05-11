@@ -1877,6 +1877,18 @@ div > .i-button-small span,
 .i-sa .i-filterselect-suggestpopup {
 	font-family: Helvetica, Arial, "Lucida Grande", Geneva, Tahoma, Verdana, sans-serif;
 }
+.i-errorindicator {
+	width: 12px;
+	height: 16px;
+	background: transparent url(../default/icons/16/error.png) no-repeat top right;
+}
+.i-ie6 .i-errorindicator {
+	/* gif for transparency */
+	background-image: url(../default/icons/16/error.gif);
+}
+.i-ie7 .i-errorindicator {
+	margin-left: -3px;
+}
 
 /* ./WebContent/ITMILL/themes/reindeer/label/label.css */
 .i-label {
@@ -2148,7 +2160,7 @@ div > .i-button-small span,
 	width: 100%;
 	overflow: hidden;
 	text-indent: -99999px;
-	background-position: center top;
+	background-position: center 3px;
 	background-repeat: no-repeat;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
@@ -2259,13 +2271,18 @@ div > .i-button-small span,
 .i-tabsheet-tabitem {
 	border: none;
 	border-bottom: 1px solid #bfbfbf;
-	padding: 5px 16px;
 	color: #4d748f;
+	padding: 0;
+}
+.i-tabsheet-tabitem .i-caption {
+	padding: 5px 16px;
 }
 .i-tabsheet-tabitem-selected {
 	border: 1px solid #bfbfbf;
 	border-bottom: none;
 	color: #222;
+}
+.i-tabsheet-tabitem-selected .i-caption {
 	padding: 4px 15px 6px 15px;
 }
 .i-tabsheet-content {
@@ -2301,8 +2318,8 @@ div > .i-button-small span,
 	background-image: url(../default/icons/16/error.gif);
 }
 .i-ie .i-tabsheet-tabs .i-errorindicator {
-	zoom:1;
-	display:inline;
+	zoom: 1;
+	display: inline;
 }
 /* Tabsheet on blue background */
 .blue .i-tabsheet-spacertd div,
