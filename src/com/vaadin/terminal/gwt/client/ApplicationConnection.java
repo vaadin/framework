@@ -61,7 +61,7 @@ public class ApplicationConnection {
 
     public static final String VAR_ARRAYITEM_SEPARATOR = "\u001c";
 
-    public static final String UIDL_SECURITY_HEADER = "com.itmill.seckey";
+    public static final String UIDL_SECURITY_HEADER = "com.vaadin.seckey";
 
     public static final String PARAM_UNLOADBURST = "onunloadburst";
 
