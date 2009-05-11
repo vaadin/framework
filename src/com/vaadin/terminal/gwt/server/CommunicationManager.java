@@ -41,12 +41,13 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.itmill.toolkit.external.org.apache.commons.fileupload.FileItemIterator;
-import com.itmill.toolkit.external.org.apache.commons.fileupload.FileItemStream;
-import com.itmill.toolkit.external.org.apache.commons.fileupload.FileUploadException;
-import com.itmill.toolkit.external.org.apache.commons.fileupload.servlet.ServletFileUpload;
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
+import com.vaadin.external.org.apache.commons.fileupload.FileItemIterator;
+import com.vaadin.external.org.apache.commons.fileupload.FileItemStream;
+import com.vaadin.external.org.apache.commons.fileupload.FileUploadException;
+import com.vaadin.external.org.apache.commons.fileupload.ProgressListener;
+import com.vaadin.external.org.apache.commons.fileupload.servlet.ServletFileUpload;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.Paintable;

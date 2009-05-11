@@ -31,9 +31,9 @@ import javax.servlet.http.HttpSession;
 
 import org.xml.sax.SAXException;
 
-import com.itmill.toolkit.external.org.apache.commons.fileupload.servlet.ServletFileUpload;
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
+import com.vaadin.external.org.apache.commons.fileupload.servlet.ServletFileUpload;
 import com.vaadin.service.FileTypeResolver;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.ParameterHandler;
