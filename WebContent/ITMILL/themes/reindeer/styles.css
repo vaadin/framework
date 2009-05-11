@@ -2085,6 +2085,9 @@ div > .i-button-small span,
 .i-filterselect-suggestmenu .gwt-MenuItem {
 	padding: 1px 8px;
 	height: 16px;
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
 }
 .i-filterselect-suggestmenu .gwt-MenuItem .i-icon {
 	margin-right: 3px;
@@ -2170,7 +2173,7 @@ div > .i-button-small span,
   background-position: center -361px;
 }
 .i-filterselect-status {
-	text-shadow: #fff 0 1px 0;
+	text-shadow: #e9eaeb 0 1px 0;
 	font-size: 11px;
 	line-height: normal;
 	width: 100%;
@@ -2185,6 +2188,9 @@ div > .i-button-small span,
 	-moz-border-radius-bottomright: 2px;
 	-webkit-border-bottom-left-radius: 2px;
 	-webkit-border-bottom-right-radius: 2px;
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
 }
 /* IE fails to position background images properly inside table elements */
 .i-ie .i-filterselect-suggestmenu .gwt-MenuItem-selected {
@@ -2211,6 +2217,7 @@ div > .i-button-small span,
 .i-ie .i-filterselect-status {
 	background: transparent url(select/img/status-bg.png) repeat-x;
 }
+/* Filterselect with icon needs a similar fix than in buttons */
 
 /* ./WebContent/ITMILL/themes/reindeer/splitpanel/splitpanel.css */
 .i-splitpanel-horizontal .i-splitpanel-hsplitter {
