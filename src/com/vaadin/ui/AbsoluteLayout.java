@@ -9,7 +9,7 @@ import java.util.Map;
 
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.IAbsoluteLayout;
+import com.vaadin.terminal.gwt.client.ui.VAbsoluteLayout;
 
 /**
  * AbsoluteLayout is a layout implementation that mimics html absolute
@@ -28,7 +28,7 @@ public class AbsoluteLayout extends AbstractLayout {
 
     @Override
     public String getTag() {
-        return IAbsoluteLayout.TAGNAME;
+        return VAbsoluteLayout.TAGNAME;
     }
 
     public Iterator<Component> getComponentIterator() {

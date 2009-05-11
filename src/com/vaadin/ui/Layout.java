@@ -6,7 +6,7 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 
-import com.vaadin.terminal.gwt.client.ui.IMarginInfo;
+import com.vaadin.terminal.gwt.client.ui.VMarginInfo;
 import com.vaadin.terminal.gwt.client.ui.AlignmentInfo.Bits;
 
 /**
@@ -224,7 +224,7 @@ public interface Layout extends ComponentContainer, Serializable {
     }
 
     @SuppressWarnings("serial")
-    public static class MarginInfo extends IMarginInfo implements Serializable {
+    public static class MarginInfo extends VMarginInfo implements Serializable {
 
         public MarginInfo(boolean enabled) {
             super(enabled, enabled, enabled, enabled);

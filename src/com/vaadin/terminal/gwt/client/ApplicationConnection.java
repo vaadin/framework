@@ -38,10 +38,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.ui.Field;
-import com.vaadin.terminal.gwt.client.ui.IContextMenu;
-import com.vaadin.terminal.gwt.client.ui.INotification;
-import com.vaadin.terminal.gwt.client.ui.IView;
-import com.vaadin.terminal.gwt.client.ui.INotification.HideEvent;
+import com.vaadin.terminal.gwt.client.ui.VContextMenu;
+import com.vaadin.terminal.gwt.client.ui.VNotification;
+import com.vaadin.terminal.gwt.client.ui.VView;
+import com.vaadin.terminal.gwt.client.ui.VNotification.HideEvent;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -78,14 +78,14 @@ public class ApplicationConnection {
 
     private final WidgetSet widgetSet;
 
-    private IContextMenu contextMenu = null;
+    private VContextMenu contextMenu = null;
 
     private Timer loadTimer;
     private Timer loadTimer2;
     private Timer loadTimer3;
     private Element loadElement;
 
-    private final IView view;
+    private final VView view;
 
     private boolean applicationRunning = false;
 
@@ -120,7 +120,7 @@ public class ApplicationConnection {
         configuration = cnf;
         windowName = configuration.getInitialWindowName();
         if (isDebugMode()) {
-            console = new IDebugConsole(this, cnf, !isQuietDebugMode());
+            console = new VDebugConsole(this, cnf, !isQuietDebugMode());
         } else {
             console = new NullConsole();
         }
@@ -135,7 +135,7 @@ public class ApplicationConnection {
 
         initializeClientHooks();
 
-        view = new IView(cnf.getRootPanelId());
+        view = new VView(cnf.getRootPanelId());
         showLoadingIndicator();
 
     }
@@ -386,12 +386,12 @@ public class ApplicationConnection {
                     + "</p>";
         }
         if (html.length() > 0) {
-            INotification n = new INotification(1000 * 60 * 45);
+            VNotification n = new VNotification(1000 * 60 * 45);
             n.addEventListener(new NotificationRedirect(configuration
                     .getCommunicationErrorUrl()));
             n
-                    .show(html, INotification.CENTERED_TOP,
-                            INotification.STYLE_SYSTEM);
+                    .show(html, VNotification.CENTERED_TOP,
+                            VNotification.STYLE_SYSTEM);
         } else {
             redirect(configuration.getCommunicationErrorUrl());
         }
@@ -694,10 +694,10 @@ public class ApplicationConnection {
 
                 if (html.length() != 0) {
                     /* 45 min */
-                    INotification n = new INotification(1000 * 60 * 45);
+                    VNotification n = new VNotification(1000 * 60 * 45);
                     n.addEventListener(new NotificationRedirect(url));
-                    n.show(html, INotification.CENTERED_TOP,
-                            INotification.STYLE_SYSTEM);
+                    n.show(html, VNotification.CENTERED_TOP,
+                            VNotification.STYLE_SYSTEM);
                 } else {
                     redirect(url);
                 }
@@ -1461,11 +1461,11 @@ public class ApplicationConnection {
     /**
      * Singleton method to get instance of app's context menu.
      * 
-     * @return IContextMenu object
+     * @return VContextMenu object
      */
-    public IContextMenu getContextMenu() {
+    public VContextMenu getContextMenu() {
         if (contextMenu == null) {
-            contextMenu = new IContextMenu();
+            contextMenu = new VContextMenu();
             DOM.setElementProperty(contextMenu.getElement(), "id",
                     "PID_TOOLKIT_CM");
         }
@@ -1506,7 +1506,7 @@ public class ApplicationConnection {
      * messages, such as session expired.
      * 
      */
-    private class NotificationRedirect implements INotification.EventListener {
+    private class NotificationRedirect implements VNotification.EventListener {
         String url;
 
         NotificationRedirect(String url) {
@@ -1540,7 +1540,7 @@ public class ApplicationConnection {
         }
     }
 
-    private final ITooltip tooltip = new ITooltip(this);
+    private final VTooltip tooltip = new VTooltip(this);
 
     /**
      * Component may want to delegate Tooltip handling to client. Layouts add
@@ -1626,7 +1626,7 @@ public class ApplicationConnection {
         makeUidlRequest("", true, false, true);
     }
 
-    public IView getView() {
+    public VView getView() {
         return view;
     }
 

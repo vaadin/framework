@@ -109,7 +109,7 @@ public class DateField extends AbstractField {
     private String dateFormat;
 
     /**
-     * Read-only content of an ITextualDate field - null for other types of date
+     * Read-only content of an VTextualDate field - null for other types of date
      * fields.
      */
     private String dateString;

@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.ICaption;
+import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -62,7 +62,7 @@ public class ChildComponentContainer extends Panel {
     private int alignmentTopOffset = 0;
 
     // private Margins alignmentOffset = new Margins(0, 0, 0, 0);
-    private ICaption caption = null;
+    private VCaption caption = null;
     private DivElement containerDIV;
     private DivElement widgetDIV;
     private Widget widget;
@@ -413,13 +413,13 @@ public class ChildComponentContainer extends Panel {
     }
 
     public void updateCaption(UIDL uidl, ApplicationConnection client) {
-        if (ICaption.isNeeded(uidl)) {
+        if (VCaption.isNeeded(uidl)) {
             // We need a caption
 
-            ICaption newCaption = caption;
+            VCaption newCaption = caption;
 
             if (newCaption == null) {
-                newCaption = new ICaption((Paintable) widget, client);
+                newCaption = new VCaption((Paintable) widget, client);
                 // Set initial height to avoid Safari flicker
                 newCaption.setHeight("18px");
                 // newCaption.setHeight(newCaption.getHeight()); // This might
@@ -462,7 +462,7 @@ public class ChildComponentContainer extends Panel {
 
     }
 
-    private void setCaption(ICaption newCaption) {
+    private void setCaption(VCaption newCaption) {
         // Validate
         // if (newCaption == caption) {
         // return;

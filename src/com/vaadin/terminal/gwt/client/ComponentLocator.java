@@ -7,8 +7,8 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ui.IView;
-import com.vaadin.terminal.gwt.client.ui.IWindow;
+import com.vaadin.terminal.gwt.client.ui.VView;
+import com.vaadin.terminal.gwt.client.ui.VWindow;
 import com.vaadin.terminal.gwt.client.ui.SubPartAware;
 
 /**
@@ -71,8 +71,8 @@ public class ComponentLocator {
             String subPartName = client.getContextMenu().getSubPartName(
                     targetElement);
             if (subPartName != null) {
-                // IContextMenu, singleton attached directly to rootpanel
-                return "/IContextMenu[0]" + SUBPART_SEPARATOR + subPartName;
+                // VContextMenu, singleton attached directly to rootpanel
+                return "/VContextMenu[0]" + SUBPART_SEPARATOR + subPartName;
 
             }
             return null;
@@ -226,14 +226,14 @@ public class ComponentLocator {
             return pid;
         }
 
-        if (w instanceof IView) {
+        if (w instanceof VView) {
             return "";
-        } else if (w instanceof IWindow) {
-            IWindow win = (IWindow) w;
-            ArrayList<IWindow> subWindowList = client.getView()
+        } else if (w instanceof VWindow) {
+            VWindow win = (VWindow) w;
+            ArrayList<VWindow> subWindowList = client.getView()
                     .getSubWindowList();
             int indexOfSubWindow = subWindowList.indexOf(win);
-            return PARENTCHILD_SEPARATOR + "IWindow[" + indexOfSubWindow + "]";
+            return PARENTCHILD_SEPARATOR + "VWindow[" + indexOfSubWindow + "]";
         }
 
         Widget parent = w.getParent();
@@ -283,9 +283,9 @@ public class ComponentLocator {
 
                 Iterator<? extends Widget> i;
                 String widgetClassName = split[0];
-                if (widgetClassName.equals("IWindow")) {
+                if (widgetClassName.equals("VWindow")) {
                     i = client.getView().getSubWindowList().iterator();
-                } else if (widgetClassName.equals("IContextMenu")) {
+                } else if (widgetClassName.equals("VContextMenu")) {
                     return client.getContextMenu();
                 } else {
                     i = parent.iterator();

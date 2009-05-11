@@ -4,8 +4,8 @@
 
 package com.vaadin.demo.reservation.gwt.client;
 
-import com.vaadin.demo.reservation.gwt.client.ui.ICalendarField;
-import com.vaadin.demo.reservation.gwt.client.ui.IGoogleMap;
+import com.vaadin.demo.reservation.gwt.client.ui.VCalendarField;
+import com.vaadin.demo.reservation.gwt.client.ui.VGoogleMap;
 import com.vaadin.terminal.gwt.client.DefaultWidgetSet;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -14,10 +14,10 @@ public class ReservationWidgetSet extends DefaultWidgetSet {
     @Override
     public Paintable createWidget(UIDL uidl) {
         final Class type = resolveWidgetType(uidl);
-        if (IGoogleMap.class == type) {
-            return new IGoogleMap();
-        } else if (ICalendarField.class == type) {
-            return new ICalendarField();
+        if (VGoogleMap.class == type) {
+            return new VGoogleMap();
+        } else if (VCalendarField.class == type) {
+            return new VCalendarField();
         }
 
         return super.createWidget(uidl);
@@ -27,9 +27,9 @@ public class ReservationWidgetSet extends DefaultWidgetSet {
     protected Class resolveWidgetType(UIDL uidl) {
         final String tag = uidl.getTag();
         if ("googlemap".equals(tag)) {
-            return IGoogleMap.class;
+            return VGoogleMap.class;
         } else if ("calendarfield".equals(tag)) {
-            return ICalendarField.class;
+            return VCalendarField.class;
         }
         return super.resolveWidgetType(uidl);
     }

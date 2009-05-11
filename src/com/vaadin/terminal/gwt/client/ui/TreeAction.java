@@ -5,7 +5,7 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 /**
- * This class is used for "row actions" in ITree and ITable
+ * This class is used for "row actions" in VTree and ITable
  */
 public class TreeAction extends Action {
 

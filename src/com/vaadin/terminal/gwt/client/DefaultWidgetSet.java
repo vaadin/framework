@@ -5,48 +5,48 @@
 package com.vaadin.terminal.gwt.client;
 
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ui.IAbsoluteLayout;
-import com.vaadin.terminal.gwt.client.ui.IAccordion;
-import com.vaadin.terminal.gwt.client.ui.IButton;
-import com.vaadin.terminal.gwt.client.ui.ICheckBox;
-import com.vaadin.terminal.gwt.client.ui.ICustomComponent;
-import com.vaadin.terminal.gwt.client.ui.ICustomLayout;
-import com.vaadin.terminal.gwt.client.ui.IDateFieldCalendar;
-import com.vaadin.terminal.gwt.client.ui.IEmbedded;
-import com.vaadin.terminal.gwt.client.ui.IFilterSelect;
-import com.vaadin.terminal.gwt.client.ui.IForm;
-import com.vaadin.terminal.gwt.client.ui.IFormLayout;
-import com.vaadin.terminal.gwt.client.ui.IGridLayout;
-import com.vaadin.terminal.gwt.client.ui.IHorizontalLayout;
-import com.vaadin.terminal.gwt.client.ui.ILabel;
-import com.vaadin.terminal.gwt.client.ui.ILink;
-import com.vaadin.terminal.gwt.client.ui.IListSelect;
-import com.vaadin.terminal.gwt.client.ui.IMenuBar;
-import com.vaadin.terminal.gwt.client.ui.INativeSelect;
-import com.vaadin.terminal.gwt.client.ui.IOptionGroup;
-import com.vaadin.terminal.gwt.client.ui.IOrderedLayout;
-import com.vaadin.terminal.gwt.client.ui.IPanel;
-import com.vaadin.terminal.gwt.client.ui.IPasswordField;
-import com.vaadin.terminal.gwt.client.ui.IPopupCalendar;
-import com.vaadin.terminal.gwt.client.ui.IPopupView;
-import com.vaadin.terminal.gwt.client.ui.IProgressIndicator;
-import com.vaadin.terminal.gwt.client.ui.IScrollTable;
-import com.vaadin.terminal.gwt.client.ui.ISlider;
-import com.vaadin.terminal.gwt.client.ui.ISplitPanelHorizontal;
-import com.vaadin.terminal.gwt.client.ui.ISplitPanelVertical;
-import com.vaadin.terminal.gwt.client.ui.ITablePaging;
-import com.vaadin.terminal.gwt.client.ui.ITabsheet;
-import com.vaadin.terminal.gwt.client.ui.ITextArea;
-import com.vaadin.terminal.gwt.client.ui.ITextField;
-import com.vaadin.terminal.gwt.client.ui.ITextualDate;
-import com.vaadin.terminal.gwt.client.ui.ITree;
-import com.vaadin.terminal.gwt.client.ui.ITwinColSelect;
-import com.vaadin.terminal.gwt.client.ui.IUnknownComponent;
-import com.vaadin.terminal.gwt.client.ui.IUpload;
-import com.vaadin.terminal.gwt.client.ui.IUriFragmentUtility;
-import com.vaadin.terminal.gwt.client.ui.IVerticalLayout;
-import com.vaadin.terminal.gwt.client.ui.IWindow;
-import com.vaadin.terminal.gwt.client.ui.richtextarea.IRichTextArea;
+import com.vaadin.terminal.gwt.client.ui.VAbsoluteLayout;
+import com.vaadin.terminal.gwt.client.ui.VAccordion;
+import com.vaadin.terminal.gwt.client.ui.VButton;
+import com.vaadin.terminal.gwt.client.ui.VCheckBox;
+import com.vaadin.terminal.gwt.client.ui.VCustomComponent;
+import com.vaadin.terminal.gwt.client.ui.VCustomLayout;
+import com.vaadin.terminal.gwt.client.ui.VDateFieldCalendar;
+import com.vaadin.terminal.gwt.client.ui.VEmbedded;
+import com.vaadin.terminal.gwt.client.ui.VFilterSelect;
+import com.vaadin.terminal.gwt.client.ui.VForm;
+import com.vaadin.terminal.gwt.client.ui.VFormLayout;
+import com.vaadin.terminal.gwt.client.ui.VGridLayout;
+import com.vaadin.terminal.gwt.client.ui.VHorizontalLayout;
+import com.vaadin.terminal.gwt.client.ui.VLabel;
+import com.vaadin.terminal.gwt.client.ui.VLink;
+import com.vaadin.terminal.gwt.client.ui.VListSelect;
+import com.vaadin.terminal.gwt.client.ui.VMenuBar;
+import com.vaadin.terminal.gwt.client.ui.VNativeSelect;
+import com.vaadin.terminal.gwt.client.ui.VOptionGroup;
+import com.vaadin.terminal.gwt.client.ui.VOrderedLayout;
+import com.vaadin.terminal.gwt.client.ui.VPanel;
+import com.vaadin.terminal.gwt.client.ui.VPasswordField;
+import com.vaadin.terminal.gwt.client.ui.VPopupCalendar;
+import com.vaadin.terminal.gwt.client.ui.VPopupView;
+import com.vaadin.terminal.gwt.client.ui.VProgressIndicator;
+import com.vaadin.terminal.gwt.client.ui.VScrollTable;
+import com.vaadin.terminal.gwt.client.ui.VSlider;
+import com.vaadin.terminal.gwt.client.ui.VSplitPanelHorizontal;
+import com.vaadin.terminal.gwt.client.ui.VSplitPanelVertical;
+import com.vaadin.terminal.gwt.client.ui.VTablePaging;
+import com.vaadin.terminal.gwt.client.ui.VTabsheet;
+import com.vaadin.terminal.gwt.client.ui.VTextArea;
+import com.vaadin.terminal.gwt.client.ui.VTextField;
+import com.vaadin.terminal.gwt.client.ui.VTextualDate;
+import com.vaadin.terminal.gwt.client.ui.VTree;
+import com.vaadin.terminal.gwt.client.ui.VTwinColSelect;
+import com.vaadin.terminal.gwt.client.ui.VUnknownComponent;
+import com.vaadin.terminal.gwt.client.ui.VUpload;
+import com.vaadin.terminal.gwt.client.ui.VUriFragmentUtility;
+import com.vaadin.terminal.gwt.client.ui.VVerticalLayout;
+import com.vaadin.terminal.gwt.client.ui.VWindow;
+import com.vaadin.terminal.gwt.client.ui.richtextarea.VRichTextArea;
 
 public class DefaultWidgetSet implements WidgetSet {
 
@@ -60,91 +60,91 @@ public class DefaultWidgetSet implements WidgetSet {
 
     public Paintable createWidget(UIDL uidl) {
         final Class classType = resolveWidgetType(uidl);
-        if (ICheckBox.class == classType) {
-            return new ICheckBox();
-        } else if (IButton.class == classType) {
-            return new IButton();
-        } else if (IWindow.class == classType) {
-            return new IWindow();
-        } else if (IOrderedLayout.class == classType) {
-            return new IOrderedLayout();
-        } else if (IVerticalLayout.class == classType) {
-            return new IVerticalLayout();
-        } else if (IHorizontalLayout.class == classType) {
-            return new IHorizontalLayout();
-        } else if (ILabel.class == classType) {
-            return new ILabel();
-        } else if (ILink.class == classType) {
-            return new ILink();
-        } else if (IGridLayout.class == classType) {
-            return new IGridLayout();
-        } else if (ITree.class == classType) {
-            return new ITree();
-        } else if (IOptionGroup.class == classType) {
-            return new IOptionGroup();
-        } else if (ITwinColSelect.class == classType) {
-            return new ITwinColSelect();
-        } else if (INativeSelect.class == classType) {
-            return new INativeSelect();
-        } else if (IListSelect.class == classType) {
-            return new IListSelect();
-        } else if (IPanel.class == classType) {
-            return new IPanel();
-        } else if (ITabsheet.class == classType) {
-            return new ITabsheet();
-        } else if (IEmbedded.class == classType) {
-            return new IEmbedded();
-        } else if (ICustomLayout.class == classType) {
-            return new ICustomLayout();
-        } else if (ICustomComponent.class == classType) {
-            return new ICustomComponent();
-        } else if (ITextArea.class == classType) {
-            return new ITextArea();
-        } else if (IPasswordField.class == classType) {
-            return new IPasswordField();
-        } else if (ITextField.class == classType) {
-            return new ITextField();
-        } else if (ITablePaging.class == classType) {
-            return new ITablePaging();
-        } else if (IScrollTable.class == classType) {
-            return new IScrollTable();
-        } else if (IDateFieldCalendar.class == classType) {
-            return new IDateFieldCalendar();
-        } else if (ITextualDate.class == classType) {
-            return new ITextualDate();
-        } else if (IPopupCalendar.class == classType) {
-            return new IPopupCalendar();
-        } else if (ISlider.class == classType) {
-            return new ISlider();
-        } else if (IForm.class == classType) {
-            return new IForm();
-        } else if (IFormLayout.class == classType) {
-            return new IFormLayout();
-        } else if (IUpload.class == classType) {
-            return new IUpload();
-        } else if (ISplitPanelHorizontal.class == classType) {
-            return new ISplitPanelHorizontal();
-        } else if (ISplitPanelVertical.class == classType) {
-            return new ISplitPanelVertical();
-        } else if (IFilterSelect.class == classType) {
-            return new IFilterSelect();
-        } else if (IProgressIndicator.class == classType) {
-            return new IProgressIndicator();
-        } else if (IRichTextArea.class == classType) {
-            return new IRichTextArea();
-        } else if (IAccordion.class == classType) {
-            return new IAccordion();
-        } else if (IMenuBar.class == classType) {
-            return new IMenuBar();
-        } else if (IPopupView.class == classType) {
-            return new IPopupView();
-        } else if (IUriFragmentUtility.class == classType) {
-            return new IUriFragmentUtility();
-        } else if (IAbsoluteLayout.class == classType) {
-            return new IAbsoluteLayout();
+        if (VCheckBox.class == classType) {
+            return new VCheckBox();
+        } else if (VButton.class == classType) {
+            return new VButton();
+        } else if (VWindow.class == classType) {
+            return new VWindow();
+        } else if (VOrderedLayout.class == classType) {
+            return new VOrderedLayout();
+        } else if (VVerticalLayout.class == classType) {
+            return new VVerticalLayout();
+        } else if (VHorizontalLayout.class == classType) {
+            return new VHorizontalLayout();
+        } else if (VLabel.class == classType) {
+            return new VLabel();
+        } else if (VLink.class == classType) {
+            return new VLink();
+        } else if (VGridLayout.class == classType) {
+            return new VGridLayout();
+        } else if (VTree.class == classType) {
+            return new VTree();
+        } else if (VOptionGroup.class == classType) {
+            return new VOptionGroup();
+        } else if (VTwinColSelect.class == classType) {
+            return new VTwinColSelect();
+        } else if (VNativeSelect.class == classType) {
+            return new VNativeSelect();
+        } else if (VListSelect.class == classType) {
+            return new VListSelect();
+        } else if (VPanel.class == classType) {
+            return new VPanel();
+        } else if (VTabsheet.class == classType) {
+            return new VTabsheet();
+        } else if (VEmbedded.class == classType) {
+            return new VEmbedded();
+        } else if (VCustomLayout.class == classType) {
+            return new VCustomLayout();
+        } else if (VCustomComponent.class == classType) {
+            return new VCustomComponent();
+        } else if (VTextArea.class == classType) {
+            return new VTextArea();
+        } else if (VPasswordField.class == classType) {
+            return new VPasswordField();
+        } else if (VTextField.class == classType) {
+            return new VTextField();
+        } else if (VTablePaging.class == classType) {
+            return new VTablePaging();
+        } else if (VScrollTable.class == classType) {
+            return new VScrollTable();
+        } else if (VDateFieldCalendar.class == classType) {
+            return new VDateFieldCalendar();
+        } else if (VTextualDate.class == classType) {
+            return new VTextualDate();
+        } else if (VPopupCalendar.class == classType) {
+            return new VPopupCalendar();
+        } else if (VSlider.class == classType) {
+            return new VSlider();
+        } else if (VForm.class == classType) {
+            return new VForm();
+        } else if (VFormLayout.class == classType) {
+            return new VFormLayout();
+        } else if (VUpload.class == classType) {
+            return new VUpload();
+        } else if (VSplitPanelHorizontal.class == classType) {
+            return new VSplitPanelHorizontal();
+        } else if (VSplitPanelVertical.class == classType) {
+            return new VSplitPanelVertical();
+        } else if (VFilterSelect.class == classType) {
+            return new VFilterSelect();
+        } else if (VProgressIndicator.class == classType) {
+            return new VProgressIndicator();
+        } else if (VRichTextArea.class == classType) {
+            return new VRichTextArea();
+        } else if (VAccordion.class == classType) {
+            return new VAccordion();
+        } else if (VMenuBar.class == classType) {
+            return new VMenuBar();
+        } else if (VPopupView.class == classType) {
+            return new VPopupView();
+        } else if (VUriFragmentUtility.class == classType) {
+            return new VUriFragmentUtility();
+        } else if (VAbsoluteLayout.class == classType) {
+            return new VAbsoluteLayout();
         }
 
-        return new IUnknownComponent();
+        return new VUnknownComponent();
 
     }
 
@@ -152,111 +152,111 @@ public class DefaultWidgetSet implements WidgetSet {
         final String tag = uidl.getTag();
         if ("button".equals(tag)) {
             if ("switch".equals(uidl.getStringAttribute("type"))) {
-                return ICheckBox.class;
+                return VCheckBox.class;
             } else {
-                return IButton.class;
+                return VButton.class;
             }
         } else if ("window".equals(tag)) {
-            return IWindow.class;
+            return VWindow.class;
         } else if ("orderedlayout".equals(tag)) {
-            return IOrderedLayout.class;
+            return VOrderedLayout.class;
         } else if ("verticallayout".equals(tag)) {
-            return IVerticalLayout.class;
+            return VVerticalLayout.class;
         } else if ("horizontallayout".equals(tag)) {
-            return IHorizontalLayout.class;
+            return VHorizontalLayout.class;
         } else if ("label".equals(tag)) {
-            return ILabel.class;
+            return VLabel.class;
         } else if ("link".equals(tag)) {
-            return ILink.class;
+            return VLink.class;
         } else if ("gridlayout".equals(tag)) {
-            return IGridLayout.class;
+            return VGridLayout.class;
         } else if ("tree".equals(tag)) {
-            return ITree.class;
+            return VTree.class;
         } else if ("select".equals(tag)) {
             if (uidl.hasAttribute("type")) {
                 final String type = uidl.getStringAttribute("type");
                 if (type.equals("twincol")) {
-                    return ITwinColSelect.class;
+                    return VTwinColSelect.class;
                 }
                 if (type.equals("optiongroup")) {
-                    return IOptionGroup.class;
+                    return VOptionGroup.class;
                 }
                 if (type.equals("native")) {
-                    return INativeSelect.class;
+                    return VNativeSelect.class;
                 }
                 if (type.equals("list")) {
-                    return IListSelect.class;
+                    return VListSelect.class;
                 }
             } else {
                 if (uidl.hasAttribute("selectmode")
                         && uidl.getStringAttribute("selectmode")
                                 .equals("multi")) {
-                    return IListSelect.class;
+                    return VListSelect.class;
                 } else {
-                    return IFilterSelect.class;
+                    return VFilterSelect.class;
                 }
             }
         } else if ("panel".equals(tag)) {
-            return IPanel.class;
+            return VPanel.class;
         } else if ("tabsheet".equals(tag)) {
-            return ITabsheet.class;
+            return VTabsheet.class;
         } else if ("accordion".equals(tag)) {
-            return IAccordion.class;
+            return VAccordion.class;
         } else if ("embedded".equals(tag)) {
-            return IEmbedded.class;
+            return VEmbedded.class;
         } else if ("customlayout".equals(tag)) {
-            return ICustomLayout.class;
+            return VCustomLayout.class;
         } else if ("customcomponent".equals(tag)) {
-            return ICustomComponent.class;
+            return VCustomComponent.class;
         } else if ("textfield".equals(tag)) {
             if (uidl.getBooleanAttribute("richtext")) {
-                return IRichTextArea.class;
+                return VRichTextArea.class;
             } else if (uidl.hasAttribute("multiline")) {
-                return ITextArea.class;
+                return VTextArea.class;
             } else if (uidl.getBooleanAttribute("secret")) {
-                return IPasswordField.class;
+                return VPasswordField.class;
             } else {
-                return ITextField.class;
+                return VTextField.class;
             }
         } else if ("table".equals(tag)) {
-            return IScrollTable.class;
+            return VScrollTable.class;
         } else if ("pagingtable".equals(tag)) {
-            return ITablePaging.class;
+            return VTablePaging.class;
         } else if ("datefield".equals(tag)) {
             if (uidl.hasAttribute("type")) {
                 if ("inline".equals(uidl.getStringAttribute("type"))) {
-                    return IDateFieldCalendar.class;
+                    return VDateFieldCalendar.class;
                 } else if ("popup".equals(uidl.getStringAttribute("type"))) {
-                    return IPopupCalendar.class;
+                    return VPopupCalendar.class;
                 }
             }
             // popup calendar is the default
-            return IPopupCalendar.class;
+            return VPopupCalendar.class;
         } else if ("slider".equals(tag)) {
-            return ISlider.class;
+            return VSlider.class;
         } else if ("form".equals(tag)) {
-            return IForm.class;
+            return VForm.class;
         } else if ("formlayout".equals(tag)) {
-            return IFormLayout.class;
+            return VFormLayout.class;
         } else if ("upload".equals(tag)) {
-            return IUpload.class;
+            return VUpload.class;
         } else if ("hsplitpanel".equals(tag)) {
-            return ISplitPanelHorizontal.class;
+            return VSplitPanelHorizontal.class;
         } else if ("vsplitpanel".equals(tag)) {
-            return ISplitPanelVertical.class;
+            return VSplitPanelVertical.class;
         } else if ("progressindicator".equals(tag)) {
-            return IProgressIndicator.class;
+            return VProgressIndicator.class;
         } else if ("menubar".equals(tag)) {
-            return IMenuBar.class;
+            return VMenuBar.class;
         } else if ("popupview".equals(tag)) {
-            return IPopupView.class;
+            return VPopupView.class;
         } else if ("urifragment".equals(tag)) {
-            return IUriFragmentUtility.class;
-        } else if (IAbsoluteLayout.TAGNAME.equals(tag)) {
-            return IAbsoluteLayout.class;
+            return VUriFragmentUtility.class;
+        } else if (VAbsoluteLayout.TAGNAME.equals(tag)) {
+            return VAbsoluteLayout.class;
         }
 
-        return IUnknownComponent.class;
+        return VUnknownComponent.class;
     }
 
     /**
