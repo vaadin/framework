@@ -240,7 +240,11 @@
 	padding-left: 2px;
 	color: red;
 }
-
+.i-form fieldset {
+	border: none;
+	padding: 0;
+	margin: 0;
+}
 /* Field modified */ /* Disabled by default
 .i-modified,
 .i-richtextarea.i-modified iframe.gwt-RichTextArea,
@@ -2106,6 +2110,7 @@ div > .i-button-small span,
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	-o-border-radius: 2px;
+	overflow: hidden;
 }
 .i-filterselect-suggestmenu .gwt-MenuItem {
 	padding: 1px 8px;

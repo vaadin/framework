@@ -64,6 +64,7 @@
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	-o-border-radius: 2px;
+	overflow: hidden;
 }
 .i-filterselect-suggestmenu .gwt-MenuItem {
 	padding: 1px 8px;

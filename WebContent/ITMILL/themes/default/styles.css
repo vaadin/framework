@@ -240,7 +240,11 @@
 	padding-left: 2px;
 	color: red;
 }
-
+.i-form fieldset {
+	border: none;
+	padding: 0;
+	margin: 0;
+}
 /* Field modified */ /* Disabled by default
 .i-modified,
 .i-richtextarea.i-modified iframe.gwt-RichTextArea,
