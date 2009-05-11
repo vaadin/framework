@@ -12,7 +12,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 
 public class IContextMenu extends IToolkitOverlay implements SubPartAware {
 
@@ -120,8 +119,8 @@ public class IContextMenu extends IToolkitOverlay implements SubPartAware {
 
     public Element getSubPartElement(String subPart) {
         int index = Integer.parseInt(subPart.substring(6));
-        ApplicationConnection.getConsole().log(
-                "Searching element for selection index " + index);
+        // ApplicationConnection.getConsole().log(
+        // "Searching element for selection index " + index);
         Element wrapperdiv = menu.getElement();
         com.google.gwt.dom.client.TableSectionElement tBody = (TableSectionElement) wrapperdiv
                 .getFirstChildElement().getFirstChildElement();
@@ -137,7 +136,7 @@ public class IContextMenu extends IToolkitOverlay implements SubPartAware {
             {
                 while (e != null && !e.getTagName().toLowerCase().equals("tr")) {
                     e = e.getParentElement();
-                    ApplicationConnection.getConsole().log("Found row");
+                    // ApplicationConnection.getConsole().log("Found row");
                 }
             }
             com.google.gwt.dom.client.TableSectionElement parentElement = (TableSectionElement) e
@@ -145,8 +144,8 @@ public class IContextMenu extends IToolkitOverlay implements SubPartAware {
             NodeList<TableRowElement> rows = parentElement.getRows();
             for (int i = 0; i < rows.getLength(); i++) {
                 if (rows.getItem(i) == e) {
-                    ApplicationConnection.getConsole().log(
-                            "Found index for row" + 1);
+                    // ApplicationConnection.getConsole().log(
+                    // "Found index for row" + 1);
                     return "option" + i;
                 }
             }
