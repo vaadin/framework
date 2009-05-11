@@ -13,6 +13,12 @@
 .i-app input.i-textfield {
 	padding: 3px 3px 0 3px;
 }
+.i-textfield-focus {
+	border-color: #5b97d0;
+	border-top-color: #4f83b4;
+	border-bottom-color: #5ca0df;
+	outline: none;
+}
 /* Textfield on blue background */
 .blue .i-textfield {
 	border-color: #92a2aa;
@@ -33,4 +39,11 @@
 	-moz-border-image: url(img/bg-border-image.png) 0 3 0 3 stretch stretch;
 	-o-border-image: url(img/bg-border-image.png) 0 3 0 3 stretch stretch;
 	
+}
+.i-sa input.i-textfield-focus,
+.i-ff35 input.i-textfield-focus,
+.i-op input.i-textfield-focus {
+	-webkit-border-image: url(img/bg-border-image-focus.png) 0 3 0 3 stretch stretch;
+	-moz-border-image: url(img/bg-border-image-focus.png) 0 3 0 3 stretch stretch;
+	-o-border-image: url(img/bg-border-image-focus.png) 0 3 0 3 stretch stretch;
 }

@@ -1,0 +1,191 @@
+.i-filterselect {
+	height: 24px;
+	background-repeat: no-repeat;
+	background-image: url(img/left.png); /** sprite-ref: verticals; sprite-margin-bottom: 1px */
+	padding-left: 2px;
+}
+.i-app .i-filterselect-input,
+.i-window .i-filterselect-input,
+.i-popupview-popup .i-filterselect-input {
+	background: transparent;
+	background-repeat: repeat-x;
+	background-image: url(img/center.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+	border: none;
+	height: 21px;
+}
+/* More specific selector to override padding */
+.i-app input.i-filterselect-input,
+.i-window input.i-filterselect-input,
+.i-popupview-popup input.i-filterselect-input {
+	padding: 3px 0 0 2px;
+}
+.i-filterselect-prompt .i-filterselect-input {
+	font-style: normal;
+}
+.i-filterselect-input:focus {
+	outline: none;
+}
+.i-filterselect-focus {
+	background-image: url(img/left-focus.png); /** sprite-ref: verticals; sprite-margin-bottom: 1px */
+}
+.i-filterselect-focus .i-filterselect-input {
+	background-image: url(img/center-focus.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+}
+.i-filterselect-button {
+	overflow: hidden;
+	width: 25px;
+	height: 24px;
+	background-image: url(img/right.png); /** sprite-ref: verticals */
+	cursor: default;
+}
+.i-filterselect-button:hover {
+	background-image: url(img/right-hover.png); /** sprite-ref: verticals */
+}
+.i-filterselect-button:active {
+	background-image: url(img/right-pressed.png); /** sprite-ref: verticals */
+}
+.i-filterselect-focus .i-filterselect-button {
+	background-image: url(img/right-focus.png); /** sprite-ref: verticals */
+}
+.i-filterselect-focus .i-filterselect-button:hover {
+	background-image: url(img/right-focus-hover.png); /** sprite-ref: verticals */
+}
+.i-filterselect-focus .i-filterselect-button:active {
+	background-image: url(img/right-focus-pressed.png); /** sprite-ref: verticals */
+}
+.i-disabled .i-filterselect-button:hover,
+.i-readonly .i-filterselect-button:hover {
+	background-image: url(img/right.png); /** sprite-ref: verticals */
+}
+/* IE6 needs some manual adjustments */
+.i-ie6 input.i-filterselect-input {
+	border-top: 1px solid #a2a3a4;
+	padding-top: 2px;
+}
+.i-ie6 .i-filterselect-button {
+	border-top: 1px solid #a2a3a4;
+	height: 23px;
+	cursor: pointer;
+}
+.i-ie6 .i-filterselect-focus input.i-filterselect-input,
+.i-ie6 .i-filterselect-focus .i-filterselect-button {
+	border-top-color: #5b97d0;
+}
+
+.i-filterselect-suggestpopup {
+	background: #f8f8f9;
+	border: none;
+	border-radius: 2px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	-o-border-radius: 2px;
+}
+.i-filterselect-suggestmenu .gwt-MenuItem {
+	padding: 1px 8px;
+	height: 16px;
+}
+.i-filterselect-suggestmenu .gwt-MenuItem .i-icon {
+	margin-right: 3px;
+}
+.i-filterselect-suggestmenu .gwt-MenuItem-selected {
+	background: transparent;
+	background-repeat: repeat-x;
+	background-image: url(img/sel-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+	color: #fff;
+	text-shadow: #3b5a7a 0 1px 0;
+}
+/* IE fails to position background images properly inside table elements */
+.i-ie .i-filterselect-suggestmenu .gwt-MenuItem-selected {
+	background: transparent url(img/sel-bg.png) repeat-x;
+}
+.i-filterselect-nextpage,
+.i-filterselect-nextpage-off,
+.i-filterselect-prevpage-off,
+.i-filterselect-prevpage {
+	height: 11px;
+	width: 100%;
+	background: transparent;
+}
+.i-filterselect-nextpage:hover {
+	background-repeat: repeat-x;
+	background-image: url(img/page-down-hover.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+}
+.i-filterselect-prevpage:hover {
+	background-repeat: repeat-x;
+	background-image: url(img/page-up-hover.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+}
+.i-filterselect-nextpage:active {
+	background-repeat: repeat-x;
+	background-image: url(img/page-down-pressed.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+}
+.i-filterselect-prevpage:active {
+	background-repeat: repeat-x;
+	background-image: url(img/page-up-pressed.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+}
+.i-filterselect-nextpage-off span,
+.i-filterselect-prevpage-off span {
+	display: none;
+}
+.i-filterselect-nextpage span,
+.i-filterselect-prevpage span {
+	display: block;
+	height: 11px;
+	width: 100%;
+	overflow: hidden;
+	text-indent: -99999px;
+	background-position: center top;
+	background-repeat: no-repeat;
+	background-image: url(img/arrow-down.png); /** sprite-ref: verticals; sprite-margin-top: 3px; sprite-margin-bottom: 3px; sprite-alignment: center */
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+}
+.i-filterselect-prevpage span {
+	background-image: url(img/arrow-up.png); /** sprite-ref: verticals; sprite-margin-top: 3px; sprite-margin-bottom: 3px; sprite-alignment: center */
+}
+.i-filterselect-nextpage:hover span {
+	background-image: url(img/arrow-down-hover.png); /** sprite-ref: verticals; sprite-margin-top: 3px; sprite-margin-bottom: 3px; sprite-alignment: center */
+}
+.i-filterselect-prevpage:hover span {
+	background-image: url(img/arrow-up-hover.png); /** sprite-ref: verticals; sprite-margin-top: 3px; sprite-margin-bottom: 3px; sprite-alignment: center */
+}
+.i-filterselect-status {
+	text-shadow: #fff 0 1px 0;
+	font-size: 11px;
+	line-height: normal;
+	width: 100%;
+	padding: 3px 0;
+	height: 11px;
+	overflow: hidden;
+	background-repeat: repeat-x;
+	background-image: url(img/status-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+	-moz-border-radius-bottomleft: 2px;
+	-moz-border-radius-bottomright: 2px;
+	-webkit-border-bottom-left-radius: 2px;
+	-webkit-border-bottom-right-radius: 2px;
+}
+/* IE fails to position background images properly inside table elements */
+.i-ie .i-filterselect-suggestmenu .gwt-MenuItem-selected {
+	background: transparent url(img/sel-bg.png) repeat-x;
+}
+.i-ie .i-filterselect-nextpage:hover {
+	background: transparent url(img/page-down-hover.png) repeat-x;
+}
+.i-ie .i-filterselect-prevpage:hover {
+	background: transparent url(img/page-up-hover.png) repeat-x;
+}
+.i-ie .i-filterselect-prevpage span {
+	background: transparent url(img/arrow-up.png) no-repeat center 3px;
+}
+.i-ie .i-filterselect-nextpage span {
+	background: transparent url(img/arrow-down.png) no-repeat center 3px;
+}
+.i-ie .i-filterselect-prevpage:hover span {
+	background: transparent url(img/arrow-up-hover.png) no-repeat center 3px;
+}
+.i-ie .i-filterselect-nextpage:hover span {
+	background: transparent url(img/arrow-down-hover.png) no-repeat center 3px;
+}
+.i-ie .i-filterselect-status {
+	background: transparent url(img/status-bg.png) repeat-x;
+}

@@ -1549,11 +1549,8 @@ div.i-window-header {
 /* Automatically compiled css file from subdirectories. */
 
 /* ./WebContent/ITMILL/themes/reindeer/a-sprite-definitions/a-sprite-definitions.css */
-/** sprite: verticals; sprite-image: url(common/img/vertical-sprites.png); sprite-layout: vertical */
 
-/** sprite: horizontals; sprite-image: url(common/img/horizontal-sprites.png); sprite-layout: horizontal */
 
-/** sprite: buttons; sprite-image: url(button/img/button-sprites.png); sprite-layout: vertical */
 
 /* ./WebContent/ITMILL/themes/reindeer/button/button.css */
 /* We serve simpler buttons for IE6, since it doesn't support the adjacent 
@@ -1565,7 +1562,9 @@ div > .i-button,
 	padding: 0 0 0 6px;
 	background-color: transparent;
 	background-repeat: no-repeat;
-	background-image: url(button/img/left.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -0px;
 	border: none;
 	cursor: default;
 }
@@ -1577,7 +1576,9 @@ div > .i-button span,
 	background-color: transparent;
 	background-repeat: no-repeat;
 	background-position: right top;
-	background-image: url(button/img/right.png);  /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -26px;
 	text-shadow: #fff 0 1px 0;
 	font-weight: bold;
 	font-size: 11px;
@@ -1589,21 +1590,29 @@ div > .i-button span,
 	padding-top: 5px;
 }
 .i-button:focus {
-	background-image: url(button/img/left-focus.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -52px;
 	outline: none;
 }
 .i-button:focus span {
-	background-image: url(button/img/right-focus.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -78px;
 	outline: none;
 }
 .i-button:active,
 .i-ie7 .i-button.i-pressed {
-	background-image: url(button/img/left-pressed.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -104px;
 	outline: none;
 }
 .i-button:active span,
 .i-ie7 .i-button.i-pressed span {
-	background-image: url(button/img/right-pressed.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -130px;
 	outline: none;
 }
 .i-ie7 .i-button.i-pressed span {
@@ -1704,37 +1713,53 @@ div > .i-button .i-errorindicator,
  */
 div > .i-button-primary,
 .i-ie7 .i-button-primary {
-	background-image: url(button/img/primary-left.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -156px;
 }
 div > .i-button-primary span,
 .i-ie7 .i-button-primary span {
-	background-image: url(button/img/primary-right.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -182px;
 }
 .i-button-primary:focus {
-	background-image: url(button/img/primary-left-focus.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -208px;
 }
 .i-button-primary:focus span {
-	background-image: url(button/img/primary-right-focus.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -234px;
 }
 .i-button-primary:active,
 .i-ie7 .i-button-primary.i-pressed {
-	background-image: url(button/img/primary-left-pressed.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -260px;
 }
 .i-button-primary:active span,
 .i-ie7 .i-button-primary.i-pressed span {
-	background-image: url(button/img/primary-right-pressed.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -286px;
 }
 /* 
  * Small-style --------------------------
  */
 div > .i-button-small,
 .i-ie7 .i-button-small {
-	background-image: url(button/img/small-left.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -312px;
 	height: 20px;
 }
 div > .i-button-small span,
 .i-ie7 .i-button-small span {
-	background-image: url(button/img/small-right.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -332px;
 	height: 19px;
 	padding: 1px 11px 0 5px;
 	font-weight: normal;
@@ -1748,18 +1773,26 @@ div > .i-button-small span,
 	padding-top: 2px;
 }
 .i-button-small:focus {
-	background-image: url(button/img/small-left-focus.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -352px;
 }
 .i-button-small:focus span {
-	background-image: url(button/img/small-right-focus.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -372px;
 }
 .i-button-small:active,
 .i-ie7 .i-button-small.i-pressed {
-	background-image: url(button/img/small-left-pressed.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -392px;
 }
 .i-button-small:active span,
 .i-ie7 .i-button-small.i-pressed span {
-	background-image: url(button/img/small-right-pressed.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -412px;
 }
 
 /**
@@ -1817,7 +1850,8 @@ div > .i-button-small span,
 .i-popupview-popup input,
 .i-popupview-popup select,
 .i-popupview-popup button,
-.i-popupview-popup textarea {
+.i-popupview-popup textarea,
+.i-filterselect-suggestpopup {
 	font-family: Arial, Helvetica, Tahoma, Verdana, sans-serif;
 	font-size: 12px;
 	line-height: normal;
@@ -1839,7 +1873,8 @@ div > .i-button-small span,
 .i-sa .i-popupview-popup input,
 .i-sa .i-popupview-popup select,
 .i-sa .i-popupview-popup button,
-.i-sa .i-popupview-popup textarea {
+.i-sa .i-popupview-popup textarea,
+.i-sa .i-filterselect-suggestpopup {
 	font-family: Helvetica, Arial, "Lucida Grande", Geneva, Tahoma, Verdana, sans-serif;
 }
 
@@ -1942,30 +1977,271 @@ div > .i-button-small span,
 	background: rgba(0,0,0,.08);
 }
 
+/* ./WebContent/ITMILL/themes/reindeer/select/select.css */
+.i-filterselect {
+	height: 24px;
+	background-repeat: no-repeat;
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -0px;
+	padding-left: 2px;
+}
+.i-app .i-filterselect-input,
+.i-window .i-filterselect-input,
+.i-popupview-popup .i-filterselect-input {
+	background: transparent;
+	background-repeat: repeat-x;
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -25px;
+	border: none;
+	height: 21px;
+}
+/* More specific selector to override padding */
+.i-app input.i-filterselect-input,
+.i-window input.i-filterselect-input,
+.i-popupview-popup input.i-filterselect-input {
+	padding: 3px 0 0 2px;
+}
+.i-filterselect-prompt .i-filterselect-input {
+	font-style: normal;
+}
+.i-filterselect-input:focus {
+	outline: none;
+}
+.i-filterselect-focus {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -49px;
+}
+.i-filterselect-focus .i-filterselect-input {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -74px;
+}
+.i-filterselect-button {
+	overflow: hidden;
+	width: 25px;
+	height: 24px;
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -98px;
+	cursor: default;
+}
+.i-filterselect-button:hover {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -122px;
+}
+.i-filterselect-button:active {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -146px;
+}
+.i-filterselect-focus .i-filterselect-button {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -170px;
+}
+.i-filterselect-focus .i-filterselect-button:hover {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -194px;
+}
+.i-filterselect-focus .i-filterselect-button:active {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -218px;
+}
+.i-disabled .i-filterselect-button:hover,
+.i-readonly .i-filterselect-button:hover {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -242px;
+}
+/* IE6 needs some manual adjustments */
+.i-ie6 input.i-filterselect-input {
+	border-top: 1px solid #a2a3a4;
+	padding-top: 2px;
+}
+.i-ie6 .i-filterselect-button {
+	border-top: 1px solid #a2a3a4;
+	height: 23px;
+	cursor: pointer;
+}
+.i-ie6 .i-filterselect-focus input.i-filterselect-input,
+.i-ie6 .i-filterselect-focus .i-filterselect-button {
+	border-top-color: #5b97d0;
+}
+
+.i-filterselect-suggestpopup {
+	background: #f8f8f9;
+	border: none;
+	border-radius: 2px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	-o-border-radius: 2px;
+}
+.i-filterselect-suggestmenu .gwt-MenuItem {
+	padding: 1px 8px;
+	height: 16px;
+}
+.i-filterselect-suggestmenu .gwt-MenuItem .i-icon {
+	margin-right: 3px;
+}
+.i-filterselect-suggestmenu .gwt-MenuItem-selected {
+	background: transparent;
+	background-repeat: repeat-x;
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -266px;
+	color: #fff;
+	text-shadow: #3b5a7a 0 1px 0;
+}
+/* IE fails to position background images properly inside table elements */
+.i-ie .i-filterselect-suggestmenu .gwt-MenuItem-selected {
+	background: transparent url(select/img/sel-bg.png) repeat-x;
+}
+.i-filterselect-nextpage,
+.i-filterselect-nextpage-off,
+.i-filterselect-prevpage-off,
+.i-filterselect-prevpage {
+	height: 11px;
+	width: 100%;
+	background: transparent;
+}
+.i-filterselect-nextpage:hover {
+	background-repeat: repeat-x;
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -284px;
+}
+.i-filterselect-prevpage:hover {
+	background-repeat: repeat-x;
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -295px;
+}
+.i-filterselect-nextpage:active {
+	background-repeat: repeat-x;
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -306px;
+}
+.i-filterselect-prevpage:active {
+	background-repeat: repeat-x;
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -317px;
+}
+.i-filterselect-nextpage-off span,
+.i-filterselect-prevpage-off span {
+	display: none;
+}
+.i-filterselect-nextpage span,
+.i-filterselect-prevpage span {
+	display: block;
+	height: 11px;
+	width: 100%;
+	overflow: hidden;
+	text-indent: -99999px;
+	background-position: center top;
+	background-repeat: no-repeat;
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: center -328px;
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+}
+.i-filterselect-prevpage span {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: center -339px;
+}
+.i-filterselect-nextpage:hover span {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: center -350px;
+}
+.i-filterselect-prevpage:hover span {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: center -361px;
+}
+.i-filterselect-status {
+	text-shadow: #fff 0 1px 0;
+	font-size: 11px;
+	line-height: normal;
+	width: 100%;
+	padding: 3px 0;
+	height: 11px;
+	overflow: hidden;
+	background-repeat: repeat-x;
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -372px;
+	-moz-border-radius-bottomleft: 2px;
+	-moz-border-radius-bottomright: 2px;
+	-webkit-border-bottom-left-radius: 2px;
+	-webkit-border-bottom-right-radius: 2px;
+}
+/* IE fails to position background images properly inside table elements */
+.i-ie .i-filterselect-suggestmenu .gwt-MenuItem-selected {
+	background: transparent url(select/img/sel-bg.png) repeat-x;
+}
+.i-ie .i-filterselect-nextpage:hover {
+	background: transparent url(select/img/page-down-hover.png) repeat-x;
+}
+.i-ie .i-filterselect-prevpage:hover {
+	background: transparent url(select/img/page-up-hover.png) repeat-x;
+}
+.i-ie .i-filterselect-prevpage span {
+	background: transparent url(select/img/arrow-up.png) no-repeat center 3px;
+}
+.i-ie .i-filterselect-nextpage span {
+	background: transparent url(select/img/arrow-down.png) no-repeat center 3px;
+}
+.i-ie .i-filterselect-prevpage:hover span {
+	background: transparent url(select/img/arrow-up-hover.png) no-repeat center 3px;
+}
+.i-ie .i-filterselect-nextpage:hover span {
+	background: transparent url(select/img/arrow-down-hover.png) no-repeat center 3px;
+}
+.i-ie .i-filterselect-status {
+	background: transparent url(select/img/status-bg.png) repeat-x;
+}
+
 /* ./WebContent/ITMILL/themes/reindeer/splitpanel/splitpanel.css */
 .i-splitpanel-horizontal .i-splitpanel-hsplitter {
 	width: 7px;
 	background-repeat: repeat-y;
-	background-image: url(splitpanel/img/hor-bg.png); /** sprite-ref: horizontals; sprite-alignment: repeat */
+  background-image: url(common/img/horizontal-sprites.png);
+  background-position: -0px top;
 }
 .i-splitpanel-horizontal .i-splitpanel-hsplitter div {
 	width: 7px;
 	background: transparent;
 	background-repeat: no-repeat;
 	background-position: 50%;
-	background-image: url(splitpanel/img/hor-handle.png); /** sprite-ref: horizontals; sprite-alignment: middle */
+  background-image: url(common/img/horizontal-sprites.png);
+  background-position: -7px middle;
 }
 .i-splitpanel-vertical .i-splitpanel-vsplitter {
 	height: 7px;
 	background-repeat: repeat-x;
-	background-image: url(splitpanel/img/ver-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -389px;
 }
 .i-splitpanel-vertical .i-splitpanel-vsplitter div {
 	height: 7px;
 	background: transparent;
 	background-repeat: no-repeat;
 	background-position: 50%;
-	background-image: url(splitpanel/img/ver-handle.png); /** sprite-ref: verticals; sprite-alignment: center */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: center -396px;
 }
 
 /* ./WebContent/ITMILL/themes/reindeer/tabsheet/tabsheet.css */
@@ -2037,12 +2313,20 @@ div > .i-button-small span,
 	border-bottom-color: #d2d3d4;
 	background: #fff;
 	background-repeat: repeat-x;
-	background-image: url(textfield/img/bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -403px;
 	-moz-border-radius: 3px;
 }
 /* Need more specific selector because of #2384 fixes in base/common/common.css */
 .i-app input.i-textfield {
 	padding: 3px 3px 0 3px;
+}
+.i-textfield-focus {
+	border-color: #5b97d0;
+	border-top-color: #4f83b4;
+	border-bottom-color: #5ca0df;
+	outline: none;
 }
 /* Textfield on blue background */
 .blue .i-textfield {
@@ -2064,4 +2348,11 @@ div > .i-button-small span,
 	-moz-border-image: url(textfield/img/bg-border-image.png) 0 3 0 3 stretch stretch;
 	-o-border-image: url(textfield/img/bg-border-image.png) 0 3 0 3 stretch stretch;
 	
+}
+.i-sa input.i-textfield-focus,
+.i-ff35 input.i-textfield-focus,
+.i-op input.i-textfield-focus {
+	-webkit-border-image: url(textfield/img/bg-border-image-focus.png) 0 3 0 3 stretch stretch;
+	-moz-border-image: url(textfield/img/bg-border-image-focus.png) 0 3 0 3 stretch stretch;
+	-o-border-image: url(textfield/img/bg-border-image-focus.png) 0 3 0 3 stretch stretch;
 }

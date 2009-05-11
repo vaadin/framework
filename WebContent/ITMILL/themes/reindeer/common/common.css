@@ -18,7 +18,8 @@
 .i-popupview-popup input,
 .i-popupview-popup select,
 .i-popupview-popup button,
-.i-popupview-popup textarea {
+.i-popupview-popup textarea,
+.i-filterselect-suggestpopup {
 	font-family: Arial, Helvetica, Tahoma, Verdana, sans-serif;
 	font-size: 12px;
 	line-height: normal;
@@ -40,6 +41,7 @@
 .i-sa .i-popupview-popup input,
 .i-sa .i-popupview-popup select,
 .i-sa .i-popupview-popup button,
-.i-sa .i-popupview-popup textarea {
+.i-sa .i-popupview-popup textarea,
+.i-sa .i-filterselect-suggestpopup {
 	font-family: Helvetica, Arial, "Lucida Grande", Geneva, Tahoma, Verdana, sans-serif;
 }
