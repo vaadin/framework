@@ -36,16 +36,16 @@ import com.vaadin.terminal.PaintTarget;
  * 
  * <p>
  * <code>Form</code> provides customizable editor for classes implementing
- * {@link com.vaadin.data.Item} interface. Also the form itself
- * implements this interface for easier connectivity to other items. To use the
- * form as editor for an item, just connect the item to form with
+ * {@link com.vaadin.data.Item} interface. Also the form itself implements this
+ * interface for easier connectivity to other items. To use the form as editor
+ * for an item, just connect the item to form with
  * {@link Form#setItemDataSource(Item)}. If only a part of the item needs to be
  * edited, {@link Form#setItemDataSource(Item,Collection)} can be used instead.
  * After the item has been connected to the form, the automatically created
  * fields can be customized and new fields can be added. If you need to connect
- * a class that does not implement {@link com.vaadin.data.Item}
- * interface, most properties of any class following bean pattern, can be
- * accessed trough {@link com.vaadin.data.util.BeanItem}.
+ * a class that does not implement {@link com.vaadin.data.Item} interface, most
+ * properties of any class following bean pattern, can be accessed trough
+ * {@link com.vaadin.data.util.BeanItem}.
  * </p>
  * 
  * @author IT Mill Ltd.
@@ -72,7 +72,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     /**
      * Ordered list of property ids in this editor.
      */
-    private final LinkedList propertyIds = new LinkedList();
+    private final LinkedList<Object> propertyIds = new LinkedList<Object>();
 
     /**
      * Current buffered source exception.
@@ -92,25 +92,24 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     /**
      * Mapping from propertyName to corresponding field.
      */
-    private final HashMap fields = new HashMap();
+    private final HashMap<Object, Field> fields = new HashMap<Object, Field>();
 
     /**
      * Field factory for this form.
      */
-    private FieldFactory fieldFactory;
+    private FormFieldFactory fieldFactory;
 
     /**
      * Visible item properties.
      */
-    private Collection visibleItemProperties;
+    private Collection<Object> visibleItemProperties;
 
     /**
      * Form needs to repaint itself if child fields value changes due possible
      * change in form validity.
      */
     private final ValueChangeListener fieldValueChangeListener = new ValueChangeListener() {
-        public void valueChange(
-                com.vaadin.data.Property.ValueChangeEvent event) {
+        public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
             requestRepaint();
         }
     };
@@ -149,21 +148,22 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      *            the layout of the form.
      */
     public Form(Layout formLayout) {
-        this(formLayout, new BaseFieldFactory());
+        this(formLayout, DefaultFieldFactory.get());
     }
 
     /**
-     * Contructs a new form with given layout and FieldFactory.
+     * Contructs a new form with given {@link Layout} and
+     * {@link FormFieldFactory}.
      * 
      * @param formLayout
      *            the layout of the form.
      * @param fieldFactory
      *            the FieldFactory of the form.
      */
-    public Form(Layout formLayout, FieldFactory fieldFactory) {
+    public Form(Layout formLayout, FormFieldFactory fieldFactory) {
         super();
         setLayout(formLayout);
-        setFieldFactory(fieldFactory);
+        setFormFieldFactory(fieldFactory);
         setValidationVisible(false);
         setWidth(100, UNITS_PERCENTAGE);
     }
@@ -201,7 +201,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
         // getErrorMessage() recursively instead of validate().
         ErrorMessage validationError = null;
         if (isValidationVisible()) {
-            for (final Iterator i = propertyIds.iterator(); i.hasNext();) {
+            for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
                 Object f = fields.get(i.next());
                 if (f instanceof AbstractComponent) {
                     AbstractComponent field = (AbstractComponent) f;
@@ -274,7 +274,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     @Override
     public void commit() throws Buffered.SourceException {
 
-        LinkedList problems = null;
+        LinkedList<SourceException> problems = null;
 
         // Only commit on valid state if so requested
         if (!isInvalidCommitted() && !isValid()) {
@@ -291,16 +291,16 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
         }
 
         // Try to commit all
-        for (final Iterator i = propertyIds.iterator(); i.hasNext();) {
+        for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
             try {
-                final Field f = ((Field) fields.get(i.next()));
+                final Field f = (fields.get(i.next()));
                 // Commit only non-readonly fields.
                 if (!f.isReadOnly()) {
                     f.commit();
                 }
             } catch (final Buffered.SourceException e) {
                 if (problems == null) {
-                    problems = new LinkedList();
+                    problems = new LinkedList<SourceException>();
                 }
                 problems.add(e);
             }
@@ -318,8 +318,9 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
         // Commit problems
         final Throwable[] causes = new Throwable[problems.size()];
         int index = 0;
-        for (final Iterator i = problems.iterator(); i.hasNext();) {
-            causes[index++] = (Throwable) i.next();
+        for (final Iterator<SourceException> i = problems.iterator(); i
+                .hasNext();) {
+            causes[index++] = i.next();
         }
         final Buffered.SourceException e = new Buffered.SourceException(this,
                 causes);
@@ -335,15 +336,15 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     @Override
     public void discard() throws Buffered.SourceException {
 
-        LinkedList problems = null;
+        LinkedList<SourceException> problems = null;
 
         // Try to discard all changes
-        for (final Iterator i = propertyIds.iterator(); i.hasNext();) {
+        for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
             try {
-                ((Field) fields.get(i.next())).discard();
+                (fields.get(i.next())).discard();
             } catch (final Buffered.SourceException e) {
                 if (problems == null) {
-                    problems = new LinkedList();
+                    problems = new LinkedList<SourceException>();
                 }
                 problems.add(e);
             }
@@ -361,8 +362,9 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
         // Discards problems occurred
         final Throwable[] causes = new Throwable[problems.size()];
         int index = 0;
-        for (final Iterator i = problems.iterator(); i.hasNext();) {
-            causes[index++] = (Throwable) i.next();
+        for (final Iterator<SourceException> i = problems.iterator(); i
+                .hasNext();) {
+            causes[index++] = i.next();
         }
         final Buffered.SourceException e = new Buffered.SourceException(this,
                 causes);
@@ -377,8 +379,8 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      */
     @Override
     public boolean isModified() {
-        for (final Iterator i = propertyIds.iterator(); i.hasNext();) {
-            final Field f = (Field) fields.get(i.next());
+        for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
+            final Field f = fields.get(i.next());
             if (f != null && f.isModified()) {
                 return true;
             }
@@ -413,8 +415,8 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     public void setReadThrough(boolean readThrough) {
         if (readThrough != this.readThrough) {
             this.readThrough = readThrough;
-            for (final Iterator i = propertyIds.iterator(); i.hasNext();) {
-                ((Field) fields.get(i.next())).setReadThrough(readThrough);
+            for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
+                (fields.get(i.next())).setReadThrough(readThrough);
             }
         }
     }
@@ -428,8 +430,8 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
             InvalidValueException {
         if (writeThrough != this.writeThrough) {
             this.writeThrough = writeThrough;
-            for (final Iterator i = propertyIds.iterator(); i.hasNext();) {
-                ((Field) fields.get(i.next())).setWriteThrough(writeThrough);
+            for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
+                (fields.get(i.next())).setWriteThrough(writeThrough);
             }
         }
     }
@@ -452,7 +454,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
         }
 
         // Gets suitable field
-        final Field field = fieldFactory.createField(property, this);
+        final Field field = fieldFactory.createField(this, property, this);
         if (field == null) {
             return false;
         }
@@ -532,7 +534,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * @see com.vaadin.data.Item#getItemProperty(Object)
      */
     public Property getItemProperty(Object id) {
-        final Field field = (Field) fields.get(id);
+        final Field field = fields.get(id);
         if (field == null) {
             return null;
         }
@@ -552,7 +554,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      *            the id of the property.
      */
     public Field getField(Object propertyId) {
-        return (Field) fields.get(propertyId);
+        return fields.get(propertyId);
     }
 
     /* Documented in interface */
@@ -567,7 +569,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      */
     public boolean removeItemProperty(Object id) {
 
-        final Field field = (Field) fields.get(id);
+        final Field field = fields.get(id);
 
         if (field != null) {
             propertyIds.remove(id);
@@ -759,7 +761,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
         }
 
         // Gets the old field
-        final Field oldField = (Field) fields.get(propertyId);
+        final Field oldField = fields.get(propertyId);
         if (oldField == null) {
             throw new IllegalArgumentException("Field with given propertyid '"
                     + propertyId.toString() + "' can not be found.");
@@ -876,8 +878,8 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     @Override
     public boolean isValid() {
         boolean valid = true;
-        for (final Iterator i = propertyIds.iterator(); i.hasNext();) {
-            valid &= ((Field) fields.get(i.next())).isValid();
+        for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
+            valid &= (fields.get(i.next())).isValid();
         }
         return valid && super.isValid();
     }
@@ -890,8 +892,8 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     @Override
     public void validate() throws InvalidValueException {
         super.validate();
-        for (final Iterator i = propertyIds.iterator(); i.hasNext();) {
-            ((Field) fields.get(i.next())).validate();
+        for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
+            (fields.get(i.next())).validate();
         }
     }
 
@@ -925,7 +927,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     public void setReadOnly(boolean readOnly) {
         super.setReadOnly(readOnly);
         for (final Iterator i = propertyIds.iterator(); i.hasNext();) {
-            ((Field) fields.get(i.next())).setReadOnly(readOnly);
+            (fields.get(i.next())).setReadOnly(readOnly);
         }
     }
 
@@ -938,10 +940,37 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * @param fieldFactory
      *            the New factory used to create the fields.
      * @see Field
-     * @see FieldFactory
+     * @see FormFieldFactory
+     * @deprecated use {@link #setFormFieldFactory(FormFieldFactory)} instead
      */
+    @Deprecated
     public void setFieldFactory(FieldFactory fieldFactory) {
         this.fieldFactory = fieldFactory;
+    }
+
+    /**
+     * Sets the field factory used by this Form to genarate Fields for
+     * properties.
+     * 
+     * {@link FormFieldFactory} is used to create fields for form properties.
+     * {@link DefaultFieldFactory} is used by default.
+     * 
+     * @param fieldFactory
+     *            the new factory used to create the fields.
+     * @see Field
+     * @see FormFieldFactory
+     */
+    public void setFormFieldFactory(FormFieldFactory fieldFactory) {
+        this.fieldFactory = fieldFactory;
+    }
+
+    /**
+     * Get the field factory of the form.
+     * 
+     * @return the FormFieldFactory Factory used to create the fields.
+     */
+    public FormFieldFactory getFormFieldFactory() {
+        return fieldFactory;
     }
 
     /**
@@ -950,7 +979,11 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * @return the FieldFactory Factory used to create the fields.
      */
     public FieldFactory getFieldFactory() {
-        return fieldFactory;
+        if (fieldFactory instanceof FieldFactory) {
+            return (FieldFactory) fieldFactory;
+
+        }
+        return null;
     }
 
     /**
@@ -1063,7 +1096,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      *            the visibleProperties to set.
      */
     public void setVisibleItemProperties(Object[] visibleProperties) {
-        LinkedList v = new LinkedList();
+        LinkedList<Object> v = new LinkedList<Object>();
         for (int i = 0; i < visibleProperties.length; i++) {
             v.add(visibleProperties[i]);
         }
@@ -1103,8 +1136,8 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     @Override
     public void setImmediate(boolean immediate) {
         super.setImmediate(immediate);
-        for (Iterator i = fields.values().iterator(); i.hasNext();) {
-            Field f = (Field) i.next();
+        for (Iterator<Field> i = fields.values().iterator(); i.hasNext();) {
+            Field f = i.next();
             if (f instanceof AbstractComponent) {
                 ((AbstractComponent) f).setImmediate(immediate);
             }
@@ -1115,8 +1148,8 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     @Override
     protected boolean isEmpty() {
 
-        for (Iterator i = fields.values().iterator(); i.hasNext();) {
-            Field f = (Field) i.next();
+        for (Iterator<Field> i = fields.values().iterator(); i.hasNext();) {
+            Field f = i.next();
             if (f instanceof AbstractField) {
                 if (!((AbstractField) f).isEmpty()) {
                     return false;
@@ -1145,7 +1178,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      */
     public Layout getFooter() {
         if (formFooter == null) {
-            formFooter = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+            formFooter = new HorizontalLayout();
             formFooter.setParent(this);
         }
         return formFooter;

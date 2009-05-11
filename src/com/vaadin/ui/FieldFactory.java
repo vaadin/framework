@@ -4,10 +4,6 @@
 
 package com.vaadin.ui;
 
-import java.io.Serializable;
-
-import com.vaadin.data.Container;
-import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 
 /**
@@ -18,8 +14,10 @@ import com.vaadin.data.Property;
  * @version
  * @VERSION@
  * @since 3.1
+ * @deprecated use FormFieldFactory or TableFieldFactory or both instead
  */
-public interface FieldFactory extends Serializable {
+@Deprecated
+public interface FieldFactory extends FormFieldFactory, TableFieldFactory {
 
     /**
      * Creates a field based on type of data.
@@ -43,34 +41,5 @@ public interface FieldFactory extends Serializable {
      * @return Field the field suitable for editing the specified data.
      */
     Field createField(Property property, Component uiContext);
-
-    /**
-     * Creates a field based on the item and property id.
-     * 
-     * @param item
-     *            the item where the property belongs to.
-     * @param propertyId
-     *            the Id of the property.
-     * @param uiContext
-     *            the component where the field is presented.
-     * @return Field the field suitable for editing the specified data.
-     */
-    Field createField(Item item, Object propertyId, Component uiContext);
-
-    /**
-     * Creates a field based on the container item id and property id.
-     * 
-     * @param container
-     *            the Container where the property belongs to.
-     * @param itemId
-     *            the item Id.
-     * @param propertyId
-     *            the Id of the property.
-     * @param uiContext
-     *            the component where the field is presented.
-     * @return Field the field suitable for editing the specified data.
-     */
-    Field createField(Container container, Object itemId, Object propertyId,
-            Component uiContext);
 
 }

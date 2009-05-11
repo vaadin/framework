@@ -4,8 +4,6 @@
 
 package com.vaadin.ui;
 
-import java.util.Date;
-
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -23,8 +21,11 @@ import com.vaadin.data.Property;
  * @version
  * @VERSION@
  * @since 3.1
+ * @deprecated use {@link DefaultFieldFactory} or own implementations on
+ *             {@link FormFieldFactory} or {@link TableFieldFactory} instead.
  */
 
+@Deprecated
 @SuppressWarnings("serial")
 public class BaseFieldFactory implements FieldFactory {
 
@@ -37,42 +38,16 @@ public class BaseFieldFactory implements FieldFactory {
      * @param uiContext
      *            the context where the Field is presented.
      * 
-     * @see com.vaadin.ui.FieldFactory#createField(Class, Component)
+     * @see com.itmill.toolkit.ui.FieldFactory#createField(Class, Component)
      */
     public Field createField(Class type, Component uiContext) {
-        // Null typed properties can not be edited
-        if (type == null) {
-            return null;
-        }
-
-        // Item field
-        if (Item.class.isAssignableFrom(type)) {
-            return new Form();
-        }
-
-        // Date field
-        if (Date.class.isAssignableFrom(type)) {
-            final DateField df = new DateField();
-            df.setResolution(DateField.RESOLUTION_DAY);
-            return df;
-        }
-
-        // Boolean field
-        if (Boolean.class.isAssignableFrom(type)) {
-            final Button button = new Button();
-            button.setSwitchMode(true);
-            button.setImmediate(false);
-            return button;
-        }
-
-        // Nested form is used by default
-        return new TextField();
+        return DefaultFieldFactory.createFieldByPropertyType(type);
     }
 
     /**
      * Creates the field based on the datasource property.
      * 
-     * @see com.vaadin.ui.FieldFactory#createField(Property, Component)
+     * @see com.itmill.toolkit.ui.FieldFactory#createField(Property, Component)
      */
     public Field createField(Property property, Component uiContext) {
         if (property != null) {
@@ -85,7 +60,7 @@ public class BaseFieldFactory implements FieldFactory {
     /**
      * Creates the field based on the item and property id.
      * 
-     * @see com.vaadin.ui.FieldFactory#createField(Item, Object,
+     * @see com.itmill.toolkit.ui.FieldFactory#createField(Item, Object,
      *      Component)
      */
     public Field createField(Item item, Object propertyId, Component uiContext) {
@@ -93,44 +68,9 @@ public class BaseFieldFactory implements FieldFactory {
             final Field f = createField(item.getItemProperty(propertyId),
                     uiContext);
             if (f instanceof AbstractComponent) {
-                String name = propertyId.toString();
-                if (name.length() > 0) {
-
-                    // If name follows method naming conventions, convert the
-                    // name to spaced uppercased text. For example, convert
-                    // "firstName" to "First Name"
-                    if (name.indexOf(' ') < 0
-                            && name.charAt(0) == Character.toLowerCase(name
-                                    .charAt(0))
-                            && name.charAt(0) != Character.toUpperCase(name
-                                    .charAt(0))) {
-                        StringBuffer out = new StringBuffer();
-                        out.append(Character.toUpperCase(name.charAt(0)));
-                        int i = 1;
-
-                        while (i < name.length()) {
-                            int j = i;
-                            for (; j < name.length(); j++) {
-                                char c = name.charAt(j);
-                                if (Character.toLowerCase(c) != c
-                                        && Character.toUpperCase(c) == c) {
-                                    break;
-                                }
-                            }
-                            if (j == name.length()) {
-                                out.append(name.substring(i));
-                            } else {
-                                out.append(name.substring(i, j));
-                                out.append(" " + name.charAt(j));
-                            }
-                            i = j + 1;
-                        }
-
-                        name = out.toString();
-                    }
-
-                    ((AbstractComponent) f).setCaption(name);
-                }
+                String name = DefaultFieldFactory
+                        .createCaptionByPropertyId(propertyId);
+                f.setCaption(name);
             }
             return f;
         } else {
@@ -139,8 +79,8 @@ public class BaseFieldFactory implements FieldFactory {
     }
 
     /**
-     * @see com.vaadin.ui.FieldFactory#createField(com.vaadin.data.Container,
-     *      java.lang.Object, java.lang.Object, com.vaadin.ui.Component)
+     * @see com.itmill.toolkit.ui.FieldFactory#createField(com.itmill.toolkit.data.Container,
+     *      java.lang.Object, java.lang.Object, com.itmill.toolkit.ui.Component)
      */
     public Field createField(Container container, Object itemId,
             Object propertyId, Component uiContext) {

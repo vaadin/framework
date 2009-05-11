@@ -263,7 +263,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Table cell editor factory.
      */
-    private FieldFactory fieldFactory = new BaseFieldFactory();
+    private TableFieldFactory fieldFactory = DefaultFieldFactory.get();
 
     /**
      * Is table editable.
@@ -1931,8 +1931,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.ui.AbstractSelect#paintContent(com.vaadin.
+     * @see com.vaadin.ui.AbstractSelect#paintContent(com.vaadin.
      * terminal.PaintTarget)
      */
     @Override
@@ -2324,7 +2323,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param property
      *            the Property to be presented.
      * @return Object Either formatted value or Component for field.
-     * @see #setFieldFactory(FieldFactory)
+     * @see #setTableFieldFactory(TableFieldFactory)
      */
     protected Object getPropertyValue(Object rowId, Object colId,
             Property property) {
@@ -2530,8 +2529,8 @@ public class Table extends AbstractSelect implements Action.Container,
      *            the class of the property.
      * @param defaultValue
      *            the default value given for all existing items.
-     * @see com.vaadin.data.Container#addContainerProperty(Object,
-     *      Class, Object)
+     * @see com.vaadin.data.Container#addContainerProperty(Object, Class,
+     *      Object)
      */
     @Override
     public boolean addContainerProperty(Object propertyId, Class type,
@@ -2575,8 +2574,8 @@ public class Table extends AbstractSelect implements Action.Container,
      *            the Alignment of the column. Null implies align left.
      * @throws UnsupportedOperationException
      *             if the operation is not supported.
-     * @see com.vaadin.data.Container#addContainerProperty(Object,
-     *      Class, Object)
+     * @see com.vaadin.data.Container#addContainerProperty(Object, Class,
+     *      Object)
      */
     public boolean addContainerProperty(Object propertyId, Class type,
             Object defaultValue, String columnHeader, Resource columnIcon,
@@ -2837,15 +2836,48 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
+     * Sets the TableFieldFactory that is used to create editor for table cells.
+     * 
+     * The TableFieldFactory is only used if the Table is editable. By default
+     * the DefaultFieldFactory is used.
+     * 
+     * @param fieldFactory
+     *            the field factory to set.
+     * @see #isEditable
+     * @see DefaultFieldFactory
+     */
+    public void setTableFieldFactory(TableFieldFactory fieldFactory) {
+        this.fieldFactory = fieldFactory;
+    }
+
+    /**
+     * Gets the TableFieldFactory that is used to create editor for table cells.
+     * 
+     * The FieldFactory is only used if the Table is editable.
+     * 
+     * @return TableFieldFactory used to create the Field instances.
+     * @see #isEditable
+     */
+    public TableFieldFactory getTableFieldFactory() {
+        return fieldFactory;
+    }
+
+    /**
      * Gets the FieldFactory that is used to create editor for table cells.
      * 
      * The FieldFactory is only used if the Table is editable.
      * 
      * @return FieldFactory used to create the Field instances.
      * @see #isEditable
+     * @deprecated use {@link #getTableFieldFactory()} instead
      */
+    @Deprecated
     public FieldFactory getFieldFactory() {
-        return fieldFactory;
+        if (fieldFactory instanceof FieldFactory) {
+            return (FieldFactory) fieldFactory;
+
+        }
+        return null;
     }
 
     /**
@@ -2858,8 +2890,9 @@ public class Table extends AbstractSelect implements Action.Container,
      *            the field factory to set.
      * @see #isEditable
      * @see BaseFieldFactory
-     * 
+     * @deprecated use {@link #setTableFieldFactory(TableFieldFactory)} instead
      */
+    @Deprecated
     public void setFieldFactory(FieldFactory fieldFactory) {
         this.fieldFactory = fieldFactory;
 
