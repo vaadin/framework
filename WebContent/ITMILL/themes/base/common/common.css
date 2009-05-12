@@ -130,10 +130,9 @@
 	margin-right: 1em;
 	vertical-align: middle;
 }
-/* Label has tiny paddings to include possible content margins */
-.v-label {
-	padding-top: 1px;
-	padding-bottom: 1px;
+/* Margins are not supported within Label */
+.v-label pre {
+	margin: 0;
 }
 /* A label with undefined width is always considered to be on one line */
 .v-label-undef-w {

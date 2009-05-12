@@ -8,7 +8,7 @@
 	background: transparent;
 	background-repeat: no-repeat;
 	background-position: 50%;
-	background-image: url(img/hor-handle.png); /** sprite-ref: horizontals; sprite-alignment: middle */
+	background-image: url(img/hor-handle.png); /** sprite-ref: horizontals; sprite-alignment: center */
 }
 .v-splitpanel-vertical .v-splitpanel-vsplitter {
 	height: 7px;

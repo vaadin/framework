@@ -297,10 +297,9 @@
 	margin-right: 1em;
 	vertical-align: middle;
 }
-/* Label has tiny paddings to include possible content margins */
-.v-label {
-	padding-top: 1px;
-	padding-bottom: 1px;
+/* Margins are not supported within Label */
+.v-label pre {
+	margin: 0;
 }
 /* A label with undefined width is always considered to be on one line */
 .v-label-undef-w {
@@ -1553,11 +1552,8 @@ div.v-window-header {
 /* Automatically compiled css file from subdirectories. */
 
 /* ./WebContent/ITMILL/themes/reindeer/a-sprite-definitions/a-sprite-definitions.css */
-/** sprite: verticals; sprite-image: url(common/img/vertical-sprites.png); sprite-layout: vertical */
 
-/** sprite: horizontals; sprite-image: url(common/img/horizontal-sprites.png); sprite-layout: horizontal */
 
-/** sprite: buttons; sprite-image: url(button/img/button-sprites.png); sprite-layout: vertical */
 
 /* ./WebContent/ITMILL/themes/reindeer/button/button.css */
 /* We serve simpler buttons for IE6, since it doesn't support the adjacent 
@@ -1569,7 +1565,9 @@ div > .v-button,
 	padding: 0 0 0 6px;
 	background-color: transparent;
 	background-repeat: no-repeat;
-	background-image: url(button/img/left.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -0px;
 	border: none;
 	cursor: default;
 }
@@ -1581,7 +1579,9 @@ div > .v-button span,
 	background-color: transparent;
 	background-repeat: no-repeat;
 	background-position: right top;
-	background-image: url(button/img/right.png);  /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -26px;
 	text-shadow: #fff 0 1px 0;
 	font-weight: bold;
 	font-size: 11px;
@@ -1593,21 +1593,29 @@ div > .v-button span,
 	padding-top: 5px;
 }
 .v-button:focus {
-	background-image: url(button/img/left-focus.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -52px;
 	outline: none;
 }
 .v-button:focus span {
-	background-image: url(button/img/right-focus.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -78px;
 	outline: none;
 }
 .v-button:active,
 .v-ie7 .v-button.v-pressed {
-	background-image: url(button/img/left-pressed.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -104px;
 	outline: none;
 }
 .v-button:active span,
 .v-ie7 .v-button.v-pressed span {
-	background-image: url(button/img/right-pressed.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -130px;
 	outline: none;
 }
 .v-ie7 .v-button.v-pressed span {
@@ -1708,37 +1716,53 @@ div > .v-button .v-errorindicator,
  */
 div > .v-button-primary,
 .v-ie7 .v-button-primary {
-	background-image: url(button/img/primary-left.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -156px;
 }
 div > .v-button-primary span,
 .v-ie7 .v-button-primary span {
-	background-image: url(button/img/primary-right.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -182px;
 }
 .v-button-primary:focus {
-	background-image: url(button/img/primary-left-focus.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -208px;
 }
 .v-button-primary:focus span {
-	background-image: url(button/img/primary-right-focus.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -234px;
 }
 .v-button-primary:active,
 .v-ie7 .v-button-primary.v-pressed {
-	background-image: url(button/img/primary-left-pressed.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -260px;
 }
 .v-button-primary:active span,
 .v-ie7 .v-button-primary.v-pressed span {
-	background-image: url(button/img/primary-right-pressed.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -286px;
 }
 /* 
  * Small-style --------------------------
  */
 div > .v-button-small,
 .v-ie7 .v-button-small {
-	background-image: url(button/img/small-left.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -312px;
 	height: 20px;
 }
 div > .v-button-small span,
 .v-ie7 .v-button-small span {
-	background-image: url(button/img/small-right.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -332px;
 	height: 19px;
 	padding: 1px 11px 0 5px;
 	font-weight: normal;
@@ -1752,18 +1776,26 @@ div > .v-button-small span,
 	padding-top: 2px;
 }
 .v-button-small:focus {
-	background-image: url(button/img/small-left-focus.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -352px;
 }
 .v-button-small:focus span {
-	background-image: url(button/img/small-right-focus.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -372px;
 }
 .v-button-small:active,
 .v-ie7 .v-button-small.v-pressed {
-	background-image: url(button/img/small-left-pressed.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -392px;
 }
 .v-button-small:active span,
 .v-ie7 .v-button-small.v-pressed span {
-	background-image: url(button/img/small-right-pressed.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -412px;
 }
 
 /**
@@ -1889,6 +1921,140 @@ div > .v-button-small span,
 	margin: 1px 0 4px 0;
 }
 
+/* ./WebContent/ITMILL/themes/reindeer/datefield/datefield.css */
+.v-datefield-calendarpanel {
+	border-collapse: collapse;
+	margin: 0;
+	padding: 0;
+}
+.v-datefield-year .v-datefield-calendarpanel-prevmonth,
+.v-datefield-year .v-datefield-calendarpanel-nextmonth,
+.v-datefield-year .v-datefield-calendarpanel-weekdays {
+	display: none;
+}
+td.v-datefield-calendarpanel-month {
+	height: 23px;
+	background-repeat: repeat-x;
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -0px;
+}
+span.v-datefield-calendarpanel-month {
+	display: block;
+	text-align: center;
+	height: 18px;
+	padding: 3px 10px 0 10px;
+	border-left: 1px solid #efefef;
+	border-right: 1px solid #d8d8d8;
+	text-shadow: #fff 0 1px 0;
+	overflow: hidden;
+}
+.v-datefield-year .v-datefield-calendarpanel-month {
+	width: 35px;
+}
+.v-datefield-month .v-datefield-calendarpanel-month,
+.v-datefield-day .v-datefield-calendarpanel-month,
+.v-datefield-full .v-datefield-calendarpanel-month {
+	width: 94px;
+}
+.v-datefield-year .v-datefield-calendarpanel td,
+.v-datefield-month .v-datefield-calendarpanel td,
+.v-datefield-day .v-datefield-calendarpanel td {
+	width: auto;
+}
+.v-datefield-year .v-datefield-calendarpanel {
+	width: 100px;
+}
+.v-datefield-calendarpanel-prevyear {
+	text-align: right;
+}
+.v-datefield-calendarpanel-prevyear button,
+.v-datefield-calendarpanel-nextyear button,
+.v-datefield-calendarpanel-prevmonth button,
+.v-datefield-calendarpanel-nextmonth button {
+	width: 24px;
+	height: 23px;
+	border: none;
+	background: transparent;
+	background-repeat: no-repeat;
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -23px;
+	overflow: hidden;
+	padding: 0;
+	text-indent: -9999px;
+	outline: none;
+}
+.v-ie6 .v-datefield-calendarpanel-prevyear button,
+.v-ie6 .v-datefield-calendarpanel-nextyear button,
+.v-ie6 .v-datefield-calendarpanel-prevmonth button,
+.v-ie6 .v-datefield-calendarpanel-nextmonth button {
+	text-indent: 0;
+	font-size: 1px;
+}
+.v-datefield-calendarpanel-nextyear button {
+	background-position: left top;
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -46px;
+}
+.v-datefield-calendarpanel-prevyear button:active,
+.v-ie6 .v-datefield-calendarpanel-prevyear button.v-pressed {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: right -69px;
+}
+.v-datefield-calendarpanel-nextyear button:active,
+.v-ie6 .v-datefield-calendarpanel-nextyear button.v-pressed  {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -92px;
+}
+.v-datefield-calendarpanel-prevmonth,
+.v-datefield-calendarpanel-nextmonth {
+	background-repeat: repeat-x;
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -115px;
+}
+.v-datefield-calendarpanel-prevmonth button,
+.v-datefield-calendarpanel-nextmonth button {
+	width: 100%;
+	height: 21px;
+	border-left: 1px solid #efefef;
+	border-right: 1px solid #d8d8d8;
+	background: transparent;
+	background-position: center top;
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: center -138px;
+	min-width: 24px;
+}
+.v-ie6 .v-datefield-calendarpanel-prevmonth button,
+.v-ie6 .v-datefield-calendarpanel-nextmonth button {
+	width: 24px;
+	border: none;
+}
+.v-datefield-calendarpanel-nextmonth button {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: center -159px;
+}
+.v-datefield-calendarpanel-prevmonth button:active,
+.v-ie6 .v-datefield-calendarpanel-prevmonth button.v-pressed {
+	background-position: center top;
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: center -180px;
+}
+.v-datefield-calendarpanel-nextmonth button:active,
+.v-ie6 .v-datefield-calendarpanel-nextmonth button.v-pressed {
+	background-position: center top;
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: center -201px;
+}
+
 /* ./WebContent/ITMILL/themes/reindeer/label/label.css */
 .v-label {
 	line-height: 18px;
@@ -1992,7 +2158,9 @@ div > .v-button-small span,
 .v-filterselect {
 	height: 24px;
 	background-repeat: no-repeat;
-	background-image: url(select/img/left.png); /** sprite-ref: verticals; sprite-margin-bottom: 1px */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -222px;
 	padding-left: 2px;
 }
 .v-app .v-filterselect-input,
@@ -2000,7 +2168,9 @@ div > .v-button-small span,
 .v-popupview-popup .v-filterselect-input {
 	background: transparent;
 	background-repeat: repeat-x;
-	background-image: url(select/img/center.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -247px;
 	border: none;
 	height: 21px;
 }
@@ -2017,36 +2187,54 @@ div > .v-button-small span,
 	outline: none;
 }
 .v-filterselect-focus {
-	background-image: url(select/img/left-focus.png); /** sprite-ref: verticals; sprite-margin-bottom: 1px */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -271px;
 }
 .v-filterselect-focus .v-filterselect-input {
-	background-image: url(select/img/center-focus.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -296px;
 }
 .v-filterselect-button {
 	overflow: hidden;
 	width: 25px;
 	height: 24px;
-	background-image: url(select/img/right.png); /** sprite-ref: verticals */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -320px;
 	cursor: default;
 }
 .v-filterselect-button:hover {
-	background-image: url(select/img/right-hover.png); /** sprite-ref: verticals */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -344px;
 }
 .v-filterselect-button:active {
-	background-image: url(select/img/right-pressed.png); /** sprite-ref: verticals */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -368px;
 }
 .v-filterselect-focus .v-filterselect-button {
-	background-image: url(select/img/right-focus.png); /** sprite-ref: verticals */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -392px;
 }
 .v-filterselect-focus .v-filterselect-button:hover {
-	background-image: url(select/img/right-focus-hover.png); /** sprite-ref: verticals */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -416px;
 }
 .v-filterselect-focus .v-filterselect-button:active {
-	background-image: url(select/img/right-focus-pressed.png); /** sprite-ref: verticals */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -440px;
 }
 .v-disabled .v-filterselect-button:hover,
 .v-readonly .v-filterselect-button:hover {
-	background-image: url(select/img/right.png); /** sprite-ref: verticals */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -464px;
 }
 .v-filterselect-suggestpopup {
 	background: #f8f8f9;
@@ -2070,7 +2258,9 @@ div > .v-button-small span,
 .v-filterselect-suggestmenu .gwt-MenuItem-selected {
 	background: transparent;
 	background-repeat: repeat-x;
-	background-image: url(select/img/sel-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -488px;
 	color: #fff;
 	text-shadow: #3b5a7a 0 1px 0;
 }
@@ -2084,19 +2274,27 @@ div > .v-button-small span,
 }
 .v-filterselect-nextpage:hover {
 	background-repeat: repeat-x;
-	background-image: url(select/img/page-down-hover.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -506px;
 }
 .v-filterselect-prevpage:hover {
 	background-repeat: repeat-x;
-	background-image: url(select/img/page-up-hover.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -517px;
 }
 .v-filterselect-nextpage:active {
 	background-repeat: repeat-x;
-	background-image: url(select/img/page-down-pressed.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -528px;
 }
 .v-filterselect-prevpage:active {
 	background-repeat: repeat-x;
-	background-image: url(select/img/page-up-pressed.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -539px;
 }
 .v-filterselect-nextpage-off span,
 .v-filterselect-prevpage-off span {
@@ -2111,19 +2309,27 @@ div > .v-button-small span,
 	text-indent: -99999px;
 	background-position: center 3px;
 	background-repeat: no-repeat;
-	background-image: url(select/img/arrow-down.png); /** sprite-ref: verticals; sprite-margin-top: 3px; sprite-margin-bottom: 3px; sprite-alignment: center */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: center -550px;
 	user-select: none;
 	-moz-user-select: none;
 	-webkit-user-select: none;
 }
 .v-filterselect-prevpage span {
-	background-image: url(select/img/arrow-up.png); /** sprite-ref: verticals; sprite-margin-top: 3px; sprite-margin-bottom: 3px; sprite-alignment: center */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: center -561px;
 }
 .v-filterselect-nextpage:hover span {
-	background-image: url(select/img/arrow-down-hover.png); /** sprite-ref: verticals; sprite-margin-top: 3px; sprite-margin-bottom: 3px; sprite-alignment: center */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: center -572px;
 }
 .v-filterselect-prevpage:hover span {
-	background-image: url(select/img/arrow-up-hover.png); /** sprite-ref: verticals; sprite-margin-top: 3px; sprite-margin-bottom: 3px; sprite-alignment: center */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: center -583px;
 }
 .v-filterselect-status {
 	text-shadow: #e9eaeb 0 1px 0;
@@ -2134,7 +2340,9 @@ div > .v-button-small span,
 	height: 11px;
 	overflow: hidden;
 	background-repeat: repeat-x;
-	background-image: url(select/img/status-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -594px;
 	-moz-border-radius-bottomleft: 2px;
 	-moz-border-radius-bottomright: 2px;
 	-webkit-border-bottom-left-radius: 2px;
@@ -2174,26 +2382,32 @@ div > .v-button-small span,
 .v-splitpanel-horizontal .v-splitpanel-hsplitter {
 	width: 7px;
 	background-repeat: repeat-y;
-	background-image: url(splitpanel/img/hor-bg.png); /** sprite-ref: horizontals; sprite-alignment: repeat */
+  background-image: url(common/img/horizontal-sprites.png);
+  background-position: -0px top;
 }
 .v-splitpanel-horizontal .v-splitpanel-hsplitter div {
 	width: 7px;
 	background: transparent;
 	background-repeat: no-repeat;
 	background-position: 50%;
-	background-image: url(splitpanel/img/hor-handle.png); /** sprite-ref: horizontals; sprite-alignment: middle */
+  background-image: url(common/img/horizontal-sprites.png);
+  background-position: -7px center;
 }
 .v-splitpanel-vertical .v-splitpanel-vsplitter {
 	height: 7px;
 	background-repeat: repeat-x;
-	background-image: url(splitpanel/img/ver-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -611px;
 }
 .v-splitpanel-vertical .v-splitpanel-vsplitter div {
 	height: 7px;
 	background: transparent;
 	background-repeat: no-repeat;
 	background-position: 50%;
-	background-image: url(splitpanel/img/ver-handle.png); /** sprite-ref: verticals; sprite-alignment: center */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: center -618px;
 }
 
 /* ./WebContent/ITMILL/themes/reindeer/tabsheet/tabsheet.css */
@@ -2270,7 +2484,9 @@ div > .v-button-small span,
 	border-bottom-color: #d2d3d4;
 	background: #fff;
 	background-repeat: repeat-x;
-	background-image: url(textfield/img/bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -625px;
 	-moz-border-radius: 3px;
 }
 /* Need more specific selector because of #2384 fixes in base/common/common.css */
