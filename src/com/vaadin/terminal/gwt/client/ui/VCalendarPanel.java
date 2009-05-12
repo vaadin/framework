@@ -99,10 +99,10 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
             if (prevMonth == null) { // Only do once
                 prevYear = new VEventButton();
                 prevYear.setHTML("&laquo;");
-                prevYear.setStyleName("i-button-prevyear");
+                prevYear.setStyleName("v-button-prevyear");
                 nextYear = new VEventButton();
                 nextYear.setHTML("&raquo;");
-                nextYear.setStyleName("i-button-nextyear");
+                nextYear.setStyleName("v-button-nextyear");
                 prevYear.addMouseListener(this);
                 nextYear.addMouseListener(this);
                 setWidget(0, 0, prevYear);
@@ -111,10 +111,10 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
                 if (needsMonth) {
                     prevMonth = new VEventButton();
                     prevMonth.setHTML("&lsaquo;");
-                    prevMonth.setStyleName("i-button-prevmonth");
+                    prevMonth.setStyleName("v-button-prevmonth");
                     nextMonth = new VEventButton();
                     nextMonth.setHTML("&rsaquo;");
-                    nextMonth.setStyleName("i-button-nextmonth");
+                    nextMonth.setStyleName("v-button-nextmonth");
                     prevMonth.addMouseListener(this);
                     nextMonth.addMouseListener(this);
                     setWidget(0, 3, nextMonth);
@@ -379,6 +379,7 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
                     | Event.MOUSEEVENTS);
         }
 
+        @Override
         public void addMouseListener(MouseListener listener) {
             if (mouseListeners == null) {
                 mouseListeners = new MouseListenerCollection();
@@ -386,6 +387,7 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
             mouseListeners.add(listener);
         }
 
+        @Override
         public void removeMouseListener(MouseListener listener) {
             if (mouseListeners != null) {
                 mouseListeners.remove(listener);

@@ -1,4 +1,4 @@
-.i-button-primary {
+.v-button-primary {
 	/* PNG with alpha as background */
 	background: #66aa00 url(prominentbg.png) bottom right;
 	/* make PNG work in IE */
@@ -11,12 +11,12 @@
 	-webkit-border-radius: 9px;
 	border-radius: 9px;
 }
-.i-button-primary:hover {
+.v-button-primary:hover {
 	/* changing color works due to PNG with alpha */
 	background-color: #ff9000;
 	border-color: #ff9000;
 }
-.i-button-primary span {
+.v-button-primary span {
 	/* big white caption */
 	color: #fff;
 	font-size: 26px;

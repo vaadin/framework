@@ -4,24 +4,24 @@
  * Simplified default theme to work seamlessly with Liferay
  */
 
-div.i-app {
+div.v-app {
 	background-color: transparent;
 }
 
-.i-orderedlayout-margin-left {
+.v-orderedlayout-margin-left {
 	padding-left:8px;
 }
-.i-orderedlayout-margin-bottom {
+.v-orderedlayout-margin-bottom {
 	padding-bottom:5px;
 }
-.i-orderedlayout-margin-right {
+.v-orderedlayout-margin-right {
 	padding-right:8px;
 }
-.i-orderedlayout-margin-top {
+.v-orderedlayout-margin-top {
 	padding-top:5px;
 }
 
-input[type="text"].i-filterselect-input {
+input[type="text"].v-filterselect-input {
 	background: transparent;
 	border: none;
 	font-size: 13px;
@@ -30,7 +30,7 @@ input[type="text"].i-filterselect-input {
 	padding: 3px 0px 0px 4px;
 }
 	
-.simplereserver div.i-datefield-entrycalendar-hours {
+.simplereserver div.v-datefield-entrycalendar-hours {
 	height: 200px;
 	overflow: auto;
 }

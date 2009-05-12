@@ -16,18 +16,18 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Container;
-import com.vaadin.terminal.gwt.client.VCaption;
-import com.vaadin.terminal.gwt.client.VCaptionWrapper;
-import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VCaption;
+import com.vaadin.terminal.gwt.client.VCaptionWrapper;
+import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 
 public class VPopupView extends HTML implements Container {
 
-    public static final String CLASSNAME = "i-popupview";
+    public static final String CLASSNAME = "v-popupview";
 
     /** For server-client communication */
     private String uidlId;

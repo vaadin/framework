@@ -26,7 +26,7 @@ import com.vaadin.terminal.gwt.client.Util;
 
 public class VSplitPanel extends ComplexPanel implements Container,
         ContainerResizedListener {
-    public static final String CLASSNAME = "i-splitpanel";
+    public static final String CLASSNAME = "v-splitpanel";
 
     public static final int ORIENTATION_HORIZONTAL = 0;
 

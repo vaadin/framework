@@ -30,7 +30,7 @@ import com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer;
 
 public class VGridLayout extends SimplePanel implements Paintable, Container {
 
-    public static final String CLASSNAME = "i-gridlayout";
+    public static final String CLASSNAME = "v-gridlayout";
 
     private DivElement margin = Document.get().createDivElement();
 

@@ -1,86 +1,86 @@
-.i-generated-body,
-.i-app {
+.v-generated-body,
+.v-app {
 	background: #f5f5f5;
 }
 /* Global font styles */
-.i-app,
-.i-window,
-.i-popupview-popup,
-.i-tooltip,
-.i-app input,
-.i-app select,
-.i-app button,
-.i-app textarea,
-.i-window input,
-.i-window select,
-.i-window button,
-.i-window textarea,
-.i-popupview-popup input,
-.i-popupview-popup select,
-.i-popupview-popup button,
-.i-popupview-popup textarea,
-.i-filterselect-suggestpopup {
+.v-app,
+.v-window,
+.v-popupview-popup,
+.v-tooltip,
+.v-app input,
+.v-app select,
+.v-app button,
+.v-app textarea,
+.v-window input,
+.v-window select,
+.v-window button,
+.v-window textarea,
+.v-popupview-popup input,
+.v-popupview-popup select,
+.v-popupview-popup button,
+.v-popupview-popup textarea,
+.v-filterselect-suggestpopup {
 	font-family: Arial, Helvetica, Tahoma, Verdana, sans-serif;
 	font-size: 12px;
 	line-height: normal;
 	color: #222;
 }
 /* Fonts for Safari, exchange Helvetica for Arial */
-.i-sa .i-app,
-.i-sa .i-window,
-.i-sa .i-popupview-popup,
-.i-sa .i-tooltip,
-.i-sa .i-app input,
-.i-sa .i-app select,
-.i-sa .i-app button,
-.i-sa .i-app textarea,
-.i-sa .i-window input,
-.i-sa .i-window select,
-.i-sa .i-window button,
-.i-sa .i-window textarea,
-.i-sa .i-popupview-popup input,
-.i-sa .i-popupview-popup select,
-.i-sa .i-popupview-popup button,
-.i-sa .i-popupview-popup textarea,
-.i-sa .i-filterselect-suggestpopup {
+.v-sa .v-app,
+.v-sa .v-window,
+.v-sa .v-popupview-popup,
+.v-sa .v-tooltip,
+.v-sa .v-app input,
+.v-sa .v-app select,
+.v-sa .v-app button,
+.v-sa .v-app textarea,
+.v-sa .v-window input,
+.v-sa .v-window select,
+.v-sa .v-window button,
+.v-sa .v-window textarea,
+.v-sa .v-popupview-popup input,
+.v-sa .v-popupview-popup select,
+.v-sa .v-popupview-popup button,
+.v-sa .v-popupview-popup textarea,
+.v-sa .v-filterselect-suggestpopup {
 	font-family: Helvetica, Arial, "Lucida Grande", Geneva, Tahoma, Verdana, sans-serif;
 }
-.i-errorindicator {
+.v-errorindicator {
 	width: 12px;
 	height: 16px;
 	background: transparent url(../../default/icons/16/error.png) no-repeat top right;
 }
-.i-ie6 .i-errorindicator {
+.v-ie6 .v-errorindicator {
 	/* gif for transparency */
 	background-image: url(../../default/icons/16/error.gif);
 }
-.i-ie7 .i-errorindicator {
+.v-ie7 .v-errorindicator {
 	margin-left: -3px;
 }
-.i-tooltip {
+.v-tooltip {
 	background-color: #fffcdd;
 	border: 1px solid #b8b295;
 	font-size: 11px;
 	line-height: 13px;
 	color: #222;
 }
-.i-tooltip-text {
+.v-tooltip-text {
 	padding: 2px 4px;
 }
-.i-tooltip .i-errormessage {
+.v-tooltip .v-errormessage {
 	padding: 3px 4px;
 	background: #ffecc6;
 	color: #b74100;
 	border: none;
 	border-top: 1px solid #fff3dc;
 }
-.i-tooltip .i-errormessage h2 {
+.v-tooltip .v-errormessage h2 {
 	font-size: 16px;
 	font-weight: normal;
 	color: #ab3101;
 	margin: 2px 0 8px 0;
 }
-.i-tooltip .i-errormessage h3 {
+.v-tooltip .v-errormessage h3 {
 	font-size: 13px;
 	font-weight: bold;
 	margin: 1px 0 4px 0;

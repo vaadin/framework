@@ -1,4 +1,4 @@
-.i-textfield {
+.v-textfield {
 	background: #fff url(img/bg.png) repeat-x;
 	padding: 2px;
 	border: 1px solid #b6b6b6;
@@ -9,7 +9,7 @@
 	font-size: 13px;
 	height: 18px;
 }
-.i-textarea {
+.v-textarea {
 	background: #fff url(img/bg.png) repeat-x;
 	padding: 2px;
 	border: 1px solid #b6b6b6;
@@ -19,18 +19,18 @@
 	margin: 0;
 	font-size: 13px;
 }
-.i-textfield-focus,
-.i-textarea-focus {
+.v-textfield-focus,
+.v-textarea-focus {
 	border-color: #5daee8;
 }
-input.i-textfield-prompt,
-textarea.i-textarea-prompt {
+input.v-textfield-prompt,
+textarea.v-textarea-prompt {
 	color: #999;
 	font-style: normal;
 }
-.i-richtextarea {
+.v-richtextarea {
 	border: 1px solid #b6b6b6;
 }
-.i-richtextarea .gwt-RichTextArea {
+.v-richtextarea .gwt-RichTextArea {
 	background: #fff url(img/bg.png) repeat-x;
 }

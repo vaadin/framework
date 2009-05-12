@@ -20,7 +20,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 public class VSlider extends Widget implements Paintable, Field,
         ContainerResizedListener {
 
-    public static final String CLASSNAME = "i-slider";
+    public static final String CLASSNAME = "v-slider";
 
     /**
      * Minimum size (width or height, depending on orientation) of the slider

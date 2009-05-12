@@ -44,7 +44,7 @@ public class VWindow extends VToolkitOverlay implements Container,
 
     private static Vector<VWindow> windowOrder = new Vector<VWindow>();
 
-    public static final String CLASSNAME = "i-window";
+    public static final String CLASSNAME = "v-window";
 
     /**
      * Pixels used by inner borders and paddings horizontally (calculated only
@@ -640,7 +640,7 @@ public class VWindow extends VToolkitOverlay implements Container,
         String html = Util.escapeHTML(c);
         if (icon != null) {
             icon = client.translateToolkitUri(icon);
-            html = "<img src=\"" + icon + "\" class=\"i-icon\" />" + html;
+            html = "<img src=\"" + icon + "\" class=\"v-icon\" />" + html;
         }
         DOM.setInnerHTML(headerText, html);
     }
@@ -774,7 +774,7 @@ public class VWindow extends VToolkitOverlay implements Container,
 
     @Override
     /*
-     * Width is set to the out-most element (i-window).
+     * Width is set to the out-most element (v-window).
      * 
      * This function should never be called with percentage values (it will
      * throw an exception)
@@ -819,7 +819,7 @@ public class VWindow extends VToolkitOverlay implements Container,
 
     @Override
     /*
-     * Height is set to the out-most element (i-window).
+     * Height is set to the out-most element (v-window).
      * 
      * This function should never be called with percentage values (it will
      * throw an exception)

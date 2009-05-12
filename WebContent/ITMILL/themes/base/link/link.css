@@ -1,18 +1,18 @@
-.i-link {
+.v-link {
 	white-space: nowrap;	
 }
-.i-link a {
+.v-link a {
 	vertical-align: middle;
 	text-decoration: none;
 }
-.i-link span {
+.v-link span {
 	text-decoration: underline;
 	vertical-align: middle;
 }
-.i-disabled a {
+.v-disabled a {
 	cursor: default;
 }
-.i-link img {
+.v-link img {
 	vertical-align: middle;
 	border:none;
 }

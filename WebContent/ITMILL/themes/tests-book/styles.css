@@ -4,14 +4,14 @@
 /* Styling for tests.magi application.                                       */
 /*****************************************************************************/
 
-.i-app {
+.v-app {
 	background: white;
 }
 
 /*****************************************************************************/
 /* For example_Forms()                                                       */
 /*****************************************************************************/
-.i-form {
+.v-form {
     border: thin solid;
     padding: 5px 5px 5px 5px;
 }
@@ -21,7 +21,7 @@
 /* For example_Table()                                                       */
 /*****************************************************************************/
 /* Table rows contain three-row TextField components. */
-.i-table-components-inside .i-table-cell-content {
+.v-table-components-inside .v-table-cell-content {
 	height: 54px; /* 3*18px = 54px. */
 }
 
@@ -29,12 +29,12 @@
  * For TableCellStyle.java.
  ******************************************************************************/
 /* Center the text in header. */
-.i-table-header-cell {
+.v-table-header-cell {
     text-align: center;
 }
 
 /* Basic style for all cells. */
-.i-table-checkerboard .i-table-cell-content {
+.v-table-checkerboard .v-table-cell-content {
     text-align: center;
     vertical-align: middle;
     padding-top: 12px;
@@ -43,18 +43,18 @@
 }
 
 /* Style specifically for the row header cells. */
-.i-table-cell-content-rowheader {
+.v-table-cell-content-rowheader {
 	background: #E7EDF3 url(../default/table/img/header-bg.png) repeat-x scroll 0 0;
 }
 
 /* Style specifically for the "white" cells. */
-.i-table-cell-content-white {
+.v-table-cell-content-white {
     background: white;
     color: black;
 }
 
 /* Style specifically for the "black" cells. */
-.i-table-cell-content-black {
+.v-table-cell-content-black {
     background: black;
     color: white;
 }
@@ -63,112 +63,112 @@
 /* For example_Tree()                                                        */
 /*****************************************************************************/
 
-.i-expandlayout-treeexample .i-panel .i-orderedlayout {
+.v-expandlayout-treeexample .v-panel .v-orderedlayout {
 	padding: 0px;
 }
 
-.i-orderedlayout-margin-top    { padding-top:    0px; }
-.i-orderedlayout-margin-left   { padding-left:   0px; }
-.i-orderedlayout-margin-bottom { padding-bottom: 0px; }
-.i-orderedlayout-margin-right  { padding-right:  0px; }
+.v-orderedlayout-margin-top    { padding-top:    0px; }
+.v-orderedlayout-margin-left   { padding-left:   0px; }
+.v-orderedlayout-margin-bottom { padding-bottom: 0px; }
+.v-orderedlayout-margin-right  { padding-right:  0px; }
 
 /*****************************************************************************/
 /* For example_GridLayout()                                                  */
 /*****************************************************************************/
-table.i-gridlayout-example-gridlayout {
+table.v-gridlayout-example-gridlayout {
 	background: blue;
 }
 
-.i-gridlayout-example-gridlayout td {
+.v-gridlayout-example-gridlayout td {
 	background: white;
 }
 
 /*****************************************************************************/
 /* For example_Alignment()                                                   */
 /*****************************************************************************/
-.i-gridlayout-example-alignment {
+.v-gridlayout-example-alignment {
 	background: blue;
 }
-.i-gridlayout-example-alignment .i-expandlayout {
+.v-gridlayout-example-alignment .v-expandlayout {
 	background: white;
 	width: 150px;
 	height: 75px;
 }
 
-.i-orderedlayout {
+.v-orderedlayout {
 	margin: 5px;
 }
 
 /* For SelectExample.java. */
-.i-orderedlayout tr {
+.v-orderedlayout tr {
 	vertical-align: top;
 }
 
 /*****************************************************************************/
 /* For example_ProgressIndicator()                                           */
 /*****************************************************************************/
-.i-progressindicator-invisible {
+.v-progressindicator-invisible {
 	display: none;
 }
 
-.i-progressindicator-fullwidth {
+.v-progressindicator-fullwidth {
     width: 100px;
 }
 
 /*****************************************************************************/
 /* For example_Spacing()                                                     */
 /*****************************************************************************/
-.i-orderedlayout-spacingexample table {
+.v-orderedlayout-spacingexample table {
     background: blue;
 }
 
-.i-orderedlayout-spacingexample td {
+.v-orderedlayout-spacingexample td {
     background: white;
 }
 
 /* Set horizontal cell spacing for all OrderedLayouts. */
-.i-orderedlayout-hspacing {
+.v-orderedlayout-hspacing {
     padding-left: 10px;
 }
 
 /* Set horizontal cell spacing in specific layout with "spacingexample" style. */
-.i-orderedlayout-spacingexample .i-orderedlayout-hspacing {
+.v-orderedlayout-spacingexample .v-orderedlayout-hspacing {
     padding-left: 30px;
 }
 
 /* Set vertical cell spacing in specific layout with "spacingexample" style. */
-.i-orderedlayout-spacingexample .i-orderedlayout-vspacing {
+.v-orderedlayout-spacingexample .v-orderedlayout-vspacing {
     margin-top: 30px;
 }
 
-table.i-gridlayout-spacingexample {
+table.v-gridlayout-spacingexample {
     background: blue;
 }
 
-.i-gridlayout-spacingexample td {
+.v-gridlayout-spacingexample td {
    background: white;
 }
 
 /*****************************************************************************/
 /* For example_Margin()                                                      */
 /*****************************************************************************/
-.i-orderedlayout-marginexample1 { padding-left:   200px; }
-.i-orderedlayout-marginexample1 { padding-right:  100px; }
-.i-orderedlayout-marginexample1 { padding-top:    50px;  }
-.i-orderedlayout-marginexample1 { padding-bottom: 25px;  }
+.v-orderedlayout-marginexample1 { padding-left:   200px; }
+.v-orderedlayout-marginexample1 { padding-right:  100px; }
+.v-orderedlayout-marginexample1 { padding-top:    50px;  }
+.v-orderedlayout-marginexample1 { padding-bottom: 25px;  }
 
-.i-orderedlayout-marginexample2 .i-orderedlayout-margin-left   { padding-left:   200px; }
-.i-orderedlayout-marginexample2 .i-orderedlayout-margin-right  { padding-right:  100px; }
-.i-orderedlayout-marginexample2 .i-orderedlayout-margin-top    { padding-top:    50px;  }
-.i-orderedlayout-marginexample2 .i-orderedlayout-margin-bottom { padding-bottom: 25px;  }
+.v-orderedlayout-marginexample2 .v-orderedlayout-margin-left   { padding-left:   200px; }
+.v-orderedlayout-marginexample2 .v-orderedlayout-margin-right  { padding-right:  100px; }
+.v-orderedlayout-marginexample2 .v-orderedlayout-margin-top    { padding-top:    50px;  }
+.v-orderedlayout-marginexample2 .v-orderedlayout-margin-bottom { padding-bottom: 25px;  }
 
-.i-orderedlayout-marginexample1 { background: #d0d0ff; border: 1px;}
-.i-orderedlayout-marginexample2 { background: #ffd0d0; border: 1px;}
-.i-orderedlayout-marginexample table { background: white; }
+.v-orderedlayout-marginexample1 { background: #d0d0ff; border: 1px;}
+.v-orderedlayout-marginexample2 { background: #ffd0d0; border: 1px;}
+.v-orderedlayout-marginexample table { background: white; }
 
 /*****************************************************************************/
 /* For example_RichTextArea()                                                */
 /*****************************************************************************/
-.i-richtextarea-richtextexample .gwt-ToggleButton .gwt-Image {
+.v-richtextarea-richtextexample .gwt-ToggleButton .gwt-Image {
   background-image: url(img/richtextarea-toolbar-fi.png) !important;
 }

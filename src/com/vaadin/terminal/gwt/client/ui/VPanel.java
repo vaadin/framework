@@ -24,7 +24,7 @@ import com.vaadin.terminal.gwt.client.Util;
 
 public class VPanel extends SimplePanel implements Container {
 
-    public static final String CLASSNAME = "i-panel";
+    public static final String CLASSNAME = "v-panel";
 
     ApplicationConnection client;
 
@@ -216,7 +216,7 @@ public class VPanel extends SimplePanel implements Container {
             if (errorIndicatorElement == null) {
                 errorIndicatorElement = DOM.createDiv();
                 DOM.setElementProperty(errorIndicatorElement, "className",
-                        "i-errorindicator");
+                        "v-errorindicator");
                 DOM.sinkEvents(errorIndicatorElement, Event.MOUSEEVENTS);
                 sinkEvents(Event.MOUSEEVENTS);
             }

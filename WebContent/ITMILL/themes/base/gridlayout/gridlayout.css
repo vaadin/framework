@@ -1,30 +1,30 @@
-.i-gridlayout-margin-top {
+.v-gridlayout-margin-top {
 	padding-top: 2em;
 }
-.i-gridlayout-margin-bottom {
+.v-gridlayout-margin-bottom {
 	padding-bottom: 2em;
 }
-.i-gridlayout-margin-left {
+.v-gridlayout-margin-left {
 	padding-left: 2em;
 } 
-.i-gridlayout-margin-right {
+.v-gridlayout-margin-right {
 	padding-right: 2em;
 }
-.i-gridlayout-spacing-on {
+.v-gridlayout-spacing-on {
 	padding-left: 1em;
 	padding-top: 1em;
 	overflow: hidden;
 }
-.i-gridlayout-spacing,
-.i-gridlayout-spacing-off {
+.v-gridlayout-spacing,
+.v-gridlayout-spacing-off {
 	padding-left: 0;
 	padding-top: 0;
 }
-.i-gridlayout-spacing-off {
+.v-gridlayout-spacing-off {
 	overflow: hidden;
 }
 /* Ensure that resizing gridlayout works in IE */
-.i-ie6 .i-gridlayout,
-.i-ie7 .i-gridlayout {
+.v-ie6 .v-gridlayout,
+.v-ie7 .v-gridlayout {
 	overflow: hidden;
 }

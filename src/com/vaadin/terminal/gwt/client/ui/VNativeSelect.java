@@ -14,7 +14,7 @@ import com.vaadin.terminal.gwt.client.Util;
 
 public class VNativeSelect extends VOptionGroupBase implements Field {
 
-    public static final String CLASSNAME = "i-select";
+    public static final String CLASSNAME = "v-select";
 
     protected TooltipListBox select;
 

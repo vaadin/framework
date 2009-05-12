@@ -17,7 +17,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 
 public class VOptionGroup extends VOptionGroupBase {
 
-    public static final String CLASSNAME = "i-select-optiongroup";
+    public static final String CLASSNAME = "v-select-optiongroup";
 
     private final Panel panel;
 
@@ -43,7 +43,7 @@ public class VOptionGroup extends VOptionGroupBase {
                 op.setText(opUidl.getStringAttribute("caption"));
             } else {
                 op = new RadioButton(id, opUidl.getStringAttribute("caption"));
-                op.setStyleName("i-radiobutton");
+                op.setStyleName("v-radiobutton");
             }
             op.addStyleName(CLASSNAME_OPTION);
             op.setChecked(opUidl.getBooleanAttribute("selected"));

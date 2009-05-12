@@ -17,7 +17,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 
 public class VTwinColSelect extends VOptionGroupBase {
 
-    private static final String CLASSNAME = "i-select-twincol";
+    private static final String CLASSNAME = "v-select-twincol";
 
     private static final int VISIBLE_COUNT = 10;
 

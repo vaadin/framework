@@ -13,10 +13,10 @@ import com.google.gwt.user.client.ui.TextBoxBase;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VTooltip;
 
 /**
  * This class represents a basic text input field with one row.
@@ -30,7 +30,7 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
     /**
      * The input node CSS classname.
      */
-    public static final String CLASSNAME = "i-textfield";
+    public static final String CLASSNAME = "v-textfield";
     /**
      * This CSS classname is added to the input node on hover.
      */

@@ -1,20 +1,20 @@
-.i-window {
+.v-window {
 	color: #464f52;
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	font-size: 13px;
 	line-height: 18px;
 	background: transparent url(img/bottom-left.png) no-repeat left bottom;
 }
-.i-window-wrap {
+.v-window-wrap {
 	background: transparent url(img/top-left.png) no-repeat;
 }
-.i-window-outerheader {
+.v-window-outerheader {
 	height: 23px;
 	margin-left: 9px;
 	padding: 15px 40px 11px 12px;
 	background: transparent url(img/top-right.png) no-repeat right top;
 }
-.i-window-header {
+.v-window-header {
 	font-size: 18px;
 	line-height: 1.2;
 	font-weight: normal;
@@ -23,21 +23,21 @@
 	text-shadow: 0 1px 0 #fff;
 	/* This element is 100% wide in IE6 */
 }
-.i-window-contents {
+.v-window-contents {
 	background: #fff;
 	border: 2px solid #acb2b3;
 	border-top: none;
 	border-bottom: none;
 }
-.i-window-footer {
+.v-window-footer {
 	height: 8px;
 	margin-left: 9px;
 	background: transparent url(img/bottom-right.png) no-repeat right top;  
 }
-.i-ie7 .i-window-footer {
+.v-ie7 .v-window-footer {
 	position: relative;
 }
-.i-window-resizebox {
+.v-window-resizebox {
 	position: absolute; /* Needed to position the element over ScrollPanel, which is relatively positioned */
 	right: 5px;
 	width: 10px;
@@ -45,11 +45,11 @@
 	margin-top: -7px;
 	background: transparent url(img/resize.png);
 }
-.i-window-resizebox-disabled {
+.v-window-resizebox-disabled {
 	background: transparent;
 	display: block;
 }
-.i-window-closebox {
+.v-window-closebox {
 	position: absolute;
 	top: 21px;
 	right: 24px;
@@ -57,57 +57,57 @@
 	height: 12px;
 	background: transparent url(img/close.png);
 }
-.i-window-closebox:hover {
+.v-window-closebox:hover {
 	background-position: 0 -12px;
 }
-.i-window-modalitycurtain {
+.v-window-modalitycurtain {
 	background: #fff;
 }
 /* Shadow for window */
-.i-shadow-window .top-left {
+.v-shadow-window .top-left {
     top: -13px;             left: -20px;
     width: 39px;         height: 39px;
     background: transparent url(img/shadow/top-left.png);
 }
-.i-shadow-window .top {
+.v-shadow-window .top {
     top: -13px;             left: 19px;
     height: 39px;
     right: 19px;
     background: transparent url(img/shadow/top.png);
 }
-.i-shadow-window .top-right {
+.v-shadow-window .top-right {
     top: -13px;             right: -20px;
     width: 39px;         height: 39px;
     background: transparent url(img/shadow/top-right.png);
 }
-.i-shadow-window .left {
+.v-shadow-window .left {
     top: 26px;           left: -20px;
     width: 39px;
     bottom: 12px;
     background: transparent url(img/shadow/left.png);
 }
-.i-shadow-window .center {
+.v-shadow-window .center {
     top: 26px;           left: 19px;
     bottom: 12px;        right: 19px;
     background: transparent url(img/shadow/center.png);
 }
-.i-shadow-window .right {
+.v-shadow-window .right {
     top: 26px;           right: -20px;
     width: 39px;
     bottom: 12px;
     background: transparent url(img/shadow/right.png);
 }
-.i-shadow-window .bottom-left {
+.v-shadow-window .bottom-left {
     bottom: -27px;           left: -20px;
     width: 39px;          height: 39px;
     background: transparent url(img/shadow/bottom-left.png);
 }
-.i-shadow-window .bottom {
+.v-shadow-window .bottom {
     bottom: -27px;           left: 19px;
     right: 19px;          height: 39px;
     background: transparent url(img/shadow/bottom.png);
 }
-.i-shadow-window .bottom-right {
+.v-shadow-window .bottom-right {
     bottom: -27px;           right: -20px;
     width: 39px;          height: 39px;
     background: transparent url(img/shadow/bottom-right.png);

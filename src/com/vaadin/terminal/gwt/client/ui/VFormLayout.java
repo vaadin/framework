@@ -17,19 +17,19 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Container;
-import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.StyleConstants;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VTooltip;
 
 /**
  * Two col Layout that places caption on left col and field on right col
  */
 public class VFormLayout extends SimplePanel implements Container {
 
-    private final static String CLASSNAME = "i-formlayout";
+    private final static String CLASSNAME = "v-formlayout";
 
     private ApplicationConnection client;
     private VFormLayoutTable table;
@@ -248,7 +248,7 @@ public class VFormLayout extends SimplePanel implements Container {
 
     public class Caption extends HTML {
 
-        public static final String CLASSNAME = "i-caption";
+        public static final String CLASSNAME = "v-caption";
 
         private final Paintable owner;
 
@@ -278,7 +278,7 @@ public class VFormLayout extends SimplePanel implements Container {
         public void updateCaption(UIDL uidl) {
             setVisible(!uidl.getBooleanAttribute("invisible"));
 
-            setStyleName(getElement(), "i-disabled", uidl
+            setStyleName(getElement(), "v-disabled", uidl
                     .hasAttribute("disabled"));
 
             boolean isEmpty = true;
@@ -329,7 +329,7 @@ public class VFormLayout extends SimplePanel implements Container {
                     requiredFieldIndicator = DOM.createSpan();
                     DOM.setInnerText(requiredFieldIndicator, "*");
                     DOM.setElementProperty(requiredFieldIndicator, "className",
-                            "i-required-field-indicator");
+                            "v-required-field-indicator");
                     DOM.appendChild(getElement(), requiredFieldIndicator);
                 }
             } else {
@@ -392,7 +392,7 @@ public class VFormLayout extends SimplePanel implements Container {
                     errorIndicatorElement = DOM.createDiv();
                     DOM.setInnerHTML(errorIndicatorElement, "&nbsp;");
                     DOM.setElementProperty(errorIndicatorElement, "className",
-                            "i-errorindicator");
+                            "v-errorindicator");
                     DOM.appendChild(getElement(), errorIndicatorElement);
                 }
 

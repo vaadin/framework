@@ -12,14 +12,14 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VTooltip;
 
 public class VLink extends HTML implements Paintable, ClickListener {
 
-    public static final String CLASSNAME = "i-link";
+    public static final String CLASSNAME = "v-link";
 
     private static final int BORDER_STYLE_DEFAULT = 0;
     private static final int BORDER_STYLE_MINIMAL = 1;
@@ -103,7 +103,7 @@ public class VLink extends HTML implements Paintable, ClickListener {
             if (errorIndicatorElement == null) {
                 errorIndicatorElement = DOM.createDiv();
                 DOM.setElementProperty(errorIndicatorElement, "className",
-                        "i-errorindicator");
+                        "v-errorindicator");
             }
             DOM.insertChild(getElement(), errorIndicatorElement, 0);
         } else if (errorIndicatorElement != null) {

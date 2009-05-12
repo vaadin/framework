@@ -33,7 +33,7 @@ public class VContextMenu extends VToolkitOverlay implements SubPartAware {
     public VContextMenu() {
         super(true, false, true);
         setWidget(menu);
-        setStyleName("i-contextmenu");
+        setStyleName("v-contextmenu");
     }
 
     /**

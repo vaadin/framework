@@ -152,15 +152,15 @@ public class LoginForm extends CustomComponent {
                 + guessedThemeUri2
                 + "'/>"
                 + "</head><body onload='setTarget();' style='margin:0;padding:0;'>"
-                + "<div class='i-app i-app-loginpage'>"
+                + "<div class='v-app v-app-loginpage'>"
                 + "<iframe name='logintarget' style='width:0;height:0;"
                 + "border:0;margin:0;padding:0;'></iframe>"
                 + "<form id='loginf' target='logintarget'>"
                 + "<div>Username</div><div >"
-                + "<input class='i-textfield' style='display:block;' type='text' name='username'></div>"
+                + "<input class='v-textfield' style='display:block;' type='text' name='username'></div>"
                 + "<div>Password</div>"
-                + "<div><input class='i-textfield' style='display:block;' type='password' name='password'></div>"
-                + "<div><input class='i-button' type='submit' value='Login'></div></form></div>" + "</body></html>")
+                + "<div><input class='v-textfield' style='display:block;' type='password' name='password'></div>"
+                + "<div><input class='v-button' type='submit' value='Login'></div></form></div>" + "</body></html>")
                 .getBytes();
     }
 

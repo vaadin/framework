@@ -21,7 +21,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 
 public class VEmbedded extends HTML implements Paintable {
-    private static String CLASSNAME = "i-embedded";
+    private static String CLASSNAME = "v-embedded";
 
     private String height;
     private String width;

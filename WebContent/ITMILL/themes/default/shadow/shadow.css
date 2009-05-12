@@ -1,29 +1,29 @@
-.i-shadow {
+.v-shadow {
 	position: absolute;
 }
 
-.i-shadow .top-left {
+.v-shadow .top-left {
     position: absolute; overflow: hidden;
     top: -3px;             left: -4px;
     width: 8px;         height: 8px;
     background: transparent url(img/top-left.png);
 }
 
-.i-shadow .top {
+.v-shadow .top {
     position: absolute; overflow: hidden;
     top: -3px;             left: 4px;
     height: 8px;           right: 4px;
     background: transparent url(img/top.png);
 }
 
-.i-shadow .top-right {
+.v-shadow .top-right {
     position: absolute; overflow: hidden;
     top: -3px;             right: -4px;
     width: 8px;         height: 8px;
     background: transparent url(img/top-right.png);
 }
 
-.i-shadow .left {
+.v-shadow .left {
     position: absolute; overflow: hidden;
     top: 5px;           left: -4px;
     width: 8px;
@@ -31,14 +31,14 @@
     background: transparent url(img/left.png);
 }
 
-.i-shadow .center {
+.v-shadow .center {
     position: absolute; overflow: hidden;
     top: 5px;           left: 4px;
     bottom: 3px;        right: 4px;
     background: transparent url(img/center.png);
 }
 
-.i-shadow .right {
+.v-shadow .right {
     position: absolute; overflow: hidden;
     top: 5px;           right: -4px;
     width: 8px;
@@ -46,21 +46,21 @@
     background: transparent url(img/right.png);
 }
 
-.i-shadow .bottom-left {
+.v-shadow .bottom-left {
     position: absolute; overflow: hidden;
     bottom: -5px;           left: -4px;
     width: 8px;          height: 8px;
     background: transparent url(img/bottom-left.png);
 }
 
-.i-shadow .bottom {
+.v-shadow .bottom {
     position: absolute; overflow: hidden;
     bottom: -5px;           left: 4px;
     right: 4px;          height: 8px;
     background: transparent url(img/bottom.png);
 }
 
-.i-shadow .bottom-right {
+.v-shadow .bottom-right {
     position: absolute; overflow: hidden;
     bottom: -5px;           right: -4px;
     width: 8px;          height: 8px;

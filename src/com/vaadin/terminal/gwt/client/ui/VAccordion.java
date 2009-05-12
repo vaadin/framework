@@ -14,17 +14,17 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ContainerResizedListener;
-import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VCaption;
 
 public class VAccordion extends VTabsheetBase implements
         ContainerResizedListener {
 
-    public static final String CLASSNAME = "i-accordion";
+    public static final String CLASSNAME = "v-accordion";
 
     private Set<Paintable> paintables = new HashSet<Paintable>();
 

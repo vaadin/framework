@@ -1,8 +1,8 @@
 @import url(../default/styles.css);
 
-.i-app, body.i-generated-body {
+.v-app, body.v-generated-body {
 	background-color: black;
 }
-.i-panel-content-light {
+.v-panel-content-light {
 	border: none;
 }

@@ -1,32 +1,32 @@
-.i-orderedlayout-margin-top,
-.i-horizontallayout-margin-top,
-.i-verticallayout-margin-top {
+.v-orderedlayout-margin-top,
+.v-horizontallayout-margin-top,
+.v-verticallayout-margin-top {
 	padding-top: 18px;
 }
-.i-orderedlayout-margin-right,
-.i-horizontallayout-margin-right,
-.i-verticallayout-margin-right {
+.v-orderedlayout-margin-right,
+.v-horizontallayout-margin-right,
+.v-verticallayout-margin-right {
 	padding-right: 18px;
 }
-.i-orderedlayout-margin-bottom,
-.i-horizontallayout-margin-bottom,
-.i-verticallayout-margin-bottom {
+.v-orderedlayout-margin-bottom,
+.v-horizontallayout-margin-bottom,
+.v-verticallayout-margin-bottom {
 	padding-bottom: 18px;
 }
-.i-orderedlayout-margin-left,
-.i-horizontallayout-margin-left,
-.i-verticallayout-margin-left {
+.v-orderedlayout-margin-left,
+.v-horizontallayout-margin-left,
+.v-verticallayout-margin-left {
 	padding-left: 18px;
 }
-.i-orderedlayout-spacing-on,
-.i-horizontallayout-spacing-on,
-.i-verticallayout-spacing-on {
+.v-orderedlayout-spacing-on,
+.v-horizontallayout-spacing-on,
+.v-verticallayout-spacing-on {
 	padding-top: 7px;
 	padding-left: 6px;
 }
 /* Blue background */
-.i-verticallayout-blue,
-.i-horizontallayout-blue,
-.i-orderedlayout-blue {
+.v-verticallayout-blue,
+.v-horizontallayout-blue,
+.v-orderedlayout-blue {
 	background-color: #bcd3de;
 }

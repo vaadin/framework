@@ -35,7 +35,7 @@ public class VRichTextArea extends Composite implements Paintable, Field,
     /**
      * The input node CSS classname.
      */
-    public static final String CLASSNAME = "i-richtextarea";
+    public static final String CLASSNAME = "v-richtextarea";
 
     protected String id;
 

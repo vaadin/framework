@@ -1,34 +1,34 @@
-.i-progressindicator {
+.v-progressindicator {
 	overflow: hidden; /* for IE6 */
 	width: 150px;
 }
-.i-progressindicator-wrapper {
+.v-progressindicator-wrapper {
 	overflow: hidden; /* for IE6 */
 	height: 9px;
 	border: 1px solid #ddd;
 }
-.i-progressindicator-disabled {
+.v-progressindicator-disabled {
 	height: 9px;
 	overflow: hidden; /* for IE6 */
 }
-.i-progressindicator-indicator {
+.v-progressindicator-indicator {
 	height: 9px;
 	overflow: hidden; /* for IE6 */
 	background: #ddd;
 }
-.i-progressindicator-indeterminate {
+.v-progressindicator-indeterminate {
 	height: 16px;
 	width: 16px;
 	overflow: hidden; /* for IE6 */
 }
 /* Hide obsolete elements in indeterminate mode */
-.i-progressindicator-indeterminate .i-progressindicator-wrapper,
-.i-progressindicator-indeterminate .i-progressindicator-indicator,
-.i-progressindicator-indeterminate-disabled .i-progressindicator-wrapper,
-.i-progressindicator-indeterminate-disabled .i-progressindicator-indicator {
+.v-progressindicator-indeterminate .v-progressindicator-wrapper,
+.v-progressindicator-indeterminate .v-progressindicator-indicator,
+.v-progressindicator-indeterminate-disabled .v-progressindicator-wrapper,
+.v-progressindicator-indeterminate-disabled .v-progressindicator-indicator {
 	display: none;
 }
-.i-progressindicator-indeterminate-disabled {
+.v-progressindicator-indeterminate-disabled {
 	height: 16px;
 	width: 16px;
 	overflow: hidden; /* for IE6 */

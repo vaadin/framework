@@ -1,134 +1,134 @@
-.i-select {
+.v-select {
 	text-align: left;
 }
-.i-select-optiongroup .i-select-option {
+.v-select-optiongroup .v-select-option {
 	display: block;
 	white-space: nowrap;
 }
-.i-ie .i-select-optiongroup .i-select-option {
+.v-ie .v-select-optiongroup .v-select-option {
 	zoom: 1;
 }
-.i-select-select {
+.v-select-select {
 	display: block;
 }
-.i-select-twincol {
+.v-select-twincol {
 	white-space: nowrap;
 }
-.i-select-twincol-options {
+.v-select-twincol-options {
 	float: left;
 }
-.i-select-twincol-selections {
+.v-select-twincol-selections {
 	font-weight: bold;
 }
-.i-select-twincol-buttons {
+.v-select-twincol-buttons {
 	float: left;
 	text-align: center;
 }
-.i-select-twincol-buttons .i-select-twincol-deco {
+.v-select-twincol-buttons .v-select-twincol-deco {
 	clear: both;
 }
-.i-select-twincol .i-textfield {
+.v-select-twincol .v-textfield {
 	display: block;
 	float: left;
 	clear: left;
 }
-.i-select-twincol .i-button {
+.v-select-twincol .v-button {
 	display: block;
 	float: left;
 }
-.i-select-twincol-buttons .i-button {
+.v-select-twincol-buttons .v-button {
 	display: inline;
 	float: none;
 }
-.i-filterselect {
+.v-filterselect {
 	white-space: nowrap;
 	text-align: left;
 }
-.i-filterselect .i-icon {
+.v-filterselect .v-icon {
 	float: left;
 }
-.i-app .i-filterselect-input,
-.i-window .i-filterselect-input,
-.i-popupview-popup .i-filterselect-input {
+.v-app .v-filterselect-input,
+.v-window .v-filterselect-input,
+.v-popupview-popup .v-filterselect-input {
 	float: left;
 }
-.i-filterselect-prompt .i-filterselect-input {
+.v-filterselect-prompt .v-filterselect-input {
 	color: #999;
 	font-style: italic;
 }
-.i-filterselect-button {
+.v-filterselect-button {
 	float: right;
 	cursor: pointer;
 }
-.i-filterselect.i-readonly .i-filterselect-button {
+.v-filterselect.v-readonly .v-filterselect-button {
 	display: none;
 }
-.i-filterselect-suggestpopup {
+.v-filterselect-suggestpopup {
 	background: #fff;
 	border: 1px solid #eee;
 }
-.i-filterselect-suggestmenu table {
+.v-filterselect-suggestmenu table {
 	border-collapse: collapse;
 	border: none;
 }
-.i-filterselect-suggestmenu .gwt-MenuItem {
+.v-filterselect-suggestmenu .gwt-MenuItem {
 	white-space: nowrap;
 }
-.i-filterselect-suggestmenu .gwt-MenuItem .i-icon {
+.v-filterselect-suggestmenu .gwt-MenuItem .v-icon {
 	margin-right: 3px;
 	vertical-align: middle;
 }
-.i-filterselect-suggestmenu .gwt-MenuItem span {
+.v-filterselect-suggestmenu .gwt-MenuItem span {
 	vertical-align: middle;
 }
-.i-filterselect-suggestmenu .gwt-MenuItem-selected {
+.v-filterselect-suggestmenu .gwt-MenuItem-selected {
 	background: #333;
 	color: #fff;
 }
-.i-filterselect-nextpage,
-.i-filterselect-nextpage-off,
-.i-filterselect-prevpage-off,
-.i-filterselect-prevpage {
+.v-filterselect-nextpage,
+.v-filterselect-nextpage-off,
+.v-filterselect-prevpage-off,
+.v-filterselect-prevpage {
 	width: 100%;
 	background: #aaa;
 	text-align: center;
 	overflow: hidden;
 	cursor: pointer;
 }
-.i-filterselect-nextpage-off,
-.i-filterselect-prevpage-off {
+.v-filterselect-nextpage-off,
+.v-filterselect-prevpage-off {
 	color: #666;
 	opacity: .5;
 	filter: alpha(opacity=50);
 	cursor: default;
 }
-.i-filterselect-nextpage-off span,
-.i-filterselect-prevpage-off span {
+.v-filterselect-nextpage-off span,
+.v-filterselect-prevpage-off span {
 	cursor: default;
 }
-.i-filterselect-status {
+.v-filterselect-status {
 	white-space: nowrap;
 	text-align: center;
 }
 
 /* Error styles (disabled by default)
 
-.i-filterselect-error .i-filterselect-input,
-.i-select-error .i-select-option,
-.i-select-error .i-select-select,
-.i-select-error .i-select-twincol-selections,
-.i-select-error .i-select-twincol-options {
+.v-filterselect-error .v-filterselect-input,
+.v-select-error .v-select-option,
+.v-select-error .v-select-select,
+.v-select-error .v-select-twincol-selections,
+.v-select-error .v-select-twincol-options {
 	background: #ffaaaa;
 }
 */
 
 /*  Required field styles (disabled by default)
    
-.i-filterselect-error .i-filterselect-input,
-.i-select-required .i-select-option,
-.i-select-required .i-select-select,
-.i-select-required .i-select-twincol-selections,
-.i-select-required .i-select-twincol-options {
+.v-filterselect-error .v-filterselect-input,
+.v-select-required .v-select-option,
+.v-select-required .v-select-select,
+.v-select-required .v-select-twincol-selections,
+.v-select-required .v-select-twincol-options {
 	background: #ffaaaa;
 }
 */

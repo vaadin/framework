@@ -18,7 +18,7 @@ import com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer;
 
 public class VOrderedLayout extends CellBasedLayout {
 
-    public static final String CLASSNAME = "i-orderedlayout";
+    public static final String CLASSNAME = "v-orderedlayout";
 
     private int orientation;
 
@@ -838,8 +838,8 @@ public class VOrderedLayout extends CellBasedLayout {
         /*
          * UIDL contains component alignments as a comma separated list.
          * 
-         * See com.vaadin.terminal.gwt.client.ui.AlignmentInfo.java for
-         * possible values.
+         * See com.vaadin.terminal.gwt.client.ui.AlignmentInfo.java for possible
+         * values.
          */
         final int[] alignments = uidl.getIntArrayAttribute("alignments");
 

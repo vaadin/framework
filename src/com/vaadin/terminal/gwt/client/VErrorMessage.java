@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.terminal.gwt.client.ui.VToolkitOverlay;
 
 public class VErrorMessage extends FlowPanel {
-    public static final String CLASSNAME = "i-errormessage";
+    public static final String CLASSNAME = "v-errormessage";
 
     public VErrorMessage() {
         super();

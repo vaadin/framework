@@ -1,31 +1,31 @@
-.i-captionwrapper {
+.v-captionwrapper {
 	text-align: left; /* Force default alignment */
 }
-.i-caption {
+.v-caption {
 	overflow: hidden;
 	white-space: nowrap;
 }
-.i-errorindicator {
+.v-errorindicator {
 	float: left;
 }
-.i-caption .i-icon {
+.v-caption .v-icon {
 	float: left;
 	padding-right: 2px;
 	vertical-align: middle;
 }
-.i-caption .i-captiontext {
+.v-caption .v-captiontext {
 	float: left;
 	overflow: hidden;
 	vertical-align: middle;
 }
-.i-caption .i-required-field-indicator {
+.v-caption .v-required-field-indicator {
 	float: left;
 }
 
 /* Fix IE6 "double-float-margin-bug" */
-.i-ie6 .i-errorindicator,
-.i-ie6 .i-icon,
-.i-ie6 .i-captiontext,
-.i-ie6 .i-required-field-indicator {
+.v-ie6 .v-errorindicator,
+.v-ie6 .v-icon,
+.v-ie6 .v-captiontext,
+.v-ie6 .v-required-field-indicator {
 	display: inline;
 }

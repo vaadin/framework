@@ -3197,8 +3197,8 @@ public class Table extends AbstractSelect implements Action.Container,
      * Allow to define specific style on cells (and rows) contents. Implements
      * this interface and pass it to Table.setCellStyleGenerator. Row styles are
      * generated when porpertyId is null. The CSS class name that will be added
-     * to the cell content is <tt>i-table-cell-content-[style name]</tt>, and
-     * the row style will be <tt>i-table-row-[style name]</tt>.
+     * to the cell content is <tt>v-table-cell-content-[style name]</tt>, and
+     * the row style will be <tt>v-table-row-[style name]</tt>.
      */
     public interface CellStyleGenerator extends Serializable {
 
@@ -3210,8 +3210,8 @@ public class Table extends AbstractSelect implements Action.Container,
          * @param propertyId
          *            The propertyId of the cell, null when getting row style
          * @return The style name to add to this cell or row. (the CSS class
-         *         name will be i-table-cell-content-[style name], or
-         *         i-table-row-[style name] for rows)
+         *         name will be v-table-cell-content-[style name], or
+         *         v-table-row-[style name] for rows)
          */
         public abstract String getStyle(Object itemId, Object propertyId);
     }

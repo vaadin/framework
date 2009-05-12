@@ -30,7 +30,7 @@ public class VNotification extends VToolkitOverlay {
     public static final int DELAY_FOREVER = -1;
     public static final int DELAY_NONE = 0;
 
-    private static final String STYLENAME = "i-Notification";
+    private static final String STYLENAME = "v-Notification";
     private static final int mouseMoveThreshold = 7;
     private static final int Z_INDEX_BASE = 20000;
     public static final String STYLE_SYSTEM = "system";

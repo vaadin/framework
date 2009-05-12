@@ -19,7 +19,7 @@ import com.vaadin.terminal.gwt.client.Util;
 
 public class VCustomComponent extends SimplePanel implements Container {
 
-    private static final String CLASSNAME = "i-customcomponent";
+    private static final String CLASSNAME = "v-customcomponent";
     private String height;
     private ApplicationConnection client;
     private boolean rendering;

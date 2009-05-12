@@ -1,37 +1,37 @@
-.i-menubar table {
+.v-menubar table {
 	white-space: nowrap;
 	border-collapse: collapse;
 	padding: 0;
 	margin: 0;
 }
-.i-menubar table {
+.v-menubar table {
 	white-space: nowrap;
 	border-collapse: collapse;
 	padding: 0;
 	margin: 0;
 }
-.i-menubar .menuitem {
+.v-menubar .menuitem {
 	cursor : default;
 }
-.i-menubar-submenu {
+.v-menubar-submenu {
 	background: #fff;
 }
-.i-menubar-submenu table {
+.v-menubar-submenu table {
 	white-space: nowrap;
 	border-collapse: collapse;
 	padding: 0;
 	margin: 0;
 }
-.i-menubar-submenu table td {
+.v-menubar-submenu table td {
 	white-space: nowrap;
 	padding: 0;
 	margin: 0;
 }
-.i-menubar .menuitem-selected,
-.i-menubar-submenu .menuitem-selected {
+.v-menubar .menuitem-selected,
+.v-menubar-submenu .menuitem-selected {
 	background: #333;
 	color: #fff;
 }
-.i-menubar-submenu .menuitem { 
+.v-menubar-submenu .menuitem { 
 	cursor: default;
 }

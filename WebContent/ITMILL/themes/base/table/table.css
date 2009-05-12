@@ -6,48 +6,48 @@
  * these instructions.
  * 
  * Borders in table header and in table body need to be same width
- * - specify vertical borders on .i-table-header-wrap and .i-table-body
+ * - specify vertical borders on .v-table-header-wrap and .v-table-body
  *
  * Table cells in body:
- *  - padding/border for cells is to be defined for td elements (class name: .i-table-cell-content)
+ *  - padding/border for cells is to be defined for td elements (class name: .v-table-cell-content)
  *  - in default theme there are no borders, but they should work. Just set border-right or border-bottom
- *  - no padding or border is allowed for div inside cells (class name: .i-table-cell-wrapper) element
+ *  - no padding or border is allowed for div inside cells (class name: .v-table-cell-wrapper) element
  *  - background is allowed for both elements
  *
  * Table headers:
- *  - table cells in header contain .i-table-resizer and 
- *	  .i-table-caption-container div elements, which are both floated to right
- *  - to align header caption to body content resizer width + .i-table-caption-container
+ *  - table cells in header contain .v-table-resizer and 
+ *	  .v-table-caption-container div elements, which are both floated to right
+ *  - to align header caption to body content resizer width + .v-table-caption-container
  *    padding right should be equal to content cells padding-right and border-right.
  *  - Possible cell border in header must be themed into column resizer.
  *
  */
-.i-table {
+.v-table {
 	overflow: hidden;
 	text-align: left; /* Force default alignment */
 }
-.i-table-header-wrap {
+.v-table-header-wrap {
 	overflow: hidden;
 	border: 1px solid #aaa;
 	border-bottom: none;
 	background: #efefef;
 }
-.i-table-header table,
-.i-table-table {
+.v-table-header table,
+.v-table-table {
 	border-spacing: 0;
 	margin: 0;
 	padding: 0;
 	border: 0;
 }
-.i-table-header td {
+.v-table-header td {
 	padding: 0;
 }
-.i-table-header-cell,
-.i-table-header-cell-asc,
-.i-table-header-cell-desc {
+.v-table-header-cell,
+.v-table-header-cell-asc,
+.v-table-header-cell-desc {
 	cursor: pointer;
 }
-.i-table-resizer {
+.v-table-resizer {
 	display: block;
 	height: 1.2em;
 	float: right;
@@ -56,48 +56,48 @@
 	width: 1px;
 	overflow: hidden;
 }
-.i-table-caption-container {
+.v-table-caption-container {
 	float: right;
 	overflow: hidden;
 	white-space: nowrap;
 	padding-right: 6px;
 }
-.i-table-header-cell-asc .i-table-caption-container {
+.v-table-header-cell-asc .v-table-caption-container {
 	background: transparent url(../common/img/sprites.png) no-repeat right 6px;
 }
-.i-table-header-cell-desc .i-table-caption-container {
+.v-table-header-cell-desc .v-table-caption-container {
 	background: transparent url(../common/img/sprites.png) no-repeat right -10px;
 }
-.i-table-body {
+.v-table-body {
 	border: 1px solid #aaa;
 }
-.i-table-row-spacer {
+.v-table-row-spacer {
 	height: 10px;
 	overflow: hidden; /* IE hack to allow < one line height divs */
 }
-.i-table-row,
-.i-table-row-odd {
+.v-table-row,
+.v-table-row-odd {
 	border: 0;
 	margin: 0;
 	padding: 0;
 	cursor: default;
 }
-.i-table .i-selected {
+.v-table .v-selected {
 	background: #999;
 	color: #fff;
 }
-.i-table-cell-content {
+.v-table-cell-content {
 	white-space: nowrap;
 	overflow: hidden;
 	padding: 0 6px;
 	border-right: 1px solid #aaa;
 }
-.i-table-cell-wrapper {
+.v-table-cell-wrapper {
 	/* Do not specify any margins, paddings or borders here */
 	white-space: nowrap;
 	overflow: hidden;
 }
-.i-table-column-selector {
+.v-table-column-selector {
 	float: right;
 	background: transparent url(../common/img/sprites.png) no-repeat 4px -37px;
 	margin: -1.2em 0 0 0;
@@ -106,19 +106,19 @@
 	position: relative; /* hide this from IE, it works without it */
 	cursor: pointer;
 }
-.i-ie6 .i-table-column-selector,
-.i-ie7 .i-table-column-selector {
+.v-ie6 .v-table-column-selector,
+.v-ie7 .v-table-column-selector {
 	position: static;
 }
-.i-table-focus-slot-left {
+.v-table-focus-slot-left {
 	border-left: 2px solid #999;
 	margin-right: -2px;
 }
-.i-table-focus-slot-right {
+.v-table-focus-slot-right {
 	border-right: 2px solid #999;
 	margin-left: -2px;
 }
-.i-table-header-drag {
+.v-table-header-drag {
 	position: absolute;
 	background: #efefef;
 	border: 1px solid #eee;
@@ -127,19 +127,19 @@
 	margin-top: 20px;
 	z-index: 30000;
 }
-.i-table-scrollposition {
+.v-table-scrollposition {
 	width: 160px;
 	background: #eee;
 	border: 1px solid #aaa;
 }
-.i-table-scrollposition span {
+.v-table-scrollposition span {
 	display: block;
 	text-align: center;
 }
 /* row in column selector */
-.i-on div {
+.v-on div {
 	
 }
-.i-off div {
+.v-off div {
 	color: #ddd;
 }

@@ -1,4 +1,4 @@
-.i-datefield-button {
+.v-datefield-button {
 	font-size:13px;
 	width: 22px;
 	height: 24px;
@@ -8,7 +8,7 @@
 	background: transparent url(img/open-button.png) no-repeat right 0;
 	vertical-align: top;
 }
-.i-datefield-popup {
+.v-datefield-popup {
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	color: #464f52;
 	font-size: 12px;
@@ -16,37 +16,37 @@
 	border: 1px solid #b6bbbc;
 	padding: 6px;
 }
-.i-datefield-calendarpanel {
+.v-datefield-calendarpanel {
 	width: 19em;
 	font-size: 12px;
 }
-.i-datefield-popup .i-datefield-calendarpanel {
+.v-datefield-popup .v-datefield-calendarpanel {
 	width: 16em;
 }
-.i-datefield-calendarpanel td {
+.v-datefield-calendarpanel td {
 	text-align: right;
 }
-.i-datefield-calendarpanel td span {
+.v-datefield-calendarpanel td span {
 	display: block;
 }
-.i-datefield-calendarpanel-header {
+.v-datefield-calendarpanel-header {
 	height: 30px;
 }
-.i-datefield-calendarpanel-header,
-.i-datefield-calendarpanel strong {
+.v-datefield-calendarpanel-header,
+.v-datefield-calendarpanel strong {
 	font-size: 13px;
 }
-.i-datefield-popup .i-datefield-calendarpanel-header,
-.i-datefield-popup .i-datefield-calendarpanel strong {
+.v-datefield-popup .v-datefield-calendarpanel-header,
+.v-datefield-popup .v-datefield-calendarpanel strong {
 	font-size: 12px;
 }
-.i-datefield-calendarpanel-month {
+.v-datefield-calendarpanel-month {
 	font-weight: bold;
 	text-shadow: #ffffff 2px 2px 0;
 }
 /* Year buttons */
-.i-datefield-calendarpanel .i-button-prevyear,
-.i-datefield-calendarpanel .i-button-nextyear {
+.v-datefield-calendarpanel .v-button-prevyear,
+.v-datefield-calendarpanel .v-button-nextyear {
 	display: block;
 	width: 16px;
 	height: 16px;
@@ -56,16 +56,16 @@
 	text-indent: -90000px;
 	margin: 0 auto;
 }
-.i-datefield-calendarpanel .i-button-nextyear {
+.v-datefield-calendarpanel .v-button-nextyear {
 	background: transparent url(img/nextyear.png) no-repeat;
 }
-.i-datefield-calendarpanel .i-button-prevyear:hover,
-.i-datefield-calendarpanel .i-button-nextyear:hover {
+.v-datefield-calendarpanel .v-button-prevyear:hover,
+.v-datefield-calendarpanel .v-button-nextyear:hover {
 	background-position: left bottom;
 }
 /* Month buttons */
-.i-datefield-calendarpanel .i-button-prevmonth,
-.i-datefield-calendarpanel .i-button-nextmonth {
+.v-datefield-calendarpanel .v-button-prevmonth,
+.v-datefield-calendarpanel .v-button-nextmonth {
 	display: block;
 	width: 11px;
 	height: 16px;
@@ -75,40 +75,40 @@
 	text-indent: -90000px;
 	margin: 0 auto;
 }
-.i-datefield-calendarpanel .i-button-nextmonth {
+.v-datefield-calendarpanel .v-button-nextmonth {
 	background: transparent url(img/nextmonth.png) no-repeat;
 }
-.i-datefield-calendarpanel .i-button-prevmonth:hover,
-.i-datefield-calendarpanel .i-button-nextmonth:hover {
+.v-datefield-calendarpanel .v-button-prevmonth:hover,
+.v-datefield-calendarpanel .v-button-nextmonth:hover {
 	background-position: left bottom;
 }
-.i-datefield-calendarpanel strong {
+.v-datefield-calendarpanel strong {
 	color: #ee5311;
 	display: block;
 	width: 20px;
 }
-.i-datefield-calendarpanel-day,
-.i-datefield-calendarpanel-day-today {
+.v-datefield-calendarpanel-day,
+.v-datefield-calendarpanel-day-today {
 	padding: 1px 3px;
 	width: 14px;
 	height: 16px;
 }
-.i-datefield-calendarpanel-day-today {
+.v-datefield-calendarpanel-day-today {
 	border: 1px solid #429ce9;
 	width: 12px;
 	height: 14px
 }
-.i-datefield-calendarpanel-day-entry {
+.v-datefield-calendarpanel-day-entry {
 	color: #6a98b5;
 }
-.i-datefield-calendarpanel-day-disabled {
+.v-datefield-calendarpanel-day-disabled {
 	font-weight: normal;
 	color: #dddddd;
 }
-.i-datefield-calendarpanel-day-entry.i-datefield-calendarpanel-day-disabled {
+.v-datefield-calendarpanel-day-entry.v-datefield-calendarpanel-day-disabled {
 	color: #afd6f8;
 }
-.i-datefield-calendarpanel-day-selected {
+.v-datefield-calendarpanel-day-selected {
 	font-weight: bold;
 	width: 14px;
 	height: 16px;
@@ -117,19 +117,19 @@
 	background: transparent url(img/selected-bg.png) no-repeat 50% 50%;
 	border: none;
 }
-.i-datefield-time {
+.v-datefield-time {
 	font-size: 11px;
 }
-.i-datefield-time .i-select {
+.v-datefield-time .v-select {
 	font-size: 10px;
 	padding: 0;
 	margin: 0;
 }
-.i-datefield-rendererror .i-textfield {
+.v-datefield-rendererror .v-textfield {
 	background: #ff9999;
 }
 /* IE specific styles */
-.i-ie7 .i-datefield-button {
+.v-ie7 .v-datefield-button {
 	background-position: right 1px;
 	height: 25px;
 	margin: 0;

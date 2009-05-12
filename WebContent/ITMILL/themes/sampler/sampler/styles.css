@@ -1,20 +1,20 @@
 /******************************************************************************
  * Sampler styles
  ******************************************************************************/
-.i-app-SamplerApplication {
+.v-app-SamplerApplication {
 	background-color: white;
 }
 
-.i-app-SamplerApplication .i-horizontallayout-topbar {
+.v-app-SamplerApplication .v-horizontallayout-topbar {
 	border-bottom: 1px solid #fff;
 	background: #5c5d60 url(top-bg.png) repeat-x;
 }
 
-.i-app-SamplerApplication .i-horizontallayout-sample-view {
+.v-app-SamplerApplication .v-horizontallayout-sample-view {
 	background: #fff url(main-bg.png) repeat-x;
 }
 
-.i-app-SamplerApplication .topbar .logo {
+.v-app-SamplerApplication .topbar .logo {
 	width: 167px;
 	height: 44px;
 	margin: 0;
@@ -23,26 +23,26 @@
 	overflow: hidden;
 }
 
-.i-app-SamplerApplication .topbar .logo img {
+.v-app-SamplerApplication .topbar .logo img {
 	display: none;
 }
 
-.i-app-SamplerApplication .i-popupview-quickjump {
+.v-app-SamplerApplication .v-popupview-quickjump {
 	background: transparent url(quickjump.png) no-repeat 0px 1px;
 }
 
-.i-customcomponent-breadcrumbs {
+.v-customcomponent-breadcrumbs {
 	font-family: arial, helvetica, verdana, sans-serif;
 }
-.i-sa .i-customcomponent-breadcrumbs {
+.v-sa .v-customcomponent-breadcrumbs {
 	font-family: helvetica, arial, verdana, sans-serif;
 }
-.i-customcomponent-breadcrumbs .i-horizontallayout-spacing-on {
+.v-customcomponent-breadcrumbs .v-horizontallayout-spacing-on {
 	padding-left: 5px;
 }
 
-.i-customcomponent-breadcrumbs .i-link a,
-.i-customcomponent-breadcrumbs .i-label {
+.v-customcomponent-breadcrumbs .v-link a,
+.v-customcomponent-breadcrumbs .v-label {
 	text-decoration: none;
 	color: #000;
 	text-shadow: 0 1px 0 #8f9193;
@@ -52,34 +52,34 @@
 	display: block;
 	float: left;
 }
-.i-customcomponent-breadcrumbs .i-label {
+.v-customcomponent-breadcrumbs .v-label {
 }
-.i-sa .i-customcomponent-breadcrumbs .i-label {
+.v-sa .v-customcomponent-breadcrumbs .v-label {
 	
 }
-.i-ie .i-customcomponent-breadcrumbs .i-label {
+.v-ie .v-customcomponent-breadcrumbs .v-label {
 	
 }
-.i-ff .i-customcomponent-breadcrumbs .i-label {
+.v-ff .v-customcomponent-breadcrumbs .v-label {
 	
 }
-.i-customcomponent-breadcrumbs .i-link span {
+.v-customcomponent-breadcrumbs .v-link span {
 	text-decoration: none;
 }
-.i-customcomponent-breadcrumbs .i-link a:hover {
+.v-customcomponent-breadcrumbs .v-link a:hover {
 	color: #000;
 	text-decoration: underline;
 }
-.i-customcomponent-breadcrumbs .i-link-bold {
+.v-customcomponent-breadcrumbs .v-link-bold {
 	height: 20px;
 	padding: 0 0 0 9px;
 	background: transparent url(breadcrumb-current-left.png) no-repeat;
 	float: left;
 }
-.i-ie .i-customcomponent-breadcrumbs .i-link-bold {
+.v-ie .v-customcomponent-breadcrumbs .v-link-bold {
 	margin-top: 1px;
 }
-.i-customcomponent-breadcrumbs .i-link-bold a {
+.v-customcomponent-breadcrumbs .v-link-bold a {
 	display: block;
 	height: 16px;
 	background: transparent url(breadcrumb-current-right.png) no-repeat right top;
@@ -90,31 +90,31 @@
 	padding: 4px 9px 0 0;
 	cursor: default;
 }
-.i-sa .i-customcomponent-breadcrumbs .i-link-bold a {
+.v-sa .v-customcomponent-breadcrumbs .v-link-bold a {
 	height: 17px;
 	padding-top: 3px;
 }
-.i-ie .i-customcomponent-breadcrumbs .i-link-bold a {
+.v-ie .v-customcomponent-breadcrumbs .v-link-bold a {
 	padding-top: 2px;
 	padding-bottom: 2px;
 }
-.i-ff .i-customcomponent-breadcrumbs .i-link-bold a {
+.v-ff .v-customcomponent-breadcrumbs .v-link-bold a {
 	padding-top: 2px;
 	padding-bottom: 2px;
 }
-.i-customcomponent-breadcrumbs .i-link-bold a:hover {
+.v-customcomponent-breadcrumbs .v-link-bold a:hover {
 	color: #c2c4c6;
 	text-decoration: none;
 }
 
-.i-app-SamplerApplication .i-horizontallayout-topbar .i-button-link span {
+.v-app-SamplerApplication .v-horizontallayout-topbar .v-button-link span {
 	text-decoration: none;
 }
-.i-app-SamplerApplication .i-horizontallayout-topbar .i-button-link:hover span {
+.v-app-SamplerApplication .v-horizontallayout-topbar .v-button-link:hover span {
 	text-decoration: underline;
 }
-.i-app-SamplerApplication .i-horizontallayout-segment .i-button,
-.i-app-SamplerApplication .i-horizontallayout-segment .i-popupview {
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button,
+.v-app-SamplerApplication .v-horizontallayout-segment .v-popupview {
 	width: 30px;
 	height: 24px;
 	overflow: hidden;
@@ -123,55 +123,55 @@
 	background: transparent url(segment.png) no-repeat;
 	cursor: default;
 }
-.i-app-SamplerApplication .i-horizontallayout-segment .i-button:active,
-.i-app-SamplerApplication .i-horizontallayout-segment .i-popupview:active {
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button:active,
+.v-app-SamplerApplication .v-horizontallayout-segment .v-popupview:active {
 	background-position: left bottom;
 }
-.i-app-SamplerApplication .i-horizontallayout-segment .i-button-next,
-.i-app-SamplerApplication .i-horizontallayout-segment .i-button-tree-switch {
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button-next,
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button-tree-switch {
 	background-position: right top;
 }
-.i-app-SamplerApplication .i-horizontallayout-segment .i-button-next:active,
-.i-app-SamplerApplication .i-horizontallayout-segment .i-button-tree-switch:active {
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button-next:active,
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button-tree-switch:active {
 	background-position: right bottom;
 }
-.i-app-SamplerApplication .i-horizontallayout-segment .i-button-down {
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button-down {
 	background-position: right bottom;
 }
-.i-app-SamplerApplication .i-horizontallayout-segment .i-button span,
-.i-app-SamplerApplication .i-horizontallayout-segment .i-popupview span {
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button span,
+.v-app-SamplerApplication .v-horizontallayout-segment .v-popupview span {
 	display: block;
 	height: 24px;
 	background-repeat: no-repeat;
 	background-position: 50% 30%;
 }
-.i-app-SamplerApplication .i-horizontallayout-segment .i-button-tree-switch span {
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button-tree-switch span {
 	background-image: url(tree.png);
 }
-.i-app-SamplerApplication .i-horizontallayout-segment .i-popupview span {
+.v-app-SamplerApplication .v-horizontallayout-segment .v-popupview span {
 	background-image: url(magnifier.png);
 	background-position: 50% 40%;
 }
-.i-app-SamplerApplication .i-horizontallayout-segment .i-button-previous span {
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button-previous span {
 	background-image: url(prev.png);
 }
-.i-app-SamplerApplication .i-horizontallayout-segment .i-button-next span {
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button-next span {
 	background-image: url(next.png);
 }
-.i-popupview-popup-quickjump {
+.v-popupview-popup-quickjump {
 	background: transparent;
 	border: none;
 }
 
-.i-app-SamplerApplication .i-splitpanel-first-container-main-split {
+.v-app-SamplerApplication .v-splitpanel-first-container-main-split {
 	background: #eaebec url(tree-bg.png) repeat-x fixed;
 }
 
-.i-app-SamplerApplication .i-splitpanel-hsplitter-main-split {
+.v-app-SamplerApplication .v-splitpanel-hsplitter-main-split {
 	width: 1px;
 	background: #aeb0b5;
 }
-.i-app-SamplerApplication .i-splitpanel-hsplitter-main-split div {
+.v-app-SamplerApplication .v-splitpanel-hsplitter-main-split div {
 	width: 3px;
 	background: transparent;
 	border: none;
@@ -180,22 +180,22 @@
 }
 
 
-.i-app-SamplerApplication .i-tree-menu {
+.v-app-SamplerApplication .v-tree-menu {
 	font-family: arial, helvetica, verdana, sans-serif;
 	font-size: 12px;
 	line-height: 17px;
 	padding: 13px 0;
 }
-.i-sa .i-app-SamplerApplication .i-tree-menu {
+.v-sa .v-app-SamplerApplication .v-tree-menu {
 	font-family: helvetica, arial, verdana, sans-serif;
 }
-.i-app-SamplerApplication .i-tree-menu .i-tree-node-selected span {
+.v-app-SamplerApplication .v-tree-menu .v-tree-node-selected span {
 	background: #7d8490;
 	padding: 1px;
 }
 
 
-.i-app-SamplerApplication .i-label-section {
+.v-app-SamplerApplication .v-label-section {
 	font-family: "Helvetica Neue", helvetica, arial, verdana, sans-serif;
 	font-size: 24px;
 	font-weight: bold;
@@ -206,7 +206,7 @@
 	color: #1e2229;
 	
 }
-.i-app-SamplerApplication .i-label-subsection {
+.v-app-SamplerApplication .v-label-subsection {
 	font-family: helvetica, arial, verdana, sans-serif;
 	font-size: 16px;
 	font-weight: normal;
@@ -214,16 +214,16 @@
 	text-indent: 15px;
 	padding-right: 20px;
 }
-.i-app-SamplerApplication .i-button-screenshot {
+.v-app-SamplerApplication .v-button-screenshot {
 	border: 3px solid #ccc;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	overflow: hidden;
 }
-.i-app-SamplerApplication .i-button-screenshot:hover {
+.v-app-SamplerApplication .v-button-screenshot:hover {
 	border-color: #abc;
 }
-.i-app-SamplerApplication .i-button-screenshot img.i-icon {
+.v-app-SamplerApplication .v-button-screenshot img.v-icon {
 	margin: 0;
 	margin-top: -2px;
 	margin-left: -3px;
@@ -233,40 +233,40 @@
 	-webkit-border-radius: 5px;
 	overflow: hidden;
 }
-.i-ie .i-app-SamplerApplication .i-button-screenshot img.i-icon {
+.v-ie .v-app-SamplerApplication .v-button-screenshot img.v-icon {
 	margin-left: -12px;
 }
 
 
-.i-app-SamplerApplication .i-table-featuretable tr.i-table-row,
-.i-app-SamplerApplication .i-table-featuretable tr.i-table-row-odd {
+.v-app-SamplerApplication .v-table-featuretable tr.v-table-row,
+.v-app-SamplerApplication .v-table-featuretable tr.v-table-row-odd {
 	height: 50px;
 }
-.i-app-SamplerApplication .i-table-featuretable tr.i-table-row-section {
+.v-app-SamplerApplication .v-table-featuretable tr.v-table-row-section {
 	color: #333366;
 	font-size: 18px;
 	font-weight: bold;
 }
-.i-app-SamplerApplication .i-table-featuretable tr.i-table-row-subsection {
+.v-app-SamplerApplication .v-table-featuretable tr.v-table-row-subsection {
 	font-size: 16px;
 	font-weight: bold;
 }
 
-.i-app-SamplerApplication .i-table-featuretable .i-table-body {
+.v-app-SamplerApplication .v-table-featuretable .v-table-body {
 	border: transparent;	
 }
 
-.i-app-SamplerApplication .i-panel-content-light {
+.v-app-SamplerApplication .v-panel-content-light {
 	border-top: 0px;
 }
 
-.i-app-SamplerApplication .i-horizontallayout-sample-view .i-horizontallayout-margin-top {
+.v-app-SamplerApplication .v-horizontallayout-sample-view .v-horizontallayout-margin-top {
 	padding-top: 27px;
 }
-.i-app-SamplerApplication .i-horizontallayout-sample-view .i-horizontallayout-margin-bottom {
+.v-app-SamplerApplication .v-horizontallayout-sample-view .v-horizontallayout-margin-bottom {
 	padding-bottom: 24px;
 }
-.i-app-SamplerApplication .i-caption-feature-controls {
+.v-app-SamplerApplication .v-caption-feature-controls {
 	font-family: "Helvetica Neue", helvetica, arial, sans-serif;
 	font-weight: bold;
 	font-size: 24px;
@@ -275,33 +275,33 @@
 	letter-spacing: -0.015em;
 	text-shadow: 0 2px 1px #c0c1c2;
 }
-.i-app-SamplerApplication .feature-info {
+.v-app-SamplerApplication .feature-info {
 	background: #1e2123 url(info-bubble-bg.png) repeat-y;
 	color: #b8bbbe;
 	font-family: arial, helvetica, verdana, sans-serif;
 	font-size: 12px;
 	line-height: 19px;
 }
-.i-sa .i-app-SamplerApplication .feature-info {
+.v-sa .v-app-SamplerApplication .feature-info {
 	font-family: helvetica, arial, verdana, sans-serif;
 }
-.i-app-SamplerApplication .feature-info div.i-link a {
+.v-app-SamplerApplication .feature-info div.v-link a {
 	color: #b7c0c7;
 	font-size: 11px;
 	line-height: 18px;
 	margin-left: 28px;
 }
-.i-app-SamplerApplication .feature-info div.i-link a:hover {
+.v-app-SamplerApplication .feature-info div.v-link a:hover {
 	color: #dcebf6;
 }
-.i-app-SamplerApplication .feature-info div.i-link a span {
+.v-app-SamplerApplication .feature-info div.v-link a span {
 	text-decoration: none;
 	border-bottom: 1px dotted #495964;
 }
-.i-app-SamplerApplication .feature-info div.i-link a:hover span {
+.v-app-SamplerApplication .feature-info div.v-link a:hover span {
 	border-bottom: 1px solid #dcebf6;
 }
-.i-app-SamplerApplication .feature-info .i-panel-caption {
+.v-app-SamplerApplication .feature-info .v-panel-caption {
 	color: #fff;
 	font-family: "Helvetica Neue", helvetica, arial, verdana, sans-serif;
 	font-size: 14px;
@@ -315,29 +315,29 @@
 	padding-top: 15px;
 	border: none;
 }
-.i-app-SamplerApplication .feature-info .i-panel-content {
+.v-app-SamplerApplication .feature-info .v-panel-content {
 	background: transparent url(info-bubble-top.png) no-repeat 0 -44px;
 	border: none;
 }
-.i-app-SamplerApplication .i-panel-deco-feature-info {
+.v-app-SamplerApplication .v-panel-deco-feature-info {
 	height: 28px;
 	background: transparent url(info-bubble-bottom.png);
 	margin: 0;
 	border: none;
 }
 
-.i-app-SamplerApplication .feature-info .i-verticallayout .i-verticallayout-margin-left {
+.v-app-SamplerApplication .feature-info .v-verticallayout .v-verticallayout-margin-left {
 	padding-left: 28px;
 }
-.i-app-SamplerApplication .feature-info .i-verticallayout .i-verticallayout-margin-right {
+.v-app-SamplerApplication .feature-info .v-verticallayout .v-verticallayout-margin-right {
 	padding-right: 20px;
 }
 
-.i-app-SamplerApplication .feature-info .i-label {
+.v-app-SamplerApplication .feature-info .v-label {
 	padding: 0 20px 9px 28px;
 }
 
-.i-app-SamplerApplication .feature-info .i-label-section {
+.v-app-SamplerApplication .feature-info .v-label-section {
 	font-weight: bold;
 	font-size: 12px;
 	line-height: 30px;
@@ -348,25 +348,25 @@
 	padding: 0;
 }
 
-.i-app-SamplerApplication .feature-info .i-label-section span {
+.v-app-SamplerApplication .feature-info .v-label-section span {
 	display: block;
 	background: transparent url(info-bubble-separator.png) repeat-x;
 	padding: 5px 0 0 19px;
 	margin: 0 5px 0 9px;
 }
 
-.i-app-SamplerApplication .feature-info .description {
+.v-app-SamplerApplication .feature-info .description {
 	padding: 0;
 }
-.i-app-SamplerApplication .feature-info .description div.outer-deco {
+.v-app-SamplerApplication .feature-info .description div.outer-deco {
 	margin: 0 5px 0 9px;
 	width: 353px;
 }
-.i-app-SamplerApplication .feature-info .description div.deco {
+.v-app-SamplerApplication .feature-info .description div.deco {
 	padding: 0 19px 13px 19px;
 	position: relative;
 }
-.i-app-SamplerApplication .feature-info .description span.deco {
+.v-app-SamplerApplication .feature-info .description span.deco {
 	display: block;
 	position: absolute;
 	height: 12px;
@@ -375,14 +375,14 @@
 	left: -5px;
 	top: 40%;
 }
-.i-ie6 .i-app-SamplerApplication .feature-info .description span.deco {
+.v-ie6 .v-app-SamplerApplication .feature-info .description span.deco {
 	left: -24px;
 }
 
-.i-app-SamplerApplication .feature-info .sample-description {
+.v-app-SamplerApplication .feature-info .sample-description {
 	padding: 0;
 }
-.i-app-SamplerApplication .feature-info .sample-description div.outer-deco {
+.v-app-SamplerApplication .feature-info .sample-description div.outer-deco {
 	margin: 0 5px 0 9px;
 	color: #e0ecff;
 	text-shadow: 0 1px 0 #283b4e;
@@ -391,11 +391,11 @@
 	border-bottom-color: #2e5b92;
 	width: 353px;
 }
-.i-ie6 .i-app-SamplerApplication .feature-info .sample-description div.outer-deco {
+.v-ie6 .v-app-SamplerApplication .feature-info .sample-description div.outer-deco {
 	border-top: none;
 }
 
-.i-app-SamplerApplication .feature-info .sample-description div.deco {
+.v-app-SamplerApplication .feature-info .sample-description div.deco {
 	padding: 13px 19px 13px 19px;
 	background: #31629e url(sample-desc-bg.png) repeat-x;
 	border: 1px solid #4b81b2;
@@ -404,7 +404,7 @@
 	position: relative;
 }
 
-.i-app-SamplerApplication .feature-info .sample-description span.deco {
+.v-app-SamplerApplication .feature-info .sample-description span.deco {
 	display: block;
 	position: absolute;
 	height: 11px;
@@ -413,41 +413,41 @@
 	left: -7px;
 	top: 45%;
 }
-.i-ie6 .i-app-SamplerApplication .feature-info .sample-description span.deco {
+.v-ie6 .v-app-SamplerApplication .feature-info .sample-description span.deco {
 	left: -26px;
 }
 
-.i-app-SamplerApplication .i-link-showcode {
+.v-app-SamplerApplication .v-link-showcode {
 	margin-left: 3px;
 }
-.i-app-SamplerApplication .i-button-showcode,
-.i-app-SamplerApplication .i-link-showcode {
+.v-app-SamplerApplication .v-button-showcode,
+.v-app-SamplerApplication .v-link-showcode {
 	font-family: arial, helvetica, verdana, sans-serif;
 	display: inline;
 	font-size: 12px;
 	line-height: 20px;
 	height: 20px;
 }
-.i-sa .i-app-SamplerApplication .i-button-showcode,
-.i-sa .i-app-SamplerApplication .i-link-showcode {
+.v-sa .v-app-SamplerApplication .v-button-showcode,
+.v-sa .v-app-SamplerApplication .v-link-showcode {
 	font-family: helvetica, arial, verdana, sans-serif;
 }
-.i-app-SamplerApplication .i-button-showcode span,
-.i-app-SamplerApplication .i-link-showcode span {
+.v-app-SamplerApplication .v-button-showcode span,
+.v-app-SamplerApplication .v-link-showcode span {
 	color: #8b8e91;
 	text-decoration: none;
 }
-.i-app-SamplerApplication .i-button-showcode:hover span,
-.i-app-SamplerApplication .i-link-showcode:hover span {
+.v-app-SamplerApplication .v-button-showcode:hover span,
+.v-app-SamplerApplication .v-link-showcode:hover span {
 	color: #62696f;
 	text-decoration: underline;
 }
-.i-app-SamplerApplication .i-panel-content-source {
+.v-app-SamplerApplication .v-panel-content-source {
 	border: 1px solid #eee;
 	background: #fff;
 }
 
-.i-customcomponent-ModeSwitch .i-button {
+.v-customcomponent-ModeSwitch .v-button {
 	height: 24px;
 	width: 30px;
 	border: none;
@@ -455,31 +455,31 @@
 	cursor: default;
 	padding: 0;
 }
-.i-customcomponent-ModeSwitch .i-button span {
+.v-customcomponent-ModeSwitch .v-button span {
 	display: none;
 }
-.i-customcomponent-ModeSwitch .i-button .i-icon {
+.v-customcomponent-ModeSwitch .v-button .v-icon {
 	width: auto;
 	height: auto;
 }
-.i-customcomponent-ModeSwitch .i-button-first-on,
-.i-customcomponent-ModeSwitch .i-button-first:active {
+.v-customcomponent-ModeSwitch .v-button-first-on,
+.v-customcomponent-ModeSwitch .v-button-first:active {
 	background-position: left bottom;
 }
-.i-customcomponent-ModeSwitch .i-button-first {
+.v-customcomponent-ModeSwitch .v-button-first {
 	background-position: left top;
 }
 /*
-.i-customcomponent-ModeSwitch .i-button-mid-on {
+.v-customcomponent-ModeSwitch .v-button-mid-on {
 	background: transparent url(mid-on.gif) no-repeat;
 }
-.i-customcomponent-ModeSwitch .i-button-mid {
+.v-customcomponent-ModeSwitch .v-button-mid {
 	background: transparent url(mid.gif) no-repeat;
 }*/
-.i-customcomponent-ModeSwitch .i-button-last-on,
-.i-customcomponent-ModeSwitch .i-button-last:active {
+.v-customcomponent-ModeSwitch .v-button-last-on,
+.v-customcomponent-ModeSwitch .v-button-last:active {
 	background-position: right bottom;
 }
-.i-customcomponent-ModeSwitch .i-button-last {
+.v-customcomponent-ModeSwitch .v-button-last {
 	background-position: right top;
 }

@@ -1,16 +1,16 @@
-.i-gridlayout-margin-top {
+.v-gridlayout-margin-top {
 	padding-top: 15px;
 }
-.i-gridlayout-margin-bottom {
+.v-gridlayout-margin-bottom {
 	padding-bottom: 15px;
 }
-.i-gridlayout-margin-left {
+.v-gridlayout-margin-left {
 	padding-left: 18px;
 } 
-.i-gridlayout-margin-right {
+.v-gridlayout-margin-right {
 	padding-right: 18px;
 }
-.i-gridlayout-spacing-on {
+.v-gridlayout-spacing-on {
 	padding-left: 8px;
 	padding-top: 8px;
 }

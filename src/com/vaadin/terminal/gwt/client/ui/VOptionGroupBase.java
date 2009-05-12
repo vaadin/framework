@@ -21,7 +21,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 abstract class VOptionGroupBase extends Composite implements Paintable, Field,
         ClickListener, ChangeListener, KeyboardListener, Focusable {
 
-    public static final String CLASSNAME_OPTION = "i-select-option";
+    public static final String CLASSNAME_OPTION = "v-select-option";
 
     protected ApplicationConnection client;
 

@@ -11,14 +11,14 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ClientExceptionHandler;
 import com.vaadin.terminal.gwt.client.DateTimeService;
-import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.LocaleNotLoadedException;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.VTooltip;
 
 public class VDateField extends FlowPanel implements Paintable, Field {
 
-    public static final String CLASSNAME = "i-datefield";
+    public static final String CLASSNAME = "v-datefield";
 
     protected String id;
 

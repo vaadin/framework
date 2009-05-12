@@ -31,7 +31,7 @@ public class VToolkitOverlay extends PopupPanel {
      * style of shadow, it can use setShadowStyle(String) to give the shadow
      * element a new style name.
      */
-    public static final String CLASSNAME_SHADOW = "i-shadow";
+    public static final String CLASSNAME_SHADOW = "v-shadow";
 
     /*
      * The shadow element for this overlay.
@@ -43,7 +43,7 @@ public class VToolkitOverlay extends PopupPanel {
      * nine different DIV-elements with the following class names:
      * 
      * <pre>
-     *   .i-shadow[-stylename]
+     *   .v-shadow[-stylename]
      *   ----------------------------------------------
      *   | .top-left     |   .top    |     .top-right |
      *   |---------------|-----------|----------------|
@@ -190,7 +190,7 @@ public class VToolkitOverlay extends PopupPanel {
      * @param style
      *            The new style name for the shadow element. Will be prefixed by
      *            CLASSNAME_SHADOW, e.g. style=='foobar' -> actual style
-     *            name=='i-shadow-foobar'.
+     *            name=='v-shadow-foobar'.
      */
     protected void setShadowStyle(String style) {
         if (shadow != null) {

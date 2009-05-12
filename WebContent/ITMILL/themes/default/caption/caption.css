@@ -1,15 +1,15 @@
-.i-captionwrapper {
+.v-captionwrapper {
 	margin: 0.3em 0 0 0;
 }
-.i-errorindicator {
+.v-errorindicator {
 	width: 12px;
 	height: 16px;
 	background: transparent url(../icons/16/error.png) no-repeat top right;
 }
-.i-ie6 .i-errorindicator {
+.v-ie6 .v-errorindicator {
 	/* gif for transparency */
 	background-image: url(../icons/16/error.gif);
 }
-.i-ie7 .i-errorindicator {
+.v-ie7 .v-errorindicator {
 	margin-left: -3px;
 }

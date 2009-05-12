@@ -22,7 +22,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
  * 
  */
 public class VTextArea extends VTextField {
-    public static final String CLASSNAME = "i-textarea";
+    public static final String CLASSNAME = "v-textarea";
 
     public VTextArea() {
         super(DOM.createTextArea());

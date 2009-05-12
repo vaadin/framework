@@ -22,7 +22,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 public class VMenuBar extends Widget implements Paintable, PopupListener {
 
     /** Set the CSS class name to allow styling. */
-    public static final String CLASSNAME = "i-menubar";
+    public static final String CLASSNAME = "v-menubar";
 
     /** For server connections **/
     protected String uidlId;
@@ -134,7 +134,7 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
         VMenuBar currentMenu = this;
 
         while (itr.hasNext()) {
-            UIDL item = (UIDL) itr.next();
+            UIDL item = itr.next();
             CustomMenuItem currentItem = null;
 
             String itemText = item.getStringAttribute("text");
@@ -184,7 +184,7 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
 
             while (!itr.hasNext() && !iteratorStack.empty()) {
                 itr = iteratorStack.pop();
-                currentMenu = (VMenuBar) menuStack.pop();
+                currentMenu = menuStack.pop();
             }
         }// while
 
@@ -196,7 +196,7 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
 
             int i = 0;
             for (; i < getItems().size() && topLevelWidth < ourWidth; i++) {
-                CustomMenuItem item = (CustomMenuItem) getItems().get(i);
+                CustomMenuItem item = getItems().get(i);
                 topLevelWidth += item.getOffsetWidth();
             }
 
@@ -208,7 +208,7 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
                 }
 
                 for (int j = 0; j < toBeCollapsed.size(); j++) {
-                    CustomMenuItem item = (CustomMenuItem) toBeCollapsed.get(j);
+                    CustomMenuItem item = toBeCollapsed.get(j);
                     removeItem(item);
 
                     // it's ugly, but we have to insert the submenu icon
@@ -346,7 +346,7 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
         Element targetElement = DOM.eventGetTarget(e);
         CustomMenuItem targetItem = null;
         for (int i = 0; i < items.size(); i++) {
-            CustomMenuItem item = (CustomMenuItem) items.get(i);
+            CustomMenuItem item = items.get(i);
             if (DOM.isOrHasChild(item.getElement(), targetElement)) {
                 targetItem = item;
             }
@@ -474,7 +474,7 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
      */
     public void onShow() {
         if (!items.isEmpty()) {
-            ((CustomMenuItem) items.get(0)).setSelected(true);
+            (items.get(0)).setSelected(true);
         }
     }
 

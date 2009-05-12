@@ -66,7 +66,7 @@ import com.vaadin.terminal.gwt.client.ui.VScrollTable.VScrollTableBody.VScrollTa
  */
 public class VScrollTable extends FlowPanel implements Table, ScrollListener {
 
-    public static final String CLASSNAME = "i-table";
+    public static final String CLASSNAME = "v-table";
     /**
      * multiple of pagelength which component will cache when requesting more
      * rows
@@ -820,7 +820,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
         if (scrollPositionElement == null) {
             scrollPositionElement = DOM.createDiv();
             DOM.setElementProperty(scrollPositionElement, "className",
-                    "i-table-scrollposition");
+                    "v-table-scrollposition");
             DOM.appendChild(getElement(), scrollPositionElement);
         }
 
@@ -1688,9 +1688,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
             public String getHTML() {
                 final StringBuffer buf = new StringBuffer();
                 if (collapsed) {
-                    buf.append("<span class=\"i-off\">");
+                    buf.append("<span class=\"v-off\">");
                 } else {
-                    buf.append("<span class=\"i-on\">");
+                    buf.append("<span class=\"v-on\">");
                 }
                 buf.append(super.getHTML());
                 buf.append("</span>");
@@ -1947,7 +1947,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
                 row.addStyleName(CLASSNAME + "-row");
             }
             if (row.isSelected()) {
-                row.addStyleName("i-selected");
+                row.addStyleName("v-selected");
             }
             tBodyElement.insertBefore(row.getElement(), tBodyElement
                     .getFirstChild());
@@ -1967,7 +1967,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
                 row.addStyleName(CLASSNAME + "-row");
             }
             if (row.isSelected()) {
-                row.addStyleName("i-selected");
+                row.addStyleName("v-selected");
             }
             tBodyElement.appendChild(row.getElement());
             adopt(row);
@@ -2516,19 +2516,17 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
                         deselectAll();
                     }
                     selectedRowKeys.add(String.valueOf(rowKey));
-                    addStyleName("i-selected");
+                    addStyleName("v-selected");
                 } else {
                     selectedRowKeys.remove(String.valueOf(rowKey));
-                    removeStyleName("i-selected");
+                    removeStyleName("v-selected");
                 }
             }
 
             /*
              * (non-Javadoc)
              * 
-             * @see
-             * com.vaadin.terminal.gwt.client.ui.IActionOwner#getActions
-             * ()
+             * @see com.vaadin.terminal.gwt.client.ui.IActionOwner#getActions ()
              */
             public Action[] getActions() {
                 if (actionKeys == null) {
@@ -2833,7 +2831,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
             s = "<img src=\""
                     + client.translateToolkitUri(uidl
                             .getStringAttribute("icon"))
-                    + "\" alt=\"icon\" class=\"i-icon\">" + s;
+                    + "\" alt=\"icon\" class=\"v-icon\">" + s;
         }
         return s;
     }

@@ -18,10 +18,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
-import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.VCaption;
 
 public class VAbsoluteLayout extends ComplexPanel implements Container {
 
@@ -29,7 +29,7 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
     public static final String TAGNAME = "absolutelayout";
 
     /** Class name, prefix in styling */
-    public static final String CLASSNAME = "i-absolutelayout";
+    public static final String CLASSNAME = "v-absolutelayout";
 
     private DivElement marginElement;
 

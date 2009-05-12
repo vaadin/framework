@@ -1,39 +1,39 @@
-.i-formlayout-cell .i-errorindicator {
+.v-formlayout-cell .v-errorindicator {
 	display: block;
 }
-.i-formlayout-captioncell {
+.v-formlayout-captioncell {
 	text-align:right;
 	white-space: nowrap;
 }
-.i-formlayout-captioncell .i-caption {
+.v-formlayout-captioncell .v-caption {
 	overflow: visible;
 }
-.i-formlayout-spacing .i-formlayout-row .i-formlayout-captioncell, 
-.i-formlayout-spacing .i-formlayout-row .i-formlayout-contentcell,
-.i-formlayout-spacing .i-formlayout-row .i-formlayout-errorcell {
+.v-formlayout-spacing .v-formlayout-row .v-formlayout-captioncell, 
+.v-formlayout-spacing .v-formlayout-row .v-formlayout-contentcell,
+.v-formlayout-spacing .v-formlayout-row .v-formlayout-errorcell {
 	padding-top: 1em;
 }
-.i-formlayout-spacing .i-formlayout-firstrow .i-formlayout-captioncell, 
-.i-formlayout-spacing .i-formlayout-firstrow .i-formlayout-contentcell,
-.i-formlayout-spacing .i-formlayout-firstrow .i-formlayout-errorcell {
+.v-formlayout-spacing .v-formlayout-firstrow .v-formlayout-captioncell, 
+.v-formlayout-spacing .v-formlayout-firstrow .v-formlayout-contentcell,
+.v-formlayout-spacing .v-formlayout-firstrow .v-formlayout-errorcell {
 	padding-top: 0;
 }
-.i-formlayout-margin-top .i-formlayout-firstrow .i-formlayout-captioncell, 
-.i-formlayout-margin-top .i-formlayout-firstrow .i-formlayout-contentcell,
-.i-formlayout-margin-top .i-formlayout-firstrow .i-formlayout-errorcell {
+.v-formlayout-margin-top .v-formlayout-firstrow .v-formlayout-captioncell, 
+.v-formlayout-margin-top .v-formlayout-firstrow .v-formlayout-contentcell,
+.v-formlayout-margin-top .v-formlayout-firstrow .v-formlayout-errorcell {
 	padding-top: 2em;
 }
-.i-formlayout-margin-bottom .i-formlayout-lastrow .i-formlayout-captioncell,
-.i-formlayout-margin-bottom .i-formlayout-lastrow .i-formlayout-contentcell,
-.i-formlayout-margin-bottom .i-formlayout-lastrow .i-formlayout-errorcell {
+.v-formlayout-margin-bottom .v-formlayout-lastrow .v-formlayout-captioncell,
+.v-formlayout-margin-bottom .v-formlayout-lastrow .v-formlayout-contentcell,
+.v-formlayout-margin-bottom .v-formlayout-lastrow .v-formlayout-errorcell {
 	padding-bottom: 2em;
 }
-.i-formlayout-margin-left .i-formlayout-captioncell {
+.v-formlayout-margin-left .v-formlayout-captioncell {
 	padding-left: 2em;
 } 
-.i-formlayout-margin-right .i-formlayout-contentcell {
+.v-formlayout-margin-right .v-formlayout-contentcell {
 	padding-right: 2em;
 }
-.i-formlayout-captioncell .i-caption .i-required-field-indicator {
+.v-formlayout-captioncell .v-caption .v-required-field-indicator {
 	float: none;
 }

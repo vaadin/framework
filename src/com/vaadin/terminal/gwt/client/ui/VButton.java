@@ -12,19 +12,19 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VTooltip;
 
 public class VButton extends Button implements Paintable {
 
     private String width = null;
 
-    public static final String CLASSNAME = "i-button";
-    
+    public static final String CLASSNAME = "v-button";
+
     // Used only for IE, because it doesn't support :active CSS selector
-    private static final String CLASSNAME_DOWN = "i-pressed";
+    private static final String CLASSNAME_DOWN = "v-pressed";
 
     String id;
 
@@ -87,7 +87,7 @@ public class VButton extends Button implements Paintable {
             if (errorIndicatorElement == null) {
                 errorIndicatorElement = DOM.createDiv();
                 DOM.setElementProperty(errorIndicatorElement, "className",
-                        "i-errorindicator");
+                        "v-errorindicator");
             }
             DOM.insertChild(getElement(), errorIndicatorElement, 0);
 
@@ -140,8 +140,8 @@ public class VButton extends Button implements Paintable {
                 && event.getButton() == Event.BUTTON_LEFT) {
             clickPending = true;
             if (BrowserInfo.get().isIE()) {
-            	// Only for IE, because it doesn't support :active CSS selector
-            	// Simple check is cheaper than DOM manipulation
+                // Only for IE, because it doesn't support :active CSS selector
+                // Simple check is cheaper than DOM manipulation
                 addStyleName(CLASSNAME_DOWN);
             }
         } else if (DOM.eventGetType(event) == Event.ONMOUSEMOVE) {

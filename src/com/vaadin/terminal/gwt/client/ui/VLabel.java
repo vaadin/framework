@@ -12,15 +12,15 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VTooltip;
 
 public class VLabel extends HTML implements Paintable {
 
-    public static final String CLASSNAME = "i-label";
-    private static final String CLASSNAME_UNDEFINED_WIDTH = "i-label-undef-w";
+    public static final String CLASSNAME = "v-label";
+    private static final String CLASSNAME_UNDEFINED_WIDTH = "v-label-undef-w";
 
     private ApplicationConnection client;
     private int verticalPaddingBorder = 0;

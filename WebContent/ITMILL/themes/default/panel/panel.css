@@ -1,13 +1,13 @@
-.i-panel {
+.v-panel {
 	background: transparent url(img/top-left.png) no-repeat;
 }
-.i-panel-caption .i-errorindicator {
+.v-panel-caption .v-errorindicator {
 	padding-right: 20px;
 	background: transparent url(../icons/16/error.png) no-repeat bottom center;
 	
 }
-.i-panel-caption,
-.i-panel-caption-light {
+.v-panel-caption,
+.v-panel-caption-light {
 	font-size: 18px;
 	line-height: 18px;
 	font-weight: normal;
@@ -18,22 +18,22 @@
 	margin-left: 10px;
 	background: transparent url(img/top-right.png) no-repeat right top;
 }
-.i-panel-nocaption {
+.v-panel-nocaption {
 	height: 9px;
 	margin-left: 10px;
 	background: transparent url(img/top-right.png) no-repeat right top;
 }
-.i-panel-content {
+.v-panel-content {
 	border: 1px solid #babfc0;
 	border-bottom: 1px solid #dee2e3;
 	background-color: #fff;
 }
-.i-panel-deco {
+.v-panel-deco {
 	height: 9px;
 	background: transparent url(img/bottom-right.png) repeat-x right top;
 	margin-left: 9px;
 }
-.i-panel-deco:before {
+.v-panel-deco:before {
 	display: block;
 	content: "";
 	width: 9px;
@@ -42,58 +42,58 @@
 	background: transparent url(img/bottom-left.png) no-repeat;
 }
 /* Light panel style */
-.i-panel-light,
-.i-panel-caption-light {
+.v-panel-light,
+.v-panel-caption-light {
 	background: transparent;
 }
-.i-panel-nocaption-light {
+.v-panel-nocaption-light {
 	background: transparent;
 	height: 0;
 	margin: 0;
 }
-.i-panel-content-light {
+.v-panel-content-light {
 	border: none;
 	border-top: 1px solid #babfc0;
 	background: transparent;
 }
-.i-panel-deco-light {
+.v-panel-deco-light {
 	height: 0;
 	overflow: hidden;
 }
 /* IE specific rules */
-.i-ie6 .i-panel {
+.v-ie6 .v-panel {
 	background: transparent;
 }
-.i-ie6 .i-panel-caption {
+.v-ie6 .v-panel-caption {
 	border: 1px solid #babfc0;
 	border-bottom: none;
 	background: #fff;
 	margin: 0;
 	padding-left: 18px
 }
-.i-ie6 .i-panel-nocaption {
+.v-ie6 .v-panel-nocaption {
 	border: none;
 	background: transparent;
 	margin: 0;
 	height: 0;
 }
-.i-ie6 .i-panel-caption-light {
+.v-ie6 .v-panel-caption-light {
 	border: none;
 	background: transparent;
 }
-.i-ie6 .i-panel-content,
-.i-ie7 .i-panel-content,
-.i-ie8 .i-panel-content {
+.v-ie6 .v-panel-content,
+.v-ie7 .v-panel-content,
+.v-ie8 .v-panel-content {
 	border-bottom: 1px solid #babfc0;
 }
-.i-ie6 .i-panel-content-light,
-.i-ie7 .i-panel-content-light,
-.i-ie8 .i-panel-content-light {
+.v-ie6 .v-panel-content-light,
+.v-ie7 .v-panel-content-light,
+.v-ie8 .v-panel-content-light {
 	border-bottom: none;
 }
-.i-ie6 .i-panel-deco,
-.i-ie7 .i-panel-deco,
-.i-ie8 .i-panel-deco {
+.v-ie6 .v-panel-deco,
+.v-ie7 .v-panel-deco,
+.v-ie8 .v-panel-deco {
 	height: 0;
 	overflow: hidden;
 }

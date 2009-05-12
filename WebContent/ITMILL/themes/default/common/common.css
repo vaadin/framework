@@ -1,43 +1,43 @@
-.i-generated-body {
+.v-generated-body {
 	background: #e9eced;
 }
-.i-app {
+.v-app {
 	background: #e9eced;
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	color: #464f52;
 	font-size: 13px;
 	line-height: 18px;
 }
-.i-app-loading {
+.v-app-loading {
 	background-image: url(img/loading-indicator.gif);
 	background-repeat: no-repeat;
 	background-position: 50%;
 }
 /* Global font styles */
-.i-window,
-.i-popupview-popup,
-.i-app input,
-.i-app select,
-.i-app button,
-.i-app textarea,
-.i-window input,
-.i-window select,
-.i-window button,
-.i-window textarea,
-.i-popupview-popup input,
-.i-popupview-popup select,
-.i-popupview-popup button,
-.i-popupview-popup textarea {
+.v-window,
+.v-popupview-popup,
+.v-app input,
+.v-app select,
+.v-app button,
+.v-app textarea,
+.v-window input,
+.v-window select,
+.v-window button,
+.v-window textarea,
+.v-popupview-popup input,
+.v-popupview-popup select,
+.v-popupview-popup button,
+.v-popupview-popup textarea {
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	color: #464f52;
 	font-size: 13px;
 }
-.i-app select,
-.i-window select {
+.v-app select,
+.v-window select {
 	padding: 0;
 }
 /* Custom tooltip */
-.i-tooltip {
+.v-tooltip {
 	background-color: #fffcdd;
 	border: 1px solid #b8b295;
 	border-top-color: #d5d2c1;
@@ -47,13 +47,13 @@
 	font-family: arial, helvetica, tahoma, verdana, sans-serif;
 	color: #5d5444;
 }
-.i-tooltip-text {
+.v-tooltip-text {
 	padding: 2px 4px;
 	border: none;
 	border-top: 1px solid #fffef5;
 	border-bottom: 1px solid #fbf8d9;
 }
-.i-tooltip .i-errormessage {
+.v-tooltip .v-errormessage {
 	padding: 3px 4px 3px 4px;
 	background: #ffecc6;
 	color: #b74100;
@@ -61,18 +61,18 @@
 	border-top: 1px solid #fff3dc;
 	border-bottom: 1px solid #ead7b1;
 }
-.i-tooltip .i-errormessage h2 {
+.v-tooltip .v-errormessage h2 {
 	font-size: 16px;
 	font-weight: normal;
 	color: #ab3101;
 	margin: 2px 0 8px 0;
 }
-.i-tooltip .i-errormessage h3 {
+.v-tooltip .v-errormessage h3 {
 	font-size: 13px;
 	font-weight: bold;
 	margin: 1px 0 4px 0;
 }
-.i-contextmenu {
+.v-contextmenu {
 	background: #e9eced url(../tabsheet/img/tab-bg.png);
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	background-color: #f6f7f7;
@@ -80,37 +80,37 @@
 	font-size: 12px;
 	line-height: 14px;
 }
-.i-contextmenu .gwt-MenuBar {
+.v-contextmenu .gwt-MenuBar {
 	border-right: 1px solid #c6cbcc;
 	border-bottom: 1px solid #c6cbcc;
 	border-top: 1px solid #d0d4d5;
 	border-left: 1px solid #d0d4d5;
 }
-.i-contextmenu .gwt-MenuItem {
+.v-contextmenu .gwt-MenuItem {
 	padding: 2px 0;
 }
-.i-contextmenu .gwt-MenuItem div {
+.v-contextmenu .gwt-MenuItem div {
 	padding: 1px 20px 1px 8px;
 }
-.i-contextmenu .gwt-MenuItem-selected div {
+.v-contextmenu .gwt-MenuItem-selected div {
 	color: #fff;
 	background: #5daee8;
 }
-.i-contextmenu .gwt-MenuItem img {
+.v-contextmenu .gwt-MenuItem img {
 	margin-right: 10px;
 }
-.i-loading-indicator,
-.i-loading-indicator-delay,
-.i-loading-indicator-wait {
+.v-loading-indicator,
+.v-loading-indicator-delay,
+.v-loading-indicator-wait {
 	width: 31px;
 	height: 31px;
 	background: transparent url(img/loading-indicator.gif);
 	margin-right: 5px;
 	margin-top: 5px;
 }
-.i-loading-indicator-delay {
+.v-loading-indicator-delay {
 	background-image: url(img/loading-indicator-delay.gif);
 }
-.i-loading-indicator-wait {
+.v-loading-indicator-wait {
 	background-image: url(img/loading-indicator-wait.gif);
 }

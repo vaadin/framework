@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class VCaptionWrapper extends FlowPanel {
 
-    public static final String CLASSNAME = "i-captionwrapper";
+    public static final String CLASSNAME = "v-captionwrapper";
     VCaption caption;
     Paintable widget;
 

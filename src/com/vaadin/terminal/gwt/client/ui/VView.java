@@ -40,7 +40,7 @@ import com.vaadin.terminal.gwt.client.Util;
 public class VView extends SimplePanel implements Container,
         WindowResizeListener, WindowCloseListener {
 
-    private static final String CLASSNAME = "i-view";
+    private static final String CLASSNAME = "v-view";
 
     private String theme;
 
@@ -90,7 +90,7 @@ public class VView extends SimplePanel implements Container,
 
         RootPanel root = RootPanel.get(elementId);
         root.add(this);
-        root.removeStyleName("i-app-loading");
+        root.removeStyleName("v-app-loading");
 
         BrowserInfo browser = BrowserInfo.get();
 

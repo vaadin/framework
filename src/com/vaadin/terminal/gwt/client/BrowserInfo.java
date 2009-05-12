@@ -20,7 +20,7 @@ public class BrowserInfo {
     private static String cssClass = null;
 
     static {
-        // Add browser dependent i-* classnames to body to help css hacks
+        // Add browser dependent v-* classnames to body to help css hacks
         String browserClassnames = get().getCSSClass();
         RootPanel.get().addStyleName(browserClassnames);
     }
@@ -98,13 +98,13 @@ public class BrowserInfo {
      * This is quite simple at the moment, more heuristics will be added when
      * needed.
      * 
-     * Examples: Internet Explorer 6: ".i-ie .i-ie6", Firefox 3.0.4:
-     * ".i-ff .i-ff3", Opera 9.60: ".i-op .i-op96"
+     * Examples: Internet Explorer 6: ".v-ie .v-ie6", Firefox 3.0.4:
+     * ".v-ff .v-ff3", Opera 9.60: ".v-op .v-op96"
      * 
      * @return
      */
     public String getCSSClass() {
-        String prefix = "i-";
+        String prefix = "v-";
 
         if (cssClass == null) {
             String bs = getBrowserString().toLowerCase();

@@ -1,25 +1,25 @@
-.i-accordion {
+.v-accordion {
 	position: relative;
 	outline: none;
 	overflow: hidden;
 	text-align: left /* Force default alignment */
 }
-.i-accordion-item {
+.v-accordion-item {
 	position: relative;
 }
-.i-accordion-item-caption {
+.v-accordion-item-caption {
 	overflow: hidden;
 	white-space: nowrap;
 	background: #eee;
 	border-bottom: 1px solid #ddd;
 }
-.i-accordion-item-caption .i-caption {
+.v-accordion-item-caption .v-caption {
 	cursor: pointer;
 }
-.i-accordion-item-open .i-accordion-item-caption .i-caption {
+.v-accordion-item-open .v-accordion-item-caption .v-caption {
 	cursor: default;
 }
-.i-accordion-item-content {
+.v-accordion-item-content {
 	position: absolute;
 	overflow: auto;
 	width: 100%;

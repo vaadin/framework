@@ -1,9 +1,9 @@
-.i-popupview {
+.v-popupview {
 	cursor: pointer;
 	width: 5px;
 	height: 5px;
 	background: #aaa;
 }
-.i-popupview-popup {
+.v-popupview-popup {
 	overflow: auto;
 }

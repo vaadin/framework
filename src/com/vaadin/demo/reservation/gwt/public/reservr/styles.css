@@ -1,45 +1,45 @@
 @import "googlemap/css/googlemap.css";
 
 /* Entrycalendar styles */
-.i-datefield-entrycalendar-hours {
+.v-datefield-entrycalendar-hours {
 	width: 240px;
 	height: auto;
 }
-.i-datefield-entrycalendar-hours table {
+.v-datefield-entrycalendar-hours table {
 	table-layout: fixed;
 }
-.i-datefield-entrycalendar-hours table tr {
+.v-datefield-entrycalendar-hours table tr {
 	height: 1em;
 }
-.i-datefield-entrycalendar-row-even {
+.v-datefield-entrycalendar-row-even {
 	cursor: pointer;
 	background: #fff;
 	height: 1em;
 }
-.i-datefield-entrycalendar-row-odd {
+.v-datefield-entrycalendar-row-odd {
 	cursor: pointer;
 	background: #f6f7f7;
 	height: 1em;
 }
-.i-datefield-entrycalendar-row-selected {
+.v-datefield-entrycalendar-row-selected {
 	color: #fff;
 	background: #5daee8 url(img/calendar-time-selected.gif) no-repeat;
 }
-.i-datefield-calendarpanel td.i-datefield-entrycalendar-time {
+.v-datefield-calendarpanel td.v-datefield-entrycalendar-time {
 	width: 55px;
 	padding: 2px 0px;
 	white-space: nowrap;
 }
-td.i-datefield-entrycalendar-time span {
+td.v-datefield-entrycalendar-time span {
 	width: 47px;
 	padding: 0px 4px;
 	text-align: right;
 	display: block;
 }
-td.i-datefield-entrycalendar-entry {
+td.v-datefield-entrycalendar-entry {
 	overflow: hidden;
 }
-td.i-datefield-entrycalendar-entry span {
+td.v-datefield-entrycalendar-entry span {
 	display: block;
 	overflow: hidden;
 	padding: 2px;
@@ -49,7 +49,7 @@ td.i-datefield-entrycalendar-entry span {
 	background-position: 0px 0px;
 	text-align: left;
 }
-.i-datefield-calendarpanel td.i-datefield-entrycalendar-entry {
+.v-datefield-calendarpanel td.v-datefield-entrycalendar-entry {
 	background-color: #F24C1A;
 	color: #fff;
 	background-image: url(img/entry-bg.jpg);
@@ -59,91 +59,91 @@ td.i-datefield-entrycalendar-entry span {
 }
 
 /* Reservr styles */
-.i-datefield-entrycalendar-01 {
+.v-datefield-entrycalendar-01 {
 	
 }
-.i-datefield-entrycalendar-02 {
+.v-datefield-entrycalendar-02 {
 	
 }
-.i-datefield-entrycalendar-03 {
+.v-datefield-entrycalendar-03 {
 	
 }
-.i-datefield-entrycalendar-04 {
+.v-datefield-entrycalendar-04 {
 	
 }
-.i-datefield-entrycalendar-05 {
+.v-datefield-entrycalendar-05 {
 	
 }
-.i-datefield-entrycalendar-06 {
+.v-datefield-entrycalendar-06 {
 	
 }
-.i-datefield-entrycalendar-07 {
+.v-datefield-entrycalendar-07 {
 	
 }
-.i-datefield-entrycalendar-08 {
+.v-datefield-entrycalendar-08 {
 	
 }
-.i-datefield-entrycalendar-09 {
+.v-datefield-entrycalendar-09 {
 	
 }
-.i-datefield-entrycalendar-10 {
+.v-datefield-entrycalendar-10 {
 	
 }
-.i-datefield-entrycalendar-11 {
+.v-datefield-entrycalendar-11 {
 	
 }
-.i-datefield-entrycalendar-12 {
+.v-datefield-entrycalendar-12 {
 	
 }
-.i-datefield-entrycalendar-13 {
+.v-datefield-entrycalendar-13 {
 	
 }
-.i-datefield-entrycalendar-14 {
+.v-datefield-entrycalendar-14 {
 	
 }
-.i-datefield-entrycalendar-15 {
+.v-datefield-entrycalendar-15 {
 	
 }
-.i-datefield-entrycalendar-16 {
+.v-datefield-entrycalendar-16 {
 	
 }
-.i-datefield-entrycalendar-17 {
+.v-datefield-entrycalendar-17 {
 	
 }
-.i-datefield-entrycalendar-18 {
+.v-datefield-entrycalendar-18 {
 	
 }
-.i-datefield-entrycalendar-19 {
+.v-datefield-entrycalendar-19 {
 	
 }
-.i-datefield-entrycalendar-20 {
+.v-datefield-entrycalendar-20 {
 	
 }
-.i-datefield-entrycalendar-21 {
+.v-datefield-entrycalendar-21 {
 	
 }
-.i-datefield-entrycalendar-22 {
+.v-datefield-entrycalendar-22 {
 	
 }
-.i-datefield-entrycalendar-23 {
+.v-datefield-entrycalendar-23 {
 	
 }
-.i-datefield-entrycalendar-24 {
+.v-datefield-entrycalendar-24 {
 	
 }
-.i-datefield-entrycalendar-25 {
+.v-datefield-entrycalendar-25 {
 	
 }
-.i-datefield-entrycalendar-26 {
+.v-datefield-entrycalendar-26 {
 	
 }
-.i-datefield-entrycalendar-27 {
+.v-datefield-entrycalendar-27 {
 	
 }
-.i-datefield-entrycalendar-28 {
+.v-datefield-entrycalendar-28 {
 	
 }
-.i-datefield-entrycalendar-29 {
+.v-datefield-entrycalendar-29 {
 	
 }
 

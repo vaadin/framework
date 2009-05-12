@@ -1163,7 +1163,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
             page.write("<title>" + title + "</title>");
 
             page
-                    .write("\n</head>\n<body scroll=\"auto\" class=\"i-generated-body\">\n");
+                    .write("\n</head>\n<body scroll=\"auto\" class=\"v-generated-body\">\n");
         }
 
         String appId = appUrl;
@@ -1359,12 +1359,12 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
             style = "style=\"" + reqParam + "\"";
         }
         /*- Add classnames; 
-         *      .i-app 
-         *      .i-app-loading
-         *      .i-app-<simpleName for app class> 
-         *      .i-theme-<themeName, remove non-alphanum>
+         *      .v-app 
+         *      .v-app-loading
+         *      .v-app-<simpleName for app class> 
+         *      .v-theme-<themeName, remove non-alphanum>
          */
-        String appClass = "i-app-";
+        String appClass = "v-app-";
         try {
             appClass += getApplicationClass().getSimpleName();
         } catch (ClassNotFoundException e) {
@@ -1374,10 +1374,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
         }
         String themeClass = "";
         if (themeName != null) {
-            themeClass = "i-theme-" + themeName.replaceAll("[^a-zA-Z0-9]", "");
+            themeClass = "v-theme-" + themeName.replaceAll("[^a-zA-Z0-9]", "");
         }
 
-        page.write("<div id=\"" + appId + "\" class=\"i-app i-app-loading "
+        page.write("<div id=\"" + appId + "\" class=\"v-app v-app-loading "
                 + themeClass + " " + appClass + "\" "
                 + (style != null ? style : "") + "></div>\n");
 

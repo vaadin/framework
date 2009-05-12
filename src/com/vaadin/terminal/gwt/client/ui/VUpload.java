@@ -22,7 +22,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 public class VUpload extends FormPanel implements Paintable, ClickListener,
         FormHandler {
 
-    public static final String CLASSNAME = "i-upload";
+    public static final String CLASSNAME = "v-upload";
 
     /**
      * FileUpload component that opens native OS dialog to select file.

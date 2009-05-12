@@ -11,13 +11,13 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.VTooltip;
 
 public class VListSelect extends VOptionGroupBase {
 
-    public static final String CLASSNAME = "i-select";
+    public static final String CLASSNAME = "v-select";
 
     private static final int VISIBLE_COUNT = 10;
 

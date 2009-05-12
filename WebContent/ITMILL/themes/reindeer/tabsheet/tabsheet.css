@@ -1,63 +1,63 @@
-.i-tabsheet-spacertd div {
+.v-tabsheet-spacertd div {
 	border-color: #bfbfbf;
 	border-left: none;
 }
-.i-tabsheet-tabitem {
+.v-tabsheet-tabitem {
 	border: none;
 	border-bottom: 1px solid #bfbfbf;
 	color: #4d748f;
 	padding: 0;
 }
-.i-tabsheet-tabitem .i-caption {
+.v-tabsheet-tabitem .v-caption {
 	padding: 5px 16px;
 }
-.i-tabsheet-tabitem-selected {
+.v-tabsheet-tabitem-selected {
 	border: 1px solid #bfbfbf;
 	border-bottom: none;
 	color: #222;
 }
-.i-tabsheet-tabitem-selected .i-caption {
+.v-tabsheet-tabitem-selected .v-caption {
 	padding: 4px 15px 6px 15px;
 }
-.i-tabsheet-content {
+.v-tabsheet-content {
 	border: none;
 }
-.i-tabsheet-deco {
+.v-tabsheet-deco {
 	height: 0;
 }
-.i-tabsheet-tabs .i-icon,
-.i-tabsheet-tabs .i-captiontext,
-.i-tabsheet-tabs .i-errorindicator {
+.v-tabsheet-tabs .v-icon,
+.v-tabsheet-tabs .v-captiontext,
+.v-tabsheet-tabs .v-errorindicator {
 	display: inline;
 	float: none;
 }
-.i-sa .i-tabsheet-tabs .i-captiontext {
+.v-sa .v-tabsheet-tabs .v-captiontext {
 	display: inline-block;
 }
-.i-tabsheet-tabs .i-icon {
+.v-tabsheet-tabs .v-icon {
 	width: 16px !important;
 	height: 16px !important;
 }
-.i-tabsheet-tabs .i-errorindicator {
+.v-tabsheet-tabs .v-errorindicator {
 	display: inline-block;
 	width: 5px;
 	height: 16px;
 	background: transparent url(../../default/icons/16/error.png) no-repeat -1px 50%;
 }
-.i-ff2 .i-tabsheet-tabs .i-icon,
-.i-ff2 .i-tabsheet-tabs .i-errorindicator {
+.v-ff2 .v-tabsheet-tabs .v-icon,
+.v-ff2 .v-tabsheet-tabs .v-errorindicator {
 	display: -moz-inline-stack;
 }
-.i-ie6 .i-tabsheet-tabs .i-errorindicator {
+.v-ie6 .v-tabsheet-tabs .v-errorindicator {
 	background-image: url(../../default/icons/16/error.gif);
 }
-.i-ie .i-tabsheet-tabs .i-errorindicator {
+.v-ie .v-tabsheet-tabs .v-errorindicator {
 	zoom: 1;
 	display: inline;
 }
 /* Tabsheet on blue background */
-.blue .i-tabsheet-spacertd div,
-.blue .i-tabsheet-tabitem,
-.blue .i-tabsheet-tabitem-selected  {
+.blue .v-tabsheet-spacertd div,
+.blue .v-tabsheet-tabitem,
+.blue .v-tabsheet-tabitem-selected  {
 	border-color: #7c8a91;
 }

@@ -155,7 +155,7 @@ public class VTabsheetPanel extends ComplexPanel {
             // height of widget might have changed due wrapping
             height = visibleWidget.getOffsetHeight();
         }
-        // i-tabsheet-tabsheetpanel height
+        // v-tabsheet-tabsheetpanel height
         getElement().getStyle().setPropertyPx("height", height);
 
         // widget wrapper height

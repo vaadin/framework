@@ -1,37 +1,37 @@
-.i-tree {
+.v-tree {
 	text-align: left /* Force default alignment */
 }
-.i-tree-node {
+.v-tree-node {
 	background: transparent url(../common/img/sprites.png) no-repeat 5px -37px;
 }
-.i-tree-node-expanded {
+.v-tree-node-expanded {
 	background-position: -5px -10px;
 }
-div.i-tree-node-leaf {
+div.v-tree-node-leaf {
 	background: none;
 }
-.i-tree-node-caption {
+.v-tree-node-caption {
 	margin-left: 1em;
 }
-.i-tree-node span {
+.v-tree-node span {
 	cursor: pointer;
 	white-space: nowrap;
 }
-.i-tree-node-selected span {
+.v-tree-node-selected span {
 	background: #999;
 	color: #fff;
 }
-.i-tree-node-children {
+.v-tree-node-children {
 	padding-left: 1em;
 }
 /* ie6compatnode is hidden from non ie6 browsers, for ie6 
  * uses weird hack to sink all events properly 
  */
-.i-tree-node-ie6compatnode {
+.v-tree-node-ie6compatnode {
 	display: none;
 }
-/* IMPORTANT keep the offsetWidth of this element the same as the margin-left of i-tree-node-caption */
-.i-ie6 .i-tree-node-ie6compatnode {
+/* IMPORTANT keep the offsetWidth of this element the same as the margin-left of v-tree-node-caption */
+.v-ie6 .v-tree-node-ie6compatnode {
 	display: inline;
 	float: left;
 	background: orange;
@@ -41,7 +41,7 @@ div.i-tree-node-leaf {
 	padding: 0.1em;
 	filter: alpha(opacity=0);
 }
-.i-ie6 .i-tree-node,
-.i-ie6 .i-tree-node-children {
+.v-ie6 .v-tree-node,
+.v-ie6 .v-tree-node-children {
 	clear: left;
 }

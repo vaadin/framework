@@ -27,7 +27,7 @@ import com.vaadin.terminal.gwt.client.Util;
  */
 public class VTree extends FlowPanel implements Paintable {
 
-    public static final String CLASSNAME = "i-tree";
+    public static final String CLASSNAME = "v-tree";
 
     private Set<String> selectedIds = new HashSet<String>();
     private ApplicationConnection client;
@@ -184,7 +184,7 @@ public class VTree extends FlowPanel implements Paintable {
 
     protected class TreeNode extends SimplePanel implements ActionOwner {
 
-        public static final String CLASSNAME = "i-tree-node";
+        public static final String CLASSNAME = "v-tree-node";
 
         String key;
 
@@ -424,7 +424,7 @@ public class VTree extends FlowPanel implements Paintable {
          */
         protected void setSelected(boolean selected) {
             // add style name to caption dom structure only, not to subtree
-            setStyleName(nodeCaptionDiv, "i-tree-node-selected", selected);
+            setStyleName(nodeCaptionDiv, "v-tree-node-selected", selected);
         }
 
         protected boolean isSelected() {

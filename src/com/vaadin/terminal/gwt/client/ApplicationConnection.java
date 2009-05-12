@@ -47,7 +47,7 @@ import com.vaadin.terminal.gwt.client.ui.VNotification.HideEvent;
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class ApplicationConnection {
-    private static final String MODIFIED_CLASSNAME = "i-modified";
+    private static final String MODIFIED_CLASSNAME = "v-modified";
 
     private static final String REQUIRED_CLASSNAME_EXT = "-required";
 
@@ -341,7 +341,7 @@ public class ApplicationConnection {
                             console
                                     .log("Assuming CSS loading is not complete, "
                                             + "postponing render phase. "
-                                            + "(.i-loading-indicator height == 0)");
+                                            + "(.v-loading-indicator height == 0)");
                             cssWaits++;
                         } else {
                             handleReceivedJSONMessage(response);
@@ -497,14 +497,14 @@ public class ApplicationConnection {
             DOM.appendChild(view.getElement(), loadElement);
             ApplicationConnection.getConsole().log("inserting load indicator");
         }
-        DOM.setElementProperty(loadElement, "className", "i-loading-indicator");
+        DOM.setElementProperty(loadElement, "className", "v-loading-indicator");
         DOM.setStyleAttribute(loadElement, "display", "block");
         // Initialize other timers
         loadTimer2 = new Timer() {
             @Override
             public void run() {
                 DOM.setElementProperty(loadElement, "className",
-                        "i-loading-indicator-delay");
+                        "v-loading-indicator-delay");
             }
         };
         // Second one kicks in at 1500ms from request start
@@ -514,7 +514,7 @@ public class ApplicationConnection {
             @Override
             public void run() {
                 DOM.setElementProperty(loadElement, "className",
-                        "i-loading-indicator-wait");
+                        "v-loading-indicator-wait");
             }
         };
         // Third one kicks in at 5000ms from request start
@@ -1068,11 +1068,11 @@ public class ApplicationConnection {
         // first disabling and read-only status
         if (!enabled) {
             styleBuf.append(" ");
-            styleBuf.append("i-disabled");
+            styleBuf.append("v-disabled");
         }
         if (uidl.getBooleanAttribute("readonly")) {
             styleBuf.append(" ");
-            styleBuf.append("i-readonly");
+            styleBuf.append("v-readonly");
         }
 
         // add additional styles as css classes, prefixed with component default

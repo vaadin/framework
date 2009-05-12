@@ -1,42 +1,42 @@
-.i-orderedlayout-margin-top,
-.i-horizontallayout-margin-top,
-.i-verticallayout-margin-top {
+.v-orderedlayout-margin-top,
+.v-horizontallayout-margin-top,
+.v-verticallayout-margin-top {
 	padding-top: 2em;
 }
-.i-orderedlayout-margin-right,
-.i-horizontallayout-margin-right,
-.i-verticallayout-margin-right {
+.v-orderedlayout-margin-right,
+.v-horizontallayout-margin-right,
+.v-verticallayout-margin-right {
 	padding-right: 2em;
 }
-.i-orderedlayout-margin-bottom,
-.i-horizontallayout-margin-bottom,
-.i-verticallayout-margin-bottom {
+.v-orderedlayout-margin-bottom,
+.v-horizontallayout-margin-bottom,
+.v-verticallayout-margin-bottom {
 	padding-bottom: 2em;
 }
-.i-orderedlayout-margin-left,
-.i-horizontallayout-margin-left,
-.i-verticallayout-margin-left {
+.v-orderedlayout-margin-left,
+.v-horizontallayout-margin-left,
+.v-verticallayout-margin-left {
 	padding-left: 2em;
 }
-.i-orderedlayout-spacing-on,
-.i-horizontallayout-spacing-on,
-.i-verticallayout-spacing-on {
+.v-orderedlayout-spacing-on,
+.v-horizontallayout-spacing-on,
+.v-verticallayout-spacing-on {
 	padding-top: 1em;
 	padding-left: 1em;
 }
 /* This can be used to define spacing if spacing is off server side */
-.i-orderedlayout-spacing-off,
-.i-horizontallayout-spacing-off,
-.i-verticallayout-spacing-off {
+.v-orderedlayout-spacing-off,
+.v-horizontallayout-spacing-off,
+.v-verticallayout-spacing-off {
 	padding-top: 0;
 	padding-left: 0;
 }
 /* To make sure IE don't expand elements larger than they should */
-.i-ie6 .i-orderedlayout,
-.i-ie6 .i-horizontallayout,
-.i-ie6 .i-verticallayout,
-.i-ie7 .i-orderedlayout,
-.i-ie7 .i-horizontallayout,
-.i-ie7 .i-verticallayout {
+.v-ie6 .v-orderedlayout,
+.v-ie6 .v-horizontallayout,
+.v-ie6 .v-verticallayout,
+.v-ie7 .v-orderedlayout,
+.v-ie7 .v-horizontallayout,
+.v-ie7 .v-verticallayout {
 	overflow: hidden;
 }

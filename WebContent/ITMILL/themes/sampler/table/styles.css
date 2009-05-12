@@ -1,29 +1,29 @@
-.i-table-iso3166 .i-table-row-marked {
+.v-table-iso3166 .v-table-row-marked {
 	color: red;
 	font-style: italic;
 }
 
-.i-table-contacts .i-table-row-red {
+.v-table-contacts .v-table-row-red {
 	color: red;
 }
-.i-table-contacts .i-table-row-blue {
+.v-table-contacts .v-table-row-blue {
 	color: blue;
 }
-.i-table-contacts .i-table-row-green {
+.v-table-contacts .v-table-row-green {
 	color: green;
 }
 
-.i-table-contacts .i-table-cell-content-marked {
+.v-table-contacts .v-table-cell-content-marked {
 	background-color: #ffd;
 }
 
-.i-table-contacts .i-table-cell-content-email {
+.v-table-contacts .v-table-cell-content-email {
 	background-color: #ffd;
 	font-family: monospace;
 	margin: 0px;
 }
 
-.i-table .i-icon {
+.v-table .v-icon {
 	/* explicitly set icon width for fast browsers
 	 * to properly detect row header width */
 	width: 16px;

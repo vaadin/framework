@@ -1,17 +1,17 @@
-.i-accordion-item {
+.v-accordion-item {
 	background-color: #fff;
 }
-.i-accordion-item-caption {
+.v-accordion-item-caption {
 	height: 31px;
 	background: #edf0f0 url(../tabsheet/img/tab-bg.png);
 	font-size: 15px;
 	color: #656d73;
 	border-top: 1px solid #c8cccd;
 }
-.i-accordion-item-caption .i-caption {
+.v-accordion-item-caption .v-caption {
 	padding: 7px 0 6px 18px;
 }
-.i-accordion-item-open .i-accordion-item-caption {
+.v-accordion-item-open .v-accordion-item-caption {
 	color: #3b4b57;
 	background: #d5dee2 url(img/selected-bg.png);
 	border-top-color: #cbd7de;

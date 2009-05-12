@@ -19,12 +19,12 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VCaption;
 
 public class VTabsheet extends VTabsheetBase {
 
@@ -187,10 +187,10 @@ public class VTabsheet extends VTabsheetBase {
 
     }
 
-    public static final String CLASSNAME = "i-tabsheet";
+    public static final String CLASSNAME = "v-tabsheet";
 
-    public static final String TABS_CLASSNAME = "i-tabsheet-tabcontainer";
-    public static final String SCROLLER_CLASSNAME = "i-tabsheet-scroller";
+    public static final String TABS_CLASSNAME = "v-tabsheet-tabcontainer";
+    public static final String SCROLLER_CLASSNAME = "v-tabsheet-scroller";
     private final Element tabs; // tabbar and 'scroller' container
     private final Element scroller; // tab-scroller element
     private final Element scrollerNext; // tab-scroller next button element

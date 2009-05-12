@@ -10,15 +10,15 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VTooltip;
 
 public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
         Paintable, Field {
 
-    public static final String CLASSNAME = "i-checkbox";
+    public static final String CLASSNAME = "v-checkbox";
 
     String id;
 
@@ -68,7 +68,7 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
                 errorIndicatorElement = DOM.createDiv();
                 errorIndicatorElement.setInnerHTML("&nbsp;");
                 DOM.setElementProperty(errorIndicatorElement, "className",
-                        "i-errorindicator");
+                        "v-errorindicator");
                 DOM.appendChild(getElement(), errorIndicatorElement);
                 DOM.sinkEvents(errorIndicatorElement, VTooltip.TOOLTIP_EVENTS
                         | Event.ONCLICK);

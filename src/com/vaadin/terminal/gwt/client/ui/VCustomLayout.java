@@ -20,12 +20,12 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.ContainerResizedListener;
-import com.vaadin.terminal.gwt.client.VCaption;
-import com.vaadin.terminal.gwt.client.VCaptionWrapper;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VCaption;
+import com.vaadin.terminal.gwt.client.VCaptionWrapper;
 import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 
 /**
@@ -37,7 +37,7 @@ import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 public class VCustomLayout extends ComplexPanel implements Paintable,
         Container, ContainerResizedListener {
 
-    public static final String CLASSNAME = "i-customlayout";
+    public static final String CLASSNAME = "v-customlayout";
 
     /** Location-name to containing element in DOM map */
     private final HashMap locationToElement = new HashMap();

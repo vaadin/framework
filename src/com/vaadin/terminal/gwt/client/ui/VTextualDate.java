@@ -128,9 +128,9 @@ public class VTextualDate extends VDateField implements Paintable, Field,
         text.setEnabled(enabled && !readonly);
 
         if (readonly) {
-            text.addStyleName("i-readonly");
+            text.addStyleName("v-readonly");
         } else {
-            text.removeStyleName("i-readonly");
+            text.removeStyleName("v-readonly");
         }
 
     }

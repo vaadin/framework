@@ -1,59 +1,59 @@
-.i-table-header-wrap {
+.v-table-header-wrap {
 	height: 36px;
 	border: 1px solid #b6bbbc;
 	border-bottom: none;
 	background: #e7edf3 url(img/header-bg.png) repeat-x;
 }
-.i-table-header {
+.v-table-header {
 	height: 36px;
 }
-.i-table-resizer {
+.v-table-resizer {
 	height: 36px;
 	width: 4px;
 	background: transparent url(img/resizer-bg.png) repeat-y 50% 50%;
 }
-.i-table-caption-container {
+.v-table-caption-container {
 	color: #393a3c;
 	font-size: 15px;
 	padding-top: 9px;
 	text-shadow: #ffffff 0 1px 0;
 	padding-right: 2px; /* See themes/base/table.css for explanation */
 }
-.i-table-header-cell-asc .i-table-caption-container {
+.v-table-header-cell-asc .v-table-caption-container {
 	background: transparent url(img/sort-asc.png) no-repeat right 80%;
 }
-.i-table-header-cell-desc .i-table-caption-container {
+.v-table-header-cell-desc .v-table-caption-container {
 	background: transparent url(img/sort-desc.png) no-repeat right 80%;
 }
-.i-table-header-cell:hover,
-.i-table-header-cell-asc:hover,
-.i-table-header-cell-desc:hover {
+.v-table-header-cell:hover,
+.v-table-header-cell-asc:hover,
+.v-table-header-cell-desc:hover {
 	background: transparent url(img/header-bg-over.png) repeat-x;
 }
-.i-table-body {
+.v-table-body {
 	background: #fff;
 	border: 1px solid #b6bbbc;
 }
-.i-table-row,
-.i-table-row-odd {
+.v-table-row,
+.v-table-row-odd {
 	background-color: #fff;
 }
-.i-table-row-odd {
+.v-table-row-odd {
 	background-color: #f6f7f7;
 }
-.i-table-row:hover,
-.i-table-row-odd:hover {
+.v-table-row:hover,
+.v-table-row-odd:hover {
 	background-color: #edeeee;
 }
-.i-table .i-selected {
+.v-table .v-selected {
 	background: #57a7ed;
 	color: #fff;
 }
-.i-table-cell-content {
+.v-table-cell-content {
 	padding: 0 6px 0 4px;
 	border-right: none;
 }
-.i-table-cell-wrapper {
+.v-table-cell-wrapper {
 	white-space: nowrap;
 	overflow: hidden;
 	line-height: 23px;
@@ -61,37 +61,37 @@
 	padding: 3px 0 0 0;
 }
 /* Fix textfield size to correspond label size inside table */
-.i-table-cell-content .i-textfield,
-.i-table-cell-content .i-button {
+.v-table-cell-content .v-textfield,
+.v-table-cell-content .v-button {
 	margin: -3px 0 0 0;
 }
-.i-table-cell-content .i-textfield,
-.i-table-cell-content .i-datefield {
+.v-table-cell-content .v-textfield,
+.v-table-cell-content .v-datefield {
 	width: 97%; /* approximate */
 }
 /* ...but not for datefield textarea */
-.i-table-cell-content .i-datefield .i-textfield {
+.v-table-cell-content .v-datefield .v-textfield {
 	width: auto;
 	
 }
 /* datefield button is too high for table cell */
-.i-table-cell-content .i-datefield-button {
+.v-table-cell-content .v-datefield-button {
 	height: 25px;
 	margin: -3px 0 0 0;
 }
-.i-table-column-selector {
+.v-table-column-selector {
 	background: transparent url(img/colsel.png) no-repeat;
 	margin: -36px 0 0 0;
 	height: 36px;
 	width: 15px;
 }
-.i-table-focus-slot-left {
+.v-table-focus-slot-left {
 	border-color: #b6bbbc;
 }
-.i-table-focus-slot-right {
+.v-table-focus-slot-right {
 	border-color: #b6bbbc;
 }
-.i-table-header-drag {
+.v-table-header-drag {
 	background: #e7edf3 url(img/header-bg.png) repeat-x;
 	border: 1px solid #b6bbbc;
 	padding: 4px;
@@ -100,13 +100,13 @@
 	font-size: 15px;
 	margin-top: 20px;
 }
-.i-table-scrollposition {
+.v-table-scrollposition {
 	width: 160px;
 	height: 39px;
 	background: transparent url(img/scroll-position-bg.png);
 	border: none;
 }
-.i-table-scrollposition span {
+.v-table-scrollposition span {
 	display: block;
 	margin-top: 8px;
 	text-align: center;
@@ -116,18 +116,18 @@
 	text-shadow: #ffffff 2px 2px 0;
 }
 /* row in column selector */
-.i-on div {
+.v-on div {
 	background: transparent url(img/check.gif) no-repeat 2px 50%;
 	text-indent: 6px;
 }
-.i-off div {
+.v-off div {
 	text-indent: 6px;
 }
-.i-table .i-link {
+.v-table .v-link {
 	display: inline;
 }
 /* IE6 hack */
-.i-ie6 .i-table-scrollposition {
+.v-ie6 .v-table-scrollposition {
 	background: transparent;
 	/* 
 	AlphaImageLoader uses src attribute relative to host page, not CSS

@@ -1,21 +1,21 @@
-.i-button {
+.v-button {
 	font-size: 13px;
 }
-.i-checkbox .i-errorindicator {
+.v-checkbox .v-errorindicator {
 	padding-left: 10px;
 }
-.i-ie6 .i-button,
-.i-ie7 .i-button {
+.v-ie6 .v-button,
+.v-ie7 .v-button {
 	padding-left: 10px;
 	padding-right: 10px;
 }
-.i-ie6 .i-checkbox .i-errorindicator {
+.v-ie6 .v-checkbox .v-errorindicator {
 	padding-right: 4px;
 }
-.i-ie7 .i-checkbox .i-errorindicator {
+.v-ie7 .v-checkbox .v-errorindicator {
 	padding-right: 7px;
 }
-.i-ie6 .i-button .i-errorindicator,
-.i-ie7 .i-button .i-errorindicator {
+.v-ie6 .v-button .v-errorindicator,
+.v-ie7 .v-button .v-errorindicator {
 	padding-right: 5px;
 }

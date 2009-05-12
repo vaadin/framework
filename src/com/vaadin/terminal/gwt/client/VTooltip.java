@@ -15,7 +15,7 @@ import com.vaadin.terminal.gwt.client.ui.VToolkitOverlay;
  * TODO open for extension
  */
 public class VTooltip extends VToolkitOverlay {
-    private static final String CLASSNAME = "i-tooltip";
+    private static final String CLASSNAME = "v-tooltip";
     private static final int MARGIN = 4;
     public static final int TOOLTIP_EVENTS = Event.ONKEYDOWN
             | Event.ONMOUSEOVER | Event.ONMOUSEOUT | Event.ONMOUSEMOVE

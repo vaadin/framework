@@ -14,7 +14,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 
 public class VProgressIndicator extends Widget implements Paintable {
 
-    private static final String CLASSNAME = "i-progressindicator";
+    private static final String CLASSNAME = "v-progressindicator";
     Element wrapper = DOM.createDiv();
     Element indicator = DOM.createDiv();
     private ApplicationConnection client;

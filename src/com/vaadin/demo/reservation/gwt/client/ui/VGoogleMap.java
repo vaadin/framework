@@ -19,7 +19,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 
 public class VGoogleMap extends Composite implements Paintable {
 
-    public static final String CLASSNAME = "i-googlemap";
+    public static final String CLASSNAME = "v-googlemap";
 
     private final MapWidget widget = new MapWidget();
 

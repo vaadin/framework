@@ -1,71 +1,71 @@
-.i-datefield {
+.v-datefield {
 	white-space: nowrap;
 }
-.i-datefield-textfield {
+.v-datefield-textfield {
 	vertical-align: top;
 }
-.i-datefield-button {
+.v-datefield-button {
 	cursor: pointer;
 }
-.i-datefield-calendarpanel table {
+.v-datefield-calendarpanel table {
 	width: 100%;
 }
-.i-datefield-calendarpanel td {
+.v-datefield-calendarpanel td {
 	width: 14.2%;
 	padding: 0;
 	margin: 0;
 }
-.i-datefield-calendarpanel-header td {
+.v-datefield-calendarpanel-header td {
 	text-align: center;
 }
-.i-datefield-calendarpanel-month {
+.v-datefield-calendarpanel-month {
 	text-align: center;
 	white-space: nowrap;
 }
-.i-datefield-calendarpanel-day,
-.i-datefield-calendarpanel-day-today {
+.v-datefield-calendarpanel-day,
+.v-datefield-calendarpanel-day-today {
 	cursor: pointer;
 }
-.i-datefield-calendarpanel-day-today {
+.v-datefield-calendarpanel-day-today {
 	border: 1px solid #ddd;
 }
-.i-disabled .i-datefield-calendarpanel-day,
-.i-disabled .i-datefield-calendarpanel-day-today {
+.v-disabled .v-datefield-calendarpanel-day,
+.v-disabled .v-datefield-calendarpanel-day-today {
 	cursor: default;
 }
-.i-datefield-calendarpanel-day-disabled {
+.v-datefield-calendarpanel-day-disabled {
 	cursor: default;
 	opacity: .5;
 }
-.i-datefield-calendarpanel-day-selected {
+.v-datefield-calendarpanel-day-selected {
 	cursor: default;
 	background: #333;
 	color: #fff;
 }
-.i-datefield-time {
+.v-datefield-time {
 	white-space: nowrap;
 }
-.i-datefield-time .i-label {
+.v-datefield-time .v-label {
 	display: inline;
 }
 /* Disabled by default
-.i-datefield-error .i-textfield,
-.i-datefield-error .i-datefield-calendarpanel {
+.v-datefield-error .v-textfield,
+.v-datefield-error .v-datefield-calendarpanel {
 	background: #ffe0e0;
 }
 */
 
 /* Disabled by default
-.i-datefield-required .i-textfield,
-.i-datefield-required .i-datefield-calendarpanel {
+.v-datefield-required .v-textfield,
+.v-datefield-required .v-datefield-calendarpanel {
 	background:transparent;
 	background-color: #ffe0e0;
 }
 */
-/* IE somehow loses generic i-disabled alpha. See #1960 */
-.i-ie6 .i-disabled .i-datefield-button,
-.i-ie6 .i-disabled .i-datefield-textfield,
-.i-ie7 .i-disabled .i-datefield-button,
-.i-ie7 .i-disabled .i-datefield-textfield {
+/* IE somehow loses generic v-disabled alpha. See #1960 */
+.v-ie6 .v-disabled .v-datefield-button,
+.v-ie6 .v-disabled .v-datefield-textfield,
+.v-ie7 .v-disabled .v-datefield-button,
+.v-ie7 .v-disabled .v-datefield-textfield {
 	filter: alpha(opacity=30);
 }

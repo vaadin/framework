@@ -84,8 +84,8 @@ public final class VDebugConsole extends VToolkitOverlay implements Console {
         if (showWindow) {
             DOM.appendChild(getContainerElement(), caption);
             setWidget(panel);
-            caption.setClassName("i-debug-console-caption");
-            setStyleName("i-debug-console");
+            caption.setClassName("v-debug-console-caption");
+            setStyleName("v-debug-console");
             DOM.setStyleAttribute(getElement(), "zIndex", 20000 + "");
             DOM.setStyleAttribute(getElement(), "overflow", "hidden");
 
@@ -93,7 +93,7 @@ public final class VDebugConsole extends VToolkitOverlay implements Console {
 
             sinkEvents(Event.MOUSEEVENTS);
 
-            panel.setStyleName("i-debug-console-content");
+            panel.setStyleName("v-debug-console-content");
 
             caption.setInnerHTML("Debug window");
             caption.setTitle(help);
@@ -117,7 +117,7 @@ public final class VDebugConsole extends VToolkitOverlay implements Console {
                     int height = panel.getOffsetHeight();
                     panel = new FlowPanel();
                     panel.setPixelSize(width, height);
-                    panel.setStyleName("i-debug-console-content");
+                    panel.setStyleName("v-debug-console-content");
                     panel.add(actions);
                     setWidget(panel);
                 }
@@ -305,8 +305,7 @@ public final class VDebugConsole extends VToolkitOverlay implements Console {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.terminal.gwt.client.Console#error(java.lang.String)
+     * @see com.vaadin.terminal.gwt.client.Console#error(java.lang.String)
      */
     public void error(String msg) {
         panel.add((new HTML(msg)));
@@ -317,8 +316,7 @@ public final class VDebugConsole extends VToolkitOverlay implements Console {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.terminal.gwt.client.Console#printObject(java.lang.
+     * @see com.vaadin.terminal.gwt.client.Console#printObject(java.lang.
      * Object)
      */
     public void printObject(Object msg) {
@@ -329,8 +327,7 @@ public final class VDebugConsole extends VToolkitOverlay implements Console {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.terminal.gwt.client.Console#dirUIDL(com.vaadin
+     * @see com.vaadin.terminal.gwt.client.Console#dirUIDL(com.vaadin
      * .terminal.gwt.client.UIDL)
      */
     public void dirUIDL(UIDL u) {
