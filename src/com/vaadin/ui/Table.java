@@ -1422,6 +1422,26 @@ public class Table extends AbstractSelect implements Action.Container,
 
                                 } else if (iscomponent[j]) {
                                     value = p.getValue();
+                                    if (p instanceof Property.ValueChangeNotifier) {
+                                        /*
+                                         * Component in property may change ->
+                                         * listen value changes events.
+                                         */
+                                        if (oldListenedProperties == null
+                                                || !oldListenedProperties
+                                                        .contains(p)) {
+                                            ((Property.ValueChangeNotifier) p)
+                                                    .addListener(this);
+                                        }
+                                        /*
+                                         * register listened properties, so we
+                                         * can do proper cleanup to free memory.
+                                         * Essential if table has loads of data
+                                         * and it is used for a long time.
+                                         */
+                                        listenedProperties.add(p);
+
+                                    }
                                 } else if (p != null) {
                                     value = getPropertyValue(id, colids[j], p);
                                     /*
