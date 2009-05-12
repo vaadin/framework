@@ -2,7 +2,7 @@
 	/* PNG with alpha as background */
 	background: #66aa00 url(prominentbg.png) bottom right;
 	/* make PNG work in IE */
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="/ITMILL/themes/sampler/prominentprimaryaction/prominentbg.png", sizingMethod="scale");
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="/VAADIN/themes/sampler/prominentprimaryaction/prominentbg.png", sizingMethod="scale");
 	border: 2px solid #66aa00;
 	/* make some extra room */
 	padding: 10px;

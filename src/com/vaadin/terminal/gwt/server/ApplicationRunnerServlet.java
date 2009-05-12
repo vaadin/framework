@@ -89,9 +89,9 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
      * Parses application runner URIs.
      * 
      * If request URL is e.g.
-     * http://localhost:8080/itmill/run/com.vaadin.demo.Calc then
+     * http://localhost:8080/vaadin/run/com.vaadin.demo.Calc then
      * <ul>
-     * <li>context=itmill</li>
+     * <li>context=vaadin</li>
      * <li>Runner servlet=run</li>
      * <li>Toolkit application=com.vaadin.demo.Calc</li>
      * </ul>

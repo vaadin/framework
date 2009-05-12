@@ -173,11 +173,11 @@ public class ApplicationConnection {
             return componentLocator.@com.vaadin.terminal.gwt.client.ComponentLocator::getPathForElement(Lcom/google/gwt/user/client/Element;)(element);
          }
 
-         if(!$wnd.itmill.clients) {
-            $wnd.itmill.clients = {};
+         if(!$wnd.vaadin.clients) {
+            $wnd.vaadin.clients = {};
          }
          
-        $wnd.itmill.clients[TTAppId] = client;
+        $wnd.vaadin.clients[TTAppId] = client;
     }-*/;
 
     /**
@@ -191,7 +191,7 @@ public class ApplicationConnection {
     /**
      * Publishes a JavaScript API for mash-up applications.
      * <ul>
-     * <li><code>itmill.forceSync()</code> sends pending variable changes, in
+     * <li><code>vaadin.forceSync()</code> sends pending variable changes, in
      * effect synchronizing the server and client state. This is done for all
      * applications on host page.</li>
      * </ul>
@@ -202,20 +202,20 @@ public class ApplicationConnection {
     /*-{
         var app = this;
         var oldSync;
-        if($wnd.itmill.forceSync) {
-            oldSync = $wnd.itmill.forceSync;
+        if($wnd.vaadin.forceSync) {
+            oldSync = $wnd.vaadin.forceSync;
         }
-        $wnd.itmill.forceSync = function() {
+        $wnd.vaadin.forceSync = function() {
             if(oldSync) {
                 oldSync();
             }
             app.@com.vaadin.terminal.gwt.client.ApplicationConnection::sendPendingVariableChanges()();
         }
         var oldForceLayout;
-        if($wnd.itmill.forceLayout) {
-            oldForceLayout = $wnd.itmill.forceLayout;
+        if($wnd.vaadin.forceLayout) {
+            oldForceLayout = $wnd.vaadin.forceLayout;
         }
-        $wnd.itmill.forceLayout = function() {
+        $wnd.vaadin.forceLayout = function() {
             if(oldForceLayout) {
                 oldForceLayout();
             }
@@ -235,7 +235,7 @@ public class ApplicationConnection {
      */
     public native static boolean isDebugMode()
     /*-{
-        if($wnd.itmill.debug) {
+        if($wnd.vaadin.debug) {
             var parameters = $wnd.location.search;
             var re = /debug[^\/]*$/;
             return re.test(parameters);

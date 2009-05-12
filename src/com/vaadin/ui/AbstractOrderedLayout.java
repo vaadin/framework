@@ -234,9 +234,8 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.ui.Layout.AlignmentHandler#setComponentAlignment(com
-     * .itmill.toolkit.ui.Component, int, int)
+     * @see com.vaadin.ui.Layout.AlignmentHandler#setComponentAlignment(com
+     * .vaadin.ui.Component, int, int)
      */
     public void setComponentAlignment(Component childComponent,
             int horizontalAlignment, int verticalAlignment) {
@@ -266,9 +265,8 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.ui.Layout.AlignmentHandler#getComponentAlignment(com
-     * .itmill.toolkit.ui.Component)
+     * @see com.vaadin.ui.Layout.AlignmentHandler#getComponentAlignment(com
+     * .vaadin.ui.Component)
      */
     public Alignment getComponentAlignment(Component childComponent) {
         Alignment alignment = componentToAlignment.get(childComponent);

@@ -21,8 +21,8 @@ public class VUnknownComponent extends Composite implements Paintable {
         panel.add(caption);
         panel.add(uidlTree);
         initWidget(panel);
-        setStyleName("itmill-unknown");
-        caption.setStyleName("itmill-unknown-caption");
+        setStyleName("vaadin-unknown");
+        caption.setStyleName("vaadin-unknown-caption");
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {

@@ -99,7 +99,7 @@ package {
                 	// that the flash is now ready to accept information of the covers.
                 	// The name of the function we're about to call is dynamic, meaning
                 	// it is unique for every instance of this widget
-                   	ExternalInterface.call("itmill.coverflow['getCovers_" + _pid + "']");
+                   	ExternalInterface.call("vaadin.coverflow['getCovers_" + _pid + "']");
                 } catch (error:SecurityError) {
                     Alert.show("A SecurityError occurred: " + error.message + "\n");
                 } catch (error:Error) {
@@ -418,7 +418,7 @@ package {
 			// the animation has finished), then send the selected cover's
 			// key to GWT which will then forward it to the server.		
 			if (ExternalInterface.available && i == _selected) {
-				ExternalInterface.call("itmill.coverflow['setCurrent_" + _pid + "']",_coverList[_selected].caption);
+				ExternalInterface.call("vaadin.coverflow['setCurrent_" + _pid + "']",_coverList[_selected].caption);
 				
 				// Send an event which notifies the scrollbar that the selected cover has changed.
 				_eventHandler.dispatchEvent(new Event(EventHandler.CURRENT_CHANGED));				

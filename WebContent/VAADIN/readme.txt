@@ -2,7 +2,7 @@
 Themes and Widget Sets
 ======================
 
-The WebContent/ITMILL directory contains Themes and Widgetsets.
+The WebContent/VAADIN directory contains Themes and Widgetsets.
 
 ------
 Themes

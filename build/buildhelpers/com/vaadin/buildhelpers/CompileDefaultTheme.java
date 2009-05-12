@@ -18,7 +18,7 @@ import java.util.Comparator;
  */
 public class CompileDefaultTheme {
 
-    private static final String THEME_DIR = "./WebContent/ITMILL/themes/";
+    private static final String THEME_DIR = "./WebContent/VAADIN/themes/";
     private static final String BASE = "base";
     private static final String DEFAULT = "default";
     private static final String REINDEER = "reindeer";

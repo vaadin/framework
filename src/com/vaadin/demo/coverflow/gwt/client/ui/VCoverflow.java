@@ -1,7 +1,7 @@
 /* 
 @ITMillApache2LicenseForJavaFiles@
  */
- 
+
 package com.vaadin.demo.coverflow.gwt.client.ui;
 
 import java.util.ArrayList;
@@ -201,23 +201,23 @@ public class VCoverflow extends Composite implements Paintable {
      *            id
      */
     public native void initializeMethods(String id) /*-{
-          var app = this;
-          
-          if($wnd.itmill.coverflow == null)
-          	var coverflow = [];
-          else
-          	var coverflow = $wnd.itmill.coverflow;
-          	
-          coverflow['getCovers_' + id] = function() {                
-             	app.@com.vaadin.demo.coverflow.gwt.client.ui.VCoverflow::getCovers()();
-          };   
-          
-         	coverflow['setCurrent_' + id] = function(selected) {
-             	app.@com.vaadin.demo.coverflow.gwt.client.ui.VCoverflow::setCover(Ljava/lang/String;)(selected);
-          };
-          
-          $wnd.itmill.coverflow = coverflow;
-      }-*/;
+             var app = this;
+             
+             if($wnd.vaadin.coverflow == null)
+             	var coverflow = [];
+             else
+             	var coverflow = $wnd.vaadin.coverflow;
+             	
+             coverflow['getCovers_' + id] = function() {                
+                	app.@com.vaadin.demo.coverflow.gwt.client.ui.VCoverflow::getCovers()();
+             };   
+             
+            	coverflow['setCurrent_' + id] = function(selected) {
+                	app.@com.vaadin.demo.coverflow.gwt.client.ui.VCoverflow::setCover(Ljava/lang/String;)(selected);
+             };
+             
+             $wnd.vaadin.coverflow = coverflow;
+         }-*/;
 
     /**
      * This function sends all covers to the flash. We cannot do this directly
@@ -259,14 +259,14 @@ public class VCoverflow extends Composite implements Paintable {
      * @param icon
      */
     public native void addCover(String id, String caption, String icon) /*-{   
-          try {
-          	    $doc['fxcoverflow' + id].addCover(caption.toString(), icon.toString());
-              }
-              catch(e) {
-                  $wnd.alert(e.message);
-              }   
-               	
-          }-*/;
+             try {
+             	    $doc['fxcoverflow' + id].addCover(caption.toString(), icon.toString());
+                 }
+                 catch(e) {
+                     $wnd.alert(e.message);
+                 }   
+                  	
+             }-*/;
 
     /**
      * This function tells the flash which cover should be selected.
@@ -275,21 +275,21 @@ public class VCoverflow extends Composite implements Paintable {
      * @param key
      */
     public native void selectCover(String id, String key) /*-{    
-       	$doc["fxcoverflow" + id].selectCover(key.toString());
-       }-*/;
+          	$doc["fxcoverflow" + id].selectCover(key.toString());
+          }-*/;
 
     public native void setBackgroundColor(String id, String startGradient,
             String endGradient) /*-{    	
-          	$doc["fxcoverflow" + id].setBackgroundColor("0x" + startGradient.toString(), "0x" + endGradient.toString());
-      }-*/;
+             	$doc["fxcoverflow" + id].setBackgroundColor("0x" + startGradient.toString(), "0x" + endGradient.toString());
+         }-*/;
 
     public native void toggleScrollbarVisibility(String id, boolean visibility) /*-{    	
-       	$doc["fxcoverflow" + id].toggleScrollbarVisibility(visibility);
-       }-*/;
+          	$doc["fxcoverflow" + id].toggleScrollbarVisibility(visibility);
+          }-*/;
 
     public native void removeCover(String id, String key) /*-{    	
-       	$doc["fxcoverflow" + id].removeCover(key);
-       }-*/;
+          	$doc["fxcoverflow" + id].removeCover(key);
+          }-*/;
 
     /**
      * Set the HTML coding of the flash movie. This isn't done until the

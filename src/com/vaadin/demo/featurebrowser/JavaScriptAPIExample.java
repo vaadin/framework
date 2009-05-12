@@ -22,7 +22,7 @@ import com.vaadin.ui.Button.ClickEvent;
  */
 public class JavaScriptAPIExample extends CustomComponent {
 
-    public static final String txt = "<p>For advanced client side programmers Toolkit offers a simple method which can be used to force sync client with server. This may be needed for example if another part of a mashup changes things on server.</p> (more examples will be added here as the APIs are made public)<br/><br/><A href=\"javascript:itmill.forceSync();\">javascript:itmill.forceSync();</A>";
+    public static final String txt = "<p>For advanced client side programmers Toolkit offers a simple method which can be used to force sync client with server. This may be needed for example if another part of a mashup changes things on server.</p> (more examples will be added here as the APIs are made public)<br/><br/><A href=\"javascript:vaadin.forceSync();\">javascript:itmill.forceSync();</A>";
 
     private final VerticalLayout main;
     private final Label l;
@@ -61,7 +61,7 @@ public class JavaScriptAPIExample extends CustomComponent {
         Label l = new Label(
                 "This label will update it's server-side value AFTER it's rendered to the client-side. "
                         + "The client will be synchronized on reload, when you click a button, "
-                        + "or when itmill.forceSync() is called.") {
+                        + "or when vaadin.forceSync() is called.") {
 
             @Override
             public void paintContent(PaintTarget target) throws PaintException {

@@ -88,7 +88,7 @@ public class LoginForm extends CustomComponent {
 
     private URIHandler uriHandler = new URIHandler() {
         private final String responce = "<html><body>Login form handeled."
-                + "<script type='text/javascript'>top.itmill.forceSync();"
+                + "<script type='text/javascript'>top.vaadin.forceSync();"
                 + "</script></body></html>";
 
         public DownloadStream handleURI(URL context, String relativeUri) {

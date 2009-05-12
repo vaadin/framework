@@ -1205,16 +1205,16 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                     + "'></script>\n");
             page.write("<script type=\"text/javascript\">\n");
             page.write("//<![CDATA[\n");
-            page.write("if(!itmill || !itmill.toolkitConfigurations) {\n "
-                    + "if(!itmill) { var itmill = {}} \n"
-                    + "itmill.toolkitConfigurations = {};\n"
-                    + "itmill.themesLoaded = {}};\n");
+            page.write("if(!vaadin || !vaadin.toolkitConfigurations) {\n "
+                    + "if(!vaadin) { var vaadin = {}} \n"
+                    + "vaadin.toolkitConfigurations = {};\n"
+                    + "vaadin.themesLoaded = {}};\n");
 
             if (!isProductionMode()) {
-                page.write("itmill.debug = true;\n");
+                page.write("vaadin.debug = true;\n");
             }
 
-            page.write("itmill.toolkitConfigurations[\"" + appId + "\"] = {");
+            page.write("vaadin.toolkitConfigurations[\"" + appId + "\"] = {");
             page.write("appUri:'" + appUrl + "', ");
             page.write("pathInfo: '" + pathInfo + "', ");
             if (window != application.getMainWindow()) {
@@ -1254,7 +1254,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                 // set
                 page.write("<script type=\"text/javascript\">\n");
                 page.write("//<![CDATA[\n");
-                page.write("if(!itmill.themesLoaded['" + themeName + "']) {\n");
+                page.write("if(!vaadin.themesLoaded['" + themeName + "']) {\n");
                 page
                         .write("var stylesheet = document.createElement('link');\n");
                 page.write("stylesheet.setAttribute('rel', 'stylesheet');\n");
@@ -1263,7 +1263,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                         + "/styles.css');\n");
                 page
                         .write("document.getElementsByTagName('head')[0].appendChild(stylesheet);\n");
-                page.write("itmill.themesLoaded['" + themeName
+                page.write("vaadin.themesLoaded['" + themeName
                         + "'] = true;\n}\n");
                 page.write("//]]>\n</script>\n");
             }
@@ -1271,12 +1271,12 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
         } else {
             page.write("<script type=\"text/javascript\">\n");
             page.write("//<![CDATA[\n");
-            page.write("if(!itmill || !itmill.toolkitConfigurations) {\n "
-                    + "if(!itmill) { var itmill = {}} \n"
-                    + "itmill.toolkitConfigurations = {};\n"
-                    + "itmill.themesLoaded = {};\n");
+            page.write("if(!vaadin || !vaadin.toolkitConfigurations) {\n "
+                    + "if(!vaadin) { var vaadin = {}} \n"
+                    + "vaadin.toolkitConfigurations = {};\n"
+                    + "vaadin.themesLoaded = {};\n");
             if (!isProductionMode()) {
-                page.write("itmill.debug = true;\n");
+                page.write("vaadin.debug = true;\n");
             }
             page
                     .write("document.write('<iframe tabIndex=\"-1\" id=\"__gwt_historyFrame\" "
@@ -1287,7 +1287,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                     + widgetset + "/" + widgetset + ".nocache.js?"
                     + new Date().getTime() + "'><\\/script>\");\n}\n");
 
-            page.write("itmill.toolkitConfigurations[\"" + appId + "\"] = {");
+            page.write("vaadin.toolkitConfigurations[\"" + appId + "\"] = {");
             page.write("appUri:'" + appUrl + "', ");
             page.write("pathInfo: '" + pathInfo + "', ");
             if (window != application.getMainWindow()) {
@@ -1328,7 +1328,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                 // set
                 page.write("<script type=\"text/javascript\">\n");
                 page.write("//<![CDATA[\n");
-                page.write("if(!itmill.themesLoaded['" + themeName + "']) {\n");
+                page.write("if(!vaadin.themesLoaded['" + themeName + "']) {\n");
                 page
                         .write("var stylesheet = document.createElement('link');\n");
                 page.write("stylesheet.setAttribute('rel', 'stylesheet');\n");
@@ -1337,7 +1337,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                         + "/styles.css');\n");
                 page
                         .write("document.getElementsByTagName('head')[0].appendChild(stylesheet);\n");
-                page.write("itmill.themesLoaded['" + themeName
+                page.write("vaadin.themesLoaded['" + themeName
                         + "'] = true;\n}\n");
                 page.write("//]]>\n</script>\n");
             }

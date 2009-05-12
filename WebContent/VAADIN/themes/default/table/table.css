@@ -134,8 +134,8 @@
 	We need multiple different filters because we cannot be sure how host page is served compared to theme resources
 	TODO: This actually does not work as expected, since only the last filter is applied. Can we chain filters together (i.e. contain all versions on one line)?
 	 */
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/themes/default/table/img/scroll-position-bg.png", sizingMethod="scale");
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/themes/default/table/img/scroll-position-bg.png", sizingMethod="scale");
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="ITMILL/themes/default/table/img/scroll-position-bg.png", sizingMethod="scale");
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="/ITMILL/themes/default/table/img/scroll-position-bg.png", sizingMethod="scale");
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../VAADIN/themes/default/table/img/scroll-position-bg.png", sizingMethod="scale");
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../VAADIN/themes/default/table/img/scroll-position-bg.png", sizingMethod="scale");
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="VAADIN/themes/default/table/img/scroll-position-bg.png", sizingMethod="scale");
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="/VAADIN/themes/default/table/img/scroll-position-bg.png", sizingMethod="scale");
 }
