@@ -71,12 +71,12 @@ public class SamplerApplication extends Application {
      */
     public static String getThemeBase() {
         try {
-            URI uri = new URI(APP_URL + "../ITMILL/themes/" + THEME_NAME + "/");
+            URI uri = new URI(APP_URL + "../VAADIN/themes/" + THEME_NAME + "/");
             return uri.normalize().toString();
         } catch (Exception e) {
             System.err.println("Theme location could not be resolved:" + e);
         }
-        return "/ITMILL/themes/" + THEME_NAME + "/";
+        return "/VAADIN/themes/" + THEME_NAME + "/";
     }
 
     // Supports multiple browser windows

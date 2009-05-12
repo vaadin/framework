@@ -14,7 +14,7 @@ import com.google.gwt.dev.GWTCompiler;
  * 
  * A typical invocation would use e.g. the following arguments
  * 
- * "-out WebContent/ITMILL/widgetsets com.vaadin.terminal.gwt.DefaultWidgetSet"
+ * "-out WebContent/VAADIN/widgetsets com.vaadin.terminal.gwt.DefaultWidgetSet"
  * 
  * In addition, larger memory usage settings for the VM should be used, e.g.
  * 

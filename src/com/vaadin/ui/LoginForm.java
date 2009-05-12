@@ -126,10 +126,10 @@ public class LoginForm extends CustomComponent {
     protected byte[] getLoginHTML() {
 
         String theme = getApplication().getMainWindow().getTheme();
-        String guessedThemeUri = getApplication().getURL() + "ITMILL/themes/"
+        String guessedThemeUri = getApplication().getURL() + "VAADIN/themes/"
                 + (theme == null ? "default" : theme) + "/styles.css";
         String guessedThemeUri2 = getApplication().getURL()
-                + "../ITMILL/themes/" + (theme == null ? "default" : theme)
+                + "../VAADIN/themes/" + (theme == null ? "default" : theme)
                 + "/styles.css";
 
         String appUri = getApplication().getURL().toString();

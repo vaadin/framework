@@ -129,7 +129,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
     private static final String SERVLET_PARAMETER_PRODUCTION_MODE = "productionMode";
 
     // Configurable parameter names
-    private static final String PARAMETER_ITMILL_RESOURCES = "Resources";
+    private static final String PARAMETER_VAADIN_RESOURCES = "Resources";
 
     private static final int DEFAULT_BUFFER_SIZE = 32 * 1024;
 
@@ -139,11 +139,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
     private static final String AJAX_UIDL_URI = "/UIDL";
 
-    static final String THEME_DIRECTORY_PATH = "ITMILL/themes/";
+    static final String THEME_DIRECTORY_PATH = "VAADIN/themes/";
 
     private static final int DEFAULT_THEME_CACHETIME = 1000 * 60 * 60 * 24;
 
-    static final String WIDGETSET_DIRECTORY_PATH = "ITMILL/widgetsets/";
+    static final String WIDGETSET_DIRECTORY_PATH = "VAADIN/widgetsets/";
 
     // Name of the default widget set, used if not specified in web.xml
     private static final String DEFAULT_WIDGETSET = "com.vaadin.terminal.gwt.DefaultWidgetSet";
@@ -559,8 +559,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
         } else if (requestType == RequestType.OTHER) {
             /*
-             * TODO Should *any* request really create a new application
-             * instance if none was found?
+             * TODO Shouldany request really create a new application instance
+             * if none was found?
              */
             return createApplication(request);
 
@@ -889,12 +889,12 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
         }
 
         if ((request.getContextPath() != null)
-                && (request.getRequestURI().startsWith("/ITMILL/"))) {
-            serveStaticResourcesInITMILL(request.getRequestURI(), response);
+                && (request.getRequestURI().startsWith("/VAADIN/"))) {
+            serveStaticResourcesInVAADIN(request.getRequestURI(), response);
             return true;
         } else if (request.getRequestURI().startsWith(
-                request.getContextPath() + "/ITMILL/")) {
-            serveStaticResourcesInITMILL(request.getRequestURI().substring(
+                request.getContextPath() + "/VAADIN/")) {
+            serveStaticResourcesInVAADIN(request.getRequestURI().substring(
                     request.getContextPath().length()), response);
             return true;
         }
@@ -903,14 +903,14 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
     }
 
     /**
-     * Serve resources from ITMILL directory.
+     * Serve resources from VAADIN directory.
      * 
      * @param request
      * @param response
      * @throws IOException
      * @throws ServletException
      */
-    private void serveStaticResourcesInITMILL(String filename,
+    private void serveStaticResourcesInVAADIN(String filename,
             HttpServletResponse response) throws IOException, ServletException {
 
         final ServletContext sc = getServletContext();
@@ -928,7 +928,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                         .println("Requested resource ["
                                 + filename
                                 + "] not found from filesystem or through class loader."
-                                + " Add widgetset and/or theme JAR to your classpath or add files to WebContent/ITMILL folder.");
+                                + " Add widgetset and/or theme JAR to your classpath or add files to WebContent/VAADIN folder.");
                 response.setStatus(404);
                 return;
             }
@@ -1121,7 +1121,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
         final String widgetsetPath = getWidgetsetLocation(request);
 
         final String staticFilePath = getApplicationOrSystemProperty(
-                PARAMETER_ITMILL_RESOURCES, widgetsetPath);
+                PARAMETER_VAADIN_RESOURCES, widgetsetPath);
 
         // Default theme does not use theme URI
         String themeUri = null;

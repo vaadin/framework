@@ -269,7 +269,7 @@ public class CustomLayout extends AbstractLayout {
      * Set the name of the template used to draw custom layout.
      * 
      * With GWT-adapter, the template with name 'templatename' is loaded from
-     * ITMILL/themes/themename/layouts/templatename.html. If the theme has not
+     * VAADIN/themes/themename/layouts/templatename.html. If the theme has not
      * been set (with Application.setTheme()), themename is 'default'.
      * 
      * @param templateName

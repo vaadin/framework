@@ -61,7 +61,7 @@ IT Mill Toolkit Web Mode.launch
 WebContent/doc/example-source/build-widgetset.xml
 - example on how to build GWT widget sets for IT Mill Toolkit application
 
-WebContent/ITMILL
+WebContent/VAADIN
 - widget sets and themes
 
 gwt

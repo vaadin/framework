@@ -15,7 +15,7 @@ public class Ticket2022 extends Application {
 
         // WebApplicationContext wac = ((WebApplicationContext) getContext());
         // File f = new File(wac.getBaseDirectory().getAbsoluteFile()
-        // + "/ITMILL/themes/" + getTheme() + "/layouts/Ticket2022.html");
+        // + "/VAADIN/themes/" + getTheme() + "/layouts/Ticket2022.html");
 
         l = new CustomLayout("Ticket2022");
         // try {

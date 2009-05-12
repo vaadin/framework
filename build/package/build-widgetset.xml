@@ -3,7 +3,7 @@
 <!-- 
 
 Client-side code is compiled by using GWTCompiler which compiles client-side Java code into
-JavaScript. Generated files are located under WebContent/ITMILL/widgetsets/*.
+JavaScript. Generated files are located under WebContent/VAADIN/widgetsets/*.
 
 Client-side compilation is required if you create new or modify existing widgets.
 You may use either this script or IT Mill Toolkit Hosted Mode.launch (in Eclipse)
@@ -43,7 +43,7 @@ See configure target to adjust this buildfile.
 		<property name="client-side-src-location" value="${base}WebContent/WEB-INF/src" />
 			
 		<!-- where to generate compiled javascript and theme files -->
-		<property name="client-side-destination" value="${base}WebContent/ITMILL/widgetsets" />
+		<property name="client-side-destination" value="${base}WebContent/VAADIN/widgetsets" />
 	</target>
 		
 	<target name="init" depends="configure">

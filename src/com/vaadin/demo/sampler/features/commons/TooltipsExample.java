@@ -25,7 +25,7 @@ public class TooltipsExample extends VerticalLayout {
         rich.setStyleName(Button.STYLE_LINK);
         // add the tooltip:
         rich
-                .setDescription("<h2><img src=\"../ITMILL/themes/sampler/icons/comment_yellow.gif\"/>A richtext tooltip</h2>"
+                .setDescription("<h2><img src=\"../VAADIN/themes/sampler/icons/comment_yellow.gif\"/>A richtext tooltip</h2>"
                         + "<ul>"
                         + "<li>HTML formatting</li><li>Images<br/>"
                         + "</li><li>etc...</li></ul>");

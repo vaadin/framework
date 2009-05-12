@@ -25,7 +25,7 @@
 	See build.properties to define path where your gwt installation is located.
 	You must unpack platform specific binaries under linux, windows and mac directories.
 	${gwt-dir}/${platform} (linux|windows|mac) are used for
-  	a) compile WebContent/ITMILL/widgetsets
+  	a) compile WebContent/VAADIN/widgetsets
 	b) creating platform specific release ZIP/TGZ packages.
 	
 	NOTE FOR USING OOPHM:
@@ -190,7 +190,7 @@
 		<!-- Create result dir unless already exists -->
 		<mkdir dir="${result-path}" />
 
-		<!-- required when compiling WebContent/ITMILL/widgetsets (and also Java server-side classes) -->
+		<!-- required when compiling WebContent/VAADIN/widgetsets (and also Java server-side classes) -->
 		<property name="lib-gwt-dev" value="gwt-dev-${platform}.jar" />
 
 		<echo>We are on ${platform} platform (${os.name} ${os.version}), using ${gwt-dir}/${platform}/${lib-gwt-dev} (${gwt-version}).</echo>
@@ -659,19 +659,19 @@
 		<java2html srcdir="${output-dir}/WebContent/WEB-INF/src/${toolkit-package}/demo" destdir="${output-dir}/WebContent/doc/example-source/${toolkit-package}/demo" includes="**/*.java" style="eclipse" showLineNumbers="false" showFileName="true" showTableBorder="false" />
 
 		<!-- Add WebContent -->
-		<echo>Adding ITMILL/themes, demo and hsqldb.jar files.</echo>
+		<echo>Adding VAADIN/themes, demo and hsqldb.jar files.</echo>
 		<copy todir="${output-dir}/WebContent">
 			<fileset dir="WebContent">
 				<exclude name="**/.svn" />
 				<!-- TODO check what is neccessary -->
-				<exclude name="ITMILL/themes/tests*" />
-				<exclude name="ITMILL/themes/tests-magi/**/*" />
-				<exclude name="ITMILL/themes/tests-featurebrowser/**/*" />
-				<exclude name="ITMILL/themes/tests*/**/*" />
-				<exclude name="ITMILL/themes/sampler/**" if="build.sampler.disabled" />
+				<exclude name="VAADIN/themes/tests*" />
+				<exclude name="VAADIN/themes/tests-magi/**/*" />
+				<exclude name="VAADIN/themes/tests-featurebrowser/**/*" />
+				<exclude name="VAADIN/themes/tests*/**/*" />
+				<exclude name="VAADIN/themes/sampler/**" if="build.sampler.disabled" />
 				<include name="demo/**/*" />
 				<include name="WEB-INF/lib/hsqldb.jar" />
-				<include name="ITMILL/themes/**/*" />
+				<include name="VAADIN/themes/**/*" />
 				<include name="META-INF/**/*" />
 			</fileset>
 		</copy>
@@ -734,7 +734,7 @@
 
 	<target name="remove-widgetset-gwt-tmp">
 		<echo>Removing widgetset temp files</echo>
-		<delete dir="${output-dir}/WebContent/ITMILL/widgetsets/.gwt-tmp" includeemptydirs="true"/>
+		<delete dir="${output-dir}/WebContent/VAADIN/widgetsets/.gwt-tmp" includeemptydirs="true"/>
 	</target>
 
 	<target name="compile-widgetset-default">
@@ -742,7 +742,7 @@
 		<echo>com.vaadin.terminal.gwt.DefaultWidgetSet</echo>
 		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="-out" />
-			<arg value="${output-dir}/WebContent/ITMILL/widgetsets" />
+			<arg value="${output-dir}/WebContent/VAADIN/widgetsets" />
 			<arg value="com.vaadin.terminal.gwt.DefaultWidgetSet" />
 			<arg value="-style" />
 			<arg value="OBF" />
@@ -768,7 +768,7 @@
 		<echo>com.vaadin.demo.reservation.gwt.ReservationWidgetSet</echo>
 		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="-out" />
-			<arg value="${output-dir}/WebContent/ITMILL/widgetsets" />
+			<arg value="${output-dir}/WebContent/VAADIN/widgetsets" />
 			<arg value="com.vaadin.demo.reservation.gwt.ReservationWidgetSet" />
 			<arg value="-style" />
 			<arg value="OBF" />
@@ -793,7 +793,7 @@
 		<echo>com.vaadin.demo.sampler.gwt.SamplerWidgetSet</echo>
 		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="-out" />
-			<arg value="${output-dir}/WebContent/ITMILL/widgetsets" />
+			<arg value="${output-dir}/WebContent/VAADIN/widgetsets" />
 			<arg value="com.vaadin.demo.sampler.gwt.SamplerWidgetSet" />
 			<arg value="-style" />
 			<arg value="OBF" />
@@ -815,7 +815,7 @@
 		<echo>com.vaadin.demo.coverflow.gwt.CoverflowWidgetSet</echo>
 		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="-out" />
-			<arg value="${output-dir}/WebContent/ITMILL/widgetsets" />
+			<arg value="${output-dir}/WebContent/VAADIN/widgetsets" />
 			<arg value="com.vaadin.demo.coverflow.gwt.CoverflowWidgetSet" />
 			<arg value="-style" />
 			<arg value="OBF" />
@@ -837,7 +837,7 @@
 		<echo>com.vaadin.demo.colorpicker.gwt.ColorPickerWidgetSet</echo>
 		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="-out" />
-			<arg value="${output-dir}/WebContent/ITMILL/widgetsets" />
+			<arg value="${output-dir}/WebContent/VAADIN/widgetsets" />
 			<arg value="com.vaadin.demo.colorpicker.gwt.ColorPickerWidgetSet" />
 			<arg value="-style" />
 			<arg value="OBF" />
@@ -875,7 +875,7 @@
 		<!-- Path to GWT directory. TODO: This should be read from build.properties file. -->
 		<property name="gwt-dir" value="build/gwt" />
 
-		<!-- required when compiling WebContent/ITMILL/widgetsets (and also Java server-side classes) -->
+		<!-- required when compiling WebContent/VAADIN/widgetsets (and also Java server-side classes) -->
 		<property name="lib-gwt-dev" value="gwt-dev-${platform}.jar" />
 
 		<echo>We are on ${platform} platform, using ${gwt-dir}/${platform}/${lib-gwt-dev}.</echo>
@@ -940,8 +940,8 @@
 			</fileset>
 			<fileset dir="${output-dir}/WebContent">
 				<patternset>
-					<include name="ITMILL/widgetsets/com.vaadin.terminal.gwt.DefaultWidgetSet/**/*" />
-					<include name="ITMILL/themes/default/**/*" />
+					<include name="VAADIN/widgetsets/com.vaadin.terminal.gwt.DefaultWidgetSet/**/*" />
+					<include name="VAADIN/themes/default/**/*" />
 				</patternset>
 			</fileset>
 		</jar>

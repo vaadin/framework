@@ -17,7 +17,7 @@ import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.TwinColSelect;
 
 /**
- * TODO: Note you need to add Theme under WebContent/ITMILL/Themes/mytheme in
+ * TODO: Note you need to add Theme under WebContent/VAADIN/Themes/mytheme in
  * order to see actual visible results on the browser. Currently changes are
  * visible only by inspecting DOM.
  * 
@@ -44,7 +44,7 @@ public class TestForMultipleStyleNames extends CustomComponent implements
         main.addComponent(new Label(
                 "TK5 supports multiple stylenames for components."));
         main.addComponent(new Label("Note you need to add Theme under"
-                + " WebContent/ITMILL/Themes/mytheme"
+                + " WebContent/VAADIN/Themes/mytheme"
                 + " in order to see actual visible results"
                 + " on the browser. Currently changes are"
                 + " visible only by inspecting DOM."));

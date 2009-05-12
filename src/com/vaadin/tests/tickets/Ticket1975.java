@@ -47,7 +47,7 @@ public class Ticket1975 extends Application {
 
                     }));
             File f = new File(wc.getBaseDirectory().getAbsoluteFile()
-                    + "/ITMILL/themes/" + getTheme()
+                    + "/VAADIN/themes/" + getTheme()
                     + "/layouts/Ticket1975.html");
 
             cl2 = new CustomLayout(new FileInputStream(f));
