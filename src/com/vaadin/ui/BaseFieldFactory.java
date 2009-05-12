@@ -11,10 +11,9 @@ import com.vaadin.data.Property;
 /**
  * Default implementation of the the following Field types are used by default:
  * <p>
- * <b>Boolean</b>: Button(switchMode:true).<br/>
- * <b>Date</b>: DateField(resolution: day).<br/>
- * <b>Item</b>: Form. <br/>
- * <b>default field type</b>: TextField.
+ * <b>Boolean</b>: Button(switchMode:true).<br/> <b>Date</b>:
+ * DateField(resolution: day).<br/> <b>Item</b>: Form. <br/> <b>default field
+ * type</b>: TextField.
  * <p>
  * 
  * @author IT Mill Ltd.
@@ -38,7 +37,7 @@ public class BaseFieldFactory implements FieldFactory {
      * @param uiContext
      *            the context where the Field is presented.
      * 
-     * @see com.itmill.toolkit.ui.FieldFactory#createField(Class, Component)
+     * @see com.vaadin.ui.FieldFactory#createField(Class, Component)
      */
     public Field createField(Class type, Component uiContext) {
         return DefaultFieldFactory.createFieldByPropertyType(type);
@@ -47,7 +46,7 @@ public class BaseFieldFactory implements FieldFactory {
     /**
      * Creates the field based on the datasource property.
      * 
-     * @see com.itmill.toolkit.ui.FieldFactory#createField(Property, Component)
+     * @see com.vaadin.ui.FieldFactory#createField(Property, Component)
      */
     public Field createField(Property property, Component uiContext) {
         if (property != null) {
@@ -60,8 +59,7 @@ public class BaseFieldFactory implements FieldFactory {
     /**
      * Creates the field based on the item and property id.
      * 
-     * @see com.itmill.toolkit.ui.FieldFactory#createField(Item, Object,
-     *      Component)
+     * @see com.vaadin.ui.FieldFactory#createField(Item, Object, Component)
      */
     public Field createField(Item item, Object propertyId, Component uiContext) {
         if (item != null && propertyId != null) {
@@ -79,8 +77,8 @@ public class BaseFieldFactory implements FieldFactory {
     }
 
     /**
-     * @see com.itmill.toolkit.ui.FieldFactory#createField(com.itmill.toolkit.data.Container,
-     *      java.lang.Object, java.lang.Object, com.itmill.toolkit.ui.Component)
+     * @see com.vaadin.ui.FieldFactory#createField(com.vaadin.data.Container,
+     *      java.lang.Object, java.lang.Object, com.vaadin.ui.Component)
      */
     public Field createField(Container container, Object itemId,
             Object propertyId, Component uiContext) {

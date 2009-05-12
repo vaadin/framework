@@ -190,8 +190,7 @@ public class IndexedContainer implements Container.Indexed,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.data.Container#getContainerProperty(java.lang.Object,
+     * @see com.vaadin.data.Container#getContainerProperty(java.lang.Object,
      * java.lang.Object)
      */
     public Property getContainerProperty(Object itemId, Object propertyId) {
@@ -238,8 +237,7 @@ public class IndexedContainer implements Container.Indexed,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.data.Container#addContainerProperty(java.lang.Object,
+     * @see com.vaadin.data.Container#addContainerProperty(java.lang.Object,
      * java.lang.Class, java.lang.Object)
      */
     public boolean addContainerProperty(Object propertyId, Class type,
@@ -386,9 +384,7 @@ public class IndexedContainer implements Container.Indexed,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.data.Container#removeContainerProperty(java.lang.Object
-     * )
+     * @see com.vaadin.data.Container#removeContainerProperty(java.lang.Object )
      */
     public boolean removeContainerProperty(Object propertyId) {
 
@@ -456,8 +452,7 @@ public class IndexedContainer implements Container.Indexed,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.data.Container.Ordered#nextItemId(java.lang.Object)
+     * @see com.vaadin.data.Container.Ordered#nextItemId(java.lang.Object)
      */
     public Object nextItemId(Object itemId) {
         if (filteredItemIds != null) {
@@ -483,8 +478,7 @@ public class IndexedContainer implements Container.Indexed,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.data.Container.Ordered#prevItemId(java.lang.Object)
+     * @see com.vaadin.data.Container.Ordered#prevItemId(java.lang.Object)
      */
     public Object prevItemId(Object itemId) {
         if (filteredItemIds != null) {
@@ -512,8 +506,7 @@ public class IndexedContainer implements Container.Indexed,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.data.Container.Ordered#isFirstId(java.lang.Object)
+     * @see com.vaadin.data.Container.Ordered#isFirstId(java.lang.Object)
      */
     public boolean isFirstId(Object itemId) {
         if (filteredItemIds != null) {
@@ -551,8 +544,7 @@ public class IndexedContainer implements Container.Indexed,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object,
+     * @see com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object,
      * java.lang.Object)
      */
     public Item addItemAfter(Object previousItemId, Object newItemId) {
@@ -572,8 +564,7 @@ public class IndexedContainer implements Container.Indexed,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object)
+     * @see com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object)
      */
     public Object addItemAfter(Object previousItemId) {
 
@@ -611,8 +602,7 @@ public class IndexedContainer implements Container.Indexed,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.data.Container.Indexed#indexOfId(java.lang.Object)
+     * @see com.vaadin.data.Container.Indexed#indexOfId(java.lang.Object)
      */
     public int indexOfId(Object itemId) {
         if (filteredItemIds != null) {
@@ -636,8 +626,7 @@ public class IndexedContainer implements Container.Indexed,
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.data.Container.Indexed#addItemAt(int,
-     * java.lang.Object)
+     * @see com.vaadin.data.Container.Indexed#addItemAt(int, java.lang.Object)
      */
     public Item addItemAt(int index, Object newItemId) {
 
@@ -737,9 +726,7 @@ public class IndexedContainer implements Container.Indexed,
         /*
          * (non-Javadoc)
          * 
-         * @see
-         * com.vaadin.data.Container.PropertySetChangeEvent#getContainer
-         * ()
+         * @see com.vaadin.data.Container.PropertySetChangeEvent#getContainer ()
          */
         public Container getContainer() {
             return (Container) getSource();
@@ -768,8 +755,7 @@ public class IndexedContainer implements Container.Indexed,
         /*
          * (non-Javadoc)
          * 
-         * @see
-         * com.vaadin.data.Container.ItemSetChangeEvent#getContainer()
+         * @see com.vaadin.data.Container.ItemSetChangeEvent#getContainer()
          */
         public Container getContainer() {
             return (Container) getSource();
@@ -817,8 +803,7 @@ public class IndexedContainer implements Container.Indexed,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.data.Container.PropertySetChangeNotifier#addListener
+     * @see com.vaadin.data.Container.PropertySetChangeNotifier#addListener
      * (com.vaadin.data.Container.PropertySetChangeListener)
      */
     public void addListener(Container.PropertySetChangeListener listener) {
@@ -831,8 +816,7 @@ public class IndexedContainer implements Container.Indexed,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.data.Container.PropertySetChangeNotifier#removeListener
+     * @see com.vaadin.data.Container.PropertySetChangeNotifier#removeListener
      * (com.vaadin.data.Container.PropertySetChangeListener)
      */
     public void removeListener(Container.PropertySetChangeListener listener) {
@@ -844,9 +828,8 @@ public class IndexedContainer implements Container.Indexed,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.data.Container.ItemSetChangeNotifier#addListener(com
-     * .itmill.toolkit.data.Container.ItemSetChangeListener)
+     * @see com.vaadin.data.Container.ItemSetChangeNotifier#addListener(com
+     * .vaadin.data.Container.ItemSetChangeListener)
      */
     public void addListener(Container.ItemSetChangeListener listener) {
         if (itemSetChangeListeners == null) {
@@ -858,8 +841,7 @@ public class IndexedContainer implements Container.Indexed,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.data.Container.ItemSetChangeNotifier#removeListener
+     * @see com.vaadin.data.Container.ItemSetChangeNotifier#removeListener
      * (com.vaadin.data.Container.ItemSetChangeListener)
      */
     public void removeListener(Container.ItemSetChangeListener listener) {
@@ -871,9 +853,8 @@ public class IndexedContainer implements Container.Indexed,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.data.Property.ValueChangeNotifier#addListener(com.
-     * itmill.toolkit.data.Property.ValueChangeListener)
+     * @see com.vaadin.data.Property.ValueChangeNotifier#addListener(com.
+     * vaadin.data.Property.ValueChangeListener)
      */
     public void addListener(Property.ValueChangeListener listener) {
         if (propertyValueChangeListeners == null) {
@@ -885,9 +866,8 @@ public class IndexedContainer implements Container.Indexed,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.data.Property.ValueChangeNotifier#removeListener(com
-     * .itmill.toolkit.data.Property.ValueChangeListener)
+     * @see com.vaadin.data.Property.ValueChangeNotifier#removeListener(com
+     * .vaadin.data.Property.ValueChangeListener)
      */
     public void removeListener(Property.ValueChangeListener listener) {
         if (propertyValueChangeListeners != null) {
@@ -1037,8 +1017,8 @@ public class IndexedContainer implements Container.Indexed,
     /* Internal Item and Property implementations */
 
     /*
-     * A class implementing the com.vaadin.data.Item interface to be
-     * contained in the list. @author IT Mill Ltd.
+     * A class implementing the com.vaadin.data.Item interface to be contained
+     * in the list. @author IT Mill Ltd.
      * 
      * @version @VERSION@
      * 
@@ -1348,8 +1328,7 @@ public class IndexedContainer implements Container.Indexed,
         /*
          * (non-Javadoc)
          * 
-         * @see
-         * com.vaadin.data.Property.ValueChangeNotifier#addListener(
+         * @see com.vaadin.data.Property.ValueChangeNotifier#addListener(
          * com.vaadin.data.Property.ValueChangeListener)
          */
         public void addListener(Property.ValueChangeListener listener) {
@@ -1359,8 +1338,7 @@ public class IndexedContainer implements Container.Indexed,
         /*
          * (non-Javadoc)
          * 
-         * @see
-         * com.vaadin.data.Property.ValueChangeNotifier#removeListener
+         * @see com.vaadin.data.Property.ValueChangeNotifier#removeListener
          * (com.vaadin.data.Property.ValueChangeListener)
          */
         public void removeListener(Property.ValueChangeListener listener) {
@@ -1419,8 +1397,7 @@ public class IndexedContainer implements Container.Indexed,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.data.Container.Sortable#getSortableContainerPropertyIds
+     * @see com.vaadin.data.Container.Sortable#getSortableContainerPropertyIds
      * ()
      */
     public Collection getSortableContainerPropertyIds() {
