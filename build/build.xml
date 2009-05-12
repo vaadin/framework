@@ -1169,8 +1169,8 @@
       <fail unless="version" message="The 'version' property must be defined."/>
 
       <!-- Parameters for the test.xml script. -->
-      <fail unless="testingtools.tester.host" message="The 'testingtools.tester.host' property must be defined."/>
-      <fail unless="testingtools.deployment.url" message="The 'testingtools.deployment.url' property must be defined."/>
+      <fail unless="com.vaadin.testingtools.tester.host" message="The 'com.vaadin.testingtools.tester.host' property must be defined."/>
+      <fail unless="com.vaadin.testingtools.deployment.url" message="The 'com.vaadin.testingtools.deployment.url' property must be defined."/>
 
       <property name="package.platform.name" value="${product-file}-${package-platform}-${version}"/>
 
@@ -1182,8 +1182,8 @@
           <property name="package.filename" value="${package.linux.filename}"/>
           <property name="testing.testarea" value="/tmp/testarea"/>
           <property name="package.name" value="${package.platform.name}"/>
-          <property name="testingtools.tester.host" value="${testingtools.tester.host}"/>
-          <property name="testingtools.deployment.url" value="${testingtools.deployment.url}"/>
+          <property name="com.vaadin.testingtools.tester.host" value="${com.vaadin.testingtools.tester.host}"/>
+          <property name="com.vaadin.testingtools.deployment.url" value="${com.vaadin.testingtools.deployment.url}"/>
       </ant>
     </target>
 

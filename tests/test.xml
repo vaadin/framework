@@ -82,8 +82,8 @@
     <!-- ================================================================== -->
 
 	<target name="check-parameters">
-        <fail unless="testingtools.tester.host" message="The 'testingtools.tester.host' property must be defined."/>
-        <fail unless="testingtools.deployment.url" message="The 'testingtools.deployment.url' property must be defined."/>
+        <fail unless="com.vaadin.testingtools.tester.host" message="The 'com.vaadin.testingtools.tester.host' property must be defined."/>
+        <fail unless="com.vaadin.testingtools.deployment.url" message="The 'com.vaadin.testingtools.deployment.url' property must be defined."/>
     </target>
 
 	<target name="run-tests" if="server.start.succeeded" depends="execute-tests">
@@ -94,8 +94,8 @@
 			<classpath>
 				<path refid="classpath" />
 			</classpath>
-			<jvmarg value="-Dtestingtools.tester.host=${testingtools.tester.host}" />
-			<jvmarg value="-Dtestingtools.deployment.url=${testingtools.deployment.url}" />
+			<jvmarg value="-Dcom.vaadin.testingtools.tester.host=${com.vaadin.testingtools.tester.host}" />
+			<jvmarg value="-Dcom.vaadin.testingtools.deployment.url=${com.vaadin.testingtools.deployment.url}" />
 
 			<batchtest>
 				<fileset dir="${test-output-dir}">
