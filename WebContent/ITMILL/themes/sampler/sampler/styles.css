@@ -223,11 +223,17 @@
 .i-app-SamplerApplication .i-button-screenshot:hover {
 	border-color: #abc;
 }
-.i-app-SamplerApplication .i-button-screenshot img {
+.i-app-SamplerApplication .i-button-screenshot img.i-icon {
+	margin: 0;
 	margin-top: -2px;
 	margin-left: -3px;
+	width: auto;
+	height: auto;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	overflow: hidden;
 }
-.i-ie .i-app-SamplerApplication .i-button-screenshot img {
+.i-ie .i-app-SamplerApplication .i-button-screenshot img.i-icon {
 	margin-left: -12px;
 }
 
@@ -307,14 +313,17 @@
 	padding-bottom: 12px;
 	padding-left: 28px;
 	padding-top: 15px;
+	border: none;
 }
 .i-app-SamplerApplication .feature-info .i-panel-content {
 	background: transparent url(info-bubble-top.png) no-repeat 0 -44px;
+	border: none;
 }
 .i-app-SamplerApplication .i-panel-deco-feature-info {
 	height: 28px;
 	background: transparent url(info-bubble-bottom.png);
 	margin: 0;
+	border: none;
 }
 
 .i-app-SamplerApplication .feature-info .i-verticallayout .i-verticallayout-margin-left {
@@ -445,6 +454,13 @@
 	background: transparent url(segment.png) no-repeat;
 	cursor: default;
 	padding: 0;
+}
+.i-customcomponent-ModeSwitch .i-button span {
+	display: none;
+}
+.i-customcomponent-ModeSwitch .i-button .i-icon {
+	width: auto;
+	height: auto;
 }
 .i-customcomponent-ModeSwitch .i-button-first-on,
 .i-customcomponent-ModeSwitch .i-button-first:active {
