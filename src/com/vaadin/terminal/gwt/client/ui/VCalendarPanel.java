@@ -379,7 +379,6 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
                     | Event.MOUSEEVENTS);
         }
 
-        @Override
         public void addMouseListener(MouseListener listener) {
             if (mouseListeners == null) {
                 mouseListeners = new MouseListenerCollection();
@@ -387,7 +386,6 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
             mouseListeners.add(listener);
         }
 
-        @Override
         public void removeMouseListener(MouseListener listener) {
             if (mouseListeners != null) {
                 mouseListeners.remove(listener);
