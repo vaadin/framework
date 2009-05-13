@@ -21,6 +21,7 @@
 	padding: 0;
 	background: transparent url(sampler.png) no-repeat;
 	overflow: hidden;
+	border: none;
 }
 
 .v-app-SamplerApplication .topbar .logo img {

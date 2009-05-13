@@ -133,6 +133,7 @@ div > .v-button .v-errorindicator,
 	display: inline;
 	font-weight: normal;
 	color: #1b699f;
+	font-size: 12px;
 }
 .v-button.v-button-link .v-icon + span {
 	margin: 0;
@@ -236,4 +237,12 @@ div > .v-button-small span,
 	border-color: #84949c;
 	border-top-color: #83939b;
 	border-bottom-color: #888d91;
+}
+/* Link button in IE6 */
+.v-ie6 .v-button-link {
+	border: none;
+	padding: 0;
+	background: transparent;
+	line-height: normal;
+	font-size: 12px;
 }
