@@ -1,5 +1,11 @@
+/*------------
+ * General vertical and horizontal sprites 
+ * -----------*/
 /** sprite: verticals; sprite-image: url(../common/img/vertical-sprites.png); sprite-layout: vertical */
-
 /** sprite: horizontals; sprite-image: url(../common/img/horizontal-sprites.png); sprite-layout: horizontal */
 
+/*------------
+ * Buttons 
+ * -----------*/
 /** sprite: buttons; sprite-image: url(../button/img/button-sprites.png); sprite-layout: vertical */
+/** sprite: buttons-black; sprite-image: url(../button/img/button-black-sprites.png); sprite-layout: vertical */

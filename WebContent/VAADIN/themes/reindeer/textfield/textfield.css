@@ -13,7 +13,15 @@
 .v-app input.v-textfield {
 	padding: 3px 3px 0 3px;
 }
-.v-textfield-focus {
+/* Textfield on blue background */
+.blue .v-textfield {
+	border-color: #92a2aa;
+	border-top-color: #7c8a90;
+	border-bottom-color: #a1b3bc;
+}
+.v-app .v-textfield-focus,
+.v-window .v-textfield-focus,
+.v-popupview-popup .v-textfield-focus {
 	border-color: #5b97d0;
 	border-top-color: #4f83b4;
 	border-bottom-color: #5ca0df;
@@ -22,12 +30,6 @@
 input.v-textfield-prompt {
 	font-style: normal;
 	color: #999;
-}
-/* Textfield on blue background */
-.blue .v-textfield {
-	border-color: #92a2aa;
-	border-top-color: #7c8a90;
-	border-bottom-color: #a1b3bc;
 }
 /* Capable browsers get fancier border images */
 .v-sa input.v-textfield,
@@ -42,7 +44,6 @@ input.v-textfield-prompt {
 	-webkit-border-image: url(img/bg-border-image.png) 0 3 0 3 stretch stretch;
 	-moz-border-image: url(img/bg-border-image.png) 0 3 0 3 stretch stretch;
 	-o-border-image: url(img/bg-border-image.png) 0 3 0 3 stretch stretch;
-	
 }
 .v-sa input.v-textfield-focus,
 .v-ff35 input.v-textfield-focus,

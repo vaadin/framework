@@ -19,7 +19,8 @@
 .v-popupview-popup select,
 .v-popupview-popup button,
 .v-popupview-popup textarea,
-.v-filterselect-suggestpopup {
+.v-filterselect-suggestpopup,
+.v-datefield-popup {
 	font-family: Arial, Helvetica, Tahoma, Verdana, sans-serif;
 	font-size: 12px;
 	line-height: normal;
@@ -42,7 +43,8 @@
 .v-sa .v-popupview-popup select,
 .v-sa .v-popupview-popup button,
 .v-sa .v-popupview-popup textarea,
-.v-sa .v-filterselect-suggestpopup {
+.v-sa .v-filterselect-suggestpopup,
+.v-sa .v-datefield-popup {
 	font-family: Helvetica, Arial, "Lucida Grande", Geneva, Tahoma, Verdana, sans-serif;
 }
 .v-errorindicator {

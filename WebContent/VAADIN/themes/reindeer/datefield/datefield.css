@@ -2,11 +2,14 @@
 	border-collapse: collapse;
 	margin: 0;
 	padding: 0;
+	height: auto !important;
 }
 .v-datefield-year .v-datefield-calendarpanel-prevmonth,
-.v-datefield-year .v-datefield-calendarpanel-nextmonth,
-.v-datefield-year .v-datefield-calendarpanel-weekdays {
+.v-datefield-year .v-datefield-calendarpanel-nextmonth {
 	display: none;
+}
+.v-datefield-calendarpanel td {
+	vertical-align: top;
 }
 td.v-datefield-calendarpanel-month {
 	height: 23px;
@@ -16,12 +19,13 @@ td.v-datefield-calendarpanel-month {
 span.v-datefield-calendarpanel-month {
 	display: block;
 	text-align: center;
-	height: 18px;
+	height: 16px;
 	padding: 3px 10px 0 10px;
 	border-left: 1px solid #efefef;
 	border-right: 1px solid #d8d8d8;
 	text-shadow: #fff 0 1px 0;
 	overflow: hidden;
+	margin-top: 1px;
 }
 .v-datefield-year .v-datefield-calendarpanel-month {
 	width: 35px;
@@ -29,18 +33,16 @@ span.v-datefield-calendarpanel-month {
 .v-datefield-month .v-datefield-calendarpanel-month,
 .v-datefield-day .v-datefield-calendarpanel-month,
 .v-datefield-full .v-datefield-calendarpanel-month {
-	width: 94px;
-}
-.v-datefield-year .v-datefield-calendarpanel td,
-.v-datefield-month .v-datefield-calendarpanel td,
-.v-datefield-day .v-datefield-calendarpanel td {
-	width: auto;
+	width: 124px;
 }
 .v-datefield-year .v-datefield-calendarpanel {
 	width: 100px;
 }
-.v-datefield-calendarpanel-prevyear {
+td.v-datefield-calendarpanel-prevyear {
 	text-align: right;
+}
+td.v-datefield-calendarpanel-nextyear {
+	text-align: left;
 }
 .v-datefield-calendarpanel-prevyear button,
 .v-datefield-calendarpanel-nextyear button,
@@ -57,10 +59,10 @@ span.v-datefield-calendarpanel-month {
 	text-indent: -9999px;
 	outline: none;
 }
-.v-ie6 .v-datefield-calendarpanel-prevyear button,
-.v-ie6 .v-datefield-calendarpanel-nextyear button,
-.v-ie6 .v-datefield-calendarpanel-prevmonth button,
-.v-ie6 .v-datefield-calendarpanel-nextmonth button {
+.v-ie .v-datefield-calendarpanel-prevyear button,
+.v-ie .v-datefield-calendarpanel-nextyear button,
+.v-ie .v-datefield-calendarpanel-prevmonth button,
+.v-ie .v-datefield-calendarpanel-nextmonth button {
 	text-indent: 0;
 	font-size: 1px;
 }
@@ -69,15 +71,16 @@ span.v-datefield-calendarpanel-month {
 	background-image: url(img/year-next.png); /** sprite-ref: verticals */
 }
 .v-datefield-calendarpanel-prevyear button:active,
-.v-ie6 .v-datefield-calendarpanel-prevyear button.v-pressed {
-	background-image: url(img/year-prev-pressed.png); /** sprite-ref: verticals; sprite-alignment: right */
+.v-ie .v-datefield-calendarpanel-prevyear button.v-pressed {
+	background-image: url(img/year-prev-pressed.png); /** sprite-ref: verticals */
 }
 .v-datefield-calendarpanel-nextyear button:active,
-.v-ie6 .v-datefield-calendarpanel-nextyear button.v-pressed  {
+.v-ie .v-datefield-calendarpanel-nextyear button.v-pressed  {
 	background-image: url(img/year-next-pressed.png); /** sprite-ref: verticals */
 }
 .v-datefield-calendarpanel-prevmonth,
 .v-datefield-calendarpanel-nextmonth {
+	width: 24px;
 	background-repeat: repeat-x;
 	background-image: url(img/header-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 }
@@ -91,22 +94,152 @@ span.v-datefield-calendarpanel-month {
 	background-position: center top;
 	background-image: url(img/month-prev.png); /** sprite-ref: verticals; sprite-alignment: center */
 	min-width: 24px;
+	margin-top: 1px;
+}
+.v-ie .v-datefield-calendarpanel-prevmonth button,
+.v-ie .v-datefield-calendarpanel-nextmonth button {
+	border: none;
 }
 .v-ie6 .v-datefield-calendarpanel-prevmonth button,
 .v-ie6 .v-datefield-calendarpanel-nextmonth button {
 	width: 24px;
-	border: none;
 }
 .v-datefield-calendarpanel-nextmonth button {
 	background-image: url(img/month-next.png); /** sprite-ref: verticals; sprite-alignment: center */
 }
 .v-datefield-calendarpanel-prevmonth button:active,
-.v-ie6 .v-datefield-calendarpanel-prevmonth button.v-pressed {
+.v-ie .v-datefield-calendarpanel-prevmonth button.v-pressed {
 	background-position: center top;
 	background-image: url(img/month-prev-pressed.png); /** sprite-ref: verticals; sprite-alignment: center */
 }
 .v-datefield-calendarpanel-nextmonth button:active,
-.v-ie6 .v-datefield-calendarpanel-nextmonth button.v-pressed {
+.v-ie .v-datefield-calendarpanel-nextmonth button.v-pressed {
 	background-position: center top;
 	background-image: url(img/month-next-pressed.png); /** sprite-ref: verticals; sprite-alignment: center */
+}
+.v-datefield-calendarpanel-body,
+.v-datefield-calendarpanel-time {
+	text-align: center;
+	vertical-align: top;
+}
+.v-datefield-calendarpanel-body table {
+	border-collapse: collapse;
+	margin: 0;
+	padding: 0;
+	width: 220px;
+	margin: 0 auto;
+}
+.v-datefield-calendarpanel-weekdays td {
+	width: 14.2%;
+	overflow: hidden;
+	background-repeat: repeat-x;
+	background-image: url(img/weekday-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat; sprite-margin-bottom: 3px */
+	font-size: 10px;
+	line-height: normal;
+	text-transform: uppercase;
+	color: #eaeff1;
+	text-shadow: #3b4651 0 -1px 0;
+	vertical-align: top;
+}
+.v-datefield-calendarpanel-weekdays strong {
+	display: block;
+	text-align: right;
+	padding-right: 5px;
+	height: 15px;
+	border-top: 1px solid #596775;
+}
+.v-datefield-calendarpanel .v-first {
+	background-repeat: no-repeat;
+	background-image: url(img/weekday-first.png); /** sprite-ref: verticals; sprite-margin-bottom: 3px */
+}
+.v-datefield-calendarpanel .v-last {
+	background-repeat: no-repeat;
+	background-position: right top;
+	background-image: url(img/weekday-last.png); /** sprite-ref: verticals; sprite-alignment: right */
+}
+/* IE fails to position backgrounds inside table element */
+.v-ie .v-datefield-calendarpanel-weekdays td {
+	background: url(img/weekday-bg.png) repeat-x;
+	background-position: left top;
+}
+.v-ie .v-datefield-calendarpanel .v-first {
+	background: url(img/weekday-first.png) no-repeat;
+}
+.v-ie .v-datefield-calendarpanel .v-last {
+	background: url(img/weekday-last.png) no-repeat right top;
+}
+.v-datefield-calendarpanel-body td {
+	text-align: right;
+	height: 19px;
+}
+.v-datefield-calendarpanel-day,
+.v-datefield-calendarpanel-day-today {
+	padding: 2px 5px 2px 0;
+	display: block;
+	margin: 1px 0 0 6px;
+}
+.v-datefield-calendarpanel-day-today {
+	color: #4095d1;
+	border: none;
+}
+.v-datefield-calendarpanel-day-selected {
+	background: #507ba3;
+	color: #fff;
+	text-shadow: #3b5b79 0 1px 0;
+	border-radius: 2px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+}
+.v-datefield-calendarpanel-time select {
+	padding: 0;
+	font-size: 11px;
+}
+.v-datefield-popup {
+	background: #f8f8f9;
+	padding: 8px 4px;
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-moz-border-radisu: 3px;
+}
+.v-sa .v-datefield-popup,
+.v-ff3 .v-datefield-popup,
+.v-op .v-datefield-popup {
+	background: rgba(255,255,255,.95);
+}
+.v-datefield-year .v-datefield-textfield {
+	width: 4em;
+}
+.v-datefield-month .v-datefield-textfield {
+	width: 5em;
+}
+.v-datefield-day .v-datefield-textfield {
+	width: 5.5em;
+}
+.v-datefield-full .v-datefield-textfield {
+	width: 12em;
+}
+.v-datefield-popupcalendar .v-datefield-textfield {
+	border-right: none;
+	height: 18px;
+}
+.v-ff .v-datefield-popupcalendar .v-datefield-textfield{
+	-moz-border-radius-topright: 0;
+	-moz-border-radius-bottomright: 0;
+}
+.v-sa .v-datefield-popupcalendar .v-datefield-textfield,
+.v-ff35 .v-datefield-popupcalendar .v-datefield-textfield,
+.v-op .v-datefield-popupcalendar .v-datefield-textfield {
+	border-width: 0 0 0 3px;
+}
+.v-datefield-popupcalendar .v-datefield-button {
+	width: 24px;
+	height: 23px;
+	background: transparent;
+	border: none;
+	padding: 0;
+	background-image: url(img/popup-btn.png); /** sprite-ref: verticals */
+	cursor: default;
+}
+.v-datefield-popupcalendar .v-datefield-button:active {
+	background-image: url(img/popup-btn-pressed.png); /** sprite-ref: verticals */
 }

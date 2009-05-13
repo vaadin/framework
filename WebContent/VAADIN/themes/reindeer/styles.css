@@ -376,7 +376,6 @@
 	width: 100%;
 }
 .v-datefield-calendarpanel td {
-	width: 14.2%;
 	padding: 0;
 	margin: 0;
 }
@@ -1552,11 +1551,13 @@ div.v-window-header {
 /* Automatically compiled css file from subdirectories. */
 
 /* ./WebContent/VAADIN/themes/reindeer/a-sprite-definitions/a-sprite-definitions.css */
-/** sprite: verticals; sprite-image: url(common/img/vertical-sprites.png); sprite-layout: vertical */
+/*------------
+ * General vertical and horizontal sprites 
+ * -----------*/
 
-/** sprite: horizontals; sprite-image: url(common/img/horizontal-sprites.png); sprite-layout: horizontal */
-
-/** sprite: buttons; sprite-image: url(button/img/button-sprites.png); sprite-layout: vertical */
+/*------------
+ * Buttons 
+ * -----------*/
 
 /* ./WebContent/VAADIN/themes/reindeer/button/button.css */
 /* We serve simpler buttons for IE6, since it doesn't support the adjacent 
@@ -1568,7 +1569,9 @@ div > .v-button,
 	padding: 0 0 0 6px;
 	background-color: transparent;
 	background-repeat: no-repeat;
-	background-image: url(button/img/left.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -0px;
 	border: none;
 	cursor: default;
 }
@@ -1580,7 +1583,9 @@ div > .v-button span,
 	background-color: transparent;
 	background-repeat: no-repeat;
 	background-position: right top;
-	background-image: url(button/img/right.png);  /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -26px;
 	text-shadow: #fff 0 1px 0;
 	font-weight: bold;
 	font-size: 11px;
@@ -1592,21 +1597,29 @@ div > .v-button span,
 	padding-top: 5px;
 }
 .v-button:focus {
-	background-image: url(button/img/left-focus.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -52px;
 	outline: none;
 }
 .v-button:focus span {
-	background-image: url(button/img/right-focus.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -78px;
 	outline: none;
 }
 .v-button:active,
 .v-ie7 .v-button.v-pressed {
-	background-image: url(button/img/left-pressed.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -104px;
 	outline: none;
 }
 .v-button:active span,
 .v-ie7 .v-button.v-pressed span {
-	background-image: url(button/img/right-pressed.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -130px;
 	outline: none;
 }
 .v-ie7 .v-button.v-pressed span {
@@ -1707,37 +1720,53 @@ div > .v-button .v-errorindicator,
  */
 div > .v-button-primary,
 .v-ie7 .v-button-primary {
-	background-image: url(button/img/primary-left.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -156px;
 }
 div > .v-button-primary span,
 .v-ie7 .v-button-primary span {
-	background-image: url(button/img/primary-right.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -182px;
 }
 .v-button-primary:focus {
-	background-image: url(button/img/primary-left-focus.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -208px;
 }
 .v-button-primary:focus span {
-	background-image: url(button/img/primary-right-focus.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -234px;
 }
 .v-button-primary:active,
 .v-ie7 .v-button-primary.v-pressed {
-	background-image: url(button/img/primary-left-pressed.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -260px;
 }
 .v-button-primary:active span,
 .v-ie7 .v-button-primary.v-pressed span {
-	background-image: url(button/img/primary-right-pressed.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -286px;
 }
 /* 
  * Small-style --------------------------
  */
 div > .v-button-small,
 .v-ie7 .v-button-small {
-	background-image: url(button/img/small-left.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -312px;
 	height: 20px;
 }
 div > .v-button-small span,
 .v-ie7 .v-button-small span {
-	background-image: url(button/img/small-right.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -332px;
 	height: 19px;
 	padding: 1px 11px 0 5px;
 	font-weight: normal;
@@ -1751,18 +1780,26 @@ div > .v-button-small span,
 	padding-top: 2px;
 }
 .v-button-small:focus {
-	background-image: url(button/img/small-left-focus.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -352px;
 }
 .v-button-small:focus span {
-	background-image: url(button/img/small-right-focus.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -372px;
 }
 .v-button-small:active,
 .v-ie7 .v-button-small.v-pressed {
-	background-image: url(button/img/small-left-pressed.png); /** sprite-ref: buttons */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: left -392px;
 }
 .v-button-small:active span,
 .v-ie7 .v-button-small.v-pressed span {
-	background-image: url(button/img/small-right-pressed.png); /** sprite-ref: buttons; sprite-alignment: right */
+  background-image: url(button/img/button-sprites.png);
+  -background-image: url(button/img/button-sprites-ie6.png);
+  background-position: right -412px;
 }
 
 /**
@@ -1821,7 +1858,8 @@ div > .v-button-small span,
 .v-popupview-popup select,
 .v-popupview-popup button,
 .v-popupview-popup textarea,
-.v-filterselect-suggestpopup {
+.v-filterselect-suggestpopup,
+.v-datefield-popup {
 	font-family: Arial, Helvetica, Tahoma, Verdana, sans-serif;
 	font-size: 12px;
 	line-height: normal;
@@ -1844,7 +1882,8 @@ div > .v-button-small span,
 .v-sa .v-popupview-popup select,
 .v-sa .v-popupview-popup button,
 .v-sa .v-popupview-popup textarea,
-.v-sa .v-filterselect-suggestpopup {
+.v-sa .v-filterselect-suggestpopup,
+.v-sa .v-datefield-popup {
 	font-family: Helvetica, Arial, "Lucida Grande", Geneva, Tahoma, Verdana, sans-serif;
 }
 .v-errorindicator {
@@ -1893,26 +1932,32 @@ div > .v-button-small span,
 	border-collapse: collapse;
 	margin: 0;
 	padding: 0;
+	height: auto !important;
 }
 .v-datefield-year .v-datefield-calendarpanel-prevmonth,
-.v-datefield-year .v-datefield-calendarpanel-nextmonth,
-.v-datefield-year .v-datefield-calendarpanel-weekdays {
+.v-datefield-year .v-datefield-calendarpanel-nextmonth {
 	display: none;
+}
+.v-datefield-calendarpanel td {
+	vertical-align: top;
 }
 td.v-datefield-calendarpanel-month {
 	height: 23px;
 	background-repeat: repeat-x;
-	background-image: url(datefield/img/header-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -0px;
 }
 span.v-datefield-calendarpanel-month {
 	display: block;
 	text-align: center;
-	height: 18px;
+	height: 16px;
 	padding: 3px 10px 0 10px;
 	border-left: 1px solid #efefef;
 	border-right: 1px solid #d8d8d8;
 	text-shadow: #fff 0 1px 0;
 	overflow: hidden;
+	margin-top: 1px;
 }
 .v-datefield-year .v-datefield-calendarpanel-month {
 	width: 35px;
@@ -1920,18 +1965,16 @@ span.v-datefield-calendarpanel-month {
 .v-datefield-month .v-datefield-calendarpanel-month,
 .v-datefield-day .v-datefield-calendarpanel-month,
 .v-datefield-full .v-datefield-calendarpanel-month {
-	width: 94px;
-}
-.v-datefield-year .v-datefield-calendarpanel td,
-.v-datefield-month .v-datefield-calendarpanel td,
-.v-datefield-day .v-datefield-calendarpanel td {
-	width: auto;
+	width: 124px;
 }
 .v-datefield-year .v-datefield-calendarpanel {
 	width: 100px;
 }
-.v-datefield-calendarpanel-prevyear {
+td.v-datefield-calendarpanel-prevyear {
 	text-align: right;
+}
+td.v-datefield-calendarpanel-nextyear {
+	text-align: left;
 }
 .v-datefield-calendarpanel-prevyear button,
 .v-datefield-calendarpanel-nextyear button,
@@ -1942,35 +1985,46 @@ span.v-datefield-calendarpanel-month {
 	border: none;
 	background: transparent;
 	background-repeat: no-repeat;
-	background-image: url(datefield/img/year-prev.png); /** sprite-ref: verticals */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -23px;
 	overflow: hidden;
 	padding: 0;
 	text-indent: -9999px;
 	outline: none;
 }
-.v-ie6 .v-datefield-calendarpanel-prevyear button,
-.v-ie6 .v-datefield-calendarpanel-nextyear button,
-.v-ie6 .v-datefield-calendarpanel-prevmonth button,
-.v-ie6 .v-datefield-calendarpanel-nextmonth button {
+.v-ie .v-datefield-calendarpanel-prevyear button,
+.v-ie .v-datefield-calendarpanel-nextyear button,
+.v-ie .v-datefield-calendarpanel-prevmonth button,
+.v-ie .v-datefield-calendarpanel-nextmonth button {
 	text-indent: 0;
 	font-size: 1px;
 }
 .v-datefield-calendarpanel-nextyear button {
 	background-position: left top;
-	background-image: url(datefield/img/year-next.png); /** sprite-ref: verticals */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -46px;
 }
 .v-datefield-calendarpanel-prevyear button:active,
-.v-ie6 .v-datefield-calendarpanel-prevyear button.v-pressed {
-	background-image: url(datefield/img/year-prev-pressed.png); /** sprite-ref: verticals; sprite-alignment: right */
+.v-ie .v-datefield-calendarpanel-prevyear button.v-pressed {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -69px;
 }
 .v-datefield-calendarpanel-nextyear button:active,
-.v-ie6 .v-datefield-calendarpanel-nextyear button.v-pressed  {
-	background-image: url(datefield/img/year-next-pressed.png); /** sprite-ref: verticals */
+.v-ie .v-datefield-calendarpanel-nextyear button.v-pressed  {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -92px;
 }
 .v-datefield-calendarpanel-prevmonth,
 .v-datefield-calendarpanel-nextmonth {
+	width: 24px;
 	background-repeat: repeat-x;
-	background-image: url(datefield/img/header-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -115px;
 }
 .v-datefield-calendarpanel-prevmonth button,
 .v-datefield-calendarpanel-nextmonth button {
@@ -1980,26 +2034,174 @@ span.v-datefield-calendarpanel-month {
 	border-right: 1px solid #d8d8d8;
 	background: transparent;
 	background-position: center top;
-	background-image: url(datefield/img/month-prev.png); /** sprite-ref: verticals; sprite-alignment: center */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: center -138px;
 	min-width: 24px;
+	margin-top: 1px;
+}
+.v-ie .v-datefield-calendarpanel-prevmonth button,
+.v-ie .v-datefield-calendarpanel-nextmonth button {
+	border: none;
 }
 .v-ie6 .v-datefield-calendarpanel-prevmonth button,
 .v-ie6 .v-datefield-calendarpanel-nextmonth button {
 	width: 24px;
-	border: none;
 }
 .v-datefield-calendarpanel-nextmonth button {
-	background-image: url(datefield/img/month-next.png); /** sprite-ref: verticals; sprite-alignment: center */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: center -159px;
 }
 .v-datefield-calendarpanel-prevmonth button:active,
-.v-ie6 .v-datefield-calendarpanel-prevmonth button.v-pressed {
+.v-ie .v-datefield-calendarpanel-prevmonth button.v-pressed {
 	background-position: center top;
-	background-image: url(datefield/img/month-prev-pressed.png); /** sprite-ref: verticals; sprite-alignment: center */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: center -180px;
 }
 .v-datefield-calendarpanel-nextmonth button:active,
-.v-ie6 .v-datefield-calendarpanel-nextmonth button.v-pressed {
+.v-ie .v-datefield-calendarpanel-nextmonth button.v-pressed {
 	background-position: center top;
-	background-image: url(datefield/img/month-next-pressed.png); /** sprite-ref: verticals; sprite-alignment: center */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: center -201px;
+}
+.v-datefield-calendarpanel-body,
+.v-datefield-calendarpanel-time {
+	text-align: center;
+	vertical-align: top;
+}
+.v-datefield-calendarpanel-body table {
+	border-collapse: collapse;
+	margin: 0;
+	padding: 0;
+	width: 220px;
+	margin: 0 auto;
+}
+.v-datefield-calendarpanel-weekdays td {
+	width: 14.2%;
+	overflow: hidden;
+	background-repeat: repeat-x;
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -222px;
+	font-size: 10px;
+	line-height: normal;
+	text-transform: uppercase;
+	color: #eaeff1;
+	text-shadow: #3b4651 0 -1px 0;
+	vertical-align: top;
+}
+.v-datefield-calendarpanel-weekdays strong {
+	display: block;
+	text-align: right;
+	padding-right: 5px;
+	height: 15px;
+	border-top: 1px solid #596775;
+}
+.v-datefield-calendarpanel .v-first {
+	background-repeat: no-repeat;
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -241px;
+}
+.v-datefield-calendarpanel .v-last {
+	background-repeat: no-repeat;
+	background-position: right top;
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: right -260px;
+}
+/* IE fails to position backgrounds inside table element */
+.v-ie .v-datefield-calendarpanel-weekdays td {
+	background: url(datefield/img/weekday-bg.png) repeat-x;
+	background-position: left top;
+}
+.v-ie .v-datefield-calendarpanel .v-first {
+	background: url(datefield/img/weekday-first.png) no-repeat;
+}
+.v-ie .v-datefield-calendarpanel .v-last {
+	background: url(datefield/img/weekday-last.png) no-repeat right top;
+}
+.v-datefield-calendarpanel-body td {
+	text-align: right;
+	height: 19px;
+}
+.v-datefield-calendarpanel-day,
+.v-datefield-calendarpanel-day-today {
+	padding: 2px 5px 2px 0;
+	display: block;
+	margin: 1px 0 0 6px;
+}
+.v-datefield-calendarpanel-day-today {
+	color: #4095d1;
+	border: none;
+}
+.v-datefield-calendarpanel-day-selected {
+	background: #507ba3;
+	color: #fff;
+	text-shadow: #3b5b79 0 1px 0;
+	border-radius: 2px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+}
+.v-datefield-calendarpanel-time select {
+	padding: 0;
+	font-size: 11px;
+}
+.v-datefield-popup {
+	background: #f8f8f9;
+	padding: 8px 4px;
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-moz-border-radisu: 3px;
+}
+.v-sa .v-datefield-popup,
+.v-ff3 .v-datefield-popup,
+.v-op .v-datefield-popup {
+	background: rgba(255,255,255,.95);
+}
+.v-datefield-year .v-datefield-textfield {
+	width: 4em;
+}
+.v-datefield-month .v-datefield-textfield {
+	width: 5em;
+}
+.v-datefield-day .v-datefield-textfield {
+	width: 5.5em;
+}
+.v-datefield-full .v-datefield-textfield {
+	width: 12em;
+}
+.v-datefield-popupcalendar .v-datefield-textfield {
+	border-right: none;
+	height: 18px;
+}
+.v-ff .v-datefield-popupcalendar .v-datefield-textfield{
+	-moz-border-radius-topright: 0;
+	-moz-border-radius-bottomright: 0;
+}
+.v-sa .v-datefield-popupcalendar .v-datefield-textfield,
+.v-ff35 .v-datefield-popupcalendar .v-datefield-textfield,
+.v-op .v-datefield-popupcalendar .v-datefield-textfield {
+	border-width: 0 0 0 3px;
+}
+.v-datefield-popupcalendar .v-datefield-button {
+	width: 24px;
+	height: 23px;
+	background: transparent;
+	border: none;
+	padding: 0;
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -276px;
+	cursor: default;
+}
+.v-datefield-popupcalendar .v-datefield-button:active {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -299px;
 }
 
 /* ./WebContent/VAADIN/themes/reindeer/label/label.css */
@@ -2105,7 +2307,9 @@ span.v-datefield-calendarpanel-month {
 .v-filterselect {
 	height: 24px;
 	background-repeat: no-repeat;
-	background-image: url(select/img/left.png); /** sprite-ref: verticals; sprite-margin-bottom: 1px */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -322px;
 	padding-left: 2px;
 }
 .v-app .v-filterselect-input,
@@ -2113,7 +2317,9 @@ span.v-datefield-calendarpanel-month {
 .v-popupview-popup .v-filterselect-input {
 	background: transparent;
 	background-repeat: repeat-x;
-	background-image: url(select/img/center.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -347px;
 	border: none;
 	height: 21px;
 }
@@ -2130,36 +2336,54 @@ span.v-datefield-calendarpanel-month {
 	outline: none;
 }
 .v-filterselect-focus {
-	background-image: url(select/img/left-focus.png); /** sprite-ref: verticals; sprite-margin-bottom: 1px */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -371px;
 }
 .v-filterselect-focus .v-filterselect-input {
-	background-image: url(select/img/center-focus.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -396px;
 }
 .v-filterselect-button {
 	overflow: hidden;
 	width: 25px;
 	height: 24px;
-	background-image: url(select/img/right.png); /** sprite-ref: verticals */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -420px;
 	cursor: default;
 }
 .v-filterselect-button:hover {
-	background-image: url(select/img/right-hover.png); /** sprite-ref: verticals */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -444px;
 }
 .v-filterselect-button:active {
-	background-image: url(select/img/right-pressed.png); /** sprite-ref: verticals */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -468px;
 }
 .v-filterselect-focus .v-filterselect-button {
-	background-image: url(select/img/right-focus.png); /** sprite-ref: verticals */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -492px;
 }
 .v-filterselect-focus .v-filterselect-button:hover {
-	background-image: url(select/img/right-focus-hover.png); /** sprite-ref: verticals */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -516px;
 }
 .v-filterselect-focus .v-filterselect-button:active {
-	background-image: url(select/img/right-focus-pressed.png); /** sprite-ref: verticals */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -540px;
 }
 .v-disabled .v-filterselect-button:hover,
 .v-readonly .v-filterselect-button:hover {
-	background-image: url(select/img/right.png); /** sprite-ref: verticals */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -564px;
 }
 .v-filterselect-suggestpopup {
 	background: #f8f8f9;
@@ -2183,7 +2407,9 @@ span.v-datefield-calendarpanel-month {
 .v-filterselect-suggestmenu .gwt-MenuItem-selected {
 	background: transparent;
 	background-repeat: repeat-x;
-	background-image: url(select/img/sel-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -588px;
 	color: #fff;
 	text-shadow: #3b5a7a 0 1px 0;
 }
@@ -2197,19 +2423,27 @@ span.v-datefield-calendarpanel-month {
 }
 .v-filterselect-nextpage:hover {
 	background-repeat: repeat-x;
-	background-image: url(select/img/page-down-hover.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -606px;
 }
 .v-filterselect-prevpage:hover {
 	background-repeat: repeat-x;
-	background-image: url(select/img/page-up-hover.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -617px;
 }
 .v-filterselect-nextpage:active {
 	background-repeat: repeat-x;
-	background-image: url(select/img/page-down-pressed.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -628px;
 }
 .v-filterselect-prevpage:active {
 	background-repeat: repeat-x;
-	background-image: url(select/img/page-up-pressed.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -639px;
 }
 .v-filterselect-nextpage-off span,
 .v-filterselect-prevpage-off span {
@@ -2224,19 +2458,27 @@ span.v-datefield-calendarpanel-month {
 	text-indent: -99999px;
 	background-position: center 3px;
 	background-repeat: no-repeat;
-	background-image: url(select/img/arrow-down.png); /** sprite-ref: verticals; sprite-margin-top: 3px; sprite-margin-bottom: 3px; sprite-alignment: center */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: center -650px;
 	user-select: none;
 	-moz-user-select: none;
 	-webkit-user-select: none;
 }
 .v-filterselect-prevpage span {
-	background-image: url(select/img/arrow-up.png); /** sprite-ref: verticals; sprite-margin-top: 3px; sprite-margin-bottom: 3px; sprite-alignment: center */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: center -661px;
 }
 .v-filterselect-nextpage:hover span {
-	background-image: url(select/img/arrow-down-hover.png); /** sprite-ref: verticals; sprite-margin-top: 3px; sprite-margin-bottom: 3px; sprite-alignment: center */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: center -672px;
 }
 .v-filterselect-prevpage:hover span {
-	background-image: url(select/img/arrow-up-hover.png); /** sprite-ref: verticals; sprite-margin-top: 3px; sprite-margin-bottom: 3px; sprite-alignment: center */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: center -683px;
 }
 .v-filterselect-status {
 	text-shadow: #e9eaeb 0 1px 0;
@@ -2247,7 +2489,9 @@ span.v-datefield-calendarpanel-month {
 	height: 11px;
 	overflow: hidden;
 	background-repeat: repeat-x;
-	background-image: url(select/img/status-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -694px;
 	-moz-border-radius-bottomleft: 2px;
 	-moz-border-radius-bottomright: 2px;
 	-webkit-border-bottom-left-radius: 2px;
@@ -2287,26 +2531,32 @@ span.v-datefield-calendarpanel-month {
 .v-splitpanel-horizontal .v-splitpanel-hsplitter {
 	width: 7px;
 	background-repeat: repeat-y;
-	background-image: url(splitpanel/img/hor-bg.png); /** sprite-ref: horizontals; sprite-alignment: repeat */
+  background-image: url(common/img/horizontal-sprites.png);
+  background-position: -0px top;
 }
 .v-splitpanel-horizontal .v-splitpanel-hsplitter div {
 	width: 7px;
 	background: transparent;
 	background-repeat: no-repeat;
 	background-position: 50%;
-	background-image: url(splitpanel/img/hor-handle.png); /** sprite-ref: horizontals; sprite-alignment: center */
+  background-image: url(common/img/horizontal-sprites.png);
+  background-position: -7px center;
 }
 .v-splitpanel-vertical .v-splitpanel-vsplitter {
 	height: 7px;
 	background-repeat: repeat-x;
-	background-image: url(splitpanel/img/ver-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -711px;
 }
 .v-splitpanel-vertical .v-splitpanel-vsplitter div {
 	height: 7px;
 	background: transparent;
 	background-repeat: no-repeat;
 	background-position: 50%;
-	background-image: url(splitpanel/img/ver-handle.png); /** sprite-ref: verticals; sprite-alignment: center */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: center -718px;
 }
 
 /* ./WebContent/VAADIN/themes/reindeer/tabsheet/tabsheet.css */
@@ -2383,14 +2633,24 @@ span.v-datefield-calendarpanel-month {
 	border-bottom-color: #d2d3d4;
 	background: #fff;
 	background-repeat: repeat-x;
-	background-image: url(textfield/img/bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -725px;
 	-moz-border-radius: 3px;
 }
 /* Need more specific selector because of #2384 fixes in base/common/common.css */
 .v-app input.v-textfield {
 	padding: 3px 3px 0 3px;
 }
-.v-textfield-focus {
+/* Textfield on blue background */
+.blue .v-textfield {
+	border-color: #92a2aa;
+	border-top-color: #7c8a90;
+	border-bottom-color: #a1b3bc;
+}
+.v-app .v-textfield-focus,
+.v-window .v-textfield-focus,
+.v-popupview-popup .v-textfield-focus {
 	border-color: #5b97d0;
 	border-top-color: #4f83b4;
 	border-bottom-color: #5ca0df;
@@ -2399,12 +2659,6 @@ span.v-datefield-calendarpanel-month {
 input.v-textfield-prompt {
 	font-style: normal;
 	color: #999;
-}
-/* Textfield on blue background */
-.blue .v-textfield {
-	border-color: #92a2aa;
-	border-top-color: #7c8a90;
-	border-bottom-color: #a1b3bc;
 }
 /* Capable browsers get fancier border images */
 .v-sa input.v-textfield,
@@ -2419,7 +2673,6 @@ input.v-textfield-prompt {
 	-webkit-border-image: url(textfield/img/bg-border-image.png) 0 3 0 3 stretch stretch;
 	-moz-border-image: url(textfield/img/bg-border-image.png) 0 3 0 3 stretch stretch;
 	-o-border-image: url(textfield/img/bg-border-image.png) 0 3 0 3 stretch stretch;
-	
 }
 .v-sa input.v-textfield-focus,
 .v-ff35 input.v-textfield-focus,
