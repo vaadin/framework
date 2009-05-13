@@ -14,7 +14,7 @@ How to build packages
 
 4. Run ant package-<platform> in build directory
 
-5. Enjoy build/result/itmill-toolkit-<platform>-<version>.tar.gz
+5. Enjoy build/result/vaadin-<platform>-<version>.tar.gz
 
 
 

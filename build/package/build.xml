@@ -7,7 +7,7 @@ Creates two packages:
 2. JAR package which requires JRE only, includes embedded web server.
 
 -->
-<project name="itmill-toolkit-examples" basedir="." default="package">
+<project name="vaadin-examples" basedir="." default="package">
 
 	<target name="init">
 		<echo message="Creating two packages:" />

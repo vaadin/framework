@@ -10,7 +10,7 @@ You may use either this script or IT Mill Toolkit Hosted Mode.launch (in Eclipse
 to compile your client-side java code. 
 
 By default IT Mill Toolkit first tries to serve widgetset resources from the file system, if that
-fails then files are streamed from itmill-toolkit-<version>.jar. 
+fails then files are streamed from vaadin-<version>.jar. 
 
 See configure target to adjust this buildfile.
 
@@ -21,7 +21,7 @@ See configure target to adjust this buildfile.
 	<!-- 
 		Update based on your project structure, by default this buildfile assumes that you 
 		1. use WebContent under your project's root directory
-		2. WebContent/WEB-INF/lib/itmill-toolkit-<version>.jar exists
+		2. WebContent/WEB-INF/lib/vaadin-<version>.jar exists
 		3. WebContent/WEB-INF/src contains your project source files
 		4. gwt directory contains extracted GWT distribution for your platform (windows, linux or mac)
 	-->
@@ -37,7 +37,7 @@ See configure target to adjust this buildfile.
 		<property name="gwt-location" value="${base}gwt" />
 		
 		<!-- where Toolkit jar is located -->
-		<property name="toolkit-jar-location" value="${base}WebContent/WEB-INF/lib/itmill-toolkit-@version@.jar" />
+		<property name="toolkit-jar-location" value="${base}WebContent/WEB-INF/lib/vaadin-@version@.jar" />
 		
 		<!-- where project client-side widgetset source files are located -->
 		<property name="client-side-src-location" value="${base}WebContent/WEB-INF/src" />

@@ -33,7 +33,7 @@ Start IT Mill Toolkit
 COPYING
 - license file
 
-WebContent/itmill-toolkit-<version></version>.jar
+WebContent/vaadin-<version></version>.jar
 - IT Mill Toolkit Library containing Java source and compiled files
 
 WebContent/doc/manual.pdf

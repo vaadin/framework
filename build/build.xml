@@ -12,14 +12,14 @@
 	 * creates four release packages for three three platforms (below)
 	 
 	package-windows
-     * itmill-toolkit-windows-<version>.zip
+     * vaadin-windows-<version>.zip
 	
 	package-linux
-	 * itmill-toolkit-linux-<version>.tar.bz2
+	 * vaadin-linux-<version>.tar.bz2
 	 
 	package-mac
-	 * itmill-toolkit-mac-<version>.tar.gz
-	 * itmill-toolkit-mac-<version>.dmg
+	 * vaadin-mac-<version>.tar.gz
+	 * vaadin-mac-<version>.dmg
 
 	NOTE: This build script requires directories named ${gwt-dir}/(linux|windows|mac) .
 	See build.properties to define path where your gwt installation is located.
@@ -53,7 +53,7 @@
 	<target name="package-oophm" depends="clean-result, package-init, init-oophm, build, docs, internal-package-oophm" description="Create public tar.gz package for OOPHM.">
 	</target>
 
-	<target name="package-jar" depends="clean-result, package-init, init, libs" description="Create itmill-toolkit-x.y.z.jar file.">
+	<target name="package-jar" depends="clean-result, package-init, init, libs" description="Create vaadin-x.y.z.jar file.">
 	</target>
 
 	<target name="package-war" depends="clean-result, package-init, init, build, docs, internal-package-mac, internal-package-war">
