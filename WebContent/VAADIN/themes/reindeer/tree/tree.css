@@ -1,6 +1,6 @@
 .v-tree-node {
-	background: transparent url(img/arrows.png) no-repeat 6px -12px;
-	line-height: 16px;
+	background: transparent url(img/arrows.png) no-repeat 6px -10px;
+	margin-bottom: 2px;
 }
 .v-ie6 .v-tree-node {
 	background-image: url(img/arrows-ie6.png);
@@ -10,22 +10,25 @@
 	background: transparent;
 }
 .v-tree-node-expanded {
-	background-position: -7px 3px;
+	background-position: -7px 5px;
 }
 .v-tree-node-caption {
 	margin-left: 16px;
+	margin-bottom: 1px;
 }
 .v-tree-node span {
-	padding: 0 2px;
+	padding: 1px 2px;
+	display: inline-block;
 }
 .v-tree-node-selected span {
 	background: #4d749f repeat-x;
 	background-image: url(../common/img/sel-bg.png); /* sprite-ref: verticals; sprite-alignment: repeat */
 	color: #fff;
-	padding: 0 2px;
+	padding: 1px 2px;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	text-shadow: #2b425a 0 1px 0;
+	display: inline-block;
 }
 .v-tree-node-children {
 	padding-left: 16px;

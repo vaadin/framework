@@ -7,6 +7,7 @@
 	background: #fff;
 	background-repeat: repeat-x;
 	background-image: url(img/bg.png); /** sprite-ref: verticals; sprite-alignment: repeat; sprite-margin-bottom: 22px */
+	border-radius: 3px;
 	-moz-border-radius: 3px;
 }
 /* Need more specific selector because of #2384 fixes in base/common/common.css */
@@ -33,8 +34,8 @@ input.v-textfield-prompt {
 }
 /* Capable browsers get fancier border images */
 .v-sa input.v-textfield,
-.v-ff35 input.v-textfield,
-.v-op input.v-textfield {
+.v-ff35 input.v-textfield {
+	border-radius: 0;
 	-moz-border-radius: 0;
 	border: none;
 	background: transparent;
@@ -46,8 +47,7 @@ input.v-textfield-prompt {
 	-o-border-image: url(img/bg-border-image.png) 0 3 0 3 stretch stretch;
 }
 .v-sa input.v-textfield-focus,
-.v-ff35 input.v-textfield-focus,
-.v-op input.v-textfield-focus {
+.v-ff35 input.v-textfield-focus {
 	-webkit-border-image: url(img/bg-border-image-focus.png) 0 3 0 3 stretch stretch;
 	-moz-border-image: url(img/bg-border-image-focus.png) 0 3 0 3 stretch stretch;
 	-o-border-image: url(img/bg-border-image-focus.png) 0 3 0 3 stretch stretch;
@@ -55,13 +55,11 @@ input.v-textfield-prompt {
 /* Small style textfield */
 .v-app input.v-textfield-small,
 .v-sa input.v-textfield-small,
-.v-ff35 input.v-textfield-small,
-.v-op input.v-textfield-small {
+.v-ff35 input.v-textfield-small {
 	font-size: 11px;
 	height: 15px;
 }
 .v-sa input.v-textfield-small,
-.v-ff35 input.v-textfield-small,
-.v-op input.v-textfield-small {
+.v-ff35 input.v-textfield-small {
 	height: 16px;
 }

@@ -190,9 +190,13 @@
 .v-sa .v-app-SamplerApplication .v-tree-menu {
 	font-family: helvetica, arial, verdana, sans-serif;
 }
+.v-app-SamplerApplication .v-tree-menu .v-tree-node span {
+	display: inline;
+}
 .v-app-SamplerApplication .v-tree-menu .v-tree-node-selected span {
 	background: #7d8490;
 	padding: 1px;
+	text-shadow: none;
 }
 
 
