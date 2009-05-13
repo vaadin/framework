@@ -7,8 +7,7 @@
 .v-app .v-filterselect-input,
 .v-window .v-filterselect-input,
 .v-popupview-popup .v-filterselect-input {
-	background: transparent;
-	background-repeat: repeat-x;
+	background: transparent repeat-x;
 	background-image: url(img/center.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 	border: none;
 	height: 21px;
@@ -60,10 +59,10 @@
 .v-filterselect-suggestpopup {
 	background: #f8f8f9;
 	border: none;
-	border-radius: 2px;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	-o-border-radius: 2px;
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-o-border-radius: 3px;
 	overflow: hidden;
 }
 .v-filterselect-suggestmenu .gwt-MenuItem {
@@ -72,14 +71,14 @@
 	user-select: none;
 	-moz-user-select: none;
 	-webkit-user-select: none;
+	cursor: default;
 }
 .v-filterselect-suggestmenu .gwt-MenuItem .v-icon {
 	margin-right: 3px;
 }
 .v-filterselect-suggestmenu .gwt-MenuItem-selected {
-	background: transparent;
-	background-repeat: repeat-x;
-	background-image: url(img/sel-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+	background: transparent repeat-x;
+	background-image: url(../common/img/sel-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 	color: #fff;
 	text-shadow: #3b5a7a 0 1px 0;
 }
@@ -118,8 +117,7 @@
 	width: 100%;
 	overflow: hidden;
 	text-indent: -99999px;
-	background-position: center 3px;
-	background-repeat: no-repeat;
+	background: transparent no-repeat center 3px;
 	background-image: url(img/arrow-down.png); /** sprite-ref: verticals; sprite-margin-top: 3px; sprite-margin-bottom: 3px; sprite-alignment: center */
 	user-select: none;
 	-moz-user-select: none;
@@ -144,17 +142,17 @@
 	overflow: hidden;
 	background-repeat: repeat-x;
 	background-image: url(img/status-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
-	-moz-border-radius-bottomleft: 2px;
-	-moz-border-radius-bottomright: 2px;
-	-webkit-border-bottom-left-radius: 2px;
-	-webkit-border-bottom-right-radius: 2px;
+	-moz-border-radius-bottomleft: 3px;
+	-moz-border-radius-bottomright: 3px;
+	-webkit-border-bottom-left-radius: 3px;
+	-webkit-border-bottom-right-radius: 3px;
 	user-select: none;
 	-moz-user-select: none;
 	-webkit-user-select: none;
 }
 /* IE fails to position background images properly inside table elements */
 .v-ie .v-filterselect-suggestmenu .gwt-MenuItem-selected {
-	background: transparent url(img/sel-bg.png) repeat-x;
+	background: transparent url(../common/img/sel-bg.png) repeat-x;
 }
 .v-ie .v-filterselect-nextpage:hover {
 	background: transparent url(img/page-down-hover.png) repeat-x;

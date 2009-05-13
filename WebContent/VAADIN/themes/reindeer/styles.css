@@ -2325,8 +2325,7 @@ td.v-datefield-calendarpanel-nextyear {
 .v-app .v-filterselect-input,
 .v-window .v-filterselect-input,
 .v-popupview-popup .v-filterselect-input {
-	background: transparent;
-	background-repeat: repeat-x;
+	background: transparent repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
   background-position: left -347px;
@@ -2398,10 +2397,10 @@ td.v-datefield-calendarpanel-nextyear {
 .v-filterselect-suggestpopup {
 	background: #f8f8f9;
 	border: none;
-	border-radius: 2px;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	-o-border-radius: 2px;
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-o-border-radius: 3px;
 	overflow: hidden;
 }
 .v-filterselect-suggestmenu .gwt-MenuItem {
@@ -2410,13 +2409,13 @@ td.v-datefield-calendarpanel-nextyear {
 	user-select: none;
 	-moz-user-select: none;
 	-webkit-user-select: none;
+	cursor: default;
 }
 .v-filterselect-suggestmenu .gwt-MenuItem .v-icon {
 	margin-right: 3px;
 }
 .v-filterselect-suggestmenu .gwt-MenuItem-selected {
-	background: transparent;
-	background-repeat: repeat-x;
+	background: transparent repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
   background-position: left -588px;
@@ -2435,25 +2434,25 @@ td.v-datefield-calendarpanel-nextyear {
 	background-repeat: repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -606px;
+  background-position: left -607px;
 }
 .v-filterselect-prevpage:hover {
 	background-repeat: repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -617px;
+  background-position: left -618px;
 }
 .v-filterselect-nextpage:active {
 	background-repeat: repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -628px;
+  background-position: left -629px;
 }
 .v-filterselect-prevpage:active {
 	background-repeat: repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -639px;
+  background-position: left -640px;
 }
 .v-filterselect-nextpage-off span,
 .v-filterselect-prevpage-off span {
@@ -2466,11 +2465,10 @@ td.v-datefield-calendarpanel-nextyear {
 	width: 100%;
 	overflow: hidden;
 	text-indent: -99999px;
-	background-position: center 3px;
-	background-repeat: no-repeat;
+	background: transparent no-repeat center 3px;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: center -650px;
+  background-position: center -651px;
 	user-select: none;
 	-moz-user-select: none;
 	-webkit-user-select: none;
@@ -2478,17 +2476,17 @@ td.v-datefield-calendarpanel-nextyear {
 .v-filterselect-prevpage span {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: center -661px;
+  background-position: center -662px;
 }
 .v-filterselect-nextpage:hover span {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: center -672px;
+  background-position: center -673px;
 }
 .v-filterselect-prevpage:hover span {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: center -683px;
+  background-position: center -684px;
 }
 .v-filterselect-status {
 	text-shadow: #e9eaeb 0 1px 0;
@@ -2501,18 +2499,18 @@ td.v-datefield-calendarpanel-nextyear {
 	background-repeat: repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -694px;
-	-moz-border-radius-bottomleft: 2px;
-	-moz-border-radius-bottomright: 2px;
-	-webkit-border-bottom-left-radius: 2px;
-	-webkit-border-bottom-right-radius: 2px;
+  background-position: left -695px;
+	-moz-border-radius-bottomleft: 3px;
+	-moz-border-radius-bottomright: 3px;
+	-webkit-border-bottom-left-radius: 3px;
+	-webkit-border-bottom-right-radius: 3px;
 	user-select: none;
 	-moz-user-select: none;
 	-webkit-user-select: none;
 }
 /* IE fails to position background images properly inside table elements */
 .v-ie .v-filterselect-suggestmenu .gwt-MenuItem-selected {
-	background: transparent url(select/img/sel-bg.png) repeat-x;
+	background: transparent url(common/img/sel-bg.png) repeat-x;
 }
 .v-ie .v-filterselect-nextpage:hover {
 	background: transparent url(select/img/page-down-hover.png) repeat-x;
@@ -2557,7 +2555,7 @@ td.v-datefield-calendarpanel-nextyear {
 	background-repeat: repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -711px;
+  background-position: left -712px;
 }
 .v-splitpanel-vertical .v-splitpanel-vsplitter div {
 	height: 7px;
@@ -2566,7 +2564,7 @@ td.v-datefield-calendarpanel-nextyear {
 	background-position: 50%;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: center -718px;
+  background-position: center -719px;
 }
 
 /* ./WebContent/VAADIN/themes/reindeer/tabsheet/tabsheet.css */
@@ -2645,7 +2643,7 @@ td.v-datefield-calendarpanel-nextyear {
 	background-repeat: repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -725px;
+  background-position: left -726px;
 	-moz-border-radius: 3px;
 }
 /* Need more specific selector because of #2384 fixes in base/common/common.css */
@@ -2730,7 +2728,7 @@ input.v-textfield-prompt {
 	background: #4d749f repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -748px;
+  background-position: left -749px;
 	color: #fff;
 	padding: 0 2px;
 	-webkit-border-radius: 2px;
