@@ -134,6 +134,7 @@ div > .v-button .v-errorindicator,
 	font-weight: normal;
 	color: #1b699f;
 	font-size: 12px;
+	text-shadow: none;
 }
 .v-button.v-button-link .v-icon + span {
 	margin: 0;

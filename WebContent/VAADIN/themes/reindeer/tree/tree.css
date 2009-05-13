@@ -1,0 +1,38 @@
+.v-tree-node {
+	background: transparent url(img/arrows.png) no-repeat 6px -12px;
+	line-height: 16px;
+}
+.v-ie6 .v-tree-node {
+	background-image: url(img/arrows-ie6.png);
+	background-repeat: no-repeat;
+}
+.v-ie6 div.v-tree-node-leaf {
+	background: transparent;
+}
+.v-tree-node-expanded {
+	background-position: -7px 3px;
+}
+.v-tree-node-caption {
+	margin-left: 16px;
+}
+.v-tree-node span {
+	padding: 0 2px;
+}
+.v-tree-node-selected span {
+	background: #4d749f repeat-x;
+	background-image: url(../common/img/sel-bg.png); /* sprite-ref: verticals; sprite-alignment: repeat */
+	color: #fff;
+	padding: 0 2px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	text-shadow: #2b425a 0 1px 0;
+}
+.v-tree-node-children {
+	padding-left: 16px;
+}
+/* IMPORTANT keep the offsetWidth (width + padding) of this element the same as the margin-left of v-tree-node-caption */
+.v-ie6 .v-tree-node-ie6compatnode {
+	width: 14px;
+	height: 10px;
+	padding: 1px;
+}

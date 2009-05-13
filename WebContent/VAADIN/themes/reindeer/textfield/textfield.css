@@ -6,7 +6,7 @@
 	border-bottom-color: #d2d3d4;
 	background: #fff;
 	background-repeat: repeat-x;
-	background-image: url(img/bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+	background-image: url(img/bg.png); /** sprite-ref: verticals; sprite-alignment: repeat; sprite-margin-bottom: 22px */
 	-moz-border-radius: 3px;
 }
 /* Need more specific selector because of #2384 fixes in base/common/common.css */

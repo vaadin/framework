@@ -1359,7 +1359,7 @@ textarea.v-textarea-prompt {
 	background-position: -5px -10px;
 }
 div.v-tree-node-leaf {
-	background: none;
+	background: transparent;
 }
 .v-tree-node-caption {
 	margin-left: 1em;
