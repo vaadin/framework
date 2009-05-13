@@ -34,6 +34,19 @@ public class VDateField extends FlowPanel implements Paintable, Field {
     public static final int RESOLUTION_SEC = 5;
     public static final int RESOLUTION_MSEC = 6;
 
+    static String resolutionToString(int res) {
+        if (res > RESOLUTION_DAY) {
+            return "full";
+        }
+        if (res == RESOLUTION_DAY) {
+            return "day";
+        }
+        if (res == RESOLUTION_MONTH) {
+            return "month";
+        }
+        return "year";
+    }
+
     protected int currentResolution = RESOLUTION_YEAR;
 
     protected String currentLocale;
@@ -108,6 +121,10 @@ public class VDateField extends FlowPanel implements Paintable, Field {
         }
 
         currentResolution = newResolution;
+
+        // Add stylename that indicates current resolution
+        setStyleName(CLASSNAME + " " + CLASSNAME + "-"
+                + resolutionToString(currentResolution));
 
         final int year = uidl.getIntVariable("year");
         final int month = (currentResolution >= RESOLUTION_MONTH) ? uidl

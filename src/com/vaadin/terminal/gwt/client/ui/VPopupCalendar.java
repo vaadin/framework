@@ -50,6 +50,10 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         super.updateFromUIDL(uidl, client);
+        addStyleName(CLASSNAME + "-popupcalendar");
+        popup.setStyleName(VDateField.CLASSNAME + "-popup "
+                + VDateField.CLASSNAME + "-"
+                + resolutionToString(currentResolution));
         if (date != null) {
             calendar.updateCalendar();
         }

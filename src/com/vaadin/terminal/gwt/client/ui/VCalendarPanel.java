@@ -41,6 +41,8 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
 
     private CalendarEntrySource entrySource;
 
+    private FlexTable days = new FlexTable();
+
     /* Needed to identify resolution changes */
     private int resolution = VDateField.RESOLUTION_YEAR;
 
@@ -51,14 +53,13 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
         datefield = parent;
         setStyleName(VDateField.CLASSNAME + "-calendarpanel");
         // buildCalendar(true);
-        addTableListener(new DateClickListener(this));
+        days.addTableListener(new DateClickListener(this));
     }
 
     public VCalendarPanel(VDateField parent, Date min, Date max) {
         datefield = parent;
         setStyleName(VDateField.CLASSNAME + "-calendarpanel");
-        // buildCalendar(true);
-        addTableListener(new DateClickListener(this));
+        days.addTableListener(new DateClickListener(this));
 
     }
 
@@ -82,21 +83,34 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
 
     private void clearCalendarBody(boolean remove) {
         if (!remove) {
-            for (int row = 2; row < 8; row++) {
+            for (int row = 1; row < 7; row++) {
                 for (int col = 0; col < 7; col++) {
-                    setHTML(row, col, "&nbsp;");
+                    days.setHTML(row, col, "&nbsp;");
                 }
             }
-        } else if (getRowCount() > 2) {
-            while (getRowCount() > 2) {
-                removeRow(2);
-            }
+        } else if (getRowCount() > 1) {
+            removeRow(1);
+            days.clear();
+
         }
     }
 
     private void buildCalendarHeader(boolean forceRedraw, boolean needsMonth) {
         if (forceRedraw) {
-            if (prevMonth == null) { // Only do once
+            if (prevMonth == null) {
+
+                getFlexCellFormatter().setStyleName(0, 0,
+                        VDateField.CLASSNAME + "-calendarpanel-prevyear");
+                getFlexCellFormatter().setStyleName(0, 4,
+                        VDateField.CLASSNAME + "-calendarpanel-nextyear");
+                getFlexCellFormatter().setStyleName(0, 3,
+                        VDateField.CLASSNAME + "-calendarpanel-nextmonth");
+                getFlexCellFormatter().setStyleName(0, 1,
+                        VDateField.CLASSNAME + "-calendarpanel-prevmonth");
+
+                getRowFormatter().addStyleName(0,
+                        VDateField.CLASSNAME + "-calendarpanel-header");
+
                 prevYear = new VEventButton();
                 prevYear.setHTML("&laquo;");
                 prevYear.setStyleName("v-button-prevyear");
@@ -120,10 +134,6 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
                     setWidget(0, 3, nextMonth);
                     setWidget(0, 1, prevMonth);
                 }
-
-                getFlexCellFormatter().setColSpan(0, 2, 3);
-                getRowFormatter().addStyleName(0,
-                        VDateField.CLASSNAME + "-calendarpanel-header");
             } else if (!needsMonth) {
                 // Remove month traverse buttons
                 prevMonth.removeMouseListener(this);
@@ -133,34 +143,48 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
                 prevMonth = null;
                 nextMonth = null;
             }
-
-            // Print weekday names
-            final int firstDay = datefield.getDateTimeService()
-                    .getFirstDayOfWeek();
-            for (int i = 0; i < 7; i++) {
-                int day = i + firstDay;
-                if (day > 6) {
-                    day = 0;
-                }
-                if (datefield.getCurrentResolution() > VDateField.RESOLUTION_MONTH) {
-                    setHTML(1, i, "<strong>"
-                            + datefield.getDateTimeService().getShortDay(day)
-                            + "</strong>");
-                } else {
-                    setHTML(1, i, "");
-                }
-            }
         }
 
         final String monthName = needsMonth ? datefield.getDateTimeService()
                 .getMonth(datefield.getShowingDate().getMonth()) : "";
         final int year = datefield.getShowingDate().getYear() + 1900;
+        getFlexCellFormatter().setStyleName(0, 2,
+                VDateField.CLASSNAME + "-calendarpanel-month");
         setHTML(0, 2, "<span class=\"" + VDateField.CLASSNAME
                 + "-calendarpanel-month\">" + monthName + " " + year
                 + "</span>");
     }
 
     private void buildCalendarBody() {
+
+        setWidget(1, 0, days);
+        setCellPadding(0);
+        setCellSpacing(0);
+        getFlexCellFormatter().setColSpan(1, 0, 5);
+        getFlexCellFormatter().setStyleName(1, 0,
+                VDateField.CLASSNAME + "-calendarpanel-body");
+
+        days.getFlexCellFormatter().setStyleName(0, 0, "v-first");
+        days.getFlexCellFormatter().setStyleName(0, 6, "v-last");
+        days.getRowFormatter().setStyleName(0,
+                VDateField.CLASSNAME + "-calendarpanel-weekdays");
+
+        // Print weekday names
+        final int firstDay = datefield.getDateTimeService().getFirstDayOfWeek();
+        for (int i = 0; i < 7; i++) {
+            int day = i + firstDay;
+            if (day > 6) {
+                day = 0;
+            }
+            if (datefield.getCurrentResolution() > VDateField.RESOLUTION_MONTH) {
+                days.setHTML(0, i, "<strong>"
+                        + datefield.getDateTimeService().getShortDay(day)
+                        + "</strong>");
+            } else {
+                days.setHTML(0, i, "");
+            }
+        }
+
         // date actually selected?
         Date currentDate = datefield.getCurrentDate();
         Date showing = datefield.getShowingDate();
@@ -175,9 +199,9 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
         int dayCount = 0;
         final Date today = new Date();
         final Date curr = new Date(datefield.getShowingDate().getTime());
-        for (int row = 2; row < 8; row++) {
+        for (int row = 1; row < 7; row++) {
             for (int col = 0; col < 7; col++) {
-                if (!(row == 2 && col < startWeekDay)) {
+                if (!(row == 1 && col < startWeekDay)) {
                     if (dayCount < numDays) {
                         final int selectedDate = ++dayCount;
                         String title = "";
@@ -215,7 +239,7 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
                         if (title.length() > 0) {
                             cssClass += " " + baseclass + "-entry";
                         }
-                        setHTML(row, col, "<span title=\"" + title
+                        days.setHTML(row, col, "<span title=\"" + title
                                 + "\" class=\"" + cssClass + "\">"
                                 + selectedDate + "</span>");
                     } else {
@@ -230,9 +254,10 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
     private void buildTime(boolean forceRedraw) {
         if (time == null) {
             time = new VTime(datefield);
-            setText(8, 0, ""); // Add new row
-            getFlexCellFormatter().setColSpan(8, 0, 7);
-            setWidget(8, 0, time);
+            setWidget(2, 0, time);
+            getFlexCellFormatter().setColSpan(2, 0, 5);
+            getFlexCellFormatter().setStyleName(2, 0,
+                    VDateField.CLASSNAME + "-calendarpanel-time");
         }
         time.updateTime(forceRedraw);
     }
@@ -418,12 +443,12 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
         }
 
         public void onCellClicked(SourcesTableEvents sender, int row, int col) {
-            if (sender != cal || row < 2 || row > 7
+            if (sender != cal.days || row < 1 || row > 6
                     || !cal.datefield.isEnabled() || cal.datefield.isReadonly()) {
                 return;
             }
 
-            final String text = cal.getText(row, col);
+            final String text = cal.days.getText(row, col);
             if (text.equals(" ")) {
                 return;
             }

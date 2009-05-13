@@ -6,11 +6,15 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.Date;
 
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ClientExceptionHandler;
@@ -22,7 +26,7 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 
 public class VTextualDate extends VDateField implements Paintable, Field,
-        ChangeListener, ContainerResizedListener, Focusable {
+        ChangeHandler, ContainerResizedListener, Focusable {
 
     private static final String PARSE_ERROR_CLASSNAME = CLASSNAME
             + "-parseerror";
@@ -44,7 +48,19 @@ public class VTextualDate extends VDateField implements Paintable, Field,
         text.setStyleName(VTextField.CLASSNAME);
         // add datefield spesific style name also
         text.addStyleName(CLASSNAME + "-textfield");
-        text.addChangeListener(this);
+        text.addChangeHandler(this);
+        text.addFocusHandler(new FocusHandler() {
+            public void onFocus(FocusEvent event) {
+                text.addStyleName(VTextField.CLASSNAME + "-"
+                        + VTextField.CLASSNAME_FOCUS);
+            }
+        });
+        text.addBlurHandler(new BlurHandler() {
+            public void onBlur(BlurEvent event) {
+                text.removeStyleName(VTextField.CLASSNAME + "-"
+                        + VTextField.CLASSNAME_FOCUS);
+            }
+        });
         add(text);
     }
 
@@ -135,85 +151,81 @@ public class VTextualDate extends VDateField implements Paintable, Field,
 
     }
 
-    public void onChange(Widget sender) {
-        if (sender == text) {
-            if (!text.getText().equals("")) {
-                try {
-                    DateTimeFormat format = DateTimeFormat
-                            .getFormat(getFormatString());
-                    date = format.parse(text.getText());
-                    long stamp = date.getTime();
-                    if (stamp == 0) {
-                        // If date parsing fails in firefox the stamp will be 0
-                        date = null;
-                        addStyleName(PARSE_ERROR_CLASSNAME);
-                    } else {
-                        // remove possibly added invalid value indication
-                        removeStyleName(PARSE_ERROR_CLASSNAME);
-                    }
-                } catch (final Exception e) {
-                    ClientExceptionHandler.displayError(e.getMessage());
-
-                    addStyleName(PARSE_ERROR_CLASSNAME);
-                    // this is a hack that may eventually be removed
-                    client.updateVariable(id, "lastInvalidDateString", text
-                            .getText(), false);
+    public void onChange(ChangeEvent event) {
+        if (!text.getText().equals("")) {
+            try {
+                DateTimeFormat format = DateTimeFormat
+                        .getFormat(getFormatString());
+                date = format.parse(text.getText());
+                long stamp = date.getTime();
+                if (stamp == 0) {
+                    // If date parsing fails in firefox the stamp will be 0
                     date = null;
+                    addStyleName(PARSE_ERROR_CLASSNAME);
+                } else {
+                    // remove possibly added invalid value indication
+                    removeStyleName(PARSE_ERROR_CLASSNAME);
                 }
-            } else {
+            } catch (final Exception e) {
+                ClientExceptionHandler.displayError(e.getMessage());
+
+                addStyleName(PARSE_ERROR_CLASSNAME);
+                // this is a hack that may eventually be removed
+                client.updateVariable(id, "lastInvalidDateString", text
+                        .getText(), false);
                 date = null;
-                // remove possibly added invalid value indication
-                removeStyleName(PARSE_ERROR_CLASSNAME);
             }
-            // always send the date string
-            client.updateVariable(id, "dateString", text.getText(), false);
-
-            if (date != null) {
-                showingDate = new Date(date.getTime());
-            }
-
-            // Update variables
-            // (only the smallest defining resolution needs to be
-            // immediate)
-            client.updateVariable(id, "year",
-                    date != null ? date.getYear() + 1900 : -1,
-                    currentResolution == VDateField.RESOLUTION_YEAR
-                            && immediate);
-            if (currentResolution >= VDateField.RESOLUTION_MONTH) {
-                client.updateVariable(id, "month", date != null ? date
-                        .getMonth() + 1 : -1,
-                        currentResolution == VDateField.RESOLUTION_MONTH
-                                && immediate);
-            }
-            if (currentResolution >= VDateField.RESOLUTION_DAY) {
-                client.updateVariable(id, "day", date != null ? date.getDate()
-                        : -1, currentResolution == VDateField.RESOLUTION_DAY
-                        && immediate);
-            }
-            if (currentResolution >= VDateField.RESOLUTION_HOUR) {
-                client.updateVariable(id, "hour", date != null ? date
-                        .getHours() : -1,
-                        currentResolution == VDateField.RESOLUTION_HOUR
-                                && immediate);
-            }
-            if (currentResolution >= VDateField.RESOLUTION_MIN) {
-                client.updateVariable(id, "min", date != null ? date
-                        .getMinutes() : -1,
-                        currentResolution == VDateField.RESOLUTION_MIN
-                                && immediate);
-            }
-            if (currentResolution >= VDateField.RESOLUTION_SEC) {
-                client.updateVariable(id, "sec", date != null ? date
-                        .getSeconds() : -1,
-                        currentResolution == VDateField.RESOLUTION_SEC
-                                && immediate);
-            }
-            if (currentResolution == VDateField.RESOLUTION_MSEC) {
-                client.updateVariable(id, "msec",
-                        date != null ? getMilliseconds() : -1, immediate);
-            }
-
+        } else {
+            date = null;
+            // remove possibly added invalid value indication
+            removeStyleName(PARSE_ERROR_CLASSNAME);
         }
+        // always send the date string
+        client.updateVariable(id, "dateString", text.getText(), false);
+
+        if (date != null) {
+            showingDate = new Date(date.getTime());
+        }
+
+        // Update variables
+        // (only the smallest defining resolution needs to be
+        // immediate)
+        client.updateVariable(id, "year", date != null ? date.getYear() + 1900
+                : -1, currentResolution == VDateField.RESOLUTION_YEAR
+                && immediate);
+        if (currentResolution >= VDateField.RESOLUTION_MONTH) {
+            client.updateVariable(id, "month",
+                    date != null ? date.getMonth() + 1 : -1,
+                    currentResolution == VDateField.RESOLUTION_MONTH
+                            && immediate);
+        }
+        if (currentResolution >= VDateField.RESOLUTION_DAY) {
+            client
+                    .updateVariable(id, "day", date != null ? date.getDate()
+                            : -1,
+                            currentResolution == VDateField.RESOLUTION_DAY
+                                    && immediate);
+        }
+        if (currentResolution >= VDateField.RESOLUTION_HOUR) {
+            client.updateVariable(id, "hour", date != null ? date.getHours()
+                    : -1, currentResolution == VDateField.RESOLUTION_HOUR
+                    && immediate);
+        }
+        if (currentResolution >= VDateField.RESOLUTION_MIN) {
+            client.updateVariable(id, "min", date != null ? date.getMinutes()
+                    : -1, currentResolution == VDateField.RESOLUTION_MIN
+                    && immediate);
+        }
+        if (currentResolution >= VDateField.RESOLUTION_SEC) {
+            client.updateVariable(id, "sec", date != null ? date.getSeconds()
+                    : -1, currentResolution == VDateField.RESOLUTION_SEC
+                    && immediate);
+        }
+        if (currentResolution == VDateField.RESOLUTION_MSEC) {
+            client.updateVariable(id, "msec", date != null ? getMilliseconds()
+                    : -1, immediate);
+        }
+
     }
 
     private String cleanFormat(String format) {
