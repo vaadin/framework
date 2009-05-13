@@ -177,6 +177,7 @@ public class SamplerApplication extends Application {
             setLayout(mainExpand);
             setSizeFull();
             mainExpand.setSizeFull();
+            setCaption("Vaadin Sampler");
 
             // topbar (navigation)
             HorizontalLayout nav = new HorizontalLayout();
