@@ -100,7 +100,7 @@
 	padding: 4px 0;
 }
 .v-contextmenu .gwt-MenuItem {
-	padding: 1px 8px;
+	padding: 1px 12px 1px 8px;
 	height: 16px;
 	user-select: none;
 	-moz-user-select: none;

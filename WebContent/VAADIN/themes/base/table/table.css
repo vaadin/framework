@@ -137,9 +137,9 @@
 	text-align: center;
 }
 /* row in column selector */
-.v-on div {
+.v-on {
 	
 }
-.v-off div {
+.v-off {
 	color: #ddd;
 }

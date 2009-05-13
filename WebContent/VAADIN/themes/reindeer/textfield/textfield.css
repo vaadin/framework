@@ -63,3 +63,11 @@ input.v-textfield-prompt {
 .v-ff35 input.v-textfield-small {
 	height: 16px;
 }
+.v-table input.v-textfield {
+	margin-top: -3px;
+	height: 15px;
+	line-height: normal;
+}
+.v-ie .v-table input.v-textfield {
+	padding-top: 1px;
+}
