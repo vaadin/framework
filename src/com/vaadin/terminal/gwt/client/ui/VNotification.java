@@ -133,35 +133,39 @@ public class VNotification extends VToolkitOverlay {
     public void fade() {
         DOM.removeEventPreview(this);
         cancelDelay();
-        fader = new Timer() {
-            private final long start = new Date().getTime();
+        if (fader == null) {
+            fader = new Timer() {
+                private final long start = new Date().getTime();
 
-            @Override
-            public void run() {
-                /*
-                 * To make animation smooth, don't count that event happens on
-                 * time. Reduce opacity according to the actual time spent
-                 * instead of fixed decrement.
-                 */
-                long now = new Date().getTime();
-                long timeEplaced = now - start;
-                float remainingFraction = 1 - timeEplaced / (float) fadeMsec;
-                int opacity = (int) (startOpacity * remainingFraction);
-                if (opacity <= 0) {
-                    cancel();
-                    hide();
-                    if (BrowserInfo.get().isOpera()) {
-                        // tray notification on opera needs to explicitly define
-                        // size, reset it
-                        DOM.setStyleAttribute(getElement(), "width", "");
-                        DOM.setStyleAttribute(getElement(), "height", "");
+                @Override
+                public void run() {
+                    /*
+                     * To make animation smooth, don't count that event happens
+                     * on time. Reduce opacity according to the actual time
+                     * spent instead of fixed decrement.
+                     */
+                    long now = new Date().getTime();
+                    long timeEplaced = now - start;
+                    float remainingFraction = 1 - timeEplaced
+                            / (float) fadeMsec;
+                    int opacity = (int) (startOpacity * remainingFraction);
+                    if (opacity <= 0) {
+                        cancel();
+                        hide();
+                        if (BrowserInfo.get().isOpera()) {
+                            // tray notification on opera needs to explicitly
+                            // define
+                            // size, reset it
+                            DOM.setStyleAttribute(getElement(), "width", "");
+                            DOM.setStyleAttribute(getElement(), "height", "");
+                        }
+                    } else {
+                        setOpacity(getElement(), opacity);
                     }
-                } else {
-                    setOpacity(getElement(), opacity);
                 }
-            }
-        };
-        fader.scheduleRepeating(FADE_ANIMATION_INTERVAL);
+            };
+            fader.scheduleRepeating(FADE_ANIMATION_INTERVAL);
+        }
     }
 
     public void setPosition(int position) {
