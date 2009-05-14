@@ -1058,6 +1058,13 @@
 	height: 99%;
 }
 
+.v-ie6 .v-splitpanel-first-container,
+.v-ie6 .v-splitpanel-second-container,
+.v-ie7 .v-splitpanel-first-container,
+.v-ie7 .v-splitpanel-second-container {
+	position:relative;
+}
+
 /* ./WebContent/VAADIN/themes/base/table/table.css */
 /* Table theme building instructions
  * 

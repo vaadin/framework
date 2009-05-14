@@ -29,3 +29,10 @@
 .v-ie6 .v-splitpanel-horizontal .v-splitpanel-hsplitter div {
 	height: 99%;
 }
+
+.v-ie6 .v-splitpanel-first-container,
+.v-ie6 .v-splitpanel-second-container,
+.v-ie7 .v-splitpanel-first-container,
+.v-ie7 .v-splitpanel-second-container {
+	position:relative;
+}
