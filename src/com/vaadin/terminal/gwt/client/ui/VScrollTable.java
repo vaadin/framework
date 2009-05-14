@@ -820,16 +820,19 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
         if (scrollPositionElement == null) {
             scrollPositionElement = DOM.createDiv();
             DOM.setElementProperty(scrollPositionElement, "className",
-                    "v-table-scrollposition");
+                    CLASSNAME + "-scrollposition");
+            DOM
+                    .setStyleAttribute(scrollPositionElement, "position",
+                            "absolute");
             DOM.appendChild(getElement(), scrollPositionElement);
         }
 
-        DOM.setStyleAttribute(scrollPositionElement, "position", "absolute");
         DOM.setStyleAttribute(scrollPositionElement, "marginLeft", (DOM
                 .getElementPropertyInt(getElement(), "offsetWidth") / 2 - 80)
                 + "px");
         DOM.setStyleAttribute(scrollPositionElement, "marginTop", -(DOM
-                .getElementPropertyInt(getElement(), "offsetHeight") - 2)
+                .getElementPropertyInt(bodyContainer.getElement(),
+                        "offsetHeight"))
                 + "px");
 
         // indexes go from 1-totalRows, as rowheaders in index-mode indicate
