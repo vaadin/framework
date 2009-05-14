@@ -40,16 +40,16 @@
 }
 .v-tabsheet-tabs .v-errorindicator {
 	display: inline-block;
-	width: 5px;
+	width: 13px;
 	height: 16px;
-	background: transparent url(../../default/icons/16/error.png) no-repeat -1px 50%;
+	background: transparent url(../common/icons/error.png) no-repeat 50%;
 }
 .v-ff2 .v-tabsheet-tabs .v-icon,
 .v-ff2 .v-tabsheet-tabs .v-errorindicator {
 	display: -moz-inline-stack;
 }
 .v-ie6 .v-tabsheet-tabs .v-errorindicator {
-	background-image: url(../../default/icons/16/error.gif);
+	background-image: url(../common/icons/error-ie6.png);
 }
 .v-ie .v-tabsheet-tabs .v-errorindicator {
 	zoom: 1;

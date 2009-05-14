@@ -33,3 +33,17 @@
 	border-top-color: rgba(0,0,0,.1);
 	background: rgba(0,0,0,.08);
 }
+.v-panel-caption .v-errorindicator {
+	height: 16px;
+	width: 13px;
+	background: url(../common/icons/error.png) no-repeat 50%;
+	display: inline;
+	display: inline-block;
+	vertical-align: middle;
+}
+.v-ie6 .v-panel-caption .v-errorindicator {
+	background-image: url(../common/icons/error-ie6.png);
+}
+.v-ff2 .v-panel-caption .v-errorindicator  {
+	display: -moz-inline-stack;
+}

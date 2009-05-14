@@ -1,5 +1,6 @@
 .v-table-header-wrap {
 	border-color: #2b3033;
+	border-top: none;
 	background: transparent repeat-x;
 	background-image: url(img/header-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 	height: 20px;
@@ -9,6 +10,9 @@
 	color: #e7e9ea;
 	text-shadow: #000 0 -1px 0;
 	line-height: normal;
+}
+.v-table-header {
+	height: 20px;
 }
 .v-table-caption-container {
 	heigth: 16px;
@@ -39,7 +43,7 @@
 }
 .v-table-body {
 	border-color: #c2c3c4;
-	border-top-color: #2b3033;
+	background: #fff;
 }
 .v-table-cell-content {
 	padding-top: 0;
@@ -52,7 +56,6 @@
 }
 .v-table-row,
 .v-table-row-odd {
-	background: #fff;
 	height: 19px;
 }
 .v-table-row-odd {
@@ -79,9 +82,11 @@
 }
 .v-table-focus-slot-left {
 	border-left-color: #9ca1a5;
+	margin-left: 0;
 }
 .v-table-focus-slot-right {
 	border-right-color: #9ca1a5;
+	margin-right: 0;
 }
 .v-table-header-drag {
 	font-family: arial, helvetica, verdana, sans-serif;
@@ -95,10 +100,34 @@
 	text-shadow: #000 0 -1px 0;
 	line-height: normal;
 }
+.v-table-header-drag * {
+	vertical-align: middle;
+}
+.v-table-header-drag img {
+	height: 16px;
+	margin: -3px 3px 0 0;
+}
 .v-table-scrollposition {
-	width: 160px;
-	background: #eee;
-	border: 1px solid #aaa;
+	width: auto;
+	background: transparent;
+	border: none;
+}
+.v-table-scrollposition span {
+	background: transparent repeat-x;
+	background-image: url(img/scroll-indic-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+	border: 1px solid #939494;
+	border-top: none;
+	border-bottom-color: #7d7e80;
+	border-radius-bottomleft: 4px;
+	border-radius-bottomright: 4px;
+	-moz-border-radius-bottomleft: 4px;
+	-moz-border-radius-bottomright: 4px;
+	-webkit-border-bottom-left-radius: 4px;
+	-webkit-border-bottom-right-radius: 4px;
+	height: 13px;
+	padding: 4px 30px;
+	text-shadow: #fff 0 1px 0;
+	width: 100px;
 }
 /* row in column selector */
 .v-contextmenu .v-on,
@@ -115,4 +144,9 @@
 }
 .v-contextmenu .gwt-MenuItem-selected .v-on {
 	background-image: url(../common/icons/bullet-white.png); /** sprite-ref: verticals; sprite-margin-top: 4px; sprite-margin-bottom: 5px */
+}
+/* Borderless style */
+.v-table-borderless .v-table-header-wrap,
+.v-table-borderless .v-table-body {
+	border: none;
 }

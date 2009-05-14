@@ -50,16 +50,12 @@
 	font-family: Helvetica, Arial, "Lucida Grande", Geneva, Tahoma, Verdana, sans-serif;
 }
 .v-errorindicator {
-	width: 12px;
+	width: 13px;
 	height: 16px;
-	background: transparent url(../../default/icons/16/error.png) no-repeat top right;
+	background: transparent url(../common/icons/error.png) no-repeat 50%;
 }
 .v-ie6 .v-errorindicator {
-	/* gif for transparency */
-	background-image: url(../../default/icons/16/error.gif);
-}
-.v-ie7 .v-errorindicator {
-	margin-left: -3px;
+	background-image: url(../common/icons/error-ie6.png);
 }
 .v-tooltip {
 	background-color: #fffcdd;

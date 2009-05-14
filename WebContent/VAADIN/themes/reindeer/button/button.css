@@ -102,20 +102,29 @@ div > .v-button .v-icon,
 /* Buttons with error indicator */
 div > .v-button .v-errorindicator,
 .v-ie7 .v-button .v-errorindicator {
-	display: inline;
 	position: absolute;
-	width: 5px;
-	height: 26px;
-	background: transparent url(../../default/icons/16/error.png) no-repeat 50%;
-	overflow: hidden;
+	display: inline-block;
+	width: 9px;
+	height: 16px;
+	background: transparent url(../common/icons/error.png) no-repeat 50%;
+	padding: 0;
+	margin: 0;
 }
 .v-ie6 .v-button .v-errorindicator {
 	position: absolute;
-	width: 5px;
-	height: 18px;
-	background: transparent url(../../default/icons/16/error.gif) no-repeat 50%;
-	overflow: hidden;
-	margin-left: -10px;
+	display: inline;
+	width: 9px;
+	height: 16px;
+	background: transparent url(../common/icons/error-ie6.png) no-repeat 50%;
+}
+.v-ff .v-button,
+.v-sa .v-button {
+	position: relative;
+}
+.v-ff .v-button .v-errorindicator,
+.v-sa .v-button .v-errorindicator {
+	top: 2px;
+	left: 10px;
 }
 /* Link style buttons */
 .v-button.v-button-link,
