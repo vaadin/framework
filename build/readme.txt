@@ -6,7 +6,7 @@ How to build packages
 1. See build/GWT-VERSION.properties file
 - states the GWT version used within this project
 
-2. Checkout correct GWT distribution version for your platform from http://dev.itmill.com/svn/gwt/
+2. Checkout correct GWT distribution version for your platform from http://dev.vaadin.com/svn/gwt/
 - note, you have to checkout GWT for all platforms when doing release builds
 
 3. Extract or link GWT distribution under build/gwt/<platform> directory / directories
@@ -21,10 +21,10 @@ How to build packages
 Complete example for building from scratch
 ==========================================
 This is run in an empty directory on Ubuntu 8.10 to checkout sources from svn and
-to build a complete IT Mill Toolkit package.
+to build a complete Vaadin package.
 
-svn co http://dev.itmill.com/svn/trunk/
-svn co http://dev.itmill.com/svn/gwt/
+svn co http://dev.vaadin.com/svn/trunk/
+svn co http://dev.vaadin.com/svn/gwt/
 cd gwt
 tar xfj gwt-linux-1.5.3.tar.bz2
 cd ../trunk/build

@@ -2,7 +2,7 @@
 
 <project
          xmlns:antcontrib="antlib:net.sf.antcontrib"
-         name="IT Mill Toolkit"
+         name="Vaadin"
          basedir="../" default="package-all">
 
 	<!-- Package creation - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -20,6 +20,10 @@
 	package-mac
 	 * vaadin-mac-<version>.tar.gz
 	 * vaadin-mac-<version>.dmg
+
+    In addition, the OOPHM package has the following target for building:
+	package-oophm
+	 * vaadin-oophm-<version>.zip
 
 	NOTE: This build script requires directories named ${gwt-dir}/(linux|windows|mac) .
 	See build.properties to define path where your gwt installation is located.
@@ -153,7 +157,7 @@
           <isset property="ignoreversion"/>
         </or>
       </condition>
-      <fail unless="java.version.matches" message="Java version is ${ant.java.version}, but IT Mill Toolkit must be compiled with genuine Java 1.5 compiler. Use -Dignoreversion=1 for ant to ignore the version check."/>
+      <fail unless="java.version.matches" message="Java version is ${ant.java.version}, but Vaadin must be compiled with genuine Java 1.5 compiler. Use -Dignoreversion=1 for ant to ignore the version check."/>
       <echo>Java version is ${ant.java.version} as required.</echo>
     </target>
 
@@ -165,7 +169,7 @@
       <echo>Java Servlet API is available.</echo>
 
       <available classpathref="compile.classpath" classname="javax.servlet.ServletRequestListener" property="servlet.version.is-2.4"/>
-      <fail if="servlet.version.is-2.4" message="Java Servlet API 2.4 or later detected. IT Mill Toolkit must be compiled exactly with Servlet API 2.3."/>
+      <fail if="servlet.version.is-2.4" message="Java Servlet API 2.4 or later detected. Vaadin must be compiled exactly with Servlet API 2.3."/>
       <echo>Java Servlet API specification 2.3 used.</echo>
     </target>
 
@@ -493,8 +497,8 @@
 		<move file="${output-dir}/build-widgetset.xml" tofile="${output-dir}/WebContent/doc/example-source/build-widgetset.xml" />
 		<move file="${output-dir}/eclipse-classpath" tofile="${output-dir}/.classpath" />
 		<move file="${output-dir}/eclipse-project" tofile="${output-dir}/.project" />
-		<move file="${output-dir}/eclipse-IT Mill Toolkit Hosted Mode-launch" tofile="${output-dir}/IT Mill Toolkit Hosted Mode.launch" />
-		<move file="${output-dir}/eclipse-IT Mill Toolkit Web Mode-launch" tofile="${output-dir}/IT Mill Toolkit Web Mode.launch" />
+		<move file="${output-dir}/eclipse-Vaadin Hosted Mode-launch" tofile="${output-dir}/Vaadin Hosted Mode.launch" />
+		<move file="${output-dir}/eclipse-Vaadin Web Mode-launch" tofile="${output-dir}/Vaadin Web Mode.launch" />
 		<mkdir dir="${output-dir}/.settings" />
 		<move file="${output-dir}/eclipse-org.eclipse.core.resources.prefs" tofile="${output-dir}/.settings/org.eclipse.core.resources.prefs" />
 		<move file="${output-dir}/eclipse-org.eclipse.jdt.core.prefs" tofile="${output-dir}/.settings/org.eclipse.jdt.core.prefs" />
@@ -998,7 +1002,7 @@
 
         <exec executable="svn" dir="${checkout-path}">
             <arg value="checkout"/>
-            <arg value="http://dev.itmill.com/svn/doc/trunk"/>
+            <arg value="http://dev.vaadin.com/svn/doc/trunk"/>
             <arg value="doc"/>
         </exec>
 
