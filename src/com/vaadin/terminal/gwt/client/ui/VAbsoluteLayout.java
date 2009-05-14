@@ -302,7 +302,7 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
                 }
                 // ensure ne values
                 Style style = getElement().getStyle();
-                style.setProperty("zIndex", zIndex);
+                // style.setProperty("zIndex", zIndex);
                 style.setProperty("top", top);
                 style.setProperty("left", left);
                 style.setProperty("right", right);
@@ -331,7 +331,7 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
             Style style = getElement().getStyle();
             if (bottom != null && top != null) {
                 // define height for wrapper to simulate bottom property
-                int bottompixels = measureForIE6(bottom);
+                int bottompixels = measureForIE6(bottom, true);
                 ApplicationConnection.getConsole().log("ALB" + bottompixels);
                 int height = canvas.getOffsetHeight() - bottompixels
                         - getElement().getOffsetTop();
@@ -346,10 +346,10 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
             }
             if (left != null && right != null) {
                 // define width for wrapper to simulate right property
-                int rightPixels = measureForIE6(right);
+                int rightPixels = measureForIE6(right, false);
                 ApplicationConnection.getConsole().log("ALR" + rightPixels);
                 int width = canvas.getOffsetWidth() - rightPixels
-                        - getElement().getOffsetWidth();
+                        - getElement().getOffsetLeft();
                 ApplicationConnection.getConsole().log("ALR" + width);
                 if (width < 0) {
                     width = 0;
@@ -365,14 +365,19 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
 
     private Element measureElement;
 
-    private int measureForIE6(String cssLength) {
+    private int measureForIE6(String cssLength, boolean vertical) {
         if (measureElement == null) {
             measureElement = DOM.createDiv();
             measureElement.getStyle().setProperty("position", "absolute");
             canvas.appendChild(measureElement);
         }
-        measureElement.getStyle().setProperty("width", cssLength);
-        return measureElement.getOffsetWidth();
+        if (vertical) {
+            measureElement.getStyle().setProperty("height", cssLength);
+            return measureElement.getOffsetHeight();
+        } else {
+            measureElement.getStyle().setProperty("width", cssLength);
+            return measureElement.getOffsetWidth();
+        }
     }
 
 }
