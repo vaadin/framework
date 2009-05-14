@@ -46,7 +46,7 @@
 		production environment.
 	-->
 	<servlet>
-		<servlet-name>ITMillToolkitApplicationRunner</servlet-name>
+		<servlet-name>VaadinApplicationRunner</servlet-name>
 		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
 			<param-name>applicationRunner</param-name>
@@ -209,7 +209,7 @@
 		<!-- portlet style= -->
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>ITMillToolkitApplicationRunner</servlet-name>
+		<servlet-name>VaadinApplicationRunner</servlet-name>
 		<url-pattern>/run/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
