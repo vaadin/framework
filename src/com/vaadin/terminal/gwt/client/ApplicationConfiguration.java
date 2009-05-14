@@ -187,7 +187,7 @@ public class ApplicationConfiguration {
 
     public native String getServletVersion()
     /*-{
-        return this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::versionInfo.toolkitVersion;
+        return this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::versionInfo.vaadinVersion;
     }-*/;
 
     public native String getApplicationVersion()
