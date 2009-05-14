@@ -302,7 +302,7 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
                 }
                 // ensure ne values
                 Style style = getElement().getStyle();
-                // style.setProperty("zIndex", zIndex);
+                style.setProperty("zIndex", zIndex);
                 style.setProperty("top", top);
                 style.setProperty("left", left);
                 style.setProperty("right", right);
