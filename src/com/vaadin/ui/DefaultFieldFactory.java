@@ -1,3 +1,6 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 package com.vaadin.ui;
 
 import java.util.Date;
@@ -7,7 +10,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 
 /**
- * This class contains basic implementation for both {@link FormFieldFactory}
+ * This class contains a basic implementation for both {@link FormFieldFactory}
  * and {@link TableFieldFactory}. The class is singleton, use {@link #get()}
  * method to get reference to the instance.
  * 

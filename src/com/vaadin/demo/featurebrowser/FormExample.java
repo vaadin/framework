@@ -4,10 +4,10 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Validator;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.ui.BaseFieldFactory;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
@@ -69,7 +69,7 @@ public class FormExample extends CustomComponent {
 
             // Use custom field factory to modify the defaults on how the
             // components are created
-            setFieldFactory(new MyFieldFactory());
+            setFormFieldFactory(new MyFieldFactory());
 
             // Add Commit and Discard controls to the form.
 
@@ -137,7 +137,7 @@ public class FormExample extends CustomComponent {
      * This is example on how to customize field creation. Any kind of field
      * components could be created on the fly.
      */
-    static class MyFieldFactory extends BaseFieldFactory {
+    static class MyFieldFactory extends DefaultFieldFactory {
 
         @Override
         public Field createField(Item item, Object propertyId,

@@ -1,13 +1,30 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 package com.vaadin.ui;
 
 import java.io.Serializable;
 
 import com.vaadin.data.Item;
 
+/**
+ * Factory interface for creating new Field-instances based on {@link Item},
+ * property id and uiContext (the component responsible for displaying fields).
+ * Currently this interface is used by {@link Form}, but might later be used by
+ * some other components for {@link Field} generation.
+ * 
+ * <p>
+ * 
+ * @author IT Mill Ltd.
+ * @version
+ * @VERSION@
+ * @since 6.0
+ * @see TableFieldFactory
+ */
 public interface FormFieldFactory extends Serializable {
     /**
-     * Creates a field based on the item, property id and the component where
-     * the Field will be placed in.
+     * Creates a field based on the item, property id and the component (most
+     * commonly {@link Form}) where the Field will be presented.
      * 
      * @param item
      *            the item where the property belongs to.

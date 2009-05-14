@@ -10,10 +10,10 @@ import com.vaadin.data.Validator;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.demo.sampler.ExampleUtil;
-import com.vaadin.ui.BaseFieldFactory;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
@@ -39,7 +39,7 @@ public class FormPojoExample extends VerticalLayout {
         personForm.setInvalidCommitted(false); // no invalid values in datamodel
 
         // FieldFactory for customizing the fields and adding validators
-        personForm.setFieldFactory(new PersonFieldFactory());
+        personForm.setFormFieldFactory(new PersonFieldFactory());
         personForm.setItemDataSource(personItem); // bind to POJO via BeanItem
 
         // Determines which properties are shown, and in which order:
@@ -97,7 +97,7 @@ public class FormPojoExample extends VerticalLayout {
         getWindow().showNotification(n);
     }
 
-    private class PersonFieldFactory extends BaseFieldFactory {
+    private class PersonFieldFactory extends DefaultFieldFactory {
 
         final ComboBox countries = new ComboBox("Country");
 

@@ -14,7 +14,8 @@ import com.vaadin.data.Property;
  * @version
  * @VERSION@
  * @since 3.1
- * @deprecated use FormFieldFactory or TableFieldFactory or both instead
+ * @deprecated FieldFactory was split into two lighter interfaces in 6.0 Use
+ *             FormFieldFactory or TableFieldFactory or both instead.
  */
 @Deprecated
 public interface FieldFactory extends FormFieldFactory, TableFieldFactory {
