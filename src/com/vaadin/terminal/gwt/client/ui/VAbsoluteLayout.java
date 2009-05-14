@@ -52,6 +52,7 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
         setStyleName(CLASSNAME);
         marginElement = Document.get().createDivElement();
         canvas.getStyle().setProperty("position", "relative");
+        canvas.getStyle().setProperty("overflow", "hidden");
         marginElement.appendChild(canvas);
         getElement().appendChild(marginElement);
     }
