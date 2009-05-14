@@ -3042,14 +3042,15 @@ input.v-textfield-prompt {
 /* ./WebContent/VAADIN/themes/reindeer/window/window.css */
 .v-window {
 	background: transparent;
-}
-.v-window-wrap {
 	border: 1px solid #808386;
 }
-.v-sa .v-window-wrap,
-.v-ff35 .v-window-wrap,
-.v-op .v-window-wrap {
+.v-sa .v-window,
+.v-ff35 .v-window,
+.v-op .v-window {
 	border-color: rgba(0,0,0,.2);
+}
+.v-ff2 .v-window {
+	border: none;
 }
 .v-window-outerheader {
 	padding: 12px 32px 0 14px;
