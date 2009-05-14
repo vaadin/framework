@@ -61,9 +61,9 @@ public class TableExample extends CustomComponent implements Action.Handler,
 
         // main layout
         final VerticalLayout main = new VerticalLayout();
-        root.addComponent(main);
         main.setCaption("Basic Table");
         main.setMargin(true);
+        root.addTab(main);
 
         // "source" table with bells & whistlesenabled
         source = new Table("All creatures");
