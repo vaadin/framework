@@ -1,13 +1,15 @@
 .v-window {
 	background: transparent;
+}
+.v-window-wrap {
 	border: 1px solid #808386;
 }
-.v-sa .v-window,
-.v-ff35 .v-window,
-.v-op .v-window {
+.v-sa .v-window-wrap,
+.v-ff3 .v-window-wrap,
+.v-op .v-window-wrap {
 	border-color: rgba(0,0,0,.2);
 }
-.v-ff2 .v-window {
+.v-ff2 .v-window-wrap {
 	border: none;
 }
 .v-window-outerheader {
