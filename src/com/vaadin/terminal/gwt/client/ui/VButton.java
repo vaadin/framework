@@ -85,7 +85,7 @@ public class VButton extends Button implements Paintable {
         // handle error
         if (uidl.hasAttribute("error")) {
             if (errorIndicatorElement == null) {
-                errorIndicatorElement = DOM.createDiv();
+                errorIndicatorElement = DOM.createSpan();
                 DOM.setElementProperty(errorIndicatorElement, "className",
                         "v-errorindicator");
             }

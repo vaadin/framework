@@ -214,7 +214,7 @@ public class VPanel extends SimplePanel implements Container {
     private void handleError(UIDL uidl) {
         if (uidl.hasAttribute("error")) {
             if (errorIndicatorElement == null) {
-                errorIndicatorElement = DOM.createDiv();
+                errorIndicatorElement = DOM.createSpan();
                 DOM.setElementProperty(errorIndicatorElement, "className",
                         "v-errorindicator");
                 DOM.sinkEvents(errorIndicatorElement, Event.MOUSEEVENTS);
