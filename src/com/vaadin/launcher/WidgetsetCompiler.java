@@ -1,6 +1,6 @@
 package com.vaadin.launcher;
 
-import com.google.gwt.dev.GWTCompiler;
+import java.lang.reflect.Method;
 
 /**
  * A wrapper for the GWT 1.6 compiler that runs the compiler in a new thread.
@@ -41,7 +41,16 @@ public class WidgetsetCompiler {
 
             Runnable runCompiler = new Runnable() {
                 public void run() {
-                    GWTCompiler.main(args);
+                    try {
+                        // GWTCompiler.main(args);
+                        Class<?> compilerClass = Class
+                                .forName("com.google.gwt.dev.GWTCompiler");
+                        Method method = compilerClass.getDeclaredMethod("main",
+                                String[].class);
+                        method.invoke(null, new Object[] { args });
+                    } catch (Throwable thr) {
+                        thr.printStackTrace();
+                    }
                 }
             };
             Thread runThread = new Thread(runCompiler);
