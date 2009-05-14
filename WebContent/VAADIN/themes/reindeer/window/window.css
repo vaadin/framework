@@ -1,0 +1,58 @@
+.v-window {
+	background: transparent;
+}
+.v-window-wrap {
+	border: 1px solid #808386;
+}
+.v-sa .v-window-wrap,
+.v-ff35 .v-window-wrap,
+.v-op .v-window-wrap {
+	border-color: rgba(0,0,0,.2);
+}
+.v-window-outerheader {
+	padding: 12px 32px 0 14px;
+	height: 25px;
+	background: transparent repeat-x;
+	background-image: url(img/header-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+}
+.v-window-header {
+	font-weight: bold;
+	font-size: 12px;
+	line-height: normal;
+	color: #fff;
+	text-shadow: #000 0 -1px 0;
+}
+.v-window-resizebox {
+	width: 15px;
+	height: 15px;
+	cursor: se-resize;
+	background: transparent;
+	background-image: url(img/resize.png); /** sprite-ref: verticals */
+}
+.v-window-footer {
+	background-repeat: repeat-x;
+	background-image: url(img/footer-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+}
+.v-ie6 .v-window-footer {
+	zoom: 1;
+}
+.v-window-closebox {
+	top: 12px;
+	right: 10px;
+	width: 15px;
+	height: 16px;
+	background: transparent;
+	background-image: url(img/close.png); /** sprite-ref: verticals */
+}
+.v-window-closebox:hover {
+	background-image: url(img/close-hover.png); /** sprite-ref: verticals */
+}
+.v-window-closebox:active {
+	background-image: url(img/close-pressed.png); /** sprite-ref: verticals */
+}
+.v-window-contents {
+	background: #fff;
+}
+.v-window-modalitycurtain {
+	background: #56595b;
+}
