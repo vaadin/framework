@@ -1026,8 +1026,8 @@
 		<copy todir="${output-dir}/WebContent/doc">
             <fileset dir="${docdir}/build/result/package/WebContent/doc">
 				<exclude name="**/.svn" />
-				<include name="manual/**" />
-				<include name="manual.pdf" />
+				<include name="book/**" />
+				<include name="book-of-vaadin.pdf" />
             </fileset>
         </copy>
     </target>
@@ -1039,7 +1039,7 @@
     <!-- Documentation: Add documentation including style files             -->
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
 	<target name="package-docs">
-		<copy todir="${output-dir}/WebContent/doc/manual/html-style">
+		<copy todir="${output-dir}/WebContent/doc/book/html-style">
 			<fileset dir="doc/manual/html-style">
 				<exclude name="**/.svn" />
 				<exclude name="**/test.html" />
