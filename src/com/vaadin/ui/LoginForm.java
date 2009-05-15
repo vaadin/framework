@@ -13,6 +13,7 @@ import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.ParameterHandler;
 import com.vaadin.terminal.URIHandler;
+import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 
 /**
  * LoginForm is a Toolkit component to handle common problem among Ajax
@@ -125,12 +126,14 @@ public class LoginForm extends CustomComponent {
      */
     protected byte[] getLoginHTML() {
 
+        String defaultThemeName = AbstractApplicationServlet.getDefaultTheme();
+
         String theme = getApplication().getMainWindow().getTheme();
         String guessedThemeUri = getApplication().getURL() + "VAADIN/themes/"
-                + (theme == null ? "default" : theme) + "/styles.css";
+                + (theme == null ? defaultThemeName : theme) + "/styles.css";
         String guessedThemeUri2 = getApplication().getURL()
-                + "../VAADIN/themes/" + (theme == null ? "default" : theme)
-                + "/styles.css";
+                + "../VAADIN/themes/"
+                + (theme == null ? defaultThemeName : theme) + "/styles.css";
 
         String appUri = getApplication().getURL().toString();
 

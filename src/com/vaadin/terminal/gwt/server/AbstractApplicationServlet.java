@@ -153,7 +153,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
     private static final String ERROR_NO_WINDOW_FOUND = "Application did not give any window, did you remember to setMainWindow()?";
 
-    private static final String DEFAULT_THEME = "reindeer";
+    private static final String DEFAULT_THEME_NAME = "reindeer";
 
     private String resourcePath = null;
 
@@ -759,8 +759,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      * 
      * @return
      */
-    String getDefaultTheme() {
-        return DEFAULT_THEME;
+    public static String getDefaultTheme() {
+        return DEFAULT_THEME_NAME;
     }
 
     /**

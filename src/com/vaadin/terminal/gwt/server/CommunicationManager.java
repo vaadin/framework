@@ -533,7 +533,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                 themeName = request.getParameter("theme");
             }
             if (themeName == null) {
-                themeName = applicationServlet.getDefaultTheme();
+                themeName = AbstractApplicationServlet.getDefaultTheme();
             }
 
             // TODO We should only precache the layouts that are not
