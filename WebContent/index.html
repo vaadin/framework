@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>IT Mill Toolkit 5</title>
+		<title>Vaadin 5</title>
 		<link rel="stylesheet" type="text/css" href="demo/css/styles.css" />
 		<!--[if IE]>
 		<link rel="stylesheet" type="text/css" href="demo/css/ie.css" />
@@ -81,23 +81,20 @@
 	<body id="index">
 	
 	<div id="container">
-	
+		<div id="header-links">
+			  <a href="http://dev.vaadin.com" title="Open dev.vaadin.com">Visit developer site dev.vaadin.com &gt;</a>
+              <a href="http://vaadin.com/forum" title="Open vaadin.com/forum">Visit support site vaadin.com/forum  &gt;</a>
+		</div>
 		<div class="header">
-			<h1>Introducing IT Mill Toolkit 5</h1>
-			<em>Effortless web application development for Java-programmers.</em>
-			<div id="header-links">
-			  <a href="http://dev.itmill.com" title="Open dev.itmill.com">Visit developer site dev.itmill.com</a><br/>
-              <a href="http://forum.itmill.com" title="Open forum.itmill.com">Visit support site forum.itmill.com</a>
-			</div>
+			<h1>@version@</h1>
+			
 		</div> <!-- /Header -->
 		
 		<div class="content">
 		
-			<div id="demos">
-				<h2>Demos</h2>
-				
-				<h4 id="sampler"><a class="demoapp" href="sampler/" title="Open Sampler">Open Sampler</a></h4>
-				<h4>IT Mill Toolkit Sampler</h4>
+			<div id="demos">	
+				<div id="sampler"><a class="demoapp" href="sampler/" title="Open Sampler"><img src="../demo/img/sampler-btn.png" border=0 alt="Open Sampler"/></a></div>
+				<h4>Vaadin Sampler</h4>
 				<p><a href="sampler/" title="Open Sampler">Sampler</a> contains examples of most features, as well as combination examples and useful UI patterns that you can use simply by copy-pasting the code.</p>
 				
 				<h4>Additional demos</h4>
@@ -106,21 +103,15 @@
 					<li><a class="demoapp" href="Coverflow/">Coverflow &ndash; Flex integration</a> &nbsp; (<a href="doc/example-source/com/itmill/toolkit/demo/coverflow">sources</a>)</li>
 				</ul>
 				
-				
-				<h2 class="tutorial">Tutorial and Examples</h2>
-				
 				<h4 id="address-book">Address Book tutorial</h4>
 				<p>Read the step-by-step tutorial and learn how to build a simple contacts management application.</p>
 				<ul class="links">
 					<li><a href="http://itmill.com/documentation/itmill-toolkit-5-tutorial/" class="more">Step-by-step tutorial</a></li>
 					<li><a href="AddressBook/" class="more">See Address Book application</a></li>
 				</ul>
-				
-				
-				
-					
+
 				<h4>More Examples</h4>
-				<p>Below is a collection of stand-alone demo applications that will help you get started with the actual Toolkit code.</p>
+				<p>Below is a collection of stand-alone demo applications that will help you get started with the actual Vaadin code.</p>
 				<ul>
 					<li><a class="demoapp" href="HelloWorld/">Hello world</a> &nbsp; (<a href="doc/example-source/com/itmill/toolkit/demo/HelloWorld.java.html">sources</a>)</li>
 					<li><a class="demoapp" href="Calc/">Calculator</a> &nbsp; (<a href="doc/example-source/com/itmill/toolkit/demo/Calc.java.html">sources</a>)</li>
@@ -130,20 +121,17 @@
 			</div> <!-- /demos -->
 			
 			<div id="getting-started">
-				<h2>Getting started</h2>
-				
+				<img src="../demo/img/eclipse-quickstart.png" border=0/>
 				<h4>Eclipse IDE QuickStart</h4>
-				<p>The easiest way to start working with IT Mill Toolkit is to 
-				use Eclipse IDE with the Toolkit QuickStart project.
-				<a href="doc/manual/getting-started.quickstart.html" class="more">Instant Toolkit workspace for Eclipse</a></p>
+				<p>The easiest way to start working with Vaadin is to 
+				use Eclipse IDE with the Vaadin QuickStart project.
+				<a href="doc/manual/getting-started.quickstart.html" class="more">Instant Vaadin workspace for Eclipse</a></p>
 				
 			</div> <!-- /getting-started -->
 			
-			<div id="support-licensing">
-				<h2>Support and Licensing</h2>
-				
+			<div id="support-licensing">	
 				<h4>Documentation</h4>
-				<p>Need help using IT Mill Toolkit? Look no further. Everything you need to know is here.</p>
+				<p>Need help using Vaadin? Look no further. Everything you need to know is here.</p>
 				<ul class="links">
 					<li><a href="doc/manual/index.html">Manual</a> <a href="doc/manual.pdf" class="more"><span>(</span>PDF<span>)</span></a></li>
 					<li><a href="doc/api/index.html" class="more">JavaDoc API</a></li>
@@ -151,7 +139,7 @@
 				</ul>
 				
 				<h4>Open Source Development &amp; Licenses</h4>
-				<p>IT Mill Toolkit is developed as an Open Source software and its core is licensed under
+				<p>Vaadin is developed as an Open Source software and its core is licensed under
 				   the liberal Apache 2.0 License. Commercial licenses that include support are also available.</p>
                 <ul class="links">
 				   <li><a href="http://dev.itmill.com" title="Open dev.itmill.com" class="more">Developer website</a></li>
@@ -170,8 +158,8 @@
 				
 				<div class="library">
 					<h5>Library</h5>
-					<p>Contains all you need to start a new Toolkit project (binaries, sources, default 
-					themes and widgetsets). <a href="vaadin-@version@.jar">Toolkit JAR</a></p>
+					<p>Contains all you need to start a new Vaadin project (binaries, sources, default 
+					themes and widgetsets). <a href="vaadin-@version@.jar">Vaadin JAR</a></p>
 				</div>
 				
 				<div class="documentation">
@@ -203,7 +191,7 @@
 					<form action="http://www.itmill.com/formmail.app" enctype="multipart/form-data" method="post">
 					<input name="SuccessUrl"type="hidden" value="http://www.itmill.com/developers/feedback_ok.htm">
 					<input name="FormType" type="hidden" value="7" />
-					Send a quick message to Toolkit R&D team:<br />
+					Send a quick message to Vaadin R&D team:<br />
 					<textarea name="feedback" cols="38" rows="3" multiline="true">Comments, suggestions, bug reports - anything.</textarea><br />
 					<input type="hidden" value="itmill" name="Human"/>
 					<input type="submit" value="Send" />
@@ -214,12 +202,12 @@
 			<div class="clearer"></div>
 		</div> <!-- /content-->
 		
-		<div class="footer">
-			<a href="http://www.itmill.com">IT Mill Ltd.</a>
-			<em>Interfacing IT</em>
-		</div> <!-- /footer -->
+
 	
 	</div> <!-- /container -->
 	
+	<div class="footer">
+			<a href="http://www.itmill.com">IT Mill Ltd.<br/>Interfacing IT</a>
+	</div> <!-- /footer -->
 	</body>
 </html>
