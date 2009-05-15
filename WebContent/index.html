@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>Vaadin 5</title>
+		<title>Vaadin @version@</title>
 		<link rel="stylesheet" type="text/css" href="demo/css/styles.css" />
 		<!--[if IE]>
 		<link rel="stylesheet" type="text/css" href="demo/css/ie.css" />
@@ -10,10 +10,10 @@
 		<script type="text/javascript">
 		
 		window.onload = function() {
-			itmill.init();
+			vaadin.init();
 		}
 		
-		var itmill = function() {
+		var vaadin = function() {
 		
 			var packageContent;
 			var package;
@@ -33,7 +33,7 @@
 					toggle.style.cursor = "pointer";
 					toggle.title = "Show/hide package contents";
 					// Use the quick-n-dirty way to attach event listeners
-					toggle.onclick = function() {itmill.togglePanel(packageContent)};
+					toggle.onclick = function() {vaadin.togglePanel(packageContent)};
 					
 					// feedback popup
 					var fb = document.getElementById("feedback").getElementsByTagName("textarea")[0];
@@ -93,14 +93,14 @@
 		<div class="content">
 		
 			<div id="demos">	
-				<div id="sampler"><a class="demoapp" href="sampler/" title="Open Sampler"><img src="../demo/img/sampler-btn.png" border=0 alt="Open Sampler"/></a></div>
+				<div id="sampler"><a class="demoapp" href="sampler/" title="Open Sampler"><img src="demo/img/sampler-btn.png" border=0 alt="Open Sampler"/></a></div>
 				<h4>Vaadin Sampler</h4>
 				<p><a href="sampler/" title="Open Sampler">Sampler</a> contains examples of most features, as well as combination examples and useful UI patterns that you can use simply by copy-pasting the code.</p>
 				
 				<h4>Additional demos</h4>
-				<ul><li><a class="demoapp" href="Reservr">Reservr &ndash; reservation application</a> &nbsp; (<a href="doc/example-source/com/itmill/toolkit/demo/reservation">sources</a>)</li>
-					<li><a class="demoapp" href="ToolkitTunesLayout/">ToolkitTunes &ndash; advanced layout &amp; theme</a> &nbsp; (<a href="doc/example-source/com/itmill/toolkit/demo/ToolkitTunesLayout.java.html">sources</a>)</li>
-					<li><a class="demoapp" href="Coverflow/">Coverflow &ndash; Flex integration</a> &nbsp; (<a href="doc/example-source/com/itmill/toolkit/demo/coverflow">sources</a>)</li>
+				<ul><li><a class="demoapp" href="Reservr">Reservr &ndash; reservation application</a> &nbsp; (<a href="docs/example-source/com/vaadin/demo/reservation">sources</a>)</li>
+					<li><a class="demoapp" href="ToolkitTunesLayout/">ToolkitTunes &ndash; advanced layout &amp; theme</a> &nbsp; (<a href="docs/example-source/com/vaadin/demo/ToolkitTunesLayout.java.html">sources</a>)</li>
+					<li><a class="demoapp" href="Coverflow/">Coverflow &ndash; Flex integration</a> &nbsp; (<a href="docs/example-source/com/vaadin/demo/coverflow">sources</a>)</li>
 				</ul>
 				
 				<h4 id="address-book">Address Book tutorial</h4>
@@ -113,36 +113,37 @@
 				<h4>More Examples</h4>
 				<p>Below is a collection of stand-alone demo applications that will help you get started with the actual Vaadin code.</p>
 				<ul>
-					<li><a class="demoapp" href="HelloWorld/">Hello world</a> &nbsp; (<a href="doc/example-source/com/itmill/toolkit/demo/HelloWorld.java.html">sources</a>)</li>
-					<li><a class="demoapp" href="Calc/">Calculator</a> &nbsp; (<a href="doc/example-source/com/itmill/toolkit/demo/Calc.java.html">sources</a>)</li>
-					<li><a class="demoapp" href="colorpicker">Colorpicker &ndash; creating new widgets</a> &nbsp; (<a href="doc/example-source/com/itmill/toolkit/demo/colorpicker">sources</a>)</li>
+					<li><a class="demoapp" href="HelloWorld/">Hello world</a> &nbsp; (<a href="docs/example-source/com/vaadin/demo/HelloWorld.java.html">sources</a>)</li>
+					<li><a class="demoapp" href="Calc/">Calculator</a> &nbsp; (<a href="docs/example-source/com/vaadin/demo/Calc.java.html">sources</a>)</li>
+					<li><a class="demoapp" href="colorpicker">Colorpicker &ndash; creating new widgets</a> &nbsp; (<a href="docs/example-source/com/vaadin/demo/colorpicker">sources</a>)</li>
 				</ul>
 					
 			</div> <!-- /demos -->
-			
+				
 			<div id="getting-started">
-				<img src="../demo/img/eclipse-quickstart.png" border=0/>
+				<img src="demo/img/eclipse-quickstart.png" border=0/>
 				<h4>Eclipse IDE QuickStart</h4>
 				<p>The easiest way to start working with Vaadin is to 
-				use Eclipse IDE with the Vaadin QuickStart project.
-				<a href="doc/manual/getting-started.quickstart.html" class="more">Instant Vaadin workspace for Eclipse</a></p>
+				use Eclipse IDE and download the Vaadin Eclipse plugin from <a href="http://vaadin.com/eclipse" target="_blank">http://vaadin.com/eclipse</a>. 
+				</p>
 				
-			</div> <!-- /getting-started -->
+			</div>
+			<!-- /getting-started -->
 			
 			<div id="support-licensing">	
 				<h4>Documentation</h4>
 				<p>Need help using Vaadin? Look no further. Everything you need to know is here.</p>
 				<ul class="links">
-					<li><a href="doc/manual/index.html">Manual</a> <a href="doc/manual.pdf" class="more"><span>(</span>PDF<span>)</span></a></li>
-					<li><a href="doc/api/index.html" class="more">JavaDoc API</a></li>
-					<li><a href="http://forum.itmill.com" class="more">Support forum</a></li>
+					<li><a href="docs/book-of-vaadin.pdf">Book of Vaadin (manual)</li>
+					<li><a href="docs/api/index.html" class="more">JavaDoc API</a></li>
+					<li><a href="http://vaadin.com/forum" class="more">Support forum</a></li>
 				</ul>
 				
 				<h4>Open Source Development &amp; Licenses</h4>
 				<p>Vaadin is developed as an Open Source software and its core is licensed under
 				   the liberal Apache 2.0 License. Commercial licenses that include support are also available.</p>
                 <ul class="links">
-				   <li><a href="http://dev.itmill.com" title="Open dev.itmill.com" class="more">Developer website</a></li>
+				   <li><a href="http://dev.vaadin.com" title="Open dev.vaadin.com" class="more">Developer website</a></li>
 				   <li><a href="license/licensing-guidelines.html" class="more">Licensing Guidelines</a></li>
 				</ul>
 				
@@ -166,15 +167,15 @@
 					<h5>Documentation</h5>
 					<ul>
 						<li><a href="release-notes.html">Release Notes</a></li>
-						<li><a href="doc/manual/index.html">Manual</a> &nbsp; (<a href="doc/manual.pdf">view as PDF</a>)</li>
-						<li><a href="doc/api/index.html">JavaDoc API</a></li>
+						<li><a href="docs/manual/index.html">Manual</a> &nbsp; (<a href="docs/manual.pdf">view as PDF</a>)</li>
+						<li><a href="docs/api/index.html">JavaDoc API</a></li>
 					</ul>
 				</div>
 				
 				<div class="support">
 					<h5>Support &amp; Licensing</h5>
 					<ul>
-						<li><a href="http://forum.itmill.com">Support forum</a></li>
+						<li><a href="http://vaadin.com/forum">Support forum</a></li>
 						<li><a href="license/licensing-guidelines.html">Licensing Guidelines</a></li>
 						<li>Commercial support and prices from <a href="mailto:sales@itmill.com">sales@itmill.com</a></li>
 					</ul>
