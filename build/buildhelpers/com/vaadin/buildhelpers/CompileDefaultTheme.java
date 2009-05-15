@@ -20,7 +20,7 @@ public class CompileDefaultTheme {
 
     private static final String THEME_DIR = "./WebContent/VAADIN/themes/";
     private static final String BASE = "base";
-    private static final String DEFAULT = "default";
+    private static final String ITMILL5 = "itmill5";
     private static final String REINDEER = "reindeer";
 
     /**
@@ -29,7 +29,7 @@ public class CompileDefaultTheme {
      */
     public static void main(String[] args) throws IOException {
         combineTheme(new String[] { BASE });
-        combineTheme(new String[] { BASE, DEFAULT });
+        combineTheme(new String[] { BASE, ITMILL5 });
         combineTheme(new String[] { BASE, REINDEER });
     }
 

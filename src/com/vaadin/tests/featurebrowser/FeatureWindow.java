@@ -38,7 +38,7 @@ public class FeatureWindow extends Feature implements Window.CloseListener {
         demoWindow.addListener(this);
         demoWindow.setWidth("400px");
         demoWindow.setHeight("200px");
-        demoWindow.setTheme("default");
+        demoWindow.setTheme("itmill5");
 
         layoutUpper.addComponent(addButton);
         layoutUpper.addComponent(removeButton);

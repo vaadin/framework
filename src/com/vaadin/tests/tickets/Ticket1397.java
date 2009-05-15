@@ -20,7 +20,7 @@ public class Ticket1397 extends Application {
 
     @Override
     public void init() {
-        setTheme("default");
+        setTheme("itmill5");
         main = new Window("PopupView test");
         setMainWindow(main);
         Panel panel = new Panel("PopupTest");

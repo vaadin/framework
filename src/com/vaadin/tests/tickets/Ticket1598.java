@@ -19,7 +19,7 @@ public class Ticket1598 extends Application {
     @Override
     public void init() {
         setMainWindow(main);
-        setTheme("default");
+        setTheme("itmill5");
 
         List<MenuItem> itemList = new ArrayList<MenuItem>();
         // Populate the menu bar
@@ -80,7 +80,7 @@ public class Ticket1598 extends Application {
         third.setIcon(new ThemeResource("icons/16/document.png"));
 
         for (int i = 2; i <= 3; i++) {
-            ((MenuItem) menuBar.getItems().get(i)).setCommand(new Command() {
+            (menuBar.getItems().get(i)).setCommand(new Command() {
 
                 public void menuSelected(MenuItem selectedItem) {
                     main.showNotification("Action " + selectedItem.getText());
