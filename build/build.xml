@@ -212,7 +212,6 @@
 		<mkdir dir="${output-dir}/WebContent" />
 		<mkdir dir="${output-dir}/WebContent/demo" />
 		<mkdir dir="${output-dir}/WebContent/docs" />
-		<mkdir dir="${output-dir}/WebContent/docs/manual" />
 		<mkdir dir="${output-dir}/WebContent/docs/api" />
 		<mkdir dir="${output-dir}/WebContent/docs/example-source" />
 		<mkdir dir="${output-dir}/WebContent/WEB-INF" />
@@ -1026,7 +1025,6 @@
 		<copy todir="${output-dir}/WebContent/docs">
             <fileset dir="${docdir}/build/result/package/WebContent/docs">
 				<exclude name="**/.svn" />
-				<include name="book/**" />
 				<include name="book-of-vaadin.pdf" />
             </fileset>
         </copy>
@@ -1034,24 +1032,6 @@
 
 	<target name="manual" depends="init, manual-init, manual-checkout, manual-build, manual-copy">
     </target>        
-
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
-    <!-- Documentation: Add documentation including style files             -->
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
-	<target name="package-docs">
-		<copy todir="${output-dir}/WebContent/docs/book/html-style">
-			<fileset dir="docs/manual/html-style">
-				<exclude name="**/.svn" />
-				<exclude name="**/test.html" />
-			</fileset>
-		</copy>
-		<copy todir="${output-dir}/WebContent/docs">
-			<fileset dir="docs">
-				<exclude name="**/.svn" />
-				<include name="dtd/**/*.dtd" />
-			</fileset>
-		</copy>
-	</target>
 
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
     <!-- Documentation: Add Javadoc to doc                                  -->
