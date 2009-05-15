@@ -211,10 +211,10 @@
 		<!-- Create Output Directory Hierarchy -->
 		<mkdir dir="${output-dir}/WebContent" />
 		<mkdir dir="${output-dir}/WebContent/demo" />
-		<mkdir dir="${output-dir}/WebContent/doc" />
-		<mkdir dir="${output-dir}/WebContent/doc/manual" />
-		<mkdir dir="${output-dir}/WebContent/doc/api" />
-		<mkdir dir="${output-dir}/WebContent/doc/example-source" />
+		<mkdir dir="${output-dir}/WebContent/docs" />
+		<mkdir dir="${output-dir}/WebContent/docs/manual" />
+		<mkdir dir="${output-dir}/WebContent/docs/api" />
+		<mkdir dir="${output-dir}/WebContent/docs/example-source" />
 		<mkdir dir="${output-dir}/WebContent/WEB-INF" />
 		<mkdir dir="${output-dir}/WebContent/WEB-INF/lib" />
 		<mkdir dir="${output-dir}/WebContent/WEB-INF/classes" />
@@ -288,18 +288,18 @@
 		<echo>Creating package for ${package-platform} platform.</echo>
 		<antcontrib:var name="eclipse-launch-vmargs" value="-Xms256M -Xmx512M" />
 		<antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
-		<tar destfile="${result-path}/${product-file}-${package-platform}-${version}.tar.gz" compression="gzip" longfile="gnu">
-			<tarfileset prefix="${product-file}-${package-platform}-${version}" dir="${result-path}/${product-file}-${version}">
+		<zip zipfile="${result-path}/${product-file}-${package-platform}-${version}.zip">
+			<zipfileset prefix="${product-file}-${package-platform}-${version}" dir="${result-path}/${product-file}-${version}">
 				<patternset>
 					<include name="**/*" />
 				</patternset>
-			</tarfileset>
-			<tarfileset prefix="${product-file}-${package-platform}-${version}/gwt" dir="${gwt-dir}/${package-platform}">
+			</zipfileset>
+			<zipfileset prefix="${product-file}-${package-platform}-${version}/gwt" dir="${gwt-dir}/${package-platform}">
 				<patternset>
 					<include name="**/*" />
 				</patternset>
-			</tarfileset>
-		</tar>
+			</zipfileset>
+		</zip>
 	</target>
 
 	<target name="internal-package-mac">
@@ -494,7 +494,7 @@
 				<include name="eclipse-org.eclipse.jdt.core.prefs" />
 			</fileset>
 		</copy>
-		<move file="${output-dir}/build-widgetset.xml" tofile="${output-dir}/WebContent/doc/example-source/build-widgetset.xml" />
+		<move file="${output-dir}/build-widgetset.xml" tofile="${output-dir}/WebContent/docs/example-source/build-widgetset.xml" />
 		<move file="${output-dir}/eclipse-classpath" tofile="${output-dir}/.classpath" />
 		<move file="${output-dir}/eclipse-project" tofile="${output-dir}/.project" />
 		<move file="${output-dir}/eclipse-Vaadin Hosted Mode-launch" tofile="${output-dir}/Vaadin Hosted Mode.launch" />
@@ -660,7 +660,7 @@
 		</copy>
 
 		<echo>Creating demo source html files</echo>
-		<java2html srcdir="${output-dir}/WebContent/WEB-INF/src/${toolkit-package}/demo" destdir="${output-dir}/WebContent/doc/example-source/${toolkit-package}/demo" includes="**/*.java" style="eclipse" showLineNumbers="false" showFileName="true" showTableBorder="false" />
+		<java2html srcdir="${output-dir}/WebContent/WEB-INF/src/${toolkit-package}/demo" destdir="${output-dir}/WebContent/docs/example-source/${toolkit-package}/demo" includes="**/*.java" style="eclipse" showLineNumbers="false" showFileName="true" showTableBorder="false" />
 
 		<!-- Add WebContent -->
 		<echo>Adding VAADIN/themes, demo and hsqldb.jar files.</echo>
@@ -1003,10 +1003,10 @@
         <exec executable="svn" dir="${checkout-path}">
             <arg value="checkout"/>
             <arg value="http://dev.vaadin.com/svn/doc/trunk"/>
-            <arg value="doc"/>
+            <arg value="docs"/>
         </exec>
 
-        <property name="docdir" value="${checkout-path}/doc"/>
+        <property name="docdir" value="${checkout-path}/docs"/>
     </target>
 
     <!-- If the XEP is installed, copy it to proper place. -->
@@ -1023,8 +1023,8 @@
 
     <!-- Copy the manual from sub Ant results to our output directory. -->
     <target name="manual-copy" depends="init, manual-checkout">
-		<copy todir="${output-dir}/WebContent/doc">
-            <fileset dir="${docdir}/build/result/package/WebContent/doc">
+		<copy todir="${output-dir}/WebContent/docs">
+            <fileset dir="${docdir}/build/result/package/WebContent/docs">
 				<exclude name="**/.svn" />
 				<include name="book/**" />
 				<include name="book-of-vaadin.pdf" />
@@ -1039,14 +1039,14 @@
     <!-- Documentation: Add documentation including style files             -->
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
 	<target name="package-docs">
-		<copy todir="${output-dir}/WebContent/doc/book/html-style">
-			<fileset dir="doc/manual/html-style">
+		<copy todir="${output-dir}/WebContent/docs/book/html-style">
+			<fileset dir="docs/manual/html-style">
 				<exclude name="**/.svn" />
 				<exclude name="**/test.html" />
 			</fileset>
 		</copy>
-		<copy todir="${output-dir}/WebContent/doc">
-			<fileset dir="doc">
+		<copy todir="${output-dir}/WebContent/docs">
+			<fileset dir="docs">
 				<exclude name="**/.svn" />
 				<include name="dtd/**/*.dtd" />
 			</fileset>
@@ -1057,7 +1057,7 @@
     <!-- Documentation: Add Javadoc to doc                                  -->
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
 	<target name="javadoc" depends="preprocess-src">
-		<javadoc destdir="${output-dir}/WebContent/doc/api" author="true" version="true" use="true" windowtitle="${product-name}" classpathref="compile.classpath.client-side">
+		<javadoc destdir="${output-dir}/WebContent/docs/api" author="true" version="true" use="true" windowtitle="${product-name}" classpathref="compile.classpath.client-side">
 			<packageset dir="${result-path}/src">
 				<include name="${toolkit-package}/**" />
 				<exclude name="${toolkit-package}/demo/**" />
