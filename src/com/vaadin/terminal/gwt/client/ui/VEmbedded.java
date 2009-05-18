@@ -168,7 +168,7 @@ public class VEmbedded extends HTML implements Paintable {
      * @return
      */
     private String getSrc(UIDL uidl, ApplicationConnection client) {
-        String url = client.translateToolkitUri(uidl.getStringAttribute("src"));
+        String url = client.translateVaadinUri(uidl.getStringAttribute("src"));
         if (url == null) {
             return "";
         }

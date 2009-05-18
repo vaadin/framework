@@ -258,7 +258,7 @@ public class VView extends SimplePanel implements Container,
                     String html = "";
                     if (notification.hasAttribute("icon")) {
                         final String parsedUri = client
-                                .translateToolkitUri(notification
+                                .translateVaadinUri(notification
                                         .getStringAttribute("icon"));
                         html += "<IMG src=\"" + parsedUri + "\" />";
                     }

@@ -35,7 +35,7 @@ public class Icon extends UIObject {
              */
             sinkEvents(Event.ONLOAD);
 
-            String uri = client.translateToolkitUri(uidlUri);
+            String uri = client.translateVaadinUri(uidlUri);
             DOM.setElementProperty(getElement(), "src", uri);
             myUri = uidlUri;
         }

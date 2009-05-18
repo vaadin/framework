@@ -76,7 +76,7 @@ public class VLink extends HTML implements Paintable, ClickListener {
             anchor.setAttribute("target", target);
         }
         if (uidl.hasAttribute("src")) {
-            src = client.translateToolkitUri(uidl.getStringAttribute("src"));
+            src = client.translateVaadinUri(uidl.getStringAttribute("src"));
             anchor.setAttribute("href", src);
         }
 

@@ -1473,28 +1473,36 @@ public class ApplicationConnection {
     }
 
     /**
-     * Translates custom protocols in UIRL URI's to be recognizable by browser.
+     * @deprecated Use {@link #translateVaadinUri(String)} instead.
+     */
+    @Deprecated
+    public String translateToolkitUri(String vaadinUri) {
+        return translateVaadinUri(vaadinUri);
+    }
+
+    /**
+     * Translates custom protocols in UIDL URI's to be recognizable by browser.
      * All uri's from UIDL should be routed via this method before giving them
      * to browser due URI's in UIDL may contain custom protocols like theme://.
      * 
-     * @param toolkitUri
-     *            toolkit URI from uidl
+     * @param uidlUri
+     *            Vaadin URI from uidl
      * @return translated URI ready for browser
      */
-    public String translateToolkitUri(String toolkitUri) {
-        if (toolkitUri == null) {
+    public String translateVaadinUri(String uidlUri) {
+        if (uidlUri == null) {
             return null;
         }
-        if (toolkitUri.startsWith("theme://")) {
+        if (uidlUri.startsWith("theme://")) {
             final String themeUri = configuration.getThemeUri();
             if (themeUri == null) {
                 console
                         .error("Theme not set: ThemeResource will not be found. ("
-                                + toolkitUri + ")");
+                                + uidlUri + ")");
             }
-            toolkitUri = themeUri + toolkitUri.substring(7);
+            uidlUri = themeUri + uidlUri.substring(7);
         }
-        return toolkitUri;
+        return uidlUri;
     }
 
     public String getThemeUri() {

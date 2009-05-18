@@ -104,7 +104,7 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
         UIDL options = uidl.getChildUIDL(0);
 
         if (options.hasAttribute("submenuIcon")) {
-            submenuIcon = client.translateToolkitUri(uidl.getChildUIDL(0)
+            submenuIcon = client.translateVaadinUri(uidl.getChildUIDL(0)
                     .getStringAttribute("submenuIcon"));
         } else {
             submenuIcon = null;

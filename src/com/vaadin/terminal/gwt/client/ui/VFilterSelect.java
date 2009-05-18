@@ -54,7 +54,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             key = uidl.getStringAttribute("key");
             caption = uidl.getStringAttribute("caption");
             if (uidl.hasAttribute("icon")) {
-                iconUri = client.translateToolkitUri(uidl
+                iconUri = client.translateVaadinUri(uidl
                         .getStringAttribute("icon"));
             }
         }

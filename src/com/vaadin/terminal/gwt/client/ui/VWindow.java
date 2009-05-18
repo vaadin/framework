@@ -284,7 +284,7 @@ public class VWindow extends VToolkitOverlay implements Container,
         while ("open".equals(childUidl.getTag())) {
             // TODO multiple opens with the same target will in practice just
             // open the last one - should we fix that somehow?
-            final String parsedUri = client.translateToolkitUri(childUidl
+            final String parsedUri = client.translateVaadinUri(childUidl
                     .getStringAttribute("src"));
             if (!childUidl.hasAttribute("name")) {
                 final Frame frame = new Frame();
@@ -639,7 +639,7 @@ public class VWindow extends VToolkitOverlay implements Container,
     public void setCaption(String c, String icon) {
         String html = Util.escapeHTML(c);
         if (icon != null) {
-            icon = client.translateToolkitUri(icon);
+            icon = client.translateVaadinUri(icon);
             html = "<img src=\"" + icon + "\" class=\"v-icon\" />" + html;
         }
         DOM.setInnerHTML(headerText, html);

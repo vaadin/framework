@@ -69,7 +69,7 @@ public class VTree extends FlowPanel implements Paintable {
             actionMap.put(key + "_c", caption);
             if (action.hasAttribute("icon")) {
                 // TODO need some uri handling ??
-                actionMap.put(key + "_i", client.translateToolkitUri(action
+                actionMap.put(key + "_i", client.translateVaadinUri(action
                         .getStringAttribute("icon")));
             }
         }

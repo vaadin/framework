@@ -308,7 +308,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
             actionMap.put(key + "_c", caption);
             if (action.hasAttribute("icon")) {
                 // TODO need some uri handling ??
-                actionMap.put(key + "_i", client.translateToolkitUri(action
+                actionMap.put(key + "_i", client.translateVaadinUri(action
                         .getStringAttribute("icon")));
             }
         }
@@ -2832,8 +2832,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
         String s = uidl.getStringAttribute("caption");
         if (uidl.hasAttribute("icon")) {
             s = "<img src=\""
-                    + client.translateToolkitUri(uidl
-                            .getStringAttribute("icon"))
+                    + client
+                            .translateVaadinUri(uidl.getStringAttribute("icon"))
                     + "\" alt=\"icon\" class=\"v-icon\">" + s;
         }
         return s;
