@@ -95,6 +95,11 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     private final HashMap<Object, Field> fields = new HashMap<Object, Field>();
 
     /**
+     * Form may act as an Item, its own properties are stored here.
+     */
+    private final HashMap<Object, Property> ownProperties = new HashMap<Object, Property>();
+
+    /**
      * Field factory for this form.
      */
     private FormFieldFactory fieldFactory;
@@ -453,8 +458,11 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
             return false;
         }
 
+        propertyIds.add(id);
+        ownProperties.put(id, property);
+
         // Gets suitable field
-        final Field field = fieldFactory.createField(this, property, this);
+        final Field field = fieldFactory.createField(this, id, this);
         if (field == null) {
             return false;
         }
@@ -505,7 +513,10 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
         if (propertyId != null && field != null) {
             fields.put(propertyId, field);
             field.addListener(fieldValueChangeListener);
-            propertyIds.addLast(propertyId);
+            if (!propertyIds.contains(propertyId)) {
+                // adding a field directly
+                propertyIds.addLast(propertyId);
+            }
             field.setReadThrough(readThrough);
             field.setWriteThrough(writeThrough);
             if (isImmediate() && field instanceof AbstractComponent) {
@@ -536,7 +547,8 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     public Property getItemProperty(Object id) {
         final Field field = fields.get(id);
         if (field == null) {
-            return null;
+            // field does not exist or it is not (yet) created for this property
+            return ownProperties.get(id);
         }
         final Property property = field.getPropertyDataSource();
 
@@ -568,6 +580,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * @see com.vaadin.data.Item#removeItemProperty(Object)
      */
     public boolean removeItemProperty(Object id) {
+        ownProperties.remove(id);
 
         final Field field = fields.get(id);
 
