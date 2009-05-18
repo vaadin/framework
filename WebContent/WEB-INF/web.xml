@@ -183,11 +183,11 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>ToolkitTunesLayout</servlet-name>
+		<servlet-name>VaadinTunesLayout</servlet-name>
 		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
 			<param-name>application</param-name>
-			<param-value>com.vaadin.demo.ToolkitTunesLayout</param-value>
+			<param-value>com.vaadin.demo.VaadinTunesLayout</param-value>
 		</init-param>
 	</servlet>
 
@@ -409,8 +409,8 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
-		<servlet-name>ToolkitTunesLayout</servlet-name>
-		<url-pattern>/ToolkitTunesLayout/*</url-pattern>
+		<servlet-name>VaadinTunesLayout</servlet-name>
+		<url-pattern>/VaadinTunesLayout/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

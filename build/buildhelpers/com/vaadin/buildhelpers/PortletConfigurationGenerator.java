@@ -31,7 +31,7 @@ public class PortletConfigurationGenerator {
     private static final String PORTLET_XML_FILE = "portlet.xml";
     private static final String LIFERAY_PORTLET_XML_FILE = "liferay-portlet.xml";
     private static final String LIFERAY_DISPLAY_XML_FILE = "liferay-display.xml";
-    private static final String JBOSS_OBJECT_FILE = "itmill-object.xml";
+    private static final String JBOSS_OBJECT_FILE = "vaadin-object.xml";
     private static final String JBOSS_INSTANCE_FILE = "portlet-instances.xml";
 
     // "templates" follow;

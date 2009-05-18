@@ -24,7 +24,7 @@ import com.vaadin.ui.Window.Notification;
  * 
  */
 @SuppressWarnings("serial")
-public class ToolkitTunesLayout extends Application {
+public class VaadinTunesLayout extends Application {
 
     @Override
     public void init() {
@@ -35,8 +35,8 @@ public class ToolkitTunesLayout extends Application {
          * the UI into different classes and methods.
          */
 
-        // Main (browser) window, needed in all Toolkit applications
-        final Window root = new Window("ToolkitTunes");
+        // Main (browser) window, needed in all Vaadin applications
+        final Window root = new Window("VaadinTunes");
 
         /*
          * We'll attach the window to the browser view already here, so we won't
@@ -195,8 +195,8 @@ public class ToolkitTunesLayout extends Application {
         music.setWidth("100%");
 
         Label store = new Label("Store");
-        Button toolkitTunesStore = new Button("ToolkitTunes Store");
-        toolkitTunesStore.setWidth("100%");
+        Button vaadinTunesStore = new Button("VaadinTunes Store");
+        vaadinTunesStore.setWidth("100%");
         Button purchased = new Button("Purchased");
         purchased.setWidth("100%");
 
@@ -210,7 +210,7 @@ public class ToolkitTunesLayout extends Application {
         selections.addComponent(library);
         selections.addComponent(music);
         selections.addComponent(store);
-        selections.addComponent(toolkitTunesStore);
+        selections.addComponent(vaadinTunesStore);
         selections.addComponent(purchased);
         selections.addComponent(playlists);
         selections.addComponent(genius);
@@ -287,7 +287,7 @@ public class ToolkitTunesLayout extends Application {
         // TODO the footer
 
         // Now what's left to do? Themeing of course.
-        setTheme("toolkittunes");
+        setTheme("vaadintunes");
 
         /*
          * Let's give a namespace to our application window. This way, if

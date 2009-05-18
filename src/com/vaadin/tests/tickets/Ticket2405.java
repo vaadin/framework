@@ -19,7 +19,7 @@ public class Ticket2405 extends Application {
     @Override
     public void init() {
 
-        final Window root = new Window("ToolkitTunes");
+        final Window root = new Window("VaadinTunes");
         root.setWidth("90%");
         root.setHeight("90%");
         root.center();
