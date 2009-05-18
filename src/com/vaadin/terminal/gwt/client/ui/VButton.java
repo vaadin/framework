@@ -47,6 +47,7 @@ public class VButton extends Button implements Paintable {
         setStyleName(CLASSNAME);
 
         DOM.appendChild(getElement(), captionElement);
+        captionElement.setPropertyString("className", CLASSNAME + "-caption");
 
         addClickListener(new ClickListener() {
             public void onClick(Widget sender) {
