@@ -31,10 +31,9 @@ public class FeatureLabel extends Feature {
                 new Integer(Label.CONTENT_PREFORMATTED),
                 new Integer(Label.CONTENT_TEXT),
                 new Integer(Label.CONTENT_XHTML),
-                new Integer(Label.CONTENT_XML) },
-                new Object[] { "Preformatted", "Text", "UIDL (Must be valid)",
-                        "XHTML Fragment(Must be valid)",
-                        "XML (Subtree with namespace)" });
+                new Integer(Label.CONTENT_XML) }, new Object[] {
+                "Preformatted", "Text", "XHTML Fragment(Must be valid)",
+                "XML (Subtree with namespace)" });
         propertyPanel.addProperties("Label Properties", ap);
 
         setJavadocURL("ui/Label.html");
