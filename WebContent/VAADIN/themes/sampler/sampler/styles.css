@@ -125,6 +125,7 @@
 	cursor: default;
 }
 .v-app-SamplerApplication .v-horizontallayout-segment .v-button:active,
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button.v-pressed,
 .v-app-SamplerApplication .v-horizontallayout-segment .v-popupview:active {
 	background-position: left bottom;
 }
@@ -133,30 +134,36 @@
 	background-position: right top;
 }
 .v-app-SamplerApplication .v-horizontallayout-segment .v-button-next:active,
-.v-app-SamplerApplication .v-horizontallayout-segment .v-button-tree-switch:active {
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button-next.v-pressed,
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button-tree-switch:active,
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button-tree-switch.v-pressed {
 	background-position: right bottom;
 }
 .v-app-SamplerApplication .v-horizontallayout-segment .v-button-down {
 	background-position: right bottom;
 }
 .v-app-SamplerApplication .v-horizontallayout-segment .v-button span,
-.v-app-SamplerApplication .v-horizontallayout-segment .v-popupview span {
+.v-app-SamplerApplication .v-horizontallayout-segment .v-popupview span,
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button.v-pressed span {
 	display: block;
 	height: 24px;
 	background-repeat: no-repeat;
 	background-position: 50% 30%;
 }
-.v-app-SamplerApplication .v-horizontallayout-segment .v-button-tree-switch span {
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button-tree-switch span,
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button-tree-switch.v-pressed span {
 	background-image: url(tree.png);
 }
 .v-app-SamplerApplication .v-horizontallayout-segment .v-popupview span {
 	background-image: url(magnifier.png);
 	background-position: 50% 40%;
 }
-.v-app-SamplerApplication .v-horizontallayout-segment .v-button-previous span {
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button-previous span,
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button-previous.v-pressed span {
 	background-image: url(prev.png);
 }
-.v-app-SamplerApplication .v-horizontallayout-segment .v-button-next span {
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button-next span,
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button-next.v-pressed span {
 	background-image: url(next.png);
 }
 .v-popupview-popup-quickjump {
@@ -237,15 +244,22 @@
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	overflow: hidden;
+	position: static;
 }
 .v-ie .v-app-SamplerApplication .v-button-screenshot img.v-icon {
 	margin-left: -12px;
 }
 
-
 .v-app-SamplerApplication .v-table-featuretable tr.v-table-row,
 .v-app-SamplerApplication .v-table-featuretable tr.v-table-row-odd {
 	height: 50px;
+	vertical-align: middle;
+}
+.v-app-SamplerApplication .v-table-featuretable tr .v-table-cell-wrapper {
+	height: 48px;
+	padding-top: 1px;
+	padding-bottom: 1px;
+	line-height: 30px;
 }
 .v-app-SamplerApplication .v-table-featuretable tr.v-table-row-section {
 	color: #333366;
@@ -258,7 +272,7 @@
 }
 
 .v-app-SamplerApplication .v-table-featuretable .v-table-body {
-	border: transparent;	
+	border: none;	
 }
 
 .v-app-SamplerApplication .v-panel-content-light {
@@ -452,7 +466,7 @@
 	background: #fff;
 }
 
-.v-customcomponent-ModeSwitch .v-button {
+.v-app .v-customcomponent-ModeSwitch button.v-button {
 	height: 24px;
 	width: 30px;
 	border: none;
@@ -460,18 +474,21 @@
 	cursor: default;
 	padding: 0;
 }
-.v-customcomponent-ModeSwitch .v-button span {
+.v-app .v-customcomponent-ModeSwitch button.v-button span.v-button-caption {
 	display: none;
 }
-.v-customcomponent-ModeSwitch .v-button .v-icon {
+.v-app .v-customcomponent-ModeSwitch button.v-button img.v-icon {
 	width: auto;
 	height: auto;
+	margin: 0;
+	position: static;
 }
-.v-customcomponent-ModeSwitch .v-button-first-on,
-.v-customcomponent-ModeSwitch .v-button-first:active {
+.v-app .v-customcomponent-ModeSwitch button.v-button-first-on,
+.v-app .v-customcomponent-ModeSwitch button.v-button-first:active,
+.v-app .v-customcomponent-ModeSwitch button.v-button-first.v-pressed {
 	background-position: left bottom;
 }
-.v-customcomponent-ModeSwitch .v-button-first {
+.v-app .v-customcomponent-ModeSwitch button.v-button-first {
 	background-position: left top;
 }
 /*
@@ -481,10 +498,11 @@
 .v-customcomponent-ModeSwitch .v-button-mid {
 	background: transparent url(mid.gif) no-repeat;
 }*/
-.v-customcomponent-ModeSwitch .v-button-last-on,
-.v-customcomponent-ModeSwitch .v-button-last:active {
+.v-app .v-customcomponent-ModeSwitch button.v-button-last-on,
+.v-app .v-customcomponent-ModeSwitch button.v-button-last:active,
+.v-app .v-customcomponent-ModeSwitch button.v-button-last.v-pressed {
 	background-position: right bottom;
 }
-.v-customcomponent-ModeSwitch .v-button-last {
+.v-app .v-customcomponent-ModeSwitch button.v-button-last {
 	background-position: right top;
 }
