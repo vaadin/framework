@@ -60,7 +60,7 @@
 	<target name="package-jar" depends="clean-result, package-init, init, libs" description="Create vaadin-x.y.z.jar file.">
 	</target>
 
-	<target name="package-war" depends="clean-result, package-init, init, build, docs, internal-package-mac, internal-package-war">
+	<target name="package-war" depends="clean-result, package-init, init, build, docs, internal-package-linux, internal-package-war">
 	</target>
 
     <target name="package-test" depends="clean-result, nightly-init, package-init, init, build, docs, internal-package-linux, nightly-publish">
@@ -324,13 +324,27 @@
 
 	<target name="internal-package-war">
 		<echo>Building WAR</echo>
+
+        <!-- Add the files. -->
+        <!-- Warning: This should not really be "platform spefic". -->
+		<antcontrib:var name="package-platform" value="linux" />
+		<antcontrib:var name="eclipse-launch-vmargs" value="-Xms256M -Xmx512M" />
+		<antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
+
+        <!-- Copy source tree to class tree.                         -->
+        <!-- A workaround for not setting classpath properly in WAR. -->
+		<copy todir="${output-dir}/WebContent/WEB-INF/classes">
+			<fileset dir="${output-dir}/WebContent/WEB-INF/src">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+
 		<war warfile="${output-dir}/${product-file}.war">
 			<fileset dir="${output-dir}/WebContent">
 				<include name="**/*" />
 			</fileset>
 		</war>
 	</target>
-
 
 	<target name="create-mac-diskimage">
 		<!-- create Mac disk image (dmg) also -->
