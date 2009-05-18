@@ -35,7 +35,7 @@ import com.vaadin.terminal.gwt.client.Util;
  * 
  * @author IT Mill Ltd
  */
-public class VWindow extends VToolkitOverlay implements Container,
+public class VWindow extends VOverlay implements Container,
         ScrollListener {
 
     private static final int MIN_HEIGHT = 100;
@@ -595,7 +595,7 @@ public class VWindow extends VToolkitOverlay implements Container,
             DOM.setStyleAttribute(draggingCurtain, "width", "100%");
             DOM.setStyleAttribute(draggingCurtain, "height", "100%");
             DOM.setStyleAttribute(draggingCurtain, "zIndex", ""
-                    + VToolkitOverlay.Z_INDEX);
+                    + VOverlay.Z_INDEX);
 
             DOM.appendChild(RootPanel.getBodyElement(), draggingCurtain);
         } else if (!show && draggingCurtain != null) {

@@ -487,7 +487,7 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
 
                 if (datefield instanceof VTextualDate
                         && resolution < VDateField.RESOLUTION_HOUR) {
-                    ((VToolkitOverlay) getParent()).hide();
+                    ((VOverlay) getParent()).hide();
                 } else {
                     updateCalendar();
                 }

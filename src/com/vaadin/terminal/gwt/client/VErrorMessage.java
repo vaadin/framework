@@ -10,7 +10,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.vaadin.terminal.gwt.client.ui.VToolkitOverlay;
+import com.vaadin.terminal.gwt.client.ui.VOverlay;
 
 public class VErrorMessage extends FlowPanel {
     public static final String CLASSNAME = "v-errormessage";
@@ -48,9 +48,9 @@ public class VErrorMessage extends FlowPanel {
      * @param indicatorElement
      */
     public void showAt(Element indicatorElement) {
-        VToolkitOverlay errorContainer = (VToolkitOverlay) getParent();
+        VOverlay errorContainer = (VOverlay) getParent();
         if (errorContainer == null) {
-            errorContainer = new VToolkitOverlay();
+            errorContainer = new VOverlay();
             errorContainer.setWidget(this);
         }
         errorContainer.setPopupPosition(DOM.getAbsoluteLeft(indicatorElement)
@@ -65,7 +65,7 @@ public class VErrorMessage extends FlowPanel {
     }
 
     public void hide() {
-        final VToolkitOverlay errorContainer = (VToolkitOverlay) getParent();
+        final VOverlay errorContainer = (VOverlay) getParent();
         if (errorContainer != null) {
             errorContainer.hide();
         }

@@ -376,7 +376,7 @@ public class MenuBar extends Widget implements PopupListener {
         // Create a new popup for this item, and position it next to
         // the item (below if this is a horizontal menu bar, to the
         // right if it's a vertical bar).
-        popup = new VToolkitOverlay(true) {
+        popup = new VOverlay(true) {
             {
                 setWidget(item.getSubMenu());
                 item.getSubMenu().onShow();

@@ -435,7 +435,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
             DOM.setStyleAttribute(draggingCurtain, "width", "100%");
             DOM.setStyleAttribute(draggingCurtain, "height", "100%");
             DOM.setStyleAttribute(draggingCurtain, "zIndex", ""
-                    + VToolkitOverlay.Z_INDEX);
+                    + VOverlay.Z_INDEX);
             DOM.appendChild(RootPanel.getBodyElement(), draggingCurtain);
         }
     }

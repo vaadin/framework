@@ -192,7 +192,7 @@ public class VPopupView extends HTML implements Container {
         }
     }-*/;
 
-    private class CustomPopup extends VToolkitOverlay {
+    private class CustomPopup extends VOverlay {
 
         private Paintable popupComponentPaintable = null;
         private Widget popupComponentWidget = null;

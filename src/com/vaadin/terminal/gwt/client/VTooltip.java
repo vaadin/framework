@@ -9,12 +9,12 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.vaadin.terminal.gwt.client.ui.VToolkitOverlay;
+import com.vaadin.terminal.gwt.client.ui.VOverlay;
 
 /**
  * TODO open for extension
  */
-public class VTooltip extends VToolkitOverlay {
+public class VTooltip extends VOverlay {
     private static final String CLASSNAME = "v-tooltip";
     private static final int MARGIN = 4;
     public static final int TOOLTIP_EVENTS = Event.ONKEYDOWN

@@ -24,7 +24,7 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
 
     private final VCalendarPanel calendar;
 
-    private final VToolkitOverlay popup;
+    private final VOverlay popup;
     private boolean open = false;
 
     public VPopupCalendar() {
@@ -37,7 +37,7 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
         add(calendarToggle);
 
         calendar = new VCalendarPanel(this);
-        popup = new VToolkitOverlay(true, true, true);
+        popup = new VOverlay(true, true, true);
         popup.setStyleName(VDateField.CLASSNAME + "-popup");
         popup.setWidget(calendar);
         popup.addPopupListener(this);

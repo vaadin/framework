@@ -18,7 +18,7 @@ import com.vaadin.terminal.gwt.client.BrowserInfo;
  * temporary float over other components like context menus etc. This is to deal
  * stacking order correctly with VWindow objects.
  */
-public class VToolkitOverlay extends PopupPanel {
+public class VOverlay extends PopupPanel {
 
     /*
      * The z-index value from where all overlays live. This can be overridden in
@@ -59,22 +59,22 @@ public class VToolkitOverlay extends PopupPanel {
      */
     private static final String SHADOW_HTML = "<div class=\"top-left\"></div><div class=\"top\"></div><div class=\"top-right\"></div><div class=\"left\"></div><div class=\"center\"></div><div class=\"right\"></div><div class=\"bottom-left\"></div><div class=\"bottom\"></div><div class=\"bottom-right\"></div>";
 
-    public VToolkitOverlay() {
+    public VOverlay() {
         super();
         adjustZIndex();
     }
 
-    public VToolkitOverlay(boolean autoHide) {
+    public VOverlay(boolean autoHide) {
         super(autoHide);
         adjustZIndex();
     }
 
-    public VToolkitOverlay(boolean autoHide, boolean modal) {
+    public VOverlay(boolean autoHide, boolean modal) {
         super(autoHide, modal);
         adjustZIndex();
     }
 
-    public VToolkitOverlay(boolean autoHide, boolean modal, boolean showShadow) {
+    public VOverlay(boolean autoHide, boolean modal, boolean showShadow) {
         super(autoHide, modal);
         if (showShadow) {
             shadow = DOM.createDiv();

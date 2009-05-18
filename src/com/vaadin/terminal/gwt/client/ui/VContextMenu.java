@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.PopupPanel;
 
-public class VContextMenu extends VToolkitOverlay implements SubPartAware {
+public class VContextMenu extends VOverlay implements SubPartAware {
 
     private ActionOwner actionOwner;
 

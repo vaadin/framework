@@ -41,7 +41,7 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
     protected boolean subMenu;
     protected ArrayList<CustomMenuItem> items;
     protected Element containerElement;
-    protected VToolkitOverlay popup;
+    protected VOverlay popup;
     protected VMenuBar visibleChildMenu;
     protected VMenuBar parentMenu;
     protected CustomMenuItem selected;
@@ -435,7 +435,7 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
      * @param item
      */
     public void showChildMenu(CustomMenuItem item) {
-        popup = new VToolkitOverlay(true, false, true);
+        popup = new VOverlay(true, false, true);
         popup.setWidget(item.getSubMenu());
         popup.addPopupListener(this);
 

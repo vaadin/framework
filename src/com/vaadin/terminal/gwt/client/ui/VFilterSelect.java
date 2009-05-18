@@ -87,7 +87,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         }
     }
 
-    public class SuggestionPopup extends VToolkitOverlay implements
+    public class SuggestionPopup extends VOverlay implements
             PositionCallback, PopupListener {
 
         private static final String Z_INDEX = "30000";

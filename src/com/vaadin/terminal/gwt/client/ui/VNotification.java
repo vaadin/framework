@@ -17,7 +17,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 
-public class VNotification extends VToolkitOverlay {
+public class VNotification extends VOverlay {
 
     public static final int CENTERED = 1;
     public static final int CENTERED_TOP = 2;

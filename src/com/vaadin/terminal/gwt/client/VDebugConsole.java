@@ -28,9 +28,9 @@ import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ui.VToolkitOverlay;
+import com.vaadin.terminal.gwt.client.ui.VOverlay;
 
-public final class VDebugConsole extends VToolkitOverlay implements Console {
+public final class VDebugConsole extends VOverlay implements Console {
 
     /**
      * Builds number. For example 0-custom_tag in 5.0.0-custom_tag.
