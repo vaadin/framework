@@ -87,8 +87,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         }
     }
 
-    public class SuggestionPopup extends VOverlay implements
-            PositionCallback, PopupListener {
+    public class SuggestionPopup extends VOverlay implements PositionCallback,
+            PopupListener {
 
         private static final String Z_INDEX = "30000";
 
@@ -133,7 +133,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
             // Add TT anchor point
             DOM.setElementProperty(getElement(), "id",
-                    "TOOLKIT_COMBOBOX_OPTIONLIST");
+                    "VAADIN_COMBOBOX_OPTIONLIST");
 
             menu.setSuggestions(currentSuggestions);
             final int x = VFilterSelect.this.getAbsoluteLeft();

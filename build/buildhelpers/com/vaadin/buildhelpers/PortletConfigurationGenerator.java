@@ -42,7 +42,7 @@ public class PortletConfigurationGenerator {
             + "        xsi:schemaLocation=\"http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd\">\n";
     private static final String PORTLET_XML_SECTION = "        <portlet>\n"
             + "                <portlet-name>%PORTLETNAME%</portlet-name>\n"
-            + "                <display-name>IT Mill Toolkit %NAME%</display-name>\n"
+            + "                <display-name>Vaadin %NAME%</display-name>\n"
             + "                <portlet-class>com.vaadin.terminal.gwt.server.ApplicationPortlet</portlet-class>\n"
             + "                <init-param>\n"
             + "                        <name>application</name>\n"
@@ -100,7 +100,7 @@ public class PortletConfigurationGenerator {
             + "<!DOCTYPE display PUBLIC \"-//Liferay//DTD Display 4.0.0//EN\" \"http://www.liferay.com/dtd/liferay-display_4_0_0.dtd\">\n"
             + "\n"
             + "<display>\n"
-            + "        <category name=\"IT Mill Toolkit\">\n" + "";
+            + "        <category name=\"Vaadin\">\n" + "";
     private static final String LIFERAY_DISPLAY_XML_SECTION = "                <portlet id=\"%PORTLETNAME%\" />\n";
     private static final String LIFERAY_DISPLAY_XML_FOOT = "\n"
             + "        </category>\n" + "</display>";

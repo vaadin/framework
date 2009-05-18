@@ -274,7 +274,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
         test(layout, cb);
 
         final ClassResource flashResource = new ClassResource(
-                "itmill_spin.swf", this);
+                "vaadin_spin.swf", this);
         final Embedded emb = new Embedded("Embedded " + count++, flashResource);
         emb.setType(Embedded.TYPE_OBJECT);
         emb.setMimeType("application/x-shockwave-flash");

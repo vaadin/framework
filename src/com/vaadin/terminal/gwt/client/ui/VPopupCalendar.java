@@ -43,7 +43,7 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
         popup.addPopupListener(this);
 
         DOM.setElementProperty(calendar.getElement(), "id",
-                "PID_TOOLKIT_POPUPCAL");
+                "PID_VAADIN_POPUPCAL");
 
     }
 

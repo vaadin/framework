@@ -43,13 +43,13 @@ public abstract class Feature extends CustomComponent {
     }
 
     /**
-     * Actual URL consists of "/doc/api/com/itmill/toolkit/"+url
+     * Actual URL consists of "http://www.vaadin.com/api/com/vaadin/"+url
      * 
      * @param url
      */
     public void setJavadocURL(String url) {
         javadoc
-                .setValue("<iframe width=\"100%\" src=\"../doc/api/com/itmill/toolkit/"
+                .setValue("<iframe width=\"100%\" src=\"http://www.vaadin.com/api/com/vaadin/"
                         + url + "\"></iframe>");
     }
 

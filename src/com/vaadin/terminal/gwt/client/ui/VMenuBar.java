@@ -118,7 +118,7 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
 
             if (moreItemUIDL.hasAttribute("icon")) {
                 itemHTML.append("<img src=\""
-                        + client.translateToolkitUri(moreItemUIDL
+                        + client.translateVaadinUri(moreItemUIDL
                                 .getStringAttribute("icon"))
                         + "\" align=\"left\" />");
             }
@@ -147,7 +147,7 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
 
             if (item.hasAttribute("icon")) {
                 itemHTML.append("<img src=\""
-                        + client.translateToolkitUri(item
+                        + client.translateVaadinUri(item
                                 .getStringAttribute("icon"))
                         + "\" align=\"left\" />");
             }

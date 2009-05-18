@@ -35,8 +35,7 @@ import com.vaadin.terminal.gwt.client.Util;
  * 
  * @author IT Mill Ltd
  */
-public class VWindow extends VOverlay implements Container,
-        ScrollListener {
+public class VWindow extends VOverlay implements Container, ScrollListener {
 
     private static final int MIN_HEIGHT = 100;
 
@@ -373,7 +372,7 @@ public class VWindow extends VOverlay implements Container,
                         String html = "";
                         if (notification.hasAttribute("icon")) {
                             final String parsedUri = client
-                                    .translateToolkitUri(notification
+                                    .translateVaadinUri(notification
                                             .getStringAttribute("icon"));
                             html += "<img src=\"" + parsedUri + "\" />";
                         }

@@ -1,6 +1,6 @@
 /* Table theme building instructions
  * 
- * Toolkit scroll table is very complex widget with dozens of features. These 
+ * Vaadin scroll table is very complex widget with dozens of features. These 
  * features set some limitations for theme builder. To keep things working, it
  * is safest to try to just override values used in default theme and comfort to
  * these instructions.

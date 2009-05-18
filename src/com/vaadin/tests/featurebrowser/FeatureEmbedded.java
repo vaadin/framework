@@ -22,7 +22,7 @@ public class FeatureEmbedded extends Feature {
         final OrderedLayout l = new OrderedLayout();
 
         final ClassResource flashResource = new ClassResource(
-                "itmill_spin.swf", getApplication());
+                "vaadin_spin.swf", getApplication());
         final Embedded emb = new Embedded("Embedded Caption", flashResource);
         emb.setType(Embedded.TYPE_OBJECT);
         emb.setMimeType("application/x-shockwave-flash");
@@ -49,7 +49,7 @@ public class FeatureEmbedded extends Feature {
         ap.replaceWithSelect("heightUnits", units, symbols);
         ap.replaceWithSelect("widthUnits", units, symbols);
         ap.replaceWithSelect("source", new Object[] { flashResource },
-                new Object[] { "itmill_spin.swf" });
+                new Object[] { "vaadin_spin.swf" });
         propertyPanel.addProperties("Embedded Properties", ap);
         propertyPanel.getField("standby").setDescription(
                 "The text to display while loading the object.");

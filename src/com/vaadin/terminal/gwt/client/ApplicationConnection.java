@@ -1467,17 +1467,9 @@ public class ApplicationConnection {
         if (contextMenu == null) {
             contextMenu = new VContextMenu();
             DOM.setElementProperty(contextMenu.getElement(), "id",
-                    "PID_TOOLKIT_CM");
+                    "PID_VAADIN_CM");
         }
         return contextMenu;
-    }
-
-    /**
-     * @deprecated Use {@link #translateVaadinUri(String)} instead.
-     */
-    @Deprecated
-    public String translateToolkitUri(String vaadinUri) {
-        return translateVaadinUri(vaadinUri);
     }
 
     /**
