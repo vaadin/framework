@@ -247,7 +247,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
         set
                 .getField("componentError")
                 .setDescription(
-                        "IT Mill Toolkit supports extensive error reporting. One part of the error reporting are component"
+                        "Vaadin supports extensive error reporting. One part of the error reporting are component"
                                 + " errors that can be controlled by the programmer. This example only contains couple of "
                                 + "sample errors; to get the full picture, read browse ErrorMessage-interface implementors "
                                 + "API documentation.");

@@ -14,7 +14,7 @@ public class FeaturesApplication extends com.vaadin.Application {
             FeatureUtil.setStatistics(true);
         }
         setUser(new Long(System.currentTimeMillis()).toString());
-        final Window main = new Window("IT Mill Toolkit Features Tour");
+        final Window main = new Window("Vaadin Features Tour");
         setMainWindow(main);
 
         main.setLayout(new FeatureBrowser());
@@ -24,8 +24,7 @@ public class FeaturesApplication extends com.vaadin.Application {
      * ErrorEvents are printed to default error stream and not in GUI.
      */
     @Override
-    public void terminalError(
-            com.vaadin.terminal.Terminal.ErrorEvent event) {
+    public void terminalError(com.vaadin.terminal.Terminal.ErrorEvent event) {
         final Throwable e = event.getThrowable();
         FeatureUtil.debug(getUser().toString(), "terminalError: "
                 + e.toString());

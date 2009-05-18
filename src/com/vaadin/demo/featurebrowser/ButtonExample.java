@@ -96,19 +96,19 @@ public class ButtonExample extends CustomComponent implements
                         + " server-initiated window opening.");
         desc.setContentMode(Label.CONTENT_XHTML);
         links.addComponent(desc);
-        Link l = new Link("IT Mill home", new ExternalResource(
-                "http://www.itmill.com"));
+        Link l = new Link("Vaadin home", new ExternalResource(
+                "http://www.vaadin.com"));
         l.setDescription("Link without target name, opens in this window");
         links.addComponent(l);
 
-        l = new Link("IT Mill home (new window)", new ExternalResource(
-                "http://www.itmill.com"));
+        l = new Link("Vaadin home (new window)", new ExternalResource(
+                "http://www.vaadin.com"));
         l.setTargetName("_blank");
         l.setDescription("Link with target name, opens in new window");
         links.addComponent(l);
 
-        l = new Link("IT Mill home (new window, less decor)",
-                new ExternalResource("http://www.itmill.com"));
+        l = new Link("Vaadin home (new window, less decor)",
+                new ExternalResource("http://www.vaadin.com"));
         l.setTargetName("_blank");
         l.setTargetBorder(Link.TARGET_BORDER_MINIMAL);
         l.setTargetName("_blank");
@@ -116,8 +116,8 @@ public class ButtonExample extends CustomComponent implements
                 .setDescription("Link with target name and BORDER_MINIMAL, opens in new window with less decor");
         links.addComponent(l);
 
-        l = new Link("IT Mill home (new 200x200 window, no decor, icon)",
-                new ExternalResource("http://www.itmill.com"), "_blank", 200,
+        l = new Link("Vaadin home (new 200x200 window, no decor, icon)",
+                new ExternalResource("http://www.vaadin.com"), "_blank", 200,
                 200, Link.TARGET_BORDER_NONE);
         l.setTargetName("_blank");
         l

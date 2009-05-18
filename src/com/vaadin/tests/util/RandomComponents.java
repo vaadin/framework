@@ -159,7 +159,7 @@ public class RandomComponents {
             break;
         case 4:
             // Link
-            result = new Link("", new ExternalResource("http://www.itmill.com"));
+            result = new Link("", new ExternalResource("http://www.vaadin.com"));
             result.setCaption("Link component " + caption);
             break;
         case 5:

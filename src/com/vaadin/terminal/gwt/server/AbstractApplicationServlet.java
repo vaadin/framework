@@ -116,7 +116,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
     private Properties applicationProperties;
 
-    private static final String NOT_PRODUCTION_MODE_INFO = "=================================================================\nIT Mill Toolkit is running in DEBUG MODE.\nAdd productionMode=true to web.xml to disable debug features.\nTo show debug window, add ?debug to your application URL.\n=================================================================";
+    private static final String NOT_PRODUCTION_MODE_INFO = "=================================================================\nVaadin is running in DEBUG MODE.\nAdd productionMode=true to web.xml to disable debug features.\nTo show debug window, add ?debug to your application URL.\n=================================================================";
 
     private boolean productionMode = false;
 
@@ -1097,8 +1097,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
             pathInfo = "/";
         }
 
-        String title = ((window.getCaption() == null) ? "IT Mill Toolkit 5"
-                : window.getCaption());
+        String title = ((window.getCaption() == null) ? "Vaadin 6" : window
+                .getCaption());
 
         String widgetset = null;
         // request widgetset takes precedence (e.g portlet include)
@@ -1405,7 +1405,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      * browsers scripting support is disabled.
      */
     protected String getNoScriptMessage() {
-        return "You have to enable javascript in your browser to use an application built with IT Mill Toolkit.";
+        return "You have to enable javascript in your browser to use an application built with Vaadin.";
     }
 
     private boolean isGecko17(HttpServletRequest request) {

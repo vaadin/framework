@@ -81,7 +81,7 @@ public class FeatureDateField extends Feature {
     protected String getDescriptionXHTML() {
         return "Representing Dates and times and providing a way to select "
                 + "or enter some specific date and/or time is an typical need in "
-                + "data-entry user interfaces (UI). IT Mill Toolkit provides a DateField "
+                + "data-entry user interfaces (UI). Vaadin provides a DateField "
                 + "component that is intuitive to use and yet controllable through "
                 + "its properties."
                 + "<br /><br />The calendar-style allows point-and-click selection "

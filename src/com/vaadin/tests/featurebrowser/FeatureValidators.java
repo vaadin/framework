@@ -14,7 +14,7 @@ import com.vaadin.ui.Select;
 public class FeatureValidators extends Feature {
 
     private static final String INTRO_TEXT = ""
-            + "IT Mill Toolkit contains simple, yet powerful validation interface, "
+            + "Vaadin contains simple, yet powerful validation interface, "
             + "that consists of two parts: Validator and Validatable. Validator is "
             + "any class that can check validity of an Object. Validatable is "
             + "a class with configurable validation. "

@@ -8,7 +8,7 @@ package com.vaadin.demo.sampler;
  */
 public class APIResource extends NamedExternalResource {
 
-    private static final String VAADIN_BASE = "http://toolkit.itmill.com/demo/doc/api/";
+    private static final String VAADIN_BASE = "http://www.vaadin.com/api";
     private static final String JAVA_BASE = "http://java.sun.com/javase/6/docs/api/";
     private static final String SERVLET_BASE = "http://java.sun.com/products/servlet/2.5/docs/servlet-2_5-mr2";
     private static final String PORTLET_BASE = "http://developers.sun.com/docs/jscreator/apis/portlet";

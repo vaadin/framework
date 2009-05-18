@@ -50,7 +50,7 @@ public class FeatureTextField extends Feature {
     protected String getDescriptionXHTML() {
         return "TextField combines the logic of both the single line text-entry field and the multi-line "
                 + "text-area into one component. "
-                + "As with all Data-components of IT Mill Toolkit, the TextField can also be bound to an "
+                + "As with all Data-components of Vaadin, the TextField can also be bound to an "
                 + "underlying data source, both directly or in a buffered (asynchronous) "
                 + "mode. In buffered mode its background color will change to indicate "
                 + "that the value has changed but is not committed."

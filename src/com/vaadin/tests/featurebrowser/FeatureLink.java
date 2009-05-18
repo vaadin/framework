@@ -22,7 +22,7 @@ public class FeatureLink extends Feature {
         final OrderedLayout l = new OrderedLayout();
 
         final Link lnk = new Link("Link caption", new ExternalResource(
-                "http://www.itmill.com"));
+                "http://www.vaadin.com"));
         l.addComponent(lnk);
 
         // Properties
@@ -43,7 +43,7 @@ public class FeatureLink extends Feature {
 
     @Override
     protected String getExampleSrc() {
-        return "Link link = new Link(\"Link caption\",new ExternalResource(\"http://www.itmill.com\"));\n";
+        return "Link link = new Link(\"Link caption\",new ExternalResource(\"http://www.vaadin.com\"));\n";
     }
 
     @Override

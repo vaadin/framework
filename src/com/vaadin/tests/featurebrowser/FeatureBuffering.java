@@ -14,7 +14,7 @@ import com.vaadin.ui.Select;
 public class FeatureBuffering extends Feature {
 
     private static final String INTRO_TEXT = ""
-            + "IT Mill Toolkit data model provides interface for implementing "
+            + "Vaadin data model provides interface for implementing "
             + "buffering in data components. The basic idea is that a component "
             + "reading their state from data source can implement "
             + "Buffered-interface, for storing the value internally. "

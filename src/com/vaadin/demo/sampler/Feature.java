@@ -67,7 +67,7 @@ abstract public class Feature implements Serializable {
     /**
      * Gets related API resources, i.e links to javadoc of used classes.
      * <p>
-     * Good candidates are IT Mill classes being demoed in the example, or other
+     * Good candidates are Vaadin classes being demoed in the example, or other
      * classes playing an important role in the example.
      * </p>
      * <p>

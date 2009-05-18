@@ -25,16 +25,14 @@ public class EmbeddedBrowserExample extends VerticalLayout implements
         Select.ValueChangeListener {
 
     // Default URL to open.
-    private static final String DEFAULT_URL = "http://www.itmill.com/index_itmill_toolkit.htm";
+    private static final String DEFAULT_URL = "http://www.vaadin.com/";
 
     // The embedded page
     Embedded emb = new Embedded();
 
     public EmbeddedBrowserExample() {
-        this(new String[] { DEFAULT_URL,
-                "http://www.itmill.com/index_developers.htm",
-                "http://toolkit.itmill.com/demo/doc/api/",
-                "http://www.itmill.com/manual/index.html" });
+        this(new String[] { DEFAULT_URL, "http://www.vaadin.com/learn",
+                "http://www.vaadin.com/api", "http://www.vaadin.com/book" });
     }
 
     public EmbeddedBrowserExample(String[] urls) {
@@ -80,7 +78,7 @@ public class EmbeddedBrowserExample extends VerticalLayout implements
 
             } catch (MalformedURLException e) {
                 getWindow().showNotification("Invalid address",
-                        e.getMessage() + " (example: http://www.itmill.com)",
+                        e.getMessage() + " (example: http://www.vaadin.com)",
                         Notification.TYPE_WARNING_MESSAGE);
             }
 

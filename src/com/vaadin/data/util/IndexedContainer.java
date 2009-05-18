@@ -1018,7 +1018,9 @@ public class IndexedContainer implements Container.Indexed,
 
     /*
      * A class implementing the com.vaadin.data.Item interface to be contained
-     * in the list. @author IT Mill Ltd.
+     * in the list.
+     * 
+     * @author IT Mill Ltd.
      * 
      * @version @VERSION@
      * 

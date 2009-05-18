@@ -46,7 +46,7 @@ public class ToolkitTunesLayout extends Application {
 
         root
                 .showNotification(
-                        "This is an example of how you can do layouts in IT Mill Toolkit.<br/>It is not a working sound player.",
+                        "This is an example of how you can do layouts in Vaadin.<br/>It is not a working sound player.",
                         Notification.TYPE_HUMANIZED_MESSAGE);
 
         // Our root window contains one VerticalLayout by default, let's make

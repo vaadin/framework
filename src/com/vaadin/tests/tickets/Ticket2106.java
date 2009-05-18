@@ -12,8 +12,8 @@ public class Ticket2106 extends Application {
 
     private static CustomizedSystemMessages msgs = new Application.CustomizedSystemMessages();
     static {
-        // We will forward the user to www.itmill.com when the session expires
-        msgs.setSessionExpiredURL("http://www.itmill.com");
+        // We will forward the user to www.vaadin.com when the session expires
+        msgs.setSessionExpiredURL("http://www.vaadin.com");
         msgs.setSessionExpiredMessage(null);
         msgs.setSessionExpiredCaption(null);
     }

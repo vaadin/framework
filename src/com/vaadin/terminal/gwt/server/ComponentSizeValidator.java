@@ -91,7 +91,7 @@ public class ComponentSizeValidator implements Serializable {
             Stack<ComponentInfo> attributes, boolean widthError,
             PrintStream errorStream) {
         StringBuffer err = new StringBuffer();
-        err.append("IT Mill Toolkit DEBUG\n");
+        err.append("Vaadin DEBUG\n");
 
         StringBuilder indent = new StringBuilder("");
         ComponentInfo ci;

@@ -118,7 +118,7 @@ public class Ticket1362Login extends Application {
                 }
                 return new DownloadStream(
                         new ByteArrayInputStream(
-                                "<html><body>Login form handeled.<script type='text/javascript'>top.itmill.forceSync();</script></body></html>"
+                                "<html><body>Login form handeled.<script type='text/javascript'>top.vaadin.forceSync();</script></body></html>"
                                         .getBytes()), "text/html",
                         "loginSuccesfull.html");
             }

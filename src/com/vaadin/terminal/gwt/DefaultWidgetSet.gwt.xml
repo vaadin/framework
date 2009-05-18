@@ -1,6 +1,6 @@
 <module>
 	<!--
-		This GWT module defines the IT Mill Toolkit DefaultWidgetSet. This is
+		This GWT module defines the Vaadin DefaultWidgetSet. This is
 		the module you want to extend when creating an extended widget set, or
 		when creating a specialized widget set with a subset of the
 		components.

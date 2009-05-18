@@ -197,7 +197,7 @@ public class FeatureBrowser extends CustomComponent implements
                     }
                     getWindow()
                             .setCaption(
-                                    "IT Mill Toolkit Features / "
+                                    "Vaadin Features / "
                                             + features.getContainerProperty(id,
                                                     "name"));
                 }

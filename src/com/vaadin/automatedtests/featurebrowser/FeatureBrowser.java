@@ -109,8 +109,7 @@ public class FeatureBrowser extends com.vaadin.Application implements
             // Windowing
             { "Misc", "Windowing", "About windowing", WindowingExample.class },
             // JavaScript API
-            { "Misc", "JavaScript API",
-                    "JavaScript to IT Mill Toolkit communication",
+            { "Misc", "JavaScript API", "JavaScript to Vaadin communication",
                     JavaScriptAPIExample.class },
     // END
     };
@@ -122,7 +121,7 @@ public class FeatureBrowser extends com.vaadin.Application implements
         setTheme("example");
 
         // Create new window for the application and give the window a visible.
-        final Window main = new Window("IT Mill Toolkit 5");
+        final Window main = new Window("Vaadin 6");
         main.setDebugId("mainWindow");
         // set as main window
         setMainWindow(main);
@@ -273,8 +272,8 @@ public class FeatureBrowser extends com.vaadin.Application implements
         exp.setExpandRatio(ts, 1);
 
         final Label status = new Label(
-                "<a href=\"http://www.itmill.com/developers/\">Developer Area</a>"
-                        + " | <a href=\"http://www.itmill.com/documentation/\">Documentation</a>");
+                "<a href=\"http://www.vaadin.com/learn\">30 Seconds to Vaadin</a>"
+                        + " | <a href=\"http://www.vaadin.com/book\">Book of Vaadin</a>");
         status.setContentMode(Label.CONTENT_XHTML);
         exp.addComponent(status);
         exp.setComponentAlignment(status, Alignment.MIDDLE_RIGHT);

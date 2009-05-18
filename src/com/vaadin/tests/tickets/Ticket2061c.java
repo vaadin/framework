@@ -26,7 +26,7 @@ public class Ticket2061c extends Application implements
 
     @Override
     public void init() {
-        mainWindow = new Window("It Mill");
+        mainWindow = new Window("Vaadin");
         mainWindow.setSizeFull();
         mainWindow.getLayout().setSizeFull();
         setMainWindow(mainWindow);

@@ -6,7 +6,7 @@ import com.vaadin.ui.Window;
 public class HelpWindow extends Window {
 	private static final String HELP_HTML_SNIPPET = "This is "
 			+ "an application built during <strong><a href=\""
-			+ "http://dev.itmill.com/\">Toolkit</a></strong> "
+			+ "http://dev.vaadin.com/\">Vaadin</a></strong> "
 			+ "tutorial. Hopefully it don't need any real help.";
 
 	public HelpWindow() {

@@ -122,7 +122,7 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
         test(layout, label);
 
         final Link link = new Link("Link " + count++, new ExternalResource(
-                "www.itmill.com"));
+                "www.vaadin.com"));
         test(layout, link);
 
         final NativeSelect nativeSelect = new NativeSelect("NativeSelect "

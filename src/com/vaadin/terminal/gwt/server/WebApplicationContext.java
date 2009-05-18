@@ -25,7 +25,7 @@ import com.vaadin.Application;
 import com.vaadin.service.ApplicationContext;
 
 /**
- * Web application context for the IT Mill Toolkit applications.
+ * Web application context for Vaadin applications.
  * 
  * @author IT Mill Ltd.
  * @version

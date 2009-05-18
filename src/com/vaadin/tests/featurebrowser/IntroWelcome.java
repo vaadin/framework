@@ -27,7 +27,7 @@ public class IntroWelcome extends Feature implements URIHandler,
 
     private static final String WELCOME_TEXT_UPPER = ""
             + "This application lets you view and play with some features of "
-            + "IT Mill Toolkit. Use menu on the left to select component."
+            + "Vaadin. Use menu on the left to select component."
             + "<br /><br />Note the <b>Properties selection</b> on the top "
             + "right corner. Click it open to access component properties and"
             + " feel free to edit properties at any time."
@@ -38,11 +38,11 @@ public class IntroWelcome extends Feature implements URIHandler,
             + "<br /><br />You may also change application's theme from below the menu."
             + " This example application is designed to work best with"
             + " <em>Demo</em> theme, other themes are for demonstration purposes only."
-            + "<br /><br />IT Mill Toolkit enables you to construct complex Web"
+            + "<br /><br />Vaadin enables you to construct complex Web"
             + " applications using plain Java, no knowledge of other Web technologies"
             + " such as XML, HTML, DOM, JavaScript or browser differences is required."
             + "<br /><br />For more information, point your browser to"
-            + " <a href=\"http://www.itmill.com\" target=\"_new\">www.itmill.com</a>.";
+            + " <a href=\"http://www.vaadin.com\" target=\"_new\">www.vaadin.com</a>.";
 
     private static final String WELCOME_TEXT_LOWER = ""
             + "This area contains the selected component's description, list of properties, javadoc"
@@ -53,7 +53,7 @@ public class IntroWelcome extends Feature implements URIHandler,
 
     // TODO Add browser agent string
     private final String description = WELCOME_TEXT_LOWER
-            + "<br /><br />IT Mill Toolkit version: "
+            + "<br /><br />Vaadin Toolkit version: "
             + ApplicationServlet.VERSION;
 
     public IntroWelcome() {
@@ -65,7 +65,7 @@ public class IntroWelcome extends Feature implements URIHandler,
 
         final OrderedLayout l = new OrderedLayout();
 
-        panel.setCaption("Welcome to the IT Mill Toolkit feature tour!");
+        panel.setCaption("Welcome to the Vaadin feature tour!");
         l.addComponent(panel);
 
         final Label label = new Label();
@@ -93,8 +93,7 @@ public class IntroWelcome extends Feature implements URIHandler,
 
     @Override
     protected String getExampleSrc() {
-        return ""
-                + "package com.vaadin.demo;\n"
+        return "" + "package com.vaadin.demo;\n"
                 + "import com.vaadin.ui.*;\n\n"
                 + "public class HelloWorld extends com.vaadin.Application {\n"
                 + "    public void init() {\n"

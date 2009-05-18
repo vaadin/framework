@@ -21,7 +21,7 @@ public class VColorPicker extends GwtColorPicker implements Paintable {
 
     /**
      * The constructor should first call super() to initialize the component and
-     * then handle any initialization relevant to IT Mill Toolkit.
+     * then handle any initialization relevant to Vaadin.
      */
     public VColorPicker() {
         // The superclass has a lot of relevant initialization

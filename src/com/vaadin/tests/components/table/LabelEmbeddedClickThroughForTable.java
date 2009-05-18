@@ -47,7 +47,7 @@ public class LabelEmbeddedClickThroughForTable extends TestBase {
                 .getItemProperty("Column 3")
                 .setValue(
                         new Label(
-                                "<a href=\"http://www.itmill.com\" target=_blank>Label A</a>",
+                                "<a href=\"http://www.vaadin.com\" target=_blank>Label A</a>",
                                 Label.CONTENT_XHTML));
         item.getItemProperty("Column 4").setValue(
                 new Embedded("", new ThemeResource("icons/32/cancel.png")));

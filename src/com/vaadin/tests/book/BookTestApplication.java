@@ -649,7 +649,7 @@ public class BookTestApplication extends com.vaadin.Application {
 		final Link alink = new Link();
 
 		/* Set the resource to be opened in the window. */
-		alink.setResource(new ExternalResource("http://www.itmill.com/"));
+		alink.setResource(new ExternalResource("http://www.vaadin.com/"));
 
 		main.addComponent(alink);
 
@@ -657,7 +657,7 @@ public class BookTestApplication extends com.vaadin.Application {
 				this);
 		main.addComponent(new Link("The document (pdf)", mydocument));
 		main.addComponent(new Link("link to a resource", new ExternalResource(
-				"http://www.itmill.com/")));
+				"http://www.vaadin.com/")));
 	}
 
 	void example_Button(Window main, String param) {

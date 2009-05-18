@@ -15,7 +15,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * A regular GWT component without integration with IT Mill Toolkit.
+ * A regular GWT component without integration with Vaadin.
  */
 public class GwtColorPicker extends Composite implements ClickListener {
 

@@ -546,7 +546,7 @@ public class SampleDB {
         try {
             final PreparedStatement stmt = connection.prepareStatement(q);
             stmt.setString(1, "Demo User");
-            stmt.setString(2, "demo.user@itmill.com");
+            stmt.setString(2, "demo.user@vaadin.com");
             stmt.setString(3, "demo");
             stmt.execute();
         } catch (final SQLException e) {

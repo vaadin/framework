@@ -21,7 +21,7 @@ public class LinkIcon extends TestBase {
     @Override
     protected void setup() {
         Link l = new Link("www.google.com", new ExternalResource(
-                "http://www.itmill.com/"));
+                "http://www.vaadin.com/"));
         l.setIcon(new ThemeResource("icons/32/calendar.png"));
 
         addComponent(l);

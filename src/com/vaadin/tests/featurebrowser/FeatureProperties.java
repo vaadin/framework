@@ -14,7 +14,7 @@ import com.vaadin.ui.Select;
 public class FeatureProperties extends Feature {
 
     private static final String INTRO_TEXT = ""
-            + "IT Mill Toolkit data model is one of the core concepts "
+            + "Vaadin data model is one of the core concepts "
             + "in the library and Property-interface is the base of that "
             + "model. Property provides standardized API for a single data object "
             + "that can be read (get) and written (set). A property is always typed, but can optionally "
@@ -25,7 +25,7 @@ public class FeatureProperties extends Feature {
             + "editor and viewer classes. Typically this is used to connect different "
             + "data sources to UI components for editing and viewing their contents."
             + "<br /><br />Properties can be utilized either by implementing the interface "
-            + "or by using some of the existing property implementations. IT Mill Toolkit "
+            + "or by using some of the existing property implementations. Vaadin "
             + "includes Property interface implementations for "
             + "arbitrary function pairs or Bean-properties as well as simple object "
             + "properties."

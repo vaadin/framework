@@ -127,7 +127,7 @@ public class TestSizeableIncomponents extends Application {
         cont = new IndexedContainer();
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
 
-        URL dir = cl.getResource("com/itmill/toolkit/ui");
+        URL dir = cl.getResource("com/vaadin/ui");
 
         String[] list2 = (new File(dir.getFile())).list();
         for (int i = 0; i < list2.length; i++) {
@@ -227,8 +227,7 @@ public class TestSizeableIncomponents extends Application {
 
         public String getTestableName() {
             StringBuffer sb = new StringBuffer();
-            sb.append(classToTest.getName().replaceAll(
-                    "com.vaadin.ui.", ""));
+            sb.append(classToTest.getName().replaceAll("com.vaadin.ui.", ""));
             sb.append("[");
             for (Iterator i = configurations.iterator(); i.hasNext();) {
                 sb.append(((Configuration) i.next()).getDescription());

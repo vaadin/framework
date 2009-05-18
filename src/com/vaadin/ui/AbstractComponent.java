@@ -28,8 +28,8 @@ import com.vaadin.terminal.gwt.server.ComponentSizeValidator;
 /**
  * An abstract class that defines default implementation for the
  * {@link Component} interface. Basic UI components that are not derived from an
- * external component can inherit this class to easily qualify as a IT Mill
- * Toolkit component. Most components in the toolkit do just that.
+ * external component can inherit this class to easily qualify as Vaadin
+ * components. Most components in Vaadin do just that.
  * 
  * @author IT Mill Ltd.
  * @version
@@ -172,8 +172,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
     /**
      * Sets and replaces all previous style names of the component. This method
-     * will trigger a
-     * {@link com.vaadin.terminal.Paintable.RepaintRequestEvent
+     * will trigger a {@link com.vaadin.terminal.Paintable.RepaintRequestEvent
      * RepaintRequestEvent}.
      * 
      * @param style
@@ -347,8 +346,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
     /**
      * Sets the component's immediate mode to the specified status. This method
-     * will trigger a
-     * {@link com.vaadin.terminal.Paintable.RepaintRequestEvent
+     * will trigger a {@link com.vaadin.terminal.Paintable.RepaintRequestEvent
      * RepaintRequestEvent}.
      * 
      * @param immediate
@@ -817,8 +815,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * 
      * <p>
      * For more information on the inheritable event mechanism see the
-     * {@link com.vaadin.event com.vaadin.event package
-     * documentation}.
+     * {@link com.vaadin.event com.vaadin.event package documentation}.
      * </p>
      * 
      * @param eventType
@@ -853,8 +850,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * 
      * <p>
      * For more information on the inheritable event mechanism see the
-     * {@link com.vaadin.event com.vaadin.event package
-     * documentation}.
+     * {@link com.vaadin.event com.vaadin.event package documentation}.
      * </p>
      * 
      * <p>
@@ -887,8 +883,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * 
      * <p>
      * For more information on the inheritable event mechanism see the
-     * {@link com.vaadin.event com.vaadin.event package
-     * documentation}.
+     * {@link com.vaadin.event com.vaadin.event package documentation}.
      * </p>
      * 
      * @param eventType
@@ -910,8 +905,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * 
      * <p>
      * For more information on the inheritable event mechanism see the
-     * {@link com.vaadin.event com.vaadin.event package
-     * documentation}.
+     * {@link com.vaadin.event com.vaadin.event package documentation}.
      * </p>
      * 
      * @param eventType
@@ -945,8 +939,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * 
      * <p>
      * For more information on the inheritable event mechanism see the
-     * {@link com.vaadin.event com.vaadin.event package
-     * documentation}.
+     * {@link com.vaadin.event com.vaadin.event package documentation}.
      * </p>
      * 
      * @param eventType

@@ -68,7 +68,7 @@ public class PersonContainer extends BeanItemContainer<Person> implements
                 p.setLastName(lnames[r.nextInt(lnames.length)]);
                 p.setCity(cities[r.nextInt(cities.length)]);
                 p.setEmail(p.getFirstName().toLowerCase() + "."
-                        + p.getLastName().toLowerCase() + "@itmill.com");
+                        + p.getLastName().toLowerCase() + "@vaadin.com");
                 p.setPhoneNumber("+358 02 555 " + r.nextInt(10) + r.nextInt(10)
                         + r.nextInt(10) + r.nextInt(10));
                 int n = r.nextInt(100000);

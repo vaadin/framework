@@ -21,7 +21,7 @@ public class RichTextExample extends CustomComponent {
     public static final String txt = "<h1>RichText editor example</h1>"
             + "To edit this text, press the <b>Edit</b> button below."
             + "<br/>"
-            + "See the <A href=\"http://www.itmill.com/documentation/itmill-toolkit-5-reference-manual/\">manual</a> "
+            + "See the <A href=\"http://www.vaadin.com/book\">Book of Vaadin</a> "
             + "for more information.";
 
     private final VerticalLayout main;

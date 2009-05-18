@@ -14,7 +14,7 @@ import com.vaadin.ui.Select;
 public class IntroDataModel extends Feature {
 
     private static final String INTRO_TEXT = ""
-            + "This section introduces main concepts of data model in IT Mill Toolkit."
+            + "This section introduces main concepts of data model in Vaadin."
             + " It contains brief introduction to Properties, Items, Containers, Validators and"
             + " Buffering classes."
             + "<br /><br />See the API documentation of respective area for more information.";

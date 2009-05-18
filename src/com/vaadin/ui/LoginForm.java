@@ -18,7 +18,7 @@ import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 /**
  * LoginForm is a Toolkit component to handle common problem among Ajax
  * applications: browsers password managers don't fill dynamically created forms
- * like all those UI elements created by IT Mill Toolkit.
+ * like all those UI elements created by Vaadin.
  * <p>
  * For developer it is easy to use: add component to a desired place in you UI
  * and add LoginListener to validate form input. Behind the curtain LoginForm

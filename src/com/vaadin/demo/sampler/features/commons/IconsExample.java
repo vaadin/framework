@@ -28,20 +28,20 @@ public class IconsExample extends VerticalLayout {
         Panel p = new Panel("Handy links");
         p.setIcon(new ThemeResource("icons/icon_info.gif"));
         addComponent(p);
-        Link lnk = new Link("http://www.itmill.com", new ExternalResource(
-                "http://www.itmill.com"));
+        Link lnk = new Link("http://www.vaadin.com", new ExternalResource(
+                "http://www.vaadin.com"));
         lnk.setIcon(new ThemeResource("icons/icon_world.gif"));
         p.addComponent(lnk);
-        lnk = new Link("http://www.itmill.com/developers/",
-                new ExternalResource("http://www.itmill.com/developers/"));
+        lnk = new Link("http://www.vaadin.com/learn", new ExternalResource(
+                "http://www.vaadin.com/learn"));
         lnk.setIcon(new ThemeResource("icons/icon_world.gif"));
         p.addComponent(lnk);
-        lnk = new Link("http://dev.itmill.com/", new ExternalResource(
-                "http://dev.itmill.com/"));
+        lnk = new Link("http://dev.vaadin.com/", new ExternalResource(
+                "http://dev.vaadin.com/"));
         lnk.setIcon(new ThemeResource("icons/icon_world.gif"));
         p.addComponent(lnk);
-        lnk = new Link("http://forum.itmill.com", new ExternalResource(
-                "http://forum.itmill.com"));
+        lnk = new Link("http://www.vaadin.com/forum", new ExternalResource(
+                "http://www.vaadin.com/forum"));
         lnk.setIcon(new ThemeResource("icons/icon_world.gif"));
         p.addComponent(lnk);
 

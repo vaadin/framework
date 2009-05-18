@@ -34,29 +34,29 @@ import com.vaadin.ui.Window;
 
 /**
  * <p>
- * Base class required for all IT Mill Toolkit applications. This class provides
- * all the basic services required by the toolkit. These services allow external
- * discovery and manipulation of the user, {@link com.vaadin.ui.Window
- * windows} and themes, and starting and stopping the application.
+ * Base class required for all Vaadin applications. This class provides all the
+ * basic services required by the toolkit. These services allow external
+ * discovery and manipulation of the user, {@link com.vaadin.ui.Window windows}
+ * and themes, and starting and stopping the application.
  * </p>
  * 
  * <p>
- * As mentioned, all IT Mill Toolkit applications must inherit this class.
- * However, this is almost all of what one needs to do to create a fully
- * functional application. The only thing a class inheriting the
- * <code>Application</code> needs to do is implement the <code>init</code>
- * method where it creates the windows it needs to perform its function. Note
- * that all applications must have at least one window: the main window. The
- * first unnamed window constructed by an application automatically becomes the
- * main window which behaves just like other windows with one exception: when
- * accessing windows using URLs the main window corresponds to the application
- * URL whereas other windows correspond to a URL gotten by catenating the
- * window's name to the application URL.
+ * As mentioned, all Vaadin applications must inherit this class. However, this
+ * is almost all of what one needs to do to create a fully functional
+ * application. The only thing a class inheriting the <code>Application</code>
+ * needs to do is implement the <code>init</code> method where it creates the
+ * windows it needs to perform its function. Note that all applications must
+ * have at least one window: the main window. The first unnamed window
+ * constructed by an application automatically becomes the main window which
+ * behaves just like other windows with one exception: when accessing windows
+ * using URLs the main window corresponds to the application URL whereas other
+ * windows correspond to a URL gotten by catenating the window's name to the
+ * application URL.
  * </p>
  * 
  * <p>
- * See the class <code>com.vaadin.demo.HelloWorld</code> for a simple
- * example of a fully working application.
+ * See the class <code>com.vaadin.demo.HelloWorld</code> for a simple example of
+ * a fully working application.
  * </p>
  * 
  * <p>
@@ -76,8 +76,8 @@ import com.vaadin.ui.Window;
  * found out, the window itself is queried for a preferred theme. If the window
  * does not prefer a specific theme, the application containing the window is
  * queried. If neither the application prefers a theme, the default theme for
- * the {@link com.vaadin.terminal.Terminal terminal} is used. The
- * terminal always defines a default theme.
+ * the {@link com.vaadin.terminal.Terminal terminal} is used. The terminal
+ * always defines a default theme.
  * </p>
  * 
  * @author IT Mill Ltd.

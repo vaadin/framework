@@ -130,7 +130,7 @@ public class FeatureTree extends Feature implements Action.Handler {
     protected String getDescriptionXHTML() {
         return "A tree is a natural way to represent datasets that have"
                 + " hierarchical relationships, such as filesystems, message "
-                + "threads or, as in this example, organization structure. IT Mill Toolkit features a versatile "
+                + "threads or, as in this example, organization structure. Vaadin features a versatile "
                 + "and powerful Tree component that works much like the tree components "
                 + "of most modern operating systems."
                 + "<br /><br />The most prominent use of the Tree component is to "

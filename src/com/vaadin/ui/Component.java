@@ -19,7 +19,7 @@ import com.vaadin.terminal.VariableOwner;
 
 /**
  * The top-level component interface which must be implemented by all UI
- * components that use IT Mill Toolkit.
+ * components that use Vaadin.
  * 
  * @author IT Mill Ltd.
  * @version
@@ -38,8 +38,7 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
 
     /**
      * Sets and replaces all previous style names of the component. This method
-     * will trigger a
-     * {@link com.vaadin.terminal.Paintable.RepaintRequestEvent
+     * will trigger a {@link com.vaadin.terminal.Paintable.RepaintRequestEvent
      * RepaintRequestEvent}.
      * 
      * @param style

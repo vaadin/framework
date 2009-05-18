@@ -417,8 +417,8 @@ public class VTree extends FlowPanel implements Paintable {
         }
 
         /**
-         * Adds/removes IT Mill Toolkit specific style name. This method ought
-         * to be called only from VTree.
+         * Adds/removes Vaadin specific style name. This method ought to be
+         * called only from VTree.
          * 
          * @param selected
          */

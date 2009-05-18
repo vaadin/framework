@@ -19,7 +19,7 @@ public class Ticket1673 extends com.vaadin.Application {
     public static Application.SystemMessages getSystemMessages() {
         Application.CustomizedSystemMessages msgs = new Application.CustomizedSystemMessages();
 
-        msgs.setSessionExpiredURL("http://www.itmill.com/");
+        msgs.setSessionExpiredURL("http://www.vaadin.com/");
         msgs.setSessionExpiredCaption("Foo");
         msgs.setSessionExpiredMessage("Bar");
 

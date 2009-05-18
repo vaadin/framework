@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.vaadin.Application;
 
 /**
- * This servlet connects IT Mill Toolkit Application to Web.
+ * This servlet connects a Vaadin Application to Web.
  * 
  * @author IT Mill Ltd.
  * @version

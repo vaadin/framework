@@ -226,7 +226,7 @@ public class VToolkitOverlay extends PopupPanel {
         String zIndex = null;
         try {
             // Odd behaviour with Windows Hosted Mode forces us to use
-            // this redundant try/catch block (See dev.itmill.com #2011)
+            // this redundant try/catch block (See dev.vaadin.com #2011)
             zIndex = DOM.getStyleAttribute(getElement(), "zIndex");
         } catch (Exception ignore) {
             // Ignored, will cause no harm

@@ -39,8 +39,8 @@ public class TestForChildComponentRendering extends CustomComponent {
         main.addComponent(new Label("SDFGFHFHGJGFDSDSSSGFDD"));
 
         final Link l = new Link();
-        l.setCaption("Siirry ITMILLIIN");
-        l.setResource(new ExternalResource("http://www.itmill.com/"));
+        l.setCaption("Siirry Vaadiniin");
+        l.setResource(new ExternalResource("http://www.vaadin.com/"));
         l.setTargetHeight(200);
         l.setTargetWidth(500);
         l.setTargetBorder(Link.TARGET_BORDER_MINIMAL);

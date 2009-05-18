@@ -49,7 +49,7 @@ public class FeatureButton extends Feature {
      */
     @Override
     protected String getDescriptionXHTML() {
-        return "In IT Mill Toolkit, boolean input values are represented by buttons. "
+        return "In Vaadin, boolean input values are represented by buttons. "
                 + "Buttons may function either as a push buttons or switches. (checkboxes)<br/><br/>"
                 + "Button can be directly connected to any method of an object, which "
                 + "is an easy way to trigger events: <code> new Button(\"Play\", myPiano \"playIt\")</code>. "

@@ -9,7 +9,7 @@ Themes
 ------
 
 Themes may be edited freely. They contain static images, CSS,
-and layouts for Toolkit applications.
+and layouts for Vaadin applications.
 
 ---------------------------
 Building Custom Widget Sets
@@ -24,13 +24,13 @@ See build-widgetsets.xml, com.vaadin.demo.colorpicker package, and the
 Reference Manual for more information regarding widget sets.
 
 ---------------------------
-IT Mill Toolkit Development
+Vaadin Development
 ---------------------------
-When developing the IT Mill Toolkit Library itself, change to "build" directory and
+When developing the Vaadin Library itself, change to "build" directory and
 run "ant widgetsets" to compile all widgetsets or "ant widgetset-default",
 "ant-widgetset-reserver", or "ant widgetset-colorpicker" to compile individual
 widgetsets. You must have GWT installed under build/gwt, under the proper
 platform directory.
 
-See http://dev.itmill.com/wiki/DevDocs/StartingDevelopment for instructions for
-installing GWT and compiling widgetsets for Toolkit development.
+See http://dev.vaadin.com/wiki/DevDocs/StartingDevelopment for instructions for
+installing GWT and compiling widgetsets for Vaadin development.

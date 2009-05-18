@@ -45,7 +45,7 @@ public class ApplicationPortlet implements Portlet, Serializable {
     public void render(RenderRequest request, RenderResponse response)
             throws PortletException, IOException {
 
-        // display the IT Mill Toolkit application
+        // display the Vaadin application
         writeAjaxWindow(request, response);
     }
 
