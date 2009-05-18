@@ -117,7 +117,7 @@ public class CompileDefaultTheme {
                 + combinedCss.toString().length() + " bytes)");
 
         if (useSmartSprites) {
-            createSprites(combinedCss);
+            createSprites(themeNames[themeNames.length - 1]);
             System.out.println("Used SmartSprites to create sprites");
             File oldCss = new File(stylesCssName);
             oldCss.delete();
@@ -131,12 +131,12 @@ public class CompileDefaultTheme {
         }
     }
 
-    private static void createSprites(StringBuffer combinedCss)
+    private static void createSprites(String themeName)
             throws FileNotFoundException, IOException {
         String[] parameters = new String[] { "--sprite-png-depth", "AUTO",
                 "--sprite-png-ie6", "--css-file-suffix", "-sprite",
                 "--css-file-encoding", "UTF-8", "--root-dir-path",
-                "WebContent/VAADIN/themes/reindeer", "--log-level", "WARN" };
+                THEME_DIR + themeName, "--log-level", "WARN" };
 
         org.carrot2.labs.smartsprites.SmartSprites.main(parameters);
 
