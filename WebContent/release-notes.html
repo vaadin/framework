@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>IT Mill Toolkit 5</title>
+<title>Vaadin 6</title>
 <link rel="stylesheet" type="text/css" href="demo/css/styles.css" />
 <!--[if IE]>
 		<link rel="stylesheet" type="text/css" href="demo/css/ie.css" />
@@ -13,23 +13,98 @@
 <div id="container">
 
 <div class="header">
-<h1>Introducing IT Mill Toolkit 5</h1>
+<h1>Introducing Vaadin 6</h1>
 <em>Effortless web application development for Java-programmers.</em>
-<div id="header-links"><a href="http://dev.itmill.com"
-	title="Open dev.itmill.com">Visit developer site dev.itmill.com</a><br />
-<a href="http://forum.itmill.com" title="Open forum.itmill.com">Visit
-support site forum.itmill.com</a></div>
+<div id="header-links"><a href="http://dev.vaadin.com"
+	title="Open dev.vaadin.com">Visit developer site dev.vaadin.com</a><br />
+<a href="http://vaadin.com" title="Open vaadin.com">Visit
+community and support site vaadin.com</a></div>
 </div>
 <!-- /Header -->
 
 <div class="content">
 
 <div>
-<h2>Release Notes for IT Mill Toolkit Version @version@</h2>
+<h2>Release Notes for Vaadin Version @version@</h2>
 
-<p>Version 5.3.0 is the first stable release of IT Mill Toolkit 5,
-meaning that there are no known major problems and the API will be kept
-backward compatible.</p>
+<p>Vaadin 6.0.0 is the first release of Vaadin, the next generation of the framework
+formerly known as IT Mill Toolkit. The major release includes a number of enhancements to
+IT Mill Toolkit 5.4.0, along with many bug fixes. The most notable additions are:</p>
+
+<ul>
+  <li>Vaadin Plugin for the Eclipse IDE</li>
+  <li>WYSIWYG Editor under Eclipse</li>
+</ul>
+
+<p>Some other notable changes:</p>
+
+<ul>
+  <li><b>TabSheet</b> API has changed (#2914)</li>
+  <li><b>Panel</b> and <b>Window</b> can now contain a <b>ComponentContainer</b> as the "root layout" (previously only Layout) (#2921). This should not require changes to user code.</li>
+  <li></li>
+</ul>
+
+<h2>Instructions for Upgrading from IT Mill Toolkit 5</h2>
+
+<p>While the Vaadin 6 API is otherwise backward-compatible with IT Mill Toolkit 5.4, the
+change of the product name has made it necessary to reflect it in the Java package names,
+some name prefixes, and some other details.</p>
+
+<h3>Server-side Upgrade Instructions</h3>
+
+<ul>
+  <li>Java Package names have changed:</li>
+  <ul>
+    <li>Renamed <tt>com.itmill.toolkit</tt> to <tt>com.vaadin</tt></li>
+    <li>Applies to all Java files using IT Mill Toolkit</li>
+    <li>The <tt>web.xml</tt> deployment descriptor must also be updated</li>
+  </ul>
+
+  <li>Changes in themes:
+  <ul>
+    <li><tt>WebContent/ITMILL</tt> has been renamed to <tt>WebContent/VAADIN</tt></li>
+    <ul>
+      <li>This may require changes to build scripts for custom widgetsets, as well as to any code that relies on the old naming (it is discouraged but possible).</li>
+    </ul>
+    <li>The new "<tt>reindeer</tt>" theme is the default theme in Vaadin.</li>
+    <li>The "<tt>default</tt>" theme in IT Mill Toolkit 5 has been renamed as "<tt>runo</tt>"</li>
+    <ul>
+      <li>Custom themes that import the "<tt>default</tt>" theme should instead import "<tt>runo</tt>".</li>
+      <li>There is no longer a theme with name "<tt>default</tt>"</li>
+      <li>The old default theme can be used with <tt>setTheme("runo");</tt></li>
+    </ul>
+    <li>CSS class names now start with "<tt>v-</tt>" prefix instead of "<tt>i-</tt>"</li>
+    <ul>
+      <li>To fix: search "<tt>.i-</tt>" and replace with "<tt>.v-</tt>" in custom themes </li>
+    </ul>
+  </ul>
+
+  <li>Embedding Vaadin applications in web pages:</li>
+  <ul>
+    <li>The name of the JavaScript variable used for launching applications has changed from "<tt>itmill.toolkitConfigurations</tt>" to "<tt>vaadin.vaadinConfigurations</tt>"</li>
+  </ul>
+
+  <li>Other API changes:</li>
+  <ul>
+    <li><b>FieldFactory</b> has been split into <b>FormFieldFactory</b> and <b>TableFieldFactory</b>, both containing a single method (#2956, #2499).</li>
+    <li>The <b>Form</b> component previously called two methods in <b>FieldFactory</b>. Now it always calls only one in <b>FormFieldFactory</b></li>
+  </ul>
+</ul>
+
+<h3>Client-side Upgrade Instructions</h3>
+
+<p>The following changes are relevant only if you have developed or integrated custom
+client-side widgets with Google Web Toolkit (GWT).</p>
+
+<ul>
+  <li>GWT 1.6 is required for compiling custom widgets (optional)</li>
+          o Possible problems when building widgetset using Windows and JDK 1.5 (#2891)
+          o GWT version in the projects must be updated (done automatically by the plugin)
+          o GWT Compiler class name has changed
+
+  <li>The "<b>I</b>" (IT Mill) prefix in client-side widget classes has been changed to "<b>V</b>" (Vaadin), for example: <b>IButton</b> is now <b>VButton</b>.</li>
+  <li><b>IToolkitOverlay</b> is now <b>VOverlay</b>
+</ul>
 
 <h2>Package for the experimental GWT Out-of-Process Hosted Mode</h2>
 
@@ -41,10 +116,9 @@ browser. Using the OOPHM requires installing a browser plugin (available
 for Mozilla Firefox, IE, and WebKit). See the manual section on OOPHM
 for more details.</p>
 
-<p>The Linux version of GWT Hosted Mode Browser is no longer
-compatible with IT Mill Toolkit 5.3.0 (<a
-	href="http://dev.itmill.com/ticket/2299">#2299</a>), so the OOPHM is
-the only option for debugging in hosted mode in Linux.</p>
+<p>The Linux version of GWT Hosted Mode Browser is no longer compatible with Vaadin (<a
+href="http://dev.itmill.com/ticket/2299">#2299</a>), so the OOPHM is the only option for
+debugging in hosted mode in Linux.</p>
 
 <p>The compilation of OOPHM widget sets uses a large amount of stack memory, so if the
 JVM default is too small, you should set it explicitly in <tt>compile-widgetset.xml</tt>
@@ -53,7 +127,7 @@ script): <tt>&lt;jvmarg value="-Xss1024k"/&gt;</tt>.</p>
 
 <p>As the OOPHM package is experimental, you should use it only for
 debugging purposes during development. For production use, you should
-compile your custom widget sets with the regular IT Mill Toolkit package
+compile your custom widget sets with the regular Vaadin package
 for your platform.</p>
 
 <h2>Important known problems in @version@</h2>
@@ -79,7 +153,7 @@ for your platform.</p>
 
 <h2>Requirements</h2>
 
-<p>IT Mill Toolkit is available for the following operating systems:</p>
+<p>Vaadin is available for the following operating systems:</p>
 
 <ul>
 	<li>Windows (see the Zip installation notice above)</li>
@@ -92,7 +166,7 @@ for your platform.</p>
 	for Linux.</li>
 </ul>
 
-<p>IT Mill Toolkit supports Java Servlet API 2.3 and later versions and should work with
+<p>Vaadin supports Java Servlet API 2.3 and later versions and should work with
 any Java application server that conforms to the standard. It supports the following
 application servers:</p>
 
@@ -105,7 +179,7 @@ application servers:</p>
     <li>Glassfish, version 2 or later</li>
 </ul>
 
-<p>IT Mill Toolkit supports the following browsers for using the applications made with
+<p>Vaadin supports the following browsers for using the applications made with
 it:</p>
 
 <ul>
@@ -126,7 +200,7 @@ Windows and Mac, if available. Firefox is supported also on Linux (Opera 10a1 wo
 on Linux though also suffers from <a
 href="http://dev.itmill.com/ticket/2652">#2652</a>). There may be differences between the
 exact versions of the supported browsers that may cause incompatibility with applications
-made with IT Mill Toolkit.</p>
+made with Vaadin.</p>
 
 <p>The following browsers are not supported but have been found to
 work to a large degree:</p>
@@ -146,11 +220,8 @@ work to a large degree:</p>
 as well.</p>
 
 <p>Nokia E-series phones, such as E90, have been known to work with older versions, but
-not with IT Mill Toolkit 5.2 and later. Links, Lynx, and other text-based browsers do not
+not with Vaadin 6. Links, Lynx, and other text-based browsers do not
 work.</p>
-
-<!-- h2>ChangeLog Between IT Mill Toolkit 5.1.2 and 5.2.0</h2 --></div>
-<!-- /getting-started -->
 
 <div class="clearer"></div>
 </div>
