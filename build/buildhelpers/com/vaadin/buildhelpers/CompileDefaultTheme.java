@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,7 +13,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 /**
- * Helper to combine css diveded into separate per component dirs into one to
+ * Helper to combine css divded into separate per component dirs into one to
  * optimize http requests.
  * 
  */
@@ -28,9 +29,9 @@ public class CompileDefaultTheme {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
-        combineTheme(new String[] { BASE });
-        combineTheme(new String[] { BASE, ITMILL5 });
-        combineTheme(new String[] { BASE, REINDEER });
+        combineTheme(new String[] { BASE }, false);
+        combineTheme(new String[] { BASE, ITMILL5 }, false);
+        combineTheme(new String[] { BASE, REINDEER }, true);
     }
 
     /**
@@ -42,7 +43,8 @@ public class CompileDefaultTheme {
      *            theme folder.
      * @throws IOException
      */
-    private static void combineTheme(String[] themeNames) throws IOException {
+    private static void combineTheme(String[] themeNames,
+            boolean useSmartSprites) throws IOException {
 
         StringBuffer combinedCss = new StringBuffer();
 
@@ -102,13 +104,41 @@ public class CompileDefaultTheme {
             }
         }
 
-        BufferedWriter out = new BufferedWriter(new FileWriter(THEME_DIR
-                + themeNames[themeNames.length - 1] + "/styles.css"));
+        String stylesCssDir = THEME_DIR + themeNames[themeNames.length - 1]
+                + "/";
+        String stylesCssName = stylesCssDir + "styles.css";
+
+        BufferedWriter out = new BufferedWriter(new FileWriter(stylesCssName));
         out.write(combinedCss.toString());
         out.close();
 
         System.out.println("Compiled CSS to " + THEME_DIR
                 + themeNames[themeNames.length - 1] + "/styles.css ("
                 + combinedCss.toString().length() + " bytes)");
+
+        if (useSmartSprites) {
+            createSprites(combinedCss);
+            System.out.println("Used SmartSprites to create sprites");
+            File oldCss = new File(stylesCssName);
+            oldCss.delete();
+
+            File newCss = new File(stylesCssDir + "styles-sprite.css");
+            boolean ok = newCss.renameTo(oldCss);
+            if (!ok) {
+                System.out.println("Rename " + newCss + " -> " + oldCss
+                        + " failed");
+            }
+        }
+    }
+
+    private static void createSprites(StringBuffer combinedCss)
+            throws FileNotFoundException, IOException {
+        String[] parameters = new String[] { "--sprite-png-depth", "AUTO",
+                "--sprite-png-ie6", "--css-file-suffix", "-sprite",
+                "--css-file-encoding", "UTF-8", "--root-dir-path",
+                "WebContent/VAADIN/themes/reindeer", "--log-level", "WARN" };
+
+        org.carrot2.labs.smartsprites.SmartSprites.main(parameters);
+
     }
 }

@@ -723,10 +723,13 @@
 	<target name="defaulttheme">
 		<echo>Combining default themes css files</echo>
 		<!-- ensure buildhelpers are compiled -->
-		<javac source="1.5" target="1.5" srcdir="build/buildhelpers" />
+		<javac source="1.5" target="1.5" srcdir="build/buildhelpers" classpath="build/smartsprites/lib/smartsprites-0.2.3-itmill.jar"/>
 		<java classname="com.vaadin.buildhelpers.CompileDefaultTheme" failonerror="yes" fork="yes">
 			<classpath>
 				<pathelement location="build/buildhelpers" />
+				<fileset dir="build/smartsprites/lib">
+					<include name="*.jar"/>
+				</fileset>
 			</classpath>
 		</java>
 	</target>
