@@ -74,8 +74,8 @@ public class ApplicationConfiguration {
     /*-{
 
         var id = this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::id;
-        if($wnd.vaadin.toolkitConfigurations && $wnd.vaadin.toolkitConfigurations[id]) {
-            var jsobj = $wnd.vaadin.toolkitConfigurations[id];
+        if($wnd.vaadin.vaadinConfigurations && $wnd.vaadin.vaadinConfigurations[id]) {
+            var jsobj = $wnd.vaadin.vaadinConfigurations[id];
             var uri = jsobj.appUri;
             if(uri[uri.length -1] != "/") {
                 uri = uri + "/";
@@ -173,7 +173,7 @@ public class ApplicationConfiguration {
     private native static void loadAppIdListFromDOM(ArrayList<String> list)
     /*-{
          var j;
-         for(j in $wnd.vaadin.toolkitConfigurations) {
+         for(j in $wnd.vaadin.vaadinConfigurations) {
              list.@java.util.Collection::add(Ljava/lang/Object;)(j);
          }
      }-*/;

@@ -1216,16 +1216,16 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                     + "'></script>\n");
             page.write("<script type=\"text/javascript\">\n");
             page.write("//<![CDATA[\n");
-            page.write("if(!vaadin || !vaadin.toolkitConfigurations) {\n "
+            page.write("if(!vaadin || !vaadin.vaadinConfigurations) {\n "
                     + "if(!vaadin) { var vaadin = {}} \n"
-                    + "vaadin.toolkitConfigurations = {};\n"
+                    + "vaadin.vaadinConfigurations = {};\n"
                     + "vaadin.themesLoaded = {}};\n");
 
             if (!isProductionMode()) {
                 page.write("vaadin.debug = true;\n");
             }
 
-            page.write("vaadin.toolkitConfigurations[\"" + appId + "\"] = {");
+            page.write("vaadin.vaadinConfigurations[\"" + appId + "\"] = {");
             page.write("appUri:'" + appUrl + "', ");
             page.write("pathInfo: '" + pathInfo + "', ");
             if (window != application.getMainWindow()) {
@@ -1282,9 +1282,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
         } else {
             page.write("<script type=\"text/javascript\">\n");
             page.write("//<![CDATA[\n");
-            page.write("if(!vaadin || !vaadin.toolkitConfigurations) {\n "
+            page.write("if(!vaadin || !vaadin.vaadinConfigurations) {\n "
                     + "if(!vaadin) { var vaadin = {}} \n"
-                    + "vaadin.toolkitConfigurations = {};\n"
+                    + "vaadin.vaadinConfigurations = {};\n"
                     + "vaadin.themesLoaded = {};\n");
             if (!isProductionMode()) {
                 page.write("vaadin.debug = true;\n");
@@ -1298,7 +1298,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                     + widgetset + "/" + widgetset + ".nocache.js?"
                     + new Date().getTime() + "'><\\/script>\");\n}\n");
 
-            page.write("vaadin.toolkitConfigurations[\"" + appId + "\"] = {");
+            page.write("vaadin.vaadinConfigurations[\"" + appId + "\"] = {");
             page.write("appUri:'" + appUrl + "', ");
             page.write("pathInfo: '" + pathInfo + "', ");
             if (window != application.getMainWindow()) {
