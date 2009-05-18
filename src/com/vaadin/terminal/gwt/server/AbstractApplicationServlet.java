@@ -407,7 +407,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                 return;
             }
 
-            // Send initial AJAX page that kickstarts Toolkit application
+            // Send initial AJAX page that kickstarts a Vaadin application
             writeAjaxPage(request, response, window, themeName, application);
 
         } catch (final SessionExpired e) {
@@ -1204,7 +1204,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
             // supported, but the hack is make it possible to use linux and
             // hosted mode browser for debugging. Note that due this hack,
             // debugging gwt code in portals with linux will be problematic if
-            // there are multiple toolkit portlets visible at the same time.
+            // there are multiple Vaadin portlets visible at the same time.
             // TODO remove this when hosted mode on linux gets newer gecko
 
             page.write("<iframe tabIndex=\"-1\" id=\"__gwt_historyFrame\" "

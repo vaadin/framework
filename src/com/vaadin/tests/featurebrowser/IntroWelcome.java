@@ -53,8 +53,7 @@ public class IntroWelcome extends Feature implements URIHandler,
 
     // TODO Add browser agent string
     private final String description = WELCOME_TEXT_LOWER
-            + "<br /><br />Vaadin Toolkit version: "
-            + ApplicationServlet.VERSION;
+            + "<br /><br />Vaadin version: " + ApplicationServlet.VERSION;
 
     public IntroWelcome() {
         super();

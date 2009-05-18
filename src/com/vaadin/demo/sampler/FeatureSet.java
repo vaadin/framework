@@ -399,7 +399,7 @@ public class FeatureSet extends Feature {
             super(
                     "Dates",
                     "Dates",
-                    "The DateField component can be used to produce various date and time input fields with different resolutions. The date and time format used with this component is reported to the Toolkit by the browser.",
+                    "The DateField component can be used to produce various date and time input fields with different resolutions. The date and time format used with this component is reported to Vaadin by the browser.",
                     new Feature[] {
                     //        
                             new DatePopup(), //

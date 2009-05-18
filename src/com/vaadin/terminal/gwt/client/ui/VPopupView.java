@@ -314,7 +314,7 @@ public class VPopupView extends HTML implements Container {
 
         /*
          * 
-         * We need a hack make popup act as a child of VPopupView in toolkits
+         * We need a hack make popup act as a child of VPopupView in Vaadin's
          * component tree, but work in default GWT manner when closing or
          * opening.
          * 

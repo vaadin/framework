@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 
 /**
- * In Toolkit UI this Overlay should always be used for all elements that
+ * In Vaadin UI this Overlay should always be used for all elements that
  * temporary float over other components like context menus etc. This is to deal
  * stacking order correctly with VWindow objects.
  */

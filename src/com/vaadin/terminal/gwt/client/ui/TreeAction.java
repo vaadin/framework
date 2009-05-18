@@ -24,7 +24,7 @@ public class TreeAction extends Action {
 
     /**
      * Sends message to server that this action has been fired. Messages are
-     * "standard" Toolkit messages whose value is comma separated pair of
+     * "standard" Vaadin messages whose value is comma separated pair of
      * targetKey (row, treeNod ...) and actions id.
      * 
      * Variablename is always "action".

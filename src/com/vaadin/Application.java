@@ -35,9 +35,9 @@ import com.vaadin.ui.Window;
 /**
  * <p>
  * Base class required for all Vaadin applications. This class provides all the
- * basic services required by the toolkit. These services allow external
- * discovery and manipulation of the user, {@link com.vaadin.ui.Window windows}
- * and themes, and starting and stopping the application.
+ * basic services required by Vaadin. These services allow external discovery
+ * and manipulation of the user, {@link com.vaadin.ui.Window windows} and
+ * themes, and starting and stopping the application.
  * </p>
  * 
  * <p>
@@ -799,7 +799,7 @@ public abstract class Application implements URIHandler,
         /**
          * Gets the previous user of the application.
          * 
-         * @return the previous Toolkit user, if user has not changed ever on
+         * @return the previous Vaadin user, if user has not changed ever on
          *         application it returns <code>null</code>
          */
         public Object getPreviousUser() {

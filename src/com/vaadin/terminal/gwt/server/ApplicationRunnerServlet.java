@@ -93,7 +93,7 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
      * <ul>
      * <li>context=vaadin</li>
      * <li>Runner servlet=run</li>
-     * <li>Toolkit application=com.vaadin.demo.Calc</li>
+     * <li>Vaadin application=com.vaadin.demo.Calc</li>
      * </ul>
      * 
      * @param request

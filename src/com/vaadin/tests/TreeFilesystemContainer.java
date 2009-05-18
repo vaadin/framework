@@ -19,18 +19,17 @@ import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.Component.Listener;
 
 /**
- * Browsable file explorer using Toolkit Tree component. Demonstrates: how to
- * use <code>com.vaadin.ui.Component.Tree</code> datasource container,
- * how to create <code>com.vaadin.data.util.FilesystemContainer</code>,
- * how to read <code>com.vaadin.ui.Component.Event</code> objects, how
- * to receive and handle any event by implementing
- * <code>com.vaadin.ui.Component.Listener</code>.
+ * Browsable file explorer using Vaadin Tree component. Demonstrates: how to use
+ * <code>com.vaadin.ui.Component.Tree</code> datasource container, how to create
+ * <code>com.vaadin.data.util.FilesystemContainer</code>, how to read
+ * <code>com.vaadin.ui.Component.Event</code> objects, how to receive and handle
+ * any event by implementing <code>com.vaadin.ui.Component.Listener</code>.
  * 
  * @since 4.0.0
  * 
  */
-public class TreeFilesystemContainer extends com.vaadin.Application
-        implements Listener {
+public class TreeFilesystemContainer extends com.vaadin.Application implements
+        Listener {
 
     // Filesystem explorer panel and it's components
     private final Panel explorerPanel = new Panel("Filesystem explorer");

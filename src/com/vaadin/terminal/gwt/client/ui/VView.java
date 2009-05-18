@@ -303,7 +303,7 @@ public class VView extends SimplePanel implements Container,
 
                     /*
                      * Two types of Widgets can be focused, either implementing
-                     * GWT HasFocus of a thinner Toolkit specific Focusable
+                     * GWT HasFocus of a thinner Vaadin specific Focusable
                      * interface.
                      */
                     if (toBeFocused instanceof HasFocus) {

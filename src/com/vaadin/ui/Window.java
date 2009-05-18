@@ -708,11 +708,10 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * 
      * <p>
      * This method should not be invoked directly. Instead the
-     * {@link com.vaadin.Application#addWindow(Window)} method should be
-     * used to add the window to an application and
-     * {@link com.vaadin.Application#removeWindow(Window)} method for
-     * removing the window from the applicion. These methods call this method
-     * implicitly.
+     * {@link com.vaadin.Application#addWindow(Window)} method should be used to
+     * add the window to an application and
+     * {@link com.vaadin.Application#removeWindow(Window)} method for removing
+     * the window from the applicion. These methods call this method implicitly.
      * </p>
      * 
      * <p>
@@ -1335,7 +1334,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * in client too. Not the one that is rendered last (the case we'd get if
      * implemented in Focusable only).
      * 
-     * To focus component from Toolkit application, use Focusable.focus(). See
+     * To focus component from Vaadin application, use Focusable.focus(). See
      * {@link Focusable}.
      * 
      * @param focusable

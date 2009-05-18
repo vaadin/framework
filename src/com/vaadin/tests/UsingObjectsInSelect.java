@@ -14,8 +14,8 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.Window;
 
-public class UsingObjectsInSelect extends com.vaadin.Application
-        implements ValueChangeListener {
+public class UsingObjectsInSelect extends com.vaadin.Application implements
+        ValueChangeListener {
 
     private final Select select = new Select();
     private final Label selectedTask = new Label("Selected task",
@@ -67,7 +67,7 @@ public class UsingObjectsInSelect extends com.vaadin.Application
     }
 
     /**
-     * Sample class which is bind in Toolkit components
+     * Sample class which is bound to Vaadin components
      * 
      */
     public class Task {

@@ -18,11 +18,11 @@ import com.vaadin.ui.Component.Listener;
 /**
  * This example demonstrates custom layout. All components created here are
  * placed using custom.html file. Custom layouts may be created with any web
- * designer tool such as Dreamweaver. To place Toolkit components into html
- * page, use divs with location tag as an identifier for Toolkit components, see
- * html page (themes/example/layout/custom.html) and source code below. Body
- * panel contents are changed when menu items are clicked. Contents are HTML
- * pages located at themes/example/layout directory.
+ * designer tool such as Dreamweaver. To place Vaadin components into html page,
+ * use divs with location tag as an identifier for Vaadin components, see html
+ * page (themes/example/layout/custom.html) and source code below. Body panel
+ * contents are changed when menu items are clicked. Contents are HTML pages
+ * located at themes/example/layout directory.
  * 
  * @author IT Mill Ltd.
  * @since 4.0.0

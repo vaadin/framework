@@ -16,7 +16,7 @@ import com.vaadin.terminal.URIHandler;
 import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 
 /**
- * LoginForm is a Toolkit component to handle common problem among Ajax
+ * LoginForm is a Vaadin component to handle common problem among Ajax
  * applications: browsers password managers don't fill dynamically created forms
  * like all those UI elements created by Vaadin.
  * <p>

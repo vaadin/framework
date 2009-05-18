@@ -16,7 +16,7 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Window;
 
 /**
- * This example demonstrates layouts. Layouts are populated with sample Toolkit
+ * This example demonstrates layouts. Layouts are populated with sample Vaadin
  * UI components.
  * 
  * @author IT Mill Ltd.

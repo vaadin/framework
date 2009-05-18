@@ -17,7 +17,7 @@ import com.vaadin.terminal.PaintTarget;
  * <p>
  * A container component with freely designed layout and style. The layout
  * consists of items with textually represented locations. Each item contains
- * one sub-component, which can be any Toolkit component, such as a layout. The
+ * one sub-component, which can be any Vaadin component, such as a layout. The
  * adapter and theme are responsible for rendering the layout with a given style
  * by placing the items in the defined locations.
  * </p>

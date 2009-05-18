@@ -99,7 +99,7 @@ public class ApplicationConfiguration {
             }
         
         } else {
-            $wnd.alert("Toolkit app failed to initialize: " + this.id);
+            $wnd.alert("Vaadin app failed to initialize: " + this.id);
         }
      
      }-*/;

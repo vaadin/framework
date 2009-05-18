@@ -17,21 +17,20 @@ import com.vaadin.ui.Window;
 
 /**
  * This example shows how Table, Select and Tree UI components can use
- * Containers. QueryContainer is used to bind SQL table rows into Toolkit UI
+ * Containers. QueryContainer is used to bind SQL table rows into Vaadin UI
  * components. Table has few example actions added. Also embedding XHTML through
  * Label components is used. Demonstrates: how to create
  * <code>com.vaadin.data.Container</code> and set it as datasource to UI
  * components <code>com.vaadin.ui.Component.Tree</code>, how to receive
- * ExpandEvent and implement
- * <code>com.vaadin.ui.Tree.ExpandListener</code>, how to use
- * <code>com.vaadin.event.Action</code>.
+ * ExpandEvent and implement <code>com.vaadin.ui.Tree.ExpandListener</code>, how
+ * to use <code>com.vaadin.event.Action</code>.
  * 
  * @author IT Mill Ltd.
  * @since 4.0.0
  * 
  */
-public class QueryContainerDemo extends com.vaadin.Application
-        implements Action.Handler {
+public class QueryContainerDemo extends com.vaadin.Application implements
+        Action.Handler {
 
     private static final String ACTION_DESCRIPTION = "Try right mouse button to initiate "
             + "actions menu.<br />Note: on Opera you use meta key "
@@ -116,7 +115,7 @@ public class QueryContainerDemo extends com.vaadin.Application
         table.addActionHandler(this);
         table.setDescription(ACTION_DESCRIPTION);
 
-        // populate Toolkit table component with test SQL table rows
+        // populate Vaadin table component with test SQL table rows
         try {
             final QueryContainer qc = new QueryContainer(
                     "SELECT * FROM employee", sampleDatabase.getConnection());
@@ -139,7 +138,7 @@ public class QueryContainerDemo extends com.vaadin.Application
         select.setCaption("All distinct units from employee table.");
         select.setItemCaptionPropertyId("UNIT");
 
-        // populate Toolkit select component with test SQL table rows
+        // populate Vaadin select component with test SQL table rows
         try {
             final QueryContainer qc = new QueryContainer(
                     "SELECT DISTINCT UNIT FROM employee", sampleDatabase
@@ -167,7 +166,7 @@ public class QueryContainerDemo extends com.vaadin.Application
                 + "actions menu. Note: on Opera you use meta key "
                 + "and left mouse button.");
 
-        // Populate Toolkit Tree using select component as data source
+        // Populate Vaadin Tree using select component as data source
         tree.setContainerDataSource(select.getContainerDataSource());
     }
 

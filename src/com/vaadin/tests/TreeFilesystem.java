@@ -15,10 +15,10 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.Tree.ExpandEvent;
 
 /**
- * Browsable file explorer using Toolkit Tree component. Demonstrates: how to
- * add items hierarchially into
- * <code>com.vaadin.ui.Component.Tree</code>, how to receive ExpandEvent
- * and implement <code>com.vaadin.ui.Tree.ExpandListener</code>.
+ * Browsable file explorer using Vaadin Tree component. Demonstrates: how to add
+ * items hierarchically into <code>com.vaadin.ui.Component.Tree</code>, how to
+ * receive ExpandEvent and implement
+ * <code>com.vaadin.ui.Tree.ExpandListener</code>.
  * 
  * @since 4.0.0
  * 

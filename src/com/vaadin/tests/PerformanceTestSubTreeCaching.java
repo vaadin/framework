@@ -22,7 +22,7 @@ public class PerformanceTestSubTreeCaching extends CustomComponent {
 
     private final Label result;
 
-    private static final String DESCRIPTION = "Hyphothesis: Toolkit 4 has major architechtural problem when adding "
+    private static final String DESCRIPTION = "Hypothesis: Toolkit 4 has major architechtural problem when adding "
             + "small incrementall updates to a container which has either a lot or "
             + "some very slow components in it. Toolkit 5 has 'subtree caching' and a"
             + " small amount of logic in containers, so CommunicationManager can assure"

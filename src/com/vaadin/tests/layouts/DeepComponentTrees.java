@@ -18,7 +18,7 @@ public class DeepComponentTrees extends TestBase {
 
     @Override
     protected String getDescription() {
-        return "Toolkit should not choke on deep component trees. 15 levels should be minimum to survive.";
+        return "Vaadin should not choke on deep component trees. 15 levels should be minimum to survive.";
     }
 
     @Override
@@ -89,7 +89,7 @@ public class DeepComponentTrees extends TestBase {
             layout = lo;
         }
         layout.addComponent(new Label(
-                "FF did it! Toolkit, Mozilla and you win! Dare to try again?"));
+                "FF did it! Vaadin, Mozilla and you win! Dare to try again?"));
         root.setLayout(r);
     }
 
