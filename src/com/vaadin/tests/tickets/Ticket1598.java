@@ -19,7 +19,7 @@ public class Ticket1598 extends Application {
     @Override
     public void init() {
         setMainWindow(main);
-        setTheme("itmill5");
+        setTheme("runo");
 
         List<MenuItem> itemList = new ArrayList<MenuItem>();
         // Populate the menu bar

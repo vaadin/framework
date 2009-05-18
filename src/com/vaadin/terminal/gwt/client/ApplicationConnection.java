@@ -1574,8 +1574,7 @@ public class ApplicationConnection {
     public void addPngFix(Element el) {
         BrowserInfo b = BrowserInfo.get();
         if (b.isIE6()) {
-            Util.addPngFix(el, getThemeUri()
-                    + "/../default/common/img/blank.gif");
+            Util.addPngFix(el, getThemeUri() + "/../runo/common/img/blank.gif");
         }
     }
 
