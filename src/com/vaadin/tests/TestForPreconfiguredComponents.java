@@ -53,7 +53,7 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
         main.removeAllComponents();
         main
                 .addComponent(new Label(
-                        "In Toolkit 5 we introduce new componens. Previously we"
+                        "In Toolkit 5 we introduce new components. Previously we"
                                 + " usually used setStyle or some other methods on possibly "
                                 + "multiple steps to configure component for ones needs. These new "
                                 + "server side components are mostly just classes that in constructor "

@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd">
         <portlet>
                 <portlet-name>PortletDemoPortlet</portlet-name>
-                <display-name>IT Mill Toolkit PortletDemo</display-name>
+                <display-name>Vaadin PortletDemo</display-name>
                 <portlet-class>com.vaadin.terminal.gwt.server.ApplicationPortlet</portlet-class>
                 <init-param>
                         <name>application</name>
@@ -39,7 +39,7 @@
         </portlet>
         <portlet>
                 <portlet-name>SimpleReserverPortlet</portlet-name>
-                <display-name>IT Mill Toolkit SimpleReserver</display-name>
+                <display-name>Vaadin SimpleReserver</display-name>
                 <portlet-class>com.vaadin.terminal.gwt.server.ApplicationPortlet</portlet-class>
                 <init-param>
                         <name>application</name>
@@ -73,7 +73,7 @@
         </portlet>
         <portlet>
                 <portlet-name>FeatureBrowserPortlet</portlet-name>
-                <display-name>IT Mill Toolkit FeatureBrowser</display-name>
+                <display-name>Vaadin FeatureBrowser</display-name>
                 <portlet-class>com.vaadin.terminal.gwt.server.ApplicationPortlet</portlet-class>
                 <init-param>
                         <name>application</name>
@@ -107,7 +107,7 @@
         </portlet>
         <portlet>
                 <portlet-name>ChatServletPortlet</portlet-name>
-                <display-name>IT Mill Toolkit ChatServlet</display-name>
+                <display-name>Vaadin ChatServlet</display-name>
                 <portlet-class>com.vaadin.terminal.gwt.server.ApplicationPortlet</portlet-class>
                 <init-param>
                         <name>application</name>
@@ -141,7 +141,7 @@
         </portlet>
         <portlet>
                 <portlet-name>BrowserDemoPortlet</portlet-name>
-                <display-name>IT Mill Toolkit BrowserDemo</display-name>
+                <display-name>Vaadin BrowserDemo</display-name>
                 <portlet-class>com.vaadin.terminal.gwt.server.ApplicationPortlet</portlet-class>
                 <init-param>
                         <name>application</name>

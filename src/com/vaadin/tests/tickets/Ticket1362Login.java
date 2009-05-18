@@ -26,7 +26,8 @@ import com.vaadin.ui.Window.Notification;
  * Proof of concept how to create a decent login screen that works with browsers
  * PW managers. (Browsers don't autofill generated login forms)
  * 
- * TODO generalize js to work inside iframes (if toolkit is inside iframe)
+ * TODO generalize js to work inside iframes (if a Vaadin application is inside
+ * iframe)
  * 
  * TODO extract login form to a external template.
  * 

@@ -173,7 +173,7 @@ public final class VDebugConsole extends VToolkitOverlay implements Console {
 
         }
 
-        log("Toolkit application servlet version: " + cnf.getServletVersion());
+        log("Vaadin application servlet version: " + cnf.getServletVersion());
         log("Widget set is built on version: " + VERSION);
         log("Application version: " + cnf.getApplicationVersion());
 

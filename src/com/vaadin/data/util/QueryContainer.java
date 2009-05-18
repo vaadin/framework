@@ -22,7 +22,7 @@ import com.vaadin.data.Property;
  * <p>
  * The <code>QueryContainer</code> is the specialized form of Container which is
  * Ordered and Indexed. This is used to represent the contents of relational
- * database tables accessed through the JDBC Connection in the Toolkit Table.
+ * database tables accessed through the JDBC Connection in the Vaadin Table.
  * This creates Items based on the queryStatement provided to the container.
  * </p>
  * 

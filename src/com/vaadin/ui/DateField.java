@@ -22,10 +22,10 @@ import com.vaadin.terminal.PaintTarget;
  * </p>
  * <p>
  * Since <code>DateField</code> extends <code>AbstractField</code> it implements
- * the {@link com.vaadin.data.Buffered}interface. A
- * <code>DateField</code> is in write-through mode by default, so
- * {@link com.vaadin.ui.AbstractField#setWriteThrough(boolean)}must be
- * called to enable buffering.
+ * the {@link com.vaadin.data.Buffered}interface. A <code>DateField</code> is in
+ * write-through mode by default, so
+ * {@link com.vaadin.ui.AbstractField#setWriteThrough(boolean)}must be called to
+ * enable buffering.
  * </p>
  * 
  * @author IT Mill Ltd.
@@ -360,8 +360,8 @@ public class DateField extends AbstractField {
      * This can be overridden to handle conversions or to throw an exception, or
      * to fire an event.
      * 
-     * The default behavior is likely to change in the next major version of the
-     * toolkit - a Property.ConversionException will be thrown.
+     * The default behavior is likely to change in the next major version of
+     * Vaadin - a Property.ConversionException will be thrown.
      * 
      * @param dateString
      * @return parsed Date
@@ -503,7 +503,7 @@ public class DateField extends AbstractField {
      * 
      * By default it is encouraged to used default formatting defined by Locale,
      * but due some JVM bugs it is sometimes necessary to use this method to
-     * override formatting. See Toolkit issue #2200.
+     * override formatting. See Vaadin issue #2200.
      * 
      * @param dateFormat
      *            the dateFormat to set
