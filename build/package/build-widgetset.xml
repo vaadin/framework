@@ -6,10 +6,10 @@ Client-side code is compiled by using GWTCompiler which compiles client-side Jav
 JavaScript. Generated files are located under WebContent/VAADIN/widgetsets/*.
 
 Client-side compilation is required if you create new or modify existing widgets.
-You may use either this script or IT Mill Toolkit Hosted Mode.launch (in Eclipse)
+You may use either this script or Vaadin Hosted Mode Browser.launch (in Eclipse)
 to compile your client-side java code. 
 
-By default IT Mill Toolkit first tries to serve widgetset resources from the file system, if that
+By default Vaadin first tries to serve widgetset resources from the file system, if that
 fails then files are streamed from vaadin-<version>.jar. 
 
 See configure target to adjust this buildfile.
@@ -27,7 +27,7 @@ See configure target to adjust this buildfile.
 	-->
 	<target name="configure">
 		
-		<!-- Path from this file to the root of the toolkit distribution package -->
+		<!-- Path from this file to the root of the Vaadin distribution package -->
 		<property name="base" value="../../../" />
 		
 		<!-- which platform we are in, possible values are windows, linux and mac -->
@@ -36,7 +36,7 @@ See configure target to adjust this buildfile.
 		<!-- where platform specific GWT distribution is located -->
 		<property name="gwt-location" value="${base}gwt" />
 		
-		<!-- where Toolkit jar is located -->
+		<!-- where Vaadin jar is located -->
 		<property name="toolkit-jar-location" value="${base}WebContent/WEB-INF/lib/vaadin-@version@.jar" />
 		
 		<!-- where project client-side widgetset source files are located -->

@@ -23,9 +23,9 @@ Creates two packages:
 		<delete dir="build" />
 	</target>
 
-	<!-- Compiles your Toolkit application -->
+	<!-- Compiles your Vaadin application -->
 	<target name="compile" depends="init">
-		<echo message="Compiling Toolkit application sources." />
+		<echo message="Compiling Vaadin application sources." />
 		<path id="compile.class.path">
 			<fileset dir="WebContent">
 				<include name="WEB-INF/lib/*.jar" />
@@ -41,7 +41,7 @@ Creates two packages:
 		</javac>
 	</target>
 
-	<!-- Creates Toolkit WAR package (requires Application Server / Servlet Container)-->
+	<!-- Creates Vaadin WAR package (requires Application Server / Servlet Container)-->
 	<target name="war-package" depends="compile">
 		<echo message="Creating WAR package." />
 		<war warfile="build/${ant.project.name}.war" webxml="WebContent/WEB-INF/web.xml">
@@ -52,7 +52,7 @@ Creates two packages:
 		</war>
 	</target>
 
-	<!-- Creates Toolkit JAR package that contains embedded WebServer -->
+	<!-- Creates Vaadin JAR package that contains embedded WebServer -->
 	<target name="jar-package" depends="war-package">
 		<echo message="Creating JAR package." />
 		<copy tofile="build/WebServer-temp/embedded.war" file="build/${ant.project.name}.war" />
@@ -67,7 +67,7 @@ Creates two packages:
 		</copy>
 	</target>
 
-	<!-- Creates both Toolkit WAR and JAR packages -->
+	<!-- Creates both Vaadin WAR and JAR packages -->
 	<target name="package" depends="jar-package">
 		<jar destfile="build/${ant.project.name}.jar" basedir="build/WebServer-temp" manifest="build/WebServer-temp/META-INF/MANIFEST.MF" />
 		<echo message="Created WAR-file to build/${ant.project.name}.war." />

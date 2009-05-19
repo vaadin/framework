@@ -7,8 +7,8 @@ package com.vaadin.launcher.util;
 import java.io.IOException;
 
 /**
- * This class opens default browser for ITMillDesktopLaunch class. Default
- * browser is detected by the operating system.
+ * This class opens default browser for DemoLauncher class. Default browser is
+ * detected by the operating system.
  * 
  */
 public class BrowserLauncher {
