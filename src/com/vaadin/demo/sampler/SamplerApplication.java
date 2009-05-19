@@ -7,10 +7,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import com.vaadin.Application;
-import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.demo.sampler.ActiveLink.LinkActivatedEvent;
@@ -53,8 +51,7 @@ public class SamplerApplication extends Application {
     private static final HierarchicalContainer allFeatures = FeatureSet.FEATURES
             .getContainer(true);
 
-    // this actually differs from getTheme() - this is the 'base', the active
-    // theme extends this
+    // init() inits
     private static final String THEME_NAME = "sampler";
 
     // used when trying to guess theme location
@@ -62,7 +59,7 @@ public class SamplerApplication extends Application {
 
     @Override
     public void init() {
-        setTheme("sampler-reindeer");
+        setTheme("sampler");
         setMainWindow(new SamplerWindow());
         APP_URL = getURL().toString();
     }
@@ -212,33 +209,6 @@ public class SamplerApplication extends Application {
                     setFeature(frag);
                 }
             });
-
-            { // Theme select
-                final ComboBox themeSelect = new ComboBox();
-                themeSelect.setWidth("120px");
-                themeSelect.setStyleName("theme");
-                themeSelect.setImmediate(true);
-                themeSelect.setNullSelectionAllowed(false);
-                themeSelect.addContainerProperty("name", String.class, null);
-                themeSelect.setItemCaptionPropertyId("name");
-                Item item = themeSelect.addItem("sampler-reindeer");
-                item.getItemProperty("name").setValue("Reindeer theme");
-                item = themeSelect.addItem("sampler-runo");
-                item.getItemProperty("name").setValue("Runo theme");
-                themeSelect.setValue(SamplerApplication.this.getTheme());
-                themeSelect.addListener(new ValueChangeListener() {
-                    public void valueChange(ValueChangeEvent event) {
-                        Object theme = themeSelect.getValue();
-                        if (theme != null
-                                && !theme.equals(SamplerApplication.this
-                                        .getTheme())) {
-                            SamplerApplication.this.setTheme((String) theme);
-                        }
-                    }
-                });
-                nav.addComponent(themeSelect);
-                nav.setComponentAlignment(themeSelect, Alignment.MIDDLE_LEFT);
-            }
 
             // Main left/right split; hidden menu tree
             mainSplit = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
