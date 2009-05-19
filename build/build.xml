@@ -510,8 +510,8 @@
 		<move file="${output-dir}/build-widgetset.xml" tofile="${output-dir}/WebContent/docs/example-source/build-widgetset.xml" />
 		<move file="${output-dir}/eclipse-classpath" tofile="${output-dir}/.classpath" />
 		<move file="${output-dir}/eclipse-project" tofile="${output-dir}/.project" />
-		<move file="${output-dir}/eclipse-Vaadin Hosted Mode-launch" tofile="${output-dir}/Vaadin Hosted Mode.launch" />
-		<move file="${output-dir}/eclipse-Vaadin Web Mode-launch" tofile="${output-dir}/Vaadin Web Mode.launch" />
+		<move file="${output-dir}/eclipse-Vaadin Hosted Mode Browser-launch" tofile="${output-dir}/Vaadin Hosted Mode Browser.launch" />
+		<move file="${output-dir}/eclipse-Vaadin Development Server-launch" tofile="${output-dir}/Vaadin Development Server.launch" />
 		<mkdir dir="${output-dir}/.settings" />
 		<move file="${output-dir}/eclipse-org.eclipse.core.resources.prefs" tofile="${output-dir}/.settings/org.eclipse.core.resources.prefs" />
 		<move file="${output-dir}/eclipse-org.eclipse.jdt.core.prefs" tofile="${output-dir}/.settings/org.eclipse.jdt.core.prefs" />

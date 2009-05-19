@@ -32,11 +32,11 @@ import com.vaadin.launcher.util.BrowserLauncher;
  * This class starts servlet container and opens a simple control dialog.
  * 
  */
-public class ITMillToolkitDesktopMode {
+public class DemoLauncher {
 
     public static void main(String[] args) {
 
-        final Map serverArgs = ITMillToolkitWebMode.parseArguments(args);
+        final Map serverArgs = DevelopmentServerLauncher.parseArguments(args);
         boolean deployed = false;
         try {
             // Default deployment: embedded.war
@@ -53,18 +53,18 @@ public class ITMillToolkitDesktopMode {
                 // Using WebContent directory as webroot
                 serverArgs.put("webroot", "WebContent");
             } else {
-                System.err.print("Failed to deploy Toolkit application. "
+                System.err.print("Failed to deploy Vaadin application. "
                         + "Please add --webroot parameter. Exiting.");
                 return;
             }
         }
 
         // Start the Winstone servlet container
-        final String url = ITMillToolkitWebMode.runServer(serverArgs,
-                "Desktop Mode");
+        final String url = DevelopmentServerLauncher.runServer(serverArgs,
+                "Demo Server");
 
         if (!serverArgs.containsKey("nogui") && url != null) {
-			
+
             // Open browser into application URL
             BrowserLauncher.openBrowser(url);
 
@@ -178,7 +178,7 @@ public class ITMillToolkitDesktopMode {
      */
     protected static boolean deployEmbeddedWarfile(Map args) throws IOException {
         final String embeddedWarfileName = "/embedded.war";
-        final InputStream embeddedWarfile = ITMillToolkitDesktopMode.class
+        final InputStream embeddedWarfile = DemoLauncher.class
                 .getResourceAsStream(embeddedWarfileName);
         if (embeddedWarfile != null) {
             final File tempWarfile = File.createTempFile("embedded", ".war")

@@ -54,8 +54,8 @@ WebContent/doc/example-source
 WebContent/demo
 - files required by the demos
 
-IT Mill Toolkit Hosted Mode.launch
-IT Mill Toolkit Web Mode.launch
+Vaadin Hosted Mode Browser.launch
+Vaadin Development Server.launch
 - launch configurations for Eclipse workspace
 
 WebContent/doc/example-source/build-widgetset.xml

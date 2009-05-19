@@ -18,7 +18,7 @@ import com.vaadin.launcher.util.BrowserLauncher;
  * Class for running Jetty servlet container within Eclipse project.
  * 
  */
-public class ITMillToolkitWebMode {
+public class DevelopmentServerLauncher {
 
     private final static String serverPort = "8888";
 
@@ -37,7 +37,7 @@ public class ITMillToolkitWebMode {
 
         // Start Jetty
         System.out.println("Starting Jetty servlet container.");
-        final String url = runServer(serverArgs, "Web Mode");
+        final String url = runServer(serverArgs, "Development Server Mode");
 
         // Start Browser
         System.out.println("Starting Web Browser.");
@@ -58,7 +58,7 @@ public class ITMillToolkitWebMode {
         // Add help for System.out
         System.out
                 .println("-------------------------------------------------\n"
-                        + "Starting IT Mill Toolkit in "
+                        + "Starting Vaadin in "
                         + mode
                         + ".\n"
                         + "Running in http://localhost:"

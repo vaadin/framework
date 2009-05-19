@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
-<stringAttribute key="bad_container_name" value="/<eclipse-workspace-name></eclipse-workspace-name>/IT Mill Toolkit Hosted Mode.launch"/>
+<stringAttribute key="bad_container_name" value="/<eclipse-workspace-name></eclipse-workspace-name>/Vaadin Hosted Mode.launch"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
 <listEntry value="/<eclipse-workspace-name></eclipse-workspace-name>/gwt/gwt-dev-@platform@.jar"/>
 </listAttribute>
@@ -21,7 +21,7 @@
 </listAttribute>
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.gwt.dev.GWTShell"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-noserver -out WebContent/ITMILL/widgetsets http://localhost:8888/"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-noserver -out WebContent/VAADIN/widgetsets http://localhost:8888/"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="<eclipse-workspace-name></eclipse-workspace-name>"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="<eclipse-launch-vmargs></eclipse-launch-vmargs>"/>
 </launchConfiguration>
