@@ -341,7 +341,7 @@
 			</fileset>
 		</copy>
 
-		<war warfile="${result-path}/${product-file}-${version}.war"> 
+		<war warfile="${result-path}/${product-file}-demo-${version}.war"> 
 			<fileset dir="${output-dir}/WebContent">
 				<include name="**/*" />
 			</fileset>
