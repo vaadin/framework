@@ -25,28 +25,34 @@ community and support site vaadin.com</a></div>
 <div class="content">
 
 <div>
-<h2>Release Notes for Vaadin Version @version@</h2>
+<h2>Release Notes for Vaadin @version@</h2>
 
-<p>Vaadin 6.0.0 is the first release of Vaadin, the next generation of the framework
+<p>Vaadin @version@ is the first release of Vaadin, the next generation of the framework
 formerly known as IT Mill Toolkit. The major release includes a number of enhancements to
-IT Mill Toolkit 5.4.0, along with many bug fixes. The most notable additions are:</p>
+IT Mill Toolkit 5.4, along with many bug fixes. The most significant additions are:</p>
 
 <ul>
   <li>Vaadin Plugin for the Eclipse IDE</li>
-  <li>WYSIWYG Editor under Eclipse</li>
+  <li>Preview version of a WYSIWYG Editor (under Eclipse)</li>
 </ul>
 
 <p>Some other notable changes:</p>
 
 <ul>
-  <li><b>TabSheet</b> API has changed (#2914)</li>
-  <li><b>Panel</b> and <b>Window</b> can now contain a <b>ComponentContainer</b> as the "root layout" (previously only Layout) (#2921). This should not require changes to user code.</li>
-  <li></li>
+  <li>State (caption, hidden, disabled) of a tab in a <b>TabSheet</b> is no longer bound to the contained component, though the initial state is obtained from the component (<a href="http://dev.itmill.com/ticket/2914">#2914</a>).</li>
+
+  <li><b>FieldFactory</b> has been split into <b>FormFieldFactory</b> and <b>TableFieldFactory</b>, both containing a single method (<a href="http://dev.itmill.com/ticket/2956">#2956</a>, <a href="http://dev.itmill.com/ticket/2499">#2499</a>).</li>
+
+  <li>The <b>Form</b> component previously called two methods in <b>FieldFactory</b>. Now it always calls only one in <b>FormFieldFactory</b></li>
+
+  <li><b>Panel</b> and <b>Window</b> can now contain a <b>ComponentContainer</b> as the "root layout" (previously only Layout) (<a href="http://dev.itmill.com/ticket/2921">#2921</a>). This should not require changes to user code.</li>
 </ul>
+
+<p>The first three changes are not backward-compatible with IT Mill Toolkit 5.4.</p>
 
 <h2>Instructions for Upgrading from IT Mill Toolkit 5</h2>
 
-<p>While the Vaadin 6 API is otherwise backward-compatible with IT Mill Toolkit 5.4, the
+<p>While the Vaadin 6 API is otherwise mostly backward-compatible with IT Mill Toolkit 5.4, the
 change of the product name has made it necessary to reflect it in the Java package names,
 some name prefixes, and some other details.</p>
 
@@ -55,40 +61,41 @@ some name prefixes, and some other details.</p>
 <ul>
   <li>Java Package names have changed:</li>
   <ul>
-    <li>Renamed <tt>com.itmill.toolkit</tt> to <tt>com.vaadin</tt></li>
-    <li>Applies to all Java files using IT Mill Toolkit</li>
-    <li>The <tt>web.xml</tt> deployment descriptor must also be updated</li>
+    <li>In all Java files using IT Mill Toolkit, rename package prefix <tt>com.itmill.toolkit</tt> &#x2192; <tt>com.vaadin</tt></li>
+    <li>You also need to update the <tt>web.xml</tt> deployment descriptor:</li>
+    <ul>
+      <li>The servlet class is now <b>com.vaadin.terminal.gwt.server.ApplicationServlet</b>.</li>
+    </ul>
   </ul>
 
   <li>Changes in themes:
   <ul>
-    <li><tt>WebContent/ITMILL</tt> has been renamed to <tt>WebContent/VAADIN</tt></li>
+    <li>Rename <tt>WebContent/ITMILL</tt> &#x2192; <tt>WebContent/VAADIN</tt></li>
     <ul>
+      <li>If you have extracted the built-in themes and widgetsets in IT Mill Toolkit JAR to the folder to have them served statically by the server, remove the old content and re-extract from Vaadin JAR.</li>
       <li>This may require changes to build scripts for custom widgetsets, as well as to any code that relies on the old naming (it is discouraged but possible).</li>
     </ul>
-    <li>The new "<tt>reindeer</tt>" theme is the default theme in Vaadin.</li>
-    <li>The "<tt>default</tt>" theme in IT Mill Toolkit 5 has been renamed as "<tt>runo</tt>"</li>
+    <li>The new "<tt>reindeer</tt>" theme is the default theme in Vaadin; the old
+    "<tt>default</tt>" theme in IT Mill Toolkit 5 has been renamed as "<tt>runo</tt>"</li>
     <ul>
-      <li>Custom themes that import the "<tt>default</tt>" theme should instead import "<tt>runo</tt>".</li>
       <li>There is no longer a theme with name "<tt>default</tt>"</li>
-      <li>The old default theme can be used with <tt>setTheme("runo");</tt></li>
+      <li>In your custom theme, replace:
+         <table><tr><td></td><td><tt>@import "../default/styles.css";</tt></td></tr>
+         <tr><td align="right">&#x2192;</td><td><tt>@import "../reindeer/styles.css";</tt></td><td>if you wish to use the new default theme,</td></tr>
+         <tr><td align="right">or &#x2192;</td><td><tt>@import "../runo/styles.css";</tt></td><td>if you wish to use the old default theme.</td></tr></li>
+      <li>Use the new default theme with <tt>setTheme("reindeer")</tt> and the old one with <tt>setTheme("runo")</tt>.</li>
     </ul>
     <li>CSS class names now start with "<tt>v-</tt>" prefix instead of "<tt>i-</tt>"</li>
     <ul>
-      <li>To fix: search "<tt>.i-</tt>" and replace with "<tt>.v-</tt>" in custom themes </li>
+      <li>Search and replace "<tt>.i-</tt>" &#x2192; "<tt>.v-</tt>" in custom themes </li>
     </ul>
   </ul>
 
   <li>Embedding Vaadin applications in web pages:</li>
   <ul>
-    <li>The name of the JavaScript variable used for launching applications has changed from "<tt>itmill.toolkitConfigurations</tt>" to "<tt>vaadin.vaadinConfigurations</tt>"</li>
+    <li>The name of the JavaScript variable used for launching applications has changed from "<tt>itmill.toolkitConfigurations</tt>" &#x2192; "<tt>vaadin.vaadinConfigurations</tt>"</li>
   </ul>
 
-  <li>Other API changes:</li>
-  <ul>
-    <li><b>FieldFactory</b> has been split into <b>FormFieldFactory</b> and <b>TableFieldFactory</b>, both containing a single method (#2956, #2499).</li>
-    <li>The <b>Form</b> component previously called two methods in <b>FieldFactory</b>. Now it always calls only one in <b>FormFieldFactory</b></li>
-  </ul>
 </ul>
 
 <h3>Client-side Upgrade Instructions</h3>
@@ -98,12 +105,17 @@ client-side widgets with Google Web Toolkit (GWT).</p>
 
 <ul>
   <li>GWT 1.6 is required for compiling custom widgets (optional)</li>
-          o Possible problems when building widgetset using Windows and JDK 1.5 (#2891)
-          o GWT version in the projects must be updated (done automatically by the plugin)
-          o GWT Compiler class name has changed
+  <ul>
+    <li>You need to upgrade GWT</li>
+    <li>The GWT Compiler class name has changed:</li>
+    <ul>
+      <li>Replace <tt>com.google.gwt.dev.GWTCompiler</tt> &#x2192; <tt>com.google.gwt.dev.Compiler</tt> in your widget set build script (Ant) or launch configuration (Eclipse).</li>
+    </ul>
+    <li><i>Possible problems when building widgetset using Windows and JDK 1.5</i>. See <a href="#known-problems">Known Problems</a> #2891 below.</li>
+  </ul>
 
-  <li>The "<b>I</b>" (IT Mill) prefix in client-side widget classes has been changed to "<b>V</b>" (Vaadin), for example: <b>IButton</b> is now <b>VButton</b>.</li>
-  <li><b>IToolkitOverlay</b> is now <b>VOverlay</b>
+  <li>The "<b>I</b>" (IT Mill) prefix in client-side widget classes has been changed to "<b>V</b>" (Vaadin), for example: <b>IButton</b> &#x2192; <b>VButton</b>.</li>
+  <li>Rename <b>IToolkitOverlay</b> &#x2192; <b>VOverlay</b>
 </ul>
 
 <h2>Package for the experimental GWT Out-of-Process Hosted Mode</h2>
@@ -130,7 +142,7 @@ debugging purposes during development. For production use, you should
 compile your custom widget sets with the regular Vaadin package
 for your platform.</p>
 
-<h2>Important known problems in @version@</h2>
+<h2><a name="known-problems">Important known problems in Vaadin @version@</a></h2>
 
 <ul>
 	<li><a href="http://dev.itmill.com/ticket/1155">#1155</a>
@@ -146,6 +158,20 @@ for your platform.</p>
 	GWT code. You need to install the experimental OOPHM package instead
 	(see above) for development. For production, you should use the regular
 	package for Linux.</li>
+
+    <li>
+      <p><a href="http://dev.itmill.com/ticket/2891">#2891</a> As there is a bug in J2SE
+      5.0 that prevents setting the stack size for the main thread, widgetsets cannot be
+      compiled using the standard GWT compiler of GWT 1.6 and JDK 1.5.0 (see #2656 for
+      more details on the JDK bug). This bug primarily affects Windows users as other
+      operating systems have a larger default stack size.</p>
+
+      <p>Before that fix is available in a published GWT version, we provide a wrapper for
+      the GWT compiler that runs the compiler in a separate thread, thus using the
+      user-specified stack size settings also on JDK 1.5.0. Use
+      <tt>com.itmill.toolkit.launcher.WidgetsetCompiler</tt> instead of
+      <tt>com.google.gwt.dev.Compiler</tt></p>
+    </li>
 </ul>
 
 <p>For other known problems, see open tickets at developer site <a
@@ -184,16 +210,10 @@ it:</p>
 
 <ul>
 	<li>Mozilla Firefox release 3</li>
-	<li>Internet Explorer releases 6, 7, and 8<sup>&#8224;</sup>.</li>
+	<li>Internet Explorer releases 6, 7, and 8</li>
 	<li>Safari 3</li>
-	<li>Opera 9.6<sup>&#8225;</sup></li>
+	<li>Opera 9.6</li>
 </ul>
-
-<p style="font-size: 80%;">&#8224; Internet Explorer 8 RC1 may not be usable because of a
-serious bug in the RC1. <a href="http://dev.itmill.com/ticket/2578">#2578</a><br/>
-
-&#8225; The current support for Opera has some limitations, such as the front page of
-the Sampler demo. <a href="http://dev.itmill.com/ticket/2652">#2652</a></p>
 
 <p>The support for browsers follows the support by GWT. The browsers are supported on both
 Windows and Mac, if available. Firefox is supported also on Linux (Opera 10a1 works also
@@ -207,7 +227,7 @@ work to a large degree:</p>
 
 <ul>
 	<li>Safari 2, and 4 beta</li>
-	<li>Firefox 1.5 and 2</li>
+	<li>Firefox 2</li>
     <li>Google Chrome 1.0.x (available only for Windows)</li>
 	<li>iPhone (firmware 2.2)</li>
     <li>Midori (0.1.2)</li>
