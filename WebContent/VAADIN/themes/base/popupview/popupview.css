@@ -1,7 +1,5 @@
 .v-popupview {
 	cursor: pointer;
-	width: 5px;
-	height: 5px;
 	background: #aaa;
 }
 .v-popupview-popup {
