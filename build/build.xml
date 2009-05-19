@@ -255,6 +255,8 @@
 			<zipfileset prefix="${product-file}-${package-platform}-${version}/gwt" dir="${gwt-dir}/${package-platform}">
 				<patternset>
 					<include name="**/*" />
+					<exclude name="gwt/doc"/>
+					<exclude name="gwt/samples"/>
 				</patternset>
 			</zipfileset>
 		</zip>
@@ -962,6 +964,8 @@
 				<patternset>
 					<include name="VAADIN/widgetsets/com.vaadin.terminal.gwt.DefaultWidgetSet/**/*" />
 					<include name="VAADIN/themes/default/**/*" />
+					<include name="VAADIN/themes/runo/**/*" />
+					<include name="VAADIN/themes/reindeer/**/*" />
 				</patternset>
 			</fileset>
 		</jar>
