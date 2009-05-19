@@ -1,0 +1,12 @@
+/* "default" theme has been renamed to "runo" */
+
+.v-generated-body {
+	background-image: url(images/default_theme_is_now_runo.png);
+	background-repeat: no-repeat;
+	height: 83px;
+	width: 347px;
+}
+
+.v-app {
+	display: none;
+}
