@@ -6,11 +6,11 @@ import java.util.List;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.data.validator.EmailValidator;
+import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.demo.tutorial.addressbook.AddressBookApplication;
 import com.vaadin.demo.tutorial.addressbook.data.Person;
 import com.vaadin.demo.tutorial.addressbook.data.PersonContainer;
-import com.vaadin.demo.tutorial.addressbook.validators.EmailValidator;
-import com.vaadin.demo.tutorial.addressbook.validators.PostalCodeValidator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
@@ -89,11 +89,14 @@ public class PersonForm extends Form implements ClickListener {
 					tf.setNullRepresentation("");
 
 					/* Add a validator for postalCode and make it required */
-					tf.addValidator(new PostalCodeValidator());
+					tf
+							.addValidator(new RegexpValidator("[1-9][0-9]{4}",
+									"Postal code must be a five digit number and cannot start with a zero."));
 					tf.setRequired(true);
 				} else if (propertyId.equals("email")) {
 					/* Add a validator for email and make it required */
-					field.addValidator(new EmailValidator());
+					field.addValidator(new EmailValidator(
+							"Email must contain '@' and have full domain."));
 					field.setRequired(true);
 
 				}

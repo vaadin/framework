@@ -1,7 +1,3 @@
-/* 
-@ITMillApache2LicenseForJavaFiles@
- */
-
 package com.vaadin.demo.tutorial.addressbook;
 
 import com.vaadin.Application;
