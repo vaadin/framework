@@ -747,6 +747,7 @@
 					<include name="*.jar"/>
 				</fileset>
 			</classpath>
+            <jvmarg value="-Djava.awt.headless=true"/>
 		</java>
 	</target>
 
@@ -762,8 +763,8 @@
 	<target name="compile-widgetset-default">
 		<echo>Compiling src (client-side)</echo>
 		<echo>com.vaadin.terminal.gwt.DefaultWidgetSet</echo>
-		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
-			<arg value="-out" />
+		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
+			<arg value="-war" />
 			<arg value="${output-dir}/WebContent/VAADIN/widgetsets" />
 			<arg value="com.vaadin.terminal.gwt.DefaultWidgetSet" />
 			<arg value="-style" />
@@ -788,8 +789,8 @@
 			<available file="lib/reservr/gwt-maps.jar" />
 		</condition>
 		<echo>com.vaadin.demo.reservation.gwt.ReservationWidgetSet</echo>
-		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
-			<arg value="-out" />
+		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
+			<arg value="-war" />
 			<arg value="${output-dir}/WebContent/VAADIN/widgetsets" />
 			<arg value="com.vaadin.demo.reservation.gwt.ReservationWidgetSet" />
 			<arg value="-style" />
@@ -813,8 +814,8 @@
     <!-- Building Sampler for installation package is disabled. -->
 	<target name="compile-widgetset-sampler" unless="build.sampler.disabled">
 		<echo>com.vaadin.demo.sampler.gwt.SamplerWidgetSet</echo>
-		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
-			<arg value="-out" />
+		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
+			<arg value="-war" />
 			<arg value="${output-dir}/WebContent/VAADIN/widgetsets" />
 			<arg value="com.vaadin.demo.sampler.gwt.SamplerWidgetSet" />
 			<arg value="-style" />
@@ -835,8 +836,8 @@
 	
 	<target name="compile-widgetset-coverflow">
 		<echo>com.vaadin.demo.coverflow.gwt.CoverflowWidgetSet</echo>
-		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
-			<arg value="-out" />
+		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
+			<arg value="-war" />
 			<arg value="${output-dir}/WebContent/VAADIN/widgetsets" />
 			<arg value="com.vaadin.demo.coverflow.gwt.CoverflowWidgetSet" />
 			<arg value="-style" />
@@ -857,8 +858,8 @@
 	
 	<target name="compile-widgetset-colorpicker">
 		<echo>com.vaadin.demo.colorpicker.gwt.ColorPickerWidgetSet</echo>
-		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
-			<arg value="-out" />
+		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
+			<arg value="-war" />
 			<arg value="${output-dir}/WebContent/VAADIN/widgetsets" />
 			<arg value="com.vaadin.demo.colorpicker.gwt.ColorPickerWidgetSet" />
 			<arg value="-style" />
