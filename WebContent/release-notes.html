@@ -10,21 +10,15 @@
 </head>
 <body>
 
-<div id="container">
+		<div id="header">
+			<h1>Vaadin &ndash; thinking of U and I</h1>
+			<div id="version">
+				<a href="index.html" title="Back to index page">Back</a>
+			</div>
+		</div> <!-- /header -->
 
-<div class="header">
-<h1>Introducing Vaadin 6</h1>
-<em>Effortless web application development for Java-programmers.</em>
-<div id="header-links"><a href="http://dev.vaadin.com"
-	title="Open dev.vaadin.com">Visit developer site dev.vaadin.com</a><br />
-<a href="http://vaadin.com" title="Open vaadin.com">Visit
-community and support site vaadin.com</a></div>
-</div>
-<!-- /Header -->
+<div id="content">
 
-<div class="content">
-
-<div>
 <h2>Release Notes for Vaadin @version@</h2>
 
 <p>Vaadin @version@ is the first release of Vaadin, the next generation of the framework
@@ -82,7 +76,7 @@ some name prefixes, and some other details.</p>
       <li>In your custom theme, replace:
          <table><tr><td></td><td><tt>@import "../default/styles.css";</tt></td></tr>
          <tr><td align="right">&#x2192;</td><td><tt>@import "../reindeer/styles.css";</tt></td><td>if you wish to use the new default theme,</td></tr>
-         <tr><td align="right">or &#x2192;</td><td><tt>@import "../runo/styles.css";</tt></td><td>if you wish to use the old default theme.</td></tr></li>
+         <tr><td align="right">or &#x2192;</td><td><tt>@import "../runo/styles.css";</tt></td><td>if you wish to use the old default theme.</td></tr></table></li>
       <li>Use the new default theme with <tt>setTheme("reindeer")</tt> and the old one with <tt>setTheme("runo")</tt>.</li>
     </ul>
     <li>CSS class names now start with "<tt>v-</tt>" prefix instead of "<tt>i-</tt>"</li>
@@ -243,14 +237,12 @@ as well.</p>
 not with Vaadin 6. Links, Lynx, and other text-based browsers do not
 work.</p>
 
-<div class="clearer"></div>
-</div>
-<!-- /content-->
+</div> <!-- /content-->
 
-<div class="footer"><a href="http://www.itmill.com">IT Mill
-Ltd.</a> <em>Interfacing IT</em></div>
-<!-- /footer --></div>
-<!-- /container -->
+
+<div id="footer">
+	<span class="slogan">Vaadin &ndash; thinking of U and I<span>
+</div> <!-- /footer -->
 
 </body>
 </html>
