@@ -179,9 +179,7 @@ public class FeatureView extends HorizontalLayout {
                 res.setMargin(false, false, true, false);
                 for (NamedExternalResource r : resources) {
                     final Link l = new Link(r.getName(), r);
-                    l
-                            .setIcon(new ThemeResource(
-                                    "../default/icons/16/note.png"));
+                    l.setIcon(new ThemeResource("../runo/icons/16/note.png"));
                     res.addComponent(l);
                 }
                 right.addComponent(res);
@@ -199,7 +197,7 @@ public class FeatureView extends HorizontalLayout {
                 for (APIResource r : apis) {
                     final Link l = new Link(r.getName(), r);
                     l.setIcon(new ThemeResource(
-                            "../default/icons/16/document-txt.png"));
+                            "../runo/icons/16/document-txt.png"));
                     api.addComponent(l);
                 }
                 right.addComponent(api);

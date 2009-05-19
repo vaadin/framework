@@ -31,7 +31,7 @@ public class Ticket736 extends Application {
         f.setItemDataSource(new BeanItem(address, new String[] { "name",
                 "street", "zip", "city", "state", "country" }));
         f.setCaption("Office address");
-        f.setIcon(new ThemeResource("../default/icons/16/document.png"));
+        f.setIcon(new ThemeResource("../runo/icons/16/document.png"));
         f.setDescription("Jep jpe, this is form description.");
         mainWin.addComponent(f);
 
@@ -52,7 +52,7 @@ public class Ticket736 extends Application {
         f.getField("zip").addValidator(new IsInteger());
         f.getField("zip").setDescription("Jepjep");
         ((AbstractComponent) f.getField("zip")).setIcon(new ThemeResource(
-                "../default/icons/16/folder.png"));
+                "../runo/icons/16/folder.png"));
         f.getField("state").addValidator(new IsValidState());
         f.getField("name").setRequired(true);
         f.getField("street").setRequired(true);
