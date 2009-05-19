@@ -1,4 +1,4 @@
-package com.vaadin.launcher;
+package com.vaadin.tools;
 
 import java.lang.reflect.Method;
 
@@ -43,6 +43,8 @@ public class WidgetsetCompiler {
                 public void run() {
                     try {
                         // GWTCompiler.main(args);
+                        // avoid warnings
+                        System.setProperty("gwt.nowarn.legacy.tools", "true");
                         Class<?> compilerClass = Class
                                 .forName("com.google.gwt.dev.GWTCompiler");
                         Method method = compilerClass.getDeclaredMethod("main",
