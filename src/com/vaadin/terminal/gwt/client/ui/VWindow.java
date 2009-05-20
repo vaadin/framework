@@ -807,7 +807,7 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
                 DOM.setStyleAttribute(getElement(), "width", rootWidth + "px");
             }
 
-            renderSpace.setWidth(pixelWidth);
+            renderSpace.setWidth(contents.getOffsetWidth() - getBorderWidth());
 
             // IE6 needs the actual inner content width on the content element,
             // otherwise it won't wrap the content properly (no scrollbars
