@@ -467,7 +467,9 @@ public class VCustomLayout extends ComplexPanel implements Paintable,
     @Override
     public void onDetach() {
         super.onDetach();
-        detachResizedFunction(elementWithNativeResizeFunction);
+        if (elementWithNativeResizeFunction != null) {
+            detachResizedFunction(elementWithNativeResizeFunction);
+        }
     }
 
     private native void detachResizedFunction(Element element)
