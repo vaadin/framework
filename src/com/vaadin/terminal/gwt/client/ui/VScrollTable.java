@@ -2203,7 +2203,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
                 this.rowKey = rowKey;
                 rowElement = Document.get().createTRElement();
                 setElement(rowElement);
-                DOM.sinkEvents(getElement(), Event.ONCLICK | Event.ONDBLCLICK
+                DOM.sinkEvents(getElement(), Event.ONMOUSEUP | Event.ONDBLCLICK
                         | Event.ONCONTEXTMENU);
             }
 
@@ -2402,7 +2402,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
                                     paintableId,
                                     "clickEvent",
                                     details.toString(),
-                                    !(!doubleClick
+                                    !(event.getButton() == Event.BUTTON_LEFT
+                                            && !doubleClick
                                             && selectMode > Table.SELECT_MODE_NONE && immediate));
                 }
             }
@@ -2416,9 +2417,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
                     Element targetTdOrTr = getEventTargetTdOrTr(event);
                     if (targetTdOrTr != null) {
                         switch (DOM.eventGetType(event)) {
-                        case Event.ONCLICK:
+                        case Event.ONDBLCLICK:
                             handleClickEvent(event, targetTdOrTr);
-                            if (selectMode > Table.SELECT_MODE_NONE) {
+                            break;
+                        case Event.ONMOUSEUP:
+                            handleClickEvent(event, targetTdOrTr);
+                            if (event.getButton() == Event.BUTTON_LEFT
+                                    && selectMode > Table.SELECT_MODE_NONE) {
                                 toggleSelection();
                                 // Note: changing the immediateness of this
                                 // might
@@ -2427,9 +2432,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
                                 client.updateVariable(paintableId, "selected",
                                         selectedRowKeys.toArray(), immediate);
                             }
-                            break;
-                        case Event.ONDBLCLICK:
-                            handleClickEvent(event, targetTdOrTr);
                             break;
                         case Event.ONCONTEXTMENU:
                             showContextMenu(event);

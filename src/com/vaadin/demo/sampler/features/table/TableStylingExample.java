@@ -70,6 +70,7 @@ public class TableStylingExample extends VerticalLayout {
         table.setColumnCollapsingAllowed(true);
 
         // Actions (a.k.a context menu)
+
         table.addActionHandler(new Action.Handler() {
             public Action[] getActions(Object target, Object sender) {
                 return ACTIONS;
@@ -115,6 +116,10 @@ public class TableStylingExample extends VerticalLayout {
         // toggle cell 'marked' styling when double-clicked
         table.addListener(new ItemClickListener() {
             public void itemClick(ItemClickEvent event) {
+                if (event.getButton() == ItemClickEvent.BUTTON_RIGHT) {
+                    // you can handle left/right/middle -mouseclick
+                }
+
                 if (event.isDoubleClick()) {
                     Object itemId = event.getItemId();
                     Object propertyId = event.getPropertyId();
