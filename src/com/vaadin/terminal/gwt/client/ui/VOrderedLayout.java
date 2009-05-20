@@ -77,8 +77,8 @@ public class VOrderedLayout extends CellBasedLayout {
         ArrayList<UIDL> relativeSizeComponentUIDL = new ArrayList<UIDL>();
 
         int pos = 0;
-        for (final Iterator<UIDL> it = uidl.getChildIterator(); it.hasNext();) {
-            final UIDL childUIDL = it.next();
+        for (final Iterator<Object> it = uidl.getChildIterator(); it.hasNext();) {
+            final UIDL childUIDL = (UIDL) it.next();
             final Paintable child = client.getPaintable(childUIDL);
             Widget widget = (Widget) child;
 

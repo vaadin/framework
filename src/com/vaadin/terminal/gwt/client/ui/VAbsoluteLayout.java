@@ -132,9 +132,9 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
         HashSet<String> unrenderedPids = new HashSet<String>(
                 pidToComponentWrappper.keySet());
 
-        for (Iterator<UIDL> childIterator = uidl.getChildIterator(); childIterator
+        for (Iterator<Object> childIterator = uidl.getChildIterator(); childIterator
                 .hasNext();) {
-            UIDL cc = childIterator.next();
+            UIDL cc = (UIDL) childIterator.next();
             UIDL componentUIDL = cc.getChildUIDL(0);
             unrenderedPids.remove(componentUIDL.getId());
             getWrapper(client, componentUIDL).updateFromUIDL(cc);

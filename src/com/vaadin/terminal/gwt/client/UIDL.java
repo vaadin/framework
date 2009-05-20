@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONNumber;
@@ -17,7 +19,6 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
-import com.google.gwt.user.client.ui.TreeListener;
 
 public class UIDL {
 
@@ -47,8 +48,9 @@ public class UIDL {
         return ((JSONString) val).stringValue();
     }
 
-    public Set getAttributeNames() {
-        final HashSet attrs = new HashSet(((JSONObject) json.get(1)).keySet());
+    public Set<String> getAttributeNames() {
+        final HashSet<String> attrs = new HashSet<String>(((JSONObject) json
+                .get(1)).keySet());
         attrs.remove("v");
         return attrs;
     }
@@ -58,7 +60,7 @@ public class UIDL {
         if (val == null) {
             return 0;
         }
-        final double num = ((JSONNumber) val).getValue();
+        final double num = val.isNumber().doubleValue();
         return (int) num;
     }
 
@@ -67,7 +69,7 @@ public class UIDL {
         if (val == null) {
             return 0;
         }
-        final double num = ((JSONNumber) val).getValue();
+        final double num = val.isNumber().doubleValue();
         return (long) num;
     }
 
@@ -76,7 +78,7 @@ public class UIDL {
         if (val == null) {
             return 0;
         }
-        final double num = ((JSONNumber) val).getValue();
+        final double num = val.isNumber().doubleValue();
         return (float) num;
     }
 
@@ -85,7 +87,7 @@ public class UIDL {
         if (val == null) {
             return 0;
         }
-        final double num = ((JSONNumber) val).getValue();
+        final double num = val.isNumber().doubleValue();
         return num;
     }
 
@@ -94,7 +96,7 @@ public class UIDL {
         if (val == null) {
             return false;
         }
-        return ((JSONBoolean) val).booleanValue();
+        return val.isBoolean().booleanValue();
     }
 
     public String[] getStringArrayAttribute(String name) {
@@ -115,9 +117,9 @@ public class UIDL {
         return s;
     }
 
-    public HashSet getStringArrayAttributeAsSet(String string) {
+    public HashSet<String> getStringArrayAttributeAsSet(String string) {
         final JSONArray a = getArrayVariable(string);
-        final HashSet s = new HashSet();
+        final HashSet<String> s = new HashSet<String>();
         for (int i = 0; i < a.size(); i++) {
             s.add(((JSONString) a.get(i)).stringValue());
         }
@@ -161,9 +163,9 @@ public class UIDL {
                 + " is not of type String");
     }
 
-    public Iterator getChildIterator() {
+    public Iterator<Object> getChildIterator() {
 
-        return new Iterator() {
+        return new Iterator<Object>() {
 
             int index = 2;
 
@@ -204,8 +206,8 @@ public class UIDL {
     public String toString() {
         String s = "<" + getTag();
 
-        for (final Iterator i = getAttributeNames().iterator(); i.hasNext();) {
-            final String name = i.next().toString();
+        Set<String> attributeNames = getAttributeNames();
+        for (String name : attributeNames) {
             s += " " + name + "=";
             final JSONValue v = ((JSONObject) json.get(1)).get(name);
             if (v.isString() != null) {
@@ -217,7 +219,7 @@ public class UIDL {
 
         s += ">\n";
 
-        final Iterator i = getChildIterator();
+        final Iterator<Object> i = getChildIterator();
         while (i.hasNext()) {
             final Object c = i.next();
             s += c.toString();
@@ -230,7 +232,7 @@ public class UIDL {
 
     public String getChildrenAsXML() {
         String s = "";
-        final Iterator i = getChildIterator();
+        final Iterator<Object> i = getChildIterator();
         while (i.hasNext()) {
             final Object c = i.next();
             s += c.toString();
@@ -250,25 +252,22 @@ public class UIDL {
             final TreeItem root = new TreeItem(getTag());
             addItem(root);
             root.addItem("");
-            addTreeListener(new TreeListener() {
+            addOpenHandler(new OpenHandler<TreeItem>() {
+                boolean isLoaded;
 
-                public void onTreeItemStateChanged(TreeItem item) {
-                    if (item == root) {
+                public void onOpen(OpenEvent<TreeItem> event) {
+                    TreeItem item = event.getTarget();
+                    if (item == root && !isLoaded) {
                         removeItem(root);
-                        VUIDLBrowser.this.removeTreeListener(this);
                         addItem(dir());
-                        final Iterator it = treeItemIterator();
+                        final Iterator<TreeItem> it = treeItemIterator();
                         while (it.hasNext()) {
-                            ((TreeItem) it.next()).setState(true);
+                            it.next().setState(true);
                         }
+                        isLoaded = true;
                     }
                 }
-
-                public void onTreeItemSelected(TreeItem item) {
-                }
-
             });
-
         }
 
         @Override
@@ -281,8 +280,8 @@ public class UIDL {
     public TreeItem dir() {
 
         String nodeName = getTag();
-        for (final Iterator i = getAttributeNames().iterator(); i.hasNext();) {
-            final String name = i.next().toString();
+        Set<String> attributeNames = getAttributeNames();
+        for (String name : attributeNames) {
             final String value = getAttribute(name);
             nodeName += " " + name + "=" + value;
         }
@@ -290,9 +289,8 @@ public class UIDL {
 
         try {
             TreeItem tmp = null;
-            for (final Iterator i = getVariableHash().keySet().iterator(); i
-                    .hasNext();) {
-                final String name = i.next().toString();
+            Set<String> keySet = getVariableHash().keySet();
+            for (String name : keySet) {
                 String value = "";
                 try {
                     value = getStringVariable(name);
@@ -321,7 +319,7 @@ public class UIDL {
             // Ignored, no variables
         }
 
-        final Iterator i = getChildIterator();
+        final Iterator<Object> i = getChildIterator();
         while (i.hasNext()) {
             final Object child = i.next();
             try {
@@ -344,12 +342,12 @@ public class UIDL {
     }
 
     public boolean hasVariable(String name) {
-        Object v = null;
-        try {
-            v = getVariableHash().get(name);
-        } catch (final IllegalArgumentException e) {
+        final JSONObject variables = (JSONObject) ((JSONObject) json.get(1))
+                .get("v");
+        if (variables == null) {
+            return false;
         }
-        return v != null;
+        return variables.keySet().contains(name);
     }
 
     public String getStringVariable(String name) {
@@ -365,7 +363,7 @@ public class UIDL {
         if (t == null) {
             throw new IllegalArgumentException("No such variable: " + name);
         }
-        return (int) t.getValue();
+        return (int) t.doubleValue();
     }
 
     public long getLongVariable(String name) {
@@ -373,7 +371,7 @@ public class UIDL {
         if (t == null) {
             throw new IllegalArgumentException("No such variable: " + name);
         }
-        return (long) t.getValue();
+        return (long) t.doubleValue();
     }
 
     public float getFloatVariable(String name) {
@@ -381,7 +379,7 @@ public class UIDL {
         if (t == null) {
             throw new IllegalArgumentException("No such variable: " + name);
         }
-        return (float) t.getValue();
+        return (float) t.doubleValue();
     }
 
     public double getDoubleVariable(String name) {
@@ -389,7 +387,7 @@ public class UIDL {
         if (t == null) {
             throw new IllegalArgumentException("No such variable: " + name);
         }
-        return t.getValue();
+        return t.doubleValue();
     }
 
     public boolean getBooleanVariable(String name) {
@@ -431,7 +429,7 @@ public class UIDL {
         final int[] s = new int[a.size()];
         for (int i = 0; i < a.size(); i++) {
             final JSONValue v = a.get(i);
-            s[i] = v.isNumber() != null ? (int) ((JSONNumber) v).getValue()
+            s[i] = v.isNumber() != null ? (int) v.isNumber().doubleValue()
                     : Integer.parseInt(v.toString());
         }
         return s;
@@ -446,8 +444,8 @@ public class UIDL {
 
         public String getXMLAsString() {
             final StringBuffer sb = new StringBuffer();
-            for (final Iterator it = x.keySet().iterator(); it.hasNext();) {
-                final String tag = (String) it.next();
+            Set<String> keySet = x.keySet();
+            for (String tag : keySet) {
                 sb.append("<");
                 sb.append(tag);
                 sb.append(">");

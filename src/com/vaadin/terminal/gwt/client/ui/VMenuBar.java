@@ -128,13 +128,13 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
         }
 
         UIDL uidlItems = uidl.getChildUIDL(1);
-        Iterator<UIDL> itr = uidlItems.getChildIterator();
-        Stack<Iterator<UIDL>> iteratorStack = new Stack<Iterator<UIDL>>();
+        Iterator<Object> itr = uidlItems.getChildIterator();
+        Stack<Iterator<Object>> iteratorStack = new Stack<Iterator<Object>>();
         Stack<VMenuBar> menuStack = new Stack<VMenuBar>();
         VMenuBar currentMenu = this;
 
         while (itr.hasNext()) {
-            UIDL item = itr.next();
+            UIDL item = (UIDL) itr.next();
             CustomMenuItem currentItem = null;
 
             String itemText = item.getStringAttribute("text");
