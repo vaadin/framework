@@ -51,12 +51,6 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
      */
     private int borderWidth = -1;
 
-    /**
-     * Pixels used by inner borders and paddings vertically (calculated only
-     * once)
-     */
-    private int borderHeight = -1;
-
     private static final int STACKING_OFFSET_PIXELS = 15;
 
     public static final int Z_INDEX = 10000;
@@ -461,12 +455,22 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
             // use max(layout width, window width)
             // i.e layout content width or caption width
             int lowidth = contentPanel.getElement().getScrollWidth()
-                    + borderWidth; // layout does not know about border
+                    + getBorderWidth(); // layout does not know about border
             int elwidth = getElement().getOffsetWidth();
             naturalWidth = (lowidth > elwidth ? lowidth : elwidth);
         }
 
         setWidth(naturalWidth + "px");
+    }
+
+    private int getBorderWidth() {
+        if (borderWidth < 0) {
+            if (!isAttached()) {
+                return 0;
+            }
+            borderWidth = Util.measureHorizontalPaddingAndBorder(contents, 4);
+        }
+        return borderWidth;
     }
 
     private void setReadOnly(boolean readonly) {
@@ -744,8 +748,8 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
 
     private void setSize(Event event, boolean updateVariables) {
         int w = event.getScreenX() - startX + origW;
-        if (w < MIN_WIDTH + borderWidth) {
-            w = MIN_WIDTH + borderWidth;
+        if (w < MIN_WIDTH + getBorderWidth()) {
+            w = MIN_WIDTH + getBorderWidth();
         }
 
         int h = event.getScreenY() - startY + origH;
@@ -796,10 +800,10 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
             }
             getElement().getStyle().setProperty("width", width);
 
-            pixelWidth = getElement().getOffsetWidth() - borderWidth;
+            pixelWidth = getElement().getOffsetWidth() - getBorderWidth();
             if (pixelWidth < MIN_WIDTH) {
                 pixelWidth = MIN_WIDTH;
-                int rootWidth = pixelWidth + borderWidth;
+                int rootWidth = pixelWidth + getBorderWidth();
                 DOM.setStyleAttribute(getElement(), "width", rootWidth + "px");
             }
 
@@ -926,39 +930,8 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
     protected void onAttach() {
         super.onAttach();
 
-        // Calculate space required by window borders, so we can accurately
-        // calculate space for content
-
-        // IE (IE6 especially) requires some magic tricks to pull the border
-        // size correctly (remember that we want to accomodate for paddings as
-        // well)
-        if (BrowserInfo.get().isIE()) {
-            DOM.setStyleAttribute(contents, "width", "7000px");
-            DOM.setStyleAttribute(contentPanel.getElement(), "width", "7000px");
-            int contentWidth = DOM.getElementPropertyInt(contentPanel
-                    .getElement(), "offsetWidth");
-            contentWidth = DOM.getElementPropertyInt(contentPanel.getElement(),
-                    "offsetWidth");
-            final int windowWidth = DOM.getElementPropertyInt(getElement(),
-                    "offsetWidth");
-            DOM.setStyleAttribute(contentPanel.getElement(), "width", "");
-            DOM.setStyleAttribute(contents, "width", "");
-
-            borderWidth = windowWidth - contentWidth;
-        }
-
-        // Standards based browsers get away with it a little easier :)
-        else {
-            final int contentWidth = DOM.getElementPropertyInt(contentPanel
-                    .getElement(), "offsetWidth");
-            final int windowWidth = DOM.getElementPropertyInt(getElement(),
-                    "offsetWidth");
-            borderWidth = windowWidth - contentWidth;
-        }
-
         setWidth(width);
         setHeight(height);
-
     }
 
     public RenderSpace getAllocatedSpace(Widget child) {
