@@ -280,6 +280,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
                 sizeInit();
             }
         }
+
+        if (selectMode == Table.SELECT_MODE_NONE) {
+            tBody.addStyleName(CLASSNAME + "-body-noselection");
+        } else {
+            tBody.removeStyleName(CLASSNAME + "-body-noselection");
+        }
+
         hideScrollPositionAnnotation();
         purgeUnregistryBag();
         rendering = false;
@@ -2197,7 +2204,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
             private List<UIDL> pendingComponentPaints;
 
             private String[] actionKeys = null;
-            private TableRowElement rowElement;
+            private final TableRowElement rowElement;
 
             private VScrollTableRow(int rowKey) {
                 this.rowKey = rowKey;
