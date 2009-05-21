@@ -9,6 +9,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ui.VOverlay;
 
 /**
@@ -222,9 +223,10 @@ public class VTooltip extends VOverlay {
         }
 
         /*
-         * No registered tooltips found
+         * No registered tooltips found. Still try the owner (needed if we are
+         * e.g. hovering caption and the owner is not a parent).
          */
-        return null;
+        return getTooltip(((Widget) paintable).getElement());
     }
 
     private int tooltipEventMouseX;
