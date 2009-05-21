@@ -7,10 +7,6 @@
 	text-align:right;
 	white-space: nowrap;
 }
-.v-formlayout-error-indicator {
-	/* fix width so layout is not jumpy when error disapear */
-	width: 12px;
-}
 .v-formlayout-spacing .v-formlayout-row .v-formlayout-captioncell, 
 .v-formlayout-spacing .v-formlayout-row .v-formlayout-contentcell,
 .v-formlayout-spacing .v-formlayout-row .v-formlayout-errorcell {

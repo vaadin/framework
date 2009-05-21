@@ -71,3 +71,33 @@ input.v-textfield-prompt {
 .v-ie .v-table input.v-textfield {
 	padding-top: 1px;
 }
+/* Textfield on black background */
+.black .v-textfield {
+	border-color: #343536;
+	border-top-color: #2a2a2b;
+	border-bottom-color: #3a3b3c;
+	background: #1b1d1e;
+	background-image: url(img/bg-black.png); /** sprite-ref: black-verticals; sprite-alignment: repeat; sprite-margin-bottom: 22px */
+	color: #c9ccce;
+	text-shadow: #000 0 0 1px;
+}
+.v-app .black .v-textfield-focus,
+.v-window .black .v-textfield-focus,
+.v-popupview-popup .black .v-textfield-focus {
+	border-color: #4e6a80;
+	border-top-color: #3a5163;
+	border-bottom-color: #557086;
+}
+/* Capable browsers get fancier border images */
+.v-sa .black input.v-textfield,
+.v-ff35 .black input.v-textfield {
+	-webkit-border-image: url(img/bg-border-image-black.png) 0 3 0 3 stretch stretch;
+	-moz-border-image: url(img/bg-border-image-black.png) 0 3 0 3 stretch stretch;
+	-o-border-image: url(img/bg-border-image-black.png) 0 3 0 3 stretch stretch;
+}
+.v-sa .black input.v-textfield-focus,
+.v-ff35 .black input.v-textfield-focus {
+	-webkit-border-image: url(img/bg-border-image-black-focus.png) 0 3 0 3 stretch stretch;
+	-moz-border-image: url(img/bg-border-image-black-focus.png) 0 3 0 3 stretch stretch;
+	-o-border-image: url(img/bg-border-image-black-focus.png) 0 3 0 3 stretch stretch;
+}

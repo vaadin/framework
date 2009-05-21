@@ -438,6 +438,10 @@
 .v-formlayout-cell .v-errorindicator {
 	display: block;
 }
+.v-formlayout-error-indicator {
+	/* fix width so layout is not jumpy when error disappears */
+	width: 12px;
+}
 .v-formlayout-captioncell {
 	text-align:right;
 	white-space: nowrap;
@@ -1562,6 +1566,7 @@ div.v-window-header {
  * General vertical and horizontal sprites 
  * -----------*/
 
+
 /*------------
  * Buttons 
  * -----------*/
@@ -1889,6 +1894,129 @@ div > .v-button-small .v-button-caption,
   -background-image: url(button/img/button-sprites-ie6.png);
   background-position: right -412px;
 }
+
+/*------------
+* Black buttons
+*------------*/
+.black div > .v-button,
+.black .v-ie7 .v-button {
+  background-image: url(button/img/black-button-sprites.png);
+  -background-image: url(button/img/black-button-sprites-ie6.png);
+  background-position: left -0px;
+}
+.black div > .v-button .v-button-caption,
+.black .v-ie7 .v-button .v-button-caption {
+  background-image: url(button/img/black-button-sprites.png);
+  -background-image: url(button/img/black-button-sprites-ie6.png);
+  background-position: right -26px;
+	color: #c9ccce;
+	text-shadow: #000 0 1px 0;
+	font-weight: normal;
+}
+.black .v-button:focus {
+  background-image: url(button/img/black-button-sprites.png);
+  -background-image: url(button/img/black-button-sprites-ie6.png);
+  background-position: left -52px;
+}
+.black .v-button:focus .v-button-caption {
+  background-image: url(button/img/black-button-sprites.png);
+  -background-image: url(button/img/black-button-sprites-ie6.png);
+  background-position: right -78px;
+}
+.black .v-button:active,
+.black .v-ie7 .v-button.v-pressed {
+  background-image: url(button/img/black-button-sprites.png);
+  -background-image: url(button/img/black-button-sprites-ie6.png);
+  background-position: left -104px;
+}
+.black .v-button:active .v-button-caption,
+.black .v-ie7 .v-button.v-pressed .v-button-caption {
+  background-image: url(button/img/black-button-sprites.png);
+  -background-image: url(button/img/black-button-sprites-ie6.png);
+  background-position: right -130px;
+}
+
+/*
+ * Primary-style ----------------------------
+ */
+.black div > .v-button-primary,
+.black .v-ie7 .v-button-primary {
+  background-image: url(button/img/black-button-sprites.png);
+  -background-image: url(button/img/black-button-sprites-ie6.png);
+  background-position: left -156px;
+}
+.black div > .v-button-primary .v-button-caption,
+.black .v-ie7 .v-button-primary .v-button-caption {
+  background-image: url(button/img/black-button-sprites.png);
+  -background-image: url(button/img/black-button-sprites-ie6.png);
+  background-position: right -182px;
+	text-shadow: #26282a 0 1px 0;
+}
+.black .v-button-primary:focus {
+  background-image: url(button/img/black-button-sprites.png);
+  -background-image: url(button/img/black-button-sprites-ie6.png);
+  background-position: left -208px;
+}
+.black .v-button-primary:focus .v-button-caption {
+  background-image: url(button/img/black-button-sprites.png);
+  -background-image: url(button/img/black-button-sprites-ie6.png);
+  background-position: right -234px;
+	color: #eaf4fb;
+}
+.black .v-button-primary:active,
+.black .v-ie7 .v-button-primary.v-pressed {
+  background-image: url(button/img/black-button-sprites.png);
+  -background-image: url(button/img/black-button-sprites-ie6.png);
+  background-position: left -260px;
+}
+.black .v-button-primary:active .v-button-caption,
+.black .v-ie7 .v-button-primary.v-pressed .v-button-caption {
+  background-image: url(button/img/black-button-sprites.png);
+  -background-image: url(button/img/black-button-sprites-ie6.png);
+  background-position: right -286px;
+}
+
+/* 
+ * Small-style --------------------------
+ */
+.black div > .v-button-small,
+.black .v-ie7 .v-button-small {
+  background-image: url(button/img/black-button-sprites.png);
+  -background-image: url(button/img/black-button-sprites-ie6.png);
+  background-position: left -312px;
+}
+.black div > .v-button-small .v-button-caption,
+.black .v-ie7 .v-button-small .v-button-caption {
+  background-image: url(button/img/black-button-sprites.png);
+  -background-image: url(button/img/black-button-sprites-ie6.png);
+  background-position: right -332px;
+	text-shadow: #000 0 -1px 0;
+}
+.black .v-button-small:focus {
+  background-image: url(button/img/black-button-sprites.png);
+  -background-image: url(button/img/black-button-sprites-ie6.png);
+  background-position: left -352px;
+}
+.black .v-button-small:focus .v-button-caption {
+  background-image: url(button/img/black-button-sprites.png);
+  -background-image: url(button/img/black-button-sprites-ie6.png);
+  background-position: right -372px;
+}
+.black .v-button-small:active,
+.black .v-ie7 .v-button-small.v-pressed {
+  background-image: url(button/img/black-button-sprites.png);
+  -background-image: url(button/img/black-button-sprites-ie6.png);
+  background-position: left -392px;
+}
+.black .v-button-small:active .v-button-caption,
+.black .v-ie7 .v-button-small.v-pressed .v-button-caption {
+  background-image: url(button/img/black-button-sprites.png);
+  -background-image: url(button/img/black-button-sprites-ie6.png);
+  background-position: right -412px;
+}
+
+
+
 
 /**
  * IE6 buttons --------------------------
@@ -2338,6 +2466,61 @@ td.v-datefield-calendarpanel-nextyear {
   background-position: left -357px;
 }
 
+/* ./WebContent/VAADIN/themes/reindeer/formlayout/formlayout.css */
+.v-formlayout-cell .v-errorindicator {
+	width: 13px;
+	height: 16px;
+	background: transparent url(common/icons/error.png) no-repeat 50%;
+}
+.v-ie6 .v-formlayout-cell .v-errorindicator {
+	background-image: url(common/icons/error-ie6.png);
+}
+.v-formlayout-captioncell {
+	text-align: right;
+	white-space: nowrap;
+}
+.v-formlayout-spacing .v-formlayout-row .v-formlayout-captioncell, 
+.v-formlayout-spacing .v-formlayout-row .v-formlayout-contentcell,
+.v-formlayout-spacing .v-formlayout-row .v-formlayout-errorcell {
+	padding-top: 8px;
+}
+.v-formlayout-margin-top .v-formlayout-firstrow .v-formlayout-captioncell, 
+.v-formlayout-margin-top .v-formlayout-firstrow .v-formlayout-contentcell,
+.v-formlayout-margin-top .v-formlayout-firstrow .v-formlayout-errorcell {
+	padding-top: 15px;
+}
+.v-formlayout-margin-bottom .v-formlayout-lastrow .v-formlayout-captioncell,
+.v-formlayout-margin-bottom .v-formlayout-lastrow .v-formlayout-contentcell,
+.v-formlayout-margin-bottom .v-formlayout-lastrow .v-formlayout-errorcell {
+	padding-bottom: 15px;
+}
+.v-formlayout-margin-left .v-formlayout-captioncell {
+	padding-left: 18px;
+} 
+.v-formlayout-margin-right .v-formlayout-contentcell {
+	padding-right: 18px;
+}
+/* form */
+.v-form-errormessage {
+	background: transparent url(icons/16/error.png) no-repeat top left;
+	padding-left: 20px;
+	margin-bottom: 5px;
+	margin-top: 5px;
+	min-height: 20px;
+}
+.v-ie6 .v-form-errormessage {
+	height: 20px
+}
+.v-form fieldset {
+	border: none;
+	border-top: 1px solid #babfc0;
+}
+.v-form legend {
+	margin: 0;
+	padding: 0 4px 0.3em 4px;
+	font-weight: bold;
+}
+
 /* ./WebContent/VAADIN/themes/reindeer/label/label.css */
 .v-label {
 	line-height: 18px;
@@ -2398,6 +2581,14 @@ td.v-datefield-calendarpanel-nextyear {
 .v-horizontallayout-blue,
 .v-orderedlayout-blue {
 	background-color: #bcd3de;
+}
+/* Black background */
+.v-verticallayout-black,
+.v-horizontallayout-black,
+.v-orderedlayout-black {
+	background: #16181a url(layouts/img/black-bg.png) repeat-x;
+	color: #c9ccce;
+	text-shadow: #000 0 0 1px;
 }
 
 /* ./WebContent/VAADIN/themes/reindeer/notification/notification.css */
@@ -3127,6 +3318,37 @@ input.v-textfield-prompt {
 }
 .v-ie .v-table input.v-textfield {
 	padding-top: 1px;
+}
+/* Textfield on black background */
+.black .v-textfield {
+	border-color: #343536;
+	border-top-color: #2a2a2b;
+	border-bottom-color: #3a3b3c;
+	background: #1b1d1e;
+  background-image: url(common/img/black-vertical-sprites.png);
+  background-position: left -0px;
+	color: #c9ccce;
+	text-shadow: #000 0 0 1px;
+}
+.v-app .black .v-textfield-focus,
+.v-window .black .v-textfield-focus,
+.v-popupview-popup .black .v-textfield-focus {
+	border-color: #4e6a80;
+	border-top-color: #3a5163;
+	border-bottom-color: #557086;
+}
+/* Capable browsers get fancier border images */
+.v-sa .black input.v-textfield,
+.v-ff35 .black input.v-textfield {
+	-webkit-border-image: url(textfield/img/bg-border-image-black.png) 0 3 0 3 stretch stretch;
+	-moz-border-image: url(textfield/img/bg-border-image-black.png) 0 3 0 3 stretch stretch;
+	-o-border-image: url(textfield/img/bg-border-image-black.png) 0 3 0 3 stretch stretch;
+}
+.v-sa .black input.v-textfield-focus,
+.v-ff35 .black input.v-textfield-focus {
+	-webkit-border-image: url(textfield/img/bg-border-image-black-focus.png) 0 3 0 3 stretch stretch;
+	-moz-border-image: url(textfield/img/bg-border-image-black-focus.png) 0 3 0 3 stretch stretch;
+	-o-border-image: url(textfield/img/bg-border-image-black-focus.png) 0 3 0 3 stretch stretch;
 }
 
 /* ./WebContent/VAADIN/themes/reindeer/tree/tree.css */

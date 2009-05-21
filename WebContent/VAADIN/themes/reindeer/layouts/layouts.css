@@ -30,3 +30,11 @@
 .v-orderedlayout-blue {
 	background-color: #bcd3de;
 }
+/* Black background */
+.v-verticallayout-black,
+.v-horizontallayout-black,
+.v-orderedlayout-black {
+	background: #16181a url(img/black-bg.png) repeat-x;
+	color: #c9ccce;
+	text-shadow: #000 0 0 1px;
+}

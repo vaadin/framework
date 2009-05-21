@@ -1,43 +1,53 @@
 .v-formlayout-cell .v-errorindicator {
-	display: block;
+	width: 13px;
+	height: 16px;
+	background: transparent url(../common/icons/error.png) no-repeat 50%;
 }
-.v-formlayout-error-indicator {
-	/* fix width so layout is not jumpy when error disappears */
-	width: 12px;
+.v-ie6 .v-formlayout-cell .v-errorindicator {
+	background-image: url(../common/icons/error-ie6.png);
 }
 .v-formlayout-captioncell {
-	text-align:right;
+	text-align: right;
 	white-space: nowrap;
-}
-.v-formlayout-captioncell .v-caption {
-	overflow: visible;
 }
 .v-formlayout-spacing .v-formlayout-row .v-formlayout-captioncell, 
 .v-formlayout-spacing .v-formlayout-row .v-formlayout-contentcell,
 .v-formlayout-spacing .v-formlayout-row .v-formlayout-errorcell {
-	padding-top: 1em;
-}
-.v-formlayout-spacing .v-formlayout-firstrow .v-formlayout-captioncell, 
-.v-formlayout-spacing .v-formlayout-firstrow .v-formlayout-contentcell,
-.v-formlayout-spacing .v-formlayout-firstrow .v-formlayout-errorcell {
-	padding-top: 0;
+	padding-top: 8px;
 }
 .v-formlayout-margin-top .v-formlayout-firstrow .v-formlayout-captioncell, 
 .v-formlayout-margin-top .v-formlayout-firstrow .v-formlayout-contentcell,
 .v-formlayout-margin-top .v-formlayout-firstrow .v-formlayout-errorcell {
-	padding-top: 2em;
+	padding-top: 15px;
 }
 .v-formlayout-margin-bottom .v-formlayout-lastrow .v-formlayout-captioncell,
 .v-formlayout-margin-bottom .v-formlayout-lastrow .v-formlayout-contentcell,
 .v-formlayout-margin-bottom .v-formlayout-lastrow .v-formlayout-errorcell {
-	padding-bottom: 2em;
+	padding-bottom: 15px;
 }
 .v-formlayout-margin-left .v-formlayout-captioncell {
-	padding-left: 2em;
+	padding-left: 18px;
 } 
 .v-formlayout-margin-right .v-formlayout-contentcell {
-	padding-right: 2em;
+	padding-right: 18px;
 }
-.v-formlayout-captioncell .v-caption .v-required-field-indicator {
-	float: none;
+/* form */
+.v-form-errormessage {
+	background: transparent url(../icons/16/error.png) no-repeat top left;
+	padding-left: 20px;
+	margin-bottom: 5px;
+	margin-top: 5px;
+	min-height: 20px;
+}
+.v-ie6 .v-form-errormessage {
+	height: 20px
+}
+.v-form fieldset {
+	border: none;
+	border-top: 1px solid #babfc0;
+}
+.v-form legend {
+	margin: 0;
+	padding: 0 4px 0.3em 4px;
+	font-weight: bold;
 }
