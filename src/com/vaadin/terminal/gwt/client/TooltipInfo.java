@@ -9,6 +9,13 @@ public class TooltipInfo {
 
     private UIDL errorUidl;
 
+    public TooltipInfo() {
+    }
+
+    public TooltipInfo(String tooltip) {
+        setTitle(tooltip);
+    }
+
     public String getTitle() {
         return title;
     }

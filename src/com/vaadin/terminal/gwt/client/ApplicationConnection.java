@@ -65,6 +65,9 @@ public class ApplicationConnection {
 
     public static final String PARAM_UNLOADBURST = "onunloadburst";
 
+    public static final String ATTRIBUTE_DESCRIPTION = "description";
+    public static final String ATTRIBUTE_ERROR = "error";
+
     private static String uidl_security_key = "init";
 
     private final HashMap<String, String> resourcesMap = new HashMap<String, String>();
@@ -1095,22 +1098,30 @@ public class ApplicationConnection {
             styleBuf.append(MODIFIED_CLASSNAME);
         }
 
-        TooltipInfo tooltipInfo = componentDetail.getTooltipInfo();
-        if (uidl.hasAttribute("description")) {
-            tooltipInfo.setTitle(uidl.getStringAttribute("description"));
+        // Update tooltip
+        if (uidl.hasAttribute(ATTRIBUTE_DESCRIPTION)
+                || uidl.hasAttribute(ATTRIBUTE_ERROR)) {
+            TooltipInfo tooltipInfo = new TooltipInfo();
+
+            if (uidl.hasAttribute(ATTRIBUTE_DESCRIPTION)) {
+                tooltipInfo.setTitle(uidl
+                        .getStringAttribute(ATTRIBUTE_DESCRIPTION));
+            }
+
+            if (uidl.hasAttribute(ATTRIBUTE_ERROR)) {
+                tooltipInfo.setErrorUidl(uidl.getErrors());
+            }
+
+            registerTooltip(component.getElement(), tooltipInfo);
         } else {
-            tooltipInfo.setTitle(null);
+            registerTooltip(component.getElement(), (TooltipInfo) null);
         }
 
         // add error classname to components w/ error
-        if (uidl.hasAttribute("error")) {
+        if (uidl.hasAttribute(ATTRIBUTE_ERROR)) {
             styleBuf.append(" ");
             styleBuf.append(primaryName);
             styleBuf.append(ERROR_CLASSNAME_EXT);
-
-            tooltipInfo.setErrorUidl(uidl.getErrors());
-        } else {
-            tooltipInfo.setErrorUidl(null);
         }
 
         // add required style to required components
@@ -1529,15 +1540,7 @@ public class ApplicationConnection {
      * 
      */
     public TooltipInfo getTitleInfo(Paintable titleOwner) {
-        if (null == titleOwner) {
-            return null;
-        }
-        ComponentDetail pd = idToPaintableDetail.get(getPid(titleOwner));
-        if (null != pd) {
-            return pd.getTooltipInfo();
-        } else {
-            return null;
-        }
+        return tooltip.getTooltip(((Widget) titleOwner).getElement());
     }
 
     private final VTooltip tooltip = new VTooltip(this);
@@ -1627,6 +1630,18 @@ public class ApplicationConnection {
 
     public VView getView() {
         return view;
+    }
+
+    public void registerTooltip(Element e, String tooltip) {
+        if (tooltip == null || tooltip.equals("")) {
+            registerTooltip(e, (TooltipInfo) null);
+        } else {
+            registerTooltip(e, new TooltipInfo(tooltip));
+        }
+    }
+
+    public void registerTooltip(Element e, TooltipInfo tooltip) {
+        this.tooltip.registerTooltip(e, tooltip);
     }
 
 }

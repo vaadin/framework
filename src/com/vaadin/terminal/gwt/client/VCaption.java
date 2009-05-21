@@ -33,12 +33,12 @@ public class VCaption extends HTML {
 
     private int maxWidth = -1;
 
-    private static String ATTRIBUTE_ICON = "icon";
-    private static String ATTRIBUTE_CAPTION = "caption";
-    private static String ATTRIBUTE_DESCRIPTION = "description";
-    private static String ATTRIBUTE_REQUIRED = "required";
-    private static String ATTRIBUTE_ERROR = "error";
-    private static String ATTRIBUTE_HIDEERRORS = "hideErrors";
+    protected static final String ATTRIBUTE_ICON = "icon";
+    protected static final String ATTRIBUTE_CAPTION = "caption";
+    protected static final String ATTRIBUTE_DESCRIPTION = "description";
+    protected static final String ATTRIBUTE_REQUIRED = "required";
+    protected static final String ATTRIBUTE_ERROR = "error";
+    protected static final String ATTRIBUTE_HIDEERRORS = "hideErrors";
 
     /**
      * 

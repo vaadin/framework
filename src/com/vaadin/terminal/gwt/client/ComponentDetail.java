@@ -41,21 +41,6 @@ class ComponentDetail {
     }
 
     /**
-     * @return the tooltipInfo
-     */
-    TooltipInfo getTooltipInfo() {
-        return tooltipInfo;
-    }
-
-    /**
-     * @param tooltipInfo
-     *            the tooltipInfo to set
-     */
-    void setTooltipInfo(TooltipInfo tooltipInfo) {
-        this.tooltipInfo = tooltipInfo;
-    }
-
-    /**
      * @return the relativeSize
      */
     FloatSize getRelativeSize() {
