@@ -567,7 +567,6 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     private boolean focused = false;
 
     public VFilterSelect() {
-        selectedItemIcon.setVisible(false);
         selectedItemIcon.setStyleName("v-icon");
         selectedItemIcon.addLoadListener(new LoadListener() {
             public void onError(Widget sender) {
@@ -579,7 +578,6 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             }
         });
 
-        panel.add(selectedItemIcon);
         tb.sinkEvents(VTooltip.TOOLTIP_EVENTS);
         panel.add(tb);
         panel.add(popupOpener);
@@ -787,12 +785,12 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     }
 
     private void setSelectedItemIcon(String iconUri) {
-        if (iconUri == null) {
-            selectedItemIcon.setVisible(false);
+        if (iconUri == null || iconUri == "") {
+            panel.remove(selectedItemIcon);
             updateRootWidth();
         } else {
             selectedItemIcon.setUrl(iconUri);
-            selectedItemIcon.setVisible(true);
+            panel.insert(selectedItemIcon, 0);
             updateRootWidth();
             updateSelectedIconPosition();
         }
