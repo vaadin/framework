@@ -1,14 +1,13 @@
 .v-table-header-wrap {
-	border-color: #2b3033;
-	border-top: none;
+	border-color: #c2c3c4;
 	background: transparent repeat-x;
-	background-image: url(img/header-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+	background-image: url(img/header-bg-light.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 	height: 20px;
 	text-transform: uppercase;
 	font-size: 10px;
 	font-weight: bold;
-	color: #e7e9ea;
-	text-shadow: #000 0 -1px 0;
+	color: #222;
+	text-shadow: #fff 0 1px 0;
 	line-height: normal;
 }
 .v-table-header {
@@ -31,15 +30,15 @@
 	height: 20px;
 	width: 2px;
 	background: transparent;
-	border-right: 1px solid #1c1f21;
+	border-right: 1px solid #c2c3c4;
 }
 .v-table-header-cell-asc .v-table-caption-container {
 	background: transparent no-repeat right 7px;
-	background-image: url(img/asc.png); /** sprite-ref: verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
+	background-image: url(img/asc-light.png); /** sprite-ref: verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
 }
 .v-table-header-cell-desc .v-table-caption-container {
 	background: transparent no-repeat right 7px;
-	background-image: url(img/desc.png); /** sprite-ref: verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
+	background-image: url(img/desc-light.png); /** sprite-ref: verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
 }
 .v-table-body {
 	border-color: #c2c3c4;
@@ -75,29 +74,29 @@
 	height: 20px;
 	margin-top: -20px;
 	background: transparent no-repeat;
-	background-image: url(img/col-sel.png); /** sprite-ref: verticals */
+	background-image: url(img/col-sel-light.png); /** sprite-ref: verticals */
 }
 .v-table-column-selector:active {
-	background-image: url(img/col-sel-pressed.png); /** sprite-ref: verticals */
+	background-image: url(img/col-sel-light-pressed.png); /** sprite-ref: verticals */
 }
 .v-table-focus-slot-left {
-	border-left-color: #9ca1a5;
+	border-left-color: #222;
 	margin-left: 0;
 }
 .v-table-focus-slot-right {
-	border-right-color: #9ca1a5;
+	border-right-color: #222;
 	margin-right: 0;
 }
 .v-table-header-drag {
 	font-family: arial, helvetica, verdana, sans-serif;
 	background: transparent repeat-x;
-	background-image: url(img/header-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+	background-image: url(img/header-bg-light.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 	padding: 4px;
 	text-transform: uppercase;
 	font-size: 10px;
 	font-weight: bold;
-	color: #e7e9ea;
-	text-shadow: #000 0 -1px 0;
+	color: #222;
+	text-shadow: #fff 0 1px 0;
 	line-height: normal;
 }
 .v-table-header-drag * {
@@ -116,8 +115,7 @@
 	background: transparent repeat-x;
 	background-image: url(img/scroll-indic-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 	border: 1px solid #939494;
-	border-top: none;
-	border-bottom-color: #7d7e80;
+	border: none;
 	border-radius-bottomleft: 4px;
 	border-radius-bottomright: 4px;
 	-moz-border-radius-bottomleft: 4px;
@@ -128,6 +126,9 @@
 	padding: 4px 30px;
 	text-shadow: #fff 0 1px 0;
 	width: 100px;
+	position: relative;
+	top: 1px;
+	-webkit-box-shadow: rgba(0,0,0,.5) 0 1px 2px;
 }
 /* row in column selector */
 .v-contextmenu .v-on,
@@ -149,4 +150,36 @@
 .v-table-borderless .v-table-header-wrap,
 .v-table-borderless .v-table-body {
 	border: none;
+}
+/* Strong style */
+.v-table-strong .v-table-header-wrap {
+	border-color: #2b3033;
+	border-top-color: #2b3033;
+	background-image: url(img/header-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+	color: #e7e9ea;
+	text-shadow: #000 0 -1px 0;
+}
+.v-table-strong .v-table-resizer {
+	border-right-color: #1c1f21;
+}
+.v-table-strong .v-table-header-cell-asc .v-table-caption-container {
+	background-image: url(img/asc.png); /** sprite-ref: verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
+}
+.v-table-strong ..v-table-header-cell-desc .v-table-caption-container {
+	background-image: url(img/desc.png); /** sprite-ref: verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
+}
+.v-table-strong .v-table-column-selector {
+	background-image: url(img/col-sel.png); /** sprite-ref: verticals */
+}
+.v-table-strong .v-table-column-selector:active {
+	background-image: url(img/col-sel-pressed.png); /** sprite-ref: verticals */
+}
+.v-table-strong .v-table-header-drag {
+	background-image: url(img/header-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+	color: #e7e9ea;
+	text-shadow: #000 0 -1px 0;
+}
+.v-table-strong .v-table-focus-slot-left,
+.v-table-strong .v-table-focus-slot-right {
+	border-color: #9ca1a5;
 }

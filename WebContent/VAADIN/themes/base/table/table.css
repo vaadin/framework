@@ -80,6 +80,10 @@
 	border: 0;
 	margin: 0;
 	padding: 0;
+	cursor: pointer;
+}
+.v-table-body-noselection .v-table-row,
+.v-table-body-noselection .v-table-row-odd {
 	cursor: default;
 }
 .v-table .v-selected {

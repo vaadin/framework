@@ -176,3 +176,11 @@
 	background: transparent url(img/status-bg.png) repeat-x;
 }
 /* Filterselect with icon needs a similar fix than in buttons */
+.v-filterselect .v-icon {
+	width: 16px;
+	position: relative;
+}
+.v-filterselect .v-icon + .v-filterselect-input {
+	margin-left: -16px;
+	padding-left: 18px;
+}
