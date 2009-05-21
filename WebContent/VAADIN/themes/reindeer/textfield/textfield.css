@@ -101,3 +101,18 @@ input.v-textfield-prompt {
 	-moz-border-image: url(img/bg-border-image-black-focus.png) 0 3 0 3 stretch stretch;
 	-o-border-image: url(img/bg-border-image-black-focus.png) 0 3 0 3 stretch stretch;
 }
+
+/* Readonly */
+input.v-textfield-readonly,
+.v-sa input.v-textfield-readonly,
+.v-ff35 input.v-textfield-readonly,
+.black input.v-textfield-readonly,
+.v-sa .black input.v-textfield-readonly,
+.v-ff35 .black input.v-textfield-readonly {
+	border: none;
+	background: transparent;
+	-webkit-border-image: none;
+	-moz-border-image: none;
+	-o-border-image: none;
+	border-width: 0;
+}

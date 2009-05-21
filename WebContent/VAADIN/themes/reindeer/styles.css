@@ -1782,32 +1782,7 @@ div > .v-button .v-errorindicator,
 	display: block;
 	margin-left: 0;
 }
-/* Link style buttons */
-.v-button.v-button-link,
-.v-ie7 .v-button-link.v-pressed {
-	background: transparent;
-	height: auto;
-	padding: 0;
-	cursor: pointer;
-}
-.v-button.v-button-link .v-button-caption,
-.v-ie7 .v-button-link.v-pressed .v-button-caption {
-	background: transparent;
-	height: auto;
-	padding: 0;
-	display: inline;
-	font-weight: normal;
-	color: #1b699f;
-	font-size: 12px;
-	text-shadow: none;
-}
-.v-button.v-button-link .v-icon + .v-button-caption {
-	margin: 0;
-	padding: 0;
-}
-.v-button-link:focus {
-	outline: 1px dotted #1b699f;
-}
+
 /**
  * Default action button style --------------------------
  */
@@ -2015,6 +1990,43 @@ div > .v-button-small .v-button-caption,
   background-position: right -412px;
 }
 
+
+
+
+/**
+ * Link style buttons -----------------------
+ */
+div > .v-button.v-button-link,
+div > .v-button.v-button-link:focus,
+div > .v-button.v-button-link:active,
+.v-ie7 .v-button-link,
+.v-ie7 .v-button-link.v-pressed {
+	background: transparent;
+	height: auto;
+	padding: 0;
+	cursor: pointer;
+}
+div > .v-button.v-button-link .v-button-caption,
+div > .v-button.v-button-link:focus .v-button-caption,
+div > .v-button.v-button-link:active .v-button-caption,
+.v-ie7 .v-button-link .v-button-caption,
+.v-ie7 .v-button-link.v-pressed .v-button-caption {
+	background: transparent;
+	height: auto;
+	padding: 0;
+	display: inline;
+	font-weight: normal;
+	color: #1b699f;
+	font-size: 12px;
+	text-shadow: none;
+}
+.v-button.v-button-link .v-icon + .v-button-caption {
+	margin: 0;
+	padding: 0;
+}
+.v-button.v-button-link:focus {
+	outline: 1px dotted #1b699f;
+}
 
 
 
@@ -3349,6 +3361,21 @@ input.v-textfield-prompt {
 	-webkit-border-image: url(textfield/img/bg-border-image-black-focus.png) 0 3 0 3 stretch stretch;
 	-moz-border-image: url(textfield/img/bg-border-image-black-focus.png) 0 3 0 3 stretch stretch;
 	-o-border-image: url(textfield/img/bg-border-image-black-focus.png) 0 3 0 3 stretch stretch;
+}
+
+/* Readonly */
+input.v-textfield-readonly,
+.v-sa input.v-textfield-readonly,
+.v-ff35 input.v-textfield-readonly,
+.black input.v-textfield-readonly,
+.v-sa .black input.v-textfield-readonly,
+.v-ff35 .black input.v-textfield-readonly {
+	border: none;
+	background: transparent;
+	-webkit-border-image: none;
+	-moz-border-image: none;
+	-o-border-image: none;
+	border-width: 0;
 }
 
 /* ./WebContent/VAADIN/themes/reindeer/tree/tree.css */

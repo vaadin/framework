@@ -145,32 +145,7 @@ div > .v-button .v-errorindicator,
 	display: block;
 	margin-left: 0;
 }
-/* Link style buttons */
-.v-button.v-button-link,
-.v-ie7 .v-button-link.v-pressed {
-	background: transparent;
-	height: auto;
-	padding: 0;
-	cursor: pointer;
-}
-.v-button.v-button-link .v-button-caption,
-.v-ie7 .v-button-link.v-pressed .v-button-caption {
-	background: transparent;
-	height: auto;
-	padding: 0;
-	display: inline;
-	font-weight: normal;
-	color: #1b699f;
-	font-size: 12px;
-	text-shadow: none;
-}
-.v-button.v-button-link .v-icon + .v-button-caption {
-	margin: 0;
-	padding: 0;
-}
-.v-button-link:focus {
-	outline: 1px dotted #1b699f;
-}
+
 /**
  * Default action button style --------------------------
  */
@@ -318,6 +293,43 @@ div > .v-button-small .v-button-caption,
 	background-image: url(img/black/small-right-pressed.png); /** sprite-ref: black-buttons; sprite-alignment: right */
 }
 
+
+
+
+/**
+ * Link style buttons -----------------------
+ */
+div > .v-button.v-button-link,
+div > .v-button.v-button-link:focus,
+div > .v-button.v-button-link:active,
+.v-ie7 .v-button-link,
+.v-ie7 .v-button-link.v-pressed {
+	background: transparent;
+	height: auto;
+	padding: 0;
+	cursor: pointer;
+}
+div > .v-button.v-button-link .v-button-caption,
+div > .v-button.v-button-link:focus .v-button-caption,
+div > .v-button.v-button-link:active .v-button-caption,
+.v-ie7 .v-button-link .v-button-caption,
+.v-ie7 .v-button-link.v-pressed .v-button-caption {
+	background: transparent;
+	height: auto;
+	padding: 0;
+	display: inline;
+	font-weight: normal;
+	color: #1b699f;
+	font-size: 12px;
+	text-shadow: none;
+}
+.v-button.v-button-link .v-icon + .v-button-caption {
+	margin: 0;
+	padding: 0;
+}
+.v-button.v-button-link:focus {
+	outline: 1px dotted #1b699f;
+}
 
 
 
