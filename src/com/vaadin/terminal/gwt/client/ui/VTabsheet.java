@@ -22,6 +22,7 @@ import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.RenderSpace;
+import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
@@ -34,6 +35,24 @@ public class VTabsheet extends VTabsheetBase {
         }
 
         @Override
+        public boolean updateCaption(UIDL uidl) {
+            if (uidl.hasAttribute(ATTRIBUTE_DESCRIPTION)
+                    || uidl.hasAttribute(ATTRIBUTE_ERROR)) {
+                TooltipInfo tooltipInfo = new TooltipInfo();
+                tooltipInfo.setTitle(uidl
+                        .getStringAttribute(ATTRIBUTE_DESCRIPTION));
+                if (uidl.hasAttribute(ATTRIBUTE_ERROR)) {
+                    tooltipInfo.setErrorUidl(uidl.getErrors());
+                }
+                client.registerTooltip(getElement(), tooltipInfo);
+            } else {
+                client.registerTooltip(getElement(), "");
+            }
+
+            return super.updateCaption(uidl);
+        }
+
+        @Override
         public void onBrowserEvent(Event event) {
             super.onBrowserEvent(event);
             if (event.getTypeInt() == Event.ONLOAD) {
@@ -43,6 +62,8 @@ public class VTabsheet extends VTabsheetBase {
                 }
                 updateTabScroller();
             }
+
+            client.handleTooltipEvent(event, VTabsheet.this);
         }
 
         @Override

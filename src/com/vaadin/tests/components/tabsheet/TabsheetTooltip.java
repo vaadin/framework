@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.tabsheet;
 
+import com.vaadin.terminal.UserError;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
@@ -25,6 +26,11 @@ public class TabsheetTooltip extends TestBase {
 
         Tab tab = tabSheet.addTab(l, "Tab", null);
         tab.setDescription("This is a tab");
+        tab.setComponentError(new UserError("abc error"));
+
+        Tab tab2 = tabSheet.addTab(new Label("Another label, d'oh"), "Tab 2",
+                null);
+        tab2.setDescription("This is another tab");
 
         addComponent(tabSheet);
     }
