@@ -981,7 +981,9 @@ public class VFilterSelect extends Composite implements Paintable, Field,
              */
             int tbWidth = Util.getRequiredWidth(tb);
             int openerWidth = Util.getRequiredWidth(popupOpener);
-            int iconWidth = Util.getRequiredWidth(selectedItemIcon);
+            int iconWidth = selectedItemIcon.isAttached() ? Util
+                    .measureMarginLeft(tb.getElement())
+                    - Util.measureMarginLeft(selectedItemIcon.getElement()) : 0;
 
             int w = tbWidth + openerWidth + iconWidth;
             if (suggestionPopupMinWidth > w) {
