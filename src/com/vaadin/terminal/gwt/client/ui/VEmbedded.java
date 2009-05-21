@@ -19,6 +19,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VTooltip;
 
 public class VEmbedded extends HTML implements Paintable {
     private static String CLASSNAME = "v-embedded";
@@ -84,6 +85,12 @@ public class VEmbedded extends HTML implements Paintable {
                     // insert in dom late
                     getElement().appendChild(el);
                 }
+
+                /*
+                 * Sink tooltip events so tooltip is displayed when hovering the
+                 * image.
+                 */
+                sinkEvents(VTooltip.TOOLTIP_EVENTS);
 
             } else if (type.equals("browser")) {
                 if (browserElement == null) {
@@ -221,5 +228,7 @@ public class VEmbedded extends HTML implements Paintable {
         if (DOM.eventGetType(event) == Event.ONLOAD) {
             Util.notifyParentOfSizeChange(this, true);
         }
+
+        client.handleTooltipEvent(event, this);
     }
 }
