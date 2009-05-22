@@ -103,7 +103,8 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         }
 
         String text = uidl.getStringVariable("text");
-        prompting = inputPrompt != null && (text == null || text.equals(""));
+        setPrompting(inputPrompt != null && focusedTextField != this
+                && (text == null || text.equals("")));
         if (prompting) {
             setText(inputPrompt);
             addStyleDependentName(CLASSNAME_PROMPT);
@@ -169,12 +170,17 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         removeStyleDependentName(CLASSNAME_FOCUS);
         focusedTextField = null;
         String text = getText();
-        prompting = inputPrompt != null && (text == null || "".equals(text));
+        setPrompting(inputPrompt != null && (text == null || "".equals(text)));
         if (prompting) {
             setText(inputPrompt);
             addStyleDependentName(CLASSNAME_PROMPT);
         }
         onChange(sender);
+    }
+
+    private void setPrompting(boolean prompting) {
+        this.prompting = prompting;
+        System.out.println("Prompting is now: " + prompting);
     }
 
     public void setColumns(int columns) {
