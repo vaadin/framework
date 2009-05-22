@@ -1028,7 +1028,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     private void setTextboxWidth(int componentWidth) {
         int padding = getTextboxPadding();
         int popupOpenerWidth = Util.getRequiredWidth(popupOpener);
-        int iconWidth = Util.getRequiredWidth(selectedItemIcon);
+        int iconWidth = selectedItemIcon.isAttached() ? Util
+                .getRequiredWidth(selectedItemIcon) : 0;
         int textboxWidth = componentWidth - padding - popupOpenerWidth
                 - iconWidth;
         if (textboxWidth < 0) {
