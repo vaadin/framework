@@ -12,10 +12,10 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.ui.AlignmentInfo;
@@ -424,6 +424,13 @@ public class ChildComponentContainer extends Panel {
                 newCaption.setHeight("18px");
                 // newCaption.setHeight(newCaption.getHeight()); // This might
                 // be better... ??
+                if (BrowserInfo.get().isIE()) {
+                    /*
+                     * Must attach caption here so IE sends an immediate onload
+                     * event for images coming from the cache
+                     */
+                    setCaption(newCaption);
+                }
             }
 
             boolean positionChanged = newCaption.updateCaption(uidl);
