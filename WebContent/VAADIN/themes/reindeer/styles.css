@@ -1716,10 +1716,9 @@ div > .v-button .v-icon,
 .v-ie7 .v-button .v-icon {
 	display: inline-block;
 	width: 16px;
-	height: 16px;
 	overflow: hidden;
 	position: relative;
-	margin: 0 3px 0 6px;
+	margin: -1px 3px 0 6px;
 }
 .v-ff2 .v-button .v-icon {
 	display: block;
@@ -2023,6 +2022,9 @@ div > .v-button.v-button-link:active .v-button-caption,
 .v-button.v-button-link:focus {
 	outline: 1px dotted #1b699f;
 }
+.v-ie7 .v-button-link .v-icon {
+	position: static;
+}
 
 
 
@@ -2082,6 +2084,7 @@ div > .v-button.v-button-link:active .v-button-caption,
 	background: transparent;
 	line-height: normal;
 	font-size: 12px;
+	font-weight: normal;
 }
 
 /* ./WebContent/VAADIN/themes/reindeer/common/common.css */
