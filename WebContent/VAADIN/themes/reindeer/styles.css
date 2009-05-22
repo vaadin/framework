@@ -2062,8 +2062,7 @@ div > .v-button.v-button-link:active .v-button-caption,
 }
 /* Buttons on black background */
 .v-ie6 .black .v-button {
-	border: 1px solid #505354;
-	border-bottom-color: #313435;
+	border: 1px solid #0d0e0f;
 	background: #202224 url(button/img/black/right.png) no-repeat 0 -1px;
 	color: #c9ccce;
 }
@@ -2508,6 +2507,115 @@ td.v-datefield-calendarpanel-nextyear {
 	margin-top: 1px;
 }
 
+
+/*------------
+* on black background
+*/
+
+.black td.v-datefield-calendarpanel-month {
+  background-image: url(common/img/black-vertical-sprites.png);
+  -background-image: url(common/img/black-vertical-sprites-ie6.png);
+  background-position: left -46px;
+	height: 21px;
+}
+.black span.v-datefield-calendarpanel-month {
+	border-left: 1px solid #333638;
+	border-right: 1px solid #232527;
+	text-shadow: #000 0 -1px 0;
+}
+.black .v-datefield-calendarpanel-prevyear button,
+.black .v-datefield-calendarpanel-nextyear button,
+.black .v-datefield-calendarpanel-prevmonth button,
+.black .v-datefield-calendarpanel-nextmonth button {
+  background-image: url(common/img/black-vertical-sprites.png);
+  -background-image: url(common/img/black-vertical-sprites-ie6.png);
+  background-position: left -67px;
+	height: 21px;
+}
+.black .v-datefield-calendarpanel-nextyear button {
+  background-image: url(common/img/black-vertical-sprites.png);
+  -background-image: url(common/img/black-vertical-sprites-ie6.png);
+  background-position: left -88px;
+}
+.black .v-datefield-calendarpanel-prevyear button:active,
+.v-ie .black .v-datefield-calendarpanel-prevyear button.v-pressed {
+  background-image: url(common/img/black-vertical-sprites.png);
+  -background-image: url(common/img/black-vertical-sprites-ie6.png);
+  background-position: left -109px;
+}
+.black .v-datefield-calendarpanel-nextyear button:active,
+.v-ie .black .v-datefield-calendarpanel-nextyear button.v-pressed  {
+  background-image: url(common/img/black-vertical-sprites.png);
+  -background-image: url(common/img/black-vertical-sprites-ie6.png);
+  background-position: left -130px;
+}
+.black .v-datefield-calendarpanel-prevmonth,
+.black .v-datefield-calendarpanel-nextmonth {
+  background-image: url(common/img/black-vertical-sprites.png);
+  -background-image: url(common/img/black-vertical-sprites-ie6.png);
+  background-position: left -151px;
+}
+.black .v-datefield-calendarpanel-prevmonth button,
+.black .v-datefield-calendarpanel-nextmonth button {
+	border-left: 1px solid #333638;
+	border-right: 1px solid #232527;
+  background-image: url(common/img/black-vertical-sprites.png);
+  -background-image: url(common/img/black-vertical-sprites-ie6.png);
+  background-position: center -172px;
+	margin-top: 0;
+}
+.black .v-datefield-calendarpanel-nextmonth button {
+  background-image: url(common/img/black-vertical-sprites.png);
+  -background-image: url(common/img/black-vertical-sprites-ie6.png);
+  background-position: center -193px;
+}
+.black .v-datefield-calendarpanel-prevmonth button:active,
+.v-ie .black .v-datefield-calendarpanel-prevmonth button.v-pressed {
+  background-image: url(common/img/black-vertical-sprites.png);
+  -background-image: url(common/img/black-vertical-sprites-ie6.png);
+  background-position: center -214px;
+}
+.black .v-datefield-calendarpanel-nextmonth button:active,
+.v-ie .black .v-datefield-calendarpanel-nextmonth button.v-pressed {
+  background-image: url(common/img/black-vertical-sprites.png);
+  -background-image: url(common/img/black-vertical-sprites-ie6.png);
+  background-position: center -235px;
+}
+.v-ie .black .v-datefield-calendarpanel-prevmonth button,
+.v-ie .black .v-datefield-calendarpanel-nextmonth button {
+	border: none;
+}
+.black .v-datefield-calendarpanel-weekdays td {
+  background-image: url(common/img/black-vertical-sprites.png);
+  -background-image: url(common/img/black-vertical-sprites-ie6.png);
+  background-position: left -256px;
+	color: #0a0b0b;
+	text-shadow: #5a5c5e 0 1px 0;
+}
+.black .v-datefield-calendarpanel-weekdays strong {
+	border-top-color: #1b1c1d;
+}
+.black .v-datefield-calendarpanel .v-first {
+  background-image: url(common/img/black-vertical-sprites.png);
+  -background-image: url(common/img/black-vertical-sprites-ie6.png);
+  background-position: left -275px;
+}
+.black .v-datefield-calendarpanel .v-last {
+  background-image: url(common/img/black-vertical-sprites.png);
+  -background-image: url(common/img/black-vertical-sprites-ie6.png);
+  background-position: right -294px;
+}
+/* IE fails to position backgrounds inside table element */
+.v-ie .black .v-datefield-calendarpanel-weekdays td {
+	background: url(datefield/img/weekday-bg-black.png) repeat-x;
+}
+.v-ie .black .v-datefield-calendarpanel .v-first {
+	background: url(datefield/img/weekday-first-black.png) no-repeat;
+}
+.v-ie .black .v-datefield-calendarpanel .v-last {
+	background: url(datefield/img/weekday-last-black.png) no-repeat right top;
+}
+
 /* ./WebContent/VAADIN/themes/reindeer/formlayout/formlayout.css */
 .v-formlayout-cell .v-errorindicator {
 	width: 13px;
@@ -2942,7 +3050,7 @@ td.v-datefield-calendarpanel-nextyear {
 .black .v-filterselect {
   background-image: url(common/img/black-vertical-sprites.png);
   -background-image: url(common/img/black-vertical-sprites-ie6.png);
-  background-position: left -46px;
+  background-position: left -310px;
 }
 .v-app .black .v-filterselect-input,
 .v-window .black .v-filterselect-input,
@@ -2950,37 +3058,37 @@ td.v-datefield-calendarpanel-nextyear {
 	color: #c9ccce;
   background-image: url(common/img/black-vertical-sprites.png);
   -background-image: url(common/img/black-vertical-sprites-ie6.png);
-  background-position: left -70px;
+  background-position: left -334px;
 }
 .black .v-filterselect-focus {
   background-image: url(common/img/black-vertical-sprites.png);
   -background-image: url(common/img/black-vertical-sprites-ie6.png);
-  background-position: left -94px;
+  background-position: left -358px;
 }
 .black .v-filterselect-focus .v-filterselect-input {
   background-image: url(common/img/black-vertical-sprites.png);
   -background-image: url(common/img/black-vertical-sprites-ie6.png);
-  background-position: left -118px;
+  background-position: left -382px;
 }
 .black .v-filterselect-button {
   background-image: url(common/img/black-vertical-sprites.png);
   -background-image: url(common/img/black-vertical-sprites-ie6.png);
-  background-position: left -142px;
+  background-position: left -406px;
 }
 .black .v-filterselect-button:hover {
   background-image: url(common/img/black-vertical-sprites.png);
   -background-image: url(common/img/black-vertical-sprites-ie6.png);
-  background-position: left -166px;
+  background-position: left -430px;
 }
 .black .v-filterselect-button:active {
   background-image: url(common/img/black-vertical-sprites.png);
   -background-image: url(common/img/black-vertical-sprites-ie6.png);
-  background-position: left -190px;
+  background-position: left -454px;
 }
 .black .v-filterselect-focus .v-filterselect-button {
   background-image: url(common/img/black-vertical-sprites.png);
   -background-image: url(common/img/black-vertical-sprites-ie6.png);
-  background-position: left -214px;
+  background-position: left -478px;
 }
 .black .v-filterselect-focus .v-filterselect-button:hover {
   background-image: url(common/img/vertical-sprites.png);
@@ -2990,7 +3098,7 @@ td.v-datefield-calendarpanel-nextyear {
 .black .v-filterselect-focus .v-filterselect-button:active {
   background-image: url(common/img/black-vertical-sprites.png);
   -background-image: url(common/img/black-vertical-sprites-ie6.png);
-  background-position: left -238px;
+  background-position: left -502px;
 }
 .black .v-disabled .v-filterselect-button:hover,
 .black .v-readonly .v-filterselect-button:hover {
@@ -3474,7 +3582,7 @@ input.v-textfield-prompt {
 	background: #1b1d1e;
   background-image: url(common/img/black-vertical-sprites.png);
   -background-image: url(common/img/black-vertical-sprites-ie6.png);
-  background-position: left -262px;
+  background-position: left -526px;
 	color: #c9ccce;
 	text-shadow: #000 0 0 1px;
 }

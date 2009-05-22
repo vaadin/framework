@@ -366,8 +366,7 @@ div > .v-button.v-button-link:active .v-button-caption,
 }
 /* Buttons on black background */
 .v-ie6 .black .v-button {
-	border: 1px solid #505354;
-	border-bottom-color: #313435;
+	border: 1px solid #0d0e0f;
 	background: #202224 url(img/black/right.png) no-repeat 0 -1px;
 	color: #c9ccce;
 }

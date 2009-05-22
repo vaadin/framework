@@ -258,3 +258,86 @@ td.v-datefield-calendarpanel-nextyear {
 .v-ie6 .v-datefield-popupcalendar .v-datefield-button {
 	margin-top: 1px;
 }
+
+
+/*------------
+* on black background
+*/
+
+.black td.v-datefield-calendarpanel-month {
+	background-image: url(img/header-bg-black.png); /** sprite-ref: black-verticals; sprite-alignment: repeat */
+	height: 21px;
+}
+.black span.v-datefield-calendarpanel-month {
+	border-left: 1px solid #333638;
+	border-right: 1px solid #232527;
+	text-shadow: #000 0 -1px 0;
+}
+.black .v-datefield-calendarpanel-prevyear button,
+.black .v-datefield-calendarpanel-nextyear button,
+.black .v-datefield-calendarpanel-prevmonth button,
+.black .v-datefield-calendarpanel-nextmonth button {
+	background-image: url(img/year-prev-black.png); /** sprite-ref: black-verticals */
+	height: 21px;
+}
+.black .v-datefield-calendarpanel-nextyear button {
+	background-image: url(img/year-next-black.png); /** sprite-ref: black-verticals */
+}
+.black .v-datefield-calendarpanel-prevyear button:active,
+.v-ie .black .v-datefield-calendarpanel-prevyear button.v-pressed {
+	background-image: url(img/year-prev-black-pressed.png); /** sprite-ref: black-verticals */
+}
+.black .v-datefield-calendarpanel-nextyear button:active,
+.v-ie .black .v-datefield-calendarpanel-nextyear button.v-pressed  {
+	background-image: url(img/year-next-black-pressed.png); /** sprite-ref: black-verticals */
+}
+.black .v-datefield-calendarpanel-prevmonth,
+.black .v-datefield-calendarpanel-nextmonth {
+	background-image: url(img/header-bg-black.png); /** sprite-ref: black-verticals; sprite-alignment: repeat */
+}
+.black .v-datefield-calendarpanel-prevmonth button,
+.black .v-datefield-calendarpanel-nextmonth button {
+	border-left: 1px solid #333638;
+	border-right: 1px solid #232527;
+	background-image: url(img/month-prev-black.png); /** sprite-ref: black-verticals; sprite-alignment: center */
+	margin-top: 0;
+}
+.black .v-datefield-calendarpanel-nextmonth button {
+	background-image: url(img/month-next-black.png); /** sprite-ref: black-verticals; sprite-alignment: center */
+}
+.black .v-datefield-calendarpanel-prevmonth button:active,
+.v-ie .black .v-datefield-calendarpanel-prevmonth button.v-pressed {
+	background-image: url(img/month-prev-black-pressed.png); /** sprite-ref: black-verticals; sprite-alignment: center */
+}
+.black .v-datefield-calendarpanel-nextmonth button:active,
+.v-ie .black .v-datefield-calendarpanel-nextmonth button.v-pressed {
+	background-image: url(img/month-next-black-pressed.png); /** sprite-ref: black-verticals; sprite-alignment: center */
+}
+.v-ie .black .v-datefield-calendarpanel-prevmonth button,
+.v-ie .black .v-datefield-calendarpanel-nextmonth button {
+	border: none;
+}
+.black .v-datefield-calendarpanel-weekdays td {
+	background-image: url(img/weekday-bg-black.png); /** sprite-ref: black-verticals; sprite-alignment: repeat; sprite-margin-bottom: 3px */
+	color: #0a0b0b;
+	text-shadow: #5a5c5e 0 1px 0;
+}
+.black .v-datefield-calendarpanel-weekdays strong {
+	border-top-color: #1b1c1d;
+}
+.black .v-datefield-calendarpanel .v-first {
+	background-image: url(img/weekday-first-black.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 3px */
+}
+.black .v-datefield-calendarpanel .v-last {
+	background-image: url(img/weekday-last-black.png); /** sprite-ref: black-verticals; sprite-alignment: right */
+}
+/* IE fails to position backgrounds inside table element */
+.v-ie .black .v-datefield-calendarpanel-weekdays td {
+	background: url(img/weekday-bg-black.png) repeat-x;
+}
+.v-ie .black .v-datefield-calendarpanel .v-first {
+	background: url(img/weekday-first-black.png) no-repeat;
+}
+.v-ie .black .v-datefield-calendarpanel .v-last {
+	background: url(img/weekday-last-black.png) no-repeat right top;
+}
