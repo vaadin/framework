@@ -213,15 +213,14 @@ div > .v-button-small .v-button-caption,
 * Black buttons
 *------------*/
 .black div > .v-button,
-.black .v-ie7 .v-button {
+.v-ie7 .black .v-button {
 	background-image: url(img/black/left.png); /** sprite-ref: black-buttons */
 }
 .black div > .v-button .v-button-caption,
-.black .v-ie7 .v-button .v-button-caption {
+.v-ie7 .black .v-button .v-button-caption {
 	background-image: url(img/black/right.png); /** sprite-ref: black-buttons; sprite-alignment: right */
 	color: #c9ccce;
 	text-shadow: #000 0 1px 0;
-	font-weight: normal;
 }
 .black .v-button:focus {
 	background-image: url(img/black/left-focus.png); /** sprite-ref: black-buttons */
@@ -230,11 +229,11 @@ div > .v-button-small .v-button-caption,
 	background-image: url(img/black/right-focus.png); /** sprite-ref: black-buttons; sprite-alignment: right */
 }
 .black .v-button:active,
-.black .v-ie7 .v-button.v-pressed {
+.v-ie7 .black .v-button.v-pressed {
 	background-image: url(img/black/left-pressed.png); /** sprite-ref: black-buttons */
 }
 .black .v-button:active .v-button-caption,
-.black .v-ie7 .v-button.v-pressed .v-button-caption {
+.v-ie7 .black .v-button.v-pressed .v-button-caption {
 	background-image: url(img/black/right-pressed.png); /** sprite-ref: black-buttons; sprite-alignment: right */
 }
 
@@ -242,11 +241,11 @@ div > .v-button-small .v-button-caption,
  * Primary-style ----------------------------
  */
 .black div > .v-button-primary,
-.black .v-ie7 .v-button-primary {
+.v-ie7 .black .v-button-primary {
 	background-image: url(img/black/primary-left.png); /** sprite-ref: black-buttons */
 }
 .black div > .v-button-primary .v-button-caption,
-.black .v-ie7 .v-button-primary .v-button-caption {
+.v-ie7 .black .v-button-primary .v-button-caption {
 	background-image: url(img/black/primary-right.png); /** sprite-ref: black-buttons; sprite-alignment: right */
 	text-shadow: #26282a 0 1px 0;
 }
@@ -258,11 +257,11 @@ div > .v-button-small .v-button-caption,
 	color: #eaf4fb;
 }
 .black .v-button-primary:active,
-.black .v-ie7 .v-button-primary.v-pressed {
+.v-ie7 .black .v-button-primary.v-pressed {
 	background-image: url(img/black/primary-left-pressed.png); /** sprite-ref: black-buttons */
 }
 .black .v-button-primary:active .v-button-caption,
-.black .v-ie7 .v-button-primary.v-pressed .v-button-caption {
+.v-ie7 .black .v-button-primary.v-pressed .v-button-caption {
 	background-image: url(img/black/primary-right-pressed.png); /** sprite-ref: black-buttons; sprite-alignment: right */
 }
 
@@ -270,11 +269,11 @@ div > .v-button-small .v-button-caption,
  * Small-style --------------------------
  */
 .black div > .v-button-small,
-.black .v-ie7 .v-button-small {
+.v-ie7 .black .v-button-small {
 	background-image: url(img/black/small-left.png); /** sprite-ref: black-buttons */
 }
 .black div > .v-button-small .v-button-caption,
-.black .v-ie7 .v-button-small .v-button-caption {
+.v-ie7 .black .v-button-small .v-button-caption {
 	background-image: url(img/black/small-right.png); /** sprite-ref: black-buttons; sprite-alignment: right */
 	text-shadow: #000 0 -1px 0;
 }
@@ -285,11 +284,11 @@ div > .v-button-small .v-button-caption,
 	background-image: url(img/black/small-right-focus.png); /** sprite-ref: black-buttons; sprite-alignment: right */
 }
 .black .v-button-small:active,
-.black .v-ie7 .v-button-small.v-pressed {
+.v-ie7 .black .v-button-small.v-pressed {
 	background-image: url(img/black/small-left-pressed.png); /** sprite-ref: black-buttons */
 }
 .black .v-button-small:active .v-button-caption,
-.black .v-ie7 .v-button-small.v-pressed .v-button-caption {
+.v-ie7 .black .v-button-small.v-pressed .v-button-caption {
 	background-image: url(img/black/small-right-pressed.png); /** sprite-ref: black-buttons; sprite-alignment: right */
 }
 
@@ -346,6 +345,7 @@ div > .v-button.v-button-link:active .v-button-caption,
 	line-height: 16px;
 	height: 16px;
 	outline: none;
+	cursor: default;
 }
 .v-ie6 .v-button-primary {
 	background-image: url(img/primary-right.png);
@@ -365,6 +365,22 @@ div > .v-button.v-button-link:active .v-button-caption,
 	border-color: #84949c;
 	border-top-color: #83939b;
 	border-bottom-color: #888d91;
+}
+/* Buttons on black background */
+.v-ie6 .black .v-button {
+	border: 1px solid #505354;
+	border-bottom-color: #313435;
+	background: #202224 url(img/black/right.png) no-repeat 0 -1px;
+	color: #c9ccce;
+}
+.v-ie6 .black .v-button-primary {
+	background-image: url(img/black/primary-right.png);
+}
+.v-ie6 .black .v-button-small {
+	background-image: url(img/black/small-right.png);
+}
+.v-ie6 .black .v-button.v-pressed {
+	background-image: url(img/black/right-pressed.png);
 }
 /* Link button in IE6 */
 .v-ie6 .v-button-link {

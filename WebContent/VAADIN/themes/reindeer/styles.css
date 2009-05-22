@@ -1032,11 +1032,11 @@
 .v-splitpanel-vertical {
 	overflow: hidden;
 }
-.v-splitpanel-horizontal .v-splitpanel-hsplitter {
+.v-splitpanel-hsplitter {
 	width: 6px;
 	font-size: 1px; /* for IE6 */
 }
-.v-splitpanel-horizontal .v-splitpanel-hsplitter div {
+.v-splitpanel-hsplitter div {
 	width: 6px;
 	font-size: 1px; /* for IE6 */
 	position: absolute;
@@ -1045,26 +1045,25 @@
 	background: #ddd;
 	cursor: e-resize;
 }
-.v-splitpanel-vertical .v-splitpanel-vsplitter {
+.v-splitpanel-vsplitter {
 	height: 6px;
 	font-size: 1px; /* for IE6 */
 }
-.v-splitpanel-vertical .v-splitpanel-vsplitter div {
+.v-splitpanel-vsplitter div {
 	height: 6px;
 	font-size: 1px; /* for IE6 */
 	background: #ddd;
 	cursor: n-resize;
 }
 /* IE specific styles */
-.v-ie6 .v-splitpanel-horizontal .v-splitpanel-hsplitter div {
+.v-ie6 .v-splitpanel-hsplitter div {
 	height: 99%;
 }
-
 .v-ie6 .v-splitpanel-first-container,
 .v-ie6 .v-splitpanel-second-container,
 .v-ie7 .v-splitpanel-first-container,
 .v-ie7 .v-splitpanel-second-container {
-	position:relative;
+	position: relative;
 }
 
 /* ./WebContent/VAADIN/themes/base/table/table.css */
@@ -1874,19 +1873,18 @@ div > .v-button-small .v-button-caption,
 * Black buttons
 *------------*/
 .black div > .v-button,
-.black .v-ie7 .v-button {
+.v-ie7 .black .v-button {
   background-image: url(button/img/black-button-sprites.png);
   -background-image: url(button/img/black-button-sprites-ie6.png);
   background-position: left -0px;
 }
 .black div > .v-button .v-button-caption,
-.black .v-ie7 .v-button .v-button-caption {
+.v-ie7 .black .v-button .v-button-caption {
   background-image: url(button/img/black-button-sprites.png);
   -background-image: url(button/img/black-button-sprites-ie6.png);
   background-position: right -26px;
 	color: #c9ccce;
 	text-shadow: #000 0 1px 0;
-	font-weight: normal;
 }
 .black .v-button:focus {
   background-image: url(button/img/black-button-sprites.png);
@@ -1899,13 +1897,13 @@ div > .v-button-small .v-button-caption,
   background-position: right -78px;
 }
 .black .v-button:active,
-.black .v-ie7 .v-button.v-pressed {
+.v-ie7 .black .v-button.v-pressed {
   background-image: url(button/img/black-button-sprites.png);
   -background-image: url(button/img/black-button-sprites-ie6.png);
   background-position: left -104px;
 }
 .black .v-button:active .v-button-caption,
-.black .v-ie7 .v-button.v-pressed .v-button-caption {
+.v-ie7 .black .v-button.v-pressed .v-button-caption {
   background-image: url(button/img/black-button-sprites.png);
   -background-image: url(button/img/black-button-sprites-ie6.png);
   background-position: right -130px;
@@ -1915,13 +1913,13 @@ div > .v-button-small .v-button-caption,
  * Primary-style ----------------------------
  */
 .black div > .v-button-primary,
-.black .v-ie7 .v-button-primary {
+.v-ie7 .black .v-button-primary {
   background-image: url(button/img/black-button-sprites.png);
   -background-image: url(button/img/black-button-sprites-ie6.png);
   background-position: left -156px;
 }
 .black div > .v-button-primary .v-button-caption,
-.black .v-ie7 .v-button-primary .v-button-caption {
+.v-ie7 .black .v-button-primary .v-button-caption {
   background-image: url(button/img/black-button-sprites.png);
   -background-image: url(button/img/black-button-sprites-ie6.png);
   background-position: right -182px;
@@ -1939,13 +1937,13 @@ div > .v-button-small .v-button-caption,
 	color: #eaf4fb;
 }
 .black .v-button-primary:active,
-.black .v-ie7 .v-button-primary.v-pressed {
+.v-ie7 .black .v-button-primary.v-pressed {
   background-image: url(button/img/black-button-sprites.png);
   -background-image: url(button/img/black-button-sprites-ie6.png);
   background-position: left -260px;
 }
 .black .v-button-primary:active .v-button-caption,
-.black .v-ie7 .v-button-primary.v-pressed .v-button-caption {
+.v-ie7 .black .v-button-primary.v-pressed .v-button-caption {
   background-image: url(button/img/black-button-sprites.png);
   -background-image: url(button/img/black-button-sprites-ie6.png);
   background-position: right -286px;
@@ -1955,13 +1953,13 @@ div > .v-button-small .v-button-caption,
  * Small-style --------------------------
  */
 .black div > .v-button-small,
-.black .v-ie7 .v-button-small {
+.v-ie7 .black .v-button-small {
   background-image: url(button/img/black-button-sprites.png);
   -background-image: url(button/img/black-button-sprites-ie6.png);
   background-position: left -312px;
 }
 .black div > .v-button-small .v-button-caption,
-.black .v-ie7 .v-button-small .v-button-caption {
+.v-ie7 .black .v-button-small .v-button-caption {
   background-image: url(button/img/black-button-sprites.png);
   -background-image: url(button/img/black-button-sprites-ie6.png);
   background-position: right -332px;
@@ -1978,13 +1976,13 @@ div > .v-button-small .v-button-caption,
   background-position: right -372px;
 }
 .black .v-button-small:active,
-.black .v-ie7 .v-button-small.v-pressed {
+.v-ie7 .black .v-button-small.v-pressed {
   background-image: url(button/img/black-button-sprites.png);
   -background-image: url(button/img/black-button-sprites-ie6.png);
   background-position: left -392px;
 }
 .black .v-button-small:active .v-button-caption,
-.black .v-ie7 .v-button-small.v-pressed .v-button-caption {
+.v-ie7 .black .v-button-small.v-pressed .v-button-caption {
   background-image: url(button/img/black-button-sprites.png);
   -background-image: url(button/img/black-button-sprites-ie6.png);
   background-position: right -412px;
@@ -2043,6 +2041,7 @@ div > .v-button.v-button-link:active .v-button-caption,
 	line-height: 16px;
 	height: 16px;
 	outline: none;
+	cursor: default;
 }
 .v-ie6 .v-button-primary {
 	background-image: url(button/img/primary-right.png);
@@ -2062,6 +2061,22 @@ div > .v-button.v-button-link:active .v-button-caption,
 	border-color: #84949c;
 	border-top-color: #83939b;
 	border-bottom-color: #888d91;
+}
+/* Buttons on black background */
+.v-ie6 .black .v-button {
+	border: 1px solid #505354;
+	border-bottom-color: #313435;
+	background: #202224 url(button/img/black/right.png) no-repeat 0 -1px;
+	color: #c9ccce;
+}
+.v-ie6 .black .v-button-primary {
+	background-image: url(button/img/black/primary-right.png);
+}
+.v-ie6 .black .v-button-small {
+	background-image: url(button/img/black/small-right.png);
+}
+.v-ie6 .black .v-button.v-pressed {
+	background-image: url(button/img/black/right-pressed.png);
 }
 /* Link button in IE6 */
 .v-ie6 .v-button-link {
@@ -2546,10 +2561,6 @@ td.v-datefield-calendarpanel-nextyear {
 	font-weight: bold;
 	color: #44698b;
 }
-.v-ie6 .v-label-h1 {
-	font-size: 1px;
-	line-height: normal;
-}
 .v-label-h2,
 .v-caption-h2 {
 	font-size: 16px;
@@ -2559,6 +2570,22 @@ td.v-datefield-calendarpanel-nextyear {
 	font-size: 11px;
 	line-height: 13px;
 	color: #707070;
+}
+
+.blue .v-label-h1,
+.blue .v-label-h2,
+.blue .v-caption-h1,
+.blue .v-caption-h2 {
+	color: #fff;
+	text-shadow: rgba(0,0,0,.3) 0 1px 1px;
+}
+
+.black .v-label-h1,
+.black .v-label-h2,
+.black .v-caption-h1,
+.black .v-caption-h2 {
+	color: #fff;
+	text-shadow: rgba(0,0,0,.8) 0 2px 2px;
 }
 
 /* ./WebContent/VAADIN/themes/reindeer/layouts/layouts.css */
@@ -2892,6 +2919,13 @@ td.v-datefield-calendarpanel-nextyear {
 	padding-left: 18px;
 }
 
+
+
+/* Twincolselect needs a little tweak in IE6 */
+.v-ie6 .v-select-twincol-buttons {
+	overflow: hidden;
+}
+
 /* ./WebContent/VAADIN/themes/reindeer/slider/slider.css */
 .v-slider {
 	border-top: 1px solid #9a9c9e;
@@ -2940,13 +2974,14 @@ td.v-datefield-calendarpanel-nextyear {
 }
 
 /* ./WebContent/VAADIN/themes/reindeer/splitpanel/splitpanel.css */
-.v-splitpanel-horizontal .v-splitpanel-hsplitter {
+.v-splitpanel-hsplitter,
+.v-splitpanel-hsplitter-locked {
 	width: 7px;
 	background-repeat: repeat-y;
   background-image: url(common/img/horizontal-sprites.png);
   background-position: -0px top;
 }
-.v-splitpanel-horizontal .v-splitpanel-hsplitter div {
+.v-splitpanel-hsplitter div {
 	width: 7px;
 	background: transparent;
 	background-repeat: no-repeat;
@@ -2954,14 +2989,15 @@ td.v-datefield-calendarpanel-nextyear {
   background-image: url(common/img/horizontal-sprites.png);
   background-position: -7px center;
 }
-.v-splitpanel-vertical .v-splitpanel-vsplitter {
+.v-splitpanel-vsplitter,
+.v-splitpanel-vsplitter-locked {
 	height: 7px;
 	background-repeat: repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
   background-position: left -791px;
 }
-.v-splitpanel-vertical .v-splitpanel-vsplitter div {
+.v-splitpanel-vsplitter div {
 	height: 7px;
 	background: transparent;
 	background-repeat: no-repeat;
@@ -3357,6 +3393,9 @@ input.v-textfield-prompt {
 	-webkit-border-image: url(textfield/img/bg-border-image-black-focus.png) 0 3 0 3 stretch stretch;
 	-moz-border-image: url(textfield/img/bg-border-image-black-focus.png) 0 3 0 3 stretch stretch;
 	-o-border-image: url(textfield/img/bg-border-image-black-focus.png) 0 3 0 3 stretch stretch;
+}
+.black input.v-textfield-prompt {
+	color: #5f6366;
 }
 
 /* Readonly */

@@ -2,11 +2,11 @@
 .v-splitpanel-vertical {
 	overflow: hidden;
 }
-.v-splitpanel-horizontal .v-splitpanel-hsplitter {
+.v-splitpanel-hsplitter {
 	width: 6px;
 	font-size: 1px; /* for IE6 */
 }
-.v-splitpanel-horizontal .v-splitpanel-hsplitter div {
+.v-splitpanel-hsplitter div {
 	width: 6px;
 	font-size: 1px; /* for IE6 */
 	position: absolute;
@@ -15,24 +15,23 @@
 	background: #ddd;
 	cursor: e-resize;
 }
-.v-splitpanel-vertical .v-splitpanel-vsplitter {
+.v-splitpanel-vsplitter {
 	height: 6px;
 	font-size: 1px; /* for IE6 */
 }
-.v-splitpanel-vertical .v-splitpanel-vsplitter div {
+.v-splitpanel-vsplitter div {
 	height: 6px;
 	font-size: 1px; /* for IE6 */
 	background: #ddd;
 	cursor: n-resize;
 }
 /* IE specific styles */
-.v-ie6 .v-splitpanel-horizontal .v-splitpanel-hsplitter div {
+.v-ie6 .v-splitpanel-hsplitter div {
 	height: 99%;
 }
-
 .v-ie6 .v-splitpanel-first-container,
 .v-ie6 .v-splitpanel-second-container,
 .v-ie7 .v-splitpanel-first-container,
 .v-ie7 .v-splitpanel-second-container {
-	position:relative;
+	position: relative;
 }

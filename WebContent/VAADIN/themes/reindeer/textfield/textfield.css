@@ -101,6 +101,9 @@ input.v-textfield-prompt {
 	-moz-border-image: url(img/bg-border-image-black-focus.png) 0 3 0 3 stretch stretch;
 	-o-border-image: url(img/bg-border-image-black-focus.png) 0 3 0 3 stretch stretch;
 }
+.black input.v-textfield-prompt {
+	color: #5f6366;
+}
 
 /* Readonly */
 input.v-textfield-readonly,

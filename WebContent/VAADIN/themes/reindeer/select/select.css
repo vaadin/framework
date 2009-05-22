@@ -184,3 +184,10 @@
 	margin-left: -16px;
 	padding-left: 18px;
 }
+
+
+
+/* Twincolselect needs a little tweak in IE6 */
+.v-ie6 .v-select-twincol-buttons {
+	overflow: hidden;
+}
