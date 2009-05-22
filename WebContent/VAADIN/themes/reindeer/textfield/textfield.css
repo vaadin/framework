@@ -94,6 +94,7 @@ input.v-textfield-prompt {
 	-webkit-border-image: url(img/bg-border-image-black.png) 0 3 0 3 stretch stretch;
 	-moz-border-image: url(img/bg-border-image-black.png) 0 3 0 3 stretch stretch;
 	-o-border-image: url(img/bg-border-image-black.png) 0 3 0 3 stretch stretch;
+	height: 19px;
 }
 .v-sa .black input.v-textfield-focus,
 .v-ff35 .black input.v-textfield-focus {
@@ -101,6 +102,11 @@ input.v-textfield-prompt {
 	-moz-border-image: url(img/bg-border-image-black-focus.png) 0 3 0 3 stretch stretch;
 	-o-border-image: url(img/bg-border-image-black-focus.png) 0 3 0 3 stretch stretch;
 }
+.v-sa .black input.v-textfield-small,
+.v-ff35 .black input.v-textfield-small {
+	height: 15px;
+}
+
 .black input.v-textfield-prompt {
 	color: #5f6366;
 }

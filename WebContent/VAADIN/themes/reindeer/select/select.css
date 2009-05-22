@@ -187,6 +187,61 @@
 
 
 
+
+/* Combobox on black background */
+.black .v-filterselect {
+	background-image: url(img/left-black.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
+}
+.v-app .black .v-filterselect-input,
+.v-window .black .v-filterselect-input,
+.v-popupview-popup .black .v-filterselect-input {
+	color: #c9ccce;
+	background-image: url(img/center-black.png); /** sprite-ref: black-verticals; sprite-alignment: repeat; sprite-margin-bottom: 1px */
+}
+.black .v-filterselect-focus {
+	background-image: url(img/left-black-focus.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
+}
+.black .v-filterselect-focus .v-filterselect-input {
+	background-image: url(img/center-black-focus.png); /** sprite-ref: black-verticals; sprite-alignment: repeat; sprite-margin-bottom: 1px */
+}
+.black .v-filterselect-button {
+	background-image: url(img/right-black.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
+}
+.black .v-filterselect-button:hover {
+	background-image: url(img/right-black-hover.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
+}
+.black .v-filterselect-button:active {
+	background-image: url(img/right-black-pressed.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
+}
+.black .v-filterselect-focus .v-filterselect-button {
+	background-image: url(img/right-black-focus.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
+}
+.black .v-filterselect-focus .v-filterselect-button:hover {
+	background-image: url(img/right-black-focus-hover.png); /** sprite-ref: verticals; sprite-margin-bottom: 1px */
+}
+.black .v-filterselect-focus .v-filterselect-button:active {
+	background-image: url(img/right-black-focus-pressed.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
+}
+.black .v-disabled .v-filterselect-button:hover,
+.black .v-readonly .v-filterselect-button:hover {
+	background-image: url(img/right-black.png); /** sprite-ref: verticals; sprite-margin-bottom: 1px */
+}
+.black .v-filterselect-prompt .v-filterselect-input {
+	color: #5f6366;
+}
+
+
+
+/* Native selects on black background */
+.black .v-select select,
+.black .v-select-twincol select {
+	border: 1px solid #343536;
+	border-top-color: #2a2a2b;
+	border-bottom-color: #3a3b3c;
+	background: #1b1d1e;
+	color: #c9ccce;
+}
+
 /* Twincolselect needs a little tweak in IE6 */
 .v-ie6 .v-select-twincol-buttons {
 	overflow: hidden;

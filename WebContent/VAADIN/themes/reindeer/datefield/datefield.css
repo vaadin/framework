@@ -245,3 +245,16 @@ td.v-datefield-calendarpanel-nextyear {
 .v-datefield-popupcalendar .v-datefield-button:active {
 	background-image: url(img/popup-btn-pressed.png); /** sprite-ref: verticals */
 }
+
+/* over black background */
+.black .v-datefield-popupcalendar .v-datefield-button {
+	background-image: url(img/popup-btn-black.png); /** sprite-ref: black-verticals */
+}
+.black .v-datefield-popupcalendar .v-datefield-button:active {
+	background-image: url(img/popup-btn-black-pressed.png); /** sprite-ref: black-verticals */
+}
+
+/* Small adjustment for IE6 */
+.v-ie6 .v-datefield-popupcalendar .v-datefield-button {
+	margin-top: 1px;
+}

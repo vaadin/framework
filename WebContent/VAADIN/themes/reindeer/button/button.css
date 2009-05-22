@@ -220,7 +220,7 @@ div > .v-button-small .v-button-caption,
 .v-ie7 .black .v-button .v-button-caption {
 	background-image: url(img/black/right.png); /** sprite-ref: black-buttons; sprite-alignment: right */
 	color: #c9ccce;
-	text-shadow: #000 0 1px 0;
+	text-shadow: rgba(0,0,0,.8) 0 -1px 0;
 }
 .black .v-button:focus {
 	background-image: url(img/black/left-focus.png); /** sprite-ref: black-buttons */
@@ -247,7 +247,6 @@ div > .v-button-small .v-button-caption,
 .black div > .v-button-primary .v-button-caption,
 .v-ie7 .black .v-button-primary .v-button-caption {
 	background-image: url(img/black/primary-right.png); /** sprite-ref: black-buttons; sprite-alignment: right */
-	text-shadow: #26282a 0 1px 0;
 }
 .black .v-button-primary:focus {
 	background-image: url(img/black/primary-left-focus.png); /** sprite-ref: black-buttons */
@@ -275,7 +274,6 @@ div > .v-button-small .v-button-caption,
 .black div > .v-button-small .v-button-caption,
 .v-ie7 .black .v-button-small .v-button-caption {
 	background-image: url(img/black/small-right.png); /** sprite-ref: black-buttons; sprite-alignment: right */
-	text-shadow: #000 0 -1px 0;
 }
 .black .v-button-small:focus {
 	background-image: url(img/black/small-left-focus.png); /** sprite-ref: black-buttons */

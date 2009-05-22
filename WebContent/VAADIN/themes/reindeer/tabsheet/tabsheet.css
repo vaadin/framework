@@ -61,3 +61,13 @@
 .blue .v-tabsheet-tabitem-selected  {
 	border-color: #7c8a91;
 }
+/* Tabsheet on black background */
+.black .v-tabsheet-spacertd div,
+.black .v-tabsheet-tabitem,
+.black .v-tabsheet-tabitem-selected  {
+	border-color: #3e4044;
+	color: #6a7f89;
+}
+.black .v-tabsheet-tabitem-selected {
+	color: #c9ccce;
+}
