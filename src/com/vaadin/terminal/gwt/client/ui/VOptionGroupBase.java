@@ -153,14 +153,9 @@ abstract class VOptionGroupBase extends Composite implements Paintable, Field,
             if (newItemField == null) {
                 newItemButton = new VButton();
                 newItemButton.setText("+");
-                newItemButton.setWidth("1.5em");
                 newItemButton.addClickListener(this);
                 newItemField = new VTextField();
                 newItemField.addKeyboardListener(this);
-                // newItemField.setColumns(16);
-                if (getColumns() > 0) {
-                    newItemField.setWidth((getColumns() - 2) + "em");
-                }
             }
             newItemField.setEnabled(!disabled && !readonly);
             newItemButton.setEnabled(!disabled && !readonly);
@@ -168,6 +163,9 @@ abstract class VOptionGroupBase extends Composite implements Paintable, Field,
             if (newItemField == null || newItemField.getParent() != container) {
                 container.add(newItemField);
                 container.add(newItemButton);
+                final int w = container.getOffsetWidth()
+                        - newItemButton.getOffsetWidth();
+                newItemField.setWidth(Math.max(w, 0) + "px");
             }
         } else if (newItemField != null) {
             container.remove(newItemField);
