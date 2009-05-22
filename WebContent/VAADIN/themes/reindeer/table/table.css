@@ -51,11 +51,7 @@
 }
 .v-table-cell-wrapper {
 	padding-top: 3px;
-	height: 17px;
-}
-.v-table-row,
-.v-table-row-odd {
-	height: 19px;
+	padding-bottom: 3px;
 }
 .v-table-row-odd {
 	background: #eff0f1;
