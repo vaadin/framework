@@ -24,3 +24,25 @@
 	background-position: 50%;
 	background-image: url(img/ver-handle.png); /** sprite-ref: verticals; sprite-alignment: center */
 }
+
+/* Small style */
+.v-splitpanel-hsplitter-small,
+.v-splitpanel-hsplitter-small-locked {
+	width: 1px;
+	background: #949698;
+}
+.v-splitpanel-vsplitter-small,
+.v-splitpanel-vsplitter-small-locked {
+	height: 1px;
+	background: #949698;
+}
+.v-splitpanel-hsplitter-small div {
+	width: 3px;
+	margin-left: -2px;
+	background: transparent;
+}
+.v-splitpanel-vsplitter-small div {
+	height: 3px;
+	margin-top: -2px;
+	background: transparent;
+}
