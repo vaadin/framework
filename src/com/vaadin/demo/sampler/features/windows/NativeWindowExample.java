@@ -58,7 +58,7 @@ public class NativeWindowExample extends VerticalLayout {
     class NativeWindow extends Window {
         NativeWindow() {
             // Configure the layout
-            VerticalLayout layout = (VerticalLayout) getLayout();
+            VerticalLayout layout = (VerticalLayout) getContent();
             layout.setMargin(true);
             layout.setSpacing(true);
 

@@ -126,19 +126,19 @@ public class CalendarField extends DateField implements Container.Viewer {
 
         // Check old propertyIds
         if (itemEndPropertyId != null) {
-            final Class c = dataSource.getType(itemEndPropertyId);
+            final Class<?> c = dataSource.getType(itemEndPropertyId);
             if (!Date.class.isAssignableFrom(c)) {
                 itemEndPropertyId = null;
             }
         }
         if (itemNotimePropertyId != null) {
-            final Class c = dataSource.getType(itemNotimePropertyId);
+            final Class<?> c = dataSource.getType(itemNotimePropertyId);
             if (!Boolean.class.isAssignableFrom(c)) {
                 itemNotimePropertyId = null;
             }
         }
         if (itemStartPropertyId != null) {
-            final Class c = dataSource.getType(itemStartPropertyId);
+            final Class<?> c = dataSource.getType(itemStartPropertyId);
             if (Date.class.isAssignableFrom(c)) {
                 // All we _really_ need is one date
                 return true;
@@ -147,10 +147,10 @@ public class CalendarField extends DateField implements Container.Viewer {
             }
         }
         // We need at least one Date
-        final Collection ids = dataSource.getContainerPropertyIds();
-        for (final Iterator it = ids.iterator(); it.hasNext();) {
+        final Collection<?> ids = dataSource.getContainerPropertyIds();
+        for (final Iterator<?> it = ids.iterator(); it.hasNext();) {
             final Object id = it.next();
-            final Class c = dataSource.getType(id);
+            final Class<?> c = dataSource.getType(id);
             if (Date.class.isAssignableFrom(c)) {
                 itemStartPropertyId = id;
                 return true;
@@ -257,7 +257,7 @@ public class CalendarField extends DateField implements Container.Viewer {
                 month = ((Date) value).getMonth();
             }
 
-            for (final Iterator it = dataSource.getItemIds().iterator(); it
+            for (final Iterator<?> it = dataSource.getItemIds().iterator(); it
                     .hasNext();) {
                 final Object itemId = it.next();
                 final Item item = dataSource.getItem(itemId);

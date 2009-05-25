@@ -26,6 +26,7 @@ public class TabSheetDisabledExample extends VerticalLayout implements
     private VerticalLayout l1;
     private VerticalLayout l2;
     private VerticalLayout l3;
+    @SuppressWarnings("unused")
     private Tab t1, t2, t3;
 
     public TabSheetDisabledExample() {

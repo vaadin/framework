@@ -232,6 +232,7 @@ public class TableExample extends CustomComponent implements Action.Handler,
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void buttonClick(ClickEvent event) {
         final Button b = event.getButton();
         if (b == deselect) {

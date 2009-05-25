@@ -20,6 +20,7 @@ public class AccordionDisabledExample extends VerticalLayout implements
     private Label l1;
     private Label l2;
     private Label l3;
+    @SuppressWarnings("unused")
     private Tab t1;
     private Tab t2;
     private Tab t3;

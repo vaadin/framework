@@ -18,7 +18,7 @@ public class ColorPicker extends AbstractField {
         setValue(new String("white"));
     }
 
-    /** The property value of the field is an Integer. */
+    /** The property value of the field is a String. */
     @Override
     public Class getType() {
         return String.class;

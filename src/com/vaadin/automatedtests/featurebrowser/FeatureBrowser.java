@@ -54,7 +54,7 @@ public class FeatureBrowser extends com.vaadin.Application implements
     private TabSheet ts;
 
     // Example "cache"
-    private final HashMap exampleInstances = new HashMap();
+    private final HashMap<Class<?>, Component> exampleInstances = new HashMap<Class<?>, Component>();
     private String section;
 
     // List of examples
@@ -129,9 +129,9 @@ public class FeatureBrowser extends com.vaadin.Application implements
         final SplitPanel split = new SplitPanel(
                 SplitPanel.ORIENTATION_HORIZONTAL);
         split.setSplitPosition(200, SplitPanel.UNITS_PIXELS);
-        main.setLayout(split);
+        main.setContent(split);
 
-        final HashMap sectionIds = new HashMap();
+        final HashMap<String, Object> sectionIds = new HashMap<String, Object>();
         final HierarchicalContainer container = createContainer();
         final Object rootId = container.addItem();
         Item item = container.getItem(rootId);
@@ -212,7 +212,7 @@ public class FeatureBrowser extends com.vaadin.Application implements
             public void buttonClick(ClickEvent event) {
                 Component component = (Component) ts.getComponentIterator()
                         .next();
-                String caption = ts.getTabCaption(component);
+                String caption = ts.getTab(component).getCaption();
                 try {
                     component = component.getClass().newInstance();
                 } catch (Exception e) {
@@ -222,7 +222,7 @@ public class FeatureBrowser extends com.vaadin.Application implements
                 Window w = new Window(caption);
                 w.setWidth("640px");
                 if (Layout.class.isAssignableFrom(component.getClass())) {
-                    w.setLayout((Layout) component);
+                    w.setContent((Layout) component);
                 } else {
                     // w.getLayout().getSize().setSizeFull();
                     w.addComponent(component);
@@ -237,7 +237,7 @@ public class FeatureBrowser extends com.vaadin.Application implements
             public void buttonClick(ClickEvent event) {
                 Component component = (Component) ts.getComponentIterator()
                         .next();
-                final String caption = ts.getTabCaption(component);
+                final String caption = ts.getTab(component).getCaption();
                 Window w = getWindow(caption);
                 if (w == null) {
                     try {
@@ -249,7 +249,7 @@ public class FeatureBrowser extends com.vaadin.Application implements
                     w = new Window(caption);
                     w.setName(caption);
                     if (Layout.class.isAssignableFrom(component.getClass())) {
-                        w.setLayout((Layout) component);
+                        w.setContent((Layout) component);
                     } else {
                         // w.getLayout().getSize().setSizeFull();
                         w.addComponent(component);
@@ -381,7 +381,7 @@ public class FeatureBrowser extends com.vaadin.Application implements
                 return null;
             }
         }
-        return (Component) exampleInstances.get(componentClass);
+        return exampleInstances.get(componentClass);
     }
 
 }

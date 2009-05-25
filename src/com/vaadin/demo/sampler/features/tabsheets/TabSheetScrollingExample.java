@@ -5,6 +5,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
+import com.vaadin.ui.TabSheet.Tab;
 
 @SuppressWarnings("serial")
 public class TabSheetScrollingExample extends VerticalLayout implements
@@ -55,7 +56,10 @@ public class TabSheetScrollingExample extends VerticalLayout implements
     }
 
     public void selectedTabChange(SelectedTabChangeEvent event) {
-        String c = t.getTabCaption(event.getTabSheet().getSelectedTab());
-        getWindow().showNotification("Selected tab: " + c);
+        TabSheet tabsheet = event.getTabSheet();
+        Tab tab = tabsheet.getTab(tabsheet.getSelectedTab());
+        if (tab != null) {
+            getWindow().showNotification("Selected tab: " + tab.getCaption());
+        }
     }
 }

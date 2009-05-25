@@ -103,8 +103,7 @@ public class FormPojoExample extends VerticalLayout {
 
         public PersonFieldFactory() {
             countries.setWidth("30em");
-            countries.setContainerDataSource(ExampleUtil
-                    .getStaticISO3166Container());
+            countries.setContainerDataSource(ExampleUtil.getISO3166Container());
             countries
                     .setItemCaptionPropertyId(ExampleUtil.iso3166_PROPERTY_NAME);
             countries.setItemIconPropertyId(ExampleUtil.iso3166_PROPERTY_FLAG);

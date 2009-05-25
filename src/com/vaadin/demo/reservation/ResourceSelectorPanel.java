@@ -17,7 +17,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 
-@SuppressWarnings("serial")
+@SuppressWarnings( { "serial", "unchecked" })
 public class ResourceSelectorPanel extends Panel implements
         Button.ClickListener {
     private final HashMap categoryLayouts = new HashMap();

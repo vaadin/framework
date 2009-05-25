@@ -126,9 +126,11 @@ public class SamplerApplication extends Application {
      * @param clazz
      * @return
      */
+    @SuppressWarnings("unchecked")
     public static Feature getFeatureFor(Class clazz) {
-        for (Iterator it = allFeatures.getItemIds().iterator(); it.hasNext();) {
-            Feature f = (Feature) it.next();
+        for (Iterator<Feature> it = allFeatures.getItemIds().iterator(); it
+                .hasNext();) {
+            Feature f = it.next();
             if (f.getClass() == clazz) {
                 return f;
             }
@@ -174,7 +176,7 @@ public class SamplerApplication extends Application {
         SamplerWindow() {
             // Main top/expanded-bottom layout
             VerticalLayout mainExpand = new VerticalLayout();
-            setLayout(mainExpand);
+            setContent(mainExpand);
             setSizeFull();
             mainExpand.setSizeFull();
             setCaption("Vaadin Sampler");
@@ -316,7 +318,7 @@ public class SamplerApplication extends Application {
             search.setNullSelectionAllowed(true);
             search.setImmediate(true);
             search.setContainerDataSource(allFeatures);
-            for (Iterator it = allFeatures.getItemIds().iterator(); it
+            for (Iterator<?> it = allFeatures.getItemIds().iterator(); it
                     .hasNext();) {
                 Object id = it.next();
                 if (id instanceof FeatureSet) {
@@ -678,17 +680,18 @@ public class SamplerApplication extends Application {
 
         FeatureGrid() {
             setSizeFull();
-            setLayout(grid);
+            setContent(grid);
             grid.setSizeUndefined();
             grid.setSpacing(true);
             setStyleName(Panel.STYLE_LIGHT);
         }
 
+        @SuppressWarnings("unchecked")
         public void setFeatureContainer(HierarchicalContainer c) {
             grid.removeAllComponents();
-            Collection features = c.getItemIds();
-            for (Iterator it = features.iterator(); it.hasNext();) {
-                final Feature f = (Feature) it.next();
+            Collection<Feature> features = c.getItemIds();
+            for (Iterator<Feature> it = features.iterator(); it.hasNext();) {
+                final Feature f = it.next();
                 if (f instanceof FeatureSet) {
                     grid.newLine();
                     Label title = new Label(f.getName());

@@ -53,7 +53,7 @@ public class FeatureBrowser extends com.vaadin.Application implements
     private TabSheet ts;
 
     // Example "cache"
-    private final HashMap exampleInstances = new HashMap();
+    private final HashMap<Class<?>, Component> exampleInstances = new HashMap<Class<?>, Component>();
     private String section;
 
     // List of examples
@@ -129,7 +129,7 @@ public class FeatureBrowser extends com.vaadin.Application implements
         split.setSplitPosition(200, SplitPanel.UNITS_PIXELS);
         main.setContent(split);
 
-        final HashMap sectionIds = new HashMap();
+        final HashMap<String, Object> sectionIds = new HashMap<String, Object>();
         final HierarchicalContainer container = createContainer();
         final Object rootId = container.addItem();
         Item item = container.getItem(rootId);
@@ -166,7 +166,7 @@ public class FeatureBrowser extends com.vaadin.Application implements
         tree.addListener(this);
         tree.setImmediate(true);
         tree.expandItemsRecursively(rootId);
-        for (Iterator i = container.getItemIds().iterator(); i.hasNext();) {
+        for (Iterator<?> i = container.getItemIds().iterator(); i.hasNext();) {
             Object id = i.next();
             if (container.getChildren(id) == null) {
                 tree.setChildrenAllowed(id, false);
@@ -209,7 +209,7 @@ public class FeatureBrowser extends com.vaadin.Application implements
             public void buttonClick(ClickEvent event) {
                 Component component = (Component) ts.getComponentIterator()
                         .next();
-                String caption = ts.getTabCaption(component);
+                String caption = ts.getTab(component).getCaption();
                 try {
                     component = component.getClass().newInstance();
                 } catch (Exception e) {
@@ -233,7 +233,7 @@ public class FeatureBrowser extends com.vaadin.Application implements
             public void buttonClick(ClickEvent event) {
                 Component component = (Component) ts.getComponentIterator()
                         .next();
-                final String caption = ts.getTabCaption(component);
+                final String caption = ts.getTab(component).getCaption();
                 Window w = getWindow(caption);
                 if (w == null) {
                     try {
@@ -347,8 +347,8 @@ public class FeatureBrowser extends com.vaadin.Application implements
                 tree.setValue(table.getValue());
                 table.addListener(this);
                 final Item item = table.getItem(table.getValue());
-                final Class c = (Class) item.getItemProperty(PROPERTY_ID_CLASS)
-                        .getValue();
+                final Class<?> c = (Class<?>) item.getItemProperty(
+                        PROPERTY_ID_CLASS).getValue();
                 final Component component = getComponent(c);
                 if (component != null) {
                     final String caption = (String) item.getItemProperty(
@@ -368,7 +368,7 @@ public class FeatureBrowser extends com.vaadin.Application implements
 
     }
 
-    private Component getComponent(Class componentClass) {
+    private Component getComponent(Class<?> componentClass) {
         if (!exampleInstances.containsKey(componentClass)) {
             try {
                 final Component c = (Component) componentClass.newInstance();
@@ -377,7 +377,7 @@ public class FeatureBrowser extends com.vaadin.Application implements
                 return null;
             }
         }
-        return (Component) exampleInstances.get(componentClass);
+        return exampleInstances.get(componentClass);
     }
 
 }

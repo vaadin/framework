@@ -17,7 +17,7 @@ public class ComboBoxContainsExample extends VerticalLayout implements
 
         // Creates a new combobox using an existing container
         ComboBox l = new ComboBox("Please select your country", ExampleUtil
-                .getStaticISO3166Container());
+                .getISO3166Container());
 
         // Sets the combobox to show a certain property as the item caption
         l.setItemCaptionPropertyId(ExampleUtil.iso3166_PROPERTY_NAME);
@@ -44,7 +44,7 @@ public class ComboBoxContainsExample extends VerticalLayout implements
      * Shows a notification when a selection is made.
      */
     public void valueChange(ValueChangeEvent event) {
-        Property selected = ExampleUtil.getStaticISO3166Container()
+        Property selected = ExampleUtil.getISO3166Container()
                 .getContainerProperty(event.getProperty().toString(), "name");
         getWindow().showNotification("Selected country: " + selected);
     }

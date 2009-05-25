@@ -72,10 +72,11 @@ public class ModeSwitch extends CustomComponent {
         updateStyles();
     }
 
+    @SuppressWarnings("unchecked")
     private void updateStyles() {
         boolean first = true;
-        for (Iterator it = layout.getComponentIterator(); it.hasNext();) {
-            Button b = (Button) it.next();
+        for (Iterator<Button> it = layout.getComponentIterator(); it.hasNext();) {
+            Button b = it.next();
             String isOn = (b.getData() == mode ? "-on" : "");
             if (first) {
                 first = false;

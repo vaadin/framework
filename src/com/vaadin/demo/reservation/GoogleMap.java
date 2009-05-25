@@ -55,8 +55,8 @@ public class GoogleMap extends AbstractComponent implements Sizeable,
 
         if (dataSource != null) {
             target.startTag(TAG_MARKERS);
-            final Collection itemIds = dataSource.getItemIds();
-            for (final Iterator it = itemIds.iterator(); it.hasNext();) {
+            final Collection<?> itemIds = dataSource.getItemIds();
+            for (final Iterator<?> it = itemIds.iterator(); it.hasNext();) {
                 final Object itemId = it.next();
                 final Item item = dataSource.getItem(itemId);
                 Property p = item.getItemProperty(getItemMarkerXPropertyId());

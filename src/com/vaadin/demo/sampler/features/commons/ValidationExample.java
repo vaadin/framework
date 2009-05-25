@@ -14,7 +14,7 @@ import com.vaadin.ui.VerticalLayout;
 @SuppressWarnings("serial")
 public class ValidationExample extends VerticalLayout {
 
-    HashSet usernames = new HashSet();
+    HashSet<String> usernames = new HashSet<String>();
 
     public ValidationExample() {
         setSpacing(true);
@@ -53,9 +53,11 @@ public class ValidationExample extends VerticalLayout {
             public void valueChange(ValueChangeEvent event) {
                 TextField tf = (TextField) event.getProperty();
                 tf.validate();
-                usernames.add(tf.getValue());
-                addComponent(new Label("Added " + tf.getValue()
-                        + " to usernames"));
+                if (tf.getValue() != null) {
+                    usernames.add(tf.getValue().toString());
+                    addComponent(new Label("Added " + tf.getValue()
+                            + " to usernames"));
+                }
             }
         });
 

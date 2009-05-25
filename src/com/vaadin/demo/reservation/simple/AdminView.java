@@ -76,8 +76,7 @@ public class AdminView extends VerticalLayout {
             public void buttonClick(ClickEvent event) {
                 if (editedItem == null) {
                     // save
-                    int addResource = application.getDb().addResource(
-                            name.getValue().toString(),
+                    application.getDb().addResource(name.getValue().toString(),
                             desc.getValue().toString());
                 } else {
                     // update

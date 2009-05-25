@@ -4,7 +4,9 @@ import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
+import com.vaadin.ui.TabSheet.Tab;
 
 @SuppressWarnings("serial")
 public class AccordionIconsExample extends HorizontalLayout implements
@@ -38,7 +40,10 @@ public class AccordionIconsExample extends HorizontalLayout implements
     }
 
     public void selectedTabChange(SelectedTabChangeEvent event) {
-        String c = a.getTabCaption(event.getTabSheet().getSelectedTab());
-        getWindow().showNotification("Selected tab: " + c);
+        TabSheet tabsheet = event.getTabSheet();
+        Tab tab = tabsheet.getTab(tabsheet.getSelectedTab());
+        if (tab != null) {
+            getWindow().showNotification("Selected tab: " + tab.getCaption());
+        }
     }
 }

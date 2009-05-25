@@ -21,7 +21,7 @@ public class SubwindowPositionedExample extends VerticalLayout {
         subwindow.setHeight("200px");
 
         // Configure the windws layout; by default a VerticalLayout
-        VerticalLayout layout = (VerticalLayout) subwindow.getLayout();
+        VerticalLayout layout = (VerticalLayout) subwindow.getContent();
         layout.setMargin(true);
         layout.setSpacing(true);
         // make it fill the whole window

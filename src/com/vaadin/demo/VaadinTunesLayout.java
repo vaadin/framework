@@ -51,7 +51,7 @@ public class VaadinTunesLayout extends Application {
 
         // Our root window contains one VerticalLayout by default, let's make
         // sure it's 100% sized, and remove unwanted margins
-        root.getLayout().setSizeFull();
+        root.getContent().setSizeFull();
         root.getLayout().setMargin(false);
 
         // Top area, containing playback and volume controls, play status, view
@@ -172,7 +172,7 @@ public class VaadinTunesLayout extends Application {
 
         // The splitpanel is by default 100% x 100%, but we'll need to adjust
         // our main window layout to accomodate the height
-        ((VerticalLayout) root.getLayout()).setExpandRatio(bottom, 1.0F);
+        ((VerticalLayout) root.getContent()).setExpandRatio(bottom, 1.0F);
 
         // Give the sidebar less space than the listing
         bottom.setSplitPosition(200, SplitPanel.UNITS_PIXELS);

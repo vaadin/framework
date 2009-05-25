@@ -267,7 +267,7 @@ public class SampleDB {
 
     }
 
-    public Container getReservations(List resources) {
+    public Container getReservations(List<?> resources) {
         // TODO where reserved_by=?
         // TODO where from=?
         // TODO where to=?
@@ -277,7 +277,7 @@ public class SampleDB {
                 + Resource.PROPERTY_ID_ID;
         if (resources != null && resources.size() > 0) {
             final StringBuffer s = new StringBuffer();
-            for (final Iterator it = resources.iterator(); it.hasNext();) {
+            for (final Iterator<?> it = resources.iterator(); it.hasNext();) {
                 if (s.length() > 0) {
                     s.append(",");
                 }
@@ -397,14 +397,14 @@ public class SampleDB {
                 "Customer meeting", "Guests arriving at harbour",
                 "Moving furniture", "Taking guests to see town" };
         final Container cat = getCategories();
-        final Collection cIds = cat.getItemIds();
-        for (final Iterator it = cIds.iterator(); it.hasNext();) {
+        final Collection<?> cIds = cat.getItemIds();
+        for (final Iterator<?> it = cIds.iterator(); it.hasNext();) {
             final Object id = it.next();
             final Item ci = cat.getItem(id);
             final String c = (String) ci.getItemProperty(
                     Resource.PROPERTY_ID_CATEGORY).getValue();
             final Container resources = getResources(c);
-            final Collection rIds = resources.getItemIds();
+            final Collection<?> rIds = resources.getItemIds();
             final Calendar cal = Calendar.getInstance();
             cal.set(Calendar.MINUTE, 0);
             cal.set(Calendar.SECOND, 0);
@@ -413,7 +413,7 @@ public class SampleDB {
             // cal.add(Calendar.DAY_OF_MONTH, -days);
             for (int i = 0; i < days; i++) {
                 int r = 3;
-                for (final Iterator rit = rIds.iterator(); rit.hasNext()
+                for (final Iterator<?> rit = rIds.iterator(); rit.hasNext()
                         && r > 0; r--) {
                     final Object rid = rit.next();
                     final Item resource = resources.getItem(rid);

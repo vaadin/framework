@@ -138,7 +138,7 @@ public class TableMainFeaturesExample extends VerticalLayout {
             public void valueChange(ValueChangeEvent event) {
                 // in multiselect mode, a Set of itemIds is returned,
                 // in singleselect mode the itemId is returned directly
-                Set value = (Set) event.getProperty().getValue();
+                Set<?> value = (Set<?>) event.getProperty().getValue();
                 if (null == value || value.size() == 0) {
                     selected.setValue("No selection");
                 } else {

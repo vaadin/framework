@@ -78,6 +78,7 @@ public class VGoogleMap extends Composite implements Paintable {
     private void addMarkerPopup(Marker marker, final String html) {
         marker.addMarkerClickHandler(new MarkerClickHandler() {
 
+            @SuppressWarnings("deprecation")
             public void onClick(MarkerClickEvent event) {
                 widget.getInfoWindow().open(event.getSender().getPoint(),
                         new InfoWindowContent(html));

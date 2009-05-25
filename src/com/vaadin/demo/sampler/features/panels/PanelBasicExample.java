@@ -20,7 +20,7 @@ public class PanelBasicExample extends VerticalLayout implements ClickListener {
         panel.setHeight("200px"); // we want scrollbars
 
         // let's adjust the panels default layout (a VerticalLayout)
-        VerticalLayout layout = (VerticalLayout) panel.getLayout();
+        VerticalLayout layout = (VerticalLayout) panel.getContent();
         layout.setMargin(true); // we want a margin
         layout.setSpacing(true); // and spacing between components
         addComponent(panel);

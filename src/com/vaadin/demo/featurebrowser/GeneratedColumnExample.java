@@ -4,10 +4,10 @@
 
 package com.vaadin.demo.featurebrowser;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Vector;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
@@ -15,10 +15,10 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Container.Indexed;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.AbstractField;
-import com.vaadin.ui.BaseFieldFactory;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
@@ -117,15 +117,15 @@ public class GeneratedColumnExample extends CustomComponent {
      * implementations, as they are not needed in this example.
      */
     public class MySimpleIndexedContainer implements Container, Indexed {
-        Vector items;
+        ArrayList<BeanItem> items;
         Object itemtemplate;
 
         public MySimpleIndexedContainer(Object itemtemplate) {
             this.itemtemplate = itemtemplate;
-            items = new Vector(); // Yeah this is just a test
+            items = new ArrayList<BeanItem>(); // Yeah this is just a test
         }
 
-        public boolean addContainerProperty(Object propertyId, Class type,
+        public boolean addContainerProperty(Object propertyId, Class<?> type,
                 Object defaultValue) throws UnsupportedOperationException {
             throw new UnsupportedOperationException();
         }
@@ -165,7 +165,7 @@ public class GeneratedColumnExample extends CustomComponent {
             if (itemId instanceof Integer) {
                 int pos = ((Integer) itemId).intValue();
                 if (pos >= 0 && pos < items.size()) {
-                    Item item = (Item) items.get(pos);
+                    Item item = items.get(pos);
 
                     // The BeanItem provides the property objects for the items.
                     return item.getItemProperty(propertyId);
@@ -175,7 +175,7 @@ public class GeneratedColumnExample extends CustomComponent {
         }
 
         /** Table calls this to get the column names. */
-        public Collection getContainerPropertyIds() {
+        public Collection<?> getContainerPropertyIds() {
             Item item = new BeanItem(itemtemplate);
 
             // The BeanItem knows how to get the property names from the bean.
@@ -186,21 +186,21 @@ public class GeneratedColumnExample extends CustomComponent {
             if (itemId instanceof Integer) {
                 int pos = ((Integer) itemId).intValue();
                 if (pos >= 0 && pos < items.size()) {
-                    return (Item) items.get(pos);
+                    return items.get(pos);
                 }
             }
             return null;
         }
 
-        public Collection getItemIds() {
-            Vector ids = new Vector(items.size());
+        public Collection<?> getItemIds() {
+            ArrayList<Integer> ids = new ArrayList<Integer>(items.size());
             for (int i = 0; i < items.size(); i++) {
                 ids.add(Integer.valueOf(i));
             }
             return ids;
         }
 
-        public Class getType(Object propertyId) {
+        public Class<?> getType(Object propertyId) {
             return BeanItem.class;
         }
 
@@ -427,11 +427,13 @@ public class GeneratedColumnExample extends CustomComponent {
     /**
      * Custom field factory that sets the fields as immediate.
      */
-    public class ImmediateFieldFactory extends BaseFieldFactory {
+    public class ImmediateFieldFactory extends DefaultFieldFactory {
         @Override
-        public Field createField(Class type, Component uiContext) {
-            // Let the BaseFieldFactory create the fields
-            Field field = super.createField(type, uiContext);
+        public Field createField(Container container, Object itemId,
+                Object propertyId, Component uiContext) {
+            // Let the DefaultFieldFactory create the fields
+            Field field = super.createField(container, itemId, propertyId,
+                    uiContext);
 
             // ...and just set them as immediate
             ((AbstractField) field).setImmediate(true);
@@ -529,7 +531,7 @@ public class GeneratedColumnExample extends CustomComponent {
 
         // Use a custom field factory to set the edit fields as immediate.
         // This is used when the table is in editable mode.
-        table.setFieldFactory(new ImmediateFieldFactory());
+        table.setTableFieldFactory(new ImmediateFieldFactory());
 
         // Setting the table itself as immediate has no relevance in this
         // example,

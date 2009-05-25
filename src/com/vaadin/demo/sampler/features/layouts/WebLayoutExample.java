@@ -59,7 +59,7 @@ public class WebLayoutExample extends VerticalLayout {
             Tree tree = new Tree();
             tree.setContainerDataSource(ExampleUtil.getHardwareContainer());
             tree.setItemCaptionPropertyId(ExampleUtil.hw_PROPERTY_NAME);
-            for (Iterator it = tree.rootItemIds().iterator(); it.hasNext();) {
+            for (Iterator<?> it = tree.rootItemIds().iterator(); it.hasNext();) {
                 tree.expandItemsRecursively(it.next());
             }
             addComponent(tree);

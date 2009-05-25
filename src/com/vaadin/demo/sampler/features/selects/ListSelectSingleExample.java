@@ -12,8 +12,9 @@ import com.vaadin.ui.VerticalLayout;
 public class ListSelectSingleExample extends VerticalLayout implements
         Property.ValueChangeListener {
 
-    private static final List cities = Arrays.asList(new String[] { "Berlin",
-            "Brussels", "Helsinki", "Madrid", "Oslo", "Paris", "Stockholm" });
+    private static final List<String> cities = Arrays.asList(new String[] {
+            "Berlin", "Brussels", "Helsinki", "Madrid", "Oslo", "Paris",
+            "Stockholm" });
 
     public ListSelectSingleExample() {
         setSpacing(true);

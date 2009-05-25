@@ -14,15 +14,15 @@ public class APIResource extends NamedExternalResource {
     private static final String SERVLET_BASE = "http://java.sun.com/products/servlet/2.5/docs/servlet-2_5-mr2";
     private static final String PORTLET_BASE = "http://developers.sun.com/docs/jscreator/apis/portlet";
 
-    public APIResource(Class clazz) {
+    public APIResource(Class<?> clazz) {
         this(resolveBaseUrl(clazz), clazz);
     }
 
-    public APIResource(String baseUrl, Class clazz) {
+    public APIResource(String baseUrl, Class<?> clazz) {
         super(resolveName(clazz), getJavadocUrl(baseUrl, clazz));
     }
 
-    private static String getJavadocUrl(String baseUrl, Class clazz) {
+    private static String getJavadocUrl(String baseUrl, Class<?> clazz) {
         if (!baseUrl.endsWith("/")) {
             baseUrl += "/";
         }
@@ -38,7 +38,7 @@ public class APIResource extends NamedExternalResource {
      * @param clazz
      * @return
      */
-    private static String resolveBaseUrl(Class clazz) {
+    private static String resolveBaseUrl(Class<?> clazz) {
         String name = clazz.getName();
         if (name.startsWith("javax.servlet.")) {
             return SERVLET_BASE;
@@ -50,8 +50,8 @@ public class APIResource extends NamedExternalResource {
         return VAADIN_BASE;
     }
 
-    private static String resolveName(Class clazz) {
-        Class ec = clazz.getEnclosingClass();
+    private static String resolveName(Class<?> clazz) {
+        Class<?> ec = clazz.getEnclosingClass();
         return (ec != null ? ec.getSimpleName() + "." : "")
                 + clazz.getSimpleName();
     }

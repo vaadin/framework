@@ -41,7 +41,7 @@ public class TreeMultiSelectExample extends VerticalLayout implements
                 Tree t = (Tree) event.getProperty();
                 // enable if something is selected, returns a set
                 deleteButton.setEnabled(t.getValue() != null
-                        && ((Set) t.getValue()).size() > 0);
+                        && ((Set<?>) t.getValue()).size() > 0);
             }
         });
 
@@ -53,12 +53,13 @@ public class TreeMultiSelectExample extends VerticalLayout implements
         tree.setItemCaptionMode(AbstractSelect.ITEM_CAPTION_MODE_PROPERTY);
 
         // Expand whole tree
-        for (Iterator it = tree.rootItemIds().iterator(); it.hasNext();) {
+        for (Iterator<?> it = tree.rootItemIds().iterator(); it.hasNext();) {
             tree.expandItemsRecursively(it.next());
         }
 
         // Create the 'delete button', inline click-listener
         deleteButton = new Button("Delete", new Button.ClickListener() {
+            @SuppressWarnings("unchecked")
             public void buttonClick(ClickEvent event) {
                 // Delete all the selected objects
                 Object[] toDelete = ((Set<Object>) tree.getValue()).toArray();

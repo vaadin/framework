@@ -17,7 +17,7 @@ public class SubwindowExample extends VerticalLayout {
         subwindow = new Window("A subwindow");
 
         // Configure the windws layout; by default a VerticalLayout
-        VerticalLayout layout = (VerticalLayout) subwindow.getLayout();
+        VerticalLayout layout = (VerticalLayout) subwindow.getContent();
         layout.setMargin(true);
         layout.setSpacing(true);
 

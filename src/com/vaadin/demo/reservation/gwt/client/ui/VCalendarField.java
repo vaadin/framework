@@ -24,6 +24,7 @@ import com.vaadin.terminal.gwt.client.ui.CalendarEntry;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel;
 import com.vaadin.terminal.gwt.client.ui.VDateField;
 
+@SuppressWarnings( { "deprecation", "unchecked" })
 public class VCalendarField extends VDateField {
 
     private final VCalendarPanel calPanel;
@@ -87,7 +88,6 @@ public class VCalendarField extends VDateField {
         buildDayView(date);
     }
 
-    @SuppressWarnings("deprecation")
     protected void buildDayView(Date date) {
         if (hourPanel == null) {
             hourPanel = new SimplePanel();
@@ -219,7 +219,6 @@ public class VCalendarField extends VDateField {
 
         private final HashMap dates = new HashMap();
 
-        @SuppressWarnings("deprecation")
         public void addItem(UIDL item) {
             final String styleName = item.getStringAttribute("styleName");
             // final Integer id = new Integer(item.getIntAttribute("id"));
@@ -265,7 +264,6 @@ public class VCalendarField extends VDateField {
             }
         }
 
-        @SuppressWarnings("deprecation")
         public List getEntries(Date date, int resolution) {
             final ArrayList res = new ArrayList();
             if (date == null) {
