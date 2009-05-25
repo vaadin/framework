@@ -176,9 +176,12 @@
 .v-app {
 	height: 100%;
 }
-.v-app-loading {
+div.v-app-loading {
 	/* You can use this to provide indication for the user that the application is loading. */
 	/* It is applied to the same element as .v-app */
+	background-image: url(../base/common/img/loading-indicator.gif);
+	background-repeat: no-repeat;
+	background-position: 50%;
 }
 .v-view {
 	height: 100%;
@@ -312,11 +315,21 @@
 .v-loading-indicator,
 .v-loading-indicator-delay,
 .v-loading-indicator-wait {
-	height: 16px;
 	position: absolute;
 	top: 0;
 	right: 0;
 	z-index: 30000;
+	width: 31px;
+	height: 31px;
+	background: transparent url(../base/common/img/loading-indicator.gif);
+	margin-right: 5px;
+	margin-top: 5px;
+}
+.v-loading-indicator-delay {
+	background-image: url(../base/common/img/loading-indicator-delay.gif);
+}
+.v-loading-indicator-wait {
+	background-image: url(../base/common/img/loading-indicator-wait.gif);
 }
 /* Debug dialog */
 .v-debug-console {
@@ -722,10 +735,14 @@
 	overflow: hidden; /* for IE6 */
 	background: #ddd;
 }
-.v-progressindicator-indeterminate {
-	height: 16px;
-	width: 16px;
+div.v-progressindicator-indeterminate {
+	height: 20px;
+	width: 20px;
 	overflow: hidden; /* for IE6 */
+	background: #fff url(../base/common/img/ajax-loader-medium.gif) no-repeat 50%;
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
 }
 /* Hide obsolete elements in indeterminate mode */
 .v-progressindicator-indeterminate .v-progressindicator-wrapper,
@@ -734,10 +751,11 @@
 .v-progressindicator-indeterminate-disabled .v-progressindicator-indicator {
 	display: none;
 }
-.v-progressindicator-indeterminate-disabled {
-	height: 16px;
-	width: 16px;
+div.v-progressindicator-indeterminate-disabled {
+	height: 20px;
+	width: 20px;
 	overflow: hidden; /* for IE6 */
+	background: transparent;
 }
 
 /* ./WebContent/VAADIN/themes/base/select/select.css */
@@ -1657,11 +1675,6 @@ div.v-window-header {
 	font-size: 13px;
 	line-height: 18px;
 }
-.v-app-loading {
-	background-image: url(common/img/loading-indicator.gif);
-	background-repeat: no-repeat;
-	background-position: 50%;
-}
 /* Global font styles */
 .v-window,
 .v-popupview-popup,
@@ -1747,21 +1760,6 @@ div.v-window-header {
 }
 .v-contextmenu .gwt-MenuItem img {
 	margin-right: 10px;
-}
-.v-loading-indicator,
-.v-loading-indicator-delay,
-.v-loading-indicator-wait {
-	width: 31px;
-	height: 31px;
-	background: transparent url(common/img/loading-indicator.gif);
-	margin-right: 5px;
-	margin-top: 5px;
-}
-.v-loading-indicator-delay {
-	background-image: url(common/img/loading-indicator-delay.gif);
-}
-.v-loading-indicator-wait {
-	background-image: url(common/img/loading-indicator-wait.gif);
 }
 
 /* ./WebContent/VAADIN/themes/runo/datefield/datefield.css */
@@ -2240,10 +2238,10 @@ div.v-window-header {
 	background: #f7f9f9 url(progressindicator/img/progress.png);
 }
 .v-progressindicator-indeterminate {
-	background: #dfe2e4 url(common/img/ajax-loader-medium.gif);
+	background: #fff url(../base/common/img/ajax-loader-medium.gif) no-repeat 50%;
 }
 .v-progressindicator-indeterminate-disabled {
-	background: #dfe2e4 url(common/img/blank.gif);
+	background: #dfe2e4;
 }
 
 /* ./WebContent/VAADIN/themes/runo/select/select.css */

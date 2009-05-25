@@ -16,10 +16,14 @@
 	overflow: hidden; /* for IE6 */
 	background: #ddd;
 }
-.v-progressindicator-indeterminate {
-	height: 16px;
-	width: 16px;
+div.v-progressindicator-indeterminate {
+	height: 20px;
+	width: 20px;
 	overflow: hidden; /* for IE6 */
+	background: #fff url(../common/img/ajax-loader-medium.gif) no-repeat 50%;
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
 }
 /* Hide obsolete elements in indeterminate mode */
 .v-progressindicator-indeterminate .v-progressindicator-wrapper,
@@ -28,8 +32,9 @@
 .v-progressindicator-indeterminate-disabled .v-progressindicator-indicator {
 	display: none;
 }
-.v-progressindicator-indeterminate-disabled {
-	height: 16px;
-	width: 16px;
+div.v-progressindicator-indeterminate-disabled {
+	height: 20px;
+	width: 20px;
 	overflow: hidden; /* for IE6 */
+	background: transparent;
 }

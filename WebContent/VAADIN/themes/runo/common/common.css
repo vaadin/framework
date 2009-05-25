@@ -8,11 +8,6 @@
 	font-size: 13px;
 	line-height: 18px;
 }
-.v-app-loading {
-	background-image: url(img/loading-indicator.gif);
-	background-repeat: no-repeat;
-	background-position: 50%;
-}
 /* Global font styles */
 .v-window,
 .v-popupview-popup,
@@ -98,19 +93,4 @@
 }
 .v-contextmenu .gwt-MenuItem img {
 	margin-right: 10px;
-}
-.v-loading-indicator,
-.v-loading-indicator-delay,
-.v-loading-indicator-wait {
-	width: 31px;
-	height: 31px;
-	background: transparent url(img/loading-indicator.gif);
-	margin-right: 5px;
-	margin-top: 5px;
-}
-.v-loading-indicator-delay {
-	background-image: url(img/loading-indicator-delay.gif);
-}
-.v-loading-indicator-wait {
-	background-image: url(img/loading-indicator-wait.gif);
 }

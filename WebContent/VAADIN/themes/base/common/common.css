@@ -9,9 +9,12 @@
 .v-app {
 	height: 100%;
 }
-.v-app-loading {
+div.v-app-loading {
 	/* You can use this to provide indication for the user that the application is loading. */
 	/* It is applied to the same element as .v-app */
+	background-image: url(img/loading-indicator.gif);
+	background-repeat: no-repeat;
+	background-position: 50%;
 }
 .v-view {
 	height: 100%;
@@ -145,11 +148,21 @@
 .v-loading-indicator,
 .v-loading-indicator-delay,
 .v-loading-indicator-wait {
-	height: 16px;
 	position: absolute;
 	top: 0;
 	right: 0;
 	z-index: 30000;
+	width: 31px;
+	height: 31px;
+	background: transparent url(img/loading-indicator.gif);
+	margin-right: 5px;
+	margin-top: 5px;
+}
+.v-loading-indicator-delay {
+	background-image: url(img/loading-indicator-delay.gif);
+}
+.v-loading-indicator-wait {
+	background-image: url(img/loading-indicator-wait.gif);
 }
 /* Debug dialog */
 .v-debug-console {
