@@ -7,6 +7,7 @@ import com.vaadin.demo.sampler.NamedExternalResource;
 import com.vaadin.demo.sampler.features.selects.ComboBoxNewItems;
 import com.vaadin.ui.TextField;
 
+@SuppressWarnings("serial")
 public class TextFieldSecret extends Feature {
     @Override
     public String getName() {

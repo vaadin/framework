@@ -14,7 +14,7 @@ import com.vaadin.Application;
 import com.vaadin.terminal.gwt.server.PortletApplicationContext;
 import com.vaadin.terminal.gwt.server.PortletApplicationContext.PortletListener;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.OrderedLayout;
+import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -26,6 +26,7 @@ import com.vaadin.ui.Button.ClickListener;
  * to your classpath.
  * 
  */
+@SuppressWarnings("serial")
 public class SimpleReserver extends Application {
 
     private SampleDB db = new SampleDB();
@@ -97,7 +98,7 @@ public class SimpleReserver extends Application {
     }
 
     protected void toggleMode() {
-        OrderedLayout main = (OrderedLayout) getMainWindow().getLayout();
+        ComponentContainer main = getMainWindow().getContent();
         isAdminView = !isAdminView;
         if (isAdminView) {
             main.replaceComponent(stdView, adminView);

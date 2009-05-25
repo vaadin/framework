@@ -4,6 +4,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.ui.AbstractComponent;
 
+@SuppressWarnings("serial")
 public class GoogleAnalytics extends AbstractComponent {
 
     private String trackerId;

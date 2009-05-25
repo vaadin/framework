@@ -8,6 +8,7 @@ import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
 
+@SuppressWarnings("serial")
 public class TreeMouseEventsExample extends VerticalLayout implements
         ItemClickListener {
 

@@ -5,6 +5,7 @@ import com.vaadin.demo.sampler.Feature;
 import com.vaadin.demo.sampler.NamedExternalResource;
 import com.vaadin.ui.TwinColSelect;
 
+@SuppressWarnings("serial")
 public class TwinColumnSelect extends Feature {
     @Override
     public String getName() {

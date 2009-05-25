@@ -22,6 +22,7 @@ import com.vaadin.ui.VerticalLayout;
  * 
  * @author IT Mill Ltd.
  */
+@SuppressWarnings("serial")
 public class SelectExample extends CustomComponent {
 
     // listener that shows a value change notification

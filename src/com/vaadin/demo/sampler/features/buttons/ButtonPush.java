@@ -6,6 +6,7 @@ import com.vaadin.demo.sampler.NamedExternalResource;
 import com.vaadin.demo.sampler.features.blueprints.ProminentPrimaryAction;
 import com.vaadin.ui.Button;
 
+@SuppressWarnings("serial")
 public class ButtonPush extends Feature {
 
     @Override

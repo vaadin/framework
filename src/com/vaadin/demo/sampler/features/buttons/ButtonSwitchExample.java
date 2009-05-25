@@ -5,6 +5,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 
+@SuppressWarnings("serial")
 public class ButtonSwitchExample extends VerticalLayout implements
         Button.ClickListener {
 

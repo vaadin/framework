@@ -10,6 +10,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.Tab;
 
+@SuppressWarnings("serial")
 public class TabSheetDisabledExample extends VerticalLayout implements
         TabSheet.SelectedTabChangeListener, Button.ClickListener {
     private static final ThemeResource icon1 = new ThemeResource(

@@ -2,6 +2,7 @@ package com.vaadin.demo.sampler;
 
 import com.vaadin.ui.Label;
 
+@SuppressWarnings("serial")
 public class CodeLabel extends Label {
 
     private static final String TAG = "codelabel";

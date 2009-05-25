@@ -5,6 +5,7 @@ import com.vaadin.demo.sampler.Feature;
 import com.vaadin.demo.sampler.NamedExternalResource;
 import com.vaadin.ui.VerticalLayout;
 
+@SuppressWarnings("serial")
 public class VerticalLayoutBasic extends Feature {
 
     @Override

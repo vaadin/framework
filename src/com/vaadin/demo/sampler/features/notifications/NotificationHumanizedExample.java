@@ -6,6 +6,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 
+@SuppressWarnings("serial")
 public class NotificationHumanizedExample extends VerticalLayout {
 
     public NotificationHumanizedExample() {

@@ -17,6 +17,7 @@ import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.AbstractComponent;
 
+@SuppressWarnings("serial")
 public class GoogleMap extends AbstractComponent implements Sizeable,
         Container.Viewer {
     private final String TAG_MARKERS = "markers";

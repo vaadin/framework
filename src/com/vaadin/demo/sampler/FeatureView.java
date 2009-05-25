@@ -17,6 +17,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 
+@SuppressWarnings("serial")
 public class FeatureView extends HorizontalLayout {
 
     private static final String MSG_SHOW_SRC = "Show Java™ source »";
@@ -97,7 +98,7 @@ public class FeatureView extends HorizontalLayout {
     public void showSource(String source) {
         if (srcWindow == null) {
             srcWindow = new Window("Java™ source");
-            ((VerticalLayout) srcWindow.getLayout()).setSizeUndefined();
+            srcWindow.getContent().setSizeUndefined();
             srcWindow.setWidth("70%");
             srcWindow.setHeight("60%");
             srcWindow.setPositionX(100);

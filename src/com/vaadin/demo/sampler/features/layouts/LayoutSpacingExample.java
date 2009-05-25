@@ -6,6 +6,7 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 
+@SuppressWarnings("serial")
 public class LayoutSpacingExample extends VerticalLayout {
 
     public LayoutSpacingExample() {

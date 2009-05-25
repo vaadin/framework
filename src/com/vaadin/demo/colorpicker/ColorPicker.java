@@ -10,6 +10,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.ui.AbstractField;
 
+@SuppressWarnings("serial")
 public class ColorPicker extends AbstractField {
 
     public ColorPicker() {

@@ -8,6 +8,7 @@ import com.vaadin.demo.sampler.features.buttons.ButtonPush;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Link;
 
+@SuppressWarnings("serial")
 public class ProminentPrimaryAction extends Feature {
 
     @Override

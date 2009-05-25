@@ -6,6 +6,7 @@ import com.vaadin.demo.sampler.NamedExternalResource;
 import com.vaadin.demo.sampler.features.text.TextFieldInputPrompt;
 import com.vaadin.ui.ComboBox;
 
+@SuppressWarnings("serial")
 public class ComboBoxInputPrompt extends Feature {
     @Override
     public String getName() {

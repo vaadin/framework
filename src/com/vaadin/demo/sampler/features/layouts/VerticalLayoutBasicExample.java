@@ -3,6 +3,7 @@ package com.vaadin.demo.sampler.features.layouts;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
+@SuppressWarnings("serial")
 public class VerticalLayoutBasicExample extends VerticalLayout {
 
     public VerticalLayoutBasicExample() {

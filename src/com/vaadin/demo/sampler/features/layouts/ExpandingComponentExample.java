@@ -4,6 +4,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 
+@SuppressWarnings("serial")
 public class ExpandingComponentExample extends VerticalLayout {
 
     public ExpandingComponentExample() {

@@ -8,6 +8,7 @@ import com.vaadin.demo.sampler.features.selects.ComboBoxInputPrompt;
 import com.vaadin.demo.sampler.features.selects.ComboBoxNewItems;
 import com.vaadin.ui.TextField;
 
+@SuppressWarnings("serial")
 public class TextFieldInputPrompt extends Feature {
     @Override
     public String getName() {

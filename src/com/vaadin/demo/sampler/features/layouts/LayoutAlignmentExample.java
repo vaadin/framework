@@ -6,9 +6,9 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.VerticalLayout;
 
+@SuppressWarnings("serial")
 public class LayoutAlignmentExample extends VerticalLayout {
 
-    @SuppressWarnings("deprecation")
     public LayoutAlignmentExample() {
         // Create a grid layout
         final GridLayout grid = new GridLayout(1, 9);

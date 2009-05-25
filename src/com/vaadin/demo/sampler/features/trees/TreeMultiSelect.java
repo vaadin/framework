@@ -5,6 +5,7 @@ import com.vaadin.demo.sampler.Feature;
 import com.vaadin.demo.sampler.NamedExternalResource;
 import com.vaadin.ui.Tree;
 
+@SuppressWarnings("serial")
 public class TreeMultiSelect extends Feature {
     @Override
     public String getName() {

@@ -14,6 +14,7 @@ import com.vaadin.ui.Component;
  * </p>
  * 
  */
+@SuppressWarnings("serial")
 abstract public class Feature implements Serializable {
 
     public static final Object PROPERTY_ICON = "Icon";

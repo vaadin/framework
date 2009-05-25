@@ -13,6 +13,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Table.CellStyleGenerator;
 
+@SuppressWarnings("serial")
 public class TableMainFeaturesExample extends VerticalLayout {
 
     Table table = new Table("ISO-3166 Country Codes and flags");

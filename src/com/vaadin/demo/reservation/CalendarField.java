@@ -19,6 +19,7 @@ import com.vaadin.ui.DateField;
 // TODO send one month at a time, do lazyLoading
 // TODO check date limit when updating variables
 // TODO Allow item selection
+@SuppressWarnings("serial")
 public class CalendarField extends DateField implements Container.Viewer {
 
     private static final String TAGNAME = "calendarfield";
@@ -234,6 +235,7 @@ public class CalendarField extends DateField implements Container.Viewer {
      * @throws PaintException
      *             if the paint operation failed.
      */
+    @SuppressWarnings("deprecation")
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);

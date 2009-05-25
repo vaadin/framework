@@ -5,6 +5,7 @@ import com.vaadin.demo.sampler.Feature;
 import com.vaadin.demo.sampler.NamedExternalResource;
 import com.vaadin.ui.Window;
 
+@SuppressWarnings("serial")
 public class NotificationHumanized extends Feature {
 
     @Override

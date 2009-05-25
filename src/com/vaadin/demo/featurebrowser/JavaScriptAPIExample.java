@@ -20,6 +20,7 @@ import com.vaadin.ui.Button.ClickEvent;
  * An example using a RichTextArea to edit a Label in XHTML-mode.
  * 
  */
+@SuppressWarnings("serial")
 public class JavaScriptAPIExample extends CustomComponent {
 
     public static final String txt = "<p>For advanced client side programmers Vaadin offers a simple method which can be used to force sync client with server. This may be needed for example if another part of a mashup changes things on server.</p> (more examples will be added here as the APIs are made public)<br/><br/><A href=\"javascript:vaadin.forceSync();\">javascript:vaadin.forceSync();</A>";

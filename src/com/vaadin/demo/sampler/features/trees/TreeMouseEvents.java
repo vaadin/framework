@@ -5,6 +5,7 @@ import com.vaadin.demo.sampler.Feature;
 import com.vaadin.demo.sampler.NamedExternalResource;
 import com.vaadin.ui.Tree;
 
+@SuppressWarnings("serial")
 public class TreeMouseEvents extends Feature {
     @Override
     public String getName() {

@@ -18,16 +18,18 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.Window.Notification;
 
+@SuppressWarnings("serial")
 public class ReservationApplication extends Application {
 
     private SampleDB db;
@@ -62,7 +64,7 @@ public class ReservationApplication extends Application {
         final Window mainWindow = new Window("Reservr ");
         setMainWindow(mainWindow);
         setTheme("reservr");
-        mainWindow.getLayout().setWidth("100%");
+        mainWindow.getContent().setWidth("100%");
 
         Label logo = new Label("Reservr");
         logo.setStyleName("logo");
@@ -75,7 +77,7 @@ public class ReservationApplication extends Application {
         final TabSheet mainTabs = new TabSheet();
         mainWindow.addComponent(mainTabs);
 
-        final OrderedLayout reservationTab = new OrderedLayout();
+        final VerticalLayout reservationTab = new VerticalLayout();
         reservationTab.setWidth("100%");
         mainTabs.addTab(reservationTab, "Make reservation", null);
 
@@ -87,12 +89,12 @@ public class ReservationApplication extends Application {
         reservationTab.addComponent(resourcePanel);
 
         final Panel reservationPanel = new Panel("Reservation",
-                new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL));
+                new HorizontalLayout());
         reservationPanel.addStyleName(Panel.STYLE_LIGHT);
         reservationPanel.getLayout().setMargin(true);
         reservationTab.addComponent(reservationPanel);
 
-        final OrderedLayout infoLayout = new OrderedLayout();
+        final VerticalLayout infoLayout = new VerticalLayout();
         infoLayout.setSpacing(true);
         infoLayout.setSizeUndefined();
         infoLayout.setMargin(false, true, false, false);
@@ -107,7 +109,8 @@ public class ReservationApplication extends Application {
         reservationButton = new Button("Make reservation", this,
                 "makeReservation");
         infoLayout.addComponent(reservationButton);
-        infoLayout.setComponentAlignment(reservationButton, Alignment.MIDDLE_CENTER);
+        infoLayout.setComponentAlignment(reservationButton,
+                Alignment.MIDDLE_CENTER);
 
         map = new GoogleMap();
         map.setWidth("250px");

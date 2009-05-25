@@ -5,6 +5,7 @@ import com.vaadin.demo.sampler.Feature;
 import com.vaadin.demo.sampler.NamedExternalResource;
 import com.vaadin.ui.SplitPanel;
 
+@SuppressWarnings("serial")
 public class SplitPanelBasic extends Feature {
 
     @Override

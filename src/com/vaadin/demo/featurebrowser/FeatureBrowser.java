@@ -36,6 +36,7 @@ import com.vaadin.ui.Button.ClickEvent;
  * @author IT Mill Ltd.
  * @see com.vaadin.ui.Window
  */
+@SuppressWarnings("serial")
 public class FeatureBrowser extends com.vaadin.Application implements
         Select.ValueChangeListener {
 
@@ -126,7 +127,7 @@ public class FeatureBrowser extends com.vaadin.Application implements
         final SplitPanel split = new SplitPanel(
                 SplitPanel.ORIENTATION_HORIZONTAL);
         split.setSplitPosition(200, SplitPanel.UNITS_PIXELS);
-        main.setLayout(split);
+        main.setContent(split);
 
         final HashMap sectionIds = new HashMap();
         final HierarchicalContainer container = createContainer();
@@ -218,7 +219,7 @@ public class FeatureBrowser extends com.vaadin.Application implements
                 Window w = new Window(caption);
                 w.setWidth("640px");
                 if (Layout.class.isAssignableFrom(component.getClass())) {
-                    w.setLayout((Layout) component);
+                    w.setContent((Layout) component);
                 } else {
                     // w.getLayout().getSize().setSizeFull();
                     w.addComponent(component);
@@ -244,7 +245,7 @@ public class FeatureBrowser extends com.vaadin.Application implements
                     w = new Window(caption);
                     w.setName(caption);
                     if (Layout.class.isAssignableFrom(component.getClass())) {
-                        w.setLayout((Layout) component);
+                        w.setContent((Layout) component);
                     } else {
                         // w.getLayout().getSize().setSizeFull();
                         w.addComponent(component);

@@ -5,6 +5,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.VerticalLayout;
 
+@SuppressWarnings("serial")
 public class TwinColumnSelectExample extends VerticalLayout implements
         Property.ValueChangeListener {
 

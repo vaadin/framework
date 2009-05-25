@@ -29,6 +29,7 @@ import com.vaadin.ui.Window.Notification;
  * @author marc
  * 
  */
+@SuppressWarnings("serial")
 public class PortletDemo extends Application {
 
     Window main = new Window();
@@ -38,6 +39,7 @@ public class PortletDemo extends Application {
     Link portletMax = new Link();
     Link someAction = null;
 
+    @Override
     public void init() {
         main = new Window();
         setMainWindow(main);

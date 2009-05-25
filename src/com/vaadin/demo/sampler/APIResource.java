@@ -6,6 +6,7 @@ package com.vaadin.demo.sampler;
  * a javadoc baseurl. The name will be set to the class simpleName.
  * 
  */
+@SuppressWarnings("serial")
 public class APIResource extends NamedExternalResource {
 
     private static final String VAADIN_BASE = "http://www.vaadin.com/api";

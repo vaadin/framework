@@ -5,6 +5,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.VerticalLayout;
 
+@SuppressWarnings("serial")
 public class NativeSelectionExample extends VerticalLayout implements
         Property.ValueChangeListener {
 

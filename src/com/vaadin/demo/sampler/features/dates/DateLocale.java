@@ -8,6 +8,7 @@ import com.vaadin.demo.sampler.NamedExternalResource;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.InlineDateField;
 
+@SuppressWarnings("serial")
 public class DateLocale extends Feature {
     @Override
     public String getName() {

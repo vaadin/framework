@@ -17,6 +17,7 @@ import com.vaadin.ui.VerticalLayout;
  * 
  * @author IT Mill Ltd.
  */
+@SuppressWarnings("serial")
 public class LayoutExample extends CustomComponent {
 
     public LayoutExample() {

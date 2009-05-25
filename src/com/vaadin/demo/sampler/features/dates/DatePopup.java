@@ -6,6 +6,7 @@ import com.vaadin.demo.sampler.NamedExternalResource;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.PopupDateField;
 
+@SuppressWarnings("serial")
 public class DatePopup extends Feature {
     @Override
     public String getName() {

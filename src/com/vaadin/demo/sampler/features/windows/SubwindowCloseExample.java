@@ -7,6 +7,7 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Window.CloseEvent;
 
+@SuppressWarnings("serial")
 public class SubwindowCloseExample extends VerticalLayout {
 
     Window subwindow;

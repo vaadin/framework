@@ -10,6 +10,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.VerticalLayout;
 
+@SuppressWarnings("serial")
 public class DateLocaleExample extends VerticalLayout implements
         Property.ValueChangeListener {
 

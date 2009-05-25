@@ -21,6 +21,7 @@ import com.vaadin.ui.Window.Notification;
  * 
  * @author IT Mill Ltd.
  */
+@SuppressWarnings("serial")
 public class ValueInputExample extends CustomComponent {
 
     public ValueInputExample() {

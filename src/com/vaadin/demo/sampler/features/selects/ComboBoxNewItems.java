@@ -5,6 +5,7 @@ import com.vaadin.demo.sampler.Feature;
 import com.vaadin.demo.sampler.NamedExternalResource;
 import com.vaadin.ui.ComboBox;
 
+@SuppressWarnings("serial")
 public class ComboBoxNewItems extends Feature {
     @Override
     public String getName() {

@@ -13,7 +13,7 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.QueryContainer;
 import com.vaadin.demo.util.SampleCalendarDatabase;
 import com.vaadin.ui.DateField;
-import com.vaadin.ui.OrderedLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Window;
 
 /**
@@ -26,6 +26,7 @@ import com.vaadin.ui.Window;
  * @since 4.0.0
  * 
  */
+@SuppressWarnings("serial")
 public class CalendarDemo extends com.vaadin.Application {
 
     // Database provided with sample data
@@ -43,7 +44,7 @@ public class CalendarDemo extends com.vaadin.Application {
         final Window main = new Window("Calendar demo");
         setMainWindow(main);
 
-        main.setLayout(new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL));
+        main.setContent(new HorizontalLayout());
 
         // create the calendar component and add to layout
         from = new CalendarField();

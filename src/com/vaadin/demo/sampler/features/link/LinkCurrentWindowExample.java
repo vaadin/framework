@@ -5,6 +5,7 @@ import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.VerticalLayout;
 
+@SuppressWarnings("serial")
 public class LinkCurrentWindowExample extends VerticalLayout {
 
     private static final String CAPTION = "Open Google";

@@ -3,6 +3,7 @@ package com.vaadin.demo.sampler.features.text;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
+@SuppressWarnings("serial")
 public class LabelPlainExample extends VerticalLayout {
 
     public LabelPlainExample() {

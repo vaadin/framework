@@ -36,6 +36,7 @@ import com.vaadin.ui.Button.ClickListener;
  * 
  * @author magi
  */
+@SuppressWarnings("serial")
 public class GeneratedColumnExample extends CustomComponent {
     /**
      * The business model: fill-up at a gas station.

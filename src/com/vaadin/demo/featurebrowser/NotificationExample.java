@@ -23,6 +23,7 @@ import com.vaadin.ui.Button.ClickListener;
  * @author IT Mill Ltd.
  * @see com.vaadin.ui.Window
  */
+@SuppressWarnings("serial")
 public class NotificationExample extends CustomComponent {
 
     // Dropdown select for notification type, using the native dropdown

@@ -25,6 +25,7 @@ import com.vaadin.ui.Button.ClickEvent;
  * 
  * @author IT Mill Ltd.
  */
+@SuppressWarnings("serial")
 public class TableExample extends CustomComponent implements Action.Handler,
         Button.ClickListener {
 

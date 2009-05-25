@@ -15,13 +15,14 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 
-public class StdView extends OrderedLayout {
+@SuppressWarnings("serial")
+public class StdView extends VerticalLayout {
 
     private ComboBox resources = new ComboBox("Select resource");
     private CalendarField reservations = new CalendarField();

@@ -17,6 +17,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Table.CellStyleGenerator;
 
+@SuppressWarnings("serial")
 public class TableStylingExample extends VerticalLayout {
 
     Table table = new Table();

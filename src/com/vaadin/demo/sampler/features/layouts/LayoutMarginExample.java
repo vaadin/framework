@@ -6,6 +6,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 
+@SuppressWarnings("serial")
 public class LayoutMarginExample extends GridLayout implements
         Button.ClickListener {
 

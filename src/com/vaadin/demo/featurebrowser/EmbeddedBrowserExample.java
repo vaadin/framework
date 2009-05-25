@@ -21,6 +21,7 @@ import com.vaadin.ui.Window.Notification;
  * @author IT Mill Ltd.
  * @see com.vaadin.ui.Window
  */
+@SuppressWarnings("serial")
 public class EmbeddedBrowserExample extends VerticalLayout implements
         Select.ValueChangeListener {
 

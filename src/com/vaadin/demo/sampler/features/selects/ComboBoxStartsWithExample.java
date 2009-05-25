@@ -8,6 +8,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.AbstractSelect.Filtering;
 
+@SuppressWarnings("serial")
 public class ComboBoxStartsWithExample extends VerticalLayout implements
         Property.ValueChangeListener {
 

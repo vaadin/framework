@@ -4,18 +4,19 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.AbstractSelect.NewItemHandler;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 
-public class AdminView extends OrderedLayout {
+@SuppressWarnings("serial")
+public class AdminView extends VerticalLayout {
 
     private ComboBox resources = new ComboBox(
             "Select for editing or type new resource");
     private SimpleReserver application;
-    private OrderedLayout form = new OrderedLayout();
+    private VerticalLayout form = new VerticalLayout();
     private Button save = new Button("Save resource");
 
     private TextField name = new TextField("Name:");

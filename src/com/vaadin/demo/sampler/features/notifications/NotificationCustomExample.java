@@ -13,6 +13,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Window.Notification;
 
+@SuppressWarnings("serial")
 public class NotificationCustomExample extends VerticalLayout {
 
     private static final Object CAPTION_PROPERTY = new Object();

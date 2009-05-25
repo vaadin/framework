@@ -5,6 +5,7 @@ import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 
+@SuppressWarnings("serial")
 public class TooltipsExample extends VerticalLayout {
 
     private static final String editTxt = "Edit tooltip";

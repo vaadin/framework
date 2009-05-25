@@ -6,6 +6,7 @@ import com.vaadin.demo.sampler.NamedExternalResource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Tree;
 
+@SuppressWarnings("serial")
 public class TreeActions extends Feature {
     @Override
     public String getName() {

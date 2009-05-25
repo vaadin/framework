@@ -346,6 +346,7 @@ public class SampleDB {
         return true;
     }
 
+    @SuppressWarnings("deprecation")
     public synchronized void generateReservations() {
         final int days = 30;
         final String descriptions[] = { "Picking up guests from airport",

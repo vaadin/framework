@@ -3,6 +3,7 @@ package com.vaadin.demo;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
 
+@SuppressWarnings("serial")
 public class HelloWorld extends com.vaadin.Application {
 
     /**

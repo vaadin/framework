@@ -16,6 +16,7 @@ import com.vaadin.ui.Button.ClickEvent;
  * An example using a RichTextArea to edit a Label in XHTML-mode.
  * 
  */
+@SuppressWarnings("serial")
 public class RichTextExample extends CustomComponent {
 
     public static final String txt = "<h1>RichText editor example</h1>"

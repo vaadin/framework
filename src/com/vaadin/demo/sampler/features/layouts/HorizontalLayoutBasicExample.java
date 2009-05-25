@@ -4,6 +4,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 
+@SuppressWarnings("serial")
 public class HorizontalLayoutBasicExample extends HorizontalLayout {
 
     public HorizontalLayoutBasicExample() {

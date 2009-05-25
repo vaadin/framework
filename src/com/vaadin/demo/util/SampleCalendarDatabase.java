@@ -102,6 +102,7 @@ public class SampleCalendarDatabase {
      * names as HSQLDB returns column names in capitalized form with this demo.
      * 
      */
+    @SuppressWarnings("deprecation")
     private void createTables() {
         try {
             String stmt = null;

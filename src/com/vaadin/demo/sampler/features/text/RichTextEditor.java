@@ -6,6 +6,7 @@ import com.vaadin.demo.sampler.NamedExternalResource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.RichTextArea;
 
+@SuppressWarnings("serial")
 public class RichTextEditor extends Feature {
     @Override
     public String getName() {

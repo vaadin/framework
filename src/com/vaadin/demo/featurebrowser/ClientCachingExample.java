@@ -21,6 +21,7 @@ import com.vaadin.ui.VerticalLayout;
  * 
  * @author IT Mill Ltd.
  */
+@SuppressWarnings("serial")
 public class ClientCachingExample extends CustomComponent {
 
     private static final String msg = "This example is a (simple) demonstration of client-side caching."

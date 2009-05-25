@@ -14,6 +14,7 @@ import com.vaadin.ui.AbstractSelect.Filtering;
 /**
  * 
  */
+@SuppressWarnings("serial")
 public class ComboBoxExample extends CustomComponent {
 
     private static final String[] firstnames = new String[] { "John", "Mary",

@@ -8,6 +8,7 @@ import com.vaadin.demo.sampler.features.blueprints.ProminentPrimaryAction;
 import com.vaadin.demo.sampler.features.link.LinkCurrentWindow;
 import com.vaadin.ui.Button;
 
+@SuppressWarnings("serial")
 public class ButtonLink extends Feature {
 
     @Override

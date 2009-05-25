@@ -7,6 +7,7 @@ import com.vaadin.demo.sampler.FeatureSet.Links;
 import com.vaadin.demo.sampler.FeatureSet.Windows;
 import com.vaadin.ui.Window;
 
+@SuppressWarnings("serial")
 public class NativeWindow extends Feature {
 
     @Override

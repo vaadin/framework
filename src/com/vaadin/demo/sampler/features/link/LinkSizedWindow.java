@@ -6,6 +6,7 @@ import com.vaadin.demo.sampler.NamedExternalResource;
 import com.vaadin.demo.sampler.features.buttons.ButtonLink;
 import com.vaadin.ui.Link;
 
+@SuppressWarnings("serial")
 public class LinkSizedWindow extends Feature {
 
     @Override

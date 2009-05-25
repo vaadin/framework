@@ -60,14 +60,14 @@ public class SampleDirectory {
         }
         // Add failure notification as an Panel to main window
         final Panel errorPanel = new Panel("Demo application error");
-        errorPanel.setStyle("strong");
+        errorPanel.setStyleName("strong");
         errorPanel.setComponentError(new SystemError(
                 "Cannot provide sample directory"));
         errorPanel.addComponent(new Label(errorMessage, Label.CONTENT_XHTML));
         // Remove all components from applications main window
-        application.getMainWindow().getLayout().removeAllComponents();
+        application.getMainWindow().getContent().removeAllComponents();
         // Add error panel
-        application.getMainWindow().getLayout().addComponent(errorPanel);
+        application.getMainWindow().getContent().addComponent(errorPanel);
         return null;
     }
 }

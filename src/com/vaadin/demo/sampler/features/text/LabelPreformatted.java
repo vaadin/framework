@@ -5,6 +5,7 @@ import com.vaadin.demo.sampler.Feature;
 import com.vaadin.demo.sampler.NamedExternalResource;
 import com.vaadin.ui.Label;
 
+@SuppressWarnings("serial")
 public class LabelPreformatted extends Feature {
     @Override
     public String getName() {

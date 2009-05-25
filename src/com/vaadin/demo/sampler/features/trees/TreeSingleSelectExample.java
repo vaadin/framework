@@ -12,6 +12,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Button.ClickEvent;
 
+@SuppressWarnings("serial")
 public class TreeSingleSelectExample extends HorizontalLayout implements
         Property.ValueChangeListener, Button.ClickListener, Action.Handler {
 

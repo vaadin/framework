@@ -7,6 +7,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 
+@SuppressWarnings("serial")
 public class LabelRichExample extends VerticalLayout implements ClickListener {
 
     private Button b;

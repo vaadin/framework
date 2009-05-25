@@ -6,6 +6,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.VerticalLayout;
 
+@SuppressWarnings("serial")
 public class GridLayoutBasicExample extends VerticalLayout {
 
     public GridLayoutBasicExample() {

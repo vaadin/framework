@@ -18,6 +18,7 @@ import com.vaadin.ui.Button.ClickEvent;
  * @author marc
  * 
  */
+@SuppressWarnings("serial")
 public class WindowingExample extends CustomComponent {
 
     public static final String txt = "<p>There are two main types of windows: application-level windows, and "

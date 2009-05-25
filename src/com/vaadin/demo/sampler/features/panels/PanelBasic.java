@@ -7,6 +7,7 @@ import com.vaadin.demo.sampler.NamedExternalResource;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
 
+@SuppressWarnings("serial")
 public class PanelBasic extends Feature {
     @Override
     public String getName() {

@@ -14,6 +14,7 @@ import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 
+@SuppressWarnings("serial")
 public class TreeMultiSelectExample extends VerticalLayout implements
         Action.Handler {
 

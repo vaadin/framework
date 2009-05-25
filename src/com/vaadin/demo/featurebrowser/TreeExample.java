@@ -21,6 +21,7 @@ import com.vaadin.ui.Tree;
  * functionality, and a ValueChangeListener reacts to both the Tree and the
  * TextField.
  */
+@SuppressWarnings("serial")
 public class TreeExample extends CustomComponent implements Action.Handler,
         Tree.ValueChangeListener {
 

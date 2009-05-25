@@ -6,6 +6,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 
+@SuppressWarnings("serial")
 public class SubwindowSizedExample extends VerticalLayout {
 
     Window subwindow;

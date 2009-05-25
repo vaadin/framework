@@ -7,6 +7,7 @@ import com.vaadin.demo.sampler.features.form.FormBasic;
 import com.vaadin.demo.sampler.features.notifications.NotificationError;
 import com.vaadin.ui.AbstractComponent;
 
+@SuppressWarnings("serial")
 public class Errors extends Feature {
 
     private static final String desc = "A <i>component error</i> can be set to"
@@ -30,20 +31,24 @@ public class Errors extends Feature {
         return "Error indicator";
     }
 
+    @Override
     public String getDescription() {
         return desc;
     }
 
+    @Override
     public APIResource[] getRelatedAPI() {
         return new APIResource[] { new APIResource(AbstractComponent.class) };
     }
 
+    @Override
     public Class[] getRelatedFeatures() {
         // TODO link validation sample, form sample
         return new Class[] { Validation.class, FormBasic.class,
                 NotificationError.class };
     }
 
+    @Override
     public NamedExternalResource[] getRelatedResources() {
         // TODO Auto-generated method stub
         return null;

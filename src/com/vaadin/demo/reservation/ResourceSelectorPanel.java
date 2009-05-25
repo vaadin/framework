@@ -11,11 +11,13 @@ import java.util.LinkedList;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 
+@SuppressWarnings("serial")
 public class ResourceSelectorPanel extends Panel implements
         Button.ClickListener {
     private final HashMap categoryLayouts = new HashMap();
@@ -25,7 +27,7 @@ public class ResourceSelectorPanel extends Panel implements
     private LinkedList selectedResources = null;
 
     public ResourceSelectorPanel(String caption) {
-        super(caption, new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL));
+        super(caption, new HorizontalLayout());
         addStyleName(Panel.STYLE_LIGHT);
         setSizeUndefined();
         setWidth("100%");
@@ -55,7 +57,7 @@ public class ResourceSelectorPanel extends Panel implements
                 LinkedList resourceList = (LinkedList) categoryResources
                         .get(category);
                 if (resourceLayout == null) {
-                    resourceLayout = new OrderedLayout();
+                    resourceLayout = new VerticalLayout();
                     resourceLayout.setSizeUndefined();
                     resourceLayout.setMargin(true);
                     addComponent(resourceLayout);

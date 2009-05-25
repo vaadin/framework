@@ -15,6 +15,7 @@ import com.vaadin.ui.Panel;
  * 
  * @author IT Mill Ltd.
  */
+@SuppressWarnings("serial")
 public class LabelExample extends CustomComponent {
 
     private static final String xhtml = "This text has <b>HTML</b> formatting.<br/>"

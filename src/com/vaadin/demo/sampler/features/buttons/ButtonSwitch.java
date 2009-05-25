@@ -5,6 +5,7 @@ import com.vaadin.demo.sampler.Feature;
 import com.vaadin.demo.sampler.NamedExternalResource;
 import com.vaadin.ui.Button;
 
+@SuppressWarnings("serial")
 public class ButtonSwitch extends Feature {
 
     @Override

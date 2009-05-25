@@ -5,6 +5,7 @@ import com.vaadin.demo.sampler.Feature;
 import com.vaadin.demo.sampler.NamedExternalResource;
 import com.vaadin.ui.Label;
 
+@SuppressWarnings("serial")
 public class LabelPlain extends Feature {
     @Override
     public String getName() {

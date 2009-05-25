@@ -8,6 +8,7 @@ import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
+@SuppressWarnings("serial")
 public class IconsExample extends VerticalLayout {
 
     public IconsExample() {

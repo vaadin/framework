@@ -6,6 +6,7 @@ import com.vaadin.demo.sampler.FeatureSet;
 import com.vaadin.demo.sampler.NamedExternalResource;
 import com.vaadin.ui.Window;
 
+@SuppressWarnings("serial")
 public class SubwindowClose extends Feature {
 
     @Override

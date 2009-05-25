@@ -5,6 +5,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.VerticalLayout;
 
+@SuppressWarnings("serial")
 public class ComboBoxInputPromptExample extends VerticalLayout implements
         Property.ValueChangeListener {
 

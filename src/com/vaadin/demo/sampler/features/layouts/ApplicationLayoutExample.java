@@ -14,6 +14,7 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Window.CloseEvent;
 
+@SuppressWarnings("serial")
 public class ApplicationLayoutExample extends VerticalLayout {
 
     Window win = new ApplicationLayoutWindow();
@@ -51,14 +52,14 @@ public class ApplicationLayoutExample extends VerticalLayout {
             // Our main layout is a horizontal layout
             HorizontalLayout main = new HorizontalLayout();
             main.setSizeFull();
-            setLayout(main);
+            setContent(main);
 
             // Tree to the left
             Panel treePanel = new Panel(); // for scrollbars
             treePanel.setStyleName(Panel.STYLE_LIGHT);
             treePanel.setHeight("100%");
             treePanel.setWidth(null);
-            treePanel.getLayout().setSizeUndefined();
+            treePanel.getContent().setSizeUndefined();
             addComponent(treePanel);
 
             Tree tree = new Tree();

@@ -5,6 +5,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.VerticalLayout;
 
+@SuppressWarnings("serial")
 public class ListSelectMultipleExample extends VerticalLayout implements
         Property.ValueChangeListener {
 

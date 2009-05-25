@@ -7,6 +7,7 @@ import com.vaadin.demo.sampler.NamedExternalResource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Table;
 
+@SuppressWarnings("serial")
 public class TableMouseEvents extends Feature {
 
     @Override

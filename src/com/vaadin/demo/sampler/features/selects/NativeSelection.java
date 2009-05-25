@@ -6,6 +6,7 @@ import com.vaadin.demo.sampler.FeatureSet;
 import com.vaadin.demo.sampler.NamedExternalResource;
 import com.vaadin.ui.NativeSelect;
 
+@SuppressWarnings("serial")
 public class NativeSelection extends Feature {
     @Override
     public String getName() {

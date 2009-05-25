@@ -12,6 +12,7 @@ import com.vaadin.terminal.StreamResource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Component;
 
+@SuppressWarnings("serial")
 public class Icons extends Feature {
 
     @Override

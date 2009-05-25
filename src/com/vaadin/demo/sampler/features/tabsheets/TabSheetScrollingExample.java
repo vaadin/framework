@@ -6,6 +6,7 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 
+@SuppressWarnings("serial")
 public class TabSheetScrollingExample extends VerticalLayout implements
         TabSheet.SelectedTabChangeListener {
 

@@ -15,6 +15,7 @@ import com.vaadin.ui.Button.ClickEvent;
  * Demonstration application that shows how to use a simple custom client-side
  * GWT component, the ColorPicker.
  */
+@SuppressWarnings("serial")
 public class ColorPickerApplication extends com.vaadin.Application {
     Window main = new Window("Color Picker Demo");
 

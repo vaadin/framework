@@ -6,6 +6,7 @@ import com.vaadin.demo.sampler.FeatureSet;
 import com.vaadin.demo.sampler.NamedExternalResource;
 import com.vaadin.ui.TextField;
 
+@SuppressWarnings("serial")
 public class TextArea extends Feature {
     @Override
     public String getName() {

@@ -21,10 +21,12 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 
+@SuppressWarnings("serial")
 public class CoverflowApplication extends com.vaadin.Application {
 
     Coverflow covers = new Coverflow();
 
+    @Override
     public void init() {
 
         setMainWindow(new Window("Coverflow", createMainLayout()));
@@ -48,7 +50,7 @@ public class CoverflowApplication extends com.vaadin.Application {
         final Embedded visibleSlide = new Embedded();
         visibleSlide.setHeight("480px");
         slidePanel.addComponent(visibleSlide);
-        ((VerticalLayout) slidePanel.getLayout()).setComponentAlignment(
+        ((VerticalLayout) slidePanel.getContent()).setComponentAlignment(
                 visibleSlide, "center");
 
         // Listen to coverflow changes as change slides when needed

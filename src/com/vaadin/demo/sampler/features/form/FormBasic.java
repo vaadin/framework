@@ -11,6 +11,7 @@ import com.vaadin.demo.sampler.features.commons.Validation;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Form;
 
+@SuppressWarnings("serial")
 public class FormBasic extends Feature {
 
     @Override

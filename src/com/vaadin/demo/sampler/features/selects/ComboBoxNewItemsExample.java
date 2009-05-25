@@ -6,6 +6,7 @@ import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.VerticalLayout;
 
+@SuppressWarnings("serial")
 public class ComboBoxNewItemsExample extends VerticalLayout implements
         Property.ValueChangeListener, AbstractSelect.NewItemHandler {
     private static final String[] cities = new String[] { "Berlin", "Brussels",

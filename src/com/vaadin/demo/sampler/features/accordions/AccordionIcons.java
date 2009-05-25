@@ -6,6 +6,7 @@ import com.vaadin.demo.sampler.FeatureSet;
 import com.vaadin.demo.sampler.NamedExternalResource;
 import com.vaadin.ui.Accordion;
 
+@SuppressWarnings("serial")
 public class AccordionIcons extends Feature {
     @Override
     public String getName() {

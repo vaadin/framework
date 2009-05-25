@@ -25,6 +25,7 @@ import com.vaadin.ui.Button.ClickListener;
  * more complex than real use, as it tries to demonstrate more features than
  * needed in general case.
  */
+@SuppressWarnings("serial")
 public class FormExample extends CustomComponent {
 
     static final String cities[] = { "Amsterdam", "Berlin", "Helsinki",

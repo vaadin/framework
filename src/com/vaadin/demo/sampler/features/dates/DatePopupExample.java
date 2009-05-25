@@ -8,6 +8,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.VerticalLayout;
 
+@SuppressWarnings("serial")
 public class DatePopupExample extends VerticalLayout implements
         Property.ValueChangeListener {
 

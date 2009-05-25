@@ -8,6 +8,7 @@ import com.vaadin.ui.Window;
 // Calculator is created by extending Application-class. Application is
 // deployed by adding ApplicationServlet to web.xml and this class as
 // "application" parameter to the servlet.
+@SuppressWarnings("serial")
 public class Calc extends com.vaadin.Application {
 
     // Calculation data model is automatically stored in the user session

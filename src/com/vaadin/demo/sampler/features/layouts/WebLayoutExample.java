@@ -13,6 +13,7 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Window.CloseEvent;
 
+@SuppressWarnings("serial")
 public class WebLayoutExample extends VerticalLayout {
 
     Window win = new WebLayoutWindow();
@@ -52,7 +53,7 @@ public class WebLayoutExample extends VerticalLayout {
             HorizontalLayout main = new HorizontalLayout();
             main.setMargin(true);
             main.setSpacing(true);
-            setLayout(main);
+            setContent(main);
 
             // Tree to the left
             Tree tree = new Tree();

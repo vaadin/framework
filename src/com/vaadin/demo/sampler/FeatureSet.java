@@ -95,6 +95,7 @@ import com.vaadin.demo.sampler.features.windows.SubwindowSized;
  * </p>
  * 
  */
+@SuppressWarnings("serial")
 public class FeatureSet extends Feature {
 
     /*
