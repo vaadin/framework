@@ -20,8 +20,8 @@ import com.vaadin.terminal.Resource;
 /**
  * <p>
  * A class representing a selection of items the user has selected in a UI. The
- * set of choices is presented as a set of {@link com.vaadin.data.Item}s
- * in a {@link com.vaadin.data.Container}.
+ * set of choices is presented as a set of {@link com.vaadin.data.Item}s in a
+ * {@link com.vaadin.data.Container}.
  * </p>
  * 
  * <p>
@@ -395,8 +395,6 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
             optionRepaint();
             return;
         }
-
-        // Try to set the property value
 
         // New option entered (and it is allowed)
         final String newitem = (String) variables.get("newitem");
