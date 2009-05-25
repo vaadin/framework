@@ -164,7 +164,9 @@ for your platform.</p>
       the GWT compiler that runs the compiler in a separate thread, thus using the
       user-specified stack size settings also on JDK 1.5.0. Use
       <tt>com.itmill.toolkit.launcher.WidgetsetCompiler</tt> instead of
-      <tt>com.google.gwt.dev.Compiler</tt></p>
+      <tt>com.google.gwt.dev.Compiler</tt>. You need the wrapper if you use a build script
+      to compile custom widget sets; the Eclipse plugin uses the wrapper
+      automatically. You can also avoid the problem by using JDK 1.6.</p>
     </li>
 </ul>
 
