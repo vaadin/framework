@@ -1256,6 +1256,9 @@
 	text-align: right;
 	margin-top: -1em;
 }
+.v-ff2 .v-tabsheet-scroller {
+	position: relative;
+}
 .v-tabsheet-scrollerPrev,
 .v-tabsheet-scrollerNext,
 .v-tabsheet-scrollerPrev-disabled,
@@ -1640,7 +1643,9 @@ div.v-window-header {
  * sibling selector (+) that is needed to position .v-icon properly.
  */
 div > .v-button,
-.v-ie7 .v-button {
+.v-ie7 .v-button,
+div > .v-button.v-disabled,
+.v-ie7 .v-button.v-disabled {
 	height: 26px;
 	padding: 0 0 0 6px;
 	background-color: transparent;
@@ -1657,7 +1662,9 @@ div > .v-button,
 	position: relative;
 }
 div > .v-button .v-button-caption,
-.v-ie7 .v-button .v-button-caption {
+.v-ie7 .v-button .v-button-caption,
+div > .v-button.v-disabled .v-button-caption,
+.v-ie7 .v-button.v-disabled .v-button-caption {
 	display: inline-block;
 	height: 22px;
 	padding: 4px 15px 0 9px;
@@ -1727,23 +1734,29 @@ div > .v-button .v-button-caption,
 }
 /* Modifications for buttons with icons */
 div > .v-button .v-icon,
-.v-ie7 .v-button .v-icon {
+.v-ie7 .v-button .v-icon,
+div > .v-button.v-disabled .v-icon,
+.v-ie7 .v-button.v-disabled .v-icon {
 	display: inline-block;
 	width: 16px;
 	overflow: hidden;
 	position: relative;
 	margin: -1px 3px 0 6px;
 }
-.v-ff2 .v-button .v-icon {
+.v-ff2 .v-button .v-icon,
+.v-ff2 .v-button.v-disabled .v-icon {
 	display: block;
 	float: left;
 	margin-top: 4px;
 }
-.v-ff2 .v-button-link .v-icon {
+.v-ff2 .v-button-link .v-icon,
+.v-ff2 .v-button-link.v-disabled .v-icon {
 	margin: 0;
 }
 .v-button .v-icon + .v-button-caption,
-.v-button .v-icon + .v-errorindicator + .v-button-caption {
+.v-button .v-icon + .v-errorindicator + .v-button-caption,
+.v-button.v-disabled .v-icon + .v-button-caption,
+.v-button.v-disabled .v-icon + .v-errorindicator + .v-button-caption {
 	margin-left: -25px;
 	padding-left: 25px;
 }
@@ -1799,13 +1812,17 @@ div > .v-button .v-errorindicator,
  * Default action button style --------------------------
  */
 div > .v-button-primary,
-.v-ie7 .v-button-primary {
+.v-ie7 .v-button-primary,
+div > .v-button-primary.v-disabled,
+.v-ie7 .v-button-primary.v-disabled {
   background-image: url(button/img/button-sprites.png);
   -background-image: url(button/img/button-sprites-ie6.png);
   background-position: left -156px;
 }
 div > .v-button-primary .v-button-caption,
-.v-ie7 .v-button-primary .v-button-caption {
+.v-ie7 .v-button-primary .v-button-caption,
+div > .v-button-primary.v-disabled .v-button-caption,
+.v-ie7 .v-button-primary.v-disabled .v-button-caption {
   background-image: url(button/img/button-sprites.png);
   -background-image: url(button/img/button-sprites-ie6.png);
   background-position: right -182px;
@@ -1836,14 +1853,18 @@ div > .v-button-primary .v-button-caption,
  * Small-style --------------------------
  */
 div > .v-button-small,
-.v-ie7 .v-button-small {
+.v-ie7 .v-button-small,
+div > .v-button-small.v-disabled,
+.v-ie7 .v-button-small.v-disabled {
   background-image: url(button/img/button-sprites.png);
   -background-image: url(button/img/button-sprites-ie6.png);
   background-position: left -312px;
 	height: 20px;
 }
 div > .v-button-small .v-button-caption,
-.v-ie7 .v-button-small .v-button-caption {
+.v-ie7 .v-button-small .v-button-caption,
+div > .v-button-small.v-disabled .v-button-caption,
+.v-ie7 .v-button-small.v-disabled .v-button-caption {
   background-image: url(button/img/button-sprites.png);
   -background-image: url(button/img/button-sprites-ie6.png);
   background-position: right -332px;
@@ -1886,13 +1907,17 @@ div > .v-button-small .v-button-caption,
 * Black buttons
 *------------*/
 .black div > .v-button,
-.v-ie7 .black .v-button {
+.v-ie7 .black .v-button,
+.black div > .v-button.v-disabled,
+.v-ie7 .black .v-button.v-disabled {
   background-image: url(button/img/black-button-sprites.png);
   -background-image: url(button/img/black-button-sprites-ie6.png);
   background-position: left -0px;
 }
 .black div > .v-button .v-button-caption,
-.v-ie7 .black .v-button .v-button-caption {
+.v-ie7 .black .v-button .v-button-caption,
+.black div > .v-button.v-disabled .v-button-caption,
+.v-ie7 .black .v-button.v-disabled .v-button-caption {
   background-image: url(button/img/black-button-sprites.png);
   -background-image: url(button/img/black-button-sprites-ie6.png);
   background-position: right -26px;
@@ -1926,13 +1951,17 @@ div > .v-button-small .v-button-caption,
  * Primary-style ----------------------------
  */
 .black div > .v-button-primary,
-.v-ie7 .black .v-button-primary {
+.v-ie7 .black .v-button-primary,
+.black div > .v-button-primary.v-disabled,
+.v-ie7 .black .v-button-primary.v-disabled {
   background-image: url(button/img/black-button-sprites.png);
   -background-image: url(button/img/black-button-sprites-ie6.png);
   background-position: left -156px;
 }
 .black div > .v-button-primary .v-button-caption,
-.v-ie7 .black .v-button-primary .v-button-caption {
+.v-ie7 .black .v-button-primary .v-button-caption,
+.black div > .v-button-primary.v-disabled .v-button-caption,
+.v-ie7 .black .v-button-primary.v-disabled .v-button-caption {
   background-image: url(button/img/black-button-sprites.png);
   -background-image: url(button/img/black-button-sprites-ie6.png);
   background-position: right -182px;
@@ -1965,13 +1994,17 @@ div > .v-button-small .v-button-caption,
  * Small-style --------------------------
  */
 .black div > .v-button-small,
-.v-ie7 .black .v-button-small {
+.v-ie7 .black .v-button-small,
+.black div > .v-button-small.v-disabled,
+.v-ie7 .black .v-button-small.v-disabled {
   background-image: url(button/img/black-button-sprites.png);
   -background-image: url(button/img/black-button-sprites-ie6.png);
   background-position: left -312px;
 }
 .black div > .v-button-small .v-button-caption,
-.v-ie7 .black .v-button-small .v-button-caption {
+.v-ie7 .black .v-button-small .v-button-caption,
+.black div > .v-button-small.v-disabled .v-button-caption,
+.v-ie7 .black .v-button-small.v-disabled .v-button-caption {
   background-image: url(button/img/black-button-sprites.png);
   -background-image: url(button/img/black-button-sprites-ie6.png);
   background-position: right -332px;
@@ -2009,7 +2042,9 @@ div > .v-button.v-button-link,
 div > .v-button.v-button-link:focus,
 div > .v-button.v-button-link:active,
 .v-ie7 .v-button-link,
-.v-ie7 .v-button-link.v-pressed {
+.v-ie7 .v-button-link.v-pressed,
+div > .v-button.v-button-link.v-disabled,
+.v-ie7 .v-button-link.v-disabled {
 	background: transparent;
 	height: auto;
 	padding: 0;
@@ -2019,7 +2054,9 @@ div > .v-button.v-button-link .v-button-caption,
 div > .v-button.v-button-link:focus .v-button-caption,
 div > .v-button.v-button-link:active .v-button-caption,
 .v-ie7 .v-button-link .v-button-caption,
-.v-ie7 .v-button-link.v-pressed .v-button-caption {
+.v-ie7 .v-button-link.v-pressed .v-button-caption,
+div > .v-button.v-button-link.v-disabled .v-button-caption,
+.v-ie7 .v-button-link.v-disabled .v-button-caption {
 	background: transparent;
 	height: auto;
 	padding: 0;
@@ -2279,6 +2316,11 @@ span.v-datefield-calendarpanel-month {
 .v-datefield-day,
 .v-datefield-full {
 	min-width: 240px;
+}
+.v-ff2 .v-datefield-month,
+.v-ff2 .v-datefield-day,
+.v-ff2 .v-datefield-full {
+	min-width: 254px;
 }
 .v-datefield-year .v-datefield-calendarpanel {
 	width: 100px;
@@ -3527,6 +3569,58 @@ td.v-datefield-calendarpanel-nextyear {
 	zoom: 1;
 	display: inline;
 }
+.v-tabsheet-scroller {
+	margin-top: -20px;
+	height: 17px;
+}
+.v-tabsheet-scrollerPrev,
+.v-tabsheet-scrollerNext,
+.v-tabsheet-scrollerPrev-disabled,
+.v-tabsheet-scrollerNext-disabled {
+	border: none;
+	background: transparent;
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -1162px;
+	width: 18px;
+	height: 17px;
+	overflow: hidden;
+	cursor: default;
+}
+.v-tabsheet-scroller button::-moz-focus-inner {
+	border: none;
+}
+.v-tabsheet-scrollerNext {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -1179px;
+}
+.v-tabsheet-scrollerPrev:active {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -1196px;
+}
+.v-tabsheet-scrollerNext:active {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -1213px;
+}
+.v-tabsheet-scrollerPrev-disabled,
+.v-tabsheet-scrollerPrev-disabled:active {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -1230px;
+	opacity: 1;
+	filter: none;
+}
+.v-tabsheet-scrollerNext-disabled,
+.v-tabsheet-scrollerNext-disabled:active {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -1247px;
+	opacity: 1;
+	filter: none;
+}
 /* Tabsheet on blue background */
 .blue .v-tabsheet-spacertd div,
 .blue .v-tabsheet-tabitem,
@@ -3555,7 +3649,7 @@ td.v-datefield-calendarpanel-nextyear {
 	background-repeat: repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1162px;
+  background-position: left -1264px;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 }
@@ -3705,7 +3799,7 @@ input.v-textfield-readonly,
 	background: #4d749f repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1185px;
+  background-position: left -1287px;
 	color: #fff;
 	padding: 1px 2px;
 	-webkit-border-radius: 2px;
@@ -3751,7 +3845,7 @@ input.v-textfield-readonly,
 	background: transparent repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1205px;
+  background-position: left -1307px;
 }
 .v-window-header {
 	font-weight: bold;
@@ -3767,13 +3861,13 @@ input.v-textfield-readonly,
 	background: transparent;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1242px;
+  background-position: left -1344px;
 }
 .v-window-footer {
 	background-repeat: repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1257px;
+  background-position: left -1359px;
 }
 .v-ie7 .v-window-footer {
 	height: 15px;
@@ -3789,17 +3883,17 @@ input.v-textfield-readonly,
 	background: transparent;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1272px;
+  background-position: left -1374px;
 }
 .v-window-closebox:hover {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1288px;
+  background-position: left -1390px;
 }
 .v-window-closebox:active {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1304px;
+  background-position: left -1406px;
 }
 .v-window-contents {
 	background: #fff;

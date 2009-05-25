@@ -2,7 +2,9 @@
  * sibling selector (+) that is needed to position .v-icon properly.
  */
 div > .v-button,
-.v-ie7 .v-button {
+.v-ie7 .v-button,
+div > .v-button.v-disabled,
+.v-ie7 .v-button.v-disabled {
 	height: 26px;
 	padding: 0 0 0 6px;
 	background-color: transparent;
@@ -17,7 +19,9 @@ div > .v-button,
 	position: relative;
 }
 div > .v-button .v-button-caption,
-.v-ie7 .v-button .v-button-caption {
+.v-ie7 .v-button .v-button-caption,
+div > .v-button.v-disabled .v-button-caption,
+.v-ie7 .v-button.v-disabled .v-button-caption {
 	display: inline-block;
 	height: 22px;
 	padding: 4px 15px 0 9px;
@@ -77,23 +81,29 @@ div > .v-button .v-button-caption,
 }
 /* Modifications for buttons with icons */
 div > .v-button .v-icon,
-.v-ie7 .v-button .v-icon {
+.v-ie7 .v-button .v-icon,
+div > .v-button.v-disabled .v-icon,
+.v-ie7 .v-button.v-disabled .v-icon {
 	display: inline-block;
 	width: 16px;
 	overflow: hidden;
 	position: relative;
 	margin: -1px 3px 0 6px;
 }
-.v-ff2 .v-button .v-icon {
+.v-ff2 .v-button .v-icon,
+.v-ff2 .v-button.v-disabled .v-icon {
 	display: block;
 	float: left;
 	margin-top: 4px;
 }
-.v-ff2 .v-button-link .v-icon {
+.v-ff2 .v-button-link .v-icon,
+.v-ff2 .v-button-link.v-disabled .v-icon {
 	margin: 0;
 }
 .v-button .v-icon + .v-button-caption,
-.v-button .v-icon + .v-errorindicator + .v-button-caption {
+.v-button .v-icon + .v-errorindicator + .v-button-caption,
+.v-button.v-disabled .v-icon + .v-button-caption,
+.v-button.v-disabled .v-icon + .v-errorindicator + .v-button-caption {
 	margin-left: -25px;
 	padding-left: 25px;
 }
@@ -149,11 +159,15 @@ div > .v-button .v-errorindicator,
  * Default action button style --------------------------
  */
 div > .v-button-primary,
-.v-ie7 .v-button-primary {
+.v-ie7 .v-button-primary,
+div > .v-button-primary.v-disabled,
+.v-ie7 .v-button-primary.v-disabled {
 	background-image: url(img/primary-left.png); /** sprite-ref: buttons */
 }
 div > .v-button-primary .v-button-caption,
-.v-ie7 .v-button-primary .v-button-caption {
+.v-ie7 .v-button-primary .v-button-caption,
+div > .v-button-primary.v-disabled .v-button-caption,
+.v-ie7 .v-button-primary.v-disabled .v-button-caption {
 	background-image: url(img/primary-right.png); /** sprite-ref: buttons; sprite-alignment: right */
 }
 .v-button-primary:focus {
@@ -174,12 +188,16 @@ div > .v-button-primary .v-button-caption,
  * Small-style --------------------------
  */
 div > .v-button-small,
-.v-ie7 .v-button-small {
+.v-ie7 .v-button-small,
+div > .v-button-small.v-disabled,
+.v-ie7 .v-button-small.v-disabled {
 	background-image: url(img/small-left.png); /** sprite-ref: buttons */
 	height: 20px;
 }
 div > .v-button-small .v-button-caption,
-.v-ie7 .v-button-small .v-button-caption {
+.v-ie7 .v-button-small .v-button-caption,
+div > .v-button-small.v-disabled .v-button-caption,
+.v-ie7 .v-button-small.v-disabled .v-button-caption {
 	background-image: url(img/small-right.png); /** sprite-ref: buttons; sprite-alignment: right */
 	height: 19px;
 	padding: 1px 11px 0 5px;
@@ -212,11 +230,15 @@ div > .v-button-small .v-button-caption,
 * Black buttons
 *------------*/
 .black div > .v-button,
-.v-ie7 .black .v-button {
+.v-ie7 .black .v-button,
+.black div > .v-button.v-disabled,
+.v-ie7 .black .v-button.v-disabled {
 	background-image: url(img/black/left.png); /** sprite-ref: black-buttons */
 }
 .black div > .v-button .v-button-caption,
-.v-ie7 .black .v-button .v-button-caption {
+.v-ie7 .black .v-button .v-button-caption,
+.black div > .v-button.v-disabled .v-button-caption,
+.v-ie7 .black .v-button.v-disabled .v-button-caption {
 	background-image: url(img/black/right.png); /** sprite-ref: black-buttons; sprite-alignment: right */
 	color: #c9ccce;
 	text-shadow: rgba(0,0,0,.8) 0 -1px 0;
@@ -240,11 +262,15 @@ div > .v-button-small .v-button-caption,
  * Primary-style ----------------------------
  */
 .black div > .v-button-primary,
-.v-ie7 .black .v-button-primary {
+.v-ie7 .black .v-button-primary,
+.black div > .v-button-primary.v-disabled,
+.v-ie7 .black .v-button-primary.v-disabled {
 	background-image: url(img/black/primary-left.png); /** sprite-ref: black-buttons */
 }
 .black div > .v-button-primary .v-button-caption,
-.v-ie7 .black .v-button-primary .v-button-caption {
+.v-ie7 .black .v-button-primary .v-button-caption,
+.black div > .v-button-primary.v-disabled .v-button-caption,
+.v-ie7 .black .v-button-primary.v-disabled .v-button-caption {
 	background-image: url(img/black/primary-right.png); /** sprite-ref: black-buttons; sprite-alignment: right */
 }
 .black .v-button-primary:focus {
@@ -267,11 +293,15 @@ div > .v-button-small .v-button-caption,
  * Small-style --------------------------
  */
 .black div > .v-button-small,
-.v-ie7 .black .v-button-small {
+.v-ie7 .black .v-button-small,
+.black div > .v-button-small.v-disabled,
+.v-ie7 .black .v-button-small.v-disabled {
 	background-image: url(img/black/small-left.png); /** sprite-ref: black-buttons */
 }
 .black div > .v-button-small .v-button-caption,
-.v-ie7 .black .v-button-small .v-button-caption {
+.v-ie7 .black .v-button-small .v-button-caption,
+.black div > .v-button-small.v-disabled .v-button-caption,
+.v-ie7 .black .v-button-small.v-disabled .v-button-caption {
 	background-image: url(img/black/small-right.png); /** sprite-ref: black-buttons; sprite-alignment: right */
 }
 .black .v-button-small:focus {
@@ -299,7 +329,9 @@ div > .v-button.v-button-link,
 div > .v-button.v-button-link:focus,
 div > .v-button.v-button-link:active,
 .v-ie7 .v-button-link,
-.v-ie7 .v-button-link.v-pressed {
+.v-ie7 .v-button-link.v-pressed,
+div > .v-button.v-button-link.v-disabled,
+.v-ie7 .v-button-link.v-disabled {
 	background: transparent;
 	height: auto;
 	padding: 0;
@@ -309,7 +341,9 @@ div > .v-button.v-button-link .v-button-caption,
 div > .v-button.v-button-link:focus .v-button-caption,
 div > .v-button.v-button-link:active .v-button-caption,
 .v-ie7 .v-button-link .v-button-caption,
-.v-ie7 .v-button-link.v-pressed .v-button-caption {
+.v-ie7 .v-button-link.v-pressed .v-button-caption,
+div > .v-button.v-button-link.v-disabled .v-button-caption,
+.v-ie7 .v-button-link.v-disabled .v-button-caption {
 	background: transparent;
 	height: auto;
 	padding: 0;

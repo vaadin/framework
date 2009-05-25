@@ -40,6 +40,11 @@ span.v-datefield-calendarpanel-month {
 .v-datefield-full {
 	min-width: 240px;
 }
+.v-ff2 .v-datefield-month,
+.v-ff2 .v-datefield-day,
+.v-ff2 .v-datefield-full {
+	min-width: 254px;
+}
 .v-datefield-year .v-datefield-calendarpanel {
 	width: 100px;
 }

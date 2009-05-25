@@ -1256,6 +1256,9 @@
 	text-align: right;
 	margin-top: -1em;
 }
+.v-ff2 .v-tabsheet-scroller {
+	position: relative;
+}
 .v-tabsheet-scrollerPrev,
 .v-tabsheet-scrollerNext,
 .v-tabsheet-scrollerPrev-disabled,
