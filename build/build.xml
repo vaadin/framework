@@ -189,6 +189,10 @@
 		<property file="build/GWT-VERSION.properties" />
 		<property file="build/html-style.properties" />
 
+        <tstamp>
+            <format property="build.date" pattern="yyyy-MM-dd"/>
+        </tstamp>
+
         <echo>Toolkit package is: ${toolkit-package}</echo>
 
 		<!-- Create result dir unless already exists -->
@@ -451,6 +455,9 @@
 				<replacetokens begintoken="@" endtoken="@">
 					<token key="platform" value="${package-platform}" />
 					<token key="/platform" value="" />
+				</replacetokens>
+				<replacetokens begintoken="@" endtoken="@">
+					<token key="builddate" value="${build.date}" />
 				</replacetokens>
 			</filterchain>
 			<fileset dir="WebContent">
