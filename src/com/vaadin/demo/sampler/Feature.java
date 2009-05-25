@@ -91,7 +91,7 @@ abstract public class Feature implements Serializable {
      * 
      * @return
      */
-    abstract public Class[] getRelatedFeatures();
+    abstract public Class<? extends Feature>[] getRelatedFeatures();
 
     /**
      * Gets the name of the icon for this feature, usually simpleName +

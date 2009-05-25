@@ -33,8 +33,9 @@ public class TableMouseEvents extends Feature {
         return new APIResource[] { new APIResource(Table.class) };
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Class[] getRelatedFeatures() {
+    public Class<? extends Feature>[] getRelatedFeatures() {
         return new Class[] { FeatureSet.Tables.class };
     }
 

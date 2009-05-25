@@ -29,8 +29,9 @@ public class ComboBoxContains extends Feature {
         return new APIResource[] { new APIResource(ComboBox.class) };
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Class[] getRelatedFeatures() {
+    public Class<? extends Feature>[] getRelatedFeatures() {
         return new Class[] { ComboBoxPlain.class, ComboBoxStartsWith.class,
                 ComboBoxNewItems.class };
     }

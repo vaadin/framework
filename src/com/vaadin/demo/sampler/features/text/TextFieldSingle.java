@@ -28,8 +28,9 @@ public class TextFieldSingle extends Feature {
         return new APIResource[] { new APIResource(TextField.class) };
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Class[] getRelatedFeatures() {
+    public Class<? extends Feature>[] getRelatedFeatures() {
         // TODO update CB -ref to 'suggest' pattern, when available
         return new Class[] { TextFieldSecret.class, ComboBoxNewItems.class,
                 FeatureSet.Texts.class };

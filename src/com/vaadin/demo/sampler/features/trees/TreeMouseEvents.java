@@ -28,8 +28,9 @@ public class TreeMouseEvents extends Feature {
         return new APIResource[] { new APIResource(Tree.class) };
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Class[] getRelatedFeatures() {
+    public Class<? extends Feature>[] getRelatedFeatures() {
         return new Class[] { TreeSingleSelect.class, TreeMultiSelect.class,
                 TreeActions.class };
     }

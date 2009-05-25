@@ -25,8 +25,9 @@ public class LabelPreformatted extends Feature {
         return new APIResource[] { new APIResource(Label.class) };
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Class[] getRelatedFeatures() {
+    public Class<? extends Feature>[] getRelatedFeatures() {
         return new Class[] { LabelPlain.class, LabelRich.class,
                 TextFieldSingle.class, TextArea.class, RichTextEditor.class };
     }

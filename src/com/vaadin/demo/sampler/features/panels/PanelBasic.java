@@ -26,8 +26,9 @@ public class PanelBasic extends Feature {
                 new APIResource(Layout.class) };
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Class[] getRelatedFeatures() {
+    public Class<? extends Feature>[] getRelatedFeatures() {
         return new Class[] { PanelLight.class, FeatureSet.Layouts.class };
     }
 

@@ -41,8 +41,9 @@ public class Errors extends Feature {
         return new APIResource[] { new APIResource(AbstractComponent.class) };
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Class[] getRelatedFeatures() {
+    public Class<? extends Feature>[] getRelatedFeatures() {
         // TODO link validation sample, form sample
         return new Class[] { Validation.class, FormBasic.class,
                 NotificationError.class };

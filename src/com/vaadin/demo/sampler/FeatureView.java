@@ -204,7 +204,7 @@ public class FeatureView extends HorizontalLayout {
                 right.addComponent(api);
             }
 
-            Class[] features = feature.getRelatedFeatures();
+            Class<? extends Feature>[] features = feature.getRelatedFeatures();
             if (features != null) {
                 VerticalLayout rel = new VerticalLayout();
                 Label caption = new Label("<span>Related Samples</span>",

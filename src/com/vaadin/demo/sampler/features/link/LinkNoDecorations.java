@@ -24,8 +24,9 @@ public class LinkNoDecorations extends Feature {
         return new APIResource[] { new APIResource(Link.class) };
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Class[] getRelatedFeatures() {
+    public Class<? extends Feature>[] getRelatedFeatures() {
         return new Class[] { LinkCurrentWindow.class, LinkSizedWindow.class,
                 ButtonLink.class };
     }

@@ -532,7 +532,7 @@ public class FeatureSet extends Feature {
     }
 
     @Override
-    public Class[] getRelatedFeatures() {
+    public Class<? extends Feature>[] getRelatedFeatures() {
         return null;
     }
 

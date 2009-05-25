@@ -31,8 +31,9 @@ public class NativeSelection extends Feature {
         return new APIResource[] { new APIResource(NativeSelect.class) };
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Class[] getRelatedFeatures() {
+    public Class<? extends Feature>[] getRelatedFeatures() {
         return new Class[] { ComboBoxPlain.class, ListSelectSingle.class,
                 FeatureSet.Selects.class };
     }

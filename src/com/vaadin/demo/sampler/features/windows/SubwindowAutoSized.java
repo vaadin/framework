@@ -27,8 +27,9 @@ public class SubwindowAutoSized extends Feature {
         return new APIResource[] { new APIResource(Window.class) };
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Class[] getRelatedFeatures() {
+    public Class<? extends Feature>[] getRelatedFeatures() {
         return new Class[] { SubwindowSized.class, FeatureSet.Windows.class };
     }
 

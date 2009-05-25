@@ -22,8 +22,9 @@ public class TabSheetIcons extends Feature {
         return new APIResource[] { new APIResource(TabSheet.class) };
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Class[] getRelatedFeatures() {
+    public Class<? extends Feature>[] getRelatedFeatures() {
         return new Class[] { TabSheetScrolling.class, TabSheetDisabled.class };
     }
 

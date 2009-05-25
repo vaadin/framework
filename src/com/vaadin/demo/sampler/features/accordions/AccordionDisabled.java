@@ -23,8 +23,9 @@ public class AccordionDisabled extends Feature {
         return new APIResource[] { new APIResource(Accordion.class) };
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Class[] getRelatedFeatures() {
+    public Class<? extends Feature>[] getRelatedFeatures() {
         return new Class[] { AccordionIcons.class, FeatureSet.Tabsheets.class };
     }
 

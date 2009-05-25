@@ -42,7 +42,7 @@ public class Icons extends Feature {
     }
 
     @Override
-    public Class[] getRelatedFeatures() {
+    public Class<? extends Feature>[] getRelatedFeatures() {
         // TODO link embedded sample
         return null;
     }

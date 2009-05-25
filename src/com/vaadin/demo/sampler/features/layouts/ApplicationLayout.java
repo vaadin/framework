@@ -32,8 +32,9 @@ public class ApplicationLayout extends Feature {
                 new APIResource(VerticalLayout.class) };
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Class[] getRelatedFeatures() {
+    public Class<? extends Feature>[] getRelatedFeatures() {
         return new Class[] { WebLayout.class, CustomLayouts.class };
     }
 

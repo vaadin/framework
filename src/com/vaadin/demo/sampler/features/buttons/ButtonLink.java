@@ -28,8 +28,9 @@ public class ButtonLink extends Feature {
         return new APIResource[] { new APIResource(Button.class) };
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Class[] getRelatedFeatures() {
+    public Class<? extends Feature>[] getRelatedFeatures() {
         return new Class[] { ButtonPush.class, ButtonSwitch.class,
                 LinkCurrentWindow.class, ProminentPrimaryAction.class,
                 FeatureSet.Links.class };

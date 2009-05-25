@@ -29,8 +29,9 @@ public class DateLocale extends Feature {
                 new APIResource(Locale.class) };
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Class[] getRelatedFeatures() {
+    public Class<? extends Feature>[] getRelatedFeatures() {
         return new Class[] { DateInline.class, DatePopup.class,
                 DateResolution.class };
     }

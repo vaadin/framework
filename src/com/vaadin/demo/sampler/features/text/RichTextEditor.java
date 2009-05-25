@@ -25,8 +25,9 @@ public class RichTextEditor extends Feature {
         return new APIResource[] { new APIResource(RichTextArea.class) };
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Class[] getRelatedFeatures() {
+    public Class<? extends Feature>[] getRelatedFeatures() {
         return new Class[] { TextArea.class, LabelRich.class };
     }
 

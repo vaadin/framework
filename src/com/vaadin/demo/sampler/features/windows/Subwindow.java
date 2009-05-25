@@ -26,8 +26,9 @@ public class Subwindow extends Feature {
         return new APIResource[] { new APIResource(Window.class) };
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Class[] getRelatedFeatures() {
+    public Class<? extends Feature>[] getRelatedFeatures() {
         return new Class[] { NativeWindow.class, FeatureSet.Windows.class };
     }
 

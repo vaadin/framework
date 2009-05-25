@@ -30,8 +30,9 @@ public class CustomLayouts extends Feature {
         return new APIResource[] { new APIResource(CustomLayout.class) };
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Class[] getRelatedFeatures() {
+    public Class<? extends Feature>[] getRelatedFeatures() {
         return new Class[] { WebLayout.class, ApplicationLayout.class };
     }
 

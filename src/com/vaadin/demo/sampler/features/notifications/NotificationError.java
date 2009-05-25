@@ -32,8 +32,9 @@ public class NotificationError extends Feature {
                 new APIResource(Window.Notification.class) };
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Class[] getRelatedFeatures() {
+    public Class<? extends Feature>[] getRelatedFeatures() {
         return new Class[] { NotificationHumanized.class,
                 NotificationTray.class, NotificationWarning.class,
                 NotificationCustom.class };

@@ -38,8 +38,9 @@ public class FormPojo extends Feature {
                 new APIResource(Validator.class), new APIResource(Form.class) };
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Class[] getRelatedFeatures() {
+    public Class<? extends Feature>[] getRelatedFeatures() {
         return new Class[] { Validation.class, Errors.class,
                 FeatureSet.Forms.class };
     }

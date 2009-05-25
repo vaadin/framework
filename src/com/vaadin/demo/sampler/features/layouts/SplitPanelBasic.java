@@ -28,8 +28,9 @@ public class SplitPanelBasic extends Feature {
         };
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Class[] getRelatedFeatures() {
+    public Class<? extends Feature>[] getRelatedFeatures() {
         return new Class[] {};
     }
 

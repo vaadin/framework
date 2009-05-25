@@ -25,8 +25,9 @@ public class GridLayoutBasic extends Feature {
         return new APIResource[] { new APIResource(GridLayout.class) };
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Class[] getRelatedFeatures() {
+    public Class<? extends Feature>[] getRelatedFeatures() {
         return new Class[] { HorizontalLayoutBasic.class,
                 VerticalLayoutBasic.class, LayoutSpacing.class,
                 LayoutMargin.class };

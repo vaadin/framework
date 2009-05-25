@@ -28,8 +28,9 @@ public class TwinColumnSelect extends Feature {
         return new APIResource[] { new APIResource(TwinColSelect.class) };
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Class[] getRelatedFeatures() {
+    public Class<? extends Feature>[] getRelatedFeatures() {
         return new Class[] { NativeSelection.class, ListSelectMultiple.class,
                 ListSelectSingle.class };
     }

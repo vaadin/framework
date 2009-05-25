@@ -27,7 +27,7 @@ public class Tooltips extends Feature {
     }
 
     @Override
-    public Class[] getRelatedFeatures() {
+    public Class<? extends Feature>[] getRelatedFeatures() {
         // TODO Auto-generated method stub
         return null;
     }

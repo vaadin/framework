@@ -23,8 +23,9 @@ public class HorizontalLayoutBasic extends Feature {
         return new APIResource[] { new APIResource(HorizontalLayout.class) };
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Class[] getRelatedFeatures() {
+    public Class<? extends Feature>[] getRelatedFeatures() {
         return new Class[] { VerticalLayoutBasic.class, LayoutSpacing.class,
                 LayoutAlignment.class, };
     }

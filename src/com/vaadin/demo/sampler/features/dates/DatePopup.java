@@ -25,8 +25,9 @@ public class DatePopup extends Feature {
                 new APIResource(PopupDateField.class) };
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Class[] getRelatedFeatures() {
+    public Class<? extends Feature>[] getRelatedFeatures() {
         return new Class[] { DateInline.class, DateLocale.class,
                 DateResolution.class };
     }

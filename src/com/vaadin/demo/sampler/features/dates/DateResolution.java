@@ -26,8 +26,9 @@ public class DateResolution extends Feature {
                 new APIResource(InlineDateField.class) };
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Class[] getRelatedFeatures() {
+    public Class<? extends Feature>[] getRelatedFeatures() {
         return new Class[] { DateInline.class, DatePopup.class,
                 DateLocale.class };
     }
