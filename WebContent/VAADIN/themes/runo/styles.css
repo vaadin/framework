@@ -1444,6 +1444,7 @@ div.v-window-header {
 }
 .v-window-footer {
 	overflow: hidden;
+	zoom: 1;
 }
 .v-window-resizebox {
 	display: inline; /* fix IE6 double float margin bug */
@@ -1453,6 +1454,19 @@ div.v-window-header {
 	cursor: se-resize;
 	background: #ddd;
 	overflow: hidden;
+}
+/* IE7 fails with the float:right */
+.v-ie7 .v-window-footer {
+	position: relative;
+	height: 10px;
+}
+.v-ie7 .v-window-resizebox {
+	position: absolute;
+	float: none;
+	right: 0;
+}
+.v-ie7 .v-window-footer-noresize {
+	height: 0;
 }
 .v-window-resizebox-disabled {
 	cursor: default;
@@ -3114,12 +3128,15 @@ textarea.v-textarea-prompt {
 .v-window-footer {
 	height: 8px;
 	margin-left: 9px;
-	background: transparent url(window/img/bottom-right.png) no-repeat right top;  
+	background: transparent url(window/img/bottom-right.png) no-repeat right top;
+	overflow: visible;
 }
 .v-ie7 .v-window-footer {
 	position: relative;
+	overflow: visible;
 }
-.v-window-resizebox {
+.v-window-resizebox,
+.v-ie7 .v-window-resizebox {
 	position: absolute; /* Needed to position the element over ScrollPanel, which is relatively positioned */
 	right: 5px;
 	width: 10px;

@@ -37,3 +37,6 @@
 	color: #fff;
 	text-shadow: rgba(0,0,0,.8) 0 2px 2px;
 }
+.black .v-label-light {
+	color: #72787c;
+}

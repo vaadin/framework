@@ -51,6 +51,13 @@
 .v-Notification {
 	font-family: Helvetica, Arial, "Lucida Grande", Geneva, Tahoma, Verdana, sans-serif;
 }
+/* Fonts on black background */
+.v-app .black,
+.v-window-black,
+.v-popupview-popup .black {
+	color: #c9ccce;
+	text-shadow: #000 0 0 1px;
+}
 .v-errorindicator {
 	width: 13px;
 	height: 16px;

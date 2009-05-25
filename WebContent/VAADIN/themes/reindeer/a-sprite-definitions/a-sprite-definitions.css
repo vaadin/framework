@@ -4,8 +4,8 @@
 /** sprite: verticals; sprite-image: url(../common/img/vertical-sprites.png); sprite-layout: vertical */
 /** sprite: horizontals; sprite-image: url(../common/img/horizontal-sprites.png); sprite-layout: horizontal */
 
-/** sprite: black-verticals; sprite-image: url(../common/img/black-vertical-sprites.png); sprite-layout: vertical */
-/** sprite: black-horizontals; sprite-image: url(../common/img/black-horizontal-sprites.png); sprite-layout: horizontal */
+/** sprite: black-verticals; sprite-image: url(../common/img/black-vertical-sprites.png); sprite-layout: vertical; sprite-matte-color: #0b0e0f */
+/** sprite: black-horizontals; sprite-image: url(../common/img/black-horizontal-sprites.png); sprite-layout: horizontal; sprite-matte-color: #0b0e0f */
 
 /*------------
  * Buttons 

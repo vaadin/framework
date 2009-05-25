@@ -4,6 +4,13 @@
 .v-window-wrap {
 	border: 1px solid #808386;
 }
+/* IE6 needs border on the outer element */
+.v-ie6 .v-window {
+	border: 1px solid #808386;
+}
+.v-ie6 .v-window-wrap {
+	border: none;
+}
 .v-sa .v-window-wrap,
 .v-ff3 .v-window-wrap,
 .v-op .v-window-wrap {
@@ -36,8 +43,11 @@
 	background-repeat: repeat-x;
 	background-image: url(img/footer-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 }
-.v-ie6 .v-window-footer {
-	zoom: 1;
+.v-ie7 .v-window-footer {
+	height: 15px;
+}
+.v-ie7 .v-window-footer-noresize {
+	height: 0;
 }
 .v-window-closebox {
 	top: 12px;
@@ -58,4 +68,76 @@
 }
 .v-window-modalitycurtain {
 	background: #56595b;
+}
+
+
+
+
+
+/**
+ Black window -----------------------------
+**/
+
+.v-window-black .v-window-wrap {
+	border-color: #2e3030;
+	border-radius: 8px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	overflow: hidden;
+}
+.v-sa .v-window-black .v-window-wrap,
+.v-ff3 .v-window-black .v-window-wrap,
+.v-op .v-window-black .v-window-wrap {
+	border-color: rgba(0,0,0,.9);
+}
+.v-window-black .v-window-wrap2 {
+	background-color: #0b0e0f;
+	-moz-border-radius: 8px;
+}
+.v-sa .v-window-black .v-window-wrap2,
+.v-ff3 .v-window-black .v-window-wrap2,
+.v-op .v-window-black .v-window-wrap2 {
+	background-color: rgba(11,14,15,.9);
+}
+.v-window-black .v-window-outerheader {
+	height: auto;
+	padding: 0;
+	background: transparent;
+}
+.v-window-black .v-window-header {
+	height: auto;
+	padding: 7px 0 7px 0;
+	height: 15px;
+	font-size: 12px;
+	font-weight: normal;
+	color: #dddfe1;
+	background: transparent repeat-x;
+	background-image: url(img/black/header-bg.png); /** sprite-ref: black-verticals; sprite-alignment: repeat */
+	text-align: center;
+	-moz-border-radius-topright: 8px;
+	-moz-border-radius-topleft: 8px;
+}
+.v-window-black .v-window-closebox {
+	top: 8px;
+}
+.v-window-black .v-window-footer {
+	background: transparent;
+}
+.v-window-black .v-window-resizebox {
+	background: transparent no-repeat;
+	background-image: url(img/black/resize.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 4px */
+	width: 14px;
+	height: 14px;
+}
+.v-ie6 .v-window-black .v-window-resizebox {
+	background-image: url(img/black/resize-ie6.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 4px */
+}
+.v-ie6 .v-window-black .v-window-contents {
+	background: transparent url(img/black/content-bg-ie6.png) repeat-x;
+}
+
+/* Must be last to make this image last in the sprites */
+.v-window-black .v-window-contents {
+	background: transparent repeat-x;
+	background-image: url(img/black/content-bg.png); /** sprite-ref: black-verticals; sprite-alignment: repeat */
 }

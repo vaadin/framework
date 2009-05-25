@@ -179,6 +179,9 @@
 	width: 1px;
 	background: #aeb0b5;
 }
+.v-app-SamplerApplication .v-splitpanel-hsplitter-main-split-locked {
+	width: 0px;
+}
 .v-app-SamplerApplication .v-splitpanel-hsplitter-main-split div {
 	width: 3px;
 	background: transparent;

@@ -35,6 +35,11 @@ span.v-datefield-calendarpanel-month {
 .v-datefield-full .v-datefield-calendarpanel-month {
 	width: 124px;
 }
+.v-datefield-month,
+.v-datefield-day,
+.v-datefield-full {
+	min-width: 240px;
+}
 .v-datefield-year .v-datefield-calendarpanel {
 	width: 100px;
 }
@@ -271,7 +276,10 @@ td.v-datefield-calendarpanel-nextyear {
 .black span.v-datefield-calendarpanel-month {
 	border-left: 1px solid #333638;
 	border-right: 1px solid #232527;
+	color: #c9ccce;
 	text-shadow: #000 0 -1px 0;
+	padding: 4px 10px 1px 10px;
+	margin-top: 0;
 }
 .black .v-datefield-calendarpanel-prevyear button,
 .black .v-datefield-calendarpanel-nextyear button,
@@ -330,14 +338,4 @@ td.v-datefield-calendarpanel-nextyear {
 }
 .black .v-datefield-calendarpanel .v-last {
 	background-image: url(img/weekday-last-black.png); /** sprite-ref: black-verticals; sprite-alignment: right */
-}
-/* IE fails to position backgrounds inside table element */
-.v-ie .black .v-datefield-calendarpanel-weekdays td {
-	background: url(img/weekday-bg-black.png) repeat-x;
-}
-.v-ie .black .v-datefield-calendarpanel .v-first {
-	background: url(img/weekday-first-black.png) no-repeat;
-}
-.v-ie .black .v-datefield-calendarpanel .v-last {
-	background: url(img/weekday-last-black.png) no-repeat right top;
 }

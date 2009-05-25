@@ -82,6 +82,7 @@ input.v-textfield-prompt {
 	text-shadow: #000 0 0 1px;
 }
 .v-app .black .v-textfield-focus,
+.v-window-black .v-textfield-focus,
 .v-window .black .v-textfield-focus,
 .v-popupview-popup .black .v-textfield-focus {
 	border-color: #4e6a80;

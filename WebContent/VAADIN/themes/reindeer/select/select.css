@@ -194,6 +194,7 @@
 }
 .v-app .black .v-filterselect-input,
 .v-window .black .v-filterselect-input,
+.v-window-black .v-filterselect-input,
 .v-popupview-popup .black .v-filterselect-input {
 	color: #c9ccce;
 	background-image: url(img/center-black.png); /** sprite-ref: black-verticals; sprite-alignment: repeat; sprite-margin-bottom: 1px */
