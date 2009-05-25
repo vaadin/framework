@@ -351,17 +351,14 @@ public class DateField extends AbstractField {
     }
 
     /**
-     * This method is called to handle the date string from the client if the
-     * client could not parse it as a Date.
+     * This method is called to handle a non-empty date string from the client
+     * if the client could not parse it as a Date.
      * 
-     * By default, null is returned. If an exception is thrown, the current
-     * value will not be modified.
+     * By default, a Property.ConversionException is thrown, and the current
+     * value is not modified.
      * 
-     * This can be overridden to handle conversions or to throw an exception, or
-     * to fire an event.
-     * 
-     * The default behavior is likely to change in the next major version of
-     * Vaadin - a Property.ConversionException will be thrown.
+     * This can be overridden to handle conversions, to return null (equivalent
+     * to empty input), to throw an exception or to fire an event.
      * 
      * @param dateString
      * @return parsed Date
@@ -370,10 +367,7 @@ public class DateField extends AbstractField {
      */
     protected Date handleUnparsableDateString(String dateString)
             throws Property.ConversionException {
-        // TODO in the next major version, this should throw an exception to be
-        // consistent with other fields
-        // throw new Property.ConversionException();
-        return null;
+        throw new Property.ConversionException();
     }
 
     /* Property features */
