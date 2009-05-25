@@ -27,8 +27,8 @@ import com.vaadin.terminal.Resource;
 /**
  * <p>
  * A class representing a selection of items the user has selected in a UI. The
- * set of choices is presented as a set of {@link com.vaadin.data.Item}s
- * in a {@link com.vaadin.data.Container}.
+ * set of choices is presented as a set of {@link com.vaadin.data.Item}s in a
+ * {@link com.vaadin.data.Container}.
  * </p>
  * 
  * <p>
@@ -362,9 +362,11 @@ public abstract class AbstractSelect extends AbstractField implements
         super.changeVariables(source, variables);
 
         // New option entered (and it is allowed)
-        final String newitem = (String) variables.get("newitem");
-        if (newitem != null && newitem.length() > 0) {
-            getNewItemHandler().addNewItem(newitem);
+        if (isNewItemsAllowed()) {
+            final String newitem = (String) variables.get("newitem");
+            if (newitem != null && newitem.length() > 0) {
+                getNewItemHandler().addNewItem(newitem);
+            }
         }
 
         // Selection change
@@ -709,8 +711,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * Gets the Property identified by the given itemId and propertyId from the
      * Container
      * 
-     * @see com.vaadin.data.Container#getContainerProperty(Object,
-     *      Object)
+     * @see com.vaadin.data.Container#getContainerProperty(Object, Object)
      */
     public Property getContainerProperty(Object itemId, Object propertyId) {
         return items.getContainerProperty(itemId, propertyId);
@@ -1664,8 +1665,7 @@ public abstract class AbstractSelect extends AbstractField implements
             }
         }
 
-        public void valueChange(
-                com.vaadin.data.Property.ValueChangeEvent event) {
+        public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
             requestRepaint();
         }
 

@@ -397,12 +397,14 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
         }
 
         // New option entered (and it is allowed)
-        final String newitem = (String) variables.get("newitem");
-        if (newitem != null && newitem.length() > 0) {
-            getNewItemHandler().addNewItem(newitem);
-            // rebuild list
-            filterstring = null;
-            prevfilterstring = null;
+        if (isNewItemsAllowed()) {
+            final String newitem = (String) variables.get("newitem");
+            if (newitem != null && newitem.length() > 0) {
+                getNewItemHandler().addNewItem(newitem);
+                // rebuild list
+                filterstring = null;
+                prevfilterstring = null;
+            }
         }
 
     }
