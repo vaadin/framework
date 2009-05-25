@@ -614,9 +614,12 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
     private void setResizable(boolean resizability) {
         resizable = resizability;
         if (resizability) {
+            DOM.setElementProperty(footer, "className", CLASSNAME + "-footer");
             DOM.setElementProperty(resizeBox, "className", CLASSNAME
                     + "-resizebox");
         } else {
+            DOM.setElementProperty(footer, "className", CLASSNAME + "-footer "
+                    + CLASSNAME + "-footer-noresize");
             DOM.setElementProperty(resizeBox, "className", CLASSNAME
                     + "-resizebox " + CLASSNAME + "-resizebox-disabled");
         }

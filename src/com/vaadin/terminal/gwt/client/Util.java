@@ -257,6 +257,11 @@ public class Util {
     public static int measureHorizontalPaddingAndBorder(Element element,
             int paddingGuess) {
         String originalWidth = DOM.getStyleAttribute(element, "width");
+        String originalOverflow = "";
+        if (BrowserInfo.get().isIE6()) {
+            originalOverflow = DOM.getStyleAttribute(element, "overflow");
+            DOM.setStyleAttribute(element, "overflow", "hidden");
+        }
         int originalOffsetWidth = element.getOffsetWidth();
         int widthGuess = (originalOffsetWidth - paddingGuess);
         if (widthGuess < 1) {
@@ -266,6 +271,9 @@ public class Util {
         int padding = element.getOffsetWidth() - widthGuess;
 
         DOM.setStyleAttribute(element, "width", originalWidth);
+        if (BrowserInfo.get().isIE6()) {
+            DOM.setStyleAttribute(element, "overflow", originalOverflow);
+        }
         return padding;
     }
 
