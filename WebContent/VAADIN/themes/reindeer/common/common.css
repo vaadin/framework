@@ -54,6 +54,7 @@
 /* Fonts on black background */
 .v-app .black,
 .v-window-black,
+.v-window .black,
 .v-popupview-popup .black {
 	color: #c9ccce;
 	text-shadow: #000 0 0 1px;
