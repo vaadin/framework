@@ -4,20 +4,30 @@
 .v-window-wrap {
 	border: 1px solid #808386;
 }
-/* IE6 needs border on the outer element */
-.v-ie6 .v-window {
-	border: 1px solid #808386;
-}
-.v-ie6 .v-window-wrap {
-	border: none;
-}
 .v-sa .v-window-wrap,
 .v-ff3 .v-window-wrap,
 .v-op .v-window-wrap {
 	border-color: rgba(0,0,0,.2);
 }
-.v-ff2 .v-window-wrap {
+.v-ff2 .v-window-wrap,
+.v-ie6 .v-window-wrap {
 	border: none;
+}
+.v-ff2 .v-window-outerheader,
+.v-ie6 .v-window-outerheader {
+	border: 1px solid #808386;
+	border-bottom: none;
+}
+.v-ff2 .v-window-contents,
+.v-ie6 .v-window-contents {
+	border: 1px solid #808386;
+	border-top: none;
+	border-bottom: none;
+}
+.v-ff2 .v-window-footer,
+.v-ie6 .v-window-footer {
+	border: 1px solid #808386;
+	border-top: none;
 }
 .v-window-outerheader {
 	padding: 12px 32px 0 14px;
@@ -32,6 +42,13 @@
 	color: #fff;
 	text-shadow: #000 0 -1px 0;
 }
+.v-window-error .v-window-header {
+	padding-left: 13px;
+	background: transparent url(../common/icons/error.png) no-repeat 0 50%;
+}
+.v-ie6 .v-window-error .v-window-header {
+	background-image: url(../common/icons/error-ie6.png);
+}
 .v-window-resizebox {
 	width: 15px;
 	height: 15px;
@@ -42,12 +59,7 @@
 .v-window-footer {
 	background-repeat: repeat-x;
 	background-image: url(img/footer-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
-}
-.v-ie7 .v-window-footer {
 	height: 15px;
-}
-.v-ie7 .v-window-footer-noresize {
-	height: 0;
 }
 .v-window-closebox {
 	top: 12px;
@@ -74,8 +86,61 @@
 
 
 
+
 /**
- Black window -----------------------------
+ Light style window -----------------------------
+**/
+
+.v-window-light .v-window-outerheader {
+	background: transparent;
+	padding: 15px 32px 0 18px;
+	height: 23px;
+}
+.v-window-light .v-window-header {
+	font-size: 16px;
+	color: #292e34;
+	text-shadow: none;
+}
+.v-window-light .v-window-resizebox {
+	width: 12px;
+	height: 12px;
+	background-image: url(img/resize-light.png); /** sprite-ref: verticals */
+}
+.v-window-light .v-window-footer {
+	background: transparent;
+	height: 12px;
+}
+.v-window-light .v-window-closebox {
+	right: 1px;
+	top: 17px;
+	width: 19px;
+	height: 15px;
+	background-image: url(img/close-light.png); /** sprite-ref: verticals */
+}
+.v-window-light .v-window-closebox:hover {
+	background-image: url(img/close-light-hover.png); /** sprite-ref: verticals */
+}
+.v-window-light .v-window-closebox:active {
+	background-image: url(img/close-light-pressed.png); /** sprite-ref: verticals */
+}
+.v-window-light .v-window-contents {
+	background: transparent;
+}
+/* This must be the last sprite added to the verticals-sprite image */
+.v-window-light .v-window-wrap2 {
+	background: #f7f7f8 repeat-x;
+	background-image: url(img/content-bg-light.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+}
+.v-ie6 .v-window-light .v-window-wrap2 {
+	background-image: none;
+}
+
+
+
+
+
+/**
+ Black style window -----------------------------
 **/
 
 .v-window-black .v-window-wrap {
@@ -93,6 +158,7 @@
 .v-window-black .v-window-wrap2 {
 	background-color: #0b0e0f;
 	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
 }
 .v-sa .v-window-black .v-window-wrap2,
 .v-ff3 .v-window-black .v-window-wrap2,
@@ -101,27 +167,30 @@
 }
 .v-window-black .v-window-outerheader {
 	height: auto;
-	padding: 0;
-	background: transparent;
-}
-.v-window-black .v-window-header {
-	height: auto;
-	padding: 7px 0 7px 0;
+	padding: 7px 14px;
 	height: 15px;
-	font-size: 12px;
-	font-weight: normal;
-	color: #dddfe1;
 	background: transparent repeat-x;
 	background-image: url(img/black/header-bg.png); /** sprite-ref: black-verticals; sprite-alignment: repeat */
 	text-align: center;
 	-moz-border-radius-topright: 8px;
 	-moz-border-radius-topleft: 8px;
+	-webkit-border-top-right-radius: 8px;
+	-webkit-border-top-left-radius: 8px;
+	overflow: hidden;
+	border: none;
+}
+.v-window-black .v-window-header {
+	font-size: 12px;
+	font-weight: normal;
+	color: #dddfe1;
 }
 .v-window-black .v-window-closebox {
 	top: 8px;
 }
 .v-window-black .v-window-footer {
 	background: transparent;
+	border: none;
+	height: 14px;
 }
 .v-window-black .v-window-resizebox {
 	background: transparent no-repeat;
@@ -135,9 +204,9 @@
 .v-ie6 .v-window-black .v-window-contents {
 	background: transparent url(img/black/content-bg-ie6.png) repeat-x;
 }
-
 /* Must be last to make this image last in the sprites */
 .v-window-black .v-window-contents {
+	border: none;
 	background: transparent repeat-x;
 	background-image: url(img/black/content-bg.png); /** sprite-ref: black-verticals; sprite-alignment: repeat */
 }

@@ -45,6 +45,10 @@ span.v-datefield-calendarpanel-month {
 .v-ff2 .v-datefield-full {
 	min-width: 254px;
 }
+.v-datefield-popupcalendar,
+.v-ff2 .v-datefield-popupcalendar {
+	min-width: 0;
+}
 .v-datefield-year .v-datefield-calendarpanel {
 	width: 100px;
 }

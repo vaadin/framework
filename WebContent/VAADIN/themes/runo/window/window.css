@@ -29,7 +29,7 @@
 	border-top: none;
 	border-bottom: none;
 }
-.v-window-footer {
+.v-window div.v-window-footer {
 	height: 8px;
 	margin-left: 9px;
 	background: transparent url(img/bottom-right.png) no-repeat right top;

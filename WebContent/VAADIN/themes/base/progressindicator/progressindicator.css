@@ -4,15 +4,11 @@
 }
 .v-progressindicator-wrapper {
 	overflow: hidden; /* for IE6 */
-	height: 9px;
+	height: 7px;
 	border: 1px solid #ddd;
 }
-.v-progressindicator-disabled {
-	height: 9px;
-	overflow: hidden; /* for IE6 */
-}
 .v-progressindicator-indicator {
-	height: 9px;
+	height: 7px;
 	overflow: hidden; /* for IE6 */
 	background: #ddd;
 }

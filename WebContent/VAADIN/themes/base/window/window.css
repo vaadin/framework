@@ -10,7 +10,7 @@
 	font-weight: bold;
 }
 /* A more specific selector to make sure padding isn't so easily overridden */
-div.v-window-header {
+.div.v-window-header {
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	-ms-text-overflow: ellipsis;
@@ -35,27 +35,19 @@ div.v-window-header {
 .v-window-footer {
 	overflow: hidden;
 	zoom: 1;
+	height: 10px;
+	position: relative;
 }
 .v-window-resizebox {
-	display: inline; /* fix IE6 double float margin bug */
-	float: right;
 	width: 10px;
 	height: 10px;
 	cursor: se-resize;
 	background: #ddd;
 	overflow: hidden;
-}
-/* IE7 fails with the float:right */
-.v-ie7 .v-window-footer {
-	position: relative;
-	height: 10px;
-}
-.v-ie7 .v-window-resizebox {
 	position: absolute;
-	float: none;
 	right: 0;
 }
-.v-ie7 .v-window-footer-noresize {
+.v-window div.v-window-footer-noresize {
 	height: 0;
 }
 .v-window-resizebox-disabled {

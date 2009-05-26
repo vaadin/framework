@@ -723,15 +723,11 @@ div.v-app-loading {
 }
 .v-progressindicator-wrapper {
 	overflow: hidden; /* for IE6 */
-	height: 9px;
+	height: 7px;
 	border: 1px solid #ddd;
 }
-.v-progressindicator-disabled {
-	height: 9px;
-	overflow: hidden; /* for IE6 */
-}
 .v-progressindicator-indicator {
-	height: 9px;
+	height: 7px;
 	overflow: hidden; /* for IE6 */
 	background: #ddd;
 }
@@ -1441,7 +1437,7 @@ div.v-tree-node-leaf {
 	font-weight: bold;
 }
 /* A more specific selector to make sure padding isn't so easily overridden */
-div.v-window-header {
+.div.v-window-header {
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	-ms-text-overflow: ellipsis;
@@ -1466,27 +1462,19 @@ div.v-window-header {
 .v-window-footer {
 	overflow: hidden;
 	zoom: 1;
+	height: 10px;
+	position: relative;
 }
 .v-window-resizebox {
-	display: inline; /* fix IE6 double float margin bug */
-	float: right;
 	width: 10px;
 	height: 10px;
 	cursor: se-resize;
 	background: #ddd;
 	overflow: hidden;
-}
-/* IE7 fails with the float:right */
-.v-ie7 .v-window-footer {
-	position: relative;
-	height: 10px;
-}
-.v-ie7 .v-window-resizebox {
 	position: absolute;
-	float: none;
 	right: 0;
 }
-.v-ie7 .v-window-footer-noresize {
+.v-window div.v-window-footer-noresize {
 	height: 0;
 }
 .v-window-resizebox-disabled {
@@ -2224,15 +2212,15 @@ div.v-window-header {
 }
 
 /* ./WebContent/VAADIN/themes/runo/progressindicator/progressindicator.css */
-.v-progressindicator {
-	background: #dfe2e4 url(progressindicator/img/base.gif) repeat-x 0 1px;
-}
 .v-progressindicator-wrapper {
+	background: #dfe2e4 url(progressindicator/img/base.gif) repeat-x;
 	border: 1px solid #b6bbbc;
 }
-.v-progressindicator-disabled {
-	background: #dfe2e4 url(progressindicator/img/disabled.gif);
-	border: 1px solid #b6bbbc;
+.v-disabled .v-progressindicator-wrapper {
+	background-image: url(progressindicator/img/disabled.gif);
+}
+.v-progressindicator-indicator {
+	background: #f7f9f9 url(progressindicator/img/progress.png);
 }
 .v-progressindicator-indicator {
 	background: #f7f9f9 url(progressindicator/img/progress.png);
@@ -3126,7 +3114,7 @@ textarea.v-textarea-prompt {
 	border-top: none;
 	border-bottom: none;
 }
-.v-window-footer {
+.v-window div.v-window-footer {
 	height: 8px;
 	margin-left: 9px;
 	background: transparent url(window/img/bottom-right.png) no-repeat right top;
