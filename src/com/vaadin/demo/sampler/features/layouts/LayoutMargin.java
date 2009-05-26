@@ -22,7 +22,7 @@ public class LayoutMargin extends Feature {
                 + " customized using CSS - in this example, the right margin"
                 + " size is increased.<br/>Note that <i>margin</i>"
                 + " is the space around the layout as a whole, and"
-                + " <i>spacing</i> is the space between the component within"
+                + " <i>spacing</i> is the space between the components within"
                 + " the layout.";
     }
 

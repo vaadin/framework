@@ -39,7 +39,7 @@ public class TwinColumnSelect extends Feature {
     public NamedExternalResource[] getRelatedResources() {
         return new NamedExternalResource[] { new NamedExternalResource(
                 "Open Source Design Pattern Library; List Builder",
-                "http://www.uidesignpatterns.org/content/list-builder") };
+                "http://www.uidesignpatterns.org/designPatterns/List-Builder") };
     }
 
 }
