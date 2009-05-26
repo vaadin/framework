@@ -189,7 +189,10 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
         }// while
 
         // we might need to collapse the top-level menu
-        if (collapseItems) {
+        // Only needed if there is more than 1 top level item
+        // TODO and if width is defined
+        if (collapseItems && getItems().size() > 1) {
+
             int topLevelWidth = 0;
 
             int ourWidth = getOffsetWidth();
