@@ -22,6 +22,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 
+@SuppressWarnings("serial")
 public class PersonForm extends Form implements ClickListener {
 
 	private Button save = new Button("Save", (ClickListener) this);

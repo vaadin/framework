@@ -13,6 +13,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Window.Notification;
 
+@SuppressWarnings("serial")
 public class SearchView extends Panel {
 
 	private TextField tf;
@@ -24,13 +25,13 @@ public class SearchView extends Panel {
 	public SearchView(final AddressBookApplication app) {
 		this.app = app;
 		addStyleName("view");
-		
+
 		setCaption("Search contacts");
 		setSizeFull();
 
 		/* Use a FormLayout as main layout for this Panel */
 		FormLayout formLayout = new FormLayout();
-		setLayout(formLayout);
+		setContent(formLayout);
 
 		/* Create UI components */
 		tf = new TextField("Search term");

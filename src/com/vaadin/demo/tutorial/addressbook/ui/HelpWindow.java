@@ -3,6 +3,7 @@ package com.vaadin.demo.tutorial.addressbook.ui;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
 
+@SuppressWarnings("serial")
 public class HelpWindow extends Window {
 	private static final String HELP_HTML_SNIPPET = "This is "
 			+ "an application built during <strong><a href=\""

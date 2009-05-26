@@ -6,6 +6,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 
+@SuppressWarnings("serial")
 public class SharingOptions extends Window {
 	public SharingOptions() {
 		/*

@@ -4,6 +4,7 @@ import com.vaadin.demo.tutorial.addressbook.AddressBookApplication;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Tree;
 
+@SuppressWarnings("serial")
 public class NavigationTree extends Tree {
 	public static final Object SHOW_ALL = "Show all";
 	public static final Object SEARCH = "Search";

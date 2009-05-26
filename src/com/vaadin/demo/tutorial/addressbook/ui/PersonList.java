@@ -8,6 +8,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Table;
 
+@SuppressWarnings("serial")
 public class PersonList extends Table {
 	public PersonList(AddressBookApplication app) {
 		setSizeFull();

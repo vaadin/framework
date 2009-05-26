@@ -2,6 +2,7 @@ package com.vaadin.demo.tutorial.addressbook.data;
 
 import java.io.Serializable;
 
+@SuppressWarnings("serial")
 public class SearchFilter implements Serializable {
 
 	private final String term;

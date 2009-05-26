@@ -2,6 +2,7 @@ package com.vaadin.demo.tutorial.addressbook.data;
 
 import java.io.Serializable;
 
+@SuppressWarnings("serial")
 public class Person implements Serializable {
 	private String firstName = "";
 	private String lastName = "";

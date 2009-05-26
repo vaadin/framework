@@ -29,6 +29,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Window.Notification;
 
+@SuppressWarnings("serial")
 public class AddressBookApplication extends Application implements
 		ClickListener, ValueChangeListener, ItemClickListener {
 
@@ -72,7 +73,7 @@ public class AddressBookApplication extends Application implements
 		horizontalSplit.setSplitPosition(200, SplitPanel.UNITS_PIXELS);
 		horizontalSplit.setFirstComponent(tree);
 
-		getMainWindow().setLayout(layout);
+		getMainWindow().setContent(layout);
 	}
 
 	private HorizontalLayout createToolbar() {

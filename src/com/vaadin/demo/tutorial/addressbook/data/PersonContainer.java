@@ -5,6 +5,7 @@ import java.util.Random;
 
 import com.vaadin.data.util.BeanItemContainer;
 
+@SuppressWarnings("serial")
 public class PersonContainer extends BeanItemContainer<Person> implements
 		Serializable {
 
