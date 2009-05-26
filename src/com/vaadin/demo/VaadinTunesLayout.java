@@ -36,7 +36,8 @@ public class VaadinTunesLayout extends Application {
          */
 
         // Main (browser) window, needed in all Vaadin applications
-        final Window root = new Window("VaadinTunes");
+        VerticalLayout rootLayout = new VerticalLayout();
+        final Window root = new Window("VaadinTunes", rootLayout);
 
         /*
          * We'll attach the window to the browser view already here, so we won't
@@ -49,10 +50,10 @@ public class VaadinTunesLayout extends Application {
                         "This is an example of how you can do layouts in Vaadin.<br/>It is not a working sound player.",
                         Notification.TYPE_HUMANIZED_MESSAGE);
 
-        // Our root window contains one VerticalLayout by default, let's make
+        // Our root window contains one VerticalLayout, let's make
         // sure it's 100% sized, and remove unwanted margins
-        root.getContent().setSizeFull();
-        root.getLayout().setMargin(false);
+        rootLayout.setSizeFull();
+        rootLayout.setMargin(false);
 
         // Top area, containing playback and volume controls, play status, view
         // modes and search

@@ -20,7 +20,7 @@ public class ColorPicker extends AbstractField {
 
     /** The property value of the field is a String. */
     @Override
-    public Class getType() {
+    public Class<?> getType() {
         return String.class;
     }
 
@@ -55,6 +55,7 @@ public class ColorPicker extends AbstractField {
     }
 
     /** Deserialize changes received from client. */
+    @SuppressWarnings("unchecked")
     @Override
     public void changeVariables(Object source, Map variables) {
         // Sets the currently selected color

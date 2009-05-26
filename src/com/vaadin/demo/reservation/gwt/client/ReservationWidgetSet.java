@@ -13,7 +13,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 public class ReservationWidgetSet extends DefaultWidgetSet {
     @Override
     public Paintable createWidget(UIDL uidl) {
-        final Class type = resolveWidgetType(uidl);
+        final Class<?> type = resolveWidgetType(uidl);
         if (VGoogleMap.class == type) {
             return new VGoogleMap();
         } else if (VCalendarField.class == type) {
@@ -24,7 +24,7 @@ public class ReservationWidgetSet extends DefaultWidgetSet {
     }
 
     @Override
-    protected Class resolveWidgetType(UIDL uidl) {
+    protected Class<?> resolveWidgetType(UIDL uidl) {
         final String tag = uidl.getTag();
         if ("googlemap".equals(tag)) {
             return VGoogleMap.class;

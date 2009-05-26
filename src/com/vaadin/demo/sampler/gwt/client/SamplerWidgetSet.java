@@ -11,7 +11,7 @@ public class SamplerWidgetSet extends DefaultWidgetSet {
 
     @Override
     public Paintable createWidget(UIDL uidl) {
-        final Class classType = resolveWidgetType(uidl);
+        final Class<?> classType = resolveWidgetType(uidl);
         if (VGoogleAnalytics.class == classType) {
             return new VGoogleAnalytics();
         } else if (VCodeLabel.class == classType) {
@@ -24,7 +24,7 @@ public class SamplerWidgetSet extends DefaultWidgetSet {
     }
 
     @Override
-    protected Class resolveWidgetType(UIDL uidl) {
+    protected Class<?> resolveWidgetType(UIDL uidl) {
         final String tag = uidl.getTag();
         if ("googleanalytics".equals(tag)) {
             return VGoogleAnalytics.class;

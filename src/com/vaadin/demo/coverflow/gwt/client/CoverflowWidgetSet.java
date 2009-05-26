@@ -13,7 +13,7 @@ public class CoverflowWidgetSet extends DefaultWidgetSet {
     /** Creates a widget according to its class name. */
     @Override
     public Paintable createWidget(UIDL uidl) {
-        final Class classType = resolveWidgetType(uidl);
+        final Class<?> classType = resolveWidgetType(uidl);
         if (VCoverflow.class == classType) {
             return new VCoverflow();
         }
@@ -24,7 +24,7 @@ public class CoverflowWidgetSet extends DefaultWidgetSet {
 
     /** Resolves UIDL tag name to class . */
     @Override
-    protected Class resolveWidgetType(UIDL uidl) {
+    protected Class<?> resolveWidgetType(UIDL uidl) {
         final String tag = uidl.getTag();
         if ("cover".equals(tag)) {
             return VCoverflow.class;

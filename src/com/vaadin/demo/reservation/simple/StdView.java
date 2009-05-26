@@ -88,7 +88,7 @@ public class StdView extends VerticalLayout {
             add.setEnabled(false);
             reservations.setEnabled(false);
         } else {
-            List resource = new LinkedList();
+            List<Item> resource = new LinkedList<Item>();
             resource.add(resources.getItem(resources.getValue()));
             final Container res = application.getDb().getReservations(resource);
             reservations.setContainerDataSource(res);

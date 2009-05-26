@@ -49,8 +49,9 @@ public class FeatureView extends HorizontalLayout {
         addComponent(left);
         setExpandRatio(left, 1);
 
-        right = new Panel();
-        right.getLayout().setMargin(true, false, false, false);
+        VerticalLayout rightLayout = new VerticalLayout();
+        right = new Panel(rightLayout);
+        rightLayout.setMargin(true, false, false, false);
         right.setStyleName(Panel.STYLE_LIGHT);
         right.addStyleName("feature-info");
         right.setWidth("369px");
@@ -213,7 +214,7 @@ public class FeatureView extends HorizontalLayout {
                 caption.setWidth("100%");
                 rel.addComponent(caption);
                 rel.setMargin(false, false, true, false);
-                for (Class c : features) {
+                for (Class<? extends Feature> c : features) {
                     final Feature f = SamplerApplication.getFeatureFor(c);
                     if (f != null) {
                         String path = SamplerApplication.getPathFor(f);

@@ -18,7 +18,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 public class VCoverflow extends Composite implements Paintable {
     private String uidlId;
     protected ApplicationConnection client;
-    private ArrayList coverList = new ArrayList();
+    private ArrayList<HashMap<String, String>> coverList = new ArrayList<HashMap<String, String>>();
 
     private Object _selected;
     private boolean flashInited = false;
@@ -28,7 +28,7 @@ public class VCoverflow extends Composite implements Paintable {
     private String backgroundGradientEnd;
     private boolean colorChanged = false;
     private boolean sbVisibilityChanged = false;
-    private HashMap keyMap = new HashMap();
+    private HashMap<String, String> keyMap = new HashMap<String, String>();
 
     /**
      * Constructor
@@ -96,16 +96,16 @@ public class VCoverflow extends Composite implements Paintable {
         // should
         // be deleted.
 
-        ArrayList newList = new ArrayList();
+        ArrayList<HashMap<String, String>> newList = new ArrayList<HashMap<String, String>>();
 
         // Iterate through all option elements
-        for (final Iterator i = images.getChildIterator(); i.hasNext();) {
+        for (final Iterator<Object> i = images.getChildIterator(); i.hasNext();) {
             final UIDL imgUidl = (UIDL) i.next();
 
             // Make sure all required attributes exist
             if (imgUidl.hasAttribute("caption") && imgUidl.hasAttribute("key")
                     && imgUidl.hasAttribute("icon")) {
-                HashMap set = new HashMap();
+                HashMap<String, String> set = new HashMap<String, String>();
 
                 // Update the key map
                 keyMap.put(imgUidl.getStringAttribute("caption"), imgUidl
@@ -127,27 +127,26 @@ public class VCoverflow extends Composite implements Paintable {
         }
 
         // Deleted items
-        ArrayList intersectList = new ArrayList();
+        ArrayList<HashMap<String, String>> intersectList = new ArrayList<HashMap<String, String>>();
         intersectList.addAll(coverList);
         intersectList.removeAll(newList);
 
         if (flashInited) {
             for (int i = 0; i < intersectList.size(); i++) {
-                HashMap cover = (HashMap) intersectList.get(i);
-                removeCover(uidlId, cover.get("caption").toString());
+                HashMap<String, String> cover = intersectList.get(i);
+                removeCover(uidlId, cover.get("caption"));
             }
         }
 
         // Added items
-        intersectList = new ArrayList();
+        intersectList = new ArrayList<HashMap<String, String>>();
         intersectList.addAll(newList);
         intersectList.removeAll(coverList);
 
         if (flashInited) {
             for (int i = 0; i < intersectList.size(); i++) {
-                HashMap cover = (HashMap) intersectList.get(i);
-                addCover(uidlId, cover.get("caption").toString(), cover.get(
-                        "icon").toString());
+                HashMap<String, String> cover = intersectList.get(i);
+                addCover(uidlId, cover.get("caption"), cover.get("icon"));
             }
         }
 
@@ -189,8 +188,8 @@ public class VCoverflow extends Composite implements Paintable {
             return;
         }
 
-        client.updateVariable(uidlId, "selected", new String[] { keyMap.get(
-                coverId).toString() }, true);
+        client.updateVariable(uidlId, "selected", new String[] { keyMap
+                .get(coverId) }, true);
     }
 
     /**
@@ -201,23 +200,23 @@ public class VCoverflow extends Composite implements Paintable {
      *            id
      */
     public native void initializeMethods(String id) /*-{
-                var app = this;
-                
-                if($wnd.vaadin.coverflow == null)
-                	var coverflow = [];
-                else
-                	var coverflow = $wnd.vaadin.coverflow;
-                	
-                coverflow['getCovers_' + id] = function() {                
-                   	app.@com.vaadin.demo.coverflow.gwt.client.ui.VCoverflow::getCovers()();
-                };   
-                
-               	coverflow['setCurrent_' + id] = function(selected) {
-                   	app.@com.vaadin.demo.coverflow.gwt.client.ui.VCoverflow::setCover(Ljava/lang/String;)(selected);
-                };
-                
-                $wnd.vaadin.coverflow = coverflow;
-            }-*/;
+                                                 var app = this;
+                                                 
+                                                 if($wnd.vaadin.coverflow == null)
+                                                 	var coverflow = [];
+                                                 else
+                                                 	var coverflow = $wnd.vaadin.coverflow;
+                                                 	
+                                                 coverflow['getCovers_' + id] = function() {                
+                                                    	app.@com.vaadin.demo.coverflow.gwt.client.ui.VCoverflow::getCovers()();
+                                                 };   
+                                                 
+                                                	coverflow['setCurrent_' + id] = function(selected) {
+                                                    	app.@com.vaadin.demo.coverflow.gwt.client.ui.VCoverflow::setCover(Ljava/lang/String;)(selected);
+                                                 };
+                                                 
+                                                 $wnd.vaadin.coverflow = coverflow;
+                                             }-*/;
 
     /**
      * This function sends all covers to the flash. We cannot do this directly
@@ -226,14 +225,13 @@ public class VCoverflow extends Composite implements Paintable {
      * it's ready.
      */
     public void getCovers() {
-        // Loop through all stored coves
+        // Loop through all stored covers
         for (int i = 0; i < coverList.size(); i++) {
-            HashMap set = (HashMap) coverList.get(i);
+            HashMap<String, String> set = coverList.get(i);
 
             try {
                 // Add the cover
-                addCover(uidlId, set.get("caption").toString(), set.get("icon")
-                        .toString());
+                addCover(uidlId, set.get("caption"), set.get("icon"));
             } catch (Exception e) {
                 // Do not add covers lacking obligatory data
             }
@@ -259,14 +257,14 @@ public class VCoverflow extends Composite implements Paintable {
      * @param icon
      */
     public native void addCover(String id, String caption, String icon) /*-{   
-                try {
-                	    $doc['fxcoverflow' + id].addCover(caption.toString(), icon.toString());
-                    }
-                    catch(e) {
-                        $wnd.alert(e.message);
-                    }   
-                     	
-                }-*/;
+                                                 try {
+                                                 	    $doc['fxcoverflow' + id].addCover(caption.toString(), icon.toString());
+                                                     }
+                                                     catch(e) {
+                                                         $wnd.alert(e.message);
+                                                     }   
+                                                      	
+                                                 }-*/;
 
     /**
      * This function tells the flash which cover should be selected.
@@ -275,21 +273,21 @@ public class VCoverflow extends Composite implements Paintable {
      * @param key
      */
     public native void selectCover(String id, String key) /*-{    
-             	$doc["fxcoverflow" + id].selectCover(key.toString());
-             }-*/;
+                                              	$doc["fxcoverflow" + id].selectCover(key.toString());
+                                              }-*/;
 
     public native void setBackgroundColor(String id, String startGradient,
             String endGradient) /*-{    	
-                	$doc["fxcoverflow" + id].setBackgroundColor("0x" + startGradient.toString(), "0x" + endGradient.toString());
-            }-*/;
+                                                 	$doc["fxcoverflow" + id].setBackgroundColor("0x" + startGradient.toString(), "0x" + endGradient.toString());
+                                             }-*/;
 
     public native void toggleScrollbarVisibility(String id, boolean visibility) /*-{    	
-             	$doc["fxcoverflow" + id].toggleScrollbarVisibility(visibility);
-             }-*/;
+                                              	$doc["fxcoverflow" + id].toggleScrollbarVisibility(visibility);
+                                              }-*/;
 
     public native void removeCover(String id, String key) /*-{    	
-             	$doc["fxcoverflow" + id].removeCover(key);
-             }-*/;
+                                              	$doc["fxcoverflow" + id].removeCover(key);
+                                              }-*/;
 
     /**
      * Set the HTML coding of the flash movie. This isn't done until the

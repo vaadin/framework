@@ -15,6 +15,7 @@ import com.vaadin.terminal.gwt.server.PortletApplicationContext;
 import com.vaadin.terminal.gwt.server.PortletApplicationContext.PortletListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -45,7 +46,8 @@ public class SimpleReserver extends Application {
 
     @Override
     public void init() {
-        final Window w = new Window("Simple Reserver");
+        VerticalLayout rootLayout = new VerticalLayout();
+        final Window w = new Window("Simple Reserver", rootLayout);
         w.addStyleName("simplereserver");
 
         if (getContext() instanceof PortletApplicationContext) {
@@ -79,7 +81,7 @@ public class SimpleReserver extends Application {
             });
             w.setTheme("liferay");
             // portal will deal outer margins
-            w.getLayout().setMargin(false);
+            rootLayout.setMargin(false);
         } else {
             w.setTheme("reservr");
         }

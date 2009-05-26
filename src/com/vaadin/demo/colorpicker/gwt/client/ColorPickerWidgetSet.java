@@ -12,7 +12,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 public class ColorPickerWidgetSet extends DefaultWidgetSet {
     /** Resolves UIDL tag name to widget class. */
     @Override
-    protected Class resolveWidgetType(UIDL uidl) {
+    protected Class<?> resolveWidgetType(UIDL uidl) {
         final String tag = uidl.getTag();
         if ("colorpicker".equals(tag)) {
             return VColorPicker.class;
@@ -25,7 +25,7 @@ public class ColorPickerWidgetSet extends DefaultWidgetSet {
     /** Creates a widget instance according to its class object. */
     @Override
     public Paintable createWidget(UIDL uidl) {
-        final Class type = resolveWidgetType(uidl);
+        final Class<?> type = resolveWidgetType(uidl);
         if (VColorPicker.class == type) {
             return new VColorPicker();
         }

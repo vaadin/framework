@@ -35,11 +35,12 @@ public class VGoogleMap extends Composite implements Paintable {
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         widget.clearOverlays();
         LatLng pos = null;
-        for (final Iterator it = uidl.getChildIterator(); it.hasNext();) {
+        for (final Iterator<Object> it = uidl.getChildIterator(); it.hasNext();) {
             final UIDL u = (UIDL) it.next();
             if (u.getTag().equals("markers")) {
 
-                for (final Iterator m = u.getChildIterator(); m.hasNext();) {
+                for (final Iterator<Object> m = u.getChildIterator(); m
+                        .hasNext();) {
                     final UIDL umarker = (UIDL) m.next();
                     final String html = "<span>"
                             + umarker.getStringAttribute("html") + "</span>";

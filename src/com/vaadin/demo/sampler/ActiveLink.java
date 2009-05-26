@@ -11,7 +11,6 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 
 @SuppressWarnings("serial")
 public class ActiveLink extends Link {
@@ -20,7 +19,7 @@ public class ActiveLink extends Link {
 
     private static final Method LINK_FOLLOWED_METHOD;
 
-    private HashSet listeners = new HashSet();
+    private HashSet<LinkActivatedListener> listeners = new HashSet<LinkActivatedListener>();
 
     public ActiveLink() {
         super();
@@ -72,7 +71,7 @@ public class ActiveLink extends Link {
      * @param listener
      *            the Listener to be removed.
      */
-    public void removeListener(ClickListener listener) {
+    public void removeListener(LinkActivatedListener listener) {
         listeners.remove(listener);
         removeListener(ClickEvent.class, listener, LINK_FOLLOWED_METHOD);
         if (listeners.size() == 0) {
@@ -97,6 +96,7 @@ public class ActiveLink extends Link {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void changeVariables(Object source, Map variables) {
         super.changeVariables(source, variables);

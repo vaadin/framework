@@ -76,6 +76,7 @@ public class PortletDemo extends Application {
 
         }
 
+        @SuppressWarnings("unchecked")
         public void handleRenderRequest(RenderRequest request,
                 RenderResponse response) {
             // Portlet up-and-running, enable stuff

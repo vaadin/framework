@@ -14,13 +14,14 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 
+@SuppressWarnings("serial")
 public class SimpleAddressBook extends Application {
 
 	private static String[] fields = { "First Name", "Last Name", "Company",
 			"Mobile Phone", "Work Phone", "Home Phone", "Work Email",
 			"Home Email", "Street", "Zip", "City", "State", "Country" };
-	private static String[] visibleCols = new String[] { "Last Name", "First Name",
-	"Company" };
+	private static String[] visibleCols = new String[] { "Last Name",
+			"First Name", "Company" };
 
 	private Table contactList = new Table();
 	private Form contactEditor = new Form();
@@ -28,6 +29,7 @@ public class SimpleAddressBook extends Application {
 	private Button contactRemovalButton;
 	private IndexedContainer addressBookData = createDummyData();
 
+	@Override
 	public void init() {
 		initLayout();
 		initContactAddRemoveButtons();
@@ -51,16 +53,17 @@ public class SimpleAddressBook extends Application {
 		contactEditor.setImmediate(true);
 		bottomLeftCorner.setWidth("100%");
 		left.addComponent(bottomLeftCorner);
-	}	
+	}
 
 	private void initContactAddRemoveButtons() {
 		// New item button
-		bottomLeftCorner.addComponent(new Button("+", new Button.ClickListener() {
-			public void buttonClick(ClickEvent event) {
-				Object id = contactList.addItem();
-				contactList.setValue(id);
-			}
-		}));
+		bottomLeftCorner.addComponent(new Button("+",
+				new Button.ClickListener() {
+					public void buttonClick(ClickEvent event) {
+						Object id = contactList.addItem();
+						contactList.setValue(id);
+					}
+				}));
 
 		// Remove item button
 		contactRemovalButton = new Button("-", new Button.ClickListener() {
@@ -100,15 +103,17 @@ public class SimpleAddressBook extends Application {
 			sf.addListener(new Property.ValueChangeListener() {
 				public void valueChange(ValueChangeEvent event) {
 					addressBookData.removeContainerFilters(pn);
-					if (sf.toString().length() > 0 && !pn.equals(sf.toString()))
+					if (sf.toString().length() > 0 && !pn.equals(sf.toString())) {
 						addressBookData.addContainerFilter(pn, sf.toString(),
 								true, false);
+					}
 					getMainWindow().showNotification(
 							"" + addressBookData.size() + " matches found");
 				}
 			});
 		}
 	}
+
 	private static IndexedContainer createDummyData() {
 
 		String[] fnames = { "Peter", "Alice", "Joshua", "Mike", "Olivia",
@@ -120,8 +125,9 @@ public class SimpleAddressBook extends Application {
 
 		IndexedContainer ic = new IndexedContainer();
 
-		for (String p : fields)
+		for (String p : fields) {
 			ic.addContainerProperty(p, String.class, "");
+		}
 
 		for (int i = 0; i < 1000; i++) {
 			Object id = ic.addItem();

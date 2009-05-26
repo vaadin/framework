@@ -17,14 +17,14 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 
-@SuppressWarnings( { "serial", "unchecked" })
+@SuppressWarnings("serial")
 public class ResourceSelectorPanel extends Panel implements
         Button.ClickListener {
-    private final HashMap categoryLayouts = new HashMap();
-    private final HashMap categoryResources = new HashMap();
+    private final HashMap<String, Layout> categoryLayouts = new HashMap<String, Layout>();
+    private final HashMap<String, LinkedList<Item>> categoryResources = new HashMap<String, LinkedList<Item>>();
 
     // private Container allResources;
-    private LinkedList selectedResources = null;
+    private LinkedList<Item> selectedResources = null;
 
     public ResourceSelectorPanel(String caption) {
         super(caption, new HorizontalLayout());
@@ -38,7 +38,7 @@ public class ResourceSelectorPanel extends Panel implements
         categoryLayouts.clear();
         categoryResources.clear();
         if (resources != null && resources.size() > 0) {
-            for (final Iterator it = resources.getItemIds().iterator(); it
+            for (final Iterator<?> it = resources.getItemIds().iterator(); it
                     .hasNext();) {
                 final Item resource = resources.getItem(it.next());
                 // final Integer id = (Integer) resource.getItemProperty(
@@ -53,16 +53,15 @@ public class ResourceSelectorPanel extends Panel implements
                 rButton.setStyleName("link");
                 rButton.setDescription(description);
                 rButton.setData(resource);
-                Layout resourceLayout = (Layout) categoryLayouts.get(category);
-                LinkedList resourceList = (LinkedList) categoryResources
-                        .get(category);
+                Layout resourceLayout = categoryLayouts.get(category);
+                LinkedList<Item> resourceList = categoryResources.get(category);
                 if (resourceLayout == null) {
                     resourceLayout = new VerticalLayout();
                     resourceLayout.setSizeUndefined();
                     resourceLayout.setMargin(true);
                     addComponent(resourceLayout);
                     categoryLayouts.put(category, resourceLayout);
-                    resourceList = new LinkedList();
+                    resourceList = new LinkedList<Item>();
                     categoryResources.put(category, resourceList);
                     final Button cButton = new Button(category + " (any)", this);
                     cButton.setStyleName("important-link");
@@ -75,12 +74,12 @@ public class ResourceSelectorPanel extends Panel implements
         }
     }
 
-    // Selects one initial categore, inpractice randomly
+    // Selects one initial category, in practice randomly
     public void selectFirstCategory() {
         try {
-            final Object catId = categoryResources.keySet().iterator().next();
-            final LinkedList res = (LinkedList) categoryResources.get(catId);
-            final Layout l = (Layout) categoryLayouts.get(catId);
+            final String catId = categoryResources.keySet().iterator().next();
+            final LinkedList<Item> res = categoryResources.get(catId);
+            final Layout l = categoryLayouts.get(catId);
             final Button catB = (Button) l.getComponentIterator().next();
             setSelectedResources(res);
             catB.setStyleName("selected-link");
@@ -89,12 +88,12 @@ public class ResourceSelectorPanel extends Panel implements
         }
     }
 
-    private void setSelectedResources(LinkedList resources) {
+    private void setSelectedResources(LinkedList<Item> resources) {
         selectedResources = resources;
         fireEvent(new SelectedResourcesChangedEvent());
     }
 
-    public LinkedList getSelectedResources() {
+    public LinkedList<Item> getSelectedResources() {
         return selectedResources;
     }
 
@@ -104,12 +103,12 @@ public class ResourceSelectorPanel extends Panel implements
             final Object data = ((Button) source).getData();
             resetStyles();
             if (data instanceof Item) {
-                final LinkedList rlist = new LinkedList();
-                rlist.add(data);
+                final LinkedList<Item> rlist = new LinkedList<Item>();
+                rlist.add((Item) data);
                 setSelectedResources(rlist);
             } else {
                 final String category = (String) data;
-                final LinkedList resources = (LinkedList) categoryResources
+                final LinkedList<Item> resources = categoryResources
                         .get(category);
                 setSelectedResources(resources);
             }
@@ -119,10 +118,11 @@ public class ResourceSelectorPanel extends Panel implements
     }
 
     private void resetStyles() {
-        for (final Iterator it = categoryLayouts.values().iterator(); it
+        for (final Iterator<Layout> it = categoryLayouts.values().iterator(); it
                 .hasNext();) {
-            final Layout lo = (Layout) it.next();
-            for (final Iterator bit = lo.getComponentIterator(); bit.hasNext();) {
+            final Layout lo = it.next();
+            for (final Iterator<?> bit = lo.getComponentIterator(); bit
+                    .hasNext();) {
                 final Button b = (Button) bit.next();
                 if (b.getData() instanceof Item) {
                     b.setStyleName("link");

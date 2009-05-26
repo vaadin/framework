@@ -9,7 +9,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 
 import com.vaadin.Application;
 import com.vaadin.data.Container;
@@ -88,10 +87,11 @@ public class ReservationApplication extends Application {
                 this, "selectedResourcesChanged");
         reservationTab.addComponent(resourcePanel);
 
+        HorizontalLayout reservationLayout = new HorizontalLayout();
         final Panel reservationPanel = new Panel("Reservation",
-                new HorizontalLayout());
+                reservationLayout);
         reservationPanel.addStyleName(Panel.STYLE_LIGHT);
-        reservationPanel.getLayout().setMargin(true);
+        reservationLayout.setMargin(true);
         reservationTab.addComponent(reservationPanel);
 
         final VerticalLayout infoLayout = new VerticalLayout();
@@ -230,10 +230,10 @@ public class ReservationApplication extends Application {
     }
 
     private Item getActiveResource() throws ResourceNotAvailableException {
-        final List rids = resourcePanel.getSelectedResources();
+        final LinkedList<Item> rids = resourcePanel.getSelectedResources();
         if (rids != null && rids.size() > 0) {
-            for (final Iterator it = rids.iterator(); it.hasNext();) {
-                final Item resource = (Item) it.next();
+            for (final Iterator<Item> it = rids.iterator(); it.hasNext();) {
+                final Item resource = it.next();
                 final int id = ((Integer) resource.getItemProperty(
                         SampleDB.Resource.PROPERTY_ID_ID).getValue())
                         .intValue();
@@ -296,9 +296,9 @@ public class ReservationApplication extends Application {
             resourceName.setCaption(name);
             resourceName.setValue(desc);
             // Put all resources on map (may be many if category was selected)
-            final LinkedList srs = resourcePanel.getSelectedResources();
-            for (final Iterator it = srs.iterator(); it.hasNext();) {
-                resource = (Item) it.next();
+            final LinkedList<Item> srs = resourcePanel.getSelectedResources();
+            for (final Iterator<Item> it = srs.iterator(); it.hasNext();) {
+                resource = it.next();
                 name = (String) resource.getItemProperty(
                         SampleDB.Resource.PROPERTY_ID_NAME).getValue();
                 desc = (String) resource.getItemProperty(
