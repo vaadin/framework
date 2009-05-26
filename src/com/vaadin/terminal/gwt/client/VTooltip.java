@@ -9,7 +9,6 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ui.VOverlay;
 
 /**
@@ -29,14 +28,14 @@ public class VTooltip extends VOverlay {
     VErrorMessage em = new VErrorMessage();
     Element description = DOM.createDiv();
     private Paintable tooltipOwner;
-    private Element tooltipTargetElement;
 
     private boolean closing = false;
     private boolean opening = false;
     private ApplicationConnection ac;
     // Open next tooltip faster. Disabled after 2 sec of showTooltip-silence.
     private boolean justClosed = false;
-    private TooltipInfo visibleTooltip = null;
+    // If this is "additional" tooltip, this field contains the key for it
+    private Object tooltipKey;
 
     public VTooltip(ApplicationConnection client) {
         super(false, false, true);
@@ -98,25 +97,19 @@ public class VTooltip extends VOverlay {
                     sinkEvents(Event.ONMOUSEOVER | Event.ONMOUSEOUT);
                 }
             });
-            visibleTooltip = info;
         } else {
             hide();
-            visibleTooltip = null;
         }
     }
 
-    public void showTooltip(Paintable owner, Event event) {
-        Element targetElement = event.getEventTarget().cast();
-        if (closing && tooltipOwner == owner) {
-            TooltipInfo newToolTip = getTooltip(owner, targetElement);
-            if (newToolTip == visibleTooltip) {
-                // return to same tooltip, cancel closing
-                closeTimer.cancel();
-                closing = false;
-                justClosedTimer.cancel();
-                justClosed = false;
-                return;
-            }
+    public void showTooltip(Paintable owner, Event event, Object key) {
+        if (closing && tooltipOwner == owner && tooltipKey == key) {
+            // return to same tooltip, cancel closing
+            closeTimer.cancel();
+            closing = false;
+            justClosedTimer.cancel();
+            justClosed = false;
+            return;
         }
 
         if (closing) {
@@ -129,7 +122,7 @@ public class VTooltip extends VOverlay {
             showTimer.cancel();
         }
         tooltipOwner = owner;
-        tooltipTargetElement = targetElement;
+        tooltipKey = key;
 
         // Schedule timer for showing the tooltip according to if it was
         // recently closed or not.
@@ -153,7 +146,7 @@ public class VTooltip extends VOverlay {
     private Timer showTimer = new Timer() {
         @Override
         public void run() {
-            TooltipInfo info = getTooltip(tooltipOwner, tooltipTargetElement);
+            TooltipInfo info = ac.getTooltipTitleInfo(tooltipOwner, tooltipKey);
             if (null != info) {
                 show(info);
             }
@@ -197,38 +190,6 @@ public class VTooltip extends VOverlay {
 
     }
 
-    /**
-     * Returns the tooltip that should be shown for the element. Searches upward
-     * in the DOM tree for registered tooltips until the root of the Paintable
-     * is found. Returns null if no tooltip was found (none should be shown).
-     * 
-     * @param paintable
-     * @param element
-     * @return
-     */
-    private TooltipInfo getTooltip(Paintable paintable, Element element) {
-        /* Try to find registered tooltips */
-        while (element != null) {
-            TooltipInfo info = getTooltip(element);
-            if (info != null) {
-                return info;
-            }
-
-            if (ac.getPid(element) != null) {
-                // This is the Paintable root so we stop searching
-                break;
-            }
-
-            element = DOM.getParent(element);
-        }
-
-        /*
-         * No registered tooltips found. Still try the owner (needed if we are
-         * e.g. hovering caption and the owner is not a parent).
-         */
-        return getTooltip(((Widget) paintable).getElement());
-    }
-
     private int tooltipEventMouseX;
     private int tooltipEventMouseY;
 
@@ -238,11 +199,11 @@ public class VTooltip extends VOverlay {
 
     }
 
-    public void handleTooltipEvent(Event event, Paintable owner) {
+    public void handleTooltipEvent(Event event, Paintable owner, Object key) {
         final int type = DOM.eventGetType(event);
         if ((VTooltip.TOOLTIP_EVENTS & type) == type) {
             if (type == Event.ONMOUSEOVER) {
-                showTooltip(owner, event);
+                showTooltip(owner, event, key);
             } else if (type == Event.ONMOUSEMOVE) {
                 updatePosition(event);
             } else {
@@ -273,13 +234,4 @@ public class VTooltip extends VOverlay {
         }
     }
 
-    native TooltipInfo getTooltip(Element e)
-    /*-{
-          return e.vaadinTooltip;
-    }-*/;
-
-    native void registerTooltip(Element e, TooltipInfo tooltipInfo)
-    /*-{
-          e.vaadinTooltip = tooltipInfo;
-    }-*/;
 }

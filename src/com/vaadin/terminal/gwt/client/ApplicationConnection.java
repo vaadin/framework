@@ -1098,30 +1098,23 @@ public class ApplicationConnection {
             styleBuf.append(MODIFIED_CLASSNAME);
         }
 
+        TooltipInfo tooltipInfo = componentDetail.getTooltipInfo(null);
         // Update tooltip
-        if (uidl.hasAttribute(ATTRIBUTE_DESCRIPTION)
-                || uidl.hasAttribute(ATTRIBUTE_ERROR)) {
-            TooltipInfo tooltipInfo = new TooltipInfo();
-
-            if (uidl.hasAttribute(ATTRIBUTE_DESCRIPTION)) {
-                tooltipInfo.setTitle(uidl
-                        .getStringAttribute(ATTRIBUTE_DESCRIPTION));
-            }
-
-            if (uidl.hasAttribute(ATTRIBUTE_ERROR)) {
-                tooltipInfo.setErrorUidl(uidl.getErrors());
-            }
-
-            registerTooltip(component.getElement(), tooltipInfo);
+        if (uidl.hasAttribute(ATTRIBUTE_DESCRIPTION)) {
+            tooltipInfo
+                    .setTitle(uidl.getStringAttribute(ATTRIBUTE_DESCRIPTION));
         } else {
-            registerTooltip(component.getElement(), (TooltipInfo) null);
+            tooltipInfo.setTitle(null);
         }
 
         // add error classname to components w/ error
         if (uidl.hasAttribute(ATTRIBUTE_ERROR)) {
+            tooltipInfo.setErrorUidl(uidl.getErrors());
             styleBuf.append(" ");
             styleBuf.append(primaryName);
             styleBuf.append(ERROR_CLASSNAME_EXT);
+        } else {
+            tooltipInfo.setErrorUidl(null);
         }
 
         // add required style to required components
@@ -1539,8 +1532,16 @@ public class ApplicationConnection {
      * Updating TooltipInfo is done in updateComponent method.
      * 
      */
-    public TooltipInfo getTitleInfo(Paintable titleOwner) {
-        return tooltip.getTooltip(((Widget) titleOwner).getElement());
+    public TooltipInfo getTooltipTitleInfo(Paintable titleOwner, Object key) {
+        if (null == titleOwner) {
+            return null;
+        }
+        ComponentDetail cd = idToPaintableDetail.get(getPid(titleOwner));
+        if (null != cd) {
+            return cd.getTooltipInfo(key);
+        } else {
+            return null;
+        }
     }
 
     private final VTooltip tooltip = new VTooltip(this);
@@ -1556,7 +1557,25 @@ public class ApplicationConnection {
      * @param owner
      */
     public void handleTooltipEvent(Event event, Paintable owner) {
-        tooltip.handleTooltipEvent(event, owner);
+        tooltip.handleTooltipEvent(event, owner, null);
+
+    }
+
+    /**
+     * Component may want to delegate Tooltip handling to client. Layouts add
+     * Tooltip (description, errors) to caption, but some components may want
+     * them to appear one other elements too.
+     * 
+     * Events wanted by this handler are same as in Tooltip.TOOLTIP_EVENTS
+     * 
+     * @param event
+     * @param owner
+     * @param key
+     *            the key for tooltip if this is "additional" tooltip, null for
+     *            components "main tooltip"
+     */
+    public void handleTooltipEvent(Event event, Paintable owner, Object key) {
+        tooltip.handleTooltipEvent(event, owner, key);
 
     }
 
@@ -1632,16 +1651,33 @@ public class ApplicationConnection {
         return view;
     }
 
-    public void registerTooltip(Element e, String tooltip) {
-        if (tooltip == null || tooltip.equals("")) {
-            registerTooltip(e, (TooltipInfo) null);
-        } else {
-            registerTooltip(e, new TooltipInfo(tooltip));
-        }
-    }
-
-    public void registerTooltip(Element e, TooltipInfo tooltip) {
-        this.tooltip.registerTooltip(e, tooltip);
+    /**
+     * If component has several tooltips in addition to the one provided by
+     * {@link com.vaadin.ui.AbstractComponent}, component can register them with
+     * this method.
+     * <p>
+     * Component must also pipe events to
+     * {@link #handleTooltipEvent(Event, Paintable, Object)} method.
+     * <p>
+     * This method can also be used to deregister tooltips by using null as
+     * tooltip
+     * 
+     * @param paintable
+     *            Paintable "owning" this tooltip
+     * @param key
+     *            key assosiated with given tooltip. Can be any object. For
+     *            example a related dom element. Same key must be given for
+     *            {@link #handleTooltipEvent(Event, Paintable, Object)} method.
+     * 
+     * @param tooltip
+     *            the TooltipInfo object containing details shown in tooltip,
+     *            null if deregistering tooltip
+     */
+    public void registerTooltip(Paintable paintable, Object key,
+            TooltipInfo tooltip) {
+        ComponentDetail componentDetail = idToPaintableDetail
+                .get(getPid(paintable));
+        componentDetail.putAdditionalTooltip(key, tooltip);
     }
 
 }

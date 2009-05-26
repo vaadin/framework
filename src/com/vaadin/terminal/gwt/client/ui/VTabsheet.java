@@ -44,9 +44,10 @@ public class VTabsheet extends VTabsheetBase {
                 if (uidl.hasAttribute(ATTRIBUTE_ERROR)) {
                     tooltipInfo.setErrorUidl(uidl.getErrors());
                 }
-                client.registerTooltip(getElement(), tooltipInfo);
+                client.registerTooltip(VTabsheet.this, getElement(),
+                        tooltipInfo);
             } else {
-                client.registerTooltip(getElement(), "");
+                client.registerTooltip(VTabsheet.this, getElement(), null);
             }
 
             return super.updateCaption(uidl);
@@ -62,8 +63,7 @@ public class VTabsheet extends VTabsheetBase {
                 }
                 updateTabScroller();
             }
-
-            client.handleTooltipEvent(event, VTabsheet.this);
+            client.handleTooltipEvent(event, VTabsheet.this, getElement());
         }
 
         @Override
