@@ -8,6 +8,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.VLink;
 
+@SuppressWarnings("deprecation")
 public class VActiveLink extends VLink {
 
     String id;

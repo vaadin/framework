@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * A regular GWT component without integration with Vaadin.
  */
+@SuppressWarnings("deprecation")
 public class GwtColorPicker extends Composite implements ClickListener {
 
     /** Currently selected color name to give client-side feedback to the user. */
