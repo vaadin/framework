@@ -1,5 +1,6 @@
 package com.vaadin.tests.tickets;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -38,7 +39,7 @@ public class Ticket2998 extends Application {
     private WorkoutEditor editor = new WorkoutEditor(this);
     private VerticalLayout mainLayout;
 
-    public class Workout {
+    public class Workout implements Serializable {
         private Long id;
         private Date date = new Date();
         private String title = " -- new workout -- ";
