@@ -57,8 +57,7 @@
 	background: #eff0f1;
 }
 .v-table .v-selected {
-	background: #4d749f repeat-x;
-	background-image: url(../common/img/sel-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+	background: #4d749f url(../common/img/sel-bg.png) repeat-x; /* We can't include this in the sprite, since we don't know the row height */
 	color: #fff;
 	text-shadow: #3b5a7a 0 1px 0;
 }
