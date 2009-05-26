@@ -21,11 +21,11 @@ public class AccordionExample extends CustomComponent {
         for (int i = 0; i < 5; i++) {
             // Create a root component for a accordion tab
             VerticalLayout layout = new VerticalLayout();
-            accordion.addComponent(layout);
-
             // The accordion tab label is taken from the caption of the root
             // component. Notice that layouts can have a caption too.
             layout.setCaption("Tab " + (i + 1));
+
+            accordion.addComponent(layout);
 
             // Add some components in each accordion tab
             Label label = new Label("These are the contents of Tab " + (i + 1)
