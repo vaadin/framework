@@ -28,7 +28,7 @@ public class Ticket1924ThemeChanging extends com.vaadin.Application {
             boolean flag = false;
 
             public void buttonClick(ClickEvent event) {
-                if (flag = !flag) {
+                if (flag == !flag) {
                     main.setTheme("tests-tickets");
                 } else {
                     main.setTheme(null);
