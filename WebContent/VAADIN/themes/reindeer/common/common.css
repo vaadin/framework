@@ -22,7 +22,8 @@
 .v-filterselect-suggestpopup,
 .v-datefield-popup,
 .v-contextmenu,
-.v-Notification {
+.v-Notification,
+.v-menubar-submenu {
 	font-family: Arial, Helvetica, Tahoma, Verdana, sans-serif;
 	font-size: 12px;
 	line-height: normal;
@@ -48,7 +49,8 @@
 .v-sa .v-filterselect-suggestpopup,
 .v-sa .v-datefield-popup,
 .v-sa .v-contextmenu,
-.v-Notification {
+.v-Notification,
+.v-menubar-submenu {
 	font-family: Helvetica, Arial, "Lucida Grande", Geneva, Tahoma, Verdana, sans-serif;
 }
 /* Fonts on black background */

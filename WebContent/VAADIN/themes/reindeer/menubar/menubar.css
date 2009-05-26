@@ -1,0 +1,45 @@
+.v-menubar {
+	height: 23px;
+	overflow: hidden;
+	background: #323336 repeat-x;
+	background-image: url(img/bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+	color: #d1d3d6;
+	text-shadow: rgba(0,0,0,.9) 0 1px 0;
+}
+.v-menubar table {
+	margin-left: 8px;
+	height: 23px;
+}
+.v-menubar .menuitem {
+	padding: 3px 8px;
+	height: 17px;
+}
+.v-menubar-submenu {
+	background: #f8f8f9;
+	border: none;
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-o-border-radius: 3px;
+	overflow: hidden;
+	padding: 4px 0;
+}
+.v-menubar-submenu .menuitem {
+	padding: 1px 15px 1px 10px;
+	height: 16px;
+}
+.v-menubar .menuitem-selected,
+.v-menubar-submenu .menuitem-selected {
+	background: #4d749f repeat-x;
+	background-image: url(../common/img/sel-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+	color: #fff;
+	text-shadow: #3b5a7a 0 1px 0;
+}
+.v-menubar .menuitem-selected {
+	background-image: url(img/menu-sel-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+}
+
+/* Submenu icon (remove after #2849 is fixed) */
+.v-menubar-submenu .menuitem img[align="right"] {
+	margin-right: -15px;
+}
