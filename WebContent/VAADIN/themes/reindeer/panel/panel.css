@@ -58,3 +58,19 @@
 .v-ff2 .v-panel-caption .v-errorindicator  {
 	display: -moz-inline-stack;
 }
+
+/* Light style */
+.v-panel-caption-light,
+.v-panel-nocaption-light {
+	border: none;
+}
+.v-panel-content-light {
+	border: none;
+}
+.v-panel-content-light > div {
+	background: transparent;
+}
+.v-panel-deco-light {
+	height: 0;
+	border: none;
+}

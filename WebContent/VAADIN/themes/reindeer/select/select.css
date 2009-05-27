@@ -4,6 +4,9 @@
 	background-image: url(img/left.png); /** sprite-ref: verticals; sprite-margin-bottom: 1px */
 	padding-left: 2px;
 }
+.v-ie6 .v-filterselect {
+	background-image: url(img/left-ie6.png); /** sprite-ref: verticals; sprite-margin-bottom: 1px */
+}
 .v-app .v-filterselect-input,
 .v-window .v-filterselect-input,
 .v-popupview-popup .v-filterselect-input {
@@ -26,6 +29,9 @@
 }
 .v-filterselect-focus {
 	background-image: url(img/left-focus.png); /** sprite-ref: verticals; sprite-margin-bottom: 1px */
+}
+.v-ie6 .v-filterselect-focus {
+	background-image: url(img/left-focus-ie6.png); /** sprite-ref: verticals; sprite-margin-bottom: 1px */
 }
 .v-filterselect-focus .v-filterselect-input {
 	background-image: url(img/center-focus.png); /** sprite-ref: verticals; sprite-alignment: repeat */
@@ -203,6 +209,9 @@
 .black .v-filterselect {
 	background-image: url(img/left-black.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
 }
+.v-ie6 .black .v-filterselect {
+	background-image: url(img/left-black-ie6.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
+}
 .v-app .black .v-filterselect-input,
 .v-window .black .v-filterselect-input,
 .v-window-black .v-filterselect-input,
@@ -212,6 +221,9 @@
 }
 .black .v-filterselect-focus {
 	background-image: url(img/left-black-focus.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
+}
+.v-ie6 .black .v-filterselect-focus {
+	background-image: url(img/left-black-focus-ie6.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
 }
 .black .v-filterselect-focus .v-filterselect-input {
 	background-image: url(img/center-black-focus.png); /** sprite-ref: black-verticals; sprite-alignment: repeat; sprite-margin-bottom: 1px */
