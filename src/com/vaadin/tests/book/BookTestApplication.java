@@ -1022,7 +1022,22 @@ public class BookTestApplication extends com.vaadin.Application {
 	}
 
 	void example_TabSheet(Window main, String param) {
-		if (param.equals("icon")) {
+        if (param.equals("simple")) {
+            // Create an empty tab sheet.
+            TabSheet tabsheet = new TabSheet();
+            
+            // Create a component to put in a tab and put
+            // some content in it.
+            VerticalLayout myTab = new VerticalLayout();
+            myTab.addComponent(new Label("Hello, I am a Tab!"));
+            
+            // Add the component to the tab sheet as a new tab.
+            tabsheet.addTab(myTab);
+            
+            // Get the Tab holding the component and set its caption.
+            tabsheet.getTab(myTab).setCaption("My Tab");
+
+        } else if (param.equals("icon")) {
 			final TabSheet tabsheet = new TabSheet();
 
 			tabsheet.addTab(new Label("Contents of the first tab"),
