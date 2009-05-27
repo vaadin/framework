@@ -16,6 +16,11 @@
 	border: 1px solid #dcdcdc;
 	border-bottom: none;
 	border-top: none;
+	color: #222;
+	text-shadow: none;
+}
+.blue .v-panel-content {
+	border-color: #a8bcc5;
 }
 .v-sa .v-panel-content,
 .v-ff3 .v-panel-content {
@@ -31,6 +36,10 @@
 	border-top: 1px solid #bebebe;
 	background: #e2e2e2;
 	overflow: hidden;
+}
+.blue .v-panel-deco {
+	border-color: #92a3ac;
+	background: #adc2cd;
 }
 .v-sa .v-panel-deco,
 .v-ff3 .v-panel-deco {

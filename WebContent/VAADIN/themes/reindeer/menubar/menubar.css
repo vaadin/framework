@@ -43,3 +43,6 @@
 .v-menubar-submenu .menuitem img[align="right"] {
 	margin-right: -15px;
 }
+.v-ie .v-menubar-submenu .menuitem img[align="right"] {
+	margin-top: -14px;
+}
