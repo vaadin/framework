@@ -91,7 +91,7 @@
 }
 .v-tabsheet-scrollerNext-disabled,
 .v-tabsheet-scrollerNext-disabled:active {
-	background-image: url(img/tab-next-disabled.png); /** sprite-ref: verticals */
+	background-image: url(img/tab-next-disabled.png); /** sprite-ref: verticals; sprite-margin-bottom: 1px */
 	opacity: 1;
 	filter: none;
 }
@@ -110,4 +110,96 @@
 }
 .black .v-tabsheet-tabitem-selected {
 	color: #c9ccce;
+}
+
+
+
+/* Framed style */
+.v-tabsheet-framed .v-tabsheet-tabitemcell,
+.v-tabsheet-framed .v-tabsheet-spacertd {
+	height: 32px;
+	padding: 0;
+}
+.v-tabsheet-framed .v-tabsheet-tabitemcell {
+	background: no-repeat;
+	background-image: url(img/framed/tab-left.png); /** sprite-ref: verticals */
+	padding: 0 0 0 3px;
+}
+.v-tabsheet-framed .v-tabsheet-tabitemcell-first {
+	padding-left: 10px;
+	background-image: url(img/framed/tab-first-left.png); /** sprite-ref: verticals */
+}
+.v-tabsheet-framed .v-tabsheet-tabitem,
+.v-tabsheet-framed .v-tabsheet-spacertd div {
+	border: none;
+	height: 32px;
+	background: transparent repeat-x;
+	background-image: url(img/framed/tab-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+	padding: 0;
+	color: #222;
+	text-shadow: #fff 0 1px 0;
+}
+.v-tabsheet-framed .v-tabsheet-tabitem .v-caption {
+	border: none;
+	height: 23px;
+	background: no-repeat right top;
+	background-image: url(img/framed/tab-right.png); /** sprite-ref: verticals; sprite-alignment: right */
+	padding: 9px 8px 0 6px;
+}
+.v-tabsheet-framed .v-tabsheet-tabitem .v-captiontext {
+	height: 16px;
+}
+.v-tabsheet-framed .v-tabsheet-tabitemcell-selected {
+	background-image: url(img/framed/tab-left-sel.png); /** sprite-ref: verticals */
+}
+.v-tabsheet-framed .v-tabsheet-tabitemcell-selected-first {
+	background-image: url(img/framed/tab-first-left-sel.png); /** sprite-ref: verticals */
+}
+.v-tabsheet-framed .v-tabsheet-tabitem-selected {
+	background-image: url(img/framed/tab-bg-sel.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+	color: #232930;
+}
+.v-tabsheet-framed .v-tabsheet-tabitem-selected .v-caption {
+	background-image: url(img/framed/tab-right-sel.png); /** sprite-ref: verticals; sprite-alignment: right */
+}
+.v-tabsheet-framed .v-tabsheet-spacertd div {
+	margin-right: 4px;
+}
+.v-tabsheet-framed .v-tabsheet-spacertd {
+	background: transparent no-repeat right top;
+	background-image: url(img/framed/tab-spacer-right.png); /** sprite-ref: verticals; sprite-alignment: right */
+}
+.v-tabsheet-content-framed {
+	border: 1px solid #dcdcdc;
+	border-bottom: none;
+	border-top: none;
+}
+.v-tabsheet-content-framed .v-tabsheet-tabsheetpanel {
+	background: #fff;
+}
+.v-sa .v-tabsheet-content-framed,
+.v-ff3 .v-tabsheet-content-framed {
+	border-color: rgba(0,0,0,.1);
+}
+.v-tabsheet-deco-framed {
+	height: 1px;
+	border-top: 1px solid #bebebe;
+	background: #e2e2e2;
+	overflow: hidden;
+}
+.v-sa .v-tabsheet-deco-framed,
+.v-ff3 .v-tabsheet-deco-framed {
+	border-top-color: rgba(0,0,0,.1);
+	background: rgba(0,0,0,.08);
+}
+.v-tabsheet-framed .v-tabsheet-scroller {
+	height: 31px;
+	margin-top: -31px;
+	padding-right: 3px;
+	border-right: 1px solid #afafaf;
+	position: relative;
+	float: right;
+}
+.v-tabsheet-framed .v-tabsheet-scroller button {
+	margin-top: 7px;
 }

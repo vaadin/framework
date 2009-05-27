@@ -65,6 +65,9 @@
 	-o-border-radius: 3px;
 	overflow: hidden;
 }
+.v-filterselect-suggestmenu {
+	margin: 4px 0;
+}
 .v-filterselect-suggestmenu .gwt-MenuItem {
 	padding: 1px 8px;
 	height: 16px;
@@ -89,6 +92,11 @@
 	height: 11px;
 	width: 100%;
 	background: transparent;
+	margin-bottom: -4px;
+}
+.v-filterselect-nextpage,
+.v-filterselect-nextpage-off {
+	margin: -4px 0 0;
 }
 .v-filterselect-nextpage:hover {
 	background-repeat: repeat-x;
@@ -218,14 +226,14 @@
 	background-image: url(img/right-black-focus.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
 }
 .black .v-filterselect-focus .v-filterselect-button:hover {
-	background-image: url(img/right-black-focus-hover.png); /** sprite-ref: verticals; sprite-margin-bottom: 1px */
+	background-image: url(img/right-black-focus-hover.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
 }
 .black .v-filterselect-focus .v-filterselect-button:active {
 	background-image: url(img/right-black-focus-pressed.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
 }
 .black .v-disabled .v-filterselect-button:hover,
 .black .v-readonly .v-filterselect-button:hover {
-	background-image: url(img/right-black.png); /** sprite-ref: verticals; sprite-margin-bottom: 1px */
+	background-image: url(img/right-black.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
 }
 .black .v-filterselect-prompt .v-filterselect-input {
 	color: #5f6366;

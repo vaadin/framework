@@ -9,6 +9,7 @@
 	background-image: url(img/bg.png); /** sprite-ref: verticals; sprite-alignment: repeat; sprite-margin-bottom: 22px */
 	border-radius: 3px;
 	-moz-border-radius: 3px;
+	margin: 0;
 }
 /* Need more specific selector because of #2384 fixes in base/common/common.css */
 .v-app input.v-textfield {

@@ -16,11 +16,15 @@
 	border: 1px solid #dcdcdc;
 	border-bottom: none;
 	border-top: none;
-	background: #fff;
 }
 .v-sa .v-panel-content,
 .v-ff3 .v-panel-content {
 	border-color: rgba(0,0,0,.1);
+}
+.v-panel-content > div,
+.v-ie6 .v-panel-content {
+	background: #fff;
+	min-height: 100%;
 }
 .v-panel-deco {
 	height: 1px;
