@@ -14,7 +14,9 @@
 	background: #fff url(main-bg.png) repeat-x;
 }
 
-.v-app-SamplerApplication .topbar .logo {
+.v-app-SamplerApplication .topbar .logo,
+.v-app-SamplerApplication .topbar .logo:focus,
+.v-app-SamplerApplication .topbar .logo:active {
 	width: 167px;
 	height: 44px;
 	margin: 0;
@@ -22,6 +24,7 @@
 	background: transparent url(sampler.png) no-repeat;
 	overflow: hidden;
 	border: none;
+	outline: none;
 }
 
 .v-app-SamplerApplication .topbar .logo img {
@@ -115,6 +118,7 @@
 	text-decoration: underline;
 }
 .v-app-SamplerApplication .v-horizontallayout-segment .v-button,
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button.v-disabled,
 .v-app-SamplerApplication .v-horizontallayout-segment .v-popupview {
 	width: 30px;
 	height: 24px;
@@ -135,6 +139,7 @@
 }
 .v-app-SamplerApplication .v-horizontallayout-segment .v-button-next:active,
 .v-app-SamplerApplication .v-horizontallayout-segment .v-button-next.v-pressed,
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button-next.v-disabled,
 .v-app-SamplerApplication .v-horizontallayout-segment .v-button-tree-switch:active,
 .v-app-SamplerApplication .v-horizontallayout-segment .v-button-tree-switch.v-pressed {
 	background-position: right bottom;
@@ -144,7 +149,8 @@
 }
 .v-app-SamplerApplication .v-horizontallayout-segment .v-button span,
 .v-app-SamplerApplication .v-horizontallayout-segment .v-popupview span,
-.v-app-SamplerApplication .v-horizontallayout-segment .v-button.v-pressed span {
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button.v-pressed span,
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button.v-disabled span {
 	display: block;
 	height: 24px;
 	background-repeat: no-repeat;
@@ -159,11 +165,13 @@
 	background-position: 50% 40%;
 }
 .v-app-SamplerApplication .v-horizontallayout-segment .v-button-previous span,
-.v-app-SamplerApplication .v-horizontallayout-segment .v-button-previous.v-pressed span {
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button-previous.v-pressed span,
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button-previous.v-disabled span {
 	background-image: url(prev.png);
 }
 .v-app-SamplerApplication .v-horizontallayout-segment .v-button-next span,
-.v-app-SamplerApplication .v-horizontallayout-segment .v-button-next.v-pressed span {
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button-next.v-pressed span,
+.v-app-SamplerApplication .v-horizontallayout-segment .v-button-next.v-disabled span {
 	background-image: url(next.png);
 }
 .v-popupview-popup-quickjump {
@@ -445,24 +453,28 @@
 .v-app-SamplerApplication .v-link-showcode {
 	margin-left: 3px;
 }
-.v-app-SamplerApplication .v-button-showcode,
+.v-app-SamplerApplication div > .v-button-showcode,
+.v-app-SamplerApplication div > .v-button-showcode:active,
+.v-app-SamplerApplication div > .v-button-showcode:focus,
 .v-app-SamplerApplication .v-link-showcode {
 	font-family: arial, helvetica, verdana, sans-serif;
 	display: inline;
 	font-size: 12px;
 	line-height: 20px;
 	height: 20px;
+	margin-right: 3px;
 }
 .v-sa .v-app-SamplerApplication .v-button-showcode,
 .v-sa .v-app-SamplerApplication .v-link-showcode {
 	font-family: helvetica, arial, verdana, sans-serif;
 }
-.v-app-SamplerApplication .v-button-showcode span,
+.v-app-SamplerApplication div > .v-button-showcode.v-button-link span,
 .v-app-SamplerApplication .v-link-showcode span {
 	color: #8b8e91;
 	text-decoration: none;
 }
-.v-app-SamplerApplication .v-button-showcode:hover span,
+.v-app-SamplerApplication div > .v-button-showcode:hover span,
+.v-app-SamplerApplication div > .v-button-showcode:active span,
 .v-app-SamplerApplication .v-link-showcode:hover span {
 	color: #62696f;
 	text-decoration: underline;
