@@ -825,7 +825,7 @@ div.v-progressindicator-indeterminate-disabled {
 	border: 1px solid #eee;
 }
 .v-filterselect-suggestmenu table {
-	border-collapse: collapse;
+	border-spacing: 0;
 	border: none;
 }
 .v-filterselect-suggestmenu .gwt-MenuItem {
@@ -2307,6 +2307,9 @@ div.v-tree-node-leaf {
 	padding: 1px 6px;
 	cursor: pointer;
 	height: 18px;
+}
+.v-ff .v-filterselect-suggestmenu .gwt-MenuItem {
+	height: 20px;
 }
 .v-filterselect-suggestmenu .gwt-MenuItem .v-icon {
 	margin-right: 3px;

@@ -825,7 +825,7 @@ div.v-progressindicator-indeterminate-disabled {
 	border: 1px solid #eee;
 }
 .v-filterselect-suggestmenu table {
-	border-collapse: collapse;
+	border-spacing: 0;
 	border: none;
 }
 .v-filterselect-suggestmenu .gwt-MenuItem {

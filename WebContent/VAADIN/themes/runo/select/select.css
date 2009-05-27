@@ -73,6 +73,9 @@
 	cursor: pointer;
 	height: 18px;
 }
+.v-ff .v-filterselect-suggestmenu .gwt-MenuItem {
+	height: 20px;
+}
 .v-filterselect-suggestmenu .gwt-MenuItem .v-icon {
 	margin-right: 3px;
 }

@@ -76,6 +76,9 @@
 	-webkit-user-select: none;
 	cursor: default;
 }
+.v-ff .v-filterselect-suggestmenu .gwt-MenuItem {
+	height: 18px;
+}
 .v-filterselect-suggestmenu .gwt-MenuItem .v-icon {
 	margin-right: 3px;
 }

@@ -825,7 +825,7 @@ div.v-progressindicator-indeterminate-disabled {
 	border: 1px solid #eee;
 }
 .v-filterselect-suggestmenu table {
-	border-collapse: collapse;
+	border-spacing: 0;
 	border: none;
 }
 .v-filterselect-suggestmenu .gwt-MenuItem {
@@ -3062,6 +3062,9 @@ td.v-datefield-calendarpanel-nextyear {
 	-moz-user-select: none;
 	-webkit-user-select: none;
 	cursor: default;
+}
+.v-ff .v-filterselect-suggestmenu .gwt-MenuItem {
+	height: 18px;
 }
 .v-filterselect-suggestmenu .gwt-MenuItem .v-icon {
 	margin-right: 3px;
