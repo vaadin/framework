@@ -114,16 +114,17 @@
 
 
 
-/* Framed style */
+/**
+ * Framed style ---------------
+ */
 .v-tabsheet-framed .v-tabsheet-tabitemcell,
 .v-tabsheet-framed .v-tabsheet-spacertd {
 	height: 32px;
-	padding: 0;
 }
 .v-tabsheet-framed .v-tabsheet-tabitemcell {
 	background: no-repeat;
 	background-image: url(img/framed/tab-left.png); /** sprite-ref: verticals */
-	padding: 0 0 0 3px;
+	padding-left: 3px;
 }
 .v-tabsheet-framed .v-tabsheet-tabitemcell-first {
 	padding-left: 10px;
@@ -211,4 +212,62 @@
 }
 .v-tabsheet-framed .v-tabsheet-scroller button {
 	margin-top: 7px;
+}
+
+
+
+
+/**
+ * Bar style ---------------
+ */
+.v-tabsheet-bar .v-tabsheet-tabitemcell,
+.v-tabsheet-bar .v-tabsheet-spacertd {
+	height: 20px;
+}
+.v-tabsheet-bar .v-tabsheet-tabitemcell {
+	background: no-repeat;
+	background-image: url(img/bar/tab-left.png); /** sprite-ref: verticals */
+	padding-left: 3px;
+}
+.v-tabsheet-bar .v-tabsheet-tabitemcell-first {
+	padding-left: 6px;
+	background-image: url(img/bar/tab-first-left.png); /** sprite-ref: verticals */
+}
+.v-tabsheet-bar .v-tabsheet-tabitem,
+.v-tabsheet-bar .v-tabsheet-spacertd div {
+	border: none;
+	height: 20px;
+	background: transparent repeat-x;
+	background-image: url(img/bar/tab-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+	padding: 0;
+	color: #222;
+	text-shadow: #fff 0 1px 0;
+	font-size: 11px;
+}
+.v-tabsheet-bar .v-tabsheet-tabitem .v-caption {
+	border: none;
+	height: 18px;
+	background: no-repeat right top;
+	background-image: url(img/bar/tab-right.png); /** sprite-ref: verticals; sprite-alignment: right */
+	padding: 2px 12px 0 10px;
+}
+.v-tabsheet-bar .v-tabsheet-tabitem .v-captiontext {
+	height: 16px;
+	line-height: 16px;
+}
+.v-tabsheet-bar .v-tabsheet-tabitemcell-selected {
+	background-image: url(img/bar/tab-left-sel.png); /** sprite-ref: verticals */
+}
+.v-tabsheet-bar .v-tabsheet-tabitemcell-selected-first {
+	background-image: url(img/bar/tab-first-left-sel.png); /** sprite-ref: verticals */
+}
+.v-tabsheet-bar .v-tabsheet-tabitem-selected {
+	background-image: url(img/bar/tab-bg-sel.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+	color: #232930;
+}
+.v-tabsheet-bar .v-tabsheet-tabitem-selected .v-caption {
+	background-image: url(img/bar/tab-right-sel.png); /** sprite-ref: verticals; sprite-alignment: right */
+}
+.v-tabsheet-bar .v-tabsheet-scroller {
+	margin-top: -19px;
 }

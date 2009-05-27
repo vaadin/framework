@@ -3,4 +3,22 @@
 	border-radius: 4px
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
+	font-size: 100%;
+	background: #babcbe;
+}
+.v-Notification.warning {
+	background: #f4a100;
+}
+.v-Notification.error {
+	background: #d82000;
+}
+.v-Notification.tray {
+	margin: 0 5px 5px 0;
+	background: #16181a;
+}
+.v-Notification.tray h1 {
+	font-size: 14px;
+}
+.v-Notification.tray p {
+	font-size: 12px;
 }

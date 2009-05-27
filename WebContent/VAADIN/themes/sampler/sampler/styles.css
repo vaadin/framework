@@ -341,6 +341,9 @@
 	background: transparent url(info-bubble-top.png) no-repeat 0 -44px;
 	border: none;
 }
+.v-app-SamplerApplication .feature-info .v-panel-content > div {
+	background: transparent;
+}
 .v-app-SamplerApplication .v-panel-deco-feature-info {
 	height: 28px;
 	background: transparent url(info-bubble-bottom.png);
