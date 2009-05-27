@@ -93,9 +93,9 @@ public class VTabsheet extends VTabsheetBase {
 
     class TabBar extends ComplexPanel implements ClickListener {
 
-        private Element tr = DOM.createTR();
+        private final Element tr = DOM.createTR();
 
-        private Element spacerTd = DOM.createTD();
+        private final Element spacerTd = DOM.createTD();
 
         TabBar() {
             Element el = DOM.createTable();
@@ -140,12 +140,25 @@ public class VTabsheet extends VTabsheetBase {
         }
 
         public void selectTab(int index) {
-            Widget newSelected = getWidget(index);
-            Widget.setStyleName(DOM.getParent(newSelected.getElement()),
-                    CLASSNAME + "-tabitem-selected", true);
+            final String classname = CLASSNAME + "-tabitem-selected";
+            String classname2 = CLASSNAME + "-tabitemcell-selected"
+                    + (index == 0 ? "-first" : "");
+
+            final Widget newSelected = getWidget(index);
+            final com.google.gwt.dom.client.Element div = newSelected
+                    .getElement().getParentElement();
+
+            Widget.setStyleName(div, classname, true);
+            Widget.setStyleName(div.getParentElement(), classname2, true);
+
             if (oldSelected != null && oldSelected != newSelected) {
-                Widget.setStyleName(DOM.getParent(oldSelected.getElement()),
-                        CLASSNAME + "-tabitem-selected", false);
+                classname2 = CLASSNAME + "-tabitemcell-selected"
+                        + (getWidgetIndex(oldSelected) == 0 ? "-first" : "");
+                final com.google.gwt.dom.client.Element divOld = oldSelected
+                        .getElement().getParentElement();
+                Widget.setStyleName(divOld, classname, false);
+                Widget.setStyleName(divOld.getParentElement(), classname2,
+                        false);
             }
             oldSelected = newSelected;
         }
@@ -229,7 +242,7 @@ public class VTabsheet extends VTabsheetBase {
 
     private boolean waitingForResponse;
 
-    private RenderInformation renderInformation = new RenderInformation();
+    private final RenderInformation renderInformation = new RenderInformation();
 
     /**
      * Previous visible widget is set invisible with CSS (not display: none, but
@@ -239,6 +252,8 @@ public class VTabsheet extends VTabsheetBase {
     private Widget previousVisibleWidget;
 
     private boolean rendering = false;
+
+    private String currentStyle;
 
     private void onTabSelected(final int tabIndex) {
         if (disabled || waitingForResponse) {
@@ -355,39 +370,13 @@ public class VTabsheet extends VTabsheetBase {
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         rendering = true;
 
+        // Handle stylename changes before generics (might affect size
+        // calculations)
+        handleStyleNames(uidl);
+
         super.updateFromUIDL(uidl, client);
         if (cachedUpdate) {
             return;
-        }
-
-        // Add proper stylenames for all elements (easier to prevent unwanted
-        // style inheritance)
-        if (uidl.hasAttribute("style")) {
-            final String[] styles = uidl.getStringAttribute("style").split(" ");
-            final String contentBaseClass = CLASSNAME + "-content";
-            String contentClass = contentBaseClass;
-            final String decoBaseClass = CLASSNAME + "-deco";
-            String decoClass = decoBaseClass;
-            for (int i = 0; i < styles.length; i++) {
-                tb.addStyleDependentName(styles[i]);
-                contentClass += " " + contentBaseClass + "-" + styles[i];
-                decoClass += " " + decoBaseClass + "-" + styles[i];
-            }
-            DOM.setElementProperty(contentNode, "className", contentClass);
-            DOM.setElementProperty(deco, "className", decoClass);
-        } else {
-            tb.setStyleName(CLASSNAME + "-tabs");
-            DOM.setElementProperty(contentNode, "className", CLASSNAME
-                    + "-content");
-            DOM.setElementProperty(deco, "className", CLASSNAME + "-deco");
-        }
-
-        if (uidl.hasAttribute("hidetabs")) {
-            tb.setVisible(false);
-            addStyleName(CLASSNAME + "-hidetabs");
-        } else {
-            tb.setVisible(true);
-            removeStyleName(CLASSNAME + "-hidetabs");
         }
 
         // tabs; push or not
@@ -425,6 +414,43 @@ public class VTabsheet extends VTabsheetBase {
 
         waitingForResponse = false;
         rendering = false;
+    }
+
+    private void handleStyleNames(UIDL uidl) {
+        // Add proper stylenames for all elements (easier to prevent unwanted
+        // style inheritance)
+        if (uidl.hasAttribute("style")) {
+            final String style = uidl.getStringAttribute("style");
+            if (currentStyle != style) {
+                currentStyle = style;
+                final String[] styles = style.split(" ");
+                final String contentBaseClass = CLASSNAME + "-content";
+                String contentClass = contentBaseClass;
+                final String decoBaseClass = CLASSNAME + "-deco";
+                String decoClass = decoBaseClass;
+                for (int i = 0; i < styles.length; i++) {
+                    tb.addStyleDependentName(styles[i]);
+                    contentClass += " " + contentBaseClass + "-" + styles[i];
+                    decoClass += " " + decoBaseClass + "-" + styles[i];
+                }
+                DOM.setElementProperty(contentNode, "className", contentClass);
+                DOM.setElementProperty(deco, "className", decoClass);
+                borderW = -1;
+            }
+        } else {
+            tb.setStyleName(CLASSNAME + "-tabs");
+            DOM.setElementProperty(contentNode, "className", CLASSNAME
+                    + "-content");
+            DOM.setElementProperty(deco, "className", CLASSNAME + "-deco");
+        }
+
+        if (uidl.hasAttribute("hidetabs")) {
+            tb.setVisible(false);
+            addStyleName(CLASSNAME + "-hidetabs");
+        } else {
+            tb.setVisible(true);
+            removeStyleName(CLASSNAME + "-hidetabs");
+        }
     }
 
     private void updateDynamicWidth() {
@@ -827,7 +853,7 @@ public class VTabsheet extends VTabsheetBase {
         return borderW;
     }
 
-    private RenderSpace renderSpace = new RenderSpace(0, 0, true);
+    private final RenderSpace renderSpace = new RenderSpace(0, 0, true);
 
     public RenderSpace getAllocatedSpace(Widget child) {
         // All tabs have equal amount of space allocated
