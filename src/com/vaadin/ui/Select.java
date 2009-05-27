@@ -137,6 +137,8 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
                     && getNullSelectionItemId() == null ? 0 : 1)];
         }
 
+        target.addAttribute("pagelength", pageLength);
+
         target.addAttribute("filteringmode", getFilteringMode());
 
         // Paints the options and create array of selected id keys

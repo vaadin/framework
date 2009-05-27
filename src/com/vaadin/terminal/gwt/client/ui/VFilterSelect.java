@@ -141,7 +141,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             topPosition += tb.getOffsetHeight();
             setPopupPosition(x, topPosition);
 
-            final int first = currentPage * PAGELENTH
+            final int first = currentPage * pageLength
                     + (nullSelectionAllowed && currentPage > 0 ? 0 : 1);
             final int last = first + currentSuggestions.size() - 1;
             final int matches = totalSuggestions
@@ -158,7 +158,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             }
             // We don't need to show arrows or statusbar if there is only one
             // page
-            if (matches <= PAGELENTH) {
+            if (matches <= pageLength) {
                 setPagingEnabled(false);
             } else {
                 setPagingEnabled(true);
@@ -290,7 +290,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             menu.setHeight("");
             if (currentPage > 0) {
                 // fix height to avoid height change when getting to last page
-                menu.fixHeightTo(PAGELENTH);
+                menu.fixHeightTo(pageLength);
             }
             offsetHeight = getOffsetHeight();
 
@@ -501,7 +501,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
     private static final String CLASSNAME = "v-filterselect";
 
-    public static final int PAGELENTH = 10;
+    protected int pageLength = 10;
 
     private final FlowPanel panel = new FlowPanel();
 
@@ -591,7 +591,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     }
 
     public boolean hasNextPage() {
-        if (totalMatches > (currentPage + 1) * PAGELENTH) {
+        if (totalMatches > (currentPage + 1) * pageLength) {
             return true;
         } else {
             return false;
@@ -657,6 +657,10 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
         currentPage = uidl.getIntVariable("page");
 
+        if (uidl.hasAttribute("pagelength")) {
+            pageLength = uidl.getIntAttribute("pagelength");
+        }
+
         if (uidl.hasAttribute(ATTR_INPUTPROMPT)) {
             // input prompt changed from server
             inputPrompt = uidl.getStringAttribute(ATTR_INPUTPROMPT);
@@ -716,7 +720,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 // we're paging w/ arrows
                 if (lastIndex == 0) {
                     // going up, select last item
-                    int lastItem = PAGELENTH - 1;
+                    int lastItem = pageLength - 1;
                     List items = suggestionPopup.menu.getItems();
                     /*
                      * The first page can contain less than 10 items if the null
