@@ -31,6 +31,7 @@ import com.vaadin.terminal.UserError;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.AbstractSelect;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
@@ -51,6 +52,7 @@ import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.Select;
+import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
@@ -158,7 +160,7 @@ public class BookTestApplication extends com.vaadin.Application {
 						"customlayout", "spacing", "margin", "clientinfo",
 						"fillinform/templates", "notification", "print",
 						"richtextfield", "querycontainer", "menubar",
-						"absolutelayout"};
+						"absolutelayout", "layout/intro"};
 				for (int i = 0; i < examples.length; i++) {
 					grid.addComponent(new Label("<a href='"
 							+ context.toString() + examples[i] + "'>"
@@ -245,6 +247,8 @@ public class BookTestApplication extends com.vaadin.Application {
 				example_MenuBar(main, param);
 			} else if (example.equals("absolutelayout")) {
 				example_AbsoluteLayout(main, param);
+            } else if (example.equals("layout")) {
+                example_Layout(main, param);
 			} else {
 				; // main.addComponent(new
 				// Label("Unknown test '"+example+"'."));
@@ -1779,4 +1783,115 @@ public class BookTestApplication extends com.vaadin.Application {
 		final Button button = new Button ("This could be anywhere");
 		layout.addComponent(button, "top: 100px; left: 50px;");
 	}
+
+    void example_Layout(final Window main, String param) {
+        if (param.equals("intro")) {
+            // Set the root layout (VerticalLayout is actually the default).
+            VerticalLayout root = new VerticalLayout();
+            main.setContent(root);
+
+            // Add some components.
+            Label title = new Label("The Ultimate Cat Finder");
+            main.addComponent(title);
+
+            // Horizontal layout with selection tree on the left and 
+            // a details panel on the right.
+            HorizontalLayout horlayout = new HorizontalLayout();
+            main.addComponent(horlayout);
+
+            // Layout for the left-hand side
+            VerticalLayout treeContainer = new VerticalLayout();
+            horlayout.addComponent(treeContainer);
+            
+            // Add some instructions.
+            treeContainer.addComponent(new Label("The Planets and Major Moons"));
+            
+            // A selection tree, fill it later.
+            Tree tree = new Tree();
+            treeContainer.addComponent(tree);
+
+            // A panel for the right size area.
+            Panel detailspanel = new Panel("Details");
+            detailspanel.setSizeFull();
+            horlayout.addComponent(detailspanel);
+
+            // Have a vertical layout in the Details panel.
+            VerticalLayout detailslayout = new VerticalLayout();
+            detailspanel.setContent(detailslayout);
+            
+            // Put some stuff in the Details view.
+            detailslayout.addComponent(new Label("Where is the cat?"));
+            detailslayout.addComponent(new Label("I don't know!"));
+            
+            // // // // // //
+
+            horlayout.setExpandRatio(detailspanel, 1);
+            horlayout.setExpandRatio(treeContainer, 0);
+            horlayout.setSizeFull();
+            horlayout.setSpacing(true);
+
+            root.addStyleName("layoutexample");
+            root.setSizeFull();
+            root.setExpandRatio(horlayout, 1);
+
+            title.addStyleName("title");
+            tree.setSizeUndefined();
+            tree.setHeight("100%");
+            treeContainer.addStyleName("treecontainer");
+            treeContainer.setSizeUndefined();
+            treeContainer.setHeight("100%");
+            treeContainer.setExpandRatio(tree, 1);
+            detailspanel.addStyleName("light");
+            
+            for (Iterator i = detailslayout.getComponentIterator(); i.hasNext();) {
+                Label c = (Label)i.next();
+                detailslayout.setComponentAlignment(c, Alignment.MIDDLE_CENTER);
+                c.setSizeUndefined();
+            }
+
+            final Object[][] planets = new Object[][] {
+                    new Object[] { "Mercury" },
+                    new Object[] { "Venus" },
+                    new Object[] { "Earth", "The Moon" },
+                    new Object[] { "Mars", "Phobos", "Deimos" },
+                    new Object[] { "Jupiter", "Io", "Europa", "Ganymedes",
+                            "Callisto" },
+                    new Object[] { "Saturn", "Titan", "Tethys", "Dione", "Rhea",
+                            "Iapetus" },
+                    new Object[] { "Uranus", "Miranda", "Ariel", "Umbriel",
+                            "Titania", "Oberon" },
+                    new Object[] { "Neptune", "Triton", "Proteus", "Nereid",
+                            "Larissa" } };
+
+            // Add planets as root items in the tree.
+            for (int i = 0; i < planets.length; i++) {
+                final String planet = (String) (planets[i][0]);
+                tree.addItem(planet);
+
+                if (planets[i].length == 1) {
+                    // The planet has no moons so make it a leaf.
+                    tree.setChildrenAllowed(planet, false);
+                } else {
+                    // Add children (moons) under the planets.
+                    for (int j = 1; j < planets[i].length; j++) {
+                        final String moon = (String) planets[i][j];
+
+                        // Add the item as a regular item.
+                        tree.addItem(moon);
+
+                        // Set it to be a child.
+                        tree.setParent(moon, planet);
+
+                        // Make the moons look like leaves.
+                        tree.setChildrenAllowed(moon, false);
+                    }
+
+                    // Expand the subtree.
+                    tree.expandItemsRecursively(planet);
+                }
+            }
+        
+        
+        }
+    }
 }

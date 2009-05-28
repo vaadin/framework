@@ -172,3 +172,37 @@ table.v-gridlayout-spacingexample {
 .v-richtextarea-richtextexample .gwt-ToggleButton .gwt-Image {
   background-image: url(img/richtextarea-toolbar-fi.png) !important;
 }
+
+/*****************************************************************************/
+/* For example_Layout()                                                      */
+/*****************************************************************************/
+.v-verticallayout-layoutexample {
+	background: gray;
+}
+
+.layoutexample .v-verticallayout .v-label {
+	color: white;
+    background: gray;
+}
+
+.layoutexample .v-label-title {
+	font-size: 24pt;
+	color: white;
+    line-height:36pt;
+    background: black;
+}   
+ 
+.layoutexample .v-panel .v-label {
+    font-size: 24pt;
+    color: gray;
+    line-height: 36pt;
+    background: white;
+}
+
+.layoutexample .treecontainer, .layoutexample .v-panel, .layoutexample .v-caption {
+    background: white;
+}
+
+.layoutexample .v-horizontallayout-spacing-on {
+	padding-left: 4px;
+}
