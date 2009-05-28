@@ -235,7 +235,8 @@ public class VForm extends ComplexPanel implements Container {
 
     public boolean requestLayout(Set<Paintable> child) {
 
-        if (height != null && width != null) {
+        if (height != null && !"".equals(height) && width != null
+                && !"".equals(width)) {
             /*
              * If the height and width has been specified the child components
              * cannot make the size of the layout change
