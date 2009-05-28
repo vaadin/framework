@@ -29,6 +29,7 @@ import com.vaadin.terminal.StreamResource;
 import com.vaadin.terminal.URIHandler;
 import com.vaadin.terminal.UserError;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
+import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
@@ -80,7 +81,9 @@ public class BookTestApplication extends com.vaadin.Application {
 		setTheme("tests-book");
 
 		setMainWindow(main);
-
+		
+		main.getContent().setSizeFull();
+		
 		// Demo the use of parameter and URI handlers
 		main.addParameterHandler(new MyParameterHandler());
 		main.addURIHandler(new MyURIHandler());
@@ -154,7 +157,8 @@ public class BookTestApplication extends com.vaadin.Application {
 						"progress/window", "progress/thread", "progress",
 						"customlayout", "spacing", "margin", "clientinfo",
 						"fillinform/templates", "notification", "print",
-						"richtextfield", "querycontainer", "menubar" };
+						"richtextfield", "querycontainer", "menubar",
+						"absolutelayout"};
 				for (int i = 0; i < examples.length; i++) {
 					grid.addComponent(new Label("<a href='"
 							+ context.toString() + examples[i] + "'>"
@@ -239,6 +243,8 @@ public class BookTestApplication extends com.vaadin.Application {
 				example_QueryContainer(main, param);
 			} else if (example.equals("menubar")) {
 				example_MenuBar(main, param);
+			} else if (example.equals("absolutelayout")) {
+				example_AbsoluteLayout(main, param);
 			} else {
 				; // main.addComponent(new
 				// Label("Unknown test '"+example+"'."));
@@ -1762,5 +1768,15 @@ public class BookTestApplication extends com.vaadin.Application {
 		// Yet another top-level item
 		MenuBar.MenuItem services = menubar.addItem("Services", null, null);
 		services.addItem("Car Service", null, mycommand);
+	}
+
+	void example_AbsoluteLayout(final Window main, String param) {
+		AbsoluteLayout layout = new AbsoluteLayout();
+		layout.setWidth("400px");
+		layout.setHeight("400px");
+		main.setContent(layout);
+		
+		final Button button = new Button ("This could be anywhere");
+		layout.addComponent(button, "top: 100px; left: 50px;");
 	}
 }
