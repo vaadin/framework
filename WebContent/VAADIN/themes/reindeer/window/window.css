@@ -41,6 +41,7 @@
 	line-height: normal;
 	color: #fff;
 	text-shadow: #000 0 -1px 0;
+	white-space: nowrap;
 }
 .v-window-error .v-window-header {
 	padding-left: 13px;

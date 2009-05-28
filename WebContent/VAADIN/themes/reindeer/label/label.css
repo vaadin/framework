@@ -29,6 +29,9 @@
 	color: #fff;
 	text-shadow: rgba(0,0,0,.3) 0 1px 1px;
 }
+.blue .v-label-light {
+	color: #6e7c83;
+}
 
 .black .v-label-h1,
 .black .v-label-h2,
@@ -39,4 +42,20 @@
 }
 .black .v-label-light {
 	color: #72787c;
+}
+
+.v-label hr {
+	height: 1px;
+	overflow: hidden;
+	background: #dcdcdc;
+	border: none;
+	border-bottom: 1px solid #fff;
+}
+.blue .v-label hr {
+	background: #a3bcc9;
+	border-bottom-color: #cfe2eb;
+}
+.black .v-label hr {
+	background: #0c0d0e;
+	border-bottom-color: #292b2e;
 }

@@ -120,12 +120,13 @@
 }
 .v-contextmenu .gwt-MenuItem-selected {
 	background: transparent repeat-x;
-	background-image: url(../common/img/sel-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+	background-image: url(img/sel-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 	color: #fff;
 	text-shadow: #3b5a7a 0 1px 0;
 }
 .v-ie .v-contextmenu .gwt-MenuItem-selected {
-	background-image: url(../common/img/sel-bg.png);
+	background-image: url(img/sel-bg.png);
+	background-position: left top;
 }
 .v-contextmenu .gwt-MenuItem-selected div {
 	background: transparent;

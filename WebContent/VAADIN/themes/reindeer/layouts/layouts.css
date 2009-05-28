@@ -27,12 +27,14 @@
 /* Blue background */
 .v-verticallayout-blue,
 .v-horizontallayout-blue,
-.v-orderedlayout-blue {
+.v-orderedlayout-blue,
+.v-panel-content > div.blue {
 	background-color: #bcd3de;
 }
 /* Black background */
 .v-verticallayout-black,
 .v-horizontallayout-black,
-.v-orderedlayout-black {
+.v-orderedlayout-black,
+.v-panel-content > div.black {
 	background: #16181a url(img/black-bg.png) repeat-x;
 }

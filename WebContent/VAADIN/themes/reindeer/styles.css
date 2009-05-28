@@ -2289,6 +2289,7 @@ div > .v-button.v-button-link.v-disabled .v-button-caption,
 }
 .v-ie .v-contextmenu .gwt-MenuItem-selected {
 	background-image: url(common/img/sel-bg.png);
+	background-position: left top;
 }
 .v-contextmenu .gwt-MenuItem-selected div {
 	background: transparent;
@@ -2794,6 +2795,9 @@ td.v-datefield-calendarpanel-nextyear {
 	color: #fff;
 	text-shadow: rgba(0,0,0,.3) 0 1px 1px;
 }
+.blue .v-label-light {
+	color: #6e7c83;
+}
 
 .black .v-label-h1,
 .black .v-label-h2,
@@ -2804,6 +2808,22 @@ td.v-datefield-calendarpanel-nextyear {
 }
 .black .v-label-light {
 	color: #72787c;
+}
+
+.v-label hr {
+	height: 1px;
+	overflow: hidden;
+	background: #dcdcdc;
+	border: none;
+	border-bottom: 1px solid #fff;
+}
+.blue .v-label hr {
+	background: #a3bcc9;
+	border-bottom-color: #cfe2eb;
+}
+.black .v-label hr {
+	background: #0c0d0e;
+	border-bottom-color: #292b2e;
 }
 
 /* ./WebContent/VAADIN/themes/reindeer/layouts/layouts.css */
@@ -2836,13 +2856,15 @@ td.v-datefield-calendarpanel-nextyear {
 /* Blue background */
 .v-verticallayout-blue,
 .v-horizontallayout-blue,
-.v-orderedlayout-blue {
+.v-orderedlayout-blue,
+.v-panel-content > div.blue {
 	background-color: #bcd3de;
 }
 /* Black background */
 .v-verticallayout-black,
 .v-horizontallayout-black,
-.v-orderedlayout-black {
+.v-orderedlayout-black,
+.v-panel-content > div.black {
 	background: #16181a url(layouts/img/black-bg.png) repeat-x;
 }
 
@@ -4347,6 +4369,7 @@ input.v-textfield-readonly,
 	line-height: normal;
 	color: #fff;
 	text-shadow: #000 0 -1px 0;
+	white-space: nowrap;
 }
 .v-window-error .v-window-header {
 	padding-left: 13px;
