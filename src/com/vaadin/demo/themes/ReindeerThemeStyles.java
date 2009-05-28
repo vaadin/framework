@@ -21,6 +21,7 @@ import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 
 /**
  * This Vaadin application demonstrates all the available styles that the
@@ -37,7 +38,7 @@ public class ReindeerThemeStyles extends Application {
 
     @Override
     public void init() {
-        setTheme("reindeer-style-example");
+        setTheme("reindeer");
 
         main = new Window("Vaadin Reindeer Theme - Included Style Names");
         setMainWindow(main);
@@ -307,38 +308,62 @@ public class ReindeerThemeStyles extends Application {
 
     private VerticalLayout buildWindows() {
         Base l = new Base("Sub windows");
-        l.setHeight("260px");
 
-        Window w = new Window("Normal window");
-        w.setWidth("200px");
-        w.setHeight("180px");
-        w.setPositionX(20);
-        w.setPositionY(2000);
-        main.addWindow(w);
+        HorizontalLayout hl = new HorizontalLayout();
+        hl.setSpacing(true);
 
-        w = new Window("Window, no resize");
-        w.setResizable(false);
-        w.setWidth("200px");
-        w.setHeight("180px");
-        w.setPositionX(240);
-        w.setPositionY(2000);
-        main.addWindow(w);
+        Button b = new Button("Open normal window", new ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                Window w = new Window("Normal window");
+                w.setWidth("200px");
+                w.setHeight("180px");
+                w.setPositionX(20);
+                w.setPositionY(200);
+                main.addWindow(w);
+            }
+        });
+        hl.addComponent(b);
 
-        w = new Window("Light window");
-        w.setWidth("200px");
-        w.setHeight("180px");
-        w.setStyleName("light");
-        w.setPositionX(460);
-        w.setPositionY(2000);
-        main.addWindow(w);
+        b = new Button("Open normal window (no resize)", new ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                Window w = new Window("Window, no resize");
+                w.setResizable(false);
+                w.setWidth("200px");
+                w.setHeight("180px");
+                w.setPositionX(240);
+                w.setPositionY(200);
+                main.addWindow(w);
+            }
+        });
+        hl.addComponent(b);
 
-        w = new Window("Black window");
-        w.setWidth("200px");
-        w.setHeight("180px");
-        w.setStyleName("black");
-        w.setPositionX(680);
-        w.setPositionY(2000);
-        main.addWindow(w);
+        b = new Button("Open light style window", new ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                Window w = new Window("Light window");
+                w.setWidth("200px");
+                w.setHeight("180px");
+                w.setStyleName("light");
+                w.setPositionX(460);
+                w.setPositionY(200);
+                main.addWindow(w);
+            }
+        });
+        hl.addComponent(b);
+
+        b = new Button("Open black style window", new ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                Window w = new Window("Black window");
+                w.setWidth("200px");
+                w.setHeight("180px");
+                w.setStyleName("black");
+                w.setPositionX(680);
+                w.setPositionY(200);
+                main.addWindow(w);
+            }
+        });
+        hl.addComponent(b);
+
+        l.addComponent(hl);
 
         return l;
     }
