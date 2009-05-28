@@ -18,6 +18,7 @@ public class TextAreaExample extends HorizontalLayout implements
 
     public TextAreaExample() {
         setSpacing(true);
+        setWidth("100%");
 
         editor = new TextField("", initialText);
         editor.setRows(20); // this will make it an 'area', i.e multiline
@@ -33,6 +34,7 @@ public class TextAreaExample extends HorizontalLayout implements
         plainText = new Label(initialText);
         plainText.setContentMode(Label.CONTENT_XHTML);
         addComponent(plainText);
+        setExpandRatio(plainText, 1);
     }
 
     /*
