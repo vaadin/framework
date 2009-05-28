@@ -565,6 +565,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
      */
     private String lastNewItemString;
     private boolean focused = false;
+    private int horizPaddingAndBorder = 2;
 
     public VFilterSelect() {
         selectedItemIcon.setStyleName("v-icon");
@@ -966,7 +967,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         } else {
             this.width = width;
         }
-        Util.setWidthExcludingPaddingAndBorder(this, width, 4);
+        horizPaddingAndBorder = Util.setWidthExcludingPaddingAndBorder(this,
+                width, horizPaddingAndBorder);
         updateRootWidth();
     }
 
