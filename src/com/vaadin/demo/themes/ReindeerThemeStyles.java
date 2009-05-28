@@ -3,7 +3,6 @@ package com.vaadin.demo.themes;
 import java.util.Date;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
@@ -149,7 +148,6 @@ public class ReindeerThemeStyles extends Application {
 
         b = new Button("Normal");
         hl.addComponent(b);
-        b.setIcon(new ThemeResource("../runo/icons/16/document.png"));
 
         b = new Button("Disabled");
         b.setEnabled(false);
