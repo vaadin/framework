@@ -3532,7 +3532,8 @@ td.v-datefield-calendarpanel-nextyear {
 .v-table-row-odd {
 	background: #eff0f1;
 }
-.v-table .v-selected {
+.v-table .v-selected,
+.black .v-table .v-selected {
 	background: #4d749f url(common/img/sel-bg.png) repeat-x; /* We can't include this in the sprite, since we don't know the row height */
 	color: #fff;
 	text-shadow: #3b5a7a 0 1px 0;
@@ -3603,6 +3604,7 @@ td.v-datefield-calendarpanel-nextyear {
 	-webkit-border-bottom-right-radius: 4px;
 	height: 13px;
 	padding: 4px 30px;
+	color: #222;
 	text-shadow: #fff 0 1px 0;
 	width: 100px;
 	position: relative;
@@ -3629,11 +3631,8 @@ td.v-datefield-calendarpanel-nextyear {
   -background-image: url(common/img/vertical-sprites-ie6.png);
   background-position: left -1075px;
 }
-/* Borderless style */
-.v-table-borderless .v-table-header-wrap,
-.v-table-borderless .v-table-body {
-	border: none;
-}
+
+
 /* Strong style */
 .v-table-strong .v-table-header-wrap {
 	border-color: #2b3033;
@@ -3677,6 +3676,76 @@ td.v-datefield-calendarpanel-nextyear {
 .v-table-strong .v-table-focus-slot-left,
 .v-table-strong .v-table-focus-slot-right {
 	border-color: #9ca1a5;
+}
+
+
+/* Table on black background (normal style) */
+.black .v-table-header-wrap {
+	border-color: #252729;
+  background-image: url(common/img/black-vertical-sprites.png);
+  -background-image: url(common/img/black-vertical-sprites-ie6.png);
+  background-position: left -622px;
+	color: #e7eaee;
+	text-shadow: #000 0 -1px 0;
+}
+.black .v-table-resizer {
+	border-right-color: #252729;
+}
+.black .v-table-header-cell-asc .v-table-caption-container {
+  background-image: url(common/img/black-vertical-sprites.png);
+  -background-image: url(common/img/black-vertical-sprites-ie6.png);
+  background-position: right -642px;
+}
+.black .v-table-header-cell-desc .v-table-caption-container {
+  background-image: url(common/img/black-vertical-sprites.png);
+  -background-image: url(common/img/black-vertical-sprites-ie6.png);
+  background-position: right -661px;
+}
+.black .v-table-column-selector {
+  background-image: url(common/img/black-vertical-sprites.png);
+  -background-image: url(common/img/black-vertical-sprites-ie6.png);
+  background-position: left -680px;
+}
+.black .v-table-column-selector:active {
+  background-image: url(common/img/black-vertical-sprites.png);
+  -background-image: url(common/img/black-vertical-sprites-ie6.png);
+  background-position: left -700px;
+}
+.black .v-table-header-drag {
+  background-image: url(common/img/black-vertical-sprites.png);
+  -background-image: url(common/img/black-vertical-sprites-ie6.png);
+  background-position: left -720px;
+	color: #e7eaee;
+	text-shadow: #000 0 -1px 0;
+}
+.black .v-table-focus-slot-left,
+.black .v-table-focus-slot-right {
+	border-color: #9ca1a5;
+}
+.black .v-table-body {
+	border-color: #252729;
+	background: transparent;
+}
+.black .v-table-cell-content {
+	border-right-color: #252729;
+	border-bottom: 1px solid #252729;
+}
+.black .v-table-cell-wrapper {
+	padding-bottom: 2px;
+}
+.black .v-table-row-odd {
+	background: transparent;
+}
+/* Selection background-color combined with default style selector, so we don't have to duplicate the sprite image in the final sprite collection */
+.black .v-table .v-selected .v-table-cell-content {
+	border-bottom: 1px solid #4d749f;
+}
+
+
+/* Borderless style */
+.v-table-borderless .v-table-header-wrap,
+.v-table-borderless .v-table-body {
+	border: none;
 }
 
 /* ./WebContent/VAADIN/themes/reindeer/tabsheet/tabsheet.css */
@@ -4085,7 +4154,7 @@ input.v-textfield-prompt {
 	background: #1b1d1e;
   background-image: url(common/img/black-vertical-sprites.png);
   -background-image: url(common/img/black-vertical-sprites-ie6.png);
-  background-position: left -622px;
+  background-position: left -740px;
 	color: #c9ccce;
 	text-shadow: #000 0 0 1px;
 }
@@ -4377,7 +4446,7 @@ input.v-textfield-readonly,
 	background: transparent repeat-x;
   background-image: url(common/img/black-vertical-sprites.png);
   -background-image: url(common/img/black-vertical-sprites-ie6.png);
-  background-position: left -645px;
+  background-position: left -763px;
 	text-align: center;
 	-moz-border-radius-topright: 8px;
 	-moz-border-radius-topleft: 8px;
@@ -4403,14 +4472,14 @@ input.v-textfield-readonly,
 	background: transparent no-repeat;
   background-image: url(common/img/black-vertical-sprites.png);
   -background-image: url(common/img/black-vertical-sprites-ie6.png);
-  background-position: left -674px;
+  background-position: left -792px;
 	width: 14px;
 	height: 14px;
 }
 .v-ie6 .v-window-black .v-window-resizebox {
   background-image: url(common/img/black-vertical-sprites.png);
   -background-image: url(common/img/black-vertical-sprites-ie6.png);
-  background-position: left -688px;
+  background-position: left -806px;
 }
 .v-ie6 .v-window-black .v-window-contents {
 	background: transparent url(window/img/black/content-bg-ie6.png) repeat-x;
@@ -4421,5 +4490,5 @@ input.v-textfield-readonly,
 	background: transparent repeat-x;
   background-image: url(common/img/black-vertical-sprites.png);
   -background-image: url(common/img/black-vertical-sprites-ie6.png);
-  background-position: left -702px;
+  background-position: left -820px;
 }
