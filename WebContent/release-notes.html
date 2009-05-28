@@ -106,6 +106,7 @@ client-side widgets with Google Web Toolkit (GWT).</p>
     <li>The GWT Compiler class name has changed:</li>
     <ul>
       <li>Replace <tt>com.google.gwt.dev.GWTCompiler</tt> &#x2192; <tt>com.google.gwt.dev.Compiler</tt> in your widget set build script (Ant) or launch configuration (Eclipse).</li>
+      <li>Replace the output directory argument for the compiler with the new WAR output argument: <tt>-out</tt> &#x2192; <tt>-war</tt>. The directory parameter for the argument remains unchanged.</li>
     </ul>
     <li><i>Possible problems when building widgetset using Windows and JDK 1.5</i>. See <a href="#known-problems">Known Problems</a> #2891 below.</li>
   </ul>
@@ -141,35 +142,45 @@ for your platform.</p>
 <h2><a name="known-problems">Important known problems in Vaadin @version@</a></h2>
 
 <ul>
-	<li><a href="http://dev.itmill.com/ticket/1155">#1155</a>
+	<li><p><a href="http://dev.itmill.com/ticket/1155">#1155</a>:
 	Uncompressing the installation package fails in Windows if using the
 	default Zip uncompression. Uncompression gives (in Windows Vista) an
 	error message about too long filenames, and a more obscure message in
 	other versions of Windows. Workaround: use <a
 		href="http://www.7-zip.org/">7-Zip</a> or some other good unzip
-	program for Windows.</li>
+	program for Windows.</p></li>
 
-	<li><a href="http://dev.itmill.com/ticket/2299">#2299</a> The
+	<li><p><a href="http://dev.itmill.com/ticket/2299">#2299</a>: The
 	Hosted Mode Browser does not work in Linux for debugging client-side
 	GWT code. You need to install the experimental OOPHM package instead
 	(see above) for development. For production, you should use the regular
-	package for Linux.</li>
+	package for Linux.</p></li>
 
     <li>
-      <p><a href="http://dev.itmill.com/ticket/2891">#2891</a> As there is a bug in J2SE
-      5.0 that prevents setting the stack size for the main thread, widgetsets cannot be
-      compiled using the standard GWT compiler of GWT 1.6 and JDK 1.5.0 (see #2656 for
-      more details on the JDK bug). This bug primarily affects Windows users as other
-      operating systems have a larger default stack size.</p>
+      <p><a href="http://dev.itmill.com/ticket/2523">#2523</a>: GWT Compiler 1.6 uses more
+      stack space than 1.5 and can result in stack overflow errors. You can prevent the
+      problem by giving the Java process more stack space with the <tt>-Xss</tt>
+      parameter, such as: <tt>-Xss1024k</tt>. You can give the parameter in your widgetset
+      build script with a <tt>&lt;jvmarg value="-Xss1024k"/&gt;</tt> parameter for the
+      <tt>&lt;java&gt;</tt> task.</p></li>
 
-      <p>Before that fix is available in a published GWT version, we provide a wrapper for
-      the GWT compiler that runs the compiler in a separate thread, thus using the
-      user-specified stack size settings also on JDK 1.5.0. Use
-      <tt>com.itmill.toolkit.launcher.WidgetsetCompiler</tt> instead of
-      <tt>com.google.gwt.dev.Compiler</tt>. You need the wrapper if you use a build script
-      to compile custom widget sets; the Eclipse plugin uses the wrapper
-      automatically. You can also avoid the problem by using JDK 1.6.</p>
-    </li>
+    <ul>
+      <li>
+        <p><a href="http://dev.itmill.com/ticket/2891">#2891</a>: As there is a bug in
+        J2SE 5.0 that prevents setting the stack size for the main thread, widgetsets
+        cannot be compiled using the standard GWT compiler of GWT 1.6 and JDK 1.5.0 (see
+        #2656 for more details on the JDK bug). This bug primarily affects Windows users
+        as other operating systems have a larger default stack size.</p>
+
+        <p>Before that fix is available in a published GWT version, we provide a wrapper
+        for the GWT compiler that runs the compiler in a separate thread, thus using the
+        user-specified stack size settings also on JDK 1.5.0. Use
+        <tt>com.itmill.toolkit.launcher.WidgetsetCompiler</tt> instead of
+        <tt>com.google.gwt.dev.Compiler</tt>. You need the wrapper if you use a build
+        script to compile custom widget sets; the Eclipse plugin uses the wrapper
+        automatically. You can also avoid the problem by using JDK 1.6.</p>
+      </li>
+    </ul>
 </ul>
 
 <p>For other known problems, see open tickets at developer site <a
