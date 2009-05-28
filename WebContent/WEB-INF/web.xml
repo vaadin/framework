@@ -203,6 +203,15 @@
 			<param-value>com.vaadin.demo.coverflow.gwt.CoverflowWidgetSet</param-value>
 		</init-param>
 	</servlet>
+	
+	<servlet>
+		<servlet-name>ReindeerThemeStyles</servlet-name>
+		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.vaadin.demo.themes.ReindeerThemeStyles</param-value>
+		</init-param>
+	</servlet>
 
 	<servlet>
 		<servlet-name>FeaturesApplication</servlet-name>
@@ -499,6 +508,11 @@
 	<servlet-mapping>
 		<servlet-name>AddressBook</servlet-name>
 		<url-pattern>/AddressBook/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>ReindeerThemeStyles</servlet-name>
+		<url-pattern>/ReindeerTheme/*</url-pattern>
 	</servlet-mapping>
 
 	<welcome-file-list>

@@ -201,6 +201,16 @@
 		</init-param>
 	</servlet>
 
+	<!--  ReindeerTheme demo -->
+	<servlet>
+		<servlet-name>ReindeerThemeStyles</servlet-name>
+		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.vaadin.demo.themes.ReindeerThemeStyles</param-value>
+		</init-param>
+	</servlet>
+
 	<!-- Servlet Mappings below - see servlets for comments -->
 	<servlet-mapping>
 		<servlet-name>PortletDemo</servlet-name>
@@ -261,6 +271,10 @@
 	<servlet-mapping>
 		<servlet-name>Coverflow</servlet-name>
 		<url-pattern>/Coverflow/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ReindeerThemeStyles</servlet-name>
+		<url-pattern>/ReindeerTheme/*</url-pattern>
 	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
