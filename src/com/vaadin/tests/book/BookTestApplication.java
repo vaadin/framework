@@ -1022,90 +1022,92 @@ public class BookTestApplication extends com.vaadin.Application {
 	}
 
 	void example_TabSheet(Window main, String param) {
-        if (param.equals("simple")) {
-            // Create an empty tab sheet.
-            TabSheet tabsheet = new TabSheet();
-            
-            // Create a component to put in a tab and put
-            // some content in it.
-            VerticalLayout myTab = new VerticalLayout();
-            myTab.addComponent(new Label("Hello, I am a Tab!"));
-            
-            // Add the component to the tab sheet as a new tab.
-            tabsheet.addTab(myTab);
-            
-            // Get the Tab holding the component and set its caption.
-            tabsheet.getTab(myTab).setCaption("My Tab");
+		if (param != null) {
+	        if (param.equals("simple")) {
+	            // Create an empty tab sheet.
+	            TabSheet tabsheet = new TabSheet();
+	            
+	            // Create a component to put in a tab and put
+	            // some content in it.
+	            VerticalLayout myTab = new VerticalLayout();
+	            myTab.addComponent(new Label("Hello, I am a Tab!"));
+	            
+	            // Add the component to the tab sheet as a new tab.
+	            tabsheet.addTab(myTab);
+	            
+	            // Get the Tab holding the component and set its caption.
+	            tabsheet.getTab(myTab).setCaption("My Tab");
 
-        } else if (param.equals("icon")) {
-			final TabSheet tabsheet = new TabSheet();
-
-			tabsheet.addTab(new Label("Contents of the first tab"),
-					"First Tab", new ClassResource("images/Mercury_small.png",
-							main.getApplication()));
-			tabsheet.addTab(new Label("Contents of the second tab"),
-					"Second Tab", new ClassResource("images/Venus_small.png",
-							this));
-			tabsheet.addTab(new Label("Contents of the third tab"),
-					"Third tab", new ClassResource("images/Earth_small.png",
-							this));
-
-			main.addComponent(tabsheet);
-			// main.addComponent(new Embedded("Emb", new ClassResource
-			// ("images/Mercury_small.png", this)));
-		} else if (param.equals("expanding")) {
-			// Create the layout
-			VerticalLayout expanding = new VerticalLayout();
-
-			// It is important to set the expanding layout as the root layout
-			// of the containing window, in this case the main window, and not
-			// use addComponent(), which would place the layout inside the
-			// default root layout.
-			main.setLayout(expanding);
-
-			// Create a tab sheet that fills the expanding layout
-			final TabSheet tabsheet = new TabSheet();
-			tabsheet.addTab(new Label("Contents of the first tab"),
-					"First Tab", null);
-			tabsheet.addTab(new Label("Contents of the second tab"),
-					"Second Tab", null);
-			tabsheet.addTab(new Label("Contents of the third tab"),
-					"Third tab", null);
-
-			// Set the tabsheet to scale to full size inside its container
-			tabsheet.setWidth(100, Sizeable.UNITS_PERCENTAGE);
-			tabsheet.setHeight(100, Sizeable.UNITS_PERCENTAGE);
-
-			// Add the tab sheet to the layout as usual
-			expanding.addComponent(tabsheet);
-
-			// Set the tab sheet to be the expanding component
-			expanding.setExpandRatio(tabsheet, 1);
-		} else if (param.equals("ordered")) {
-			// Create the layout
-			VerticalLayout layout = new VerticalLayout();
-
-			// It is important to set the expanding layout as the root layout
-			// of the containing window, in this case the main window, and not
-			// use addComponent(), which would place the layout inside the
-			// default root layout.
-			main.setLayout(layout);
-
-			// Create a tab sheet that fills the expanding layout
-			final TabSheet tabsheet = new TabSheet();
-			tabsheet.addTab(new Label("Contents of the first tab"),
-					"First Tab", null);
-			tabsheet.addTab(new Label("Contents of the second tab"),
-					"Second Tab", null);
-			tabsheet.addTab(new Label("Contents of the third tab"),
-					"Third tab", null);
-
-			// Set the tabsheet to scale to full size inside its container
-			tabsheet.setWidth(100, Sizeable.UNITS_PERCENTAGE);
-			// tabsheet().setHeight(100, Sizeable.UNITS_PERCENTAGE);
-
-			// Add the tab sheet to the layout as usual
-			layout.addComponent(tabsheet);
+	        } else if (param.equals("icon")) {
+				final TabSheet tabsheet = new TabSheet();
+	
+				tabsheet.addTab(new Label("Contents of the first tab"),
+						"First Tab", new ClassResource("images/Mercury_small.png",
+								main.getApplication()));
+				tabsheet.addTab(new Label("Contents of the second tab"),
+						"Second Tab", new ClassResource("images/Venus_small.png",
+								this));
+				tabsheet.addTab(new Label("Contents of the third tab"),
+						"Third tab", new ClassResource("images/Earth_small.png",
+								this));
+	
+				main.addComponent(tabsheet);
+				// main.addComponent(new Embedded("Emb", new ClassResource
+				// ("images/Mercury_small.png", this)));
+			} else if (param.equals("expanding")) {
+				// Create the layout
+				VerticalLayout layout = new VerticalLayout();
+	
+				// It is important to set the expanding layout as the root layout
+				// of the containing window, in this case the main window, and not
+				// use addComponent(), which would place the layout inside the
+				// default root layout.
+				main.setLayout(layout);
+	
+				// Create a tab sheet that fills the expanding layout
+				final TabSheet tabsheet = new TabSheet();
+				tabsheet.addTab(new Label("Contents of the first tab"),
+						"First Tab", null);
+				tabsheet.addTab(new Label("Contents of the second tab"),
+						"Second Tab", null);
+				tabsheet.addTab(new Label("Contents of the third tab"),
+						"Third tab", null);
+	
+				// Set the tabsheet to scale to full size inside its container
+				tabsheet.setWidth(100, Sizeable.UNITS_PERCENTAGE);
+				tabsheet.setHeight(100, Sizeable.UNITS_PERCENTAGE);
+	
+				// Add the tab sheet to the layout as usual
+				layout.addComponent(tabsheet);
+	
+				// Set the tab sheet to be the expanding component
+				layout.setExpandRatio(tabsheet, 1);
+			} else if (param.equals("ordered")) {
+				// Create the layout
+				VerticalLayout layout = new VerticalLayout();
+	
+				// It is important to set the expanding layout as the root layout
+				// of the containing window, in this case the main window, and not
+				// use addComponent(), which would place the layout inside the
+				// default root layout.
+				main.setLayout(layout);
+	
+				// Create a tab sheet that fills the expanding layout
+				final TabSheet tabsheet = new TabSheet();
+				tabsheet.addTab(new Label("Contents of the first tab"),
+						"First Tab", null);
+				tabsheet.addTab(new Label("Contents of the second tab"),
+						"Second Tab", null);
+				tabsheet.addTab(new Label("Contents of the third tab"),
+						"Third tab", null);
+	
+				// Set the tabsheet to scale to full size inside its container
+				tabsheet.setWidth(100, Sizeable.UNITS_PERCENTAGE);
+				// tabsheet().setHeight(100, Sizeable.UNITS_PERCENTAGE);
+	
+				// Add the tab sheet to the layout as usual
+				layout.addComponent(tabsheet);
+			}
 		} else {
 			main.addComponent(new TabSheetExample());
 		}
