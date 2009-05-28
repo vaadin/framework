@@ -436,6 +436,20 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         public void doSelectedItemAction() {
             final MenuItem item = getSelectedItem();
             final String enteredItemValue = tb.getText();
+            if (nullSelectionAllowed && "".equals(enteredItemValue)) {
+                if (nullSelectItem) {
+                    reset();
+                    return;
+                }
+                // null is not visible on pages != 0, and not visible when
+                // filtering: handle separately
+                client.updateVariable(paintableId, "filter", "", false);
+                client.updateVariable(paintableId, "page", 0, false);
+                client.updateVariable(paintableId, "selected", new String[] {},
+                        immediate);
+                suggestionPopup.hide();
+                return;
+            }
             // check for exact match in menu
             int p = getItems().size();
             if (p > 0) {
@@ -543,6 +557,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     private int totalMatches;
     private boolean allowNewItem;
     private boolean nullSelectionAllowed;
+    private boolean nullSelectItem;
     private boolean enabled;
 
     // shown in unfocused empty field, disappears on focus (e.g "Search here")
@@ -655,6 +670,9 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         immediate = uidl.hasAttribute("immediate");
 
         nullSelectionAllowed = uidl.hasAttribute("nullselect");
+
+        nullSelectItem = uidl.hasAttribute("nullselectitem")
+                && uidl.getBooleanAttribute("nullselectitem");
 
         currentPage = uidl.getIntVariable("page");
 
@@ -867,22 +885,26 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                     break;
                 }
             case KeyboardListener.KEY_ESCAPE:
-                if (currentSuggestion != null) {
-                    String text = currentSuggestion.getReplacementString();
-                    setPromptingOff(text);
-                    selectedOptionKey = currentSuggestion.key;
-                } else {
-                    setPromptingOn();
-                    selectedOptionKey = null;
-                }
-                lastFilter = "";
-                suggestionPopup.hide();
+                reset();
                 break;
             default:
                 filterOptions(currentPage);
                 break;
             }
         }
+    }
+
+    private void reset() {
+        if (currentSuggestion != null) {
+            String text = currentSuggestion.getReplacementString();
+            setPromptingOff(text);
+            selectedOptionKey = currentSuggestion.key;
+        } else {
+            setPromptingOn();
+            selectedOptionKey = null;
+        }
+        lastFilter = "";
+        suggestionPopup.hide();
     }
 
     /**
