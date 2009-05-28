@@ -238,6 +238,9 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
             if (!isAttached()) {
                 show();
             }
+            if (uidl.getBooleanAttribute("resizable") != resizable) {
+                setResizable(!resizable);
+            }
         }
 
         if (client.updateComponent(this, uidl, false)) {
@@ -245,10 +248,6 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
         }
 
         immediate = uidl.hasAttribute("immediate");
-
-        if (uidl.getBooleanAttribute("resizable") != resizable) {
-            setResizable(!resizable);
-        }
 
         if (isReadOnly() != uidl.getBooleanAttribute("readonly")) {
             setReadOnly(!isReadOnly());
