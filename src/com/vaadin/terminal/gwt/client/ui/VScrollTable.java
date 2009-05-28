@@ -2153,12 +2153,24 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
                 detectExtrawidth();
                 tBodyElement.removeChild(scrollTableRow.getElement());
             } else {
+                boolean noCells = false;
                 TableRowElement item = rows.getItem(0);
                 TableCellElement firstTD = item.getCells().getItem(0);
+                if (firstTD == null) {
+                    // content is currently empty, we need to add a fake cell
+                    // for measuring
+                    noCells = true;
+                    VScrollTableRow next = (VScrollTableRow) iterator().next();
+                    next.addCell("", ALIGN_LEFT, "", true);
+                    firstTD = item.getCells().getItem(0);
+                }
                 com.google.gwt.dom.client.Element wrapper = firstTD
                         .getFirstChildElement();
                 cellExtraWidth = firstTD.getOffsetWidth()
                         - wrapper.getOffsetWidth();
+                if (noCells) {
+                    firstTD.getParentElement().removeChild(firstTD);
+                }
             }
         }
 
