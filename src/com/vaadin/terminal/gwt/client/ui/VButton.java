@@ -4,7 +4,9 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Button;
@@ -119,8 +121,18 @@ public class VButton extends Button implements Paintable {
             }
         }
         if (BrowserInfo.get().isIE7()) {
+            /*
+             * Workaround for IE7 size calculation issues. Deferred because of
+             * issues with a button with an icon using the reindeer theme
+             */
             if (width.equals("")) {
-                setWidth(getOffsetWidth() + "px");
+                DeferredCommand.addCommand(new Command() {
+
+                    public void execute() {
+                        setWidth("");
+                        setWidth(getOffsetWidth() + "px");
+                    }
+                });
             }
         }
     }
