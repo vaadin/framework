@@ -41,7 +41,20 @@ IT Mill Toolkit 5.4, along with many bug fixes. The most significant additions a
 
   <li>The <b>Form</b> component previously called two methods in <b>FieldFactory</b>. Now it always calls only one in <b>FormFieldFactory</b></li>
 
-  <li><b>Panel</b> and <b>Window</b> can now contain a <b>ComponentContainer</b> as the "root layout" (previously only Layout) (<a href="http://dev.itmill.com/ticket/2921">#2921</a>). This should not require changes to user code.</li>
+  <li><b>Panel</b> and <b>Window</b> can now contain a <b>ComponentContainer</b>
+  (previously only <b>Layout</b>) as the "root layout" (<a
+  href="http://dev.itmill.com/ticket/2921">#2921</a>). The <tt>setLayout()</tt> method is
+  deprecated and the new <tt>setContent()</tt> method that accepts a
+  <b>ComponentContainer</b> is recommended.</li>
+
+  <li>Vaadin applications are now serializable, which allows compatibility with many clustering and cloud computing solutions.</li>
+
+  <li>The new <b>AbsoluteLayout</b> allows placing components by their coordinates.</li>
+
+  <li>The way how <b>DateField</b> handles unparseable non-empty input in the default
+  implementation of <tt>handleUnparsableDateString()</tt> method is changed (<a
+  href="http://dev.vaadin.com/ticket/2831">#2831</a>). It now throws a
+  <b>Property.ConversionException</b> instead of returning <tt>null</tt>.
 </ul>
 
 <p>The first three changes are not backward-compatible with IT Mill Toolkit 5.4.</p>
