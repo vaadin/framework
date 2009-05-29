@@ -7,6 +7,23 @@
 		<!--[if IE]>
 		<link rel="stylesheet" type="text/css" href="demo/css/ie.css" />
 		<![endif]--> 
+		<script type="text/javascript">
+		window.onload = function() {
+			try {
+				if(window.location.search && -1 != window.location.search.indexOf('gwt.hosted')) {
+					var hostedParam = window.location.search;
+					var demolinks = document.getElementsByTagName("a");
+					for (var k = 0; k < demolinks.length; k++) {
+						var link = demolinks[k];
+						if(link.className.indexOf
+								("demoapp") != -1) {
+							link.href = link.href + hostedParam;
+						}
+					}
+				}
+			} catch(e) {}
+		}
+		</script>
 	</head>
 	<body>
 	
@@ -32,7 +49,7 @@
 			<div id="sampler">
 				<h2>Vaadin Sampler</h2>
 				<p>Sampler contains examples of most features, as well as combination examples and useful UI patterns that you can use simply by copy-pasting the code.</p>
-				<p><a href="sampler/">Start Sampler &raquo;</a>
+				<p><a href="sampler/" class="demoapp">Start Sampler &raquo;</a>
 			</div>
 			<div id="eclipse">
 				<h2>Vaadin Eclipse Plugin</h2>
@@ -61,7 +78,7 @@
 				<p class="tutorial">Read the step-by-step tutorial and learn how to build a simple contact management app.</p>
 				<ul>
 					<li><a href="http://www.vaadin.com/tutorial/">Step-by-step Tutorial &raquo;</a></li>
-					<li><a href="AddressBook/">See Address Book application &raquo;</a></li>
+					<li><a href="AddressBook/" class="demoapp">See Address Book application &raquo;</a></li>
 				</ul>
 				
 				<h3>Documentation</h3>
