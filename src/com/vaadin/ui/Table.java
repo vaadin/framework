@@ -239,9 +239,6 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Set of properties listened - the list is kept to release the listeners
      * later.
-     * 
-     * Note: This should be set or list. IdentityHashMap used due very heavy
-     * hashCode in indexed container
      */
     private HashSet<Property> listenedProperties = null;
 
@@ -1413,6 +1410,10 @@ public class Table extends AbstractSelect implements Action.Container,
                                 int indexInOldBuffer = index
                                         - pageBufferFirstIndex;
                                 value = pageBuffer[CELL_FIRSTCOL + j][indexInOldBuffer];
+                                if (!isGenerated && iscomponent[j]
+                                        || !(value instanceof Component)) {
+                                    listenProperty(p, oldListenedProperties);
+                                }
                             } else {
                                 if (isGenerated) {
                                     ColumnGenerator cg = columnGenerators
@@ -1422,26 +1423,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
                                 } else if (iscomponent[j]) {
                                     value = p.getValue();
-                                    if (p instanceof Property.ValueChangeNotifier) {
-                                        /*
-                                         * Component in property may change ->
-                                         * listen value changes events.
-                                         */
-                                        if (oldListenedProperties == null
-                                                || !oldListenedProperties
-                                                        .contains(p)) {
-                                            ((Property.ValueChangeNotifier) p)
-                                                    .addListener(this);
-                                        }
-                                        /*
-                                         * register listened properties, so we
-                                         * can do proper cleanup to free memory.
-                                         * Essential if table has loads of data
-                                         * and it is used for a long time.
-                                         */
-                                        listenedProperties.add(p);
-
-                                    }
+                                    listenProperty(p, oldListenedProperties);
                                 } else if (p != null) {
                                     value = getPropertyValue(id, colids[j], p);
                                     /*
@@ -1453,22 +1435,8 @@ public class Table extends AbstractSelect implements Action.Container,
                                      * will start to listen them and refresh
                                      * content when needed.
                                      */
-                                    if (!(value instanceof Component)
-                                            && p instanceof Property.ValueChangeNotifier) {
-                                        // only add listener to property once
-                                        if (oldListenedProperties == null
-                                                || !oldListenedProperties
-                                                        .contains(p)) {
-                                            ((Property.ValueChangeNotifier) p)
-                                                    .addListener(this);
-                                        }
-                                        /*
-                                         * register listened properties, so we
-                                         * can do proper cleanup to free memory.
-                                         * Essential if table has loads of data
-                                         * and it is used for a long time.
-                                         */
-                                        listenedProperties.add(p);
+                                    if (!(value instanceof Component)) {
+                                        listenProperty(p, oldListenedProperties);
                                     }
                                 } else {
                                     value = getPropertyValue(id, colids[j],
@@ -1515,6 +1483,23 @@ public class Table extends AbstractSelect implements Action.Container,
             requestRepaint();
         }
 
+    }
+
+    private void listenProperty(Property p,
+            HashSet<Property> oldListenedProperties) {
+        if (p instanceof Property.ValueChangeNotifier) {
+            if (oldListenedProperties == null
+                    || !oldListenedProperties.contains(p)) {
+                ((Property.ValueChangeNotifier) p).addListener(this);
+            }
+            /*
+             * register listened properties, so we can do proper cleanup to free
+             * memory. Essential if table has loads of data and it is used for a
+             * long time.
+             */
+            listenedProperties.add(p);
+
+        }
     }
 
     /**
