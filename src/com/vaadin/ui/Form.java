@@ -836,11 +836,15 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
         newField.setItemCaptionPropertyId("desc");
         for (int i = 0; i < values.length; i++) {
             Object id = values[i];
+            final Item item;
             if (id == null) {
-                id = new Object();
+                id = newField.addItem();
+                item = newField.getItem(id);
                 newField.setNullSelectionItemId(id);
+            } else {
+                item = newField.addItem(id);
             }
-            final Item item = newField.addItem(id);
+
             if (item != null) {
                 item.getItemProperty("desc").setValue(
                         descriptions[i].toString());

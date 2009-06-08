@@ -125,6 +125,8 @@ public class IndexedContainer implements Container.Indexed,
 
     private HashMap<Object, Object> defaultPropertyValues;
 
+    private int nextGeneratedItemId = 1;
+
     /* Container constructors */
 
     public IndexedContainer() {
@@ -305,7 +307,7 @@ public class IndexedContainer implements Container.Indexed,
     public Object addItem() {
 
         // Creates a new id
-        final Object id = new Object();
+        final Object id = generateId();
 
         // Adds the Item into container
         addItem(id);
@@ -569,7 +571,7 @@ public class IndexedContainer implements Container.Indexed,
     public Object addItemAfter(Object previousItemId) {
 
         // Creates a new id
-        final Object id = new Object();
+        final Object id = generateId();
 
         return addItemAfter(previousItemId, id);
     }
@@ -660,12 +662,16 @@ public class IndexedContainer implements Container.Indexed,
     public Object addItemAt(int index) {
 
         // Creates a new id
-        final Object id = new Object();
+        final Object id = generateId();
 
         // Adds the Item into container
         addItemAt(index, id);
 
         return id;
+    }
+
+    private Serializable generateId() {
+        return new Integer(nextGeneratedItemId++);
     }
 
     /* Event notifiers */
