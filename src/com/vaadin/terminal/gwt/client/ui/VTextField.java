@@ -180,7 +180,6 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
 
     private void setPrompting(boolean prompting) {
         this.prompting = prompting;
-        System.out.println("Prompting is now: " + prompting);
     }
 
     public void setColumns(int columns) {
