@@ -103,13 +103,11 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
             out.writeObject(setMethod.getParameterTypes());
         } else {
             out.writeObject("");
-            out.writeObject("");
         }
         if (getMethod != null) {
             out.writeObject(getMethod.getName());
             out.writeObject(getMethod.getParameterTypes());
         } else {
-            out.writeObject("");
             out.writeObject("");
         }
     };
@@ -123,15 +121,16 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
             setArgs = (Object[]) in.readObject();
             getArgs = (Object[]) in.readObject();
             String name = (String) in.readObject();
-            Class<?>[] paramTypes = (Class<?>[]) in.readObject();
             if (name != null && !name.equals("")) {
+                Class<?>[] paramTypes = (Class<?>[]) in.readObject();
                 setMethod = instance.getClass().getMethod(name, paramTypes);
             } else {
                 setMethod = null;
             }
+
             name = (String) in.readObject();
-            paramTypes = (Class<?>[]) in.readObject();
             if (name != null && !name.equals("")) {
+                Class<?>[] paramTypes = (Class<?>[]) in.readObject();
                 getMethod = instance.getClass().getMethod(name, paramTypes);
             } else {
                 getMethod = null;
