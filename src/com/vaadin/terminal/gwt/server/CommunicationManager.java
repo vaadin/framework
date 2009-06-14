@@ -960,7 +960,18 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             if (ampm_first > 0 && ampm_first < timeStart) {
                 timeStart = ampm_first;
             }
-            final String dateformat = df.substring(0, timeStart - 1);
+            // Hebrew locale has time before the date
+            final boolean timeFirst = timeStart == 0;
+            String dateformat;
+            if (timeFirst) {
+                int dateStart = df.indexOf(' ');
+                if (ampm_first > dateStart) {
+                    dateStart = df.indexOf(' ', ampm_first);
+                }
+                dateformat = df.substring(dateStart + 1);
+            } else {
+                dateformat = df.substring(0, timeStart - 1);
+            }
 
             outWriter.print("\"df\":\"" + dateformat.trim() + "\",");
 
