@@ -234,7 +234,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Page contents buffer used in buffered mode.
      */
-    private Object[][] pageBuffer = null;
+    private transient Object[][] pageBuffer = null;
 
     /**
      * Set of properties listened - the list is kept to release the listeners
