@@ -1,6 +1,7 @@
 package com.vaadin.tests;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -8,7 +9,6 @@ import java.io.Serializable;
 
 import junit.framework.TestCase;
 
-import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.MethodProperty;
@@ -60,10 +60,10 @@ public class TestSerialization extends TestCase {
             throws IOException, ClassNotFoundException {
         // Serialize and deserialize
 
-        ByteOutputStream bs = new ByteOutputStream();
+        ByteArrayOutputStream bs = new ByteArrayOutputStream();
         ObjectOutputStream out = new ObjectOutputStream(bs);
         out.writeObject(s);
-        byte[] data = bs.getBytes();
+        byte[] data = bs.toByteArray();
         ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(
                 data));
         Serializable s2 = (Serializable) in.readObject();
