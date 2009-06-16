@@ -77,7 +77,7 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
     }
 
     private static class URIS {
-        String widgetsetPath;
+        String staticFilesPath;
         String applicationURI;
         String context;
         String runner;
@@ -117,7 +117,7 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
             }
             applicationClassname = urlParts[3];
 
-            uris.widgetsetPath = "/" + context;
+            uris.staticFilesPath = "/" + context;
             uris.applicationURI = "/" + context + "/" + runner + "/"
                     + applicationClassname;
             uris.context = context;
@@ -132,7 +132,7 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
             }
             applicationClassname = urlParts[2];
 
-            uris.widgetsetPath = "/";
+            uris.staticFilesPath = "/";
             uris.applicationURI = "/" + runner + "/" + applicationClassname;
             uris.context = context;
             uris.runner = runner;
@@ -160,14 +160,14 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
     }
 
     @Override
-    String getWidgetsetLocation(HttpServletRequest request) {
+    String getStaticFilesLocation(HttpServletRequest request) {
         URIS uris = getApplicationRunnerURIs(request);
-        String widgetsetPath = uris.widgetsetPath;
-        if (widgetsetPath.equals("/")) {
-            widgetsetPath = "";
+        String staticFilesPath = uris.staticFilesPath;
+        if (staticFilesPath.equals("/")) {
+            staticFilesPath = "";
         }
 
-        return widgetsetPath;
+        return staticFilesPath;
     }
 
 }

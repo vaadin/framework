@@ -1029,21 +1029,25 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
             throws ClassNotFoundException;
 
     /**
-     * Resolve widgetset URL. Widgetset is not application specific.
+     * Return the URL from where static files, e.g. the widgetset and the theme,
+     * are served. In a standard configuration the VAADIN folder inside the
+     * returned folder is what is used for widgetsets and themes.
+     * 
+     * The returned folder is usually the same as the context path and
+     * independent of the application.
      * 
      * @param request
-     * @return
+     * @return The location of static resources (should contain the VAADIN
+     *         directory). Never ends with a slash (/).
      * @throws MalformedURLException
      */
-    String getWidgetsetLocation(HttpServletRequest request)
-            throws MalformedURLException {
-        URL applicationURL = getApplicationUrl(request);
-
-        String applicationPath = applicationURL.getPath();
-        String pathParts[] = applicationPath.split("\\/");
-
+    String getStaticFilesLocation(HttpServletRequest request) {
         // if context is specified add it to widgetsetUrl
         String ctxPath = request.getContextPath();
+
+        // FIXME: ctxPath.length() == 0 condition is probably unnecessary and
+        // might even be wrong.
+
         if (ctxPath.length() == 0
                 && request.getAttribute("javax.servlet.include.context_path") != null) {
             // include request (e.g portlet), get context path from
@@ -1052,14 +1056,33 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                     .getAttribute("javax.servlet.include.context_path");
         }
 
-        String widgetsetPath = "";
-        if (pathParts.length > 1
-                && pathParts[1].equals(ctxPath.replaceAll("\\/", ""))) {
-            widgetsetPath = "/" + pathParts[1];
+        // Remove heading and trailing slashes from the context path
+        ctxPath = removeHeadingOrTrailing(ctxPath, "/");
+
+        if (ctxPath.equals("")) {
+            return "";
+        } else {
+            return "/" + ctxPath;
+        }
+    }
+
+    /**
+     * Remove any heading or trailing "what" from the "string".
+     * 
+     * @param string
+     * @param what
+     * @return
+     */
+    private static String removeHeadingOrTrailing(String string, String what) {
+        while (string.startsWith(what)) {
+            string = string.substring(1);
         }
 
-        return widgetsetPath;
+        while (string.endsWith(what)) {
+            string = string.substring(0, string.length() - 1);
+        }
 
+        return string;
     }
 
     /**
@@ -1129,10 +1152,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
             appUrl = appUrl.substring(0, appUrl.length() - 1);
         }
 
-        final String widgetsetPath = getWidgetsetLocation(request);
+        final String staticFilesLocation = getStaticFilesLocation(request);
 
         final String staticFilePath = getApplicationOrSystemProperty(
-                PARAMETER_VAADIN_RESOURCES, widgetsetPath);
+                PARAMETER_VAADIN_RESOURCES, staticFilesLocation);
 
         // Default theme does not use theme URI
         String themeUri = null;
@@ -1539,7 +1562,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                 || servletPath.charAt(servletPath.length() - 1) != '/') {
             servletPath = servletPath + "/";
         }
-
+        System.out.println(request.getPathInfo());
         URL u = new URL(reqURL, servletPath);
         return u;
     }
