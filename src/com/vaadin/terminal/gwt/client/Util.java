@@ -525,7 +525,7 @@ public class Util {
     /**
      * Run workaround for webkits overflow auto issue.
      * 
-     * See: our buh #2138 and https://bugs.webkit.org/show_bug.cgi?id=21462
+     * See: our bug #2138 and https://bugs.webkit.org/show_bug.cgi?id=21462
      * 
      * @param elem
      *            with overflow auto
@@ -539,6 +539,13 @@ public class Util {
                 public void execute() {
                     // Dough, safari scoll auto means actually just a moped
                     elem.getStyle().setProperty("overflow", "auto");
+                    if (elem.getScrollTop() > 0) {
+                        // fix another bug where scrollbar remains in wrong
+                        // position
+                        int scrolltop = elem.getScrollTop();
+                        elem.setScrollTop(scrolltop + 1);
+                        elem.setScrollTop(scrolltop);
+                    }
                 }
             });
         }
