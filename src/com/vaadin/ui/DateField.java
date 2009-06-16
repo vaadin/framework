@@ -101,7 +101,7 @@ public class DateField extends AbstractField {
     /**
      * The internal calendar to be used in java.utl.Date conversions.
      */
-    private Calendar calendar;
+    private transient Calendar calendar;
 
     /**
      * Overridden format string
