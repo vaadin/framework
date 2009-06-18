@@ -632,7 +632,9 @@ public class Util {
             com.google.gwt.dom.client.Element element)
     /*-{
         var width;
-        if (element.getBoundingClientRect != null) {
+        if (element == null) {
+          width = 0;
+        } else if (element.getBoundingClientRect != null) {
           var rect = element.getBoundingClientRect();
           width = Math.ceil(rect.right - rect.left);
         } else {

@@ -81,6 +81,10 @@ public class VTabsheet extends VTabsheetBase {
 
         private void fixTextWidth() {
             Element captionText = getTextElement();
+            if (captionText == null) {
+                return;
+            }
+
             int captionWidth = Util.getRequiredWidth(captionText);
             int scrollWidth = captionText.getScrollWidth();
             if (scrollWidth > captionWidth) {
