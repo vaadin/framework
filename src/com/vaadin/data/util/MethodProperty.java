@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
 import java.util.LinkedList;
 
 import com.vaadin.data.Property;
+import com.vaadin.util.SerializerHelper;
 
 /**
  * <p>
@@ -78,7 +79,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
     /**
      * Type of the property.
      */
-    private Class type;
+    private transient Class<?> type;
 
     /**
      * List of listeners who are interested in the read-only status changes of
@@ -95,20 +96,25 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
     /* Special serialization to handle method references */
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
+        SerializerHelper.writeClass(out, type);
         out.writeObject(instance);
         out.writeObject(setArgs);
         out.writeObject(getArgs);
         if (setMethod != null) {
             out.writeObject(setMethod.getName());
-            out.writeObject(setMethod.getParameterTypes());
+            SerializerHelper
+                    .writeClassArray(out, setMethod.getParameterTypes());
         } else {
-            out.writeObject("");
+            out.writeObject(null);
+            out.writeObject(null);
         }
         if (getMethod != null) {
             out.writeObject(getMethod.getName());
-            out.writeObject(getMethod.getParameterTypes());
+            SerializerHelper
+                    .writeClassArray(out, getMethod.getParameterTypes());
         } else {
-            out.writeObject("");
+            out.writeObject(null);
+            out.writeObject(null);
         }
     };
 
@@ -117,20 +123,21 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
             ClassNotFoundException {
         in.defaultReadObject();
         try {
+            type = SerializerHelper.readClass(in);
             instance = in.readObject();
             setArgs = (Object[]) in.readObject();
             getArgs = (Object[]) in.readObject();
             String name = (String) in.readObject();
-            if (name != null && !name.equals("")) {
-                Class<?>[] paramTypes = (Class<?>[]) in.readObject();
+            Class<?>[] paramTypes = SerializerHelper.readClassArray(in);
+            if (name != null) {
                 setMethod = instance.getClass().getMethod(name, paramTypes);
             } else {
                 setMethod = null;
             }
 
             name = (String) in.readObject();
-            if (name != null && !name.equals("")) {
-                Class<?>[] paramTypes = (Class<?>[]) in.readObject();
+            paramTypes = SerializerHelper.readClassArray(in);
+            if (name != null) {
                 getMethod = instance.getClass().getMethod(name, paramTypes);
             } else {
                 getMethod = null;
