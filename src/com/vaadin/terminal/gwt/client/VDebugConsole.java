@@ -361,6 +361,10 @@ public final class VDebugConsole extends VOverlay implements Console {
                 + size + " </h4>"));
         if (size > 0) {
             Tree tree = new Tree();
+
+            // Position relative does not work here in IE7
+            DOM.setStyleAttribute(tree.getElement(), "position", "");
+
             TreeItem root = new TreeItem("Root problems");
             for (int i = 0; i < size; i++) {
                 JSONObject error = array.get(i).isObject();
