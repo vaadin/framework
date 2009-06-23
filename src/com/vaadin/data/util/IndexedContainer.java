@@ -670,8 +670,19 @@ public class IndexedContainer implements Container.Indexed,
         return id;
     }
 
+    /**
+     * Generates an unique identifier for use as an item id. Guarantees that the
+     * generated id is not currently used as an id.
+     * 
+     * @return
+     */
     private Serializable generateId() {
-        return new Integer(nextGeneratedItemId++);
+        Serializable id;
+        do {
+            id = new Integer(nextGeneratedItemId++);
+        } while (items.containsKey(id));
+
+        return id;
     }
 
     /* Event notifiers */
