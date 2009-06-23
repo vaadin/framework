@@ -225,10 +225,10 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
             target.addVariable(this, "scrollTop", getScrollTop());
         }
 
-        if (actionHandlers != null && !actionHandlers.isEmpty()) {
-            target.addVariable(this, "action", "");
-            target.startTag("actions");
+        target.addVariable(this, "action", "");
+        target.startTag("actions");
 
+        if (actionHandlers != null && !actionHandlers.isEmpty()) {
             for (final Iterator ahi = actionHandlers.iterator(); ahi.hasNext();) {
                 final Action[] aa = ((Action.Handler) ahi.next()).getActions(
                         null, this);
@@ -261,8 +261,8 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
                     }
                 }
             }
-            target.endTag("actions");
         }
+        target.endTag("actions");
     }
 
     @Override
@@ -327,8 +327,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * Called when one or more variables handled by the implementing class are
      * changed.
      * 
-     * @see com.vaadin.terminal.VariableOwner#changeVariables(Object,
-     *      Map)
+     * @see com.vaadin.terminal.VariableOwner#changeVariables(Object, Map)
      */
     @Override
     public void changeVariables(Object source, Map variables) {

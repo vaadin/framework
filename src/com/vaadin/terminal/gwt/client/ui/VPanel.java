@@ -184,9 +184,6 @@ public class VPanel extends SimplePanel implements Container {
                     shortcutHandler.updateActionMap(childUidl);
                 }
             }
-        } else if (shortcutHandler != null) {
-            // All actions have been removed
-            shortcutHandler = null;
         }
 
         if (uidl.hasVariable("scrollTop")
