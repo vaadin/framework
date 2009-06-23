@@ -197,6 +197,19 @@ public class ApplicationConnection {
      * <li><code>vaadin.forceSync()</code> sends pending variable changes, in
      * effect synchronizing the server and client state. This is done for all
      * applications on host page.</li>
+     * <li><code>vaadin.postRequestHooks</code> is a map of functions which gets
+     * called after each XHR made by vaadin application. Note, that it is
+     * attaching js functions responsibility to create the variable like this:
+     * 
+     * <code><pre> 
+     * if(!vaadin.postRequestHooks) {vaadin.postRequestHooks = new Object();}
+     * postRequestHooks.myHook = function(appId) {
+     *          if(appId == "MyAppOfInterest") {
+     *                  // do the staff you need on xhr activity
+     *          }
+     * }
+     * </pre></code> First parameter passed to these functions is the identifier
+     * of Vaadin application that made the request.
      * </ul>
      * 
      * TODO make this multi-app aware
@@ -223,6 +236,25 @@ public class ApplicationConnection {
                 oldForceLayout();
             }
             app.@com.vaadin.terminal.gwt.client.ApplicationConnection::forceLayout()();
+        }
+    }-*/;
+
+    /**
+     * Runs possibly registered client side post request hooks. This is expected
+     * to be run after each uidl request made by Vaadin application.
+     * 
+     * @param appId
+     */
+    private static native void runPostRequestHooks(String appId)
+    /*-{
+        if($wnd.vaadin.postRequestHooks) {
+            for(var hook in $wnd.vaadin.postRequestHooks) {
+                if(typeof($wnd.vaadin.postRequestHooks[hook]) == "function") {
+                    try {
+                        $wnd.vaadin.postRequestHooks[hook](appId);
+                    } catch(e) {}
+                }
+            }
         }
     }-*/;
 
@@ -440,6 +472,7 @@ public class ApplicationConnection {
     private void endRequest() {
         if (applicationRunning) {
             checkForPendingVariableBursts();
+            runPostRequestHooks(configuration.getRootPanelId());
         }
         activeRequests--;
         // deferring to avoid flickering
