@@ -45,7 +45,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     private final Map<BT, BeanItem> beanToItem = new HashMap<BT, BeanItem>();
 
     // internal data model to obtain property IDs etc.
-    private final Class<BT> type;
+    private final Class<? extends BT> type;
     private transient LinkedHashMap<String, PropertyDescriptor> model;
 
     private List<ItemSetChangeListener> itemSetChangeListeners;
@@ -67,7 +67,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
      * @throws IllegalArgumentException
      *             If the type is null
      */
-    public BeanItemContainer(Class<BT> type) {
+    public BeanItemContainer(Class<? extends BT> type) {
         if (type == null) {
             throw new IllegalArgumentException(
                     "The type passed to BeanItemContainer must not be null");
@@ -92,7 +92,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
                     "The collection passed to BeanItemContainer must not be null or empty");
         }
 
-        type = (Class<BT>) collection.iterator().next().getClass();
+        type = (Class<? extends BT>) collection.iterator().next().getClass();
         model = BeanItem.getPropertyDescriptors(type);
         int i = 0;
         for (BT bt : collection) {
@@ -190,13 +190,12 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
      * 
      * The bean is used both as the item contents and as the item identifier.
      * 
-     * @see com.vaadin.data.Container.Ordered#addItemAfter(Object,
-     *      Object)
+     * @see com.vaadin.data.Container.Ordered#addItemAfter(Object, Object)
      */
     public BeanItem addItemAfter(Object previousItemId, Object newItemId)
             throws UnsupportedOperationException {
         // only add if the previous item is visible
-        if (list.contains(previousItemId)) {
+        if (containsId(previousItemId)) {
             return addItemAtInternalIndex(allItems.indexOf(previousItemId) + 1,
                     newItemId);
         } else {
@@ -205,8 +204,8 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     }
 
     public BT firstItemId() {
-        if (list.size() > 0) {
-            return list.get(0);
+        if (size() > 0) {
+            return getIdByIndex(0);
         } else {
             return null;
         }
@@ -221,17 +220,17 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     }
 
     public BT lastItemId() {
-        if (list.size() > 0) {
-            return list.get(list.size() - 1);
+        if (size() > 0) {
+            return getIdByIndex(size() - 1);
         } else {
             return null;
         }
     }
 
     public BT nextItemId(Object itemId) {
-        int index = list.indexOf(itemId);
-        if (index >= 0 && index < list.size() - 1) {
-            return list.get(index + 1);
+        int index = indexOfId(itemId);
+        if (index >= 0 && index < size() - 1) {
+            return getIdByIndex(index + 1);
         } else {
             // out of bounds
             return null;
@@ -239,9 +238,9 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     }
 
     public BT prevItemId(Object itemId) {
-        int index = list.indexOf(itemId);
+        int index = indexOfId(itemId);
         if (index > 0) {
-            return list.get(index - 1);
+            return getIdByIndex(index - 1);
         } else {
             // out of bounds
             return null;
@@ -282,7 +281,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
      * @see com.vaadin.data.Container#addItem(Object)
      */
     public BeanItem addItem(Object itemId) throws UnsupportedOperationException {
-        if (list.size() > 0) {
+        if (size() > 0) {
             // add immediately after last visible item
             int lastIndex = allItems.indexOf(lastItemId());
             return addItemAtInternalIndex(lastIndex + 1, itemId);
@@ -297,7 +296,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     }
 
     public Property getContainerProperty(Object itemId, Object propertyId) {
-        return beanToItem.get(itemId).getItemProperty(propertyId);
+        return getItem(itemId).getItemProperty(propertyId);
     }
 
     public Collection<String> getContainerPropertyIds() {
@@ -339,7 +338,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
             return false;
         }
         // detach listeners from Item
-        removeAllValueChangeListeners(beanToItem.get(itemId));
+        removeAllValueChangeListeners(getItem(itemId));
         // remove item
         beanToItem.remove(itemId);
         list.remove(itemId);
@@ -396,15 +395,15 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
                 public int compare(BT a, BT b) {
                     Comparable va, vb;
                     if (asc) {
-                        va = (Comparable) beanToItem.get(a).getItemProperty(
-                                property).getValue();
-                        vb = (Comparable) beanToItem.get(b).getItemProperty(
-                                property).getValue();
+                        va = (Comparable) getItem(a).getItemProperty(property)
+                                .getValue();
+                        vb = (Comparable) getItem(b).getItemProperty(property)
+                                .getValue();
                     } else {
-                        va = (Comparable) beanToItem.get(b).getItemProperty(
-                                property).getValue();
-                        vb = (Comparable) beanToItem.get(a).getItemProperty(
-                                property).getValue();
+                        va = (Comparable) getItem(b).getItemProperty(property)
+                                .getValue();
+                        vb = (Comparable) getItem(a).getItemProperty(property)
+                                .getValue();
                     }
 
                     /*
