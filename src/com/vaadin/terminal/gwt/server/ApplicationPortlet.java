@@ -1,6 +1,7 @@
 package com.vaadin.terminal.gwt.server;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Serializable;
 
@@ -72,7 +73,30 @@ public class ApplicationPortlet implements Portlet, Serializable {
                     request.setAttribute(ApplicationServlet.REQUEST_APPSTYLE,
                             style);
                 }
+
                 dispatcher.include(request, response);
+
+                boolean isLifeRay = request.getPortalContext().getPortalInfo()
+                        .toLowerCase().contains("liferay");
+                if (isLifeRay) {
+                    /*
+                     * Temporary support to heartbeat Liferay session when using
+                     * Vaadin based portlet. We hit an extra xhr to liferay
+                     * servlet to extend the session lifetime after each Vaadin
+                     * request. This hack can be removed when supporting porlet
+                     * 2.0 and resourceRequests.
+                     * 
+                     * TODO make this configurable, this is not necessary with
+                     * some custom session configurations.
+                     */
+                    OutputStream out = response.getPortletOutputStream();
+                    byte[] lifeRaySessionHearbeatHack = ("<script type=\"text/javascript\">"
+                            + "if(!vaadin.postRequestHooks) {vaadin.postRequestHooks = {};}"
+                            + "vaadin.postRequestHooks.liferaySessionHeartBeat = function()"
+                            + "{Liferay.Session.extend();};</script>")
+                            .getBytes();
+                    out.write(lifeRaySessionHearbeatHack);
+                }
 
             } catch (PortletException e) {
                 PrintWriter out = response.getWriter();
@@ -89,5 +113,4 @@ public class ApplicationPortlet implements Portlet, Serializable {
 
         }
     }
-
 }
