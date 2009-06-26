@@ -93,7 +93,7 @@ public class ApplicationPortlet implements Portlet, Serializable {
                     byte[] lifeRaySessionHearbeatHack = ("<script type=\"text/javascript\">"
                             + "if(!vaadin.postRequestHooks) {vaadin.postRequestHooks = {};}"
                             + "vaadin.postRequestHooks.liferaySessionHeartBeat = function()"
-                            + "{Liferay.Session.extend();};</script>")
+                            + "{Liferay.Session.setCookie();};</script>")
                             .getBytes();
                     out.write(lifeRaySessionHearbeatHack);
                 }
