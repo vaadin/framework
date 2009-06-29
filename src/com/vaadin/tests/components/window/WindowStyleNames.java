@@ -36,6 +36,14 @@ public class WindowStyleNames extends TestBase {
 
         }));
 
+        addComponent(new Button("Add 'foo' style", new ClickListener() {
+
+            public void buttonClick(ClickEvent event) {
+                getMainWindow().addStyleName("foo");
+            }
+
+        }));
+
     }
 
     protected void setWindowStyle(String string) {

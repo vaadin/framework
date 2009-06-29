@@ -155,7 +155,8 @@ public class VView extends SimplePanel implements Container,
             theme = newTheme;
         }
         if (uidl.hasAttribute("style")) {
-            addStyleName(uidl.getStringAttribute("style"));
+            setStyleName(getStylePrimaryName() + " "
+                    + uidl.getStringAttribute("style"));
         }
 
         if (uidl.hasAttribute("name")) {
