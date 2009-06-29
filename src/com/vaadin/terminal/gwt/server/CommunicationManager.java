@@ -619,8 +619,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
             // Security: double cookie submission pattern unless disabled by
             // property
-            if (!"true".equals(application2
-                    .getProperty("disable-xsrf-protection"))) {
+            if (!"true"
+                    .equals(application2
+                            .getProperty(AbstractApplicationServlet.SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION))) {
                 if (bursts.length == 1 && "init".equals(bursts[0])) {
                     // initial request, no variable changes: send key
                     String seckey = (String) request.getSession().getAttribute(
