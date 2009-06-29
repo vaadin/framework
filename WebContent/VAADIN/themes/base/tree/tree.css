@@ -1,5 +1,6 @@
 .v-tree {
-	text-align: left /* Force default alignment */
+	text-align: left; /* Force default alignment */
+	overflow: hidden;
 }
 .v-tree-node {
 	background: transparent url(../common/img/sprites.png) no-repeat 5px -37px;
@@ -13,7 +14,7 @@ div.v-tree-node-leaf {
 .v-tree-node-caption {
 	margin-left: 1em;
 }
-.v-tree-node span {
+.v-tree-node-caption div {
 	cursor: pointer;
 	white-space: nowrap;
 }
