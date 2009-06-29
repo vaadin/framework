@@ -160,13 +160,21 @@ public class VPopupView extends HTML implements Container {
         int left = hostHorizontalCenter - offsetWidth / 2;
         int top = hostVerticalCenter - offsetHeight / 2;
 
-        // Superclass takes care of top and left
+        // Don't show the popup outside the screen.
         if ((left + offsetWidth) > windowRight) {
             left -= (left + offsetWidth) - windowRight;
         }
 
         if ((top + offsetHeight) > windowBottom) {
             top -= (top + offsetHeight) - windowBottom;
+        }
+
+        if (left < 0) {
+            left = 0;
+        }
+
+        if (top < 0) {
+            top = 0;
         }
 
         popup.setPopupPosition(left, top);
