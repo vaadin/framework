@@ -118,6 +118,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
     private static final String NOT_PRODUCTION_MODE_INFO = "=================================================================\nVaadin is running in DEBUG MODE.\nAdd productionMode=true to web.xml to disable debug features.\nTo show debug window, add ?debug to your application URL.\n=================================================================";
 
+    private static final String WARNING_XSRF_PROTECTION_DISABLED = "===========================================================\nWARNING: Cross-site request forgery protection is disabled!\n===========================================================";
+
     private boolean productionMode = false;
 
     private static final String URL_PARAMETER_RESTART_APPLICATION = "restartApplication";
@@ -127,6 +129,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
     private static final String SERVLET_PARAMETER_DEBUG = "Debug";
     private static final String SERVLET_PARAMETER_PRODUCTION_MODE = "productionMode";
+    static final String SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION = "disable-xsrf-protection";
 
     // Configurable parameter names
     private static final String PARAMETER_VAADIN_RESOURCES = "Resources";
@@ -190,8 +193,20 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
             applicationProperties.setProperty(name, context
                     .getInitParameter(name));
         }
-
         checkProductionMode();
+        checkCrossSiteProtection();
+    }
+
+    private void checkCrossSiteProtection() {
+        if (getApplicationOrSystemProperty(
+                SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION, "false").equals(
+                "true")) {
+            /*
+             * Print an information/warning message about running with xsrf
+             * protection disabled
+             */
+            System.err.println(WARNING_XSRF_PROTECTION_DISABLED);
+        }
     }
 
     private void checkProductionMode() {
