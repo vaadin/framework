@@ -1562,7 +1562,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                 || servletPath.charAt(servletPath.length() - 1) != '/') {
             servletPath = servletPath + "/";
         }
-        System.out.println(request.getPathInfo());
         URL u = new URL(reqURL, servletPath);
         return u;
     }
