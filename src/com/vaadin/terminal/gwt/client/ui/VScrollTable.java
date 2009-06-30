@@ -2076,6 +2076,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
                     }
                 }
                 tBodyMeasurementsDone = true;
+
+                updatePageLength();
+
                 return rowHeight;
             }
         }
@@ -2654,6 +2657,32 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
 
     }
 
+    /**
+     * Determines the pagelength when the table height is fixed.
+     */
+    public void updatePageLength() {
+        if (tBody == null) {
+            return;
+        }
+
+        if (height == null || height.equals("")) {
+            return;
+        }
+
+        int rowHeight = tBody.getRowHeight();
+        int bodyH = bodyContainer.getOffsetHeight();
+        int rowsAtOnce = bodyH / rowHeight;
+        boolean anotherPartlyVisible = ((bodyH % rowHeight) != 0);
+        if (anotherPartlyVisible) {
+            rowsAtOnce++;
+        }
+
+        pageLength = rowsAtOnce;
+
+        client.updateVariable(paintableId, "pagelength", pageLength, false);
+
+    }
+
     @Override
     public void setWidth(String width) {
         if (this.width.equals(width)) {
@@ -2818,6 +2847,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
         this.height = height;
         super.setHeight(height);
         setContainerHeight();
+        updatePageLength();
     }
 
     /*

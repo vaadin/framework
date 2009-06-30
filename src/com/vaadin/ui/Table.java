@@ -1752,6 +1752,12 @@ public class Table extends AbstractSelect implements Action.Container,
 
         super.changeVariables(source, variables);
 
+        // Client might update the pagelength if Table height is fixed
+        if (variables.containsKey("pagelength")) {
+            // Sets pageLength directly to avoid repaint that setter causes
+            pageLength = (Integer) variables.get("pagelength");
+        }
+
         // Page start index
         if (variables.containsKey("firstvisible")) {
             final Integer value = (Integer) variables.get("firstvisible");
