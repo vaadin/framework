@@ -22,8 +22,7 @@ public class TablePageLengthUpdate extends TestBase {
 
     @Override
     protected Integer getTicketNumber() {
-        // TODO Auto-generated method stub
-        return null;
+        return 1623;
     }
 
     @Override
