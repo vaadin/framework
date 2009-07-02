@@ -10,6 +10,7 @@
 	font-weight: bold;
 	color: #44698b;
 	letter-spacing: -0.02em;
+	text-shadow: #fff 0 -1px 1px;
 }
 .v-label-h2,
 .v-caption-h2 {
