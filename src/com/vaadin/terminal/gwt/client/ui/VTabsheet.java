@@ -209,11 +209,12 @@ public class VTabsheet extends VTabsheetBase {
         }
 
         public void setVisible(int index, boolean visible) {
-            Element e = DOM.getParent(getTab(index).getElement());
+            com.google.gwt.dom.client.Element e = getTab(index).getElement()
+                    .getParentElement().getParentElement();
             if (visible) {
-                DOM.setStyleAttribute(e, "display", "");
+                e.getStyle().setProperty("display", "");
             } else {
-                DOM.setStyleAttribute(e, "display", "none");
+                e.getStyle().setProperty("display", "none");
             }
         }
 
