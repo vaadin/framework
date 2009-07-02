@@ -159,7 +159,7 @@
 .v-table-strong .v-table-header-cell-asc .v-table-caption-container {
 	background-image: url(img/asc.png); /** sprite-ref: verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
 }
-.v-table-strong ..v-table-header-cell-desc .v-table-caption-container {
+.v-table-strong .v-table-header-cell-desc .v-table-caption-container {
 	background-image: url(img/desc.png); /** sprite-ref: verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
 }
 .v-table-strong .v-table-column-selector {
