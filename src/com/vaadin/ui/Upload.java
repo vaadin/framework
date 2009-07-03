@@ -161,7 +161,8 @@ public class Upload extends AbstractComponent implements Component.Focusable {
             while ((bytesRead = in.read(buffer)) > 0) {
                 out.write(buffer, 0, bytesRead);
                 totalBytes += bytesRead;
-                if (progressListener != null && contentLength > 0) {
+                if (contentLength > 0
+                        && (progressListeners != null || progressListener != null)) {
                     // update progress if listener set and contentLength
                     // received
                     synchronized (application) {
