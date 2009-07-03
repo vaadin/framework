@@ -99,6 +99,13 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
             .getName()
             + ".fragment";
     /**
+     * This request attribute forces widgetsets to be loaded from under the
+     * specified base path; e.g shared widgetset for all portlets in a portal.
+     */
+    public static final String REQUEST_VAADIN_WIDGETSET_PATH = ApplicationServlet.class
+            .getName()
+            + ".widgetsetPath";
+    /**
      * This request attribute forces widgetset used; e.g for portlets that can
      * not have different widgetsets.
      */
@@ -1172,6 +1179,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
         final String staticFilePath = getApplicationOrSystemProperty(
                 PARAMETER_VAADIN_RESOURCES, staticFilesLocation);
 
+        reqParam = request.getAttribute(REQUEST_VAADIN_WIDGETSET_PATH);
+        final String widgetsetFilePath = reqParam instanceof String ? (String) reqParam
+                : staticFilePath;
+
         // Default theme does not use theme URI
         String themeUri = null;
         if (themeName != null) {
@@ -1248,10 +1259,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
             page.write("<iframe tabIndex=\"-1\" id=\"__gwt_historyFrame\" "
                     + "style=\"width:0;height:0;border:0;overflow:"
                     + "hidden\" src=\"javascript:false\"></iframe>\n");
-            page.write("<script language='javascript' src='" + staticFilePath
-                    + "/" + WIDGETSET_DIRECTORY_PATH + widgetset + "/"
-                    + widgetset + ".nocache.js?" + new Date().getTime()
-                    + "'></script>\n");
+            page.write("<script language='javascript' src='"
+                    + widgetsetFilePath + "/" + WIDGETSET_DIRECTORY_PATH
+                    + widgetset + "/" + widgetset + ".nocache.js?"
+                    + new Date().getTime() + "'></script>\n");
             page.write("<script type=\"text/javascript\">\n");
             page.write("//<![CDATA[\n");
             page.write("if(!vaadin || !vaadin.vaadinConfigurations) {\n "
@@ -1332,7 +1343,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                             + "style=\"width:0;height:0;border:0;overflow:"
                             + "hidden\" src=\"javascript:false\"></iframe>');\n");
             page.write("document.write(\"<script language='javascript' src='"
-                    + staticFilePath + "/" + WIDGETSET_DIRECTORY_PATH
+                    + widgetsetFilePath + "/" + WIDGETSET_DIRECTORY_PATH
                     + widgetset + "/" + widgetset + ".nocache.js?"
                     + new Date().getTime() + "'><\\/script>\");\n}\n");
 
@@ -1398,8 +1409,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
         page.write("//<![CDATA[\n");
         page.write("setTimeout('if (typeof " + widgetset.replace('.', '_')
                 + " == \"undefined\") {alert(\"Failed to load the widgetset: "
-                + staticFilePath + "/" + WIDGETSET_DIRECTORY_PATH + widgetset
-                + "/" + widgetset + ".nocache.js\")};',15000);\n"
+                + widgetsetFilePath + "/" + WIDGETSET_DIRECTORY_PATH
+                + widgetset + "/" + widgetset + ".nocache.js\")};',15000);\n"
                 + "//]]>\n</script>\n");
 
         String style = null;
