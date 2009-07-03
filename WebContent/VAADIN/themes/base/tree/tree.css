@@ -20,6 +20,10 @@ div.v-tree-node-leaf {
 .v-tree-node-caption div {
 	white-space: nowrap;
 }
+.v-tree-node-caption span,
+.v-tree-node-caption .v-icon {
+	vertical-align: middle;
+}
 .v-tree-node-selected span {
 	background: #999;
 	color: #fff;

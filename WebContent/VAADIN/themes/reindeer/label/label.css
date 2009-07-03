@@ -60,3 +60,8 @@
 	background: #0c0d0e;
 	border-bottom-color: #292b2e;
 }
+
+/* Labels inside Table don't need a line-height */
+.v-table .v-label {
+	line-height: normal;
+}
