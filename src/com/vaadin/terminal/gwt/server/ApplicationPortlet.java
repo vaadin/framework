@@ -90,12 +90,16 @@ public class ApplicationPortlet implements Portlet, Serializable {
                      * some custom session configurations.
                      */
                     OutputStream out = response.getPortletOutputStream();
-                    byte[] lifeRaySessionHearbeatHack = ("<script type=\"text/javascript\">"
-                            + "if(!vaadin.postRequestHooks) {vaadin.postRequestHooks = {};}"
-                            + "vaadin.postRequestHooks.liferaySessionHeartBeat = function()"
-                            + "{Liferay.Session.setCookie();};</script>")
-                            .getBytes();
-                    out.write(lifeRaySessionHearbeatHack);
+                    String lifeRaySessionHearbeatHack = ("<script type=\"text/javascript\">"
+                            + "if(!vaadin.postRequestHooks) {"
+                            + "    vaadin.postRequestHooks = {};"
+                            + "}"
+                            + "vaadin.postRequestHooks.liferaySessionHeartBeat = function() {"
+                            + "    if (Liferay && Liferay.Session) {"
+                            + "        Liferay.Session.setCookie();"
+                            + "    }"
+                            + "};" + "</script>");
+                    out.write(lifeRaySessionHearbeatHack.getBytes());
                 }
 
             } catch (PortletException e) {
