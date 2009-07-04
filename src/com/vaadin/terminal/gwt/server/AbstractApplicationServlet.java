@@ -547,20 +547,26 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      */
     private Application findApplicationInstance(HttpServletRequest request,
             RequestType requestType) throws MalformedURLException,
-            SAXException, IllegalAccessException, InstantiationException,
             ServletException, SessionExpired {
 
-        final boolean restartApplication = (request
-                .getParameter(URL_PARAMETER_RESTART_APPLICATION) != null);
-        final boolean closeApplication = (request
-                .getParameter(URL_PARAMETER_CLOSE_APPLICATION) != null);
+        boolean requestCanCreateApplication = requestCanCreateApplication(
+                request, requestType);
 
-        Application application = getExistingApplication(request);
+        /* Find an existing application for this request. */
+        Application application = getExistingApplication(request,
+                requestCanCreateApplication);
+
         if (application != null) {
             /*
              * There is an existing application. We can use this as long as the
              * user not specifically requested to close or restart it.
              */
+
+            final boolean restartApplication = (request
+                    .getParameter(URL_PARAMETER_RESTART_APPLICATION) != null);
+            final boolean closeApplication = (request
+                    .getParameter(URL_PARAMETER_CLOSE_APPLICATION) != null);
+
             if (restartApplication) {
                 closeApplication(application, request.getSession(false));
                 return createApplication(request);
@@ -573,26 +579,51 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
         }
 
         // No existing application was found
+
+        if (requestCanCreateApplication) {
+            /*
+             * If the request is such that it should create a new application if
+             * one as not found, we do that.
+             */
+            return createApplication(request);
+        } else {
+            /*
+             * The application was not found and a new one should not be
+             * created. Assume the session has expired.
+             */
+            throw new SessionExpired();
+        }
+
+    }
+
+    /**
+     * Check if the request should create an application if an existing
+     * application is not found.
+     * 
+     * @param request
+     * @param requestType
+     * @return true if an application should be created, false otherwise
+     */
+    private boolean requestCanCreateApplication(HttpServletRequest request,
+            RequestType requestType) {
         if (requestType == RequestType.UIDL && isRepaintAll(request)) {
             /*
              * UIDL request contains valid repaintAll=1 event, the user probably
              * wants to initiate a new application through a custom index.html
              * without using writeAjaxPage.
              */
-            return createApplication(request);
+            return true;
 
         } else if (requestType == RequestType.OTHER) {
             /*
-             * TODO Shouldany request really create a new application instance
-             * if none was found?
+             * TODO Should any URL request really create a new application
+             * instance if none was found?
              */
-            return createApplication(request);
+            return true;
 
-        } else {
-            /* The application was not found. Assume the session has expired. */
-            throw new SessionExpired();
         }
 
+        return false;
     }
 
     /**
@@ -1588,6 +1619,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                 || servletPath.charAt(servletPath.length() - 1) != '/') {
             servletPath = servletPath + "/";
         }
+        System.out.println(request.getPathInfo());
         URL u = new URL(reqURL, servletPath);
         return u;
     }
@@ -1598,6 +1630,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      * 
      * @param request
      *            the HTTP request.
+     * @param allowSessionCreation
+     *            true if a session should be created if no session exists,
+     *            false if no session should be created
      * @return Application instance, or null if the URL does not map to valid
      *         application.
      * @throws MalformedURLException
@@ -1606,23 +1641,28 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      * @throws SAXException
      * @throws IllegalAccessException
      * @throws InstantiationException
+     * @throws SessionExpired
      */
-    private Application getExistingApplication(HttpServletRequest request)
-            throws MalformedURLException, SAXException, IllegalAccessException,
-            InstantiationException {
+    private Application getExistingApplication(HttpServletRequest request,
+            boolean allowSessionCreation) throws MalformedURLException,
+            SessionExpired {
 
         // Ensures that the session is still valid
-        final HttpSession session = request.getSession(true);
+        final HttpSession session = request.getSession(allowSessionCreation);
+        if (session == null) {
+            throw new SessionExpired();
+        }
 
         WebApplicationContext context = WebApplicationContext
                 .getApplicationContext(session);
 
         // Gets application list for the session.
-        final Collection applications = context.getApplications();
+        final Collection<Application> applications = context.getApplications();
 
         // Search for the application (using the application URI) from the list
-        for (final Iterator i = applications.iterator(); i.hasNext();) {
-            final Application sessionApplication = (Application) i.next();
+        for (final Iterator<Application> i = applications.iterator(); i
+                .hasNext();) {
+            final Application sessionApplication = i.next();
             final String sessionApplicationPath = sessionApplication.getURL()
                     .getPath();
             String requestApplicationPath = getApplicationUrl(request)
