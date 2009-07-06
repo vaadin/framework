@@ -809,8 +809,6 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
                 DOM.setStyleAttribute(getElement(), "width", rootWidth + "px");
             }
 
-            renderSpace.setWidth(contents.getOffsetWidth() - getBorderWidth());
-
             // IE6 needs the actual inner content width on the content element,
             // otherwise it won't wrap the content properly (no scrollbars
             // appear, content flows out of window)
@@ -818,6 +816,9 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
                 DOM.setStyleAttribute(contentPanel.getElement(), "width",
                         pixelWidth + "px");
             }
+
+            renderSpace.setWidth(contents.getOffsetWidth() - getBorderWidth());
+
             updateShadowSizeAndPosition();
         }
     }
