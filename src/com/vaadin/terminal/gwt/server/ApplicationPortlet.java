@@ -28,7 +28,7 @@ public class ApplicationPortlet implements Portlet, Serializable {
 
     // portal configuration parameters
     private static final String PORTAL_PARAMETER_VAADIN_WIDGETSET = "vaadin.widgetset";
-    private static final String PORTAL_PARAMETER_VAADIN_WIDGETSET_PATH = "vaadin.widgetset.path";
+    private static final String PORTAL_PARAMETER_VAADIN_RESOURCE_PATH = "vaadin.resources.path";
     private static final String PORTAL_PARAMETER_VAADIN_THEME = "vaadin.theme";
 
     // The application to show
@@ -95,6 +95,18 @@ public class ApplicationPortlet implements Portlet, Serializable {
                 String portalWidgetset = getPortalProperty(
                         PORTAL_PARAMETER_VAADIN_WIDGETSET, portalCtx);
 
+                // location of the widgetset(s) and default theme (to which
+                // /VAADIN/widgetsets/...
+                // is appended)
+                String portalResourcePath = getPortalProperty(
+                        PORTAL_PARAMETER_VAADIN_RESOURCE_PATH, portalCtx);
+
+                // by default on LifeRay, widgetset and default theme is in
+                // /html/VAADIN/widgetsets/...
+                if (isLifeRay && portalResourcePath == null) {
+                    portalResourcePath = "/html";
+                }
+
                 // - if the user has specified a widgetset for this portlet, use
                 // it from the portlet (not fully supported)
                 // - otherwise, if specified, use the portal-wide widgetset
@@ -102,23 +114,11 @@ public class ApplicationPortlet implements Portlet, Serializable {
                 // - finally, default to use the default widgetset if nothing
                 // else is found
                 if (portalWidgetset != null) {
-                    // location of the widgetset(s) (to which
-                    // /VAADIN/widgetsets/...
-                    // is appended)
-                    String portalWidgetsetPath = getPortalProperty(
-                            PORTAL_PARAMETER_VAADIN_WIDGETSET_PATH, portalCtx);
-
-                    // by default on LifeRay, widgetset is in
-                    // <root>/VAADIN/widgetsets/...
-                    if (isLifeRay && portalWidgetsetPath == null) {
-                        portalWidgetsetPath = "/html";
-                    }
-
-                    if (portalWidgetsetPath != null) {
+                    if (portalResourcePath != null) {
                         request
                                 .setAttribute(
                                         ApplicationServlet.REQUEST_VAADIN_WIDGETSET_PATH,
-                                        portalWidgetsetPath);
+                                        portalResourcePath);
                     }
 
                     request.setAttribute(ApplicationServlet.REQUEST_WIDGETSET,
@@ -131,6 +131,16 @@ public class ApplicationPortlet implements Portlet, Serializable {
                 if (style != null) {
                     request.setAttribute(ApplicationServlet.REQUEST_APPSTYLE,
                             style);
+                }
+
+                String themeUri = null;
+                if (portalTheme != null) {
+                    themeUri = portalResourcePath + "/"
+                            + AbstractApplicationServlet.THEME_DIRECTORY_PATH
+                            + portalTheme;
+                    request.setAttribute(
+                            ApplicationServlet.REQUEST_DEFAULT_THEME_URI,
+                            themeUri);
                 }
 
                 dispatcher.include(request, response);
@@ -147,6 +157,7 @@ public class ApplicationPortlet implements Portlet, Serializable {
                      * some custom session configurations.
                      */
                     OutputStream out = response.getPortletOutputStream();
+
                     String lifeRaySessionHearbeatHack = ("<script type=\"text/javascript\">"
                             + "if(!vaadin.postRequestHooks) {"
                             + "    vaadin.postRequestHooks = {};"
@@ -162,7 +173,24 @@ public class ApplicationPortlet implements Portlet, Serializable {
                      * Make sure LifeRay default Vaadin theme is included
                      * exactly once in DOM.
                      */
-                    // TODO implement this
+                    if (portalTheme != null) {
+                        // Using portal-wide theme
+                        String loadDefaultTheme = ("<script type=\"text/javascript\">\n"
+                                + "if(!vaadin.themesLoaded['"
+                                + portalTheme
+                                + "']) {\n"
+                                + "var stylesheet = document.createElement('link');\n"
+                                + "stylesheet.setAttribute('rel', 'stylesheet');\n"
+                                + "stylesheet.setAttribute('type', 'text/css');\n"
+                                + "stylesheet.setAttribute('href', '"
+                                + themeUri
+                                + "/styles.css');\n"
+                                + "document.getElementsByTagName('head')[0].appendChild(stylesheet);\n"
+                                + "vaadin.themesLoaded['"
+                                + portalTheme
+                                + "'] = true;\n}\n" + "</script>\n");
+                        out.write(loadDefaultTheme.getBytes());
+                    }
                 }
 
             } catch (PortletException e) {

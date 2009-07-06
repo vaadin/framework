@@ -113,6 +113,16 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
             .getName()
             + ".widgetset";
     /**
+     * If set, do not load the default theme but assume that loading it is
+     * handled e.g. by ApplicationPortlet.
+     * 
+     * The default theme should be located in
+     * REQUEST_DEFAULT_THEME_URI/THEME_DIRECTORY_PATH/getDefaultTheme() .
+     */
+    public static final String REQUEST_DEFAULT_THEME_URI = ApplicationServlet.class
+            .getName()
+            + ".defaultThemeUri";
+    /**
      * This request attribute is used to add styles to the main element. E.g
      * "height:500px" generates a style="height:500px" to the main element,
      * useful from some embedding situations (e.g portlet include.)
@@ -424,7 +434,14 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                 return;
             }
 
-            String themeName = getThemeForWindow(request, window);
+            String defaultThemeUri = null;
+            Object reqObj = request.getAttribute(REQUEST_DEFAULT_THEME_URI);
+            if (reqObj instanceof String) {
+                defaultThemeUri = (String) reqObj;
+            }
+
+            String themeName = getThemeForWindow(request, window,
+                    defaultThemeUri != null);
 
             // Handles theme resource requests
             if (handleResourceRequest(request, response, themeName)) {
@@ -432,7 +449,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
             }
 
             // Send initial AJAX page that kickstarts a Vaadin application
-            writeAjaxPage(request, response, window, themeName, application);
+            writeAjaxPage(request, response, window, themeName,
+                    defaultThemeUri, application);
 
         } catch (final SessionExpired e) {
             // Session has expired, notify user
@@ -806,14 +824,15 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
     }
 
-    private String getThemeForWindow(HttpServletRequest request, Window window) {
+    private String getThemeForWindow(HttpServletRequest request, Window window,
+            boolean ignoreDefaultTheme) {
         // Finds theme name
         String themeName = window.getTheme();
         if (request.getParameter(URL_PARAMETER_THEME) != null) {
             themeName = request.getParameter(URL_PARAMETER_THEME);
         }
 
-        if (themeName == null) {
+        if (!ignoreDefaultTheme && themeName == null) {
             themeName = getDefaultTheme();
         }
 
@@ -1191,8 +1210,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      */
     private void writeAjaxPage(HttpServletRequest request,
             HttpServletResponse response, Window window, String themeName,
-            Application application) throws IOException, MalformedURLException,
-            ServletException {
+            String defaultThemeUri, Application application)
+            throws IOException, MalformedURLException, ServletException {
 
         // e.g portlets only want a html fragment
         boolean fragment = (request.getAttribute(REQUEST_FRAGMENT) != null);
@@ -1249,10 +1268,16 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                 : staticFilePath;
 
         // Default theme does not use theme URI
-        String themeUri = null;
+        String themeBaseUri;
+        String themeUri;
         if (themeName != null) {
             // Using custom theme
-            themeUri = staticFilePath + "/" + THEME_DIRECTORY_PATH + themeName;
+            themeBaseUri = staticFilePath;
+            themeUri = themeBaseUri + "/" + THEME_DIRECTORY_PATH + themeName;
+        } else {
+            themeBaseUri = defaultThemeUri;
+            themeUri = themeBaseUri + "/" + THEME_DIRECTORY_PATH
+                    + getDefaultTheme();
         }
 
         if (!fragment) {
@@ -1346,7 +1371,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                 page.write("windowName: '" + window.getName() + "', ");
             }
             page.write("themeUri:");
-            page.write(themeUri != null ? "'" + themeUri + "'" : "null");
+            page
+                    .write(themeBaseUri != null ? "'" + themeBaseUri + "'"
+                            : "null");
             page.write(", versionInfo : {vaadinVersion:\"");
             page.write(VERSION);
             page.write("\",applicationVersion:\"");
@@ -1419,7 +1446,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                 page.write("windowName: '" + window.getName() + "', ");
             }
             page.write("themeUri:");
-            page.write(themeUri != null ? "'" + themeUri + "'" : "null");
+            page
+                    .write(themeBaseUri != null ? "'" + themeBaseUri + "'"
+                            : "null");
             page.write(", versionInfo : {vaadinVersion:\"");
             page.write(VERSION);
             page.write("\",applicationVersion:\"");
@@ -1483,10 +1512,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
         if (reqParam != null) {
             style = "style=\"" + reqParam + "\"";
         }
-        /*- Add classnames; 
-         *      .v-app 
+        /*- Add classnames;
+         *      .v-app
          *      .v-app-loading
-         *      .v-app-<simpleName for app class> 
+         *      .v-app-<simpleName for app class>
          *      .v-theme-<themeName, remove non-alphanum>
          */
         String appClass = "v-app-";
@@ -1500,6 +1529,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
         String themeClass = "";
         if (themeName != null) {
             themeClass = "v-theme-" + themeName.replaceAll("[^a-zA-Z0-9]", "");
+        } else {
+            themeClass = "v-theme-"
+                    + getDefaultTheme().replaceAll("[^a-zA-Z0-9]", "");
         }
 
         page.write("<div id=\"" + appId + "\" class=\"v-app v-app-loading "
@@ -1551,7 +1583,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
     private boolean handleResourceRequest(HttpServletRequest request,
             HttpServletResponse response, String themeName)
             throws ServletException {
-
         // If the resource path is unassigned, initialize it
         if (resourcePath == null) {
             resourcePath = request.getContextPath() + request.getServletPath()
@@ -1565,6 +1596,18 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
         // Checks if this really is a resource request
         if (resourceId == null || !resourceId.startsWith(RESOURCE_URI)) {
             return false;
+        }
+
+        if (themeName == null) {
+            try {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            } catch (final java.io.IOException e) {
+                // FIXME: Handle exception
+                System.err.println("Returning error code failed:  "
+                        + request.getRequestURI() + ". (" + e.getMessage()
+                        + ")");
+            }
+            return true;
         }
 
         // Checks the resource type
