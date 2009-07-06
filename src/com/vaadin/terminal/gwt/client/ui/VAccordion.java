@@ -246,7 +246,7 @@ public class VAccordion extends VTabsheetBase implements
             return;
         }
 
-        super.setWidth(width);
+        Util.setWidthExcludingPaddingAndBorder(this, width, 2);
         this.width = width;
         if (!rendering) {
             updateOpenTabSize();
@@ -266,7 +266,7 @@ public class VAccordion extends VTabsheetBase implements
 
     @Override
     public void setHeight(String height) {
-        super.setHeight(height);
+        Util.setHeightExcludingPaddingAndBorder(this, height, 2);
         this.height = height;
 
         if (!rendering) {
