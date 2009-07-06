@@ -290,7 +290,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                     String cap = ci.getOutOfSyncCaption();
                     if (msg != null || cap != null) {
                         applicationServlet.criticalNotification(request,
-                                response, cap, msg, ci.getOutOfSyncURL());
+                                response, cap, msg, null, ci.getOutOfSyncURL());
                         // will reload page after this
                         return;
                     }

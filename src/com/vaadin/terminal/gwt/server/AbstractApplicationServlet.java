@@ -165,6 +165,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
     private static final String DEFAULT_THEME_NAME = "reindeer";
 
+    private static final String INVALID_SECURITY_KEY_MSG = "Invalid security key.";
+
     private String resourcePath = null;
 
     /**
@@ -492,6 +494,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      *            for the notification
      * @param message
      *            for the notification
+     * @param details
+     *            a detail message to show in addition to the passed message.
+     *            Currently shown directly but could be hidden behind a details
+     *            drop down.
      * @param url
      *            url to load after message, null for current page
      * @throws IOException
@@ -499,7 +505,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      */
     void criticalNotification(HttpServletRequest request,
             HttpServletResponse response, String caption, String message,
-            String url) throws IOException {
+            String details, String url) throws IOException {
 
         // clients JS app is still running, but server application either
         // no longer exists or it might fail to perform reasonably.
@@ -508,6 +514,13 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
         if (caption != null) {
             caption = "\"" + caption + "\"";
+        }
+        if (details != null) {
+            if (message == null) {
+                message = details;
+            } else {
+                message += "<br/><br/>" + details;
+            }
         }
         if (message != null) {
             message = "\"" + message + "\"";
@@ -779,7 +792,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
             Application.SystemMessages ci = getSystemMessages();
             criticalNotification(request, response, ci
                     .getInternalErrorCaption(), ci.getInternalErrorMessage(),
-                    ci.getInternalErrorURL());
+                    null, ci.getInternalErrorURL());
             if (application != null) {
                 application.getErrorHandler()
                         .terminalError(new RequestError(e));
@@ -865,7 +878,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                 // send uidl redirect
                 criticalNotification(request, response, ci
                         .getSessionExpiredCaption(), ci
-                        .getSessionExpiredMessage(), ci.getSessionExpiredURL());
+                        .getSessionExpiredMessage(), null, ci
+                        .getSessionExpiredURL());
                 /*
                  * Invalidate session (weird to have session if we're saying
                  * that it's expired, and worse: portal integration will fail
@@ -889,9 +903,29 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
             return;
         }
 
-        // TODO handle differently?
-        // Invalid security key, show session expired message for now.
-        handleServiceSessionExpired(request, response);
+        try {
+            Application.SystemMessages ci = getSystemMessages();
+            if (getRequestType(request) != RequestType.UIDL) {
+                // 'plain' http req - e.g. browser reload;
+                // just go ahead redirect the browser
+                response.sendRedirect(ci.getCommunicationErrorURL());
+            } else {
+                // send uidl redirect
+                criticalNotification(request, response, ci
+                        .getCommunicationErrorCaption(), ci
+                        .getCommunicationErrorMessage(),
+                        INVALID_SECURITY_KEY_MSG, ci.getCommunicationErrorURL());
+                /*
+                 * Invalidate session. Portal integration will fail otherwise
+                 * since the session is not created by the portal.
+                 */
+                request.getSession().invalidate();
+            }
+        } catch (SystemMessageException ee) {
+            throw new ServletException(ee);
+        }
+
+        log("Invalid security key received from " + request.getRemoteHost());
     }
 
     /**
