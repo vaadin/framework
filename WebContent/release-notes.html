@@ -23,41 +23,35 @@
 
 <h2>Release Notes for Vaadin @version@</h2>
 
-<p>Vaadin @version@ is the first release of Vaadin, the next generation of the framework
-formerly known as IT Mill Toolkit. The major release includes a number of enhancements to
-IT Mill Toolkit 5.4, along with many bug fixes. The most significant additions are:</p>
+<p>Vaadin @version@ is the first maintenance release for Vaadin 6. In addition to many bug
+fixes, the most significant additions are:</p>
 
 <ul>
-  <li>Vaadin Plugin for the Eclipse IDE</li>
-  <li>Preview version of a WYSIWYG Editor (under Eclipse)</li>
+  <li>Major improvement in Liferay portal integration support (<a href="http://dev.itmill.com/ticket/3113">#3113</a>).<br/>Note that:</li>
+  <ul>
+    <li>Regarding widget sets:</li>
+    <ul>
+      <li>Only one widget set is allowed for a portal. If different portlets would normally use different widget sets, you need to use inheritance or composition to combine the widget sets to a single widget set.</li>
+      <li>You need to specify the widget set in the portal properties.</li>
+      <li>The widget set needs to be loaded from <tt>/VAADIN/widgetsets/</tt> path.</li>
+    </ul>
+    <li>Regarding themes:</li>
+    <ul>
+      <li>The base theme (usually "<tt>reindeer</tt>" or "<tt>runo</tt>") is defined in portal properties and is loaded automatically by the portal, not by individual portlets.</li>
+      <li>The base theme must have path <tt>/VAADIN/themes/<i>reindeer</i></tt>.</li>
+      <li>No <tt>@import</tt> statement should be used in an application theme, unlike in normal Vaadin applications, as the base theme is loaded implicitly.</li>
+    </ul>
+  </ul>
 </ul>
 
 <p>Some other notable changes:</p>
 
 <ul>
-  <li>State (caption, hidden, disabled) of a tab in a <b>TabSheet</b> is no longer bound to the contained component, though the initial state is obtained from the component (<a href="http://dev.itmill.com/ticket/2914">#2914</a>).</li>
-
-  <li><b>FieldFactory</b> has been split into <b>FormFieldFactory</b> and <b>TableFieldFactory</b>, both containing a single method (<a href="http://dev.itmill.com/ticket/2956">#2956</a>, <a href="http://dev.itmill.com/ticket/2499">#2499</a>).</li>
-
-  <li>The <b>Form</b> component previously called two methods in <b>FieldFactory</b>. Now it always calls only one in <b>FormFieldFactory</b></li>
-
-  <li><b>Panel</b> and <b>Window</b> can now contain a <b>ComponentContainer</b>
-  (previously only <b>Layout</b>) as the "root layout" (<a
-  href="http://dev.itmill.com/ticket/2921">#2921</a>). The <tt>setLayout()</tt> method is
-  deprecated and the new <tt>setContent()</tt> method that accepts a
-  <b>ComponentContainer</b> is recommended.</li>
-
-  <li>Vaadin applications are now serializable, which allows compatibility with many clustering and cloud computing solutions.</li>
-
-  <li>The new <b>AbsoluteLayout</b> allows placing components by their coordinates.</li>
-
-  <li>The way how <b>DateField</b> handles unparseable non-empty input in the default
-  implementation of <tt>handleUnparsableDateString()</tt> method is changed (<a
-  href="http://dev.vaadin.com/ticket/2831">#2831</a>). It now throws a
-  <b>Property.ConversionException</b> instead of returning <tt>null</tt>.
+  <li>Print a warning to standard output if cross-side scripting prevention is turned off (<a href="http://dev.itmill.com/ticket/3060">#3060</a>)</li>
+  <li>An integration hook in JavaScript API that makes a call after each XHR (<a href="http://dev.itmill.com/ticket/3083">#3083</a>)</li>
 </ul>
 
-<p>The first three changes are not backward-compatible with IT Mill Toolkit 5.4.</p>
+<p>See the <a href="#changelog">Change Log</a> below for a more detailed list of closed issues in this release.</p>
 
 <h2>Instructions for Upgrading from IT Mill Toolkit 5</h2>
 
@@ -198,6 +192,35 @@ for your platform.</p>
 
 <p>For other known problems, see open tickets at developer site <a
 	href="http://dev.itmill.com/">dev.itmill.com</a>.</p>
+
+<h2><a name="changelog">Change Log</a></h2>
+
+<ul>
+  <li><a href="http://dev.itmill.com/ticket/1623">#1623</a>: Table: Client side should dynamically adjust pagelength variable</li>
+  <li><a href="http://dev.itmill.com/ticket/2941">#2941</a>: Panel/Window does not remove all Action Handlers on client-side</li>
+  <li><a href="http://dev.itmill.com/ticket/3015">#3015</a>: Class Object instances should not be used as identifiers, are not serializable</li>
+  <li><a href="http://dev.itmill.com/ticket/3038">#3038</a>: demo main page broken if scrollbars in use (FF, SA)</li>
+  <li><a href="http://dev.itmill.com/ticket/3039">#3039</a>: Scrollbar jumps to top in Safari</li>
+  <li><a href="http://dev.itmill.com/ticket/3051">#3051</a>: MethodProperty serialization broken when setter or getter is null</li>
+  <li><a href="http://dev.itmill.com/ticket/3052">#3052</a>: Link style button icons are always 16px wide in reindeer theme</li>
+  <li><a href="http://dev.itmill.com/ticket/3059">#3059</a>: Window's setStyleName, removeStyleName does not remove old styles on the client side.</li>
+  <li><a href="http://dev.itmill.com/ticket/3060">#3060</a>: Warn if cross site scripting prevention is turned off</li>
+  <li><a href="http://dev.itmill.com/ticket/3061">#3061</a>: Security key should not use invalid http header</li>
+  <li><a href="http://dev.itmill.com/ticket/3071">#3071</a>: IE6: Undefined/auto subwindow width is broken</li>
+  <li><a href="http://dev.itmill.com/ticket/3073">#3073</a>: IE7: Error when rendering a Tab without a caption</li>
+  <li><a href="http://dev.itmill.com/ticket/3074">#3074</a>: "100% wide accordion is too wide using ""reindeer"""</li>
+  <li><a href="http://dev.itmill.com/ticket/3078">#3078</a>: "Debug console ""root problems"" has invalid position in IE7"</li>
+  <li><a href="http://dev.itmill.com/ticket/3081">#3081</a>: HierarchicalContainer overwrites old items when trying to add a new item</li>
+  <li><a href="http://dev.itmill.com/ticket/3083">#3083</a>: JS api where to hook functionality after each XHR</li>
+  <li><a href="http://dev.itmill.com/ticket/3092">#3092</a>: BeanItemContainer is not extendable</li>
+  <li><a href="http://dev.itmill.com/ticket/3098">#3098</a>: Tree node text wraps to the next line if an icon is present and width is fixed</li>
+  <li><a href="http://dev.itmill.com/ticket/3099">#3099</a>: PopupView is shown off screen</li>
+  <li><a href="http://dev.itmill.com/ticket/3102">#3102</a>: Upload.ProgressListener not called in some situations</li>
+  <li><a href="http://dev.itmill.com/ticket/3105">#3105</a>: "Show ""invalid security key"" instead of ""Session Expired"" for invalid security key"</li>
+  <li><a href="http://dev.itmill.com/ticket/3109">#3109</a>: Down sort arrow visually broken in table with strong style (reindeer)</li>
+  <li><a href="http://dev.itmill.com/ticket/3115">#3115</a>: A new session should not be created if an application is not</li>
+  <li><a href="http://dev.itmill.com/ticket/3119">#3119</a>: Release notes back link should not link to index.html</li>
+</ul>
 
 <h2>Requirements</h2>
 
