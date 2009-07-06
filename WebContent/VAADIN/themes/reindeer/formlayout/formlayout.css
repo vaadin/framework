@@ -1,3 +1,6 @@
+.v-formlayout-errorcell {
+	width: 13px;
+}
 .v-formlayout-cell .v-errorindicator {
 	width: 13px;
 	height: 16px;
@@ -33,14 +36,15 @@
 }
 /* form */
 .v-form-errormessage {
-	background: transparent url(../icons/16/error.png) no-repeat top left;
+	background: transparent url(../common/icons/error.png) no-repeat 3px 2px;
 	padding-left: 20px;
 	margin-bottom: 5px;
 	margin-top: 5px;
 	min-height: 20px;
 }
 .v-ie6 .v-form-errormessage {
-	height: 20px
+	height: 20px;
+	background-image: url(../common/icons/error-ie6.png);
 }
 .v-form fieldset {
 	border: none;
