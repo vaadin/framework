@@ -2100,8 +2100,12 @@ div > .v-button.v-button-link.v-disabled .v-button-caption,
 .v-button.v-button-link:focus {
 	outline: 1px dotted #1b699f;
 }
-.v-ie7 .v-button-link .v-icon {
+div > .v-button-link .v-icon,
+.v-ie7 .v-button-link .v-icon,
+div > .v-disabled.v-button-link .v-icon,
+.v-ie7 .v-disabled.v-button-link .v-icon {
 	position: static;
+	width: auto;
 }
 
 
