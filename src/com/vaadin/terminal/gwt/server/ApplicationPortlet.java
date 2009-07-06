@@ -150,7 +150,7 @@ public class ApplicationPortlet implements Portlet, Serializable {
                      * Temporary support to heartbeat Liferay session when using
                      * Vaadin based portlet. We hit an extra xhr to liferay
                      * servlet to extend the session lifetime after each Vaadin
-                     * request. This hack can be removed when supporting porlet
+                     * request. This hack can be removed when supporting portlet
                      * 2.0 and resourceRequests.
                      * 
                      * TODO make this configurable, this is not necessary with
@@ -164,7 +164,7 @@ public class ApplicationPortlet implements Portlet, Serializable {
                             + "}"
                             + "vaadin.postRequestHooks.liferaySessionHeartBeat = function() {"
                             + "    if (Liferay && Liferay.Session) {"
-                            + "        Liferay.Session.setCookie();"
+                            + "        Liferay.Session.extend();"
                             + "    }"
                             + "};" + "</script>");
                     out.write(lifeRaySessionHearbeatHack.getBytes());
