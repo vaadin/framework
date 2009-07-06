@@ -21,24 +21,34 @@
 
 <p>Version @version@ built on @builddate@.</p>
 
-<h2>Release Notes for Vaadin @version@</h2>
+<h2><a name="overview">Release Notes for Vaadin @version@</a></h2>
+
+<ul>
+  <li><a href="overview">Overview</a></li>
+  <li><a href="upgrading">General Upgrade Notes</a></li>
+  <li><a href="upgrading-tk5">Instructions for Upgrading from IT Mill Toolkit 5</a></li>
+  <li><a href="oophm">Package for the experimental GWT Out-of-Process Hosted Mode</a></li>
+  <li><a href="known-problems">Important known problems in Vaadin @version@</a></li>
+  <li><a href="changelog">Change Log</a></li>
+  <li><a href="requirements">Requirements</a></li>
+</ul>
 
 <p>Vaadin @version@ is the first maintenance release for Vaadin 6. In addition to many bug
 fixes, the most significant additions are:</p>
 
 <ul>
-  <li>Major improvement in Liferay portal integration support (<a href="http://dev.itmill.com/ticket/3113">#3113</a>).<br/>Note that:</li>
+  <li>Major improvement in Liferay portal integration support (<a href="http://dev.vaadin.com/ticket/3113">#3113</a>).<br/>Note that:</li>
   <ul>
     <li>Regarding widget sets:</li>
     <ul>
-      <li>Only one widget set is allowed for a portal. If different portlets would normally use different widget sets, you need to use inheritance or composition to combine the widget sets to a single widget set.</li>
       <li>You need to specify the widget set in the portal properties.</li>
+      <li>If you have portlets that require different widget sets, you need to use inheritance or composition to combine the widget sets to a single widget set.</li>
       <li>The widget set needs to be loaded from <tt>/VAADIN/widgetsets/</tt> path.</li>
     </ul>
     <li>Regarding themes:</li>
     <ul>
       <li>The base theme (usually "<tt>reindeer</tt>" or "<tt>runo</tt>") is defined in portal properties and is loaded automatically by the portal, not by individual portlets.</li>
-      <li>The base theme must have path <tt>/VAADIN/themes/<i>reindeer</i></tt>.</li>
+      <li>The base theme must have path such as <tt>/VAADIN/themes/<i>reindeer</i></tt>.</li>
       <li>No <tt>@import</tt> statement should be used in an application theme, unlike in normal Vaadin applications, as the base theme is loaded implicitly.</li>
     </ul>
   </ul>
@@ -47,13 +57,32 @@ fixes, the most significant additions are:</p>
 <p>Some other notable changes:</p>
 
 <ul>
-  <li>Print a warning to standard output if cross-side scripting prevention is turned off (<a href="http://dev.itmill.com/ticket/3060">#3060</a>)</li>
-  <li>An integration hook in JavaScript API that makes a call after each XHR (<a href="http://dev.itmill.com/ticket/3083">#3083</a>)</li>
+  <li>Vaadin application will print a warning to standard error if cross-site scripting prevention is turned off (<a href="http://dev.vaadin.com/ticket/3060">#3060</a>)</li>
+  <li>An integration hook in JavaScript API that is called after each XHR (<a href="http://dev.vaadin.com/ticket/3083">#3083</a>)</li>
 </ul>
 
 <p>See the <a href="#changelog">Change Log</a> below for a more detailed list of closed issues in this release.</p>
 
-<h2>Instructions for Upgrading from IT Mill Toolkit 5</h2>
+<p>Vaadin @version@ uses Google Web Toolkit 1.6.4, which is included in the <tt>gwt</tt> folder of the installation package.</p>
+
+<h2><a name="upgrading">General Upgrade Notes</a></h2>
+
+<p>When upgrading from an earlier version of the Vaadin library, you should always do the following:</p>
+
+<ol>
+  <li>Install the new Vaadin JAR to your project</li>
+  <li>Install new GWT JARs if the GWT version has changed</li>
+  <li>If you have custom widget sets, recompile them with the new Vaadin library using the included GWT compiler</li>
+  <li>If using the Eclipse IDE:
+  <ol type="a">
+    <li>Refresh the Eclipse project by selecting the project folder and pressing <b>F5</b></li>
+    <li>Restart the application server</li>
+  </ol>
+</ol>
+
+<p>Using the Vaadin project facet in the Eclipse IDE does the steps 1 and 2 automatically.</p>
+
+<h2><a name="upgrading-tk5">Instructions for Upgrading from IT Mill Toolkit 5</a></h2>
 
 <p>While the Vaadin 6 API is otherwise mostly backward-compatible with IT Mill Toolkit 5.4, the
 change of the product name has made it necessary to reflect it in the Java package names,
@@ -99,6 +128,11 @@ some name prefixes, and some other details.</p>
     <li>The name of the JavaScript variable used for launching applications has changed from "<tt>itmill.toolkitConfigurations</tt>" &#x2192; "<tt>vaadin.vaadinConfigurations</tt>"</li>
   </ul>
 
+  <li>Other changes in naming:</li>
+  <ul>
+    <li>Rename references to <tt>translateToolkitUri()</tt> &#x2192; <tt>translateVaadinUri()</tt> method in <b>ApplicationConnection</b> class.
+  </ul>
+
 </ul>
 
 <h3>Client-side Upgrade Instructions</h3>
@@ -122,7 +156,7 @@ client-side widgets with Google Web Toolkit (GWT).</p>
   <li>Rename <b>IToolkitOverlay</b> &#x2192; <b>VOverlay</b>
 </ul>
 
-<h2>Package for the experimental GWT Out-of-Process Hosted Mode</h2>
+<h2><a name="oophm">Package for the experimental GWT Out-of-Process Hosted Mode</a></h2>
 
 <p>We provide a separate (platform independent) installation package
 (<tt>vaadin-oophm-<version></version>.tar.gz</tt>) for the
@@ -133,7 +167,7 @@ for Mozilla Firefox, IE, and WebKit). See the manual section on OOPHM
 for more details.</p>
 
 <p>The Linux version of GWT Hosted Mode Browser is no longer compatible with Vaadin (<a
-href="http://dev.itmill.com/ticket/2299">#2299</a>), so the OOPHM is the only option for
+href="http://dev.vaadin.com/ticket/2299">#2299</a>), so the OOPHM is the only option for
 debugging in hosted mode in Linux.</p>
 
 <p>The compilation of OOPHM widget sets uses a large amount of stack memory, so if the
@@ -149,7 +183,7 @@ for your platform.</p>
 <h2><a name="known-problems">Important known problems in Vaadin @version@</a></h2>
 
 <ul>
-	<li><p><a href="http://dev.itmill.com/ticket/1155">#1155</a>:
+	<li><p><a href="http://dev.vaadin.com/ticket/1155">#1155</a>:
 	Uncompressing the installation package fails in Windows if using the
 	default Zip uncompression. Uncompression gives (in Windows Vista) an
 	error message about too long filenames, and a more obscure message in
@@ -157,14 +191,14 @@ for your platform.</p>
 		href="http://www.7-zip.org/">7-Zip</a> or some other good unzip
 	program for Windows.</p></li>
 
-	<li><p><a href="http://dev.itmill.com/ticket/2299">#2299</a>: The
+	<li><p><a href="http://dev.vaadin.com/ticket/2299">#2299</a>: The
 	Hosted Mode Browser does not work in Linux for debugging client-side
 	GWT code. You need to install the experimental OOPHM package instead
 	(see above) for development. For production, you should use the regular
 	package for Linux.</p></li>
 
     <li>
-      <p><a href="http://dev.itmill.com/ticket/2523">#2523</a>: GWT Compiler 1.6 uses more
+      <p><a href="http://dev.vaadin.com/ticket/2523">#2523</a>: GWT Compiler 1.6 uses more
       stack space than 1.5 and can result in stack overflow errors. You can prevent the
       problem by giving the Java process more stack space with the <tt>-Xss</tt>
       parameter, such as: <tt>-Xss1024k</tt>. You can give the parameter in your widgetset
@@ -173,7 +207,7 @@ for your platform.</p>
 
     <ul>
       <li>
-        <p><a href="http://dev.itmill.com/ticket/2891">#2891</a>: As there is a bug in
+        <p><a href="http://dev.vaadin.com/ticket/2891">#2891</a>: As there is a bug in
         J2SE 5.0 that prevents setting the stack size for the main thread, widgetsets
         cannot be compiled using the standard GWT compiler of GWT 1.6 and JDK 1.5.0 (see
         #2656 for more details on the JDK bug). This bug primarily affects Windows users
@@ -191,38 +225,38 @@ for your platform.</p>
 </ul>
 
 <p>For other known problems, see open tickets at developer site <a
-	href="http://dev.itmill.com/">dev.itmill.com</a>.</p>
+	href="http://dev.vaadin.com/">dev.vaadin.com</a>.</p>
 
 <h2><a name="changelog">Change Log</a></h2>
 
 <ul>
-  <li><a href="http://dev.itmill.com/ticket/1623">#1623</a>: Table: Client side should dynamically adjust pagelength variable</li>
-  <li><a href="http://dev.itmill.com/ticket/2941">#2941</a>: Panel/Window does not remove all Action Handlers on client-side</li>
-  <li><a href="http://dev.itmill.com/ticket/3015">#3015</a>: Class Object instances should not be used as identifiers, are not serializable</li>
-  <li><a href="http://dev.itmill.com/ticket/3038">#3038</a>: demo main page broken if scrollbars in use (FF, SA)</li>
-  <li><a href="http://dev.itmill.com/ticket/3039">#3039</a>: Scrollbar jumps to top in Safari</li>
-  <li><a href="http://dev.itmill.com/ticket/3051">#3051</a>: MethodProperty serialization broken when setter or getter is null</li>
-  <li><a href="http://dev.itmill.com/ticket/3052">#3052</a>: Link style button icons are always 16px wide in reindeer theme</li>
-  <li><a href="http://dev.itmill.com/ticket/3059">#3059</a>: Window's setStyleName, removeStyleName does not remove old styles on the client side.</li>
-  <li><a href="http://dev.itmill.com/ticket/3060">#3060</a>: Warn if cross site scripting prevention is turned off</li>
-  <li><a href="http://dev.itmill.com/ticket/3061">#3061</a>: Security key should not use invalid http header</li>
-  <li><a href="http://dev.itmill.com/ticket/3071">#3071</a>: IE6: Undefined/auto subwindow width is broken</li>
-  <li><a href="http://dev.itmill.com/ticket/3073">#3073</a>: IE7: Error when rendering a Tab without a caption</li>
-  <li><a href="http://dev.itmill.com/ticket/3074">#3074</a>: "100% wide accordion is too wide using ""reindeer"""</li>
-  <li><a href="http://dev.itmill.com/ticket/3078">#3078</a>: "Debug console ""root problems"" has invalid position in IE7"</li>
-  <li><a href="http://dev.itmill.com/ticket/3081">#3081</a>: HierarchicalContainer overwrites old items when trying to add a new item</li>
-  <li><a href="http://dev.itmill.com/ticket/3083">#3083</a>: JS api where to hook functionality after each XHR</li>
-  <li><a href="http://dev.itmill.com/ticket/3092">#3092</a>: BeanItemContainer is not extendable</li>
-  <li><a href="http://dev.itmill.com/ticket/3098">#3098</a>: Tree node text wraps to the next line if an icon is present and width is fixed</li>
-  <li><a href="http://dev.itmill.com/ticket/3099">#3099</a>: PopupView is shown off screen</li>
-  <li><a href="http://dev.itmill.com/ticket/3102">#3102</a>: Upload.ProgressListener not called in some situations</li>
-  <li><a href="http://dev.itmill.com/ticket/3105">#3105</a>: "Show ""invalid security key"" instead of ""Session Expired"" for invalid security key"</li>
-  <li><a href="http://dev.itmill.com/ticket/3109">#3109</a>: Down sort arrow visually broken in table with strong style (reindeer)</li>
-  <li><a href="http://dev.itmill.com/ticket/3115">#3115</a>: A new session should not be created if an application is not</li>
-  <li><a href="http://dev.itmill.com/ticket/3119">#3119</a>: Release notes back link should not link to index.html</li>
+  <li><a href="http://dev.vaadin.com/ticket/1623">#1623</a>: Table: Client side should dynamically adjust pagelength variable</li>
+  <li><a href="http://dev.vaadin.com/ticket/2941">#2941</a>: Panel/Window does not remove all Action Handlers on client-side</li>
+  <li><a href="http://dev.vaadin.com/ticket/3015">#3015</a>: Class Object instances should not be used as identifiers, are not serializable</li>
+  <li><a href="http://dev.vaadin.com/ticket/3038">#3038</a>: demo main page broken if scrollbars in use (FF, SA)</li>
+  <li><a href="http://dev.vaadin.com/ticket/3039">#3039</a>: Scrollbar jumps to top in Safari</li>
+  <li><a href="http://dev.vaadin.com/ticket/3051">#3051</a>: MethodProperty serialization broken when setter or getter is null</li>
+  <li><a href="http://dev.vaadin.com/ticket/3052">#3052</a>: Link style button icons are always 16px wide in reindeer theme</li>
+  <li><a href="http://dev.vaadin.com/ticket/3059">#3059</a>: Window's setStyleName, removeStyleName does not remove old styles on the client side.</li>
+  <li><a href="http://dev.vaadin.com/ticket/3060">#3060</a>: Warn if cross site scripting prevention is turned off</li>
+  <li><a href="http://dev.vaadin.com/ticket/3061">#3061</a>: Security key should not use invalid http header</li>
+  <li><a href="http://dev.vaadin.com/ticket/3071">#3071</a>: IE6: Undefined/auto subwindow width is broken</li>
+  <li><a href="http://dev.vaadin.com/ticket/3073">#3073</a>: IE7: Error when rendering a Tab without a caption</li>
+  <li><a href="http://dev.vaadin.com/ticket/3074">#3074</a>: "100% wide accordion is too wide using ""reindeer"""</li>
+  <li><a href="http://dev.vaadin.com/ticket/3078">#3078</a>: "Debug console ""root problems"" has invalid position in IE7"</li>
+  <li><a href="http://dev.vaadin.com/ticket/3081">#3081</a>: HierarchicalContainer overwrites old items when trying to add a new item</li>
+  <li><a href="http://dev.vaadin.com/ticket/3083">#3083</a>: JS api where to hook functionality after each XHR</li>
+  <li><a href="http://dev.vaadin.com/ticket/3092">#3092</a>: BeanItemContainer is not extendable</li>
+  <li><a href="http://dev.vaadin.com/ticket/3098">#3098</a>: Tree node text wraps to the next line if an icon is present and width is fixed</li>
+  <li><a href="http://dev.vaadin.com/ticket/3099">#3099</a>: PopupView is shown off screen</li>
+  <li><a href="http://dev.vaadin.com/ticket/3102">#3102</a>: Upload.ProgressListener not called in some situations</li>
+  <li><a href="http://dev.vaadin.com/ticket/3105">#3105</a>: "Show ""invalid security key"" instead of ""Session Expired"" for invalid security key"</li>
+  <li><a href="http://dev.vaadin.com/ticket/3109">#3109</a>: Down sort arrow visually broken in table with strong style (reindeer)</li>
+  <li><a href="http://dev.vaadin.com/ticket/3113">#3113</a>: Liferay portal integration</li>
+  <li><a href="http://dev.vaadin.com/ticket/3115">#3115</a>: A new session should not be created if an application is not</li>
 </ul>
 
-<h2>Requirements</h2>
+<h2><a name="requirements">Requirements</a></h2>
 
 <p>Vaadin is available for the following operating systems:</p>
 
@@ -263,7 +297,7 @@ it:</p>
 <p>The support for browsers follows the support by GWT. The browsers are supported on both
 Windows and Mac, if available. Firefox is supported also on Linux (Opera 10a1 works also
 on Linux though also suffers from <a
-href="http://dev.itmill.com/ticket/2652">#2652</a>). There may be differences between the
+href="http://dev.vaadin.com/ticket/2652">#2652</a>). There may be differences between the
 exact versions of the supported browsers that may cause incompatibility with applications
 made with Vaadin.</p>
 
