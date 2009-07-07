@@ -1,0 +1,28 @@
+<module>
+	<!-- Inherit the DefaultWidgetSet -->
+	<inherits name="com.vaadin.demo.sampler.gwt.SamplerWidgetSet" />
+
+	<!--
+		Workaround for IE8 issues. To be removed when a new GWT version
+		arrives
+	-->
+
+	<define-property name="vaadin.is.ie8" values="true,false" />
+
+	<property-provider name="vaadin.is.ie8"><![CDATA[
+       var ua = navigator.userAgent.toLowerCase();
+
+		if (ua.indexOf("msie") != -1) {
+        	if (document.documentMode >= 8) {
+          		return "true";
+          		}
+          	}
+        return "false";
+          
+  	]]></property-provider>
+
+	<replace-with class="com.google.gwt.user.client.ui.impl.PopupImpl">
+		<when-type-is class="com.google.gwt.user.client.ui.impl.PopupImpl" />
+		<when-property-is name="vaadin.is.ie8" value="true" />
+	</replace-with>
+</module>

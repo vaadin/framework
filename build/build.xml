@@ -788,6 +788,27 @@
 		<echo>Compiled DefaultWidgetSet</echo>
 	</target>
 
+	<target name="compile-widgetset-portal-default">
+		<echo>Compiling src (client-side)</echo>
+		<echo>com.vaadin.terminal.gwt.PortalDefaultWidgetSet</echo>
+		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
+			<arg value="-war" />
+			<arg value="${output-dir}/WebContent/VAADIN/widgetsets" />
+			<arg value="com.vaadin.terminal.gwt.PortalDefaultWidgetSet" />
+			<arg value="-style" />
+			<arg value="OBF" />
+            <jvmarg value="-Xss8M"/>
+            <jvmarg value="-Djava.awt.headless=true"/>
+			<classpath>
+				<pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
+				<pathelement location="${gwt-dir}/${platform}/${lib-gwt-dev}" />
+				<pathelement location="${result-path}/src" />
+			</classpath>
+		</java>
+		<antcall target="remove-widgetset-gwt-tmp"/>
+		<echo>Compiled PortalDefaultWidgetSet</echo>
+	</target>
+
 	<target name="compile-widgetset-reserver">
 		<condition property="googlemaps-jar" value="${output-dir}/WebContent/demo/lib/reservr/gwt-maps.jar">
 			<available file="${output-dir}/WebContent/demo/lib/reservr/gwt-maps.jar" />
@@ -886,7 +907,7 @@
 	</target>
 
 	<!-- Builds the client-side engine, i.e., the widgetsets. -->
-	<target name="compile-client-side" depends="compile-widgetset-default, compile-widgetset-reserver, compile-widgetset-sampler, compile-widgetset-colorpicker, compile-widgetset-coverflow">
+	<target name="compile-client-side" depends="compile-widgetset-default, compile-widgetset-portal-default, compile-widgetset-reserver, compile-widgetset-sampler, compile-widgetset-colorpicker, compile-widgetset-coverflow">
         <!-- Building the widgetsets is currently done sequentially, because
             parallel compilation takes too much memory for most machines. -->
 	</target>
@@ -919,6 +940,10 @@
 
 	<!-- Builds the default widgetset locally, i.e., not for an installation package. -->
 	<target name="widgetset-default" depends="init-nonpackage, compile-widgetset-default">
+	</target>
+
+	<!-- Builds the default portal widgetset locally, i.e., not for an installation package. -->
+	<target name="widgetset-portal-default" depends="init-nonpackage, compile-widgetset-portal-default">
 	</target>
 
 	<!-- Builds the sampler widgetset locally, i.e., not for an installation package. -->
