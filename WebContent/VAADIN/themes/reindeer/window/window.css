@@ -42,6 +42,9 @@
 	color: #fff;
 	text-shadow: #000 0 -1px 0;
 	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	-ms-text-overflow: ellipsis;
 }
 .v-window-error .v-window-header {
 	padding-left: 13px;
@@ -154,17 +157,17 @@
 .v-sa .v-window-black .v-window-wrap,
 .v-ff3 .v-window-black .v-window-wrap,
 .v-op .v-window-black .v-window-wrap {
-	border-color: rgba(0,0,0,.9);
+	border-color: rgba(0,0,0,.8);
 }
 .v-window-black .v-window-wrap2 {
-	background-color: #0b0e0f;
+	background-color: #1d2021;
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
 }
 .v-sa .v-window-black .v-window-wrap2,
 .v-ff3 .v-window-black .v-window-wrap2,
 .v-op .v-window-black .v-window-wrap2 {
-	background-color: rgba(11,14,15,.9);
+	background-color: rgba(29,32,33,.9);
 }
 .v-window-black .v-window-outerheader {
 	height: auto;
