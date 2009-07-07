@@ -2952,7 +2952,7 @@ td.v-datefield-calendarpanel-nextyear {
 /* ./WebContent/VAADIN/themes/reindeer/notification/notification.css */
 .v-Notification {
 	color: #fff;
-	border-radius: 4px
+	border-radius: 4px;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	font-size: 100%;
@@ -4198,7 +4198,8 @@ td.v-datefield-calendarpanel-nextyear {
 /* Content area font color specified with minimal style (reduces additional selectors) */
 
 /* ./WebContent/VAADIN/themes/reindeer/textfield/textfield.css */
-.v-textfield {
+.v-textfield,
+.v-textarea {
 	line-height: normal;
 	height: 19px;
 	border: 1px solid #bcbdbe;
@@ -4213,25 +4214,35 @@ td.v-datefield-calendarpanel-nextyear {
 	-moz-border-radius: 3px;
 	margin: 0;
 }
+.v-textarea {
+	background-image: none;
+	height: auto;
+}
 /* Need more specific selector because of #2384 fixes in base/common/common.css */
-.v-app input.v-textfield {
+.v-app input.v-textfield,
+.v-app .v-textarea {
 	padding: 3px 3px 0 3px;
 }
 /* Textfield on blue background */
-.blue .v-textfield {
+.blue .v-textfield,
+.blue .v-textarea {
 	border-color: #92a2aa;
 	border-top-color: #7c8a90;
 	border-bottom-color: #a1b3bc;
 }
 .v-app .v-textfield-focus,
 .v-window .v-textfield-focus,
-.v-popupview-popup .v-textfield-focus {
+.v-popupview-popup .v-textfield-focus,
+.v-app .v-textarea-focus,
+.v-window .v-textarea-focus,
+.v-popupview-popup .v-textarea-focus {
 	border-color: #5b97d0;
 	border-top-color: #4f83b4;
 	border-bottom-color: #5ca0df;
 	outline: none;
 }
-input.v-textfield-prompt {
+input.v-textfield-prompt,
+textarea.v-textarea-prompt {
 	font-style: normal;
 	color: #999;
 }
@@ -4259,6 +4270,9 @@ input.v-textfield-prompt {
 .v-ff35 input.v-textfield-small {
 	font-size: 11px;
 	height: 15px;
+}
+.v-app textarea.v-textarea-small {
+	font-size: 11px;
 }
 .v-sa input.v-textfield-small,
 .v-ff35 input.v-textfield-small {
