@@ -46,3 +46,15 @@
 	margin-top: -2px;
 	background: transparent;
 }
+
+/* Splitpanels on blue background */
+.blue .v-splitpanel-hsplitter-small,
+.blue .v-splitpanel-hsplitter-small-locked {
+	background: #7c8a91;
+}
+
+/* Splitpanels on black background */
+.black .v-splitpanel-hsplitter-small,
+.black .v-splitpanel-hsplitter-small-locked {
+	background: #4e5253;
+}

@@ -2720,6 +2720,9 @@ td.v-datefield-calendarpanel-nextyear {
 }
 
 /* ./WebContent/VAADIN/themes/reindeer/formlayout/formlayout.css */
+.v-formlayout-errorcell {
+	width: 13px;
+}
 .v-formlayout-cell .v-errorindicator {
 	width: 13px;
 	height: 16px;
@@ -2755,14 +2758,15 @@ td.v-datefield-calendarpanel-nextyear {
 }
 /* form */
 .v-form-errormessage {
-	background: transparent url(icons/16/error.png) no-repeat top left;
+	background: transparent url(common/icons/error.png) no-repeat 3px 2px;
 	padding-left: 20px;
 	margin-bottom: 5px;
 	margin-top: 5px;
 	min-height: 20px;
 }
 .v-ie6 .v-form-errormessage {
-	height: 20px
+	height: 20px;
+	background-image: url(common/icons/error-ie6.png);
 }
 .v-form fieldset {
 	border: none;
@@ -2873,16 +2877,20 @@ td.v-datefield-calendarpanel-nextyear {
 /* Blue background */
 .v-verticallayout-blue,
 .v-horizontallayout-blue,
-.v-orderedlayout-blue,
+.v-orderedlayout-blue {
+	background-color: #bcd3de;
+}
 .v-panel-content > div.blue {
 	background-color: #bcd3de;
 }
 /* Black background */
 .v-verticallayout-black,
 .v-horizontallayout-black,
-.v-orderedlayout-black,
+.v-orderedlayout-black {
+	background-color: #1e2022;
+}
 .v-panel-content > div.black {
-	background: #16181a url(layouts/img/black-bg.png) repeat-x;
+	background-color: #1e2022;
 }
 
 /* ./WebContent/VAADIN/themes/reindeer/menubar/menubar.css */
@@ -3391,10 +3399,10 @@ td.v-datefield-calendarpanel-nextyear {
 /* Native selects on black background */
 .black .v-select select,
 .black .v-select-twincol select {
-	border: 1px solid #343536;
-	border-top-color: #2a2a2b;
-	border-bottom-color: #3a3b3c;
-	background: #1b1d1e;
+	border-color: #38393a;
+	border-top-color: #2c2d2e;
+	border-bottom-color: #3e3f3f;
+	background: #151717;
 	color: #c9ccce;
 }
 
@@ -3504,6 +3512,18 @@ td.v-datefield-calendarpanel-nextyear {
 	height: 3px;
 	margin-top: -2px;
 	background: transparent;
+}
+
+/* Splitpanels on blue background */
+.blue .v-splitpanel-hsplitter-small,
+.blue .v-splitpanel-hsplitter-small-locked {
+	background: #7c8a91;
+}
+
+/* Splitpanels on black background */
+.black .v-splitpanel-hsplitter-small,
+.black .v-splitpanel-hsplitter-small-locked {
+	background: #4e5253;
 }
 
 /* ./WebContent/VAADIN/themes/reindeer/table/table.css */
@@ -3649,6 +3669,10 @@ td.v-datefield-calendarpanel-nextyear {
 	position: relative;
 	top: 1px;
 	-webkit-box-shadow: rgba(0,0,0,.5) 0 1px 2px;
+	-moz-box-shadow: rgba(0,0,0,.5) 0 1px 2px;
+}
+.v-table-borderless .v-table-scrollposition span {
+	top: 0;
 }
 /* row in column selector */
 .v-contextmenu .v-on,
@@ -3672,6 +3696,16 @@ td.v-datefield-calendarpanel-nextyear {
 }
 
 
+/* Table on blue background */
+.blue .v-table-header-wrap {
+	border-color: #92a2aa;
+}
+.blue .v-table-body {
+	border-color: #92a2aa;
+	border-top-color: #c2c3c4;
+}
+
+
 /* Strong style */
 .v-table-strong .v-table-header-wrap {
 	border-color: #2b3033;
@@ -3681,6 +3715,9 @@ td.v-datefield-calendarpanel-nextyear {
   background-position: left -1090px;
 	color: #e7e9ea;
 	text-shadow: #000 0 -1px 0;
+}
+.v-table-strong .v-table-body {
+	border-top-color: #2b3033;
 }
 .v-table-strong .v-table-resizer {
 	border-right-color: #1c1f21;
@@ -4207,16 +4244,14 @@ input.v-textfield-prompt {
 	background: transparent;
 	border-width: 0 3px 0 3px;
 	padding: 4px 0 0 0;
-	height: 20px;
+	height: 21px;
 	-webkit-border-image: url(textfield/img/bg-border-image.png) 0 3 0 3 stretch stretch;
 	-moz-border-image: url(textfield/img/bg-border-image.png) 0 3 0 3 stretch stretch;
-	-o-border-image: url(textfield/img/bg-border-image.png) 0 3 0 3 stretch stretch;
 }
 .v-sa input.v-textfield-focus,
 .v-ff35 input.v-textfield-focus {
 	-webkit-border-image: url(textfield/img/bg-border-image-focus.png) 0 3 0 3 stretch stretch;
 	-moz-border-image: url(textfield/img/bg-border-image-focus.png) 0 3 0 3 stretch stretch;
-	-o-border-image: url(textfield/img/bg-border-image-focus.png) 0 3 0 3 stretch stretch;
 }
 /* Small style textfield */
 .v-app input.v-textfield-small,
@@ -4239,10 +4274,10 @@ input.v-textfield-prompt {
 }
 /* Textfield on black background */
 .black .v-textfield {
-	border-color: #343536;
-	border-top-color: #2a2a2b;
-	border-bottom-color: #3a3b3c;
-	background: #1b1d1e;
+	border-color: #38393a;
+	border-top-color: #2c2d2e;
+	border-bottom-color: #3e3f3f;
+	background: #151717;
   background-image: url(common/img/black-vertical-sprites.png);
   -background-image: url(common/img/black-vertical-sprites-ie6.png);
   background-position: left -740px;
@@ -4253,23 +4288,21 @@ input.v-textfield-prompt {
 .v-window-black .v-textfield-focus,
 .v-window .black .v-textfield-focus,
 .v-popupview-popup .black .v-textfield-focus {
-	border-color: #4e6a80;
-	border-top-color: #3a5163;
-	border-bottom-color: #557086;
+	border-color: #4b7192;
+	border-top-color: #3b5a75;
+	border-bottom-color: #507596;
 }
 /* Capable browsers get fancier border images */
 .v-sa .black input.v-textfield,
 .v-ff35 .black input.v-textfield {
 	-webkit-border-image: url(textfield/img/bg-border-image-black.png) 0 3 0 3 stretch stretch;
 	-moz-border-image: url(textfield/img/bg-border-image-black.png) 0 3 0 3 stretch stretch;
-	-o-border-image: url(textfield/img/bg-border-image-black.png) 0 3 0 3 stretch stretch;
 	height: 19px;
 }
 .v-sa .black input.v-textfield-focus,
 .v-ff35 .black input.v-textfield-focus {
 	-webkit-border-image: url(textfield/img/bg-border-image-black-focus.png) 0 3 0 3 stretch stretch;
 	-moz-border-image: url(textfield/img/bg-border-image-black-focus.png) 0 3 0 3 stretch stretch;
-	-o-border-image: url(textfield/img/bg-border-image-black-focus.png) 0 3 0 3 stretch stretch;
 }
 .v-sa .black input.v-textfield-small,
 .v-ff35 .black input.v-textfield-small {
@@ -4291,7 +4324,6 @@ input.v-textfield-readonly,
 	background: transparent;
 	-webkit-border-image: none;
 	-moz-border-image: none;
-	-o-border-image: none;
 	border-width: 0;
 }
 
@@ -4387,6 +4419,9 @@ input.v-textfield-readonly,
 	color: #fff;
 	text-shadow: #000 0 -1px 0;
 	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	-ms-text-overflow: ellipsis;
 }
 .v-window-error .v-window-header {
 	padding-left: 13px;
@@ -4519,17 +4554,17 @@ input.v-textfield-readonly,
 .v-sa .v-window-black .v-window-wrap,
 .v-ff3 .v-window-black .v-window-wrap,
 .v-op .v-window-black .v-window-wrap {
-	border-color: rgba(0,0,0,.9);
+	border-color: rgba(0,0,0,.8);
 }
 .v-window-black .v-window-wrap2 {
-	background-color: #0b0e0f;
+	background-color: #1d2021;
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
 }
 .v-sa .v-window-black .v-window-wrap2,
 .v-ff3 .v-window-black .v-window-wrap2,
 .v-op .v-window-black .v-window-wrap2 {
-	background-color: rgba(11,14,15,.9);
+	background-color: rgba(29,32,33,.9);
 }
 .v-window-black .v-window-outerheader {
 	height: auto;

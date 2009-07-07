@@ -42,16 +42,14 @@ input.v-textfield-prompt {
 	background: transparent;
 	border-width: 0 3px 0 3px;
 	padding: 4px 0 0 0;
-	height: 20px;
+	height: 21px;
 	-webkit-border-image: url(img/bg-border-image.png) 0 3 0 3 stretch stretch;
 	-moz-border-image: url(img/bg-border-image.png) 0 3 0 3 stretch stretch;
-	-o-border-image: url(img/bg-border-image.png) 0 3 0 3 stretch stretch;
 }
 .v-sa input.v-textfield-focus,
 .v-ff35 input.v-textfield-focus {
 	-webkit-border-image: url(img/bg-border-image-focus.png) 0 3 0 3 stretch stretch;
 	-moz-border-image: url(img/bg-border-image-focus.png) 0 3 0 3 stretch stretch;
-	-o-border-image: url(img/bg-border-image-focus.png) 0 3 0 3 stretch stretch;
 }
 /* Small style textfield */
 .v-app input.v-textfield-small,
@@ -74,10 +72,10 @@ input.v-textfield-prompt {
 }
 /* Textfield on black background */
 .black .v-textfield {
-	border-color: #343536;
-	border-top-color: #2a2a2b;
-	border-bottom-color: #3a3b3c;
-	background: #1b1d1e;
+	border-color: #38393a;
+	border-top-color: #2c2d2e;
+	border-bottom-color: #3e3f3f;
+	background: #151717;
 	background-image: url(img/bg-black.png); /** sprite-ref: black-verticals; sprite-alignment: repeat; sprite-margin-bottom: 22px */
 	color: #c9ccce;
 	text-shadow: #000 0 0 1px;
@@ -86,23 +84,21 @@ input.v-textfield-prompt {
 .v-window-black .v-textfield-focus,
 .v-window .black .v-textfield-focus,
 .v-popupview-popup .black .v-textfield-focus {
-	border-color: #4e6a80;
-	border-top-color: #3a5163;
-	border-bottom-color: #557086;
+	border-color: #4b7192;
+	border-top-color: #3b5a75;
+	border-bottom-color: #507596;
 }
 /* Capable browsers get fancier border images */
 .v-sa .black input.v-textfield,
 .v-ff35 .black input.v-textfield {
 	-webkit-border-image: url(img/bg-border-image-black.png) 0 3 0 3 stretch stretch;
 	-moz-border-image: url(img/bg-border-image-black.png) 0 3 0 3 stretch stretch;
-	-o-border-image: url(img/bg-border-image-black.png) 0 3 0 3 stretch stretch;
 	height: 19px;
 }
 .v-sa .black input.v-textfield-focus,
 .v-ff35 .black input.v-textfield-focus {
 	-webkit-border-image: url(img/bg-border-image-black-focus.png) 0 3 0 3 stretch stretch;
 	-moz-border-image: url(img/bg-border-image-black-focus.png) 0 3 0 3 stretch stretch;
-	-o-border-image: url(img/bg-border-image-black-focus.png) 0 3 0 3 stretch stretch;
 }
 .v-sa .black input.v-textfield-small,
 .v-ff35 .black input.v-textfield-small {
@@ -124,6 +120,5 @@ input.v-textfield-readonly,
 	background: transparent;
 	-webkit-border-image: none;
 	-moz-border-image: none;
-	-o-border-image: none;
 	border-width: 0;
 }
