@@ -45,7 +45,10 @@ public class ApplicationPortlet implements Portlet, Serializable {
     public void init(PortletConfig config) throws PortletException {
         app = config.getInitParameter(PORTLET_PARAMETER_APPLICATION);
         if (app == null) {
-            app = "PortletDemo";
+            throw new PortletException(
+                    "No porlet application url defined in portlet.xml. Define the '"
+                            + PORTLET_PARAMETER_APPLICATION
+                            + "' init parameter to be the servlet deployment path.");
         }
         style = config.getInitParameter(PORTLET_PARAMETER_STYLE);
         // enable forcing the selection of the widgetset in portlet
