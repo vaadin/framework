@@ -53,7 +53,7 @@ textarea.v-textarea-prompt {
 	background: transparent;
 	border-width: 0 3px 0 3px;
 	padding: 4px 0 0 0;
-	height: 21px;
+	height: 20px;
 	-webkit-border-image: url(img/bg-border-image.png) 0 3 0 3 stretch stretch;
 	-moz-border-image: url(img/bg-border-image.png) 0 3 0 3 stretch stretch;
 }

@@ -46,18 +46,24 @@
 }
 
 .v-label hr {
-	height: 1px;
+	height: 2px;
 	overflow: hidden;
 	background: #dcdcdc;
+	color: #dcdcdc; /* For IE */
 	border: none;
 	border-bottom: 1px solid #fff;
 }
+.v-sa .v-label hr {
+	height: 1px;
+}
 .blue .v-label hr {
 	background: #a3bcc9;
+	color: #a3bcc9;
 	border-bottom-color: #cfe2eb;
 }
 .black .v-label hr {
 	background: #0c0d0e;
+	color: #0c0d0e;
 	border-bottom-color: #292b2e;
 }
 
