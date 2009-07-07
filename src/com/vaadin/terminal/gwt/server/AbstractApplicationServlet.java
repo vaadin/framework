@@ -1371,9 +1371,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                 page.write("windowName: '" + window.getName() + "', ");
             }
             page.write("themeUri:");
-            page
-                    .write(themeBaseUri != null ? "'" + themeBaseUri + "'"
-                            : "null");
+            page.write(themeUri != null ? "'" + themeUri + "'" : "null");
             page.write(", versionInfo : {vaadinVersion:\"");
             page.write(VERSION);
             page.write("\",applicationVersion:\"");
@@ -1446,9 +1444,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                 page.write("windowName: '" + window.getName() + "', ");
             }
             page.write("themeUri:");
-            page
-                    .write(themeBaseUri != null ? "'" + themeBaseUri + "'"
-                            : "null");
+            page.write(themeUri != null ? "'" + themeUri + "'" : "null");
             page.write(", versionInfo : {vaadinVersion:\"");
             page.write(VERSION);
             page.write("\",applicationVersion:\"");

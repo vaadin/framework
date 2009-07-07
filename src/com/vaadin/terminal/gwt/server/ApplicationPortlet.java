@@ -140,7 +140,7 @@ public class ApplicationPortlet implements Portlet, Serializable {
                             + portalTheme;
                     request.setAttribute(
                             ApplicationServlet.REQUEST_DEFAULT_THEME_URI,
-                            themeUri);
+                            portalTheme);
                 }
 
                 dispatcher.include(request, response);
