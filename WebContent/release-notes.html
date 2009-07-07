@@ -24,13 +24,13 @@
 <h2><a name="overview">Release Notes for Vaadin @version@</a></h2>
 
 <ul>
-  <li><a href="overview">Overview</a></li>
-  <li><a href="upgrading">General Upgrade Notes</a></li>
-  <li><a href="upgrading-tk5">Instructions for Upgrading from IT Mill Toolkit 5</a></li>
-  <li><a href="oophm">Package for the experimental GWT Out-of-Process Hosted Mode</a></li>
-  <li><a href="known-problems">Important known problems in Vaadin @version@</a></li>
-  <li><a href="changelog">Change Log</a></li>
-  <li><a href="requirements">Requirements</a></li>
+  <li><a href="#overview">Overview</a></li>
+  <li><a href="#upgrading">General Upgrade Notes</a></li>
+  <li><a href="#upgrading-tk5">Instructions for Upgrading from IT Mill Toolkit 5</a></li>
+  <li><a href="#oophm">Package for the experimental GWT Out-of-Process Hosted Mode</a></li>
+  <li><a href="#known-problems">Important known problems in Vaadin @version@</a></li>
+  <li><a href="#changelog">Change Log</a></li>
+  <li><a href="#requirements">Requirements</a></li>
 </ul>
 
 <p>Vaadin @version@ is the first maintenance release for Vaadin 6. In addition to many bug
@@ -159,7 +159,7 @@ client-side widgets with Google Web Toolkit (GWT).</p>
 <h2><a name="oophm">Package for the experimental GWT Out-of-Process Hosted Mode</a></h2>
 
 <p>We provide a separate (platform independent) installation package
-(<tt>vaadin-oophm-<version></version>.tar.gz</tt>) for the
+(<tt>vaadin-oophm-@version@.tar.gz</tt>) for the
 experimental Out of Process Hosted Mode (OOPHM) of GWT, which allows
 debugging client-side code in GWT Hosted Mode with a regular web
 browser. Using the OOPHM requires installing a browser plugin (available
@@ -210,8 +210,9 @@ for your platform.</p>
         <p><a href="http://dev.vaadin.com/ticket/2891">#2891</a>: As there is a bug in
         J2SE 5.0 that prevents setting the stack size for the main thread, widgetsets
         cannot be compiled using the standard GWT compiler of GWT 1.6 and JDK 1.5.0 (see
-        #2656 for more details on the JDK bug). This bug primarily affects Windows users
-        as other operating systems have a larger default stack size.</p>
+        <a href="http://dev.vaadin.com/ticket/2656">#2656</a> for more details on the JDK
+        bug). This bug primarily affects Windows users as other operating systems have a
+        larger default stack size.</p>
 
         <p>Before that fix is available in a published GWT version, we provide a wrapper
         for the GWT compiler that runs the compiler in a separate thread, thus using the
