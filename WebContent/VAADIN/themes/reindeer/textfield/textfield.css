@@ -18,7 +18,9 @@
 }
 /* Need more specific selector because of #2384 fixes in base/common/common.css */
 .v-app input.v-textfield,
-.v-app .v-textarea {
+.v-app .v-textarea,
+.v-window input.v-textfield,
+.v-window .v-textarea  {
 	padding: 3px 3px 0 3px;
 }
 /* Textfield on blue background */
