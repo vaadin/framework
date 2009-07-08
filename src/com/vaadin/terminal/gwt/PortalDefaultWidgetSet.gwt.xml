@@ -26,6 +26,11 @@
 		<when-property-is name="vaadin.is.ie8" value="true" />
 	</replace-with>
 	
+	<replace-with class="com.google.gwt.user.client.ui.impl.ClippedImageImpl">
+		<when-type-is class="com.google.gwt.user.client.ui.impl.ClippedImageImpl" />
+		<when-property-is name="vaadin.is.ie8" value="true" />
+	</replace-with>
+	
 	<!-- Entry point -->
 	<entry-point class="com.vaadin.terminal.gwt.client.PortalDefaultWidgetSet"/>
 	
