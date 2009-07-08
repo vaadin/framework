@@ -237,8 +237,6 @@
 	<servlet-mapping>
 		<servlet-name>FeatureBrowser</servlet-name>
 		<url-pattern>/FeatureBrowser/*</url-pattern>
-		<!-- Hint for the automatic deployment descriptor generator -->
-		<!-- portlet style=height:650px -->
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>Sampler</servlet-name>
