@@ -361,7 +361,12 @@ div.v-app-loading {
 .v-app input[type="password"],
 .v-app input[type="reset"],
 .v-app select,
-.v-app textarea {
+.v-app textarea ,
+.v-window input[type="text"],
+.v-window input[type="password"],
+.v-window input[type="reset"],
+.v-window select,
+.v-window textarea {
 	padding: 2px;
 }
 
@@ -4226,7 +4231,9 @@ td.v-datefield-calendarpanel-nextyear {
 }
 /* Need more specific selector because of #2384 fixes in base/common/common.css */
 .v-app input.v-textfield,
-.v-app .v-textarea {
+.v-app textarea.v-textarea,
+.v-window input.v-textfield,
+.v-window textarea.v-textarea  {
 	padding: 3px 3px 0 3px;
 }
 /* Textfield on blue background */

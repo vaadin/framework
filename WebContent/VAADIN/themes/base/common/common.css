@@ -194,6 +194,11 @@ div.v-app-loading {
 .v-app input[type="password"],
 .v-app input[type="reset"],
 .v-app select,
-.v-app textarea {
+.v-app textarea ,
+.v-window input[type="text"],
+.v-window input[type="password"],
+.v-window input[type="reset"],
+.v-window select,
+.v-window textarea {
 	padding: 2px;
 }
