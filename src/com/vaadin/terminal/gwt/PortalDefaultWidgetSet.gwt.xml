@@ -25,4 +25,8 @@
 		<when-type-is class="com.google.gwt.user.client.ui.impl.PopupImpl" />
 		<when-property-is name="vaadin.is.ie8" value="true" />
 	</replace-with>
+	
+	<!-- Entry point -->
+	<entry-point class="com.vaadin.terminal.gwt.client.PortalDefaultWidgetSet"/>
+	
 </module>
