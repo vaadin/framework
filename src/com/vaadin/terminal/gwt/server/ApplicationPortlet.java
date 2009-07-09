@@ -171,29 +171,31 @@ public class ApplicationPortlet implements Portlet, Serializable {
                             + "    }"
                             + "};" + "</script>");
                     out.write(lifeRaySessionHearbeatHack.getBytes());
+                }
 
-                    /*
-                     * Make sure LifeRay default Vaadin theme is included
-                     * exactly once in DOM.
-                     */
-                    if (portalTheme != null) {
-                        // Using portal-wide theme
-                        String loadDefaultTheme = ("<script type=\"text/javascript\">\n"
-                                + "if(!vaadin.themesLoaded['"
-                                + portalTheme
-                                + "']) {\n"
-                                + "var stylesheet = document.createElement('link');\n"
-                                + "stylesheet.setAttribute('rel', 'stylesheet');\n"
-                                + "stylesheet.setAttribute('type', 'text/css');\n"
-                                + "stylesheet.setAttribute('href', '"
-                                + themeUri
-                                + "/styles.css');\n"
-                                + "document.getElementsByTagName('head')[0].appendChild(stylesheet);\n"
-                                + "vaadin.themesLoaded['"
-                                + portalTheme
-                                + "'] = true;\n}\n" + "</script>\n");
-                        out.write(loadDefaultTheme.getBytes());
-                    }
+                /*
+                 * Make sure portal default Vaadin theme is included exactly
+                 * once in DOM.
+                 */
+                if (portalTheme != null) {
+                    OutputStream out = response.getPortletOutputStream();
+
+                    // Using portal-wide theme
+                    String loadDefaultTheme = ("<script type=\"text/javascript\">\n"
+                            + "if(!vaadin.themesLoaded['"
+                            + portalTheme
+                            + "']) {\n"
+                            + "var stylesheet = document.createElement('link');\n"
+                            + "stylesheet.setAttribute('rel', 'stylesheet');\n"
+                            + "stylesheet.setAttribute('type', 'text/css');\n"
+                            + "stylesheet.setAttribute('href', '"
+                            + themeUri
+                            + "/styles.css');\n"
+                            + "document.getElementsByTagName('head')[0].appendChild(stylesheet);\n"
+                            + "vaadin.themesLoaded['"
+                            + portalTheme
+                            + "'] = true;\n}\n" + "</script>\n");
+                    out.write(loadDefaultTheme.getBytes());
                 }
 
             } catch (PortletException e) {
