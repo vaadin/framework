@@ -146,8 +146,6 @@ public class ApplicationPortlet implements Portlet, Serializable {
                             portalTheme);
                 }
 
-                dispatcher.include(request, response);
-
                 /*
                  * Make sure portal default Vaadin theme is included exactly
                  * once in DOM.
@@ -158,7 +156,6 @@ public class ApplicationPortlet implements Portlet, Serializable {
                     // Using portal-wide theme
                     String loadDefaultTheme = ("<script type=\"text/javascript\">\n"
                             + "if(!vaadin) { var vaadin = {} } \n"
-                            + "if(!vaadin.vaadinConfigurations) { vaadin.vaadinConfigurations = {} } \n"
                             + "if(!vaadin.themesLoaded) { vaadin.themesLoaded = {} } \n"
                             + "if(!vaadin.themesLoaded['"
                             + portalTheme
@@ -175,6 +172,8 @@ public class ApplicationPortlet implements Portlet, Serializable {
                             + "'] = true;\n}\n" + "</script>\n");
                     out.write(loadDefaultTheme.getBytes());
                 }
+
+                dispatcher.include(request, response);
 
                 if (isLifeRay) {
                     /*

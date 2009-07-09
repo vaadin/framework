@@ -1355,10 +1355,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                     + new Date().getTime() + "'></script>\n");
             page.write("<script type=\"text/javascript\">\n");
             page.write("//<![CDATA[\n");
-            page.write("if(!vaadin || !vaadin.vaadinConfigurations) {\n "
-                    + "if(!vaadin) { var vaadin = {}} \n"
-                    + "vaadin.vaadinConfigurations = {};\n"
-                    + "vaadin.themesLoaded = {}};\n");
+            page
+                    .write("if(!vaadin || !vaadin.vaadinConfigurations) {\n "
+                            + "if(!vaadin) { var vaadin = {}} \n"
+                            + "vaadin.vaadinConfigurations = {};\n"
+                            + "if (!vaadin.themesLoaded) { vaadin.themesLoaded = {}; } }\n");
 
             if (!isProductionMode()) {
                 page.write("vaadin.debug = true;\n");
@@ -1421,10 +1422,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
         } else {
             page.write("<script type=\"text/javascript\">\n");
             page.write("//<![CDATA[\n");
-            page.write("if(!vaadin || !vaadin.vaadinConfigurations) {\n "
-                    + "if(!vaadin) { var vaadin = {}} \n"
-                    + "vaadin.vaadinConfigurations = {};\n"
-                    + "vaadin.themesLoaded = {};\n");
+            page
+                    .write("if(!vaadin || !vaadin.vaadinConfigurations) {\n "
+                            + "if(!vaadin) { var vaadin = {}} \n"
+                            + "vaadin.vaadinConfigurations = {};\n"
+                            + "if (!vaadin.themesLoaded) { vaadin.themesLoaded = {}; }\n");
             if (!isProductionMode()) {
                 page.write("vaadin.debug = true;\n");
             }
