@@ -72,6 +72,13 @@ public class VButton extends Button implements Paintable {
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
+	// client.updateComponent depends on this, so this must come before that.
+        if (uidl.hasAttribute("primarystyle")) {
+            setStyleName(uidl.getStringAttribute("primarystyle"));
+            captionElement.setPropertyString("className", getStylePrimaryName()
+                    + "-caption");
+        }
+
         // Ensure correct implementation,
         // but don't let container manage caption etc.
         if (client.updateComponent(this, uidl, false)) {
