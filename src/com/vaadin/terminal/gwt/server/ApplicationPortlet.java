@@ -148,6 +148,34 @@ public class ApplicationPortlet implements Portlet, Serializable {
 
                 dispatcher.include(request, response);
 
+                /*
+                 * Make sure portal default Vaadin theme is included exactly
+                 * once in DOM.
+                 */
+                if (portalTheme != null) {
+                    OutputStream out = response.getPortletOutputStream();
+
+                    // Using portal-wide theme
+                    String loadDefaultTheme = ("<script type=\"text/javascript\">\n"
+                            + "if(!vaadin) { var vaadin = {} } \n"
+                            + "if(!vaadin.vaadinConfigurations) { vaadin.vaadinConfigurations = {} } \n"
+                            + "if(!vaadin.themesLoaded) { vaadin.themesLoaded = {} } \n"
+                            + "if(!vaadin.themesLoaded['"
+                            + portalTheme
+                            + "']) {\n"
+                            + "var stylesheet = document.createElement('link');\n"
+                            + "stylesheet.setAttribute('rel', 'stylesheet');\n"
+                            + "stylesheet.setAttribute('type', 'text/css');\n"
+                            + "stylesheet.setAttribute('href', '"
+                            + themeUri
+                            + "/styles.css');\n"
+                            + "document.getElementsByTagName('head')[0].appendChild(stylesheet);\n"
+                            + "vaadin.themesLoaded['"
+                            + portalTheme
+                            + "'] = true;\n}\n" + "</script>\n");
+                    out.write(loadDefaultTheme.getBytes());
+                }
+
                 if (isLifeRay) {
                     /*
                      * Temporary support to heartbeat Liferay session when using
@@ -171,31 +199,6 @@ public class ApplicationPortlet implements Portlet, Serializable {
                             + "    }"
                             + "};" + "</script>");
                     out.write(lifeRaySessionHearbeatHack.getBytes());
-                }
-
-                /*
-                 * Make sure portal default Vaadin theme is included exactly
-                 * once in DOM.
-                 */
-                if (portalTheme != null) {
-                    OutputStream out = response.getPortletOutputStream();
-
-                    // Using portal-wide theme
-                    String loadDefaultTheme = ("<script type=\"text/javascript\">\n"
-                            + "if(!vaadin.themesLoaded['"
-                            + portalTheme
-                            + "']) {\n"
-                            + "var stylesheet = document.createElement('link');\n"
-                            + "stylesheet.setAttribute('rel', 'stylesheet');\n"
-                            + "stylesheet.setAttribute('type', 'text/css');\n"
-                            + "stylesheet.setAttribute('href', '"
-                            + themeUri
-                            + "/styles.css');\n"
-                            + "document.getElementsByTagName('head')[0].appendChild(stylesheet);\n"
-                            + "vaadin.themesLoaded['"
-                            + portalTheme
-                            + "'] = true;\n}\n" + "</script>\n");
-                    out.write(loadDefaultTheme.getBytes());
                 }
 
             } catch (PortletException e) {
