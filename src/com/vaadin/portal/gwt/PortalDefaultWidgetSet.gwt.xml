@@ -32,6 +32,6 @@
 	</replace-with>
 	
 	<!-- Entry point -->
-	<entry-point class="com.vaadin.terminal.gwt.client.PortalDefaultWidgetSet"/>
+	<entry-point class="com.vaadin.portal.gwt.client.PortalDefaultWidgetSet"/>
 	
 </module>

@@ -790,11 +790,11 @@
 
 	<target name="compile-widgetset-portal-default">
 		<echo>Compiling src (client-side)</echo>
-		<echo>com.vaadin.terminal.gwt.PortalDefaultWidgetSet</echo>
+		<echo>com.vaadin.portal.gwt.PortalDefaultWidgetSet</echo>
 		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="-war" />
 			<arg value="${output-dir}/WebContent/VAADIN/widgetsets" />
-			<arg value="com.vaadin.terminal.gwt.PortalDefaultWidgetSet" />
+			<arg value="com.vaadin.portal.gwt.PortalDefaultWidgetSet" />
 			<arg value="-style" />
 			<arg value="OBF" />
             <jvmarg value="-Xss8M"/>
