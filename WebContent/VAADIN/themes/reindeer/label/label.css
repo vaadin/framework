@@ -53,7 +53,8 @@
 	border: none;
 	border-bottom: 1px solid #fff;
 }
-.v-sa .v-label hr {
+.v-sa .v-label hr,
+.v-ie8 .v-label hr {
 	height: 1px;
 }
 .blue .v-label hr {
