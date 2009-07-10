@@ -1497,10 +1497,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
                 }
             }
             // check for orphaned header cells
-            for (String cid : availableCells.keySet()) {
+            for (Iterator<String> cit = availableCells.keySet().iterator(); cit
+                    .hasNext();) {
+                String cid = cit.next();
                 if (!updated.contains(cid)) {
                     removeCell(cid);
-                    it.remove();
+                    cit.remove();
                 }
             }
 
