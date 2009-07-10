@@ -41,16 +41,20 @@ fixes, the most significant additions are:</p>
   <ul>
     <li>Regarding widget sets:</li>
     <ul>
-      <li>You need to specify the widget set in the portal properties.</li>
+      <li>You should specify the widget set and its location in portal properties (<tt>portal-ext.properties</tt>).</li>
+      <li>Default location is <tt>/html/VAADIN/widgetsets/</tt> path.</li>
       <li>If you have portlets that require different widget sets, you need to use inheritance or composition to combine the widget sets to a single widget set.</li>
-      <li>The widget set needs to be loaded from <tt>/VAADIN/widgetsets/</tt> path.</li>
     </ul>
     <li>Regarding themes:</li>
     <ul>
-      <li>The base theme (usually "<tt>reindeer</tt>" or "<tt>runo</tt>") is defined in portal properties and is loaded automatically by the portal, not by individual portlets.</li>
-      <li>The base theme must have path such as <tt>/VAADIN/themes/<i>reindeer</i></tt>.</li>
-      <li>No <tt>@import</tt> statement should be used in an application theme, unlike in normal Vaadin applications, as the base theme is loaded implicitly.</li>
+      <li>You can specify the base theme ("<tt>reindeer</tt>" by default) in the portal properties to have it loaded automatically by the portal, not by individual portlets.</li>
+      <li>Default location is <tt>/html/VAADIN/themes/<i>reindeer</i></tt>.</li>
+      <li>No <tt>@import</tt> statement should be used in an application theme, unlike in normal Vaadin applications, as the base theme is loaded implicitly. If you need be able to run the portlet as a regular application as well, use a different theme in the application mode without the statement.</li>
     </ul>
+    <li>You need to copy the widget set and base theme under the defined directories in the portal.</li>
+    <li>The default widget set, themes, the Vaadin JAR, and the required portal configuration will be included built-in in Liferay 5.3, making the configuration unnecessary unless you use a custom widget set.</li>
+    <li>You need to use the same version of the Vaadin library in all the portlets running in the same portal.</li>
+    <li>See the <i>Portal Integration</i> section in Book of Vaadin for details on configuring portlets in Liferay.</li>
   </ul>
 </ul>
 
@@ -231,30 +235,38 @@ for your platform.</p>
 <h2><a name="changelog">Change Log</a></h2>
 
 <ul>
-  <li><a href="http://dev.vaadin.com/ticket/1623">#1623</a>: Table: Client side should dynamically adjust pagelength variable</li>
-  <li><a href="http://dev.vaadin.com/ticket/2941">#2941</a>: Panel/Window does not remove all Action Handlers on client-side</li>
-  <li><a href="http://dev.vaadin.com/ticket/3015">#3015</a>: Class Object instances should not be used as identifiers, are not serializable</li>
-  <li><a href="http://dev.vaadin.com/ticket/3038">#3038</a>: demo main page broken if scrollbars in use (FF, SA)</li>
-  <li><a href="http://dev.vaadin.com/ticket/3039">#3039</a>: Scrollbar jumps to top in Safari</li>
-  <li><a href="http://dev.vaadin.com/ticket/3051">#3051</a>: MethodProperty serialization broken when setter or getter is null</li>
-  <li><a href="http://dev.vaadin.com/ticket/3052">#3052</a>: Link style button icons are always 16px wide in reindeer theme</li>
-  <li><a href="http://dev.vaadin.com/ticket/3059">#3059</a>: Window's setStyleName, removeStyleName does not remove old styles on the client side.</li>
-  <li><a href="http://dev.vaadin.com/ticket/3060">#3060</a>: Warn if cross site scripting prevention is turned off</li>
-  <li><a href="http://dev.vaadin.com/ticket/3061">#3061</a>: Security key should not use invalid http header</li>
-  <li><a href="http://dev.vaadin.com/ticket/3071">#3071</a>: IE6: Undefined/auto subwindow width is broken</li>
-  <li><a href="http://dev.vaadin.com/ticket/3073">#3073</a>: IE7: Error when rendering a Tab without a caption</li>
-  <li><a href="http://dev.vaadin.com/ticket/3074">#3074</a>: "100% wide accordion is too wide using ""reindeer"""</li>
-  <li><a href="http://dev.vaadin.com/ticket/3078">#3078</a>: "Debug console ""root problems"" has invalid position in IE7"</li>
-  <li><a href="http://dev.vaadin.com/ticket/3081">#3081</a>: HierarchicalContainer overwrites old items when trying to add a new item</li>
-  <li><a href="http://dev.vaadin.com/ticket/3083">#3083</a>: JS api where to hook functionality after each XHR</li>
-  <li><a href="http://dev.vaadin.com/ticket/3092">#3092</a>: BeanItemContainer is not extendable</li>
-  <li><a href="http://dev.vaadin.com/ticket/3098">#3098</a>: Tree node text wraps to the next line if an icon is present and width is fixed</li>
-  <li><a href="http://dev.vaadin.com/ticket/3099">#3099</a>: PopupView is shown off screen</li>
-  <li><a href="http://dev.vaadin.com/ticket/3102">#3102</a>: Upload.ProgressListener not called in some situations</li>
-  <li><a href="http://dev.vaadin.com/ticket/3105">#3105</a>: "Show ""invalid security key"" instead of ""Session Expired"" for invalid security key"</li>
-  <li><a href="http://dev.vaadin.com/ticket/3109">#3109</a>: Down sort arrow visually broken in table with strong style (reindeer)</li>
-  <li><a href="http://dev.vaadin.com/ticket/3113">#3113</a>: Liferay portal integration</li>
-  <li><a href="http://dev.vaadin.com/ticket/3115">#3115</a>: A new session should not be created if an application is not</li>
+  <li><a href="http://dev.itmill.com/ticket/1623">#1623</a>: Table: Client side should dynamically adjust pagelength variable</li>
+  <li><a href="http://dev.itmill.com/ticket/2941">#2941</a>: Panel/Window does not remove all Action Handlers on client-side</li>
+  <li><a href="http://dev.itmill.com/ticket/3015">#3015</a>: Class Object instances should not be used as identifiers, are not serializable</li>
+  <li><a href="http://dev.itmill.com/ticket/3038">#3038</a>: demo main page broken if scrollbars in use (FF, SA)</li>
+  <li><a href="http://dev.itmill.com/ticket/3039">#3039</a>: Scrollbar jumps to top in Safari</li>
+  <li><a href="http://dev.itmill.com/ticket/3051">#3051</a>: MethodProperty serialization broken when setter or getter is null</li>
+  <li><a href="http://dev.itmill.com/ticket/3052">#3052</a>: Link style button icons are always 16px wide in reindeer theme</li>
+  <li><a href="http://dev.itmill.com/ticket/3059">#3059</a>: Window's setStyleName, removeStyleName does not remove old styles on the client side.</li>
+  <li><a href="http://dev.itmill.com/ticket/3060">#3060</a>: Warn if cross site scripting prevention is turned off</li>
+  <li><a href="http://dev.itmill.com/ticket/3061">#3061</a>: Security key should not use invalid http header</li>
+  <li><a href="http://dev.itmill.com/ticket/3071">#3071</a>: IE6: Undefined/auto subwindow width is broken</li>
+  <li><a href="http://dev.itmill.com/ticket/3073">#3073</a>: IE7: Error when rendering a Tab without a caption</li>
+  <li><a href="http://dev.itmill.com/ticket/3074">#3074</a>: "100% wide accordion is too wide using ""reindeer"""</li>
+  <li><a href="http://dev.itmill.com/ticket/3075">#3075</a>: Migrating from Toolkit to Vaadin release notes: translateToolkitUri</li>
+  <li><a href="http://dev.itmill.com/ticket/3078">#3078</a>: "Debug console ""root problems"" has invalid position in IE7"</li>
+  <li><a href="http://dev.itmill.com/ticket/3081">#3081</a>: HierarchicalContainer overwrites old items when trying to add a new item</li>
+  <li><a href="http://dev.itmill.com/ticket/3083">#3083</a>: JS api where to hook functionality after each XHR</li>
+  <li><a href="http://dev.itmill.com/ticket/3092">#3092</a>: BeanItemContainer is not extendable</li>
+  <li><a href="http://dev.itmill.com/ticket/3098">#3098</a>: Tree node text wraps to the next line if an icon is present and width is fixed</li>
+  <li><a href="http://dev.itmill.com/ticket/3099">#3099</a>: PopupView is shown off screen</li>
+  <li><a href="http://dev.itmill.com/ticket/3102">#3102</a>: Upload.ProgressListener not called in some situations</li>
+  <li><a href="http://dev.itmill.com/ticket/3105">#3105</a>: "Show ""invalid security key"" instead of ""Session Expired"" for invalid security key"</li>
+  <li><a href="http://dev.itmill.com/ticket/3109">#3109</a>: Down sort arrow visually broken in table with strong style (reindeer)</li>
+  <li><a href="http://dev.itmill.com/ticket/3113">#3113</a>: Liferay portal integration</li>
+  <li><a href="http://dev.itmill.com/ticket/3114">#3114</a>: IE7 compatibility mode forcing does not work for portlets</li>
+  <li><a href="http://dev.itmill.com/ticket/3115">#3115</a>: A new session should not be created if an application is not</li>
+  <li><a href="http://dev.itmill.com/ticket/3121">#3121</a>: Subwindow caption flows out of the window</li>
+  <li><a href="http://dev.itmill.com/ticket/3123">#3123</a>: Applications print request path info unnecessarily</li>
+  <li><a href="http://dev.itmill.com/ticket/3126">#3126</a>: Create a portal default widget set</li>
+  <li><a href="http://dev.itmill.com/ticket/3127">#3127</a>: Fix portlet demos</li>
+  <li><a href="http://dev.itmill.com/ticket/3128">#3128</a>: ApplicationPortlet should throw an error if the application is not defined</li>
+  <li><a href="http://dev.itmill.com/ticket/3130">#3130</a>: In IE8 RichTextArea button icons are broken</li>
 </ul>
 
 <h2><a name="requirements">Requirements</a></h2>
