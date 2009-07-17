@@ -951,6 +951,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      */
     public void setPositionX(int positionX) {
         this.positionX = positionX;
+        centerRequested = false;
         requestRepaint();
     }
 
@@ -979,6 +980,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      */
     public void setPositionY(int positionY) {
         this.positionY = positionY;
+        centerRequested = false;
         requestRepaint();
     }
 
