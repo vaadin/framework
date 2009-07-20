@@ -106,8 +106,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
     private int idSequence = 0;
 
-    private final AbstractApplicationServlet applicationServlet;
-
     private final Application application;
 
     // Note that this is only accessed from synchronized block and
@@ -124,7 +122,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             AbstractApplicationServlet applicationServlet) {
         this.application = application;
         requireLocale(application.getLocale().toString());
-        this.applicationServlet = applicationServlet;
     }
 
     /**
@@ -253,7 +250,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             // Finds the window within the application
             Window window = null;
             if (application.isRunning()) {
-                window = getApplicationWindow(request, application, null);
+                window = getApplicationWindow(request, applicationServlet,
+                        application, null);
                 // Returns if no window found
                 if (window == null) {
                     // This should not happen, no windows exists but
@@ -270,7 +268,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             }
 
             // Change all variables based on request parameters
-            if (!handleVariables(request, response, application, window)) {
+            if (!handleVariables(request, response, applicationServlet,
+                    application, window)) {
 
                 // var inconsistency; the client is probably out-of-sync
                 SystemMessages ci = null;
@@ -355,8 +354,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             List<InvalidLayout> invalidComponentRelativeSizes = null;
 
             // re-get window - may have been changed
-            Window newWindow = getApplicationWindow(request, application,
-                    window);
+            Window newWindow = getApplicationWindow(request,
+                    applicationServlet, application, window);
             if (newWindow != window) {
                 window = newWindow;
                 repaintAll = true;
@@ -607,8 +606,10 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
      * @throws IOException
      */
     private boolean handleVariables(HttpServletRequest request,
-            HttpServletResponse response, Application application2,
-            Window window) throws IOException, InvalidUIDLSecurityKeyException {
+            HttpServletResponse response,
+            AbstractApplicationServlet applicationServlet,
+            Application application2, Window window) throws IOException,
+            InvalidUIDLSecurityKeyException {
         boolean success = true;
 
         if (request.getContentLength() > 0) {
@@ -1023,6 +1024,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
      *             servlet's normal operation.
      */
     private Window getApplicationWindow(HttpServletRequest request,
+            AbstractApplicationServlet applicationServlet,
             Application application, Window assumedWindow)
             throws ServletException {
 
@@ -1457,7 +1459,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
      * @see com.vaadin.terminal.URIHandler
      */
     DownloadStream handleURI(Window window, HttpServletRequest request,
-            HttpServletResponse response) {
+            HttpServletResponse response,
+            AbstractApplicationServlet applicationServlet) {
 
         String uri = applicationServlet.getRequestPathInfo(request);
 

@@ -864,7 +864,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
             HttpServletResponse response) throws IOException {
         // Handles the URI
         DownloadStream download = applicationManager.handleURI(window, request,
-                response);
+                response, this);
 
         // A download request
         if (download != null) {
