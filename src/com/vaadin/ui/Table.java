@@ -2184,7 +2184,7 @@ public class Table extends AbstractSelect implements Action.Container,
         target.endTag("rows");
 
         // The select variable is only enabled if selectable
-        if (selectable && selectedKeys.size() > 0) {
+        if (selectable) {
             target.addVariable(this, "selected", selectedKeys
                     .toArray(new String[selectedKeys.size()]));
         }
