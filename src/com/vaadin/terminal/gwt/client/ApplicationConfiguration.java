@@ -106,7 +106,7 @@ public class ApplicationConfiguration {
 
     /**
      * Inits the ApplicationConfiguration by reading the DOM and instantiating
-     * ApplicationConenctions accordingly. Call {@link #startNextApplication()}
+     * ApplicationConnections accordingly. Call {@link #startNextApplication()}
      * to actually start the applications.
      * 
      * @param widgetset

@@ -761,7 +761,7 @@ public class ApplicationConnection {
     /**
      * This method assures that all pending variable changes are sent to server.
      * Method uses synchronized xmlhttprequest and does not return before the
-     * changes are sent. No UIDL updates are processed and thut UI is left in
+     * changes are sent. No UIDL updates are processed and thus UI is left in
      * inconsistent state. This method should be called only when closing
      * windows - normally sendPendingVariableChanges() should be used.
      */
@@ -899,11 +899,11 @@ public class ApplicationConnection {
      * Build the variable burst and send it to server.
      * 
      * When sync is forced, we also force sending of all pending variable-bursts
-     * at the same time. This is ok as we can assume that DOM will newer be
+     * at the same time. This is ok as we can assume that DOM will never be
      * updated after this.
      * 
      * @param pendingVariables
-     *            Vector of variablechanges to send
+     *            Vector of variable changes to send
      * @param forceSync
      *            Should we use synchronous request?
      */

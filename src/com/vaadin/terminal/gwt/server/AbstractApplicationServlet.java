@@ -366,6 +366,24 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
         RequestType requestType = getRequestType(request);
 
         try {
+            // If a duplicate "close application" URL is received for an
+            // application that is not open, redirect to the application's main
+            // page.
+            // This is needed as e.g. Spring Security remembers the last
+            // URL from the application, which is the logout URL, and repeats
+            // it.
+            // We can tell apart a real onunload request from a repeated one
+            // based on the real one having content (at least the UIDL security
+            // key).
+            if (requestType == RequestType.UIDL
+                    && request.getParameterMap().containsKey(
+                            ApplicationConnection.PARAM_UNLOADBURST)
+                    && request.getContentLength() < 1
+                    && getExistingApplication(request, false) == null) {
+                redirectToApplication(request, response);
+                return;
+            }
+
             // Find out which application this request is related to
             application = findApplicationInstance(request, requestType);
             if (application == null) {
@@ -1189,6 +1207,21 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
         }
 
         return string;
+    }
+
+    /**
+     * Write a redirect response to the main page of the application.
+     * 
+     * @param request
+     * @param response
+     * @throws IOException
+     *             if sending the redirect fails due to an input/output error or
+     *             a bad application URL
+     */
+    private void redirectToApplication(HttpServletRequest request,
+            HttpServletResponse response) throws IOException {
+        String applicationUrl = getApplicationUrl(request).toExternalForm();
+        response.sendRedirect(response.encodeRedirectURL(applicationUrl));
     }
 
     /**
