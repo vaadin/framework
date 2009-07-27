@@ -123,8 +123,7 @@ public class VDateField extends FlowPanel implements Paintable, Field {
         currentResolution = newResolution;
 
         // Add stylename that indicates current resolution
-        setStyleName(CLASSNAME + " " + CLASSNAME + "-"
-                + resolutionToString(currentResolution));
+        addStyleName(CLASSNAME + "-" + resolutionToString(currentResolution));
 
         final int year = uidl.getIntVariable("year");
         final int month = (currentResolution >= RESOLUTION_MONTH) ? uidl
