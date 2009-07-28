@@ -28,6 +28,8 @@ public class VButton extends Button implements Paintable {
     // Used only for IE, because it doesn't support :active CSS selector
     private static final String CLASSNAME_DOWN = "v-pressed";
 
+    private String primaryStyleName;
+
     String id;
 
     ApplicationConnection client;
@@ -72,9 +74,11 @@ public class VButton extends Button implements Paintable {
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
-	// client.updateComponent depends on this, so this must come before that.
-        if (uidl.hasAttribute("primarystyle")) {
-            setStyleName(uidl.getStringAttribute("primarystyle"));
+        // client.updateComponent depends on this, so this must come before
+        if (uidl.hasAttribute("primarystyle")
+                && primaryStyleName != uidl.getStringAttribute("primarystyle")) {
+            primaryStyleName = uidl.getStringAttribute("primarystyle");
+            setStyleName(primaryStyleName);
             captionElement.setPropertyString("className", getStylePrimaryName()
                     + "-caption");
         }
