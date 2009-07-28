@@ -375,9 +375,11 @@ public class VTabsheet extends VTabsheetBase {
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         rendering = true;
 
-        // Handle stylename changes before generics (might affect size
-        // calculations)
-        handleStyleNames(uidl);
+        if (!uidl.getBooleanAttribute("cached")) {
+            // Handle stylename changes before generics (might affect size
+            // calculations)
+            handleStyleNames(uidl);
+        }
 
         super.updateFromUIDL(uidl, client);
         if (cachedUpdate) {
