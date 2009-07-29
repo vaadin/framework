@@ -1,8 +1,9 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.HistoryListener;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
@@ -15,7 +16,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
  * 
  */
 public class VUriFragmentUtility extends Widget implements Paintable,
-        HistoryListener {
+        ValueChangeHandler<String> {
 
     private String fragment;
     private ApplicationConnection client;
@@ -28,7 +29,7 @@ public class VUriFragmentUtility extends Widget implements Paintable,
             getElement().getStyle().setProperty("overflow", "hidden");
             getElement().getStyle().setProperty("height", "0");
         }
-        History.addHistoryListener(this);
+        History.addValueChangeHandler(this);
         History.fireCurrentHistoryState();
     }
 
@@ -57,7 +58,8 @@ public class VUriFragmentUtility extends Widget implements Paintable,
         }
     }
 
-    public void onHistoryChanged(String historyToken) {
+    public void onValueChange(ValueChangeEvent<String> event) {
+        String historyToken = event.getValue();
         fragment = historyToken;
         if (client != null) {
             client.updateVariable(paintableId, "fragment", fragment, immediate);
