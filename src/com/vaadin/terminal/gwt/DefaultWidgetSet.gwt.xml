@@ -24,6 +24,12 @@
 	<inherits name="com.google.gwt.json.JSON" />
 
 	<source path="client" />
+	
+	<!-- Use our own history impl for IE to workaround #2931.	--> 
+	<replace-with class="com.vaadin.terminal.gwt.client.HistoryImplIEVaadin">
+		<when-type-is class="com.google.gwt.user.client.impl.HistoryImpl"/>
+		<when-property-is name="user.agent" value="ie6"/>
+	</replace-with>
 
 	<entry-point class="com.vaadin.terminal.gwt.client.DefaultWidgetSet" />
 </module>
