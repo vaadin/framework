@@ -383,6 +383,7 @@ public class VTabsheet extends VTabsheetBase {
 
         super.updateFromUIDL(uidl, client);
         if (cachedUpdate) {
+            rendering = false;
             return;
         }
 
