@@ -1523,7 +1523,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
         }
 
         public void setHorizontalScrollPosition(int scrollLeft) {
-            DOM.setElementPropertyInt(hTableWrapper, "scrollLeft", scrollLeft);
+            if (BrowserInfo.get().isIE6()) {
+                hTableWrapper.getStyle().setProperty("position", "relative");
+                hTableWrapper.getStyle().setPropertyPx("left", -scrollLeft);
+            } else {
+                hTableWrapper.setScrollLeft(scrollLeft);
+            }
         }
 
         public void setColumnCollapsingAllowed(boolean cc) {
