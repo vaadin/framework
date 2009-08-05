@@ -4,6 +4,7 @@
 
 package com.vaadin.ui;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
@@ -20,13 +21,16 @@ import com.vaadin.terminal.UploadStream;
 /**
  * Component for uploading files from client to server.
  * 
+ * <p>
  * The visible component consists of a file name input box and a browse button
  * and an upload submit button to start uploading.
  * 
+ * <p>
  * The Upload component needs a java.io.OutputStream to write the uploaded data.
  * You need to implement the Upload.Receiver interface and return the output
  * stream in the receiveUpload() method.
  * 
+ * <p>
  * You can get an event regarding starting (StartedEvent), progress
  * (ProgressEvent), and finishing (FinishedEvent) of upload by implementing
  * StartedListener, ProgressListener, and FinishedListener, respectively. The
@@ -34,9 +38,15 @@ import com.vaadin.terminal.UploadStream;
  * to separate between these two cases, you can use SucceededListener
  * (SucceededEvenet) and FailedListener (FailedEvent).
  * 
+ * <p>
  * The upload component does not itself show upload progress, but you can use
  * the ProgressIndicator for providing progress feedback by implementing
  * ProgressListener and updating the indicator in updateProgress().
+ * 
+ * <p>
+ * Setting upload component immediate initiates the upload as soon as a file is
+ * selected, instead of the common pattern of file selection field and upload
+ * button.
  * 
  * @author IT Mill Ltd.
  * @version
@@ -81,7 +91,9 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * upload
      */
     private ProgressListener progressListener;
-    private LinkedHashSet progressListeners;
+    private LinkedHashSet<ProgressListener> progressListeners;
+
+    private boolean interrupted = false;
 
     /* TODO: Add a default constructor, receive to temp file. */
 
@@ -169,6 +181,9 @@ public class Upload extends AbstractComponent implements Component.Focusable {
                         fireUpdateProgress(totalBytes, contentLength);
                     }
                 }
+                if (interrupted) {
+                    throw new Exception("Upload interrupted by other thread");
+                }
             }
 
             // upload successful
@@ -182,8 +197,15 @@ public class Upload extends AbstractComponent implements Component.Focusable {
         } catch (final Exception e) {
             synchronized (application) {
                 // Download interrupted
+                try {
+                    // still try to close output stream
+                    out.close();
+                } catch (IOException e1) {
+                    // NOP
+                }
                 fireUploadInterrupted(filename, type, totalBytes, e);
                 endUpload();
+                interrupted = false;
             }
         }
     }
@@ -697,7 +719,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      */
     public void addListener(ProgressListener listener) {
         if (progressListeners == null) {
-            progressListeners = new LinkedHashSet();
+            progressListeners = new LinkedHashSet<ProgressListener>();
         }
         progressListeners.add(listener);
     }
@@ -792,8 +814,9 @@ public class Upload extends AbstractComponent implements Component.Focusable {
         // this is implemented differently than other listeners to maintain
         // backwards compatibility
         if (progressListeners != null) {
-            for (Iterator it = progressListeners.iterator(); it.hasNext();) {
-                ProgressListener l = (ProgressListener) it.next();
+            for (Iterator<ProgressListener> it = progressListeners.iterator(); it
+                    .hasNext();) {
+                ProgressListener l = it.next();
                 l.updateProgress(totalBytes, contentLength);
             }
         }
@@ -881,12 +904,23 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     }
 
     /**
+     * Interrupts the upload currently being received. The interruption will be
+     * done by the receiving tread so this method will return immediately and
+     * the actual interrupt will happen a bit later.
+     */
+    public void interruptUpload() {
+        if (isUploading) {
+            interrupted = true;
+        }
+    }
+
+    /**
      * Go into state where new uploading can begin.
      * 
      * Warning: this is an internal method used by the framework and should not
      * be used by user of the Upload component.
      */
-    public void endUpload() {
+    private void endUpload() {
         isUploading = false;
         contentLength = -1;
     }
@@ -960,11 +994,17 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     }
 
     /**
-     * File uploads usually have button that starts actual upload progress. This
-     * method is used to set text in that button.
+     * In addition to the actual file chooser, upload components have button
+     * that starts actual upload progress. This method is used to set text in
+     * that button.
+     * 
+     * <p>
+     * <strong>Note</strong> the string given is set as is to the button. HTML
+     * formatting is not stripped. Be sure to properly validate your value
+     * according to your needs.
      * 
      * @param buttonCaption
-     *            text for uploads button.
+     *            text for upload components button.
      */
     public void setButtonCaption(String buttonCaption) {
         this.buttonCaption = buttonCaption;

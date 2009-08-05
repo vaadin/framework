@@ -4,30 +4,53 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.FormHandler;
 import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
-import com.google.gwt.user.client.ui.FormSubmitEvent;
+import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
+import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 
-public class VUpload extends FormPanel implements Paintable, ClickListener,
-        FormHandler {
+public class VUpload extends FormPanel implements Paintable,
+        SubmitCompleteHandler, SubmitHandler {
+
+    private final class MyFileUpload extends FileUpload {
+        @Override
+        public void onBrowserEvent(Event event) {
+            super.onBrowserEvent(event);
+            if (event.getTypeInt() == Event.ONCHANGE) {
+                if (immediate && fu.getFilename() != null
+                        && !"".equals(fu.getFilename())) {
+                    submit();
+                }
+            } else if (event.getTypeInt() == Event.ONFOCUS) {
+                // IE and user has clicked on hidden textarea part of upload
+                // field. Manually open file selector, other browsers do it by
+                // default.
+                fireNativeClick(fu.getElement());
+                // also remove focus to enable hack if user presses cancel
+                // button
+                fireNativeBlur(fu.getElement());
+            }
+        }
+    }
 
     public static final String CLASSNAME = "v-upload";
 
     /**
      * FileUpload component that opens native OS dialog to select file.
      */
-    FileUpload fu = new FileUpload();
+    FileUpload fu = new MyFileUpload();
 
     Panel panel = new FlowPanel();
 
@@ -56,18 +79,34 @@ public class VUpload extends FormPanel implements Paintable, ClickListener,
 
     private boolean enabled = true;
 
+    private boolean immediate;
+
+    private Hidden maxfilesize = new Hidden();
+
     public VUpload() {
         super();
         setEncoding(FormPanel.ENCODING_MULTIPART);
         setMethod(FormPanel.METHOD_POST);
 
         setWidget(panel);
+        panel.add(maxfilesize);
         panel.add(fu);
         submitButton = new Button();
-        submitButton.addClickListener(this);
+        submitButton.setStyleName("v-button");
+        submitButton.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                if (immediate) {
+                    // fire click on upload (eg. focused button and hit space)
+                    fireNativeClick(fu.getElement());
+                } else {
+                    submit();
+                }
+            }
+        });
         panel.add(submitButton);
 
-        addFormHandler(this);
+        addSubmitCompleteHandler(this);
+        addSubmitHandler(this);
 
         setStyleName(CLASSNAME);
     }
@@ -76,10 +115,12 @@ public class VUpload extends FormPanel implements Paintable, ClickListener,
         if (client.updateComponent(this, uidl, true)) {
             return;
         }
+        setImmediate(uidl.getBooleanAttribute("immediate"));
         this.client = client;
         paintableId = uidl.getId();
         setAction(client.getAppUri());
-        submitButton.setText(uidl.getStringAttribute("buttoncaption"));
+        submitButton.setHTML("<span class=\"v-button-caption\">"
+                + uidl.getStringAttribute("buttoncaption") + "</span>");
         fu.setName(paintableId + "_file");
 
         if (uidl.hasAttribute("disabled") || uidl.hasAttribute("readonly")) {
@@ -87,16 +128,76 @@ public class VUpload extends FormPanel implements Paintable, ClickListener,
         } else if (uidl.getBooleanAttribute("state")) {
             enableUploaod();
         }
-
     }
 
-    public void onClick(Widget sender) {
-        submit();
+    private void setImmediate(boolean booleanAttribute) {
+        if (immediate != booleanAttribute) {
+            immediate = booleanAttribute;
+            if (immediate) {
+                fu.sinkEvents(Event.ONCHANGE);
+                fu.sinkEvents(Event.ONFOCUS);
+            }
+        }
+        setStyleName(getElement(), CLASSNAME + "-immediate", immediate);
     }
 
-    public void onSubmit(FormSubmitEvent event) {
+    private static native void fireNativeClick(Element element)
+    /*-{
+        element.click();
+    }-*/;
+
+    private static native void fireNativeBlur(Element element)
+    /*-{
+        element.blur();
+    }-*/;
+
+    protected void disableUpload() {
+        submitButton.setEnabled(false);
+        fu.setVisible(false);
+        enabled = false;
+    }
+
+    protected void enableUploaod() {
+        submitButton.setEnabled(true);
+        fu.setVisible(true);
+        enabled = true;
+    }
+
+    /**
+     * Re-creates file input field and populates panel. This is needed as we
+     * want to clear existing values from our current file input field.
+     */
+    private void rebuildPanel() {
+        panel.remove(submitButton);
+        panel.remove(fu);
+        fu = new MyFileUpload();
+        fu.setName(paintableId + "_file");
+        fu.setVisible(enabled);
+        panel.add(fu);
+        panel.add(submitButton);
+        if (immediate) {
+            fu.sinkEvents(Event.ONCHANGE);
+        }
+    }
+
+    public void onSubmitComplete(SubmitCompleteEvent event) {
+        if (client != null) {
+            if (t != null) {
+                t.cancel();
+            }
+            ApplicationConnection.getConsole().log("Submit complete");
+            client.sendPendingVariableChanges();
+        }
+
+        rebuildPanel();
+
+        submitted = false;
+        enableUploaod();
+    }
+
+    public void onSubmit(SubmitEvent event) {
         if (fu.getFilename().length() == 0 || submitted || !enabled) {
-            event.setCancelled(true);
+            event.cancel();
             ApplicationConnection
                     .getConsole()
                     .log(
@@ -123,30 +224,6 @@ public class VUpload extends FormPanel implements Paintable, ClickListener,
             }
         };
         t.schedule(800);
-    }
-
-    protected void disableUpload() {
-        submitButton.setEnabled(false);
-        fu.setVisible(false);
-        enabled = false;
-    }
-
-    protected void enableUploaod() {
-        submitButton.setEnabled(true);
-        fu.setVisible(true);
-        enabled = true;
-    }
-
-    public void onSubmitComplete(FormSubmitCompleteEvent event) {
-        if (client != null) {
-            if (t != null) {
-                t.cancel();
-            }
-            ApplicationConnection.getConsole().log("Submit complete");
-            client.sendPendingVariableChanges();
-        }
-        submitted = false;
-        enableUploaod();
     }
 
 }

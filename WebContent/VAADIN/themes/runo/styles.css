@@ -1436,6 +1436,30 @@ div.v-tree-node-leaf {
 	clear: left;
 }
 
+/* ./WebContent/VAADIN/themes/base/upload/upload.css */
+.v-upload-immediate {
+	position: relative;
+	width: 10em;
+	margin:0;
+}
+
+.v-upload-immediate input {
+	opacity: 0;
+	filter: alpha(opacity=0);
+	z-index:2;
+	position: absolute;
+	right:0;
+	height:21px;
+	text-align: right;
+}
+.v-upload-immediate button {
+	position:relative;
+	left:0;
+	top:0;
+	width:100%;
+}
+  
+
 /* ./WebContent/VAADIN/themes/base/window/window.css */
 .v-window {
 	background: #fff;
