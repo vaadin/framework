@@ -78,6 +78,8 @@ import com.vaadin.demo.sampler.features.trees.TreeActions;
 import com.vaadin.demo.sampler.features.trees.TreeMouseEvents;
 import com.vaadin.demo.sampler.features.trees.TreeMultiSelect;
 import com.vaadin.demo.sampler.features.trees.TreeSingleSelect;
+import com.vaadin.demo.sampler.features.upload.UploadBasic;
+import com.vaadin.demo.sampler.features.upload.UploadWithProgressMonitoring;
 import com.vaadin.demo.sampler.features.windows.NativeWindow;
 import com.vaadin.demo.sampler.features.windows.Subwindow;
 import com.vaadin.demo.sampler.features.windows.SubwindowAutoSized;
@@ -139,6 +141,7 @@ public class FeatureSet extends Feature {
                     new TextFields(), //
                     new Trees(), //
                     new Windows(), //
+                    new Uploads(), //
             });
         }
     }
@@ -300,6 +303,20 @@ public class FeatureSet extends Feature {
                             + " related fields visually.", new Feature[] {
                     //        
                     new FormBasic(), //
+                    });
+        }
+    }
+
+    public static class Uploads extends FeatureSet {
+        public Uploads() {
+            super(
+                    "Uploads",
+                    "Uploads",
+                    "Upload is a component providing a method for clients to send files to server.",
+                    new Feature[] {
+                    //
+                            new UploadBasic(), //
+                            new UploadWithProgressMonitoring(), //
                     });
         }
     }
