@@ -2,6 +2,7 @@
 	position: relative;
 	width: 10em;
 	margin:0;
+	overflow:hidden;
 }
 
 .v-upload-immediate input {
@@ -18,5 +19,6 @@
 	left:0;
 	top:0;
 	width:100%;
+	text-align:left;
 }
   

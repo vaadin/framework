@@ -153,13 +153,13 @@ public class VUpload extends FormPanel implements Paintable,
 
     protected void disableUpload() {
         submitButton.setEnabled(false);
-        fu.setVisible(false);
+        // fu.getElement().setPropertyBoolean("disabled", true);
         enabled = false;
     }
 
     protected void enableUploaod() {
         submitButton.setEnabled(true);
-        fu.setVisible(true);
+        // fu.getElement().setPropertyBoolean("disabled", false);
         enabled = true;
     }
 
@@ -172,7 +172,7 @@ public class VUpload extends FormPanel implements Paintable,
         panel.remove(fu);
         fu = new MyFileUpload();
         fu.setName(paintableId + "_file");
-        fu.setVisible(enabled);
+        // fu.getElement().setPropertyBoolean("disabled", !enabled);
         panel.add(fu);
         panel.add(submitButton);
         if (immediate) {
