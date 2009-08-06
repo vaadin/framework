@@ -308,6 +308,7 @@ public class Label extends AbstractComponent implements Property,
                         .isAssignableFrom(dataSource.getClass())) {
             ((Property.ValueChangeNotifier) dataSource).addListener(this);
         }
+        requestRepaint();
     }
 
     /**
