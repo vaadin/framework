@@ -543,7 +543,7 @@ public class Util {
                         // fix another bug where scrollbar remains in wrong
                         // position
                         int scrolltop = elem.getScrollTop();
-                        elem.setScrollTop(scrolltop + 1);
+                        elem.setScrollTop(scrolltop - 1);
                         elem.setScrollTop(scrolltop);
                     }
                 }
