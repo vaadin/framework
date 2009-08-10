@@ -1330,8 +1330,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                     + ">\n<head>\n");
             page
                     .write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>\n");
-            page
-                    .write("<meta http-equiv=\"X-UA-Compatible\" content=\"IE=7\" />\n");
             page.write("<style type=\"text/css\">"
                     + "html, body {height:100%;}</style>");
 
