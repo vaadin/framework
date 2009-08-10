@@ -193,8 +193,8 @@ public class ApplicationPortlet implements Portlet, Serializable {
                             + "    vaadin.postRequestHooks = {};"
                             + "}"
                             + "vaadin.postRequestHooks.liferaySessionHeartBeat = function() {"
-                            + "    if (Liferay && Liferay.Session) {"
-                            + "        Liferay.Session.extend();"
+                            + "    if (Liferay && Liferay.Session && Liferay.Session.setCookie) {"
+                            + "        Liferay.Session.setCookie();"
                             + "    }"
                             + "};" + "</script>");
                     out.write(lifeRaySessionHearbeatHack.getBytes());
