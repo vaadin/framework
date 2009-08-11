@@ -25,7 +25,7 @@ public class PreventTabChange extends TestBase implements
 
     @Override
     protected Integer getTicketNumber() {
-        return null;
+        return 3199;
     }
 
     @Override
