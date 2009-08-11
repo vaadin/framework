@@ -706,7 +706,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             currentSuggestions.add(suggestion);
             if (optionUidl.hasAttribute("selected")) {
                 if (!filtering || popupOpenerClicked) {
-                    tb.setText(suggestion.getReplacementString());
+                    setPromptingOff(suggestion.getReplacementString());
                     selectedOptionKey = "" + suggestion.getOptionKey();
                 }
                 currentSuggestion = suggestion;
@@ -769,15 +769,19 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     }
 
     private void setPromptingOn() {
-        prompting = true;
-        addStyleDependentName(CLASSNAME_PROMPT);
+        if (!prompting) {
+            prompting = true;
+            addStyleDependentName(CLASSNAME_PROMPT);
+        }
         tb.setText(inputPrompt);
     }
 
     private void setPromptingOff(String text) {
         tb.setText(text);
-        prompting = false;
-        removeStyleDependentName(CLASSNAME_PROMPT);
+        if (prompting) {
+            prompting = false;
+            removeStyleDependentName(CLASSNAME_PROMPT);
+        }
     }
 
     public void onSuggestionSelected(FilterSelectSuggestion suggestion) {

@@ -798,7 +798,7 @@ public class VOrderedLayout extends CellBasedLayout {
 
     @Override
     public void setWidth(String width) {
-        if (this.width.equals(width)) {
+        if (this.width.equals(width) || !isVisible()) {
             return;
         }
         Size sizeBefore = new Size(activeLayoutSize.getWidth(),
