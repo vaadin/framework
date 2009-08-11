@@ -1369,161 +1369,75 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
             throw new ServletException("CommunicationError!", e);
         }
 
-        if (isGecko17(request)) {
-            // special start page for gecko 1.7 versions. Firefox 1.0 is not
-            // supported, but the hack is make it possible to use linux and
-            // hosted mode browser for debugging. Note that due this hack,
-            // debugging gwt code in portals with linux will be problematic if
-            // there are multiple Vaadin portlets visible at the same time.
-            // TODO remove this when hosted mode on linux gets newer gecko
+        page.write("<script type=\"text/javascript\">\n");
+        page.write("//<![CDATA[\n");
+        page.write("if(!vaadin || !vaadin.vaadinConfigurations) {\n "
+                + "if(!vaadin) { var vaadin = {}} \n"
+                + "vaadin.vaadinConfigurations = {};\n"
+                + "if (!vaadin.themesLoaded) { vaadin.themesLoaded = {}; }\n");
+        if (!isProductionMode()) {
+            page.write("vaadin.debug = true;\n");
+        }
+        page
+                .write("document.write('<iframe tabIndex=\"-1\" id=\"__gwt_historyFrame\" "
+                        + "style=\"width:0;height:0;border:0;overflow:"
+                        + "hidden\" src=\"javascript:false\"></iframe>');\n");
+        page.write("document.write(\"<script language='javascript' src='"
+                + widgetsetFilePath + "/" + WIDGETSET_DIRECTORY_PATH
+                + widgetset + "/" + widgetset + ".nocache.js?"
+                + new Date().getTime() + "'><\\/script>\");\n}\n");
 
-            page.write("<iframe tabIndex=\"-1\" id=\"__gwt_historyFrame\" "
-                    + "style=\"width:0;height:0;border:0;overflow:"
-                    + "hidden\" src=\"javascript:false\"></iframe>\n");
-            page.write("<script language='javascript' src='"
-                    + widgetsetFilePath + "/" + WIDGETSET_DIRECTORY_PATH
-                    + widgetset + "/" + widgetset + ".nocache.js?"
-                    + new Date().getTime() + "'></script>\n");
+        page.write("vaadin.vaadinConfigurations[\"" + appId + "\"] = {");
+        page.write("appUri:'" + appUrl + "', ");
+        page.write("pathInfo: '" + pathInfo + "', ");
+        if (window != application.getMainWindow()) {
+            page.write("windowName: '" + window.getName() + "', ");
+        }
+        page.write("themeUri:");
+        page.write(themeUri != null ? "'" + themeUri + "'" : "null");
+        page.write(", versionInfo : {vaadinVersion:\"");
+        page.write(VERSION);
+        page.write("\",applicationVersion:\"");
+        page.write(application.getVersion());
+        page.write("\"},");
+        if (systemMessages != null) {
+            // Write the CommunicationError -message to client
+            String caption = systemMessages.getCommunicationErrorCaption();
+            if (caption != null) {
+                caption = "\"" + caption + "\"";
+            }
+            String message = systemMessages.getCommunicationErrorMessage();
+            if (message != null) {
+                message = "\"" + message + "\"";
+            }
+            String url = systemMessages.getCommunicationErrorURL();
+            if (url != null) {
+                url = "\"" + url + "\"";
+            }
+
+            page.write("\"comErrMsg\": {" + "\"caption\":" + caption + ","
+                    + "\"message\" : " + message + "," + "\"url\" : " + url
+                    + "}");
+        }
+        page.write("};\n//]]>\n</script>\n");
+
+        if (themeName != null) {
+            // Custom theme's stylesheet, load only once, in different
+            // script
+            // tag to be dominate styles injected by widget
+            // set
             page.write("<script type=\"text/javascript\">\n");
             page.write("//<![CDATA[\n");
+            page.write("if(!vaadin.themesLoaded['" + themeName + "']) {\n");
+            page.write("var stylesheet = document.createElement('link');\n");
+            page.write("stylesheet.setAttribute('rel', 'stylesheet');\n");
+            page.write("stylesheet.setAttribute('type', 'text/css');\n");
+            page.write("stylesheet.setAttribute('href', '" + themeUri
+                    + "/styles.css');\n");
             page
-                    .write("if(!vaadin || !vaadin.vaadinConfigurations) {\n "
-                            + "if(!vaadin) { var vaadin = {}} \n"
-                            + "vaadin.vaadinConfigurations = {};\n"
-                            + "if (!vaadin.themesLoaded) { vaadin.themesLoaded = {}; } }\n");
-
-            if (!isProductionMode()) {
-                page.write("vaadin.debug = true;\n");
-            }
-
-            page.write("vaadin.vaadinConfigurations[\"" + appId + "\"] = {");
-            page.write("appUri:'" + appUrl + "', ");
-            page.write("pathInfo: '" + pathInfo + "', ");
-            if (window != application.getMainWindow()) {
-                page.write("windowName: '" + window.getName() + "', ");
-            }
-            page.write("themeUri:");
-            page.write(themeUri != null ? "'" + themeUri + "'" : "null");
-            page.write(", versionInfo : {vaadinVersion:\"");
-            page.write(VERSION);
-            page.write("\",applicationVersion:\"");
-            page.write(application.getVersion());
-            page.write("\"},");
-            if (systemMessages != null) {
-                // Write the CommunicationError -message to client
-                String caption = systemMessages.getCommunicationErrorCaption();
-                if (caption != null) {
-                    caption = "\"" + caption + "\"";
-                }
-                String message = systemMessages.getCommunicationErrorMessage();
-                if (message != null) {
-                    message = "\"" + message + "\"";
-                }
-                String url = systemMessages.getCommunicationErrorURL();
-                if (url != null) {
-                    url = "\"" + url + "\"";
-                }
-                page.write("\"comErrMsg\": {" + "\"caption\":" + caption + ","
-                        + "\"message\" : " + message + "," + "\"url\" : " + url
-                        + "}");
-            }
-            page.write("};\n//]]>\n</script>\n");
-
-            if (themeName != null) {
-                // Custom theme's stylesheet, load only once, in different
-                // script
-                // tag to be dominate styles injected by widget
-                // set
-                page.write("<script type=\"text/javascript\">\n");
-                page.write("//<![CDATA[\n");
-                page.write("if(!vaadin.themesLoaded['" + themeName + "']) {\n");
-                page
-                        .write("var stylesheet = document.createElement('link');\n");
-                page.write("stylesheet.setAttribute('rel', 'stylesheet');\n");
-                page.write("stylesheet.setAttribute('type', 'text/css');\n");
-                page.write("stylesheet.setAttribute('href', '" + themeUri
-                        + "/styles.css');\n");
-                page
-                        .write("document.getElementsByTagName('head')[0].appendChild(stylesheet);\n");
-                page.write("vaadin.themesLoaded['" + themeName
-                        + "'] = true;\n}\n");
-                page.write("//]]>\n</script>\n");
-            }
-
-        } else {
-            page.write("<script type=\"text/javascript\">\n");
-            page.write("//<![CDATA[\n");
-            page
-                    .write("if(!vaadin || !vaadin.vaadinConfigurations) {\n "
-                            + "if(!vaadin) { var vaadin = {}} \n"
-                            + "vaadin.vaadinConfigurations = {};\n"
-                            + "if (!vaadin.themesLoaded) { vaadin.themesLoaded = {}; }\n");
-            if (!isProductionMode()) {
-                page.write("vaadin.debug = true;\n");
-            }
-            page
-                    .write("document.write('<iframe tabIndex=\"-1\" id=\"__gwt_historyFrame\" "
-                            + "style=\"width:0;height:0;border:0;overflow:"
-                            + "hidden\" src=\"javascript:false\"></iframe>');\n");
-            page.write("document.write(\"<script language='javascript' src='"
-                    + widgetsetFilePath + "/" + WIDGETSET_DIRECTORY_PATH
-                    + widgetset + "/" + widgetset + ".nocache.js?"
-                    + new Date().getTime() + "'><\\/script>\");\n}\n");
-
-            page.write("vaadin.vaadinConfigurations[\"" + appId + "\"] = {");
-            page.write("appUri:'" + appUrl + "', ");
-            page.write("pathInfo: '" + pathInfo + "', ");
-            if (window != application.getMainWindow()) {
-                page.write("windowName: '" + window.getName() + "', ");
-            }
-            page.write("themeUri:");
-            page.write(themeUri != null ? "'" + themeUri + "'" : "null");
-            page.write(", versionInfo : {vaadinVersion:\"");
-            page.write(VERSION);
-            page.write("\",applicationVersion:\"");
-            page.write(application.getVersion());
-            page.write("\"},");
-            if (systemMessages != null) {
-                // Write the CommunicationError -message to client
-                String caption = systemMessages.getCommunicationErrorCaption();
-                if (caption != null) {
-                    caption = "\"" + caption + "\"";
-                }
-                String message = systemMessages.getCommunicationErrorMessage();
-                if (message != null) {
-                    message = "\"" + message + "\"";
-                }
-                String url = systemMessages.getCommunicationErrorURL();
-                if (url != null) {
-                    url = "\"" + url + "\"";
-                }
-
-                page.write("\"comErrMsg\": {" + "\"caption\":" + caption + ","
-                        + "\"message\" : " + message + "," + "\"url\" : " + url
-                        + "}");
-            }
-            page.write("};\n//]]>\n</script>\n");
-
-            if (themeName != null) {
-                // Custom theme's stylesheet, load only once, in different
-                // script
-                // tag to be dominate styles injected by widget
-                // set
-                page.write("<script type=\"text/javascript\">\n");
-                page.write("//<![CDATA[\n");
-                page.write("if(!vaadin.themesLoaded['" + themeName + "']) {\n");
-                page
-                        .write("var stylesheet = document.createElement('link');\n");
-                page.write("stylesheet.setAttribute('rel', 'stylesheet');\n");
-                page.write("stylesheet.setAttribute('type', 'text/css');\n");
-                page.write("stylesheet.setAttribute('href', '" + themeUri
-                        + "/styles.css');\n");
-                page
-                        .write("document.getElementsByTagName('head')[0].appendChild(stylesheet);\n");
-                page.write("vaadin.themesLoaded['" + themeName
-                        + "'] = true;\n}\n");
-                page.write("//]]>\n</script>\n");
-            }
+                    .write("document.getElementsByTagName('head')[0].appendChild(stylesheet);\n");
+            page.write("vaadin.themesLoaded['" + themeName + "'] = true;\n}\n");
+            page.write("//]]>\n</script>\n");
         }
 
         // Warn if the widgetset has not been loaded after 15 seconds on
@@ -1581,18 +1495,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      */
     protected String getNoScriptMessage() {
         return "You have to enable javascript in your browser to use an application built with Vaadin.";
-    }
-
-    private boolean isGecko17(HttpServletRequest request) {
-        final WebBrowser browser = WebApplicationContext.getApplicationContext(
-                request.getSession()).getBrowser();
-        if (browser != null && browser.getBrowserApplication() != null) {
-            if (browser.getBrowserApplication().indexOf("rv:1.7.") > 0
-                    && browser.getBrowserApplication().indexOf("Gecko") > 0) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
