@@ -616,8 +616,8 @@ public class VTabsheet extends VTabsheetBase {
         updateOpenTabSize();
         VTabsheet.this.removeStyleDependentName("loading");
         if (previousVisibleWidget != null) {
-            DOM.setStyleAttribute(previousVisibleWidget.getElement(),
-                    "visibility", "");
+            DOM.setStyleAttribute(DOM.getParent(previousVisibleWidget
+                    .getElement()), "visibility", "");
             previousVisibleWidget = null;
         }
     }
