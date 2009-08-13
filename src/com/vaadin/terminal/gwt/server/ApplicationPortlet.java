@@ -110,6 +110,15 @@ public class ApplicationPortlet implements Portlet, Serializable {
                     portalResourcePath = "/html";
                 }
 
+                if (portalResourcePath != null) {
+                    // if portalResourcePath is defined, set it as a request
+                    // parameter which will override the default location in
+                    // servlet
+                    request.setAttribute(
+                            ApplicationServlet.REQUEST_VAADIN_STATIC_FILE_PATH,
+                            portalResourcePath);
+                }
+
                 // - if the user has specified a widgetset for this portlet, use
                 // it from the portlet (not fully supported)
                 // - otherwise, if specified, use the portal-wide widgetset
@@ -117,13 +126,6 @@ public class ApplicationPortlet implements Portlet, Serializable {
                 // - finally, default to use the default widgetset if nothing
                 // else is found
                 if (portalWidgetset != null) {
-                    if (portalResourcePath != null) {
-                        request
-                                .setAttribute(
-                                        ApplicationServlet.REQUEST_VAADIN_WIDGETSET_PATH,
-                                        portalResourcePath);
-                    }
-
                     request.setAttribute(ApplicationServlet.REQUEST_WIDGETSET,
                             portalWidgetset);
                 } else if (portletWidgetset != null) {
@@ -136,21 +138,20 @@ public class ApplicationPortlet implements Portlet, Serializable {
                             style);
                 }
 
-                String themeUri = null;
                 if (portalTheme != null) {
-                    themeUri = portalResourcePath + "/"
+                    request.setAttribute(
+                            ApplicationServlet.REQUEST_DEFAULT_THEME,
+                            portalTheme);
+
+                    String defaultThemeUri = null;
+                    defaultThemeUri = portalResourcePath + "/"
                             + AbstractApplicationServlet.THEME_DIRECTORY_PATH
                             + portalTheme;
-                    request.setAttribute(
-                            ApplicationServlet.REQUEST_DEFAULT_THEME_URI,
-                            portalTheme);
-                }
-
-                /*
-                 * Make sure portal default Vaadin theme is included exactly
-                 * once in DOM.
-                 */
-                if (portalTheme != null) {
+                    /*
+                     * Make sure portal default Vaadin theme is included in DOM.
+                     * Vaadin portlet themes do not "inherit" base theme, so we
+                     * need to force loading of the common base theme.
+                     */
                     OutputStream out = response.getPortletOutputStream();
 
                     // Using portal-wide theme
@@ -164,7 +165,7 @@ public class ApplicationPortlet implements Portlet, Serializable {
                             + "stylesheet.setAttribute('rel', 'stylesheet');\n"
                             + "stylesheet.setAttribute('type', 'text/css');\n"
                             + "stylesheet.setAttribute('href', '"
-                            + themeUri
+                            + defaultThemeUri
                             + "/styles.css');\n"
                             + "document.getElementsByTagName('head')[0].appendChild(stylesheet);\n"
                             + "vaadin.themesLoaded['"

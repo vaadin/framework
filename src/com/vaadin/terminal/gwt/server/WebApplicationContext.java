@@ -82,7 +82,7 @@ public class WebApplicationContext implements ApplicationContext,
      * 
      * @see com.vaadin.service.ApplicationContext#getApplications()
      */
-    public Collection getApplications() {
+    public Collection<Application> getApplications() {
         return Collections.unmodifiableCollection(applications);
     }
 

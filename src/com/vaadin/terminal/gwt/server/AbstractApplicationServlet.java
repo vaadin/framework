@@ -102,7 +102,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      * This request attribute forces widgetsets to be loaded from under the
      * specified base path; e.g shared widgetset for all portlets in a portal.
      */
-    public static final String REQUEST_VAADIN_WIDGETSET_PATH = ApplicationServlet.class
+    public static final String REQUEST_VAADIN_STATIC_FILE_PATH = ApplicationServlet.class
             .getName()
             + ".widgetsetPath";
     /**
@@ -119,7 +119,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      * The default theme should be located in
      * REQUEST_DEFAULT_THEME_URI/THEME_DIRECTORY_PATH/getDefaultTheme() .
      */
-    public static final String REQUEST_DEFAULT_THEME_URI = ApplicationServlet.class
+    public static final String REQUEST_DEFAULT_THEME = ApplicationServlet.class
             .getName()
             + ".defaultThemeUri";
     /**
@@ -133,9 +133,17 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
     private Properties applicationProperties;
 
-    private static final String NOT_PRODUCTION_MODE_INFO = "=================================================================\nVaadin is running in DEBUG MODE.\nAdd productionMode=true to web.xml to disable debug features.\nTo show debug window, add ?debug to your application URL.\n=================================================================";
+    private static final String NOT_PRODUCTION_MODE_INFO = ""
+            + "=================================================================\n"
+            + "Vaadin is running in DEBUG MODE.\nAdd productionMode=true to web.xml "
+            + "to disable debug features.\nTo show debug window, add ?debug to "
+            + "your application URL.\n"
+            + "=================================================================";
 
-    private static final String WARNING_XSRF_PROTECTION_DISABLED = "===========================================================\nWARNING: Cross-site request forgery protection is disabled!\n===========================================================";
+    private static final String WARNING_XSRF_PROTECTION_DISABLED = ""
+            + "===========================================================\n"
+            + "WARNING: Cross-site request forgery protection is disabled!\n"
+            + "===========================================================";
 
     private boolean productionMode = false;
 
@@ -190,6 +198,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      *             if an exception has occurred that interferes with the
      *             servlet's normal operation.
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void init(javax.servlet.ServletConfig servletConfig)
             throws javax.servlet.ServletException {
@@ -353,6 +362,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      * @throws IOException
      *             if the request for the TRACE cannot be handled.
      */
+    @SuppressWarnings("unchecked")
     @Override
     protected void service(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
@@ -420,9 +430,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                 return;
             }
 
-            // Removes application if it has stopped
+            // Removes application if it has stopped (by thread,
+            // transactionlistener)
             if (!application.isRunning()) {
-                // FIXME How can this be reached?
                 endApplication(request, response, application);
                 return;
             }
@@ -452,23 +462,13 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                 return;
             }
 
-            String defaultThemeUri = null;
-            Object reqObj = request.getAttribute(REQUEST_DEFAULT_THEME_URI);
-            if (reqObj instanceof String) {
-                defaultThemeUri = (String) reqObj;
-            }
-
-            String themeName = getThemeForWindow(request, window,
-                    defaultThemeUri != null);
-
             // Handles theme resource requests
-            if (handleResourceRequest(request, response, themeName)) {
+            if (handleResourceRequest(request, response, window)) {
                 return;
             }
 
             // Send initial AJAX page that kickstarts a Vaadin application
-            writeAjaxPage(request, response, window, themeName,
-                    defaultThemeUri, application);
+            writeAjaxPage(request, response, window, application);
 
         } catch (final SessionExpired e) {
             // Session has expired, notify user
@@ -720,6 +720,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      * 
      * @see com.vaadin.terminal.URIHandler
      */
+    @SuppressWarnings("unchecked")
     private void handleDownload(DownloadStream stream,
             HttpServletRequest request, HttpServletResponse response)
             throws IOException {
@@ -842,18 +843,33 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
     }
 
-    private String getThemeForWindow(HttpServletRequest request, Window window,
-            boolean ignoreDefaultTheme) {
+    /**
+     * Returns the theme for given request/window
+     * 
+     * @param request
+     * @param window
+     * @return
+     */
+    private String getThemeForWindow(HttpServletRequest request, Window window) {
         // Finds theme name
-        String themeName = window.getTheme();
+        String themeName;
+
         if (request.getParameter(URL_PARAMETER_THEME) != null) {
             themeName = request.getParameter(URL_PARAMETER_THEME);
+        } else {
+            themeName = window.getTheme();
         }
 
-        if (!ignoreDefaultTheme && themeName == null) {
-            themeName = getDefaultTheme();
+        if (themeName == null) {
+            // no explicit theme for window defined
+            if (request.getAttribute(REQUEST_DEFAULT_THEME) != null) {
+                // the default theme is defined in request (by portal)
+                return (String) request.getAttribute(REQUEST_DEFAULT_THEME);
+            } else {
+                // using the default theme defined by Vaadin
+                themeName = getDefaultTheme();
+            }
         }
-
         return themeName;
     }
 
@@ -1064,7 +1080,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                                 + filename
                                 + "] not found from filesystem or through class loader."
                                 + " Add widgetset and/or theme JAR to your classpath or add files to WebContent/VAADIN folder.");
-                response.setStatus(404);
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 return;
             }
         }
@@ -1073,7 +1089,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
             response.setContentType(mimetype);
         }
         final OutputStream os = response.getOutputStream();
-        final byte buffer[] = new byte[20000];
+        final byte buffer[] = new byte[DEFAULT_BUFFER_SIZE];
         int bytes;
         while ((bytes = is.read(buffer)) >= 0) {
             os.write(buffer, 0, bytes);
@@ -1125,7 +1141,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      */
     protected SystemMessages getSystemMessages() {
         try {
-            Class appCls = getApplicationClass();
+            Class<? extends Application> appCls = getApplicationClass();
             Method m = appCls.getMethod("getSystemMessages", (Class[]) null);
             return (Application.SystemMessages) m.invoke(null, (Object[]) null);
         } catch (ClassNotFoundException e) {
@@ -1149,7 +1165,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
         return Application.getSystemMessages();
     }
 
-    protected abstract Class getApplicationClass()
+    protected abstract Class<? extends Application> getApplicationClass()
             throws ClassNotFoundException;
 
     /**
@@ -1166,6 +1182,38 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      * @throws MalformedURLException
      */
     String getStaticFilesLocation(HttpServletRequest request) {
+
+        // request may have an attribute explicitly telling location (portal
+        // case)
+        String staticFileLocation = (String) request
+                .getAttribute(REQUEST_VAADIN_STATIC_FILE_PATH);
+        if (staticFileLocation != null) {
+            return staticFileLocation;
+        }
+
+        return getWebApplicationsStaticFileLocation(request);
+    }
+
+    /**
+     * The default method to fetch static files location. This method does not
+     * check for request attribute {@value #REQUEST_VAADIN_STATIC_FILE_PATH}.
+     * 
+     * @param request
+     * @return
+     */
+    private String getWebApplicationsStaticFileLocation(
+            HttpServletRequest request) {
+        String staticFileLocation;
+        // if property is defined in configurations, use that
+        staticFileLocation = getApplicationOrSystemProperty(
+                PARAMETER_VAADIN_RESOURCES, null);
+        if (staticFileLocation != null) {
+            return staticFileLocation;
+        }
+
+        // the last (but most common) option is to generate default location
+        // from request
+
         // if context is specified add it to widgetsetUrl
         String ctxPath = request.getContextPath();
 
@@ -1225,6 +1273,22 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
     }
 
     /**
+     * This method writes the html host page (aka kickstart page) that starts
+     * the actual Vaadin application.
+     * <p>
+     * If one needs to override parts of the host page, it is suggested that one
+     * overrides on of several submethods which are called by this method:
+     * <ul>
+     * <li> {@link #writeAjaxPageHeaders(HttpServletResponse)}
+     * <li> {@link #writeAjaxPageHtmlHeadStart(BufferedWriter)}
+     * <li> {@link #writeAjaxPageHtmlHeader(BufferedWriter, String, String)}
+     * <li> {@link #writeAjaxPageHtmlBodyStart(BufferedWriter)}
+     * <li>
+     * {@link #writeAjaxPageHtmlVaadinScripts(Window, String, Application, BufferedWriter, String, String, String, String, String, String)}
+     * <li>
+     * {@link #writeAjaxPageHtmlMainDiv(BufferedWriter, String, String, String)}
+     * <li> {@link #writeAjaxPageHtmlBodyEnd(BufferedWriter)}
+     * </ul>
      * 
      * @param request
      *            the HTTP request.
@@ -1241,47 +1305,23 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      *             if the application is denied access the persistent data store
      *             represented by the given URL.
      */
-    private void writeAjaxPage(HttpServletRequest request,
-            HttpServletResponse response, Window window, String themeName,
-            String defaultThemeUri, Application application)
+    protected void writeAjaxPage(HttpServletRequest request,
+            HttpServletResponse response, Window window, Application application)
             throws IOException, MalformedURLException, ServletException {
 
         // e.g portlets only want a html fragment
         boolean fragment = (request.getAttribute(REQUEST_FRAGMENT) != null);
         if (fragment) {
+            // if this is a fragment request, the actual application is put to
+            // request so ApplicationPortlet can save it for a later use
             request.setAttribute(Application.class.getName(), application);
         }
 
         final BufferedWriter page = new BufferedWriter(new OutputStreamWriter(
                 response.getOutputStream()));
-        String pathInfo = getRequestPathInfo(request);
-        if (pathInfo == null) {
-            pathInfo = "/";
-        }
 
         String title = ((window.getCaption() == null) ? "Vaadin 6" : window
                 .getCaption());
-
-        String widgetset = null;
-        // request widgetset takes precedence (e.g portlet include)
-        Object reqParam = request.getAttribute(REQUEST_WIDGETSET);
-        try {
-            widgetset = (String) reqParam;
-        } catch (Exception e) {
-            // FIXME: Handle exception
-            System.err.println("Warning: request param '" + REQUEST_WIDGETSET
-                    + "' could not be used (is not a String)" + e);
-        }
-
-        // TODO: Any reason this could not use
-        // getApplicationOrSystemProperty with DEFAULT_WIDGETSET as default
-        // value ?
-        if (widgetset == null) {
-            widgetset = getApplicationProperty(PARAMETER_WIDGETSET);
-        }
-        if (widgetset == null) {
-            widgetset = DEFAULT_WIDGETSET;
-        }
 
         /* Fetch relative url to application */
         // don't use server and port in uri. It may cause problems with some
@@ -1291,60 +1331,15 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
             appUrl = appUrl.substring(0, appUrl.length() - 1);
         }
 
-        final String staticFilesLocation = getStaticFilesLocation(request);
+        String themeName = getThemeForWindow(request, window);
 
-        final String staticFilePath = getApplicationOrSystemProperty(
-                PARAMETER_VAADIN_RESOURCES, staticFilesLocation);
-
-        reqParam = request.getAttribute(REQUEST_VAADIN_WIDGETSET_PATH);
-        final String widgetsetFilePath = reqParam instanceof String ? (String) reqParam
-                : staticFilePath;
-
-        // Default theme does not use theme URI
-        String themeBaseUri;
-        String themeUri;
-        if (themeName != null) {
-            // Using custom theme
-            themeBaseUri = staticFilePath;
-            themeUri = themeBaseUri + "/" + THEME_DIRECTORY_PATH + themeName;
-        } else {
-            themeBaseUri = defaultThemeUri;
-            themeUri = themeBaseUri + "/" + THEME_DIRECTORY_PATH
-                    + getDefaultTheme();
-        }
+        String themeUri = getThemeUri(themeName, request);
 
         if (!fragment) {
-            // Window renders are not cacheable
-            response.setHeader("Cache-Control", "no-cache");
-            response.setHeader("Pragma", "no-cache");
-            response.setDateHeader("Expires", 0);
-            response.setContentType("text/html; charset=UTF-8");
-
-            // write html header
-            page.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD "
-                    + "XHTML 1.0 Transitional//EN\" "
-                    + "\"http://www.w3.org/TR/xhtml1/"
-                    + "DTD/xhtml1-transitional.dtd\">\n");
-
-            page.write("<html xmlns=\"http://www.w3.org/1999/xhtml\""
-                    + ">\n<head>\n");
-            page
-                    .write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>\n");
-            page.write("<style type=\"text/css\">"
-                    + "html, body {height:100%;}</style>");
-
-            // Add favicon links
-            page
-                    .write("<link rel=\"shortcut icon\" type=\"image/vnd.microsoft.icon\" href=\""
-                            + themeUri + "/favicon.ico\" />");
-            page
-                    .write("<link rel=\"icon\" type=\"image/vnd.microsoft.icon\" href=\""
-                            + themeUri + "/favicon.ico\" />");
-
-            page.write("<title>" + title + "</title>");
-
-            page
-                    .write("\n</head>\n<body scroll=\"auto\" class=\"v-generated-body\">\n");
+            writeAjaxPageHeaders(response);
+            writeAjaxPageHtmlHeadStart(page);
+            writeAjaxPageHtmlHeader(page, title, themeUri);
+            writeAjaxPageHtmlBodyStart(page);
         }
 
         String appId = appUrl;
@@ -1359,6 +1354,120 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
             hashCode = -hashCode;
         }
         appId = appId + "-" + hashCode;
+
+        writeAjaxPageHtmlVaadinScripts(window, themeName, application, page,
+                appUrl, themeUri, appId, request);
+
+        /*- Add classnames;
+         *      .v-app
+         *      .v-app-loading
+         *      .v-app-<simpleName for app class>
+         *      .v-theme-<themeName, remove non-alphanum>
+         */
+
+        String appClass = "v-app-";
+        try {
+            appClass += getApplicationClass().getSimpleName();
+        } catch (ClassNotFoundException e) {
+            appClass += "unknown";
+            e.printStackTrace();
+        }
+        String themeClass = "";
+        if (themeName != null) {
+            themeClass = "v-theme-" + themeName.replaceAll("[^a-zA-Z0-9]", "");
+        } else {
+            themeClass = "v-theme-"
+                    + getDefaultTheme().replaceAll("[^a-zA-Z0-9]", "");
+        }
+
+        String classNames = "v-app v-app-loading " + themeClass + " "
+                + appClass;
+
+        String divStyle = null;
+        if (request.getAttribute(REQUEST_APPSTYLE) != null) {
+            divStyle = "style=\"" + request.getAttribute(REQUEST_APPSTYLE)
+                    + "\"";
+        }
+
+        writeAjaxPageHtmlMainDiv(page, appId, classNames, divStyle);
+
+        if (!fragment) {
+            writeAjaxPageHtmlBodyEnd(page);
+        }
+
+        page.close();
+
+    }
+
+    private String getThemeUri(String themeName, HttpServletRequest request) {
+        final String staticFilePath;
+        if (themeName.equals(request.getAttribute(REQUEST_DEFAULT_THEME))) {
+            // our window theme is the portal wide default theme, make it load
+            // from portals directory is defined
+            staticFilePath = getStaticFilesLocation(request);
+        } else {
+            /*
+             * theme is a custom theme, which does not necessary locate in
+             * portals VAADIN directory. Let default servlet conf decide
+             * (omitting request parameter) the location. Note that theme can
+             * still be placed to portal directory with servlet parameter.
+             */
+            staticFilePath = getWebApplicationsStaticFileLocation(request);
+        }
+        return staticFilePath + "/" + THEME_DIRECTORY_PATH + themeName;
+    }
+
+    /**
+     * Method to write the div element into which that actual Vaadin application
+     * is rendered.
+     * <p>
+     * Override this method if you want to add some custom html around around
+     * the div element into which the actual vaadin application will be
+     * rendered.
+     * 
+     * @param page
+     * @param appId
+     * @param classNames
+     * @param divStyle
+     * @throws IOException
+     */
+    protected void writeAjaxPageHtmlMainDiv(final BufferedWriter page,
+            String appId, String classNames, String divStyle)
+            throws IOException {
+        page.write("<div id=\"" + appId + "\" class=\"" + classNames + "\" "
+                + (divStyle != null ? divStyle : "") + "></div>\n");
+    }
+
+    /**
+     * 
+     * * Method to write the script part of the page which loads needed vaadin
+     * scripts and themes.
+     * <p>
+     * Override this method if you want to add some custom html around scripts.
+     * 
+     * @param window
+     * @param themeName
+     * @param application
+     * @param page
+     * @param appUrl
+     * @param themeUri
+     * @param appId
+     * @param request
+     * @throws ServletException
+     * @throws IOException
+     */
+    protected void writeAjaxPageHtmlVaadinScripts(Window window,
+            String themeName, Application application,
+            final BufferedWriter page, String appUrl, String themeUri,
+            String appId, HttpServletRequest request) throws ServletException,
+            IOException {
+
+        String widgetset = getWidgetSet(request);
+
+        final String staticFilePath = getStaticFilesLocation(request);
+        final String widgetsetFilePath = staticFilePath + "/"
+                + WIDGETSET_DIRECTORY_PATH + widgetset + "/" + widgetset
+                + ".nocache.js?" + new Date().getTime();
 
         // Get system messages
         Application.SystemMessages systemMessages = null;
@@ -1383,12 +1492,16 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                         + "style=\"width:0;height:0;border:0;overflow:"
                         + "hidden\" src=\"javascript:false\"></iframe>');\n");
         page.write("document.write(\"<script language='javascript' src='"
-                + widgetsetFilePath + "/" + WIDGETSET_DIRECTORY_PATH
-                + widgetset + "/" + widgetset + ".nocache.js?"
-                + new Date().getTime() + "'><\\/script>\");\n}\n");
+                + widgetsetFilePath + "'><\\/script>\");\n}\n");
 
         page.write("vaadin.vaadinConfigurations[\"" + appId + "\"] = {");
         page.write("appUri:'" + appUrl + "', ");
+
+        String pathInfo = getRequestPathInfo(request);
+        if (pathInfo == null) {
+            pathInfo = "/";
+        }
+
         page.write("pathInfo: '" + pathInfo + "', ");
         if (window != application.getMainWindow()) {
             page.write("windowName: '" + window.getName() + "', ");
@@ -1444,49 +1557,126 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
         // inactivity
         page.write("<script type=\"text/javascript\">\n");
         page.write("//<![CDATA[\n");
-        page.write("setTimeout('if (typeof " + widgetset.replace('.', '_')
-                + " == \"undefined\") {alert(\"Failed to load the widgetset: "
-                + widgetsetFilePath + "/" + WIDGETSET_DIRECTORY_PATH
-                + widgetset + "/" + widgetset + ".nocache.js\")};',15000);\n"
-                + "//]]>\n</script>\n");
+        page
+                .write("setTimeout('if (typeof "
+                        + widgetset.replace('.', '_')
+                        + " == \"undefined\") {alert(\"Failed to load the widgetset: "
+                        + widgetsetFilePath + "\")};',15000);\n"
+                        + "//]]>\n</script>\n");
+    }
 
-        String style = null;
-        reqParam = request.getAttribute(REQUEST_APPSTYLE);
-        if (reqParam != null) {
-            style = "style=\"" + reqParam + "\"";
+    private String getWidgetSet(HttpServletRequest request) {
+        // request widgetset takes precedence (e.g portlet include)
+        String widgetset = (String) request.getAttribute(REQUEST_WIDGETSET);
+        if (widgetset == null) {
+            // use the value from configuration or DEFAULT_WIDGETSET
+            widgetset = getApplicationOrSystemProperty(PARAMETER_WIDGETSET,
+                    DEFAULT_WIDGETSET);
         }
-        /*- Add classnames;
-         *      .v-app
-         *      .v-app-loading
-         *      .v-app-<simpleName for app class>
-         *      .v-theme-<themeName, remove non-alphanum>
-         */
-        String appClass = "v-app-";
-        try {
-            appClass += getApplicationClass().getSimpleName();
-        } catch (ClassNotFoundException e) {
-            appClass += "unknown";
+        return widgetset;
+    }
 
-            e.printStackTrace();
-        }
-        String themeClass = "";
-        if (themeName != null) {
-            themeClass = "v-theme-" + themeName.replaceAll("[^a-zA-Z0-9]", "");
-        } else {
-            themeClass = "v-theme-"
-                    + getDefaultTheme().replaceAll("[^a-zA-Z0-9]", "");
-        }
+    /**
+     * Method to write the end of the html kickstart page.
+     * <p>
+     * This method is responsible for closing body and html tags.
+     * <p>
+     * Override this method if you want to add some custom html to the end of
+     * the page.
+     * 
+     * @param page
+     * @throws IOException
+     */
+    protected void writeAjaxPageHtmlBodyEnd(final BufferedWriter page)
+            throws IOException {
+        page.write("<noscript>" + getNoScriptMessage() + "</noscript>");
+        page.write("</body>\n</html>\n");
+    }
 
-        page.write("<div id=\"" + appId + "\" class=\"v-app v-app-loading "
-                + themeClass + " " + appClass + "\" "
-                + (style != null ? style : "") + "></div>\n");
+    /**
+     * 
+     * Method to open the body tag of the html kickstart page.
+     * <p>
+     * This method is responsible for closing the head tag and opening the body
+     * tag.
+     * <p>
+     * Override this method if you want to add some custom html to the page.
+     * 
+     * @param page
+     * @throws IOException
+     */
+    protected void writeAjaxPageHtmlBodyStart(final BufferedWriter page)
+            throws IOException {
+        page
+                .write("\n</head>\n<body scroll=\"auto\" class=\"v-generated-body\">\n");
+    }
 
-        if (!fragment) {
-            page.write("<noscript>" + getNoScriptMessage() + "</noscript>");
-            page.write("</body>\n</html>\n");
-        }
-        page.close();
+    /**
+     * Method to write the contents of head element in html kickstart page.
+     * <p>
+     * Override this method if you want to add some custom html to the header of
+     * the page.
+     * 
+     * @param page
+     * @param title
+     * @param themeUri
+     * @throws IOException
+     */
+    protected void writeAjaxPageHtmlHeader(final BufferedWriter page,
+            String title, String themeUri) throws IOException {
+        page
+                .write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>\n");
+        page.write("<style type=\"text/css\">"
+                + "html, body {height:100%;}</style>");
 
+        // Add favicon links
+        page
+                .write("<link rel=\"shortcut icon\" type=\"image/vnd.microsoft.icon\" href=\""
+                        + themeUri + "/favicon.ico\" />");
+        page
+                .write("<link rel=\"icon\" type=\"image/vnd.microsoft.icon\" href=\""
+                        + themeUri + "/favicon.ico\" />");
+
+        page.write("<title>" + title + "</title>");
+    }
+
+    /**
+     * Method to write the beginning of the html page.
+     * <p>
+     * This method is responsible for writing appropriate doc type declarations
+     * and to open html and head tags.
+     * <p>
+     * Override this method if you want to add some custom html to the very
+     * beginning of the page.
+     * 
+     * @param page
+     * @throws IOException
+     */
+    protected void writeAjaxPageHtmlHeadStart(final BufferedWriter page)
+            throws IOException {
+        // write html header
+        page.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD "
+                + "XHTML 1.0 Transitional//EN\" "
+                + "\"http://www.w3.org/TR/xhtml1/"
+                + "DTD/xhtml1-transitional.dtd\">\n");
+
+        page.write("<html xmlns=\"http://www.w3.org/1999/xhtml\""
+                + ">\n<head>\n");
+    }
+
+    /**
+     * Method to write http request headers for the Vaadin kickstart page.
+     * <p>
+     * Override this method if you need to customize http headers of the page.
+     * 
+     * @param response
+     */
+    protected void writeAjaxPageHeaders(HttpServletResponse response) {
+        // Window renders are not cacheable
+        response.setHeader("Cache-Control", "no-cache");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
+        response.setContentType("text/html; charset=UTF-8");
     }
 
     /**
@@ -1512,7 +1702,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      *             servlet's normal operation.
      */
     private boolean handleResourceRequest(HttpServletRequest request,
-            HttpServletResponse response, String themeName)
+            HttpServletResponse response, Window window)
             throws ServletException {
         // If the resource path is unassigned, initialize it
         if (resourcePath == null) {
@@ -1529,17 +1719,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
             return false;
         }
 
-        if (themeName == null) {
-            try {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND);
-            } catch (final java.io.IOException e) {
-                // FIXME: Handle exception
-                System.err.println("Returning error code failed:  "
-                        + request.getRequestURI() + ". (" + e.getMessage()
-                        + ")");
-            }
-            return true;
-        }
+        String themeName = getThemeForWindow(request, window);
 
         // Checks the resource type
         resourceId = resourceId.substring(RESOURCE_URI.length());
