@@ -222,4 +222,14 @@ public class BrowserInfo {
         c.log("isIE() " + get().isIE());
     }
 
+    public native int getScreenWidth()
+    /*-{ 
+        return $wnd.screen.width;
+    }-*/;
+
+    public native int getScreenHeight()
+    /*-{ 
+        return $wnd.screen.height;
+    }-*/;
+
 }

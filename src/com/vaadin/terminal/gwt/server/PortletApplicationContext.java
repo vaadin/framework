@@ -98,22 +98,6 @@ public class PortletApplicationContext extends WebApplicationContext implements
         super.removeApplication(application);
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (portletSession == null) {
-            return super.equals(obj);
-        }
-        return portletSession.equals(obj);
-    }
-
-    @Override
-    public int hashCode() {
-        if (portletSession == null) {
-            return super.hashCode();
-        }
-        return portletSession.hashCode();
-    }
-
     public void setPortletApplication(Portlet portlet, Application app) {
         portletToApplication.put(portlet, app);
     }

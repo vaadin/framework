@@ -64,9 +64,9 @@ public class WebBrowser implements Terminal {
             browserApplication = agent;
         }
 
-        final String sw = request.getParameter("screenWidth");
-        final String sh = request.getParameter("screenHeight");
-        if (sw != null && sh != null) {
+        final String sw = request.getParameter("sw");
+        if (sw != null) {
+            final String sh = request.getParameter("sh");
             try {
                 screenHeight = Integer.parseInt(sh);
                 screenWidth = Integer.parseInt(sw);

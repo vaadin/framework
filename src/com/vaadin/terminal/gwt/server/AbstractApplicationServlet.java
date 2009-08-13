@@ -115,9 +115,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
     /**
      * If set, do not load the default theme but assume that loading it is
      * handled e.g. by ApplicationPortlet.
-     * 
-     * The default theme should be located in
-     * REQUEST_DEFAULT_THEME_URI/THEME_DIRECTORY_PATH/getDefaultTheme() .
      */
     public static final String REQUEST_DEFAULT_THEME = ApplicationServlet.class
             .getName()
@@ -412,13 +409,14 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
             /* Update browser information from the request */
             webApplicationContext.getBrowser().updateBrowserProperties(request);
 
+            // Start the newly created application
+            startApplication(request, application, webApplicationContext);
+
             /*
              * Transaction starts. Call transaction listeners. Transaction end
              * is called in the finally block below.
              */
             webApplicationContext.startTransaction(application, request);
-
-            // TODO Add screen height and width to the GWT client
 
             /* Handle the request */
             if (requestType == RequestType.FILE_UPLOAD) {
@@ -430,7 +428,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                 return;
             }
 
-            // Removes application if it has stopped (by thread,
+            // Removes application if it has stopped (mayby by thread or
             // transactionlistener)
             if (!application.isRunning()) {
                 endApplication(request, response, application);
@@ -795,9 +793,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
     }
 
     /**
-     * Creates and starts a new application. This is not meant to be overridden.
-     * Override getNewApplication to create the application instance in a custom
-     * way.
+     * Creates a new application and registers it into WebApplicationContext
+     * (aka session). This is not meant to be overridden. Override
+     * getNewApplication to create the application instance in a custom way.
      * 
      * @param request
      * @return
@@ -808,15 +806,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
             throws ServletException, MalformedURLException {
         Application newApplication = getNewApplication(request);
 
-        // Create application
-        final URL applicationUrl = getApplicationUrl(request);
-
-        // Initial locale comes from the request
-        Locale locale = request.getLocale();
-        HttpSession session = request.getSession();
-
-        // Start the newly created application
-        startApplication(session, newApplication, applicationUrl, locale);
+        final WebApplicationContext context = WebApplicationContext
+                .getApplicationContext(request.getSession());
+        context.addApplication(newApplication);
 
         return newApplication;
     }
@@ -864,7 +856,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
             // no explicit theme for window defined
             if (request.getAttribute(REQUEST_DEFAULT_THEME) != null) {
                 // the default theme is defined in request (by portal)
-                return (String) request.getAttribute(REQUEST_DEFAULT_THEME);
+                themeName = (String) request
+                        .getAttribute(REQUEST_DEFAULT_THEME);
             } else {
                 // using the default theme defined by Vaadin
                 themeName = getDefaultTheme();
@@ -993,29 +986,27 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
             throws ServletException;
 
     /**
-     * Starts the application if it is not already running. Ensures the
-     * application is added to the WebApplicationContext.
+     * Starts the application if it is not already running.
      * 
-     * @param session
+     * @param request
      * @param application
-     * @param applicationUrl
-     * @param locale
+     * @param webApplicationContext
      * @throws ServletException
+     * @throws MalformedURLException
      */
-    private void startApplication(HttpSession session, Application application,
-            URL applicationUrl, Locale locale) throws ServletException {
-        if (application == null) {
-            throw new ServletException(
-                    "Application is null and can't be started");
-        }
+    private void startApplication(HttpServletRequest request,
+            Application application, WebApplicationContext webApplicationContext)
+            throws ServletException, MalformedURLException {
 
         if (!application.isRunning()) {
-            final WebApplicationContext context = WebApplicationContext
-                    .getApplicationContext(session);
-            // final URL applicationUrl = getApplicationUrl(request);
-            context.addApplication(application);
+            // Create application
+            final URL applicationUrl = getApplicationUrl(request);
+
+            // Initial locale comes from the request
+            Locale locale = request.getLocale();
             application.setLocale(locale);
-            application.start(applicationUrl, applicationProperties, context);
+            application.start(applicationUrl, applicationProperties,
+                    webApplicationContext);
         }
     }
 

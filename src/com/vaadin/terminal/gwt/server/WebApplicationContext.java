@@ -107,23 +107,6 @@ public class WebApplicationContext implements ApplicationContext,
         return cx;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (session == null) {
-            return false;
-        }
-
-        return session.equals(obj);
-    }
-
-    @Override
-    public int hashCode() {
-        if (session == null) {
-            return -1;
-        }
-        return session.hashCode();
-    }
-
     /**
      * Adds the transaction listener to this context.
      * 
