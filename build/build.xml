@@ -2,6 +2,7 @@
 
 <project
          xmlns:antcontrib="antlib:net.sf.antcontrib"
+		 xmlns:artifact="antlib:org.apache.maven.artifact.ant"
          name="Vaadin"
          basedir="../" default="package-all">
 
@@ -73,6 +74,12 @@
             <pathelement location="build/lib/ant-contrib-1.0b3.jar" />
         </classpath>
     </taskdef>
+
+	<!-- ant contrib for Maven integration -->
+	<path id="maven-ant-tasks.classpath" path="build/lib/maven-ant-tasks-2.0.10.jar" />
+	<typedef resource="org/apache/maven/artifact/ant/antlib.xml"
+	           uri="antlib:org.apache.maven.artifact.ant"
+	           classpathref="maven-ant-tasks.classpath" />
 
 	<!-- internal tests for packaging -->
 
@@ -1192,9 +1199,23 @@
         <echo>Result: ${nightly.install.scp.result}</echo>
     </target>
 
-    <target name="nightly-publish" depends="nightly-teamcity-publish, nightly-download-publish">
+    <target name="nightly-publish" depends="nightly-teamcity-publish, nightly-download-publish, nightly-maven-publish">
     </target>
 
+	
+	<target name="nightly-maven-publish" depends="">
+		<property file="${gpg.passphrase.file}" />
+        <echo>Publishing ${output-dir}/WebContent/${lib-jar-name} to Maven repository</echo>
+		<artifact:mvn>
+			<arg value="gpg:sign-and-deploy-file"/>
+			<sysproperty key="file" value="${output-dir}/WebContent/${lib-jar-name}" />
+			<sysproperty key="pomFile" value="maven/pom.xml" />
+			<sysproperty key="gpg.repositoryId" value="vaadin-snapshots" />
+			<sysproperty key="url" value="http://oss.sonatype.org/content/repositories/vaadin-snapshots/" />
+			<sysproperty key="gpg.passphrase" value="${maven.gpg.passphrase}" />
+		</artifact:mvn>
+	</target>
+	
     <!-- ================================================================== -->
     <!-- Automated tests.                                                   -->
     <!-- ================================================================== -->
