@@ -1383,7 +1383,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
         writeAjaxPageHtmlMainDiv(page, appId, classNames, divStyle);
 
         if (!fragment) {
-            writeAjaxPageHtmlBodyEnd(page);
+            page.write("</body>\n</html>\n");
         }
 
         page.close();
@@ -1427,6 +1427,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
             throws IOException {
         page.write("<div id=\"" + appId + "\" class=\"" + classNames + "\" "
                 + (divStyle != null ? divStyle : "") + "></div>\n");
+        page.write("<noscript>" + getNoScriptMessage() + "</noscript>");
     }
 
     /**
@@ -1565,23 +1566,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                     DEFAULT_WIDGETSET);
         }
         return widgetset;
-    }
-
-    /**
-     * Method to write the end of the html kickstart page.
-     * <p>
-     * This method is responsible for closing body and html tags.
-     * <p>
-     * Override this method if you want to add some custom html to the end of
-     * the page.
-     * 
-     * @param page
-     * @throws IOException
-     */
-    protected void writeAjaxPageHtmlBodyEnd(final BufferedWriter page)
-            throws IOException {
-        page.write("<noscript>" + getNoScriptMessage() + "</noscript>");
-        page.write("</body>\n</html>\n");
     }
 
     /**
