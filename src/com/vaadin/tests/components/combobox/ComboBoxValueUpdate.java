@@ -1,7 +1,6 @@
 package com.vaadin.tests.components.combobox;
 
 import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
@@ -17,28 +16,31 @@ public class ComboBoxValueUpdate extends TestBase {
 
     @Override
     protected String getDescription() {
-        return "Testcase for value update for ComboBox. The server-side value should be updated immediately when a new item is selected in the dropdown";
+        return "Testcase for ComboBox. Test especially edge values(of page changes) when selecting items with keyboard only.";
     }
 
     @Override
     protected void setup() {
-        ComboBox combobox = new ComboBox();
-        combobox.setImmediate(true);
-        combobox.addItem("Item 1");
-        combobox.addItem("Item 2");
-        combobox.addItem("Item 3");
-        combobox.addListener(new ValueChangeListener() {
+        ComboBox select = new ComboBox("");
+        select.setImmediate(true);
+        for (int i = 0; i < 100; i++) {
+            select.addItem("item " + i);
+        }
+
+        final Label value = new Label();
+
+        select.addListener(new ComboBox.ValueChangeListener() {
 
             public void valueChange(ValueChangeEvent event) {
-                Object p = event.getProperty().getValue();
-                selectedLabel.setValue("Server side value: " + p);
+                System.err
+                        .println("Selected " + event.getProperty().getValue());
+                value.setValue("Selected " + event.getProperty().getValue());
+
             }
-
         });
-        selectedLabel = new Label("Server side value: " + combobox.getValue());
-        getLayout().addComponent(selectedLabel);
 
-        getLayout().addComponent(combobox);
+        getLayout().addComponent(select);
+        getLayout().addComponent(value);
 
     }
 
