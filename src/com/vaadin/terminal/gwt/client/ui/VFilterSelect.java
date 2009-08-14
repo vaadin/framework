@@ -643,6 +643,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         currentPage = page;
     }
 
+    @SuppressWarnings("deprecation")
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         paintableId = uidl.getId();
         this.client = client;
@@ -737,6 +738,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             filtering = false;
             if (!popupOpenerClicked && lastIndex != -1) {
                 // we're paging w/ arrows
+                MenuItem activeMenuItem;
                 if (lastIndex == 0) {
                     // going up, select last item
                     int lastItem = pageLength - 1;
@@ -748,14 +750,20 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                     if (lastItem >= items.size()) {
                         lastItem = items.size() - 1;
                     }
-                    suggestionPopup.menu.selectItem((MenuItem) items
-                            .get(lastItem));
+                    activeMenuItem = (MenuItem) items.get(lastItem);
+                    suggestionPopup.menu.selectItem(activeMenuItem);
                 } else {
                     // going down, select first item
-                    suggestionPopup.menu
-                            .selectItem((MenuItem) suggestionPopup.menu
-                                    .getItems().get(0));
+                    activeMenuItem = (MenuItem) suggestionPopup.menu.getItems()
+                            .get(0);
+                    suggestionPopup.menu.selectItem(activeMenuItem);
                 }
+
+                tb.setText(activeMenuItem.getText());
+                tb.setSelectionRange(lastFilter.length(), activeMenuItem
+                        .getText().length()
+                        - lastFilter.length());
+
                 lastIndex = -1; // reset
             }
         }
