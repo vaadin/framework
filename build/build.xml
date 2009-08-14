@@ -1199,7 +1199,7 @@
         <echo>Result: ${nightly.install.scp.result}</echo>
     </target>
 
-    <target name="nightly-publish" depends="nightly-teamcity-publish, nightly-download-publish, nightly-maven-publish">
+    <target name="nightly-publish" depends="nightly-teamcity-publish, nightly-download-publish">
     </target>
 
 	
