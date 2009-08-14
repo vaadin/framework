@@ -1270,7 +1270,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      * If one needs to override parts of the host page, it is suggested that one
      * overrides on of several submethods which are called by this method:
      * <ul>
-     * <li> {@link #writeAjaxPageHeaders(HttpServletResponse)}
+     * <li> {@link #setAjaxPageHeaders(HttpServletResponse)}
      * <li> {@link #writeAjaxPageHtmlHeadStart(BufferedWriter)}
      * <li> {@link #writeAjaxPageHtmlHeader(BufferedWriter, String, String)}
      * <li> {@link #writeAjaxPageHtmlBodyStart(BufferedWriter)}
@@ -1327,7 +1327,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
         String themeUri = getThemeUri(themeName, request);
 
         if (!fragment) {
-            writeAjaxPageHeaders(response);
+            setAjaxPageHeaders(response);
             writeAjaxPageHtmlHeadStart(page);
             writeAjaxPageHtmlHeader(page, title, themeUri);
             writeAjaxPageHtmlBodyStart(page);
@@ -1656,13 +1656,13 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
     }
 
     /**
-     * Method to write http request headers for the Vaadin kickstart page.
+     * Method to set http request headers for the Vaadin kickstart page.
      * <p>
      * Override this method if you need to customize http headers of the page.
      * 
      * @param response
      */
-    protected void writeAjaxPageHeaders(HttpServletResponse response) {
+    protected void setAjaxPageHeaders(HttpServletResponse response) {
         // Window renders are not cacheable
         response.setHeader("Cache-Control", "no-cache");
         response.setHeader("Pragma", "no-cache");
