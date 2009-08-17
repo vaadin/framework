@@ -1208,7 +1208,8 @@
         <echo>Publishing ${output-dir}/WebContent/${lib-jar-name} to Maven repository</echo>
 		<artifact:mvn>
 			<arg value="gpg:sign-and-deploy-file"/>
-			<sysproperty key="file" value="${output-dir}/WebContent/${lib-jar-name}" />
+			<!-- .. is a workaround as maven runs in the build directory -->
+			<sysproperty key="file" value="../${output-dir}/WebContent/${lib-jar-name}" />
 			<sysproperty key="pomFile" value="maven/pom.xml" />
 			<sysproperty key="gpg.repositoryId" value="vaadin-snapshots" />
 			<sysproperty key="url" value="http://oss.sonatype.org/content/repositories/vaadin-snapshots/" />
