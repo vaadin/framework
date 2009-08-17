@@ -29,6 +29,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.impl.HTTPRequestImpl;
@@ -304,6 +305,8 @@ public class ApplicationConnection {
         console.log("Making UIDL Request with params: " + requestData);
         String uri = getAppUri() + "UIDL" + configuration.getPathInfo();
         if (repaintAll) {
+            // collect some client side data that will be sent to server on
+            // initial uidl request
             int clientHeight = Window.getClientHeight();
             int clientWidth = Window.getClientWidth();
             com.google.gwt.dom.client.Element pe = view.getElement()
@@ -313,13 +316,15 @@ public class ApplicationConnection {
             int screenWidth = BrowserInfo.get().getScreenWidth();
             int screenHeight = BrowserInfo.get().getScreenHeight();
 
+            String token = History.getToken();
+
             // TODO figure out how client and view size could be used better on
             // server. screen size can be accessed via Browser object, but other
             // values currently only via transaction listener.
             uri += "?repaintAll=1&" + "sh=" + screenHeight + "&sw="
                     + screenWidth + "&cw=" + clientWidth + "&ch="
                     + clientHeight + "&vw=" + offsetWidth + "&vh="
-                    + offsetHeight;
+                    + offsetHeight + "&fr=" + token;
             if (analyzeLayouts) {
                 uri += "&analyzeLayouts=1";
             }
