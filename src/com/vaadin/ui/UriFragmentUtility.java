@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import com.vaadin.service.ApplicationContext.TransactionListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 
@@ -104,12 +103,12 @@ public class UriFragmentUtility extends AbstractComponent {
 
     /**
      * Gets currently set URI fragment.
-     * 
-     * Note that initial URI fragment that user used to enter the application
-     * will be read after application init. If you absolutely need that you must
-     * hook to {@link TransactionListener}
-     * 
+     * <p>
      * To listen changes in fragment, hook a {@link FragmentChangedListener}.
+     * <p>
+     * Note that initial URI fragment that user used to enter the application
+     * will be read after application init. It fires FragmentChangedEvent only
+     * if it is not the same as on server side.
      * 
      * @return the current fragment in browser uri or null if not known
      */
