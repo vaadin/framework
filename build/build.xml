@@ -1211,8 +1211,8 @@
 			<!-- .. is a workaround as maven runs in the build directory -->
 			<sysproperty key="file" value="../${output-dir}/WebContent/${lib-jar-name}" />
 			<sysproperty key="pomFile" value="maven/pom.xml" />
-			<sysproperty key="gpg.repositoryId" value="vaadin-snapshots" />
-			<sysproperty key="url" value="http://oss.sonatype.org/content/repositories/vaadin-snapshots/" />
+			<sysproperty key="repositoryId" value="vaadin-snapshots" />
+			<sysproperty key="url" value="http://oss.sonatype.org/content/repositories/vaadin-snapshots" />
 			<sysproperty key="gpg.passphrase" value="${maven.gpg.passphrase}" />
 		</artifact:mvn>
 	</target>
