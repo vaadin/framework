@@ -5,6 +5,8 @@ import java.util.Map;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -224,36 +226,30 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
         }
     }
 
+    private static DivElement measurement;
+    private static DivElement measurement2;
+    private static DivElement measurement3;
+    private static DivElement helper;
+
+    static {
+        helper = Document.get().createDivElement();
+        helper
+                .setInnerHTML("<div style=\"position:absolute;top:0;left:0;height:0;visibility:hidden;overflow:hidden;\">"
+                        + "<div style=\"width:0;height:0;visibility:hidden;overflow;hidden;\"></div></div><div style=\"position:absolute;height:0;\"></div>");
+        NodeList<Node> childNodes = helper.getChildNodes();
+        measurement = (DivElement) childNodes.getItem(0);
+        measurement2 = (DivElement) measurement.getFirstChildElement();
+        measurement3 = (DivElement) childNodes.getItem(1);
+    }
+
     protected boolean measureMarginsAndSpacing() {
         if (!isAttached()) {
             return false;
         }
 
-        DivElement measurement = Document.get().createDivElement();
-        Style style = measurement.getStyle();
-        style.setProperty("position", "absolute");
-        style.setProperty("top", "0");
-        style.setProperty("left", "0");
-        style.setProperty("width", "0");
-        style.setProperty("height", "0");
-        style.setProperty("visibility", "hidden");
-        style.setProperty("overflow", "hidden");
-        root.appendChild(measurement);
-
         // Measure spacing (actually CSS padding)
-        measurement.setClassName(STYLENAME_SPACING
+        measurement3.setClassName(STYLENAME_SPACING
                 + (spacingEnabled ? "-on" : "-off"));
-        activeSpacing.vSpacing = measurement.getOffsetHeight();
-        activeSpacing.hSpacing = measurement.getOffsetWidth();
-
-        DivElement measurement2 = Document.get().createDivElement();
-        style = measurement2.getStyle();
-        style.setProperty("width", "0px");
-        style.setProperty("height", "0px");
-        style.setProperty("visibility", "hidden");
-        style.setProperty("overflow", "hidden");
-
-        measurement.appendChild(measurement2);
 
         String sn = getStylePrimaryName() + "-margin";
 
@@ -273,6 +269,11 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
         // Measure top and left margins (actually CSS padding)
         measurement.setClassName(sn);
 
+        root.appendChild(helper);
+
+        activeSpacing.vSpacing = measurement3.getOffsetHeight();
+        activeSpacing.hSpacing = measurement3.getOffsetWidth();
+
         activeMargins.setMarginTop(measurement2.getOffsetTop());
         activeMargins.setMarginLeft(measurement2.getOffsetLeft());
         activeMargins.setMarginRight(measurement.getOffsetWidth()
@@ -283,10 +284,10 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
         // ApplicationConnection.getConsole().log("Margins: " + activeMargins);
         // ApplicationConnection.getConsole().log("Spacing: " + activeSpacing);
         // Util.alert("Margins: " + activeMargins);
-        root.removeChild(measurement);
+        root.removeChild(helper);
 
         // apply margin
-        style = root.getStyle();
+        Style style = root.getStyle();
         style.setPropertyPx("marginLeft", activeMargins.getMarginLeft());
         style.setPropertyPx("marginRight", activeMargins.getMarginRight());
         style.setPropertyPx("marginTop", activeMargins.getMarginTop());
