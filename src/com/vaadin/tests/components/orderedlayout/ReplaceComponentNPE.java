@@ -1,11 +1,11 @@
-package com.vaadin.tests.layouts;
+package com.vaadin.tests.components.orderedlayout;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 
-public class NPEInReplaceComponent extends TestBase {
+public class ReplaceComponentNPE extends TestBase {
 
 	@Override
 	protected String getDescription() {
