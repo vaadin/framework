@@ -10,20 +10,17 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.Vector;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONString;
-import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
@@ -75,7 +72,7 @@ public class ApplicationConnection {
 
     private static Console console;
 
-    private final Vector<String> pendingVariables = new Vector<String>();
+    private final ArrayList<String> pendingVariables = new ArrayList<String>();
 
     private final ComponentDetailMap idToPaintableDetail = ComponentDetailMap
             .create();
@@ -99,7 +96,7 @@ public class ApplicationConnection {
     private final ApplicationConfiguration configuration;
 
     /** List of pending variable change bursts that must be submitted in order */
-    private final Vector<Vector<String>> pendingVariableBursts = new Vector<Vector<String>>();
+    private final ArrayList<ArrayList<String>> pendingVariableBursts = new ArrayList<ArrayList<String>>();
 
     /** Timer for automatic refirect to SessionExpiredURL */
     private Timer redirectTimer;
@@ -514,11 +511,11 @@ public class ApplicationConnection {
     private void checkForPendingVariableBursts() {
         cleanVariableBurst(pendingVariables);
         if (pendingVariableBursts.size() > 0) {
-            for (Iterator<Vector<String>> iterator = pendingVariableBursts
+            for (Iterator<ArrayList<String>> iterator = pendingVariableBursts
                     .iterator(); iterator.hasNext();) {
                 cleanVariableBurst(iterator.next());
             }
-            Vector<String> nextBurst = pendingVariableBursts.firstElement();
+            ArrayList<String> nextBurst = pendingVariableBursts.get(0);
             pendingVariableBursts.remove(0);
             buildAndSendVariableBurst(nextBurst, false);
         }
@@ -530,7 +527,7 @@ public class ApplicationConnection {
      * 
      * @param variableBurst
      */
-    private void cleanVariableBurst(Vector<String> variableBurst) {
+    private void cleanVariableBurst(ArrayList<String> variableBurst) {
         for (int i = 1; i < variableBurst.size(); i += 2) {
             String id = variableBurst.get(i);
             id = id.substring(0, id.indexOf(VAR_FIELD_SEPARATOR));
@@ -591,14 +588,19 @@ public class ApplicationConnection {
         }
     }
 
+    private static native ValueMap parseJSONResponse(String jsonText)
+    /*-{
+        return $wnd.eval('(' + jsonText + ')');
+     }-*/;
+
     private void handleReceivedJSONMessage(Response response) {
         final Date start = new Date();
         String jsonText = response.getText();
         // for(;;);[realjson]
         jsonText = jsonText.substring(9, jsonText.length() - 1);
-        JSONValue json;
+        ValueMap json;
         try {
-            json = JSONParser.parse(jsonText);
+            json = parseJSONResponse(jsonText);
         } catch (final com.google.gwt.json.client.JSONException e) {
             endRequest();
             showCommunicationError(e.getMessage() + " - Original JSON-text:");
@@ -606,38 +608,33 @@ public class ApplicationConnection {
             return;
         }
         // Handle redirect
-        final JSONObject redirect = (JSONObject) ((JSONObject) json)
-                .get("redirect");
-        if (redirect != null) {
-            final JSONString url = (JSONString) redirect.get("url");
-            if (url != null) {
-                console.log("redirecting to " + url.stringValue());
-                redirect(url.stringValue());
-                return;
+        if (json.containsKey("redirect")) {
+            String url = json.getValueMap("redirect").getString("url");
+            console.log("redirecting to " + url);
+            redirect(url);
+            return;
+        }
+
+        if (json.containsKey("resources")) {
+            ValueMap resources = json.getValueMap("resources");
+            JsArrayString keyArray = resources.getKeyArray();
+            int l = keyArray.length();
+            for (int i = 0; i < l; i++) {
+                String key = keyArray.get(i);
+                resourcesMap.put(key, resources.getAsString(key));
             }
         }
 
-        // Store resources
-        final JSONObject resources = (JSONObject) ((JSONObject) json)
-                .get("resources");
-        for (final Iterator<String> i = resources.keySet().iterator(); i
-                .hasNext();) {
-            final String key = i.next();
-            resourcesMap.put(key, ((JSONString) resources.get(key))
-                    .stringValue());
+        if (json.containsKey("locales")) {
+            // Store locale data
+            JsArray<ValueMap> valueMapArray = json
+                    .getJSValueMapArray("locales");
+            LocaleService.addLocales(valueMapArray);
         }
 
-        // Store locale data
-        if (((JSONObject) json).containsKey("locales")) {
-            final JSONArray l = (JSONArray) ((JSONObject) json).get("locales");
-            for (int i = 0; i < l.size(); i++) {
-                LocaleService.addLocale((JSONObject) l.get(i));
-            }
-        }
-
-        JSONObject meta = null;
-        if (((JSONObject) json).containsKey("meta")) {
-            meta = ((JSONObject) json).get("meta").isObject();
+        ValueMap meta = null;
+        if (json.containsKey("meta")) {
+            meta = json.getValueMap("meta");
             if (meta.containsKey("repaintAll")) {
                 view.clear();
                 idToPaintableDetail.clear();
@@ -648,33 +645,33 @@ public class ApplicationConnection {
                 }
             }
             if (meta.containsKey("timedRedirect")) {
-                final JSONObject timedRedirect = meta.get("timedRedirect")
-                        .isObject();
+                final ValueMap timedRedirect = meta
+                        .getValueMap("timedRedirect");
                 redirectTimer = new Timer() {
                     @Override
                     public void run() {
-                        redirect(timedRedirect.get("url").isString()
-                                .stringValue());
+                        redirect(timedRedirect.getString("url"));
                     }
                 };
-                sessionExpirationInterval = Integer.parseInt(timedRedirect.get(
-                        "interval").toString());
+                sessionExpirationInterval = timedRedirect.getInt("interval");
             }
         }
+
         if (redirectTimer != null) {
             redirectTimer.schedule(1000 * sessionExpirationInterval);
         }
-        // Process changes
-        final JSONArray changes = (JSONArray) ((JSONObject) json)
-                .get("changes");
 
-        Vector<Paintable> updatedWidgets = new Vector<Paintable>();
+        // Process changes
+        JsArray<ValueMap> changes = json.getJSValueMapArray("changes");
+
+        ArrayList<Paintable> updatedWidgets = new ArrayList<Paintable>();
         relativeSizeChanges.clear();
         componentCaptionSizeChanges.clear();
 
-        for (int i = 0; i < changes.size(); i++) {
+        int length = changes.length();
+        for (int i = 0; i < length; i++) {
             try {
-                final UIDL change = new UIDL((JSONArray) changes.get(i));
+                final UIDL change = changes.get(i).cast();
                 try {
                     console.dirUIDL(change);
                 } catch (final Exception e) {
@@ -732,20 +729,17 @@ public class ApplicationConnection {
 
         if (meta != null) {
             if (meta.containsKey("appError")) {
-                JSONObject error = meta.get("appError").isObject();
-                JSONValue val = error.get("caption");
+                ValueMap error = meta.getValueMap("appError");
                 String html = "";
-                if (val.isString() != null) {
-                    html += "<h1>" + val.isString().stringValue() + "</h1>";
+                if (error.containsKey("caption")) {
+                    html += "<h1>" + error.getAsString("caption") + "</h1>";
                 }
-                val = error.get("message");
-                if (val.isString() != null) {
-                    html += "<p>" + val.isString().stringValue() + "</p>";
+                if (error.containsKey("message")) {
+                    html += "<p>" + error.getAsString("message") + "</p>";
                 }
-                val = error.get("url");
                 String url = null;
-                if (val.isString() != null) {
-                    url = val.isString().stringValue();
+                if (error.containsKey("url")) {
+                    url = error.getAsString("url");
                 }
 
                 if (html.length() != 0) {
@@ -760,8 +754,7 @@ public class ApplicationConnection {
                 applicationRunning = false;
             }
             if (validatingLayouts) {
-                getConsole().printLayoutProblems(
-                        meta.get("invalidLayouts").isArray(), this,
+                getConsole().printLayoutProblems(meta, this,
                         zeroHeightComponents, zeroWidthComponents);
                 zeroHeightComponents = null;
                 zeroWidthComponents = null;
@@ -778,6 +771,10 @@ public class ApplicationConnection {
         endRequest();
     }
 
+    private UIDL getUidl(JSONArray changes, int i) {
+        return (UIDL) changes.get(i).isArray().getJavaScriptObject();
+    }
+
     /**
      * This method assures that all pending variable changes are sent to server.
      * Method uses synchronized xmlhttprequest and does not return before the
@@ -788,7 +785,7 @@ public class ApplicationConnection {
     public void sendPendingVariableChangesSync() {
         if (applicationRunning) {
             pendingVariableBursts.add(pendingVariables);
-            Vector<String> nextBurst = pendingVariableBursts.firstElement();
+            ArrayList<String> nextBurst = pendingVariableBursts.get(0);
             pendingVariableBursts.remove(0);
             buildAndSendVariableBurst(nextBurst, true);
         }
@@ -904,7 +901,7 @@ public class ApplicationConnection {
                 // skip empty queues if there are pending bursts to be sent
                 if (pendingVariables.size() > 0
                         || pendingVariableBursts.size() == 0) {
-                    Vector<String> burst = (Vector<String>) pendingVariables
+                    ArrayList<String> burst = (ArrayList<String>) pendingVariables
                             .clone();
                     pendingVariableBursts.add(burst);
                     pendingVariables.clear();
@@ -927,7 +924,7 @@ public class ApplicationConnection {
      * @param forceSync
      *            Should we use synchronous request?
      */
-    private void buildAndSendVariableBurst(Vector<String> pendingVariables,
+    private void buildAndSendVariableBurst(ArrayList<String> pendingVariables,
             boolean forceSync) {
         final StringBuffer req = new StringBuffer();
 
@@ -946,7 +943,7 @@ public class ApplicationConnection {
             pendingVariables.clear();
             // Append all the busts to this synchronous request
             if (forceSync && !pendingVariableBursts.isEmpty()) {
-                pendingVariables = pendingVariableBursts.firstElement();
+                pendingVariables = pendingVariableBursts.get(0);
                 pendingVariableBursts.remove(0);
                 req.append(VAR_BURST_SEPARATOR);
             }

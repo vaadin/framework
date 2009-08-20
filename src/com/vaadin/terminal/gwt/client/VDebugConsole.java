@@ -7,9 +7,7 @@ package com.vaadin.terminal.gwt.client;
 import java.util.List;
 import java.util.Set;
 
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -331,9 +329,24 @@ public final class VDebugConsole extends VOverlay implements Console {
      * .terminal.gwt.client.UIDL)
      */
     public void dirUIDL(UIDL u) {
-        panel.add(u.print_r());
-        consoleLog(u.getChildrenAsXML());
+        if (panel.isAttached()) {
+            panel.add(new VUIDLBrowser(u));
+        }
+        consoleDir(u);
+        // consoleLog(u.getChildrenAsXML());
     }
+
+    private static native void consoleDir(UIDL u)
+    /*-{
+         if($wnd.console && $wnd.console.log) {
+             if($wnd.console.dir) {
+                 $wnd.console.dir(u);
+             } else {
+                 $wnd.console.log(u);
+             }
+         }
+        
+    }-*/;
 
     private static native void consoleLog(String msg)
     /*-{
@@ -352,10 +365,12 @@ public final class VDebugConsole extends VOverlay implements Console {
          }
      }-*/;
 
-    public void printLayoutProblems(JSONArray array, ApplicationConnection ac,
+    public void printLayoutProblems(ValueMap meta, ApplicationConnection ac,
             Set<Paintable> zeroHeightComponents,
             Set<Paintable> zeroWidthComponents) {
-        int size = array.size();
+        JsArray<ValueMap> valueMapArray = meta
+                .getJSValueMapArray("invalidLayouts");
+        int size = valueMapArray.length();
         panel.add(new HTML("<div>************************</di>"
                 + "<h4>Layouts analyzed on server, total top level problems: "
                 + size + " </h4>"));
@@ -367,8 +382,7 @@ public final class VDebugConsole extends VOverlay implements Console {
 
             TreeItem root = new TreeItem("Root problems");
             for (int i = 0; i < size; i++) {
-                JSONObject error = array.get(i).isObject();
-                printLayoutError(error, root, ac);
+                printLayoutError(valueMapArray.get(i), root, ac);
             }
             panel.add(tree);
             tree.addItem(root);
@@ -418,22 +432,22 @@ public final class VDebugConsole extends VOverlay implements Console {
         }
     }
 
-    private void printLayoutError(JSONObject error, TreeItem parent,
+    private void printLayoutError(ValueMap valueMap, TreeItem parent,
             final ApplicationConnection ac) {
-        final String pid = error.get("id").isString().stringValue();
+        final String pid = valueMap.getString("id");
         final Paintable paintable = ac.getPaintable(pid);
 
         TreeItem errorNode = new TreeItem();
         VerticalPanel errorDetails = new VerticalPanel();
         errorDetails.add(new Label(Util.getSimpleName(paintable) + " id: "
                 + pid));
-        if (error.containsKey("heightMsg")) {
+        if (valueMap.containsKey("heightMsg")) {
             errorDetails.add(new Label("Height problem: "
-                    + error.get("heightMsg")));
+                    + valueMap.getString("heightMsg")));
         }
-        if (error.containsKey("widthMsg")) {
+        if (valueMap.containsKey("widthMsg")) {
             errorDetails.add(new Label("Width problem: "
-                    + error.get("widthMsg")));
+                    + valueMap.getString("widthMsg")));
         }
         final CheckBox emphasisInUi = new CheckBox("Emphasis component in UI");
         emphasisInUi.addClickListener(new ClickListener() {
@@ -447,18 +461,15 @@ public final class VDebugConsole extends VOverlay implements Console {
         });
         errorDetails.add(emphasisInUi);
         errorNode.setWidget(errorDetails);
-        if (error.containsKey("subErrors")) {
+        if (valueMap.containsKey("subErrors")) {
             HTML l = new HTML(
                     "<em>Expand this node to show problems that may be dependent on this problem.</em>");
             errorDetails.add(l);
-            JSONArray array = error.get("subErrors").isArray();
-            for (int i = 0; i < array.size(); i++) {
-                JSONValue value = array.get(i);
-                if (value != null && value.isObject() != null) {
-                    printLayoutError(value.isObject(), errorNode, ac);
-                } else {
-                    System.out.print(value);
-                }
+            JsArray<ValueMap> suberrors = valueMap
+                    .getJSValueMapArray("subErrors");
+            for (int i = 0; i < suberrors.length(); i++) {
+                ValueMap value = suberrors.get(i);
+                printLayoutError(value, errorNode, ac);
             }
 
         }

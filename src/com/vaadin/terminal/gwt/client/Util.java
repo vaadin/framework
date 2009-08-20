@@ -631,16 +631,12 @@ public class Util {
     public static native int getRequiredWidth(
             com.google.gwt.dom.client.Element element)
     /*-{
-        var width;
-        if (element == null) {
-          width = 0;
-        } else if (element.getBoundingClientRect != null) {
+        if (element.getBoundingClientRect) {
           var rect = element.getBoundingClientRect();
-          width = Math.ceil(rect.right - rect.left);
+          return Math.ceil(rect.right - rect.left);
         } else {
-          width = element.offsetWidth;
+          return element.offsetWidth;
         }
-        return width;
     }-*/;
 
     public static native int getRequiredHeight(

@@ -4,8 +4,8 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Vector;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
@@ -62,7 +62,7 @@ public class VNativeSelect extends VOptionGroupBase implements Field {
 
     @Override
     protected Object[] getSelectedItems() {
-        final Vector selectedItemKeys = new Vector();
+        final ArrayList selectedItemKeys = new ArrayList();
         for (int i = 0; i < select.getItemCount(); i++) {
             if (select.isItemSelected(i)) {
                 selectedItemKeys.add(select.getValue(i));

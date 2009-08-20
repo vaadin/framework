@@ -5,6 +5,7 @@
 package com.vaadin.terminal;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * This interface defines the methods for painting XML to the UIDL stream.
@@ -14,7 +15,7 @@ import java.io.Serializable;
  * @VERSION@
  * @since 3.0
  */
-public interface PaintTarget extends Serializable{
+public interface PaintTarget extends Serializable {
 
     /**
      * Prints single XMLsection.
@@ -200,6 +201,16 @@ public interface PaintTarget extends Serializable{
      *             if the paint operation failed.
      */
     public void addAttribute(String name, String value) throws PaintException;
+
+    /**
+     * TODO
+     * 
+     * @param name
+     * @param value
+     * @throws PaintException
+     */
+    public void addAttribute(String name, Map<?, ?> value)
+            throws PaintException;
 
     /**
      * Adds a string type variable.

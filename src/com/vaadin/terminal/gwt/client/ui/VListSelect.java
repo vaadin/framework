@@ -4,8 +4,8 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Vector;
 
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ListBox;
@@ -61,7 +61,7 @@ public class VListSelect extends VOptionGroupBase {
 
     @Override
     protected Object[] getSelectedItems() {
-        final Vector selectedItemKeys = new Vector();
+        final ArrayList selectedItemKeys = new ArrayList();
         for (int i = 0; i < select.getItemCount(); i++) {
             if (select.isItemSelected(i)) {
                 selectedItemKeys.add(select.getValue(i));

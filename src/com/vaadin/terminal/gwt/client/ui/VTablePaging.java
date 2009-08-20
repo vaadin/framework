@@ -4,10 +4,10 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.Vector;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -50,7 +50,7 @@ public class VTablePaging extends Composite implements Table, Paintable,
 
     private int selectMode = Table.SELECT_MODE_NONE;
 
-    private final Vector selectedRowKeys = new Vector();
+    private final ArrayList selectedRowKeys = new ArrayList();
 
     private int totalRows;
 

@@ -40,11 +40,12 @@ public class ChildComponentContainer extends Panel {
     private int captionHeight = 0;
 
     /**
+     * 
      * Padding added to the container when it is larger than the component.
      */
     private Size containerExpansion = new Size(0, 0);
 
-    private float expandRatio;
+    private double expandRatio;
 
     private int containerMarginLeft = 0;
     private int containerMarginTop = 0;
@@ -405,7 +406,6 @@ public class ChildComponentContainer extends Panel {
 
     public void setAlignment(AlignmentInfo alignmentInfo) {
         alignment = alignmentInfo;
-
     }
 
     public Size getWidgetSize() {
@@ -650,12 +650,18 @@ public class ChildComponentContainer extends Panel {
 
     }
 
-    public void setExpandRatio(int expandRatio) {
-        this.expandRatio = (expandRatio / 1000.0f);
+    /**
+     * Sets the normalized expand ratio of this slot. The fraction that this
+     * slot will use of "excess space".
+     * 
+     * @param expandRatio
+     */
+    public void setNormalizedExpandRatio(double expandRatio) {
+        this.expandRatio = expandRatio;
     }
 
     public int expand(int orientation, int spaceForExpansion) {
-        int expansionAmount = (int) ((double) spaceForExpansion * expandRatio);
+        int expansionAmount = (int) (spaceForExpansion * expandRatio);
 
         if (orientation == CellBasedLayout.ORIENTATION_HORIZONTAL) {
             // HORIZONTAL

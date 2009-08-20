@@ -4,9 +4,9 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.Vector;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
@@ -41,7 +41,7 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
 
     private static final int MIN_WIDTH = 150;
 
-    private static Vector<VWindow> windowOrder = new Vector<VWindow>();
+    private static ArrayList<VWindow> windowOrder = new ArrayList<VWindow>();
 
     public static final String CLASSNAME = "v-window";
 
@@ -158,7 +158,7 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
      * @return
      */
     private boolean isActive() {
-        return windowOrder.lastElement().equals(this);
+        return windowOrder.get(windowOrder.size() - 1).equals(this);
     }
 
     public void setWindowOrder(int order) {

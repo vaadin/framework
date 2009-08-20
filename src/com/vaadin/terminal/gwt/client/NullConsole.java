@@ -6,8 +6,6 @@ package com.vaadin.terminal.gwt.client;
 
 import java.util.Set;
 
-import com.google.gwt.json.client.JSONArray;
-
 /**
  * Client side console implementation for non-debug mode that discards all
  * messages.
@@ -27,7 +25,7 @@ public class NullConsole implements Console {
     public void printObject(Object msg) {
     }
 
-    public void printLayoutProblems(JSONArray array,
+    public void printLayoutProblems(ValueMap meta,
             ApplicationConnection applicationConnection,
             Set<Paintable> zeroHeightComponents,
             Set<Paintable> zeroWidthComponents) {

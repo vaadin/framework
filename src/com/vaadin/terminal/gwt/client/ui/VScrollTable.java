@@ -11,7 +11,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.Vector;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NodeList;
@@ -1395,7 +1394,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
 
         private static final int WRAPPER_WIDTH = 9000;
 
-        Vector<Widget> visibleCells = new Vector<Widget>();
+        ArrayList<Widget> visibleCells = new ArrayList<Widget>();
 
         HashMap<String, HeaderCell> availableCells = new HashMap<String, HeaderCell>();
 
@@ -1558,8 +1557,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
                 // insert to right slot
                 DOM.insertChild(tr, cell.getElement(), index);
                 adopt(cell);
-                visibleCells.insertElementAt(cell, index);
-
+                visibleCells.add(index, cell);
             } else if (index == visibleCells.size()) {
                 // simply append
                 DOM.appendChild(tr, cell.getElement());
@@ -1600,7 +1598,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
             DOM.removeChild(tr, cell);
 
             DOM.insertChild(tr, cell, newIndex);
-            visibleCells.insertElementAt(hCell, newIndex);
+            visibleCells.add(newIndex, hCell);
         }
 
         public Iterator<Widget> iterator() {
@@ -1790,7 +1788,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
 
         private int rowHeight = -1;
 
-        private final List<Widget> renderedRows = new Vector<Widget>();
+        private final List<Widget> renderedRows = new ArrayList<Widget>();
 
         /**
          * Due some optimizations row height measuring is deferred and initial
@@ -2220,7 +2218,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
         public class VScrollTableRow extends Panel implements ActionOwner,
                 Container {
 
-            Vector<Widget> childWidgets = new Vector<Widget>();
+            ArrayList<Widget> childWidgets = new ArrayList<Widget>();
             private boolean selected = false;
             private final int rowKey;
             private List<UIDL> pendingComponentPaints;
@@ -2628,7 +2626,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
                 oldComponent.removeFromParent();
 
                 parentElement.appendChild(newComponent.getElement());
-                childWidgets.insertElementAt(newComponent, index);
+                childWidgets.add(index, newComponent);
                 adopt(newComponent);
 
             }

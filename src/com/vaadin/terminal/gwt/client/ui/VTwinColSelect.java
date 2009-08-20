@@ -4,8 +4,8 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Vector;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -111,7 +111,7 @@ public class VTwinColSelect extends VOptionGroupBase {
 
     @Override
     protected Object[] getSelectedItems() {
-        final Vector selectedItemKeys = new Vector();
+        final ArrayList selectedItemKeys = new ArrayList();
         for (int i = 0; i < selections.getItemCount(); i++) {
             selectedItemKeys.add(selections.getValue(i));
         }

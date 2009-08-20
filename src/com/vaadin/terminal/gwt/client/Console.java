@@ -6,8 +6,6 @@ package com.vaadin.terminal.gwt.client;
 
 import java.util.Set;
 
-import com.google.gwt.json.client.JSONArray;
-
 public interface Console {
 
     public abstract void log(String msg);
@@ -18,7 +16,7 @@ public interface Console {
 
     public abstract void dirUIDL(UIDL u);
 
-    public abstract void printLayoutProblems(JSONArray array,
+    public abstract void printLayoutProblems(ValueMap meta,
             ApplicationConnection applicationConnection,
             Set<Paintable> zeroHeightComponents,
             Set<Paintable> zeroWidthComponents);

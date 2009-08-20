@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
@@ -11,6 +12,7 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.ValueMap;
 import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.ui.layout.CellBasedLayout;
@@ -35,6 +37,14 @@ public class VOrderedLayout extends CellBasedLayout {
     private String width = "";
 
     private boolean sizeHasChangedDuringRendering = false;
+
+    private ValueMap expandRatios;
+
+    private double expandRatioSum;
+
+    private double defaultExpandRatio;
+
+    private ValueMap alignments;
 
     public VOrderedLayout() {
         this(CLASSNAME, ORIENTATION_VERTICAL);
@@ -278,9 +288,12 @@ public class VOrderedLayout extends CellBasedLayout {
         }
 
         if (remaining > 0) {
+
             // Some left-over pixels due to rounding errors
 
             // Add one pixel to each container until there are no pixels left
+            // FIXME extra pixels should be divided among expanded widgets if
+            // such a widgets exists
 
             Iterator<Widget> widgetIterator = iterator();
             while (widgetIterator.hasNext() && remaining-- > 0) {
@@ -836,28 +849,57 @@ public class VOrderedLayout extends CellBasedLayout {
             ArrayList<Widget> renderedWidgets) {
 
         /*
-         * UIDL contains component alignments as a comma separated list.
-         * 
-         * See com.vaadin.terminal.gwt.client.ui.AlignmentInfo.java for possible
-         * values.
          */
-        final int[] alignments = uidl.getIntArrayAttribute("alignments");
+        alignments = uidl.getMapAttribute("alignments");
 
         /*
-         * UIDL contains normalized expand ratios as a comma separated list.
+         * UIDL contains a map of paintable ids to expand ratios
          */
-        final int[] expandRatios = uidl.getIntArrayAttribute("expandRatios");
+
+        expandRatios = uidl.getMapAttribute("expandRatios");
+        expandRatioSum = -1.0;
 
         for (int i = 0; i < renderedWidgets.size(); i++) {
             Widget widget = renderedWidgets.get(i);
+            String pid = client.getPid(widget.getElement());
 
             ChildComponentContainer container = getComponentContainer(widget);
 
             // Calculate alignment info
-            container.setAlignment(new AlignmentInfo(alignments[i]));
+            container.setAlignment(getAlignment(pid));
 
             // Update expand ratio
-            container.setExpandRatio(expandRatios[i]);
+            container.setNormalizedExpandRatio(getExpandRatio(pid));
+        }
+    }
+
+    private AlignmentInfo getAlignment(String pid) {
+        if (alignments.containsKey(pid)) {
+            return new AlignmentInfo(alignments.getInt(pid));
+        } else {
+            return AlignmentInfo.TOP_LEFT;
+        }
+    }
+
+    private double getExpandRatio(String pid) {
+        if (expandRatioSum < 0) {
+            expandRatioSum = 0;
+            JsArrayString keyArray = expandRatios.getKeyArray();
+            int length = keyArray.length();
+            for (int i = 0; i < length; i++) {
+                expandRatioSum += expandRatios.getRawNumber(keyArray.get(i));
+            }
+            if (expandRatioSum == 0) {
+                // by default split equally among components
+                defaultExpandRatio = 1.0 / widgetToComponentContainer.size();
+            } else {
+                defaultExpandRatio = 0;
+            }
+        }
+        if (expandRatios.containsKey(pid)) {
+            return expandRatios.getRawNumber(pid) / expandRatioSum;
+        } else {
+            return defaultExpandRatio;
         }
     }
 

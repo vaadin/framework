@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
@@ -22,6 +23,7 @@ import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.VariableOwner;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 
 /**
@@ -479,6 +481,44 @@ public class JsonPaintTarget implements PaintTarget {
 
     }
 
+    public void addAttribute(String name, Map<?, ?> value)
+            throws PaintException {
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("\"");
+        sb.append(name);
+        sb.append("\": ");
+        sb.append("{");
+        for (Iterator<?> it = value.keySet().iterator(); it.hasNext();) {
+            Object key = it.next();
+            Object mapValue = value.get(key);
+            sb.append("\"");
+            if (key instanceof Paintable) {
+                Paintable paintable = (Paintable) key;
+                sb.append(getPaintIdentifier(paintable));
+            } else {
+                sb.append(escapeJSON(key.toString()));
+            }
+            sb.append("\":");
+            if (mapValue instanceof Float || mapValue instanceof Integer
+                    || mapValue instanceof Double
+                    || mapValue instanceof Boolean
+                    || mapValue instanceof Alignment) {
+                sb.append(mapValue);
+            } else {
+                sb.append("\"");
+                sb.append(escapeJSON(mapValue.toString()));
+                sb.append("\"");
+            }
+            if (it.hasNext()) {
+                sb.append(",");
+            }
+        }
+        sb.append("}");
+
+        tag.addAttribute(sb.toString());
+    }
+
     public void addAttribute(String name, Object[] values) {
         // In case of null data output nothing:
         if ((values == null) || (name == null)) {
@@ -701,8 +741,8 @@ public class JsonPaintTarget implements PaintTarget {
      * @throws PaintException
      *             if the paint operation failed.
      * 
-     * @see com.vaadin.terminal.PaintTarget#addXMLSection(String,
-     *      String, String)
+     * @see com.vaadin.terminal.PaintTarget#addXMLSection(String, String,
+     *      String)
      */
     public void addXMLSection(String sectionTagName, String sectionData,
             String namespace) throws PaintException {
@@ -766,8 +806,7 @@ public class JsonPaintTarget implements PaintTarget {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.terminal.PaintTarget#startTag(com.vaadin.terminal
+     * @see com.vaadin.terminal.PaintTarget#startTag(com.vaadin.terminal
      * .Paintable, java.lang.String)
      */
     public boolean startTag(Paintable paintable, String tagName)
@@ -785,22 +824,24 @@ public class JsonPaintTarget implements PaintTarget {
 
     public void paintReference(Paintable paintable, String referenceName)
             throws PaintException {
+        final String id = getPaintIdentifier(paintable);
+        addAttribute(referenceName, id);
+    }
+
+    public String getPaintIdentifier(Paintable paintable) throws PaintException {
         if (!manager.hasPaintableId(paintable)) {
             if (identifiersCreatedDueRefPaint == null) {
                 identifiersCreatedDueRefPaint = new HashSet<Paintable>();
             }
             identifiersCreatedDueRefPaint.add(paintable);
         }
-        final String id = manager.getPaintableId(paintable);
-        addAttribute(referenceName, id);
+        return manager.getPaintableId(paintable);
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.terminal.PaintTarget#addCharacterData(java.lang.String
-     * )
+     * @see com.vaadin.terminal.PaintTarget#addCharacterData(java.lang.String )
      */
     public void addCharacterData(String text) throws PaintException {
         if (text != null) {

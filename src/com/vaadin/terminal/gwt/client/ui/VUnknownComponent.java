@@ -10,16 +10,17 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.VUIDLBrowser;
 
 public class VUnknownComponent extends Composite implements Paintable {
 
     com.google.gwt.user.client.ui.Label caption = new com.google.gwt.user.client.ui.Label();;
-    Tree uidlTree = new Tree();
+    Tree uidlTree;
+    private VerticalPanel panel;
 
     public VUnknownComponent() {
-        final VerticalPanel panel = new VerticalPanel();
+        panel = new VerticalPanel();
         panel.add(caption);
-        panel.add(uidlTree);
         initWidget(panel);
         setStyleName("vaadin-unknown");
         caption.setStyleName("vaadin-unknown-caption");
@@ -30,8 +31,12 @@ public class VUnknownComponent extends Composite implements Paintable {
             return;
         }
         setCaption("Client faced an unknown component type. Unrendered UIDL:");
-        uidlTree.clear();
-        uidlTree.addItem(uidl.dir());
+        if (uidlTree != null) {
+            uidlTree.removeFromParent();
+        }
+
+        uidlTree = new VUIDLBrowser(uidl);
+        panel.add(uidlTree);
     }
 
     public void setCaption(String c) {

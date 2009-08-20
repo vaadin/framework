@@ -8,166 +8,129 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.google.gwt.event.logical.shared.OpenEvent;
-import com.google.gwt.event.logical.shared.OpenHandler;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONBoolean;
-import com.google.gwt.json.client.JSONNumber;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONString;
-import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Tree;
-import com.google.gwt.user.client.ui.TreeItem;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArrayString;
 
-public class UIDL {
+public final class UIDL extends JavaScriptObject {
 
-    JSONArray json;
-
-    public UIDL(JSONArray json) {
-        this.json = json;
+    protected UIDL() {
     }
 
     public String getId() {
-        final JSONValue val = ((JSONObject) json.get(1)).get("id");
-        if (val == null) {
-            return null;
-        }
-        return ((JSONString) val).stringValue();
+        return getStringAttribute("id");
     }
 
-    public String getTag() {
-        return ((JSONString) json.get(0)).stringValue();
-    }
+    public native String getTag()
+    /*-{
+        return this[0];
+    }-*/;
+
+    private native ValueMap attr()
+    /*-{
+        return this[1];
+    }-*/;
+
+    private native ValueMap var()
+    /*-{
+        return this[1]["v"];
+    }-*/;
+
+    private native boolean hasVariables()
+    /*-{
+        return Boolean(this[1]["v"]);
+    }-*/;
 
     public String getStringAttribute(String name) {
-        final JSONValue val = ((JSONObject) json.get(1)).get(name);
-        if (val == null) {
-            return null;
-        }
-        return ((JSONString) val).stringValue();
+        return attr().getString(name);
     }
 
     public Set<String> getAttributeNames() {
-        final HashSet<String> attrs = new HashSet<String>(((JSONObject) json
-                .get(1)).keySet());
-        attrs.remove("v");
-        return attrs;
+        Set<String> keySet = attr().getKeySet();
+        keySet.remove("v");
+        return keySet;
+    }
+
+    public Set<String> getVariableNames() {
+        if (!hasVariables()) {
+            return new HashSet<String>();
+        } else {
+            Set<String> keySet = var().getKeySet();
+            return keySet;
+        }
     }
 
     public int getIntAttribute(String name) {
-        final JSONValue val = ((JSONObject) json.get(1)).get(name);
-        if (val == null) {
-            return 0;
-        }
-        final double num = val.isNumber().doubleValue();
-        return (int) num;
+        return attr().getInt(name);
     }
 
     public long getLongAttribute(String name) {
-        final JSONValue val = ((JSONObject) json.get(1)).get(name);
-        if (val == null) {
-            return 0;
-        }
-        final double num = val.isNumber().doubleValue();
-        return (long) num;
+        return (long) attr().getRawNumber(name);
     }
 
     public float getFloatAttribute(String name) {
-        final JSONValue val = ((JSONObject) json.get(1)).get(name);
-        if (val == null) {
-            return 0;
-        }
-        final double num = val.isNumber().doubleValue();
-        return (float) num;
+        return (float) attr().getRawNumber(name);
     }
 
     public double getDoubleAttribute(String name) {
-        final JSONValue val = ((JSONObject) json.get(1)).get(name);
-        if (val == null) {
-            return 0;
-        }
-        final double num = val.isNumber().doubleValue();
-        return num;
+        return attr().getRawNumber(name);
     }
 
     public boolean getBooleanAttribute(String name) {
-        final JSONValue val = ((JSONObject) json.get(1)).get(name);
-        if (val == null) {
-            return false;
-        }
-        return val.isBoolean().booleanValue();
+        return attr().getBoolean(name);
+    }
+
+    public ValueMap getMapAttribute(String name) {
+        return attr().getValueMap(name);
     }
 
     public String[] getStringArrayAttribute(String name) {
-        final JSONArray a = (JSONArray) ((JSONObject) json.get(1)).get(name);
-        final String[] s = new String[a.size()];
-        for (int i = 0; i < a.size(); i++) {
-            s[i] = ((JSONString) a.get(i)).stringValue();
-        }
-        return s;
+        return attr().getStringArray(name);
     }
 
-    public int[] getIntArrayAttribute(String name) {
-        final JSONArray a = (JSONArray) ((JSONObject) json.get(1)).get(name);
-        final int[] s = new int[a.size()];
-        for (int i = 0; i < a.size(); i++) {
-            s[i] = Integer.parseInt(((JSONString) a.get(i)).stringValue());
-        }
-        return s;
-    }
-
-    public HashSet<String> getStringArrayAttributeAsSet(String string) {
-        final JSONArray a = getArrayVariable(string);
-        final HashSet<String> s = new HashSet<String>();
-        for (int i = 0; i < a.size(); i++) {
-            s.add(((JSONString) a.get(i)).stringValue());
-        }
-        return s;
+    public int[] getIntArrayAttribute(final String name) {
+        return attr().getIntArray(name);
     }
 
     /**
-     * Get attributes value as string whateever the type is
+     * Get attributes value as string whatever the type is
      * 
      * @param name
      * @return string presentation of attribute
      */
-    private String getAttribute(String name) {
-        return json.get(1).isObject().get(name).toString();
+    native String getAttribute(String name)
+    /*-{
+        return '' + this[1][name];
+    }-*/;
+
+    native String getVariable(String name)
+    /*-{
+        return '' + this[1]['v'][name];
+    }-*/;
+
+    public boolean hasAttribute(final String name) {
+        return attr().containsKey(name);
     }
 
-    public boolean hasAttribute(String name) {
-        return ((JSONObject) json.get(1)).get(name) != null;
-    }
+    public native UIDL getChildUIDL(int i)
+    /*-{
+        return this[i + 2];
+    }-*/;
 
-    public UIDL getChildUIDL(int i) {
+    public native String getChildString(int i)
+    /*-{
+        return this[i + 2];
+    }-*/;
 
-        final JSONValue c = json.get(i + 2);
-        if (c == null) {
-            return null;
-        }
-        if (c.isArray() != null) {
-            return new UIDL(c.isArray());
-        }
-        throw new IllegalStateException("Child node " + i
-                + " is not of type UIDL");
-    }
-
-    public String getChildString(int i) {
-
-        final JSONValue c = json.get(i + 2);
-        if (c.isString() != null) {
-            return ((JSONString) c).stringValue();
-        }
-        throw new IllegalStateException("Child node " + i
-                + " is not of type String");
-    }
+    private native XML getChildXML(int index)
+    /*-{
+        return this[index + 2];
+    }-*/;
 
     public Iterator<Object> getChildIterator() {
 
         return new Iterator<Object>() {
 
-            int index = 2;
+            int index = -1;
 
             public void remove() {
                 throw new UnsupportedOperationException();
@@ -175,296 +138,142 @@ public class UIDL {
 
             public Object next() {
 
-                if (json.size() > index) {
-                    final JSONValue c = json.get(index++);
-                    if (c.isString() != null) {
-                        return c.isString().stringValue();
-                    } else if (c.isArray() != null) {
-                        return new UIDL(c.isArray());
-                    } else if (c.isObject() != null) {
-                        return new XML(c.isObject());
-                    } else {
-                        throw new IllegalStateException("Illegal child " + c
-                                + " in tag " + getTag() + " at index " + index);
+                if (hasNext()) {
+                    int typeOfChild = typeOfChild(index++);
+                    switch (typeOfChild) {
+                    case CHILD_TYPE_UIDL:
+                        UIDL childUIDL = getChildUIDL(index);
+                        return childUIDL;
+                    case CHILD_TYPE_STRING:
+                        return getChildString(index);
+                    case CHILD_TYPE_XML:
+                        return getChildXML(index);
+                    default:
+                        throw new IllegalStateException(
+                                "Illegal child  in tag " + getTag()
+                                        + " at index " + index);
                     }
                 }
                 return null;
             }
 
             public boolean hasNext() {
-                return json.size() > index;
+                int count = getChildCount();
+                return count > index + 1;
             }
 
         };
     }
 
-    public int getNumberOfChildren() {
-        return json.size() - 2;
-    }
+    private static final int CHILD_TYPE_STRING = 0;
+    private static final int CHILD_TYPE_UIDL = 1;
+    private static final int CHILD_TYPE_XML = 2;
 
-    @Override
-    public String toString() {
-        String s = "<" + getTag();
-
-        Set<String> attributeNames = getAttributeNames();
-        for (String name : attributeNames) {
-            s += " " + name + "=";
-            final JSONValue v = ((JSONObject) json.get(1)).get(name);
-            if (v.isString() != null) {
-                s += v;
+    private native int typeOfChild(int index)
+    /*-{
+        var t = typeof this[index + 2];
+        if(t == "object") {
+            if(typeof(t.length) == "number") {
+                return 1;
             } else {
-                s += "\"" + v + "\"";
+                return 2;
             }
+        } else if (t == "string") {
+            return 0;
         }
+        return -1;
+    }-*/;
 
-        s += ">\n";
-
-        final Iterator<Object> i = getChildIterator();
-        while (i.hasNext()) {
-            final Object c = i.next();
-            s += c.toString();
-        }
-
-        s += "</" + getTag() + ">\n";
-
-        return s;
-    }
-
+    /**
+     * 
+     * @return
+     * 
+     * @deprecated
+     */
+    @Deprecated
     public String getChildrenAsXML() {
-        String s = "";
-        final Iterator<Object> i = getChildIterator();
-        while (i.hasNext()) {
-            final Object c = i.next();
-            s += c.toString();
-        }
-        return s;
-    }
-
-    public VUIDLBrowser print_r() {
-        return new VUIDLBrowser();
-    }
-
-    private class VUIDLBrowser extends Tree {
-        public VUIDLBrowser() {
-
-            DOM.setStyleAttribute(getElement(), "position", "");
-
-            final TreeItem root = new TreeItem(getTag());
-            addItem(root);
-            root.addItem("");
-            addOpenHandler(new OpenHandler<TreeItem>() {
-                boolean isLoaded;
-
-                public void onOpen(OpenEvent<TreeItem> event) {
-                    TreeItem item = event.getTarget();
-                    if (item == root && !isLoaded) {
-                        removeItem(root);
-                        addItem(dir());
-                        final Iterator<TreeItem> it = treeItemIterator();
-                        while (it.hasNext()) {
-                            it.next().setState(true);
-                        }
-                        isLoaded = true;
-                    }
-                }
-            });
-        }
-
-        @Override
-        protected boolean isKeyboardNavigationEnabled(TreeItem currentItem) {
-            return false;
-        }
-
-    }
-
-    public TreeItem dir() {
-
-        String nodeName = getTag();
-        Set<String> attributeNames = getAttributeNames();
-        for (String name : attributeNames) {
-            final String value = getAttribute(name);
-            nodeName += " " + name + "=" + value;
-        }
-        final TreeItem item = new TreeItem(nodeName);
-
-        try {
-            TreeItem tmp = null;
-            Set<String> keySet = getVariableHash().keySet();
-            for (String name : keySet) {
-                String value = "";
-                try {
-                    value = getStringVariable(name);
-                } catch (final Exception e) {
-                    try {
-                        final JSONArray a = getArrayVariable(name);
-                        value = a.toString();
-                    } catch (final Exception e2) {
-                        try {
-                            final int intVal = getIntVariable(name);
-                            value = String.valueOf(intVal);
-                        } catch (final Exception e3) {
-                            value = "unknown";
-                        }
-                    }
-                }
-                if (tmp == null) {
-                    tmp = new TreeItem("variables");
-                }
-                tmp.addItem(name + "=" + value);
-            }
-            if (tmp != null) {
-                item.addItem(tmp);
-            }
-        } catch (final Exception e) {
-            // Ignored, no variables
-        }
-
-        final Iterator<Object> i = getChildIterator();
-        while (i.hasNext()) {
-            final Object child = i.next();
-            try {
-                final UIDL c = (UIDL) child;
-                item.addItem(c.dir());
-
-            } catch (final Exception e) {
-                item.addItem(child.toString());
-            }
-        }
-        return item;
-    }
-
-    private JSONObject getVariableHash() {
-        final JSONObject v = (JSONObject) ((JSONObject) json.get(1)).get("v");
-        if (v == null) {
-            throw new IllegalArgumentException("No variables defined in tag.");
-        }
-        return v;
+        return toString();
     }
 
     public boolean hasVariable(String name) {
-        final JSONObject variables = (JSONObject) ((JSONObject) json.get(1))
-                .get("v");
-        if (variables == null) {
-            return false;
-        }
-        return variables.keySet().contains(name);
+        return var().containsKey(name);
     }
 
     public String getStringVariable(String name) {
-        final JSONString t = (JSONString) getVariableHash().get(name);
-        if (t == null) {
-            throw new IllegalArgumentException("No such variable: " + name);
-        }
-        return t.stringValue();
+        return var().getString(name);
     }
 
     public int getIntVariable(String name) {
-        final JSONNumber t = (JSONNumber) getVariableHash().get(name);
-        if (t == null) {
-            throw new IllegalArgumentException("No such variable: " + name);
-        }
-        return (int) t.doubleValue();
+        return var().getInt(name);
     }
 
     public long getLongVariable(String name) {
-        final JSONNumber t = (JSONNumber) getVariableHash().get(name);
-        if (t == null) {
-            throw new IllegalArgumentException("No such variable: " + name);
-        }
-        return (long) t.doubleValue();
+        return (long) var().getRawNumber(name);
     }
 
     public float getFloatVariable(String name) {
-        final JSONNumber t = (JSONNumber) getVariableHash().get(name);
-        if (t == null) {
-            throw new IllegalArgumentException("No such variable: " + name);
-        }
-        return (float) t.doubleValue();
+        return (float) var().getRawNumber(name);
     }
 
     public double getDoubleVariable(String name) {
-        final JSONNumber t = (JSONNumber) getVariableHash().get(name);
-        if (t == null) {
-            throw new IllegalArgumentException("No such variable: " + name);
-        }
-        return t.doubleValue();
+        return var().getRawNumber(name);
     }
 
     public boolean getBooleanVariable(String name) {
-        final JSONBoolean t = (JSONBoolean) getVariableHash().get(name);
-        if (t == null) {
-            throw new IllegalArgumentException("No such variable: " + name);
-        }
-        return t.booleanValue();
-    }
-
-    private JSONArray getArrayVariable(String name) {
-        final JSONArray t = (JSONArray) getVariableHash().get(name);
-        if (t == null) {
-            throw new IllegalArgumentException("No such variable: " + name);
-        }
-        return t;
+        return var().getBoolean(name);
     }
 
     public String[] getStringArrayVariable(String name) {
-        final JSONArray a = getArrayVariable(name);
-        final String[] s = new String[a.size()];
-        for (int i = 0; i < a.size(); i++) {
-            s[i] = ((JSONString) a.get(i)).stringValue();
-        }
-        return s;
+        return var().getStringArray(name);
     }
 
-    public Set<String> getStringArrayVariableAsSet(String name) {
-        final JSONArray a = getArrayVariable(name);
+    public Set<String> getStringArrayVariableAsSet(final String name) {
         final HashSet<String> s = new HashSet<String>();
-        for (int i = 0; i < a.size(); i++) {
-            s.add(((JSONString) a.get(i)).stringValue());
+        JsArrayString a = var().getJSStringArray(name);
+        for (int i = 0; i < a.length(); i++) {
+            s.add(a.get(i));
         }
         return s;
     }
 
     public int[] getIntArrayVariable(String name) {
-        final JSONArray a = getArrayVariable(name);
-        final int[] s = new int[a.size()];
-        for (int i = 0; i < a.size(); i++) {
-            final JSONValue v = a.get(i);
-            s[i] = v.isNumber() != null ? (int) v.isNumber().doubleValue()
-                    : Integer.parseInt(v.toString());
-        }
-        return s;
+        return var().getIntArray(name);
     }
 
-    public class XML {
-        JSONObject x;
-
-        private XML(JSONObject x) {
-            this.x = x;
+    public final static class XML extends JavaScriptObject {
+        protected XML() {
         }
 
-        public String getXMLAsString() {
-            final StringBuffer sb = new StringBuffer();
-            Set<String> keySet = x.keySet();
-            for (String tag : keySet) {
-                sb.append("<");
-                sb.append(tag);
-                sb.append(">");
-                sb.append(x.get(tag).isString().stringValue());
-                sb.append("</");
-                sb.append(tag);
-                sb.append(">");
+        public native String getXMLAsString()
+        /*-{
+            var buf = new Array();
+            var self = this;
+            for(j in self) {
+                buf.push("<");
+                buf.push(j);
+                buf.push(">");
+                buf.push(self[j]);
+                buf.push("</");
+                buf.push("tag");
+                buf.push(">");
             }
-            return sb.toString();
-        }
+            return buf.join();
+        }-*/;
     }
 
-    public int getChildCount() {
-        return json.size() - 2;
-    }
+    public native int getChildCount()
+    /*-{
+        return this.length - 2;
+    }-*/;
 
-    public UIDL getErrors() {
-        final JSONArray a = (JSONArray) ((JSONObject) json.get(1)).get("error");
-        return new UIDL(a);
-    }
+    public native UIDL getErrors()
+    /*-{
+        return this[1]['error']; 
+    }-*/;
+
+    native boolean isMapAttribute(String name)
+    /*-{
+        return typeof this[1][name] == "object";
+    }-*/;
 
 }

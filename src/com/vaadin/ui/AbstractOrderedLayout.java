@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
@@ -133,58 +132,15 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
             target.addAttribute("spacing", spacing);
         }
 
-        final String[] alignmentsArray = new String[components.size()];
-        final Integer[] expandRatioArray = new Integer[components.size()];
-        float sum = getExpandRatioSum();
-        boolean equallyDivided = false;
-        int realSum = 0;
-        if (sum == 0 && components.size() > 0) {
-            // no component has been expanded, all components have same expand
-            // rate
-            equallyDivided = true;
-            float equalSize = 1 / (float) components.size();
-            int myRatio = Math.round(equalSize * 1000);
-            for (int i = 0; i < expandRatioArray.length; i++) {
-                expandRatioArray[i] = myRatio;
-            }
-            realSum = myRatio * components.size();
-        }
-
         // Adds all items in all the locations
-        int index = 0;
-        for (final Iterator i = components.iterator(); i.hasNext();) {
-            final Component c = (Component) i.next();
-            if (c != null) {
-                // Paint child component UIDL
-                c.paint(target);
-                alignmentsArray[index] = String
-                        .valueOf(getComponentAlignment(c).getBitMask());
-                if (!equallyDivided) {
-                    int myRatio = Math.round((getExpandRatio(c) / sum) * 1000);
-                    expandRatioArray[index] = myRatio;
-                    realSum += myRatio;
-                }
-                index++;
-            }
-        }
-
-        // correct possible rounding error
-        if (expandRatioArray.length > 0) {
-            expandRatioArray[0] -= realSum - 1000;
+        for (Component c : components) {
+            // Paint child component UIDL
+            c.paint(target);
         }
 
         // Add child component alignment info to layout tag
-        target.addAttribute("alignments", alignmentsArray);
-        target.addAttribute("expandRatios", expandRatioArray);
-    }
-
-    private float getExpandRatioSum() {
-        float sum = 0;
-        for (Iterator<Entry<Component, Float>> iterator = componentToExpandRatio
-                .entrySet().iterator(); iterator.hasNext();) {
-            sum += iterator.next().getValue();
-        }
-        return sum;
+        target.addAttribute("alignments", componentToAlignment);
+        target.addAttribute("expandRatios", componentToExpandRatio);
     }
 
     /* Documented in superclass */
