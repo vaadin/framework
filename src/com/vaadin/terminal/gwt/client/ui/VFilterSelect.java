@@ -841,32 +841,60 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     }
 
     public void onKeyDown(Widget sender, char keyCode, int modifiers) {
-        if (enabled && suggestionPopup.isAttached()) {
-            switch (keyCode) {
-            case KeyboardListener.KEY_DOWN:
-                suggestionPopup.selectNextItem();
-                DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
+        if (enabled) {
+            if (suggestionPopup.isAttached()) {
+                popupKeyDown(keyCode);
+            } else {
+                inputFieldKeyDown(keyCode);
+            }
+        }
+    }
+
+    private void inputFieldKeyDown(char keyCode) {
+        switch (keyCode) {
+        case KeyboardListener.KEY_DOWN:
+        case KeyboardListener.KEY_UP:
+        case KeyboardListener.KEY_PAGEDOWN:
+        case KeyboardListener.KEY_PAGEUP:
+            if (suggestionPopup.isAttached()) {
                 break;
-            case KeyboardListener.KEY_UP:
-                suggestionPopup.selectPrevItem();
-                DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
-                break;
-            case KeyboardListener.KEY_PAGEDOWN:
-                if (hasNextPage()) {
-                    filterOptions(currentPage + 1, lastFilter);
-                }
-                break;
-            case KeyboardListener.KEY_PAGEUP:
-                if (currentPage > 0) {
-                    filterOptions(currentPage - 1, lastFilter);
-                }
-                break;
-            case KeyboardListener.KEY_ENTER:
-            case KeyboardListener.KEY_TAB:
-                suggestionPopup.menu.doSelectedItemAction();
+            } else {
+                // open popup as from gadget
+                filterOptions(-1, "");
+                lastFilter = "";
+                tb.selectAll();
                 break;
             }
         }
+
+    }
+
+    private void popupKeyDown(char keyCode) {
+        switch (keyCode) {
+        case KeyboardListener.KEY_DOWN:
+            suggestionPopup.selectNextItem();
+            DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
+            break;
+        case KeyboardListener.KEY_UP:
+            suggestionPopup.selectPrevItem();
+            DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
+            break;
+        case KeyboardListener.KEY_PAGEDOWN:
+            if (hasNextPage()) {
+                filterOptions(currentPage + 1, lastFilter);
+            }
+            break;
+        case KeyboardListener.KEY_PAGEUP:
+            if (currentPage > 0) {
+                filterOptions(currentPage - 1, lastFilter);
+            }
+            break;
+        case KeyboardListener.KEY_ENTER:
+        case KeyboardListener.KEY_TAB:
+            suggestionPopup.menu.doSelectedItemAction();
+            break;
+        }
+
     }
 
     public void onKeyPress(Widget sender, char keyCode, int modifiers) {
@@ -881,21 +909,12 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             case KeyboardListener.KEY_SHIFT:
             case KeyboardListener.KEY_CTRL:
             case KeyboardListener.KEY_ALT:
-                ; // NOP
-                break;
             case KeyboardListener.KEY_DOWN:
             case KeyboardListener.KEY_UP:
             case KeyboardListener.KEY_PAGEDOWN:
             case KeyboardListener.KEY_PAGEUP:
-                if (suggestionPopup.isAttached()) {
-                    break;
-                } else {
-                    // open popup as from gadget
-                    filterOptions(-1, "");
-                    lastFilter = "";
-                    tb.selectAll();
-                    break;
-                }
+                ; // NOP
+                break;
             case KeyboardListener.KEY_ESCAPE:
                 reset();
                 break;
