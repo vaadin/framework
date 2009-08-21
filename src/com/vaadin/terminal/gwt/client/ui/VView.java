@@ -78,6 +78,12 @@ public class VView extends SimplePanel implements Container,
 
     private boolean immediate;
 
+    /**
+     * Reference to the parent frame/iframe. Null if there is no parent (i)frame
+     * or if the application and parent frame are in different domains.
+     */
+    private Element parentFrame;
+
     public VView(String elementId) {
         super();
         setStyleName(CLASSNAME);
@@ -114,6 +120,7 @@ public class VView extends SimplePanel implements Container,
             focus(getElement());
         }
 
+        parentFrame = getParentFrame();
     }
 
     private static native void focus(Element el)
@@ -232,6 +239,9 @@ public class VView extends SimplePanel implements Container,
         }
 
         layout.updateFromUIDL(childUidl, client);
+        if (!childUidl.getBooleanAttribute("cached")) {
+            updateParentFrameSize();
+        }
 
         // Update subwindows
         final HashSet<VWindow> removedSubWindows = new HashSet<VWindow>(
@@ -551,9 +561,38 @@ public class VView extends SimplePanel implements Container,
          * Can never propagate further and we do not want need to re-layout the
          * layout which has caused this request.
          */
+        updateParentFrameSize();
+
         return true;
 
     }
+
+    private void updateParentFrameSize() {
+        if (parentFrame == null) {
+            return;
+        }
+
+        int childHeight = Util.getRequiredHeight(getWidget().getElement());
+        int childWidth = Util.getRequiredWidth(getWidget().getElement());
+
+        parentFrame.getStyle().setPropertyPx("width", childWidth);
+        parentFrame.getStyle().setPropertyPx("height", childHeight);
+    }
+
+    private static native Element getParentFrame()
+    /*-{
+        try {
+            var frameElement = $wnd.frameElement;
+            if (frameElement == null) {
+                return null;
+            }
+            if (frameElement.getAttribute("autoResize") == "true") {
+                return frameElement;
+            }
+        } catch (e) {
+        }
+        return null;
+    }-*/;
 
     public void updateCaption(Paintable component, UIDL uidl) {
         // NOP Subwindows never draw caption for their first child (layout)
