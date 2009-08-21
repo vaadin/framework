@@ -1,6 +1,7 @@
 package com.vaadin.terminal.gwt.client.ui.layout;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import com.google.gwt.dom.client.DivElement;
@@ -311,12 +312,37 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
 
         int toRemove = getChildren().size() - pos;
         while (toRemove-- > 0) {
+            /* flag to not if widget has been moved and rendered elsewhere */
+            boolean relocated = false;
             ChildComponentContainer child = (ChildComponentContainer) getChildren()
                     .get(pos);
-            widgetToComponentContainer.remove(child.getWidget());
+            Widget widget = child.getWidget();
+            if (widget == null) {
+                // a rare case where child component has been relocated and
+                // rendered elsewhere
+                // clean widgetToComponentContainer map by iterating the correct
+                // mapping
+                Iterator<Widget> iterator = widgetToComponentContainer.keySet()
+                        .iterator();
+                while (iterator.hasNext()) {
+                    Widget key = iterator.next();
+                    if (widgetToComponentContainer.get(key) == child) {
+                        widget = key;
+                        relocated = true;
+                        break;
+                    }
+                }
+                if (widget == null) {
+                    throw new NullPointerException();
+                }
+            }
+            ChildComponentContainer remove = widgetToComponentContainer
+                    .remove(widget);
             remove(child);
-            Paintable p = (Paintable) child.getWidget();
-            client.unregisterPaintable(p);
+            if (!relocated) {
+                Paintable p = (Paintable) widget;
+                client.unregisterPaintable(p);
+            }
         }
 
     }
