@@ -1,4 +1,4 @@
-package com.example.dialogtest;
+package com.vaadin.tests.components.window;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
