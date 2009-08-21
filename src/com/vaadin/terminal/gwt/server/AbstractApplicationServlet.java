@@ -1309,7 +1309,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
         }
 
         final BufferedWriter page = new BufferedWriter(new OutputStreamWriter(
-                response.getOutputStream()));
+                response.getOutputStream(), "UTF-8"));
 
         String title = ((window.getCaption() == null) ? "Vaadin 6" : window
                 .getCaption());
