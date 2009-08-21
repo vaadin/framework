@@ -590,7 +590,7 @@ public class ApplicationConnection {
 
     private static native ValueMap parseJSONResponse(String jsonText)
     /*-{
-        return $wnd.eval('(' + jsonText + ')');
+        return eval('(' + jsonText + ')');
      }-*/;
 
     private void handleReceivedJSONMessage(Response response) {
