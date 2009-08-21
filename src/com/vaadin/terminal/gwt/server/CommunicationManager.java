@@ -452,9 +452,22 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                     paintablePainted(p);
 
                     if (analyzeLayouts) {
+                        Window w = (Window) p;
                         invalidComponentRelativeSizes = ComponentSizeValidator
-                                .validateComponentRelativeSizes(((Window) p)
-                                        .getContent(), null, null);
+                                .validateComponentRelativeSizes(w.getContent(),
+                                        null, null);
+                                        
+                        // Also check any existing subwindows
+                        if (w.getChildWindows() != null) {
+                            for (Window subWindow : (Set<Window>) w
+                                    .getChildWindows()) {
+                                invalidComponentRelativeSizes = ComponentSizeValidator
+                                        .validateComponentRelativeSizes(
+                                                subWindow.getContent(),
+                                                invalidComponentRelativeSizes,
+                                                null);
+                            }
+                        }
                     }
                 }
             }
