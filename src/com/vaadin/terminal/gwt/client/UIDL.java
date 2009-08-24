@@ -139,7 +139,7 @@ public final class UIDL extends JavaScriptObject {
             public Object next() {
 
                 if (hasNext()) {
-                    int typeOfChild = typeOfChild(index++);
+                    int typeOfChild = typeOfChild(++index);
                     switch (typeOfChild) {
                     case CHILD_TYPE_UIDL:
                         UIDL childUIDL = getChildUIDL(index);
