@@ -739,7 +739,7 @@ public class ApplicationConnection {
                 }
                 String url = null;
                 if (error.containsKey("url")) {
-                    url = error.getAsString("url");
+                    url = error.getString("url");
                 }
 
                 if (html.length() != 0) {
