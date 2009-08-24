@@ -1221,10 +1221,10 @@
     <!-- Automated tests.                                                   -->
     <!-- ================================================================== -->
 
-    <target name="tests" depends="ant-tests, testingtools-tests">
+    <target name="tests" depends="ant-tests, testbench-tests">
     </target>
 
-    <target name="testingtools-tests" depends="init">
+    <target name="testbench-tests" depends="init">
       <fail unless="product-file" message="The 'product-file' property must be defined."/>
       <fail unless="package-platform" message="The 'package-platform' property must be defined."/>
       <fail unless="version" message="The 'version' property must be defined."/>

@@ -4,7 +4,7 @@
     <!-- ================================================================== -->
     <!-- Configuration                                                      -->
     <!-- ================================================================== -->
-	<property name="lib.dir" value="../lib/testingtools" />
+	<property name="lib.dir" value="../build/lib/testbench" />
 	<property name="class-dir" value="../build/classes" />
 	<property name="test-output-dir" value="../build/test-output" />
 	<property name="test-browsers" value="firefox,ie" />
