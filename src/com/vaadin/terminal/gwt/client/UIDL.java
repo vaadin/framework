@@ -196,7 +196,7 @@ public final class UIDL extends JavaScriptObject {
     }
 
     public boolean hasVariable(String name) {
-        return var().containsKey(name);
+        return hasVariables() && var().containsKey(name);
     }
 
     public String getStringVariable(String name) {

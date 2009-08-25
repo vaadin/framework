@@ -102,7 +102,8 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             setColumns(new Integer(uidl.getStringAttribute("cols")).intValue());
         }
 
-        String text = uidl.getStringVariable("text");
+        String text = uidl.hasVariable("text") ? uidl.getStringVariable("text")
+                : null;
         setPrompting(inputPrompt != null && focusedTextField != this
                 && (text == null || text.equals("")));
         if (prompting) {
