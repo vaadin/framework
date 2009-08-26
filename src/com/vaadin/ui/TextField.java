@@ -20,10 +20,10 @@ import com.vaadin.terminal.PaintTarget;
  * 
  * <p>
  * Since <code>TextField</code> extends <code>AbstractField</code> it implements
- * the {@link com.vaadin.data.Buffered} interface. A
- * <code>TextField</code> is in write-through mode by default, so
- * {@link com.vaadin.ui.AbstractField#setWriteThrough(boolean)} must be
- * called to enable buffering.
+ * the {@link com.vaadin.data.Buffered} interface. A <code>TextField</code> is
+ * in write-through mode by default, so
+ * {@link com.vaadin.ui.AbstractField#setWriteThrough(boolean)} must be called
+ * to enable buffering.
  * </p>
  * 
  * @author IT Mill Ltd.
@@ -505,7 +505,7 @@ public class TextField extends AbstractField {
      * Gets the value formatter of TextField.
      * 
      * @return the Format used to format the value.
-     * @deprecated
+     * @deprecated replaced by {@link com.vaadin.data.util.PropertyFormatter}
      */
     @Deprecated
     public Format getFormat() {
@@ -518,7 +518,7 @@ public class TextField extends AbstractField {
      * @param format
      *            the Format used to format the value. Null disables the
      *            formatting.
-     * @deprecated
+     * @deprecated replaced by {@link com.vaadin.data.util.PropertyFormatter}
      */
     @Deprecated
     public void setFormat(Format format) {
