@@ -224,6 +224,8 @@ public abstract class Application implements URIHandler,
             w.setName(name);
             // add it to this application
             addWindow(w);
+            // ensure use of window specific url
+            w.open(new ExternalResource(w.getURL().toString()));
             // add some content
             w.addComponent(new Label("Test window"));
         }
