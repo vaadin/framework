@@ -17,6 +17,8 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
+import com.google.gwt.event.dom.client.ScrollEvent;
+import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
@@ -27,7 +29,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.ScrollListener;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -63,18 +64,20 @@ import com.vaadin.terminal.gwt.client.ui.VScrollTable.VScrollTableBody.VScrollTa
  * 
  * TODO implement unregistering for child components in Cells
  */
-public class VScrollTable extends FlowPanel implements Table, ScrollListener {
+public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
 
     public static final String CLASSNAME = "v-table";
+    private static final double CACHE_RATE_DEFAULT = 2;
+
     /**
      * multiple of pagelength which component will cache when requesting more
      * rows
      */
-    private static final double CACHE_RATE = 2;
+    private double cache_rate = CACHE_RATE_DEFAULT;
     /**
      * fraction of pageLenght which can be scrolled without making new request
      */
-    private static final double CACHE_REACT_RATE = 1.5;
+    private double cache_react_rate = 0.75 * cache_rate;
 
     public static final char ALIGN_CENTER = 'c';
     public static final char ALIGN_LEFT = 'b';
@@ -147,7 +150,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
     private boolean rendering = false;
 
     public VScrollTable() {
-        bodyContainer.addScrollListener(this);
+        bodyContainer.addScrollHandler(this);
         bodyContainer.setStyleName(CLASSNAME + "-body");
 
         setStyleName(CLASSNAME);
@@ -187,6 +190,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
             }
             totalRows = newTotalRows;
         }
+
+        setCacheRate(uidl.hasAttribute("cr") ? uidl.getDoubleAttribute("cr")
+                : CACHE_RATE_DEFAULT);
 
         recalcWidths = uidl.hasAttribute("recalcWidths");
 
@@ -292,6 +298,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
         headerChangedDuringUpdate = false;
     }
 
+    private void setCacheRate(double d) {
+        if (cache_rate != d) {
+            cache_rate = d;
+            cache_react_rate = 0.75 * d;
+        }
+    }
+
     /**
      * Unregisters Paintables in "trashed" HasWidgets (IScrollTableBodys or
      * IScrollTableRows). This is done lazily as Table must survive from
@@ -382,7 +395,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
         tBody.renderRows(uidl, firstRow, reqRows);
 
         final int optimalFirstRow = (int) (firstRowInViewPort - pageLength
-                * CACHE_RATE);
+                * cache_rate);
         boolean cont = true;
         while (cont && tBody.getLastRendered() > optimalFirstRow
                 && tBody.getFirstRendered() < optimalFirstRow) {
@@ -390,7 +403,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
             cont = tBody.unlinkRow(true);
         }
         final int optimalLastRow = (int) (firstRowInViewPort + pageLength + pageLength
-                * CACHE_RATE);
+                * cache_rate);
         cont = true;
         while (cont && tBody.getLastRendered() > optimalLastRow) {
             // client.console.log("removing row from the end");
@@ -669,6 +682,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
             tBody.reLayoutComponents();
         }
 
+        updatePageLength();
+
         /*
          * Fix "natural" height if height is not set. This must be after width
          * fixing so the components' widths have been adjusted.
@@ -711,13 +726,17 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
         if (enabled) {
             // Do we need cache rows
             if (tBody.getLastRendered() + 1 < firstRowInViewPort + pageLength
-                    + CACHE_REACT_RATE * pageLength) {
+                    + (int) cache_react_rate * pageLength) {
                 if (totalRows - 1 > tBody.getLastRendered()) {
                     // fetch cache rows
-                    rowRequestHandler
-                            .setReqFirstRow(tBody.getLastRendered() + 1);
-                    rowRequestHandler
-                            .setReqRows((int) (pageLength * CACHE_RATE));
+                    int firstInNewSet = tBody.getLastRendered() + 1;
+                    rowRequestHandler.setReqFirstRow(firstInNewSet);
+                    int lastInNewSet = (int) (firstRowInViewPort + pageLength + cache_rate
+                            * pageLength);
+                    if (lastInNewSet > totalRows - 1) {
+                        lastInNewSet = totalRows - 1;
+                    }
+                    rowRequestHandler.setReqRows(lastInNewSet - firstInNewSet);
                     rowRequestHandler.deferRowFetch(1);
                 }
             }
@@ -741,87 +760,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
         return false;
     }
 
-    /**
-     * This method has logic which rows needs to be requested from server when
-     * user scrolls
-     */
-    public void onScroll(Widget widget, int scrollLeft, int scrollTop) {
-        if (!initializedAndAttached) {
-            return;
-        }
-        if (!enabled) {
-            bodyContainer.setScrollPosition(firstRowInViewPort
-                    * tBody.getRowHeight());
-            return;
-        }
-
-        rowRequestHandler.cancel();
-
-        // fix headers horizontal scrolling
-        tHead.setHorizontalScrollPosition(scrollLeft);
-
-        firstRowInViewPort = (int) Math.ceil(scrollTop
-                / (double) tBody.getRowHeight());
-
-        int postLimit = (int) (firstRowInViewPort + pageLength + pageLength
-                * CACHE_REACT_RATE);
-        if (postLimit > totalRows - 1) {
-            postLimit = totalRows - 1;
-        }
-        int preLimit = (int) (firstRowInViewPort - pageLength
-                * CACHE_REACT_RATE);
-        if (preLimit < 0) {
-            preLimit = 0;
-        }
-        final int lastRendered = tBody.getLastRendered();
-        final int firstRendered = tBody.getFirstRendered();
-
-        if (postLimit <= lastRendered && preLimit >= firstRendered) {
-            // remember which firstvisible we requested, in case the server has
-            // a differing opinion
-            lastRequestedFirstvisible = firstRowInViewPort;
-            client.updateVariable(paintableId, "firstvisible",
-                    firstRowInViewPort, false);
-            return; // scrolled withing "non-react area"
-        }
-
-        if (firstRowInViewPort - pageLength * CACHE_RATE > lastRendered
-                || firstRowInViewPort + pageLength + pageLength * CACHE_RATE < firstRendered) {
-            // need a totally new set
-            rowRequestHandler
-                    .setReqFirstRow((int) (firstRowInViewPort - pageLength
-                            * CACHE_RATE));
-            int last = firstRowInViewPort + (int) CACHE_RATE * pageLength
-                    + pageLength;
-            if (last > totalRows) {
-                last = totalRows - 1;
-            }
-            rowRequestHandler.setReqRows(last
-                    - rowRequestHandler.getReqFirstRow() + 1);
-            rowRequestHandler.deferRowFetch();
-            return;
-        }
-        if (preLimit < firstRendered) {
-            // need some rows to the beginning of the rendered area
-            rowRequestHandler
-                    .setReqFirstRow((int) (firstRowInViewPort - pageLength
-                            * CACHE_RATE));
-            rowRequestHandler.setReqRows(firstRendered
-                    - rowRequestHandler.getReqFirstRow());
-            rowRequestHandler.deferRowFetch();
-
-            return;
-        }
-        if (postLimit > lastRendered) {
-            // need some rows to the end of the rendered area
-            rowRequestHandler.setReqFirstRow(lastRendered + 1);
-            rowRequestHandler.setReqRows((int) ((firstRowInViewPort
-                    + pageLength + pageLength * CACHE_RATE) - lastRendered));
-            rowRequestHandler.deferRowFetch();
-        }
-
-    }
-
     private void announceScrollPosition() {
         if (scrollPositionElement == null) {
             scrollPositionElement = DOM.createDiv();
@@ -842,13 +780,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
                 + "px");
 
         // indexes go from 1-totalRows, as rowheaders in index-mode indicate
-        int last = (firstRowInViewPort + (bodyContainer.getOffsetHeight() / tBody
-                .getRowHeight()));
+        int last = (firstRowInViewPort + pageLength);
         if (last > totalRows) {
             last = totalRows;
         }
         DOM.setInnerHTML(scrollPositionElement, "<span>"
-                + (firstRowInViewPort + 1) + " &ndash; " + last + "..."
+                + (firstRowInViewPort + 1) + " &ndash; " + (last) + "..."
                 + "</span>");
         DOM.setStyleAttribute(scrollPositionElement, "display", "block");
     }
@@ -907,9 +844,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
                 int firstToBeRendered = tBody.firstRendered;
                 if (reqFirstRow < firstToBeRendered) {
                     firstToBeRendered = reqFirstRow;
-                } else if (firstRowInViewPort - (int) (CACHE_RATE * pageLength) > firstToBeRendered) {
+                } else if (firstRowInViewPort - (int) (cache_rate * pageLength) > firstToBeRendered) {
                     firstToBeRendered = firstRowInViewPort
-                            - (int) (CACHE_RATE * pageLength);
+                            - (int) (cache_rate * pageLength);
                     if (firstToBeRendered < 0) {
                         firstToBeRendered = 0;
                     }
@@ -920,8 +857,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
                 if (reqFirstRow + reqRows - 1 > lastToBeRendered) {
                     lastToBeRendered = reqFirstRow + reqRows - 1;
                 } else if (firstRowInViewPort + pageLength + pageLength
-                        * CACHE_RATE < lastToBeRendered) {
-                    lastToBeRendered = (firstRowInViewPort + pageLength + (int) (pageLength * CACHE_RATE));
+                        * cache_rate < lastToBeRendered) {
+                    lastToBeRendered = (firstRowInViewPort + pageLength + (int) (pageLength * cache_rate));
                     if (lastToBeRendered >= totalRows) {
                         lastToBeRendered = totalRows - 1;
                     }
@@ -962,8 +899,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
          * Sends request to refresh content at this position.
          */
         public void refreshContent() {
-            int first = (int) (firstRowInViewPort - pageLength * CACHE_RATE);
-            int reqRows = (int) (2 * pageLength * CACHE_RATE + pageLength);
+            int first = (int) (firstRowInViewPort - pageLength * cache_rate);
+            int reqRows = (int) (2 * pageLength * cache_rate + pageLength);
             if (first < 0) {
                 reqRows = reqRows + first;
                 first = 0;
@@ -1213,7 +1150,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
                         firstvisible = 0;
                         rowRequestHandler.setReqFirstRow(0);
                         rowRequestHandler.setReqRows((int) (2 * pageLength
-                                * CACHE_RATE + pageLength));
+                                * cache_rate + pageLength));
                         rowRequestHandler.deferRowFetch();
                     }
                     break;
@@ -1897,13 +1834,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
             // this may be a new set of rows due content change,
             // ensure we have proper cache rows
             int reactFirstRow = (int) (firstRowInViewPort - pageLength
-                    * CACHE_REACT_RATE);
+                    * cache_react_rate);
             int reactLastRow = (int) (firstRowInViewPort + pageLength + pageLength
-                    * CACHE_REACT_RATE);
+                    * cache_react_rate);
             if (reactFirstRow < 0) {
                 reactFirstRow = 0;
             }
-            if (reactLastRow > totalRows) {
+            if (reactLastRow >= totalRows) {
                 reactLastRow = totalRows - 1;
             }
             if (lastRendered < reactLastRow) {
@@ -2066,8 +2003,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
             } else {
 
                 if (tBodyElement.getRows().getLength() > 0) {
-                    rowHeight = getTableHeight()
-                            / tBodyElement.getRows().getLength();
+                    int tableHeight = getTableHeight();
+                    int rowCount = tBodyElement.getRows().getLength();
+                    rowHeight = tableHeight / rowCount;
                 } else {
                     if (isAttached()) {
                         // measure row height by adding a dummy row
@@ -2081,9 +2019,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
                     }
                 }
                 tBodyMeasurementsDone = true;
-
-                updatePageLength();
-
                 return rowHeight;
             }
         }
@@ -2599,7 +2534,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
                         w = headerCell.getOffsetWidth() - getCellExtraWidth();
                     }
                 }
-                return new RenderSpace(w, getRowHeight());
+                return new RenderSpace(w, 0) {
+                    @Override
+                    public int getHeight() {
+                        return getRowHeight();
+                    }
+                };
             }
 
             private int getColIndexOf(Widget child) {
@@ -2681,10 +2621,22 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
         if (anotherPartlyVisible) {
             rowsAtOnce++;
         }
+        if (pageLength != rowsAtOnce) {
+            pageLength = rowsAtOnce;
+            client.updateVariable(paintableId, "pagelength", pageLength, false);
 
-        pageLength = rowsAtOnce;
-
-        client.updateVariable(paintableId, "pagelength", pageLength, false);
+            if (!rendering) {
+                int currentlyVisible = tBody.lastRendered - tBody.firstRendered;
+                if (currentlyVisible < pageLength
+                        && currentlyVisible < totalRows) {
+                    // shake scrollpanel to fill empty space
+                    bodyContainer.setScrollPosition(bodyContainer
+                            .getScrollPosition() + 1);
+                    bodyContainer.setScrollPosition(bodyContainer
+                            .getScrollPosition() - 1);
+                }
+            }
+        }
 
     }
 
@@ -2852,7 +2804,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
         this.height = height;
         super.setHeight(height);
         setContainerHeight();
-        updatePageLength();
+        if (initializedAndAttached) {
+            updatePageLength();
+        }
     }
 
     /*
@@ -2893,6 +2847,90 @@ public class VScrollTable extends FlowPanel implements Table, ScrollListener {
                     + "\" alt=\"icon\" class=\"v-icon\">" + s;
         }
         return s;
+    }
+
+    /**
+     * This method has logic which rows needs to be requested from server when
+     * user scrolls
+     */
+    public void onScroll(ScrollEvent event) {
+        int scrollLeft = bodyContainer.getElement().getScrollLeft();
+        int scrollTop = bodyContainer.getScrollPosition();
+        if (!initializedAndAttached) {
+            return;
+        }
+        if (!enabled) {
+            bodyContainer.setScrollPosition(firstRowInViewPort
+                    * tBody.getRowHeight());
+            return;
+        }
+
+        rowRequestHandler.cancel();
+
+        // fix headers horizontal scrolling
+        tHead.setHorizontalScrollPosition(scrollLeft);
+
+        firstRowInViewPort = (int) Math.ceil(scrollTop
+                / (double) tBody.getRowHeight());
+        if (firstRowInViewPort > totalRows - pageLength) {
+            firstRowInViewPort = totalRows - pageLength;
+        }
+
+        int postLimit = (int) (firstRowInViewPort + (pageLength - 1) + pageLength
+                * cache_react_rate);
+        if (postLimit > totalRows - 1) {
+            postLimit = totalRows - 1;
+        }
+        int preLimit = (int) (firstRowInViewPort - pageLength
+                * cache_react_rate);
+        if (preLimit < 0) {
+            preLimit = 0;
+        }
+        final int lastRendered = tBody.getLastRendered();
+        final int firstRendered = tBody.getFirstRendered();
+
+        if (postLimit <= lastRendered && preLimit >= firstRendered) {
+            // remember which firstvisible we requested, in case the server has
+            // a differing opinion
+            lastRequestedFirstvisible = firstRowInViewPort;
+            client.updateVariable(paintableId, "firstvisible",
+                    firstRowInViewPort, false);
+            return; // scrolled withing "non-react area"
+        }
+
+        if (firstRowInViewPort - pageLength * cache_rate > lastRendered
+                || firstRowInViewPort + pageLength + pageLength * cache_rate < firstRendered) {
+            // need a totally new set
+            rowRequestHandler
+                    .setReqFirstRow((firstRowInViewPort - (int) (pageLength * cache_rate)));
+            int last = firstRowInViewPort + (int) (cache_rate * pageLength)
+                    + pageLength - 1;
+            if (last >= totalRows) {
+                last = totalRows - 1;
+            }
+            rowRequestHandler.setReqRows(last
+                    - rowRequestHandler.getReqFirstRow() + 1);
+            rowRequestHandler.deferRowFetch();
+            return;
+        }
+        if (preLimit < firstRendered) {
+            // need some rows to the beginning of the rendered area
+            rowRequestHandler
+                    .setReqFirstRow((int) (firstRowInViewPort - pageLength
+                            * cache_rate));
+            rowRequestHandler.setReqRows(firstRendered
+                    - rowRequestHandler.getReqFirstRow());
+            rowRequestHandler.deferRowFetch();
+
+            return;
+        }
+        if (postLimit > lastRendered) {
+            // need some rows to the end of the rendered area
+            rowRequestHandler.setReqFirstRow(lastRendered + 1);
+            rowRequestHandler.setReqRows((int) ((firstRowInViewPort
+                    + pageLength + pageLength * cache_rate) - lastRendered));
+            rowRequestHandler.deferRowFetch();
+        }
     }
 
 }

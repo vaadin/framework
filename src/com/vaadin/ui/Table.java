@@ -148,6 +148,11 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public static final int ROW_HEADER_MODE_EXPLICIT_DEFAULTS_ID = AbstractSelect.ITEM_CAPTION_MODE_EXPLICIT_DEFAULTS_ID;
 
+    /**
+     * The default rate that table caches rows for smooth scrolling.
+     */
+    private static final double CACHE_RATE_DEFAULT = 2;
+
     /* Private table extensions to Select */
 
     /**
@@ -319,6 +324,8 @@ public class Table extends AbstractSelect implements Action.Container,
      * if set to true. Currently no setter: extend to enable.
      */
     protected boolean alwaysRecalculateColumnWidths = false;
+
+    private double cacheRate = CACHE_RATE_DEFAULT;
 
     /* Table constructors */
 
@@ -754,8 +761,13 @@ public class Table extends AbstractSelect implements Action.Container,
      * Setting page length 0 disables paging. The page length defaults to 15.
      * </p>
      * 
+     * <p>
+     * If Table has width set ({@link #setWidth(float, int)} ) the client side
+     * may update the page length automatically the correct value.
+     * </p>
+     * 
      * @param pageLength
-     *            the Length of one page.
+     *            the length of one page.
      */
     public void setPageLength(int pageLength) {
         if (pageLength >= 0 && this.pageLength != pageLength) {
@@ -764,6 +776,45 @@ public class Table extends AbstractSelect implements Action.Container,
             resetPageBuffer();
             refreshRenderedCells();
         }
+    }
+
+    /**
+     * This method adjusts a possible caching mechanism of table implementation.
+     * 
+     * <p>
+     * Table component may fetch and render some rows outside visible area. With
+     * complex tables (for example containing layouts and components), the
+     * client side may become unresponsive. Setting the value lower, UI will
+     * become more responsive. With higher values scrolling in client will hit
+     * server less frequently.
+     * 
+     * <p>
+     * The amount of cached rows will be cacheRate multiplied with pageLength (
+     * {@link #setPageLength(int)} both below and above visible area..
+     * 
+     * @param cacheRate
+     *            a value over 0 (fastest rendering time). Higher value will
+     *            cache more rows on server (smoother scrolling). Default value
+     *            is 2.
+     */
+    public void setCacheRate(double cacheRate) {
+        if (cacheRate < 0) {
+            throw new IllegalArgumentException(
+                    "cacheRate cannot be less than zero");
+        }
+        if (this.cacheRate != cacheRate) {
+            this.cacheRate = cacheRate;
+            requestRepaint();
+        }
+    }
+
+    /**
+     * @see #setCacheRate(double)
+     * 
+     * @return the current cache rate value
+     */
+    public double getCacheRate() {
+        return cacheRate;
     }
 
     /**
@@ -2016,6 +2067,10 @@ public class Table extends AbstractSelect implements Action.Container,
 
         if (clickListenerCount > 0) {
             target.addAttribute("listenClicks", true);
+        }
+
+        if (cacheRate != CACHE_RATE_DEFAULT) {
+            target.addAttribute("cr", cacheRate);
         }
 
         target.addAttribute("cols", cols);
