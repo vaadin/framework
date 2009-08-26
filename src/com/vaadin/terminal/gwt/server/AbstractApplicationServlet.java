@@ -34,7 +34,6 @@ import org.xml.sax.SAXException;
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
 import com.vaadin.external.org.apache.commons.fileupload.servlet.ServletFileUpload;
-import com.vaadin.service.FileTypeResolver;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.ParameterHandler;
 import com.vaadin.terminal.Terminal;
@@ -159,8 +158,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
     private static final int DEFAULT_BUFFER_SIZE = 32 * 1024;
 
     private static final int MAX_BUFFER_SIZE = 64 * 1024;
-
-    private static final String RESOURCE_URI = "/RES/";
 
     private static final String AJAX_UIDL_URI = "/UIDL";
 
@@ -457,11 +454,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
              * request, send the file to the client
              */
             if (handleURI(applicationManager, window, request, response)) {
-                return;
-            }
-
-            // Handles theme resource requests
-            if (handleResourceRequest(request, response, window)) {
                 return;
             }
 
@@ -1660,91 +1652,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      */
     protected String getNoScriptMessage() {
         return "You have to enable javascript in your browser to use an application built with Vaadin.";
-    }
-
-    /**
-     * Handles theme resource file requests. Resources supplied with the themes
-     * are provided by the WebAdapterServlet.
-     * 
-     * @param request
-     *            the HTTP request.
-     * @param response
-     *            the HTTP response.
-     * @return boolean <code>true</code> if the request was handled and further
-     *         processing should be suppressed, <code>false</code> otherwise.
-     * @throws ServletException
-     *             if an exception has occurred that interferes with the
-     *             servlet's normal operation.
-     */
-    private boolean handleResourceRequest(HttpServletRequest request,
-            HttpServletResponse response, Window window)
-            throws ServletException {
-        // If the resource path is unassigned, initialize it
-        if (resourcePath == null) {
-            resourcePath = request.getContextPath() + request.getServletPath()
-                    + RESOURCE_URI;
-            // WebSphere Application Server related fix
-            resourcePath = resourcePath.replaceAll("//", "/");
-        }
-
-        String resourceId = request.getPathInfo();
-
-        // Checks if this really is a resource request
-        if (resourceId == null || !resourceId.startsWith(RESOURCE_URI)) {
-            return false;
-        }
-
-        String themeName = getThemeForWindow(request, window);
-
-        // Checks the resource type
-        resourceId = resourceId.substring(RESOURCE_URI.length());
-        InputStream data = null;
-
-        // Gets theme resources
-        try {
-            data = getServletContext().getResourceAsStream(
-                    THEME_DIRECTORY_PATH + themeName + "/" + resourceId);
-        } catch (final Exception e) {
-            // FIXME: Handle exception
-            e.printStackTrace();
-            data = null;
-        }
-
-        // Writes the response
-        try {
-            if (data != null) {
-                response.setContentType(FileTypeResolver
-                        .getMIMEType(resourceId));
-
-                // Use default cache time for theme resources
-                response.setHeader("Cache-Control", "max-age="
-                        + DEFAULT_THEME_CACHETIME / 1000);
-                response.setDateHeader("Expires", System.currentTimeMillis()
-                        + DEFAULT_THEME_CACHETIME);
-                response.setHeader("Pragma", "cache"); // Required to apply
-                // caching in some
-                // Tomcats
-
-                // Writes the data to client
-                final byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
-                int bytesRead = 0;
-                final OutputStream out = response.getOutputStream();
-                while ((bytesRead = data.read(buffer)) > 0) {
-                    out.write(buffer, 0, bytesRead);
-                }
-                out.close();
-                data.close();
-            } else {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND);
-            }
-
-        } catch (final java.io.IOException e) {
-            // FIXME: Handle exception
-            System.err.println("Resource transfer failed:  "
-                    + request.getRequestURI() + ". (" + e.getMessage() + ")");
-        }
-
-        return true;
     }
 
     /**
