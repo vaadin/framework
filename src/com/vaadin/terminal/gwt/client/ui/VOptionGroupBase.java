@@ -135,8 +135,12 @@ abstract class VOptionGroupBase extends Composite implements Paintable, Field,
         nullSelectionAllowed = uidl.getBooleanAttribute("nullselect");
         nullSelectionItemAvailable = uidl.getBooleanAttribute("nullselectitem");
 
-        cols = uidl.getIntAttribute("cols");
-        rows = uidl.getIntAttribute("rows");
+        if (uidl.hasAttribute("cols")) {
+            cols = uidl.getIntAttribute("cols");
+        }
+        if (uidl.hasAttribute("rows")) {
+            rows = uidl.getIntAttribute("rows");
+        }
 
         final UIDL ops = uidl.getChildUIDL(0);
 
