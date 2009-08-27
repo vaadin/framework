@@ -236,7 +236,7 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
         helper = Document.get().createDivElement();
         helper
                 .setInnerHTML("<div style=\"position:absolute;top:0;left:0;height:0;visibility:hidden;overflow:hidden;\">"
-                        + "<div style=\"width:0;height:0;visibility:hidden;overflow;hidden;\"></div></div><div style=\"position:absolute;height:0;\"></div>");
+                        + "<div style=\"width:0;height:0;visibility:hidden;overflow;hidden;\"></div></div><div style=\"position:absolute;height:0;overflow:hidden;\"></div>");
         NodeList<Node> childNodes = helper.getChildNodes();
         measurement = (DivElement) childNodes.getItem(0);
         measurement2 = (DivElement) measurement.getFirstChildElement();
