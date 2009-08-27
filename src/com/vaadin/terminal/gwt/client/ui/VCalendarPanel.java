@@ -394,7 +394,8 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
         processClickEvent(sender, true);
     }
 
-    private class VEventButton extends VButton implements SourcesMouseEvents {
+    private class VEventButton extends VNativeButton implements
+            SourcesMouseEvents {
 
         private MouseListenerCollection mouseListeners;
 
@@ -404,6 +405,7 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
                     | Event.MOUSEEVENTS);
         }
 
+        @Override
         public void addMouseListener(MouseListener listener) {
             if (mouseListeners == null) {
                 mouseListeners = new MouseListenerCollection();
@@ -411,6 +413,7 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
             mouseListeners.add(listener);
         }
 
+        @Override
         public void removeMouseListener(MouseListener listener) {
             if (mouseListeners != null) {
                 mouseListeners.remove(listener);

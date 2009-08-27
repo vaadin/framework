@@ -1,0 +1,20 @@
+.v-ff2 .v-button .v-button-caption {
+	display: -moz-inline-box;
+	padding-top: 6px;
+	height: 20px;
+	}
+
+
+/* Modifications for buttons with icons *
+.v-ff2 .v-button .v-icon,
+.v-ff2 .v-button.v-disabled .v-icon {
+	display: block;
+	float: left;
+	margin-top: 4px;
+	}
+
+.v-ff2 .v-button-link .v-icon,
+.v-ff2 .v-button-link.v-disabled .v-icon {
+	margin: 0;
+	}
+	*/

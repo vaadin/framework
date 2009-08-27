@@ -1,56 +1,138 @@
+/*
+ * Default button (more customizable)
+ * -------------------------------------- */
 .v-button {
+	display: inline-block;
+	zoom: 1;
+	text-align: center;
+	text-decoration: none;
+	border: 2px outset #ddd;
+	background: #eee;
 	cursor: pointer;
 	white-space: nowrap;
 	margin: 0;
+	padding: .2em 1em;
+	color: inherit;
+	font: inherit;
+	line-height: normal;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ie-user-select: none;
+	user-select: none;
+	}
+
+.v-ie6 .v-button {
+	display: inline;
 }
-.v-button span {
+
+.v-button-wrap,
+.v-button-caption {
+	vertical-align: middle;
 	white-space: nowrap;
+	font: inherit;
+	color: inherit;
+	line-height: normal;
+	}
+
+.v-button .v-icon,
+.v-nativebutton .v-icon {
+	vertical-align: middle;
+	margin-right: 3px;
+	border: none;
+	}
+
+.v-button .v-errorindicator,
+.v-nativebutton .v-errorindicator {
+	display: inline-block;
+	zoom: 1;
+	vertical-align: middle;
+	float: none;
 }
+
+/* Link style (we really should deprecate this) */
+.v-button-link,
+.v-nativebutton-link {
+	border: none;
+	text-align: left;
+	background: transparent;
+	padding: 0;
+	color: inherit;
+	}
+
+/* Inset Safari focus outline a bit */
+.v-sa .v-button-link:focus{
+	outline-offset: -3px;
+	}
+
+.v-button-link .v-button-caption,
+.v-nativebutton-link .v-nativebutton-caption {
+	text-decoration: underline;
+	color: inherit;
+	text-align: left;
+	}
+
+
+/*
+ * NativeButton styles (html button element)
+ * -------------------------------------- */
+.v-nativebutton {
+	text-align: center;
+	cursor: pointer;
+	white-space: nowrap;
+	margin: 0;
+	color: inherit;
+	font: inherit;
+	line-height: normal;
+	}
+.v-nativebutton .v-nativebutton-caption {
+	vertical-align: middle;
+	white-space: nowrap;
+	font: inherit;
+	color: inherit;
+	}
+
+.v-nativebutton .v-icon {
+	vertical-align: middle;
+	margin-right: 3px;
+	}
+
+.v-nativebutton .v-errorindicator {
+	display: inline-block;
+	zoom: 1;
+	float: none;
+}
+/* Fixes streched buttons in IE6 and IE7*/
+.v-ie6 .v-nativebutton {
+	width: 1px;
+}
+.v-ie6 .v-nativebutton,
+.v-ie7 .v-nativebutton,
+.v-ie8 .v-nativebutton {
+	overflow: visible;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+/*
+ * Checkbox styles
+ * -------------------------------------- */
+
+.v-checkbox,
+.v-checkbox label,
 .v-checkbox input {
 	vertical-align: middle;
+	white-space: nowrap;
 }
-.v-button img,
 .v-checkbox img {
 	display: inline;
 	vertical-align: middle;
 	margin-right: 3px;
-}
-.v-button span,
-.v-checkbox label {
-	vertical-align: middle;
-}
-.v-button-link {
-	border: none;
-	text-align: left;
-	background: none;
-	padding: 0;
-}
-/* Inset Safari focus outline a bit */
-.v-sa .v-button-link:focus {
-	outline-offset: -3px;
-}
-.v-button-link span {
-	text-decoration: underline;
-}
-.v-checkbox {
-	white-space: nowrap;	
 }
 .v-checkbox .v-errorindicator {
 	float: none;
 	display: inline;
 	padding-left: 1em;
 	background-position: left;
-}
-/* Fixes streched buttons in IE6 and IE7*/
-.v-ie6 .v-button {
-	width: 1px;
-}
-.v-ie6 .v-button,
-.v-ie7 .v-button,
-.v-ie8 .v-button {
-	overflow: visible;
-	padding-left: 1em;
-	padding-right: 1em;
 }
 /* Error indicator on checkbox fix for IE6 */
 .v-ie6 .v-checkbox * {
@@ -76,13 +158,8 @@
 	padding-left: 0;
 	padding-right: 0.7em;
 }
-/* Error indicator on button fix for IE */
-.v-ie6 button .v-errorindicator,
-.v-ie7 button .v-errorindicator,
-.v-ie8 button .v-errorindicator {
-	display: inline;
-	padding-right: 0.5em;
-}
+
+
 /* Disabled by default
 .v-checkbox-error {
 	background: #ffe0e0;

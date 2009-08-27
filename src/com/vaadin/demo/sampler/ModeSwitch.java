@@ -7,6 +7,7 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.Button.ClickEvent;
 
 @SuppressWarnings("serial")
@@ -45,7 +46,7 @@ public class ModeSwitch extends CustomComponent {
         if (idToButton.containsKey(id)) {
             removeMode(id);
         }
-        Button b = new Button();
+        Button b = new NativeButton();
         if (caption != null) {
             b.setCaption(caption);
         }

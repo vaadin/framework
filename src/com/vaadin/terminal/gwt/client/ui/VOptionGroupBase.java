@@ -58,7 +58,7 @@ abstract class VOptionGroupBase extends Composite implements Paintable, Field,
 
     private VTextField newItemField;
 
-    private VButton newItemButton;
+    private VNativeButton newItemButton;
 
     public VOptionGroupBase(String classname) {
         container = new FlowPanel();
@@ -155,7 +155,7 @@ abstract class VOptionGroupBase extends Composite implements Paintable, Field,
 
         if (uidl.getBooleanAttribute("allownewitem")) {
             if (newItemField == null) {
-                newItemButton = new VButton();
+                newItemButton = new VNativeButton();
                 newItemButton.setText("+");
                 newItemButton.addClickListener(this);
                 newItemField = new VTextField();

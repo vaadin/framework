@@ -1108,10 +1108,11 @@ public class ApplicationConnection {
         boolean enabled = !uidl.getBooleanAttribute("disabled");
         if (component instanceof FocusWidget) {
             FocusWidget fw = (FocusWidget) component;
-            fw.setEnabled(enabled);
             if (uidl.hasAttribute("tabindex")) {
                 fw.setTabIndex(uidl.getIntAttribute("tabindex"));
             }
+            // Disabled state may affect tabindex
+            fw.setEnabled(enabled);
         }
 
         StringBuffer styleBuf = new StringBuffer();

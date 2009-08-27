@@ -1,0 +1,79 @@
+.v-ie6 .v-nativebutton-link,
+.v-ie7 .v-nativebutton-link,
+.v-ie8 .v-nativebutton-link {
+	padding: 0;
+	text-align: left;
+}
+
+
+
+
+
+/**
+ * IE6 buttons --------------------------
+ */
+.v-ie6 .v-button {
+	border: 1px solid #b3b3b3;
+	border-bottom-color: #9a9a9a;
+	background: #d8d8d8 url(img/right.png) no-repeat 0 -1px;
+	padding: 0 15px;
+	height: 23px;
+}
+.v-ie6 .v-button .v-button-wrap {
+	background: transparent;
+	height: 20px;
+	padding: 3px 0 0;
+	display: inline;
+	zoom: 1;
+}
+.v-ie6 .v-button-primary {
+	background-image: url(img/primary-right.png);
+}
+.v-ie6 .v-button-small {
+	background-image: url(img/small-right.png);
+	height: 17px;
+}
+.v-ie6 .v-button-small .v-button-wrap {
+	height: 17px;
+	padding: 0;
+}
+.v-ie6 .v-button.v-pressed {
+	background: transparent url(img/right-pressed.png) no-repeat 0 -1px;
+}
+/* Buttons on blue background */
+.v-ie6 .blue .v-button {
+	border-color: #84949c;
+	border-top-color: #83939b;
+	border-bottom-color: #888d91;
+}
+/* Buttons on black background */
+.v-ie6 .black .v-button {
+	border: 1px solid #0d0e0f;
+	background: #202224 url(img/black/right.png) no-repeat 0 -1px;
+	color: #c9ccce;
+}
+.v-ie6 .black .v-button-primary {
+	background-image: url(img/black/primary-right.png);
+}
+.v-ie6 .black .v-button-small {
+	background-image: url(img/black/small-right.png);
+}
+.v-ie6 .black .v-button.v-pressed {
+	background-image: url(img/black/right-pressed.png);
+}
+
+
+/* Link style button */
+.v-ie6 .v-button-link,
+.v-ie6 .black .v-button-link {
+	background: transparent;
+	border: none;
+	height: auto;
+	line-height: normal;
+	padding: 0;
+}
+.v-ie6 .v-button-link .v-button-wrap,
+.v-ie6 .black .v-button-link .v-button-wrap {
+	padding: 0;
+	height: auto;
+}

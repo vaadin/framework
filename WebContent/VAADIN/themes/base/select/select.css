@@ -33,11 +33,9 @@
 	clear: left;
 }
 .v-select-twincol .v-button {
-	display: block;
 	float: left;
 }
 .v-select-twincol-buttons .v-button {
-	display: inline;
 	float: none;
 }
 .v-filterselect {

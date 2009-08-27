@@ -30,6 +30,7 @@ import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.PopupView;
 import com.vaadin.ui.SplitPanel;
@@ -358,7 +359,7 @@ public class SamplerApplication extends Application {
         }
 
         private Component createLogo() {
-            Button logo = new Button("", new Button.ClickListener() {
+            Button logo = new NativeButton("", new Button.ClickListener() {
                 public void buttonClick(ClickEvent event) {
                     setFeature((Feature) null);
                 }
@@ -371,7 +372,7 @@ public class SamplerApplication extends Application {
         }
 
         private Button createNextButton() {
-            Button b = new Button("", new ClickListener() {
+            Button b = new NativeButton("", new ClickListener() {
                 public void buttonClick(ClickEvent event) {
                     Object curr = currentFeature.getValue();
                     Object next = allFeatures.nextItemId(curr);
@@ -392,7 +393,7 @@ public class SamplerApplication extends Application {
         }
 
         private Button createPrevButton() {
-            Button b = new Button("", new ClickListener() {
+            Button b = new NativeButton("", new ClickListener() {
                 public void buttonClick(ClickEvent event) {
                     Object curr = currentFeature.getValue();
                     Object prev = allFeatures.prevItemId(curr);
@@ -409,7 +410,7 @@ public class SamplerApplication extends Application {
         }
 
         private Component createTreeSwitch() {
-            final Button b = new Button();
+            final Button b = new NativeButton();
             b.setStyleName("tree-switch");
             b.setDescription("Toggle sample tree visibility");
             b.addListener(new Button.ClickListener() {
@@ -716,7 +717,7 @@ public class SamplerApplication extends Application {
                     if (grid.getCursorX() == 0) {
                         grid.space();
                     }
-                    Button b = new Button();
+                    Button b = new NativeButton();
                     b.setStyleName(Button.STYLE_LINK);
                     b.addStyleName("screenshot");
                     String resId = "75-" + f.getIconName();

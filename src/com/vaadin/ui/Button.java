@@ -28,8 +28,6 @@ public class Button extends AbstractField {
 
     boolean switchMode = false;
 
-    private String primaryStyleName;
-
     /**
      * Creates a new push button. The value of the push button is false and it
      * is immediate by default.
@@ -137,9 +135,6 @@ public class Button extends AbstractField {
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
 
-        if (primaryStyleName != null) {
-            target.addAttribute("primarystyle", primaryStyleName);
-        }
         if (isSwitchMode()) {
             target.addAttribute("type", "switch");
         }
@@ -350,35 +345,6 @@ public class Button extends AbstractField {
                     + " only accepts Boolean values");
         }
         super.setInternalValue(newValue);
-    }
-
-    /**
-     * 
-     * <i><b>EXPERIMENTAL FEATURE</b> Use with caution, the method signature
-     * might change in following releases.</i>
-     * <p>
-     * Sets the components primary style name.
-     * <p>
-     * The primary style name is usually used on the client-side as the prefix
-     * for widget CSS classnames (this depends on the terminal implementation).
-     * The default primary styles are usually prefixed with Vaadin proprietary
-     * "v-" string, e.g. the primary style name for a default Vaadin button is
-     * "v-button".
-     * <p>
-     * With this method, you can change the primary style name to "mybutton",
-     * and then on the client-side you would have "mybutton" as the CSS
-     * classname. After that, all other style names you set for the component
-     * will be prefixed with the new primary style name, i.e. setting an
-     * additional style name "red" for the same button would result in a CSS
-     * classname "mybutton-red" on the client-side.
-     */
-    public void setPrimaryStyleName(String primary) {
-        primaryStyleName = primary;
-        requestRepaint();
-    }
-
-    public String getPrimaryStyleName() {
-        return primaryStyleName;
     }
 
 }

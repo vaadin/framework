@@ -1,0 +1,62 @@
+.v-button-primary:focus {
+	background-image: url(img/primary-left-focus.png); /** sprite-ref: buttons */
+	}
+	
+.v-button-primary:focus .v-button-wrap {
+	background-image: url(img/primary-right-focus.png); /** sprite-ref: buttons; sprite-alignment: right */
+	}
+	
+.v-button-primary:active,
+.v-button-primary.v-pressed {
+	background-image: url(img/primary-left-pressed.png); /** sprite-ref: buttons */
+	}
+
+.v-button-primary:active .v-button-wrap,
+.v-button-primary.v-pressed .v-button-wrap {
+	background-image: url(img/primary-right-pressed.png); /** sprite-ref: buttons; sprite-alignment: right */
+	}
+
+.v-button-primary,
+.v-disabled.v-button-primary {
+	background-image: url(img/primary-left.png); /** sprite-ref: buttons */
+	}
+	
+.v-button-primary .v-button-wrap,
+.v-disabled.v-button-primary .v-button-wrap {
+	background-image: url(img/primary-right.png); /** sprite-ref: buttons; sprite-alignment: right */
+	}
+	
+
+
+
+/* Black style */
+
+
+.black .v-button-primary:focus {
+	background-image: url(img/black/primary-left-focus.png); /** sprite-ref: black-buttons */
+	}
+	
+.black .v-button-primary:focus .v-button-wrap {
+	background-image: url(img/black/primary-right-focus.png); /** sprite-ref: black-buttons; sprite-alignment: right */
+	color: #eaf4fb;
+	}
+	
+.black .v-button-primary:active,
+.black .v-button-primary.v-pressed {
+	background-image: url(img/black/primary-left-pressed.png); /** sprite-ref: black-buttons */
+	}
+	
+.black .v-button-primary:active .v-button-wrap,
+.black .v-button-primary.v-pressed .v-button-wrap {
+	background-image: url(img/black/primary-right-pressed.png); /** sprite-ref: black-buttons; sprite-alignment: right */
+	}
+
+.black .v-button-primary,
+.black .v-disabled.v-button-primary {
+	background-image: url(img/black/primary-left.png); /** sprite-ref: black-buttons */
+	}
+	
+.black .v-button-primary .v-button-wrap,
+.black .v-disabled.v-button-primary .v-button-wrap {
+	background-image: url(img/black/primary-right.png); /** sprite-ref: black-buttons; sprite-alignment: right */
+	}

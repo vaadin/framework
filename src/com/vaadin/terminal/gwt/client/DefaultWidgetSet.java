@@ -22,6 +22,7 @@ import com.vaadin.terminal.gwt.client.ui.VLabel;
 import com.vaadin.terminal.gwt.client.ui.VLink;
 import com.vaadin.terminal.gwt.client.ui.VListSelect;
 import com.vaadin.terminal.gwt.client.ui.VMenuBar;
+import com.vaadin.terminal.gwt.client.ui.VNativeButton;
 import com.vaadin.terminal.gwt.client.ui.VNativeSelect;
 import com.vaadin.terminal.gwt.client.ui.VOptionGroup;
 import com.vaadin.terminal.gwt.client.ui.VOrderedLayout;
@@ -64,6 +65,8 @@ public class DefaultWidgetSet implements WidgetSet {
             return new VCheckBox();
         } else if (VButton.class == classType) {
             return new VButton();
+        } else if (VNativeButton.class == classType) {
+            return new VNativeButton();
         } else if (VWindow.class == classType) {
             return new VWindow();
         } else if (VOrderedLayout.class == classType) {
@@ -150,9 +153,11 @@ public class DefaultWidgetSet implements WidgetSet {
 
     protected Class resolveWidgetType(UIDL uidl) {
         final String tag = uidl.getTag();
-        if ("button".equals(tag)) {
+        if ("button".equals(tag) || "nativebutton".equals(tag)) {
             if ("switch".equals(uidl.getStringAttribute("type"))) {
                 return VCheckBox.class;
+            } else if ("nativebutton".equals(tag)) {
+                return VNativeButton.class;
             } else {
                 return VButton.class;
             }

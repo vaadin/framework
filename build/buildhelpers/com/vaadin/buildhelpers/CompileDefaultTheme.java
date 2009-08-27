@@ -41,6 +41,8 @@ public class CompileDefaultTheme {
      *            inheritance). The order is the same in which the styles are
      *            catenated. The resulted file is placed in the last specified
      *            theme folder.
+     * 
+     * @param
      * @throws IOException
      */
     private static void combineTheme(String[] themeNames,
@@ -54,53 +56,19 @@ public class CompileDefaultTheme {
                     .append("/* Automatically compiled css file from subdirectories. */\n");
 
             File[] subdir = f.listFiles();
-            Arrays.sort(subdir, new Comparator() {
-                public int compare(Object arg0, Object arg1) {
-                    return ((File) arg0).compareTo((File) arg1);
+            Arrays.sort(subdir, new Comparator<File>() {
+                public int compare(File arg0, File arg1) {
+                    return arg0.compareTo(arg1);
                 }
             });
 
             for (int i = 0; i < subdir.length; i++) {
                 File dir = subdir[i];
-                String name = dir.getName();
-                String filename = dir.getPath() + "/" + name + ".css";
+                String folder = dir.getName();
+                String filename = dir.getPath() + "/" + folder + ".css";
 
-                File cssFile = new File(filename);
-                if (cssFile.isFile()) {
-
-                    combinedCss.append("\n");
-                    combinedCss.append("/* " + filename.replaceAll("\\\\", "/")
-                            + " */");
-                    combinedCss.append("\n");
-
-                    FileInputStream fstream = new FileInputStream(cssFile);
-                    // Get the object of DataInputStream
-                    DataInputStream in = new DataInputStream(fstream);
-                    BufferedReader br = new BufferedReader(
-                            new InputStreamReader(in));
-                    String strLine;
-                    while ((strLine = br.readLine()) != null) {
-                        // Define image url prefix
-                        String urlPrefix = "";
-                        if (j < themeNames.length - 1) {
-                            urlPrefix = "../" + themeNames[j] + "/";
-                        }
-
-                        if (strLine.indexOf("url(../") > 0) {
-                            strLine = strLine.replaceAll("url\\(../",
-                                    ("url\\(" + urlPrefix));
-
-                        } else {
-                            strLine = strLine.replaceAll("url\\(", ("url\\("
-                                    + urlPrefix + name + "/"));
-
-                        }
-                        combinedCss.append(strLine);
-                        combinedCss.append("\n");
-                    }
-                    // Close the input stream
-                    in.close();
-                }
+                processCSSFile(new File(filename), folder, themeNames[j],
+                        combinedCss, j < themeNames.length - 1);
             }
         }
 
@@ -128,6 +96,68 @@ public class CompileDefaultTheme {
                 System.out.println("Rename " + newCss + " -> " + oldCss
                         + " failed");
             }
+        }
+    }
+
+    private static void processCSSFile(File cssFile, String folder,
+            String themeName, StringBuffer combinedCss, boolean inheritedFile)
+            throws FileNotFoundException, IOException {
+        if (cssFile.isFile()) {
+
+            combinedCss.append("\n");
+
+            FileInputStream fstream = new FileInputStream(cssFile);
+            // Get the object of DataInputStream
+            DataInputStream in = new DataInputStream(fstream);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            String strLine;
+            while ((strLine = br.readLine()) != null) {
+
+                // Parse import rules
+                if (strLine.startsWith("@import")) {
+                    // All import statements must be exactly
+                    // @import "file-to-import.css";
+                    // No sub-directories are allowed in the url
+                    String importFilename = strLine.split("\"")[1];
+
+                    File importFile = new File(THEME_DIR + themeName + "/"
+                            + folder + "/" + importFilename);
+                    if (importFile.isFile()) {
+                        processCSSFile(importFile, folder, themeName,
+                                combinedCss, inheritedFile);
+                    } else {
+                        System.out
+                                .println("File not found for @import statement "
+                                        + THEME_DIR
+                                        + themeName
+                                        + "/"
+                                        + folder
+                                        + "/" + importFilename);
+                    }
+                }
+
+                // Define image url prefix
+                String urlPrefix = "";
+                if (inheritedFile) {
+                    urlPrefix = "../" + themeName + "/";
+                }
+
+                if (strLine.indexOf("url(../") > 0) {
+                    strLine = strLine.replaceAll("url\\(../",
+                            ("url\\(" + urlPrefix));
+
+                } else {
+                    strLine = strLine.replaceAll("url\\(", ("url\\("
+                            + urlPrefix + folder + "/"));
+
+                }
+                if (!strLine.startsWith("@import")) {
+                    combinedCss.append(strLine);
+                    combinedCss.append("\n");
+                }
+            }
+            // Close the input stream
+            in.close();
         }
     }
 
