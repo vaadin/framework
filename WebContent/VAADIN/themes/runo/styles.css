@@ -1696,27 +1696,73 @@ div.v-tree-node-leaf {
 	border-bottom: 1px solid #c8cccd;
 }
 
-.v-button {
+.v-button:focus {
+	border-color: #4897dc;
+	outline: none;
+	}
+	
+.v-button:active,
+.v-button.v-pressed {
+	background-position: left bottom;
+	border-color: #babfc0;
+	border-top-color: #a5abac;
+	}
+
+.v-button,
+.v-disabled.v-button {
 	font-size: 13px;
-}
+	border: 1px solid #babfc0;
+	border-bottom-color: #a5abac;
+	background: #fff url(button/img/bg.png);
+	padding: 3px 15px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	font-size: 12px;
+	line-height: 16px;
+	min-height: 16px;
+	}
+
+
+/* Small style */
+
+.v-button-small {
+	font-size: 11px;
+	line-height: 14px;
+	padding: 1px 15px;
+	min-height: 14px;
+	}
+
+
+/* Link style */
+.v-button-link {
+	border: none;
+	background: transparent;
+	padding: 0;
+	font-size: 13px;
+	}
+
+.v-button-link:focus {
+	outline: 1px dotted #4897dc;
+	}
+
+
+
+
+/* Checkbox styles */
 .v-checkbox .v-errorindicator {
 	padding-left: 10px;
-}
-.v-ie6 .v-button,
-.v-ie7 .v-button {
-	padding-left: 10px;
-	padding-right: 10px;
-}
+	}
 .v-ie6 .v-checkbox .v-errorindicator {
 	padding-right: 4px;
-}
+	}
 .v-ie7 .v-checkbox .v-errorindicator {
 	padding-right: 7px;
-}
+	}
 .v-ie6 .v-button .v-errorindicator,
 .v-ie7 .v-button .v-errorindicator {
 	padding-right: 5px;
-}
+	}
 
 .v-captionwrapper {
 	margin: 0.3em 0 0 0;
