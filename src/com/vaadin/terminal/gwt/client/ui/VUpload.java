@@ -9,7 +9,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -61,7 +60,7 @@ public class VUpload extends FormPanel implements Paintable,
     /**
      * Button that initiates uploading
      */
-    private final Button submitButton;
+    private final VButton submitButton;
 
     /**
      * When expecting big files, programmer may initiate some UI changes when
@@ -91,8 +90,7 @@ public class VUpload extends FormPanel implements Paintable,
         setWidget(panel);
         panel.add(maxfilesize);
         panel.add(fu);
-        submitButton = new Button();
-        submitButton.setStyleName("v-button");
+        submitButton = new VButton();
         submitButton.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 if (immediate) {
@@ -119,8 +117,7 @@ public class VUpload extends FormPanel implements Paintable,
         this.client = client;
         paintableId = uidl.getId();
         setAction(client.getAppUri());
-        submitButton.setHTML("<span class=\"v-button-caption\">"
-                + uidl.getStringAttribute("buttoncaption") + "</span>");
+        submitButton.setText(uidl.getStringAttribute("buttoncaption"));
         fu.setName(paintableId + "_file");
 
         if (uidl.hasAttribute("disabled") || uidl.hasAttribute("readonly")) {
