@@ -913,17 +913,22 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                 // just go ahead redirect the browser
                 response.sendRedirect(ci.getSessionExpiredURL());
             } else {
+                /*
+                 * Invalidate session (weird to have session if we're saying
+                 * that it's expired, and worse: portal integration will fail
+                 * since the session is not created by the portal.
+                 * 
+                 * Session must be invalidated before criticalNotification as it
+                 * commits the response.
+                 */
+                request.getSession().invalidate();
+
                 // send uidl redirect
                 criticalNotification(request, response, ci
                         .getSessionExpiredCaption(), ci
                         .getSessionExpiredMessage(), null, ci
                         .getSessionExpiredURL());
-                /*
-                 * Invalidate session (weird to have session if we're saying
-                 * that it's expired, and worse: portal integration will fail
-                 * since the session is not created by the portal.
-                 */
-                request.getSession().invalidate();
+
             }
         } catch (SystemMessageException ee) {
             throw new ServletException(ee);
