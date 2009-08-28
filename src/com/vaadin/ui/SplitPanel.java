@@ -127,6 +127,20 @@ public class SplitPanel extends AbstractLayout {
     }
 
     /**
+     * @return the first Component of this SplitPanel.
+     */
+    public Component getFirstComponent() {
+        return firstComponent;
+    }
+
+    /**
+     * @return the second Component of this SplitPanel.
+     */
+    public Component getSecondComponent() {
+        return secondComponent;
+    }
+
+    /**
      * Removes the component from this container.
      * 
      * @param c
