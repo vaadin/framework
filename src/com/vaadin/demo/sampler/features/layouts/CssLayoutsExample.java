@@ -32,7 +32,7 @@ public class CssLayoutsExample extends VerticalLayout {
         panel.setStyleName("floatedpanel");
         panel.setWidth("30%");
         panel.setHeight("370px");
-        panel.addComponent(new Label("This panel is 30% wide"
+        panel.addComponent(new Label("This panel is 30% wide "
                 + "and 370px high (defined on the server side) "
                 + "and floated right (with custom css). "
                 + "Try resizing the browser window to see "
