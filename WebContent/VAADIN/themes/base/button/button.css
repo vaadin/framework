@@ -105,12 +105,14 @@
 .v-ie6 .v-nativebutton {
 	width: 1px;
 }
-.v-ie6 .v-nativebutton,
-.v-ie7 .v-nativebutton,
-.v-ie8 .v-nativebutton {
+.v-ie .v-nativebutton {
 	overflow: visible;
 	padding-left: 1em;
 	padding-right: 1em;
+}
+
+.v-ie .v-nativebutton-link {
+	padding: 0;
 }
 
 /*

@@ -44,6 +44,10 @@ public class VButton extends FocusWidget implements Paintable {
      */
     private boolean clickPending;
 
+    private boolean enabled = true;
+
+    private int tabIndex = 0;
+
     /*
      * BELOW PRIVATE MEMBERS COPY-PASTED FROM GWT CustomButton
      */
@@ -62,10 +66,8 @@ public class VButton extends FocusWidget implements Paintable {
      * Used to decide whether to allow clicks to propagate up to the superclass
      * or container elements.
      */
-    private boolean allowClick;
+    private boolean disallowNextClick = false;
     private boolean isHovering;
-    private boolean enabled = true;
-    private int tabIndex = 0;
 
     public VButton() {
         super(DOM.createDiv());
@@ -178,17 +180,20 @@ public class VButton extends FocusWidget implements Paintable {
         }
 
         int type = DOM.eventGetType(event);
+        System.out.println(DOM.eventGetTypeString(event));
         switch (type) {
         case Event.ONCLICK:
             // If clicks are currently disallowed, keep it from bubbling or
             // being passed to the superclass.
-            if (!allowClick) {
+            if (disallowNextClick) {
                 event.stopPropagation();
+                disallowNextClick = false;
                 return;
             }
             break;
         case Event.ONMOUSEDOWN:
             if (event.getButton() == Event.BUTTON_LEFT) {
+                disallowNextClick = true;
                 clickPending = true;
                 setFocus(true);
                 DOM.setCapture(getElement());
@@ -205,7 +210,8 @@ public class VButton extends FocusWidget implements Paintable {
                 isCapturing = false;
                 DOM.releaseCapture(getElement());
                 if (isHovering() && event.getButton() == Event.BUTTON_LEFT) {
-                    onClick();
+                    // Click ok
+                    disallowNextClick = false;
                 }
                 if (BrowserInfo.get().isIE() || BrowserInfo.get().isOpera()) {
                     removeStyleName(CLASSNAME_PRESSED);
@@ -309,15 +315,14 @@ public class VButton extends FocusWidget implements Paintable {
         // Allow the click we're about to synthesize to pass through to the
         // superclass and containing elements. Element.dispatchEvent() is
         // synchronous, so we simply set and clear the flag within this method.
-        allowClick = true;
+
+        disallowNextClick = false;
 
         // Mouse coordinates are not always available (e.g., when the click is
         // caused by a keyboard event).
         NativeEvent evt = Document.get().createClickEvent(1, 0, 0, 0, 0, false,
                 false, false, false);
         getElement().dispatchEvent(evt);
-
-        allowClick = false;
     }
 
     /**
