@@ -13,9 +13,9 @@ public class CssLayoutsExample extends VerticalLayout {
         setMargin(true);
 
         /*
-         * Note that adding inline style like this is a very bad programming
-         * habit in common. The correct place for css is in theme. We do it here
-         * to keep css in java code for demonstration purposes.
+         * Note that adding inline style like this is a very, VERY bad
+         * programming habit. The correct place for CSS is in the theme. We do
+         * it here to keep the CSS in the java code for demonstration purposes.
          */
         Label demostyle = new Label(
                 "<style>"
@@ -32,16 +32,16 @@ public class CssLayoutsExample extends VerticalLayout {
         panel.setStyleName("floatedpanel");
         panel.setWidth("30%");
         panel.setHeight("370px");
-        panel.addComponent(new Label("This panel is 30% width "
-                + "and 370px height(defined on server side) "
+        panel.addComponent(new Label("This panel is 30% wide"
+                + "and 370px high (defined on the server side) "
                 + "and floated right (with custom css). "
-                + "Try resizesing browser window to see "
-                + "how black boxes (floated to left) "
-                + "behave. Every third of them has red "
-                + "color to demonstrate dynamic css injection. "));
+                + "Try resizing the browser window to see "
+                + "how the black boxes (floated left) "
+                + "behave. Every third of them has colored text "
+                + "to demonstrate the dynamic css injection."));
 
         final Label bottomCenter = new Label(
-                "I'm 3 inches wide footer at the bottom "
+                "I'm a 3 inches wide footer at the bottom "
                         + "of the layout (and centered unless I'm in IE6)");
         bottomCenter.setSizeUndefined(); // disable 100% default width
         bottomCenter.setStyleName("footer");
@@ -56,7 +56,7 @@ public class CssLayoutsExample extends VerticalLayout {
                 if (c instanceof Brick) {
                     brickCounter++;
                     if (brickCounter % 3 == 0) {
-                        // make every third brick red and bold
+                        // make every third brick colored and bold
                         return "color: #ff6611; font-weight:bold;";
                     }
                 }
