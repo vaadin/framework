@@ -22,6 +22,7 @@ import com.vaadin.demo.sampler.features.dates.DatePopup;
 import com.vaadin.demo.sampler.features.dates.DateResolution;
 import com.vaadin.demo.sampler.features.form.FormBasic;
 import com.vaadin.demo.sampler.features.layouts.ApplicationLayout;
+import com.vaadin.demo.sampler.features.layouts.CssLayouts;
 import com.vaadin.demo.sampler.features.layouts.CustomLayouts;
 import com.vaadin.demo.sampler.features.layouts.ExpandingComponent;
 import com.vaadin.demo.sampler.features.layouts.GridLayoutBasic;
@@ -247,6 +248,7 @@ public class FeatureSet extends Feature {
                             new ApplicationLayout(), //
                             new WebLayout(), //
                             new CustomLayouts(), //
+                            new CssLayouts(),//
                     });
         }
     }

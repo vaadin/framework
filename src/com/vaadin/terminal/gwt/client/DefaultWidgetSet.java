@@ -14,6 +14,7 @@ import com.vaadin.terminal.gwt.client.ui.VCustomLayout;
 import com.vaadin.terminal.gwt.client.ui.VDateFieldCalendar;
 import com.vaadin.terminal.gwt.client.ui.VEmbedded;
 import com.vaadin.terminal.gwt.client.ui.VFilterSelect;
+import com.vaadin.terminal.gwt.client.ui.VCssLayout;
 import com.vaadin.terminal.gwt.client.ui.VForm;
 import com.vaadin.terminal.gwt.client.ui.VFormLayout;
 import com.vaadin.terminal.gwt.client.ui.VGridLayout;
@@ -145,6 +146,8 @@ public class DefaultWidgetSet implements WidgetSet {
             return new VUriFragmentUtility();
         } else if (VAbsoluteLayout.class == classType) {
             return new VAbsoluteLayout();
+        } else if (VCssLayout.class == classType) {
+            return new VCssLayout();
         }
 
         return new VUnknownComponent();
@@ -259,6 +262,8 @@ public class DefaultWidgetSet implements WidgetSet {
             return VUriFragmentUtility.class;
         } else if (VAbsoluteLayout.TAGNAME.equals(tag)) {
             return VAbsoluteLayout.class;
+        } else if (VCssLayout.TAGNAME.equals(tag)) {
+            return VCssLayout.class;
         }
 
         return VUnknownComponent.class;
