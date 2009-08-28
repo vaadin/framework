@@ -1,23 +1,23 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal.gwt.client.ui;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
-public class VLink extends HTML implements Paintable, ClickListener {
+public class VLink extends HTML implements Paintable, ClickHandler {
 
     public static final String CLASSNAME = "v-link";
 
@@ -53,7 +53,7 @@ public class VLink extends HTML implements Paintable, ClickListener {
         super();
         getElement().appendChild(anchor);
         anchor.appendChild(captionElement);
-        addClickListener(this);
+        addClickHandler(this);
         sinkEvents(VTooltip.TOOLTIP_EVENTS);
         setStyleName(CLASSNAME);
     }
@@ -120,7 +120,7 @@ public class VLink extends HTML implements Paintable, ClickListener {
 
     }
 
-    public void onClick(Widget sender) {
+    public void onClick(ClickEvent event) {
         if (enabled && !readonly) {
             if (target == null) {
                 target = "_self";

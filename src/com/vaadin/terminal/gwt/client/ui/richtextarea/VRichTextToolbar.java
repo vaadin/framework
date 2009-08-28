@@ -1,12 +1,12 @@
 /*
  * Copyright 2007 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -16,15 +16,17 @@
 package com.vaadin.terminal.gwt.client.ui.richtextarea;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ImageBundle;
-import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.RichTextArea;
@@ -181,8 +183,8 @@ public class VRichTextToolbar extends Composite {
      * We use an inner EventListener class to avoid exposing event methods on
      * the RichTextToolbar itself.
      */
-    private class EventListener implements ClickListener, ChangeListener,
-            KeyboardListener {
+    private class EventListener implements ClickHandler, ChangeListener,
+            KeyUpHandler {
 
         public void onChange(Widget sender) {
             if (sender == backColors) {
@@ -203,7 +205,8 @@ public class VRichTextToolbar extends Composite {
             }
         }
 
-        public void onClick(Widget sender) {
+        public void onClick(ClickEvent event) {
+            Object sender = event.getSource();
             if (sender == bold) {
                 basic.toggleBold();
             } else if (sender == italic) {
@@ -259,17 +262,11 @@ public class VRichTextToolbar extends Composite {
             }
         }
 
-        public void onKeyDown(Widget sender, char keyCode, int modifiers) {
-        }
-
-        public void onKeyPress(Widget sender, char keyCode, int modifiers) {
-        }
-
-        public void onKeyUp(Widget sender, char keyCode, int modifiers) {
-            if (sender == richText) {
+        public void onKeyUp(KeyUpEvent event) {
+            if (event.getSource() == richText) {
                 // We use the RichTextArea's onKeyUp event to update the toolbar
                 // status.
-                // This will catch any cases where the user moves the cursur
+                // This will catch any cases where the user moves the cursor
                 // using the
                 // keyboard, or uses one of the browser's built-in keyboard
                 // shortcuts.
@@ -321,7 +318,7 @@ public class VRichTextToolbar extends Composite {
 
     /**
      * Creates a new toolbar that drives the given rich text area.
-     * 
+     *
      * @param richText
      *            the rich text area to be controlled
      */
@@ -388,8 +385,8 @@ public class VRichTextToolbar extends Composite {
             // We only use these listeners for updating status, so don't hook
             // them up
             // unless at least basic editing is supported.
-            richText.addKeyboardListener(listener);
-            richText.addClickListener(listener);
+            richText.addKeyUpHandler(listener);
+            richText.addClickHandler(listener);
         }
     }
 
@@ -442,7 +439,7 @@ public class VRichTextToolbar extends Composite {
 
     private PushButton createPushButton(AbstractImagePrototype img, String tip) {
         final PushButton pb = new PushButton(img.createImage());
-        pb.addClickListener(listener);
+        pb.addClickHandler(listener);
         pb.setTitle(tip);
         return pb;
     }
@@ -450,7 +447,7 @@ public class VRichTextToolbar extends Composite {
     private ToggleButton createToggleButton(AbstractImagePrototype img,
             String tip) {
         final ToggleButton tb = new ToggleButton(img.createImage());
-        tb.addClickListener(listener);
+        tb.addClickHandler(listener);
         tb.setTitle(tip);
         return tb;
     }

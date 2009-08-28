@@ -1,14 +1,14 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal.gwt.client.ui;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -34,13 +34,13 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
 
     public VCheckBox() {
         setStyleName(CLASSNAME);
-        addClickListener(new ClickListener() {
+        addClickHandler(new ClickHandler() {
 
-            public void onClick(Widget sender) {
+            public void onClick(ClickEvent event) {
                 if (id == null || client == null) {
                     return;
                 }
-                client.updateVariable(id, "state", isChecked(), immediate);
+                client.updateVariable(id, "state", getValue(), immediate);
             }
 
         });
@@ -97,15 +97,15 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
 
         // Set text
         setText(uidl.getStringAttribute("caption"));
-        setChecked(uidl.getBooleanVariable("state"));
+        setValue(uidl.getBooleanVariable("state"));
         immediate = uidl.getBooleanAttribute("immediate");
     }
 
     @Override
     public void onBrowserEvent(Event event) {
         if (icon != null && (event.getTypeInt() == Event.ONCLICK)
-                && (event.getTarget() == icon.getElement())) {
-            setChecked(!isChecked());
+                && (DOM.eventGetTarget(event) == icon.getElement())) {
+            setValue(!getValue());
         }
         super.onBrowserEvent(event);
         if (event.getTypeInt() == Event.ONLOAD) {

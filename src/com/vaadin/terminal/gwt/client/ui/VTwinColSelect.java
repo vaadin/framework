@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -7,12 +7,12 @@ package com.vaadin.terminal.gwt.client.ui;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.UIDL;
 
 public class VTwinColSelect extends VOptionGroupBase {
@@ -40,9 +40,9 @@ public class VTwinColSelect extends VOptionGroupBase {
     public VTwinColSelect() {
         super(CLASSNAME);
         options = new ListBox();
-        options.addClickListener(this);
+        options.addClickHandler(this);
         selections = new ListBox();
-        selections.addClickListener(this);
+        selections.addClickHandler(this);
         options.setVisibleItemCount(VISIBLE_COUNT);
         selections.setVisibleItemCount(VISIBLE_COUNT);
         options.setStyleName(CLASSNAME + "-options");
@@ -51,10 +51,10 @@ public class VTwinColSelect extends VOptionGroupBase {
         buttons.setStyleName(CLASSNAME + "-buttons");
         add = new VButton();
         add.setText(">>");
-        add.addClickListener(this);
+        add.addClickHandler(this);
         remove = new VButton();
         remove.setText("<<");
-        remove.addClickListener(this);
+        remove.addClickHandler(this);
         panel = ((Panel) optionsContainer);
         panel.add(options);
         buttons.add(add);
@@ -143,9 +143,9 @@ public class VTwinColSelect extends VOptionGroupBase {
     }
 
     @Override
-    public void onClick(Widget sender) {
-        super.onClick(sender);
-        if (sender == add) {
+    public void onClick(ClickEvent event) {
+        super.onClick(event);
+        if (event.getSource() == add) {
             final boolean[] sel = getItemsToAdd();
             for (int i = 0; i < sel.length; i++) {
                 if (sel[i]) {
@@ -165,7 +165,7 @@ public class VTwinColSelect extends VOptionGroupBase {
             client.updateVariable(id, "selected", selectedKeys.toArray(),
                     isImmediate());
 
-        } else if (sender == remove) {
+        } else if (event.getSource() == remove) {
             final boolean[] sel = getItemsToRemove();
             for (int i = 0; i < sel.length; i++) {
                 if (sel[i]) {
@@ -183,13 +183,13 @@ public class VTwinColSelect extends VOptionGroupBase {
             }
             client.updateVariable(id, "selected", selectedKeys.toArray(),
                     isImmediate());
-        } else if (sender == options) {
+        } else if (event.getSource() == options) {
             // unselect all in other list, to avoid mistakes (i.e wrong button)
             final int c = selections.getItemCount();
             for (int i = 0; i < c; i++) {
                 selections.setItemSelected(i, false);
             }
-        } else if (sender == selections) {
+        } else if (event.getSource() == selections) {
             // unselect all in other list, to avoid mistakes (i.e wrong button)
             final int c = options.getItemCount();
             for (int i = 0; i < c; i++) {

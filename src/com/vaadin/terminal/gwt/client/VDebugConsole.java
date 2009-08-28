@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -16,7 +18,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -109,8 +110,8 @@ public final class VDebugConsole extends VOverlay implements Console {
 
             panel.add(new HTML("<i>" + help + "</i>"));
 
-            clear.addClickListener(new ClickListener() {
-                public void onClick(Widget sender) {
+            clear.addClickHandler(new ClickHandler() {
+                public void onClick(ClickEvent event) {
                     int width = panel.getOffsetWidth();
                     int height = panel.getOffsetHeight();
                     panel = new FlowPanel();
@@ -121,8 +122,8 @@ public final class VDebugConsole extends VOverlay implements Console {
                 }
             });
 
-            restart.addClickListener(new ClickListener() {
-                public void onClick(Widget sender) {
+            restart.addClickHandler(new ClickHandler() {
+                public void onClick(ClickEvent event) {
 
                     String queryString = Window.Location.getQueryString();
                     if (queryString != null
@@ -148,14 +149,14 @@ public final class VDebugConsole extends VOverlay implements Console {
                 }
             });
 
-            forceLayout.addClickListener(new ClickListener() {
-                public void onClick(Widget sender) {
+            forceLayout.addClickHandler(new ClickHandler() {
+                public void onClick(ClickEvent event) {
                     VDebugConsole.this.client.forceLayout();
                 }
             });
 
-            analyzeLayout.addClickListener(new ClickListener() {
-                public void onClick(Widget sender) {
+            analyzeLayout.addClickHandler(new ClickHandler() {
+                public void onClick(ClickEvent event) {
                     List<ApplicationConnection> runningApplications = ApplicationConfiguration
                             .getRunningApplications();
                     for (ApplicationConnection applicationConnection : runningApplications) {
@@ -291,7 +292,7 @@ public final class VDebugConsole extends VOverlay implements Console {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.terminal.gwt.client.Console#log(java.lang.String)
      */
     public void log(String msg) {
@@ -302,7 +303,7 @@ public final class VDebugConsole extends VOverlay implements Console {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.terminal.gwt.client.Console#error(java.lang.String)
      */
     public void error(String msg) {
@@ -313,7 +314,7 @@ public final class VDebugConsole extends VOverlay implements Console {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.terminal.gwt.client.Console#printObject(java.lang.
      * Object)
      */
@@ -324,7 +325,7 @@ public final class VDebugConsole extends VOverlay implements Console {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.terminal.gwt.client.Console#dirUIDL(com.vaadin
      * .terminal.gwt.client.UIDL)
      */
@@ -345,7 +346,7 @@ public final class VDebugConsole extends VOverlay implements Console {
                  $wnd.console.log(u);
              }
          }
-        
+
     }-*/;
 
     private static native void consoleLog(String msg)
@@ -418,12 +419,12 @@ public final class VDebugConsole extends VOverlay implements Console {
                     + " inside " + Util.getSimpleName(layout)));
             final CheckBox emphasisInUi = new CheckBox(
                     "Emphasis components parent in UI (actual component is not visible)");
-            emphasisInUi.addClickListener(new ClickListener() {
-                public void onClick(Widget sender) {
+            emphasisInUi.addClickHandler(new ClickHandler() {
+                public void onClick(ClickEvent event) {
                     if (paintable != null) {
                         Element element2 = ((Widget) layout).getElement();
                         Widget.setStyleName(element2, "invalidlayout",
-                                emphasisInUi.isChecked());
+                                emphasisInUi.getValue());
                     }
                 }
             });
@@ -450,12 +451,12 @@ public final class VDebugConsole extends VOverlay implements Console {
                     + valueMap.getString("widthMsg")));
         }
         final CheckBox emphasisInUi = new CheckBox("Emphasis component in UI");
-        emphasisInUi.addClickListener(new ClickListener() {
-            public void onClick(Widget sender) {
+        emphasisInUi.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
                 if (paintable != null) {
                     Element element2 = ((Widget) paintable).getElement();
                     Widget.setStyleName(element2, "invalidlayout", emphasisInUi
-                            .isChecked());
+                            .getValue());
                 }
             }
         });

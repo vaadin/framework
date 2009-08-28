@@ -5,10 +5,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -124,7 +125,7 @@ public class VAccordion extends VTabsheetBase implements
      * same StackItem is used for rendering this time. E.g. if the first tab has
      * been removed all tabs which contain cached content must be moved 1 step
      * up to preserve the cached content.
-     * 
+     *
      * @param item
      * @param newIndex
      * @param tabUidl
@@ -352,9 +353,9 @@ public class VAccordion extends VTabsheetBase implements
     }
 
     /**
-     * 
+     *
      */
-    protected class StackItem extends ComplexPanel implements ClickListener {
+    protected class StackItem extends ComplexPanel implements ClickHandler {
 
         public void setHeight(int height) {
             if (height == -1) {
@@ -395,7 +396,7 @@ public class VAccordion extends VTabsheetBase implements
 
         /**
          * Returns caption width including padding
-         * 
+         *
          * @return
          */
         public int getCaptionWidth() {
@@ -433,7 +434,7 @@ public class VAccordion extends VTabsheetBase implements
         public StackItem(UIDL tabUidl) {
             setElement(DOM.createDiv());
             caption = new VCaption(null, client);
-            caption.addClickListener(this);
+            caption.addClickHandler(this);
             if (BrowserInfo.get().isIE6()) {
                 DOM.setEventListener(captionNode, this);
                 DOM.sinkEvents(captionNode, Event.BUTTON_LEFT);
@@ -523,7 +524,7 @@ public class VAccordion extends VTabsheetBase implements
             }
         }
 
-        public void onClick(Widget sender) {
+        public void onClick(ClickEvent event) {
             onSelectTab(this);
         }
 

@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -6,11 +6,14 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.Set;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -19,7 +22,7 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 
 abstract class VOptionGroupBase extends Composite implements Paintable, Field,
-        ClickListener, ChangeListener, KeyboardListener, Focusable {
+        ClickHandler, ChangeListener, KeyPressHandler, Focusable {
 
     public static final String CLASSNAME_OPTION = "v-select-option";
 
@@ -157,9 +160,9 @@ abstract class VOptionGroupBase extends Composite implements Paintable, Field,
             if (newItemField == null) {
                 newItemButton = new VNativeButton();
                 newItemButton.setText("+");
-                newItemButton.addClickListener(this);
+                newItemButton.addClickHandler(this);
                 newItemField = new VTextField();
-                newItemField.addKeyboardListener(this);
+                newItemField.addKeyPressHandler(this);
             }
             newItemField.setEnabled(!disabled && !readonly);
             newItemButton.setEnabled(!disabled && !readonly);
@@ -183,8 +186,9 @@ abstract class VOptionGroupBase extends Composite implements Paintable, Field,
 
     abstract protected void setTabIndex(int tabIndex);
 
-    public void onClick(Widget sender) {
-        if (sender == newItemButton && !newItemField.getText().equals("")) {
+    public void onClick(ClickEvent event) {
+        if (event.getSource() == newItemButton
+                && !newItemField.getText().equals("")) {
             client.updateVariable(id, "newitem", newItemField.getText(), true);
             newItemField.setText("");
         }
@@ -201,18 +205,11 @@ abstract class VOptionGroupBase extends Composite implements Paintable, Field,
         }
     }
 
-    public void onKeyPress(Widget sender, char keyCode, int modifiers) {
-        if (sender == newItemField && keyCode == KeyboardListener.KEY_ENTER) {
+    public void onKeyPress(KeyPressEvent event) {
+        if (event.getSource() == newItemField
+                && event.getCharCode() == KeyCodes.KEY_ENTER) {
             newItemButton.click();
         }
-    }
-
-    public void onKeyUp(Widget sender, char keyCode, int modifiers) {
-        // Ignore, subclasses may override
-    }
-
-    public void onKeyDown(Widget sender, char keyCode, int modifiers) {
-        // Ignore, subclasses may override
     }
 
     protected abstract void buildOptions(UIDL uidl);

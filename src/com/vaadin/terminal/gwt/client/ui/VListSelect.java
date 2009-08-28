@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -30,7 +30,7 @@ public class VListSelect extends VOptionGroupBase {
         select = (TooltipListBox) optionsContainer;
         select.setSelect(this);
         select.addChangeListener(this);
-        select.addClickListener(this);
+        select.addClickHandler(this);
         select.setStyleName(CLASSNAME + "-select");
         select.setVisibleItemCount(VISIBLE_COUNT);
     }

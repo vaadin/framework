@@ -1,5 +1,6 @@
 package com.vaadin.demo.sampler.gwt.client.ui;
 
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.MouseListener;
@@ -41,7 +42,7 @@ public class VActiveLink extends VLink {
     /**
      * Sends variables, returns true if default handler should be called (i.e if
      * server is listening and the link was claimed to be opened by the client)
-     * 
+     *
      * @return
      */
     private boolean sendVariables() {
@@ -63,11 +64,11 @@ public class VActiveLink extends VLink {
     }
 
     @Override
-    public void onClick(Widget sender) {
+    public void onClick(ClickEvent event) {
 
         if (sendVariables()) {
             // run default if not listening, or we claimed link was opened
-            super.onClick(sender);
+            super.onClick(event);
         }
     }
 

@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -10,18 +10,23 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusListener;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.LoadListener;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -38,11 +43,11 @@ import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
 /**
- * 
+ *
  * TODO needs major refactoring (to be extensible etc)
  */
 public class VFilterSelect extends Composite implements Paintable, Field,
-        KeyboardListener, ClickListener, FocusListener, Focusable {
+        KeyDownHandler, KeyUpHandler, ClickHandler, FocusListener, Focusable {
 
     public class FilterSelectSuggestion implements Suggestion, Command {
 
@@ -276,7 +281,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see
          * com.google.gwt.user.client.ui.PopupPanel$PositionCallback#setPosition
          * (int, int)
@@ -599,11 +604,12 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         panel.add(popupOpener);
         initWidget(panel);
         setStyleName(CLASSNAME);
-        tb.addKeyboardListener(this);
+        tb.addKeyDownHandler(this);
+        tb.addKeyUpHandler(this);
         tb.setStyleName(CLASSNAME + "-input");
         tb.addFocusListener(this);
         popupOpener.setStyleName(CLASSNAME + "-button");
-        popupOpener.addClickListener(this);
+        popupOpener.addClickHandler(this);
     }
 
     public boolean hasNextPage() {
@@ -840,22 +846,22 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 marginTop + "px");
     }
 
-    public void onKeyDown(Widget sender, char keyCode, int modifiers) {
+    public void onKeyDown(KeyDownEvent event) {
         if (enabled) {
             if (suggestionPopup.isAttached()) {
-                popupKeyDown(keyCode);
+                popupKeyDown(event);
             } else {
-                inputFieldKeyDown(keyCode);
+                inputFieldKeyDown(event);
             }
         }
     }
 
-    private void inputFieldKeyDown(char keyCode) {
-        switch (keyCode) {
-        case KeyboardListener.KEY_DOWN:
-        case KeyboardListener.KEY_UP:
-        case KeyboardListener.KEY_PAGEDOWN:
-        case KeyboardListener.KEY_PAGEUP:
+    private void inputFieldKeyDown(KeyDownEvent event) {
+        switch (event.getNativeKeyCode()) {
+        case KeyCodes.KEY_DOWN:
+        case KeyCodes.KEY_UP:
+        case KeyCodes.KEY_PAGEDOWN:
+        case KeyCodes.KEY_PAGEUP:
             if (suggestionPopup.isAttached()) {
                 break;
             } else {
@@ -869,53 +875,49 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
     }
 
-    private void popupKeyDown(char keyCode) {
-        switch (keyCode) {
-        case KeyboardListener.KEY_DOWN:
+    private void popupKeyDown(KeyDownEvent event) {
+        switch (event.getNativeKeyCode()) {
+        case KeyCodes.KEY_DOWN:
             suggestionPopup.selectNextItem();
             DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
             break;
-        case KeyboardListener.KEY_UP:
+        case KeyCodes.KEY_UP:
             suggestionPopup.selectPrevItem();
             DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
             break;
-        case KeyboardListener.KEY_PAGEDOWN:
+        case KeyCodes.KEY_PAGEDOWN:
             if (hasNextPage()) {
                 filterOptions(currentPage + 1, lastFilter);
             }
             break;
-        case KeyboardListener.KEY_PAGEUP:
+        case KeyCodes.KEY_PAGEUP:
             if (currentPage > 0) {
                 filterOptions(currentPage - 1, lastFilter);
             }
             break;
-        case KeyboardListener.KEY_ENTER:
-        case KeyboardListener.KEY_TAB:
+        case KeyCodes.KEY_ENTER:
+        case KeyCodes.KEY_TAB:
             suggestionPopup.menu.doSelectedItemAction();
             break;
         }
 
     }
 
-    public void onKeyPress(Widget sender, char keyCode, int modifiers) {
-
-    }
-
-    public void onKeyUp(Widget sender, char keyCode, int modifiers) {
+    public void onKeyUp(KeyUpEvent event) {
         if (enabled) {
-            switch (keyCode) {
-            case KeyboardListener.KEY_ENTER:
-            case KeyboardListener.KEY_TAB:
-            case KeyboardListener.KEY_SHIFT:
-            case KeyboardListener.KEY_CTRL:
-            case KeyboardListener.KEY_ALT:
-            case KeyboardListener.KEY_DOWN:
-            case KeyboardListener.KEY_UP:
-            case KeyboardListener.KEY_PAGEDOWN:
-            case KeyboardListener.KEY_PAGEUP:
+            switch (event.getNativeKeyCode()) {
+            case KeyCodes.KEY_ENTER:
+            case KeyCodes.KEY_TAB:
+            case KeyCodes.KEY_SHIFT:
+            case KeyCodes.KEY_CTRL:
+            case KeyCodes.KEY_ALT:
+            case KeyCodes.KEY_DOWN:
+            case KeyCodes.KEY_UP:
+            case KeyCodes.KEY_PAGEDOWN:
+            case KeyCodes.KEY_PAGEUP:
                 ; // NOP
                 break;
-            case KeyboardListener.KEY_ESCAPE:
+            case KeyCodes.KEY_ESCAPE:
                 reset();
                 break;
             default:
@@ -941,7 +943,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     /**
      * Listener for popupopener
      */
-    public void onClick(Widget sender) {
+    public void onClick(ClickEvent event) {
         if (enabled) {
             // ask suggestionPopup if it was just closed, we are using GWT
             // Popup's auto close feature

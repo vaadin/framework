@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HasFocus;
 import com.google.gwt.user.client.ui.Panel;
@@ -49,7 +50,7 @@ public class VOptionGroup extends VOptionGroupBase {
             op.setChecked(opUidl.getBooleanAttribute("selected"));
             op.setEnabled(!opUidl.getBooleanAttribute("disabled")
                     && !isReadonly() && !isDisabled());
-            op.addClickListener(this);
+            op.addClickHandler(this);
             optionsToKeys.put(op, opUidl.getStringAttribute("key"));
             panel.add(op);
         }
@@ -61,11 +62,11 @@ public class VOptionGroup extends VOptionGroupBase {
     }
 
     @Override
-    public void onClick(Widget sender) {
-        super.onClick(sender);
-        if (sender instanceof CheckBox) {
-            final boolean selected = ((CheckBox) sender).isChecked();
-            final String key = (String) optionsToKeys.get(sender);
+    public void onClick(ClickEvent event) {
+        super.onClick(event);
+        if (event.getSource() instanceof CheckBox) {
+            final boolean selected = ((CheckBox) event.getSource()).getValue();
+            final String key = (String) optionsToKeys.get(event.getSource());
             if (!isMultiselect()) {
                 selectedKeys.clear();
             }

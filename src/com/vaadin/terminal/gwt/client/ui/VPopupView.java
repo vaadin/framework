@@ -3,10 +3,11 @@ package com.vaadin.terminal.gwt.client.ui;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasFocus;
 import com.google.gwt.user.client.ui.Label;
@@ -53,8 +54,8 @@ public class VPopupView extends HTML implements Container {
         popup.setWidget(loading);
 
         // When we click to open the popup...
-        addClickListener(new ClickListener() {
-            public void onClick(Widget sender) {
+        addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
                 updateState(true);
             }
         });
@@ -71,8 +72,8 @@ public class VPopupView extends HTML implements Container {
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @see com.vaadin.terminal.gwt.client.Paintable#updateFromUIDL(com.vaadin.terminal.gwt.client.UIDL,
      *      com.vaadin.terminal.gwt.client.ApplicationConnection)
      */
@@ -127,7 +128,7 @@ public class VPopupView extends HTML implements Container {
 
     /**
      * Update popup visibility to server
-     * 
+     *
      * @param visibility
      */
     private void updateState(boolean visible) {
@@ -184,7 +185,7 @@ public class VPopupView extends HTML implements Container {
 
     /**
      * Make sure that we remove the popup when the main widget is removed.
-     * 
+     *
      * @see com.google.gwt.user.client.ui.Widget#onUnload()
      */
     @Override
@@ -194,7 +195,7 @@ public class VPopupView extends HTML implements Container {
     }
 
     private static native void nativeBlur(Element e)
-    /*-{ 
+    /*-{
         if(e && e.blur) {
             e.blur();
         }
@@ -321,13 +322,13 @@ public class VPopupView extends HTML implements Container {
         }
 
         /*
-         * 
+         *
          * We need a hack make popup act as a child of VPopupView in Vaadin's
          * component tree, but work in default GWT manner when closing or
          * opening.
-         * 
+         *
          * (non-Javadoc)
-         * 
+         *
          * @see com.google.gwt.user.client.ui.Widget#getParent()
          */
         @Override
@@ -364,7 +365,7 @@ public class VPopupView extends HTML implements Container {
 
     /**
      * Calculate extra space taken by the popup decorations
-     * 
+     *
      * @return
      */
     protected Size calculatePopupExtra() {

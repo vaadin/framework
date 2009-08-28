@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -9,11 +9,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
@@ -31,7 +32,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
  * style table which will be much lighter than VScrollTable is.
  */
 public class VTablePaging extends Composite implements Table, Paintable,
-        ClickListener {
+        ClickHandler {
 
     private final Grid tBody = new Grid();
     private final Button nextPage = new Button("&gt;");
@@ -72,13 +73,13 @@ public class VTablePaging extends Composite implements Table, Paintable,
 
         pager = new HorizontalPanel();
         pager.add(firstPage);
-        firstPage.addClickListener(this);
+        firstPage.addClickHandler(this);
         pager.add(prevPage);
-        prevPage.addClickListener(this);
+        prevPage.addClickHandler(this);
         pager.add(nextPage);
-        nextPage.addClickListener(this);
+        nextPage.addClickHandler(this);
         pager.add(lastPage);
-        lastPage.addClickListener(this);
+        lastPage.addClickHandler(this);
 
         panel.add(pager);
         panel.add(tBody);
@@ -168,10 +169,10 @@ public class VTablePaging extends Composite implements Table, Paintable,
     /**
      * Updates row data from uidl. UpdateFromUIDL delegates updating tBody to
      * this method.
-     * 
+     *
      * Updates may be to different part of tBody, depending on update type. It
      * can be initial row data, scroll up, scroll down...
-     * 
+     *
      * @param uidl
      *            which contains row data
      */
@@ -245,7 +246,8 @@ public class VTablePaging extends Composite implements Table, Paintable,
         return false;
     }
 
-    public void onClick(Widget sender) {
+    public void onClick(ClickEvent event) {
+        Object sender = event.getSource();
         if (sender instanceof Button) {
             if (sender == firstPage) {
                 client.updateVariable(id, "firstvisible", 0, true);
@@ -286,7 +288,7 @@ public class VTablePaging extends Composite implements Table, Paintable,
         HeaderCell(String pid, String caption) {
             super();
             cid = pid;
-            addClickListener(VTablePaging.this);
+            addClickHandler(VTablePaging.this);
             setText(caption);
             // TODO remove debug color
             DOM.setStyleAttribute(getElement(), "color", "brown");
@@ -297,7 +299,7 @@ public class VTablePaging extends Composite implements Table, Paintable,
     /**
      * Abstraction of table cell content. In needs to know on which row it is in
      * case of context click.
-     * 
+     *
      * @author mattitahvonen
      */
     public class BodyCell extends SimplePanel {
@@ -353,7 +355,7 @@ public class VTablePaging extends Composite implements Table, Paintable,
         /**
          * This method is used to set row status. Does not change value on
          * server.
-         * 
+         *
          * @param selected
          */
         public void setSelected(boolean sel) {
@@ -377,7 +379,7 @@ public class VTablePaging extends Composite implements Table, Paintable,
         /**
          * Toggles rows select state. Also updates state to server according to
          * tables immediate flag.
-         * 
+         *
          */
         public void toggleSelected() {
             if (selected) {
@@ -394,7 +396,7 @@ public class VTablePaging extends Composite implements Table, Paintable,
 
         /**
          * Shows context menu for this row.
-         * 
+         *
          * @param event
          *            Event which triggered context menu. Correct place for
          *            context menu can be determined with it.

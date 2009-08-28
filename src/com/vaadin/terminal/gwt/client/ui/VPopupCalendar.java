@@ -1,24 +1,24 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal.gwt.client.ui;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 
 public class VPopupCalendar extends VTextualDate implements Paintable, Field,
-        ClickListener, PopupListener {
+        ClickHandler, PopupListener {
 
     private final Button calendarToggle;
 
@@ -33,7 +33,7 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
         calendarToggle = new Button();
         calendarToggle.setStyleName(CLASSNAME + "-button");
         calendarToggle.setText("");
-        calendarToggle.addClickListener(this);
+        calendarToggle.addClickHandler(this);
         add(calendarToggle);
 
         calendar = new VCalendarPanel(this);
@@ -60,8 +60,8 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
         calendarToggle.setEnabled(enabled);
     }
 
-    public void onClick(Widget sender) {
-        if (sender == calendarToggle && !open) {
+    public void onClick(ClickEvent event) {
+        if (event.getSource() == calendarToggle && !open) {
             open = true;
             calendar.updateCalendar();
             // clear previous values
@@ -115,7 +115,7 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
 
     /**
      * Sets focus to Calendar panel.
-     * 
+     *
      * @param focus
      */
     public void setFocus(boolean focus) {
