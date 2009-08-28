@@ -461,6 +461,10 @@ public class VView extends SimplePanel implements Container,
      }-*/;
 
     public void onWindowClosed() {
+
+    }
+
+    public String onWindowClosing() {
         // Change focus on this window in order to ensure that all state is
         // collected from textfields
         VTextField.flushChangesFromFocusedTextField();
@@ -468,9 +472,7 @@ public class VView extends SimplePanel implements Container,
         // Send the closing state to server
         connection.updateVariable(id, "close", true, false);
         connection.sendPendingVariableChangesSync();
-    }
 
-    public String onWindowClosing() {
         return null;
     }
 

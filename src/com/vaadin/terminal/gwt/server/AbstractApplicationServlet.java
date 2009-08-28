@@ -433,7 +433,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
             }
 
             // Finds the window within the application
-            Window window = getApplicationWindow(request, application);
+            Window window = getApplicationWindow(request, applicationManager,
+                    application);
             if (window == null) {
                 throw new ServletException(ERROR_NO_WINDOW_FOUND);
             }
@@ -1803,18 +1804,16 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      *             servlet's normal operation.
      */
     private Window getApplicationWindow(HttpServletRequest request,
-            Application application) throws ServletException {
-
-        Window window = null;
+            CommunicationManager applicationManager, Application application)
+            throws ServletException {
 
         // Finds the window where the request is handled
+        Window assumedWindow = null;
         String path = getRequestPathInfo(request);
 
         // Main window as the URI is empty
-        if (path == null || path.length() == 0 || path.equals("/")
-                || path.startsWith("/APP/")) {
-            window = application.getMainWindow();
-        } else {
+        if (!(path == null || path.length() == 0 || path.equals("/") || path
+                .startsWith("/APP/"))) {
             String windowName = null;
             if (path.charAt(0) == '/') {
                 path = path.substring(1);
@@ -1825,23 +1824,13 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                 path = "";
             } else {
                 windowName = path.substring(0, index);
-                path = path.substring(index + 1);
             }
-            window = application.getWindow(windowName);
+            assumedWindow = application.getWindow(windowName);
 
-            if (window == null) {
-                // By default, we use main window
-                window = application.getMainWindow();
-            } else if (!window.isVisible()) {
-                // Implicitly painting without actually invoking paint()
-                window.requestRepaintRequests();
-
-                // If the window is invisible send a blank page
-                return null;
-            }
         }
 
-        return window;
+        return applicationManager.getApplicationWindow(request, this,
+                application, assumedWindow);
     }
 
     String getRequestPathInfo(HttpServletRequest request) {

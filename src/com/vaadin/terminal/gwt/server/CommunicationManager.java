@@ -456,7 +456,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                         invalidComponentRelativeSizes = ComponentSizeValidator
                                 .validateComponentRelativeSizes(w.getContent(),
                                         null, null);
-                                        
+
                         // Also check any existing subwindows
                         if (w.getChildWindows() != null) {
                             for (Window subWindow : (Set<Window>) w
@@ -1036,7 +1036,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
      *             if an exception has occurred that interferes with the
      *             servlet's normal operation.
      */
-    private Window getApplicationWindow(HttpServletRequest request,
+    Window getApplicationWindow(HttpServletRequest request,
             AbstractApplicationServlet applicationServlet,
             Application application, Window assumedWindow)
             throws ServletException {
@@ -1061,7 +1061,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
             // Get the path from URL
             String path = applicationServlet.getRequestPathInfo(request);
-            path = path.substring("/UIDL".length());
+            if (path.startsWith("/UIDL")) {
+                path = path.substring("/UIDL".length());
+            }
 
             // If the path is specified, create name from it
             if (path != null && path.length() > 0 && !path.equals("/")) {
