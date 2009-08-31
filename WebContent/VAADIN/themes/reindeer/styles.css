@@ -3014,8 +3014,7 @@ td.v-datefield-calendarpanel-nextyear {
 	border: 3px solid #fee3af;
 }
 .v-Notification.error {
-	background: #b40000 none no-repeat right top;
-	background-image: url(notification/img/error-close.png);
+	background: #b40000 url(notification/img/error-close.png) no-repeat right top;
 	border: 3px solid #ca3030;
 }
 .v-Notification.tray {
