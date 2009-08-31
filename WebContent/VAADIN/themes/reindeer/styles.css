@@ -783,6 +783,11 @@ div.v-app-loading {
 .v-popupview-popup {
 	overflow: auto;
 }
+.v-popupview-loading {
+	width: 30px;
+	height: 30px;
+	background: transparent url(../base/common/img/ajax-loader-medium.gif) no-repeat 50%;
+}
 
 .v-progressindicator {
 	overflow: hidden; /* for IE6 */
