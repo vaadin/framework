@@ -196,8 +196,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
 
         recalcWidths = uidl.hasAttribute("recalcWidths");
 
-        pageLength = uidl.getIntAttribute("pagelength");
-        if (pageLength == 0) {
+        if (uidl.hasAttribute("pagelength")) {
+            pageLength = uidl.getIntAttribute("pagelength");
+        } else {
+            // pagelenght is "0" meaning scrolling is turned off
             pageLength = totalRows;
         }
         firstvisible = uidl.hasVariable("firstvisible") ? uidl
