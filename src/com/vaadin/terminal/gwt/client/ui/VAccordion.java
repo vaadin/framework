@@ -125,7 +125,7 @@ public class VAccordion extends VTabsheetBase implements
      * same StackItem is used for rendering this time. E.g. if the first tab has
      * been removed all tabs which contain cached content must be moved 1 step
      * up to preserve the cached content.
-     *
+     * 
      * @param item
      * @param newIndex
      * @param tabUidl
@@ -396,7 +396,7 @@ public class VAccordion extends VTabsheetBase implements
 
         /**
          * Returns caption width including padding
-         *
+         * 
          * @return
          */
         public int getCaptionWidth() {
@@ -496,6 +496,7 @@ public class VAccordion extends VTabsheetBase implements
             DOM.setStyleAttribute(content, "left", "-100000px");
             removeStyleDependentName("open");
             setHeight(-1);
+            setWidth("");
             open = false;
         }
 
