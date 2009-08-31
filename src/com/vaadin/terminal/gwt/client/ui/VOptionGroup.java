@@ -10,7 +10,7 @@ import java.util.Map;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.HasFocus;
+import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
@@ -96,7 +96,7 @@ public class VOptionGroup extends VOptionGroupBase {
     public void focus() {
         Iterator<Widget> iterator = panel.iterator();
         if (iterator.hasNext()) {
-            ((HasFocus) iterator.next()).setFocus(true);
+            ((Focusable) iterator.next()).setFocus(true);
         }
     }
 

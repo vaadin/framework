@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -21,7 +21,6 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.WindowCloseListener;
 import com.google.gwt.user.client.WindowResizeListener;
-import com.google.gwt.user.client.ui.HasFocus;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -35,7 +34,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 
 /**
- * 
+ *
  */
 public class VView extends SimplePanel implements Container,
         WindowResizeListener, WindowCloseListener {
@@ -128,7 +127,7 @@ public class VView extends SimplePanel implements Container,
         try {
             el.focus();
         } catch (e) {
-        
+
         }
     }-*/;
 
@@ -141,7 +140,7 @@ public class VView extends SimplePanel implements Container,
      */
     private static native void reloadHostPage()
     /*-{
-         $wnd.location.reload(); 
+         $wnd.location.reload();
      }-*/;
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -317,8 +316,8 @@ public class VView extends SimplePanel implements Container,
                      * GWT HasFocus of a thinner Vaadin specific Focusable
                      * interface.
                      */
-                    if (toBeFocused instanceof HasFocus) {
-                        final HasFocus toBeFocusedWidget = (HasFocus) toBeFocused;
+                    if (toBeFocused instanceof com.google.gwt.user.client.ui.Focusable) {
+                        final com.google.gwt.user.client.ui.Focusable toBeFocusedWidget = (com.google.gwt.user.client.ui.Focusable) toBeFocused;
                         toBeFocusedWidget.setFocus(true);
                     } else if (toBeFocused instanceof Focusable) {
                         ((Focusable) toBeFocused).focus();
@@ -603,7 +602,7 @@ public class VView extends SimplePanel implements Container,
     /**
      * Return an iterator for current subwindows. This method is meant for
      * testing purposes only.
-     * 
+     *
      * @return
      */
     public ArrayList<VWindow> getSubWindowList() {

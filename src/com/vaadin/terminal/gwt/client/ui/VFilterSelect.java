@@ -10,13 +10,19 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -24,14 +30,11 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.FocusListener;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.LoadListener;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -47,7 +50,8 @@ import com.vaadin.terminal.gwt.client.VTooltip;
  * TODO needs major refactoring (to be extensible etc)
  */
 public class VFilterSelect extends Composite implements Paintable, Field,
-        KeyDownHandler, KeyUpHandler, ClickHandler, FocusListener, Focusable {
+        KeyDownHandler, KeyUpHandler, ClickHandler, FocusHandler, BlurHandler,
+        Focusable {
 
     public class FilterSelectSuggestion implements Suggestion, Command {
 
@@ -589,11 +593,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
     public VFilterSelect() {
         selectedItemIcon.setStyleName("v-icon");
-        selectedItemIcon.addLoadListener(new LoadListener() {
-            public void onError(Widget sender) {
-            }
-
-            public void onLoad(Widget sender) {
+        selectedItemIcon.addLoadHandler(new LoadHandler() {
+            public void onLoad(LoadEvent event) {
                 updateRootWidth();
                 updateSelectedIconPosition();
             }
@@ -607,7 +608,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         tb.addKeyDownHandler(this);
         tb.addKeyUpHandler(this);
         tb.setStyleName(CLASSNAME + "-input");
-        tb.addFocusListener(this);
+        tb.addFocusHandler(this);
+        tb.addBlurHandler(this);
         popupOpener.setStyleName(CLASSNAME + "-button");
         popupOpener.addClickHandler(this);
     }
@@ -987,7 +989,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         return w;
     }-*/;
 
-    public void onFocus(Widget sender) {
+    public void onFocus(FocusEvent event) {
         focused = true;
         if (prompting) {
             setPromptingOff("");
@@ -995,7 +997,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         addStyleDependentName("focus");
     }
 
-    public void onLostFocus(Widget sender) {
+    public void onBlur(BlurEvent event) {
         focused = false;
         if (!suggestionPopup.isAttached() || suggestionPopup.isJustClosed()) {
             // typing so fast the popup was never opened, or it's just closed

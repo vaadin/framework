@@ -1,14 +1,17 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal.gwt.client.ui;
 
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.FocusListener;
 import com.google.gwt.user.client.ui.TextBoxBase;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -20,12 +23,12 @@ import com.vaadin.terminal.gwt.client.VTooltip;
 
 /**
  * This class represents a basic text input field with one row.
- * 
+ *
  * @author IT Mill Ltd.
- * 
+ *
  */
 public class VTextField extends TextBoxBase implements Paintable, Field,
-        ChangeListener, FocusListener {
+        ChangeListener, FocusHandler, BlurHandler {
 
     /**
      * The input node CSS classname.
@@ -65,7 +68,8 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         }
         setStyleName(CLASSNAME);
         addChangeListener(this);
-        addFocusListener(this);
+        addFocusHandler(this);
+        addBlurHandler(this);
         sinkEvents(VTooltip.TOOLTIP_EVENTS);
     }
 
@@ -158,7 +162,7 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         }
     }
 
-    public void onFocus(Widget sender) {
+    public void onFocus(FocusEvent event) {
         addStyleDependentName(CLASSNAME_FOCUS);
         if (prompting) {
             setText("");
@@ -167,7 +171,7 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         focusedTextField = this;
     }
 
-    public void onLostFocus(Widget sender) {
+    public void onBlur(BlurEvent event) {
         removeStyleDependentName(CLASSNAME_FOCUS);
         focusedTextField = null;
         String text = getText();
@@ -176,7 +180,7 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             setText(inputPrompt);
             addStyleDependentName(CLASSNAME_PROMPT);
         }
-        onChange(sender);
+        onChange((Widget) event.getSource());
     }
 
     private void setPrompting(boolean prompting) {

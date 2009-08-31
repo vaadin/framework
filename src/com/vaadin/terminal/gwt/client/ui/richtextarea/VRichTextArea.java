@@ -1,9 +1,11 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal.gwt.client.ui.richtextarea;
 
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
@@ -11,7 +13,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.FocusListener;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.RichTextArea;
@@ -25,12 +26,12 @@ import com.vaadin.terminal.gwt.client.ui.Field;
 
 /**
  * This class implements a basic client side rich text editor component.
- * 
+ *
  * @author IT Mill Ltd.
- * 
+ *
  */
 public class VRichTextArea extends Composite implements Paintable, Field,
-        ChangeListener, FocusListener, KeyboardListener {
+        ChangeListener, BlurHandler, KeyboardListener {
 
     /**
      * The input node CSS classname.
@@ -64,7 +65,7 @@ public class VRichTextArea extends Composite implements Paintable, Field,
         fp.add(formatter);
 
         rta.setWidth("100%");
-        rta.addFocusListener(this);
+        rta.addBlurHandler(this);
 
         fp.add(rta);
 
@@ -131,11 +132,7 @@ public class VRichTextArea extends Composite implements Paintable, Field,
         }
     }
 
-    public void onFocus(Widget sender) {
-
-    }
-
-    public void onLostFocus(Widget sender) {
+    public void onBlur(BlurEvent event) {
         final String html = rta.getHTML();
         client.updateVariable(id, "text", html, immediate);
 

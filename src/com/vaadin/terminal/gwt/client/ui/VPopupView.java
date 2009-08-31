@@ -8,8 +8,8 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HasFocus;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -268,8 +268,8 @@ public class VPopupView extends HTML implements Container {
          */
         public void syncChildren() {
             // Notify children with focus
-            if ((popupComponentWidget instanceof HasFocus)) {
-                ((HasFocus) popupComponentWidget).setFocus(false);
+            if ((popupComponentWidget instanceof Focusable)) {
+                ((Focusable) popupComponentWidget).setFocus(false);
             }
 
             // Notify children that have used the keyboard
