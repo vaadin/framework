@@ -1061,7 +1061,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
             // Get the path from URL
             String path = applicationServlet.getRequestPathInfo(request);
-            if (path.startsWith("/UIDL")) {
+            if (path != null && path.startsWith("/UIDL")) {
                 path = path.substring("/UIDL".length());
             }
 
