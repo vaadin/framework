@@ -12,6 +12,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
+import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -64,7 +65,7 @@ public class FeatureView extends HorizontalLayout {
         HorizontalLayout controlButtons = new HorizontalLayout();
         controls.addComponent(controlButtons);
 
-        Button resetExample = new Button("Reset example",
+        Button resetExample = new NativeButton("Reset example",
                 new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
                         resetExample();
