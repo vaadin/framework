@@ -104,7 +104,7 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
 
         public FlowPane() {
             super();
-            setStyleName(CLASSNAME + "-grid");
+            setStyleName(CLASSNAME + "-container");
         }
 
         public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
