@@ -33,41 +33,28 @@
   <li><a href="#requirements">Requirements</a></li>
 </ul>
 
-<p>Vaadin @version@ is the first maintenance release for Vaadin 6. In addition to many bug
+<p>Vaadin @version@ is the first update release for Vaadin 6. In addition to many bug
 fixes, the most significant additions are:</p>
 
 <ul>
-  <li>Major improvement in Liferay portal integration support (<a href="http://dev.vaadin.com/ticket/3113">#3113</a>).<br/>Note that:</li>
+  <li>Google Web Toolkit (GWT) is upgraded to version 1.7. You should recompile custom widget sets using the new version.</li>
+  <li>Performance improvements (general, <b>Table</b> caching)</li>
+  <li>Google App Engine (GAE) support.</li>
+  <li>Maven support</li>
+  <li>New <b>NativeButton</b> component that always uses the native button in the browser</li>
+  <li>New <b>CssLayout</b> layout component
   <ul>
-    <li>Regarding widget sets:</li>
-    <ul>
-      <li>You should specify the widget set and its location in portal properties (<tt>portal-ext.properties</tt>).</li>
-      <li>Default location is <tt>/html/VAADIN/widgetsets/</tt> path.</li>
-      <li>If you have portlets that require different widget sets, you need to use inheritance or composition to combine the widget sets to a single widget set.</li>
-    </ul>
-    <li>Regarding themes:</li>
-    <ul>
-      <li>You can specify the base theme ("<tt>reindeer</tt>" by default) in the portal properties to have it loaded automatically by the portal, not by individual portlets.</li>
-      <li>Default location is <tt>/html/VAADIN/themes/<i>reindeer</i></tt>.</li>
-      <li>No <tt>@import</tt> statement should be used in an application theme, unlike in normal Vaadin applications, as the base theme is loaded implicitly. If you need be able to run the portlet as a regular application as well, use a different theme in the application mode without the statement.</li>
-    </ul>
-    <li>You need to copy the widget set and base theme under the defined directories in the portal.</li>
-    <li>The default widget set, themes, the Vaadin JAR, and the required portal configuration will be included built-in in Liferay 5.3, making the configuration unnecessary unless you use a custom widget set.</li>
-    <li>You need to use the same version of the Vaadin library in all the portlets running in the same portal.</li>
-    <li>See the <i>Portal Integration</i> section in Book of Vaadin for details on configuring portlets in Liferay.</li>
+    <li>A fast low-level layout where the contained components are rendered as trivially as possible under a single <tt>div</tt> element.</li>
+    <li>Result can be similar to <b>VerticalLayout</b> or <b>HorizontalLayout</b>, depending on CSS, but is noticeably faster.</li>
+    <li>No spacing, alignment or expansion rations, unlike with the more feature rich layouts.</li>
+    <li>No abstraction of browser differences; you need to make sure the CSS supports all the browser that you want your application to support.</li>
   </ul>
-</ul>
-
-<p>Some other notable changes:</p>
-
-<ul>
-  <li>Vaadin application will print a warning to standard error if cross-site scripting prevention is turned off (<a href="http://dev.vaadin.com/ticket/3060">#3060</a>)</li>
-  <li>An integration hook in JavaScript API that is called after each XHR (<a href="http://dev.vaadin.com/ticket/3083">#3083</a>)</li>
+  <li>Full support for Internet Explorer 8</li>
 </ul>
 
 <p>See the <a href="#changelog">Change Log</a> below for a more detailed list of closed issues in this release.</p>
 
-<p>Vaadin @version@ uses Google Web Toolkit 1.6.4, which is included in the <tt>gwt</tt> folder of the installation package.</p>
+<p>Vaadin @version@ uses Google Web Toolkit 1.7.0, which is included in the <tt>gwt</tt> folder of the installation package.</p>
 
 <h2><a name="upgrading">General Upgrade Notes</a></h2>
 
@@ -145,7 +132,7 @@ some name prefixes, and some other details.</p>
 client-side widgets with Google Web Toolkit (GWT).</p>
 
 <ul>
-  <li>GWT 1.6 is required for compiling custom widgets (optional)</li>
+  <li>GWT 1.7 is required for compiling custom widgets (optional)</li>
   <ul>
     <li>You need to upgrade GWT</li>
     <li>The GWT Compiler class name has changed:</li>
@@ -202,7 +189,7 @@ for your platform.</p>
 	package for Linux.</p></li>
 
     <li>
-      <p><a href="http://dev.vaadin.com/ticket/2523">#2523</a>: GWT Compiler 1.6 uses more
+      <p><a href="http://dev.vaadin.com/ticket/2523">#2523</a>: GWT Compiler 1.7 uses more
       stack space than 1.5 and can result in stack overflow errors. You can prevent the
       problem by giving the Java process more stack space with the <tt>-Xss</tt>
       parameter, such as: <tt>-Xss1024k</tt>. You can give the parameter in your widgetset
@@ -213,7 +200,7 @@ for your platform.</p>
       <li>
         <p><a href="http://dev.vaadin.com/ticket/2891">#2891</a>: As there is a bug in
         J2SE 5.0 that prevents setting the stack size for the main thread, widgetsets
-        cannot be compiled using the standard GWT compiler of GWT 1.6 and JDK 1.5.0 (see
+        cannot be compiled using the standard GWT compiler of GWT 1.7 and JDK 1.5.0 (see
         <a href="http://dev.vaadin.com/ticket/2656">#2656</a> for more details on the JDK
         bug). This bug primarily affects Windows users as other operating systems have a
         larger default stack size.</p>
@@ -224,7 +211,7 @@ for your platform.</p>
         <tt>com.itmill.toolkit.launcher.WidgetsetCompiler</tt> instead of
         <tt>com.google.gwt.dev.Compiler</tt>. You need the wrapper if you use a build
         script to compile custom widget sets; the Eclipse plugin uses the wrapper
-        automatically. You can also avoid the problem by using JDK 1.6.</p>
+        automatically. You can also avoid the problem by using JDK 1.7.</p>
       </li>
     </ul>
 </ul>
@@ -234,39 +221,67 @@ for your platform.</p>
 
 <h2><a name="changelog">Change Log</a></h2>
 
+<p>The following issues have been fixed in this release:</p>
+
 <ul>
-  <li><a href="http://dev.itmill.com/ticket/1623">#1623</a>: Table: Client side should dynamically adjust pagelength variable</li>
-  <li><a href="http://dev.itmill.com/ticket/2941">#2941</a>: Panel/Window does not remove all Action Handlers on client-side</li>
-  <li><a href="http://dev.itmill.com/ticket/3015">#3015</a>: Class Object instances should not be used as identifiers, are not serializable</li>
-  <li><a href="http://dev.itmill.com/ticket/3038">#3038</a>: demo main page broken if scrollbars in use (FF, SA)</li>
-  <li><a href="http://dev.itmill.com/ticket/3039">#3039</a>: Scrollbar jumps to top in Safari</li>
-  <li><a href="http://dev.itmill.com/ticket/3051">#3051</a>: MethodProperty serialization broken when setter or getter is null</li>
-  <li><a href="http://dev.itmill.com/ticket/3052">#3052</a>: Link style button icons are always 16px wide in reindeer theme</li>
-  <li><a href="http://dev.itmill.com/ticket/3059">#3059</a>: Window's setStyleName, removeStyleName does not remove old styles on the client side.</li>
-  <li><a href="http://dev.itmill.com/ticket/3060">#3060</a>: Warn if cross site scripting prevention is turned off</li>
-  <li><a href="http://dev.itmill.com/ticket/3061">#3061</a>: Security key should not use invalid http header</li>
-  <li><a href="http://dev.itmill.com/ticket/3071">#3071</a>: IE6: Undefined/auto subwindow width is broken</li>
-  <li><a href="http://dev.itmill.com/ticket/3073">#3073</a>: IE7: Error when rendering a Tab without a caption</li>
-  <li><a href="http://dev.itmill.com/ticket/3074">#3074</a>: "100% wide accordion is too wide using ""reindeer"""</li>
-  <li><a href="http://dev.itmill.com/ticket/3075">#3075</a>: Migrating from Toolkit to Vaadin release notes: translateToolkitUri</li>
-  <li><a href="http://dev.itmill.com/ticket/3078">#3078</a>: "Debug console ""root problems"" has invalid position in IE7"</li>
-  <li><a href="http://dev.itmill.com/ticket/3081">#3081</a>: HierarchicalContainer overwrites old items when trying to add a new item</li>
-  <li><a href="http://dev.itmill.com/ticket/3083">#3083</a>: JS api where to hook functionality after each XHR</li>
-  <li><a href="http://dev.itmill.com/ticket/3092">#3092</a>: BeanItemContainer is not extendable</li>
-  <li><a href="http://dev.itmill.com/ticket/3098">#3098</a>: Tree node text wraps to the next line if an icon is present and width is fixed</li>
-  <li><a href="http://dev.itmill.com/ticket/3099">#3099</a>: PopupView is shown off screen</li>
-  <li><a href="http://dev.itmill.com/ticket/3102">#3102</a>: Upload.ProgressListener not called in some situations</li>
-  <li><a href="http://dev.itmill.com/ticket/3105">#3105</a>: "Show ""invalid security key"" instead of ""Session Expired"" for invalid security key"</li>
-  <li><a href="http://dev.itmill.com/ticket/3109">#3109</a>: Down sort arrow visually broken in table with strong style (reindeer)</li>
-  <li><a href="http://dev.itmill.com/ticket/3113">#3113</a>: Liferay portal integration</li>
-  <li><a href="http://dev.itmill.com/ticket/3114">#3114</a>: IE7 compatibility mode forcing does not work for portlets</li>
-  <li><a href="http://dev.itmill.com/ticket/3115">#3115</a>: A new session should not be created if an application is not</li>
-  <li><a href="http://dev.itmill.com/ticket/3121">#3121</a>: Subwindow caption flows out of the window</li>
-  <li><a href="http://dev.itmill.com/ticket/3123">#3123</a>: Applications print request path info unnecessarily</li>
-  <li><a href="http://dev.itmill.com/ticket/3126">#3126</a>: Create a portal default widget set</li>
-  <li><a href="http://dev.itmill.com/ticket/3127">#3127</a>: Fix portlet demos</li>
-  <li><a href="http://dev.itmill.com/ticket/3128">#3128</a>: ApplicationPortlet should throw an error if the application is not defined</li>
-  <li><a href="http://dev.itmill.com/ticket/3130">#3130</a>: In IE8 RichTextArea button icons are broken</li>
+  <li><a href="http://dev.itmill.com/ticket/1862">#1862</a>: Add Vaadin to central Maven repository</li>
+  <li><a href="http://dev.itmill.com/ticket/2085">#2085</a>: Tooltip for disabled button</li>
+  <li><a href="http://dev.itmill.com/ticket/2824">#2824</a>: Full IE8 support</li>
+  <li><a href="http://dev.itmill.com/ticket/2931">#2931</a>: URI Fragment broken in IE with empty fragment</li>
+  <li><a href="http://dev.itmill.com/ticket/2943">#2943</a>: Reindeer theme button broken</li>
+  <li><a href="http://dev.itmill.com/ticket/2998">#2998</a>: Table rendering in Firefox is very slow when the table contains components</li>
+  <li><a href="http://dev.itmill.com/ticket/3003">#3003</a>: Table headers do not move in IE6</li>
+  <li><a href="http://dev.itmill.com/ticket/3065">#3065</a>: Inactive accordion tab keeps width</li>
+  <li><a href="http://dev.itmill.com/ticket/3066">#3066</a>: OptionGroup value changes to null if option label is clicked</li>
+  <li><a href="http://dev.itmill.com/ticket/3079">#3079</a>: Button (reindeer) visually broken in Safari (Win)</li>
+  <li><a href="http://dev.itmill.com/ticket/3091">#3091</a>: Table should iterate container using getIdByIndex if container is indexed</li>
+  <li><a href="http://dev.itmill.com/ticket/3096">#3096</a>: Analyze layouts does not check sub windows</li>
+  <li><a href="http://dev.itmill.com/ticket/3110">#3110</a>: Disabled buttons rendered wrong in IE7</li>
+  <li><a href="http://dev.itmill.com/ticket/3111">#3111</a>: OOPHM hosted mode does not work in FF3.5</li>
+  <li><a href="http://dev.itmill.com/ticket/3122">#3122</a>: Liferay session extension</li>
+  <li><a href="http://dev.itmill.com/ticket/3132">#3132</a>: Refresh fails when moving components between layouts</li>
+  <li><a href="http://dev.itmill.com/ticket/3143">#3143</a>: Table column expanding bugs if table has columns with defined size</li>
+  <li><a href="http://dev.itmill.com/ticket/3146">#3146</a>: table selection : clearing selection is impossible</li>
+  <li><a href="http://dev.itmill.com/ticket/3147">#3147</a>: Modal WIndow cannot be positioned</li>
+  <li><a href="http://dev.itmill.com/ticket/3148">#3148</a>: CommunicationManager should not keep a reference to ApplicationServlet</li>
+  <li><a href="http://dev.itmill.com/ticket/3157">#3157</a>: Spring Security form login does not work with Vaadin</li>
+  <li><a href="http://dev.itmill.com/ticket/3160">#3160</a>: Regression: DateField stylenames are not added to the DOM</li>
+  <li><a href="http://dev.itmill.com/ticket/3164">#3164</a>: DateField addStyle does not add information to DOM.</li>
+  <li><a href="http://dev.itmill.com/ticket/3166">#3166</a>: "Use of the cached instance of VTabsheet clears the ""hidetabs""-flag and style-names"</li>
+  <li><a href="http://dev.itmill.com/ticket/3167">#3167</a>: IllegalStateExcepton when session expires</li>
+  <li><a href="http://dev.itmill.com/ticket/3169">#3169</a>: Removing first/second components from SplitPanel</li>
+  <li><a href="http://dev.itmill.com/ticket/3172">#3172</a>: rendering-flag not cleared when cached version of VTabsheet is used</li>
+  <li><a href="http://dev.itmill.com/ticket/3177">#3177</a>: PropertyFormatter NPE</li>
+  <li><a href="http://dev.itmill.com/ticket/3179">#3179</a>: Application unresponsive after load on IE and Liferay</li>
+  <li><a href="http://dev.itmill.com/ticket/3180">#3180</a>: Icon is misplaced when button width is relative</li>
+  <li><a href="http://dev.itmill.com/ticket/3181">#3181</a>: Browser attributes should be non-null at Application.init()</li>
+  <li><a href="http://dev.itmill.com/ticket/3182">#3182</a>: Label does not repaint on property changes</li>
+  <li><a href="http://dev.itmill.com/ticket/3183">#3183</a>: Hidden HorizontalLayouts render wrong when set visible again.</li>
+  <li><a href="http://dev.itmill.com/ticket/3186">#3186</a>: Add a close icon for Notification.ERROR (Reindeer)</li>
+  <li><a href="http://dev.itmill.com/ticket/3187">#3187</a>: ComboBox shows all the choices again after selecting</li>
+  <li><a href="http://dev.itmill.com/ticket/3190">#3190</a>: ComboBox looses its selection if value set by server before focus</li>
+  <li><a href="http://dev.itmill.com/ticket/3191">#3191</a>: Split and open private writeAjaxPage for extension</li>
+  <li><a href="http://dev.itmill.com/ticket/3193">#3193</a>: Button visually broken in IE8</li>
+  <li><a href="http://dev.itmill.com/ticket/3194">#3194</a>: Test reindeer buttons in all configurations</li>
+  <li><a href="http://dev.itmill.com/ticket/3195">#3195</a>: ReplaceComponent causes NPE in ChildComponentContainer</li>
+  <li><a href="http://dev.itmill.com/ticket/3199">#3199</a>: Preventing tab change in a tabsheet hides the current tab</li>
+  <li><a href="http://dev.itmill.com/ticket/3206">#3206</a>: VFilterSelect: Using arrow keys + enter to select an item does not always work</li>
+  <li><a href="http://dev.itmill.com/ticket/3208">#3208</a>: Bad table performance when HorizontalLayout is used as a generated column base</li>
+  <li><a href="http://dev.itmill.com/ticket/3209">#3209</a>: Table needs a method to adjust the caching programmatically</li>
+  <li><a href="http://dev.itmill.com/ticket/3213">#3213</a>: Pecularities in accented character handling</li>
+  <li><a href="http://dev.itmill.com/ticket/3215">#3215</a>: Popup shadow doesn't resize with panel</li>
+  <li><a href="http://dev.itmill.com/ticket/3222">#3222</a>: Add functionality for embedded Vaadin application to resize parent frame</li>
+  <li><a href="http://dev.itmill.com/ticket/3229">#3229</a>: IE6 has extra padding-top in VerticalLayout with spacing enabled</li>
+  <li><a href="http://dev.itmill.com/ticket/3231">#3231</a>: VUpload depends on VNativeButton internal implementation</li>
+  <li><a href="http://dev.itmill.com/ticket/3232">#3232</a>: Implement new default look for Runo theme button</li>
+  <li><a href="http://dev.itmill.com/ticket/3237">#3237</a>: "New Button component does not react to ""click"" events"</li>
+  <li><a href="http://dev.itmill.com/ticket/3241">#3241</a>: Parameters and URIs sometimes end up in the wrong window</li>
+  <li><a href="http://dev.itmill.com/ticket/3244">#3244</a>: Empty screen when table.setPageLength(0) used (IE7)</li>
+  <li><a href="http://dev.itmill.com/ticket/3247">#3247</a>: "VPopupView contains hard coded text ""Loading..."""</li>
+  <li><a href="http://dev.itmill.com/ticket/3249">#3249</a>: NPE in CommunicationManager.getApplicationWindow</li>
+  <li><a href="http://dev.itmill.com/ticket/3251">#3251</a>: Mac FF 3.5 renders obsolete scrollbars for table</li>
+  <li><a href="http://dev.itmill.com/ticket/3256">#3256</a>: Compile Firefox 3.5 OOPHM plugin for Mac</li>
+  <li><a href="http://dev.itmill.com/ticket/3257">#3257</a>: Button in a table is too wide in IE7</li>
 </ul>
 
 <h2><a name="requirements">Requirements</a></h2>
