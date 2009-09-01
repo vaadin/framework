@@ -351,6 +351,15 @@
 			<param-value>com.vaadin.tests.book.ChatApplication</param-value>
 		</init-param>
 	</servlet>
+	
+	<servlet>
+		<servlet-name>GAESyncTest</servlet-name>
+		<servlet-class>com.vaadin.terminal.gwt.server.GAEApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.vaadin.tests.appengine.GAESyncTest</param-value>
+		</init-param>
+	</servlet>
 
 	<servlet-mapping>
 		<servlet-name>VaadinApplicationRunner</servlet-name>
@@ -503,6 +512,11 @@
 		<servlet-name>ChatServlet</servlet-name>
 		<url-pattern>/chat/*</url-pattern>
 		<!-- portlet -->
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>GAESyncTest</servlet-name>
+		<url-pattern>/gaesynctest/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

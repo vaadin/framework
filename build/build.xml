@@ -239,6 +239,7 @@
 			<pathelement path="lib/portlet/portal-kernel.jar" />
 			<pathelement path="lib/portlet/portal-service.jar" />
 			<pathelement path="lib/portlet/portlet.jar" />
+			<pathelement path="lib/appengine/appengine-api.jar" />
 		</path>
 		<path id="compile.classpath.server-side">
             <path refid="compile.classpath"/>
@@ -854,7 +855,7 @@
 			<arg value="${output-dir}/WebContent/VAADIN/widgetsets" />
 			<arg value="com.vaadin.demo.sampler.gwt.SamplerWidgetSet" />
 			<arg value="-style" />
-			<arg value="OBF" />
+			<arg value="PRETTY" />
             <jvmarg value="-Xss8M"/>
             <jvmarg value="-Djava.awt.headless=true"/>
 			<classpath>

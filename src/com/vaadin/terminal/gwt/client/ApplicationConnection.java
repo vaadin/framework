@@ -292,14 +292,15 @@ public class ApplicationConnection {
         return (activeRequests > 0);
     }
 
-    private void makeUidlRequest(String requestData, boolean repaintAll,
-            boolean forceSync, boolean analyzeLayouts) {
+    private void makeUidlRequest(final String requestData,
+            final boolean repaintAll, final boolean forceSync,
+            final boolean analyzeLayouts) {
         startRequest();
 
         // Security: double cookie submission pattern
-        requestData = uidl_security_key + VAR_BURST_SEPARATOR + requestData;
+        final String rd = uidl_security_key + VAR_BURST_SEPARATOR + requestData;
 
-        console.log("Making UIDL Request with params: " + requestData);
+        console.log("Making UIDL Request with params: " + rd);
         String uri = getAppUri() + "UIDL" + configuration.getPathInfo();
         if (repaintAll) {
             // collect some client side data that will be sent to server on
@@ -331,13 +332,14 @@ public class ApplicationConnection {
         }
 
         if (!forceSync) {
+            boolean success = false;
             final RequestBuilder rb = new RequestBuilder(RequestBuilder.POST,
                     uri);
             // TODO enable timeout
             // rb.setTimeoutMillis(timeoutMillis);
             rb.setHeader("Content-Type", "text/plain;charset=utf-8");
             try {
-                rb.sendRequest(requestData, new RequestCallback() {
+                rb.sendRequest(rd, new RequestCallback() {
                     public void onError(Request request, Throwable exception) {
                         showCommunicationError(exception.getMessage());
                         endRequest();
@@ -358,6 +360,21 @@ public class ApplicationConnection {
                             showCommunicationError("Invalid status code 0 (server down?)");
                             return;
                             // TODO could add more cases
+                        case 503:
+                            // We'll assume msec instead of the usual seconds
+                            int delay = Integer.parseInt(response
+                                    .getHeader("Retry-After"));
+                            console.log("503, retrying in " + delay + "msec");
+                            (new Timer() {
+                                @Override
+                                public void run() {
+                                    activeRequests--;
+                                    makeUidlRequest(requestData, repaintAll,
+                                            forceSync, analyzeLayouts);
+                                }
+                            }).schedule(delay);
+                            return;
+
                         }
                         if ("init".equals(uidl_security_key)) {
                             // Read security key
@@ -415,7 +432,7 @@ public class ApplicationConnection {
 
             syncSendForce(((HTTPRequestImpl) GWT.create(HTTPRequestImpl.class))
                     .createXmlHTTPRequest(), uri + "&" + PARAM_UNLOADBURST
-                    + "=1", requestData);
+                    + "=1", rd);
         }
     }
 

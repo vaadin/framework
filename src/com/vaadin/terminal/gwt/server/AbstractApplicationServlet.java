@@ -475,12 +475,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                         .endTransaction(application, request);
             }
 
-            // Work-around for GAE session problem. Explicitly touch session so
-            // it is re-serialized.
-            HttpSession session = request.getSession(false);
-            if (session != null) {
-                session.setAttribute("sessionUpdated", new Date().getTime());
-            }
         }
     }
 
@@ -879,7 +873,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      * @return true if an DownloadStream was sent to the client, false otherwise
      * @throws IOException
      */
-    private boolean handleURI(CommunicationManager applicationManager,
+    protected boolean handleURI(CommunicationManager applicationManager,
             Window window, HttpServletRequest request,
             HttpServletResponse response) throws IOException {
         // Handles the URI
@@ -1085,11 +1079,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
         }
     }
 
-    private enum RequestType {
+    enum RequestType {
         FILE_UPLOAD, UIDL, OTHER;
     }
 
-    private RequestType getRequestType(HttpServletRequest request) {
+    protected RequestType getRequestType(HttpServletRequest request) {
         if (isFileUploadRequest(request)) {
             return RequestType.FILE_UPLOAD;
         } else if (isUIDLRequest(request)) {
@@ -1812,8 +1806,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
         String path = getRequestPathInfo(request);
 
         // Main window as the URI is empty
-        if (!(path == null || path.length() == 0 || path.equals("/") || path
-                .startsWith("/APP/"))) {
+        if (!(path == null || path.length() == 0 || path.equals("/"))) {
+            if (path.startsWith("/APP/")) {
+                // Use main window for application resources
+                return application.getMainWindow();
+            }
             String windowName = null;
             if (path.charAt(0) == '/') {
                 path = path.substring(1);
