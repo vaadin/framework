@@ -189,18 +189,18 @@ public class VRichTextToolbar extends Composite {
         public void onChange(ChangeEvent event) {
             Object sender = event.getSource();
             if (sender == backColors) {
-                basic.setBackColor(backColors.getValue(backColors
+                formatter.setBackColor(backColors.getValue(backColors
                         .getSelectedIndex()));
                 backColors.setSelectedIndex(0);
             } else if (sender == foreColors) {
-                basic.setForeColor(foreColors.getValue(foreColors
+                formatter.setForeColor(foreColors.getValue(foreColors
                         .getSelectedIndex()));
                 foreColors.setSelectedIndex(0);
             } else if (sender == fonts) {
-                basic.setFontName(fonts.getValue(fonts.getSelectedIndex()));
+                formatter.setFontName(fonts.getValue(fonts.getSelectedIndex()));
                 fonts.setSelectedIndex(0);
             } else if (sender == fontSizes) {
-                basic.setFontSize(fontSizesConstants[fontSizes
+                formatter.setFontSize(fontSizesConstants[fontSizes
                         .getSelectedIndex() - 1]);
                 fontSizes.setSelectedIndex(0);
             }
@@ -209,49 +209,49 @@ public class VRichTextToolbar extends Composite {
         public void onClick(ClickEvent event) {
             Object sender = event.getSource();
             if (sender == bold) {
-                basic.toggleBold();
+                formatter.toggleBold();
             } else if (sender == italic) {
-                basic.toggleItalic();
+                formatter.toggleItalic();
             } else if (sender == underline) {
-                basic.toggleUnderline();
+                formatter.toggleUnderline();
             } else if (sender == subscript) {
-                basic.toggleSubscript();
+                formatter.toggleSubscript();
             } else if (sender == superscript) {
-                basic.toggleSuperscript();
+                formatter.toggleSuperscript();
             } else if (sender == strikethrough) {
-                extended.toggleStrikethrough();
+                formatter.toggleStrikethrough();
             } else if (sender == indent) {
-                extended.rightIndent();
+                formatter.rightIndent();
             } else if (sender == outdent) {
-                extended.leftIndent();
+                formatter.leftIndent();
             } else if (sender == justifyLeft) {
-                basic.setJustification(RichTextArea.Justification.LEFT);
+                formatter.setJustification(RichTextArea.Justification.LEFT);
             } else if (sender == justifyCenter) {
-                basic.setJustification(RichTextArea.Justification.CENTER);
+                formatter.setJustification(RichTextArea.Justification.CENTER);
             } else if (sender == justifyRight) {
-                basic.setJustification(RichTextArea.Justification.RIGHT);
+                formatter.setJustification(RichTextArea.Justification.RIGHT);
             } else if (sender == insertImage) {
                 final String url = Window.prompt("Enter an image URL:",
                         "http://");
                 if (url != null) {
-                    extended.insertImage(url);
+                    formatter.insertImage(url);
                 }
             } else if (sender == createLink) {
                 final String url = Window
                         .prompt("Enter a link URL:", "http://");
                 if (url != null) {
-                    extended.createLink(url);
+                    formatter.createLink(url);
                 }
             } else if (sender == removeLink) {
-                extended.removeLink();
+                formatter.removeLink();
             } else if (sender == hr) {
-                extended.insertHorizontalRule();
+                formatter.insertHorizontalRule();
             } else if (sender == ol) {
-                extended.insertOrderedList();
+                formatter.insertOrderedList();
             } else if (sender == ul) {
-                extended.insertUnorderedList();
+                formatter.insertUnorderedList();
             } else if (sender == removeFormat) {
-                extended.removeFormat();
+                formatter.removeFormat();
             } else if (sender == richText) {
                 // We use the RichTextArea's onKeyUp event to update the toolbar
                 // status.
@@ -287,8 +287,7 @@ public class VRichTextToolbar extends Composite {
     private final EventHandler listener = new EventHandler();
 
     private final RichTextArea richText;
-    private final RichTextArea.BasicFormatter basic;
-    private final RichTextArea.ExtendedFormatter extended;
+    private final RichTextArea.Formatter formatter;
 
     private final FlowPanel outer = new FlowPanel();
     private final FlowPanel topPanel = new FlowPanel();
@@ -325,8 +324,7 @@ public class VRichTextToolbar extends Composite {
      */
     public VRichTextToolbar(RichTextArea richText) {
         this.richText = richText;
-        basic = richText.getBasicFormatter();
-        extended = richText.getExtendedFormatter();
+        formatter = richText.getFormatter();
 
         outer.add(topPanel);
         outer.add(bottomPanel);
@@ -338,7 +336,7 @@ public class VRichTextToolbar extends Composite {
         initWidget(outer);
         setStyleName("gwt-RichTextToolbar");
 
-        if (basic != null) {
+        if (formatter != null) {
             topPanel.add(bold = createToggleButton(images.bold(), strings
                     .bold()));
             topPanel.add(italic = createToggleButton(images.italic(), strings
@@ -355,9 +353,7 @@ public class VRichTextToolbar extends Composite {
                     .justifyCenter(), strings.justifyCenter()));
             topPanel.add(justifyRight = createPushButton(images.justifyRight(),
                     strings.justifyRight()));
-        }
 
-        if (extended != null) {
             topPanel.add(strikethrough = createToggleButton(images
                     .strikeThrough(), strings.strikeThrough()));
             topPanel.add(indent = createPushButton(images.indent(), strings
@@ -375,9 +371,7 @@ public class VRichTextToolbar extends Composite {
                     strings.removeLink()));
             topPanel.add(removeFormat = createPushButton(images.removeFormat(),
                     strings.removeFormat()));
-        }
 
-        if (basic != null) {
             bottomPanel.add(backColors = createColorList("Background"));
             bottomPanel.add(foreColors = createColorList("Foreground"));
             bottomPanel.add(fonts = createFontList());
@@ -457,16 +451,14 @@ public class VRichTextToolbar extends Composite {
      * Updates the status of all the stateful buttons.
      */
     private void updateStatus() {
-        if (basic != null) {
-            bold.setDown(basic.isBold());
-            italic.setDown(basic.isItalic());
-            underline.setDown(basic.isUnderlined());
-            subscript.setDown(basic.isSubscript());
-            superscript.setDown(basic.isSuperscript());
-        }
+        if (formatter != null) {
+            bold.setDown(formatter.isBold());
+            italic.setDown(formatter.isItalic());
+            underline.setDown(formatter.isUnderlined());
+            subscript.setDown(formatter.isSubscript());
+            superscript.setDown(formatter.isSuperscript());
 
-        if (extended != null) {
-            strikethrough.setDown(extended.isStrikethrough());
+            strikethrough.setDown(formatter.isStrikethrough());
         }
     }
 }
