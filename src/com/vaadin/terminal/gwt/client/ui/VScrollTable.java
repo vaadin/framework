@@ -305,10 +305,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
     private void restoreRowVisibility() {
         // Restore row visibility which is set to "none" when the row is
         // rendered.
-        TableSectionElement tableBodyElement = scrollBody.tBodyElement;
-        final int rows = tableBodyElement.getChildCount();
+        Element tableBodyElement = scrollBody.tBodyElement.cast();
+        final int rows = DOM.getChildCount(tableBodyElement);
         for (int row = 0; row < rows; row++) {
-            final Element cell = tableBodyElement.getChild(row).cast();
+            final Element cell = DOM.getChild(tableBodyElement, row).cast();
             cell.getStyle().setProperty("visibility", "");
         }
 
