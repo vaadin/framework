@@ -1,4 +1,4 @@
-package com.vaadin.tests.components.textfield;
+package com.vaadin.tests.components.table;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -87,8 +87,8 @@ public class TextFieldRelativeWidth extends TestBase {
             if (inputPromptChild != null && inputPromptChild.length() > 0) {
                 tf.setInputPrompt(inputPromptChild);
             }
-            tf.setRows(1);
-            tf.setHeight("45px");
+            // tf.setRows(1);
+            // tf.setHeight("45px");
             tf.setWidth("100%");
             tf.addStyleName("childtf");
             newItem.getItemProperty("text").setValue(tf);
