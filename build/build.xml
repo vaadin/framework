@@ -855,7 +855,7 @@
 			<arg value="${output-dir}/WebContent/VAADIN/widgetsets" />
 			<arg value="com.vaadin.demo.sampler.gwt.SamplerWidgetSet" />
 			<arg value="-style" />
-			<arg value="PRETTY" />
+			<arg value="OBF" />
             <jvmarg value="-Xss8M"/>
             <jvmarg value="-Djava.awt.headless=true"/>
 			<classpath>
