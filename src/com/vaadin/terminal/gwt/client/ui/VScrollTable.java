@@ -286,8 +286,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
             if (isAttached()) {
                 sizeInit();
             }
-
-            restoreRowVisibility();
+            scrollBody.restoreRowVisibility();
         }
 
         if (selectMode == Table.SELECT_MODE_NONE) {
@@ -300,18 +299,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
         purgeUnregistryBag();
         rendering = false;
         headerChangedDuringUpdate = false;
-    }
-
-    private void restoreRowVisibility() {
-        // Restore row visibility which is set to "none" when the row is
-        // rendered.
-        Element tableBodyElement = scrollBody.tBodyElement.cast();
-        final int rows = DOM.getChildCount(tableBodyElement);
-        for (int row = 0; row < rows; row++) {
-            final Element cell = DOM.getChild(tableBodyElement, row).cast();
-            cell.getStyle().setProperty("visibility", "");
-        }
-
     }
 
     private void setCacheRate(double d) {
@@ -427,7 +414,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
         }
         scrollBody.fixSpacers();
 
-        restoreRowVisibility();
+        scrollBody.restoreRowVisibility();
     }
 
     /**
@@ -2176,6 +2163,16 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
 
             }
 
+        }
+
+        /**
+         * Restore row visibility which is set to "none" when the row is
+         * rendered (due a performance optimization).
+         */
+        private void restoreRowVisibility() {
+            for (Widget row : renderedRows) {
+                row.getElement().getStyle().setProperty("visibility", "");
+            }
         }
 
         public class VScrollTableRow extends Panel implements ActionOwner,
