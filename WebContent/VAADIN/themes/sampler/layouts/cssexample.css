@@ -1,0 +1,26 @@
+.floatedpanel {
+	float:right;
+}
+
+.footer {
+	width: 3in; 
+	padding: 3px;
+	margin-left:auto;
+	margin-right:auto;
+	clear:both; 
+	height:40px; 
+	background-color: grey; 
+	white-space:normal;
+}
+
+.brick {
+	text-align:center;
+	width: 100px; 
+	height: 100px; 
+	margin: 10px;
+	padding:10px;
+	background-color:#1E2123; 
+	color:white;
+	float:left; 
+	border: 3px solid black;
+} 

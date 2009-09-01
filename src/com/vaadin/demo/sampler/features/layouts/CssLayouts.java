@@ -44,6 +44,7 @@ public class CssLayouts extends Feature {
 
     @Override
     public NamedExternalResource[] getRelatedResources() {
-        return null;
+        return new NamedExternalResource[] { new NamedExternalResource(
+                "CSS for the layout", getThemeBase() + "layouts/cssexample.css") };
     }
 }

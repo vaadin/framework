@@ -13,20 +13,9 @@ public class CssLayoutsExample extends VerticalLayout {
         setMargin(true);
 
         /*
-         * Note that adding inline style like this is a very, VERY bad
-         * programming habit. The correct place for CSS is in the theme. We do
-         * it here to keep the CSS in the java code for demonstration purposes.
+         * Note, that this code example may not be self explanatory without
+         * checking out the related CSS file in the sampler theme.
          */
-        Label demostyle = new Label(
-                "<style>"
-                        + ".floatedpanel {float:right;} "
-                        + ".footer {width: 3in; padding: 3px;margin-left:auto;margin-right:auto;"
-                        + "clear:both; height:40px; background-color: grey; white-space:normal;} "
-                        + ".brick {text-align:center;width: 100px; height: 100px; margin: 10px;padding:10px;"
-                        + "background-color:#1E2123; color:white;float:left; border: 3px solid black;} "
-                        + "</style>", Label.CONTENT_XHTML);
-
-        addComponent(demostyle);
 
         final Panel panel = new Panel("Panel");
         panel.setStyleName("floatedpanel");
