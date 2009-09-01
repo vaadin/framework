@@ -25,6 +25,10 @@
 	display: inline;
 }
 
+.v-ie7 .v-button {
+   display: inline;
+}
+
 .v-button-wrap,
 .v-button-caption {
 	vertical-align: middle;
