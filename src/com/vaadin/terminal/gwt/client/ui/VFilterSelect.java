@@ -23,6 +23,8 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -32,7 +34,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
@@ -97,7 +98,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     }
 
     public class SuggestionPopup extends VOverlay implements PositionCallback,
-            PopupListener {
+            CloseHandler<PopupPanel> {
 
         private static final String Z_INDEX = "30000";
 
@@ -133,7 +134,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             DOM.appendChild(root, status);
             DOM.setElementProperty(status, "className", CLASSNAME + "-status");
 
-            addPopupListener(this);
+            addCloseHandler(this);
         }
 
         public void showSuggestions(
@@ -374,8 +375,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             return (lastAutoClosed > 0 && (now - lastAutoClosed) < 200);
         }
 
-        public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
-            if (autoClosed) {
+        public void onClose(CloseEvent<PopupPanel> event) {
+            if (event.isAutoClosed()) {
                 lastAutoClosed = (new Date()).getTime();
             }
         }

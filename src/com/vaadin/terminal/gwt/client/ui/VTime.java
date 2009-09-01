@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -6,12 +6,12 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.Date;
 
-import com.google.gwt.user.client.ui.ChangeListener;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.Widget;
 
-public class VTime extends FlowPanel implements ChangeListener {
+public class VTime extends FlowPanel implements ChangeHandler {
 
     private final VDateField datefield;
 
@@ -45,7 +45,7 @@ public class VTime extends FlowPanel implements ChangeListener {
             for (int i = 0; i < numHours; i++) {
                 hours.addItem((i < 10) ? "0" + i : "" + i);
             }
-            hours.addChangeListener(this);
+            hours.addChangeHandler(this);
             if (thc) {
                 ampm = new ListBox();
                 ampm.setStyleName(VNativeSelect.CLASSNAME);
@@ -53,7 +53,7 @@ public class VTime extends FlowPanel implements ChangeListener {
                         .getAmPmStrings();
                 ampm.addItem(ampmText[0]);
                 ampm.addItem(ampmText[1]);
-                ampm.addChangeListener(this);
+                ampm.addChangeHandler(this);
             }
 
             if (datefield.getCurrentResolution() >= VDateField.RESOLUTION_MIN) {
@@ -62,7 +62,7 @@ public class VTime extends FlowPanel implements ChangeListener {
                 for (int i = 0; i < 60; i++) {
                     mins.addItem((i < 10) ? "0" + i : "" + i);
                 }
-                mins.addChangeListener(this);
+                mins.addChangeHandler(this);
             }
             if (datefield.getCurrentResolution() >= VDateField.RESOLUTION_SEC) {
                 sec = new ListBox();
@@ -70,7 +70,7 @@ public class VTime extends FlowPanel implements ChangeListener {
                 for (int i = 0; i < 60; i++) {
                     sec.addItem((i < 10) ? "0" + i : "" + i);
                 }
-                sec.addChangeListener(this);
+                sec.addChangeHandler(this);
             }
             if (datefield.getCurrentResolution() == VDateField.RESOLUTION_MSEC) {
                 msec = new ListBox();
@@ -84,7 +84,7 @@ public class VTime extends FlowPanel implements ChangeListener {
                         msec.addItem("" + i);
                     }
                 }
-                msec.addChangeListener(this);
+                msec.addChangeHandler(this);
             }
 
             final String delimiter = datefield.getDateTimeService()
@@ -246,7 +246,7 @@ public class VTime extends FlowPanel implements ChangeListener {
         readonly = datefield.isReadonly();
     }
 
-    public void onChange(Widget sender) {
+    public void onChange(ChangeEvent event) {
         if (datefield.getCurrentDate() == null) {
             // was null on server, need to set
             Date now = datefield.getShowingDate();
@@ -272,7 +272,7 @@ public class VTime extends FlowPanel implements ChangeListener {
             datefield.getClient().updateVariable(datefield.getId(), "msec",
                     datefield.getMilliseconds(), false);
         }
-        if (sender == hours) {
+        if (event.getSource() == hours) {
             int h = hours.getSelectedIndex();
             if (datefield.getDateTimeService().isTwelveHourClock()) {
                 h = h + ampm.getSelectedIndex() * 12;
@@ -282,28 +282,28 @@ public class VTime extends FlowPanel implements ChangeListener {
             datefield.getClient().updateVariable(datefield.getId(), "hour", h,
                     datefield.isImmediate());
             updateTime(false);
-        } else if (sender == mins) {
+        } else if (event.getSource() == mins) {
             final int m = mins.getSelectedIndex();
             datefield.getCurrentDate().setMinutes(m);
             datefield.getShowingDate().setMinutes(m);
             datefield.getClient().updateVariable(datefield.getId(), "min", m,
                     datefield.isImmediate());
             updateTime(false);
-        } else if (sender == sec) {
+        } else if (event.getSource() == sec) {
             final int s = sec.getSelectedIndex();
             datefield.getCurrentDate().setSeconds(s);
             datefield.getShowingDate().setSeconds(s);
             datefield.getClient().updateVariable(datefield.getId(), "sec", s,
                     datefield.isImmediate());
             updateTime(false);
-        } else if (sender == msec) {
+        } else if (event.getSource() == msec) {
             final int ms = msec.getSelectedIndex();
             datefield.setMilliseconds(ms);
             datefield.setShowingMilliseconds(ms);
             datefield.getClient().updateVariable(datefield.getId(), "msec", ms,
                     datefield.isImmediate());
             updateTime(false);
-        } else if (sender == ampm) {
+        } else if (event.getSource() == ampm) {
             final int h = hours.getSelectedIndex() + ampm.getSelectedIndex()
                     * 12;
             datefield.getCurrentDate().setHours(h);

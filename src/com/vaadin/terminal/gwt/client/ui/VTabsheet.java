@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -9,12 +9,13 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -95,7 +96,7 @@ public class VTabsheet extends VTabsheetBase {
 
     }
 
-    class TabBar extends ComplexPanel implements ClickListener {
+    class TabBar extends ComplexPanel implements ClickHandler {
 
         private final Element tr = DOM.createTR();
 
@@ -134,12 +135,12 @@ public class VTabsheet extends VTabsheetBase {
             setStyleName(div, CLASSNAME + "-tabitem");
             DOM.appendChild(td, div);
             DOM.insertBefore(tr, td, spacerTd);
-            c.addClickListener(this);
+            c.addClickHandler(this);
             add(c, div);
         }
 
-        public void onClick(Widget sender) {
-            int index = getWidgetIndex(sender);
+        public void onClick(ClickEvent event) {
+            int index = getWidgetIndex((Widget) event.getSource());
             onTabSelected(index);
         }
 
@@ -193,12 +194,6 @@ public class VTabsheet extends VTabsheetBase {
             if (w == oldSelected) {
                 oldSelected = null;
             }
-        }
-
-        @Override
-        public boolean remove(Widget w) {
-            ((VCaption) w).removeClickListener(this);
-            return super.remove(w);
         }
 
         public TabSheetCaption getTab(int index) {

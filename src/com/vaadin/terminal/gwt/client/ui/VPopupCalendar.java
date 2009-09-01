@@ -6,11 +6,12 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -18,7 +19,7 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 
 public class VPopupCalendar extends VTextualDate implements Paintable, Field,
-        ClickHandler, PopupListener {
+        ClickHandler, CloseHandler<PopupPanel> {
 
     private final Button calendarToggle;
 
@@ -40,7 +41,7 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
         popup = new VOverlay(true, true, true);
         popup.setStyleName(VDateField.CLASSNAME + "-popup");
         popup.setWidget(calendar);
-        popup.addPopupListener(this);
+        popup.addCloseHandler(this);
 
         DOM.setElementProperty(calendar.getElement(), "id",
                 "PID_VAADIN_POPUPCAL");
@@ -99,8 +100,8 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
         }
     }
 
-    public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
-        if (sender == popup) {
+    public void onClose(CloseEvent<PopupPanel> event) {
+        if (event.getSource() == popup) {
             buildDate();
             // Sigh.
             Timer t = new Timer() {

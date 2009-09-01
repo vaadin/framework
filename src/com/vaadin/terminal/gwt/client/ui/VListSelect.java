@@ -7,9 +7,9 @@ package com.vaadin.terminal.gwt.client.ui;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -29,7 +29,7 @@ public class VListSelect extends VOptionGroupBase {
         super(new TooltipListBox(true), CLASSNAME);
         select = (TooltipListBox) optionsContainer;
         select.setSelect(this);
-        select.addChangeListener(this);
+        select.addChangeHandler(this);
         select.addClickHandler(this);
         select.setStyleName(CLASSNAME + "-select");
         select.setVisibleItemCount(VISIBLE_COUNT);
@@ -71,7 +71,7 @@ public class VListSelect extends VOptionGroupBase {
     }
 
     @Override
-    public void onChange(Widget sender) {
+    public void onChange(ChangeEvent event) {
         final int si = select.getSelectedIndex();
         if (si == -1 && !isNullSelectionAllowed()) {
             select.setSelectedIndex(lastSelectedIndex);

@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
@@ -15,8 +17,6 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.MouseListener;
 import com.google.gwt.user.client.ui.MouseListenerCollection;
 import com.google.gwt.user.client.ui.SourcesMouseEvents;
-import com.google.gwt.user.client.ui.SourcesTableEvents;
-import com.google.gwt.user.client.ui.TableListener;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.DateTimeService;
 import com.vaadin.terminal.gwt.client.LocaleService;
@@ -53,13 +53,13 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
         datefield = parent;
         setStyleName(VDateField.CLASSNAME + "-calendarpanel");
         // buildCalendar(true);
-        days.addTableListener(new DateClickListener(this));
+        days.addClickHandler(new DateClickHandler(this));
     }
 
     public VCalendarPanel(VDateField parent, Date min, Date max) {
         datefield = parent;
         setStyleName(VDateField.CLASSNAME + "-calendarpanel");
-        days.addTableListener(new DateClickListener(this));
+        days.addClickHandler(new DateClickHandler(this));
 
     }
 
@@ -263,7 +263,7 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
     }
 
     /**
-     * 
+     *
      * @param forceRedraw
      *            Build all from scratch, in case of e.g. locale changes
      */
@@ -426,8 +426,6 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
             switch (DOM.eventGetType(event)) {
             case Event.ONMOUSEDOWN:
             case Event.ONMOUSEUP:
-            case Event.ONMOUSEMOVE:
-            case Event.ONMOUSEOVER:
             case Event.ONMOUSEOUT:
                 if (mouseListeners != null) {
                     mouseListeners.fireMouseEvent(this, event);
@@ -437,21 +435,25 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
         }
     }
 
-    private class DateClickListener implements TableListener {
+    private class DateClickHandler implements ClickHandler {
 
         private final VCalendarPanel cal;
 
-        public DateClickListener(VCalendarPanel panel) {
+        public DateClickHandler(VCalendarPanel panel) {
             cal = panel;
         }
 
-        public void onCellClicked(SourcesTableEvents sender, int row, int col) {
-            if (sender != cal.days || row < 1 || row > 6
+        public void onClick(ClickEvent event) {
+            Object sender = event.getSource();
+            Cell cell = cal.days.getCellForEvent(event);
+            if (sender != cal.days || cell == null || cell.getRowIndex() < 1
+                    || cell.getRowIndex() > 6
                     || !cal.datefield.isEnabled() || cal.datefield.isReadonly()) {
                 return;
             }
 
-            final String text = cal.days.getText(row, col);
+            final String text = cal.days.getText(cell.getRowIndex(), cell
+                    .getCellIndex());
             if (text.equals(" ")) {
                 return;
             }
@@ -538,7 +540,7 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
 
     /**
      * Sets focus to Calendar panel.
-     * 
+     *
      * @param focus
      */
     public void setFocus(boolean focus) {

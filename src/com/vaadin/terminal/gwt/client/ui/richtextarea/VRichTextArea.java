@@ -6,17 +6,19 @@ package com.vaadin.terminal.gwt.client.ui.richtextarea;
 
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.RichTextArea;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Paintable;
@@ -31,7 +33,7 @@ import com.vaadin.terminal.gwt.client.ui.Field;
  *
  */
 public class VRichTextArea extends Composite implements Paintable, Field,
-        ChangeListener, BlurHandler, KeyboardListener {
+        ChangeHandler, BlurHandler, KeyPressHandler {
 
     /**
      * The input node CSS classname.
@@ -60,6 +62,8 @@ public class VRichTextArea extends Composite implements Paintable, Field,
     private int maxLength = -1;
 
     private int toolbarNaturalWidth = 500;
+
+    private HandlerRegistration keyPressHandler;
 
     public VRichTextArea() {
         fp.add(formatter);
@@ -116,17 +120,18 @@ public class VRichTextArea extends Composite implements Paintable, Field,
                 .getIntAttribute("maxLength") : -1;
         if (newMaxLength >= 0) {
             if (maxLength == -1) {
-                rta.addKeyboardListener(this);
+                keyPressHandler = rta.addKeyPressHandler(this);
             }
             maxLength = newMaxLength;
         } else if (maxLength != -1) {
             getElement().setAttribute("maxlength", "");
             maxLength = -1;
-            rta.removeKeyboardListener(this);
+            keyPressHandler.removeHandler();
         }
     }
 
-    public void onChange(Widget sender) {
+    // TODO is this really used, or does everything go via onBlur() only?
+    public void onChange(ChangeEvent event) {
         if (client != null && id != null) {
             client.updateVariable(id, "text", rta.getText(), immediate);
         }
@@ -225,11 +230,7 @@ public class VRichTextArea extends Composite implements Paintable, Field,
         }
     }
 
-    public void onKeyDown(Widget sender, char keyCode, int modifiers) {
-        // NOP
-    }
-
-    public void onKeyPress(Widget sender, char keyCode, int modifiers) {
+    public void onKeyPress(KeyPressEvent event) {
         if (maxLength >= 0) {
             DeferredCommand.addCommand(new Command() {
                 public void execute() {
@@ -239,10 +240,6 @@ public class VRichTextArea extends Composite implements Paintable, Field,
                 }
             });
         }
-    }
-
-    public void onKeyUp(Widget sender, char keyCode, int modifiers) {
-        // NOP
     }
 
 }

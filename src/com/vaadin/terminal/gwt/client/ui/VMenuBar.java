@@ -5,13 +5,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HasHTML;
-import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
@@ -19,7 +20,8 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 
-public class VMenuBar extends Widget implements Paintable, PopupListener {
+public class VMenuBar extends Widget implements Paintable,
+        CloseHandler<PopupPanel> {
 
     /** Set the CSS class name to allow styling. */
     public static final String CLASSNAME = "v-menubar";
@@ -81,7 +83,7 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
     /**
      * This method must be implemented to update the client-side component from
      * UIDL data received from server.
-     * 
+     *
      * This method is called when the page is loaded for the first time, and
      * every time UI changes in the component are received from the server.
      */
@@ -235,7 +237,7 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
     /**
      * This is called by the items in the menu and it communicates the
      * information to the server
-     * 
+     *
      * @param clickedItemId
      *            id of the item that was clicked
      */
@@ -272,7 +274,7 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
 
     /**
      * Returns the containing element of the menu
-     * 
+     *
      * @return
      */
     public Element getContainingElement() {
@@ -281,7 +283,7 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
 
     /**
      * Returns a new child element to add an item to
-     * 
+     *
      * @return
      */
     public Element getNewChildElement() {
@@ -297,7 +299,7 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
 
     /**
      * Add a new item to this menu
-     * 
+     *
      * @param html
      *            items text
      * @param cmd
@@ -312,7 +314,7 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
 
     /**
      * Add a new item to this menu
-     * 
+     *
      * @param item
      */
     public void addItem(CustomMenuItem item) {
@@ -324,7 +326,7 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
 
     /**
      * Remove the given item from this menu
-     * 
+     *
      * @param item
      */
     public void removeItem(CustomMenuItem item) {
@@ -375,7 +377,7 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
 
     /**
      * When an item is clicked
-     * 
+     *
      * @param item
      */
     public void itemClick(CustomMenuItem item) {
@@ -400,7 +402,7 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
 
     /**
      * When the user hovers the mouse over the item
-     * 
+     *
      * @param item
      */
     public void itemOver(CustomMenuItem item) {
@@ -421,7 +423,7 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
 
     /**
      * When the mouse is moved away from an item
-     * 
+     *
      * @param item
      */
     public void itemOut(CustomMenuItem item) {
@@ -434,13 +436,13 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
     /**
      * Shows the child menu of an item. The caller must ensure that the item has
      * a submenu.
-     * 
+     *
      * @param item
      */
     public void showChildMenu(CustomMenuItem item) {
         popup = new VOverlay(true, false, true);
         popup.setWidget(item.getSubMenu());
-        popup.addPopupListener(this);
+        popup.addCloseHandler(this);
 
         if (subMenu) {
             popup.setPopupPosition(item.getParentMenu().getAbsoluteLeft()
@@ -461,7 +463,7 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
 
     /**
      * Hides the submenu of an item
-     * 
+     *
      * @param item
      */
     public void hideChildMenu(CustomMenuItem item) {
@@ -509,7 +511,7 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
     /**
      * Returns the parent menu of this menu, or null if this is the top-level
      * menu
-     * 
+     *
      * @return
      */
     public VMenuBar getParentMenu() {
@@ -518,7 +520,7 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
 
     /**
      * Set the parent menu of this menu
-     * 
+     *
      * @param parent
      */
     public void setParentMenu(VMenuBar parent) {
@@ -528,7 +530,7 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
     /**
      * Returns the currently selected item of this menu, or null if nothing is
      * selected
-     * 
+     *
      * @return
      */
     public CustomMenuItem getSelected() {
@@ -537,7 +539,7 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
 
     /**
      * Set the currently selected item of this menu
-     * 
+     *
      * @param item
      */
     public void setSelected(CustomMenuItem item) {
@@ -556,9 +558,9 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
     /**
      * Listener method, fired when this menu is closed
      */
-    public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
+    public void onClose(CloseEvent<PopupPanel> event) {
         hideChildren();
-        if (autoClosed) {
+        if (event.isAutoClosed()) {
             hideParents();
         }
         // setSelected(null);
@@ -568,9 +570,9 @@ public class VMenuBar extends Widget implements Paintable, PopupListener {
     }
 
     /**
-     * 
+     *
      * A class to hold information on menu items
-     * 
+     *
      */
     private class CustomMenuItem extends UIObject implements HasHTML {
 

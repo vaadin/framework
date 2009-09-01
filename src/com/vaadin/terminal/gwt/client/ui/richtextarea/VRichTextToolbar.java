@@ -16,6 +16,8 @@
 package com.vaadin.terminal.gwt.client.ui.richtextarea;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -23,7 +25,6 @@ import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ImageBundle;
@@ -31,7 +32,6 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.ToggleButton;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * A modified version of sample toolbar for use with {@link RichTextArea}. It
@@ -180,13 +180,14 @@ public class VRichTextToolbar extends Composite {
     }
 
     /**
-     * We use an inner EventListener class to avoid exposing event methods on
-     * the RichTextToolbar itself.
+     * We use an inner EventHandler class to avoid exposing event methods on the
+     * RichTextToolbar itself.
      */
-    private class EventListener implements ClickHandler, ChangeListener,
+    private class EventHandler implements ClickHandler, ChangeHandler,
             KeyUpHandler {
 
-        public void onChange(Widget sender) {
+        public void onChange(ChangeEvent event) {
+            Object sender = event.getSource();
             if (sender == backColors) {
                 basic.setBackColor(backColors.getValue(backColors
                         .getSelectedIndex()));
@@ -283,7 +284,7 @@ public class VRichTextToolbar extends Composite {
 
     private final Images images = (Images) GWT.create(Images.class);
     private final Strings strings = (Strings) GWT.create(Strings.class);
-    private final EventListener listener = new EventListener();
+    private final EventHandler listener = new EventHandler();
 
     private final RichTextArea richText;
     private final RichTextArea.BasicFormatter basic;
@@ -392,7 +393,7 @@ public class VRichTextToolbar extends Composite {
 
     private ListBox createColorList(String caption) {
         final ListBox lb = new ListBox();
-        lb.addChangeListener(listener);
+        lb.addChangeHandler(listener);
         lb.setVisibleItemCount(1);
 
         lb.addItem(caption);
@@ -407,7 +408,7 @@ public class VRichTextToolbar extends Composite {
 
     private ListBox createFontList() {
         final ListBox lb = new ListBox();
-        lb.addChangeListener(listener);
+        lb.addChangeHandler(listener);
         lb.setVisibleItemCount(1);
 
         lb.addItem(strings.font(), "");
@@ -423,7 +424,7 @@ public class VRichTextToolbar extends Composite {
 
     private ListBox createFontSizes() {
         final ListBox lb = new ListBox();
-        lb.addChangeListener(listener);
+        lb.addChangeHandler(listener);
         lb.setVisibleItemCount(1);
 
         lb.addItem(strings.size());

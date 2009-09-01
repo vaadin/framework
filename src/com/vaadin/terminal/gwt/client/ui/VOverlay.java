@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -6,9 +6,10 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
@@ -41,7 +42,7 @@ public class VOverlay extends PopupPanel {
     /**
      * The HTML snippet that is used to render the actual shadow. In consists of
      * nine different DIV-elements with the following class names:
-     * 
+     *
      * <pre>
      *   .v-shadow[-stylename]
      *   ----------------------------------------------
@@ -54,7 +55,7 @@ public class VOverlay extends PopupPanel {
      *   | .bottom-left  |  .bottom  |  .bottom-right |
      *   ----------------------------------------------
      * </pre>
-     * 
+     *
      * See default theme 'shadow.css' for implementation example.
      */
     private static final String SHADOW_HTML = "<div class=\"top-left\"></div><div class=\"top\"></div><div class=\"top-right\"></div><div class=\"left\"></div><div class=\"center\"></div><div class=\"right\"></div><div class=\"bottom-left\"></div><div class=\"bottom\"></div><div class=\"bottom-right\"></div>";
@@ -82,8 +83,8 @@ public class VOverlay extends PopupPanel {
             shadow.setInnerHTML(SHADOW_HTML);
             DOM.setStyleAttribute(shadow, "position", "absolute");
 
-            addPopupListener(new PopupListener() {
-                public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
+            addCloseHandler(new CloseHandler<PopupPanel>() {
+                public void onClose(CloseEvent<PopupPanel> event) {
                     if (shadow.getParentElement() != null) {
                         shadow.getParentElement().removeChild(shadow);
                     }
@@ -99,7 +100,7 @@ public class VOverlay extends PopupPanel {
 
     /**
      * Set the z-index (visual stack position) for this overlay.
-     * 
+     *
      * @param zIndex
      *            The new z-index
      */
@@ -115,7 +116,7 @@ public class VOverlay extends PopupPanel {
 
     /**
      * Get the z-index (visual stack position) of this overlay.
-     * 
+     *
      * @return The z-index for this overlay.
      */
     private int getZIndex() {
@@ -162,7 +163,7 @@ public class VOverlay extends PopupPanel {
     private native void adjustIE6Frame(Element popup, int zindex)
     /*-{
         // relies on PopupImplIE6
-        if(popup.__frame) 
+        if(popup.__frame)
             popup.__frame.style.zIndex = zindex;
     }-*/;
 
@@ -186,7 +187,7 @@ public class VOverlay extends PopupPanel {
      * Sets the shadow style for this overlay. Will override any previous style
      * for the shadow. The default style name is defined by CLASSNAME_SHADOW.
      * The given style will be prefixed with CLASSNAME_SHADOW.
-     * 
+     *
      * @param style
      *            The new style name for the shadow element. Will be prefixed by
      *            CLASSNAME_SHADOW, e.g. style=='foobar' -> actual style
@@ -212,7 +213,7 @@ public class VOverlay extends PopupPanel {
      * be used to animate the shadow, using the 'progress' parameter (used to
      * animate the shadow in sync with GWT PopupPanel's default animation
      * 'PopupPanel.AnimationType.CENTER').
-     * 
+     *
      * @param progress
      *            A value between 0.0 and 1.0, indicating the progress of the
      *            animation (0=start, 1=end).

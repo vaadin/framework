@@ -47,7 +47,7 @@ public class VOptionGroup extends VOptionGroupBase {
                 op.setStyleName("v-radiobutton");
             }
             op.addStyleName(CLASSNAME_OPTION);
-            op.setChecked(opUidl.getBooleanAttribute("selected"));
+            op.setValue(opUidl.getBooleanAttribute("selected"));
             op.setEnabled(!opUidl.getBooleanAttribute("disabled")
                     && !isReadonly() && !isDisabled());
             op.addClickHandler(this);

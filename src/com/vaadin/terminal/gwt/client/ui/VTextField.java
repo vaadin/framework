@@ -6,14 +6,14 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.TextBoxBase;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Paintable;
@@ -28,7 +28,7 @@ import com.vaadin.terminal.gwt.client.VTooltip;
  *
  */
 public class VTextField extends TextBoxBase implements Paintable, Field,
-        ChangeListener, FocusHandler, BlurHandler {
+        ChangeHandler, FocusHandler, BlurHandler {
 
     /**
      * The input node CSS classname.
@@ -67,7 +67,7 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             DOM.setStyleAttribute(node, "marginBottom", "-1px");
         }
         setStyleName(CLASSNAME);
-        addChangeListener(this);
+        addChangeHandler(this);
         addFocusHandler(this);
         addBlurHandler(this);
         sinkEvents(VTooltip.TOOLTIP_EVENTS);
@@ -143,7 +143,7 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         return maxLength;
     }
 
-    public void onChange(Widget sender) {
+    public void onChange(ChangeEvent event) {
         if (client != null && id != null) {
             String newText = getText();
             if (!prompting && newText != null
@@ -180,7 +180,7 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             setText(inputPrompt);
             addStyleDependentName(CLASSNAME_PROMPT);
         }
-        onChange((Widget) event.getSource());
+        onChange(null);
     }
 
     private void setPrompting(boolean prompting) {

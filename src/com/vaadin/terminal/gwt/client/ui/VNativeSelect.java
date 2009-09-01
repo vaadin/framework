@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -7,7 +7,7 @@ package com.vaadin.terminal.gwt.client.ui;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -23,7 +23,7 @@ public class VNativeSelect extends VOptionGroupBase implements Field {
         select = (TooltipListBox) optionsContainer;
         select.setSelect(this);
         select.setVisibleItemCount(1);
-        select.addChangeListener(this);
+        select.addChangeHandler(this);
         select.setStyleName(CLASSNAME + "-select");
 
     }
@@ -72,7 +72,7 @@ public class VNativeSelect extends VOptionGroupBase implements Field {
     }
 
     @Override
-    public void onChange(Widget sender) {
+    public void onChange(ChangeEvent event) {
 
         if (select.isMultipleSelect()) {
             client.updateVariable(id, "selected", getSelectedItems(),

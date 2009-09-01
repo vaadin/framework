@@ -12,6 +12,8 @@ import java.util.Set;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
@@ -19,8 +21,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.WindowCloseListener;
-import com.google.gwt.user.client.WindowResizeListener;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -37,7 +37,7 @@ import com.vaadin.terminal.gwt.client.Util;
  *
  */
 public class VView extends SimplePanel implements Container,
-        WindowResizeListener, WindowCloseListener {
+        ResizeHandler, Window.ClosingHandler {
 
     private static final String CLASSNAME = "v-view";
 
@@ -183,10 +183,9 @@ public class VView extends SimplePanel implements Container,
             final String url = open.getStringAttribute("src");
             final String target = open.getStringAttribute("name");
             if (target == null) {
-                // This window is closing. Send close event before
-                // going to the new url
+                // This window is closing. Nothing was done in the close event,
+                // so don't need to call it before going to the new url
                 isClosed = true;
-                onWindowClosed();
                 goTo(url);
             } else {
                 String options;
@@ -332,11 +331,11 @@ public class VView extends SimplePanel implements Container,
         // Add window listeners on first paint, to prevent premature
         // variablechanges
         if (firstPaint) {
-            Window.addWindowCloseListener(this);
-            Window.addWindowResizeListener(this);
+            Window.addWindowClosingHandler(this);
+            Window.addResizeHandler(this);
         }
 
-        onWindowResized(Window.getClientWidth(), Window.getClientHeight());
+        onResize(Window.getClientWidth(), Window.getClientHeight());
 
         if (BrowserInfo.get().isSafari()) {
             Util.runWebkitOverflowAutoFix(getElement());
@@ -386,7 +385,11 @@ public class VView extends SimplePanel implements Container,
         }
     }
 
-    public void onWindowResized(int width, int height) {
+    public void onResize(ResizeEvent event) {
+        onResize(event.getWidth(), event.getHeight());
+    }
+
+    public void onResize(int wwidth, int wheight) {
         if (BrowserInfo.get().isIE()) {
             /*
              * IE will give us some false resized events due bugs with
@@ -398,17 +401,17 @@ public class VView extends SimplePanel implements Container,
                     @Override
                     public void run() {
                         boolean changed = false;
-                        if (VView.this.width != getOffsetWidth()) {
-                            VView.this.width = getOffsetWidth();
+                        if (width != getOffsetWidth()) {
+                            width = getOffsetWidth();
                             changed = true;
                             ApplicationConnection.getConsole().log(
-                                    "window w" + VView.this.width);
+                                    "window w" + width);
                         }
-                        if (VView.this.height != getOffsetHeight()) {
-                            VView.this.height = getOffsetHeight();
+                        if (height != getOffsetHeight()) {
+                            height = getOffsetHeight();
                             changed = true;
                             ApplicationConnection.getConsole().log(
-                                    "window h" + VView.this.height);
+                                    "window h" + height);
                         }
                         if (changed) {
                             ApplicationConnection
@@ -426,14 +429,14 @@ public class VView extends SimplePanel implements Container,
             }
             resizeTimer.schedule(200);
         } else {
-            if (width == VView.this.width && height == VView.this.height) {
+            if (wwidth == width && wheight == height) {
                 // No point in doing resize operations if window size has not
                 // changed
                 return;
             }
 
-            VView.this.width = Window.getClientWidth();
-            VView.this.height = Window.getClientHeight();
+            width = Window.getClientWidth();
+            height = Window.getClientHeight();
 
             ApplicationConnection.getConsole().log(
                     "Running layout functions due window resize");
@@ -459,11 +462,7 @@ public class VView extends SimplePanel implements Container,
        $wnd.location = url;
      }-*/;
 
-    public void onWindowClosed() {
-
-    }
-
-    public String onWindowClosing() {
+    public void onWindowClosing(Window.ClosingEvent event) {
         // Change focus on this window in order to ensure that all state is
         // collected from textfields
         VTextField.flushChangesFromFocusedTextField();
@@ -471,8 +470,6 @@ public class VView extends SimplePanel implements Container,
         // Send the closing state to server
         connection.updateVariable(id, "close", true, false);
         connection.sendPendingVariableChangesSync();
-
-        return null;
     }
 
     private final RenderSpace myRenderSpace = new RenderSpace() {
