@@ -286,6 +286,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
             if (isAttached()) {
                 sizeInit();
             }
+
+            restoreRowVisibility();
         }
 
         if (selectMode == Table.SELECT_MODE_NONE) {
@@ -298,6 +300,18 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
         purgeUnregistryBag();
         rendering = false;
         headerChangedDuringUpdate = false;
+    }
+
+    private void restoreRowVisibility() {
+        // Restore row visibility which is set to "none" when the row is
+        // rendered.
+        TableSectionElement tableBodyElement = scrollBody.tBodyElement;
+        final int rows = tableBodyElement.getChildCount();
+        for (int row = 0; row < rows; row++) {
+            final Element cell = tableBodyElement.getChild(row).cast();
+            cell.getStyle().setProperty("visibility", "");
+        }
+
     }
 
     private void setCacheRate(double d) {
@@ -413,6 +427,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
         }
         scrollBody.fixSpacers();
 
+        restoreRowVisibility();
     }
 
     /**
@@ -2210,6 +2225,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
 
             public VScrollTableRow(UIDL uidl, char[] aligns) {
                 this(uidl.getIntAttribute("key"));
+
+                /*
+                 * Rendering the rows as hidden improves Firefox and Safari
+                 * performance drastically.
+                 */
+                getElement().getStyle().setProperty("visibility", "hidden");
 
                 String rowStyle = uidl.getStringAttribute("rowstyle");
                 if (rowStyle != null) {
