@@ -103,8 +103,8 @@ public class VRichTextArea extends Composite implements Paintable, Field,
                 // rta is rather buggy in IE (as pretty much everything is)
                 // it needs some "shaking" not to fall into uneditable state
                 // see #2374
-                rta.getFormatter().toggleBold();
-                rta.getFormatter().toggleBold();
+                rta.getBasicFormatter().toggleBold();
+                rta.getBasicFormatter().toggleBold();
             }
             rta.setHTML(uidl.getStringVariable("text"));
 
