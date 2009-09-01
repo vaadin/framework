@@ -624,46 +624,46 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
             availW -= Util.getNativeScrollbarSize();
         }
 
+        // TODO refactor this code to be the same as in resize timer
         boolean needsReLayout = false;
 
         if (availW > total) {
             // natural size is smaller than available space
             final int extraSpace = availW - total;
             final int totalWidthR = total - totalExplicitColumnsWidths;
-            if (totalWidthR > 0) {
-                needsReLayout = true;
+            needsReLayout = true;
 
-                if (expandRatioDivider > 0) {
-                    // visible columns have some active expand ratios, excess
-                    // space is divided according to them
-                    headCells = tHead.iterator();
-                    i = 0;
-                    while (headCells.hasNext()) {
-                        HeaderCell hCell = (HeaderCell) headCells.next();
-                        if (hCell.getExpandRatio() > 0) {
-                            int w = widths[i];
-                            final int newSpace = (int) (extraSpace * (hCell
-                                    .getExpandRatio() / expandRatioDivider));
-                            w += newSpace;
-                            widths[i] = w;
-                        }
-                        i++;
+            if (expandRatioDivider > 0) {
+                // visible columns have some active expand ratios, excess
+                // space is divided according to them
+                headCells = tHead.iterator();
+                i = 0;
+                while (headCells.hasNext()) {
+                    HeaderCell hCell = (HeaderCell) headCells.next();
+                    if (hCell.getExpandRatio() > 0) {
+                        int w = widths[i];
+                        final int newSpace = (int) (extraSpace * (hCell
+                                .getExpandRatio() / expandRatioDivider));
+                        w += newSpace;
+                        widths[i] = w;
                     }
-                } else {
-                    // now we will share this sum relatively to those without
-                    // explicit width
-                    headCells = tHead.iterator();
-                    i = 0;
-                    while (headCells.hasNext()) {
-                        HeaderCell hCell = (HeaderCell) headCells.next();
-                        if (!hCell.isDefinedWidth()) {
-                            int w = widths[i];
-                            final int newSpace = extraSpace * w / totalWidthR;
-                            w += newSpace;
-                            widths[i] = w;
-                        }
-                        i++;
+                    i++;
+                }
+            } else if (totalWidthR > 0) {
+                // no expand ratios defined, we will share extra space
+                // relatively to "natural widths" among those without
+                // explicit width
+                headCells = tHead.iterator();
+                i = 0;
+                while (headCells.hasNext()) {
+                    HeaderCell hCell = (HeaderCell) headCells.next();
+                    if (!hCell.isDefinedWidth()) {
+                        int w = widths[i];
+                        final int newSpace = extraSpace * w / totalWidthR;
+                        w += newSpace;
+                        widths[i] = w;
                     }
+                    i++;
                 }
             }
 
