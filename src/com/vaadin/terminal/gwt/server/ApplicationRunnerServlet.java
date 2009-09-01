@@ -18,20 +18,25 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
      * The name of the application class currently used. Only valid within one
      * request.
      */
-    String applicationClassName = "";
+    private String[] defaultPackages;
+    private HttpServletRequest request;
 
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
+        String initParameter = servletConfig
+                .getInitParameter("defaultPackages");
+        if (initParameter != null) {
+            defaultPackages = initParameter.split(",");
+        }
     }
 
     @Override
     protected void service(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
-        applicationClassName = getApplicationRunnerApplicationClassName(request);
+        this.request = request;
         super.service(request, response);
-        applicationClassName = "";
-
+        this.request = null;
     }
 
     @Override
@@ -40,7 +45,7 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
         URL url = super.getApplicationUrl(request);
 
         String path = url.toString();
-        path += applicationClassName;
+        path += getApplicationRunnerApplicationClassName(request);
         path += "/";
 
         return new URL(path);
@@ -52,11 +57,8 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
 
         // Creates a new application instance
         try {
-            Class<?> applicationClass = getClassLoader().loadClass(
-                    applicationClassName);
-            final Application application = (Application) applicationClass
+            final Application application = (Application) getApplicationClass()
                     .newInstance();
-
             return application;
         } catch (final IllegalAccessException e) {
             throw new ServletException(e);
@@ -66,7 +68,7 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
             throw new ServletException(
                     new InstantiationException(
                             "Failed to load application class: "
-                                    + applicationClassName));
+                                    + getApplicationRunnerApplicationClassName(request)));
         }
 
     }
@@ -145,7 +147,31 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
     @Override
     protected Class getApplicationClass() throws ClassNotFoundException {
         // TODO use getClassLoader() ?
-        return getClass().getClassLoader().loadClass(applicationClassName);
+
+        Class<? extends Application> appClass = null;
+
+        String baseName = getApplicationRunnerApplicationClassName(request);
+        try {
+            appClass = (Class<? extends Application>) getClass()
+                    .getClassLoader().loadClass(baseName);
+            return appClass;
+        } catch (Exception e) {
+            //
+            for (int i = 0; i < defaultPackages.length; i++) {
+                try {
+                    appClass = (Class<? extends Application>) getClass()
+                            .getClassLoader().loadClass(
+                                    defaultPackages[i] + "." + baseName);
+                } catch (Exception e2) {
+                    // TODO: handle exception
+                }
+                if (appClass != null) {
+                    return appClass;
+                }
+            }
+        }
+
+        throw new ClassNotFoundException();
     }
 
     @Override
@@ -155,7 +181,8 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
             return null;
         }
 
-        path = path.substring(1 + applicationClassName.length());
+        path = path.substring(1 + getApplicationRunnerApplicationClassName(
+                request).length());
         return path;
     }
 

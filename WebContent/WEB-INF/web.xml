@@ -35,6 +35,8 @@
 	<servlet>
 		<servlet-name>VaadinApplicationRunner</servlet-name>
 		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationRunnerServlet</servlet-class>
+		<init-param><param-name>defaultPackages</param-name>
+		<param-value>com.vaadin.tests,com.vaadin.demo,com.vaadin.tests,com.vaadin.tests.components,com.vaadin.tests.components.layouts,com.vaadin.tests.components.panel,com.vaadin.tests.components.combobox,com.vaadin.tests.components.popupview,com.vaadin.tests.components.datefield,com.vaadin.tests.components.richtextarea,com.vaadin.tests.components.absolutelayout,com.vaadin.tests.components.embedded,com.vaadin.tests.components.splitpanel,com.vaadin.tests.components.abstractfield,com.vaadin.tests.components.form,com.vaadin.tests.components.table,com.vaadin.tests.components.accordion,com.vaadin.tests.components.label,com.vaadin.tests.components.tabsheet,com.vaadin.tests.components.beanitemcontainer,com.vaadin.tests.components.link,com.vaadin.tests.components.textfield,com.vaadin.tests.components.button,com.vaadin.tests.components.optiongroup,com.vaadin.tests.components.tree,com.vaadin.tests.components.caption,com.vaadin.tests.components.orderedlayout,com.vaadin.tests.components.window</param-value></init-param>
 	</servlet>
 
 
