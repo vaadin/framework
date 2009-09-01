@@ -118,7 +118,7 @@ public abstract class PropertyFormatter implements Property,
         }
         String newVal = toString();
         if ((prevValue == null && newVal != null)
-                || !prevValue.equals(prevValue)) {
+                || (prevValue != null && !prevValue.equals(newVal))) {
             fireValueChange();
         }
     }
@@ -362,8 +362,7 @@ public abstract class PropertyFormatter implements Property,
      * 
      * This should not be called directly.
      */
-    public void valueChange(
-            com.vaadin.data.Property.ValueChangeEvent event) {
+    public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
         fireValueChange();
     }
 
