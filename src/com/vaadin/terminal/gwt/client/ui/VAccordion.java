@@ -593,6 +593,10 @@ public class VAccordion extends VTabsheetBase implements
              * If the height and width has been specified for this container the
              * child components cannot make the size of the layout change
              */
+            // layout size change may affect its available space (scrollbars)
+            for (Paintable paintable : child) {
+                client.handleComponentRelativeSize((Widget) paintable);
+            }
 
             return true;
         }
