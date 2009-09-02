@@ -180,7 +180,6 @@ public class VButton extends FocusWidget implements Paintable {
         }
 
         int type = DOM.eventGetType(event);
-        System.out.println(DOM.eventGetTypeString(event));
         switch (type) {
         case Event.ONCLICK:
             // If clicks are currently disallowed, keep it from bubbling or
