@@ -682,6 +682,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
             }
             i++;
         }
+
+        initializedAndAttached = true;
+
         if (needsReLayout) {
             scrollBody.reLayoutComponents();
         }
@@ -746,7 +749,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
                 }
             }
         }
-        initializedAndAttached = true;
     }
 
     private boolean willHaveScrollbars() {
