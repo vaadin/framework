@@ -966,6 +966,8 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
             center();
         }
         updateShadowSizeAndPosition();
+        // layout size change may affect its available space (scrollbars)
+        client.handleComponentRelativeSize((Widget) layout);
         return true;
     }
 

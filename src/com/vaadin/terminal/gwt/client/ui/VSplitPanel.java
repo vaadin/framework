@@ -522,6 +522,11 @@ public class VSplitPanel extends ComplexPanel implements Container,
     }
 
     public boolean requestLayout(Set<Paintable> child) {
+        // content size change might cause change to its available space
+        // (scrollbars)
+        for (Paintable paintable : child) {
+            client.handleComponentRelativeSize((Widget) paintable);
+        }
         if (height != null && width != null) {
             /*
              * If the height and width has been specified the child components

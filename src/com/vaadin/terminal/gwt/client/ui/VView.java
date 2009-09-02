@@ -36,8 +36,8 @@ import com.vaadin.terminal.gwt.client.Util;
 /**
  *
  */
-public class VView extends SimplePanel implements Container,
-        ResizeHandler, Window.ClosingHandler {
+public class VView extends SimplePanel implements Container, ResizeHandler,
+        Window.ClosingHandler {
 
     private static final String CLASSNAME = "v-view";
 
@@ -561,6 +561,9 @@ public class VView extends SimplePanel implements Container,
          */
         updateParentFrameSize();
 
+        // layout size change may affect its available space (scrollbars)
+        connection.handleComponentRelativeSize((Widget) layout);
+
         return true;
 
     }
@@ -599,7 +602,7 @@ public class VView extends SimplePanel implements Container,
     /**
      * Return an iterator for current subwindows. This method is meant for
      * testing purposes only.
-     *
+     * 
      * @return
      */
     public ArrayList<VWindow> getSubWindowList() {

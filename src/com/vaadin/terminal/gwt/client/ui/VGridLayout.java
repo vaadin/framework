@@ -87,14 +87,6 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
             return;
         }
 
-        boolean mightToggleVScrollBar = "".equals(height) && !"".equals(width);
-        boolean mightToggleHScrollBar = "".equals(width) && !"".equals(height);
-        int wBeforeRender = 0;
-        int hBeforeRender = 0;
-        if (mightToggleHScrollBar || mightToggleVScrollBar) {
-            wBeforeRender = canvas.getOffsetWidth();
-            hBeforeRender = getOffsetHeight();
-        }
         canvas.setWidth("0px");
 
         handleMargins(uidl);
@@ -201,15 +193,6 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
 
         boolean needsRelativeSizeCheck = false;
 
-        if (mightToggleHScrollBar && wBeforeRender != canvas.getOffsetWidth()) {
-            needsRelativeSizeCheck = true;
-        }
-        if (mightToggleVScrollBar && hBeforeRender != getOffsetHeight()) {
-            needsRelativeSizeCheck = true;
-        }
-        if (needsRelativeSizeCheck) {
-            client.handleComponentRelativeSize(this);
-        }
     }
 
     private static int[] cloneArray(int[] toBeCloned) {

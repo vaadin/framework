@@ -492,6 +492,9 @@ public class VPanel extends SimplePanel implements Container {
     }
 
     public boolean requestLayout(Set<Paintable> child) {
+        // content size change might cause change to its available space
+        // (scrollbars)
+        client.handleComponentRelativeSize((Widget) layout);
         if (height != null && height != "" && width != null && width != "") {
             /*
              * If the height and width has been specified the child components
