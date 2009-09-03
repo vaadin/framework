@@ -8,7 +8,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.TableCellElement;
+import com.google.gwt.dom.client.TableElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Command;
@@ -457,14 +460,16 @@ public class VTabsheet extends VTabsheetBase {
     }
 
     private void updateDynamicWidth() {
-        // Find tab width
-        int tabsWidth = 0;
+        // Find width consumed by tabs
+        TableCellElement spacerCell = ((TableElement) tb.getElement().cast())
+                .getRows().getItem(0).getCells().getItem(tb.getTabCount());
 
-        int count = tb.getTabCount();
-        for (int i = 0; i < count; i++) {
-            Element tabTd = tb.getTab(i).getElement().getParentElement().cast();
-            tabsWidth += tabTd.getOffsetWidth();
-        }
+        int spacerWidth = spacerCell.getOffsetWidth();
+        DivElement div = (DivElement) spacerCell.getFirstChildElement();
+
+        int spacerMinWidth = spacerCell.getOffsetWidth() - div.getOffsetWidth();
+
+        int tabsWidth = tb.getOffsetWidth() - spacerWidth + spacerMinWidth;
 
         // Find content width
         Style style = tp.getElement().getStyle();
