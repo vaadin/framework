@@ -16,18 +16,17 @@ public class CssLayouts extends Feature {
 
     @Override
     public String getDescription() {
-        // TODO
-        return "Most commonly developers usign Vaadin don't want to think "
+        return "Most commonly developers using Vaadin don't want to think "
                 + "of the browser environment at all. With the flexible "
-                + "layout API found from grid, horizontal and vertical "
-                + "layout developers can build almost anything with plain "
-                + "Java. But sometimes experienced web developers miss "
-                + "flexibility of CSS and HTML. CssLayout is a simple "
-                + "layout that puts contained componets into div element. "
-                + "It has a simple DOM structure and it leaves all the power "
-                + "to CSS designer hands. Having a very narrow feature set"
-                + ", CssLayout is also the fastest layout to render in "
-                + "Vaadin.";
+                + "layout API found from Grid, Horizontal and Vertical "
+                + "layouts, developers can build almost anything with plain "
+                + "Java. But sometimes experienced web developers miss the "
+                + "flexibility that pure CSS and HTML can offer.<br /><br />"
+                + "CssLayout is a simple layout that places its contained "
+                + "components into a <code>DIV</code> element. It has a "
+                + "simple DOM structure and it leaves all the power to the "
+                + "CSS designer's hands. While having a very narrow feature "
+                + "set, CssLayout is the fastest layout to render in Vaadin.";
     }
 
     @Override

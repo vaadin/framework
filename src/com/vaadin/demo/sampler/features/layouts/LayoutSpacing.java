@@ -12,7 +12,7 @@ public class LayoutSpacing extends Feature {
 
     @Override
     public String getName() {
-        return "Layout Spacing";
+        return "Layout spacing";
     }
 
     @Override

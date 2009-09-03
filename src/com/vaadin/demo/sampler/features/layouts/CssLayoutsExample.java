@@ -34,7 +34,6 @@ public class CssLayoutsExample extends VerticalLayout {
                         + "of the layout (and centered unless I'm in IE6)");
         bottomCenter.setSizeUndefined(); // disable 100% default width
         bottomCenter.setStyleName("footer");
-        // bottomCenter.setWidth("50px");
 
         CssLayout cssLayout = new CssLayout() {
             int brickCounter = 0;
@@ -45,8 +44,8 @@ public class CssLayoutsExample extends VerticalLayout {
                 if (c instanceof Brick) {
                     brickCounter++;
                     if (brickCounter % 3 == 0) {
-                        // make every third brick colored and bold
-                        return "color: #ff6611; font-weight:bold;";
+                        // make every third brick colored and italic
+                        return "color: #ff6611; font-style: italic;";
                     }
                 }
                 return null;
@@ -71,7 +70,7 @@ public class CssLayoutsExample extends VerticalLayout {
     static class Brick extends Label {
         public Brick() {
             super("Brick");
-            // disable 100% that label has by default
+            // disable 100% width that label has by default
             setSizeUndefined();
             setStyleName("brick");
         }

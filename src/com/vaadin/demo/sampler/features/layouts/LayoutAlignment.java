@@ -12,7 +12,7 @@ public class LayoutAlignment extends Feature {
 
     @Override
     public String getName() {
-        return "Component Alignment";
+        return "Component alignment";
     }
 
     @Override
