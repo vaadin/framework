@@ -453,7 +453,7 @@
 				<include name="COPYING" />
 			</fileset>
 		</copy>
-		<copy todir="${output-dir}/WebContent">
+		<copy todir="${output-dir}/WebContent" encoding="UTF-8" outputencoding="UTF-8">
 			<filterchain>
 				<expandproperties />
 				<replacetokens begintoken="@" endtoken="@">
@@ -619,7 +619,7 @@
 		<mkdir dir="${result-path}/src" />
 		<echo>Copying src directory and processing copied files.</echo>
 		<echo>Replacing &lt;version&gt; tag with build version for java/html/css/xml files.</echo>
-		<copy todir="${result-path}/src">
+		<copy todir="${result-path}/src" encoding="UTF-8" outputencoding="UTF-8">
 			<filterset>
 				<filter token="ITMillApache2LicenseForJavaFiles" value="${ITMillApache2LicenseForJavaFiles}" />
 				<filter token="VERSION" value="${version}" />
