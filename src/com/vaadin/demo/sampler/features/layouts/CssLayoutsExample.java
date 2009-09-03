@@ -30,8 +30,7 @@ public class CssLayoutsExample extends VerticalLayout {
                 + "to demonstrate the dynamic css injection."));
 
         final Label bottomCenter = new Label(
-                "I'm a 3 inches wide footer at the bottom "
-                        + "of the layout (and centered unless I'm in IE6)");
+                "I'm a 3 inches wide footer at the bottom of the layout");
         bottomCenter.setSizeUndefined(); // disable 100% default width
         bottomCenter.setStyleName("footer");
 
