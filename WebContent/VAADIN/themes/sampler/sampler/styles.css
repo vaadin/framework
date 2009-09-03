@@ -257,9 +257,6 @@
 	overflow: hidden;
 	position: static;
 }
-.v-ie .v-app-SamplerApplication .v-nativebutton-screenshot img.v-icon {
-	margin-left: -12px;
-}
 
 .v-app-SamplerApplication .v-table-featuretable tr.v-table-row,
 .v-app-SamplerApplication .v-table-featuretable tr.v-table-row-odd {
