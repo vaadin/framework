@@ -141,12 +141,6 @@ public class VTree extends FlowPanel implements Paintable {
             }
             rootNode.renderChildNodes(uidl.getChildIterator());
         }
-
-        if (uidl.hasVariable("selected")) {
-            // update selection in case selected nodes were not visible
-            selectedIds = uidl.getStringArrayVariableAsSet("selected");
-        }
-
     }
 
     public void setSelected(TreeNode treeNode, boolean selected) {
@@ -309,6 +303,9 @@ public class VTree extends FlowPanel implements Paintable {
 
             if (uidl.getBooleanAttribute("selected")) {
                 setSelected(true);
+                // ensure that identifier is in selectedIds array (this may be a
+                // partial update)
+                selectedIds.add(key);
             }
 
             if (uidl.hasAttribute("icon")) {

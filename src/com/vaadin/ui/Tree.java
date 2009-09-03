@@ -331,8 +331,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * Called when one or more variables handled by the implementing class are
      * changed.
      * 
-     * @see com.vaadin.terminal.VariableOwner#changeVariables(Object
-     *      source, Map variables)
+     * @see com.vaadin.terminal.VariableOwner#changeVariables(Object source, Map
+     *      variables)
      */
     @Override
     public void changeVariables(Object source, Map variables) {
@@ -448,14 +448,11 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
         // Initialize variables
         final Set<Action> actionSet = new LinkedHashSet<Action>();
-        String[] selectedKeys;
-        if (isMultiSelect()) {
-            selectedKeys = new String[((Set) getValue()).size()];
-        } else {
-            selectedKeys = new String[(getValue() == null ? 0 : 1)];
-        }
-        int keyIndex = 0;
-        final LinkedList expandedKeys = new LinkedList();
+
+        // rendered selectedKeys
+        LinkedList<String> selectedKeys = new LinkedList<String>();
+
+        final LinkedList<String> expandedKeys = new LinkedList<String>();
 
         // Iterates through hierarchical tree using a stack of iterators
         final Stack<Iterator> iteratorStack = new Stack<Iterator>();
@@ -509,12 +506,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 target.addAttribute("key", key);
                 if (isSelected(itemId)) {
                     target.addAttribute("selected", true);
-                    try {
-                        selectedKeys[keyIndex++] = key;
-                    } catch (Exception e) {
-                        // TODO Fix, see TreeExample (featurebrowser)
-                        e.printStackTrace();
-                    }
+                    selectedKeys.add(key);
                 }
                 if (areChildrenAllowed(itemId) && isExpanded(itemId)) {
                     target.addAttribute("expanded", true);
@@ -577,14 +569,11 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         }
 
         if (partialUpdate) {
-            // update tree-level selection information in case some selected
-            // node(s) were collapsed
-            target.addVariable(this, "selected", selectedKeys);
-
             partialUpdate = false;
         } else {
             // Selected
-            target.addVariable(this, "selected", selectedKeys);
+            target.addVariable(this, "selected", selectedKeys
+                    .toArray(new String[selectedKeys.size()]));
 
             // Expand and collapse
             target.addVariable(this, "expand", new String[] {});
@@ -669,9 +658,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.data.Container.Hierarchical#setParent(java.lang.Object
-     * , java.lang.Object)
+     * @see com.vaadin.data.Container.Hierarchical#setParent(java.lang.Object ,
+     * java.lang.Object)
      */
     public boolean setParent(Object itemId, Object newParentId) {
         final boolean success = ((Container.Hierarchical) items).setParent(
