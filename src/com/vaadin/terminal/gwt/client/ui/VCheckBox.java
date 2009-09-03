@@ -65,7 +65,7 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
 
         if (uidl.hasAttribute("error")) {
             if (errorIndicatorElement == null) {
-                errorIndicatorElement = DOM.createDiv();
+                errorIndicatorElement = DOM.createSpan();
                 errorIndicatorElement.setInnerHTML("&nbsp;");
                 DOM.setElementProperty(errorIndicatorElement, "className",
                         "v-errorindicator");

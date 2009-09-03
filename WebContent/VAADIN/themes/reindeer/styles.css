@@ -159,44 +159,19 @@
 
 .v-checkbox,
 .v-checkbox label,
-.v-checkbox input {
+.v-checkbox input,
+.v-checkbox .v-icon {
 	vertical-align: middle;
 	white-space: nowrap;
 }
-.v-checkbox img {
-	display: inline;
-	vertical-align: middle;
-	margin-right: 3px;
+.v-checkbox .v-icon {
+	margin: 0 2px;
 }
 .v-checkbox .v-errorindicator {
 	float: none;
 	display: inline;
-	padding-left: 1em;
-	background-position: left;
-}
-/* Error indicator on checkbox fix for IE6 */
-.v-ie6 .v-checkbox * {
-	float: left;
-	display: inline; /* In effect, does nothing, since float:left forces block-rendering, but will fix "double-float-margin-bug" */
-}
-.v-ie6 .v-checkbox .v-errorindicator {
-	background-position: right;
-	display: inline;
-	float: left;
-	padding-left: 0; 
-	padding-right: 0.4em;
-}
-/* Error indicator on checkbox fix for IE7 */
-.v-ie7 .v-checkbox *,
-.v-ie8 .v-checkbox * {
-	float: left;
-}
-.v-ie7 .v-checkbox .v-errorindicator,
-.v-ie8 .v-checkbox .v-errorindicator {
-	background-position: right;
-	float: left;
-	padding-left: 0;
-	padding-right: 0.7em;
+	display: inline-block;
+	zoom: 1;
 }
 
 
