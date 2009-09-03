@@ -42,7 +42,7 @@ public class VOverlay extends PopupPanel {
     /**
      * The HTML snippet that is used to render the actual shadow. In consists of
      * nine different DIV-elements with the following class names:
-     *
+     * 
      * <pre>
      *   .v-shadow[-stylename]
      *   ----------------------------------------------
@@ -55,7 +55,7 @@ public class VOverlay extends PopupPanel {
      *   | .bottom-left  |  .bottom  |  .bottom-right |
      *   ----------------------------------------------
      * </pre>
-     *
+     * 
      * See default theme 'shadow.css' for implementation example.
      */
     private static final String SHADOW_HTML = "<div class=\"top-left\"></div><div class=\"top\"></div><div class=\"top-right\"></div><div class=\"left\"></div><div class=\"center\"></div><div class=\"right\"></div><div class=\"bottom-left\"></div><div class=\"bottom\"></div><div class=\"bottom-right\"></div>";
@@ -100,7 +100,7 @@ public class VOverlay extends PopupPanel {
 
     /**
      * Set the z-index (visual stack position) for this overlay.
-     *
+     * 
      * @param zIndex
      *            The new z-index
      */
@@ -109,18 +109,6 @@ public class VOverlay extends PopupPanel {
         if (shadow != null) {
             DOM.setStyleAttribute(shadow, "zIndex", "" + zIndex);
         }
-        if (BrowserInfo.get().isIE6()) {
-            adjustIE6Frame(getElement(), zIndex - 1);
-        }
-    }
-
-    /**
-     * Get the z-index (visual stack position) of this overlay.
-     *
-     * @return The z-index for this overlay.
-     */
-    private int getZIndex() {
-        return Integer.parseInt(DOM.getStyleAttribute(getElement(), "zIndex"));
     }
 
     @Override
@@ -142,9 +130,6 @@ public class VOverlay extends PopupPanel {
                 updateShadowSizeAndPosition(1.0);
             }
         }
-        if (BrowserInfo.get().isIE6()) {
-            adjustIE6Frame(getElement(), getZIndex());
-        }
     }
 
     @Override
@@ -155,17 +140,6 @@ public class VOverlay extends PopupPanel {
                     visible ? "visible" : "hidden");
         }
     }
-
-    /*
-     * Needed to position overlays on top of native SELECT elements in IE6. See
-     * bug #2004
-     */
-    private native void adjustIE6Frame(Element popup, int zindex)
-    /*-{
-        // relies on PopupImplIE6
-        if(popup.__frame)
-            popup.__frame.style.zIndex = zindex;
-    }-*/;
 
     @Override
     public void setWidth(String width) {
@@ -187,7 +161,7 @@ public class VOverlay extends PopupPanel {
      * Sets the shadow style for this overlay. Will override any previous style
      * for the shadow. The default style name is defined by CLASSNAME_SHADOW.
      * The given style will be prefixed with CLASSNAME_SHADOW.
-     *
+     * 
      * @param style
      *            The new style name for the shadow element. Will be prefixed by
      *            CLASSNAME_SHADOW, e.g. style=='foobar' -> actual style
@@ -213,7 +187,7 @@ public class VOverlay extends PopupPanel {
      * be used to animate the shadow, using the 'progress' parameter (used to
      * animate the shadow in sync with GWT PopupPanel's default animation
      * 'PopupPanel.AnimationType.CENTER').
-     *
+     * 
      * @param progress
      *            A value between 0.0 and 1.0, indicating the progress of the
      *            animation (0=start, 1=end).
