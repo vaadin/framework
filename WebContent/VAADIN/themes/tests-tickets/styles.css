@@ -1288,4 +1288,8 @@ padding:2px;
 .green {
 	background:green;	
 }
-   
+
+.v-checkbox-wrap label {
+   	white-space: normal;
+}
+
