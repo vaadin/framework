@@ -2732,7 +2732,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
             int availW = scrollBody.getAvailableWidth();
             // Hey IE, are you really sure about this?
             availW = scrollBody.getAvailableWidth();
-            availW -= scrollBody.getCellExtraWidth() * visibleColOrder.length;
+            int visibleCellCount = tHead.getVisibleCellCount();
+            availW -= scrollBody.getCellExtraWidth() * visibleCellCount;
             if (willHaveScrollbars()) {
                 availW -= Util.getNativeScrollbarSize();
             }
@@ -2771,8 +2772,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
                 }
                 colIndex++;
             }
-            Util.runWebkitOverflowAutoFix(bodyContainer.getElement());
             scrollBody.reLayoutComponents();
+            DeferredCommand.addCommand(new Command() {
+                public void execute() {
+                    Util.runWebkitOverflowAutoFix(bodyContainer.getElement());
+                }
+            });
         }
     };
 
