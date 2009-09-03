@@ -25,6 +25,7 @@
 
 <ul>
   <li><a href="#overview">Overview</a></li>
+  <li><a href="#button">Button Component Modifications</a></li>
   <li><a href="#upgrading">General Upgrade Notes</a></li>
   <li><a href="#upgrading-tk5">Instructions for Upgrading from IT Mill Toolkit 5</a></li>
   <li><a href="#oophm">Package for the experimental GWT Out-of-Process Hosted Mode</a></li>
@@ -38,23 +39,98 @@ fixes, the most significant additions are:</p>
 
 <ul>
   <li>Google Web Toolkit (GWT) is upgraded to version 1.7. You should recompile custom widget sets using the new version.</li>
-  <li>Performance improvements (general, <b>Table</b> caching)</li>
+  <li>Performance improvements (general, <strong>Table</strong> caching)</li>
   <li>Google App Engine (GAE) support.</li>
   <li>Maven support</li>
-  <li>New <b>NativeButton</b> component that always uses the native button in the browser</li>
-  <li>New <b>CssLayout</b> layout component
-  <ul>
-    <li>A fast low-level layout where the contained components are rendered as trivially as possible under a single <tt>div</tt> element.</li>
-    <li>Result can be similar to <b>VerticalLayout</b> or <b>HorizontalLayout</b>, depending on CSS, but is noticeably faster.</li>
-    <li>No spacing, alignment or expansion rations, unlike with the more feature rich layouts.</li>
-    <li>No abstraction of browser differences; you need to make sure the CSS supports all the browser that you want your application to support.</li>
-  </ul>
+  <li>Major refactoring of the <strong>Button</strong> component implementation on the client side. See the section about <a href="#button">Button modifications</a> for more info.</li>
+  <li>New <strong>NativeButton</strong> component that always uses the native button in the browser See the section about <a href="#button">Button modifications</a> for more info.</li>
+  <li>New <strong>CssLayout</strong> layout component
+  	<ul>
+    	<li>A fast low-level layout where the contained components are rendered as trivially as possible under a single <tt>div</tt> element.</li>
+    	<li>Result can be similar to <strong>VerticalLayout</strong> or <strong>HorizontalLayout</strong>, depending on CSS, but is noticeably faster.</li>
+    	<li>No spacing, alignment or expansion rations, unlike with the more feature rich layouts.</li>
+    	<li>No abstraction of browser differences; you need to make sure the CSS supports all the browser that you want your application to support.</li>
+  	</ul>
+  </li>
   <li>Full support for Internet Explorer 8</li>
 </ul>
 
 <p>See the <a href="#changelog">Change Log</a> below for a more detailed list of closed issues in this release.</p>
 
 <p>Vaadin @version@ uses Google Web Toolkit 1.7.0, which is included in the <tt>gwt</tt> folder of the installation package.</p>
+
+<h2><a name="button">Button Component Modifications</a></h2>
+<p>The previous version of the VButton widget (i.e. GWT counterpart for the Button component) was built using the native BUTTON element in the browser. Because of multiple theming issues that resulted from that (final nail in the coffin, <a href="http://dev.vaadin.com/ticket/3079">#3079</a>), the implementation was changed to a DIV based one.</p>
+<p>For the Runo theme this means that your application buttons will change their style when you update to 6.1. See the <a href="#button-migration">migration instructions</a> for more help.
+<p>The previous version is now included as a new component called NativeButton, and it is always rendered with the native BUTTON element in the client side and will contain no additional styling.</p>
+<p>You shouldn't notice this change in any way, <em>unless</em> you've made modifications to the button CSS in a custom theme, or you're using the Runo theme. Below are listed the most important changes you need to consider.</p>
+<ul>
+	<li>First off, all the original CSS class names of the button stay unmodified. Only the root element type is changed.</li>
+	<li>One additional wrapping element is introduced in the DIV-based implementation.</li>
+	<li>The CSS class names for VNativeButton are prefixed with <code>v-nativebutton</code>.</li>
+	<li>The resulting HTML structures for both Button and NativeButton are shown below (changes emphasized):
+	<div class="codeblock">
+	<table style="width: 100%;">
+		<tr style="vertical-align:top;">
+			<td>
+				<h4>VButton widget structure</h4>
+				<pre><strong>div</strong>.v-button
+  <strong>span.v-button-wrap</strong>
+    [span.v-errorindicator]
+    [img.v-icon]
+    span.v-button-caption</pre>
+			</td>
+			<td>
+				<h4>VNativeButton widget structure</h4>
+				<pre>button<strong>.v-nativebutton</strong>
+    [span.v-errorindicator]
+    [img.v-icon]
+    span<strong>.v-nativebutton-caption</strong></pre>
+			</td>
+		</tr>
+	</table>
+	</div>
+	</li>
+</ul>
+
+<h3><a name="button-migration">Implications to Custom Themes: Migration Guide</a></h3>
+<p>If you've made additional styling to buttons in your custom theme, you may need to make changes both to your Java and CSS code.</p>
+<div class="codeblock">
+<table style="width:100%;">
+	<tr style="vertical-align:top;">
+		<td style="width:50%; padding-right: 2em;">
+			<h4>Runo theme</h4>
+			<strong>Unmodified Buttons</strong>
+			<ul>
+				<li>If you prefer the original, native button look, change all buttons in your application from Button to NativeButton.</li>
+			</ul>
+			<strong>Themed Buttons</strong>
+			<ul>
+				<li>Replace the Button with NativeButton</li>
+				<li>In your theme CSS, find-and-replace <br /><code>.v-button</code> &rarr; <code>.v-nativebutton</code></li>
+			</ul>
+		</td>
+		<td>
+			<h4>Reindeer theme</h4>
+			<strong>Unmodified Buttons</strong>
+			<ul>
+				<li>No actions are needed.</li>
+			</ul>
+			<strong>Buttons with a completely different look</strong>
+			<ul>
+				<li>Replace the Button with NativeButton</li>
+				<li>In your theme CSS, find-and-replace <br /><code>.v-button</code> &rarr; <code>.v-nativebutton</code></li>
+			</ul>
+			<strong>Buttons with a some modifications/additions</strong>
+			<p>We cannot provide a comprehensive migration guide for these situations, since every case will most likely require different actions.</p>
+			<p>But if your modified buttons looks broken, it is most likely caused by the additional element in the HTML structure (<code>span.v-button-wrap</code>). Most of the styles previously applied on <code>.v-button-caption</code> have been moved to <code>.v-button-wrap</code>, so be sure to change your CSS accordingly.</p>
+		</td>
+	</tr>
+</table>
+<p>
+<strong>And if all else fails</strong>, you're always welcome to ask further questions on <a href="http://vaadin.com/forum">our forum</a>, we're there to help.
+</p>
+</div>
 
 <h2><a name="upgrading">General Upgrade Notes</a></h2>
 
@@ -66,7 +142,7 @@ fixes, the most significant additions are:</p>
   <li>If you have custom widget sets, recompile them with the new Vaadin library using the included GWT compiler</li>
   <li>If using the Eclipse IDE:
   <ol type="a">
-    <li>Refresh the Eclipse project by selecting the project folder and pressing <b>F5</b></li>
+    <li>Refresh the Eclipse project by selecting the project folder and pressing <strong>F5</strong></li>
     <li>Restart the application server</li>
   </ol>
 </ol>
@@ -87,7 +163,7 @@ some name prefixes, and some other details.</p>
     <li>In all Java files using IT Mill Toolkit, rename package prefix <tt>com.itmill.toolkit</tt> &#x2192; <tt>com.vaadin</tt></li>
     <li>You also need to update the <tt>web.xml</tt> deployment descriptor:</li>
     <ul>
-      <li>The servlet class is now <b>com.vaadin.terminal.gwt.server.ApplicationServlet</b>.</li>
+      <li>The servlet class is now <strong>com.vaadin.terminal.gwt.server.ApplicationServlet</strong>.</li>
     </ul>
   </ul>
 
@@ -121,7 +197,7 @@ some name prefixes, and some other details.</p>
 
   <li>Other changes in naming:</li>
   <ul>
-    <li>Rename references to <tt>translateToolkitUri()</tt> &#x2192; <tt>translateVaadinUri()</tt> method in <b>ApplicationConnection</b> class.
+    <li>Rename references to <tt>translateToolkitUri()</tt> &#x2192; <tt>translateVaadinUri()</tt> method in <strong>ApplicationConnection</strong> class.
   </ul>
 
 </ul>
@@ -143,8 +219,8 @@ client-side widgets with Google Web Toolkit (GWT).</p>
     <li><i>Possible problems when building widgetset using Windows and JDK 1.5</i>. See <a href="#known-problems">Known Problems</a> #2891 below.</li>
   </ul>
 
-  <li>The "<b>I</b>" (IT Mill) prefix in client-side widget classes has been changed to "<b>V</b>" (Vaadin), for example: <b>IButton</b> &#x2192; <b>VButton</b>.</li>
-  <li>Rename <b>IToolkitOverlay</b> &#x2192; <b>VOverlay</b>
+  <li>The "<strong>I</strong>" (IT Mill) prefix in client-side widget classes has been changed to "<strong>V</strong>" (Vaadin), for example: <strong>IButton</strong> &#x2192; <strong>VButton</strong>.</li>
+  <li>Rename <strong>IToolkitOverlay</strong> &#x2192; <strong>VOverlay</strong>
 </ul>
 
 <h2><a name="oophm">Package for the experimental GWT Out-of-Process Hosted Mode</a></h2>
@@ -316,10 +392,10 @@ application servers:</p>
 it:</p>
 
 <ul>
-	<li>Mozilla Firefox release 3</li>
+	<li>Mozilla Firefox 3</li>
 	<li>Internet Explorer releases 6, 7, and 8</li>
-	<li>Safari 3</li>
-	<li>Opera 9.6</li>
+	<li>Safari 3 and 4</li>
+	<li>Opera 9.6 and 10</li>
 </ul>
 
 <p>The support for browsers follows the support by GWT. The browsers are supported on both
