@@ -1170,6 +1170,9 @@ div.v-progressindicator-indeterminate-disabled {
 	overflow: hidden;
 	text-align: left; /* Force default alignment */
 }
+.v-ie7 .v-table {
+	overflow: visible;
+}
 .v-table-header-wrap {
 	overflow: hidden;
 	border: 1px solid #aaa;
