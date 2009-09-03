@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
@@ -37,9 +38,9 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
 
     public VCssLayout() {
         super();
-        DOM.appendChild(getElement(), margin);
-        DOM.setStyleAttribute(getElement(), "overflow", "hidden");
+        getElement().appendChild(margin);
         setStyleName(CLASSNAME);
+        margin.setClassName(CLASSNAME + "-margin");
         setWidget(panel);
     }
 
@@ -51,14 +52,14 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
     @Override
     public void setWidth(String width) {
         super.setWidth(width);
-        panel.setWidth(width);
+        // panel.setWidth(width);
         hasWidth = width != null && !width.equals("");
     }
 
     @Override
     public void setHeight(String height) {
         super.setHeight(height);
-        panel.setHeight(height);
+        // panel.setHeight(height);
         hasHeight = height != null && !height.equals("");
     }
 
@@ -70,7 +71,6 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
 
         final VMarginInfo margins = new VMarginInfo(uidl
                 .getIntAttribute("margins"));
-
         setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_TOP,
                 margins.hasTop());
         setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_RIGHT,
@@ -208,10 +208,33 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
         }
     }
 
+    private RenderSpace space;
+
     public RenderSpace getAllocatedSpace(Widget child) {
-        com.google.gwt.dom.client.Element div = child.getElement()
-                .getParentElement();
-        return new RenderSpace(div.getOffsetWidth(), div.getOffsetHeight());
+        if (space == null) {
+            space = new RenderSpace(-1, -1) {
+                @Override
+                public int getWidth() {
+                    if (BrowserInfo.get().isIE()) {
+                        int width = getOffsetWidth();
+                        int margins = margin.getOffsetWidth()
+                                - panel.getOffsetWidth();
+                        return width - margins;
+                    } else {
+                        return panel.getOffsetWidth();
+                    }
+                }
+
+                @Override
+                public int getHeight() {
+                    int height = getOffsetHeight();
+                    int margins = margin.getOffsetHeight()
+                            - panel.getOffsetHeight();
+                    return height - margins;
+                }
+            };
+        }
+        return space;
     }
 
     public boolean requestLayout(Set<Paintable> children) {
