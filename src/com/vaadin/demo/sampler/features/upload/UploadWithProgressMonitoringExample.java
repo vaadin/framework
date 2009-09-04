@@ -30,12 +30,18 @@ public class UploadWithProgressMonitoringExample extends VerticalLayout {
 
     private LineBreakCounter counter = new LineBreakCounter();
 
-    private Upload upload = new Upload("Upload a file", counter);
+    private Upload upload = new Upload("", counter);
 
     public UploadWithProgressMonitoringExample() {
-        upload.setImmediate(true); // make analyzing start immediatedly when
-        upload.setButtonCaption("Analyze file");
-        // file is selected
+        setMargin(true, false, false, false);
+        setSpacing(true);
+
+        addComponent(new Label(
+                "Upload a file and we'll count the number of line break charaters found in it."));
+
+        // make analyzing start immediatedly when file is selected
+        upload.setImmediate(true);
+        upload.setButtonCaption("Upload File");
         addComponent(upload);
 
         CheckBox handBrake = new CheckBox("Simulate slow server");
@@ -56,7 +62,7 @@ public class UploadWithProgressMonitoringExample extends VerticalLayout {
             }
         });
         cancelProcessing.setEnabled(false);
-
+        cancelProcessing.setStyleName("small");
         addComponent(cancelProcessing);
 
         handBrake.setImmediate(true);
@@ -64,7 +70,9 @@ public class UploadWithProgressMonitoringExample extends VerticalLayout {
         addComponent(handBrake);
 
         Panel p = new Panel("Status");
+        p.setSizeUndefined();
         FormLayout l = new FormLayout();
+        l.setMargin(true);
         p.setContent(l);
         state.setCaption("Current state");
         state.setValue("Idle");

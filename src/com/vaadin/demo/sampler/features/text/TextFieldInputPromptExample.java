@@ -12,7 +12,7 @@ public class TextFieldInputPromptExample extends VerticalLayout implements
     public TextFieldInputPromptExample() {
         // add som 'air' to the layout
         setSpacing(true);
-        setMargin(true);
+        setMargin(true, false, false, false);
 
         // Username field + input prompt
         TextField username = new TextField();

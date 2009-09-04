@@ -12,12 +12,9 @@ import com.vaadin.ui.TabSheet.Tab;
 public class AccordionIconsExample extends HorizontalLayout implements
         Accordion.SelectedTabChangeListener {
 
-    private static final ThemeResource icon1 = new ThemeResource(
-            "icons/action_save.gif");
-    private static final ThemeResource icon2 = new ThemeResource(
-            "icons/comment_yellow.gif");
-    private static final ThemeResource icon3 = new ThemeResource(
-            "icons/icon_info.gif");
+    private static final ThemeResource icon1 = new ThemeResource("../sampler/icons/action_save.gif");
+    private static final ThemeResource icon2 = new ThemeResource("../sampler/icons/comment_yellow.gif");
+    private static final ThemeResource icon3 = new ThemeResource("../sampler/icons/icon_info.gif");
 
     private Accordion a;
 

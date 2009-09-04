@@ -16,34 +16,34 @@ public class IconsExample extends VerticalLayout {
 
         /* Button w/ icon */
         Button button = new Button("Save");
-        button.setIcon(new ThemeResource("icons/action_save.gif"));
+        button.setIcon(new ThemeResource("../sampler/icons/action_save.gif"));
         addComponent(button);
 
         /* Label */;
         Label l = new Label("Icons are very handy");
         l.setCaption("Comment");
-        l.setIcon(new ThemeResource("icons/comment_yellow.gif"));
+        l.setIcon(new ThemeResource("../sampler/icons/comment_yellow.gif"));
         addComponent(l);
 
         /* Panel w/ links */
         Panel p = new Panel("Handy links");
-        p.setIcon(new ThemeResource("icons/icon_info.gif"));
+        p.setIcon(new ThemeResource("../sampler/icons/icon_info.gif"));
         addComponent(p);
         Link lnk = new Link("http://www.vaadin.com", new ExternalResource(
                 "http://www.vaadin.com"));
-        lnk.setIcon(new ThemeResource("icons/icon_world.gif"));
+        lnk.setIcon(new ThemeResource("../sampler/icons/icon_world.gif"));
         p.addComponent(lnk);
         lnk = new Link("http://www.vaadin.com/learn", new ExternalResource(
                 "http://www.vaadin.com/learn"));
-        lnk.setIcon(new ThemeResource("icons/icon_world.gif"));
+        lnk.setIcon(new ThemeResource("../sampler/icons/icon_world.gif"));
         p.addComponent(lnk);
         lnk = new Link("http://dev.vaadin.com/", new ExternalResource(
                 "http://dev.vaadin.com/"));
-        lnk.setIcon(new ThemeResource("icons/icon_world.gif"));
+        lnk.setIcon(new ThemeResource("../sampler/icons/icon_world.gif"));
         p.addComponent(lnk);
         lnk = new Link("http://www.vaadin.com/forum", new ExternalResource(
                 "http://www.vaadin.com/forum"));
-        lnk.setIcon(new ThemeResource("icons/icon_world.gif"));
+        lnk.setIcon(new ThemeResource("../sampler/icons/icon_world.gif"));
         p.addComponent(lnk);
 
     }

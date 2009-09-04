@@ -1740,7 +1740,8 @@ div.v-tree-node-leaf {
 
 /* Small style */
 
-.v-button-small {
+.v-button-small,
+.v-disabled.v-button-small {
 	font-size: 11px;
 	line-height: 14px;
 	padding: 1px 15px;
@@ -1749,7 +1750,8 @@ div.v-tree-node-leaf {
 
 
 /* Link style */
-.v-button-link {
+.v-button-link,
+.v-disabled.v-button-link {
 	border: none;
 	background: transparent;
 	padding: 0;

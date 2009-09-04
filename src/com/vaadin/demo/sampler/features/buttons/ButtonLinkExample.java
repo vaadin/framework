@@ -11,8 +11,7 @@ public class ButtonLinkExample extends VerticalLayout implements
 
     private static final String CAPTION = "Help";
     private static final String TOOLTIP = "Show help";
-    private static final ThemeResource ICON = new ThemeResource(
-            "icons/icon_info.gif");
+    private static final ThemeResource ICON = new ThemeResource("../sampler/icons/icon_info.gif");
     private static final String NOTIFICATION = "Help clicked";
 
     public ButtonLinkExample() {

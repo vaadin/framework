@@ -59,11 +59,11 @@ public class TableMainFeaturesExample extends VerticalLayout {
 
         // Icons for column headers
         table.setColumnIcon(ExampleUtil.iso3166_PROPERTY_FLAG,
-                new ThemeResource("icons/action_save.gif"));
+                new ThemeResource("../sampler/icons/action_save.gif"));
         table.setColumnIcon(ExampleUtil.iso3166_PROPERTY_NAME,
-                new ThemeResource("icons/icon_get_world.gif"));
+                new ThemeResource("../sampler/icons/icon_get_world.gif"));
         table.setColumnIcon(ExampleUtil.iso3166_PROPERTY_SHORT,
-                new ThemeResource("icons/page_code.gif"));
+                new ThemeResource("../sampler/icons/page_code.gif"));
 
         // Column alignment
         table.setColumnAlignment(ExampleUtil.iso3166_PROPERTY_SHORT,

@@ -10,8 +10,7 @@ public class LinkCurrentWindowExample extends VerticalLayout {
 
     private static final String CAPTION = "Open Google";
     private static final String TOOLTIP = "http://www.google.com";
-    private static final ThemeResource ICON = new ThemeResource(
-            "icons/icon_world.gif");
+    private static final ThemeResource ICON = new ThemeResource("../sampler/icons/icon_world.gif");
 
     public LinkCurrentWindowExample() {
         setSpacing(true);

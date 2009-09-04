@@ -199,7 +199,7 @@ public final class ExampleUtil {
             item.getItemProperty(iso3166_PROPERTY_NAME).setValue(name);
             item.getItemProperty(iso3166_PROPERTY_SHORT).setValue(id);
             item.getItemProperty(iso3166_PROPERTY_FLAG).setValue(
-                    new ThemeResource("flags/" + id.toLowerCase() + ".gif"));
+                    new ThemeResource("../sampler/flags/" + id.toLowerCase() + ".gif"));
         }
         container.sort(new Object[] { iso3166_PROPERTY_NAME },
                 new boolean[] { true });

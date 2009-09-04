@@ -11,8 +11,7 @@ public class ButtonSwitchExample extends VerticalLayout implements
 
     private static final String CAPTION = "Allow HTML";
     private static final String TOOLTIP = "Allow/disallow HTML in comments";
-    private static final ThemeResource ICON = new ThemeResource(
-            "icons/page_code.gif");
+    private static final ThemeResource ICON = new ThemeResource("../sampler/icons/page_code.gif");
 
     public ButtonSwitchExample() {
         setSpacing(true);

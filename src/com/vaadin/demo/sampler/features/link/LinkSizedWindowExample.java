@@ -11,8 +11,7 @@ public class LinkSizedWindowExample extends VerticalLayout {
 
     private static final String CAPTION = "Open Google in small window";
     private static final String TOOLTIP = "http://www.google.com (opens in small window)";
-    private static final ThemeResource ICON = new ThemeResource(
-            "icons/icon_world.gif");
+    private static final ThemeResource ICON = new ThemeResource("../sampler/icons/icon_world.gif");
     private static final Resource TARGET = new ExternalResource(
             "http://www.google.com/m");
 

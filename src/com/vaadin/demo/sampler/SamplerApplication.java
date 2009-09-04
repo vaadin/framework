@@ -53,14 +53,16 @@ public class SamplerApplication extends Application {
             .getContainer(true);
 
     // init() inits
-    private static final String THEME_NAME = "sampler";
+    private static final String[] THEMES = { "reindeer", "runo" };
+    private static final String SAMPLER_THEME_NAME = "sampler";
+
+    private static String currentTheme = SAMPLER_THEME_NAME + "-" + THEMES[0];
 
     // used when trying to guess theme location
     private static String APP_URL = null;
 
     @Override
     public void init() {
-        setTheme("sampler");
         setMainWindow(new SamplerWindow());
         APP_URL = getURL().toString();
     }
@@ -72,12 +74,13 @@ public class SamplerApplication extends Application {
      */
     public static String getThemeBase() {
         try {
-            URI uri = new URI(APP_URL + "../VAADIN/themes/" + THEME_NAME + "/");
+            URI uri = new URI(APP_URL + "../VAADIN/themes/"
+                    + SAMPLER_THEME_NAME + "/");
             return uri.normalize().toString();
         } catch (Exception e) {
             System.err.println("Theme location could not be resolved:" + e);
         }
-        return "/VAADIN/themes/" + THEME_NAME + "/";
+        return "/VAADIN/themes/" + SAMPLER_THEME_NAME + "/";
     }
 
     // Supports multiple browser windows
@@ -165,6 +168,7 @@ public class SamplerApplication extends Application {
         Button previousSample;
         Button nextSample;
         private ComboBox search;
+        private ComboBox theme;
 
         @Override
         public void detach() {
@@ -181,6 +185,7 @@ public class SamplerApplication extends Application {
             setSizeFull();
             mainExpand.setSizeFull();
             setCaption("Vaadin Sampler");
+            setTheme(currentTheme);
 
             // topbar (navigation)
             HorizontalLayout nav = new HorizontalLayout();
@@ -225,6 +230,11 @@ public class SamplerApplication extends Application {
             mode.setMode(currentList);
             nav.addComponent(mode);
             nav.setComponentAlignment(mode, Alignment.MIDDLE_LEFT);
+
+            // Select theme
+            Component themeSelect = createThemeSelect();
+            nav.addComponent(themeSelect);
+            nav.setComponentAlignment(themeSelect, Alignment.MIDDLE_LEFT);
 
             // Layouts for top area buttons
             HorizontalLayout quicknav = new HorizontalLayout();
@@ -344,7 +354,7 @@ public class SamplerApplication extends Application {
              * super.changeVariables(source, variables); if (isPopupVisible()) {
              * search.focus(); } } };
              */
-            PopupView pv = new PopupView("<span></span>", search);
+            final PopupView pv = new PopupView("<span></span>", search);
             pv.addListener(new PopupView.PopupVisibilityListener() {
                 public void popupVisibilityChange(PopupVisibilityEvent event) {
                     if (event.isPopupVisible()) {
@@ -356,6 +366,36 @@ public class SamplerApplication extends Application {
             pv.setDescription("Quick jump");
 
             return pv;
+        }
+
+        private Component createThemeSelect() {
+            theme = new ComboBox();
+            theme.setWidth("32px");
+            theme.setNewItemsAllowed(false);
+            theme.setFilteringMode(ComboBox.FILTERINGMODE_CONTAINS);
+            theme.setImmediate(true);
+            theme.setNullSelectionAllowed(false);
+            for (String themeName : THEMES) {
+                theme.addItem(SAMPLER_THEME_NAME + "-" + themeName);
+                theme.setItemCaption(SAMPLER_THEME_NAME + "-" + themeName,
+                        themeName.substring(0, 1).toUpperCase()
+                                + themeName.substring(1) + " theme");
+            }
+            theme.setValue(currentTheme);
+
+            theme.addListener(new ComboBox.ValueChangeListener() {
+                public void valueChange(ValueChangeEvent event) {
+                    final String newTheme = event.getProperty().getValue()
+                            .toString();
+                    setTheme(newTheme);
+                    currentTheme = newTheme;
+                }
+            });
+
+            theme.setStyleName("theme-select");
+            theme.setDescription("Select Theme");
+
+            return theme;
         }
 
         private Component createLogo() {
@@ -437,13 +477,13 @@ public class SamplerApplication extends Application {
         private ModeSwitch createModeSwitch() {
             ModeSwitch m = new ModeSwitch();
             m.addMode(currentList, "", "View as Icons", new ThemeResource(
-                    "sampler/grid.png"));
+                    "../sampler/sampler/grid.png"));
             /*- no CoverFlow yet
             m.addMode(coverFlow, "", "View as Icons", new ThemeResource(
-                    "sampler/flow.gif"));
+                    "../sampler/sampler/flow.gif"));
              */
             m.addMode(new FeatureTable(), "", "View as List",
-                    new ThemeResource("sampler/list.png"));
+                    new ThemeResource("../sampler/sampler/list.png"));
             m.addListener(new ModeSwitch.ModeSwitchListener() {
                 public void componentEvent(Event event) {
                     if (event instanceof ModeSwitchEvent) {

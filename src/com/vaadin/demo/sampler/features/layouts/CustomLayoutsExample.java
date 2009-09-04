@@ -13,7 +13,8 @@ public class CustomLayoutsExample extends VerticalLayout {
 
         // Create the custom layout and set it as a component in
         // the current layout
-        CustomLayout custom = new CustomLayout("examplecustomlayout");
+        CustomLayout custom = new CustomLayout(
+                "../../sampler/layouts/examplecustomlayout");
         addComponent(custom);
 
         // Create components and bind them to the location tags

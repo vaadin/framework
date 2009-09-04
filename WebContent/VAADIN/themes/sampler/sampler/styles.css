@@ -154,7 +154,7 @@
 	display: block;
 	height: 24px;
 	background-repeat: no-repeat;
-	background-position: 50% 30%;
+	background-position: 50% 40%;
 }
 .v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-tree-switch span,
 .v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-tree-switch.v-pressed span {
@@ -162,7 +162,36 @@
 }
 .v-app-SamplerApplication .v-horizontallayout-segment .v-popupview span {
 	background-image: url(magnifier.png);
-	background-position: 50% 40%;
+}
+.v-app-SamplerApplication .theme-select,
+.v-app-SamplerApplication .theme-select * {
+	background: transparent;
+}
+.v-app-SamplerApplication .theme-select .v-filterselect-input {
+	width: 0;
+	height: 0;
+	padding: 0;
+	overflow: hidden;
+}
+.v-app-SamplerApplication .theme-select {
+	width: 32px;
+	height: 24px;
+	overflow: hidden;
+	padding: 0;
+	border: none;
+	background: transparent url(segment.png) no-repeat;
+}
+.v-app-SamplerApplication .theme-select:active {
+	background-position: 0 bottom;
+}
+.v-app-SamplerApplication .theme-select .v-filterselect-button {
+	width: 32px;
+	height: 24px;
+	cursor: default;
+	background: url(palette.png) no-repeat right 0;
+}
+.v-app-SamplerApplication .theme-select:active .v-filterselect-button {
+	background-position: right bottom;
 }
 .v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-previous span,
 .v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-previous.v-pressed span,

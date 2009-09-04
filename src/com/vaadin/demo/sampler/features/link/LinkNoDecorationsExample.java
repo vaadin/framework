@@ -10,8 +10,7 @@ public class LinkNoDecorationsExample extends VerticalLayout {
 
     private static final String CAPTION = "Open Google in new window";
     private static final String TOOLTIP = "http://www.google.com (opens in new window)";
-    private static final ThemeResource ICON = new ThemeResource(
-            "icons/icon_world.gif");
+    private static final ThemeResource ICON = new ThemeResource("../sampler/icons/icon_world.gif");
 
     public LinkNoDecorationsExample() {
         setSpacing(true);

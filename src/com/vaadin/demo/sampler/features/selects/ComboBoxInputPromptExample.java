@@ -13,7 +13,7 @@ public class ComboBoxInputPromptExample extends VerticalLayout implements
             "Helsinki", "Madrid", "Oslo", "Paris", "Stockholm" };
 
     public ComboBoxInputPromptExample() {
-        setMargin(true); // for looks: more 'air'
+        setMargin(true, false, false, false); // for looks: more 'air'
 
         // Create & set input prompt
         ComboBox l = new ComboBox();

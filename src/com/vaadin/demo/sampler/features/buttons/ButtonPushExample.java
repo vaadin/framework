@@ -11,8 +11,7 @@ public class ButtonPushExample extends VerticalLayout implements
 
     private static final String CAPTION = "Save";
     private static final String TOOLTIP = "Save changes";
-    private static final ThemeResource ICON = new ThemeResource(
-            "icons/action_save.gif");
+    private static final ThemeResource ICON = new ThemeResource("../sampler/icons/action_save.gif");
     private static final String NOTIFICATION = "Changes have been saved";
 
     public ButtonPushExample() {
