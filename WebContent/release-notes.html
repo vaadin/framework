@@ -34,16 +34,19 @@
   <li><a href="#requirements">Requirements</a></li>
 </ul>
 
-<p>Vaadin @version@ is the first update release for Vaadin 6. In addition to many bug
+<p>Vaadin @version@ is the first feature update release for Vaadin 6. In addition to many bug
 fixes, the most significant additions are:</p>
 
 <ul>
   <li>Google Web Toolkit (GWT) is upgraded to version 1.7. You should recompile custom widget sets using the new version.</li>
+  <ul>
+    <li>No more problems with stack memory in Windows when compiling widget sets (<a href="http://dev.vaadin.com/ticket/2523">#2523</a>, <a href="http://dev.vaadin.com/ticket/2891">#2891</a>)</li>
+  </ul>
   <li>Performance improvements (general, <strong>Table</strong> caching)</li>
   <li>Google App Engine (GAE) support.</li>
-  <li>Maven support</li>
-  <li>Major refactoring of the <strong>Button</strong> component implementation on the client side. See the section about <a href="#button">Button modifications</a> for more info.</li>
-  <li>New <strong>NativeButton</strong> component that always uses the native button in the browser See the section about <a href="#button">Button modifications</a> for more info.</li>
+  <li>Maven support: Vaadin available from central Maven repository (<a href="http://dev.vaadin.com/ticket/1862">#1862</a>). See the <a href="http://dev.vaadin.com/wiki/Articles/MavenIntegration">Maven Integration</a> article for more details.</li>
+  <li>Major refactoring of the <strong>Button</strong> component implementation on the client side. See the section below about <a href="#button">Button modifications</a> for more info.</li>
+  <li>New <strong>NativeButton</strong> component that always uses the native button in the browser. See the section below about <a href="#button">Button modifications</a> for more info.</li>
   <li>New <strong>CssLayout</strong> layout component
   	<ul>
     	<li>A fast low-level layout where the contained components are rendered as trivially as possible under a single <tt>div</tt> element.</li>
@@ -57,7 +60,7 @@ fixes, the most significant additions are:</p>
 
 <p>See the <a href="#changelog">Change Log</a> below for a more detailed list of closed issues in this release.</p>
 
-<p>Vaadin @version@ uses Google Web Toolkit 1.7.0, which is included in the <tt>gwt</tt> folder of the installation package.</p>
+<p>Vaadin @version@ uses Google Web Toolkit 1.7.0, which is included in the <tt>gwt</tt> folder of the installation package. The plugin downloads the new version automatically (you may need to update your widget set compilation scripts and launch configurations).</p>
 
 <h2><a name="button">Button Component Modifications</a></h2>
 <p>The previous version of the VButton widget (i.e. GWT counterpart for the Button component) was built using the native BUTTON element in the browser. Because of multiple theming issues that resulted from that (final nail in the coffin, <a href="http://dev.vaadin.com/ticket/3079">#3079</a>), the implementation was changed to a DIV based one.</p>
@@ -138,7 +141,13 @@ fixes, the most significant additions are:</p>
 
 <ol>
   <li>Install the new Vaadin JAR to your project</li>
+  <ul>
+    <li>If using the Vaadin Plugin in Eclipse, download and select the new version in project preferences.</li>
+  </ul>
   <li>Install new GWT JARs if the GWT version has changed</li>
+  <ul>
+    <li>The Eclipse plugin will download the new GWT automatically when you update the Vaadin version; you will need to update GWT paths in the widget set compilation launch configurations in Eclipse (<a href="http://dev.vaadin.com/ticket/3286">#3286</a>).
+  </ul>  
   <li>If you have custom widget sets, recompile them with the new Vaadin library using the included GWT compiler</li>
   <li>If using the Eclipse IDE:
   <ol type="a">
@@ -216,7 +225,6 @@ client-side widgets with Google Web Toolkit (GWT).</p>
       <li>Replace <tt>com.google.gwt.dev.GWTCompiler</tt> &#x2192; <tt>com.google.gwt.dev.Compiler</tt> in your widget set build script (Ant) or launch configuration (Eclipse).</li>
       <li>Replace the output directory argument for the compiler with the new WAR output argument: <tt>-out</tt> &#x2192; <tt>-war</tt>. The directory parameter for the argument remains unchanged.</li>
     </ul>
-    <li><i>Possible problems when building widgetset using Windows and JDK 1.5</i>. See <a href="#known-problems">Known Problems</a> #2891 below.</li>
   </ul>
 
   <li>The "<strong>I</strong>" (IT Mill) prefix in client-side widget classes has been changed to "<strong>V</strong>" (Vaadin), for example: <strong>IButton</strong> &#x2192; <strong>VButton</strong>.</li>
@@ -237,10 +245,9 @@ for more details.</p>
 href="http://dev.vaadin.com/ticket/2299">#2299</a>), so the OOPHM is the only option for
 debugging in hosted mode in Linux.</p>
 
-<p>The compilation of OOPHM widget sets uses a large amount of stack memory, so if the
-JVM default is too small, you should set it explicitly in <tt>compile-widgetset.xml</tt>
-with the following parameter for the Java process (currently included in the example build
-script): <tt>&lt;jvmarg value="-Xss1024k"/&gt;</tt>.</p>
+<p>The GWT 1.7.0 version included in the OOPHM package is a custom
+build from GWT trunk and is not 100% compatible with the official GWT
+1.7.0 release (<a href="http://dev.vaadin.com/ticket/3270">#3270</a>).</p>
 
 <p>As the OOPHM package is experimental, you should use it only for
 debugging purposes during development. For production use, you should
@@ -263,33 +270,6 @@ for your platform.</p>
 	GWT code. You need to install the experimental OOPHM package instead
 	(see above) for development. For production, you should use the regular
 	package for Linux.</p></li>
-
-    <li>
-      <p><a href="http://dev.vaadin.com/ticket/2523">#2523</a>: GWT Compiler 1.7 uses more
-      stack space than 1.5 and can result in stack overflow errors. You can prevent the
-      problem by giving the Java process more stack space with the <tt>-Xss</tt>
-      parameter, such as: <tt>-Xss1024k</tt>. You can give the parameter in your widgetset
-      build script with a <tt>&lt;jvmarg value="-Xss1024k"/&gt;</tt> parameter for the
-      <tt>&lt;java&gt;</tt> task.</p></li>
-
-    <ul>
-      <li>
-        <p><a href="http://dev.vaadin.com/ticket/2891">#2891</a>: As there is a bug in
-        J2SE 5.0 that prevents setting the stack size for the main thread, widgetsets
-        cannot be compiled using the standard GWT compiler of GWT 1.7 and JDK 1.5.0 (see
-        <a href="http://dev.vaadin.com/ticket/2656">#2656</a> for more details on the JDK
-        bug). This bug primarily affects Windows users as other operating systems have a
-        larger default stack size.</p>
-
-        <p>Before that fix is available in a published GWT version, we provide a wrapper
-        for the GWT compiler that runs the compiler in a separate thread, thus using the
-        user-specified stack size settings also on JDK 1.5.0. Use
-        <tt>com.itmill.toolkit.launcher.WidgetsetCompiler</tt> instead of
-        <tt>com.google.gwt.dev.Compiler</tt>. You need the wrapper if you use a build
-        script to compile custom widget sets; the Eclipse plugin uses the wrapper
-        automatically. You can also avoid the problem by using JDK 1.7.</p>
-      </li>
-    </ul>
 </ul>
 
 <p>For other known problems, see open tickets at developer site <a
