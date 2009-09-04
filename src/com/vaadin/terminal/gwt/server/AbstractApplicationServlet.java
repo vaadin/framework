@@ -361,13 +361,14 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
     protected void service(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
 
-        // check if we should serve static files (widgetsets, themes)
-        if (serveStaticResources(request, response)) {
+        RequestType requestType = getRequestType(request);
+
+        if (requestType == RequestType.STATIC_FILE) {
+            serveStaticResources(request, response);
             return;
         }
 
         Application application = null;
-        RequestType requestType = getRequestType(request);
 
         try {
             // If a duplicate "close application" URL is received for an
@@ -638,7 +639,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      * @param requestType
      * @return true if an application should be created, false otherwise
      */
-    private boolean requestCanCreateApplication(HttpServletRequest request,
+    boolean requestCanCreateApplication(HttpServletRequest request,
             RequestType requestType) {
         if (requestType == RequestType.UIDL && isRepaintAll(request)) {
             /*
@@ -650,8 +651,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
         } else if (requestType == RequestType.OTHER) {
             /*
-             * TODO Should any URL request really create a new application
-             * instance if none was found?
+             * I.e URIs that are not application resources or static (theme)
+             * files.
              */
             return true;
 
@@ -890,7 +891,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
         return false;
     }
 
-    private void handleServiceSessionExpired(HttpServletRequest request,
+    void handleServiceSessionExpired(HttpServletRequest request,
             HttpServletResponse response) throws IOException, ServletException {
 
         if (isOnUnloadRequest(request)) {
@@ -1080,7 +1081,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
     }
 
     enum RequestType {
-        FILE_UPLOAD, UIDL, OTHER;
+        FILE_UPLOAD, UIDL, OTHER, STATIC_FILE, APPLICATION_RESOURCE;
     }
 
     protected RequestType getRequestType(HttpServletRequest request) {
@@ -1088,9 +1089,38 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
             return RequestType.FILE_UPLOAD;
         } else if (isUIDLRequest(request)) {
             return RequestType.UIDL;
+        } else if (isStaticResourceRequest(request)) {
+            return RequestType.STATIC_FILE;
+        } else if (isApplicationRequest(request)) {
+            return RequestType.APPLICATION_RESOURCE;
+        }
+        return RequestType.OTHER;
+
+    }
+
+    private boolean isApplicationRequest(HttpServletRequest request) {
+        String path = getRequestPathInfo(request);
+        if (path != null && path.startsWith("/APP/")) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isStaticResourceRequest(HttpServletRequest request) {
+        String pathInfo = request.getPathInfo();
+        if (pathInfo == null || pathInfo.length() <= 10) {
+            return false;
         }
 
-        return RequestType.OTHER;
+        if ((request.getContextPath() != null)
+                && (request.getRequestURI().startsWith("/VAADIN/"))) {
+            return true;
+        } else if (request.getRequestURI().startsWith(
+                request.getContextPath() + "/VAADIN/")) {
+            return true;
+        }
+
+        return false;
     }
 
     private boolean isUIDLRequest(HttpServletRequest request) {
@@ -1830,6 +1860,13 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                 application, assumedWindow);
     }
 
+    /**
+     * Returns the path info; note that this _can_ be different than
+     * request.getPathInfo() (e.g application runner).
+     * 
+     * @param request
+     * @return
+     */
     String getRequestPathInfo(HttpServletRequest request) {
         return request.getPathInfo();
     }

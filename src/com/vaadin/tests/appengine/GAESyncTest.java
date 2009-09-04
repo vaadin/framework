@@ -75,7 +75,7 @@ public class GAESyncTest extends Application {
                 Button b = new Button("Slow", new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
                         try {
-                            Thread.sleep((40000));
+                            Thread.sleep(15000);
                         } catch (InterruptedException e) {
                             // TODO Auto-generated catch block
                             e.printStackTrace();
