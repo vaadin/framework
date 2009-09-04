@@ -301,6 +301,12 @@ public class VTextualDate extends VDateField implements Paintable, Field,
         return fieldExtraWidth;
     }
 
+    public void updateWidth() {
+        needLayout = true;
+        fieldExtraWidth = -1;
+        iLayout();
+    }
+
     public void iLayout() {
         if (needLayout) {
             text.setWidth((getOffsetWidth() - getFieldExtraWidth()) + "px");
