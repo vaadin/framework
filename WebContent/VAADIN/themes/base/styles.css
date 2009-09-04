@@ -1498,26 +1498,25 @@ div.v-tree-node-leaf {
 
 .v-upload-immediate {
 	position: relative;
-	width: 10em;
-	margin:0;
-	overflow:hidden;
+	margin: 0;
+	overflow: hidden;
 }
 
 .v-upload-immediate input {
 	opacity: 0;
 	filter: alpha(opacity=0);
-	z-index:2;
+	z-index: 2;
 	position: absolute;
-	right:0;
-	height:21px;
+	right: 0;
+	height: 21px;
 	text-align: right;
 }
 .v-upload-immediate button {
-	position:relative;
-	left:0;
-	top:0;
-	width:100%;
-	text-align:left;
+	position: relative;
+	left: 0;
+	top: 0;
+	width: 100%;
+	text-align: left;
 }
   
 

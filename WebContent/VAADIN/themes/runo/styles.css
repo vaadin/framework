@@ -1498,26 +1498,25 @@ div.v-tree-node-leaf {
 
 .v-upload-immediate {
 	position: relative;
-	width: 10em;
-	margin:0;
-	overflow:hidden;
+	margin: 0;
+	overflow: hidden;
 }
 
 .v-upload-immediate input {
 	opacity: 0;
 	filter: alpha(opacity=0);
-	z-index:2;
+	z-index: 2;
 	position: absolute;
-	right:0;
-	height:21px;
+	right: 0;
+	height: 21px;
 	text-align: right;
 }
 .v-upload-immediate button {
-	position:relative;
-	left:0;
-	top:0;
-	width:100%;
-	text-align:left;
+	position: relative;
+	left: 0;
+	top: 0;
+	width: 100%;
+	text-align: left;
 }
   
 
@@ -1724,6 +1723,8 @@ div.v-tree-node-leaf {
 	border: 1px solid #babfc0;
 	border-bottom-color: #a5abac;
 	background: #fff url(button/img/bg.png);
+	-webkit-background-origin: padding;
+	-moz-background-origin: padding;
 	padding: 3px 15px;
 	-webkit-border-radius: 10px;
 	-moz-border-radius: 10px;
@@ -1733,6 +1734,9 @@ div.v-tree-node-leaf {
 	min-height: 16px;
 	}
 
+.v-button-caption {
+	color: #464f52;
+	}
 
 /* Small style */
 
