@@ -29,10 +29,6 @@
 	background-image: url(img/left.png); /** sprite-ref: buttons */
 	border: none;
 	cursor: default;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-ms-box-sizing: border-box;
-	box-sizing: border-box;
 	}
 
 .v-button-wrap,
