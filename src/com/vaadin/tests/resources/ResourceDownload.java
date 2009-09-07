@@ -44,6 +44,15 @@ public class ResourceDownload extends TestBase {
         });
         addComponent(b);
 
+        b = new Button("Test", new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                ResourceDownload.this.getMainWindow().showNotification(
+                        "Still working");
+            }
+
+        });
+        addComponent(b);
+
     }
 
     protected void download(String target) {
@@ -64,7 +73,7 @@ public class ResourceDownload extends TestBase {
         // IE8
         streamResource.setMIMEType("application/x-msexcel");
 
-        this.getMainWindow().open(streamResource, target);
+        getMainWindow().open(streamResource, target);
 
     }
 
