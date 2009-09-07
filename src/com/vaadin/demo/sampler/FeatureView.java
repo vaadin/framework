@@ -222,9 +222,10 @@ public class FeatureView extends HorizontalLayout {
                         ActiveLink al = new ActiveLink(f.getName(),
                                 new ExternalResource(getApplication().getURL()
                                         + "#" + path));
-                        al.setIcon(new ThemeResource(
-                                (f instanceof FeatureSet ? "icons/category.gif"
-                                        : "icons/sample.png")));
+                        al
+                                .setIcon(new ThemeResource(
+                                        (f instanceof FeatureSet ? "../sampler/icons/category.gif"
+                                                : "../sampler/icons/sample.png")));
                         al.addListener(new LinkActivatedListener() {
                             public void linkActivated(LinkActivatedEvent event) {
                                 if (event.isLinkOpened()) {
