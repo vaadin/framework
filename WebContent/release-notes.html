@@ -71,7 +71,7 @@ fixes, the most significant additions are:</p>
 	<li>First off, all the original CSS class names of the button stay unmodified. Only the root element type is changed.</li>
 	<li>One additional wrapping element is introduced in the DIV-based implementation.</li>
 	<li>The CSS class names for VNativeButton are prefixed with <code>v-nativebutton</code>.</li>
-	<li>The resulting HTML structures for both Button and NativeButton are shown below (changes emphasized):
+	<li>The resulting HTML structures for both Button and NativeButton are shown below (<strong>changes emphasized</strong>):
 	<div class="codeblock">
 	<table style="width: 100%;">
 		<tr style="vertical-align:top;">
@@ -119,14 +119,14 @@ fixes, the most significant additions are:</p>
 			<ul>
 				<li>No actions are needed.</li>
 			</ul>
-			<strong>Buttons with a completely different look</strong>
+			<strong>Buttons with a completely different theme</strong>
 			<ul>
 				<li>Replace the Button with NativeButton</li>
 				<li>In your theme CSS, find-and-replace <br /><code>.v-button</code> &rarr; <code>.v-nativebutton</code></li>
 			</ul>
-			<strong>Buttons with a some modifications/additions</strong>
+			<strong>Buttons with some theme modifications/additions</strong>
 			<p>We cannot provide a comprehensive migration guide for these situations, since every case will most likely require different actions.</p>
-			<p>But if your modified buttons looks broken, it is most likely caused by the additional element in the HTML structure (<code>span.v-button-wrap</code>). Most of the styles previously applied on <code>.v-button-caption</code> have been moved to <code>.v-button-wrap</code>, so be sure to change your CSS accordingly.</p>
+			<p>But if your modified buttons looks broken, it is most likely caused by the new additional element in the HTML structure (<code>span.v-button-wrap</code>). Most of the styles previously applied on <code>.v-button-caption</code> have been moved to <code>.v-button-wrap</code>, so be sure to change your CSS accordingly.</p>
 		</td>
 	</tr>
 </table>
