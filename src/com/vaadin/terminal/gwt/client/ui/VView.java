@@ -520,7 +520,13 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
 
         @Override
         public int getWidth() {
-            return getElement().getOffsetWidth() - getExcessWidth();
+            int w = getElement().getOffsetWidth() - getExcessWidth();
+            if (w < 10 && BrowserInfo.get().isIE7()) {
+                // Overcome an IE7 bug #3295
+                Util.shakeBodyElement();
+                w = getElement().getOffsetWidth() - getExcessWidth();
+            }
+            return w;
         }
 
         private int getExcessWidth() {

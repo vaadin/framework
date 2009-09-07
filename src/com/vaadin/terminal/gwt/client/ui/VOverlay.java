@@ -13,6 +13,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.Util;
 
 /**
  * In Vaadin UI this Overlay should always be used for all elements that
@@ -130,6 +131,13 @@ public class VOverlay extends PopupPanel {
                 updateShadowSizeAndPosition(1.0);
             }
         }
+        Util.runIE7ZeroSizedBodyFix();
+    }
+
+    @Override
+    public void hide(boolean autoClosed) {
+        super.hide(autoClosed);
+        Util.runIE7ZeroSizedBodyFix();
     }
 
     @Override

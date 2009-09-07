@@ -10,6 +10,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
@@ -712,5 +714,32 @@ public class Util {
         }
 
      }-*/;
+
+    /**
+     * IE7 sometimes "forgets" to render content. This function runs a hack to
+     * workaround the bug if needed. This happens easily in framset. See #3295.
+     */
+    public static void runIE7ZeroSizedBodyFix() {
+        if (BrowserInfo.get().isIE7()) {
+            int offsetWidth = RootPanel.getBodyElement().getOffsetWidth();
+            if (offsetWidth == 0) {
+                shakeBodyElement();
+            }
+        }
+    }
+
+    /**
+     * Does some very small adjustments to body element. We need this just to
+     * overcome some IE bugs.
+     */
+    public static void shakeBodyElement() {
+        final DivElement shaker = Document.get().createDivElement();
+        RootPanel.getBodyElement().insertBefore(shaker,
+                RootPanel.getBodyElement().getFirstChildElement());
+        shaker.getStyle().setPropertyPx("height", 0);
+        shaker.setInnerHTML("&nbsp;");
+        RootPanel.getBodyElement().removeChild(shaker);
+
+    }
 
 }
