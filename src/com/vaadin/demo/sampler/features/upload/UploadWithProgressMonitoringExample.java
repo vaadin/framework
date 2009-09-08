@@ -151,34 +151,32 @@ public class UploadWithProgressMonitoringExample extends VerticalLayout {
         private boolean sleep;
 
         /**
-         * OutputStream that simply counts lineends
+         * return an OutputStream that simply counts lineends
          */
-        private OutputStream stream = new OutputStream() {
-            private static final int searchedByte = '\n';
-
-            @Override
-            public void write(int b) throws IOException {
-                total++;
-                if (b == searchedByte) {
-                    counter++;
-                }
-                if (sleep && total % 1000 == 0) {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
-            }
-        };
-
         public OutputStream receiveUpload(String filename, String MIMEType) {
             counter = 0;
             total = 0;
             fileName = filename;
             mtype = MIMEType;
-            return stream;
+            return new OutputStream() {
+                private static final int searchedByte = '\n';
+
+                @Override
+                public void write(int b) throws IOException {
+                    total++;
+                    if (b == searchedByte) {
+                        counter++;
+                    }
+                    if (sleep && total % 1000 == 0) {
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            };
         }
 
         public String getFileName() {

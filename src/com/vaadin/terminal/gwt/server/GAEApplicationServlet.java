@@ -3,6 +3,7 @@ package com.vaadin.terminal.gwt.server;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Date;
@@ -148,6 +149,18 @@ public class GAEApplicationServlet extends ApplicationServlet {
                     "Deadline Exceeded",
                     "I'm sorry, but the operation took too long to complete. We'll try reloading to see where we're at, please take note of any unsaved data...",
                     "", null);
+        } catch (NotSerializableException e) {
+            // TODO i18n?
+            // TODO this notification is not shown - solve this in some other
+            // way...
+            criticalNotification(
+                    request,
+                    response,
+                    "NotSerializableException",
+                    "I'm sorry, but there seems to be a serious problem, please contact the administrator. And please take note of any unsaved data...",
+                    "", getApplicationUrl(request).toString()
+                            + "?restartApplication");
+            e.printStackTrace(System.err);
         } finally {
             // "Next, please!"
             if (locked) {

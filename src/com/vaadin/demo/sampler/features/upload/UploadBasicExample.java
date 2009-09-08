@@ -37,24 +37,22 @@ public class UploadBasicExample extends VerticalLayout {
         private int counter;
 
         /**
-         * OutputStream that simply counts lineends
+         * return an OutputStream that simply counts lineends
          */
-        private OutputStream stream = new OutputStream() {
-            private static final int searchedByte = '\n';
-
-            @Override
-            public void write(int b) throws IOException {
-                if (b == searchedByte) {
-                    counter++;
-                }
-            }
-        };
-
         public OutputStream receiveUpload(String filename, String MIMEType) {
             counter = 0;
             fileName = filename;
             mtype = MIMEType;
-            return stream;
+            return new OutputStream() {
+                private static final int searchedByte = '\n';
+
+                @Override
+                public void write(int b) throws IOException {
+                    if (b == searchedByte) {
+                        counter++;
+                    }
+                }
+            };
         }
 
         public String getFileName() {
