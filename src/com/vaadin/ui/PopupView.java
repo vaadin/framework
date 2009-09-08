@@ -87,12 +87,9 @@ public class PopupView extends AbstractComponentContainer {
      */
     public void setContent(PopupView.Content newContent)
             throws IllegalArgumentException {
-        if (newContent == null || newContent.getMinimizedValueAsHTML() == null
-                || newContent.getPopupComponent() == null) {
-            throw new IllegalArgumentException(
-                    "Content object is or contains null");
+        if (newContent == null) {
+            throw new IllegalArgumentException("Content must not be null");
         }
-
         content = newContent;
         requestRepaint();
     }
@@ -297,10 +294,9 @@ public class PopupView extends AbstractComponentContainer {
 
         String html = content.getMinimizedValueAsHTML();
         if (html == null) {
-            throw new PaintException(
-                    "Recieved null when trying to paint minimized value.");
+            html = "";
         }
-        target.addAttribute("html", content.getMinimizedValueAsHTML());
+        target.addAttribute("html", html);
         target.addAttribute("hideOnMouseOut", hideOnMouseOut);
 
         // Only paint component to client if we know that the popup is showing
