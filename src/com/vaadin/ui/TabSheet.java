@@ -397,7 +397,7 @@ public class TabSheet extends AbstractComponentContainer implements
      * @param c
      */
     public void setSelectedTab(Component c) {
-        if (c != null && components.contains(c) && !selected.equals(c)) {
+        if (c != null && components.contains(c) && !c.equals(selected)) {
             selected = c;
             fireSelectedTabChange();
             requestRepaint();
