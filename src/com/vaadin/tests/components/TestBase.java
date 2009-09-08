@@ -1,13 +1,12 @@
 package com.vaadin.tests.components;
 
-import com.vaadin.Application;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public abstract class TestBase extends Application {
+public abstract class TestBase extends AbstractTestCase {
 
     @Override
     public final void init() {
@@ -36,10 +35,6 @@ public abstract class TestBase extends Application {
     protected Layout getLayout() {
         return layout;
     }
-
-    protected abstract String getDescription();
-
-    protected abstract Integer getTicketNumber();
 
     protected abstract void setup();
 
