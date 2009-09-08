@@ -751,7 +751,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
         }
     }
 
-    private boolean willHaveScrollbars() {
+    /**
+     * Note, this method is not official api although declared as protected.
+     * Extend at you own risk.
+     * 
+     * @return true if content area will have scrollbars visible.
+     */
+    protected boolean willHaveScrollbars() {
         if (!(height != null && !height.equals(""))) {
             if (pageLength < totalRows) {
                 return true;
