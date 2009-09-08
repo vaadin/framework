@@ -48,6 +48,27 @@ public class GAEApplicationServlet extends ApplicationServlet {
     private static final String PROPERTY_EXPIRES = "expires";
     private static final String PROPERTY_DATA = "data";
 
+    protected void sendDeadlineExceededNotification(HttpServletRequest request,
+            HttpServletResponse response) throws IOException {
+        criticalNotification(
+                request,
+                response,
+                "Deadline Exceeded",
+                "I'm sorry, but the operation took too long to complete. We'll try reloading to see where we're at, please take note of any unsaved data...",
+                "", null);
+    }
+
+    protected void sendNotSerializableNotification(HttpServletRequest request,
+            HttpServletResponse response) throws IOException {
+        criticalNotification(
+                request,
+                response,
+                "NotSerializableException",
+                "I'm sorry, but there seems to be a serious problem, please contact the administrator. And please take note of any unsaved data...",
+                "", getApplicationUrl(request).toString()
+                        + "?restartApplication");
+    }
+
     @Override
     protected void service(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
@@ -142,24 +163,11 @@ public class GAEApplicationServlet extends ApplicationServlet {
 
         } catch (DeadlineExceededException e) {
             System.err.println("DeadlineExceeded for " + session.getId());
-            // TODO i18n?
-            criticalNotification(
-                    request,
-                    response,
-                    "Deadline Exceeded",
-                    "I'm sorry, but the operation took too long to complete. We'll try reloading to see where we're at, please take note of any unsaved data...",
-                    "", null);
+            sendDeadlineExceededNotification(request, response);
         } catch (NotSerializableException e) {
-            // TODO i18n?
-            // TODO this notification is not shown - solve this in some other
-            // way...
-            criticalNotification(
-                    request,
-                    response,
-                    "NotSerializableException",
-                    "I'm sorry, but there seems to be a serious problem, please contact the administrator. And please take note of any unsaved data...",
-                    "", getApplicationUrl(request).toString()
-                            + "?restartApplication");
+            // TODO this notification is usually not shown - should we redirect
+            // in some other way - can we?
+            sendNotSerializableNotification(request, response);
             e.printStackTrace(System.err);
         } finally {
             // "Next, please!"
@@ -170,8 +178,8 @@ public class GAEApplicationServlet extends ApplicationServlet {
         }
     }
 
-    ApplicationContext getApplicationContext(HttpServletRequest request,
-            MemcacheService memcache) {
+    protected ApplicationContext getApplicationContext(
+            HttpServletRequest request, MemcacheService memcache) {
         HttpSession session = request.getSession();
         String id = AC_BASE + session.getId();
         byte[] serializedAC = (byte[]) memcache.get(id);
