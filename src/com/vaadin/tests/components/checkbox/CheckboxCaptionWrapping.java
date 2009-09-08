@@ -1,4 +1,5 @@
 package com.vaadin.tests.components.checkbox;
+
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
@@ -23,6 +24,7 @@ public class CheckboxCaptionWrapping extends TestBase {
         CheckBox cb = new CheckBox(
                 "Checkbox with some Incididunt ut labore et dolore magna aliqua.");
         cb.setStyleName("wrap");
+        cb.setWidth("100%");
         mainLayout.setStyleName("borders");
         mainLayout.setWidth("300px");
         mainLayout.addComponent(cb);
