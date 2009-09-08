@@ -215,15 +215,17 @@ public abstract class CellBasedLayout extends ComplexPanel implements Container 
     }
 
     private void updateMarginAndSpacingInfo(UIDL uidl) {
-        int bitMask = uidl.getIntAttribute("margins");
-        if (activeMarginsInfo.getBitMask() != bitMask) {
-            activeMarginsInfo = new VMarginInfo(bitMask);
-            marginsNeedsRecalculation = true;
-        }
-        boolean spacing = uidl.getBooleanAttribute("spacing");
-        if (spacing != spacingEnabled) {
-            marginsNeedsRecalculation = true;
-            spacingEnabled = spacing;
+        if (!uidl.hasAttribute("invisible")) {
+            int bitMask = uidl.getIntAttribute("margins");
+            if (activeMarginsInfo.getBitMask() != bitMask) {
+                activeMarginsInfo = new VMarginInfo(bitMask);
+                marginsNeedsRecalculation = true;
+            }
+            boolean spacing = uidl.getBooleanAttribute("spacing");
+            if (spacing != spacingEnabled) {
+                marginsNeedsRecalculation = true;
+                spacingEnabled = spacing;
+            }
         }
     }
 
