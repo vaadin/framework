@@ -38,6 +38,7 @@
 .v-table-header table,
 .v-table-table {
 	border-spacing: 0;
+	border-collapse: separate;
 	margin: 0;
 	padding: 0;
 	border: 0;
