@@ -160,6 +160,7 @@ public class ReindeerThemeStyles extends Application {
 
         b = new Button("Link style");
         b.setStyleName("link");
+        hl.addComponent(b);
 
         l.addComponent(hl);
 
