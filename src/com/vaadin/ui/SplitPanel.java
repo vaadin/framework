@@ -9,7 +9,7 @@ import java.util.Map;
 
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.RenderInformation.Size;
+import com.vaadin.terminal.Sizeable;
 
 /**
  * SplitPanel.
@@ -293,7 +293,7 @@ public class SplitPanel extends AbstractLayout {
      * @param pos
      *            size of the first region
      * @param unit
-     *            the unit (from {@link Size}) in which the size is given.
+     *            the unit (from {@link Sizeable}) in which the size is given.
      */
     public void setSplitPosition(int pos, int unit) {
         this.pos = pos;
