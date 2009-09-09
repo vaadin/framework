@@ -43,7 +43,11 @@ fixes, the most significant additions are:</p>
     <li>No more problems with stack memory in Windows when compiling widget sets (<a href="http://dev.vaadin.com/ticket/2523">#2523</a>, <a href="http://dev.vaadin.com/ticket/2891">#2891</a>)</li>
   </ul>
   <li>Performance improvements (general, <strong>Table</strong> caching)</li>
-  <li>Google App Engine (GAE) support.</li>
+  <li>Google App Engine (GAE) support (<a href="http://dev.vaadin.com/ticket/2835">#2835</a>)</li>
+  <ul>
+    <li>Vaadin is now serializable as per <tt>java.io.Serializable</tt> (<a href="http://dev.vaadin.com/ticket/695">#695</a>)</li>
+    <li>See <a href="#gae">notes below</a> regarding Google App Engine compatibility.</li>
+  </ul>
   <li>Maven support: Vaadin available from central Maven repository (<a href="http://dev.vaadin.com/ticket/1862">#1862</a>). See the <a href="http://dev.vaadin.com/wiki/Articles/MavenIntegration">Maven Integration</a> article for more details.</li>
   <li>Major refactoring of the <strong>Button</strong> component implementation on the client side. See the section below about <a href="#button">Button modifications</a> for more info.</li>
   <li>New <strong>NativeButton</strong> component that always uses the native button in the browser. See the section below about <a href="#button">Button modifications</a> for more info.</li>
@@ -231,6 +235,41 @@ client-side widgets with Google Web Toolkit (GWT).</p>
   <li>Rename <strong>IToolkitOverlay</strong> &#x2192; <strong>VOverlay</strong>
 </ul>
 
+<h2><a name="gae">Notes and Limitations for Google App Engine</a></h2>
+
+<p>The following instructions and limitations apply when you run a Vaadin application
+under the Google App Engine.</p>
+
+<ul>
+  <li><p>Applications must use <b>GAEApplicationServlet</b> instead of
+  <b>ApplicationServlet</b> in <tt>web.xml</tt>.</p></li>
+
+  <li><p>Session support must be enabled in <tt>appengine-web.xml</tt>:</p>
+
+      <pre>    &lt;sessions-enabled&gt;true&lt;/sessions-enabled&gt;</pre>
+  </li>
+
+  <li><p>Avoid using the session for storage, usual App Engine limitations apply (no
+  synchronization, i.e, unreliable).</p></li>
+
+  <li><p>Vaadin uses memcache for mutex, the key is of the form
+  <tt>_vmutex&lt;sessionid&gt;</tt>.</p></li>
+  
+  <li><p>The Vaadin <b>WebApplicationContext</b> class is serialized separately into memcache
+  and datastore; the memcache key is <tt>_vac&lt;sessionid&gt;</tt> and the datastore
+  entity kind is <tt>_vac</tt> with identifiers of the type <tt>_vac&lt;sessionid&gt;</tt>.</p></li>
+  
+  <li><p>DO NOT update application state when serving an <b>ApplicationResource</b> (e.g <b>ClassResource</b>.<i>getStream()</i>).</p></li>
+
+  <li><p>AVOID (or be very careful when) updating application state in a
+  <b>TransactionListener</b> - it is called even when the application is not locked and
+  won't be serialized (e.g <b>ApplicationResource</b>), and changes can thus go missing (it
+  should be safe to update things that can be safely discarded later - i.e valid only for
+  the current request)</p></li>
+
+  <li><p>The application remains locked during uploads - a progress bar is not possible</p></li>
+</ul>
+
 <h2><a name="oophm">Package for the experimental GWT Out-of-Process Hosted Mode</a></h2>
 
 <p>We provide a separate (platform independent) installation package
@@ -285,12 +324,18 @@ sets with the regular Vaadin package for your platform.</p>
   <li><a href="http://dev.itmill.com/ticket/1862">#1862</a>: Add Vaadin to central Maven repository</li>
   <li><a href="http://dev.itmill.com/ticket/2085">#2085</a>: Tooltip for disabled button</li>
   <li><a href="http://dev.itmill.com/ticket/2824">#2824</a>: Full IE8 support</li>
+  <li><a href="http://dev.itmill.com/ticket/2891">#2891</a>: Stack overflow when compiling widgetsets with GWT 1.6 and JDK 1.5 on Windows</li>
   <li><a href="http://dev.itmill.com/ticket/2931">#2931</a>: URI Fragment broken in IE with empty fragment</li>
   <li><a href="http://dev.itmill.com/ticket/2943">#2943</a>: Reindeer theme button broken</li>
+  <li><a href="http://dev.itmill.com/ticket/2972">#2972</a>: Create theme selector for Sampler</li>
   <li><a href="http://dev.itmill.com/ticket/2998">#2998</a>: Table rendering in Firefox is very slow when the table contains components</li>
   <li><a href="http://dev.itmill.com/ticket/3003">#3003</a>: Table headers do not move in IE6</li>
+  <li><a href="http://dev.itmill.com/ticket/3028">#3028</a>: CheckBox captions wrap in IE</li>
+  <li><a href="http://dev.itmill.com/ticket/3058">#3058</a>: GAE does not support session synchronization</li>
   <li><a href="http://dev.itmill.com/ticket/3065">#3065</a>: Inactive accordion tab keeps width</li>
   <li><a href="http://dev.itmill.com/ticket/3066">#3066</a>: OptionGroup value changes to null if option label is clicked</li>
+  <li><a href="http://dev.itmill.com/ticket/3072">#3072</a>: IE6: Subwindow changes position after refresh</li>
+  <li><a href="http://dev.itmill.com/ticket/3076">#3076</a>: IE 7 Table scrollbar disappearance</li>
   <li><a href="http://dev.itmill.com/ticket/3079">#3079</a>: Button (reindeer) visually broken in Safari (Win)</li>
   <li><a href="http://dev.itmill.com/ticket/3091">#3091</a>: Table should iterate container using getIdByIndex if container is indexed</li>
   <li><a href="http://dev.itmill.com/ticket/3096">#3096</a>: Analyze layouts does not check sub windows</li>
@@ -299,11 +344,14 @@ sets with the regular Vaadin package for your platform.</p>
   <li><a href="http://dev.itmill.com/ticket/3122">#3122</a>: Liferay session extension</li>
   <li><a href="http://dev.itmill.com/ticket/3132">#3132</a>: Refresh fails when moving components between layouts</li>
   <li><a href="http://dev.itmill.com/ticket/3143">#3143</a>: Table column expanding bugs if table has columns with defined size</li>
+  <li><a href="http://dev.itmill.com/ticket/3144">#3144</a>: Button height/width not working as expected with reindeer theme</li>
+  <li><a href="http://dev.itmill.com/ticket/3145">#3145</a>: Rendering bug when 100% wide TextField is inside Table</li>
   <li><a href="http://dev.itmill.com/ticket/3146">#3146</a>: table selection : clearing selection is impossible</li>
   <li><a href="http://dev.itmill.com/ticket/3147">#3147</a>: Modal WIndow cannot be positioned</li>
   <li><a href="http://dev.itmill.com/ticket/3148">#3148</a>: CommunicationManager should not keep a reference to ApplicationServlet</li>
   <li><a href="http://dev.itmill.com/ticket/3157">#3157</a>: Spring Security form login does not work with Vaadin</li>
   <li><a href="http://dev.itmill.com/ticket/3160">#3160</a>: Regression: DateField stylenames are not added to the DOM</li>
+  <li><a href="http://dev.itmill.com/ticket/3163">#3163</a>: DateField shows pop-up button in Read-only mode</li>
   <li><a href="http://dev.itmill.com/ticket/3164">#3164</a>: DateField addStyle does not add information to DOM.</li>
   <li><a href="http://dev.itmill.com/ticket/3166">#3166</a>: "Use of the cached instance of VTabsheet clears the ""hidetabs""-flag and style-names"</li>
   <li><a href="http://dev.itmill.com/ticket/3167">#3167</a>: IllegalStateExcepton when session expires</li>
@@ -320,9 +368,9 @@ sets with the regular Vaadin package for your platform.</p>
   <li><a href="http://dev.itmill.com/ticket/3190">#3190</a>: ComboBox looses its selection if value set by server before focus</li>
   <li><a href="http://dev.itmill.com/ticket/3191">#3191</a>: Split and open private writeAjaxPage for extension</li>
   <li><a href="http://dev.itmill.com/ticket/3193">#3193</a>: Button visually broken in IE8</li>
-  <li><a href="http://dev.itmill.com/ticket/3194">#3194</a>: Test reindeer buttons in all configurations</li>
   <li><a href="http://dev.itmill.com/ticket/3195">#3195</a>: ReplaceComponent causes NPE in ChildComponentContainer</li>
   <li><a href="http://dev.itmill.com/ticket/3199">#3199</a>: Preventing tab change in a tabsheet hides the current tab</li>
+  <li><a href="http://dev.itmill.com/ticket/3205">#3205</a>: Table columns for rows get pushed forward</li>
   <li><a href="http://dev.itmill.com/ticket/3206">#3206</a>: VFilterSelect: Using arrow keys + enter to select an item does not always work</li>
   <li><a href="http://dev.itmill.com/ticket/3208">#3208</a>: Bad table performance when HorizontalLayout is used as a generated column base</li>
   <li><a href="http://dev.itmill.com/ticket/3209">#3209</a>: Table needs a method to adjust the caching programmatically</li>
@@ -332,14 +380,34 @@ sets with the regular Vaadin package for your platform.</p>
   <li><a href="http://dev.itmill.com/ticket/3229">#3229</a>: IE6 has extra padding-top in VerticalLayout with spacing enabled</li>
   <li><a href="http://dev.itmill.com/ticket/3231">#3231</a>: VUpload depends on VNativeButton internal implementation</li>
   <li><a href="http://dev.itmill.com/ticket/3232">#3232</a>: Implement new default look for Runo theme button</li>
+  <li><a href="http://dev.itmill.com/ticket/3233">#3233</a>: Write migration guide for Button theme</li>
+  <li><a href="http://dev.itmill.com/ticket/3235">#3235</a>: Finalize and add CSSLayout (FlowLayout) to Vaadin</li>
   <li><a href="http://dev.itmill.com/ticket/3237">#3237</a>: "New Button component does not react to ""click"" events"</li>
   <li><a href="http://dev.itmill.com/ticket/3241">#3241</a>: Parameters and URIs sometimes end up in the wrong window</li>
+  <li><a href="http://dev.itmill.com/ticket/3242">#3242</a>: PopupView getPopupComponent should not be called in constructor</li>
   <li><a href="http://dev.itmill.com/ticket/3244">#3244</a>: Empty screen when table.setPageLength(0) used (IE7)</li>
+  <li><a href="http://dev.itmill.com/ticket/3246">#3246</a>: Collapsing a table column leaves space for unneeded scrollbar</li>
   <li><a href="http://dev.itmill.com/ticket/3247">#3247</a>: "VPopupView contains hard coded text ""Loading..."""</li>
+  <li><a href="http://dev.itmill.com/ticket/3248">#3248</a>: PopupView should allow null minimized value and lazily initialize component</li>
   <li><a href="http://dev.itmill.com/ticket/3249">#3249</a>: NPE in CommunicationManager.getApplicationWindow</li>
   <li><a href="http://dev.itmill.com/ticket/3251">#3251</a>: Mac FF 3.5 renders obsolete scrollbars for table</li>
+  <li><a href="http://dev.itmill.com/ticket/3254">#3254</a>: ApplicationResources do not work</li>
   <li><a href="http://dev.itmill.com/ticket/3256">#3256</a>: Compile Firefox 3.5 OOPHM plugin for Mac</li>
   <li><a href="http://dev.itmill.com/ticket/3257">#3257</a>: Button in a table is too wide in IE7</li>
+  <li><a href="http://dev.itmill.com/ticket/3260">#3260</a>: UTF-8 characters not displayed properly in Sampler</li>
+  <li><a href="http://dev.itmill.com/ticket/3264">#3264</a>: Extra scrollbar with 100% width (or height) when child component grows</li>
+  <li><a href="http://dev.itmill.com/ticket/3265">#3265</a>: Immediate redirection doesn't happen when system notifications are disabled</li>
+  <li><a href="http://dev.itmill.com/ticket/3266">#3266</a>: Tabsheet with undefined width and reindeer theme renders incorrectly</li>
+  <li><a href="http://dev.itmill.com/ticket/3270">#3270</a>: GWT 1.7.0 OOPHM package is not 100% compatble with official GWT 1.7.0</li>
+  <li><a href="http://dev.itmill.com/ticket/3275">#3275</a>: Tree node selection is messed up</li>
+  <li><a href="http://dev.itmill.com/ticket/3280">#3280</a>: Immediate upload component doesn't respect upload button caption width</li>
+  <li><a href="http://dev.itmill.com/ticket/3285">#3285</a>: Remove IE8 fixes from PortalWidgetSet</li>
+  <li><a href="http://dev.itmill.com/ticket/3289">#3289</a>: "open(streamSource,""_top"") hangs"</li>
+  <li><a href="http://dev.itmill.com/ticket/3292">#3292</a>: NPE in Tabsheet.setSelectedTab if no tab is currently selected</li>
+  <li><a href="http://dev.itmill.com/ticket/3295">#3295</a>: Vaadin application renders improperly in frameset with IE7</li>
+  <li><a href="http://dev.itmill.com/ticket/3302">#3302</a>: Fix mail-portlet to be 6.1.0 compatible</li>
+  <li><a href="http://dev.itmill.com/ticket/3303">#3303</a>: Error message contains extra characters</li>
+  <li><a href="http://dev.itmill.com/ticket/3309">#3309</a>: Typo in SplitPanel javadoc</li>
 </ul>
 
 <h2><a name="requirements">Requirements</a></h2>
