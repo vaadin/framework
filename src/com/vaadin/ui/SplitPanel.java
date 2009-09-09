@@ -28,12 +28,12 @@ public class SplitPanel extends AbstractLayout {
     /* Predefined orientations */
 
     /**
-     * Components are to be layed out vertically.
+     * Components are to be laid out vertically.
      */
     public static final int ORIENTATION_VERTICAL = 0;
 
     /**
-     * Components are to be layed out horizontally.
+     * Components are to be laid out horizontally.
      */
     public static final int ORIENTATION_HORIZONTAL = 1;
 
@@ -281,7 +281,7 @@ public class SplitPanel extends AbstractLayout {
      * Moves the position of the splitter.
      * 
      * @param pos
-     *            the new size of the first region in persentage
+     *            the new size of the first region in percentage
      */
     public void setSplitPosition(int pos) {
         setSplitPosition(pos, UNITS_PERCENTAGE);
