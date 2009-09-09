@@ -27,7 +27,10 @@
 /* Blue background */
 .v-verticallayout-blue,
 .v-horizontallayout-blue,
-.v-orderedlayout-blue {
+.v-orderedlayout-blue,
+.v-gridlayout-blue,
+.v-csslayout-blue,
+.v-formlayout-blue {
 	background-color: #bcd3de;
 }
 .v-panel-content > div.blue {
@@ -36,7 +39,10 @@
 /* Black background */
 .v-verticallayout-black,
 .v-horizontallayout-black,
-.v-orderedlayout-black {
+.v-orderedlayout-black,
+.v-gridlayout-black,
+.v-csslayout-black,
+.v-formlayout-black {
 	background-color: #1e2022;
 }
 .v-panel-content > div.black {
