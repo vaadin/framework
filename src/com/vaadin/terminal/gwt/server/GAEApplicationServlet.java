@@ -6,7 +6,12 @@ import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -20,15 +25,77 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.FetchOptions.Builder;
+import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.apphosting.api.DeadlineExceededException;
 import com.vaadin.service.ApplicationContext;
 
+/**
+ * ApplicationServlet to be used when deploying to Google App Engine, in
+ * web.xml:
+ * 
+ * <pre>
+ *      &lt;servlet&gt;
+ *              &lt;servlet-name&gt;HelloWorld&lt;/servlet-name&gt;
+ *              &lt;servlet-class&gt;com.vaadin.terminal.gwt.server.GAEApplicationServlet&lt;/servlet-class&gt;
+ *              &lt;init-param&gt;
+ *                      &lt;param-name&gt;application&lt;/param-name&gt;
+ *                      &lt;param-value&gt;com.vaadin.demo.HelloWorld&lt;/param-value&gt;
+ *              &lt;/init-param&gt;
+ *      &lt;/servlet&gt;
+ * </pre>
+ * 
+ * Session support must be enabled in appengine-web.xml:
+ * 
+ * <pre>
+ *      &lt;sessions-enabled&gt;true&lt;/sessions-enabled&gt;
+ * </pre>
+ * 
+ * Appengine datastore cleanup can be invoked by calling one of the applications
+ * with an additional path "/CLEAN". This can be set up as a cron-job in
+ * cron.xml (see appengine documentation for more information):
+ * 
+ * <pre>
+ * &lt;cronentries&gt;
+ *   &lt;cron&gt;
+ *     &lt;url&gt;/HelloWorld/CLEAN&lt;/url&gt;
+ *     &lt;description&gt;Clean up sessions&lt;/description&gt;
+ *     &lt;schedule&gt;every 2 hours&lt;/schedule&gt;
+ *   &lt;/cron&gt;
+ * &lt;/cronentries&gt;
+ * </pre>
+ * 
+ * It is recommended (but not mandatory) to extract themes and widgetsets and
+ * have App Engine server these statically. Extract VAADIN folder (and it's
+ * contents) 'next to' the WEB-INF folder, and add the following to
+ * appengine-web.xml:
+ * 
+ * <pre>
+ *      &lt;static-files&gt;
+ *           &lt;include path=&quot;/VAADIN/**&quot; /&gt;
+ *      &lt;/static-files&gt;
+ * </pre>
+ * 
+ * Additional limitations:
+ * <ul>
+ * <li/>Do not change application state when serving an ApplicationResource.
+ * <li/>Avoid changing application state in transaction handlers, unless you're
+ * confident you fully understand the synchronization issues in App Engine.
+ * <li/>The application remains locked while uploading - no progressbar is
+ * possible.
+ * </ul>
+ */
 public class GAEApplicationServlet extends ApplicationServlet {
 
     private static final long serialVersionUID = 2179597952818898526L;
+
+    private static final Logger log = Logger
+            .getLogger(GAEApplicationServlet.class.getName());
 
     // memcache mutex is MUTEX_BASE + sessio id
     private static final String MUTEX_BASE = "_vmutex";
@@ -47,6 +114,15 @@ public class GAEApplicationServlet extends ApplicationServlet {
     // Properties used in the datastore
     private static final String PROPERTY_EXPIRES = "expires";
     private static final String PROPERTY_DATA = "data";
+
+    // path used for cleanup
+    private static final String CLEANUP_PATH = "/CLEAN";
+    // max entities to clean at once
+    private static final int CLEANUP_LIMIT = 200;
+    // appengine session kind
+    private static final String APPENGINE_SESSION_KIND = "_ah_SESSION";
+    // appengine session expires-parameter
+    private static final String PROPERTY_APPENGINE_EXPIRES = "_expires";
 
     protected void sendDeadlineExceededNotification(HttpServletRequest request,
             HttpServletResponse response) throws IOException {
@@ -69,9 +145,25 @@ public class GAEApplicationServlet extends ApplicationServlet {
                         + "?restartApplication");
     }
 
+    protected void sendCriticalErrorNotification(HttpServletRequest request,
+            HttpServletResponse response) throws IOException {
+        criticalNotification(
+                request,
+                response,
+                "Critical error",
+                "I'm sorry, but there seems to be a serious problem, please contact the administrator. And please take note of any unsaved data...",
+                "", getApplicationUrl(request).toString()
+                        + "?restartApplication");
+    }
+
     @Override
     protected void service(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
+
+        if (isCleanupRequest(request)) {
+            cleanDatastore();
+            return;
+        }
 
         RequestType requestType = getRequestType(request);
 
@@ -117,9 +209,9 @@ public class GAEApplicationServlet extends ApplicationServlet {
                 try {
                     Thread.sleep(RETRY_AFTER_MILLISECONDS);
                 } catch (InterruptedException e) {
-                    System.err
-                            .println("Thread.sleep() interrupted while waiting for lock. Trying again.");
-                    e.printStackTrace(System.err);
+                    log
+                            .info("Thread.sleep() interrupted while waiting for lock. Trying again. "
+                                    + e);
                 }
             }
 
@@ -162,13 +254,16 @@ public class GAEApplicationServlet extends ApplicationServlet {
             ds.put(entity);
 
         } catch (DeadlineExceededException e) {
-            System.err.println("DeadlineExceeded for " + session.getId());
+            log.severe("DeadlineExceeded for " + session.getId());
             sendDeadlineExceededNotification(request, response);
         } catch (NotSerializableException e) {
             // TODO this notification is usually not shown - should we redirect
             // in some other way - can we?
             sendNotSerializableNotification(request, response);
-            e.printStackTrace(System.err);
+            log.severe("NotSerializableException: " + getStackTraceAsString(e));
+        } catch (Exception e) {
+            sendCriticalErrorNotification(request, response);
+            log.severe(e + ": " + getStackTraceAsString(e));
         } finally {
             // "Next, please!"
             if (locked) {
@@ -212,22 +307,26 @@ public class GAEApplicationServlet extends ApplicationServlet {
                 session.setAttribute(WebApplicationContext.class.getName(),
                         applicationContext);
             } catch (IOException e) {
-                System.err
-                        .println("Could not de-serialize ApplicationContext for "
-                                + session.getId()
-                                + " A new one will be created.");
-                e.printStackTrace();
+                log.warning("Could not de-serialize ApplicationContext for "
+                        + session.getId() + " A new one will be created. "
+                        + getStackTraceAsString(e));
             } catch (ClassNotFoundException e) {
-                System.err
-                        .println("Could not de-serialize ApplicationContext for "
-                                + session.getId()
-                                + " A new one will be created.");
-                e.printStackTrace();
+                log.warning("Could not de-serialize ApplicationContext for "
+                        + session.getId() + " A new one will be created. "
+                        + getStackTraceAsString(e));
             }
         }
         // will create new context if the above did not
         return WebApplicationContext.getApplicationContext(session);
 
+    }
+
+    private boolean isCleanupRequest(HttpServletRequest request) {
+        String path = getRequestPathInfo(request);
+        if (path != null && path.equals(CLEANUP_PATH)) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -241,6 +340,71 @@ public class GAEApplicationServlet extends ApplicationServlet {
         if (session != null) {
             session.removeAttribute(WebApplicationContext.class.getName());
         }
+    }
+
+    /**
+     * This will look at the timestamp and delete expired persisted Vaadin and
+     * appengine sessions from the datastore.
+     * 
+     * TODO Possible improvements include: 1. Use transactions (requires entity
+     * groups - overkill?) 2. Delete one-at-a-time, catch possible exception,
+     * continue w/ next.
+     */
+    private void cleanDatastore() {
+        long expire = new Date().getTime();
+        try {
+            DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+            // Vaadin stuff first
+            {
+                Query q = new Query(AC_BASE);
+                q.setKeysOnly();
+
+                q.addFilter(PROPERTY_EXPIRES,
+                        FilterOperator.LESS_THAN_OR_EQUAL, expire);
+                PreparedQuery pq = ds.prepare(q);
+                List<Entity> entities = pq.asList(Builder
+                        .withLimit(CLEANUP_LIMIT));
+                if (entities != null) {
+                    log.info("Vaadin cleanup deleting " + entities.size()
+                            + " expired Vaadin sessions.");
+                    List<Key> keys = new ArrayList<Key>();
+                    for (Entity e : entities) {
+                        keys.add(e.getKey());
+                    }
+                    ds.delete(keys);
+                }
+            }
+            // Also cleanup GAE sessions
+            {
+                Query q = new Query(APPENGINE_SESSION_KIND);
+                q.setKeysOnly();
+                q.addFilter(PROPERTY_APPENGINE_EXPIRES,
+                        FilterOperator.LESS_THAN_OR_EQUAL, expire);
+                PreparedQuery pq = ds.prepare(q);
+                List<Entity> entities = pq.asList(Builder
+                        .withLimit(CLEANUP_LIMIT));
+                if (entities != null) {
+                    log.info("Vaadin cleanup deleting " + entities.size()
+                            + " expired appengine sessions.");
+                    List<Key> keys = new ArrayList<Key>();
+                    for (Entity e : entities) {
+                        keys.add(e.getKey());
+                    }
+                    ds.delete(keys);
+                }
+            }
+        } catch (Exception e) {
+            log
+                    .warning("Exception while cleaning: "
+                            + getStackTraceAsString(e));
+        }
+    }
+
+    private String getStackTraceAsString(Throwable t) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        t.printStackTrace(pw);
+        return sw.toString();
     }
 
 }
