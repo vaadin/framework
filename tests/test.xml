@@ -90,8 +90,11 @@
         <fail unless="com.vaadin.testbench.deployment.url" message="The 'com.vaadin.testbench.deployment.url' property must be defined."/>
     </target>
 		
+	<target name="run-tests" if="server.start.succeeded" depends="execute-tests">
+	</target>
+	
 	<!-- This target runs the generated and compiled junit tests -->
-	<target name="run-tests" depends="compile-tests,remove-error-screens">
+	<target name="execute-tests" depends="compile-tests,remove-error-screens">
 		<junit fork="yes" printsummary="withOutAndErr">
 			<classpath>
 				<path refid="classpath" />
