@@ -9,13 +9,7 @@
 	<property name="test-output-dir" value="../build/test-output" />
 	<property name="class-dir" value="${test-output-dir}/classes" />
 	<!-- Browsers to use for testing -->
-	<property name="test-browsers" value="firefox" />
-
-	<!-- Host running Selenium RC -->
-	<property name="com.vaadin.testbench.tester.host" value="192.168.56.101" />
-	<!-- Base url where the testable application is deployed -->
-	<property name="com.vaadin.testbench.deployment.url" value="http://192.168.56.1:8080/" />
-	<property name="com.vaadin.testbench.tester.reference" value="../build/screens/" />
+	<property name="test-browsers" value="firefox,ie" />
 	
 	<!-- classpath must include test bench jar and its dependencies -->
 	<path id="classpath">
@@ -112,7 +106,7 @@
 
 			<!-- true/false system arguments -->
 			<jvmarg value="-Dcom.vaadin.testbench.screenshot.reference.error_if_missing=${com.vaadin.testbench.screenshot.reference.error_if_missing}" />
-			<jvmarg value="-Dcom.vaadin.testbench.tester.reference.debug=${com.vaadin.testbench.tester.debug}" />
+			<jvmarg value="-Dcom.vaadin.testbench.screenshot.reference.debug=${com.vaadin.testbench.screenshot.reference.debug}" />
 
 			<batchtest>
 				<fileset dir="${test-output-dir}">
