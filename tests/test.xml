@@ -5,44 +5,52 @@
     <!-- Configuration                                                      -->
     <!-- ================================================================== -->
 	<property name="lib.dir" value="../build/lib/testbench" />
-	<property name="class-dir" value="../build/classes" />
+	<!-- Temporary output directory, created and removed by this script -->
 	<property name="test-output-dir" value="../build/test-output" />
-	<property name="test-browsers" value="firefox,ie" />
+	<property name="class-dir" value="${test-output-dir}/classes" />
+	<!-- Browsers to use for testing -->
+	<property name="test-browsers" value="firefox" />
 
+	<!-- Host running Selenium RC -->
+	<property name="com.vaadin.testbench.tester.host" value="192.168.56.101" />
+	<!-- Base url where the testable application is deployed -->
+	<property name="com.vaadin.testbench.deployment.url" value="http://192.168.56.1:8080/" />
+	<property name="com.vaadin.testbench.tester.reference" value="../build/screens/" />
+	
+	<!-- classpath must include test bench jar and its dependencies -->
 	<path id="classpath">
 		<fileset dir="${lib.dir}" includes="**/*.jar" />
-		<pathelement path="${class-dir}" />
 	</path>
 
-	<fileset dir="../tests" id="html-test-files">
-		<include name="**/*test**.html" />
+	<!-- fileset containing all tests to run -->
+	<fileset dir="../src/com/vaadin/tests" id="html-test-files">
+		<include name="**/**.html" />
 	</fileset>
 
-    <!-- ================================================================== -->
-    <!-- Building Tests                                                     -->
-    <!-- ================================================================== -->
-
+	<!-- This target converts HTML tests files to java junit tests. One test file for each browser is created. -->
 	<target name="create-tests">
 		<fileset id="tests">
 			<include />
 		</fileset>
 		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
 
-		<java classname="com.vaadin.testingtools.util.TestConverter" classpathref="classpath">
+		<java classname="com.vaadin.testbench.util.TestConverter" classpathref="classpath">
 			<arg value="${test-output-dir}" />
 			<arg value="${test-browsers}" />
 			<arg line="${testfiles}" />
 		</java>
 	</target>
 
+	<!-- This target complies the generated java junit tests. -->
 	<target name="compile-tests" depends="create-tests">
-        <mkdir dir="${class-dir}"/>
+		<mkdir dir="${class-dir}" />
 		<javac srcdir="${test-output-dir}" destdir="${class-dir}" debug="on">
 			<classpath>
 				<path refid="classpath" />
 			</classpath>
 		</javac>
 	</target>
+
 
     <!-- ================================================================== -->
     <!-- Toolkit Server Management                                          -->
@@ -62,6 +70,7 @@
             <arg value="start"/>
             <arg value="${package.name}"/>
             <arg value="${package.filename}"/>
+            <arg value="${output-dir}"/>
             <arg value="${testing.testarea}"/>
         </exec>
 
@@ -76,26 +85,34 @@
             <arg value="stop"/>
         </exec>
     </target>
-
+	
     <!-- ================================================================== -->
     <!-- Running Tests                                                      -->
     <!-- ================================================================== -->
-
+	
 	<target name="check-parameters">
-        <fail unless="com.vaadin.testingtools.tester.host" message="The 'com.vaadin.testingtools.tester.host' property must be defined."/>
-        <fail unless="com.vaadin.testingtools.deployment.url" message="The 'com.vaadin.testingtools.deployment.url' property must be defined."/>
+        <fail unless="output-dir" message="The 'output-dir' (usually build/result/vaadin-xxx) should be given to test script."/>
+        <fail unless="com.vaadin.testbench.tester.host" message="The 'com.vaadin.testbench.tester.host' property must be defined."/>
+        <fail unless="com.vaadin.testbench.deployment.url" message="The 'com.vaadin.testbench.deployment.url' property must be defined."/>
     </target>
-
-	<target name="run-tests" if="server.start.succeeded" depends="execute-tests">
-	</target>
-
-	<target name="execute-tests" depends="compile-tests">
-		<junit fork="yes">
+		
+	<!-- This target runs the generated and compiled junit tests -->
+	<target name="run-tests" depends="compile-tests,remove-error-screens">
+		<junit fork="yes" printsummary="withOutAndErr">
 			<classpath>
 				<path refid="classpath" />
+				<pathelement path="${class-dir}" />
 			</classpath>
-			<jvmarg value="-Dcom.vaadin.testingtools.tester.host=${com.vaadin.testingtools.tester.host}" />
-			<jvmarg value="-Dcom.vaadin.testingtools.deployment.url=${com.vaadin.testingtools.deployment.url}" />
+
+			<jvmarg value="-Dcom.vaadin.testbench.tester.host=${com.vaadin.testbench.tester.host}" />
+			<jvmarg value="-Dcom.vaadin.testbench.deployment.url=${com.vaadin.testbench.deployment.url}" />
+			<!-- Define where the reference screenshots and diff files are saved -->
+			<jvmarg value="-Dcom.vaadin.testbench.screenshot.directory=${com.vaadin.testbench.screenshot.directory}" />
+			<jvmarg value="-Djava.awt.headless=true" />
+
+			<!-- true/false system arguments -->
+			<jvmarg value="-Dcom.vaadin.testbench.screenshot.reference.error_if_missing=${com.vaadin.testbench.screenshot.reference.error_if_missing}" />
+			<jvmarg value="-Dcom.vaadin.testbench.tester.reference.debug=${com.vaadin.testbench.tester.debug}" />
 
 			<batchtest>
 				<fileset dir="${test-output-dir}">
@@ -106,11 +123,21 @@
 
 	</target>
 
+	<!-- Remove temporary source and compiled java files -->
 	<target name="remove-temp-files">
-		<!-- test java files -->
 		<delete>
 			<fileset dir="${test-output-dir}">
 				<include name="**/**.java" />
+			</fileset>
+		</delete>
+	</target>
+	
+	<!-- Remove old error screenshots -->
+	<target name="remove-error-screens">
+		<mkdir dir="${com.vaadin.testbench.screenshot.directory}/errors" />
+		<delete>
+			<fileset dir="${com.vaadin.testbench.screenshot.directory}/errors">
+				<include name="**/**.*" />	
 			</fileset>
 		</delete>
 	</target>
@@ -126,5 +153,5 @@
     <!-- Also starts the server. -->
     <target name="test-package" depends="server-start, run-and-clean-up, server-stop">
     </target>
-
+	
 </project>

@@ -1,6 +1,8 @@
 package com.vaadin.tests.components.tabsheet;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
@@ -26,6 +28,11 @@ public class TabSheetCaptions extends TestBase {
     @Override
     protected void setup() {
         final TabSheet tabSheet = new TabSheet();
+        // Define date and locale so that it doesn't change for machine/time
+        final SimpleDateFormat dateFormatter = new SimpleDateFormat(
+                "EEE, yyyy-MMM-dd", Locale.ENGLISH);
+        final Date date = new Date();
+        date.setTime((long) 1000000000000.0);
 
         panel1 = new Panel("Panel initial caption (should also be tab caption)");
         panel1.setSizeFull();
@@ -37,14 +44,15 @@ public class TabSheetCaptions extends TestBase {
         button.addListener(new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 tabSheet.setTabCaption(panel1, "This is a new tab caption "
-                        + new Date());
+                        + dateFormatter.format(date));
             }
         });
 
         Button button2 = new Button("Update panel caption");
         button2.addListener(new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
-                panel1.setCaption("This is a new panel caption " + new Date());
+                panel1.setCaption("This is a new panel caption "
+                        + dateFormatter.format(date));
             }
         });
 

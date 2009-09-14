@@ -30,7 +30,11 @@ public class DateFieldReadOnly extends TestBase {
         timeField.setWidth("8em");
         timeField.addStyleName("timeField");
 
-        timeField.setValue(new Date());
+        // Set date so that testing always has same time
+        Date date = new Date();
+        date.setTime((long) 1000000000000.0);
+
+        timeField.setValue(date);
         timeField.setReadOnly(true);
 
         addComponent(timeField);
