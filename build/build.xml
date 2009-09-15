@@ -240,6 +240,8 @@
 			<pathelement path="lib/portlet/portal-service.jar" />
 			<pathelement path="lib/portlet/portlet.jar" />
 			<pathelement path="lib/appengine/appengine-api.jar" />
+			<pathelement path="lib/test/junit-4.5.jar" />
+			<pathelement path="lib/test/easymock-2.5/easymock-2.5.jar" />
 		</path>
 		<path id="compile.classpath.server-side">
             <path refid="compile.classpath"/>
@@ -630,7 +632,7 @@
 					<include name="**/*.html" />
 					<include name="**/*.css" />
 					<include name="**/*.xml" />
-					<exclude name="**/tests/**"/>
+					<exclude name="**/tests/**" unless="build.include.tests"/>
 					<exclude name="**/demo/sampler/**" if="build.sampler.disabled" />
 				</patternset>
 			</fileset>
@@ -650,7 +652,7 @@
 					<exclude name="**/*.html" />
 					<exclude name="**/*.css" />
 					<exclude name="**/*.xml" />
-					<exclude name="**/tests/**"/>
+					<exclude name="**/tests/**" unless="build.include.tests"/>
 					<exclude name="**/demo/sampler/**" if="build.sampler.disabled" />
 				</patternset>
 			</fileset>
@@ -698,11 +700,13 @@
 			<fileset dir="WebContent">
 				<exclude name="**/.svn" />
 				<!-- TODO check what is neccessary -->
-				<exclude name="VAADIN/themes/tests*" />
+                <!-- These are needed for running tests, but are copied during testing. -->
+				<exclude name="VAADIN/themes/tests*"/>
 				<exclude name="VAADIN/themes/tests-magi/**/*" />
 				<exclude name="VAADIN/themes/tests-featurebrowser/**/*" />
-				<exclude name="VAADIN/themes/tests*/**/*" />
+				<exclude name="VAADIN/themes/tests*/**/*"/>
 				<exclude name="VAADIN/themes/sampler/**" if="build.sampler.disabled" />
+
 				<include name="demo/**/*" />
 				<include name="WEB-INF/lib/hsqldb.jar" />
 				<include name="VAADIN/themes/**/*" />
@@ -747,7 +751,7 @@
              <src path="${result-path}/src"/>
              <!-- This seems to be included by default: include name="${toolkit-package}/**"/ -->
              <exclude name="${toolkit-package}/demo/sampler/**" if="build.sampler.disabled" />
-             <exclude name="${toolkit-package}/tests/**"/>
+             <exclude name="${toolkit-package}/tests/**" unless="build.include.tests"/>
 		</javac>
 	</target>
 
@@ -985,7 +989,7 @@
 			<fileset dir="${result-path}/classes">
 				<patternset>
 					<exclude name="${toolkit-package}/demo/**" />
-					<exclude name="${toolkit-package}/tests/**" />
+					<exclude name="${toolkit-package}/tests/**"/>
 					<exclude name="${toolkit-package}/launcher/**" />
 				</patternset>
 			</fileset>
@@ -997,7 +1001,7 @@
 			<fileset dir="${result-path}/src">
 				<patternset>
 					<exclude name="${toolkit-package}/demo/**" />
-					<exclude name="${toolkit-package}/tests/**" />
+					<exclude name="${toolkit-package}/tests/**"/>
 					<exclude name="${toolkit-package}/launcher/**" />
 				</patternset>
 			</fileset>
@@ -1130,7 +1134,7 @@
     <target name="gwt-symlink">
 
         <!-- Optional property. -->
-        <property name="gwt.link.target" value="../../gwt-1.5"/>
+        <property name="gwt.link.target" value="../../gwt-1.7"/>
 
         <!-- Remove the old link, as the link target may have changed. -->
         <exec executable="rm" dir="build" searchpath="true" failonerror="false">
@@ -1230,22 +1234,29 @@
       <fail unless="package-platform" message="The 'package-platform' property must be defined."/>
       <fail unless="version" message="The 'version' property must be defined."/>
 
+      <echo>Version: ${version}</echo>
+
       <!-- Parameters for the test.xml script. -->
-      <fail unless="com.vaadin.testingtools.tester.host" message="The 'com.vaadin.testingtools.tester.host' property must be defined."/>
-      <fail unless="com.vaadin.testingtools.deployment.url" message="The 'com.vaadin.testingtools.deployment.url' property must be defined."/>
+      <fail unless="com.vaadin.testbench.tester.host" message="The 'com.vaadin.testbench.tester.host' property must be defined."/>
+      <fail unless="com.vaadin.testbench.deployment.url" message="The 'com.vaadin.testbench.deployment.url' property must be defined."/>
 
       <property name="package.platform.name" value="${product-file}-${package-platform}-${version}"/>
 
       <!-- Only Linux tests allowed. TODO: Generalize this. -->
       <property name="package.linux.filename" value="${result-path}/${package.platform.name}.tar.gz"/>
+      <property name="package.linux.dir" value="${result-path}/${package.platform.name}.tar.gz"/>
 
       <!-- Run the separate test script. -->
       <ant antfile="tests/test.xml" target="test-package" inheritall="false" inheritrefs="true">
+          <!-- This is provided so that the test script can copy the -->
+          <!-- "tests" classes after unpacking the package.          -->
+          <property name="output-dir" value="${output-dir}"/>
+
           <property name="package.filename" value="${package.linux.filename}"/>
           <property name="testing.testarea" value="/tmp/testarea"/>
           <property name="package.name" value="${package.platform.name}"/>
-          <property name="com.vaadin.testingtools.tester.host" value="${com.vaadin.testingtools.tester.host}"/>
-          <property name="com.vaadin.testingtools.deployment.url" value="${com.vaadin.testingtools.deployment.url}"/>
+          <property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}"/>
+          <property name="com.vaadin.testbench.deployment.url" value="${com.vaadin.testbench.deployment.url}"/>
       </ant>
     </target>
 

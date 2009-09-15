@@ -47,11 +47,7 @@
 	-->
 	<servlet>
 		<servlet-name>VaadinApplicationRunner</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>applicationRunner</param-name>
-			<param-value>true</param-value>
-		</init-param>
+		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationRunnerServlet</servlet-class>
 	</servlet>
 
 	<!--  Feature Browser demo application -->
