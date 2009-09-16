@@ -9,8 +9,8 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
@@ -64,15 +64,15 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     /**
      * List of URI handlers for this window.
      */
-    private LinkedList uriHandlerList = null;
+    private LinkedList<URIHandler> uriHandlerList = null;
 
     /**
      * List of parameter handlers for this window.
      */
-    private LinkedList parameterHandlerList = null;
+    private LinkedList<ParameterHandler> parameterHandlerList = null;
 
     /** Set of subwindows */
-    private final HashSet subwindows = new HashSet();
+    private final LinkedHashSet<Window> subwindows = new LinkedHashSet<Window>();
 
     /**
      * Explicitly specified theme of this window. If null, application theme is
@@ -83,7 +83,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     /**
      * Resources to be opened automatically on next repaint.
      */
-    private final LinkedList openList = new LinkedList();
+    private final LinkedList<OpenResource> openList = new LinkedList<OpenResource>();
 
     /**
      * The name of the window.
@@ -107,7 +107,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      */
     private int positionX = -1;
 
-    private LinkedList notifications;
+    private LinkedList<Notification> notifications;
 
     private boolean modal = false;
 
@@ -282,7 +282,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
             mainWindow.addURIHandler(handler);
         } else {
             if (uriHandlerList == null) {
-                uriHandlerList = new LinkedList();
+                uriHandlerList = new LinkedList<URIHandler>();
             }
             synchronized (uriHandlerList) {
                 if (!uriHandlerList.contains(handler)) {
@@ -368,7 +368,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
             mainWindow.addParameterHandler(handler);
         } else {
             if (parameterHandlerList == null) {
-                parameterHandlerList = new LinkedList();
+                parameterHandlerList = new LinkedList<ParameterHandler>();
             }
             synchronized (parameterHandlerList) {
                 if (!parameterHandlerList.contains(handler)) {
@@ -517,8 +517,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         // Open requested resource
         synchronized (openList) {
             if (!openList.isEmpty()) {
-                for (final Iterator i = openList.iterator(); i.hasNext();) {
-                    ((OpenResource) i.next()).paintContent(target);
+                for (final Iterator<OpenResource> i = openList.iterator(); i
+                        .hasNext();) {
+                    (i.next()).paintContent(target);
                 }
                 openList.clear();
             }
@@ -535,16 +536,17 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         target.addVariable(this, "close", false);
 
         // Paint subwindows
-        for (final Iterator i = subwindows.iterator(); i.hasNext();) {
-            final Window w = (Window) i.next();
+        for (final Iterator<Window> i = subwindows.iterator(); i.hasNext();) {
+            final Window w = i.next();
             w.paint(target);
         }
 
         // Paint notifications
         if (notifications != null) {
             target.startTag("notifications");
-            for (final Iterator it = notifications.iterator(); it.hasNext();) {
-                final Notification n = (Notification) it.next();
+            for (final Iterator<Notification> it = notifications.iterator(); it
+                    .hasNext();) {
+                final Notification n = it.next();
                 target.startTag("notification");
                 if (n.getCaption() != null) {
                     target.addAttribute("caption", n.getCaption());
@@ -1184,7 +1186,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * 
      * @return Set of child windows.
      */
-    public Set getChildWindows() {
+    public Set<Window> getChildWindows() {
         return Collections.unmodifiableSet(subwindows);
     }
 
@@ -1323,7 +1325,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     private void addNotification(Notification notification) {
         if (notifications == null) {
-            notifications = new LinkedList();
+            notifications = new LinkedList<Notification>();
         }
         notifications.add(notification);
         requestRepaint();
