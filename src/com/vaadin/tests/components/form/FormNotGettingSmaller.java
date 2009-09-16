@@ -45,7 +45,7 @@ public class FormNotGettingSmaller extends TestBase {
 
     @Override
     protected Integer getTicketNumber() {
-        return null;
+        return 3365;
     }
 
 }
