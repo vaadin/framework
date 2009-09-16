@@ -163,7 +163,6 @@
 .v-app-SamplerApplication .v-horizontallayout-segment .v-popupview span {
 	background-image: url(magnifier.png);
 }
-.v-app-SamplerApplication .theme-select,
 .v-app-SamplerApplication .theme-select * {
 	background: transparent;
 }
@@ -181,6 +180,7 @@
 	padding: 0;
 	border: none;
 	background: transparent url(segment.png) no-repeat;
+	outline: none;
 }
 .v-app-SamplerApplication .theme-select:active {
 	background-position: 0 bottom;
