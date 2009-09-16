@@ -205,7 +205,8 @@ public class VForm extends ComplexPanel implements Container {
             return new RenderSpace(renderInformation.getContentAreaSize()
                     .getWidth(), hPixels);
         } else if (child == footer) {
-            return new RenderSpace(footerContainer.getOffsetWidth(), 0);
+            return new RenderSpace(renderInformation.getContentAreaSize()
+                    .getWidth(), 0);
         } else {
             ApplicationConnection.getConsole().error(
                     "Invalid child requested RenderSpace information");
