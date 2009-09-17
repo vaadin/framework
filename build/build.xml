@@ -918,8 +918,14 @@
 		<echo>Compiled ColorPickerWidgetSet</echo>
 	</target>
 
+    <!-- Builds the client-side engine, i.e., the widgetsets. -->
+	<target name="compile-client-side-sequential" depends="compile-widgetset-default, compile-widgetset-portal-default, compile-widgetset-reserver, compile-widgetset-sampler, compile-widgetset-colorpicker, compile-widgetset-coverflow" unless="build.parallel">
+		<!-- Building the widgetsets is currently done sequentially, because
+		     parallel compilation takes too much memory for most machines. -->
+	</target>
+
 	<!-- Builds the client-side engine, i.e., the widgetsets in parallel. -->
-	<target name="compile-client-side">
+	<target name="compile-client-side-parallel" if="build.parallel">
 		<echo>Compiling widget sets in parallel.</echo>
 		<parallel threadsperprocessor="1">
 			<subant antfile="build.xml" target="compile-widgetset-default" inheritall="true" buildpath="build" />
@@ -930,6 +936,10 @@
 			<subant antfile="build.xml" target="compile-widgetset-coverflow" inheritall="true" buildpath="build" />
 		</parallel>
 	</target>
+
+    <!-- Build either sequentially or in parallel,   -->
+	<!-- depending on the 'build-parallel' property. -->
+	<target name="compile-client-side" depends="compile-client-side-sequential, compile-client-side-parallel"/>
 
 	<!-- Definitions for building local components, i.e., not for an installation package. -->
 	<target name="init-nonpackage" depends="init-platform">
