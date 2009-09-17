@@ -59,6 +59,9 @@ public class SamplerApplication extends Application {
     // used when trying to guess theme location
     private static String APP_URL = null;
 
+    private String currentApplicationTheme = SAMPLER_THEME_NAME + "-"
+            + THEMES[0];
+
     @Override
     public void init() {
         setMainWindow(new SamplerWindow());
@@ -152,8 +155,6 @@ public class SamplerApplication extends Application {
         private final ThemeResource SELECTED_THEME_ICON = new ThemeResource(
                 "../sampler/sampler/select-bullet.png");
 
-        private String currentTheme = SAMPLER_THEME_NAME + "-" + THEMES[0];
-
         private FeatureList currentList = new FeatureGrid();
         private final FeatureView featureView = new FeatureView();
         private final ObjectProperty currentFeature = new ObjectProperty(null,
@@ -192,7 +193,7 @@ public class SamplerApplication extends Application {
             setSizeFull();
             mainExpand.setSizeFull();
             setCaption("Vaadin Sampler");
-            setTheme(currentTheme);
+            setTheme(currentApplicationTheme);
 
             // topbar (navigation)
             HorizontalLayout nav = new HorizontalLayout();
@@ -390,8 +391,10 @@ public class SamplerApplication extends Application {
                         + themeName.substring(1) + " theme");
                 theme.setItemIcon(id, EMPTY_THEME_ICON);
             }
-            theme.setValue(currentTheme);
-            theme.setItemIcon(currentTheme, SELECTED_THEME_ICON);
+
+            final String currentWindowTheme = getTheme();
+            theme.setValue(currentWindowTheme);
+            theme.setItemIcon(currentWindowTheme, SELECTED_THEME_ICON);
 
             theme.addListener(new ComboBox.ValueChangeListener() {
                 public void valueChange(ValueChangeEvent event) {
@@ -399,9 +402,14 @@ public class SamplerApplication extends Application {
                     final String newTheme = event.getProperty().getValue()
                             .toString();
                     setTheme(newTheme);
-                    theme.setItemIcon(currentTheme, EMPTY_THEME_ICON);
+
+                    for (String themeName : THEMES) {
+                        String id = SAMPLER_THEME_NAME + "-" + themeName;
+                        theme.setItemIcon(id, EMPTY_THEME_ICON);
+                    }
+
                     theme.setItemIcon(newTheme, SELECTED_THEME_ICON);
-                    currentTheme = newTheme;
+                    currentApplicationTheme = newTheme;
                 }
             });
 
