@@ -163,11 +163,11 @@
 .v-app-SamplerApplication .v-horizontallayout-segment .v-popupview span {
 	background-image: url(magnifier.png);
 }
-.v-app-SamplerApplication .theme-select,
 .v-app-SamplerApplication .theme-select * {
 	background: transparent;
 }
-.v-app-SamplerApplication .theme-select .v-filterselect-input {
+.v-app-SamplerApplication .theme-select .v-filterselect-input,
+.v-app-SamplerApplication .theme-select .v-icon {
 	width: 0;
 	height: 0;
 	padding: 0;
@@ -180,6 +180,7 @@
 	padding: 0;
 	border: none;
 	background: transparent url(segment.png) no-repeat;
+	outline: none;
 }
 .v-app-SamplerApplication .theme-select:active {
 	background-position: 0 bottom;
@@ -193,6 +194,32 @@
 .v-app-SamplerApplication .theme-select:active .v-filterselect-button {
 	background-position: right bottom;
 }
+
+
+/* Theme select drop down styles */
+.v-filterselect-suggestpopup-theme-select {
+	background: #343538 url(theme-select-bg.png) repeat-x;
+	border: none;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	line-height: normal;
+	color: #d7d8d9;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	text-shadow: #373a3c 0 1px 0;
+}
+.v-filterselect-suggestpopup-theme-select .v-filterselect-suggestmenu {
+	margin: 6px 0;
+}
+.v-filterselect-suggestpopup-theme-select .gwt-MenuItem {
+	height: 14px;
+	padding: 1px 15px 1px 4px;
+	cursor: default;
+}
+.v-filterselect-suggestpopup-theme-select .gwt-MenuItem-selected {
+	background: #3472ac url(theme-select-sel-bg.png) repeat-x;
+}
+
 .v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-previous span,
 .v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-previous.v-pressed span,
 .v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-previous.v-disabled span {
