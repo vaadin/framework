@@ -1087,8 +1087,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
         if (window == null) {
             window = application.getMainWindow();
             // Return null if no main window was found
-            if (window == null)
+            if (window == null) {
                 return null;
+            }
         }
 
         // If the requested window is already open, resolve conflict
