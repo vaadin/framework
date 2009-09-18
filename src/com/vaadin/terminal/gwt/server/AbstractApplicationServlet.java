@@ -173,7 +173,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
     // Widget set parameter name
     private static final String PARAMETER_WIDGETSET = "widgetset";
 
-    private static final String ERROR_NO_WINDOW_FOUND = "Application did not give any window, did you remember to setMainWindow()?";
+    private static final String ERROR_NO_WINDOW_FOUND = "No window found. Did you remember to setMainWindow()?";
 
     private static final String DEFAULT_THEME_NAME = "reindeer";
 
