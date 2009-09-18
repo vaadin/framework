@@ -1262,6 +1262,7 @@
       <!-- Parameters for the test.xml script. -->
       <fail unless="com.vaadin.testbench.tester.host" message="The 'com.vaadin.testbench.tester.host' property must be defined."/>
       <fail unless="com.vaadin.testbench.deployment.url" message="The 'com.vaadin.testbench.deployment.url' property must be defined."/>
+      <fail unless="com.vaadin.testbench.lib.dir" message="The 'com.vaadin.testbench.lib.dir' property must be defined."/>
 
       <property name="package.platform.name" value="${product-file}-${package-platform}-${version}"/>
 
@@ -1280,6 +1281,7 @@
           <property name="package.name" value="${package.platform.name}"/>
           <property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}"/>
           <property name="com.vaadin.testbench.deployment.url" value="${com.vaadin.testbench.deployment.url}"/>
+          <property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}"/>
       </ant>
     </target>
 
