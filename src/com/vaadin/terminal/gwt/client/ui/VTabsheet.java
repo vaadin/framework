@@ -34,6 +34,9 @@ import com.vaadin.terminal.gwt.client.VCaption;
 public class VTabsheet extends VTabsheetBase {
 
     private class TabSheetCaption extends VCaption {
+
+        private boolean hidden = false;
+
         TabSheetCaption() {
             super(null, client);
         }
@@ -95,6 +98,14 @@ public class VTabsheet extends VTabsheetBase {
                 captionWidth = scrollWidth;
             }
             captionText.getStyle().setPropertyPx("width", captionWidth);
+        }
+
+        public boolean isHidden() {
+            return hidden;
+        }
+
+        public void setHidden(boolean hidden) {
+            this.hidden = hidden;
         }
 
     }
@@ -232,6 +243,10 @@ public class VTabsheet extends VTabsheetBase {
     private final Element scroller; // tab-scroller element
     private final Element scrollerNext; // tab-scroller next button element
     private final Element scrollerPrev; // tab-scroller prev button element
+
+    /**
+     * The index of the first visible tab (when scrolled)
+     */
     private int scrollerIndex = 0;
 
     private final TabBar tb = new TabBar();
@@ -346,27 +361,70 @@ public class VTabsheet extends VTabsheetBase {
 
         // Tab scrolling
         if (isScrolledTabs() && DOM.eventGetTarget(event) == scrollerPrev) {
-            if (scrollerIndex > 0) {
-                scrollerIndex--;
-                DOM.setStyleAttribute(DOM.getChild(DOM.getFirstChild(DOM
-                        .getFirstChild(tb.getElement())), scrollerIndex),
-                        "display", "");
-                tb.updateCaptionSize(scrollerIndex);
+            int prevVisible = getPreviousVisibleTab(scrollerIndex);
+            if (prevVisible != -1) {
+                tb.setVisible(prevVisible, true);
+                tb.updateCaptionSize(prevVisible);
+                scrollerIndex = prevVisible;
                 updateTabScroller();
             }
         } else if (isClippedTabs() && DOM.eventGetTarget(event) == scrollerNext) {
-            int tabs = tb.getTabCount();
-            if (scrollerIndex + 1 <= tabs) {
-                DOM.setStyleAttribute(DOM.getChild(DOM.getFirstChild(DOM
-                        .getFirstChild(tb.getElement())), scrollerIndex),
-                        "display", "none");
-                tb.updateCaptionSize(scrollerIndex);
-                scrollerIndex++;
+            int firstVisible = scrollerIndex;
+            int nextVisible = getNextVisibleTab(firstVisible);
+            if (nextVisible != -1) {
+                tb.setVisible(firstVisible, false);
+                tb.updateCaptionSize(firstVisible);
+                scrollerIndex = nextVisible;
                 updateTabScroller();
             }
         } else {
             super.onBrowserEvent(event);
         }
+    }
+
+    /**
+     * Find the next visible tab. Returns -1 if none is found.
+     * 
+     * @param i
+     * @return
+     */
+    private int getNextVisibleTab(int i) {
+        int tabs = tb.getTabCount();
+        do {
+            i++;
+        } while (i < tabs && tb.getTab(i).isHidden());
+
+        if (i == tabs) {
+            return -1;
+        } else {
+            return i;
+        }
+    }
+
+    /**
+     * Find the previous visible tab. Returns -1 if none is found.
+     * 
+     * @param i
+     * @return
+     */
+    private int getPreviousVisibleTab(int i) {
+        do {
+            i--;
+        } while (i >= 0 && tb.getTab(i).isHidden());
+
+        return i;
+
+    }
+
+    /**
+     * Checks if the tab with the selected index has been scrolled out of the
+     * view (on the left side).
+     * 
+     * @param index
+     * @return
+     */
+    private boolean scrolledOutOfView(int index) {
+        return scrollerIndex > index;
     }
 
     @Override
@@ -513,6 +571,12 @@ public class VTabsheet extends VTabsheetBase {
         }
         c.updateCaption(tabUidl);
 
+        c.setHidden(hidden);
+        if (scrolledOutOfView(index)) {
+            // Should not set tabs visible if they are scrolled out of view
+            hidden = true;
+        }
+        // Set the current visibility of the tab (in the browser)
         tb.setVisible(index, !hidden);
 
         /*
@@ -736,9 +800,14 @@ public class VTabsheet extends VTabsheetBase {
         if (width != null) {
             DOM.setStyleAttribute(tabs, "width", width);
         }
+
+        // Make sure scrollerIndex is valid
         if (scrollerIndex > tb.getTabCount()) {
-            scrollerIndex = 0;
+            scrollerIndex = getNextVisibleTab(-1);
+        } else if (tb.getTab(scrollerIndex).isHidden()) {
+            scrollerIndex = getNextVisibleTab(scrollerIndex);
         }
+
         boolean scrolled = isScrolledTabs();
         boolean clipped = isClippedTabs();
         if (tb.isVisible() && (scrolled || clipped)) {
@@ -774,15 +843,16 @@ public class VTabsheet extends VTabsheetBase {
     }
 
     private void showAllTabs() {
-        scrollerIndex = 0;
-        Element tr = DOM.getFirstChild(DOM.getFirstChild(tb.getElement()));
+        scrollerIndex = getNextVisibleTab(-1);
         for (int i = 0; i < tb.getTabCount(); i++) {
-            DOM.setStyleAttribute(DOM.getChild(tr, i), "display", "");
+            if (!tb.getTab(i).isHidden()) {
+                tb.setVisible(i, true);
+            }
         }
     }
 
     private boolean isScrolledTabs() {
-        return scrollerIndex > 0;
+        return scrollerIndex > getNextVisibleTab(-1);
     }
 
     private boolean isClippedTabs() {
