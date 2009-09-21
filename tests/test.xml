@@ -65,7 +65,6 @@
             <arg value="${package.filename}"/>
             <arg value="${output-dir}"/>
             <arg value="${testing.testarea}"/>
-            <arg value="${com.vaadin.testbench.lib.dir}"/>
         </exec>
 
         <condition property="server.start.succeeded">
