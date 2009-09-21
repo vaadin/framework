@@ -20,26 +20,6 @@
 	</context-param>
 
 	<!--
-		Permit use of IT Mill Testing Tools for this servlet continer. Do not
-		use this in production environment.
-	-->
-	<context-param>
-		<param-name>testingToolsActive</param-name>
-		<param-value>true</param-value>
-		<description>IT Mill Testing Tools activation</description>
-	</context-param>
-
-	<!--
-		Specify the IT Mill Testing Tools server URI. Do not use this in
-		production environment.
-	-->
-	<context-param>
-		<param-name>testingToolsServerUri</param-name>
-		<param-value>http://192.168.1.242:8099/TestingToolsServer</param-value>
-		<description>IT Mill Testing Tools URI</description>
-	</context-param>
-
-	<!--
 		Enable possibility to run any Java class as application from this
 		servlet. For example, if this servlet is mapped to /run, your foo.App
 		class can be run in /run/foo.App/. Do not deploy this servlet in
@@ -47,11 +27,7 @@
 	-->
 	<servlet>
 		<servlet-name>VaadinApplicationRunner</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>applicationRunner</param-name>
-			<param-value>true</param-value>
-		</init-param>
+		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationRunnerServlet</servlet-class>
 	</servlet>
 
 	<!--  Feature Browser demo application -->

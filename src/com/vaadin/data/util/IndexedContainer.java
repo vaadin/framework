@@ -49,7 +49,7 @@ import com.vaadin.data.Property;
 @SuppressWarnings("serial")
 public class IndexedContainer implements Container.Indexed,
         Container.ItemSetChangeNotifier, Container.PropertySetChangeNotifier,
-        Property.ValueChangeNotifier, Container.Sortable, Comparator,
+        Property.ValueChangeNotifier, Container.Sortable, Comparator<Object>,
         Cloneable, Container.Filterable {
 
     /* Internal structure */
@@ -57,7 +57,7 @@ public class IndexedContainer implements Container.Indexed,
     /**
      * Linked list of ordered Item IDs.
      */
-    private ArrayList itemIds = new ArrayList();
+    private ArrayList<Object> itemIds = new ArrayList<Object>();
 
     /** List of item ids that passes the filtering */
     private LinkedHashSet filteredItemIds = null;
@@ -1399,8 +1399,8 @@ public class IndexedContainer implements Container.Indexed,
             sortDirection[i] = (orders.get(i)).booleanValue();
         }
 
-        // Sort
-        Collections.sort(itemIds, this);
+        doSort();
+
         if (filteredItemIds != null) {
             updateContainerFiltering();
         } else {
@@ -1411,6 +1411,15 @@ public class IndexedContainer implements Container.Indexed,
         sortPropertyId = null;
         sortDirection = null;
 
+    }
+
+    /**
+     * Perform the sorting of the container. Called when everything needed for
+     * the compare function has been set up.
+     * 
+     */
+    void doSort() {
+        Collections.sort(itemIds, this);
     }
 
     /*

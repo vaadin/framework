@@ -16,7 +16,7 @@ import com.vaadin.ui.Window.Notification;
 @SuppressWarnings("serial")
 public class NotificationCustomExample extends VerticalLayout {
 
-    private static final Object CAPTION_PROPERTY = new Object();
+    private static final String CAPTION_PROPERTY = "CAPTION";
 
     public NotificationCustomExample() {
         setSpacing(true);

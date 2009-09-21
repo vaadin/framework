@@ -22,7 +22,7 @@ public class LinkIcon extends TestBase {
     protected void setup() {
         Link l = new Link("www.google.com", new ExternalResource(
                 "http://www.vaadin.com/"));
-        l.setIcon(new ThemeResource("icons/32/calendar.png"));
+        l.setIcon(new ThemeResource("../runo/icons/32/calendar.png"));
 
         addComponent(l);
     }

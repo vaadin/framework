@@ -23,9 +23,9 @@ import com.vaadin.terminal.gwt.client.VTooltip;
 
 /**
  * This class represents a basic text input field with one row.
- *
+ * 
  * @author IT Mill Ltd.
- *
+ * 
  */
 public class VTextField extends TextBoxBase implements Paintable, Field,
         ChangeHandler, FocusHandler, BlurHandler {
@@ -167,6 +167,10 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         if (prompting) {
             setText("");
             removeStyleDependentName(CLASSNAME_PROMPT);
+            if (BrowserInfo.get().isIE6()) {
+                // IE6 does not show the cursor when tabbing into the field
+                setCursorPos(0);
+            }
         }
         focusedTextField = this;
     }

@@ -6,8 +6,8 @@ package com.vaadin.data.util;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.LinkedList;
 
 import com.vaadin.data.Container;
@@ -29,22 +29,22 @@ public class HierarchicalContainer extends IndexedContainer implements
     /**
      * Set of IDs of those contained Items that can't have children.
      */
-    private final HashSet noChildrenAllowed = new HashSet();
+    private final HashSet<Object> noChildrenAllowed = new HashSet<Object>();
 
     /**
      * Mapping from Item ID to parent Item.
      */
-    private final Hashtable parent = new Hashtable();
+    private final HashMap<Object, Object> parent = new HashMap<Object, Object>();
 
     /**
      * Mapping from Item ID to a list of child IDs.
      */
-    private final Hashtable children = new Hashtable();
+    private final HashMap<Object, LinkedList<Object>> children = new HashMap<Object, LinkedList<Object>>();
 
     /**
      * List that contains all root elements of the container.
      */
-    private final LinkedList roots = new LinkedList();
+    private final LinkedList<Object> roots = new LinkedList<Object>();
 
     /*
      * Can the specified Item have any children? Don't add a JavaDoc comment
@@ -60,7 +60,7 @@ public class HierarchicalContainer extends IndexedContainer implements
      * interface.
      */
     public Collection getChildren(Object itemId) {
-        final Collection c = (Collection) children.get(itemId);
+        final Collection c = children.get(itemId);
         if (c == null) {
             return null;
         }
@@ -176,7 +176,7 @@ public class HierarchicalContainer extends IndexedContainer implements
         if (newParentId == null) {
 
             // Removes from old parents children list
-            final LinkedList l = (LinkedList) children.get(itemId);
+            final LinkedList l = children.get(itemId);
             if (l != null) {
                 l.remove(itemId);
                 if (l.isEmpty()) {
@@ -210,7 +210,7 @@ public class HierarchicalContainer extends IndexedContainer implements
 
         // Updates parent
         parent.put(itemId, newParentId);
-        LinkedList pcl = (LinkedList) children.get(newParentId);
+        LinkedList pcl = children.get(newParentId);
         if (pcl == null) {
             pcl = new LinkedList();
             children.put(newParentId, pcl);
@@ -221,7 +221,7 @@ public class HierarchicalContainer extends IndexedContainer implements
         if (oldParentId == null) {
             roots.remove(itemId);
         } else {
-            final LinkedList l = (LinkedList) children.get(oldParentId);
+            final LinkedList l = children.get(oldParentId);
             if (l != null) {
                 l.remove(itemId);
                 if (l.isEmpty()) {
@@ -251,8 +251,7 @@ public class HierarchicalContainer extends IndexedContainer implements
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.data.util.IndexedContainer#addItem(java.lang.Object)
+     * @see com.vaadin.data.util.IndexedContainer#addItem(java.lang.Object)
      */
     @Override
     public Item addItem(Object itemId) {
@@ -284,9 +283,7 @@ public class HierarchicalContainer extends IndexedContainer implements
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.data.util.IndexedContainer#removeItem(java.lang.Object
-     * )
+     * @see com.vaadin.data.util.IndexedContainer#removeItem(java.lang.Object )
      */
     @Override
     public boolean removeItem(Object itemId) {
@@ -299,7 +296,7 @@ public class HierarchicalContainer extends IndexedContainer implements
             children.remove(itemId);
             final Object p = parent.get(itemId);
             if (p != null) {
-                final LinkedList c = (LinkedList) children.get(p);
+                final LinkedList c = children.get(p);
                 if (c != null) {
                     c.remove(itemId);
                 }
@@ -309,6 +306,15 @@ public class HierarchicalContainer extends IndexedContainer implements
         }
 
         return success;
+    }
+
+    @Override
+    void doSort() {
+        super.doSort();
+        Collections.sort(roots, this);
+        for (LinkedList<Object> childList : children.values()) {
+            Collections.sort(childList, this);
+        }
     }
 
 }

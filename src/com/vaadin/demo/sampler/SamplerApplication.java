@@ -56,10 +56,11 @@ public class SamplerApplication extends Application {
     private static final String[] THEMES = { "reindeer", "runo" };
     private static final String SAMPLER_THEME_NAME = "sampler";
 
-    private static String currentTheme = SAMPLER_THEME_NAME + "-" + THEMES[0];
-
     // used when trying to guess theme location
     private static String APP_URL = null;
+
+    private String currentApplicationTheme = SAMPLER_THEME_NAME + "-"
+            + THEMES[0];
 
     @Override
     public void init() {
@@ -147,17 +148,24 @@ public class SamplerApplication extends Application {
      * 
      */
     class SamplerWindow extends Window {
+
+        private final ThemeResource EMPTY_THEME_ICON = new ThemeResource(
+                "../sampler/sampler/icon-empty.png");
+
+        private final ThemeResource SELECTED_THEME_ICON = new ThemeResource(
+                "../sampler/sampler/select-bullet.png");
+
         private FeatureList currentList = new FeatureGrid();
-        private FeatureView featureView = new FeatureView();
-        private ObjectProperty currentFeature = new ObjectProperty(null,
+        private final FeatureView featureView = new FeatureView();
+        private final ObjectProperty currentFeature = new ObjectProperty(null,
                 Feature.class);
 
-        private ModeSwitch mode;
+        private final ModeSwitch mode;
 
-        private SplitPanel mainSplit;
-        private Tree navigationTree;
+        private final SplitPanel mainSplit;
+        private final Tree navigationTree;
         // itmill: UA-658457-6
-        private GoogleAnalytics webAnalytics = new GoogleAnalytics(
+        private final GoogleAnalytics webAnalytics = new GoogleAnalytics(
                 "UA-658457-6", "none");
         // "backbutton"
         UriFragmentUtility uriFragmentUtility = new UriFragmentUtility();
@@ -185,7 +193,7 @@ public class SamplerApplication extends Application {
             setSizeFull();
             mainExpand.setSizeFull();
             setCaption("Vaadin Sampler");
-            setTheme(currentTheme);
+            setTheme(currentApplicationTheme);
 
             // topbar (navigation)
             HorizontalLayout nav = new HorizontalLayout();
@@ -376,19 +384,32 @@ public class SamplerApplication extends Application {
             theme.setImmediate(true);
             theme.setNullSelectionAllowed(false);
             for (String themeName : THEMES) {
-                theme.addItem(SAMPLER_THEME_NAME + "-" + themeName);
-                theme.setItemCaption(SAMPLER_THEME_NAME + "-" + themeName,
-                        themeName.substring(0, 1).toUpperCase()
-                                + themeName.substring(1) + " theme");
+                String id = SAMPLER_THEME_NAME + "-" + themeName;
+                theme.addItem(id);
+                theme.setItemCaption(id, themeName.substring(0, 1)
+                        .toUpperCase()
+                        + themeName.substring(1) + " theme");
+                theme.setItemIcon(id, EMPTY_THEME_ICON);
             }
-            theme.setValue(currentTheme);
+
+            final String currentWindowTheme = getTheme();
+            theme.setValue(currentWindowTheme);
+            theme.setItemIcon(currentWindowTheme, SELECTED_THEME_ICON);
 
             theme.addListener(new ComboBox.ValueChangeListener() {
                 public void valueChange(ValueChangeEvent event) {
+
                     final String newTheme = event.getProperty().getValue()
                             .toString();
                     setTheme(newTheme);
-                    currentTheme = newTheme;
+
+                    for (String themeName : THEMES) {
+                        String id = SAMPLER_THEME_NAME + "-" + themeName;
+                        theme.setItemIcon(id, EMPTY_THEME_ICON);
+                    }
+
+                    theme.setItemIcon(newTheme, SELECTED_THEME_ICON);
+                    currentApplicationTheme = newTheme;
                 }
             });
 
@@ -617,7 +638,7 @@ public class SamplerApplication extends Application {
      * Table -mode FeatureList. Displays the features in a Table.
      */
     private class FeatureTable extends Table implements FeatureList {
-        private HashMap<Object, Resource> iconCache = new HashMap<Object, Resource>();
+        private final HashMap<Object, Resource> iconCache = new HashMap<Object, Resource>();
 
         FeatureTable() {
             setStyleName("featuretable");
@@ -717,7 +738,7 @@ public class SamplerApplication extends Application {
     private class FeatureGrid extends Panel implements FeatureList {
 
         GridLayout grid = new GridLayout(11, 1);
-        private HashMap<Object, Resource> iconCache = new HashMap<Object, Resource>();
+        private final HashMap<Object, Resource> iconCache = new HashMap<Object, Resource>();
 
         FeatureGrid() {
             setSizeFull();

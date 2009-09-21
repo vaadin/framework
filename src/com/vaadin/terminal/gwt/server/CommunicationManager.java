@@ -459,8 +459,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
                         // Also check any existing subwindows
                         if (w.getChildWindows() != null) {
-                            for (Window subWindow : (Set<Window>) w
-                                    .getChildWindows()) {
+                            for (Window subWindow : w.getChildWindows()) {
                                 invalidComponentRelativeSizes = ComponentSizeValidator
                                         .validateComponentRelativeSizes(
                                                 subWindow.getContent(),
@@ -1087,6 +1086,10 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
         // By default, use mainwindow
         if (window == null) {
             window = application.getMainWindow();
+            // Return null if no main window was found
+            if (window == null) {
+                return null;
+            }
         }
 
         // If the requested window is already open, resolve conflict
