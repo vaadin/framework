@@ -490,16 +490,17 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                             lastFilter.toLowerCase())) {
                 doItemAction(item, true);
             } else {
-                if (currentSuggestion != null) {
+                // currentSuggestion has key="" for nullselection
+                if (currentSuggestion != null
+                        && !currentSuggestion.key.equals("")) {
+                    // An item (not null) selected
                     String text = currentSuggestion.getReplacementString();
-                    /*
-                     * TODO? if (text.equals("")) {
-                     * addStyleDependentName(CLASSNAME_PROMPT);
-                     * tb.setText(inputPrompt); prompting = true; } else {
-                     * tb.setText(text); prompting = false;
-                     * removeStyleDependentName(CLASSNAME_PROMPT); }
-                     */
+                    tb.setText(text);
                     selectedOptionKey = currentSuggestion.key;
+                } else {
+                    // Null selected
+                    tb.setText("");
+                    selectedOptionKey = null;
                 }
             }
             suggestionPopup.hide();
