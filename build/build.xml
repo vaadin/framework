@@ -918,11 +918,34 @@
 		<echo>Compiled ColorPickerWidgetSet</echo>
 	</target>
 
-	<!-- Builds the client-side engine, i.e., the widgetsets. -->
-	<target name="compile-client-side" depends="compile-widgetset-default, compile-widgetset-portal-default, compile-widgetset-reserver, compile-widgetset-sampler, compile-widgetset-colorpicker, compile-widgetset-coverflow">
-        <!-- Building the widgetsets is currently done sequentially, because
-            parallel compilation takes too much memory for most machines. -->
+    <!-- Builds the client-side engine, i.e., the widgetsets sequentially. -->
+	<target name="compile-client-side-sequential" unless="build.parallel">
+		<echo>Compiling widget sets sequentially.</echo>
+        <!-- We can't call these with 'depends' because of the 'unless' specifier. -->
+		<subant antfile="build.xml" target="compile-widgetset-default" inheritall="true" buildpath="build" />
+		<subant antfile="build.xml" target="compile-widgetset-portal-default" inheritall="true" buildpath="build" />
+		<subant antfile="build.xml" target="compile-widgetset-reserver" inheritall="true" buildpath="build" />
+		<subant antfile="build.xml" target="compile-widgetset-sampler" inheritall="true" buildpath="build" />
+		<subant antfile="build.xml" target="compile-widgetset-colorpicker" inheritall="true" buildpath="build" />
+		<subant antfile="build.xml" target="compile-widgetset-coverflow" inheritall="true" buildpath="build" />
 	</target>
+
+	<!-- Builds the client-side engine, i.e., the widgetsets in parallel. -->
+	<target name="compile-client-side-parallel" if="build.parallel">
+		<echo>Compiling widget sets in parallel.</echo>
+		<parallel threadsperprocessor="1">
+			<subant antfile="build.xml" target="compile-widgetset-default" inheritall="true" buildpath="build" />
+			<subant antfile="build.xml" target="compile-widgetset-portal-default" inheritall="true" buildpath="build" />
+			<subant antfile="build.xml" target="compile-widgetset-reserver" inheritall="true" buildpath="build" />
+			<subant antfile="build.xml" target="compile-widgetset-sampler" inheritall="true" buildpath="build" />
+			<subant antfile="build.xml" target="compile-widgetset-colorpicker" inheritall="true" buildpath="build" />
+			<subant antfile="build.xml" target="compile-widgetset-coverflow" inheritall="true" buildpath="build" />
+		</parallel>
+	</target>
+
+    <!-- Build either sequentially or in parallel,   -->
+	<!-- depending on the 'build-parallel' property. -->
+	<target name="compile-client-side" depends="compile-client-side-sequential, compile-client-side-parallel"/>
 
 	<!-- Definitions for building local components, i.e., not for an installation package. -->
 	<target name="init-nonpackage" depends="init-platform">
@@ -1239,6 +1262,7 @@
       <!-- Parameters for the test.xml script. -->
       <fail unless="com.vaadin.testbench.tester.host" message="The 'com.vaadin.testbench.tester.host' property must be defined."/>
       <fail unless="com.vaadin.testbench.deployment.url" message="The 'com.vaadin.testbench.deployment.url' property must be defined."/>
+      <fail unless="com.vaadin.testbench.lib.dir" message="The 'com.vaadin.testbench.lib.dir' property must be defined."/>
 
       <property name="package.platform.name" value="${product-file}-${package-platform}-${version}"/>
 
@@ -1257,6 +1281,7 @@
           <property name="package.name" value="${package.platform.name}"/>
           <property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}"/>
           <property name="com.vaadin.testbench.deployment.url" value="${com.vaadin.testbench.deployment.url}"/>
+          <property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}"/>
       </ant>
     </target>
 
@@ -1271,3 +1296,22 @@
         <echo>##teamcity[testSuiteFinished name='com.vaadin.tests.test-framework']</echo>
     </target>
 </project>
+
+<!-- These are for emacs. -->
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: xml
+sgml-omittag:nil
+sgml-shorttag:nil
+sgml-namecase-general:nil
+sgml-general-insert-case:lower
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:4
+sgml-indent-data:t
+sgml-parent-document:nil
+sgml-exposed-tags:nil
+sgml-local-catalogs:("/etc/sgml/catalog" "/usr/share/xemacs21/xemacs-packages/etc/psgml-dtds/CATALOG")
+sgml-local-ecat-files:("ECAT" "~/sgml/ECAT" "/usr/share/sgml/ECAT" "/usr/local/share/sgml/ECAT" "/usr/local/lib/sgml/ECAT")
+End:
+-->

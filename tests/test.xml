@@ -1,10 +1,9 @@
 <?xml version="1.0"?>
 
-<project name="Testing Testing Tools" basedir="." default="run-and-clean-up">
+<project name="Run Vaadin Testbench Tests" basedir="." default="run-and-clean-up">
     <!-- ================================================================== -->
     <!-- Configuration                                                      -->
     <!-- ================================================================== -->
-	<property name="lib.dir" value="../build/lib/testbench" />
 	<!-- Temporary output directory, created and removed by this script -->
 	<property name="test-output-dir" value="../build/test-output" />
 	<property name="class-dir" value="${test-output-dir}/classes" />
@@ -13,7 +12,7 @@
 	
 	<!-- classpath must include test bench jar and its dependencies -->
 	<path id="classpath">
-		<fileset dir="${lib.dir}" includes="**/*.jar" />
+		<fileset dir="${com.vaadin.testbench.lib.dir}" includes="**/*.jar" />
 	</path>
 
 	<!-- fileset containing all tests to run -->
@@ -86,6 +85,7 @@
 	
 	<target name="check-parameters">
         <fail unless="output-dir" message="The 'output-dir' (usually build/result/vaadin-xxx) should be given to test script."/>
+        <fail unless="com.vaadin.testbench.lib.dir" message="The 'com.vaadin.testbench.lib.dir' property must be defined."/>
         <fail unless="com.vaadin.testbench.tester.host" message="The 'com.vaadin.testbench.tester.host' property must be defined."/>
         <fail unless="com.vaadin.testbench.deployment.url" message="The 'com.vaadin.testbench.deployment.url' property must be defined."/>
     </target>
