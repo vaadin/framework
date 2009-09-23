@@ -78,6 +78,10 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
     private static String GET_PARAM_REPAINT_ALL = "repaintAll";
 
+    // flag used in the request to indicate that the security token should be
+    // written to the response
+    private static final String WRITE_SECURITY_TOKEN_FLAG = "writeSecurityToken";
+
     /* Variable records indexes */
     private static final int VAR_PID = 1;
     private static final int VAR_NAME = 2;
@@ -342,6 +346,21 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
         response.setContentType("application/json; charset=UTF-8");
         // some dirt to prevent cross site scripting
         outWriter.print("for(;;);[{");
+
+        // security key
+        if (request.getAttribute(WRITE_SECURITY_TOKEN_FLAG) != null) {
+            String seckey = (String) request.getSession().getAttribute(
+                    ApplicationConnection.UIDL_SECURITY_TOKEN_ID);
+            if (seckey == null) {
+                seckey = "" + (int) (Math.random() * 1000000);
+                request.getSession().setAttribute(
+                        ApplicationConnection.UIDL_SECURITY_TOKEN_ID, seckey);
+            }
+            outWriter.print("\"" + ApplicationConnection.UIDL_SECURITY_TOKEN_ID
+                    + "\":\"");
+            outWriter.print(seckey);
+            outWriter.print("\",");
+        }
 
         outWriter.print("\"changes\":[");
 
@@ -636,31 +655,21 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                     .equals(application2
                             .getProperty(AbstractApplicationServlet.SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION))) {
                 if (bursts.length == 1 && "init".equals(bursts[0])) {
-                    // initial request, no variable changes: send key
-                    String seckey = (String) request.getSession().getAttribute(
-                            ApplicationConnection.UIDL_SECURITY_HEADER);
-                    if (seckey == null) {
-                        seckey = "" + (int) (Math.random() * 1000000);
-                    }
-                    /*
-                     * Cookie c = new Cookie(
-                     * ApplicationConnection.UIDL_SECURITY_COOKIE_NAME, uuid);
-                     * response.addCookie(c);
-                     */
-                    response.setHeader(
-                            ApplicationConnection.UIDL_SECURITY_HEADER, seckey);
-                    request.getSession().setAttribute(
-                            ApplicationConnection.UIDL_SECURITY_HEADER, seckey);
+                    // init request; don't handle any variables, key sent in
+                    // response.
+                    request.setAttribute(WRITE_SECURITY_TOKEN_FLAG, true);
                     return true;
                 } else {
-                    // check the key
+                    // ApplicationServlet has stored the security token in the
+                    // session; check that it matched the one sent in the UIDL
                     String sessId = (String) request.getSession().getAttribute(
-                            ApplicationConnection.UIDL_SECURITY_HEADER);
+                            ApplicationConnection.UIDL_SECURITY_TOKEN_ID);
                     if (sessId == null || !sessId.equals(bursts[0])) {
                         throw new InvalidUIDLSecurityKeyException(
                                 "Security key mismatch");
                     }
                 }
+
             }
 
             for (int bi = 1; bi < bursts.length; bi++) {
