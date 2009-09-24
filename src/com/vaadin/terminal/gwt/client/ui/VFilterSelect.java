@@ -744,6 +744,12 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 && uidl.getStringArrayVariable("selected").length == 0) {
             // select nulled
             if (!filtering || !popupOpenerClicked) {
+                /*
+                 * client.updateComponent overwrites all styles so we must
+                 * ALWAYS set the prompting style at this point, even though we
+                 * think it has been set already...
+                 */
+                prompting = false;
                 setPromptingOn();
             }
             selectedOptionKey = null;
