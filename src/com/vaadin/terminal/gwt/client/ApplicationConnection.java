@@ -59,7 +59,11 @@ public class ApplicationConnection {
 
     public static final String VAR_ARRAYITEM_SEPARATOR = "\u001c";
 
-    public static final String UIDL_SECURITY_HEADER = "X-Vaadin-Security-Key";
+    public static final String UIDL_SECURITY_TOKEN_ID = "Vaadin-Security-Key";
+    /**
+     * @deprecated use UIDL_SECURITY_TOKEN_ID instead
+     */
+    public static final String UIDL_SECURITY_HEADER = UIDL_SECURITY_TOKEN_ID;
 
     public static final String PARAM_UNLOADBURST = "onunloadburst";
 
@@ -155,28 +159,28 @@ public class ApplicationConnection {
     private native void initializeTestbenchHooks(
             ComponentLocator componentLocator, String TTAppId)
     /*-{
-         var ap = this;
-         var client = {};
-         client.isActive = function() {
-             return ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::hasActiveRequest()();
-         }
-         var vi = ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::getVersionInfo()();
-         if (vi) {
-             client.getVersionInfo = function() {
-                 return vi;
-             }
-         }
+        var ap = this;
+        var client = {};
+        client.isActive = function() {
+            return ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::hasActiveRequest()();
+        }
+        var vi = ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::getVersionInfo()();
+        if (vi) {
+            client.getVersionInfo = function() {
+                return vi;
+            }
+        }
 
-         client.getElementByPath = function(id) {
-            return componentLocator.@com.vaadin.terminal.gwt.client.ComponentLocator::getElementByPath(Ljava/lang/String;)(id);
-         }
-         client.getPathForElement = function(element) {
-            return componentLocator.@com.vaadin.terminal.gwt.client.ComponentLocator::getPathForElement(Lcom/google/gwt/user/client/Element;)(element);
-         }
+        client.getElementByPath = function(id) {
+           return componentLocator.@com.vaadin.terminal.gwt.client.ComponentLocator::getElementByPath(Ljava/lang/String;)(id);
+        }
+        client.getPathForElement = function(element) {
+           return componentLocator.@com.vaadin.terminal.gwt.client.ComponentLocator::getPathForElement(Lcom/google/gwt/user/client/Element;)(element);
+        }
 
-         if(!$wnd.vaadin.clients) {
-            $wnd.vaadin.clients = {};
-         }
+        if(!$wnd.vaadin.clients) {
+           $wnd.vaadin.clients = {};
+        }
 
         $wnd.vaadin.clients[TTAppId] = client;
     }-*/;
@@ -275,14 +279,14 @@ public class ApplicationConnection {
         } else {
             return false;
         }
-     }-*/;
+    }-*/;
 
     private native static boolean isQuietDebugMode()
     /*-{
-     var uri = $wnd.location;
-     var re = /debug=q[^\/]*$/;
-     return re.test(uri);
-     }-*/;
+        var uri = $wnd.location;
+        var re = /debug=q[^\/]*$/;
+        return re.test(uri);
+    }-*/;
 
     public String getAppUri() {
         return configuration.getApplicationUri();
@@ -376,14 +380,7 @@ public class ApplicationConnection {
                             return;
 
                         }
-                        if ("init".equals(uidl_security_key)) {
-                            // Read security key
-                            String key = response
-                                    .getHeader(UIDL_SECURITY_HEADER);
-                            if (null != key) {
-                                uidl_security_key = key;
-                            }
-                        }
+
                         if (applicationRunning) {
                             handleReceivedJSONMessage(response);
                         } else {
@@ -469,12 +466,12 @@ public class ApplicationConnection {
     private native void syncSendForce(JavaScriptObject xmlHttpRequest,
             String uri, String requestData)
     /*-{
-         try {
-             xmlHttpRequest.open("POST", uri, false);
-             xmlHttpRequest.setRequestHeader("Content-Type", "text/plain;charset=utf-8");
-             xmlHttpRequest.send(requestData);
+        try {
+            xmlHttpRequest.open("POST", uri, false);
+            xmlHttpRequest.setRequestHeader("Content-Type", "text/plain;charset=utf-8");
+            xmlHttpRequest.send(requestData);
         } catch (e) {
-            // No errors are managed as this is synchronous forceful send that can just fail
+           // No errors are managed as this is synchronous forceful send that can just fail
         }
         this.@com.vaadin.terminal.gwt.client.ApplicationConnection::endRequest()();
     }-*/;
@@ -608,7 +605,7 @@ public class ApplicationConnection {
     private static native ValueMap parseJSONResponse(String jsonText)
     /*-{
         return eval('(' + jsonText + ')');
-     }-*/;
+    }-*/;
 
     private void handleReceivedJSONMessage(Response response) {
         final Date start = new Date();
@@ -630,6 +627,11 @@ public class ApplicationConnection {
             console.log("redirecting to " + url);
             redirect(url);
             return;
+        }
+
+        // Get security key
+        if (json.containsKey(UIDL_SECURITY_TOKEN_ID)) {
+            uidl_security_key = json.getString(UIDL_SECURITY_TOKEN_ID);
         }
 
         if (json.containsKey("resources")) {
@@ -813,12 +815,12 @@ public class ApplicationConnection {
     // Redirect browser, null reloads current page
     private static native void redirect(String url)
     /*-{
-      if (url) {
-         $wnd.location = url;
-      } else {
-          $wnd.location.reload(false);
-      }
-     }-*/;
+        if (url) {
+           $wnd.location = url;
+        } else {
+            $wnd.location.reload(false);
+        }
+    }-*/;
 
     public void registerPaintable(String id, Paintable paintable) {
         ComponentDetail componentDetail = new ComponentDetail();
