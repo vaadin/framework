@@ -70,7 +70,7 @@ public class ApplicationConnection {
     public static final String ATTRIBUTE_DESCRIPTION = "description";
     public static final String ATTRIBUTE_ERROR = "error";
 
-    private static String uidl_security_key = "init";
+    private String uidl_security_key = "init";
 
     private final HashMap<String, String> resourcesMap = new HashMap<String, String>();
 
