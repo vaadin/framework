@@ -1117,7 +1117,6 @@
             <fileset dir="${docdir}/build/result/package/WebContent/docs">
 				<exclude name="**/.svn" />
 				<include name="book-of-vaadin.pdf" />
-				<include name="book/**" />
             </fileset>
         </copy>
     </target>
@@ -1127,13 +1126,13 @@
 			<tarfileset prefix="docs" dir="${result-path}/${product-file}-${version}/WebContent/docs">
 				<patternset>
 					<include name="api/**" />
-					<include name="book/**" />
 					<include name="book-of-vaadin.pdf" />
 					<include name="example-source" />
 				</patternset>
 			</tarfileset>
 			<tarfileset prefix="docs" dir="${docdir}/build/result/package/WebContent/docs">
 				<patternset>
+					<include name="book/**" />
 					<include name="tutorial/**" />
 					<include name="vaadin-tutorial.pdf" />
 				</patternset>
