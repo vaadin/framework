@@ -92,7 +92,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
     public static final String VAR_ARRAYITEM_SEPARATOR = "\u001c";
 
-    private final HashSet<String> currentlyOpenWindowsInClient = new HashSet<String>();
+    private final HashMap<String, OpenWindowCache> currentlyOpenWindowsInClient = new HashMap<String, OpenWindowCache>();
 
     private static final int MAX_BUFFER_SIZE = 64 * 1024;
 
@@ -302,8 +302,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             paintAfterVariablechanges(request, response, applicationServlet,
                     repaintAll, outWriter, window, analyzeLayouts);
 
-            // Mark this window to be open on client
-            currentlyOpenWindowsInClient.add(window.getName());
             if (closingWindowName != null) {
                 currentlyOpenWindowsInClient.remove(closingWindowName);
                 closingWindowName = null;
@@ -322,7 +320,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
         // If repaint is requested, clean all ids in this root window
         if (repaintAll) {
-            for (final Iterator it = idPaintableMap.keySet().iterator(); it
+            for (final Iterator<String> it = idPaintableMap.keySet().iterator(); it
                     .hasNext();) {
                 final Component c = (Component) idPaintableMap.get(it.next());
                 if (isChildOf(window, c)) {
@@ -363,6 +361,12 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
             JsonPaintTarget paintTarget = new JsonPaintTarget(this, outWriter,
                     !repaintAll);
+            OpenWindowCache windowCache = currentlyOpenWindowsInClient
+                    .get(window.getName());
+            if (windowCache == null) {
+                windowCache = new OpenWindowCache();
+                currentlyOpenWindowsInClient.put(window.getName(), windowCache);
+            }
 
             // Paints components
             if (repaintAll) {
@@ -376,8 +380,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             } else {
                 // remove detached components from paintableIdMap so they
                 // can be GC'ed
-                for (Iterator it = paintableIdMap.keySet().iterator(); it
-                        .hasNext();) {
+                for (Iterator<Paintable> it = paintableIdMap.keySet()
+                        .iterator(); it.hasNext();) {
                     Component p = (Component) it.next();
                     if (p.getApplication() == null) {
                         idPaintableMap.remove(paintableIdMap.get(p));
@@ -548,10 +552,10 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             }
 
             // TODO We should only precache the layouts that are not
-            // cached already
+            // cached already (plagiate from usedPaintableTypes)
             int resourceIndex = 0;
-            for (final Iterator i = paintTarget.getPreCachedResources()
-                    .iterator(); i.hasNext();) {
+            for (final Iterator i = paintTarget.getUsedResources().iterator(); i
+                    .hasNext();) {
                 final String resource = (String) i.next();
                 InputStream is = null;
                 try {
@@ -597,6 +601,30 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                 }
             }
             outWriter.print("}");
+
+            Collection<Class<? extends Paintable>> usedPaintableTypes = paintTarget
+                    .getUsedPaintableTypes();
+            boolean typeMappingsOpen = false;
+            for (Class<? extends Paintable> class1 : usedPaintableTypes) {
+                if (windowCache.cache(class1)) {
+                    // client does not know the mapping key for this type, send
+                    // mapping to client
+                    if (!typeMappingsOpen) {
+                        typeMappingsOpen = true;
+                        outWriter.print(", \"typeMappings\" : { ");
+                    } else {
+                        outWriter.print(" , ");
+                    }
+                    String canonicalName = class1.getCanonicalName();
+                    outWriter.print("\"");
+                    outWriter.print(canonicalName);
+                    outWriter.print("\" : ");
+                    outWriter.print(getTagForType(class1));
+                }
+            }
+            if (typeMappingsOpen) {
+                outWriter.print(" }");
+            }
 
             printLocaleDeclarations(outWriter);
 
@@ -774,6 +802,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                         paintAfterVariablechanges(request, response,
                                 applicationServlet, true, outWriter, window,
                                 false);
+
                     } catch (ServletException e) {
                         // We will ignore all servlet exceptions
                     }
@@ -1093,9 +1122,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
         }
 
         // If the requested window is already open, resolve conflict
-        if (currentlyOpenWindowsInClient.contains(window.getName())) {
+        if (currentlyOpenWindowsInClient.containsKey(window.getName())) {
             String newWindowName = window.getName();
-            while (currentlyOpenWindowsInClient.contains(newWindowName)) {
+            while (currentlyOpenWindowsInClient.containsKey(newWindowName)) {
                 newWindowName = window.getName() + "_"
                         + ((int) (Math.random() * 100000000));
             }
@@ -1210,8 +1239,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
         // list. The result is that each component should be painted exactly
         // once and any unmodified components will be painted as "cached=true".
 
-        for (final Iterator i = dirtyPaintabletSet.iterator(); i.hasNext();) {
-            final Paintable p = (Paintable) i.next();
+        for (final Iterator<Paintable> i = dirtyPaintabletSet.iterator(); i
+                .hasNext();) {
+            final Paintable p = i.next();
             if (p instanceof Component) {
                 final Component component = (Component) p;
                 if (component.getApplication() == null) {
@@ -1527,5 +1557,38 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                     new URIHandlerErrorImpl(application, t));
             return null;
         }
+    }
+
+    private static HashMap<Class<? extends Paintable>, Integer> typeToKey = new HashMap<Class<? extends Paintable>, Integer>();
+    private static int nextTypeKey = 0;
+
+    static String getTagForType(Class<? extends Paintable> class1) {
+        synchronized (typeToKey) {
+            Integer object = typeToKey.get(class1);
+            if (object == null) {
+                object = nextTypeKey++;
+                typeToKey.put(class1, object);
+            }
+            return object.toString();
+        }
+    }
+
+    /**
+     * Helper class for terminal to keep track of data that client is expected
+     * to know.
+     */
+    class OpenWindowCache {
+
+        private Set<Object> res = new HashSet<Object>();
+
+        /**
+         * 
+         * @param paintable
+         * @return true if the given class was added to cache
+         */
+        boolean cache(Object object) {
+            return res.add(object);
+        }
+
     }
 }

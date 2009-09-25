@@ -1,10 +1,13 @@
 package com.vaadin.demo.sampler;
 
+import com.vaadin.demo.sampler.gwt.client.ui.VGoogleAnalytics;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.ClientWidget;
 
 @SuppressWarnings("serial")
+@ClientWidget(VGoogleAnalytics.class)
 public class GoogleAnalytics extends AbstractComponent {
 
     private String trackerId;

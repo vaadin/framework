@@ -20,7 +20,6 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
-import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
@@ -607,7 +606,11 @@ public class ApplicationConnection {
 
     private static native ValueMap parseJSONResponse(String jsonText)
     /*-{
-        return eval('(' + jsonText + ')');
+        if(JSON && JSON.parse) {
+            return JSON.parse(jsonText);
+        } else {
+            return eval('(' + jsonText + ')');
+        }
      }-*/;
 
     private void handleReceivedJSONMessage(Response response) {
@@ -618,12 +621,17 @@ public class ApplicationConnection {
         ValueMap json;
         try {
             json = parseJSONResponse(jsonText);
-        } catch (final com.google.gwt.json.client.JSONException e) {
+        } catch (final Exception e) {
             endRequest();
             showCommunicationError(e.getMessage() + " - Original JSON-text:");
             console.log(jsonText);
             return;
         }
+
+        ApplicationConnection.getConsole()
+                .log(
+                        "JSON parsing took "
+                                + (new Date().getTime() - start.getTime()));
         // Handle redirect
         if (json.containsKey("redirect")) {
             String url = json.getValueMap("redirect").getString("url");
@@ -640,6 +648,11 @@ public class ApplicationConnection {
                 String key = keyArray.get(i);
                 resourcesMap.put(key, resources.getAsString(key));
             }
+        }
+
+        if (json.containsKey("typeMappings")) {
+            configuration.addComponentMappings(
+                    json.getValueMap("typeMappings"), widgetSet);
         }
 
         if (json.containsKey("locales")) {
@@ -707,7 +720,7 @@ public class ApplicationConnection {
                     updatedWidgets.add(idToPaintableDetail.get(uidl.getId())
                             .getComponent());
                 } else {
-                    if (!uidl.getTag().equals("window")) {
+                    if (!uidl.getTag().equals("0")) {
                         ClientExceptionHandler
                                 .displayError("Received update for "
                                         + uidl.getTag()
@@ -788,10 +801,6 @@ public class ApplicationConnection {
         console.log("Referenced paintables: " + idToPaintableDetail.size());
 
         endRequest();
-    }
-
-    private UIDL getUidl(JSONArray changes, int i) {
-        return (UIDL) changes.get(i).isArray().getJavaScriptObject();
     }
 
     /**
@@ -1112,10 +1121,11 @@ public class ApplicationConnection {
         }
 
         // Switch to correct implementation if needed
-        if (!widgetSet.isCorrectImplementation(component, uidl)) {
+        if (!widgetSet.isCorrectImplementation(component, uidl, configuration)) {
             final Container parent = Util.getLayout(component);
             if (parent != null) {
-                final Widget w = (Widget) widgetSet.createWidget(uidl);
+                final Widget w = (Widget) widgetSet.createWidget(uidl,
+                        configuration);
                 parent.replaceChildComponent(component, w);
                 unregisterPaintable((Paintable) component);
                 registerPaintable(uidl.getId(), (Paintable) w);
@@ -1511,7 +1521,7 @@ public class ApplicationConnection {
         if (w != null) {
             return w;
         } else {
-            w = widgetSet.createWidget(uidl);
+            w = widgetSet.createWidget(uidl, configuration);
             registerPaintable(id, w);
             return w;
 
@@ -1748,6 +1758,10 @@ public class ApplicationConnection {
         ComponentDetail componentDetail = idToPaintableDetail
                 .get(getPid(paintable));
         componentDetail.putAdditionalTooltip(key, tooltip);
+    }
+
+    public ApplicationConfiguration getConfiguration() {
+        return configuration;
     }
 
 }

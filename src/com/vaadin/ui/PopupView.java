@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.ui.VPopupView;
 
 /**
  * 
@@ -18,6 +19,7 @@ import com.vaadin.terminal.PaintTarget;
  * @author IT Mill Ltd.
  */
 @SuppressWarnings("serial")
+@ClientWidget(VPopupView.class)
 public class PopupView extends AbstractComponentContainer {
 
     private Content content;

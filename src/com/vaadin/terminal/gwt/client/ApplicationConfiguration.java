@@ -6,6 +6,8 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArrayString;
+import com.vaadin.terminal.gwt.client.ui.VUnknownComponent;
 
 public class ApplicationConfiguration {
 
@@ -22,6 +24,8 @@ public class ApplicationConfiguration {
     private String communicationErrorMessage;
     private String communicationErrorUrl;
     private boolean useDebugIdInDom = true;
+
+    private Class<? extends Paintable>[] classes = new Class[1024];
 
     private static ArrayList<ApplicationConnection> unstartedApplications = new ArrayList<ApplicationConnection>();
     private static ArrayList<ApplicationConnection> runningApplications = new ArrayList<ApplicationConnection>();
@@ -118,13 +122,13 @@ public class ApplicationConfiguration {
         int lastdot = module.lastIndexOf(".");
         String base = module.substring(0, lastdot);
         String simpleName = module.substring(lastdot + 1);
-        if (!wsname.startsWith(base) || !wsname.endsWith(simpleName)) {
-            // WidgetSet module name does not match implementation name;
-            // probably inherited WidgetSet with entry-point. Skip.
-            GWT.log("Ignored init for " + wsname + " when starting " + module,
-                    null);
-            return;
-        }
+        // if (!wsname.startsWith(base) || !wsname.endsWith(simpleName)) {
+        // // WidgetSet module name does not match implementation name;
+        // // probably inherited WidgetSet with entry-point. Skip.
+        // GWT.log("Ignored init for " + wsname + " when starting " + module,
+        // null);
+        // return;
+        // }
 
         if (initedWidgetSet != null) {
             // Something went wrong: multiple widgetsets inited
@@ -198,4 +202,24 @@ public class ApplicationConfiguration {
     public boolean useDebugIdInDOM() {
         return useDebugIdInDom;
     }
+
+    public Class<? extends Paintable> getWidgetClassByEncodedTag(String tag) {
+        try {
+            int parseInt = Integer.parseInt(tag);
+            return classes[parseInt];
+        } catch (Exception e) {
+            // component was not present in mappings
+            return VUnknownComponent.class;
+        }
+    }
+
+    public void addComponentMappings(ValueMap valueMap, WidgetSet widgetSet) {
+        JsArrayString keyArray = valueMap.getKeyArray();
+        for (int i = 0; i < keyArray.length(); i++) {
+            String key = keyArray.get(i);
+            int value = valueMap.getInt(key);
+            classes[value] = widgetSet.getImplementationByClassName(key);
+        }
+    }
+
 }

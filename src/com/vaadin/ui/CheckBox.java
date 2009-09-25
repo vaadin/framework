@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 import com.vaadin.data.Property;
 
 @SuppressWarnings("serial")
+@ClientWidget(com.vaadin.terminal.gwt.client.ui.VCheckBox.class)
 public class CheckBox extends Button {
     /**
      * Creates a new switch button.
@@ -47,8 +48,8 @@ public class CheckBox extends Button {
      * listening button clicks. Using this method is discouraged because it
      * cannot be checked during compilation. Use
      * {@link #addListener(Class, Object, Method)} or
-     * {@link #addListener(com.vaadin.ui.Component.Listener)} instead.
-     * The method must have either no parameters, or only one parameter of
+     * {@link #addListener(com.vaadin.ui.Component.Listener)} instead. The
+     * method must have either no parameters, or only one parameter of
      * Button.ClickEvent type.
      * 
      * @param caption

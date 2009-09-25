@@ -146,8 +146,16 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * Gets the UIDL tag corresponding to the component.
      * 
      * @return the component's UIDL tag as <code>String</code>
+     * @deprecated tags are no more required for components. Instead of tags we
+     *             are now using {@link ClientWidget} annotations to map server
+     *             side components to client side counterparts. Generating
+     *             identifier for component type is delegated to terminal.
+     * @see ClientWidget
      */
-    public abstract String getTag();
+    @Deprecated
+    public String getTag() {
+        return "";
+    }
 
     public void setDebugId(String id) {
         testingId = id;
@@ -604,7 +612,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * here, we use the default documentation from implemented interface.
      */
     public final void paint(PaintTarget target) throws PaintException {
-        if (!target.startTag(this, getTag()) || repaintRequestListenersNotified) {
+        final String tag = target.getTag(this);
+        if (!target.startTag(this, tag) || repaintRequestListenersNotified) {
 
             // Paint the contents of the component
 
@@ -659,7 +668,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             // Contents have not changed, only cached presentation can be used
             target.addAttribute("cached", true);
         }
-        target.endTag(getTag());
+        target.endTag(tag);
 
         repaintRequestListenersNotified = false;
     }

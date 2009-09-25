@@ -18,13 +18,14 @@ public class VUIDLBrowser extends Tree {
      * 
      */
     private final UIDL uidl;
+    private ApplicationConfiguration conf;
 
-    public VUIDLBrowser(final UIDL uidl) {
-
+    public VUIDLBrowser(final UIDL uidl, ApplicationConfiguration conf) {
+        this.conf = conf;
         this.uidl = uidl;
         DOM.setStyleAttribute(getElement(), "position", "");
 
-        final UIDLItem root = new UIDLItem(this.uidl);
+        final UIDLItem root = new UIDLItem(this.uidl, conf);
         addItem(root);
         addOpenHandler(new OpenHandler<TreeItem>() {
             public void onOpen(OpenEvent<TreeItem> event) {
@@ -46,10 +47,19 @@ public class VUIDLBrowser extends Tree {
 
         private UIDL uidl;
 
-        UIDLItem(UIDL uidl) {
+        UIDLItem(UIDL uidl, ApplicationConfiguration conf) {
             this.uidl = uidl;
             try {
-                setText(uidl.getTag());
+                String name = uidl.getTag();
+                try {
+                    Integer.parseInt(name);
+                    Class<? extends Paintable> widgetClassByDecodedTag = conf
+                            .getWidgetClassByEncodedTag(name);
+                    name = widgetClassByDecodedTag.getName();
+                } catch (Exception e) {
+                    // NOP
+                }
+                setText(name);
                 addItem("LOADING");
             } catch (Exception e) {
                 setText(uidl.toString());
@@ -61,6 +71,15 @@ public class VUIDLBrowser extends Tree {
             removeItem(temp);
 
             String nodeName = uidl.getTag();
+            try {
+                Integer.parseInt(nodeName);
+                Class<? extends Paintable> widgetClassByDecodedTag = conf
+                        .getWidgetClassByEncodedTag(nodeName);
+                nodeName = widgetClassByDecodedTag.getName();
+            } catch (Exception e) {
+                // NOP
+            }
+
             Set<String> attributeNames = uidl.getAttributeNames();
             for (String name : attributeNames) {
                 if (uidl.isMapAttribute(name)) {
@@ -121,7 +140,7 @@ public class VUIDLBrowser extends Tree {
                 final Object child = i.next();
                 try {
                     final UIDL c = (UIDL) child;
-                    final TreeItem childItem = new UIDLItem(c);
+                    final TreeItem childItem = new UIDLItem(c, conf);
                     addItem(childItem);
 
                 } catch (final Exception e) {

@@ -390,4 +390,11 @@ public interface PaintTarget extends Serializable {
     void addCharacterData(String text) throws PaintException;
 
     public void addAttribute(String string, Object[] keys);
+
+    /**
+     * @return the "tag" string used in communication to present given
+     *         {@link Paintable} type. Terminal may define how to present
+     *         paintable.
+     */
+    public String getTag(Paintable paintable);
 }

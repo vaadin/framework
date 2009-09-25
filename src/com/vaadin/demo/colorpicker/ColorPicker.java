@@ -6,11 +6,14 @@ package com.vaadin.demo.colorpicker;
 
 import java.util.Map;
 
+import com.vaadin.demo.colorpicker.gwt.client.ui.VColorPicker;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.ui.AbstractField;
+import com.vaadin.ui.ClientWidget;
 
 @SuppressWarnings("serial")
+@ClientWidget(VColorPicker.class)
 public class ColorPicker extends AbstractField {
 
     public ColorPicker() {

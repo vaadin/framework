@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
@@ -24,6 +25,7 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.Component;
 
 /**
@@ -53,7 +55,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     private int changes = 0;
 
-    Set preCachedResources = new HashSet();
+    private Set<Object> usedResources = new HashSet<Object>();
 
     private boolean customLayoutArgumentsOpen = false;
 
@@ -66,6 +68,8 @@ public class JsonPaintTarget implements PaintTarget {
     private Collection<Paintable> paintedComponents = new HashSet<Paintable>();
 
     private Collection<Paintable> identifiersCreatedDueRefPaint;
+
+    private Collection<Class<? extends Paintable>> usedPaintableTypes = new LinkedList<Class<? extends Paintable>>();
 
     /**
      * Creates a new XMLPrintWriter, without automatic line flushing.
@@ -472,7 +476,7 @@ public class JsonPaintTarget implements PaintTarget {
         tag.addAttribute("\"" + name + "\": \"" + escapeJSON(value) + "\"");
 
         if (customLayoutArgumentsOpen && "template".equals(name)) {
-            getPreCachedResources().add("layouts/" + value + ".html");
+            getUsedResources().add("layouts/" + value + ".html");
         }
 
         if (name.equals("locale")) {
@@ -1122,12 +1126,8 @@ public class JsonPaintTarget implements PaintTarget {
         }
     }
 
-    public Set getPreCachedResources() {
-        return preCachedResources;
-    }
-
-    public void setPreCachedResources(Set preCachedResources) {
-        throw new UnsupportedOperationException();
+    public Set<Object> getUsedResources() {
+        return usedResources;
     }
 
     /**
@@ -1145,5 +1145,37 @@ public class JsonPaintTarget implements PaintTarget {
         } else {
             return true;
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    public String getTag(Paintable paintable) {
+        /*
+         * Client widget annotation is searched from component hierarchy to
+         * detect the component that presumably has client side implementation.
+         * The server side name is used in the transportation, but encoded into
+         * integer strings to optimized transferred data.
+         */
+        Class<? extends Paintable> class1 = paintable.getClass();
+        ClientWidget annotation = class1.getAnnotation(ClientWidget.class);
+        while (annotation == null) {
+            Class<?> superclass = class1.getSuperclass();
+            if (superclass != null
+                    && Paintable.class.isAssignableFrom(superclass)) {
+                class1 = (Class<? extends Paintable>) superclass;
+                annotation = class1.getAnnotation(ClientWidget.class);
+            } else {
+                System.out
+                        .append("Warning: no superclass of givent has ClientWidget"
+                                + " annotation. Component will not be mapped correctly on client side.");
+                break;
+            }
+        }
+        usedPaintableTypes.add(class1);
+        return CommunicationManager.getTagForType(class1);
+
+    }
+
+    Collection<Class<? extends Paintable>> getUsedPaintableTypes() {
+        return usedPaintableTypes;
     }
 }

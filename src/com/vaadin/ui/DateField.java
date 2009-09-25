@@ -14,6 +14,7 @@ import java.util.Map;
 import com.vaadin.data.Property;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.ui.VPopupCalendar;
 
 /**
  * <p>
@@ -34,6 +35,7 @@ import com.vaadin.terminal.PaintTarget;
  * @since 3.0
  */
 @SuppressWarnings("serial")
+@ClientWidget(VPopupCalendar.class)
 public class DateField extends AbstractField {
 
     /* Private members */

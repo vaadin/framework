@@ -793,6 +793,7 @@
 			<classpath>
 				<pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
 				<pathelement location="${gwt-dir}/${platform}/${lib-gwt-dev}" />
+				<pathelement location="build/classes" />
 				<pathelement location="${result-path}/src" />
 			</classpath>
 		</java>
@@ -815,6 +816,7 @@
 				<pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
 				<pathelement location="${gwt-dir}/${platform}/${lib-gwt-dev}" />
 				<pathelement location="${result-path}/src" />
+				<pathelement location="build/classes" />
 			</classpath>
 		</java>
 		<antcall target="remove-widgetset-gwt-tmp"/>
@@ -845,6 +847,7 @@
 				<pathelement location="${googlemaps-jar}" />
 				<!-- demo widgetset sources -->
 				<pathelement path="${output-dir}/WebContent/WEB-INF/src" />
+				<pathelement location="build/classes" />
 			</classpath>
 		</java>
 		<antcall target="remove-widgetset-gwt-tmp"/>
@@ -868,6 +871,7 @@
 				<pathelement location="${result-path}/src" />
 				<!-- demo widgetset sources -->
 				<pathelement path="${output-dir}/WebContent/WEB-INF/src" />
+				<pathelement location="build/classes" />
 			</classpath>
 		</java>
 		<antcall target="remove-widgetset-gwt-tmp"/>
@@ -890,6 +894,7 @@
 				<pathelement location="${result-path}/src" />
 				<!-- demo widgetset sources -->
 				<pathelement path="${output-dir}/WebContent/WEB-INF/src" />
+				<pathelement location="build/classes" />
 			</classpath>
 		</java>
 		<antcall target="remove-widgetset-gwt-tmp"/>
@@ -912,6 +917,7 @@
 				<pathelement location="${result-path}/src" />
 				<!-- demo widgetset sources -->
 				<pathelement path="${output-dir}/WebContent/WEB-INF/src" />
+				<pathelement location="build/classes" />
 			</classpath>
 		</java>
 		<antcall target="remove-widgetset-gwt-tmp"/>

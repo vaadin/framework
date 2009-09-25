@@ -10,6 +10,7 @@ import java.util.Stack;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
+import com.vaadin.terminal.gwt.client.ui.VMenuBar;
 
 /**
  * <p>
@@ -19,6 +20,7 @@ import com.vaadin.terminal.Resource;
  * </p>
  */
 @SuppressWarnings("serial")
+@ClientWidget(VMenuBar.class)
 public class MenuBar extends AbstractComponent {
 
     // Items of the top-level menu
@@ -340,10 +342,9 @@ public class MenuBar extends AbstractComponent {
 
     /**
      * This interface contains the layer for menu commands of the
-     * {@link com.vaadin.ui.MenuBar} class. It's method will fire when
-     * the user clicks on the containing
-     * {@link com.vaadin.ui.MenuBar.MenuItem}. The selected item is
-     * given as an argument.
+     * {@link com.vaadin.ui.MenuBar} class. It's method will fire when the user
+     * clicks on the containing {@link com.vaadin.ui.MenuBar.MenuItem}. The
+     * selected item is given as an argument.
      */
     public interface Command extends Serializable {
         public void menuSelected(MenuBar.MenuItem selectedItem);
@@ -498,8 +499,8 @@ public class MenuBar extends AbstractComponent {
          * For the containing item. This will return null if the item is in the
          * top-level menu bar.
          * 
-         * @return The containing {@link com.vaadin.ui.MenuBar.MenuItem}
-         *         , or null if there is none
+         * @return The containing {@link com.vaadin.ui.MenuBar.MenuItem} , or
+         *         null if there is none
          */
         public MenuBar.MenuItem getParent() {
             return itsParent;

@@ -10,6 +10,7 @@ import java.util.Map;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Sizeable;
+import com.vaadin.terminal.gwt.client.ui.VSplitPanelHorizontal;
 
 /**
  * SplitPanel.
@@ -23,6 +24,7 @@ import com.vaadin.terminal.Sizeable;
  * @since 5.0
  */
 @SuppressWarnings("serial")
+@ClientWidget(VSplitPanelHorizontal.class)
 public class SplitPanel extends AbstractLayout {
 
     /* Predefined orientations */
@@ -80,11 +82,7 @@ public class SplitPanel extends AbstractLayout {
      */
     @Override
     public String getTag() {
-        if (orientation == ORIENTATION_HORIZONTAL) {
-            return "hsplitpanel";
-        } else {
-            return "vsplitpanel";
-        }
+        return "splitpanel";
     }
 
     /**
@@ -217,6 +215,10 @@ public class SplitPanel extends AbstractLayout {
         super.paintContent(target);
 
         final String position = pos + UNIT_SYMBOLS[posUnit];
+
+        if (orientation == ORIENTATION_VERTICAL) {
+            target.addAttribute("vertical", true);
+        }
 
         target.addAttribute("position", position);
 

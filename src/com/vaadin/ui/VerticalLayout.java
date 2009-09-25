@@ -1,5 +1,7 @@
 package com.vaadin.ui;
 
+import com.vaadin.terminal.gwt.client.ui.VVerticalLayout;
+
 /**
  * Vertical layout
  * 
@@ -13,6 +15,7 @@ package com.vaadin.ui;
  * @since 5.3
  */
 @SuppressWarnings("serial")
+@ClientWidget(VVerticalLayout.class)
 public class VerticalLayout extends AbstractOrderedLayout {
 
     public VerticalLayout() {

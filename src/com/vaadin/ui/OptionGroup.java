@@ -9,11 +9,13 @@ import java.util.Collection;
 import com.vaadin.data.Container;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.ui.VOptionGroup;
 
 /**
  * Configures select to be used as an option group.
  */
 @SuppressWarnings("serial")
+@ClientWidget(VOptionGroup.class)
 public class OptionGroup extends AbstractSelect {
 
     public OptionGroup() {

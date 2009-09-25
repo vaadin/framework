@@ -9,6 +9,7 @@ import java.util.Collection;
 import com.vaadin.data.Container;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.ui.VNativeSelect;
 
 /**
  * This is a simple drop-down select without, for instance, support for
@@ -17,6 +18,7 @@ import com.vaadin.terminal.PaintTarget;
  * better choice.
  */
 @SuppressWarnings("serial")
+@ClientWidget(VNativeSelect.class)
 public class NativeSelect extends AbstractSelect {
 
     // width in characters, mimics TextField

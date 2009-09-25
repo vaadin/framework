@@ -23,7 +23,4 @@
 	<!-- Using key for http://demo.vaadin.com: -->
 	<script src="http://maps.google.com/maps?gwt=1&amp;file=api&amp;v=2.x&amp;key=ABQIAAAAP3UBMIhn15mgO6uIqO_GVRTjfRw0y7NvUKCc8_UnYaOyzzWA_xRoBYGzLMNrw-8-IesNKDC1WFd_vg" />
 
-	<!-- Entry point -->
-	<entry-point class="com.vaadin.demo.reservation.gwt.client.ReservationWidgetSet"/>
-  
 </module>

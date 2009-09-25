@@ -31,6 +31,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.ui.VTree;
 
 /**
  * Tree component. A Tree can be used to select an item (or multiple items) from
@@ -42,6 +43,7 @@ import com.vaadin.terminal.gwt.client.MouseEventDetails;
  * @since 3.0
  */
 @SuppressWarnings("serial")
+@ClientWidget(VTree.class)
 public class Tree extends AbstractSelect implements Container.Hierarchical,
         Action.Container, ItemClickSource {
 

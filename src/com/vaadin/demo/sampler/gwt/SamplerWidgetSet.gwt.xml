@@ -9,7 +9,4 @@
 	<stylesheet src="prettify/prettify.css"/>
 	<script src="prettify/prettify.js" />
 
-	<!-- Entry point -->
-	<entry-point class="com.vaadin.demo.sampler.gwt.client.SamplerWidgetSet"/>
-  
 </module>

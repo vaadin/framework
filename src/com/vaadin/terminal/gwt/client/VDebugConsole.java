@@ -70,6 +70,8 @@ public final class VDebugConsole extends VOverlay implements Console {
 
     private ApplicationConnection client;
 
+    private ApplicationConfiguration conf;
+
     private static final String help = "Drag=move, shift-drag=resize, doubleclick=min/max."
             + "Use debug=quiet to log only to browser console.";
 
@@ -78,6 +80,7 @@ public final class VDebugConsole extends VOverlay implements Console {
         super(false, false);
 
         this.client = client;
+        conf = cnf;
 
         panel = new FlowPanel();
         if (showWindow) {
@@ -292,7 +295,7 @@ public final class VDebugConsole extends VOverlay implements Console {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.vaadin.terminal.gwt.client.Console#log(java.lang.String)
      */
     public void log(String msg) {
@@ -303,7 +306,7 @@ public final class VDebugConsole extends VOverlay implements Console {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.vaadin.terminal.gwt.client.Console#error(java.lang.String)
      */
     public void error(String msg) {
@@ -314,7 +317,7 @@ public final class VDebugConsole extends VOverlay implements Console {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.vaadin.terminal.gwt.client.Console#printObject(java.lang.
      * Object)
      */
@@ -325,13 +328,13 @@ public final class VDebugConsole extends VOverlay implements Console {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.vaadin.terminal.gwt.client.Console#dirUIDL(com.vaadin
      * .terminal.gwt.client.UIDL)
      */
     public void dirUIDL(UIDL u) {
         if (panel.isAttached()) {
-            panel.add(new VUIDLBrowser(u));
+            panel.add(new VUIDLBrowser(u, conf));
         }
         consoleDir(u);
         // consoleLog(u.getChildrenAsXML());

@@ -12,6 +12,7 @@ import java.util.Iterator;
 
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.ui.VCustomLayout;
 
 /**
  * <p>
@@ -41,6 +42,7 @@ import com.vaadin.terminal.PaintTarget;
  * @since 3.0
  */
 @SuppressWarnings("serial")
+@ClientWidget(VCustomLayout.class)
 public class CustomLayout extends AbstractLayout {
 
     private static final int BUFFER_SIZE = 10000;

@@ -6,6 +6,7 @@ package com.vaadin.ui;
 
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.ui.richtextarea.VRichTextArea;
 
 /**
  * A simple RichTextArea to edit HTML format text.
@@ -15,6 +16,7 @@ import com.vaadin.terminal.PaintTarget;
  * into length of field.
  */
 @SuppressWarnings("serial")
+@ClientWidget(VRichTextArea.class)
 public class RichTextArea extends TextField {
 
     @Override

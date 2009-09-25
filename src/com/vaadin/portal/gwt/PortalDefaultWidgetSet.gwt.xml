@@ -1,8 +1,4 @@
 <module>
 	<!-- Inherit the SamplerWidgetSet -->
 	<inherits name="com.vaadin.demo.sampler.gwt.SamplerWidgetSet" />
-
-	<!-- Entry point -->
-	<entry-point class="com.vaadin.portal.gwt.client.PortalDefaultWidgetSet"/>
-	
 </module>

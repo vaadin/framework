@@ -20,6 +20,7 @@ import com.vaadin.terminal.gwt.client.ui.VAbsoluteLayout;
  * 
  */
 @SuppressWarnings("serial")
+@ClientWidget(VAbsoluteLayout.class)
 public class AbsoluteLayout extends AbstractLayout {
 
     private Collection<Component> components = new LinkedHashSet<Component>();

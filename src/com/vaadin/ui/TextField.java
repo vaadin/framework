@@ -10,6 +10,7 @@ import java.util.Map;
 import com.vaadin.data.Property;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.ui.VTextField;
 
 /**
  * <p>
@@ -32,6 +33,7 @@ import com.vaadin.terminal.PaintTarget;
  * @since 3.0
  */
 @SuppressWarnings("serial")
+@ClientWidget(VTextField.class)
 public class TextField extends AbstractField {
 
     /* Private members */
