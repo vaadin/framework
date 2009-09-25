@@ -60,7 +60,7 @@ public class SampleDB {
                 + "_RESERVED_TO";
     }
 
-    private static final String DEFAULT_JDBC_URL = "jdbc:hsqldb:file:reservation.db";
+    private static final String DEFAULT_JDBC_URL = "jdbc:hsqldb:mem:reservation.db";
     private static Object dbMutex = new Object();
 
     private static final String CREATE_TABLE_USER = "CREATE TABLE "
