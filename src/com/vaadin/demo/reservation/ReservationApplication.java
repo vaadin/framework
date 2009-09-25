@@ -60,21 +60,26 @@ public class ReservationApplication extends Application {
         //
         db = new SampleDB(getProperty("jdbcUrl"));
 
-        final Window mainWindow = new Window("Reservr ");
+        VerticalLayout mainLayout = new VerticalLayout();
+        mainLayout.setSizeFull();
+        mainLayout.setMargin(true);
+
+        final Window mainWindow = new Window("Reservr ", mainLayout);
         setMainWindow(mainWindow);
         setTheme("reservr");
-        mainWindow.getContent().setWidth("100%");
 
         Label logo = new Label("Reservr");
         logo.setStyleName("logo");
-        mainWindow.addComponent(logo);
+        mainLayout.addComponent(logo);
 
         Label slogan = new Label("Representational vehicles on-the-road");
         slogan.setStyleName("slogan");
-        mainWindow.addComponent(slogan);
+        mainLayout.addComponent(slogan);
 
         final TabSheet mainTabs = new TabSheet();
-        mainWindow.addComponent(mainTabs);
+        mainTabs.setSizeFull();
+        mainLayout.addComponent(mainTabs);
+        mainLayout.setExpandRatio(mainTabs, 1);
 
         final VerticalLayout reservationTab = new VerticalLayout();
         reservationTab.setWidth("100%");
@@ -184,8 +189,7 @@ public class ReservationApplication extends Application {
         });
 
         allTable = new Table();
-        allTable.setWidth("100%");
-        allTable.setHeight("450px");
+        allTable.setSizeFull();
         allTable.setColumnCollapsingAllowed(true);
         allTable.setColumnReorderingAllowed(true);
         mainTabs.addTab(allTable, "All reservations", null);
