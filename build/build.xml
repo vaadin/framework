@@ -1014,6 +1014,7 @@
 					<exclude name="${toolkit-package}/demo/**" />
 					<exclude name="${toolkit-package}/tests/**"/>
 					<exclude name="${toolkit-package}/launcher/**" />
+					<exclude name="${toolkit-package}/automatedtests/**" />
 				</patternset>
 			</fileset>
 			<!-- fileupload, see build/external/fileupload/build.xml -->
@@ -1026,6 +1027,7 @@
 					<exclude name="${toolkit-package}/demo/**" />
 					<exclude name="${toolkit-package}/tests/**"/>
 					<exclude name="${toolkit-package}/launcher/**" />
+					<exclude name="${toolkit-package}/automatedtests/**" />
 				</patternset>
 			</fileset>
 			<fileset dir="${output-dir}/WebContent">
@@ -1073,7 +1075,7 @@
     <!-- Manual: Build from external repository.                            -->
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
 
-    <target name="manual-init">
+    <target name="manual-init" depends="init">
 		<!-- Can run XEP only if license is available. -->
 		<available file="build/lib/XEP/license.xml" property="xep.license.available" />
 
@@ -1086,7 +1088,7 @@
     </target>
 
     <!-- Checkout doc repository. -->
-    <target name="manual-checkout" unless="docdir">
+    <target name="manual-checkout" depends="manual-init" unless="docdir">
         <mkdir dir="${checkout-path}"/>
 
         <exec executable="svn" dir="${checkout-path}">
@@ -1095,6 +1097,7 @@
             <arg value="docs"/>
         </exec>
 
+		<!-- Documentation source directory. -->
         <property name="docdir" value="${checkout-path}/docs"/>
     </target>
 
@@ -1104,14 +1107,14 @@
     </target>
 
     <!-- Build manual. -->
-    <target name="manual-build" depends="xep-license-copy">
+    <target name="manual-build" depends="manual-init, xep-license-copy">
       <ant dir="${docdir}" antfile="build/build.xml" inheritAll="false">
           <property name="version" value="${version}"/>
       </ant>
     </target>
 
     <!-- Copy the manual from sub Ant results to our output directory. -->
-    <target name="manual-copy" depends="init, manual-checkout">
+    <target name="manual-copy" depends="manual-init">
 		<copy todir="${output-dir}/WebContent/docs">
             <fileset dir="${docdir}/build/result/package/WebContent/docs">
 				<exclude name="**/.svn" />
@@ -1120,8 +1123,27 @@
         </copy>
     </target>
 
-	<target name="manual" depends="init, manual-init, manual-checkout, manual-build, manual-copy">
-    </target>        
+	<target name="manual-package" depends="manual-init, manual-copy">
+		<tar destfile="${result-path}/${product-file}-docs-${version}.tar.gz" compression="gzip" longfile="gnu">
+			<tarfileset prefix="docs" dir="${result-path}/${product-file}-${version}/WebContent/docs">
+				<patternset>
+					<include name="api/**" />
+					<include name="book-of-vaadin.pdf" />
+					<include name="example-source" />
+				</patternset>
+			</tarfileset>
+			<tarfileset prefix="docs" dir="${docdir}/build/result/package/WebContent/docs">
+				<patternset>
+					<include name="book/**" />
+					<include name="tutorial/**" />
+					<include name="vaadin-tutorial.pdf" />
+				</patternset>
+			</tarfileset>
+		</tar>
+	</target>
+
+	<target name="manual" depends="init, manual-init, manual-checkout, manual-build, manual-copy, manual-package">
+    </target>
 
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
     <!-- Documentation: Add Javadoc to doc                                  -->
