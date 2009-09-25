@@ -72,6 +72,7 @@ public class WidgetMapGenerator extends Generator {
         // init composer, set class properties, create source writer
         ClassSourceFileComposerFactory composer = null;
         composer = new ClassSourceFileComposerFactory(packageName, className);
+        composer.addImport("com.google.gwt.core.client.GWT");
         composer.setSuperclass("com.vaadin.terminal.gwt.client.WidgetMap");
         SourceWriter sourceWriter = composer.createSourceWriter(context,
                 printWriter);
@@ -147,13 +148,13 @@ public class WidgetMapGenerator extends Generator {
             }
             sourceWriter.print("if (");
             sourceWriter.print(clientClass.getName());
-            sourceWriter.print(".class == classType) return new ");
+            sourceWriter.print(".class == classType) return GWT.create(");
             sourceWriter.print(clientClass.getName());
-            sourceWriter.println("();");
+            sourceWriter.println(".class );");
             sourceWriter.print(" else ");
         }
         sourceWriter
-                .println("return new com.vaadin.terminal.gwt.client.ui.VUnknownComponent();");
+                .println("return GWT.create( com.vaadin.terminal.gwt.client.ui.VUnknownComponent.class );");
         sourceWriter.println("}");
     }
 
