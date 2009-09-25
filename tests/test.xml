@@ -8,7 +8,7 @@
 	<property name="test-output-dir" value="../build/test-output" />
 	<property name="class-dir" value="${test-output-dir}/classes" />
 	<!-- Browsers to use for testing -->
-	<property name="test-browsers" value="firefox,ie" />
+	<property name="test-browsers" value="firefox,ie,opera,safari,googlechrome" />
 	
 	<!-- classpath must include test bench jar and its dependencies -->
 	<path id="classpath">
