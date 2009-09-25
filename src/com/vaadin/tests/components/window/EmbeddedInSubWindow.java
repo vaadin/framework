@@ -9,12 +9,11 @@ public class EmbeddedInSubWindow extends TestBase {
 
     @Override
     protected String getDescription() {
-        return "";
+        return "The sub window contains a large icon and should be sized according to the icon. The icon contains a blue border of 10px at the outer edges. The layout in the sub window has margins enabled.";
     }
 
     @Override
     protected Integer getTicketNumber() {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -23,9 +22,9 @@ public class EmbeddedInSubWindow extends TestBase {
         setTheme("tests-tickets");
         Window zoom = new Window("Image Preview");
         zoom.setSizeUndefined();
-        zoom.getLayout().setSizeUndefined();
+        zoom.getContent().setSizeUndefined();
 
-        String res = "icons/640ok.png";
+        String res = "icons/EmbeddedInSubWindow-image.png";
         Embedded imagePreview = new Embedded("", new ThemeResource(res));
         imagePreview.setSizeUndefined();
 
