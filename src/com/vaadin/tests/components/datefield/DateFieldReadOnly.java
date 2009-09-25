@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.datefield;
 
-import java.util.Date;
+import java.util.Calendar;
+import java.util.Locale;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
@@ -31,10 +32,10 @@ public class DateFieldReadOnly extends TestBase {
         timeField.addStyleName("timeField");
 
         // Set date so that testing always has same time
-        Date date = new Date();
-        date.setTime((long) 1000000000000.0);
+        Calendar c = Calendar.getInstance(Locale.ENGLISH);
+        c.set(2009, 05, 12);
 
-        timeField.setValue(date);
+        timeField.setValue(c.getTime());
         timeField.setReadOnly(true);
 
         addComponent(timeField);
