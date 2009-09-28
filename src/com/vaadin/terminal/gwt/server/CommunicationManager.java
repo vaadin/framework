@@ -318,8 +318,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             final PrintWriter outWriter, Window window, boolean analyzeLayouts)
             throws IOException, ServletException, PaintException {
 
-        // If repaint is requested, clean all ids in this root window
         if (repaintAll) {
+            // If repaint is requested, clean all ids in this root window
             for (final Iterator<String> it = idPaintableMap.keySet().iterator(); it
                     .hasNext();) {
                 final Component c = (Component) idPaintableMap.get(it.next());
@@ -327,6 +327,12 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                     it.remove();
                     paintableIdMap.remove(c);
                 }
+            }
+            // clean WindowCache
+            OpenWindowCache openWindowCache = currentlyOpenWindowsInClient
+                    .get(window.getName());
+            if (openWindowCache != null) {
+                openWindowCache.clear();
             }
         }
 
@@ -1576,6 +1582,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
     /**
      * Helper class for terminal to keep track of data that client is expected
      * to know.
+     * 
+     * TODO make customlayout templates (from theme) to be cached here.
      */
     class OpenWindowCache {
 
@@ -1588,6 +1596,10 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
          */
         boolean cache(Object object) {
             return res.add(object);
+        }
+
+        public void clear() {
+            res.clear();
         }
 
     }
