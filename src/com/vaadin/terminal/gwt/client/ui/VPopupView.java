@@ -1,6 +1,8 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -27,7 +29,7 @@ import com.vaadin.terminal.gwt.client.VCaptionWrapper;
 import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 
-public class VPopupView extends HTML implements Container {
+public class VPopupView extends HTML implements Container, Iterable<Widget> {
 
     public static final String CLASSNAME = "v-popupview";
 
@@ -424,6 +426,32 @@ public class VPopupView extends HTML implements Container {
         if (client != null) {
             client.handleTooltipEvent(event, this);
         }
+    }
+
+    public Iterator<Widget> iterator() {
+        return new Iterator<Widget>() {
+
+            int pos = 0;
+
+            public boolean hasNext() {
+                // There is a child widget only if next() has not been called.
+                return (pos == 0);
+            }
+
+            public Widget next() {
+                // Next can be called only once to return the popup.
+                if (pos != 0) {
+                    throw new NoSuchElementException();
+                }
+                pos++;
+                return popup;
+            }
+
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+
+        };
     }
 
 }// class VPopupView
