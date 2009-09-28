@@ -655,6 +655,13 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
                 cell.cc.setHeight("");
 
                 cell.cc.updateWidgetSize();
+
+                /*
+                 * If this is the result of an caption icon onload event the
+                 * caption size may have changed
+                 */
+                cell.cc.updateCaptionSize();
+
                 int width = cell.getWidth();
                 int allocated = columnWidths[cell.col];
                 for (int i = 1; i < cell.colspan; i++) {
