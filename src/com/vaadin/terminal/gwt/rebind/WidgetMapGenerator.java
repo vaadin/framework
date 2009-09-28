@@ -60,7 +60,8 @@ public class WidgetMapGenerator extends Generator {
         // get print writer that receives the source code
         PrintWriter printWriter = null;
         printWriter = context.tryCreate(logger, packageName, className);
-        // print writer if null, source code has ALREADY been generated, return
+        // print writer if null, source code has ALREADY been generated,
+        // return (WidgetMap is equal to all permutations atm)
         if (printWriter == null) {
             return;
         }
@@ -77,37 +78,9 @@ public class WidgetMapGenerator extends Generator {
         SourceWriter sourceWriter = composer.createSourceWriter(context,
                 printWriter);
 
-        /*
-         * TODO we need som sort of mechanims to exclude/include components from
-         * widgetset. Properties in gwt.xml is one option. Now only possible by
-         * extending this class, overriding getUsedPaintables() method and
-         * redefining deferred binding rule.
-         */
-
         Collection<Class<? extends Paintable>> paintablesHavingWidgetAnnotation = getUsedPaintables();
 
-        TypeOracle typeOracle = context.getTypeOracle();
-
-        for (Iterator iterator = paintablesHavingWidgetAnnotation.iterator(); iterator
-                .hasNext();) {
-            Class<? extends Paintable> class1 = (Class<? extends Paintable>) iterator
-                    .next();
-
-            ClientWidget annotation = class1.getAnnotation(ClientWidget.class);
-
-            if (typeOracle.findType(annotation.value().getName()) == null) {
-                // GWT widget not inherited
-                logger
-                        .log(
-                                Type.WARN,
-                                "Widget implementation for "
-                                        + class1.getName()
-                                        + " not available for GWT compiler. If this is not "
-                                        + "intentional, check your gwt module definition file.");
-                iterator.remove();
-            }
-
-        }
+        validatePaintables(logger, context, paintablesHavingWidgetAnnotation);
 
         // generator constructor source code
         generateImplementationDetector(sourceWriter,
@@ -124,6 +97,53 @@ public class WidgetMapGenerator extends Generator {
 
     }
 
+    /**
+     * Verifies that all client side components are available for client side
+     * GWT module.
+     * 
+     * @param logger
+     * @param context
+     * @param paintablesHavingWidgetAnnotation
+     */
+    private void validatePaintables(
+            TreeLogger logger,
+            GeneratorContext context,
+            Collection<Class<? extends Paintable>> paintablesHavingWidgetAnnotation) {
+        TypeOracle typeOracle = context.getTypeOracle();
+
+        for (Iterator<Class<? extends Paintable>> iterator = paintablesHavingWidgetAnnotation
+                .iterator(); iterator.hasNext();) {
+            Class<? extends Paintable> class1 = iterator.next();
+
+            ClientWidget annotation = class1.getAnnotation(ClientWidget.class);
+
+            if (typeOracle.findType(annotation.value().getName()) == null) {
+                // GWT widget not inherited
+                logger
+                        .log(
+                                Type.WARN,
+                                "Widget implementation for "
+                                        + class1.getName()
+                                        + " not available for GWT compiler (but mapped "
+                                        + "for component found in classpath). If this is not "
+                                        + "intentional, check your gwt module definition file.");
+                iterator.remove();
+            }
+
+        }
+    }
+
+    /**
+     * This method is protected to allow easy creation of optimized widgetsets.
+     * <p>
+     * TODO we need some sort of mechanism to easily exclude/include components
+     * from widgetset. Properties in gwt.xml is one option. Now only possible by
+     * extending this class, overriding getUsedPaintables() method and
+     * redefining deferred binding rule.
+     * 
+     * @return a collections of Vaadin components that will be added to
+     *         widgetset
+     */
     protected Collection<Class<? extends Paintable>> getUsedPaintables() {
         return ClassPathExplorer.getPaintablesHavingWidgetAnnotation();
     }
@@ -151,10 +171,11 @@ public class WidgetMapGenerator extends Generator {
             sourceWriter.print(".class == classType) return GWT.create(");
             sourceWriter.print(clientClass.getName());
             sourceWriter.println(".class );");
-            sourceWriter.print(" else ");
+            sourceWriter.print("else ");
         }
         sourceWriter
                 .println("return GWT.create( com.vaadin.terminal.gwt.client.ui.VUnknownComponent.class );");
+        sourceWriter.outdent();
         sourceWriter.println("}");
     }
 
@@ -168,7 +189,8 @@ public class WidgetMapGenerator extends Generator {
             SourceWriter sourceWriter,
             Collection<Class<? extends Paintable>> paintablesHavingWidgetAnnotation) {
         sourceWriter
-                .println("public Class<? extends Paintable> getImplementationByServerSideClassName(String fullyQualifiedName) {");
+                .println("public Class<? extends Paintable> "
+                        + "getImplementationByServerSideClassName(String fullyQualifiedName) {");
         sourceWriter.indent();
         sourceWriter
                 .println("fullyQualifiedName = fullyQualifiedName.intern();");
@@ -179,13 +201,14 @@ public class WidgetMapGenerator extends Generator {
                     .value();
             sourceWriter.print("if ( fullyQualifiedName == \"");
             sourceWriter.print(class1.getName());
-            sourceWriter.print("\") return ");
+            sourceWriter.print("\" ) return ");
             sourceWriter.print(clientClass.getName());
             sourceWriter.println(".class;");
-            sourceWriter.print(" else ");
+            sourceWriter.print("else ");
         }
         sourceWriter
                 .println("return com.vaadin.terminal.gwt.client.ui.VUnknownComponent.class;");
+        sourceWriter.outdent();
         sourceWriter.println("}");
 
     }
