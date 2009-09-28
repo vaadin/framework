@@ -5,11 +5,10 @@ import java.util.Iterator;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.terminal.gwt.client.ui.SubPartAware;
 import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.terminal.gwt.client.ui.VWindow;
-import com.vaadin.terminal.gwt.client.ui.SubPartAware;
 
 /**
  * ComponentLocator provides methods for uniquely identifying DOM elements using
@@ -39,8 +38,9 @@ public class ComponentLocator {
      * EXPERIMENTAL.
      * 
      * Generates a string expression (path) which uniquely identifies the target
-     * element . The getElementByPath method can be used for the inverse
-     * operation, i.e. locating an element based on the string expression.
+     * element. The getElementByPath method can be used for the inverse
+     * operation, i.e. locating an element based on the string expression:
+     * getElementByPath(getPathForElement(element)) == element.
      * 
      * @since 5.4
      * @param targetElement
@@ -86,6 +86,11 @@ public class ComponentLocator {
         // "First parent widget: " + Util.getSimpleName(w));
 
         String path = getPathForWidget(w);
+        if (path == null) {
+            // No path could be determined for the widget. Cannot create a
+            // locator string.
+            return null;
+        }
         // ApplicationConnection.getConsole().log(
         // "getPathFromWidget returned " + path);
         if (w.getElement() == targetElement) {
@@ -216,9 +221,21 @@ public class ComponentLocator {
         return null;
     }
 
+    /**
+     * Creates a locator path for the given widget. The path can be used to
+     * uniquely identify the widget in the application. The path is in a form
+     * compatible with getWidgetFromPath so that
+     * getWidgetFromPath(getPathForWidget(widget)).equals(widget).
+     * 
+     * Returns null if no path can be determined for the widget or if the widget
+     * is null.
+     * 
+     * @param w
+     * @return
+     */
     private String getPathForWidget(Widget w) {
         if (w == null) {
-            return "";
+            return null;
         }
 
         String pid = client.getPid(w.getElement());
@@ -239,10 +256,18 @@ public class ComponentLocator {
         Widget parent = w.getParent();
 
         String basePath = getPathForWidget(parent);
-
+        if (basePath == null) {
+            return null;
+        }
         String simpleName = Util.getSimpleName(w);
 
-        Iterator<Widget> i = ((HasWidgets) parent).iterator();
+        if (!(parent instanceof Iterable<?>)) {
+            // Parent does not implement Iterable so we cannot find out which
+            // child this is
+            return null;
+        }
+
+        Iterator<Widget> i = ((Iterable<Widget>) parent).iterator();
         int pos = 0;
         while (i.hasNext()) {
             Object child = i.next();
@@ -256,7 +281,7 @@ public class ComponentLocator {
             }
         }
 
-        return "NOTFOUND";
+        return null;
     }
 
     private Widget getWidgetFromPath(String path) {
@@ -276,8 +301,8 @@ public class ComponentLocator {
                 w = (Widget) client.getPaintable(part);
             } else if (part.startsWith("domChild[")) {
                 break;
-            } else if (w instanceof HasWidgets) {
-                HasWidgets parent = (HasWidgets) w;
+            } else if (w instanceof Iterable<?>) {
+                Iterable<Widget> parent = (Iterable<Widget>) w;
 
                 String[] split = part.split("\\[");
 
