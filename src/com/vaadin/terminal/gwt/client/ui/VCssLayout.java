@@ -257,6 +257,13 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
                     + String.valueOf(cssProperty.charAt(indexOf + 1))
                             .toUpperCase() + cssProperty.substring(indexOf + 2);
         }
+        if ("float".equals(cssProperty)) {
+            if (BrowserInfo.get().isIE()) {
+                return "styleFloat";
+            } else {
+                return "cssFloat";
+            }
+        }
         return cssProperty;
     }
 }
