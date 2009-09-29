@@ -1,9 +1,10 @@
-package com.vaadin.terminal.gwt.rebind;
+package com.vaadin.terminal.gwt.widgetsetutils;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.net.JarURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Collection;
@@ -12,25 +13,30 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 
 import com.vaadin.terminal.Paintable;
 import com.vaadin.ui.ClientWidget;
 
 /**
- * Utility class to find server side widgets with {@link ClientWidget}
- * annotation. Used by WidgetMapGenerator to implement some monkey coding for
+ * Utility class to collect widgetset related information from classpath.
+ * Utility will seek all directories from classpaths, and jar files having
+ * "Vaadin-Widgetsets" key in their manifest file.
+ * <p>
+ * Used by WidgetMapGenerator and ide tools to implement some monkey coding for
  * you.
  * <p>
- * If you end up reading this comment, I guess you have faced a sluggish
- * performance of widget compilation or unreliable detection of components in
- * your classpaths. The thing you might be able to do is to use annotation
- * processing tool like apt to generate the needed information. Then either use
- * that information in {@link WidgetMapGenerator} or create the appropriate
- * monkey code for gwt directly in annotation processor and get rid of
- * {@link WidgetMapGenerator}. Using annotation processor might be a good idea
- * when dropping Java 1.5 support (integrated to javac in 6).
+ * Developer notice: If you end up reading this comment, I guess you have faced
+ * a sluggish performance of widget compilation or unreliable detection of
+ * components in your classpaths. The thing you might be able to do is to use
+ * annotation processing tool like apt to generate the needed information. Then
+ * either use that information in {@link WidgetMapGenerator} or create the
+ * appropriate monkey code for gwt directly in annotation processor and get rid
+ * of {@link WidgetMapGenerator}. Using annotation processor might be a good
+ * idea when dropping Java 1.5 support (integrated to javac in 6).
  * 
  */
 public class ClassPathExplorer {
@@ -49,6 +55,9 @@ public class ClassPathExplorer {
     private ClassPathExplorer() {
     }
 
+    /**
+     * Finds server side widgets with {@link ClientWidget} annotation.
+     */
     public static Collection<Class<? extends Paintable>> getPaintablesHavingWidgetAnnotation() {
         Collection<Class<? extends Paintable>> paintables = new HashSet<Class<? extends Paintable>>();
         Set<URL> keySet = classpathLocations.keySet();
@@ -60,10 +69,74 @@ public class ClassPathExplorer {
     }
 
     /**
+     * Finds available widgetset names.
+     * 
+     * @return
+     */
+    public static Collection<String> getAvailableWidgetSets() {
+        Collection<String> widgetsets = new HashSet<String>();
+        Set<URL> keySet = classpathLocations.keySet();
+        for (URL url : keySet) {
+            searchForWidgetSets(url, widgetsets);
+        }
+        return widgetsets;
+    }
+
+    private static void searchForWidgetSets(URL location,
+            Collection<String> widgetsets) {
+
+        File directory = new File(location.getFile());
+
+        if (directory.exists() && !directory.isHidden()) {
+            // Get the list of the files contained in the directory
+            String[] files = directory.list();
+            for (int i = 0; i < files.length; i++) {
+                // we are only interested in .gwt.xml files
+                if (files[i].endsWith(".gwt.xml")) {
+                    // remove the extension
+                    String classname = files[i].substring(0,
+                            files[i].length() - 8);
+                    classname = classpathLocations.get(location) + "."
+                            + classname;
+                    widgetsets.add(classname);
+                }
+            }
+        } else {
+
+            try {
+                // check files in jar file, entries will list all directories
+                // and files in jar
+
+                URLConnection openConnection = location.openConnection();
+                if (openConnection instanceof JarURLConnection) {
+                    JarURLConnection conn = (JarURLConnection) openConnection;
+
+                    JarFile jarFile = conn.getJarFile();
+
+                    Manifest manifest = jarFile.getManifest();
+                    String value = manifest.getMainAttributes().getValue(
+                            "Vaadin-Widgetsets");
+                    if (value != null) {
+                        String[] widgetsetNames = value.split(",");
+                        for (int i = 0; i < widgetsetNames.length; i++) {
+                            String widgetsetname = widgetsetNames[i].trim()
+                                    .intern();
+                            widgetsets.add(widgetsetname);
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                System.err.println(e);
+            }
+
+        }
+    }
+
+    /**
      * Determine every URL location defined by the current classpath, and it's
      * associated package name.
      */
-    public final static Map<URL, String> getClasspathLocations() {
+    private final static Map<URL, String> getClasspathLocations() {
         Map<URL, String> locations = new HashMap<URL, String>();
 
         String pathSep = System.getProperty("path.separator");
@@ -92,6 +165,27 @@ public class ClassPathExplorer {
                     || classpathEntry.contains(".vaadin.")) {
                 return true;
             } else {
+                URL url;
+                try {
+                    url = new URL("file:"
+                            + new File(classpathEntry).getCanonicalPath());
+                    url = new URL("jar:" + url.toExternalForm() + "!/");
+                    JarURLConnection conn = (JarURLConnection) url
+                            .openConnection();
+                    JarFile jarFile = conn.getJarFile();
+                    Manifest manifest = jarFile.getManifest();
+                    Attributes mainAttributes = manifest.getMainAttributes();
+                    if (mainAttributes.getValue("Vaadin-Widgetsets") != null) {
+                        return true;
+                    }
+                } catch (MalformedURLException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
                 return false;
             }
         }
@@ -153,26 +247,6 @@ public class ClassPathExplorer {
             return;
         }
 
-    }
-
-    private static String packageNameFor(JarEntry entry) {
-        if (entry == null) {
-            return "";
-        }
-        String s = entry.getName();
-        if (s == null) {
-            return "";
-        }
-        if (s.length() == 0) {
-            return s;
-        }
-        if (s.startsWith("/")) {
-            s = s.substring(1, s.length());
-        }
-        if (s.endsWith("/")) {
-            s = s.substring(0, s.length() - 1);
-        }
-        return s.replace('/', '.');
     }
 
     private final static void searchForPaintables(URL location,
@@ -237,7 +311,7 @@ public class ClassPathExplorer {
             Class<?> c = Class.forName(fullclassName);
             if (c.getAnnotation(ClientWidget.class) != null) {
                 paintables.add((Class<? extends Paintable>) c);
-                System.out.println("Found paintable " + fullclassName);
+                // System.out.println("Found paintable " + fullclassName);
             }
         } catch (ExceptionInInitializerError e) {
             // e.printStackTrace();
@@ -261,6 +335,15 @@ public class ClassPathExplorer {
         System.out.println("Found annotated paintables:");
         for (Class<? extends Paintable> cls : paintables) {
             System.out.println(cls.getCanonicalName());
+        }
+
+        System.out.println();
+        System.out.println("Searching available widgetsets...");
+
+        Collection<String> availableWidgetSets = ClassPathExplorer
+                .getAvailableWidgetSets();
+        for (String string : availableWidgetSets) {
+            System.out.println(string);
         }
     }
 }

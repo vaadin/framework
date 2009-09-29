@@ -1,4 +1,4 @@
-package com.vaadin.terminal.gwt.rebind;
+package com.vaadin.terminal.gwt.widgetsetutils;
 
 import java.io.PrintWriter;
 import java.util.Collection;
