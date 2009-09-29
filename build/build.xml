@@ -1168,6 +1168,18 @@
 	<taskdef name="java2html" classname="de.java2html.anttasks.Java2HtmlTask" classpath="build/lib/java2html.jar" />
 
     <!-- ================================================================== -->
+    <!-- Difference to previous release package.                            -->
+    <!-- ================================================================== -->
+
+	<target name="differences" depends="init, internal-package-linux">
+		<exec executable="python" searchpath="true" failonerror="true" output="${result-path}/differences-linux.txt">
+			<arg value="build/bin/package-diff.py"/>
+			<arg value="${version}"/>
+		</exec>
+        <echo>##teamcity[publishArtifacts '${result-path}/differences-linux.txt']</echo>
+	</target>
+
+    <!-- ================================================================== -->
     <!-- Nightly build.                                                     -->
     <!-- ================================================================== -->
 
