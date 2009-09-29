@@ -33,7 +33,7 @@ public class DateFieldReadOnly extends TestBase {
 
         // Set date so that testing always has same time
         Calendar c = Calendar.getInstance(Locale.ENGLISH);
-        c.set(2009, 05, 12);
+        c.set(2009, 05, 12, 0, 0, 0);
 
         timeField.setValue(c.getTime());
         timeField.setReadOnly(true);
