@@ -16,8 +16,9 @@
 	</path>
 
 	<!-- fileset containing all tests to run -->
-	<fileset dir="../src/com/vaadin/tests" id="html-test-files">
-		<include name="**/**.html" />
+	<fileset dir=".." id="html-test-files">
+		<include name="src/com/vaadin/tests/**/**.html" />
+		<include name="tests/**/**.html" />
 	</fileset>
 
 	<!-- This target converts HTML tests files to java junit tests. One test file for each browser is created. -->
