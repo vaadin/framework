@@ -38,7 +38,7 @@ public class LabelEmbeddedClickThroughForTable extends TestBase {
                 new Label("<b>Label A</b>", Label.CONTENT_XHTML));
         item.getItemProperty("Column 4").setValue(
                 new Embedded("An embedded image", new ThemeResource(
-                        "icons/32/ok.png")));
+                        "../runo/icons/32/ok.png")));
 
         item = table.addItem("Item 2 (row 2)");
         item.getItemProperty("Column 1").setValue("String B");
@@ -50,7 +50,8 @@ public class LabelEmbeddedClickThroughForTable extends TestBase {
                                 "<a href=\"http://www.vaadin.com\" target=_blank>Label A</a>",
                                 Label.CONTENT_XHTML));
         item.getItemProperty("Column 4").setValue(
-                new Embedded("", new ThemeResource("icons/32/cancel.png")));
+                new Embedded("", new ThemeResource(
+                        "../runo/icons/32/cancel.png")));
 
         table.addListener(new ItemClickListener() {
 
