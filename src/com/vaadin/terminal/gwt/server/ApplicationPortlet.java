@@ -104,12 +104,6 @@ public class ApplicationPortlet implements Portlet, Serializable {
                 String portalResourcePath = getPortalProperty(
                         PORTAL_PARAMETER_VAADIN_RESOURCE_PATH, portalCtx);
 
-                // by default on LifeRay, widgetset and default theme is in
-                // /html/VAADIN/widgetsets/...
-                if (isLifeRay && portalResourcePath == null) {
-                    portalResourcePath = "/html";
-                }
-
                 if (portalResourcePath != null) {
                     // if portalResourcePath is defined, set it as a request
                     // parameter which will override the default location in
@@ -125,12 +119,14 @@ public class ApplicationPortlet implements Portlet, Serializable {
                 // and widgetset path settings (recommended)
                 // - finally, default to use the default widgetset if nothing
                 // else is found
-                if (portalWidgetset != null) {
-                    request.setAttribute(ApplicationServlet.REQUEST_WIDGETSET,
-                            portalWidgetset);
-                } else if (portletWidgetset != null) {
+                if (portletWidgetset != null) {
                     request.setAttribute(ApplicationServlet.REQUEST_WIDGETSET,
                             portletWidgetset);
+                }
+                if (portalWidgetset != null) {
+                    request.setAttribute(
+                            ApplicationServlet.REQUEST_SHARED_WIDGETSET,
+                            portalWidgetset);
                 }
 
                 if (style != null) {
@@ -138,7 +134,9 @@ public class ApplicationPortlet implements Portlet, Serializable {
                             style);
                 }
 
-                if (portalTheme != null) {
+                // portalTheme is only used if the shared portal resource
+                // directory is defined
+                if (portalTheme != null && portalResourcePath != null) {
                     request.setAttribute(
                             ApplicationServlet.REQUEST_DEFAULT_THEME,
                             portalTheme);
@@ -183,7 +181,7 @@ public class ApplicationPortlet implements Portlet, Serializable {
                      * servlet to extend the session lifetime after each Vaadin
                      * request. This hack can be removed when supporting portlet
                      * 2.0 and resourceRequests.
-                     * 
+                     *
                      * TODO make this configurable, this is not necessary with
                      * some custom session configurations.
                      */
