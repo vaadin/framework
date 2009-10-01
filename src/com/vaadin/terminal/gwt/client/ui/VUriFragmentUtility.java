@@ -3,6 +3,7 @@ package com.vaadin.terminal.gwt.client.ui;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -13,7 +14,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 /**
  * Client side implementation for UriFragmentUtility. Uses GWT's History object
  * as an implementation.
- * 
+ *
  */
 public class VUriFragmentUtility extends Widget implements Paintable,
         ValueChangeHandler<String> {
@@ -22,6 +23,7 @@ public class VUriFragmentUtility extends Widget implements Paintable,
     private ApplicationConnection client;
     private String paintableId;
     private boolean immediate;
+    private HandlerRegistration historyValueHandlerRegistration;
 
     public VUriFragmentUtility() {
         setElement(Document.get().createDivElement());
@@ -29,8 +31,19 @@ public class VUriFragmentUtility extends Widget implements Paintable,
             getElement().getStyle().setProperty("overflow", "hidden");
             getElement().getStyle().setProperty("height", "0");
         }
-        History.addValueChangeHandler(this);
+    }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+        historyValueHandlerRegistration = History.addValueChangeHandler(this);
         History.fireCurrentHistoryState();
+    }
+
+    @Override
+    protected void onDetach() {
+        super.onDetach();
+        historyValueHandlerRegistration.removeHandler();
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
