@@ -165,7 +165,7 @@ public class FormPojoExample extends VerticalLayout {
         private String countryCode = "";
 
         public Person() {
-            uuid = UUID.randomUUID();
+            uuid = UUID.fromString("3856c3da-ea56-4717-9f58-85f6c5f560a5");
         }
 
         public String getFirstName() {
