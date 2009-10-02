@@ -398,7 +398,9 @@ public class IndexedContainer implements Container.Indexed,
         // Removes the Property to Property list and types
         propertyIds.remove(propertyId);
         types.remove(propertyId);
-        defaultPropertyValues.remove(propertyId);
+        if (defaultPropertyValues != null) {
+            defaultPropertyValues.remove(propertyId);
+        }
 
         // If remove the Property from all Items
         for (final Iterator i = itemIds.iterator(); i.hasNext();) {
