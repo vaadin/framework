@@ -497,6 +497,10 @@ public class VAccordion extends VTabsheetBase implements
             removeStyleDependentName("open");
             setHeight(-1);
             setWidth("");
+            if (BrowserInfo.get().isIE6()) {
+                // Work around for IE6 layouting problem #3359
+                getElement().getStyle().setProperty("zoom", "1");
+            }
             open = false;
         }
 
