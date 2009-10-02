@@ -63,6 +63,7 @@ public class ApplicationConnection {
     /**
      * @deprecated use UIDL_SECURITY_TOKEN_ID instead
      */
+    @Deprecated
     public static final String UIDL_SECURITY_HEADER = UIDL_SECURITY_TOKEN_ID;
 
     public static final String PARAM_UNLOADBURST = "onunloadburst";
@@ -162,7 +163,7 @@ public class ApplicationConnection {
         var ap = this;
         var client = {};
         client.isActive = function() {
-            return ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::hasActiveRequest()();
+            return ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::hasActiveRequest()() || ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::isLoadingIndicatorVisible()();
         }
         var vi = ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::getVersionInfo()();
         if (vi) {
@@ -600,6 +601,17 @@ public class ApplicationConnection {
         if (loadElement != null) {
             DOM.setStyleAttribute(loadElement, "display", "none");
         }
+    }
+
+    public boolean isLoadingIndicatorVisible() {
+        if (loadElement == null) {
+            return false;
+        }
+        if (loadElement.getStyle().getProperty("display").equals("none")) {
+            return false;
+        }
+
+        return true;
     }
 
     private static native ValueMap parseJSONResponse(String jsonText)
