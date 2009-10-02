@@ -198,6 +198,11 @@ public class VSplitPanel extends ComplexPanel implements Container,
                 }
             });
         }
+
+        // This is needed at least for cases like #3458 to take
+        // appearing/disappearing scrollbars into account.
+        client.runDescendentsLayout(this);
+        
         rendering = false;
 
     }
