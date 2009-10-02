@@ -1,5 +1,8 @@
 package com.vaadin.tests.components;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.vaadin.data.Item;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.data.util.IndexedContainer;
@@ -24,10 +27,12 @@ public class HierarchicalContainerSorting extends TestBase {
 
         Tree tree1 = new Tree("Tree with IndexedContainer");
         tree1.setContainerDataSource(indexedContainer);
+        tree1.setItemCaptionPropertyId("name");
         hl.addComponent(tree1);
 
         Tree tree2 = new Tree("Tree with HierarchicalContainer");
         tree2.setContainerDataSource(hierarchicalContainer);
+        tree2.setItemCaptionPropertyId("name");
         for (Object id : tree2.rootItemIds()) {
             tree2.expandItemsRecursively(id);
         }
@@ -74,14 +79,21 @@ public class HierarchicalContainerSorting extends TestBase {
 
     }
 
+    private static int index = 0;
+    private static Map<String, Integer> nameToId = new HashMap<String, Integer>();
+
     public static void addItem(IndexedContainer container, String string,
             String parent) {
-        Item item = container.addItem(string);
+        nameToId.put(string, index);
+        Item item = container.addItem(index);
         item.getItemProperty("name").setValue(string);
 
         if (parent != null && container instanceof HierarchicalContainer) {
-            ((HierarchicalContainer) container).setParent(string, parent);
+            ((HierarchicalContainer) container).setParent(index, nameToId
+                    .get(parent));
         }
+
+        index++;
     }
 
     @Override
