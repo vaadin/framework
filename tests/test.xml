@@ -8,7 +8,7 @@
 	<property name="test-output-dir" value="../build/test-output" />
 	<property name="class-dir" value="${test-output-dir}/classes" />
 	<!-- Browsers to use for testing -->
-	<property name="test-browsers" value="firefox,ie,safari" />
+	<property name="test-browsers" value="firefox,ie,safari,googlechrome,opera" />
 	
 	<!-- classpath must include test bench jar and its dependencies -->
 	<path id="classpath">
@@ -16,8 +16,9 @@
 	</path>
 
 	<!-- fileset containing all tests to run -->
-	<fileset dir="../src/com/vaadin/tests" id="html-test-files">
-		<include name="**/**.html" />
+	<fileset dir=".." id="html-test-files">
+		<include name="src/com/vaadin/tests/**/**.html" />
+		<include name="tests/**/**.html" />
 	</fileset>
 
 	<!-- This target converts HTML tests files to java junit tests. One test file for each browser is created. -->

@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.richtextarea;
 
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.VerticalLayout;
 
@@ -8,7 +9,7 @@ public class RichTextAreaSize extends TestBase {
 
     @Override
     protected String getDescription() {
-        return "Test the size of a rich text area. The first area is 100px*100px wide, the second 100%*100% (of 500x500px), the third one has undefined width and height.";
+        return "Test the size of a rich text area. The first area is 100px*100px wide, the second 100%*100% (of 200x200px), the third one has undefined width and height.";
     }
 
     @Override
@@ -18,7 +19,8 @@ public class RichTextAreaSize extends TestBase {
 
     @Override
     protected void setup() {
-        getMainWindow().getLayout().setHeight(null);
+        HorizontalLayout main = new HorizontalLayout();
+        getMainWindow().setContent(main);
 
         RichTextArea first = new RichTextArea();
         RichTextArea second = new RichTextArea();
@@ -30,13 +32,13 @@ public class RichTextAreaSize extends TestBase {
         third.setSizeUndefined();
 
         VerticalLayout secondLayout = new VerticalLayout();
-        secondLayout.setWidth("500px");
-        secondLayout.setHeight("500px");
+        secondLayout.setWidth("200px");
+        secondLayout.setHeight("200px");
         secondLayout.addComponent(second);
 
-        addComponent(first);
-        addComponent(secondLayout);
-        addComponent(third);
+        main.addComponent(first);
+        main.addComponent(secondLayout);
+        main.addComponent(third);
     }
 
 }
