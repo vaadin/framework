@@ -112,6 +112,7 @@ public class VNotification extends VOverlay {
         if (style != null) {
             temporaryStyle = style;
             addStyleName(style);
+            addStyleDependentName(style);
         }
         super.show();
         setPosition(position);
@@ -124,6 +125,7 @@ public class VNotification extends VOverlay {
         cancelFade();
         if (temporaryStyle != null) {
             removeStyleName(temporaryStyle);
+            removeStyleDependentName(temporaryStyle);
             temporaryStyle = null;
         }
         super.hide();

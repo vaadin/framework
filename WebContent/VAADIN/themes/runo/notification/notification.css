@@ -11,16 +11,16 @@
 }
 .v-Notification h1,
 .v-Notification p,
-.v-Notification.error h1,
-.v-Notification.error p,
-.v-Notification.warning h1,
-.v-Notification.warning p {
+.v-Notification-error h1,
+.v-Notification-error p,
+.v-Notification-warning h1,
+.v-Notification-warning p {
 	display: inline;
 	font-weight: normal;
 	white-space: nowrap;
 	margin: 0 10px 0 0;
 }
-.v-Notification.warning {
+.v-Notification-warning {
 	background: #fff1e4;
 	color: #dd3400;
 	border: 2px solid #ffaa90;
@@ -29,7 +29,7 @@
 	border-radius: 5px;
 	opacity: 1;
 }
-.v-Notification.error {
+.v-Notification-error {
 	background: #f23d00 url(img/close-error.png) no-repeat right 5px;
 	padding-right: 30px;
 	border: 3px solid #c30000;
@@ -37,12 +37,12 @@
 	-webkit-border-radius: 6px;
 	border-radius: 6px;
 }
-.v-Notification.tray {
+.v-Notification-tray {
 	background: #575e60;
 	padding: 0.5em;
 	margin: 0 5px 5px 0;
 }
-.v-Notification.tray h1 {
+.v-Notification-tray h1 {
 	display: block;
 	font-weight: bold;
 	font-size: 0.9em;
@@ -54,13 +54,13 @@
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
 }
-.v-Notification.tray p {
+.v-Notification-tray p {
 	display: block;
 	font-size: 0.9em;
 	line-height: 1.1;
 	margin: 8px 10px 5px 10px;
 	color: #e4e7ea;
 }
-.v-Notification.system {
+.v-Notification-system {
 	background-color: #ff0a0a;
 }
