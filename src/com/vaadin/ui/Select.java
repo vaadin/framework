@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -23,13 +23,13 @@ import com.vaadin.terminal.Resource;
  * set of choices is presented as a set of {@link com.vaadin.data.Item}s in a
  * {@link com.vaadin.data.Container}.
  * </p>
- * 
+ *
  * <p>
  * A <code>Select</code> component may be in single- or multiselect mode.
  * Multiselect mode means that more than one item can be selected
  * simultaneously.
  * </p>
- * 
+ *
  * @author IT Mill Ltd.
  * @version
  * @VERSION@
@@ -81,7 +81,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
 
     /**
      * Paints the content of this component.
-     * 
+     *
      * @param target
      *            the Paint Event.
      * @throws PaintException
@@ -158,8 +158,8 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
         options = sanitetizeList(options, needNullSelectOption);
 
         final boolean paintNullSelection = needNullSelectOption
-                && (currentPage == 0 && (filterstring == null || filterstring
-                        .equals("")));
+                && (currentPage == 0 && (getFilteringMode() == FILTERINGMODE_OFF
+                        || filterstring == null || filterstring.equals("")));
 
         if (paintNullSelection) {
             target.startTag("so");
@@ -227,13 +227,13 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
 
     /**
      * Makes correct sublist of given list of options.
-     * 
+     *
      * If paint is not an option request (affected by page or filter change),
      * page will be the one where possible selection exists.
-     * 
+     *
      * Detects proper first and last item in list to return right page of
      * options.
-     * 
+     *
      * @param options
      * @param needNullSelectOption
      *            flag to indicate if nullselect option needs to be taken into
@@ -326,7 +326,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
 
     /**
      * Invoked when the value of a variable has changed.
-     * 
+     *
      * @see com.vaadin.ui.AbstractComponent#changeVariables(java.lang.Object,
      *      java.util.Map)
      */
@@ -425,7 +425,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
 
     /**
      * Gets the component UIDL tag.
-     * 
+     *
      * @return the Component UIDL tag as string.
      */
     @Override
@@ -444,13 +444,13 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
     /**
      * Note, one should use more generic setWidth(String) method instead of
      * this. This now days actually converts columns to width with em css unit.
-     * 
+     *
      * Sets the number of columns in the editor. If the number of columns is set
      * 0, the actual number of displayed columns is determined implicitly by the
      * adapter.
-     * 
+     *
      * @deprecated
-     * 
+     *
      * @param columns
      *            the number of columns to set.
      */
