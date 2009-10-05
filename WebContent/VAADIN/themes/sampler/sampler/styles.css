@@ -274,17 +274,83 @@
 }
 
 
+
+/* Sample grid styles */
+.v-app-SamplerApplication .v-csslayout-grid {
+	background: transparent url(grid-bg.png) 0 80px;
+	margin: 0 20px 50px;
+}
+
 .v-app-SamplerApplication .v-label-section {
 	font-family: "Helvetica Neue", helvetica, arial, verdana, sans-serif;
 	font-size: 24px;
-	font-weight: bold;
-	border-bottom: 1px solid #eee;
-	line-height: 35px;
-	text-indent: 15px;
+	font-weight: normal;
+	line-height: normal;
 	text-shadow: 0 2px 1px #c0c1c2;
 	color: #1e2229;
-	
+	padding: 30px 0 20px 0;
+	height: 30px;
 }
+
+.v-csslayout-grid .v-label-subsection {
+	font-size: 11px;
+	line-height: 16px;
+	color: #787b7e;
+	float: left;
+	width: 155px;
+	height: 131px;
+	padding: 15px 175px 0 15px;
+	margin-right: -175px;
+	background: transparent url(subsection-bg.png) no-repeat;
+	white-space: normal;
+}
+
+.v-csslayout-grid .v-label-subsection h3 {
+	font-size: 18px;
+	font-weight: bold;
+	text-shadow: 0 2px 1px #c0c1c2;
+	color: #292d30;
+	margin: 0 0 .5em;
+}
+
+.v-csslayout-grid .screenshot,
+.v-csslayout-grid .screenshot:focus,
+.v-csslayout-grid .screenshot:active {
+	float: left;
+	height: 132px;
+	width: 87px;
+	margin: 14px 15px 0;
+	position: relative;
+}
+
+.v-csslayout-grid .screenshot .v-icon {
+	display: block;
+	width: 75px;
+	margin: 3px 6px;
+	position: absolute;
+}
+
+.v-csslayout-grid .screenshot .v-button-caption {
+	display: block;
+	width: 87px;
+	text-align: center;
+	white-space: normal;
+	text-decoration: none;
+	font-size: 12px;
+	color: #212325;
+	font-family: arial, helvetica, sans-serif;
+	font-weight: bold;
+	line-height: normal;
+	position: absolute;
+	background: transparent url(screenshot-frame.png) no-repeat 4px 2px;
+	padding-top: 84px;
+	height: 30px;
+}
+.v-csslayout-grid .screenshot:hover .v-button-caption {
+	background: transparent url(screenshot-frame-hover.png) no-repeat 1px 0px;
+}
+
+/*
 .v-app-SamplerApplication .v-label-subsection {
 	font-family: helvetica, arial, verdana, sans-serif;
 	font-size: 16px;
@@ -292,27 +358,8 @@
 	color: #666666;
 	text-indent: 15px;
 	padding-right: 20px;
-}
-.v-app-SamplerApplication .v-nativebutton-screenshot {
-	border: 3px solid #ccc;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	overflow: hidden;
-}
-.v-app-SamplerApplication .v-nativebutton-screenshot:hover {
-	border-color: #abc;
-}
-.v-app-SamplerApplication .v-nativebutton-screenshot img.v-icon {
-	margin: 0;
-	margin-top: -2px;
-	margin-left: -3px;
-	width: auto;
-	height: auto;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	overflow: hidden;
-	position: static;
-}
+}*/
+
 
 .v-app-SamplerApplication .v-table-featuretable tr.v-table-row,
 .v-app-SamplerApplication .v-table-featuretable tr.v-table-row-odd {

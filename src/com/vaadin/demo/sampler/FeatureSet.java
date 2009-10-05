@@ -124,7 +124,7 @@ public class FeatureSet extends Feature {
 
     public static class Components extends FeatureSet {
         public Components() {
-            super("Components", new Feature[] {
+            super("Vaadin Core Components", new Feature[] {
             //
                     new Common(), //
                     new Accordions(), //
@@ -435,19 +435,19 @@ public class FeatureSet extends Feature {
      * FeatureSet implementation follows.
      */
 
-    private String pathname;
+    private final String pathname;
 
-    private String name;
+    private final String name;
 
-    private String desc;
+    private final String desc;
 
-    private String icon = "folder.gif";
+    private final String icon = "folder.gif";
 
-    private Feature[] content;
+    private final Feature[] content;
 
     private HierarchicalContainer container = null;
 
-    private boolean containerRecursive = false;
+    private final boolean containerRecursive = false;
 
     FeatureSet(String pathname, Feature[] content) {
         this(pathname, pathname, "", content);

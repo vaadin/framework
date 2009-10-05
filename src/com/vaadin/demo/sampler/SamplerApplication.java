@@ -25,9 +25,9 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Embedded;
-import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeButton;
@@ -737,15 +737,14 @@ public class SamplerApplication extends Application {
 
     private class FeatureGrid extends Panel implements FeatureList {
 
-        GridLayout grid = new GridLayout(11, 1);
+        CssLayout grid = new CssLayout();
         private final HashMap<Object, Resource> iconCache = new HashMap<Object, Resource>();
 
         FeatureGrid() {
             setSizeFull();
             setContent(grid);
-            grid.setSizeUndefined();
-            grid.setSpacing(true);
             setStyleName(Panel.STYLE_LIGHT);
+            grid.setStyleName("grid");
         }
 
         @SuppressWarnings("unchecked")
@@ -755,30 +754,25 @@ public class SamplerApplication extends Application {
             for (Iterator<Feature> it = features.iterator(); it.hasNext();) {
                 final Feature f = it.next();
                 if (f instanceof FeatureSet) {
-                    grid.newLine();
                     Label title = new Label(f.getName());
                     if (c.isRoot(f)) {
-                        title.setWidth("100%");
                         title.setStyleName("section");
-                        grid.setRows(grid.getCursorY() + 1);
-                        grid.addComponent(title, 0, grid.getCursorY(), grid
-                                .getColumns() - 1, grid.getCursorY());
-                        grid
-                                .setComponentAlignment(title,
-                                        Alignment.MIDDLE_LEFT);
-                    } else {
-                        title.setStyleName("subsection");
                         grid.addComponent(title);
-                        grid
-                                .setComponentAlignment(title,
-                                        Alignment.MIDDLE_LEFT);
+                    } else {
+                        String text = "<h3>" + f.getName() + "</h3>";
+                        if (f.getDescription() != null
+                                && f.getDescription() != "") {
+                            text += f.getDescription().substring(0,
+                                    f.getDescription().indexOf(".") + 1);
+                        }
+                        title = new Label(text, Label.CONTENT_XHTML);
+                        title.setStyleName("subsection");
+                        title.setSizeUndefined();
+                        grid.addComponent(title);
                     }
 
                 } else {
-                    if (grid.getCursorX() == 0) {
-                        grid.space();
-                    }
-                    Button b = new NativeButton();
+                    Button b = new Button(f.getName());
                     b.setStyleName(Button.STYLE_LINK);
                     b.addStyleName("screenshot");
                     String resId = "75-" + f.getIconName();
@@ -787,12 +781,8 @@ public class SamplerApplication extends Application {
                         res = new ClassResource(f.getClass(), resId,
                                 SamplerApplication.this);
                         iconCache.put(resId, res);
-
                     }
                     b.setIcon(res);
-                    b.setWidth("75px");
-                    b.setHeight("75px");
-                    b.setDescription("<h3>" + f.getName() + "</h3>");
                     b.addListener(new Button.ClickListener() {
                         public void buttonClick(ClickEvent event) {
                             ((SamplerWindow) getWindow()).setFeature(f);
