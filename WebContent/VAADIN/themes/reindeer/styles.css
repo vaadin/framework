@@ -664,36 +664,36 @@ div.v-app-loading {
 }
 .v-Notification h1,
 .v-Notification p,
-.v-Notification.error h1,
-.v-Notification.error p,
-.v-Notification.warning h1,
-.v-Notification.warning p {
+.v-Notification-error h1,
+.v-Notification-error p,
+.v-Notification-warning h1,
+.v-Notification-warning p {
 	display: inline;
 	white-space: nowrap;
 	margin: 0 0.5em 0 0;
 }
-.v-Notification.warning {
+.v-Notification-warning {
 	background: orange;
 }
-.v-Notification.error {
+.v-Notification-error {
 	background: red;
 }
-.v-Notification.tray h1 {
+.v-Notification-tray h1 {
 	display: block;
 }
-.v-Notification.tray p {
+.v-Notification-tray p {
 	display: block;
 }
-.v-Notification.system {
+.v-Notification-system {
 	background-color: red;
 	opacity: .7;
 	filter: alpha(opacity=70);
 }
-.v-Notification.system h1 {
+.v-Notification-system h1 {
 	display: block;
 	margin: 0;
 }
-.v-Notification.system p {
+.v-Notification-system p {
 	white-space: nowrap;
 }
 
@@ -3021,30 +3021,30 @@ td.v-datefield-calendarpanel-nextyear {
 .v-Notification p {
 	line-height: 1.3;
 }
-.v-Notification.warning {
+.v-Notification-warning {
 	background: #fdf3b5;
 	color: #ca9a61;
 	border: 3px solid #fee3af;
 }
-.v-Notification.error {
+.v-Notification-error {
 	background: #b40000 url(notification/img/error-close.png) no-repeat right top;
 	border: 3px solid #ca3030;
 }
-.v-Notification.tray {
+.v-Notification-tray {
 	margin: 0 5px 5px 0;
 	background: #3b3c3e;
 	border: 2px solid #585b5c;
 	padding: 0.8em 0.9em;
 }
-.v-Notification.tray h1 {
+.v-Notification-tray h1 {
 	font-size: 14px;
 	line-height: 18px;
 }
-.v-Notification.tray p {
+.v-Notification-tray p {
 	font-size: 12px;
 	font-weight: normal;
 }
-.v-Notification.system {
+.v-Notification-system {
 	background-color: #b40000;
 }
 
