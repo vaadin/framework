@@ -63,13 +63,4 @@
 }
 .v-Notification.system {
 	background-color: #ff0a0a;
-	opacity: 0.7;
-	filter: alpha(opacity=70);
-}
-.v-Notification.system h1 {
-	display: block;
-	margin: 0;
-}
-.v-Notification.system p {
-	white-space: nowrap;
 }
