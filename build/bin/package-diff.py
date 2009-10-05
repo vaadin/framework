@@ -128,6 +128,8 @@ builtfiles = listfiles(builtpackage)
 
 # Report differences
 
+print "\n--------------------------------------------------------------------------------\nVaadin TAR differences"
+
 # New files
 newfiles = diffFiles(builtfiles, latestfiles)
 print "\n%d new files:" % (len(newfiles))
@@ -139,6 +141,8 @@ removed = diffFiles(latestfiles, builtfiles)
 print "\n%d removed files:" % (len(removed))
 for item in removed:
 	print item
+
+print "\n--------------------------------------------------------------------------------\nVaadin JAR differences"
 
 latestJarFiles = listTarVaadinJarFiles(locallinuxpackage, latestversion)
 builtJarFiles  = listTarVaadinJarFiles(builtpackage,      builtversion)
