@@ -47,7 +47,7 @@ import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
 /**
- * 
+ *
  * TODO needs major refactoring (to be extensible etc)
  */
 public class VFilterSelect extends Composite implements Paintable, Field,
@@ -286,7 +286,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see
          * com.google.gwt.user.client.ui.PopupPanel$PositionCallback#setPosition
          * (int, int)
@@ -460,6 +460,19 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 suggestionPopup.hide();
                 return;
             }
+
+            selecting = filtering;
+            if (!filtering) {
+                doPostFilterSelectedItemAction();
+            }
+        }
+
+        public void doPostFilterSelectedItemAction() {
+            final MenuItem item = getSelectedItem();
+            final String enteredItemValue = tb.getText();
+
+            selecting = false;
+
             // check for exact match in menu
             int p = getItems().size();
             if (p > 0) {
@@ -567,6 +580,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     private String selectedOptionKey;
 
     private boolean filtering = false;
+    private boolean selecting = false;
 
     private String lastFilter = "";
     private int lastIndex = -1; // last selected index when using arrows
@@ -791,6 +805,9 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
                 lastIndex = -1; // reset
             }
+            if (selecting) {
+                suggestionPopup.menu.doPostFilterSelectedItemAction();
+            }
         }
 
         // Calculate minumum textarea width
@@ -818,6 +835,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     }
 
     public void onSuggestionSelected(FilterSelectSuggestion suggestion) {
+        selecting = false;
+
         currentSuggestion = suggestion;
         String newKey;
         if (suggestion.key.equals("")) {
@@ -881,15 +900,18 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         case KeyCodes.KEY_UP:
         case KeyCodes.KEY_PAGEDOWN:
         case KeyCodes.KEY_PAGEUP:
-            if (suggestionPopup.isAttached()) {
-                break;
-            } else {
+            if (!suggestionPopup.isAttached()) {
                 // open popup as from gadget
                 filterOptions(-1, "");
                 lastFilter = "";
                 tb.selectAll();
-                break;
             }
+            break;
+        case KeyCodes.KEY_TAB:
+            if (suggestionPopup.isAttached()) {
+                filterOptions(currentPage, tb.getText());
+            }
+            break;
         }
 
     }
@@ -914,8 +936,16 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 filterOptions(currentPage - 1, lastFilter);
             }
             break;
-        case KeyCodes.KEY_ENTER:
         case KeyCodes.KEY_TAB:
+            if (suggestionPopup.isAttached()) {
+                filterOptions(currentPage);
+            }
+            // onBlur() takes care of the rest
+            break;
+        case KeyCodes.KEY_ENTER:
+            if (suggestionPopup.isAttached()) {
+                filterOptions(currentPage);
+            }
             suggestionPopup.menu.doSelectedItemAction();
             break;
         }
@@ -1016,10 +1046,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
     public void onBlur(BlurEvent event) {
         focused = false;
-        if (!suggestionPopup.isAttached() || suggestionPopup.isJustClosed()) {
-            // typing so fast the popup was never opened, or it's just closed
-            suggestionPopup.menu.doSelectedItemAction();
-        }
+        // much of the TAB handling takes place here
+        suggestionPopup.menu.doSelectedItemAction();
         if (selectedOptionKey == null) {
             setPromptingOn();
         }
