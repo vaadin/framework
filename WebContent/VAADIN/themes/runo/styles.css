@@ -1412,6 +1412,9 @@ textarea.v-textarea-prompt {
 	border: 1px solid #aaa;
 	overflow: hidden;
 }
+.v-richtextarea .gwt-RichTextArea {
+	background: #fff;
+}
 .v-richtextarea .gwt-RichTextToolbar .gwt-ToggleButton,
 .v-richtextarea .gwt-RichTextToolbar .gwt-PushButton {
 	float: left;
