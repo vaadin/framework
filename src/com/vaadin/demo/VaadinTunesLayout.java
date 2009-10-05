@@ -1,7 +1,5 @@
 package com.vaadin.demo;
 
-import java.util.Random;
-
 import com.vaadin.Application;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Button;
@@ -9,6 +7,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Slider;
 import com.vaadin.ui.SplitPanel;
@@ -94,9 +93,9 @@ public class VaadinTunesLayout extends Application {
         top.setExpandRatio(status, 1.0F);
 
         // Playback controls
-        Button prev = new Button("Previous");
-        Button play = new Button("Play/pause");
-        Button next = new Button("Next");
+        Button prev = new NativeButton("Previous");
+        Button play = new NativeButton("Play/pause");
+        Button next = new NativeButton("Next");
         playback.addComponent(prev);
         playback.addComponent(play);
         playback.addComponent(next);
@@ -104,11 +103,11 @@ public class VaadinTunesLayout extends Application {
         playback.setSpacing(true);
 
         // Volume controls
-        Button mute = new Button("mute");
+        Button mute = new NativeButton("mute");
         Slider vol = new Slider();
         vol.setOrientation(Slider.ORIENTATION_HORIZONTAL);
         vol.setWidth("100px");
-        Button max = new Button("max");
+        Button max = new NativeButton("max");
         volume.addComponent(mute);
         volume.addComponent(vol);
         volume.addComponent(max);
@@ -117,7 +116,7 @@ public class VaadinTunesLayout extends Application {
         status.setWidth("80%");
         status.setSpacing(true);
 
-        Button toggleVisualization = new Button("Mode");
+        Button toggleVisualization = new NativeButton("Mode");
         Label timeFromStart = new Label("0:00");
 
         // We'll need another layout to show currently playing track and
@@ -138,7 +137,7 @@ public class VaadinTunesLayout extends Application {
         trackDetails.setComponentAlignment(album, "center");
 
         Label timeToEnd = new Label("-4:46");
-        Button jumpToTrack = new Button("Show");
+        Button jumpToTrack = new NativeButton("Show");
 
         // Place all components to the status layout and align them properly
         status.addComponent(toggleVisualization);
@@ -155,9 +154,9 @@ public class VaadinTunesLayout extends Application {
         status.setExpandRatio(trackDetails, 1.0F);
 
         // View mode buttons
-        Button viewAsTable = new Button("Table");
-        Button viewAsGrid = new Button("Grid");
-        Button coverflow = new Button("Coverflow");
+        Button viewAsTable = new NativeButton("Table");
+        Button viewAsGrid = new NativeButton("Grid");
+        Button coverflow = new NativeButton("Coverflow");
         viewmodes.addComponent(viewAsTable);
         viewmodes.addComponent(viewAsGrid);
         viewmodes.addComponent(coverflow);
@@ -192,19 +191,19 @@ public class VaadinTunesLayout extends Application {
          */
         VerticalLayout selections = new VerticalLayout();
         Label library = new Label("Library");
-        Button music = new Button("Music");
+        Button music = new NativeButton("Music");
         music.setWidth("100%");
 
         Label store = new Label("Store");
-        Button vaadinTunesStore = new Button("VaadinTunes Store");
+        Button vaadinTunesStore = new NativeButton("VaadinTunes Store");
         vaadinTunesStore.setWidth("100%");
-        Button purchased = new Button("Purchased");
+        Button purchased = new NativeButton("Purchased");
         purchased.setWidth("100%");
 
         Label playlists = new Label("Playlists");
-        Button genius = new Button("Geniues");
+        Button genius = new NativeButton("Geniues");
         genius.setWidth("100%");
-        Button recent = new Button("Recently Added");
+        Button recent = new NativeButton("Recently Added");
         recent.setWidth("100%");
 
         // Lets add them to the 'selections' layout
@@ -265,7 +264,9 @@ public class VaadinTunesLayout extends Application {
                 "Frames", "Fortress", "Phobia", "The Poison", "Manifesto",
                 "White Pony", "The Big Dirty" };
         String[] genres = new String[] { "Rock", "Metal", "Hardcore", "Indie",
-                "Pop", "Alternative", "Blues", "Jazz", "Hip Hop", "Electronica" };
+                "Pop", "Alternative", "Blues", "Jazz", "Hip Hop",
+                "Electronica", "Punk", "Hard Rock", "Dance", "R'n'B", "Gospel",
+                "Country" };
         for (int i = 0; i < 1000; i++) {
             NativeSelect s = new NativeSelect();
             s.addItem("1 star");
@@ -273,13 +274,10 @@ public class VaadinTunesLayout extends Application {
             s.addItem("3 stars");
             s.addItem("4 stars");
             s.addItem("5 stars");
-            s.select(new Random().nextInt(5) + " stars");
-            listing.addItem(new Object[] {
-                    tracks[new Random().nextInt(tracks.length - 1)],
-                    times[new Random().nextInt(times.length - 1)],
-                    artists[new Random().nextInt(artists.length - 1)],
-                    albums[new Random().nextInt(albums.length - 1)],
-                    genres[new Random().nextInt(genres.length - 1)], s }, i);
+            s.select(i % 5 + " stars");
+            final int index = i % 16;
+            listing.addItem(new Object[] { tracks[index], times[index],
+                    artists[index], albums[index], genres[index], s }, i);
         }
 
         // We'll align the track time column to right as well

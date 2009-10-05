@@ -17,11 +17,11 @@
 }
 
 /* Hide all button captions */
-.tTunes .top .v-button span {
+.tTunes .top .v-nativebutton span {
 	display: none;
 }
 
-.tTunes .playback .v-button {
+.tTunes .playback .v-nativebutton {
 	width: 31px;
 	height: 32px;
 	overflow: hidden;
@@ -191,7 +191,7 @@
 	text-shadow: #fff 0 1px 0;
 }
 
-.tTunes .sidebar .v-button {
+.tTunes .sidebar .v-nativebutton {
 	text-align: left;
 	border: none;
 	background: transparent;
@@ -199,7 +199,7 @@
 	padding: 2px 0;
 }
 
-.tTunes .sidebar .v-button span {
+.tTunes .sidebar .v-nativebutton span {
 	padding-left: 25px;
 }
 
