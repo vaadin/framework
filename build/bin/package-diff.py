@@ -57,6 +57,36 @@ def diffFiles(a, b):
 	return difffiles
 
 ################################################################################
+# Lists files inside a Zip file (a JAR)
+################################################################################
+def listZipFiles(zipfile):
+	# Read the zip content listing
+	pin = os.popen("unzip -ql %s" % zipfile, "r")
+	lines = map(lambda x: x[:-1], pin.readlines())
+	pin.close()
+
+	# Determine the position of file names
+	namepos = lines[0].find("Name")
+	files = []
+	for i in xrange(2, len(lines)-2):
+		filename = lines[i][namepos:]
+		files.append(filename)
+
+	return files
+
+################################################################################
+# Lists files inside a Vaadin Jar inside a Tar
+################################################################################
+def listTarVaadinJarFiles(tarfile, vaadinversion):
+	jarfile = "vaadin-linux-%s/WebContent/vaadin-%s.jar" % (vaadinversion, vaadinversion)
+	extractedjar = "/tmp/vaadinjar-tmp-%d.jar" % (os.getpid())
+	tarcmd = "tar zOxf %s %s > %s " % (tarfile, jarfile, extractedjar)
+	command (tarcmd)
+	files = listZipFiles(extractedjar)
+	command ("rm %s" % (extractedjar))
+	return files
+
+################################################################################
 #
 ################################################################################
 
@@ -98,6 +128,8 @@ builtfiles = listfiles(builtpackage)
 
 # Report differences
 
+print "\n--------------------------------------------------------------------------------\nVaadin TAR differences"
+
 # New files
 newfiles = diffFiles(builtfiles, latestfiles)
 print "\n%d new files:" % (len(newfiles))
@@ -106,6 +138,23 @@ for item in newfiles:
 
 # Removed files
 removed = diffFiles(latestfiles, builtfiles)
+print "\n%d removed files:" % (len(removed))
+for item in removed:
+	print item
+
+print "\n--------------------------------------------------------------------------------\nVaadin JAR differences"
+
+latestJarFiles = listTarVaadinJarFiles(locallinuxpackage, latestversion)
+builtJarFiles  = listTarVaadinJarFiles(builtpackage,      builtversion)
+
+# New files
+newfiles = diffFiles(builtJarFiles, latestJarFiles)
+print "\n%d new files:" % (len(newfiles))
+for item in newfiles:
+	print item
+
+# Removed files
+removed = diffFiles(latestJarFiles, builtJarFiles)
 print "\n%d removed files:" % (len(removed))
 for item in removed:
 	print item
