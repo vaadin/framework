@@ -3044,6 +3044,9 @@ td.v-datefield-calendarpanel-nextyear {
 	font-size: 12px;
 	font-weight: normal;
 }
+.v-Notification.system {
+	background-color: #b40000;
+}
 
 .v-panel-caption,
 .v-panel-nocaption {
