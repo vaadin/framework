@@ -117,7 +117,7 @@ public class VOrderedLayout extends CellBasedLayout {
                 relativeSizeComponentUIDL.add(childUIDL);
             } else {
                 if (isDynamicWidth()) {
-                    childComponentContainer.renderChild(childUIDL, client, 0);
+                    childComponentContainer.renderChild(childUIDL, client, -1);
                 } else {
                     childComponentContainer.renderChild(childUIDL, client,
                             activeLayoutSize.getWidth());
@@ -166,7 +166,7 @@ public class VOrderedLayout extends CellBasedLayout {
             UIDL childUIDL = relativeSizeComponentUIDL.get(i);
 
             if (isDynamicWidth()) {
-                childComponentContainer.renderChild(childUIDL, client, 0);
+                childComponentContainer.renderChild(childUIDL, client, -1);
             } else {
                 childComponentContainer.renderChild(childUIDL, client,
                         activeLayoutSize.getWidth());
