@@ -22,7 +22,7 @@
 	</fileset>
 
 	<!-- This target converts HTML tests files to java junit tests. One test file for each browser is created. -->
-	<target name="create-tests">
+	<target name="create-tests" depends="remove-temp-testclasses">
 		<fileset id="tests">
 			<include />
 		</fileset>
@@ -95,7 +95,7 @@
 	</target>
 	
 	<!-- This target runs the generated and compiled junit tests -->
-	<target name="execute-tests" depends="compile-tests,remove-error-screens">
+	<target name="execute-tests" depends="remove-error-screens,compile-tests">
 		<junit fork="yes" printsummary="withOutAndErr">
 			<classpath>
 				<path refid="classpath" />
@@ -122,10 +122,11 @@
 	</target>
 
 	<!-- Remove temporary source and compiled java files -->
-	<target name="remove-temp-files">
+	<target name="remove-temp-testclasses">
 		<delete>
 			<fileset dir="${test-output-dir}">
 				<include name="**/**.java" />
+				<include name="**/**.class" />
 			</fileset>
 		</delete>
 	</target>
@@ -145,7 +146,7 @@
     <!-- ================================================================== -->
 
     <!-- The default target. -->
-	<target name="run-and-clean-up" depends="check-parameters, run-tests,remove-temp-files">
+	<target name="run-and-clean-up" depends="check-parameters, run-tests,remove-temp-testclasses">
 	</target>
 
     <!-- Also starts the server. -->
