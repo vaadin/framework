@@ -47,7 +47,7 @@ import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
 /**
- *
+ * 
  * TODO needs major refactoring (to be extensible etc)
  */
 public class VFilterSelect extends Composite implements Paintable, Field,
@@ -286,7 +286,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
         /*
          * (non-Javadoc)
-         *
+         * 
          * @see
          * com.google.gwt.user.client.ui.PopupPanel$PositionCallback#setPosition
          * (int, int)
@@ -432,6 +432,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                                 .sinkEvents((Element) child.cast(),
                                         (DOM.getEventsSunk((Element) child
                                                 .cast()) | Event.ONLOAD));
+                        client.addPngFix((Element) child.cast());
                     }
                     child = child.getNextSiblingElement();
                 }
