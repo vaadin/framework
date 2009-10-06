@@ -25,11 +25,6 @@ public class GoogleAnalytics extends AbstractComponent {
         this.domainName = domainName;
     }
 
-    @Override
-    public String getTag() {
-        return TAG;
-    }
-
     public String getTrackerId() {
         return trackerId;
     }

@@ -102,16 +102,6 @@ public class Embedded extends AbstractComponent {
     }
 
     /**
-     * Gets the component UIDL tag.
-     * 
-     * @return the Component UIDL tag as string.
-     */
-    @Override
-    public String getTag() {
-        return "embedded";
-    }
-
-    /**
      * Invoked when the component state should be painted.
      */
     @Override

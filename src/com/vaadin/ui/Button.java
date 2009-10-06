@@ -114,16 +114,6 @@ public class Button extends AbstractField {
     }
 
     /**
-     * Gets component UIDL tag.
-     * 
-     * @return the Component UIDL tag as string.
-     */
-    @Override
-    public String getTag() {
-        return "button";
-    }
-
-    /**
      * Paints the content of this component.
      * 
      * @param event

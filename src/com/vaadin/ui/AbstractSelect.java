@@ -512,16 +512,6 @@ public abstract class AbstractSelect extends AbstractField implements
     }
 
     /**
-     * Gets the component UIDL tag.
-     * 
-     * @return the Component UIDL tag as string.
-     */
-    @Override
-    public String getTag() {
-        return "select";
-    }
-
-    /**
      * Gets the visible item ids. In Select, this returns list of all item ids,
      * but can be overriden in subclasses if they paint only part of the items
      * to the terminal or null if no items is visible.

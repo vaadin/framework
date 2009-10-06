@@ -319,22 +319,11 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
     /* Component API */
 
-    /**
-     * Gets the UIDL tag corresponding to the component.
+    /*
+     * (non-Javadoc)
      * 
-     * @see com.vaadin.ui.AbstractComponent#getTag()
-     */
-    @Override
-    public String getTag() {
-        return "tree";
-    }
-
-    /**
-     * Called when one or more variables handled by the implementing class are
-     * changed.
-     * 
-     * @see com.vaadin.terminal.VariableOwner#changeVariables(Object source, Map
-     *      variables)
+     * @see com.vaadin.ui.AbstractSelect#changeVariables(java.lang.Object,
+     * java.util.Map)
      */
     @Override
     public void changeVariables(Object source, Map variables) {

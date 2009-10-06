@@ -257,16 +257,6 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         super.setParent(parent);
     }
 
-    /**
-     * Gets the component UIDL tag.
-     * 
-     * @return the Component UIDL tag as string.
-     */
-    @Override
-    public String getTag() {
-        return "window";
-    }
-
     /* ********************************************************************* */
 
     /**

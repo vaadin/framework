@@ -86,11 +86,6 @@ public class UriFragmentUtility extends AbstractComponent {
     }
 
     @Override
-    public String getTag() {
-        return "urifragment";
-    }
-
-    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
         target.addVariable(this, "fragment", fragment);

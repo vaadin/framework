@@ -152,16 +152,6 @@ public class Label extends AbstractComponent implements Property,
     }
 
     /**
-     * Get the component UIDL tag.
-     * 
-     * @return the Component UIDL tag as string.
-     */
-    @Override
-    public String getTag() {
-        return "label";
-    }
-
-    /**
      * Set the component to read-only. Readonly is not used in label.
      * 
      * @param readOnly

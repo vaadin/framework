@@ -19,11 +19,6 @@ public class CodeLabel extends Label {
     }
 
     @Override
-    public String getTag() {
-        return TAG;
-    }
-
-    @Override
     public void setContentMode(int contentMode) {
         if (contentMode != CONTENT_PREFORMATTED) {
             throw new UnsupportedOperationException(

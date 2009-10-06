@@ -145,11 +145,6 @@ public class CustomComponent extends AbstractComponentContainer {
         this.componentType = componentType;
     }
 
-    @Override
-    public String getTag() {
-        return "customcomponent";
-    }
-
     private class ComponentIterator implements Iterator, Serializable {
         boolean first = getCompositionRoot() != null;
 

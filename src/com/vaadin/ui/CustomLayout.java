@@ -98,16 +98,6 @@ public class CustomLayout extends AbstractLayout {
     }
 
     /**
-     * Gets the component UIDL tag.
-     * 
-     * @return the Component UIDL tag as string.
-     */
-    @Override
-    public String getTag() {
-        return "customlayout";
-    }
-
-    /**
      * Adds the component into this container to given location. If the location
      * is already populated, the old component is removed.
      * 

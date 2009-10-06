@@ -63,15 +63,6 @@ public class CalendarField extends DateField implements Container.Viewer {
         init();
     }
 
-    /*
-     * Gets the components UIDL tag string. Don't add a JavaDoc comment here, we
-     * use the default documentation from implemented interface.
-     */
-    @Override
-    public String getTag() {
-        return TAGNAME;
-    }
-
     public void init() {
         super.setResolution(RESOLUTION_HOUR);
 

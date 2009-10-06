@@ -30,11 +30,6 @@ public class AbsoluteLayout extends AbstractLayout {
         setSizeFull();
     }
 
-    @Override
-    public String getTag() {
-        return VAbsoluteLayout.TAGNAME;
-    }
-
     public Iterator<Component> getComponentIterator() {
         return components.iterator();
     }

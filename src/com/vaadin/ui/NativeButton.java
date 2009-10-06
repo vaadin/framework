@@ -43,9 +43,4 @@ public class NativeButton extends Button {
         super(caption, dataSource);
     }
 
-    @Override
-    public String getTag() {
-        return "nativebutton";
-    }
-
 }

@@ -76,16 +76,6 @@ public class SplitPanel extends AbstractLayout {
     }
 
     /**
-     * Gets the component UIDL tag.
-     * 
-     * @return the Component UIDL tag as string.
-     */
-    @Override
-    public String getTag() {
-        return "splitpanel";
-    }
-
-    /**
      * Add a component into this container. The component is added to the right
      * or under the previous component.
      * 

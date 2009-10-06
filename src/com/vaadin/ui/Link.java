@@ -87,16 +87,6 @@ public class Link extends AbstractComponent {
     }
 
     /**
-     * Gets the component UIDL tag.
-     * 
-     * @return the Component UIDL tag as string.
-     */
-    @Override
-    public String getTag() {
-        return "link";
-    }
-
-    /**
      * Paints the content of this component.
      * 
      * @param target

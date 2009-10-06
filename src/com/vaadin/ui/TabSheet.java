@@ -160,16 +160,6 @@ public class TabSheet extends AbstractComponentContainer implements
     }
 
     /**
-     * Gets the component UIDL tag.
-     * 
-     * @return the Component UIDL tag as string.
-     */
-    @Override
-    public String getTag() {
-        return "tabsheet";
-    }
-
-    /**
      * Moves all components from another container to this container. The
      * components are removed from the other container.
      * 

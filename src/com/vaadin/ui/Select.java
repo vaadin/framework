@@ -425,16 +425,6 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
         super.requestRepaint();
     }
 
-    /**
-     * Gets the component UIDL tag.
-     * 
-     * @return the Component UIDL tag as string.
-     */
-    @Override
-    public String getTag() {
-        return "select";
-    }
-
     public void setFilteringMode(int filteringMode) {
         this.filteringMode = filteringMode;
     }

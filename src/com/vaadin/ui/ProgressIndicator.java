@@ -73,16 +73,6 @@ public class ProgressIndicator extends AbstractField implements Property,
     }
 
     /**
-     * Gets the component UIDL tag.
-     * 
-     * @return the Component UIDL tag as string.
-     */
-    @Override
-    public String getTag() {
-        return "progressindicator";
-    }
-
-    /**
      * Sets the component to read-only. Readonly is not used in
      * ProgressIndicator.
      * 

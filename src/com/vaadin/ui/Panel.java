@@ -277,16 +277,6 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     }
 
     /**
-     * Gets the component UIDL tag.
-     * 
-     * @return the Component UIDL tag as string.
-     */
-    @Override
-    public String getTag() {
-        return "panel";
-    }
-
-    /**
      * Adds the component into this container.
      * 
      * @param c

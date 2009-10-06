@@ -18,11 +18,6 @@ public class Coverflow extends AbstractSelect {
     private String backgroundGradientEnd = "EEEEEE";
     private boolean scrollbarVisibility = true;
 
-    @Override
-    public String getTag() {
-        return "cover";
-    }
-
     /**
      * Paints the uidl
      * 

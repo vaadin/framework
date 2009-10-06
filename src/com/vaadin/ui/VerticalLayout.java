@@ -22,9 +22,4 @@ public class VerticalLayout extends AbstractOrderedLayout {
         setWidth("100%");
     }
 
-    @Override
-    public String getTag() {
-        return "verticallayout";
-    }
-
 }

@@ -639,17 +639,6 @@ public class GridLayout extends AbstractLayout implements
     }
 
     /**
-     * Gets the components UIDL tag.
-     * 
-     * @return the Component UIDL tag as string.
-     * @see com.vaadin.ui.AbstractComponent#getTag()
-     */
-    @Override
-    public String getTag() {
-        return "gridlayout";
-    }
-
-    /**
      * This class defines an area on a grid. An Area is defined by the cells of
      * its upper left corner (column1,row1) and lower right corner
      * (column2,row2).

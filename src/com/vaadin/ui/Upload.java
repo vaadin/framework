@@ -115,16 +115,6 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     }
 
     /**
-     * Gets the component type.
-     * 
-     * @return Component type as string.
-     */
-    @Override
-    public String getTag() {
-        return "upload";
-    }
-
-    /**
      * This method is called by terminal when upload is received.
      * 
      * Note, this method is called outside synchronized (Application) block, so

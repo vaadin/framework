@@ -33,12 +33,6 @@ public class MenuBar extends AbstractComponent {
     private Resource submenuIcon;
     private MenuItem moreItem;
 
-    /** Tag is the UIDL element name for client-server communications. */
-    @Override
-    public java.lang.String getTag() {
-        return "menubar";
-    }
-
     /** Paint (serialise) the component for the client. */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {

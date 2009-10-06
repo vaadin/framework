@@ -177,12 +177,6 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
 
     /* Documented in interface */
     @Override
-    public String getTag() {
-        return "form";
-    }
-
-    /* Documented in interface */
-    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
         layout.paint(target);

@@ -396,11 +396,6 @@ public class Slider extends AbstractField {
     }
 
     @Override
-    public String getTag() {
-        return "slider";
-    }
-
-    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
 

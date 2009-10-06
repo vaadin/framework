@@ -244,15 +244,6 @@ public class DateField extends AbstractField {
     }
 
     /*
-     * Gets the components UIDL tag string. Don't add a JavaDoc comment here, we
-     * use the default documentation from implemented interface.
-     */
-    @Override
-    public String getTag() {
-        return "datefield";
-    }
-
-    /*
      * Invoked when a variable of the component changes. Don't add a JavaDoc
      * comment here, we use the default documentation from implemented
      * interface.

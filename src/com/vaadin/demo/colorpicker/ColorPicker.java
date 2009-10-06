@@ -27,12 +27,6 @@ public class ColorPicker extends AbstractField {
         return String.class;
     }
 
-    /** Tag is the UIDL element name for client-server communications. */
-    @Override
-    public String getTag() {
-        return "colorpicker";
-    }
-
     /** Set the currently selected color. */
     public void setColor(String newcolor) {
         // Sets the color name as the property of the component.

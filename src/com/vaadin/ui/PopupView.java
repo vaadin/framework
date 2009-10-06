@@ -277,14 +277,6 @@ public class PopupView extends AbstractComponentContainer {
      */
 
     /**
-     * @see com.vaadin.ui.AbstractComponent#getTag()
-     */
-    @Override
-    public java.lang.String getTag() {
-        return "popupview";
-    }
-
-    /**
      * Paint (serialize) the component for the client.
      * 
      * @see com.vaadin.ui.AbstractComponent#paintContent(com.vaadin.terminal.PaintTarget)

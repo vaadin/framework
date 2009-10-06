@@ -2366,16 +2366,6 @@ public class Table extends AbstractSelect implements Action.Container,
         target.endTag("visiblecolumns");
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.AbstractSelect#getTag()
-     */
-    @Override
-    public String getTag() {
-        return "table";
-    }
-
     /**
      * Gets the cached visible table contents.
      * 

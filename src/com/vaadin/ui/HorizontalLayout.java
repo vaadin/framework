@@ -21,9 +21,4 @@ public class HorizontalLayout extends AbstractOrderedLayout {
 
     }
 
-    @Override
-    public String getTag() {
-        return "horizontallayout";
-    }
-
 }

@@ -231,18 +231,10 @@ public class TextField extends AbstractField {
     }
 
     /*
-     * Gets the components UIDL tag string. Don't add a JavaDoc comment here, we
-     * use the default documentation from implemented interface.
-     */
-    @Override
-    public String getTag() {
-        return "textfield";
-    }
-
-    /*
-     * Invoked when a variable of the component changes. Don't add a JavaDoc
-     * comment here, we use the default documentation from implemented
-     * interface.
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractField#changeVariables(java.lang.Object,
+     * java.util.Map)
      */
     @Override
     public void changeVariables(Object source, Map variables) {

@@ -37,11 +37,6 @@ public class ActiveLink extends Link {
         super(caption, resource);
     }
 
-    @Override
-    public String getTag() {
-        return TAG;
-    }
-
     static {
         try {
             LINK_FOLLOWED_METHOD = LinkActivatedListener.class
