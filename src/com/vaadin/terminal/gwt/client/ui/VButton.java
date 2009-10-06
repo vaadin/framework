@@ -20,7 +20,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
-public class VButton extends FocusWidget implements Paintable {
+public class VButton extends FocusWidget implements Paintable, ClickHandler {
 
     public static final String CLASSNAME = "v-button";
     private static final String CLASSNAME_PRESSED = "v-pressed";
@@ -86,18 +86,7 @@ public class VButton extends FocusWidget implements Paintable {
         captionElement.setClassName(CLASSNAME + "-caption");
         wrapper.appendChild(captionElement);
 
-        addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                if (id == null || client == null) {
-                    return;
-                }
-                if (BrowserInfo.get().isSafari()) {
-                    VButton.this.setFocus(true);
-                }
-                client.updateVariable(id, "state", true, true);
-                clickPending = false;
-            }
-        });
+        addClickHandler(this);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -301,14 +290,36 @@ public class VButton extends FocusWidget implements Paintable {
     }
 
     /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event
+     * .dom.client.ClickEvent)
+     */
+    public void onClick(ClickEvent event) {
+        if (id == null || client == null) {
+            return;
+        }
+        if (BrowserInfo.get().isSafari()) {
+            VButton.this.setFocus(true);
+        }
+        client.updateVariable(id, "state", true, true);
+
+        clickPending = false;
+    }
+
+    /*
      * ALL BELOW COPY-PASTED FROM GWT CustomButton
      */
 
     /**
-     * Called when the user finishes clicking on this button. The default
-     * behavior is to fire the click event to listeners. Subclasses that
+     * Called internally when the user finishes clicking on this button. The
+     * default behavior is to fire the click event to listeners. Subclasses that
      * override {@link #onClickStart()} should override this method to restore
      * the normal widget display.
+     * <p>
+     * To add custom code for a click event, override
+     * {@link #onClick(ClickEvent)} instead of this.
      */
     protected void onClick() {
         // Allow the click we're about to synthesize to pass through to the
