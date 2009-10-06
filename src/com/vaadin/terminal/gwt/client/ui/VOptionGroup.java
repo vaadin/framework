@@ -10,6 +10,7 @@ import java.util.Map;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RadioButton;
@@ -83,13 +84,8 @@ public class VOptionGroup extends VOptionGroupBase {
     @Override
     protected void setTabIndex(int tabIndex) {
         for (Iterator iterator = panel.iterator(); iterator.hasNext();) {
-            if (isMultiselect()) {
-                VCheckBox cb = (VCheckBox) iterator.next();
-                cb.setTabIndex(tabIndex);
-            } else {
-                RadioButton rb = (RadioButton) iterator.next();
-                rb.setTabIndex(tabIndex);
-            }
+            FocusWidget widget = (FocusWidget) iterator.next();
+            widget.setTabIndex(tabIndex);
         }
     }
 
