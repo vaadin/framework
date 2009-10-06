@@ -10,6 +10,7 @@ import java.util.Iterator;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
+import com.vaadin.terminal.gwt.client.ui.VEmbedded;
 
 /**
  * Component for embedding external objects.
@@ -20,6 +21,7 @@ import com.vaadin.terminal.Resource;
  * @since 3.0
  */
 @SuppressWarnings("serial")
+@ClientWidget(VEmbedded.class)
 public class Embedded extends AbstractComponent {
 
     /**
@@ -97,16 +99,6 @@ public class Embedded extends AbstractComponent {
     public Embedded(String caption, Resource source) {
         setCaption(caption);
         setSource(source);
-    }
-
-    /**
-     * Gets the component UIDL tag.
-     * 
-     * @return the Component UIDL tag as string.
-     */
-    @Override
-    public String getTag() {
-        return "embedded";
     }
 
     /**

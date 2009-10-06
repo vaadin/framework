@@ -35,7 +35,7 @@ public class VUnknownComponent extends Composite implements Paintable {
             uidlTree.removeFromParent();
         }
 
-        uidlTree = new VUIDLBrowser(uidl);
+        uidlTree = new VUIDLBrowser(uidl, client.getConfiguration());
         panel.add(uidlTree);
     }
 

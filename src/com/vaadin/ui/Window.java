@@ -24,6 +24,7 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.URIHandler;
+import com.vaadin.terminal.gwt.client.ui.VView;
 
 /**
  * Application window component.
@@ -34,6 +35,7 @@ import com.vaadin.terminal.URIHandler;
  * @since 3.0
  */
 @SuppressWarnings("serial")
+@ClientWidget(VView.class)
 public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
@@ -253,16 +255,6 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     @Override
     public void setParent(Component parent) {
         super.setParent(parent);
-    }
-
-    /**
-     * Gets the component UIDL tag.
-     * 
-     * @return the Component UIDL tag as string.
-     */
-    @Override
-    public String getTag() {
-        return "window";
     }
 
     /* ********************************************************************* */
@@ -535,10 +527,15 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         // Window closing
         target.addVariable(this, "close", false);
 
-        // Paint subwindows
-        for (final Iterator<Window> i = subwindows.iterator(); i.hasNext();) {
-            final Window w = i.next();
-            w.paint(target);
+        if (getParent() == null) {
+            // Paint subwindows
+            for (final Iterator<Window> i = subwindows.iterator(); i.hasNext();) {
+                final Window w = i.next();
+                w.paint(target);
+            }
+        } else {
+            // mark subwindows
+            target.addAttribute("sub", true);
         }
 
         // Paint notifications

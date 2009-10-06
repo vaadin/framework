@@ -50,14 +50,10 @@ import com.vaadin.terminal.gwt.client.ui.VCssLayout;
  * @since 6.1 brought in from "FastLayouts" incubator project
  * 
  */
+@ClientWidget(VCssLayout.class)
 public class CssLayout extends AbstractLayout {
 
     private static final long serialVersionUID = -6408703812053460073L;
-
-    @Override
-    public String getTag() {
-        return VCssLayout.TAGNAME;
-    }
 
     /**
      * Custom layout slots containing the components.

@@ -5,14 +5,17 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Map;
 
+import com.vaadin.demo.sampler.gwt.client.ui.VActiveLink;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
+import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Button.ClickEvent;
 
 @SuppressWarnings("serial")
+@ClientWidget(VActiveLink.class)
 public class ActiveLink extends Link {
 
     private static final String TAG = "activelink";
@@ -32,11 +35,6 @@ public class ActiveLink extends Link {
 
     public ActiveLink(String caption, Resource resource) {
         super(caption, resource);
-    }
-
-    @Override
-    public String getTag() {
-        return TAG;
     }
 
     static {

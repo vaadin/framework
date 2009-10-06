@@ -10,6 +10,7 @@ import java.util.Map;
 import com.vaadin.data.Property;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.ui.VTextField;
 
 /**
  * <p>
@@ -32,6 +33,7 @@ import com.vaadin.terminal.PaintTarget;
  * @since 3.0
  */
 @SuppressWarnings("serial")
+@ClientWidget(VTextField.class)
 public class TextField extends AbstractField {
 
     /* Private members */
@@ -229,18 +231,10 @@ public class TextField extends AbstractField {
     }
 
     /*
-     * Gets the components UIDL tag string. Don't add a JavaDoc comment here, we
-     * use the default documentation from implemented interface.
-     */
-    @Override
-    public String getTag() {
-        return "textfield";
-    }
-
-    /*
-     * Invoked when a variable of the component changes. Don't add a JavaDoc
-     * comment here, we use the default documentation from implemented
-     * interface.
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractField#changeVariables(java.lang.Object,
+     * java.util.Map)
      */
     @Override
     public void changeVariables(Object source, Map variables) {

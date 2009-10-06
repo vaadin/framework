@@ -7,6 +7,7 @@ package com.vaadin.ui;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
+import com.vaadin.terminal.gwt.client.ui.VLink;
 
 /**
  * Link is used to create external or internal URL links.
@@ -17,6 +18,7 @@ import com.vaadin.terminal.Resource;
  * @since 3.0
  */
 @SuppressWarnings("serial")
+@ClientWidget(VLink.class)
 public class Link extends AbstractComponent {
 
     /* Target window border type constant: No window border */
@@ -82,16 +84,6 @@ public class Link extends AbstractComponent {
         setTargetWidth(width);
         setTargetHeight(height);
         setTargetBorder(border);
-    }
-
-    /**
-     * Gets the component UIDL tag.
-     * 
-     * @return the Component UIDL tag as string.
-     */
-    @Override
-    public String getTag() {
-        return "link";
     }
 
     /**

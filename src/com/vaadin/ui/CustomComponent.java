@@ -9,6 +9,7 @@ import java.util.Iterator;
 
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.ui.VCustomComponent;
 
 /**
  * Custom component provides simple implementation of Component interface for
@@ -25,6 +26,7 @@ import com.vaadin.terminal.PaintTarget;
  * @since 3.0
  */
 @SuppressWarnings("serial")
+@ClientWidget(VCustomComponent.class)
 public class CustomComponent extends AbstractComponentContainer {
 
     /**
@@ -141,11 +143,6 @@ public class CustomComponent extends AbstractComponentContainer {
      */
     public void setComponentType(String componentType) {
         this.componentType = componentType;
-    }
-
-    @Override
-    public String getTag() {
-        return "customcomponent";
     }
 
     private class ComponentIterator implements Iterator, Serializable {

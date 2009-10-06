@@ -8,6 +8,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.ui.VProgressIndicator;
 
 /**
  * <code>ProgressIndicator</code> is component that shows user state of a
@@ -24,6 +25,7 @@ import com.vaadin.terminal.PaintTarget;
  * @since 4
  */
 @SuppressWarnings("serial")
+@ClientWidget(VProgressIndicator.class)
 public class ProgressIndicator extends AbstractField implements Property,
         Property.Viewer, Property.ValueChangeListener {
 
@@ -68,16 +70,6 @@ public class ProgressIndicator extends AbstractField implements Property,
      */
     public ProgressIndicator(Property contentSource) {
         setPropertyDataSource(contentSource);
-    }
-
-    /**
-     * Gets the component UIDL tag.
-     * 
-     * @return the Component UIDL tag as string.
-     */
-    @Override
-    public String getTag() {
-        return "progressindicator";
     }
 
     /**

@@ -14,6 +14,7 @@ import java.util.Map.Entry;
 
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.ui.VGridLayout;
 
 /**
  * <p>
@@ -36,6 +37,7 @@ import com.vaadin.terminal.PaintTarget;
  * @since 3.0
  */
 @SuppressWarnings("serial")
+@ClientWidget(VGridLayout.class)
 public class GridLayout extends AbstractLayout implements
         Layout.AlignmentHandler, Layout.SpacingHandler {
 
@@ -634,17 +636,6 @@ public class GridLayout extends AbstractLayout implements
         } else {
             return alignment;
         }
-    }
-
-    /**
-     * Gets the components UIDL tag.
-     * 
-     * @return the Component UIDL tag as string.
-     * @see com.vaadin.ui.AbstractComponent#getTag()
-     */
-    @Override
-    public String getTag() {
-        return "gridlayout";
     }
 
     /**

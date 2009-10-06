@@ -17,6 +17,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Paintable.RepaintRequestListener;
+import com.vaadin.terminal.gwt.client.ui.VTabsheet;
 
 /**
  * Tabsheet component.
@@ -27,6 +28,7 @@ import com.vaadin.terminal.Paintable.RepaintRequestListener;
  * @since 3.0
  */
 @SuppressWarnings("serial")
+@ClientWidget(VTabsheet.class)
 public class TabSheet extends AbstractComponentContainer implements
         RepaintRequestListener {
 
@@ -155,16 +157,6 @@ public class TabSheet extends AbstractComponentContainer implements
             return addTab(c, c.getCaption(), c.getIcon());
         }
         return null;
-    }
-
-    /**
-     * Gets the component UIDL tag.
-     * 
-     * @return the Component UIDL tag as string.
-     */
-    @Override
-    public String getTag() {
-        return "tabsheet";
     }
 
     /**

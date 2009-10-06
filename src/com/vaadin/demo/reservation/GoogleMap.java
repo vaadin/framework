@@ -12,12 +12,15 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.demo.reservation.gwt.client.ui.VGoogleMap;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.ClientWidget;
 
 @SuppressWarnings("serial")
+@ClientWidget(VGoogleMap.class)
 public class GoogleMap extends AbstractComponent implements Sizeable,
         Container.Viewer {
     private final String TAG_MARKERS = "markers";
@@ -29,11 +32,6 @@ public class GoogleMap extends AbstractComponent implements Sizeable,
     private Object itemMarkerHtmlPropertyId = new Object();
     private Object itemMarkerXPropertyId = new Object();
     private Object itemMarkerYPropertyId = new Object();
-
-    @Override
-    public String getTag() {
-        return "googlemap";
-    }
 
     @Override
     public void paintContent(PaintTarget target) throws PaintException {

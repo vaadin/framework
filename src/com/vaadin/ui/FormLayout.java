@@ -4,6 +4,8 @@
 
 package com.vaadin.ui;
 
+import com.vaadin.terminal.gwt.client.ui.VFormLayout;
+
 /**
  * FormLayout is used by {@link Form} to layout fields. It may also be used
  * separately without {@link Form}.
@@ -20,17 +22,13 @@ package com.vaadin.ui;
  * 
  */
 @SuppressWarnings( { "deprecation", "serial" })
+@ClientWidget(VFormLayout.class)
 public class FormLayout extends OrderedLayout {
 
     public FormLayout() {
         super();
         setSpacing(true);
         setMargin(true, false, true, false);
-    }
-
-    @Override
-    public String getTag() {
-        return "formlayout";
     }
 
 }

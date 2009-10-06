@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.ui.VSlider;
 
 /**
  * A component for selecting a numerical value within a range.
@@ -46,6 +47,7 @@ import com.vaadin.terminal.PaintTarget;
  * @author IT Mill Ltd.
  */
 @SuppressWarnings("serial")
+@ClientWidget(VSlider.class)
 public class Slider extends AbstractField {
 
     public static final int ORIENTATION_HORIZONTAL = 0;
@@ -391,11 +393,6 @@ public class Slider extends AbstractField {
             this.handleSize = handleSize;
         }
         requestRepaint();
-    }
-
-    @Override
-    public String getTag() {
-        return "slider";
     }
 
     @Override

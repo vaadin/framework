@@ -15,10 +15,13 @@ public interface WidgetSet extends EntryPoint {
      * 
      * @param uidl
      *            UIDL to be painted with returned component.
+     * @param client
+     *            the application connection that whishes to instantiate widget
+     * 
      * @return New uninitialized and unregistered component that can paint given
      *         UIDL.
      */
-    public Paintable createWidget(UIDL uidl);
+    public Paintable createWidget(UIDL uidl, ApplicationConfiguration conf);
 
     /**
      * Test if the given component implementation conforms to UIDL.
@@ -30,5 +33,18 @@ public interface WidgetSet extends EntryPoint {
      * @return true iff createWidget would return a new component of the same
      *         class than currentWidget
      */
-    public boolean isCorrectImplementation(Widget currentWidget, UIDL uidl);
+    public boolean isCorrectImplementation(Widget currentWidget, UIDL uidl,
+            ApplicationConfiguration conf);
+
+    /**
+     * Due its nature, GWT does not support dynamic classloading. To bypass this
+     * limitation, widgetset must have function that returns Class by its fully
+     * qualified name.
+     * 
+     * @param fullyQualifiedName
+     * @return
+     */
+    public Class<? extends Paintable> getImplementationByClassName(
+            String fullyQualifiedName);
+
 }

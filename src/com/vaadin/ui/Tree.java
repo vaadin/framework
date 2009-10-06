@@ -31,6 +31,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.ui.VTree;
 
 /**
  * Tree component. A Tree can be used to select an item (or multiple items) from
@@ -42,6 +43,7 @@ import com.vaadin.terminal.gwt.client.MouseEventDetails;
  * @since 3.0
  */
 @SuppressWarnings("serial")
+@ClientWidget(VTree.class)
 public class Tree extends AbstractSelect implements Container.Hierarchical,
         Action.Container, ItemClickSource {
 
@@ -317,22 +319,11 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
     /* Component API */
 
-    /**
-     * Gets the UIDL tag corresponding to the component.
+    /*
+     * (non-Javadoc)
      * 
-     * @see com.vaadin.ui.AbstractComponent#getTag()
-     */
-    @Override
-    public String getTag() {
-        return "tree";
-    }
-
-    /**
-     * Called when one or more variables handled by the implementing class are
-     * changed.
-     * 
-     * @see com.vaadin.terminal.VariableOwner#changeVariables(Object source, Map
-     *      variables)
+     * @see com.vaadin.ui.AbstractSelect#changeVariables(java.lang.Object,
+     * java.util.Map)
      */
     @Override
     public void changeVariables(Object source, Map variables) {

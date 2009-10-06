@@ -4,21 +4,19 @@
 
 package com.vaadin.demo.coverflow;
 
+import com.vaadin.demo.coverflow.gwt.client.ui.VCoverflow;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.ui.AbstractSelect;
+import com.vaadin.ui.ClientWidget;
 
 @SuppressWarnings( { "serial", "unchecked" })
+@ClientWidget(VCoverflow.class)
 public class Coverflow extends AbstractSelect {
 
     private String backgroundGradientStart = "FFFFFF";
     private String backgroundGradientEnd = "EEEEEE";
     private boolean scrollbarVisibility = true;
-
-    @Override
-    public String getTag() {
-        return "cover";
-    }
 
     /**
      * Paints the uidl

@@ -15,6 +15,7 @@ import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Scrollable;
+import com.vaadin.terminal.gwt.client.ui.VPanel;
 
 /**
  * Panel - a simple single component container.
@@ -25,6 +26,7 @@ import com.vaadin.terminal.Scrollable;
  * @since 3.0
  */
 @SuppressWarnings("serial")
+@ClientWidget(VPanel.class)
 public class Panel extends AbstractComponentContainer implements Scrollable,
         ComponentContainer.ComponentAttachListener,
         ComponentContainer.ComponentDetachListener, Action.Container {
@@ -272,16 +274,6 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         if (getContent() != null) {
             getContent().requestRepaintAll();
         }
-    }
-
-    /**
-     * Gets the component UIDL tag.
-     * 
-     * @return the Component UIDL tag as string.
-     */
-    @Override
-    public String getTag() {
-        return "panel";
     }
 
     /**

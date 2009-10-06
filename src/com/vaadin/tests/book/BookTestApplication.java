@@ -612,12 +612,8 @@ public class BookTestApplication extends com.vaadin.Application {
 		}
 		main.addComponent(new SSNField());
 	}
-
+    // TODO add ClientWidget annotation if test is in use
 	class PagingTable extends Table {
-		@Override
-		public String getTag() {
-			return "pagingtable";
-		}
 	}
 
 	void example_Table(Window main, String param) {

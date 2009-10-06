@@ -1,5 +1,5 @@
-/* 
-@ITMillApache2LicenseForJavaFiles@
+/*
+ * @ITMillApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.ui;
@@ -17,6 +17,7 @@ import com.vaadin.Application;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.UploadStream;
+import com.vaadin.terminal.gwt.client.ui.VUpload;
 
 /**
  * Component for uploading files from client to server.
@@ -54,6 +55,7 @@ import com.vaadin.terminal.UploadStream;
  * @since 3.0
  */
 @SuppressWarnings("serial")
+@ClientWidget(VUpload.class)
 public class Upload extends AbstractComponent implements Component.Focusable {
 
     private boolean delayedFocus;
@@ -110,16 +112,6 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     public Upload(String caption, Receiver uploadReceiver) {
         setCaption(caption);
         receiver = uploadReceiver;
-    }
-
-    /**
-     * Gets the component type.
-     * 
-     * @return Component type as string.
-     */
-    @Override
-    public String getTag() {
-        return "upload";
     }
 
     /**
@@ -200,12 +192,13 @@ public class Upload extends AbstractComponent implements Component.Focusable {
                 try {
                     // still try to close output stream
                     out.close();
-                } catch (IOException e1) {
-                    // NOP
+                } catch (IOException ignored) {
                 }
                 fireUploadInterrupted(filename, type, totalBytes, e);
                 endUpload();
                 interrupted = false;
+                // throw cause ahead
+                throw new IllegalStateException("Uploading failed", e);
             }
         }
     }

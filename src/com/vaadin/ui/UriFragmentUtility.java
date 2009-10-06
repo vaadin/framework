@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.ui.VUriFragmentUtility;
 
 /**
  * Experimental web browser dependent component for URI fragment (part after
@@ -16,6 +17,7 @@ import com.vaadin.terminal.PaintTarget;
  * 
  */
 @SuppressWarnings("serial")
+@ClientWidget(VUriFragmentUtility.class)
 public class UriFragmentUtility extends AbstractComponent {
 
     /**
@@ -81,11 +83,6 @@ public class UriFragmentUtility extends AbstractComponent {
     public UriFragmentUtility() {
         // immediate by default
         setImmediate(true);
-    }
-
-    @Override
-    public String getTag() {
-        return "urifragment";
     }
 
     @Override

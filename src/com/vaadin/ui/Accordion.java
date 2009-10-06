@@ -1,11 +1,9 @@
 package com.vaadin.ui;
 
-@SuppressWarnings("serial")
-public class Accordion extends TabSheet {
+import com.vaadin.terminal.gwt.client.ui.VAccordion;
 
-    @Override
-    public String getTag() {
-        return "accordion";
-    }
+@SuppressWarnings("serial")
+@ClientWidget(VAccordion.class)
+public class Accordion extends TabSheet {
 
 }

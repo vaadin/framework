@@ -39,16 +39,6 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     private boolean spacing = false;
 
     /**
-     * Gets the component UIDL tag.
-     * 
-     * @return the Component UIDL tag as string.
-     */
-    @Override
-    public String getTag() {
-        return "orderedlayout";
-    }
-
-    /**
      * Add a component into this container. The component is added to the right
      * or under the previous component.
      * 

@@ -12,6 +12,7 @@ import java.util.Map;
 import com.vaadin.data.Property;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.ui.VButton;
 
 /**
  * A generic button component.
@@ -22,6 +23,7 @@ import com.vaadin.terminal.PaintTarget;
  * @since 3.0
  */
 @SuppressWarnings("serial")
+@ClientWidget(VButton.class)
 public class Button extends AbstractField {
 
     /* Private members */
@@ -109,16 +111,6 @@ public class Button extends AbstractField {
         setCaption(caption);
         setSwitchMode(true);
         setPropertyDataSource(dataSource);
-    }
-
-    /**
-     * Gets component UIDL tag.
-     * 
-     * @return the Component UIDL tag as string.
-     */
-    @Override
-    public String getTag() {
-        return "button";
     }
 
     /**

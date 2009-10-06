@@ -12,14 +12,17 @@ import java.util.Iterator;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.demo.reservation.gwt.client.ui.VCalendarField;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.DateField;
 
 // TODO send one month at a time, do lazyLoading
 // TODO check date limit when updating variables
 // TODO Allow item selection
 @SuppressWarnings("serial")
+@ClientWidget(VCalendarField.class)
 public class CalendarField extends DateField implements Container.Viewer {
 
     private static final String TAGNAME = "calendarfield";
@@ -58,15 +61,6 @@ public class CalendarField extends DateField implements Container.Viewer {
     public CalendarField(String caption) {
         super(caption);
         init();
-    }
-
-    /*
-     * Gets the components UIDL tag string. Don't add a JavaDoc comment here, we
-     * use the default documentation from implemented interface.
-     */
-    @Override
-    public String getTag() {
-        return TAGNAME;
     }
 
     public void init() {

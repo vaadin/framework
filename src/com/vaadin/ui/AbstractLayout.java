@@ -26,14 +26,6 @@ public abstract class AbstractLayout extends AbstractComponentContainer
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.ui.AbstractComponent#getTag()
-     */
-    @Override
-    public abstract String getTag();
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see com.vaadin.ui.Layout#setMargin(boolean)
      */
     public void setMargin(boolean enabled) {
@@ -63,8 +55,7 @@ public abstract class AbstractLayout extends AbstractComponentContainer
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.ui.Layout#setMargin(boolean, boolean, boolean,
-     * boolean)
+     * @see com.vaadin.ui.Layout#setMargin(boolean, boolean, boolean, boolean)
      */
     public void setMargin(boolean topEnabled, boolean rightEnabled,
             boolean bottomEnabled, boolean leftEnabled) {
@@ -77,8 +68,7 @@ public abstract class AbstractLayout extends AbstractComponentContainer
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.ui.AbstractComponent#paintContent(com.vaadin
+     * @see com.vaadin.ui.AbstractComponent#paintContent(com.vaadin
      * .terminal.PaintTarget)
      */
     @Override

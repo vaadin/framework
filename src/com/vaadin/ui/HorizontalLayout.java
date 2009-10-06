@@ -1,5 +1,7 @@
 package com.vaadin.ui;
 
+import com.vaadin.terminal.gwt.client.ui.VHorizontalLayout;
+
 /**
  * Horizontal layout
  * 
@@ -12,15 +14,11 @@ package com.vaadin.ui;
  * @since 5.3
  */
 @SuppressWarnings("serial")
+@ClientWidget(VHorizontalLayout.class)
 public class HorizontalLayout extends AbstractOrderedLayout {
 
     public HorizontalLayout() {
 
-    }
-
-    @Override
-    public String getTag() {
-        return "horizontallayout";
     }
 
 }

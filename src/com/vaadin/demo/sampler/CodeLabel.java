@@ -1,7 +1,10 @@
 package com.vaadin.demo.sampler;
 
+import com.vaadin.demo.sampler.gwt.client.ui.VCodeLabel;
+import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.Label;
 
+@ClientWidget(VCodeLabel.class)
 @SuppressWarnings("serial")
 public class CodeLabel extends Label {
 
@@ -13,11 +16,6 @@ public class CodeLabel extends Label {
 
     public CodeLabel(String content) {
         super(content, CONTENT_PREFORMATTED);
-    }
-
-    @Override
-    public String getTag() {
-        return TAG;
     }
 
     @Override
