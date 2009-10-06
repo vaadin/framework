@@ -780,6 +780,7 @@
 	</target>
 
 	<target name="compile-widgetset-generator">
+		<mkdir dir="build/classes"/>
 		<javac source="1.5" target="1.5" classpathref="compile.classpath.server-side" destdir="build/classes" debug="true" encoding="UTF-8">
             <src path="${result-path}/src"/>
 			<include name="${toolkit-package}/terminal/gwt/widgetsetutils/WidgetMapGenerator" />
