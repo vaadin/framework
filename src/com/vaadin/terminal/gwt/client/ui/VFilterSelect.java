@@ -581,6 +581,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
     private boolean filtering = false;
     private boolean selecting = false;
+    private boolean tabPressed = false;
 
     private String lastFilter = "";
     private int lastIndex = -1; // last selected index when using arrows
@@ -938,6 +939,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             break;
         case KeyCodes.KEY_TAB:
             if (suggestionPopup.isAttached()) {
+                tabPressed = true;
                 filterOptions(currentPage);
             }
             // onBlur() takes care of the rest
@@ -1047,7 +1049,14 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     public void onBlur(BlurEvent event) {
         focused = false;
         // much of the TAB handling takes place here
-        suggestionPopup.menu.doSelectedItemAction();
+        if (tabPressed) {
+            tabPressed = false;
+            suggestionPopup.menu.doSelectedItemAction();
+            suggestionPopup.hide();
+        } else if (!suggestionPopup.isAttached()
+                || suggestionPopup.isJustClosed()) {
+            suggestionPopup.menu.doSelectedItemAction();
+        }
         if (selectedOptionKey == null) {
             setPromptingOn();
         }
