@@ -117,6 +117,13 @@
 .v-app-SamplerApplication .v-horizontallayout-topbar .v-nativebutton-link:hover span {
 	text-decoration: underline;
 }
+.v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-next:active,
+.v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-next.v-pressed,
+.v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-next.v-disabled,
+.v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-tree-switch:active,
+.v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-tree-switch.v-pressed {
+	background-position: right bottom;
+}
 .v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton,
 .v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton.v-disabled,
 .v-app-SamplerApplication .v-horizontallayout-segment .v-popupview {
@@ -136,13 +143,6 @@
 .v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-next,
 .v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-tree-switch {
 	background-position: right top;
-}
-.v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-next:active,
-.v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-next.v-pressed,
-.v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-next.v-disabled,
-.v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-tree-switch:active,
-.v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-tree-switch.v-pressed {
-	background-position: right bottom;
 }
 .v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-down {
 	background-position: right bottom;
@@ -227,7 +227,7 @@
 }
 .v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-next span,
 .v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-next.v-pressed span,
-.v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-next.v-disabled span {
+.v-app-SamplerApplication .v-horizontallayout-segment .v-disabled.v-nativebutton-next span {
 	background-image: url(next.png);
 }
 .v-popupview-popup-quickjump {
