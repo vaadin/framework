@@ -2,6 +2,8 @@ package com.vaadin.tools;
 
 import java.lang.reflect.Method;
 
+import com.vaadin.terminal.gwt.widgetsetutils.WidgetSetBuilder;
+
 /**
  * A wrapper for the GWT 1.6 compiler that runs the compiler in a new thread.
  * 
@@ -44,6 +46,13 @@ public class WidgetsetCompiler {
                     try {
                         // GWTCompiler.main(args);
                         // avoid warnings
+
+                        String wsname = args[args.length - 1];
+
+                        // TODO expecting this is launched via eclipse WTP
+                        // project
+                        WidgetSetBuilder.updateWidgetSet(wsname, "src");
+
                         System.setProperty("gwt.nowarn.legacy.tools", "true");
                         Class<?> compilerClass = Class
                                 .forName("com.google.gwt.dev.GWTCompiler");

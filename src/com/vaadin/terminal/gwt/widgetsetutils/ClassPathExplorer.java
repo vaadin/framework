@@ -142,6 +142,15 @@ public class ClassPathExplorer {
         String pathSep = System.getProperty("path.separator");
         String classpath = System.getProperty("java.class.path");
 
+        if (classpath.startsWith("\"")) {
+            classpath = classpath.substring(1);
+        }
+        if (classpath.endsWith("\"")) {
+            classpath = classpath.substring(0, classpath.length() - 1);
+        }
+
+        System.err.println("Classpath: " + classpath);
+
         String[] split = classpath.split(pathSep);
         for (int i = 0; i < split.length; i++) {
             String classpathEntry = split[i];
@@ -172,10 +181,12 @@ public class ClassPathExplorer {
                     url = new URL("jar:" + url.toExternalForm() + "!/");
                     JarURLConnection conn = (JarURLConnection) url
                             .openConnection();
+                    System.out.println(url);
                     JarFile jarFile = conn.getJarFile();
                     Manifest manifest = jarFile.getManifest();
                     Attributes mainAttributes = manifest.getMainAttributes();
                     if (mainAttributes.getValue("Vaadin-Widgetsets") != null) {
+                        System.err.println("Accepted jar file" + url);
                         return true;
                     }
                 } catch (MalformedURLException e) {

@@ -131,6 +131,9 @@ public class WidgetMapGenerator extends Generator {
             }
 
         }
+        logger.log(Type.INFO,
+                "Widget set will contain implementations for following components: "
+                        + paintablesHavingWidgetAnnotation.toString());
     }
 
     /**
