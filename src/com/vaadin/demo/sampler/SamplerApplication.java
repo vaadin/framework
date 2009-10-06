@@ -428,7 +428,6 @@ public class SamplerApplication extends Application {
             logo.setDescription("↶ Home");
             logo.setStyleName(Button.STYLE_LINK);
             logo.addStyleName("logo");
-            logo.setIcon(new ThemeResource("sampler/sampler.png"));
             return logo;
         }
 
