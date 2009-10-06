@@ -779,7 +779,15 @@
 		<delete dir="${output-dir}/WebContent/VAADIN/widgetsets/.gwt-tmp" includeemptydirs="true"/>
 	</target>
 
-	<target name="compile-widgetset-default">
+	<target name="compile-widgetset-generator">
+		<javac source="1.5" target="1.5" classpathref="compile.classpath.server-side" destdir="build/classes" debug="true" encoding="UTF-8">
+            <src path="${result-path}/src"/>
+			<include name="${toolkit-package}/terminal/gwt/widgetsetutils/WidgetMapGenerator" />
+            <exclude name="**"/>
+		</javac>
+	</target>
+	
+	<target name="compile-widgetset-default" depends="compile-widgetset-generator">
 		<echo>Compiling src (client-side)</echo>
 		<echo>com.vaadin.terminal.gwt.DefaultWidgetSet</echo>
 		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
@@ -801,7 +809,7 @@
 		<echo>Compiled DefaultWidgetSet</echo>
 	</target>
 
-	<target name="compile-widgetset-portal-default">
+	<target name="compile-widgetset-portal-default" depends="compile-widgetset-generator">
 		<echo>Compiling src (client-side)</echo>
 		<echo>com.vaadin.portal.gwt.PortalDefaultWidgetSet</echo>
 		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
@@ -823,7 +831,7 @@
 		<echo>Compiled PortalDefaultWidgetSet</echo>
 	</target>
 
-	<target name="compile-widgetset-reserver">
+	<target name="compile-widgetset-reserver" depends="compile-widgetset-generator">
 		<condition property="googlemaps-jar" value="${output-dir}/WebContent/demo/lib/reservr/gwt-maps.jar">
 			<available file="${output-dir}/WebContent/demo/lib/reservr/gwt-maps.jar" />
 		</condition>
@@ -855,7 +863,7 @@
 	</target>
 
     <!-- Building Sampler for installation package is disabled. -->
-	<target name="compile-widgetset-sampler" unless="build.sampler.disabled">
+	<target name="compile-widgetset-sampler" unless="build.sampler.disabled" depends="compile-widgetset-generator">
 		<echo>com.vaadin.demo.sampler.gwt.SamplerWidgetSet</echo>
 		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="-war" />
@@ -878,7 +886,7 @@
 		<echo>Compiled SamplerWidgetSet</echo>
 	</target>
 	
-	<target name="compile-widgetset-coverflow">
+	<target name="compile-widgetset-coverflow" depends="compile-widgetset-generator">
 		<echo>com.vaadin.demo.coverflow.gwt.CoverflowWidgetSet</echo>
 		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="-war" />
@@ -901,7 +909,7 @@
 		<echo>Compiled CoverflowWidgetSet</echo>
 	</target>
 	
-	<target name="compile-widgetset-colorpicker">
+	<target name="compile-widgetset-colorpicker" depends="compile-widgetset-generator">
 		<echo>com.vaadin.demo.colorpicker.gwt.ColorPickerWidgetSet</echo>
 		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="-war" />
