@@ -11,12 +11,6 @@ textarea.v-textarea-prompt {
 	color: #999;
 	font-style: italic;
 }
-.v-textfield.v-readonly,
-.v-textarea.v-readonly {
-	background: transparent;
-	color: #222;
-	border: none;
-}
 .v-richtextarea {
 	border: 1px solid #aaa;
 	overflow: hidden;

@@ -60,28 +60,7 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
         }
         calendarToggle.setEnabled(enabled);
 
-        handleReadonly();
-
-    }
-
-    private void handleReadonly() {
-        String currentDisplay = calendarToggle.getElement().getStyle()
-                .getProperty("display");
-        boolean currentReadonly = (currentDisplay != null && currentDisplay
-                .equals("none"));
-        if (currentReadonly != readonly) {
-            // We need to react only if the read-only status has changed
-            if (readonly) {
-                calendarToggle.getElement().getStyle().setProperty("display",
-                        "none");
-            } else {
-                calendarToggle.getElement().getStyle().setProperty("display",
-                        "");
-            }
-
-            // Force update of textfield size
-            updateWidth();
-        }
+        updateWidth();
 
     }
 

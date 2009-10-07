@@ -461,6 +461,9 @@ div.v-app-loading {
 .v-datefield-button {
 	cursor: pointer;
 }
+.v-readonly .v-datefield-button {
+	display: none;
+}
 .v-datefield-calendarpanel table {
 	width: 100%;
 }
@@ -1401,12 +1404,6 @@ input.v-textfield-prompt,
 textarea.v-textarea-prompt {
 	color: #999;
 	font-style: italic;
-}
-.v-textfield.v-readonly,
-.v-textarea.v-readonly {
-	background: transparent;
-	color: #222;
-	border: none;
 }
 .v-richtextarea {
 	border: 1px solid #aaa;

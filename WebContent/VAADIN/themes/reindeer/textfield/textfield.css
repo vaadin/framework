@@ -124,17 +124,3 @@ textarea.v-textarea-prompt {
 .black input.v-textfield-prompt {
 	color: #5f6366;
 }
-
-/* Readonly */
-input.v-textfield-readonly,
-.v-sa input.v-textfield-readonly,
-.v-ff35 input.v-textfield-readonly,
-.black input.v-textfield-readonly,
-.v-sa .black input.v-textfield-readonly,
-.v-ff35 .black input.v-textfield-readonly {
-	border: none;
-	background: transparent;
-	-webkit-border-image: none;
-	-moz-border-image: none;
-	border-width: 0;
-}

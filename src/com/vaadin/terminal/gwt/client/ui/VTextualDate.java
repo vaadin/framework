@@ -82,6 +82,12 @@ public class VTextualDate extends VDateField implements Paintable, Field,
         if (uidl.hasAttribute("tabindex")) {
             text.setTabIndex(uidl.getIntAttribute("tabindex"));
         }
+
+        if (readonly) {
+            text.addStyleDependentName("readonly");
+        } else {
+            text.removeStyleDependentName("readonly");
+        }
     }
 
     protected String getFormatString() {
@@ -141,7 +147,8 @@ public class VTextualDate extends VDateField implements Paintable, Field,
         }
 
         text.setText(dateText);
-        text.setEnabled(enabled && !readonly);
+        text.setEnabled(enabled);
+        text.setReadOnly(readonly);
 
         if (readonly) {
             text.addStyleName("v-readonly");
