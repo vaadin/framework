@@ -1037,7 +1037,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
     public void onFocus(FocusEvent event) {
         focused = true;
-        if (prompting) {
+        if (prompting && !readonly) {
             setPromptingOff("");
         }
         addStyleDependentName("focus");
@@ -1045,24 +1045,26 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
     public void onBlur(BlurEvent event) {
         focused = false;
-        // much of the TAB handling takes place here
-        if (tabPressed) {
-            tabPressed = false;
-            suggestionPopup.menu.doSelectedItemAction();
-            suggestionPopup.hide();
-        } else if (!suggestionPopup.isAttached()
-                || suggestionPopup.isJustClosed()) {
-            suggestionPopup.menu.doSelectedItemAction();
-        }
-        if (selectedOptionKey == null) {
-            setPromptingOn();
+        if (!readonly) {
+            // much of the TAB handling takes place here
+            if (tabPressed) {
+                tabPressed = false;
+                suggestionPopup.menu.doSelectedItemAction();
+                suggestionPopup.hide();
+            } else if (!suggestionPopup.isAttached()
+                    || suggestionPopup.isJustClosed()) {
+                suggestionPopup.menu.doSelectedItemAction();
+            }
+            if (selectedOptionKey == null) {
+                setPromptingOn();
+            }
         }
         removeStyleDependentName("focus");
     }
 
     public void focus() {
         focused = true;
-        if (prompting) {
+        if (prompting && !readonly) {
             setPromptingOff("");
         }
         tb.setFocus(true);
