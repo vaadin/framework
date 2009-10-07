@@ -144,7 +144,10 @@
 .v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-tree-switch {
 	background-position: right top;
 }
-.v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-down {
+.v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-next:active,
+.v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-next.v-pressed,
+.v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-tree-switch:active,
+.v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-tree-switch.v-pressed {
 	background-position: right bottom;
 }
 .v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton span,
@@ -172,6 +175,9 @@
 	height: 0;
 	padding: 0;
 	overflow: hidden;
+}
+.v-app-SamplerApplication .theme-select .v-icon {
+	display: none;
 }
 .v-app-SamplerApplication .theme-select {
 	width: 32px;
@@ -207,6 +213,7 @@
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	text-shadow: #373a3c 0 1px 0;
+	margin-top: -3px;
 }
 .v-filterselect-suggestpopup-theme-select .v-filterselect-suggestmenu {
 	margin: 6px 0;
