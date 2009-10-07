@@ -454,6 +454,7 @@ div.v-app-loading {
 
 .v-datefield {
 	white-space: nowrap;
+	float: left; /* Force minimum width */
 }
 .v-datefield-textfield {
 	vertical-align: top;
@@ -886,11 +887,11 @@ div.v-progressindicator-indeterminate-disabled {
 	font-style: italic;
 }
 .v-filterselect-button {
-	float: right;
 	cursor: pointer;
+	float: right;
 }
 .v-filterselect.v-readonly .v-filterselect-button {
-	display: none;
+	cursor: default;
 }
 .v-filterselect-suggestpopup {
 	background: #fff;
@@ -2413,10 +2414,7 @@ div.v-tree-node-leaf {
 .v-disabled .v-filterselect-button:hover,
 .v-readonly .v-filterselect-button:hover {
 	background-position: top left;
-}
-.v-filterselect.v-readonly .v-filterselect-input {
-	background: transparent;
-	color: black;
+	cursor: default;
 }
 .v-filterselect-suggestpopup {
 	background: #f6f7f7;

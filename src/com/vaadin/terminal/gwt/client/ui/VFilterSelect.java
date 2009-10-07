@@ -594,6 +594,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     private boolean nullSelectionAllowed;
     private boolean nullSelectItem;
     private boolean enabled;
+    private boolean readonly;
 
     // shown in unfocused empty field, disappears on focus (e.g "Search here")
     private static final String CLASSNAME_PROMPT = "prompt";
@@ -683,16 +684,11 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         paintableId = uidl.getId();
         this.client = client;
 
-        boolean readonly = uidl.hasAttribute("readonly");
-        boolean disabled = uidl.hasAttribute("disabled");
+        readonly = uidl.hasAttribute("readonly");
+        enabled = !uidl.hasAttribute("disabled");
 
-        if (disabled || readonly) {
-            tb.setEnabled(false);
-            enabled = false;
-        } else {
-            tb.setEnabled(true);
-            enabled = true;
-        }
+        tb.setEnabled(enabled);
+        tb.setReadOnly(readonly);
 
         if (client.updateComponent(this, uidl, true)) {
             return;
@@ -887,7 +883,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     }
 
     public void onKeyDown(KeyDownEvent event) {
-        if (enabled) {
+        if (enabled && !readonly) {
             if (suggestionPopup.isAttached()) {
                 popupKeyDown(event);
             } else {
@@ -956,7 +952,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     }
 
     public void onKeyUp(KeyUpEvent event) {
-        if (enabled) {
+        if (enabled && !readonly) {
             switch (event.getNativeKeyCode()) {
             case KeyCodes.KEY_ENTER:
             case KeyCodes.KEY_TAB:
@@ -996,7 +992,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
      * Listener for popupopener
      */
     public void onClick(ClickEvent event) {
-        if (enabled) {
+        if (enabled && !readonly) {
             // ask suggestionPopup if it was just closed, we are using GWT
             // Popup's auto close feature
             if (!suggestionPopup.isJustClosed()) {

@@ -2,47 +2,34 @@ package com.vaadin.tests.components.combobox;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.VerticalLayout;
 
 public class ComboBoxValueInput extends TestBase {
 
     @Override
     protected void setup() {
-        ComboBox cb = new ComboBox("A combobox without input prompt");
-        cb.setImmediate(true);
-        cb.addItem("Value 1");
-        cb.addItem("Value 2");
-        cb.addItem("Value 3");
+        ((VerticalLayout) getLayout()).setSpacing(true);
 
+        ComboBox cb = getComboBox("A combobox", false);
         addComponent(cb);
 
-        cb = new ComboBox("A combobox with input prompt");
+        cb = getComboBox("A combobox with input prompt", false);
         cb.setInputPrompt("Please select");
-        cb.setImmediate(true);
-        cb.addItem("Value 1");
-        cb.addItem("Value 2");
-        cb.addItem("Value 3");
-
         addComponent(cb);
 
-        cb = new ComboBox("A combobox with null item");
+        cb = getComboBox("A combobox with null item", true);
+        addComponent(cb);
+
+        cb = getComboBox("A combobox with null item and input prompt", true);
         cb.setInputPrompt("Please select");
-        cb.setImmediate(true);
-        cb.addItem("Null item");
-        cb.addItem("Value 1");
-        cb.addItem("Value 2");
-        cb.addItem("Value 3");
-        cb.setNullSelectionItemId("Null item");
-
         addComponent(cb);
 
-        cb = new ComboBox("A combobox with null item and input prompt");
-        cb.setImmediate(true);
-        cb.addItem("Null item");
-        cb.addItem("Value 1");
-        cb.addItem("Value 2");
-        cb.addItem("Value 3");
-        cb.setNullSelectionItemId("Null item");
+        cb = getComboBox("A disabled combobox", true);
+        cb.setEnabled(false);
+        addComponent(cb);
 
+        cb = getComboBox("A read-only combobox", true);
+        cb.setReadOnly(true);
         addComponent(cb);
     }
 
@@ -54,6 +41,20 @@ public class ComboBoxValueInput extends TestBase {
     @Override
     protected Integer getTicketNumber() {
         return 3268;
+    }
+
+    private ComboBox getComboBox(String caption, boolean addNullItem) {
+        ComboBox cb = new ComboBox(caption);
+        cb.setImmediate(true);
+        if (addNullItem) {
+            cb.addItem("Null item");
+            cb.setNullSelectionItemId("Null item");
+        }
+        cb.addItem("Value 1");
+        cb.addItem("Value 2");
+        cb.addItem("Value 3");
+
+        return cb;
     }
 
 }
