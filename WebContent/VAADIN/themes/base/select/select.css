@@ -55,11 +55,15 @@
 	font-style: italic;
 }
 .v-filterselect-button {
-	cursor: pointer;
 	float: right;
+	cursor: pointer;
 }
 .v-filterselect.v-readonly .v-filterselect-button {
-	cursor: default;
+	display: none;
+}
+.v-filterselect.v-readonly,
+.v-filterselect.v-readonly .v-filterselect-input {
+	background: transparent;
 }
 .v-filterselect-suggestpopup {
 	background: #fff;

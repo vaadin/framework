@@ -887,11 +887,15 @@ div.v-progressindicator-indeterminate-disabled {
 	font-style: italic;
 }
 .v-filterselect-button {
-	cursor: pointer;
 	float: right;
+	cursor: pointer;
 }
 .v-filterselect.v-readonly .v-filterselect-button {
-	cursor: default;
+	display: none;
+}
+.v-filterselect.v-readonly,
+.v-filterselect.v-readonly .v-filterselect-input {
+	background: transparent;
 }
 .v-filterselect-suggestpopup {
 	background: #fff;
@@ -1405,6 +1409,11 @@ input.v-textfield-prompt,
 textarea.v-textarea-prompt {
 	color: #999;
 	font-style: italic;
+}
+.v-textfield.v-readonly,
+.v-textarea.v-readonly {
+	background: transparent;
+	border: none;
 }
 .v-richtextarea {
 	border: 1px solid #aaa;

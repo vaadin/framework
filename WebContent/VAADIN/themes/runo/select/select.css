@@ -54,7 +54,9 @@
 .v-disabled .v-filterselect-button:hover,
 .v-readonly .v-filterselect-button:hover {
 	background-position: top left;
-	cursor: default;
+}
+.v-filterselect.v-readonly .v-filterselect-input {
+	background: transparent;
 }
 .v-filterselect-suggestpopup {
 	background: #f6f7f7;
