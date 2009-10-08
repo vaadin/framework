@@ -407,15 +407,15 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler {
             // http://erik.eae.net/archives/2007/07/27/18.54.15/#comment-102291
 
             // Remember the original values
-            var left = style.left, rsLeft = elem.runtimeStyle.left;
+            var left = elem.style.left, rsLeft = elem.runtimeStyle.left;
 
             // Put in the new values to get a computed value out
             elem.runtimeStyle.left = elem.currentStyle.left;
-            style.left = value || 0;
-            var ret = style.pixelLeft;
+            elem.style.left = value || 0;
+            var ret = elem.style.pixelLeft;
 
             // Revert the changed values
-            style.left = left;
+            elem.style.left = left;
             elem.runtimeStyle.left = rsLeft;
             
             return ret;
