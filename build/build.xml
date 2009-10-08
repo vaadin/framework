@@ -779,12 +779,12 @@
 		<delete dir="${output-dir}/WebContent/VAADIN/widgetsets/.gwt-tmp" includeemptydirs="true"/>
 	</target>
 
-	<target name="compile-widgetset-generator">
+	<target name="compile-widgetset-generator" depends="init, preprocess-src">
 		<mkdir dir="build/classes"/>
 		<javac source="1.5" target="1.5" classpathref="compile.classpath.server-side" destdir="build/classes" debug="true" encoding="UTF-8">
             <src path="${result-path}/src"/>
-			<include name="${toolkit-package}/terminal/gwt/widgetsetutils/WidgetMapGenerator" />
-            <exclude name="**"/>
+			<include name="com/vaadin/terminal/gwt/widgetsetutils/WidgetMapGenerator.java" />
+            <!-- <exclude name="**"/> -->
 		</javac>
 	</target>
 	
@@ -963,7 +963,7 @@
 	<target name="compile-client-side" depends="compile-client-side-sequential, compile-client-side-parallel"/>
 
 	<!-- Definitions for building local components, i.e., not for an installation package. -->
-	<target name="init-nonpackage" depends="init-platform">
+	<target name="init-nonpackage" depends="init-platform, init">
 		<property file="build/VERSION.properties" />
 		<property file="build/GWT-VERSION.properties" />
 
