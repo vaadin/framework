@@ -779,7 +779,8 @@
 		<delete dir="${output-dir}/WebContent/VAADIN/widgetsets/.gwt-tmp" includeemptydirs="true"/>
 	</target>
 
-	<target name="compile-widgetset-generator" depends="init, preprocess-src">
+    <!-- Note: Probably not needed any longer as all sources need to be compiled. -->
+	<target name="compile-widgetset-generator-only" depends="init, preprocess-src, compile-java">
 		<mkdir dir="${result-path}/classes"/>
 		<javac source="1.5" target="1.5" destdir="${result-path}/classes" debug="true" encoding="UTF-8">
             <src path="${result-path}/src"/>
@@ -793,8 +794,11 @@
 			</classpath>
 		</javac>
 	</target>
-	
-	<target name="compile-widgetset-default" depends="compile-widgetset-generator">
+
+    <!-- The widgetset generator is currently compiled along with rest of server-side Java. -->	
+	<target name="compile-widgetset-generator" depends="init, preprocess-src, compile-java"/>
+
+	<target name="compile-widgetset-default">
 		<echo>Compiling src (client-side)</echo>
 		<echo>com.vaadin.terminal.gwt.DefaultWidgetSet</echo>
 		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
@@ -816,7 +820,7 @@
 		<echo>Compiled DefaultWidgetSet</echo>
 	</target>
 
-	<target name="compile-widgetset-portal-default" depends="compile-widgetset-generator">
+	<target name="compile-widgetset-portal-default">
 		<echo>Compiling src (client-side)</echo>
 		<echo>com.vaadin.portal.gwt.PortalDefaultWidgetSet</echo>
 		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
@@ -838,7 +842,7 @@
 		<echo>Compiled PortalDefaultWidgetSet</echo>
 	</target>
 
-	<target name="compile-widgetset-reserver" depends="compile-widgetset-generator">
+	<target name="compile-widgetset-reserver">
 		<condition property="googlemaps-jar" value="${output-dir}/WebContent/demo/lib/reservr/gwt-maps.jar">
 			<available file="${output-dir}/WebContent/demo/lib/reservr/gwt-maps.jar" />
 		</condition>
@@ -870,7 +874,7 @@
 	</target>
 
     <!-- Building Sampler for installation package is disabled. -->
-	<target name="compile-widgetset-sampler" unless="build.sampler.disabled" depends="compile-widgetset-generator">
+	<target name="compile-widgetset-sampler" unless="build.sampler.disabled">
 		<echo>com.vaadin.demo.sampler.gwt.SamplerWidgetSet</echo>
 		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="-war" />
@@ -893,7 +897,7 @@
 		<echo>Compiled SamplerWidgetSet</echo>
 	</target>
 	
-	<target name="compile-widgetset-coverflow" depends="compile-widgetset-generator">
+	<target name="compile-widgetset-coverflow">
 		<echo>com.vaadin.demo.coverflow.gwt.CoverflowWidgetSet</echo>
 		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="-war" />
@@ -916,7 +920,7 @@
 		<echo>Compiled CoverflowWidgetSet</echo>
 	</target>
 	
-	<target name="compile-widgetset-colorpicker" depends="compile-widgetset-generator">
+	<target name="compile-widgetset-colorpicker">
 		<echo>com.vaadin.demo.colorpicker.gwt.ColorPickerWidgetSet</echo>
 		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="-war" />
@@ -991,32 +995,16 @@
 	</target>
 
 	<!-- Builds all widgetsets locally, i.e., not for an installation package. -->
-	<target name="widgetsets" depends="init-nonpackage, compile-client-side">
+	<target name="widgetsets" depends="compile-widgetset-generator, init-nonpackage, compile-client-side">
 	</target>
 
-	<!-- Builds the default widgetset locally, i.e., not for an installation package. -->
-	<target name="widgetset-default" depends="init-nonpackage, compile-widgetset-default">
-	</target>
-
-	<!-- Builds the default portal widgetset locally, i.e., not for an installation package. -->
-	<target name="widgetset-portal-default" depends="init-nonpackage, compile-widgetset-portal-default">
-	</target>
-
-	<!-- Builds the sampler widgetset locally, i.e., not for an installation package. -->
-	<target name="widgetset-sampler" depends="init-nonpackage, compile-widgetset-sampler">
-	</target>
-	
-	<!-- Builds the coverflow widgetset locally, i.e., not for an installation package. -->
-	<target name="widgetset-coverflow" depends="init-nonpackage, compile-widgetset-coverflow">
-	</target>
-	
-	<!-- Builds the reservation widgetset locally, i.e., not for an installation package. -->
-	<target name="widgetset-reserver" depends="init-nonpackage, compile-widgetset-reserver">
-	</target>
-
-	<!-- Builds the colorpicker widgetset locally, i.e., not for an installation package. -->
-	<target name="widgetset-colorpicker" depends="init-nonpackage, compile-widgetset-colorpicker">
-	</target>
+	<!-- Build each widgetset locally, i.e., not for an installation package. -->
+	<target name="widgetset-default" depends="compile-widgetset-generator, init-nonpackage, compile-widgetset-default"/>
+	<target name="widgetset-portal-default" depends="compile-widgetset-generator, init-nonpackage, compile-widgetset-portal-default"/>
+	<target name="widgetset-sampler" depends="compile-widgetset-generator, init-nonpackage, compile-widgetset-sampler"/>
+	<target name="widgetset-coverflow" depends="compile-widgetset-generator, init-nonpackage, compile-widgetset-coverflow"/>
+	<target name="widgetset-reserver" depends="compile-widgetset-generator, init-nonpackage, compile-widgetset-reserver"/>
+	<target name="widgetset-colorpicker" depends="compile-widgetset-generator, init-nonpackage, compile-widgetset-colorpicker"/>
 
     <!-- Compile the Toolkit library JAR.          -->
     <!-- Only need the default widgetset for this. -->
