@@ -302,8 +302,12 @@ public class VTextualDate extends VDateField implements Paintable, Field,
      */
     protected int getFieldExtraWidth() {
         if (fieldExtraWidth < 0) {
-            text.setWidth("0px");
+            text.setWidth("0");
             fieldExtraWidth = text.getOffsetWidth();
+            if (BrowserInfo.get().isFF3()) {
+                // Firefox somehow always leaves the INPUT element 2px wide
+                fieldExtraWidth -= 2;
+            }
         }
         return fieldExtraWidth;
     }

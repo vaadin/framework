@@ -50,6 +50,7 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        boolean lastReadOnlyState = readonly;
         super.updateFromUIDL(uidl, client);
         addStyleName(CLASSNAME + "-popupcalendar");
         popup.setStyleName(VDateField.CLASSNAME + "-popup "
@@ -60,7 +61,9 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
         }
         calendarToggle.setEnabled(enabled);
 
-        updateWidth();
+        if (lastReadOnlyState != readonly) {
+            updateWidth();
+        }
 
     }
 
