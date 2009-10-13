@@ -1,6 +1,7 @@
 package com.vaadin.demo.sampler;
 
 import java.util.Locale;
+import java.util.Random;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
@@ -143,9 +144,11 @@ public final class ExampleUtil {
                 String.class, "");
         contactContainer.addContainerProperty(PERSON_PROPERTY_LASTNAME,
                 String.class, "");
+
+        Random r = new Random(5);
         for (int i = 0; i < 50;) {
-            String fn = firstnames[(int) (Math.random() * firstnames.length)];
-            String ln = lastnames[(int) (Math.random() * lastnames.length)];
+            String fn = firstnames[(int) (r.nextDouble() * firstnames.length)];
+            String ln = lastnames[(int) (r.nextDouble() * lastnames.length)];
             String id = fn + ln;
             Item item = contactContainer.addItem(id);
             if (item != null) {
@@ -199,7 +202,8 @@ public final class ExampleUtil {
             item.getItemProperty(iso3166_PROPERTY_NAME).setValue(name);
             item.getItemProperty(iso3166_PROPERTY_SHORT).setValue(id);
             item.getItemProperty(iso3166_PROPERTY_FLAG).setValue(
-                    new ThemeResource("../sampler/flags/" + id.toLowerCase() + ".gif"));
+                    new ThemeResource("../sampler/flags/" + id.toLowerCase()
+                            + ".gif"));
         }
         container.sort(new Object[] { iso3166_PROPERTY_NAME },
                 new boolean[] { true });
