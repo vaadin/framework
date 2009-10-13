@@ -12,9 +12,17 @@ import junit.framework.TestCase;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.MethodProperty;
+import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.ui.Form;
 
 public class TestSerialization extends TestCase {
+
+    public void testValidators() throws Exception {
+        RegexpValidator validator = new RegexpValidator(".*", "Error");
+        validator.isValid("aaa");
+        RegexpValidator validator2 = (RegexpValidator) serializeAndDeserialize(validator);
+        validator2.isValid("aaa");
+    }
 
     public void testForm() throws Exception {
         Form f = new Form();
@@ -56,7 +64,7 @@ public class TestSerialization extends TestCase {
         serializeAndDeserialize(mp);
     }
 
-    private static void serializeAndDeserialize(Serializable s)
+    private static Serializable serializeAndDeserialize(Serializable s)
             throws IOException, ClassNotFoundException {
         // Serialize and deserialize
 
@@ -73,6 +81,8 @@ public class TestSerialization extends TestCase {
         } else {
             System.out.println(s + " does NOT equal " + s2);
         }
+
+        return s2;
     }
 
     public static class Data implements Serializable {

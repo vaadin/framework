@@ -12,8 +12,8 @@ import java.util.regex.Pattern;
  * {@link java.util.regex.Pattern#sum}
  * </p>
  * <p>
- * See {@link com.vaadin.data.validator.AbstractStringValidator} for
- * more information.
+ * See {@link com.vaadin.data.validator.AbstractStringValidator} for more
+ * information.
  * </p>
  * 
  * @author IT Mill Ltd.
@@ -26,7 +26,7 @@ public class RegexpValidator extends AbstractStringValidator {
 
     private Pattern pattern;
     private boolean complete;
-    private Matcher matcher = null;
+    private transient Matcher matcher = null;
 
     /**
      * Creates a validator for checking that the regular expression matches the
