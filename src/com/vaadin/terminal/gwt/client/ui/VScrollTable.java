@@ -2835,12 +2835,19 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
      */
     private int getContentAreaBorderHeight() {
         if (contentAreaBorderHeight < 0) {
-            DOM.setStyleAttribute(bodyContainer.getElement(), "overflow",
-                    "hidden");
-            contentAreaBorderHeight = bodyContainer.getOffsetHeight()
-                    - bodyContainer.getElement().getPropertyInt("clientHeight");
-            DOM.setStyleAttribute(bodyContainer.getElement(), "overflow",
-                    "auto");
+            if (BrowserInfo.get().isIE7()) {
+                contentAreaBorderHeight = Util
+                        .measureVerticalBorder(bodyContainer.getElement());
+            } else {
+                DOM.setStyleAttribute(bodyContainer.getElement(), "overflow",
+                        "hidden");
+                int oh = bodyContainer.getOffsetHeight();
+                int ch = bodyContainer.getElement().getPropertyInt(
+                        "clientHeight");
+                contentAreaBorderHeight = oh - ch;
+                DOM.setStyleAttribute(bodyContainer.getElement(), "overflow",
+                        "auto");
+            }
         }
         return contentAreaBorderHeight;
     }
