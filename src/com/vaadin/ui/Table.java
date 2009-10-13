@@ -2174,10 +2174,9 @@ public class Table extends AbstractSelect implements Action.Container,
             }
             target.addAttribute("key", Integer.parseInt(cells[CELL_KEY][i]
                     .toString()));
-            if (actionHandlers != null || isSelectable()) {
-                if (isSelected(itemId)) {
-                    target.addAttribute("selected", true);
-                }
+
+            if (isSelected(itemId)) {
+                target.addAttribute("selected", true);
             }
 
             // Actions
