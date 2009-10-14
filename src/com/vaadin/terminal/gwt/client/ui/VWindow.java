@@ -22,11 +22,13 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.Console;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VDebugConsole;
 
 /**
  * "Sub window" component.
@@ -909,7 +911,16 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
         } else if (vaadinModality) {
             // return false when modal and outside window
             final Element target = event.getTarget().cast();
+
             if (!DOM.isOrHasChild(getElement(), target)) {
+                // not within the modal window, but let's see if it's in the
+                // debug window
+                Console console = ApplicationConnection.getConsole();
+                if (console instanceof VDebugConsole
+                        && DOM.isOrHasChild(((VDebugConsole) console)
+                                .getElement(), target)) {
+                    return true; // allow debug-window clicks
+                }
                 return false;
             }
         }
