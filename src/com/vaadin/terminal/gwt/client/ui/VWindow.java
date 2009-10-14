@@ -628,6 +628,9 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
 
     @Override
     public void setPopupPosition(int left, int top) {
+        if (top < 0) {
+            top = 0;
+        }
         super.setPopupPosition(left, top);
         if (left != uidlPositionX && client != null) {
             client.updateVariable(id, "positionx", left, false);
