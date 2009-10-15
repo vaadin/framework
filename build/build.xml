@@ -43,7 +43,7 @@
 	<!-- 
 	Call one of package-* targets unless you understand what you are doing 
 	-->
-	<target name="package-all" depends="clean-all, package-init, init, build, docs, internal-package-mac, internal-package-windows, internal-package-linux, internal-package-war" description="Build public packages for Windows, Linux and Mac platforms.">
+	<target name="package-all" depends="clean-all, package-init, init, build, docs, internal-package-mac, internal-package-windows, internal-package-linux, internal-package-war, internal-package-liferay" description="Build public packages for Windows, Linux and Mac platforms.">
 	</target>
 
 	<target name="package-mac" depends="clean-result, package-init, init, build, docs, internal-package-mac" description="Create public tar.gz package for Mac.">
@@ -62,6 +62,9 @@
 	</target>
 
 	<target name="package-war" depends="clean-result, package-init, init, build, docs, internal-package-linux, internal-package-war">
+	</target>
+
+	<target name="package-liferay-zip" depends="clean-result, package-init, init, build, docs, internal-package-linux, internal-package-liferay">
 	</target>
 
     <target name="package-test" depends="clean-result, nightly-init, package-init, init, build, docs, internal-package-linux, nightly-publish">
@@ -360,6 +363,32 @@
 				<include name="**/*" />
 			</fileset>
 		</war>
+	</target>
+
+	<target name="internal-package-liferay" depends="internal-package-war">
+		<!-- We assume the needed files are put in place by internal-package-war -->
+		<echo>Building Liferay zip</echo>
+
+		<zip zipfile="${result-path}/${product-file}-${version}-liferay.zip">
+			<zipfileset prefix="VAADIN/widgetsets/com.vaadin.portal.gwt.PortalDefaultWidgetSet" dir="${output-dir}/WebContent/VAADIN/widgetsets/com.vaadin.portal.gwt.PortalDefaultWidgetSet">
+				<patternset>
+					<include name="**/*" />
+				</patternset>
+			</zipfileset>
+			<zipfileset prefix="VAADIN/themes" dir="${output-dir}/WebContent/VAADIN/themes">
+				<patternset>
+					<include name="base/**/*" />
+					<include name="liferay/**/*" />
+					<include name="runo/**/*" />
+					<include name="reindeer/**/*" />
+					<include name="default/**/*" />
+				</patternset>
+			</zipfileset>
+			
+		</zip>
+		
+        <echo>##teamcity[publishArtifacts '${result-path}/${product-file}-${version}-liferay.zip']</echo>
+
 	</target>
 
 	<target name="create-mac-diskimage">
