@@ -34,6 +34,7 @@ public class WidgetSetBuilder {
 
     public static void updateWidgetSet(final String widgetset, String sourcepath)
             throws IOException, FileNotFoundException {
+        boolean changed = false;
         String widgetsetfilename = sourcepath + "/"
                 + widgetset.replace(".", "/") + ".gwt.xml";
         File widgetsetFile = new File(widgetsetfilename);
@@ -44,9 +45,11 @@ public class WidgetSetBuilder {
                     widgetsetFile));
             printStream.print("<module>\n\n</module>\n");
             printStream.close();
+            changed = true;
         }
 
         String content = readFile(widgetsetFile);
+        String originalContent = content;
 
         Collection<String> oldInheritedWidgetsets = getCurrentWidgetSets(content);
 
@@ -71,7 +74,10 @@ public class WidgetSetBuilder {
             }
         }
 
-        commitChanges(widgetsetfilename, content);
+        changed = changed ? true : content.equals(originalContent);
+        if (changed) {
+            commitChanges(widgetsetfilename, content);
+        }
     }
 
     private static String removeWidgetSet(String ws, String content) {
