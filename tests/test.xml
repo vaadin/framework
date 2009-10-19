@@ -109,7 +109,7 @@
 			<jvmarg value="-Djava.awt.headless=true" />
 
 			<!-- true/false system arguments -->
-			<jvmarg value="-Dcom.vaadin.testbench.screenshot.reference.error_if_missing=${com.vaadin.testbench.screenshot.reference.error_if_missing}" />
+			<jvmarg value="-Dcom.vaadin.testbench.screenshot.softfail=${com.vaadin.testbench.screenshot.softfail}" />
 			<jvmarg value="-Dcom.vaadin.testbench.screenshot.reference.debug=${com.vaadin.testbench.screenshot.reference.debug}" />
 
 			<batchtest>

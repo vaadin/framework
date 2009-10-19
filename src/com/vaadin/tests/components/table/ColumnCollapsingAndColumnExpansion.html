@@ -21,10 +21,11 @@
 	<td></td>
 	<td></td>
 </tr>
+<!--Initial state, all 3 columns visible-->
 <tr>
 	<td>screenCapture</td>
 	<td></td>
-	<td></td>
+	<td>col1-col2-col3-visible</td>
 </tr>
 <tr>
 	<td>click</td>
@@ -36,6 +37,7 @@
 	<td></td>
 	<td></td>
 </tr>
+<!--Hide 'col2' through table interface-->
 <tr>
 	<td>click</td>
 	<td>//td[@id='gwt-uid-2']/span/div</td>
@@ -49,7 +51,141 @@
 <tr>
 	<td>screenCapture</td>
 	<td></td>
+	<td>col2-hidden</td>
+</tr>
+<tr>
+	<td>waitForVaadin</td>
 	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableColumnCollapsingAndColumnExpansion::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[0]/VTextField[0]</td>
+	<td>79,15</td>
+</tr>
+<tr>
+	<td>waitForVaadin</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>enterCharacter</td>
+	<td>vaadin=runcomvaadintestscomponentstableColumnCollapsingAndColumnExpansion::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[0]/VTextField[0]</td>
+	<td>Col1</td>
+</tr>
+<tr>
+	<td>waitForVaadin</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableColumnCollapsingAndColumnExpansion::/VVerticalLayout[0]/domChild[0]/domChild[1]</td>
+	<td>221,457</td>
+</tr>
+<tr>
+	<td>waitForVaadin</td>
+	<td></td>
+	<td></td>
+</tr>
+<!--Hide 'Col1' using button-->
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentstableColumnCollapsingAndColumnExpansion::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[1]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForVaadin</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>screenCapture</td>
+	<td></td>
+	<td>col1-col2-hidden</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableColumnCollapsingAndColumnExpansion::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[0]/VTextField[0]</td>
+	<td>55,14</td>
+</tr>
+<tr>
+	<td>waitForVaadin</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>enterCharacter</td>
+	<td>vaadin=runcomvaadintestscomponentstableColumnCollapsingAndColumnExpansion::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[0]/VTextField[0]</td>
+	<td>Col2</td>
+</tr>
+<tr>
+	<td>waitForVaadin</td>
+	<td></td>
+	<td></td>
+</tr>
+<!--Show 'col2' using button-->
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentstableColumnCollapsingAndColumnExpansion::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[2]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForVaadin</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableColumnCollapsingAndColumnExpansion::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[0]/VTextField[0]</td>
+	<td>70,16</td>
+</tr>
+<tr>
+	<td>waitForVaadin</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>screenCapture</td>
+	<td></td>
+	<td>col1-hidden</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableColumnCollapsingAndColumnExpansion::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[0]/VTextField[0]</td>
+	<td>45,19</td>
+</tr>
+<tr>
+	<td>waitForVaadin</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>enterCharacter</td>
+	<td>vaadin=runcomvaadintestscomponentstableColumnCollapsingAndColumnExpansion::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[0]/VTextField[0]</td>
+	<td>Col1</td>
+</tr>
+<tr>
+	<td>waitForVaadin</td>
+	<td></td>
+	<td></td>
+</tr>
+<!--Show 'Col1' using button-->
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentstableColumnCollapsingAndColumnExpansion::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[2]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForVaadin</td>
+	<td></td>
+	<td></td>
+</tr>
+<!--We should now be back at the initial state, all 3 columns visible-->
+<tr>
+	<td>screenCapture</td>
+	<td></td>
+	<td>col1-col2-col3-visible-again</td>
 </tr>
 
 </tbody></table>

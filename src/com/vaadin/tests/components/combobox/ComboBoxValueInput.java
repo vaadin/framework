@@ -31,6 +31,10 @@ public class ComboBoxValueInput extends TestBase {
         cb = getComboBox("A read-only combobox", true);
         cb.setReadOnly(true);
         addComponent(cb);
+
+        cb = getComboBox("A combobox with filteringMode off", false);
+        cb.setFilteringMode(ComboBox.FILTERINGMODE_OFF);
+
     }
 
     @Override

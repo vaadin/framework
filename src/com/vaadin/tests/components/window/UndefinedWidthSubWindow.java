@@ -2,11 +2,17 @@ package com.vaadin.tests.components.window;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 
 public class UndefinedWidthSubWindow extends TestBase {
+
+    private Window autoWideWindow;
 
     @Override
     protected String getDescription() {
@@ -18,16 +24,37 @@ public class UndefinedWidthSubWindow extends TestBase {
         return null;
     }
 
+    private Component createRemoveButton() {
+        Button b = new Button("Remove");
+        b.addListener(new ClickListener() {
+
+            public void buttonClick(ClickEvent event) {
+                Button b = event.getButton();
+                ComponentContainer cc = (ComponentContainer) b.getParent();
+                cc.removeComponent(b);
+            }
+        });
+
+        return b;
+    }
+
     @Override
     protected void setup() {
-        Window dialog = new Window("Dialog - width defined by contents",
+        autoWideWindow = new Window("Dialog - width defined by contents",
                 new HorizontalLayout());
-        dialog.getContent().setSizeUndefined();
-        dialog.addComponent(new TextField("Field 1"));
-        dialog.addComponent(new TextField("Field 2"));
-        dialog.addComponent(new Button("Ok"));
+        autoWideWindow.getContent().setSizeUndefined();
+        autoWideWindow.addComponent(new TextField("Field 1"));
+        autoWideWindow.addComponent(new TextField("Field 2"));
+        autoWideWindow.addComponent(new Button("Add", new ClickListener() {
 
-        getMainWindow().addWindow(dialog);
+            public void buttonClick(ClickEvent event) {
+                autoWideWindow.addComponent(createRemoveButton());
+
+            }
+
+        }));
+
+        getMainWindow().addWindow(autoWideWindow);
 
         Window dialog2 = new Window("Dialog - width defined by caption");
         dialog2.addComponent(new TextField("Field 1"));
@@ -40,5 +67,4 @@ public class UndefinedWidthSubWindow extends TestBase {
         dialog2.center();
         getMainWindow().addWindow(dialog2);
     }
-
 }
