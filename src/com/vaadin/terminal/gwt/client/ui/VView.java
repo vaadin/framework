@@ -241,26 +241,19 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
             updateParentFrameSize();
         }
 
-        // Update subwindows
+        // Save currently open subwindows to track which will need to be closed
         final HashSet<VWindow> removedSubWindows = new HashSet<VWindow>(
                 subWindows);
 
-        // Open new windows
-        while ((childUidl = uidl.getChildUIDL(childIndex++)) != null) {
-            if ("window".equals(childUidl.getTag())) {
-                final Paintable w = client.getPaintable(childUidl);
-                if (subWindows.contains(w)) {
-                    removedSubWindows.remove(w);
-                } else {
-                    subWindows.add((VWindow) w);
-                }
-                w.updateFromUIDL(childUidl, client);
-            } else if ("actions".equals(childUidl.getTag())) {
+        // Handle other UIDL children
+        while ((childUidl = uidl.getChildUIDL(++childIndex)) != null) {
+            String tag = childUidl.getTag().intern();
+            if (tag == "actions") {
                 if (actionHandler == null) {
                     actionHandler = new ShortcutActionHandler(id, client);
                 }
                 actionHandler.updateActionMap(childUidl);
-            } else if (childUidl.getTag().equals("notifications")) {
+            } else if (tag == "notifications") {
                 for (final Iterator it = childUidl.getChildIterator(); it
                         .hasNext();) {
                     final UIDL notification = (UIDL) it.next();
@@ -269,12 +262,12 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
                         final String parsedUri = client
                                 .translateVaadinUri(notification
                                         .getStringAttribute("icon"));
-                        html += "<IMG src=\"" + parsedUri + "\" />";
+                        html += "<img src=\"" + parsedUri + "\" />";
                     }
                     if (notification.hasAttribute("caption")) {
-                        html += "<H1>"
+                        html += "<h1>"
                                 + notification.getStringAttribute("caption")
-                                + "</H1>";
+                                + "</h1>";
                     }
                     if (notification.hasAttribute("message")) {
                         html += "<p>"
@@ -290,10 +283,19 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
                     final int delay = notification.getIntAttribute("delay");
                     new VNotification(delay).show(html, position, style);
                 }
+            } else {
+                // subwindows
+                final Paintable w = client.getPaintable(childUidl);
+                if (subWindows.contains(w)) {
+                    removedSubWindows.remove(w);
+                } else {
+                    subWindows.add((VWindow) w);
+                }
+                w.updateFromUIDL(childUidl, client);
             }
         }
 
-        // Close old windows
+        // Close old windows which where not in UIDL anymore
         for (final Iterator<VWindow> rem = removedSubWindows.iterator(); rem
                 .hasNext();) {
             final VWindow w = rem.next();
