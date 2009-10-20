@@ -1,5 +1,7 @@
 package com.vaadin.tests.components.table;
 
+import com.vaadin.event.Action;
+import com.vaadin.event.Action.Handler;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -23,6 +25,27 @@ public class ColumnCollapsingAndColumnExpansion extends TestBase {
         table.addContainerProperty("Col3", String.class, null);
         table.setColumnCollapsingAllowed(true);
 
+        table.addActionHandler(new Handler() {
+
+            final Action H = new Action("Toggle Col2");
+            final Action[] actions = new Action[] { H };
+
+            public Action[] getActions(Object target, Object sender) {
+                return actions;
+            }
+
+            public void handleAction(Action action, Object sender, Object target) {
+                try {
+                    table.setColumnCollapsed("Col2", !table
+                            .isColumnCollapsed("Col2"));
+                } catch (IllegalAccessException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
         table.setSizeFull();
 
         for (int y = 1; y < 5; y++) {
@@ -34,7 +57,7 @@ public class ColumnCollapsingAndColumnExpansion extends TestBase {
         addComponent(table);
 
         HorizontalLayout hl = new HorizontalLayout();
-        final TextField tf = new TextField("Column name");
+        final TextField tf = new TextField("Column name (ColX)");
         Button hide = new Button("Collapse", new ClickListener() {
 
             public void buttonClick(ClickEvent event) {
