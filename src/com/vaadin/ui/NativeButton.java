@@ -1,8 +1,10 @@
 package com.vaadin.ui;
 
 import com.vaadin.data.Property;
+import com.vaadin.terminal.gwt.client.ui.VNativeButton;
 
 @SuppressWarnings("serial")
+@ClientWidget(VNativeButton.class)
 public class NativeButton extends Button {
 
     public NativeButton() {
