@@ -1446,6 +1446,15 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
                 if (col.hasAttribute("er")) {
                     c.setExpandRatio(col.getFloatAttribute("er"));
                 }
+                if (col.hasAttribute("collapsed")) {
+                    // ensure header is properly removed from parent (case when
+                    // collapsing happens via servers side api)
+                    if (c.isAttached()) {
+                        c.removeFromParent();
+                        headerChangedDuringUpdate = true;
+                    }
+                }
+
             }
             // check for orphaned header cells
             for (Iterator<String> cit = availableCells.keySet().iterator(); cit
