@@ -1863,23 +1863,6 @@ public class Table extends AbstractSelect implements Action.Container,
             clientNeedsContentRefresh = true;
         }
 
-        // Actions
-        if (variables.containsKey("action")) {
-            final StringTokenizer st = new StringTokenizer((String) variables
-                    .get("action"), ",");
-            if (st.countTokens() == 2) {
-                final Object itemId = itemIdMapper.get(st.nextToken());
-                final Action action = (Action) actionMapper.get(st.nextToken());
-                if (action != null && containsId(itemId)
-                        && actionHandlers != null) {
-                    for (final Iterator<Handler> i = actionHandlers.iterator(); i
-                            .hasNext();) {
-                        (i.next()).handleAction(action, this, itemId);
-                    }
-                }
-            }
-        }
-
         if (!sortDisabled) {
             // Sorting
             boolean doSort = false;
@@ -1946,6 +1929,24 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         enableContentRefreshing(clientNeedsContentRefresh);
+
+        // Actions
+        if (variables.containsKey("action")) {
+            final StringTokenizer st = new StringTokenizer((String) variables
+                    .get("action"), ",");
+            if (st.countTokens() == 2) {
+                final Object itemId = itemIdMapper.get(st.nextToken());
+                final Action action = (Action) actionMapper.get(st.nextToken());
+                if (action != null && containsId(itemId)
+                        && actionHandlers != null) {
+                    for (final Iterator<Handler> i = actionHandlers.iterator(); i
+                            .hasNext();) {
+                        (i.next()).handleAction(action, this, itemId);
+                    }
+                }
+            }
+        }
+
     }
 
     /**
