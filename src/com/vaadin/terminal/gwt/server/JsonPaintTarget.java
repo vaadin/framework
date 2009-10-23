@@ -27,6 +27,7 @@ import com.vaadin.terminal.VariableOwner;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.CustomLayout;
 
 /**
  * User Interface Description Language Target.
@@ -135,11 +136,12 @@ public class JsonPaintTarget implements PaintTarget {
 
         tag = new JsonTag(tagName);
 
-        customLayoutArgumentsOpen = "customlayout".equals(tagName);
-
         if ("error".equals(tagName)) {
             errorsOpen++;
         }
+
+        customLayoutArgumentsOpen = false;
+
     }
 
     /**
@@ -761,7 +763,6 @@ public class JsonPaintTarget implements PaintTarget {
         if (namespace != null) {
             addAttribute("xmlns", namespace);
         }
-        customLayoutArgumentsOpen = false;
 
         if (sectionData != null) {
             tag.addData("\"" + escapeJSON(sectionData) + "\"");
@@ -823,6 +824,11 @@ public class JsonPaintTarget implements PaintTarget {
         paintable.addListener(manager);
         addAttribute("id", id);
         paintedComponents.add(paintable);
+
+        if (paintable instanceof CustomLayout) {
+            customLayoutArgumentsOpen = true;
+        }
+
         return cacheEnabled && isPreviouslyPainted;
     }
 
