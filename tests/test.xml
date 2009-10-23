@@ -1,15 +1,23 @@
 <?xml version="1.0"?>
 
 <project name="Run Vaadin Testbench Tests" basedir="." default="run-and-clean-up">
-    <!-- ================================================================== -->
-    <!-- Configuration                                                      -->
-    <!-- ================================================================== -->
+	<!-- ================================================================== -->
+	<!-- Configuration                                                      -->
+	<!-- ================================================================== -->
 	<!-- Temporary output directory, created and removed by this script -->
 	<property name="test-output-dir" value="../build/test-output" />
 	<property name="class-dir" value="${test-output-dir}/classes" />
+	<property name="com.vaadin.testbench.screenshot.directory" value="../tests/screenshots" />
+	<property name="com.vaadin.testbench.tester.host" value="192.168.1.44" />
 	<!-- Browsers to use for testing -->
-	<property name="test-browsers" value="firefox,ie,safari,googlechrome,opera" />
-	
+	<property name="test-browsers" value="winxp-ie6,winxp-ie7,winxp-ie8,winxp-firefox35,winxp-safari4,winxp-googlechrome3,winxp-opera10" />
+
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+		<classpath>
+			<pathelement location="../build/lib/ant-contrib-1.0b3.jar"/>
+		</classpath>
+	</taskdef>
+
 	<!-- classpath must include test bench jar and its dependencies -->
 	<path id="classpath">
 		<fileset dir="${com.vaadin.testbench.lib.dir}" includes="**/*.jar" />
@@ -46,56 +54,61 @@
 	</target>
 
 
-    <!-- ================================================================== -->
-    <!-- Toolkit Server Management                                          -->
-    <!-- ================================================================== -->
+	<!-- ================================================================== -->
+	<!-- Toolkit Server Management                                          -->
+	<!-- ================================================================== -->
 
-    <target name="server-start">
-        <fail unless="package.name" message="The 'package.name' property must be defined."/>
-        <fail unless="package.filename" message="The 'package.filename' property must be defined."/>
-        <fail unless="testing.testarea" message="The 'testing.testarea' property must be defined."/>
+	<target name="server-start">
+		<fail unless="output-dir" message="The 'output-dir' (usually build/result/vaadin-xxx) should be given to test script." />
+		<fail unless="package.name" message="The 'package.name' property must be defined." />
+		<fail unless="package.filename" message="The 'package.filename' property must be defined." />
+		<fail unless="testing.testarea" message="The 'testing.testarea' property must be defined." />
 
-        <echo>Package name: ${package.name}</echo>
-        <echo>Package filename: ${package.filename}</echo>
-        <echo>Testing area: ${testing.testarea}</echo>
+		<echo>Package name: ${package.name}</echo>
+		<echo>Package filename: ${package.filename}</echo>
+		<echo>Testing area: ${testing.testarea}</echo>
 
-        <exec executable="python" searchpath="true" dir=".."  resultproperty="server.start.result">
-            <arg value="build/testing/toolkit-server.py"/>
-            <arg value="start"/>
-            <arg value="${package.name}"/>
-            <arg value="${package.filename}"/>
-            <arg value="${output-dir}"/>
-            <arg value="${testing.testarea}"/>
-        </exec>
+		<exec executable="python" searchpath="true" dir=".." resultproperty="server.start.result">
+			<arg value="build/testing/toolkit-server.py" />
+			<arg value="start" />
+			<arg value="${package.name}" />
+			<arg value="${package.filename}" />
+			<arg value="${output-dir}" />
+			<arg value="${testing.testarea}" />
+		</exec>
 
-        <condition property="server.start.succeeded">
-            <equals arg1="${server.start.result}" arg2="0"/>
-        </condition>
-    </target>
-
-    <target name="server-stop">
-        <exec executable="python" dir=".." searchpath="true" resultproperty="server.stop.result">
-            <arg value="build/testing/toolkit-server.py"/>
-            <arg value="stop"/>
-        </exec>
-    </target>
-	
-    <!-- ================================================================== -->
-    <!-- Running Tests                                                      -->
-    <!-- ================================================================== -->
-	
-	<target name="check-parameters">
-        <fail unless="output-dir" message="The 'output-dir' (usually build/result/vaadin-xxx) should be given to test script."/>
-        <fail unless="com.vaadin.testbench.lib.dir" message="The 'com.vaadin.testbench.lib.dir' property must be defined."/>
-        <fail unless="com.vaadin.testbench.tester.host" message="The 'com.vaadin.testbench.tester.host' property must be defined."/>
-        <fail unless="com.vaadin.testbench.deployment.url" message="The 'com.vaadin.testbench.deployment.url' property must be defined."/>
-    </target>
-		
-	<target name="run-tests" if="server.start.succeeded" depends="execute-tests">
+		<condition property="server.start.succeeded">
+			<equals arg1="${server.start.result}" arg2="0" />
+		</condition>
 	</target>
-	
+
+	<target name="server-stop">
+		<exec executable="python" dir=".." searchpath="true" resultproperty="server.stop.result">
+			<arg value="build/testing/toolkit-server.py" />
+			<arg value="stop" />
+		</exec>
+	</target>
+
+	<!-- ================================================================== -->
+	<!-- Running Tests                                                      -->
+	<!-- ================================================================== -->
+
+	<target name="check-parameters">
+		<fail unless="com.vaadin.testbench.lib.dir" message="The 'com.vaadin.testbench.lib.dir' property must be defined." />
+		<fail unless="com.vaadin.testbench.tester.host" message="The 'com.vaadin.testbench.tester.host' property must be defined." />
+		<fail unless="com.vaadin.testbench.deployment.url" message="The 'com.vaadin.testbench.deployment.url' property must be defined." />
+	</target>
+
+	<target name="run-tests" depends="remove-error-screens,compile-tests">
+		<foreach parallel="true" target="execute-tests" param="target">
+			<path>
+				<fileset dir="${test-output-dir}" includes="**/**.java" />
+			</path>
+		</foreach>
+	</target>
+
 	<!-- This target runs the generated and compiled junit tests -->
-	<target name="execute-tests" depends="remove-error-screens,compile-tests">
+	<target name="execute-tests">
 		<junit fork="yes" printsummary="withOutAndErr">
 			<classpath>
 				<path refid="classpath" />
@@ -113,9 +126,7 @@
 			<jvmarg value="-Dcom.vaadin.testbench.screenshot.reference.debug=${com.vaadin.testbench.screenshot.reference.debug}" />
 
 			<batchtest>
-				<fileset dir="${test-output-dir}">
-					<include name="**/**.java" />
-				</fileset>
+				<filelist dir="${test-output-dir}" files="${target}" />
 			</batchtest>
 		</junit>
 
@@ -130,27 +141,27 @@
 			</fileset>
 		</delete>
 	</target>
-	
+
 	<!-- Remove old error screenshots -->
 	<target name="remove-error-screens">
 		<mkdir dir="${com.vaadin.testbench.screenshot.directory}/errors" />
 		<delete>
 			<fileset dir="${com.vaadin.testbench.screenshot.directory}/errors">
-				<include name="**/**.*" />	
+				<include name="**/**.*" />
 			</fileset>
 		</delete>
 	</target>
 
-    <!-- ================================================================== -->
-    <!-- Main Targets                                                       -->
-    <!-- ================================================================== -->
+	<!-- ================================================================== -->
+	<!-- Main Targets                                                       -->
+	<!-- ================================================================== -->
 
-    <!-- The default target. -->
+	<!-- The default target. -->
 	<target name="run-and-clean-up" depends="check-parameters, run-tests,remove-temp-testclasses">
 	</target>
 
-    <!-- Also starts the server. -->
-    <target name="test-package" depends="server-start, run-and-clean-up, server-stop">
-    </target>
-	
+	<!-- Also starts the server. -->
+	<target name="test-package" depends="server-start, run-and-clean-up, server-stop">
+	</target>
+
 </project>
