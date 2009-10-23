@@ -1594,7 +1594,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
      * 
      * TODO make customlayout templates (from theme) to be cached here.
      */
-    class OpenWindowCache {
+    class OpenWindowCache implements Serializable {
 
         private Set<Object> res = new HashSet<Object>();
 
