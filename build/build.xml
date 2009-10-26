@@ -1321,7 +1321,7 @@
 
         <!-- Tell TeamCity the build name. Have to do it this way, because   -->
         <!-- this script needs to get the plain build number as a parameter. -->
-        <echo>##teamcity[buildNumber '${version.full}']</echo>
+        <echo>##teamcity[buildNumber '${version}-c${build.number}']</echo>
     </target>
 
     <target name="nightly-teamcity-publish">
