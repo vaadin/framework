@@ -13,7 +13,6 @@ import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.ParameterHandler;
 import com.vaadin.terminal.URIHandler;
-import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 
 /**
  * LoginForm is a Vaadin component to handle common problem among Ajax
@@ -35,12 +34,16 @@ import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
  * 
  * @since 5.3
  */
-@SuppressWarnings("serial")
 public class LoginForm extends CustomComponent {
 
     private Embedded iframe = new Embedded();
 
     private ApplicationResource loginPage = new ApplicationResource() {
+
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
 
         public Application getApplication() {
             return LoginForm.this.getApplication();
@@ -70,11 +73,16 @@ public class LoginForm extends CustomComponent {
 
     private ParameterHandler paramHandler = new ParameterHandler() {
 
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
+
         public void handleParameters(Map parameters) {
             if (parameters.containsKey("username")) {
                 getWindow().addURIHandler(uriHandler);
 
-                HashMap params = new HashMap();
+                HashMap<String, String> params = new HashMap<String, String>();
                 // expecting single params
                 for (Iterator it = parameters.keySet().iterator(); it.hasNext();) {
                     String key = (String) it.next();
@@ -88,6 +96,10 @@ public class LoginForm extends CustomComponent {
     };
 
     private URIHandler uriHandler = new URIHandler() {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
         private final String responce = "<html><body>Login form handeled."
                 + "<script type='text/javascript'>top.vaadin.forceSync();"
                 + "</script></body></html>";
@@ -126,15 +138,6 @@ public class LoginForm extends CustomComponent {
      */
     protected byte[] getLoginHTML() {
 
-        String defaultThemeName = AbstractApplicationServlet.getDefaultTheme();
-
-        String theme = getApplication().getMainWindow().getTheme();
-        String guessedThemeUri = getApplication().getURL() + "VAADIN/themes/"
-                + (theme == null ? defaultThemeName : theme) + "/styles.css";
-        String guessedThemeUri2 = getApplication().getURL()
-                + "../VAADIN/themes/"
-                + (theme == null ? defaultThemeName : theme) + "/styles.css";
-
         String appUri = getApplication().getURL().toString();
 
         return ("<!DOCTYPE html PUBLIC \"-//W3C//DTD "
@@ -147,14 +150,19 @@ public class LoginForm extends CustomComponent {
                 + "loginHandler"
                 + "'; var f = document.getElementById('loginf');"
                 + "document.forms[0].action = uri;document.forms[0].username.focus();};"
+                + ""
+                + "var styles = window.parent.document.styleSheets;"
+                + "for(var j = 0; j < styles.length; j++) {\n"
+                + "if(styles[j].href) {"
+                + "var stylesheet = document.createElement('link');\n"
+                + "stylesheet.setAttribute('rel', 'stylesheet');\n"
+                + "stylesheet.setAttribute('type', 'text/css');\n"
+                + "stylesheet.setAttribute('href', styles[j].href);\n"
+                + "document.getElementsByTagName('head')[0].appendChild(stylesheet);\n"
+                + "}"
+                + "}\n"
                 + "</script>"
-                + "<link rel='stylesheet' href='"
-                + guessedThemeUri
-                + "'/>"
-                + "<link rel='stylesheet' href='"
-                + guessedThemeUri2
-                + "'/>"
-                + "</head><body onload='setTarget();' style='margin:0;padding:0;'>"
+                + "</head><body onload='setTarget();' style='margin:0;padding:0;' class=\"v-generated-body\">"
                 + "<div class='v-app v-app-loginpage'>"
                 + "<iframe name='logintarget' style='width:0;height:0;"
                 + "border:0;margin:0;padding:0;'></iframe>"
@@ -163,7 +171,7 @@ public class LoginForm extends CustomComponent {
                 + "<input class='v-textfield' style='display:block;' type='text' name='username'></div>"
                 + "<div>Password</div>"
                 + "<div><input class='v-textfield' style='display:block;' type='password' name='password'></div>"
-                + "<div><input class='v-button' type='submit' value='Login'></div></form></div>" + "</body></html>")
+                + "<div><div onclick=\"document.forms[0].submit();\" tabindex=\"0\" class=\"v-button\" role=\"button\" ><span class=\"v-button-wrap\"><span class=\"v-button-caption\">Login</span></span></div></div></form></div>" + "</body></html>")
                 .getBytes();
     }
 
@@ -194,9 +202,13 @@ public class LoginForm extends CustomComponent {
      */
     public class LoginEvent extends Event {
 
-        private Map params;
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
+        private Map<String, String> params;
 
-        private LoginEvent(Map params) {
+        private LoginEvent(Map<String, String> params) {
             super(LoginForm.this);
             this.params = params;
         }
@@ -209,7 +221,7 @@ public class LoginForm extends CustomComponent {
          */
         public String getLoginParameter(String name) {
             if (params.containsKey(name)) {
-                return (String) params.get(name);
+                return params.get(name);
             } else {
                 return null;
             }
