@@ -130,31 +130,6 @@
 	<target name="clean-all" depends="clean-result, clean-checkout">
     </target>
 
-	<!-- Find out which platform we are in -->
-	<target name="init-platform">
-		<antcontrib:if>
-			<contains string="${os.name}" substring="Windows" />
-			<then>
-				<property name="platform" value="windows" />
-			</then>
-		</antcontrib:if>
-		<antcontrib:if>
-			<equals arg1="${os.name}" arg2="Linux" />
-			<then>
-				<property name="platform" value="linux" />
-			</then>
-		</antcontrib:if>
-		<antcontrib:if>
-			<equals arg1="${os.name}" arg2="Mac OS X" />
-			<then>
-				<property name="platform" value="mac" />
-			</then>
-		</antcontrib:if>
-	</target>
-
-	<target name="init-oophm-platform"><property name="platform" value="oophm" /></target>
-	<target name="init-oophm" depends="init-oophm-platform,init"></target>
-
     <!-- ================================================================== -->
     <!-- Check versions.                                                    -->
     <!-- ================================================================== -->
@@ -187,13 +162,37 @@
 	<!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- ================================================================== -->
 
+	<!-- Find out which platform we are in -->
+	<target name="init-platform">
+		<antcontrib:if>
+			<contains string="${os.name}" substring="Windows" />
+			<then>
+				<property name="platform" value="windows" />
+			</then>
+		</antcontrib:if>
+		<antcontrib:if>
+			<equals arg1="${os.name}" arg2="Linux" />
+			<then>
+				<property name="platform" value="linux" />
+			</then>
+		</antcontrib:if>
+		<antcontrib:if>
+			<equals arg1="${os.name}" arg2="Mac OS X" />
+			<then>
+				<property name="platform" value="mac" />
+			</then>
+		</antcontrib:if>
+	</target>
+
+	<target name="init-oophm-platform"><property name="platform" value="oophm" /></target>
+	<target name="init-oophm" depends="init-oophm-platform,init"></target>
+
     <!-- Called only when building installation packages. -->
 	<target name="package-init">
       <!-- <property name="build.sampler.disabled" value="false"/> -->
     </target>
 
 	<target name="init" depends="check-java-version, init-platform">
-
 		<property file="build/build.properties" />
 		<property file="build/VERSION.properties" />
 		<property file="build/GWT-VERSION.properties" />
@@ -213,7 +212,7 @@
 		<echo>Base Version: ${version}</echo>
 		<echo>Full Version: ${version.full}</echo>
 
-        <echo>Toolkit package is: ${toolkit-package}</echo>
+        <echo>Vaadin package is: ${toolkit-package}</echo>
 
 		<!-- Create result dir unless already exists -->
 		<mkdir dir="${result-path}" />
@@ -231,6 +230,12 @@
 		<!-- Output directory -->
 		<property name="output-dir" value="${result-path}/${product-file}-${version.full}" />
 		<mkdir dir="${output-dir}" />
+
+		<!-- Where widgetsets are written to.                             -->
+        <!-- When not building a package, widgetsets should be written to -->
+		<!-- WebContent/VAADIN/widgetsets, which needs to be set in       -->
+        <!-- init-nonpackage target before calling this main init target. -->
+		<property name="widgetsets-output-dir" value="${output-dir}/WebContent/VAADIN/widgetsets" />
 
 		<!-- Create Output Directory Hierarchy -->
 		<mkdir dir="${output-dir}/WebContent" />
@@ -649,8 +654,17 @@
 		</antcontrib:if>
 	</target>
 
-	<target name="build" depends="libs, compile-client-side, demo" description="Build package required files, without packing them.">
+    <!-- Build server-side, client-side, libraries, and demos.                   -->
+	<!-- The client-side needs to be built before libs, because the libs         -->
+    <!-- require the default widgetset and doing otherwise would build it twice. -->
+    <!-- However, since compiling the server-side is required by the client-side -->
+    <!-- compilation, the server-side will actually be built before it.          -->
+	<target name="build"
+		    depends="compile-server-side, compile-client-side, libs, demo"
+		    description="Build package required files, without packing them.">
 	</target>
+
+	<target name="compile-server-side" depends="compile-java, webcontent"/>
 
 	<!-- Copy and preprocess sources for packaging 
 	NOTE: Replaces <version></version> tags with build version tag for some "textual" files
@@ -813,6 +827,20 @@
 		<echo>TEST TARGET CALLED</echo>
 	</target>
 
+    <!-- ================================================================== -->
+    <!-- Widget Set Compilation                                             -->
+    <!-- ================================================================== -->
+    <!-- Widget set compilation process:                                    -->
+    <!--   1. Preprocess sources                                            -->
+    <!--   2. Compile server-side java                                      -->
+    <!--   3. Generate widget set definitions and classes                   -->
+    <!--   4. Compile widget sets                                           -->
+    <!--                                                                    -->
+    <!-- Widget sets can be built for two purposes:                         -->
+    <!--   * for building installation packages                             -->
+    <!--   * for building single widget sets during development             -->
+    <!--      Targets: widgetset-<name>                                     -->
+
 	<target name="remove-widgetset-gwt-tmp">
 		<echo>Removing widgetset temp files</echo>
 		<delete dir="${output-dir}/WebContent/VAADIN/widgetsets/.gwt-tmp" includeemptydirs="true"/>
@@ -838,11 +866,10 @@
 	<target name="compile-widgetset-generator" depends="init, preprocess-src, compile-java"/>
 
 	<target name="compile-widgetset-default">
-		<echo>Compiling src (client-side)</echo>
-		<echo>com.vaadin.terminal.gwt.DefaultWidgetSet</echo>
+        <echo>Widget set output directory: ${widgetsets-output-dir}</echo>
 		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="-war" />
-			<arg value="${output-dir}/WebContent/VAADIN/widgetsets" />
+			<arg value="${widgetsets-output-dir}" />
 			<arg value="com.vaadin.terminal.gwt.DefaultWidgetSet" />
 			<arg value="-style" />
 			<arg value="OBF" />
@@ -860,11 +887,9 @@
 	</target>
 
 	<target name="compile-widgetset-portal-default">
-		<echo>Compiling src (client-side)</echo>
-		<echo>com.vaadin.portal.gwt.PortalDefaultWidgetSet</echo>
 		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="-war" />
-			<arg value="${output-dir}/WebContent/VAADIN/widgetsets" />
+			<arg value="${widgetsets-output-dir}" />
 			<arg value="com.vaadin.portal.gwt.PortalDefaultWidgetSet" />
 			<arg value="-style" />
 			<arg value="OBF" />
@@ -888,10 +913,9 @@
 		<condition property="googlemaps-jar" value="lib/reservr/gwt-maps.jar">
 			<available file="lib/reservr/gwt-maps.jar" />
 		</condition>
-		<echo>com.vaadin.demo.reservation.gwt.ReservationWidgetSet</echo>
 		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="-war" />
-			<arg value="${output-dir}/WebContent/VAADIN/widgetsets" />
+			<arg value="${widgetsets-output-dir}" />
 			<arg value="com.vaadin.demo.reservation.gwt.ReservationWidgetSet" />
 			<arg value="-style" />
 			<arg value="OBF" />
@@ -914,10 +938,9 @@
 
     <!-- Building Sampler for installation package is disabled. -->
 	<target name="compile-widgetset-sampler" unless="build.sampler.disabled">
-		<echo>com.vaadin.demo.sampler.gwt.SamplerWidgetSet</echo>
 		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="-war" />
-			<arg value="${output-dir}/WebContent/VAADIN/widgetsets" />
+			<arg value="${widgetsets-output-dir}" />
 			<arg value="com.vaadin.demo.sampler.gwt.SamplerWidgetSet" />
 			<arg value="-style" />
 			<arg value="OBF" />
@@ -937,10 +960,9 @@
 	</target>
 	
 	<target name="compile-widgetset-coverflow">
-		<echo>com.vaadin.demo.coverflow.gwt.CoverflowWidgetSet</echo>
 		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="-war" />
-			<arg value="${output-dir}/WebContent/VAADIN/widgetsets" />
+			<arg value="${widgetsets-output-dir}" />
 			<arg value="com.vaadin.demo.coverflow.gwt.CoverflowWidgetSet" />
 			<arg value="-style" />
 			<arg value="OBF" />
@@ -960,10 +982,9 @@
 	</target>
 	
 	<target name="compile-widgetset-colorpicker">
-		<echo>com.vaadin.demo.colorpicker.gwt.ColorPickerWidgetSet</echo>
 		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="-war" />
-			<arg value="${output-dir}/WebContent/VAADIN/widgetsets" />
+			<arg value="${widgetsets-output-dir}" />
 			<arg value="com.vaadin.demo.colorpicker.gwt.ColorPickerWidgetSet" />
 			<arg value="-style" />
 			<arg value="OBF" />
@@ -983,44 +1004,46 @@
 	</target>
 
     <!-- Builds the client-side engine, i.e., the widgetsets sequentially. -->
+    <!-- Notice that antcall does not fulfill dependencies.                -->
 	<target name="compile-client-side-sequential" unless="build.parallel">
 		<echo>Compiling widget sets sequentially.</echo>
         <!-- We can't call these with 'depends' because of the 'unless' specifier. -->
-		<subant antfile="build.xml" target="compile-widgetset-default" inheritall="true" buildpath="build" />
-		<subant antfile="build.xml" target="compile-widgetset-portal-default" inheritall="true" buildpath="build" />
-		<subant antfile="build.xml" target="compile-widgetset-reserver" inheritall="true" buildpath="build" />
-		<subant antfile="build.xml" target="compile-widgetset-sampler" inheritall="true" buildpath="build" />
-		<subant antfile="build.xml" target="compile-widgetset-colorpicker" inheritall="true" buildpath="build" />
-		<subant antfile="build.xml" target="compile-widgetset-coverflow" inheritall="true" buildpath="build" />
+		<antcall target="compile-widgetset-default"/>
+		<antcall target="compile-widgetset-portal-default"/>
+		<antcall target="compile-widgetset-reserver"/>
+		<antcall target="compile-widgetset-sampler"/>
+		<antcall target="compile-widgetset-colorpicker"/>
+		<antcall target="compile-widgetset-coverflow"/>
 	</target>
 
 	<!-- Builds the client-side engine, i.e., the widgetsets in parallel. -->
+    <!-- Notice that antcall does not fulfill dependencies.                -->
 	<target name="compile-client-side-parallel" if="build.parallel">
 		<echo>Compiling widget sets in parallel.</echo>
 		<parallel threadsperprocessor="1">
-			<subant antfile="build.xml" target="compile-widgetset-default" inheritall="true" buildpath="build" />
-			<subant antfile="build.xml" target="compile-widgetset-portal-default" inheritall="true" buildpath="build" />
-			<subant antfile="build.xml" target="compile-widgetset-reserver" inheritall="true" buildpath="build" />
-			<subant antfile="build.xml" target="compile-widgetset-sampler" inheritall="true" buildpath="build" />
-			<subant antfile="build.xml" target="compile-widgetset-colorpicker" inheritall="true" buildpath="build" />
-			<subant antfile="build.xml" target="compile-widgetset-coverflow" inheritall="true" buildpath="build" />
+			<antcall target="compile-widgetset-default"/>
+			<antcall target="compile-widgetset-portal-default"/>
+			<antcall target="compile-widgetset-reserver"/>
+			<antcall target="compile-widgetset-sampler"/>
+			<antcall target="compile-widgetset-colorpicker"/>
+			<antcall target="compile-widgetset-coverflow"/>
 		</parallel>
 	</target>
 
-    <!-- Build either sequentially or in parallel,   -->
-	<!-- depending on the 'build-parallel' property. -->
-	<target name="compile-client-side" depends="compile-client-side-sequential, compile-client-side-parallel"/>
+    <!-- Compiles all widgetsets.                                         -->
+    <!-- This is called when building packages and when compiling all     -->
+    <!-- widgetsets, but not when compiling individual widgetsets.        -->
+    <!-- Builds widgetsets either sequentially or in parallel, depending  -->
+	<!-- on the 'build.parallel' property.                                -->
+	<target name="compile-client-side" depends="compile-server-side, compile-client-side-sequential, compile-client-side-parallel"/>
 
 	<!-- Definitions for building local components, i.e., not for an installation package. -->
-	<target name="init-nonpackage" depends="init-platform, init">
+	<target name="init-nonpackage" depends="init-platform">
 		<property file="build/VERSION.properties" />
 		<property file="build/GWT-VERSION.properties" />
 
 		<!-- Definitions for building the client-side. -->
-		<property name="output-dir" value="." />
-
-		<!-- The "result-path" simply contains the sources. -->
-		<property name="result-path" value="." />
+		<property name="widgetsets-output-dir" value="WebContent/VAADIN/widgetsets" />
 
 		<!-- Path to GWT directory. TODO: This should be read from build.properties file. -->
 		<property name="gwt-dir" value="build/gwt" />
@@ -1029,31 +1052,38 @@
 		<property name="lib-gwt-dev" value="gwt-dev-${platform}.jar" />
 
 		<echo>We are on ${platform} platform, using ${gwt-dir}/${platform}/${lib-gwt-dev}.</echo>
-		<echo>GWT dir:    ${gwt-dir}</echo>
-		<echo>Output dir: ${output-dir}</echo>
+		<echo>GWT dir: ${gwt-dir}</echo>
+		<echo>Widget sets output dir: ${widgetsets-output-dir}</echo>
 	</target>
 
 	<!-- Builds all widgetsets locally, i.e., not for an installation package. -->
-	<target name="widgetsets" depends="compile-widgetset-generator, init-nonpackage, compile-client-side">
-	</target>
+	<target name="widgetsets" depends="init-nonpackage, init, compile-widgetset-generator, compile-client-side"/>
 
 	<!-- Build each widgetset locally, i.e., not for an installation package. -->
-	<target name="widgetset-default" depends="compile-widgetset-generator, init-nonpackage, compile-widgetset-default"/>
-	<target name="widgetset-portal-default" depends="compile-widgetset-generator, init-nonpackage, compile-widgetset-portal-default"/>
-	<target name="widgetset-sampler" depends="compile-widgetset-generator, init-nonpackage, compile-widgetset-sampler"/>
-	<target name="widgetset-coverflow" depends="compile-widgetset-generator, init-nonpackage, compile-widgetset-coverflow"/>
-	<target name="widgetset-reserver" depends="compile-widgetset-generator, init-nonpackage, compile-widgetset-reserver"/>
-	<target name="widgetset-colorpicker" depends="compile-widgetset-generator, init-nonpackage, compile-widgetset-colorpicker"/>
+	<target name="widgetset-default" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-default"/>
+	<target name="widgetset-portal-default" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-portal-default"/>
+	<target name="widgetset-sampler" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-sampler"/>
+	<target name="widgetset-coverflow" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-coverflow"/>
+	<target name="widgetset-reserver" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-reserver"/>
+	<target name="widgetset-colorpicker" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-colorpicker"/>
 
-    <!-- Compile the Toolkit library JAR.          -->
-    <!-- Only need the default widgetset for this. -->
-	<target name="libs" depends="compile-java, webcontent, compile-widgetset-default">
+    <!-- ================================================================== -->
+    <!-- Libraries and Demos                                                -->
+    <!-- ================================================================== -->
+
+    <!-- Compile the Vaadin library JAR.                                    -->
+    <!-- Need only the default widgetset for this, but can't depend         -->
+    <!-- specifically on it, because dependence does not see compiled       -->
+    <!-- individual widgetsets, because antcall does not fulfill            -->
+    <!-- dependencies.                                                      -->
+	<target name="libs" depends="compile-server-side, compile-client-side">
 		<echo>Creating libs (server-side) ${lib-jar-name}</echo>
 		<!-- Create Toolkit JAR -->
 		<mkdir dir="${output-dir}/META-INF"/>
 		<echo file="${output-dir}/META-INF/VERSION">${version.full}</echo> 
 		<echo file="${output-dir}/META-INF/GWT-VERSION">${gwt-version}</echo> 
-		<jar jarfile="${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name}" compress="true" manifest="build/package/META-INF/MANIFEST.MF">
+		<jar jarfile="${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name}"
+			 compress="true" manifest="build/package/META-INF/MANIFEST.MF">
 			<metainf dir="${output-dir}/META-INF"/>
 			<manifest>
 				<attribute name="Vaadin-Widgetsets" value="com.vaadin.terminal.gwt.DefaultWidgetSet" />
@@ -1093,9 +1123,9 @@
 		<copy file="${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name}" tofile="${output-dir}/WebContent/${lib-jar-name}" />
 	</target>
 
-	<!-- Demo  - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<!-- Demos  - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<target name="demo" depends="libs, docs">
-		<echo>Building demo</echo>
+		<echo>Building demos</echo>
 		<echo>Adding demo class files.</echo>
 		<copy todir="${output-dir}/WebContent/WEB-INF/classes">
 			<fileset dir="${result-path}/classes">
@@ -1105,7 +1135,7 @@
 			</fileset>
 		</copy>
 
-		<echo>Adding source for demo</echo>
+		<echo>Adding source for demos</echo>
 		<copy todir="${output-dir}/WebContent/WEB-INF/src">
 			<fileset dir="${result-path}/src">
 				<include name="${toolkit-package}/demo/**/*" />
