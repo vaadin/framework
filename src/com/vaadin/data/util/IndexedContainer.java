@@ -1550,17 +1550,6 @@ public class IndexedContainer implements Container.Indexed,
         return nc;
     }
 
-    /**
-     * Note! In Toolkit version 5.2.6 removed complex equals method due the old
-     * one was practically useless and caused serious performance issues.
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
-    }
-
     public void addContainerFilter(Object propertyId, String filterString,
             boolean ignoreCase, boolean onlyMatchPrefix) {
         if (filters == null) {

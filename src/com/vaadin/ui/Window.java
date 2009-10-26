@@ -444,7 +444,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * 
      * Setting theme for subwindows is not supported.
      * 
-     * In Toolkit 5 terminal will reload its host page on theme changes.
+     * The terminal will reload its host page on theme changes.
      * 
      * @param theme
      *            the New theme for this window. Null implies the default theme.
