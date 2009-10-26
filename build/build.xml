@@ -1237,7 +1237,7 @@
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
 	<target name="javadoc" depends="init, preprocess-src">
 		<javadoc destdir="${output-dir}/WebContent/docs/api" author="true" version="true" use="true" windowtitle="${product-name}" classpathref="compile.classpath.client-side">
-			<packageset dir="src">
+			<packageset dir="${result-path}/src">
 				<include name="${toolkit-package}/**" />
 				<exclude name="${toolkit-package}/demo/**" />
 				<!-- <exclude name="${toolkit-package}/tests/**" /> -->
