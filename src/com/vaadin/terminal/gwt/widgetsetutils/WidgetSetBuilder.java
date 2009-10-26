@@ -43,6 +43,11 @@ public class WidgetSetBuilder {
             widgetsetFile.createNewFile();
             PrintStream printStream = new PrintStream(new FileOutputStream(
                     widgetsetFile));
+            printStream.print("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                    + "<!DOCTYPE module PUBLIC \"-//Google Inc.//DTD "
+                    + "Google Web Toolkit 1.7.0//EN\" \"http://google"
+                    + "-web-toolkit.googlecode.com/svn/tags/1.7.0/dis"
+                    + "tro-source/core/src/gwt-module.dtd\">\n");
             printStream.print("<module>\n\n</module>\n");
             printStream.close();
             changed = true;
