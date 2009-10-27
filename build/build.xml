@@ -249,9 +249,15 @@
         <path id="compile.classpath">
             <pathelement path="build/lib/servlet.jar" />
             <pathelement path="build/external/fileupload/classes" />
-            <pathelement path="lib/core/**/*.jar" />
-            <pathelement path="lib/demo/**/*.jar" />
-            <pathelement path="lib/tests/**/*.jar" />
+        	<fileset dir="lib/core">
+        	        <include name="**/*.jar"/>
+   	        </fileset>
+        	<fileset dir="lib/demo">
+        	        <include name="**/*.jar"/>
+   	        </fileset>
+        	<fileset dir="lib/tests">
+        	        <include name="**/*.jar"/>
+   	        </fileset>
         </path>
         <path id="compile.classpath.server-side">
             <path refid="compile.classpath"/>
