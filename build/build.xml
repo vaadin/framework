@@ -249,15 +249,9 @@
         <path id="compile.classpath">
             <pathelement path="build/lib/servlet.jar" />
             <pathelement path="build/external/fileupload/classes" />
-            <pathelement path="lib/reservr/gwt-maps.jar" />
-            <pathelement path="lib/jetty/jetty-6.1.7.jar" />
-            <pathelement path="lib/jetty/jetty-util-6.1.7.jar" />
-            <pathelement path="lib/portlet/portal-kernel.jar" />
-            <pathelement path="lib/portlet/portal-service.jar" />
-            <pathelement path="lib/portlet/portlet.jar" />
-            <pathelement path="lib/appengine/appengine-api.jar" />
-            <pathelement path="lib/test/junit-4.5.jar" />
-            <pathelement path="lib/test/easymock-2.5/easymock-2.5.jar" />
+            <pathelement path="lib/core/**/*.jar" />
+            <pathelement path="lib/demo/**/*.jar" />
+            <pathelement path="lib/tests/**/*.jar" />
         </path>
         <path id="compile.classpath.server-side">
             <path refid="compile.classpath"/>
@@ -775,17 +769,17 @@
 
         <!-- copy 3rd part libraries used by demo -->
         <copy todir="${output-dir}/WebContent/demo/lib">
-            <fileset dir="lib">
-                <include name="reservr/**/*" />
+            <fileset dir="lib/demo">
+                <include name="gwt-maps/**/*" />
             </fileset>
         </copy>
         <copy todir="${output-dir}/WebContent/demo/lib">
-            <fileset dir="lib">
+            <fileset dir="lib/core">
                 <include name="jetty/**/*" />
             </fileset>
         </copy>
         <copy todir="${output-dir}/WebContent/demo/lib">
-            <fileset dir="lib">
+            <fileset dir="lib/core">
                 <include name="portlet/**/*" />
             </fileset>
         </copy>
@@ -962,10 +956,10 @@
     </target>
 
     <target name="compile-widgetset-reserver">
-        <condition property="googlemaps-jar" value="${output-dir}/WebContent/demo/lib/reservr/gwt-maps.jar">
-            <available file="${output-dir}/WebContent/demo/lib/reservr/gwt-maps.jar" />
+        <condition property="googlemaps-jar" value="${output-dir}/WebContent/demo/lib/gwt-maps/gwt-maps.jar">
+            <available file="${output-dir}/WebContent/demo/lib/gwt-maps/gwt-maps.jar" />
         </condition>
-        <condition property="googlemaps-jar" value="lib/reservr/gwt-maps.jar">
+        <condition property="googlemaps-jar" value="lib/gwt-maps/gwt-maps.jar">
             <available file="lib/reservr/gwt-maps.jar" />
         </condition>
         <java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
@@ -1109,10 +1103,7 @@
             <!-- add sources -->
             <fileset dir="${result-path}/src/core">
                 <patternset>
-                    <exclude name="${toolkit-package}/demo/**" />
-                    <exclude name="${toolkit-package}/tests/**"/>
                     <exclude name="${toolkit-package}/launcher/**" />
-                    <exclude name="${toolkit-package}/automatedtests/**" />
                 </patternset>
             </fileset>
             <fileset dir="${output-dir}/WebContent">
