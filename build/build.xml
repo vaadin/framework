@@ -251,6 +251,7 @@
             <pathelement path="build/external/fileupload/classes" />
         	<fileset dir="lib/core">
         	        <include name="**/*.jar"/>
+        			<exclude name="**/servlet-api*.jar"/>
    	        </fileset>
         	<fileset dir="lib/demo">
         	        <include name="**/*.jar"/>
