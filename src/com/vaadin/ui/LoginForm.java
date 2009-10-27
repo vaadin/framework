@@ -243,6 +243,9 @@ public class LoginForm extends CustomComponent {
 
     private static final Method ON_LOGIN_METHOD;
 
+    private static final String UNDEFINED_HEIGHT = "140px";
+    private static final String UNDEFINED_WIDTH = "200px";
+
     static {
         try {
             ON_LOGIN_METHOD = LoginListener.class.getDeclaredMethod("onLogin",
@@ -270,6 +273,30 @@ public class LoginForm extends CustomComponent {
      */
     public void removeListener(LoginListener listener) {
         removeListener(LoginEvent.class, listener, ON_LOGIN_METHOD);
+    }
+
+    @Override
+    public void setWidth(float width, int unit) {
+        super.setWidth(width, unit);
+        if (iframe != null) {
+            if (width < 0) {
+                iframe.setWidth(UNDEFINED_WIDTH);
+            } else {
+                iframe.setWidth("100%");
+            }
+        }
+    }
+
+    @Override
+    public void setHeight(float height, int unit) {
+        super.setHeight(height, unit);
+        if (iframe != null) {
+            if (height < 0) {
+                iframe.setHeight(UNDEFINED_HEIGHT);
+            } else {
+                iframe.setHeight("100%");
+            }
+        }
     }
 
 }

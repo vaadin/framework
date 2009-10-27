@@ -16,6 +16,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -214,10 +215,14 @@ public class VEmbedded extends HTML implements Paintable {
 
     @Override
     protected void onDetach() {
-        // Force browser to fire unload event when component is detached from
-        // the view (IE doesn't do this automatically)
-        if (browserElement != null) {
-            DOM.setElementAttribute(browserElement, "src", "javascript:false");
+        if (BrowserInfo.get().isIE()) {
+            // Force browser to fire unload event when component is detached
+            // from
+            // the view (IE doesn't do this automatically)
+            if (browserElement != null) {
+                DOM.setElementAttribute(browserElement, "src",
+                        "javascript:false");
+            }
         }
         super.onDetach();
     }
