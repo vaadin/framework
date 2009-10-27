@@ -94,7 +94,7 @@ public class VEmbedded extends HTML implements Paintable {
 
             } else if (type.equals("browser")) {
                 if (browserElement == null) {
-                    setHTML("<iframe width=\"100%\" height=\"100%\" frameborder=\"0\" src=\""
+                    setHTML("<iframe width=\"100%\" height=\"100%\" frameborder=\"0\" allowTransparency=\"true\" src=\""
                             + getSrc(uidl, client)
                             + "\" name=\""
                             + uidl.getId() + "\"></iframe>");
