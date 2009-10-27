@@ -1,5 +1,0 @@
-<module>
-	<!-- Inherit the NoEntry version to avoid multiple entrypoints -->
-	<inherits name="com.vaadin.terminal.gwt.DefaultWidgetSet" /> 
-  
-</module>

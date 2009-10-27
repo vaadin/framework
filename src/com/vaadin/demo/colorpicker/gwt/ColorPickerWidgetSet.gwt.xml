@@ -1,8 +1,0 @@
-<module>
-	<!-- Inherit DefaultWidgetSet -->
-	<inherits name="com.vaadin.terminal.gwt.DefaultWidgetSet" /> 
-	
-	<!-- WidgetSet default theme -->	
-	<stylesheet src="colorpicker/styles.css"/>
-
-</module>
