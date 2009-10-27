@@ -98,7 +98,21 @@ public class ClassPathExplorer {
                             files[i].length() - 8);
                     classname = classpathLocations.get(location) + "."
                             + classname;
-                    widgetsets.put(classname, location);
+                    if (!widgetsets.containsKey(classname)) {
+                        String packageName = classpathLocations.get(location);
+                        String packagePath = packageName.replaceAll("\\.", "/");
+                        String basePath = location.getFile().replaceAll(
+                                "/" + packagePath + "$", "");
+                        try {
+                            URL url = new URL(location.getProtocol(), location
+                                    .getHost(), location.getPort(), basePath);
+                            widgetsets.put(classname, url);
+                        } catch (MalformedURLException e) {
+                            // should never happen as based on an existing URL,
+                            // only changing end of file name/path part
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
         } else {
