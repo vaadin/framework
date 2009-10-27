@@ -33,20 +33,40 @@ public class NullSelectionItemId extends TestBase implements ClickListener {
         addComponent(mySelect);
         addComponent(button);
 
+        button = new Button(
+                "Select null with select(NULL_ITEM_ID) (should make value null)",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        mySelect.select(NULL_ITEM_ID);
+                    }
+                });
+
+        addComponent(button);
+
+        button = new Button(
+                "Select null with setValue(null) (should make value null)",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        mySelect.setValue(null);
+                    }
+                });
+
+        addComponent(button);
+
     }
 
     public void buttonClick(ClickEvent event) {
-        this.getMainWindow().showNotification(
+        getMainWindow().showNotification(
                 "mySelect.getValue() returns: " + mySelect.getValue());
     }
 
     @Override
     protected String getDescription() {
         return "Steps to reproduce:<br />"
-                + "<ol><li>Click the button -> value is the item id \"Null item id\".</li>"
+                + "<ol><li>Click the button -> value is the item id \"Null item id\" (should be null).</li>"
                 + "<li>Select the \"Another item\".</li>"
                 + "<li>Select back the first item.</li>"
-                + "<li>Click the button -> the value is null</li></ol>";
+                + "<li>Click the button -> the value is null (as it should)</li></ol>";
     }
 
     @Override

@@ -34,6 +34,7 @@ public class Ticket1230 extends Application {
 
                 public void buttonClick(ClickEvent event) {
                     selectWithoutNullItem.select(NULL_ITEM_ID);
+                    printState();
 
                 }
             });
@@ -42,6 +43,7 @@ public class Ticket1230 extends Application {
 
                 public void buttonClick(ClickEvent event) {
                     selectWithoutNullItem.select("1");
+                    printState();
 
                 }
             });
@@ -50,6 +52,7 @@ public class Ticket1230 extends Application {
 
                 public void buttonClick(ClickEvent event) {
                     selectWithoutNullItem.select("2");
+                    printState();
 
                 }
             });
@@ -59,6 +62,7 @@ public class Ticket1230 extends Application {
 
                 public void buttonClick(ClickEvent event) {
                     selectWithoutNullItem.select(null);
+                    printState();
 
                 }
             });
@@ -72,10 +76,12 @@ public class Ticket1230 extends Application {
             selectWithNullItem.setNullSelectionItemId(NULL_ITEM_ID);
 
             layout.addComponent(selectWithNullItem);
+            selectWithNullItem.setCaption("Select with null item id");
             Button b = new Button("Select NULL_PROPERTY", new ClickListener() {
 
                 public void buttonClick(ClickEvent event) {
                     selectWithNullItem.select(NULL_ITEM_ID);
+                    printState();
 
                 }
             });
@@ -85,6 +91,7 @@ public class Ticket1230 extends Application {
 
                 public void buttonClick(ClickEvent event) {
                     selectWithNullItem.select("1");
+                    printState();
 
                 }
             });
@@ -93,7 +100,7 @@ public class Ticket1230 extends Application {
 
                 public void buttonClick(ClickEvent event) {
                     selectWithNullItem.select("2");
-
+                    printState();
                 }
             });
             layout.addComponent(b);
@@ -102,12 +109,19 @@ public class Ticket1230 extends Application {
 
                 public void buttonClick(ClickEvent event) {
                     selectWithNullItem.select(null);
-
+                    printState();
                 }
             });
             layout.addComponent(b);
 
         }
+
+        w.addComponent(new Button("print select values",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        printState();
+                    }
+                }));
     }
 
     private Select createSelect() {
@@ -124,6 +138,14 @@ public class Ticket1230 extends Application {
         select.setNullSelectionAllowed(true);
 
         return select;
+    }
+
+    void printState() {
+        System.out.println(" Select without null item "
+                + selectWithoutNullItem.getValue());
+        System.out.println(" Select with null item "
+                + selectWithNullItem.getValue());
+
     }
 
 }
