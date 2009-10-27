@@ -10,8 +10,10 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.Reader;
+import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,16 +28,21 @@ public class WidgetSetBuilder {
             printUsage();
         } else {
             String widgetsetname = args[0];
-            String sourcepath = args[1];
-            updateWidgetSet(widgetsetname, sourcepath);
+            updateWidgetSet(widgetsetname);
 
         }
     }
 
-    public static void updateWidgetSet(final String widgetset, String sourcepath)
+    public static void updateWidgetSet(final String widgetset)
             throws IOException, FileNotFoundException {
         boolean changed = false;
-        String widgetsetfilename = sourcepath + "/"
+
+        Map<String, URL> availableWidgetSets = ClassPathExplorer
+                .getAvailableWidgetSets();
+
+        URL sourceUrl = availableWidgetSets.get(widgetset);
+
+        String widgetsetfilename = sourceUrl.getFile() + "/"
                 + widgetset.replace(".", "/") + ".gwt.xml";
         File widgetsetFile = new File(widgetsetfilename);
         if (!widgetsetFile.exists()) {
@@ -58,11 +65,8 @@ public class WidgetSetBuilder {
 
         Collection<String> oldInheritedWidgetsets = getCurrentWidgetSets(content);
 
-        Collection<String> availableWidgetSets = ClassPathExplorer
-                .getAvailableWidgetSets();
-
         // add widgetsets that do not exist
-        for (String ws : availableWidgetSets) {
+        for (String ws : availableWidgetSets.keySet()) {
             if (ws.equals(widgetset)) {
                 // do not inherit the module itself
                 continue;
@@ -73,7 +77,7 @@ public class WidgetSetBuilder {
         }
 
         for (String ws : oldInheritedWidgetsets) {
-            if (!availableWidgetSets.contains(ws)) {
+            if (!availableWidgetSets.containsKey(ws)) {
                 // widgetset not available in classpath
                 content = removeWidgetSet(ws, content);
             }
@@ -135,7 +139,7 @@ public class WidgetSetBuilder {
         o.println("\t1. Set the same classpath as you will "
                 + "have for the GWT compiler.");
         o.println("\t2. Give the widgetsetname (to be created or updated)"
-                + " as first parameter, source path as a second parameter");
+                + " as first parameter");
         o.println();
         o
                 .println("All found vaadin widgetsets will be inherited in given widgetset");

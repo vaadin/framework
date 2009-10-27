@@ -37,7 +37,7 @@ import com.vaadin.ui.ClientWidget;
  * appropriate monkey code for gwt directly in annotation processor and get rid
  * of {@link WidgetMapGenerator}. Using annotation processor might be a good
  * idea when dropping Java 1.5 support (integrated to javac in 6).
- * 
+ *
  */
 public class ClassPathExplorer {
     private final static FileFilter DIRECTORIES_ONLY = new FileFilter() {
@@ -70,11 +70,11 @@ public class ClassPathExplorer {
 
     /**
      * Finds available widgetset names.
-     * 
+     *
      * @return
      */
-    public static Collection<String> getAvailableWidgetSets() {
-        Collection<String> widgetsets = new HashSet<String>();
+    public static Map<String, URL> getAvailableWidgetSets() {
+        Map<String, URL> widgetsets = new HashMap<String, URL>();
         Set<URL> keySet = classpathLocations.keySet();
         for (URL url : keySet) {
             searchForWidgetSets(url, widgetsets);
@@ -83,7 +83,7 @@ public class ClassPathExplorer {
     }
 
     private static void searchForWidgetSets(URL location,
-            Collection<String> widgetsets) {
+            Map<String, URL> widgetsets) {
 
         File directory = new File(location.getFile());
 
@@ -98,7 +98,7 @@ public class ClassPathExplorer {
                             files[i].length() - 8);
                     classname = classpathLocations.get(location) + "."
                             + classname;
-                    widgetsets.add(classname);
+                    widgetsets.put(classname, location);
                 }
             }
         } else {
@@ -121,7 +121,7 @@ public class ClassPathExplorer {
                         for (int i = 0; i < widgetsetNames.length; i++) {
                             String widgetsetname = widgetsetNames[i].trim()
                                     .intern();
-                            widgetsets.add(widgetsetname);
+                            widgetsets.put(widgetsetname, location);
                         }
                     }
                 }
@@ -204,7 +204,7 @@ public class ClassPathExplorer {
 
     /**
      * Recursively add subdirectories and jar files to classpathlocations
-     * 
+     *
      * @param name
      * @param file
      * @param locations
@@ -351,10 +351,11 @@ public class ClassPathExplorer {
         System.out.println();
         System.out.println("Searching available widgetsets...");
 
-        Collection<String> availableWidgetSets = ClassPathExplorer
+        Map<String, URL> availableWidgetSets = ClassPathExplorer
                 .getAvailableWidgetSets();
-        for (String string : availableWidgetSets) {
-            System.out.println(string);
+        for (String string : availableWidgetSets.keySet()) {
+            System.out.println(string + " in "
+                    + availableWidgetSets.get(string));
         }
     }
 }
