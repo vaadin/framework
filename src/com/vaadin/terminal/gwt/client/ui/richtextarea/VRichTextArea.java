@@ -28,9 +28,9 @@ import com.vaadin.terminal.gwt.client.ui.Field;
 
 /**
  * This class implements a basic client side rich text editor component.
- *
+ * 
  * @author IT Mill Ltd.
- *
+ * 
  */
 public class VRichTextArea extends Composite implements Paintable, Field,
         ChangeHandler, BlurHandler, KeyPressHandler {
@@ -132,15 +132,21 @@ public class VRichTextArea extends Composite implements Paintable, Field,
 
     // TODO is this really used, or does everything go via onBlur() only?
     public void onChange(ChangeEvent event) {
+        synchronizeContentToServer();
+    }
+
+    /**
+     * Method is public to let popupview force synchronization on close.
+     */
+    public void synchronizeContentToServer() {
+        final String html = rta.getHTML();
         if (client != null && id != null) {
-            client.updateVariable(id, "text", rta.getText(), immediate);
+            client.updateVariable(id, "text", html, immediate);
         }
     }
 
     public void onBlur(BlurEvent event) {
-        final String html = rta.getHTML();
-        client.updateVariable(id, "text", html, immediate);
-
+        synchronizeContentToServer();
     }
 
     /**

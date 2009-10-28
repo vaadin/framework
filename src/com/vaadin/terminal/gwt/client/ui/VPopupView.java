@@ -14,6 +14,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -28,6 +29,7 @@ import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VCaptionWrapper;
 import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
+import com.vaadin.terminal.gwt.client.ui.richtextarea.VRichTextArea;
 
 public class VPopupView extends HTML implements Container, Iterable<Widget> {
 
@@ -274,6 +276,9 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
             // Notify children with focus
             if ((popupComponentWidget instanceof Focusable)) {
                 ((Focusable) popupComponentWidget).setFocus(false);
+            } else {
+
+                checkForRTE(popupComponentWidget);
             }
 
             // Notify children that have used the keyboard
@@ -284,6 +289,19 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
                 }
             }
             activeChildren.clear();
+        }
+
+        private void checkForRTE(Widget popupComponentWidget2) {
+            if (popupComponentWidget2 instanceof VRichTextArea) {
+                ((VRichTextArea) popupComponentWidget2)
+                        .synchronizeContentToServer();
+            } else if (popupComponentWidget2 instanceof HasWidgets) {
+                HasWidgets hw = (HasWidgets) popupComponentWidget2;
+                Iterator<Widget> iterator = hw.iterator();
+                while (iterator.hasNext()) {
+                    checkForRTE(iterator.next());
+                }
+            }
         }
 
         @Override

@@ -590,8 +590,8 @@ public abstract class AbstractSelect extends AbstractField implements
     @Override
     public void setValue(Object newValue) throws Property.ReadOnlyException,
             Property.ConversionException {
-        if (newValue == null) {
-            newValue = getNullSelectionItemId();
+        if (newValue == getNullSelectionItemId()) {
+            newValue = null;
         }
 
         setValue(newValue, false);
@@ -1311,7 +1311,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * </p>
      * 
      * @param itemId
-     *            the tem to be selected.
+     *            the identifier of Item to be selected.
      * @see #getNullSelectionItemId()
      * @see #setNullSelectionItemId(Object)
      * 
@@ -1331,7 +1331,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * Unselects an item.
      * 
      * @param itemId
-     *            the Item to be unselected.
+     *            the identifier of the Item to be unselected.
      * @see #getNullSelectionItemId()
      * @see #setNullSelectionItemId(Object)
      * 

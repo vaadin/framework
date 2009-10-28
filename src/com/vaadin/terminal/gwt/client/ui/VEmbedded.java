@@ -16,6 +16,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -94,7 +95,7 @@ public class VEmbedded extends HTML implements Paintable {
 
             } else if (type.equals("browser")) {
                 if (browserElement == null) {
-                    setHTML("<iframe width=\"100%\" height=\"100%\" frameborder=\"0\" src=\""
+                    setHTML("<iframe width=\"100%\" height=\"100%\" frameborder=\"0\" allowTransparency=\"true\" src=\""
                             + getSrc(uidl, client)
                             + "\" name=\""
                             + uidl.getId() + "\"></iframe>");
@@ -214,10 +215,14 @@ public class VEmbedded extends HTML implements Paintable {
 
     @Override
     protected void onDetach() {
-        // Force browser to fire unload event when component is detached from
-        // the view (IE doesn't do this automatically)
-        if (browserElement != null) {
-            DOM.setElementAttribute(browserElement, "src", "javascript:false");
+        if (BrowserInfo.get().isIE()) {
+            // Force browser to fire unload event when component is detached
+            // from
+            // the view (IE doesn't do this automatically)
+            if (browserElement != null) {
+                DOM.setElementAttribute(browserElement, "src",
+                        "javascript:false");
+            }
         }
         super.onDetach();
     }
