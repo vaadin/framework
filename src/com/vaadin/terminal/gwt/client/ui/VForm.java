@@ -48,9 +48,7 @@ public class VForm extends ComplexPanel implements Container {
 
     private RenderInformation renderInformation = new RenderInformation();
 
-    private int borderPaddingHorizontal;
-
-    private int borderPaddingVertical;
+    private int borderPaddingHorizontal = -1;
 
     private boolean rendering = false;
 
@@ -75,23 +73,11 @@ public class VForm extends ComplexPanel implements Container {
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         rendering = true;
-        boolean measure = false;
-        if (this.client == null) {
-            this.client = client;
-            measure = true;
-        }
+        this.client = client;
 
         if (client.updateComponent(this, uidl, false)) {
             rendering = false;
             return;
-        }
-
-        if (measure) {
-            // Measure the border when the style names have been set
-            borderPaddingVertical = getOffsetHeight();
-            int ow = getOffsetWidth();
-            int dow = desc.getOffsetWidth();
-            borderPaddingHorizontal = ow - dow;
         }
 
         boolean legendEmpty = true;
@@ -138,19 +124,8 @@ public class VForm extends ComplexPanel implements Container {
         // TODO Check if this is needed
         client.runDescendentsLayout(this);
 
-        final UIDL layoutUidl = uidl.getChildUIDL(0);
-        Container newLo = (Container) client.getPaintable(layoutUidl);
-        if (lo == null) {
-            lo = newLo;
-            add((Widget) lo, fieldContainer);
-        } else if (lo != newLo) {
-            client.unregisterPaintable(lo);
-            remove((Widget) lo);
-            lo = newLo;
-            add((Widget) lo, fieldContainer);
-        }
-        lo.updateFromUIDL(layoutUidl, client);
-
+        // first render footer so it will be easier to handle relative height of
+        // main layout
         if (uidl.getChildCount() > 1) {
             // render footer
             Container newFooter = (Container) client.getPaintable(uidl
@@ -165,12 +140,27 @@ public class VForm extends ComplexPanel implements Container {
             }
             footer = newFooter;
             footer.updateFromUIDL(uidl.getChildUIDL(1), client);
+            updateSize();
         } else {
             if (footer != null) {
                 remove((Widget) footer);
                 client.unregisterPaintable(footer);
+                updateSize();
             }
         }
+
+        final UIDL layoutUidl = uidl.getChildUIDL(0);
+        Container newLo = (Container) client.getPaintable(layoutUidl);
+        if (lo == null) {
+            lo = newLo;
+            add((Widget) lo, fieldContainer);
+        } else if (lo != newLo) {
+            client.unregisterPaintable(lo);
+            remove((Widget) lo);
+            lo = newLo;
+            add((Widget) lo, fieldContainer);
+        }
+        lo.updateFromUIDL(layoutUidl, client);
 
         rendering = false;
     }
@@ -181,7 +171,7 @@ public class VForm extends ComplexPanel implements Container {
 
         renderInformation.setContentAreaHeight(renderInformation
                 .getRenderedSize().getHeight()
-                - borderPaddingVertical);
+                - getSpaceConsumedVertically());
         if (BrowserInfo.get().isIE6()) {
             getElement().getStyle().setProperty("overflow", "hidden");
         }
@@ -192,18 +182,7 @@ public class VForm extends ComplexPanel implements Container {
 
     public RenderSpace getAllocatedSpace(Widget child) {
         if (child == lo) {
-            int hPixels = 0;
-            if (!"".equals(height)) {
-                hPixels = getOffsetHeight();
-                hPixels -= borderPaddingVertical;
-                hPixels -= footerContainer.getOffsetHeight();
-                hPixels -= errorMessage.getOffsetHeight();
-                hPixels -= desc.getOffsetHeight();
-
-            }
-
-            return new RenderSpace(renderInformation.getContentAreaSize()
-                    .getWidth(), hPixels);
+            return renderInformation.getContentAreaSize();
         } else if (child == footer) {
             return new RenderSpace(renderInformation.getContentAreaSize()
                     .getWidth(), 0);
@@ -271,8 +250,26 @@ public class VForm extends ComplexPanel implements Container {
         updateSize();
     }
 
+    /**
+     * @return pixels consumed by decoration, captions, descrioptiosn etc.. In
+     *         other words space, not used by the actual layout in form.
+     */
+    private int getSpaceConsumedVertically() {
+        int offsetHeight2 = fieldSet.getOffsetHeight();
+        int offsetHeight3 = fieldContainer.getOffsetHeight();
+        int borderPadding = offsetHeight2 - offsetHeight3;
+        return borderPadding;
+    }
+
     @Override
     public void setWidth(String width) {
+        if (borderPaddingHorizontal < 0) {
+            // measure excess size lazyly after stylename setting, but before
+            // setting width
+            int ow = getOffsetWidth();
+            int dow = desc.getOffsetWidth();
+            borderPaddingHorizontal = ow - dow;
+        }
         if (Util.equals(this.width, width)) {
             return;
         }
