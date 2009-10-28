@@ -7,10 +7,14 @@ import java.net.JarURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.jar.Attributes;
@@ -50,7 +54,8 @@ public class ClassPathExplorer {
         }
     };
 
-    private static Map<URL, String> classpathLocations = getClasspathLocations();
+    private static List<String> rawClasspathEntries = getRawClasspathEntries();
+    private static Map<URL, String> classpathLocations = getClasspathLocations(rawClasspathEntries);
 
     private ClassPathExplorer() {
     }
@@ -150,8 +155,9 @@ public class ClassPathExplorer {
      * Determine every URL location defined by the current classpath, and it's
      * associated package name.
      */
-    private final static Map<URL, String> getClasspathLocations() {
-        Map<URL, String> locations = new HashMap<URL, String>();
+    private final static List<String> getRawClasspathEntries() {
+        // try to keep the order of the classpath
+        List<String> locations = new ArrayList<String>();
 
         String pathSep = System.getProperty("path.separator");
         String classpath = System.getProperty("java.class.path");
@@ -169,11 +175,25 @@ public class ClassPathExplorer {
         for (int i = 0; i < split.length; i++) {
             String classpathEntry = split[i];
             if (acceptClassPathEntry(classpathEntry)) {
-                File file = new File(classpathEntry);
-                include(null, file, locations);
+                locations.add(classpathEntry);
             }
         }
 
+        return locations;
+    }
+
+    /**
+     * Determine every URL location defined by the current classpath, and it's
+     * associated package name.
+     */
+    private final static Map<URL, String> getClasspathLocations(
+            List<String> rawClasspathEntries) {
+        // try to keep the order of the classpath
+        Map<URL, String> locations = new LinkedHashMap<URL, String>();
+        for (String classpathEntry : rawClasspathEntries) {
+            File file = new File(classpathEntry);
+            include(null, file, locations);
+        }
         return locations;
     }
 
@@ -349,6 +369,41 @@ public class ClassPathExplorer {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Find and return the default source directory where to create new
+     * widgetsets.
+     *
+     * Return the first directory (not a JAR file etc.) on the classpath by
+     * default.
+     *
+     * TODO this could be done better...
+     *
+     * @return URL
+     */
+    public static URL getDefaultSourceDirectory() {
+        System.err.println("classpathLocations keys:  "
+                + classpathLocations.keySet());
+        Iterator<String> it = rawClasspathEntries.iterator();
+        while (it.hasNext()) {
+            String entry = it.next();
+
+            File directory = new File(entry);
+            if (directory.exists() && !directory.isHidden()
+                    && directory.isDirectory()) {
+                try {
+                    return new URL("file://" + directory.getCanonicalPath());
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                    // ignore: continue to the next classpath entry
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    // ignore: continue to the next classpath entry
+                }
+            }
+        }
+        return null;
     }
 
     /**

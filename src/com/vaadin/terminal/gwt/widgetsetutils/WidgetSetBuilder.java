@@ -41,9 +41,14 @@ public class WidgetSetBuilder {
                 .getAvailableWidgetSets();
 
         URL sourceUrl = availableWidgetSets.get(widgetset);
+        if (sourceUrl == null) {
+            // find first/default source directory
+            sourceUrl = ClassPathExplorer.getDefaultSourceDirectory();
+        }
 
         String widgetsetfilename = sourceUrl.getFile() + "/"
                 + widgetset.replace(".", "/") + ".gwt.xml";
+
         File widgetsetFile = new File(widgetsetfilename);
         if (!widgetsetFile.exists()) {
             // create empty gwt module file
