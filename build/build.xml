@@ -1,71 +1,70 @@
 <?xml version="1.0"?>
 
-<project
-         xmlns:antcontrib="antlib:net.sf.antcontrib"
-		 xmlns:artifact="antlib:org.apache.maven.artifact.ant"
+<project xmlns:antcontrib="antlib:net.sf.antcontrib"
+         xmlns:artifact="antlib:org.apache.maven.artifact.ant"
          name="Vaadin"
          basedir="../" default="package-all">
 
-	<!-- Package creation - - - - - - - - - - - - - - - - - - - - - - - - -
+    <!-- Package creation - - - - - - - - - - - - - - - - - - - - - - - - -
 
-	When creating release use only "package-*" targets:
-	package-all
-	 * creates four release packages for three three platforms (below)
-	 
-	package-windows
+    When creating release use only "package-*" targets:
+    package-all
+     * creates four release packages for three three platforms (below)
+     
+    package-windows
      * vaadin-windows-<version>.zip
-	
-	package-linux
-	 * vaadin-linux-<version>.tar.bz2
-	 
-	package-mac
-	 * vaadin-mac-<version>.tar.gz
-	 * vaadin-mac-<version>.dmg
+    
+    package-linux
+     * vaadin-linux-<version>.tar.bz2
+     
+    package-mac
+     * vaadin-mac-<version>.tar.gz
+     * vaadin-mac-<version>.dmg
 
     In addition, the OOPHM package has the following target for building:
-	package-oophm
-	 * vaadin-oophm-<version>.zip
+    package-oophm
+     * vaadin-oophm-<version>.zip
 
-	NOTE: This build script requires directories named ${gwt-dir}/(linux|windows|mac) .
-	See build.properties to define path where your gwt installation is located.
-	You must unpack platform specific binaries under linux, windows and mac directories.
-	${gwt-dir}/${platform} (linux|windows|mac) are used for
-  	a) compile WebContent/VAADIN/widgetsets
-	b) creating platform specific release ZIP/TGZ packages.
-	
-	NOTE FOR USING OOPHM:
-	 * To build with oophm define the property platform=oophm
-	   * In Eclipse this is done in External Tools Configurations -> properties
-	 * If you are using windows you must use JDK 1.6 and not 1.5
-	   * To enable building with JDK 1.6, define ignoreversion=1
-	-->
+    NOTE: This build script requires directories named ${gwt-dir}/(linux|windows|mac) .
+    See build.properties to define path where your gwt installation is located.
+    You must unpack platform specific binaries under linux, windows and mac directories.
+    ${gwt-dir}/${platform} (linux|windows|mac) are used for
+      a) compile WebContent/VAADIN/widgetsets
+    b) creating platform specific release ZIP/TGZ packages.
+    
+    NOTE FOR USING OOPHM:
+     * To build with oophm define the property platform=oophm
+       * In Eclipse this is done in External Tools Configurations -> properties
+     * If you are using windows you must use JDK 1.6 and not 1.5
+       * To enable building with JDK 1.6, define ignoreversion=1
+    -->
 
-	<!-- 
-	Call one of package-* targets unless you understand what you are doing 
-	-->
-	<target name="package-all" depends="clean-all, package-init, init, build, docs, internal-package-mac, internal-package-windows, internal-package-linux, internal-package-war, internal-package-liferay" description="Build public packages for Windows, Linux and Mac platforms.">
-	</target>
+    <!-- 
+    Call one of package-* targets unless you understand what you are doing 
+    -->
+    <target name="package-all" depends="clean-all, package-init, init, build, docs, internal-package-mac, internal-package-windows, internal-package-linux, internal-package-war, internal-package-liferay" description="Build public packages for Windows, Linux and Mac platforms.">
+    </target>
 
-	<target name="package-mac" depends="clean-result, package-init, init, build, docs, internal-package-mac" description="Create public tar.gz package for Mac.">
-	</target>
+    <target name="package-mac" depends="clean-result, package-init, init, build, docs, internal-package-mac" description="Create public tar.gz package for Mac.">
+    </target>
 
-	<target name="package-windows" depends="clean-result, package-init, init, build, docs, internal-package-windows" description="Create public ZIP package for Windows.">
-	</target>
+    <target name="package-windows" depends="clean-result, package-init, init, build, docs, internal-package-windows" description="Create public ZIP package for Windows.">
+    </target>
 
-	<target name="package-linux" depends="clean-result, package-init, init, build, docs, internal-package-linux" description="Create public tar.bz2 package for Linux.">
-	</target>
+    <target name="package-linux" depends="clean-result, package-init, init, build, docs, internal-package-linux" description="Create public tar.bz2 package for Linux.">
+    </target>
 
-	<target name="package-oophm" depends="clean-result, package-init, init-oophm, build, docs, internal-package-oophm" description="Create public tar.gz package for OOPHM.">
-	</target>
+    <target name="package-oophm" depends="clean-result, package-init, init-oophm, build, docs, internal-package-oophm" description="Create public tar.gz package for OOPHM.">
+    </target>
 
-	<target name="package-jar" depends="clean-result, package-init, init, libs" description="Create vaadin-x.y.z.jar file.">
-	</target>
+    <target name="package-jar" depends="clean-result, package-init, init, libs" description="Create vaadin-x.y.z.jar file.">
+    </target>
 
-	<target name="package-war" depends="clean-result, package-init, init, build, docs, internal-package-linux, internal-package-war">
-	</target>
+    <target name="package-war" depends="clean-result, package-init, init, build, docs, internal-package-linux, internal-package-war">
+    </target>
 
-	<target name="package-liferay-zip" depends="clean-result, package-init, init, build, docs, internal-package-linux, internal-package-liferay">
-	</target>
+    <target name="package-liferay-zip" depends="clean-result, package-init, init, build, docs, internal-package-linux, internal-package-liferay">
+    </target>
 
     <target name="package-test" depends="clean-result, nightly-init, package-init, init, build, docs, internal-package-linux, nightly-publish">
     </target>
@@ -78,82 +77,57 @@
         </classpath>
     </taskdef>
 
-	<!-- ant contrib for Maven integration -->
-	<path id="maven-ant-tasks.classpath" path="build/lib/maven-ant-tasks-2.0.10.jar" />
-	<typedef resource="org/apache/maven/artifact/ant/antlib.xml"
-	           uri="antlib:org.apache.maven.artifact.ant"
-	           classpathref="maven-ant-tasks.classpath" />
+    <!-- ant contrib for Maven integration -->
+    <path id="maven-ant-tasks.classpath" path="build/lib/maven-ant-tasks-2.0.10.jar" />
+    <typedef resource="org/apache/maven/artifact/ant/antlib.xml"
+             uri="antlib:org.apache.maven.artifact.ant"
+             classpathref="maven-ant-tasks.classpath" />
 
-	<!-- internal tests for packaging -->
+    <!-- internal tests for packaging -->
 
-	<target name="test-build" depends="clean-result, init, build" description="used for testing build.xml">
-	</target>
+    <target name="test-build" depends="clean-result, init, build" description="used for testing build.xml">
+    </target>
 
-	<target name="test-package" depends="init" description="used for testing build.xml">
-		<echo>Creating package for Mac platform.</echo>
-		<antcontrib:var name="package-platform" value="mac" />
-		<antcontrib:var name="eclipse-launch-vmargs" value="-XstartOnFirstThread -Xms128M -Xmx512M" />
-		<antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
-		<delete file="${result-path}/eclipse-test" followsymlinks="false" />
-		<exec executable="ln" failonerror="false">
-			<arg line="-s" />
-			<arg line="${output-dir}" />
-			<arg line="${result-path}/eclipse-test" />
-		</exec>
-		<!--
-		<exec executable="ln" failonerror="false">
-			<arg line="-s" />
-			<arg line="${gwt-dir}/${package-platform}" />
-			<arg line="${output-dir}/gwt" />
-		</exec>
-		-->
-		<!--
-		<antcall target="create-mac-diskimage" inheritAll="true" inheritRefs="true" />
-		-->
-	</target>
+    <target name="test-package" depends="init" description="used for testing build.xml">
+        <echo>Creating package for Mac platform.</echo>
+        <antcontrib:var name="package-platform" value="mac" />
+        <antcontrib:var name="eclipse-launch-vmargs" value="-XstartOnFirstThread -Xms128M -Xmx512M" />
+        <antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
+        <delete file="${result-path}/eclipse-test" followsymlinks="false" />
+        <exec executable="ln" failonerror="false">
+            <arg line="-s" />
+            <arg line="${output-dir}" />
+            <arg line="${result-path}/eclipse-test" />
+        </exec>
+        <!--
+        <exec executable="ln" failonerror="false">
+            <arg line="-s" />
+            <arg line="${gwt-dir}/${package-platform}" />
+            <arg line="${output-dir}/gwt" />
+        </exec>
+        -->
+        <!--
+        <antcall target="create-mac-diskimage" inheritAll="true" inheritRefs="true" />
+        -->
+    </target>
 
-	<!-- Clean results - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	<target name="clean-result" depends="">
-		<property file="build/build.properties" />
+    <!-- Clean results - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <target name="clean-result" depends="">
+        <property file="build/build.properties" />
 
         <!-- Clean build result directory. -->
-		<delete dir="${result-path}" includes="**/*" followsymlinks="false" defaultexcludes="false" includeemptydirs="true" failonerror="false"/>
+        <delete dir="${result-path}" includes="**/*" followsymlinks="false" defaultexcludes="false" includeemptydirs="true" failonerror="false"/>
     </target>
 
     <!-- Clean checkout directory. -->
-	<target name="clean-checkout" depends="">
-		<property file="build/build.properties" />
+    <target name="clean-checkout" depends="">
+        <property file="build/build.properties" />
 
         <delete dir="${checkout-path}" includes="**/*" followsymlinks="false" defaultexcludes="false" includeemptydirs="true" failonerror="false"/>
-	</target>
-
-	<target name="clean-all" depends="clean-result, clean-checkout">
     </target>
 
-	<!-- Find out which platform we are in -->
-	<target name="init-platform">
-		<antcontrib:if>
-			<contains string="${os.name}" substring="Windows" />
-			<then>
-				<property name="platform" value="windows" />
-			</then>
-		</antcontrib:if>
-		<antcontrib:if>
-			<equals arg1="${os.name}" arg2="Linux" />
-			<then>
-				<property name="platform" value="linux" />
-			</then>
-		</antcontrib:if>
-		<antcontrib:if>
-			<equals arg1="${os.name}" arg2="Mac OS X" />
-			<then>
-				<property name="platform" value="mac" />
-			</then>
-		</antcontrib:if>
-	</target>
-
-	<target name="init-oophm-platform"><property name="platform" value="oophm" /></target>
-	<target name="init-oophm" depends="init-oophm-platform,init"></target>
+    <target name="clean-all" depends="clean-result, clean-checkout">
+    </target>
 
     <!-- ================================================================== -->
     <!-- Check versions.                                                    -->
@@ -184,20 +158,43 @@
     </target>
 
     <!-- ================================================================== -->
-	<!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- ================================================================== -->
 
-    <!-- Called only when building installation packages. -->
-	<target name="package-init">
-      <!-- <property name="build.sampler.disabled" value="false"/> -->
+    <!-- Find out which platform we are in -->
+    <target name="init-platform">
+        <antcontrib:if>
+            <contains string="${os.name}" substring="Windows" />
+            <then>
+                <property name="platform" value="windows" />
+            </then>
+        </antcontrib:if>
+        <antcontrib:if>
+            <equals arg1="${os.name}" arg2="Linux" />
+            <then>
+                <property name="platform" value="linux" />
+            </then>
+        </antcontrib:if>
+        <antcontrib:if>
+            <equals arg1="${os.name}" arg2="Mac OS X" />
+            <then>
+                <property name="platform" value="mac" />
+            </then>
+        </antcontrib:if>
     </target>
 
-	<target name="init" depends="check-java-version, init-platform">
+    <target name="init-oophm-platform"><property name="platform" value="oophm" /></target>
+    <target name="init-oophm" depends="init-oophm-platform,init"></target>
 
-		<property file="build/build.properties" />
-		<property file="build/VERSION.properties" />
-		<property file="build/GWT-VERSION.properties" />
-		<property file="build/html-style.properties" />
+    <!-- Called only when building installation packages. -->
+    <target name="package-init">
+    </target>
+
+    <target name="init" depends="check-java-version, init-platform">
+        <property file="build/build.properties" />
+        <property file="build/VERSION.properties" />
+        <property file="build/GWT-VERSION.properties" />
+        <property file="build/html-style.properties" />
 
         <!-- Current timestamp in different formats. -->
         <tstamp>
@@ -207,949 +204,993 @@
             <format property="build.date.compact" pattern="yyyyMMdd"/>
         </tstamp>
 
-		<!-- Default full version name. -->
+        <!-- Default full version name. -->
         <!-- Nightly and other TeamCity builds will define their own. -->
         <property name="version.full" value="${version}.dev-${build.date.compact}"/>
-		<echo>Base Version: ${version}</echo>
-		<echo>Full Version: ${version.full}</echo>
+        <echo>Base Version: ${version}</echo>
+        <echo>Full Version: ${version.full}</echo>
 
-        <echo>Toolkit package is: ${toolkit-package}</echo>
+        <echo>Vaadin package is: ${toolkit-package}</echo>
 
-		<!-- Create result dir unless already exists -->
-		<mkdir dir="${result-path}" />
+        <!-- Create result dir unless already exists -->
+        <mkdir dir="${result-path}" />
 
-		<!-- required when compiling WebContent/VAADIN/widgetsets (and also Java server-side classes) -->
-		<property name="lib-gwt-dev" value="gwt-dev-${platform}.jar" />
+        <!-- required when compiling WebContent/VAADIN/widgetsets (and also Java server-side classes) -->
+        <property name="lib-gwt-dev" value="gwt-dev-${platform}.jar" />
 
-		<echo>We are on ${platform} platform (${os.name} ${os.version}), using ${gwt-dir}/${platform}/${lib-gwt-dev} (${gwt-version}).</echo>
+        <echo>We are on ${platform} platform (${os.name} ${os.version}), using ${gwt-dir}/${platform}/${lib-gwt-dev} (${gwt-version}).</echo>
 
-		<!-- Destination files -->
-		<property name="lib-jar-name" value="${product-file}-${version.full}.jar" />
+        <!-- Destination files -->
+        <property name="lib-jar-name" value="${product-file}-${version.full}.jar" />
 
-		<echo message="Prepared to build ${product-file} version ${version.full} packages" />
+        <echo message="Prepared to build ${product-file} version ${version.full} packages" />
 
-		<!-- Output directory -->
-		<property name="output-dir" value="${result-path}/${product-file}-${version.full}" />
-		<mkdir dir="${output-dir}" />
+        <!-- Output directory -->
+        <property name="output-dir" value="${result-path}/${product-file}-${version.full}" />
+        <mkdir dir="${output-dir}" />
 
-		<!-- Create Output Directory Hierarchy -->
-		<mkdir dir="${output-dir}/WebContent" />
-		<mkdir dir="${output-dir}/WebContent/demo" />
-		<mkdir dir="${output-dir}/WebContent/docs" />
-		<mkdir dir="${output-dir}/WebContent/docs/api" />
-		<mkdir dir="${output-dir}/WebContent/docs/example-source" />
-		<mkdir dir="${output-dir}/WebContent/WEB-INF" />
-		<mkdir dir="${output-dir}/WebContent/WEB-INF/lib" />
-		<mkdir dir="${output-dir}/WebContent/WEB-INF/classes" />
+        <!-- Where widgetsets are written to.                             -->
+        <!-- When not building a package, widgetsets should be written to -->
+        <!-- WebContent/VAADIN/widgetsets, which needs to be set in       -->
+        <!-- init-nonpackage target before calling this main init target. -->
+        <property name="widgetsets-output-dir" value="${output-dir}/WebContent/VAADIN/widgetsets" />
 
-		<!-- Construct classpath used by java and javadoc compilation -->
-		<path id="compile.classpath">
-			<pathelement path="build/lib/servlet.jar" />
-			<pathelement path="build/external/fileupload/classes" />
-			<pathelement path="lib/reservr/gwt-maps.jar" />
-			<pathelement path="lib/jetty/jetty-6.1.7.jar" />
-			<pathelement path="lib/jetty/jetty-util-6.1.7.jar" />
-			<pathelement path="lib/portlet/portal-kernel.jar" />
-			<pathelement path="lib/portlet/portal-service.jar" />
-			<!--<pathelement path="lib/portlet/portlet.jar" />-->
-			<pathelement path="lib/portlet/portlet_20.jar"/>
-			<pathelement path="lib/appengine/appengine-api.jar" />
-			<pathelement path="lib/test/junit-4.5.jar" />
-			<pathelement path="lib/test/easymock-2.5/easymock-2.5.jar" />
-		</path>
-		<path id="compile.classpath.server-side">
+        <!-- Create Output Directory Hierarchy -->
+        <mkdir dir="${output-dir}/WebContent" />
+        <mkdir dir="${output-dir}/WebContent/demo" />
+        <mkdir dir="${output-dir}/WebContent/docs" />
+        <mkdir dir="${output-dir}/WebContent/docs/api" />
+        <mkdir dir="${output-dir}/WebContent/docs/example-source" />
+        <mkdir dir="${output-dir}/WebContent/WEB-INF" />
+        <mkdir dir="${output-dir}/WebContent/WEB-INF/lib" />
+        <mkdir dir="${output-dir}/WebContent/WEB-INF/classes" />
+
+        <!-- Construct classpath used by java and javadoc compilation -->
+        <path id="compile.classpath">
+            <pathelement path="build/lib/servlet.jar" />
+            <pathelement path="build/external/fileupload/classes" />
+        	<fileset dir="lib/core">
+        	        <include name="**/*.jar"/>
+        			<exclude name="**/servlet-api*.jar"/>
+   	        </fileset>
+        	<fileset dir="lib/demo">
+        	        <include name="**/*.jar"/>
+   	        </fileset>
+        	<fileset dir="lib/tests">
+        	        <include name="**/*.jar"/>
+   	        </fileset>
+        </path>
+        <path id="compile.classpath.server-side">
             <path refid="compile.classpath"/>
-			<pathelement path="${result-path}/gwt" />
-		</path>
-		<path id="compile.classpath.client-side">
+            <pathelement path="${result-path}/gwt" />
+        </path>
+        <path id="compile.classpath.client-side">
             <path refid="compile.classpath"/>
             <pathelement path="${gwt-dir}/${platform}/gwt-user.jar" />
             <pathelement path="${gwt-dir}/${platform}/${lib-gwt-dev}" />
-		</path>
+        </path>
 
-	</target>
+    </target>
 
-	<target name="internal-package-windows">
-		<antcontrib:var name="package-platform" value="windows" />
-		<echo>Creating package for ${package-platform} platform.</echo>
-		<antcontrib:var name="eclipse-launch-vmargs" value="-Xms256M -Xmx512M" />
-		<antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
-		<zip zipfile="${result-path}/${product-file}-${package-platform}-${version.full}.zip">
-			<zipfileset prefix="${product-file}-${package-platform}-${version.full}" dir="${result-path}/${product-file}-${version.full}">
-				<patternset>
-					<include name="**/*" />
-				</patternset>
-			</zipfileset>
-			<zipfileset prefix="${product-file}-${package-platform}-${version.full}/gwt" dir="${gwt-dir}/${package-platform}">
-				<patternset>
-					<include name="**/*" />
-					<exclude name="gwt/doc"/>
-					<exclude name="gwt/samples"/>
-				</patternset>
-			</zipfileset>
-		</zip>
-	</target>
+    <target name="internal-package-windows">
+        <antcontrib:var name="package-platform" value="windows" />
+        <echo>Creating package for ${package-platform} platform.</echo>
+        <antcontrib:var name="eclipse-launch-vmargs" value="-Xms256M -Xmx512M" />
+        <antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
+        <zip zipfile="${result-path}/${product-file}-${package-platform}-${version.full}.zip">
+            <zipfileset prefix="${product-file}-${package-platform}-${version.full}" dir="${result-path}/${product-file}-${version.full}">
+                <patternset>
+                    <include name="**/*" />
+                </patternset>
+            </zipfileset>
+            <zipfileset prefix="${product-file}-${package-platform}-${version.full}/gwt" dir="${gwt-dir}/${package-platform}">
+                <patternset>
+                    <include name="**/*" />
+                    <exclude name="gwt/doc"/>
+                    <exclude name="gwt/samples"/>
+                </patternset>
+            </zipfileset>
+        </zip>
+    </target>
 
-	<target name="internal-package-linux">
-		<antcontrib:var name="package-platform" value="linux" />
-		<echo>Creating package for ${package-platform} platform.</echo>
-		<antcontrib:var name="eclipse-launch-vmargs" value="-Xms256M -Xmx512M" />
-		<antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
-		<tar destfile="${result-path}/${product-file}-${package-platform}-${version.full}.tar.gz" compression="gzip" longfile="gnu">
-			<!-- TODO use very slow but effective bzip2
-			<tar destfile="${result-path}/${product-file}-${package-platform}-${version.full}.tar.bz2" compression="bzip2" longfile="gnu">
-		-->
-			<tarfileset prefix="${product-file}-${package-platform}-${version.full}" dir="${result-path}/${product-file}-${version.full}">
-				<patternset>
-					<include name="**/*" />
-				</patternset>
-			</tarfileset>
-			<tarfileset prefix="${product-file}-${package-platform}-${version.full}/gwt" dir="${gwt-dir}/${package-platform}">
-				<patternset>
-					<include name="**/*" />
-				</patternset>
-			</tarfileset>
-		</tar>
-	</target>
+    <target name="internal-package-linux">
+        <antcontrib:var name="package-platform" value="linux" />
+        <echo>Creating package for ${package-platform} platform.</echo>
+        <antcontrib:var name="eclipse-launch-vmargs" value="-Xms256M -Xmx512M" />
+        <antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
+        <tar destfile="${result-path}/${product-file}-${package-platform}-${version.full}.tar.gz" compression="gzip" longfile="gnu">
+            <!-- TODO use very slow but effective bzip2
+            <tar destfile="${result-path}/${product-file}-${package-platform}-${version.full}.tar.bz2" compression="bzip2" longfile="gnu">
+        -->
+            <tarfileset prefix="${product-file}-${package-platform}-${version.full}" dir="${result-path}/${product-file}-${version.full}">
+                <patternset>
+                    <include name="**/*" />
+                </patternset>
+            </tarfileset>
+            <tarfileset prefix="${product-file}-${package-platform}-${version.full}/gwt" dir="${gwt-dir}/${package-platform}">
+                <patternset>
+                    <include name="**/*" />
+                </patternset>
+            </tarfileset>
+        </tar>
+    </target>
 
-	<target name="internal-package-oophm">
-		<antcontrib:var name="package-platform" value="oophm" />
-		<echo>Creating package for ${package-platform} platform.</echo>
-		<antcontrib:var name="eclipse-launch-vmargs" value="-Xms256M -Xmx512M" />
-		<antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
-		<zip zipfile="${result-path}/${product-file}-${package-platform}-${version.full}.zip">
-			<zipfileset prefix="${product-file}-${package-platform}-${version.full}" dir="${result-path}/${product-file}-${version.full}">
-				<patternset>
-					<include name="**/*" />
-				</patternset>
-			</zipfileset>
-			<zipfileset prefix="${product-file}-${package-platform}-${version.full}/gwt" dir="${gwt-dir}/${package-platform}">
-				<patternset>
-					<include name="**/*" />
-				</patternset>
-			</zipfileset>
-		</zip>
-	</target>
+    <target name="internal-package-oophm">
+        <antcontrib:var name="package-platform" value="oophm" />
+        <echo>Creating package for ${package-platform} platform.</echo>
+        <antcontrib:var name="eclipse-launch-vmargs" value="-Xms256M -Xmx512M" />
+        <antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
+        <zip zipfile="${result-path}/${product-file}-${package-platform}-${version.full}.zip">
+            <zipfileset prefix="${product-file}-${package-platform}-${version.full}" dir="${result-path}/${product-file}-${version.full}">
+                <patternset>
+                    <include name="**/*" />
+                </patternset>
+            </zipfileset>
+            <zipfileset prefix="${product-file}-${package-platform}-${version.full}/gwt" dir="${gwt-dir}/${package-platform}">
+                <patternset>
+                    <include name="**/*" />
+                </patternset>
+            </zipfileset>
+        </zip>
+    </target>
 
-	<target name="internal-package-mac">
-		<antcontrib:var name="package-platform" value="mac" />
-		<echo>Creating package for ${package-platform} platform.</echo>
-		<antcontrib:var name="eclipse-launch-vmargs" value="-XstartOnFirstThread -Xms256M -Xmx512M" />
-		<antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
-		<tar destfile="${result-path}/${product-file}-${package-platform}-${version.full}.tar.gz" compression="gzip" longfile="gnu">
-			<tarfileset prefix="${product-file}-${package-platform}-${version.full}" dir="${result-path}/${product-file}-${version.full}">
-				<patternset>
-					<include name="**/*" />
-				</patternset>
-			</tarfileset>
-			<tarfileset prefix="${product-file}-${package-platform}-${version.full}/gwt" dir="${gwt-dir}/${package-platform}">
-				<patternset>
-					<include name="**/*" />
-				</patternset>
-			</tarfileset>
-		</tar>
-		<!-- TODO: remove me: DISABLE for speed -->
-		<!-- <antcall target="create-mac-diskimage" inheritAll="true" inheritRefs="true" /> -->
-	</target>
+    <target name="internal-package-mac">
+        <antcontrib:var name="package-platform" value="mac" />
+        <echo>Creating package for ${package-platform} platform.</echo>
+        <antcontrib:var name="eclipse-launch-vmargs" value="-XstartOnFirstThread -Xms256M -Xmx512M" />
+        <antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
+        <tar destfile="${result-path}/${product-file}-${package-platform}-${version.full}.tar.gz" compression="gzip" longfile="gnu">
+            <tarfileset prefix="${product-file}-${package-platform}-${version.full}" dir="${result-path}/${product-file}-${version.full}">
+                <patternset>
+                    <include name="**/*" />
+                </patternset>
+            </tarfileset>
+            <tarfileset prefix="${product-file}-${package-platform}-${version.full}/gwt" dir="${gwt-dir}/${package-platform}">
+                <patternset>
+                    <include name="**/*" />
+                </patternset>
+            </tarfileset>
+        </tar>
+        <!-- TODO: remove me: DISABLE for speed -->
+        <!-- <antcall target="create-mac-diskimage" inheritAll="true" inheritRefs="true" /> -->
+    </target>
 
-	<target name="internal-package-war">
-		<echo>Building WAR</echo>
+    <target name="internal-package-war">
+        <echo>Building WAR</echo>
 
         <!-- Add the files. -->
         <!-- Warning: This should not really be "platform spefic". -->
-		<antcontrib:var name="package-platform" value="linux" />
-		<antcontrib:var name="eclipse-launch-vmargs" value="-Xms256M -Xmx512M" />
-		<antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
+        <antcontrib:var name="package-platform" value="linux" />
+        <antcontrib:var name="eclipse-launch-vmargs" value="-Xms256M -Xmx512M" />
+        <antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
 
         <!-- Copy source tree to class tree.                         -->
         <!-- A workaround for not setting classpath properly in WAR. -->
-		<copy todir="${output-dir}/WebContent/WEB-INF/classes">
-			<fileset dir="${output-dir}/WebContent/WEB-INF/src">
-				<include name="**/*" />
-			</fileset>
-		</copy>
+        <copy todir="${output-dir}/WebContent/WEB-INF/classes">
+            <fileset dir="${output-dir}/WebContent/WEB-INF/src">
+                <include name="**/*" />
+            </fileset>
+        </copy>
 
-		<war warfile="${result-path}/${product-file}-demo-${version.full}.war"> 
-			<fileset dir="${output-dir}/WebContent">
-				<include name="**/*" />
-			</fileset>
-		</war>
-	</target>
-
-	<target name="internal-package-liferay" depends="internal-package-war">
-		<!-- We assume the needed files are put in place by internal-package-war -->
-		<echo>Building Liferay zip</echo>
-
-		<zip zipfile="${result-path}/${product-file}-${version.full}-liferay.zip">
-			<zipfileset prefix="VAADIN/widgetsets/com.vaadin.portal.gwt.PortalDefaultWidgetSet" dir="${output-dir}/WebContent/VAADIN/widgetsets/com.vaadin.portal.gwt.PortalDefaultWidgetSet">
-				<patternset>
-					<include name="**/*" />
-				</patternset>
-			</zipfileset>
-			<zipfileset prefix="VAADIN/themes" dir="${output-dir}/WebContent/VAADIN/themes">
-				<patternset>
-					<include name="base/**/*" />
-					<include name="liferay/**/*" />
-					<include name="runo/**/*" />
-					<include name="reindeer/**/*" />
-					<include name="default/**/*" />
-				</patternset>
-			</zipfileset>
-			
-		</zip>
-		
-        <echo>##teamcity[publishArtifacts '${result-path}/${product-file}-${version.full}-liferay.zip']</echo>
-
-	</target>
-
-	<target name="create-mac-diskimage">
-		<!-- create Mac disk image (dmg) also -->
-		<property name="mount.dir" value="${result-path}/mac-mounted-image" />
-		<mkdir dir="${mount.dir}" />
-		<delete file="${result-path}/*.dmg" />
-		<antcontrib:if>
-			<equals arg1="${platform}" arg2="mac" />
-			<then>
-				<untar src="${result-path}/${product-file}-${package-platform}-${version.full}.tar.gz" dest="${result-path}/" compression="gzip" />
-				<echo>Creating Mac disk image (dmg)</echo>
-				<!-- create image -->
-				<echo>hdiutil create -format UDRW -volname ${product-file}-${version.full} -srcfolder ${result-path}/${product-file}-${package-platform}-${version.full} ${result-path}/disk-image.dmg</echo>
-				<exec executable="hdiutil" failonerror="true">
-					<arg line="create -format UDRW -volname ${product-file}-${version.full} -srcfolder ${result-path}/${product-file}-${package-platform}-${version.full} ${result-path}/disk-image.dmg" />
-				</exec>
-				<!-- open image -->
-				<exec executable="hdiutil" failonerror="true">
-					<arg line='attach' />
-					<arg line='-readwrite' />
-					<arg line='-noverify' />
-					<arg line='-noautoopen' />
-					<arg line='-mountpoint ${mount.dir}' />
-					<arg line='${result-path}/disk-image.dmg' />
-				</exec>
-				<!-- make sure root folder is opened when image is -->
-				<exec executable="bless" failonerror="true">
-					<arg line='--folder ${mount.dir}' />
-					<arg line='--openfolder ${mount.dir}' />
-				</exec>
-				<!-- hack: wait for completion -->
-				<exec executable="sleep" failonerror="true">
-					<arg line='2' />
-				</exec>
-				<!-- here we could position items -->
-				<!--
-				<exec executable="osascript" failonerror="true">
-					<arg line='package/positionItems.scpt ${mount.dir}' />
-				</exec>
-				-->
-				<!-- turn on volume icon -->
-				<exec executable="/Developer/Tools/SetFile" failonerror="true">
-					<arg line='-a C' />
-					<arg line='${mount.dir}' />
-				</exec>
-				<!-- set executable bit -->
-				<chmod file="${mount.dir}/start.sh" perm="ugo+x" />
-				<!-- close image -->
-				<exec executable="hdiutil" failonerror="true">
-					<arg line='detach ${mount.dir}/' />
-				</exec>
-				<!-- make read-only -->
-				<exec executable="hdiutil" failonerror="true">
-					<arg line='convert ${result-path}/disk-image.dmg' />
-					<arg line='-format UDZO' />
-					<arg line='-imagekey zlib-level=9' />
-					<arg line='-o ${result-path}/${product-file}-${package-platform}-${version.full}.dmg' />
-				</exec>
-				<delete file="${result-path}/disk-image.dmg" />
-				<!-- internet-enable -->
-				<exec executable="hdiutil" failonerror="true">
-					<arg line='internet-enable ${result-path}/${product-file}-${package-platform}-${version.full}.dmg' />
-				</exec>
-			</then>
-		</antcontrib:if>
-	</target>
-
-	<target name="add-platform-specific-files">
-		<echo>Adding platform specific files for ${package-platform}</echo>
-		<delete includeemptydirs="true" defaultexcludes="false">
-			<fileset dir="${output-dir}">
-				<include name=".*" />
-				<include name="*.launch" />
-				<include name="*.txt" />
-				<include name="*.bat" />
-				<include name="*.sh" />
-				<include name="*.app" />
-				<include name="build-widgetset.xml" />
-			</fileset>
-		</delete>
-		<copy todir="${output-dir}">
-			<filterchain>
-				<expandproperties />
-				<replacetokens begintoken="@" endtoken="@">
-					<token key="version" value="${version.full}" />
-				</replacetokens>
-				<replacetokens begintoken="@" endtoken="@">
-					<token key="platform" value="${package-platform}" />
-				</replacetokens>
-			</filterchain>
-			<fileset dir="WebContent/license">
-				<include name="COPYING" />
-			</fileset>
-		</copy>
-		<copy todir="${output-dir}/WebContent">
-			<filterchain>
-				<expandproperties />
-				<replacetokens begintoken="@" endtoken="@">
-					<token key="version" value="${version.full}" />
-					<token key="/version" value="" />
-				</replacetokens>
-				<replacetokens begintoken="@" endtoken="@">
-					<token key="platform" value="${package-platform}" />
-					<token key="/platform" value="" />
-				</replacetokens>
-				<replacetokens begintoken="@" endtoken="@">
-					<token key="builddate" value="${build.date}" />
-				</replacetokens>
-			</filterchain>
-			<fileset dir="WebContent">
-				<exclude name="**/.svn" />
-				<exclude name="windoweddemos.html" />
-				<include name="release-notes.html" />
-				<include name="*.html" />
-				<include name="license/*.html" />
-				<include name="license/*.txt" />
-			</fileset>
-		</copy>
-		<copy file="build/package/${package-platform}-readme.txt" tofile="${output-dir}/readme.txt">
-			<filterchain>
-				<expandproperties />
-				<replacetokens begintoken="&lt;" endtoken=">">
-					<token key="version" value="${version.full}" />
-					<token key="/version" value="" />
-				</replacetokens>
-			</filterchain>
-		</copy>
-		<copy todir="${output-dir}">
-			<filterchain>
-				<expandproperties />
-				<!-- .classpath, *.launch, build-widgetset.xml -->
-				<replacetokens begintoken="&lt;" endtoken=">">
-					<token key="version" value="${version.full}" />
-					<token key="/version" value="" />
-				</replacetokens>
-				<!-- .classpath -->
-				<replacetokens begintoken="&lt;" endtoken=">">
-					<token key="platform-specific-entries" value="&lt;classpathentry kind=&quot;lib&quot; path=&quot;gwt/gwt-dev-${package-platform}.jar&quot; /&gt;" />
-					<token key="/platform-specific-entries" value="" />
-				</replacetokens>
-				<!-- .classpath, HostedMode.launch, build-widgetset.xml -->
-				<!-- We can't use XML notation for this, because it can be inside an attribute definition. -->
-				<replacetokens begintoken="@" endtoken="@">
-					<token key="platform" value="${package-platform}" />
-				</replacetokens>
-				<!-- .project, *.launch -->
-				<replacetokens begintoken="&lt;" endtoken=">">
-					<token key="eclipse-workspace-name" value="${eclipse-workspace-name}" />
-					<token key="/eclipse-workspace-name" value="" />
-				</replacetokens>
-				<!-- HostedMode.launch -->
-				<replacetokens begintoken="&lt;" endtoken=">">
-					<token key="eclipse-launch-vmargs" value="${eclipse-launch-vmargs}" />
-					<token key="/eclipse-launch-vmargs" value="" />
-				</replacetokens>
-			</filterchain>
-			<fileset dir="build/package">
-				<include name="eclipse-classpath" />
-				<include name="eclipse-project" />
-				<include name="eclipse*launch" />
-				<include name="build-widgetset.xml" />
-				<include name="eclipse-org.eclipse.core.resources.prefs" />
-				<include name="eclipse-org.eclipse.jdt.core.prefs" />
-			</fileset>
-		</copy>
-		<move file="${output-dir}/build-widgetset.xml" tofile="${output-dir}/WebContent/docs/example-source/build-widgetset.xml" />
-		<move file="${output-dir}/eclipse-classpath" tofile="${output-dir}/.classpath" />
-		<move file="${output-dir}/eclipse-project" tofile="${output-dir}/.project" />
-		<move file="${output-dir}/eclipse-Vaadin Hosted Mode Browser-launch" tofile="${output-dir}/Vaadin Hosted Mode Browser.launch" />
-		<move file="${output-dir}/eclipse-Vaadin Development Server-launch" tofile="${output-dir}/Vaadin Development Server.launch" />
-		<mkdir dir="${output-dir}/.settings" />
-		<move file="${output-dir}/eclipse-org.eclipse.core.resources.prefs" tofile="${output-dir}/.settings/org.eclipse.core.resources.prefs" />
-		<move file="${output-dir}/eclipse-org.eclipse.jdt.core.prefs" tofile="${output-dir}/.settings/org.eclipse.jdt.core.prefs" />
-		<antcontrib:if>
-			<equals arg1="${package-platform}" arg2="windows" />
-			<then>
-				<copy todir="${output-dir}">
-					<fileset dir="build/package">
-						<include name="start.bat" />
-					</fileset>
-				</copy>
-			</then>
-		</antcontrib:if>
-		<antcontrib:if>
-			<equals arg1="${package-platform}" arg2="linux" />
-			<then>
-				<copy todir="${output-dir}">
-					<fileset dir="build/package">
-						<include name="start.sh" />
-					</fileset>
-				</copy>
-				<chmod file="${output-dir}/start.sh" perm="ugo+x" />
-				<exec executable="chmod" failonerror="false">
-					<arg line="ugo+x" />
-					<arg line="${output-dir}/start.sh" />
-				</exec>
-			</then>
-		</antcontrib:if>
-		<antcontrib:if>
-			<equals arg1="${package-platform}" arg2="oophm" />
-			<then>
-				<copy todir="${output-dir}">
-					<fileset dir="build/package">
-						<include name="start.sh" />
-					</fileset>
-				</copy>
-				<chmod file="${output-dir}/start.sh" perm="ugo+x" />
-				<exec executable="chmod" failonerror="false">
-					<arg line="ugo+x" />
-					<arg line="${output-dir}/start.sh" />
-				</exec>
-			</then>
-		</antcontrib:if>
-		<antcontrib:if>
-			<equals arg1="${package-platform}" arg2="mac" />
-			<then>
-				<copy todir="${output-dir}">
-					<fileset dir="build/package">
-						<include name="start.sh" />
-					</fileset>
-				</copy>
-				<!-- must be done manually -->
-				<!-- <exec executable="cp" failonerror="true">
-					<arg line="-r" />
-					<arg line="build/package/Start.app" />
-					<arg line="${output-dir}" />
-				</exec> -->
-				<!-- but again, ant just fails with any * or other special characters -->
-				<!-- package icon or folder background image / icon placements not in use -->
-				<!--
-				<exec executable="cp" failonerror="true">
-					<arg line="build/package/Icon*" />
-					<arg line="${output-dir}" />
-				</exec>
-				<exec executable="cp" failonerror="true">
-					<arg line="build/package/mac-DS_Store" />
-					<arg line="${output-dir}/.DS_Store" />
-				</exec>
-				<copy file="build/package/mac-VolumeIcon.icns" tofile="${output-dir}/.VolumeIcon.icns" />
-				-->
-				<chmod file="${output-dir}/start.sh" perm="ugo+x" />
-				<exec executable="chmod" failonerror="false">
-					<arg line="ugo+x" />
-					<arg line="${output-dir}/start.sh" />
-				</exec>
-			</then>
-		</antcontrib:if>
-	</target>
-
-	<target name="build" depends="libs, compile-client-side, demo" description="Build package required files, without packing them.">
-	</target>
-
-	<!-- Copy and preprocess sources for packaging 
-	NOTE: Replaces <version></version> tags with build version tag for some "textual" files
-	-->
-	<target name="preprocess-src">
-		<loadfile property="ITMillApache2LicenseForJavaFiles" srcFile="build/ITMillApache2LicenseForJavaFiles.txt" />
-		<mkdir dir="${result-path}/src" />
-		<echo>Copying src directory and processing copied files.</echo>
-		<echo>Replacing &lt;version&gt; tag with build version for java/html/css/xml files.</echo>
-		<copy todir="${result-path}/src">
-			<filterset>
-				<filter token="ITMillApache2LicenseForJavaFiles" value="${ITMillApache2LicenseForJavaFiles}" />
-				<filter token="VERSION" value="${version.full}" />
-			</filterset>
-			<fileset dir="src">
-				<patternset>
-					<include name="**/*.java" />
-					<include name="**/*.html" />
-					<include name="**/*.css" />
-					<include name="**/*.xml" />
-					<exclude name="**/tests/**" unless="build.include.tests"/>
-					<exclude name="**/demo/sampler/**" if="build.sampler.disabled" />
-				</patternset>
-			</fileset>
-		</copy>
-
-		<!-- Unify mix usage of mac/Linux/Win characters -->
-		<echo>Unifying mix usage of Mac/Linux/Win linefeeds for java/html/css/xml files.</echo>
-		<fixcrlf srcdir="${result-path}/src" eol="crlf" tablength="4" tab="asis" includes="**/*.java **/*.html **/*.css **/*.xml" />
-
-		<!-- Add other files such as images, these are not filtered or processed by fixcrlf task -->
-		<echo>Copying non java/html/css/xml files such as images.</echo>
-		<copy todir="${result-path}/src">
-			<fileset dir="src">
-				<patternset>
-					<exclude name="**/.svn" />
-					<exclude name="**/*.java" />
-					<exclude name="**/*.html" />
-					<exclude name="**/*.css" />
-					<exclude name="**/*.xml" />
-					<exclude name="**/tests/**" unless="build.include.tests"/>
-					<exclude name="**/demo/sampler/**" if="build.sampler.disabled" />
-				</patternset>
-			</fileset>
-		</copy>
-
-	</target>
-
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  WebContent
-   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	<target name="webcontent" depends="preprocess-src,defaulttheme">
-
-		<!-- copy 3rd part libraries used by demo -->
-		<copy todir="${output-dir}/WebContent/demo/lib">
-			<fileset dir="lib">
-				<include name="reservr/**/*" />
-			</fileset>
-		</copy>
-		<copy todir="${output-dir}/WebContent/demo/lib">
-			<fileset dir="lib">
-				<include name="jetty/**/*" />
-			</fileset>
-		</copy>
-		<copy todir="${output-dir}/WebContent/demo/lib">
-			<fileset dir="lib">
-				<include name="portlet/**/*" />
-			</fileset>
-		</copy>
-
-		<!-- Add demo sources -->
-		<echo>Adding demo sources to WebContent/WEB-INF/src</echo>
-		<copy todir="${output-dir}/WebContent/WEB-INF/src">
-			<fileset dir="${result-path}/src">
-				<include name="${toolkit-package}/demo/**/*" />
-				<exclude name="${toolkit-package}/demo/sampler/**" if="build.sampler.disabled" />
-			</fileset>
-		</copy>
-
-		<echo>Creating demo source html files</echo>
-		<java2html srcdir="${output-dir}/WebContent/WEB-INF/src/${toolkit-package}/demo" destdir="${output-dir}/WebContent/docs/example-source/${toolkit-package}/demo" includes="**/*.java" style="eclipse" showLineNumbers="false" showFileName="true" showTableBorder="false" />
-
-		<!-- Add WebContent -->
-		<echo>Adding VAADIN/themes, demo and hsqldb.jar files.</echo>
-		<copy todir="${output-dir}/WebContent">
-			<fileset dir="WebContent">
-				<exclude name="**/.svn" />
-				<!-- TODO check what is neccessary -->
-                <!-- These are needed for running tests, but are copied during testing. -->
-				<exclude name="VAADIN/themes/tests*"/>
-				<exclude name="VAADIN/themes/tests-magi/**/*" />
-				<exclude name="VAADIN/themes/tests-featurebrowser/**/*" />
-				<exclude name="VAADIN/themes/tests*/**/*"/>
-				<exclude name="VAADIN/themes/sampler/**" if="build.sampler.disabled" />
-
-				<include name="demo/**/*" />
-				<include name="WEB-INF/lib/hsqldb.jar" />
-				<include name="VAADIN/themes/**/*" />
-				<include name="META-INF/**/*" />
-			</fileset>
-		</copy>
-
-		<!-- Add package specific WebContent files from build/package/WebContent -->
-		<copy todir="${output-dir}/WebContent">
-			<fileset dir="build/package/WebContent">
-				<exclude name="**/.*" />
-				<include name="**/*" />
-			</fileset>
-		</copy>
-		<java classname="com.vaadin.buildhelpers.PortletConfigurationGenerator" failonerror="yes" fork="yes" maxmemory="512m">
-			<arg value="${output-dir}/WebContent/WEB-INF" />
-			<arg value="com.vaadin.demo.sampler.gwt.SamplerWidgetSet" />
-			<classpath>
-				<pathelement location="build/buildhelpers/" />
-			</classpath>
-		</java>
-	</target>
-
-	<target name="compile-fileupload">
-		<echo>Compiling custom fileupload classes.</echo>
-		<ant dir="build/external/fileupload" antfile="build.xml" target="compile" />
-	</target>
-
-	<target name="unpack-gwt" depends="init">
-        <!-- Unpack GWT from JARs. This is needed for excluding Servlet API 2.4. -->
-		<delete dir="${result-path}/gwt"/>
-        <unjar src="${gwt-dir}/${platform}/gwt-user.jar" dest="${result-path}/gwt/"/>
-        <unjar src="${gwt-dir}/${platform}/${lib-gwt-dev}" dest="${result-path}/gwt/"/>
-		<delete dir="${result-path}/gwt/javax/servlet"/>
+        <war warfile="${result-path}/${product-file}-demo-${version.full}.war"> 
+            <fileset dir="${output-dir}/WebContent">
+                <include name="**/*" />
+            </fileset>
+        </war>
     </target>
 
-	<target name="compile-java" depends="init, unpack-gwt, check-servlet-version, compile-fileupload, webcontent">
-		<echo>Compiling src (server-side)</echo>
-		<!-- Compile -->
-		<mkdir dir="${result-path}/classes" />
-		<javac source="1.5" target="1.5" classpathref="compile.classpath.server-side" destdir="${result-path}/classes" debug="true" encoding="UTF-8">
-             <src path="${result-path}/src"/>
-             <!-- This seems to be included by default: include name="${toolkit-package}/**"/ -->
-             <exclude name="${toolkit-package}/demo/sampler/**" if="build.sampler.disabled" />
+    <target name="internal-package-liferay" depends="internal-package-war">
+        <!-- We assume the needed files are put in place by internal-package-war -->
+        <echo>Building Liferay zip</echo>
+
+        <zip zipfile="${result-path}/${product-file}-${version.full}-liferay.zip">
+            <zipfileset prefix="VAADIN/widgetsets/com.vaadin.portal.gwt.PortalDefaultWidgetSet" dir="${output-dir}/WebContent/VAADIN/widgetsets/com.vaadin.portal.gwt.PortalDefaultWidgetSet">
+                <patternset>
+                    <include name="**/*" />
+                </patternset>
+            </zipfileset>
+            <zipfileset prefix="VAADIN/themes" dir="${output-dir}/WebContent/VAADIN/themes">
+                <patternset>
+                    <include name="base/**/*" />
+                    <include name="liferay/**/*" />
+                    <include name="runo/**/*" />
+                    <include name="reindeer/**/*" />
+                    <include name="default/**/*" />
+                </patternset>
+            </zipfileset>
+            
+        </zip>
+        
+        <echo>##teamcity[publishArtifacts '${result-path}/${product-file}-${version.full}-liferay.zip']</echo>
+
+    </target>
+
+    <target name="create-mac-diskimage">
+        <!-- create Mac disk image (dmg) also -->
+        <property name="mount.dir" value="${result-path}/mac-mounted-image" />
+        <mkdir dir="${mount.dir}" />
+        <delete file="${result-path}/*.dmg" />
+        <antcontrib:if>
+            <equals arg1="${platform}" arg2="mac" />
+            <then>
+                <untar src="${result-path}/${product-file}-${package-platform}-${version.full}.tar.gz" dest="${result-path}/" compression="gzip" />
+                <echo>Creating Mac disk image (dmg)</echo>
+                <!-- create image -->
+                <echo>hdiutil create -format UDRW -volname ${product-file}-${version.full} -srcfolder ${result-path}/${product-file}-${package-platform}-${version.full} ${result-path}/disk-image.dmg</echo>
+                <exec executable="hdiutil" failonerror="true">
+                    <arg line="create -format UDRW -volname ${product-file}-${version.full} -srcfolder ${result-path}/${product-file}-${package-platform}-${version.full} ${result-path}/disk-image.dmg" />
+                </exec>
+                <!-- open image -->
+                <exec executable="hdiutil" failonerror="true">
+                    <arg line='attach' />
+                    <arg line='-readwrite' />
+                    <arg line='-noverify' />
+                    <arg line='-noautoopen' />
+                    <arg line='-mountpoint ${mount.dir}' />
+                    <arg line='${result-path}/disk-image.dmg' />
+                </exec>
+                <!-- make sure root folder is opened when image is -->
+                <exec executable="bless" failonerror="true">
+                    <arg line='--folder ${mount.dir}' />
+                    <arg line='--openfolder ${mount.dir}' />
+                </exec>
+                <!-- hack: wait for completion -->
+                <exec executable="sleep" failonerror="true">
+                    <arg line='2' />
+                </exec>
+                <!-- here we could position items -->
+                <!--
+                <exec executable="osascript" failonerror="true">
+                    <arg line='package/positionItems.scpt ${mount.dir}' />
+                </exec>
+                -->
+                <!-- turn on volume icon -->
+                <exec executable="/Developer/Tools/SetFile" failonerror="true">
+                    <arg line='-a C' />
+                    <arg line='${mount.dir}' />
+                </exec>
+                <!-- set executable bit -->
+                <chmod file="${mount.dir}/start.sh" perm="ugo+x" />
+                <!-- close image -->
+                <exec executable="hdiutil" failonerror="true">
+                    <arg line='detach ${mount.dir}/' />
+                </exec>
+                <!-- make read-only -->
+                <exec executable="hdiutil" failonerror="true">
+                    <arg line='convert ${result-path}/disk-image.dmg' />
+                    <arg line='-format UDZO' />
+                    <arg line='-imagekey zlib-level=9' />
+                    <arg line='-o ${result-path}/${product-file}-${package-platform}-${version.full}.dmg' />
+                </exec>
+                <delete file="${result-path}/disk-image.dmg" />
+                <!-- internet-enable -->
+                <exec executable="hdiutil" failonerror="true">
+                    <arg line='internet-enable ${result-path}/${product-file}-${package-platform}-${version.full}.dmg' />
+                </exec>
+            </then>
+        </antcontrib:if>
+    </target>
+
+    <target name="add-platform-specific-files">
+        <echo>Adding platform specific files for ${package-platform}</echo>
+        <delete includeemptydirs="true" defaultexcludes="false">
+            <fileset dir="${output-dir}">
+                <include name=".*" />
+                <include name="*.launch" />
+                <include name="*.txt" />
+                <include name="*.bat" />
+                <include name="*.sh" />
+                <include name="*.app" />
+                <include name="build-widgetset.xml" />
+            </fileset>
+        </delete>
+        <copy todir="${output-dir}">
+            <filterchain>
+                <expandproperties />
+                <replacetokens begintoken="@" endtoken="@">
+                    <token key="version" value="${version.full}" />
+                </replacetokens>
+                <replacetokens begintoken="@" endtoken="@">
+                    <token key="platform" value="${package-platform}" />
+                </replacetokens>
+            </filterchain>
+            <fileset dir="WebContent/license">
+                <include name="COPYING" />
+            </fileset>
+        </copy>
+        <copy todir="${output-dir}/WebContent">
+            <filterchain>
+                <expandproperties />
+                <replacetokens begintoken="@" endtoken="@">
+                    <token key="version" value="${version.full}" />
+                    <token key="/version" value="" />
+                </replacetokens>
+                <replacetokens begintoken="@" endtoken="@">
+                    <token key="platform" value="${package-platform}" />
+                    <token key="/platform" value="" />
+                </replacetokens>
+                <replacetokens begintoken="@" endtoken="@">
+                    <token key="builddate" value="${build.date}" />
+                </replacetokens>
+            </filterchain>
+            <fileset dir="WebContent">
+                <exclude name="**/.svn" />
+                <exclude name="windoweddemos.html" />
+                <include name="release-notes.html" />
+                <include name="*.html" />
+                <include name="license/*.html" />
+                <include name="license/*.txt" />
+            </fileset>
+        </copy>
+        <copy file="build/package/${package-platform}-readme.txt" tofile="${output-dir}/readme.txt">
+            <filterchain>
+                <expandproperties />
+                <replacetokens begintoken="&lt;" endtoken=">">
+                    <token key="version" value="${version.full}" />
+                    <token key="/version" value="" />
+                </replacetokens>
+            </filterchain>
+        </copy>
+        <copy todir="${output-dir}">
+            <filterchain>
+                <expandproperties />
+                <!-- .classpath, *.launch, build-widgetset.xml -->
+                <replacetokens begintoken="&lt;" endtoken=">">
+                    <token key="version" value="${version.full}" />
+                    <token key="/version" value="" />
+                </replacetokens>
+                <!-- .classpath -->
+                <replacetokens begintoken="&lt;" endtoken=">">
+                    <token key="platform-specific-entries" value="&lt;classpathentry kind=&quot;lib&quot; path=&quot;gwt/gwt-dev-${package-platform}.jar&quot; /&gt;" />
+                    <token key="/platform-specific-entries" value="" />
+                </replacetokens>
+                <!-- .classpath, HostedMode.launch, build-widgetset.xml -->
+                <!-- We can't use XML notation for this, because it can be inside an attribute definition. -->
+                <replacetokens begintoken="@" endtoken="@">
+                    <token key="platform" value="${package-platform}" />
+                </replacetokens>
+                <!-- .project, *.launch -->
+                <replacetokens begintoken="&lt;" endtoken=">">
+                    <token key="eclipse-workspace-name" value="${eclipse-workspace-name}" />
+                    <token key="/eclipse-workspace-name" value="" />
+                </replacetokens>
+                <!-- HostedMode.launch -->
+                <replacetokens begintoken="&lt;" endtoken=">">
+                    <token key="eclipse-launch-vmargs" value="${eclipse-launch-vmargs}" />
+                    <token key="/eclipse-launch-vmargs" value="" />
+                </replacetokens>
+            </filterchain>
+            <fileset dir="build/package">
+                <include name="eclipse-classpath" />
+                <include name="eclipse-project" />
+                <include name="eclipse*launch" />
+                <include name="build-widgetset.xml" />
+                <include name="eclipse-org.eclipse.core.resources.prefs" />
+                <include name="eclipse-org.eclipse.jdt.core.prefs" />
+            </fileset>
+        </copy>
+        <move file="${output-dir}/build-widgetset.xml" tofile="${output-dir}/WebContent/docs/example-source/build-widgetset.xml" />
+        <move file="${output-dir}/eclipse-classpath" tofile="${output-dir}/.classpath" />
+        <move file="${output-dir}/eclipse-project" tofile="${output-dir}/.project" />
+        <move file="${output-dir}/eclipse-Vaadin Hosted Mode Browser-launch" tofile="${output-dir}/Vaadin Hosted Mode Browser.launch" />
+        <move file="${output-dir}/eclipse-Vaadin Development Server-launch" tofile="${output-dir}/Vaadin Development Server.launch" />
+        <mkdir dir="${output-dir}/.settings" />
+        <move file="${output-dir}/eclipse-org.eclipse.core.resources.prefs" tofile="${output-dir}/.settings/org.eclipse.core.resources.prefs" />
+        <move file="${output-dir}/eclipse-org.eclipse.jdt.core.prefs" tofile="${output-dir}/.settings/org.eclipse.jdt.core.prefs" />
+        <antcontrib:if>
+            <equals arg1="${package-platform}" arg2="windows" />
+            <then>
+                <copy todir="${output-dir}">
+                    <fileset dir="build/package">
+                        <include name="start.bat" />
+                    </fileset>
+                </copy>
+            </then>
+        </antcontrib:if>
+        <antcontrib:if>
+            <equals arg1="${package-platform}" arg2="linux" />
+            <then>
+                <copy todir="${output-dir}">
+                    <fileset dir="build/package">
+                        <include name="start.sh" />
+                    </fileset>
+                </copy>
+                <chmod file="${output-dir}/start.sh" perm="ugo+x" />
+                <exec executable="chmod" failonerror="false">
+                    <arg line="ugo+x" />
+                    <arg line="${output-dir}/start.sh" />
+                </exec>
+            </then>
+        </antcontrib:if>
+        <antcontrib:if>
+            <equals arg1="${package-platform}" arg2="oophm" />
+            <then>
+                <copy todir="${output-dir}">
+                    <fileset dir="build/package">
+                        <include name="start.sh" />
+                    </fileset>
+                </copy>
+                <chmod file="${output-dir}/start.sh" perm="ugo+x" />
+                <exec executable="chmod" failonerror="false">
+                    <arg line="ugo+x" />
+                    <arg line="${output-dir}/start.sh" />
+                </exec>
+            </then>
+        </antcontrib:if>
+        <antcontrib:if>
+            <equals arg1="${package-platform}" arg2="mac" />
+            <then>
+                <copy todir="${output-dir}">
+                    <fileset dir="build/package">
+                        <include name="start.sh" />
+                    </fileset>
+                </copy>
+                <!-- must be done manually -->
+                <!-- <exec executable="cp" failonerror="true">
+                    <arg line="-r" />
+                    <arg line="build/package/Start.app" />
+                    <arg line="${output-dir}" />
+                </exec> -->
+                <!-- but again, ant just fails with any * or other special characters -->
+                <!-- package icon or folder background image / icon placements not in use -->
+                <!--
+                <exec executable="cp" failonerror="true">
+                    <arg line="build/package/Icon*" />
+                    <arg line="${output-dir}" />
+                </exec>
+                <exec executable="cp" failonerror="true">
+                    <arg line="build/package/mac-DS_Store" />
+                    <arg line="${output-dir}/.DS_Store" />
+                </exec>
+                <copy file="build/package/mac-VolumeIcon.icns" tofile="${output-dir}/.VolumeIcon.icns" />
+                -->
+                <chmod file="${output-dir}/start.sh" perm="ugo+x" />
+                <exec executable="chmod" failonerror="false">
+                    <arg line="ugo+x" />
+                    <arg line="${output-dir}/start.sh" />
+                </exec>
+            </then>
+        </antcontrib:if>
+    </target>
+
+    <!-- Build server-side, client-side, libraries, and demos.                   -->
+    <!-- The client-side needs to be built before libs, because the libs         -->
+    <!-- require the default widgetset and doing otherwise would build it twice. -->
+    <!-- However, since compiling the server-side is required by the client-side -->
+    <!-- compilation, the server-side will actually be built before it.          -->
+    <target name="build"
+            depends="compile-server-side, compile-client-side, libs, demo"
+            description="Build package required files, without packing them.">
+    </target>
+
+    <target name="compile-server-side" depends="compile-java, webcontent"/>
+
+    <!-- Copy and preprocess sources for packaging 
+    NOTE: Replaces <version></version> tags with build version tag for some "textual" files
+    -->
+    <target name="preprocess-src">
+    	<!--
+    	Source directories in the project are
+		 * src (Vaadin core)
+ 		 * demo/src (Demos and examples)
+         * tests/src (Test cases)
+
+		These are copied to 
+ 		 * {$result-path}/src/core
+		 * {$result-path}/src/demo
+		 * {$result-path}/src/tests
+
+		Java/HTML/CSS/XML files are filtered so the license is added and the version is set. 
+		Other files are just copied.
+		
+		If build.include.tests is not set, then "{$result-path}/src/tests" is created but no files are copied to it.
+    	-->
+    	
+        <loadfile property="ITMillApache2LicenseForJavaFiles" srcFile="build/ITMillApache2LicenseForJavaFiles.txt" />
+        <mkdir dir="${result-path}/src" />
+    	
+    	<mkdir dir="${result-path}/src/core" />
+    	<mkdir dir="${result-path}/src/demo" />
+    	<mkdir dir="${result-path}/src/tests" />
+
+    	<patternset id="preprocessable-files">
+    		<include name="**/*.java" />
+    		<include name="**/*.html" />
+    		<include name="**/*.css" />
+    		<include name="**/*.xml" />
+		</patternset>
+		<patternset id="non-preprocessable-files">
+			<exclude name="**/.svn" />
+    		<exclude name="**/*.java" />
+    		<exclude name="**/*.html" />
+    		<exclude name="**/*.css" />
+    		<exclude name="**/*.xml" />
+    	</patternset>
+        <filterset id="version-and-license">
+            <filter token="ITMillApache2LicenseForJavaFiles" value="${ITMillApache2LicenseForJavaFiles}" />
+            <filter token="VERSION" value="${version.full}" />
+        </filterset>
+
+        <echo>Copying src directory and processing copied files.</echo>
+        <echo>Replacing &lt;version&gt; tag with build version for java/html/css/xml files.</echo>
+        <copy todir="${result-path}/src/core">
+        	<filterset refid="version-and-license"/>
+            <fileset dir="src">
+                <patternset refid="preprocessable-files" />
+            </fileset>
+        </copy>
+
+        <copy todir="${result-path}/src/demo">
+        	<filterset refid="version-and-license"/>
+            <fileset dir="demo/src">
+                <patternset refid="preprocessable-files" />
+            </fileset>
+        </copy>
+
+
+		<antcontrib:if>
+			<isset property="build.include.tests"/>
+			<then>
+		        <copy todir="${result-path}/src/tests">
+        			<filterset refid="version-and-license"/>
+            		<fileset dir="tests/src">
+                		<patternset refid="preprocessable-files" />
+            		</fileset>
+        		</copy>
+			</then>
+		</antcontrib:if>
+				
+        <!-- Unify mix usage of mac/Linux/Win characters -->
+        <echo>Unifying mix usage of Mac/Linux/Win linefeeds for java/html/css/xml files.</echo>
+        <fixcrlf srcdir="${result-path}/src" eol="crlf" tablength="4" tab="asis" includes="**/*.java **/*.html **/*.css **/*.xml" />
+
+        <!-- Add other files such as images, these are not filtered or processed by fixcrlf task -->
+        <echo>Copying non java/html/css/xml files such as images.</echo>
+        <copy todir="${result-path}/src/core">
+            <fileset dir="src">
+				<patternset refid="non-preprocessable-files" />
+			</fileset>
+        </copy>
+        <copy todir="${result-path}/src/demo">
+            <fileset dir="demo/src">
+				<patternset refid="non-preprocessable-files" />
+			</fileset>
+        </copy>
+    	<antcontrib:if>
+    		<isset property="build.include.tests"/>
+    		<then>
+        		<copy todir="${result-path}/src/tests">
+            		<fileset dir="tests/src">
+						<patternset refid="non-preprocessable-files" />
+					</fileset>
+        		</copy>
+    		</then>
+    	</antcontrib:if>
+
+    </target>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  WebContent
+   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <target name="webcontent" depends="preprocess-src,defaulttheme">
+
+        <!-- copy 3rd part libraries used by demo -->
+        <copy todir="${output-dir}/WebContent/demo/lib">
+            <fileset dir="lib/demo">
+                <include name="gwt-maps/**/*" />
+            </fileset>
+        </copy>
+        <copy todir="${output-dir}/WebContent/demo/lib">
+            <fileset dir="lib/core">
+                <include name="jetty/**/*" />
+            </fileset>
+        </copy>
+        <copy todir="${output-dir}/WebContent/demo/lib">
+            <fileset dir="lib/core">
+                <include name="portlet/**/*" />
+            </fileset>
+        </copy>
+
+        <!-- Add demo sources -->
+        <echo>Adding demo sources to WebContent/WEB-INF/src</echo>
+        <copy todir="${output-dir}/WebContent/WEB-INF/src">
+            <fileset dir="${result-path}/src/demo">
+                <include name="**/*" />
+            </fileset>
+        </copy>
+
+        <echo>Creating demo source html files</echo>
+        <java2html srcdir="${output-dir}/WebContent/WEB-INF/src/${toolkit-package}/demo" destdir="${output-dir}/WebContent/docs/example-source/${toolkit-package}/demo" includes="**/*.java" style="eclipse" showLineNumbers="false" showFileName="true" showTableBorder="false" />
+
+        <!-- Add WebContent -->
+        <echo>Adding VAADIN/themes, demo and hsqldb.jar files.</echo>
+        <copy todir="${output-dir}/WebContent">
+            <fileset dir="WebContent">
+                <exclude name="**/.svn" />
+                <!-- TODO check what is neccessary -->
+                <!-- These are needed for running tests, but are copied during testing. -->
+                <exclude name="VAADIN/themes/tests*"/>
+                <exclude name="VAADIN/themes/tests-magi/**/*" />
+                <exclude name="VAADIN/themes/tests-featurebrowser/**/*" />
+                <exclude name="VAADIN/themes/tests*/**/*"/>
+
+                <include name="demo/**/*" />
+                <include name="WEB-INF/lib/hsqldb.jar" />
+                <include name="VAADIN/themes/**/*" />
+                <include name="META-INF/**/*" />
+            </fileset>
+        </copy>
+
+        <!-- Add package specific WebContent files from build/package/WebContent -->
+        <copy todir="${output-dir}/WebContent">
+            <fileset dir="build/package/WebContent">
+                <exclude name="**/.*" />
+                <include name="**/*" />
+            </fileset>
+        </copy>
+        <java classname="com.vaadin.buildhelpers.PortletConfigurationGenerator" failonerror="yes" fork="yes" maxmemory="512m">
+            <arg value="${output-dir}/WebContent/WEB-INF" />
+            <arg value="com.vaadin.demo.sampler.gwt.SamplerWidgetSet" />
+            <classpath>
+                <pathelement location="build/buildhelpers/" />
+            </classpath>
+        </java>
+    </target>
+
+    <target name="compile-fileupload">
+        <echo>Compiling custom fileupload classes.</echo>
+        <ant dir="build/external/fileupload" antfile="build.xml" target="compile" />
+    </target>
+
+    <target name="unpack-gwt" depends="init">
+        <!-- Unpack GWT from JARs. This is needed for excluding Servlet API 2.4. -->
+        <delete dir="${result-path}/gwt"/>
+        <unjar src="${gwt-dir}/${platform}/gwt-user.jar" dest="${result-path}/gwt/"/>
+        <unjar src="${gwt-dir}/${platform}/${lib-gwt-dev}" dest="${result-path}/gwt/"/>
+        <delete dir="${result-path}/gwt/javax/servlet"/>
+    </target>
+
+    <target name="compile-java" depends="init, unpack-gwt, check-servlet-version, compile-fileupload, webcontent">
+        <echo>Compiling src (server-side)</echo>
+    	
+        <!-- Compile all sources at the same time as they depend on each other -->
+        <mkdir dir="${result-path}/classes" />
+        <javac source="1.5" target="1.5" classpathref="compile.classpath.server-side" destdir="${result-path}/classes" debug="true" encoding="UTF-8">
+             <src path="${result-path}/src/core"/>
+             <src path="${result-path}/src/demo"/>
+             <src path="${result-path}/src/tests"/>
+        	
              <exclude name="${toolkit-package}/tests/**" unless="build.include.tests"/>
-		</javac>
-	</target>
+        </javac>
+    </target>
 
-	<target name="defaulttheme">
-		<echo>Combining default themes css files</echo>
-		<!-- ensure buildhelpers are compiled -->
-		<javac source="1.5" target="1.5" srcdir="build/buildhelpers" classpath="build/smartsprites/lib/smartsprites-0.2.3-itmill.jar"/>
-		<java classname="com.vaadin.buildhelpers.CompileDefaultTheme" failonerror="yes" fork="yes">
-			<classpath>
-				<pathelement location="build/buildhelpers" />
-				<fileset dir="build/smartsprites/lib">
-					<include name="*.jar"/>
-				</fileset>
-			</classpath>
+    <target name="defaulttheme">
+        <echo>Combining default themes css files</echo>
+        <!-- ensure buildhelpers are compiled -->
+        <javac source="1.5" target="1.5" srcdir="build/buildhelpers" classpath="build/smartsprites/lib/smartsprites-0.2.3-itmill.jar"/>
+        <java classname="com.vaadin.buildhelpers.CompileDefaultTheme" failonerror="yes" fork="yes">
+            <classpath>
+                <pathelement location="build/buildhelpers" />
+                <fileset dir="build/smartsprites/lib">
+                    <include name="*.jar"/>
+                </fileset>
+            </classpath>
             <jvmarg value="-Djava.awt.headless=true"/>
-		</java>
-	</target>
+        </java>
+    </target>
 
-	<target name="testtarget">
-		<echo>TEST TARGET CALLED</echo>
-	</target>
+    <target name="testtarget">
+        <echo>TEST TARGET CALLED</echo>
+    </target>
 
-	<target name="remove-widgetset-gwt-tmp">
-		<echo>Removing widgetset temp files</echo>
-		<delete dir="${output-dir}/WebContent/VAADIN/widgetsets/.gwt-tmp" includeemptydirs="true"/>
-	</target>
+    <!-- ================================================================== -->
+    <!-- Widget Set Compilation                                             -->
+    <!-- ================================================================== -->
+    <!-- Widget set compilation process:                                    -->
+    <!--   1. Preprocess sources                                            -->
+    <!--   2. Compile server-side java                                      -->
+    <!--   3. Generate widget set definitions and classes                   -->
+    <!--   4. Compile widget sets                                           -->
+    <!--                                                                    -->
+    <!-- Widget sets can be built for two purposes:                         -->
+    <!--   * for building installation packages                             -->
+    <!--   * for building single widget sets during development             -->
+    <!--      Targets: widgetset-<name>                                     -->
+
+    <target name="remove-widgetset-gwt-tmp">
+        <echo>Removing widgetset temp files</echo>
+        <delete dir="${output-dir}/WebContent/VAADIN/widgetsets/.gwt-tmp" includeemptydirs="true"/>
+    </target>
 
     <!-- Note: Probably not needed any longer as all sources need to be compiled. -->
-	<target name="compile-widgetset-generator-only" depends="init, preprocess-src, compile-java">
-		<mkdir dir="${result-path}/classes"/>
-		<javac source="1.5" target="1.5" destdir="${result-path}/classes" debug="true" encoding="UTF-8">
-            <src path="${result-path}/src"/>
-			<include name="com/vaadin/terminal/gwt/widgetsetutils/WidgetMapGenerator.java" />
+    <target name="compile-widgetset-generator-only" depends="init, preprocess-src, compile-java">
+        <mkdir dir="${result-path}/classes"/>
+        <javac source="1.5" target="1.5" destdir="${result-path}/classes" debug="true" encoding="UTF-8">
+            <src path="${result-path}/src/core"/>
+            <include name="com/vaadin/terminal/gwt/widgetsetutils/WidgetMapGenerator.java" />
             <!-- <exclude name="**"/> -->
-			<classpath>
-				<pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
-				<pathelement location="${gwt-dir}/${platform}/${lib-gwt-dev}" />
-				<pathelement location="${result-path}/classes" />
-				<pathelement location="${result-path}/src" />
-			</classpath>
-		</javac>
-	</target>
+            <classpath>
+                <pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
+                <pathelement location="${gwt-dir}/${platform}/${lib-gwt-dev}" />
+                <pathelement location="${result-path}/classes" />
+                <pathelement location="${result-path}/src/core" />
+            </classpath>
+        </javac>
+    </target>
 
-    <!-- The widgetset generator is currently compiled along with rest of server-side Java. -->	
-	<target name="compile-widgetset-generator" depends="init, preprocess-src, compile-java"/>
+    <!-- The widgetset generator is currently compiled along with rest of server-side Java. -->    
+    <target name="compile-widgetset-generator" depends="init, preprocess-src, compile-java"/>
 
-	<target name="compile-widgetset-default">
-		<echo>Compiling src (client-side)</echo>
-		<echo>com.vaadin.terminal.gwt.DefaultWidgetSet</echo>
-		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
-			<arg value="-war" />
-			<arg value="${output-dir}/WebContent/VAADIN/widgetsets" />
-			<arg value="com.vaadin.terminal.gwt.DefaultWidgetSet" />
-			<arg value="-style" />
-			<arg value="OBF" />
-            <jvmarg value="-Xss8M"/>
-            <jvmarg value="-Djava.awt.headless=true"/>
-			<classpath>
-				<pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
-				<pathelement location="${gwt-dir}/${platform}/${lib-gwt-dev}" />
-				<pathelement location="${result-path}/classes" />
-				<pathelement location="${result-path}/src" />
-			</classpath>
-		</java>
-		<antcall target="remove-widgetset-gwt-tmp"/>
-		<echo>Compiled DefaultWidgetSet</echo>
-	</target>
 
-	<target name="compile-widgetset-portal-default">
-		<echo>Compiling src (client-side)</echo>
-		<echo>com.vaadin.portal.gwt.PortalDefaultWidgetSet</echo>
-		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
-			<arg value="-war" />
-			<arg value="${output-dir}/WebContent/VAADIN/widgetsets" />
-			<arg value="com.vaadin.portal.gwt.PortalDefaultWidgetSet" />
-			<arg value="-style" />
-			<arg value="OBF" />
-            <jvmarg value="-Xss8M"/>
-            <jvmarg value="-Djava.awt.headless=true"/>
-			<classpath>
-				<pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
-				<pathelement location="${gwt-dir}/${platform}/${lib-gwt-dev}" />
-				<pathelement location="${result-path}/src" />
-				<pathelement location="${result-path}/classes" />
-			</classpath>
-		</java>
-		<antcall target="remove-widgetset-gwt-tmp"/>
-		<echo>Compiled PortalDefaultWidgetSet</echo>
-	</target>
-
-	<target name="compile-widgetset-reserver">
-		<condition property="googlemaps-jar" value="${output-dir}/WebContent/demo/lib/reservr/gwt-maps.jar">
-			<available file="${output-dir}/WebContent/demo/lib/reservr/gwt-maps.jar" />
-		</condition>
-		<condition property="googlemaps-jar" value="lib/reservr/gwt-maps.jar">
-			<available file="lib/reservr/gwt-maps.jar" />
-		</condition>
-		<echo>com.vaadin.demo.reservation.gwt.ReservationWidgetSet</echo>
-		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
-			<arg value="-war" />
-			<arg value="${output-dir}/WebContent/VAADIN/widgetsets" />
-			<arg value="com.vaadin.demo.reservation.gwt.ReservationWidgetSet" />
-			<arg value="-style" />
-			<arg value="OBF" />
-            <jvmarg value="-Xss8M"/>
-            <jvmarg value="-Djava.awt.headless=true"/>
-			<classpath>
-				<pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
-				<pathelement location="${gwt-dir}/${platform}/${lib-gwt-dev}" />
-				<pathelement location="${result-path}/src" />
-				<!-- demo jars -->
-				<pathelement location="${googlemaps-jar}" />
-				<!-- demo widgetset sources -->
-				<pathelement path="${output-dir}/WebContent/WEB-INF/src" />
-				<pathelement location="${result-path}/classes" />
-			</classpath>
-		</java>
-		<antcall target="remove-widgetset-gwt-tmp"/>
-		<echo>Compiled ReservationWidgetSet</echo>
-	</target>
-
-    <!-- Building Sampler for installation package is disabled. -->
-	<target name="compile-widgetset-sampler" unless="build.sampler.disabled">
-		<echo>com.vaadin.demo.sampler.gwt.SamplerWidgetSet</echo>
-		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
-			<arg value="-war" />
-			<arg value="${output-dir}/WebContent/VAADIN/widgetsets" />
-			<arg value="com.vaadin.demo.sampler.gwt.SamplerWidgetSet" />
-			<arg value="-style" />
-			<arg value="OBF" />
-            <jvmarg value="-Xss8M"/>
-            <jvmarg value="-Djava.awt.headless=true"/>
-			<classpath>
-				<pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
-				<pathelement location="${gwt-dir}/${platform}/${lib-gwt-dev}" />
-				<pathelement location="${result-path}/src" />
-				<!-- demo widgetset sources -->
-				<pathelement path="${output-dir}/WebContent/WEB-INF/src" />
-				<pathelement location="${result-path}/classes" />
-			</classpath>
-		</java>
-		<antcall target="remove-widgetset-gwt-tmp"/>
-		<echo>Compiled SamplerWidgetSet</echo>
+    <path id="widgetset-compile-classpath">
+        <pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
+        <pathelement location="${gwt-dir}/${platform}/${lib-gwt-dev}" />
+        <pathelement location="${result-path}/classes" />
+        <pathelement location="${result-path}/src/core" />
+        <pathelement location="${result-path}/src/demo" />
+    </path>
+	
+	<target name="compile-widgetset" description="Compiles the widgetset given as the first parameter">
+		<fail unless="widgetset" message="No widgetset parameter set"/>
+		<echo>Compiling widgetset ${widgetset}. Output directory: ${widgetsets-output-dir}</echo>
+	    <java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
+	    	<classpath refid="widgetset-compile-classpath"/>
+	    	
+	        <arg value="-war" />
+	        <arg value="${widgetsets-output-dir}" />
+	        <arg value="-style" />
+	        <arg value="OBF" />
+	        <arg value="${widgetset}" />
+	    	
+	        <jvmarg value="-Xss8M"/>
+	        <jvmarg value="-Djava.awt.headless=true"/>
+	    </java>
+        <antcall target="remove-widgetset-gwt-tmp"/>
+		
+        <echo>Compiled ${widgetset}</echo>
 	</target>
 	
-	<target name="compile-widgetset-coverflow">
-		<echo>com.vaadin.demo.coverflow.gwt.CoverflowWidgetSet</echo>
-		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
-			<arg value="-war" />
-			<arg value="${output-dir}/WebContent/VAADIN/widgetsets" />
-			<arg value="com.vaadin.demo.coverflow.gwt.CoverflowWidgetSet" />
-			<arg value="-style" />
-			<arg value="OBF" />
-            <jvmarg value="-Xss8M"/>
-            <jvmarg value="-Djava.awt.headless=true"/>
-			<classpath>
-				<pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
-				<pathelement location="${gwt-dir}/${platform}/${lib-gwt-dev}" />
-				<pathelement location="${result-path}/src" />
-				<!-- demo widgetset sources -->
-				<pathelement path="${output-dir}/WebContent/WEB-INF/src" />
-				<pathelement location="${result-path}/classes" />
-			</classpath>
-		</java>
-		<antcall target="remove-widgetset-gwt-tmp"/>
-		<echo>Compiled CoverflowWidgetSet</echo>
-	</target>
+    <target name="compile-widgetset-default">
+    	<antcall target="compile-widgetset">
+    		<param name="widgetset" value="com.vaadin.terminal.gwt.DefaultWidgetSet"/>
+    	</antcall>
+    </target>
 	
-	<target name="compile-widgetset-colorpicker">
-		<echo>com.vaadin.demo.colorpicker.gwt.ColorPickerWidgetSet</echo>
-		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
-			<arg value="-war" />
-			<arg value="${output-dir}/WebContent/VAADIN/widgetsets" />
-			<arg value="com.vaadin.demo.colorpicker.gwt.ColorPickerWidgetSet" />
-			<arg value="-style" />
-			<arg value="OBF" />
+    <target name="compile-widgetset-portal-default">
+    	<antcall target="compile-widgetset">
+    		<param name="widgetset" value="com.vaadin.portal.gwt.PortalDefaultWidgetSet"/>
+    	</antcall>
+    </target>
+
+    <target name="compile-widgetset-reserver">
+        <condition property="googlemaps-jar" value="${output-dir}/WebContent/demo/lib/gwt-maps/gwt-maps.jar">
+            <available file="${output-dir}/WebContent/demo/lib/gwt-maps/gwt-maps.jar" />
+        </condition>
+        <condition property="googlemaps-jar" value="lib/gwt-maps/gwt-maps.jar">
+            <available file="lib/reservr/gwt-maps.jar" />
+        </condition>
+        <java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
+            <arg value="-war" />
+            <arg value="${widgetsets-output-dir}" />
+            <arg value="com.vaadin.demo.reservation.gwt.ReservationWidgetSet" />
+            <arg value="-style" />
+            <arg value="OBF" />
             <jvmarg value="-Xss8M"/>
             <jvmarg value="-Djava.awt.headless=true"/>
-			<classpath>
-				<pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
-				<pathelement location="${gwt-dir}/${platform}/${lib-gwt-dev}" />
-				<pathelement location="${result-path}/src" />
-				<!-- demo widgetset sources -->
-				<pathelement path="${output-dir}/WebContent/WEB-INF/src" />
-				<pathelement location="${result-path}/classes" />
-			</classpath>
-		</java>
-		<antcall target="remove-widgetset-gwt-tmp"/>
-		<echo>Compiled ColorPickerWidgetSet</echo>
-	</target>
+            <classpath>
+                <pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
+                <pathelement location="${gwt-dir}/${platform}/${lib-gwt-dev}" />
+                <pathelement location="${result-path}/src/core" />
+                <pathelement location="${result-path}/src/demo" />
+                <!-- demo jars -->
+                <pathelement location="${googlemaps-jar}" />
+                <!-- demo widgetset sources -->
+                <pathelement path="${output-dir}/WebContent/WEB-INF/src" />
+                <pathelement location="${result-path}/classes" />
+            </classpath>
+        </java>
+        <antcall target="remove-widgetset-gwt-tmp"/>
+        <echo>Compiled ReservationWidgetSet</echo>
+    </target>
 
+	 <target name="compile-widgetset-sampler">
+	    	<antcall target="compile-widgetset">
+	    		<param name="widgetset" value="com.vaadin.demo.sampler.gwt.SamplerWidgetSet"/>
+	    	</antcall>
+	    </target>
+	 <target name="compile-widgetset-coverflow">
+	    	<antcall target="compile-widgetset">
+	    		<param name="widgetset" value="com.vaadin.demo.coverflow.gwt.CoverflowWidgetSet"/>
+	    	</antcall>
+	    </target>
+	 <target name="compile-widgetset-colorpicker">
+	    	<antcall target="compile-widgetset">
+	    		<param name="widgetset" value="com.vaadin.demo.colorpicker.gwt.ColorPickerWidgetSet"/>
+	    	</antcall>
+	    </target>
+    
     <!-- Builds the client-side engine, i.e., the widgetsets sequentially. -->
-	<target name="compile-client-side-sequential" unless="build.parallel">
-		<echo>Compiling widget sets sequentially.</echo>
+    <!-- Notice that antcall does not fulfill dependencies.                -->
+    <target name="compile-client-side-sequential" unless="build.parallel">
+        <echo>Compiling widget sets sequentially.</echo>
         <!-- We can't call these with 'depends' because of the 'unless' specifier. -->
-		<subant antfile="build.xml" target="compile-widgetset-default" inheritall="true" buildpath="build" />
-		<subant antfile="build.xml" target="compile-widgetset-portal-default" inheritall="true" buildpath="build" />
-		<subant antfile="build.xml" target="compile-widgetset-reserver" inheritall="true" buildpath="build" />
-		<subant antfile="build.xml" target="compile-widgetset-sampler" inheritall="true" buildpath="build" />
-		<subant antfile="build.xml" target="compile-widgetset-colorpicker" inheritall="true" buildpath="build" />
-		<subant antfile="build.xml" target="compile-widgetset-coverflow" inheritall="true" buildpath="build" />
-	</target>
+        <antcall target="compile-widgetset-default"/>
+        <antcall target="compile-widgetset-portal-default"/>
+        <antcall target="compile-widgetset-reserver"/>
+        <antcall target="compile-widgetset-sampler"/>
+        <antcall target="compile-widgetset-colorpicker"/>
+        <antcall target="compile-widgetset-coverflow"/>
+    </target>
 
-	<!-- Builds the client-side engine, i.e., the widgetsets in parallel. -->
-	<target name="compile-client-side-parallel" if="build.parallel">
-		<echo>Compiling widget sets in parallel.</echo>
-		<parallel threadsperprocessor="1">
-			<subant antfile="build.xml" target="compile-widgetset-default" inheritall="true" buildpath="build" />
-			<subant antfile="build.xml" target="compile-widgetset-portal-default" inheritall="true" buildpath="build" />
-			<subant antfile="build.xml" target="compile-widgetset-reserver" inheritall="true" buildpath="build" />
-			<subant antfile="build.xml" target="compile-widgetset-sampler" inheritall="true" buildpath="build" />
-			<subant antfile="build.xml" target="compile-widgetset-colorpicker" inheritall="true" buildpath="build" />
-			<subant antfile="build.xml" target="compile-widgetset-coverflow" inheritall="true" buildpath="build" />
-		</parallel>
-	</target>
+    <!-- Builds the client-side engine, i.e., the widgetsets in parallel. -->
+    <!-- Notice that antcall does not fulfill dependencies.                -->
+    <target name="compile-client-side-parallel" if="build.parallel">
+        <echo>Compiling widget sets in parallel.</echo>
+        <parallel threadsperprocessor="1">
+            <antcall target="compile-widgetset-default"/>
+            <antcall target="compile-widgetset-portal-default"/>
+            <antcall target="compile-widgetset-reserver"/>
+            <antcall target="compile-widgetset-sampler"/>
+            <antcall target="compile-widgetset-colorpicker"/>
+            <antcall target="compile-widgetset-coverflow"/>
+        </parallel>
+    </target>
 
-    <!-- Build either sequentially or in parallel,   -->
-	<!-- depending on the 'build-parallel' property. -->
-	<target name="compile-client-side" depends="compile-client-side-sequential, compile-client-side-parallel"/>
+    <!-- Compiles all widgetsets.                                         -->
+    <!-- This is called when building packages and when compiling all     -->
+    <!-- widgetsets, but not when compiling individual widgetsets.        -->
+    <!-- Builds widgetsets either sequentially or in parallel, depending  -->
+    <!-- on the 'build.parallel' property.                                -->
+    <target name="compile-client-side" depends="compile-server-side, compile-client-side-sequential, compile-client-side-parallel"/>
 
-	<!-- Definitions for building local components, i.e., not for an installation package. -->
-	<target name="init-nonpackage" depends="init-platform, init">
-		<property file="build/VERSION.properties" />
-		<property file="build/GWT-VERSION.properties" />
+    <!-- Definitions for building local components, i.e., not for an installation package. -->
+    <target name="init-nonpackage" depends="init-platform">
+        <property file="build/VERSION.properties" />
+        <property file="build/GWT-VERSION.properties" />
 
-		<!-- Definitions for building the client-side. -->
-		<property name="output-dir" value="." />
+        <!-- Definitions for building the client-side. -->
+        <property name="widgetsets-output-dir" value="WebContent/VAADIN/widgetsets" />
 
-		<!-- The "result-path" simply contains the sources. -->
-		<property name="result-path" value="." />
+        <!-- Path to GWT directory. TODO: This should be read from build.properties file. -->
+        <property name="gwt-dir" value="build/gwt" />
 
-		<!-- Path to GWT directory. TODO: This should be read from build.properties file. -->
-		<property name="gwt-dir" value="build/gwt" />
+        <!-- required when compiling WebContent/VAADIN/widgetsets (and also Java server-side classes) -->
+        <property name="lib-gwt-dev" value="gwt-dev-${platform}.jar" />
 
-		<!-- required when compiling WebContent/VAADIN/widgetsets (and also Java server-side classes) -->
-		<property name="lib-gwt-dev" value="gwt-dev-${platform}.jar" />
+        <echo>We are on ${platform} platform, using ${gwt-dir}/${platform}/${lib-gwt-dev}.</echo>
+        <echo>GWT dir: ${gwt-dir}</echo>
+        <echo>Widget sets output dir: ${widgetsets-output-dir}</echo>
+    </target>
 
-		<echo>We are on ${platform} platform, using ${gwt-dir}/${platform}/${lib-gwt-dev}.</echo>
-		<echo>GWT dir:    ${gwt-dir}</echo>
-		<echo>Output dir: ${output-dir}</echo>
-	</target>
+    <!-- Builds all widgetsets locally, i.e., not for an installation package. -->
+    <target name="widgetsets" depends="init-nonpackage, init, compile-widgetset-generator, compile-client-side"/>
 
-	<!-- Builds all widgetsets locally, i.e., not for an installation package. -->
-	<target name="widgetsets" depends="compile-widgetset-generator, init-nonpackage, compile-client-side">
-	</target>
+    <!-- Build each widgetset locally, i.e., not for an installation package. -->
+    <target name="widgetset-default" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-default"/>
+    <target name="widgetset-portal-default" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-portal-default"/>
+    <target name="widgetset-sampler" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-sampler"/>
+    <target name="widgetset-coverflow" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-coverflow"/>
+    <target name="widgetset-reserver" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-reserver"/>
+    <target name="widgetset-colorpicker" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-colorpicker"/>
 
-	<!-- Build each widgetset locally, i.e., not for an installation package. -->
-	<target name="widgetset-default" depends="compile-widgetset-generator, init-nonpackage, compile-widgetset-default"/>
-	<target name="widgetset-portal-default" depends="compile-widgetset-generator, init-nonpackage, compile-widgetset-portal-default"/>
-	<target name="widgetset-sampler" depends="compile-widgetset-generator, init-nonpackage, compile-widgetset-sampler"/>
-	<target name="widgetset-coverflow" depends="compile-widgetset-generator, init-nonpackage, compile-widgetset-coverflow"/>
-	<target name="widgetset-reserver" depends="compile-widgetset-generator, init-nonpackage, compile-widgetset-reserver"/>
-	<target name="widgetset-colorpicker" depends="compile-widgetset-generator, init-nonpackage, compile-widgetset-colorpicker"/>
+    <!-- ================================================================== -->
+    <!-- Libraries and Demos                                                -->
+    <!-- ================================================================== -->
 
-    <!-- Compile the Toolkit library JAR.          -->
-    <!-- Only need the default widgetset for this. -->
-	<target name="libs" depends="compile-java, webcontent, compile-widgetset-default">
-		<echo>Creating libs (server-side) ${lib-jar-name}</echo>
-		<!-- Create Toolkit JAR -->
-		<mkdir dir="${output-dir}/META-INF"/>
-		<echo file="${output-dir}/META-INF/VERSION">${version.full}</echo> 
-		<echo file="${output-dir}/META-INF/GWT-VERSION">${gwt-version}</echo> 
-		<jar jarfile="${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name}" compress="true" manifest="build/package/META-INF/MANIFEST.MF">
-			<metainf dir="${output-dir}/META-INF"/>
-			<manifest>
-				<attribute name="Vaadin-Widgetsets" value="com.vaadin.terminal.gwt.DefaultWidgetSet" />
-				<attribute name="Bundle-Version" value="${version.full}" />
-			</manifest>
-			<fileset dir="${result-path}/classes">
-				<patternset>
-					<exclude name="${toolkit-package}/demo/**" />
-					<exclude name="${toolkit-package}/tests/**"/>
-					<exclude name="${toolkit-package}/launcher/**" />
-					<exclude name="${toolkit-package}/automatedtests/**" />
-				</patternset>
-			</fileset>
-			<!-- fileupload, see build/external/fileupload/build.xml -->
-			<fileset dir="build/external/fileupload/classes">
-				<include name="**/*" />
-			</fileset>
-			<!-- add sources -->
-			<fileset dir="${result-path}/src">
-				<patternset>
-					<exclude name="${toolkit-package}/demo/**" />
-					<exclude name="${toolkit-package}/tests/**"/>
-					<exclude name="${toolkit-package}/launcher/**" />
-					<exclude name="${toolkit-package}/automatedtests/**" />
-				</patternset>
-			</fileset>
-			<fileset dir="${output-dir}/WebContent">
-				<patternset>
-					<include name="VAADIN/widgetsets/com.vaadin.terminal.gwt.DefaultWidgetSet/**/*" />
-					<include name="VAADIN/themes/base/**/*" />
-					<include name="VAADIN/themes/default/**/*" />
-					<include name="VAADIN/themes/runo/**/*" />
-					<include name="VAADIN/themes/reindeer/**/*" />
-				</patternset>
-			</fileset>
-		</jar>
-		<copy file="${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name}" tofile="${output-dir}/WebContent/${lib-jar-name}" />
-	</target>
+    <!-- Compile the Vaadin library JAR.                                    -->
+    <!-- Need only the default widgetset for this, but can't depend         -->
+    <!-- specifically on it, because dependence does not see compiled       -->
+    <!-- individual widgetsets, because antcall does not fulfill            -->
+    <!-- dependencies.                                                      -->
+    <target name="libs" depends="compile-server-side, compile-client-side">
+        <echo>Creating libs (server-side) ${lib-jar-name}</echo>
+        <!-- Create Toolkit JAR -->
+        <mkdir dir="${output-dir}/META-INF"/>
+        <echo file="${output-dir}/META-INF/VERSION">${version.full}</echo> 
+        <echo file="${output-dir}/META-INF/GWT-VERSION">${gwt-version}</echo> 
+        <jar jarfile="${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name}"
+             compress="true" manifest="build/package/META-INF/MANIFEST.MF">
+            <metainf dir="${output-dir}/META-INF"/>
+            <manifest>
+                <attribute name="Vaadin-Widgetsets" value="com.vaadin.terminal.gwt.DefaultWidgetSet" />
+                <attribute name="Bundle-Version" value="${version.full}" />
+            </manifest>
+            <fileset dir="${result-path}/classes">
+                <patternset>
+                    <exclude name="${toolkit-package}/demo/**" />
+                    <exclude name="${toolkit-package}/tests/**"/>
+                    <exclude name="${toolkit-package}/launcher/**" />
+                    <exclude name="${toolkit-package}/automatedtests/**" />
+                </patternset>
+            </fileset>
+            <!-- fileupload, see build/external/fileupload/build.xml -->
+            <fileset dir="build/external/fileupload/classes">
+                <include name="**/*" />
+            </fileset>
+            <!-- add sources -->
+            <fileset dir="${result-path}/src/core">
+                <patternset>
+                    <exclude name="${toolkit-package}/launcher/**" />
+                </patternset>
+            </fileset>
+            <fileset dir="${output-dir}/WebContent">
+                <patternset>
+                    <include name="VAADIN/widgetsets/com.vaadin.terminal.gwt.DefaultWidgetSet/**/*" />
+                    <include name="VAADIN/themes/base/**/*" />
+                    <include name="VAADIN/themes/default/**/*" />
+                    <include name="VAADIN/themes/runo/**/*" />
+                    <include name="VAADIN/themes/reindeer/**/*" />
+                </patternset>
+            </fileset>
+        </jar>
+        <copy file="${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name}" tofile="${output-dir}/WebContent/${lib-jar-name}" />
+    </target>
 
-	<!-- Demo  - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	<target name="demo" depends="libs, docs">
-		<echo>Building demo</echo>
-		<echo>Adding demo class files.</echo>
-		<copy todir="${output-dir}/WebContent/WEB-INF/classes">
-			<fileset dir="${result-path}/classes">
-				<include name="${toolkit-package}/demo/**/*" />
-				<!-- user might want to tweak launcher classes -->
-				<include name="${toolkit-package}/launcher/**" />
-			</fileset>
-		</copy>
+    <!-- Demos  - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <target name="demo" depends="libs, docs">
+        <echo>Building demos</echo>
+        <echo>Adding demo class files.</echo>
+        <copy todir="${output-dir}/WebContent/WEB-INF/classes">
+            <fileset dir="${result-path}/classes">
+                <include name="${toolkit-package}/demo/**/*" />
+                <!-- user might want to tweak launcher classes -->
+                <include name="${toolkit-package}/launcher/**" />
+            </fileset>
+        </copy>
 
-		<echo>Adding source for demo</echo>
-		<copy todir="${output-dir}/WebContent/WEB-INF/src">
-			<fileset dir="${result-path}/src">
-				<include name="${toolkit-package}/demo/**/*" />
-				<!-- user might want to tweak launcher classes -->
-				<include name="${toolkit-package}/launcher/**" />
-			</fileset>
-		</copy>
-	</target>
+        <echo>Adding source for demos</echo>
+        <copy todir="${output-dir}/WebContent/WEB-INF/src">
+            <fileset dir="${result-path}/src/demo">
+                <include name="${toolkit-package}/demo/**/*" />
+            </fileset>
+            <fileset dir="${result-path}/src/core">
+                <!-- user might want to tweak launcher classes -->
+                <include name="${toolkit-package}/launcher/**" />
+            </fileset>
+        </copy>
+    </target>
 
     <!-- ================================================================== -->
     <!-- Documentation                                                      -->
     <!-- ================================================================== -->
-	<target name="docs" depends="init, javadoc, manual">
-	</target>
+    <target name="docs" depends="init, javadoc, manual">
+    </target>
 
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
     <!-- Manual: Build from external repository.                            -->
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
 
     <target name="manual-init" depends="init">
-		<!-- Can run XEP only if license is available. -->
-		<available file="build/lib/XEP/license.xml" property="xep.license.available" />
+        <!-- Can run XEP only if license is available. -->
+        <available file="build/lib/XEP/license.xml" property="xep.license.available" />
 
         <!-- Path to installed XEP license. -->
         <property name="xep.license.path.installed" value="/opt/RenderX/XEP/license.xml"/>
         <echo>XEP license expected to be installed as ${xep.license.path.installed}</echo>
 
-		<!-- Can copy XEP license only if it is available. -->
-		<available file="${xep.license.path.installed}" property="xep.license.installed"/>
+        <!-- Can copy XEP license only if it is available. -->
+        <available file="${xep.license.path.installed}" property="xep.license.installed"/>
     </target>
 
     <!-- Checkout doc repository. -->
     <target name="manual-checkout" depends="manual-init" unless="docdir">
+        <property name="manual.repository" value="http://dev.vaadin.com/svn/doc/trunk"/>
+
+        <echo>Checking out manual from repository ${manual.repository}</echo>
+
         <mkdir dir="${checkout-path}"/>
 
         <exec executable="svn" dir="${checkout-path}">
             <arg value="checkout"/>
-            <arg value="http://dev.vaadin.com/svn/doc/trunk"/>
+            <arg value="-q"/>
+            <arg value="${manual.repository}"/>
             <arg value="docs"/>
         </exec>
 
-		<!-- Documentation source directory. -->
+        <!-- Documentation source directory. -->
         <property name="docdir" value="${checkout-path}/docs"/>
+
+        <echo>Manual checked out from repository successfully</echo>
     </target>
 
     <!-- If the XEP is installed, copy it to proper place. -->
@@ -1166,69 +1207,66 @@
 
     <!-- Copy the manual from sub Ant results to our output directory. -->
     <target name="manual-copy" depends="manual-init">
-		<copy todir="${output-dir}/WebContent/docs">
+        <copy todir="${output-dir}/WebContent/docs">
             <fileset dir="${docdir}/build/result/package/WebContent/docs">
-				<exclude name="**/.svn" />
-				<include name="book-of-vaadin.pdf" />
+                <exclude name="**/.svn" />
+                <include name="book-of-vaadin.pdf" />
             </fileset>
         </copy>
     </target>
 
-	<target name="manual-package" depends="manual-init, manual-copy">
-		<tar destfile="${result-path}/${product-file}-docs-${version.full}.tar.gz" compression="gzip" longfile="gnu">
-			<tarfileset prefix="docs" dir="${result-path}/${product-file}-${version.full}/WebContent/docs">
-				<patternset>
-					<include name="api/**" />
-					<include name="book-of-vaadin.pdf" />
-					<include name="example-source" />
-				</patternset>
-			</tarfileset>
-			<tarfileset prefix="docs" dir="${docdir}/build/result/package/WebContent/docs">
-				<patternset>
-					<include name="book/**" />
-					<include name="tutorial/**" />
-					<include name="vaadin-tutorial.pdf" />
-				</patternset>
-			</tarfileset>
-		</tar>
-	</target>
-
-	<target name="manual" depends="init, manual-init, manual-checkout, manual-build, manual-copy, manual-package">
+    <target name="manual-package" depends="manual-init, manual-copy">
+        <tar destfile="${result-path}/${product-file}-docs-${version.full}.tar.gz" compression="gzip" longfile="gnu">
+            <tarfileset prefix="docs" dir="${result-path}/${product-file}-${version.full}/WebContent/docs">
+                <patternset>
+                    <include name="api/**" />
+                    <include name="book-of-vaadin.pdf" />
+                    <include name="example-source" />
+                </patternset>
+            </tarfileset>
+            <tarfileset prefix="docs" dir="${docdir}/build/result/package/WebContent/docs">
+                <patternset>
+                    <include name="book/**" />
+                    <include name="tutorial/**" />
+                    <include name="vaadin-tutorial.pdf" />
+                </patternset>
+            </tarfileset>
+        </tar>
     </target>
 
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
-    <!-- Documentation: Add Javadoc to doc                                  -->
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
-	<target name="javadoc" depends="init, preprocess-src">
-		<javadoc destdir="${output-dir}/WebContent/docs/api" author="true" version="true" use="true" windowtitle="${product-name}" classpathref="compile.classpath.client-side">
-			<packageset dir="src">
-				<include name="${toolkit-package}/**" />
-				<exclude name="${toolkit-package}/demo/**" />
-				<!-- <exclude name="${toolkit-package}/tests/**" /> -->
-				<exclude name="${toolkit-package}/automatedtests/**" />
-			</packageset>
-			<doctitle>${javadoc.doctitle}</doctitle>
-			<!-- <header><![CDATA[<script type="text/javascript" src=".html-style/style.js"></script>]]></header> -->
-			<bottom>${javadoc.bottom}</bottom>
-			<link offline="true" href="http://java.sun.com/j2se/1.5.0/docs/api/" packagelistLoc="build/javadoc/j2se-1.5.0" />
-			<link offline="true" href="http://java.sun.com/j2ee/1.4/docs/api/" packagelistLoc="build/javadoc/j2ee-1.4" />
-		</javadoc>
-	</target>
+    <target name="manual" depends="init, manual-init, manual-checkout, manual-build, manual-copy, manual-package">
+    </target>
 
-	<!-- java2html converter -->
-	<taskdef name="java2html" classname="de.java2html.anttasks.Java2HtmlTask" classpath="build/lib/java2html.jar" />
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
+    <!-- Documentation: Add Javadoc to doc                                  -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
+    <target name="javadoc" depends="init, preprocess-src">
+        <javadoc destdir="${output-dir}/WebContent/docs/api" author="true" version="true" use="true" windowtitle="${product-name}" classpathref="compile.classpath.client-side">
+            <packageset dir="${result-path}/src/core">
+                <include name="${toolkit-package}/**" />
+            </packageset>
+            <doctitle>${javadoc.doctitle}</doctitle>
+            <!-- <header><![CDATA[<script type="text/javascript" src=".html-style/style.js"></script>]]></header> -->
+            <bottom>${javadoc.bottom}</bottom>
+            <link offline="true" href="http://java.sun.com/j2se/1.5.0/docs/api/" packagelistLoc="build/javadoc/j2se-1.5.0" />
+            <link offline="true" href="http://java.sun.com/j2ee/1.4/docs/api/" packagelistLoc="build/javadoc/j2ee-1.4" />
+        </javadoc>
+    </target>
+
+    <!-- java2html converter -->
+    <taskdef name="java2html" classname="de.java2html.anttasks.Java2HtmlTask" classpath="build/lib/java2html.jar" />
 
     <!-- ================================================================== -->
     <!-- Difference to previous release package.                            -->
     <!-- ================================================================== -->
 
-	<target name="differences" depends="init, internal-package-linux">
-		<exec executable="python" searchpath="true" failonerror="true" output="${result-path}/differences-linux.txt">
-			<arg value="build/bin/package-diff.py"/>
-			<arg value="${version.full}"/>
-		</exec>
+    <target name="differences" depends="init, internal-package-linux">
+        <exec executable="python" searchpath="true" failonerror="true" output="${result-path}/differences-linux.txt">
+            <arg value="build/bin/package-diff.py"/>
+            <arg value="${version.full}"/>
+        </exec>
         <echo>##teamcity[publishArtifacts '${result-path}/differences-linux.txt']</echo>
-	</target>
+    </target>
 
     <!-- ================================================================== -->
     <!-- Nightly build.                                                     -->
@@ -1268,7 +1306,7 @@
         <!-- Optional parameters. -->
         <property name="build.tag" value="dev"/>
 
-		<property file="build/VERSION.properties" />
+        <property file="build/VERSION.properties" />
 
         <echo>Base version: ${version}</echo>
         <echo>Build number: ${build.number}</echo>
@@ -1285,7 +1323,7 @@
 
         <!-- Tell TeamCity the build name. Have to do it this way, because   -->
         <!-- this script needs to get the plain build number as a parameter. -->
-        <echo>##teamcity[buildNumber '${version.full}-c${build.number}']</echo>
+        <echo>##teamcity[buildNumber '${version}-c${build.number}']</echo>
     </target>
 
     <target name="nightly-teamcity-publish">
@@ -1316,21 +1354,21 @@
     <target name="nightly-publish" depends="nightly-teamcity-publish, nightly-download-publish">
     </target>
 
-	
-	<target name="nightly-maven-publish" depends="">
-		<property file="${gpg.passphrase.file}" />
+    
+    <target name="nightly-maven-publish" depends="">
+        <property file="${gpg.passphrase.file}" />
         <echo>Publishing ${output-dir}/WebContent/${lib-jar-name} to Maven repository</echo>
-		<artifact:mvn>
-			<arg value="gpg:sign-and-deploy-file"/>
-			<!-- .. is a workaround as maven runs in the build directory -->
-			<sysproperty key="file" value="../${output-dir}/WebContent/${lib-jar-name}" />
-			<sysproperty key="pomFile" value="maven/pom.xml" />
-			<sysproperty key="repositoryId" value="vaadin-snapshots" />
-			<sysproperty key="url" value="http://oss.sonatype.org/content/repositories/vaadin-snapshots" />
-			<sysproperty key="gpg.passphrase" value="${maven.gpg.passphrase}" />
-		</artifact:mvn>
-	</target>
-	
+        <artifact:mvn>
+            <arg value="gpg:sign-and-deploy-file"/>
+            <!-- .. is a workaround as maven runs in the build directory -->
+            <sysproperty key="file" value="../${output-dir}/WebContent/${lib-jar-name}" />
+            <sysproperty key="pomFile" value="maven/pom.xml" />
+            <sysproperty key="repositoryId" value="vaadin-snapshots" />
+            <sysproperty key="url" value="http://oss.sonatype.org/content/repositories/vaadin-snapshots" />
+            <sysproperty key="gpg.passphrase" value="${maven.gpg.passphrase}" />
+        </artifact:mvn>
+    </target>
+
     <!-- ================================================================== -->
     <!-- Automated tests.                                                   -->
     <!-- ================================================================== -->
@@ -1339,36 +1377,36 @@
     </target>
 
     <target name="testbench-tests" depends="init">
-      <fail unless="product-file" message="The 'product-file' property must be defined."/>
-      <fail unless="package-platform" message="The 'package-platform' property must be defined."/>
-      <fail unless="version" message="The 'version' property must be defined."/>
+        <fail unless="product-file" message="The 'product-file' property must be defined."/>
+        <fail unless="package-platform" message="The 'package-platform' property must be defined."/>
+        <fail unless="version" message="The 'version' property must be defined."/>
 
-      <echo>Version: ${version.full}</echo>
+        <echo>Version: ${version.full}</echo>
 
-      <!-- Parameters for the test.xml script. -->
-      <fail unless="com.vaadin.testbench.tester.host" message="The 'com.vaadin.testbench.tester.host' property must be defined."/>
-      <fail unless="com.vaadin.testbench.deployment.url" message="The 'com.vaadin.testbench.deployment.url' property must be defined."/>
-      <fail unless="com.vaadin.testbench.lib.dir" message="The 'com.vaadin.testbench.lib.dir' property must be defined."/>
+        <!-- Parameters for the test.xml script. -->
+        <fail unless="com.vaadin.testbench.tester.host" message="The 'com.vaadin.testbench.tester.host' property must be defined."/>
+        <fail unless="com.vaadin.testbench.deployment.url" message="The 'com.vaadin.testbench.deployment.url' property must be defined."/>
+        <fail unless="com.vaadin.testbench.lib.dir" message="The 'com.vaadin.testbench.lib.dir' property must be defined."/>
 
-      <property name="package.platform.name" value="${product-file}-${package-platform}-${version.full}"/>
+        <property name="package.platform.name" value="${product-file}-${package-platform}-${version.full}"/>
 
-      <!-- Only Linux tests allowed. TODO: Generalize this. -->
-      <property name="package.linux.filename" value="${result-path}/${package.platform.name}.tar.gz"/>
-      <property name="package.linux.dir" value="${result-path}/${package.platform.name}.tar.gz"/>
+        <!-- Only Linux tests allowed. TODO: Generalize this. -->
+        <property name="package.linux.filename" value="${result-path}/${package.platform.name}.tar.gz"/>
+        <property name="package.linux.dir" value="${result-path}/${package.platform.name}.tar.gz"/>
 
-      <!-- Run the separate test script. -->
-      <ant antfile="tests/test.xml" target="test-package" inheritall="false" inheritrefs="true">
-          <!-- This is provided so that the test script can copy the -->
-          <!-- "tests" classes after unpacking the package.          -->
-          <property name="output-dir" value="${output-dir}"/>
+        <!-- Run the separate test script. -->
+        <ant antfile="tests/test.xml" target="test-package" inheritall="false" inheritrefs="true">
+            <!-- This is provided so that the test script can copy the -->
+            <!-- "tests" classes after unpacking the package.          -->
+            <property name="output-dir" value="${output-dir}"/>
 
-          <property name="package.filename" value="${package.linux.filename}"/>
-          <property name="testing.testarea" value="/tmp/testarea"/>
-          <property name="package.name" value="${package.platform.name}"/>
-          <property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}"/>
-          <property name="com.vaadin.testbench.deployment.url" value="${com.vaadin.testbench.deployment.url}"/>
-          <property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}"/>
-      </ant>
+            <property name="package.filename" value="${package.linux.filename}"/>
+            <property name="testing.testarea" value="/tmp/testarea"/>
+            <property name="package.name" value="${package.platform.name}"/>
+            <property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}"/>
+            <property name="com.vaadin.testbench.deployment.url" value="${com.vaadin.testbench.deployment.url}"/>
+            <property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}"/>
+        </ant>
     </target>
 
     <target name="ant-tests">
