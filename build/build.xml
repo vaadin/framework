@@ -251,7 +251,8 @@
 			<pathelement path="lib/jetty/jetty-util-6.1.7.jar" />
 			<pathelement path="lib/portlet/portal-kernel.jar" />
 			<pathelement path="lib/portlet/portal-service.jar" />
-			<pathelement path="lib/portlet/portlet.jar" />
+			<!--<pathelement path="lib/portlet/portlet.jar" />-->
+			<pathelement path="lib/portlet/portlet_20.jar"/>
 			<pathelement path="lib/appengine/appengine-api.jar" />
 			<pathelement path="lib/test/junit-4.5.jar" />
 			<pathelement path="lib/test/easymock-2.5/easymock-2.5.jar" />
