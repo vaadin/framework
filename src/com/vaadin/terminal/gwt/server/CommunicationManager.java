@@ -62,6 +62,7 @@ import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Upload.UploadException;
 
 /**
  * Application manager processes changes and paints for single application
@@ -203,7 +204,18 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                     // file
                     pl.setUpload(uploadComponent);
 
-                    uploadComponent.receiveUpload(upstream);
+                    try {
+                        uploadComponent.receiveUpload(upstream);
+                    } catch (UploadException e) {
+                        // error happened while receiving file. Handle the
+                        // error in the same manner as it would have happened in
+                        // variable change.
+                        synchronized (application) {
+                            handleChangeVariablesError(application,
+                                    uploadComponent, e,
+                                    new HashMap<String, Object>());
+                        }
+                    }
                 }
             }
         } catch (final FileUploadException e) {

@@ -13,36 +13,35 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.terminal.StreamResource;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Upload;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Upload.FailedEvent;
-import com.vaadin.ui.Upload.FailedListener;
 import com.vaadin.ui.Upload.FinishedEvent;
-import com.vaadin.ui.Upload.FinishedListener;
 import com.vaadin.ui.Upload.StartedEvent;
 import com.vaadin.ui.Upload.StartedListener;
-import com.vaadin.ui.Upload.SucceededEvent;
-import com.vaadin.ui.Upload.SucceededListener;
 
 public class TestForUpload extends CustomComponent implements
-        Upload.FinishedListener, FailedListener, SucceededListener,
-        Upload.ProgressListener, StartedListener {
+        Upload.ProgressListener {
 
-    Layout main = new OrderedLayout();
+    private static final long serialVersionUID = -3400119871764256575L;
+
+    Layout main = new VerticalLayout();
 
     Buffer buffer = new MemoryBuffer();
 
@@ -62,6 +61,13 @@ public class TestForUpload extends CustomComponent implements
     private TextField textField;
 
     private Label textFieldValue;
+
+    private CheckBox beSluggish = new CheckBox("Be sluggish");
+
+    private CheckBox throwExecption = new CheckBox(
+            "Throw exception in receiver");
+
+    private Button interrupt = new Button("Interrupt upload");
 
     public TestForUpload() {
         setCompositionRoot(main);
@@ -86,12 +92,69 @@ public class TestForUpload extends CustomComponent implements
 
         up = new Upload("Upload", buffer);
         up.setImmediate(true);
-        up.addListener((FinishedListener) this);
-        up.addListener((FailedListener) this);
-        up.addListener((SucceededListener) this);
-        up.addListener((StartedListener) this);
+        up.addListener(new Listener() {
+            private static final long serialVersionUID = -8319074730512324303L;
 
-        up.setProgressListener(this);
+            public void componentEvent(Event event) {
+                // print out all events fired by upload for debug purposes
+                System.out.println("Upload fired event | " + event);
+            }
+        });
+
+        up.addListener(new StartedListener() {
+            private static final long serialVersionUID = 5508883803861085154L;
+
+            public void uploadStarted(StartedEvent event) {
+                pi.setVisible(true);
+                pi2.setVisible(true);
+                l.setValue("Started uploading file " + event.getFilename());
+                textFieldValue
+                        .setValue(" TestFields value at the upload start is:"
+                                + textField.getValue());
+            }
+        });
+
+        up.addListener(new Upload.FinishedListener() {
+            private static final long serialVersionUID = -3773034195991947371L;
+
+            public void uploadFinished(FinishedEvent event) {
+                pi.setVisible(false);
+                pi2.setVisible(false);
+                if (event instanceof Upload.FailedEvent) {
+                    Exception reason = ((Upload.FailedEvent) event).getReason();
+                    l.setValue("Finished with failure ( " + reason
+                            + "  ), idle");
+                } else if (event instanceof Upload.SucceededEvent) {
+                    l.setValue("Finished with succes, idle");
+                } else {
+                    l.setValue("Finished with unknow event");
+                }
+                setBuffer();
+
+                status.removeAllComponents();
+                final InputStream stream = buffer.getStream();
+                if (stream == null) {
+                    status.addComponent(new Label(
+                            "Upload finished, but output buffer is null"));
+                } else {
+                    status.addComponent(new Label("<b>Name:</b> "
+                            + event.getFilename(), Label.CONTENT_XHTML));
+                    status.addComponent(new Label("<b>Mimetype:</b> "
+                            + event.getMIMEType(), Label.CONTENT_XHTML));
+                    status.addComponent(new Label("<b>Size:</b> "
+                            + event.getLength() + " bytes.",
+                            Label.CONTENT_XHTML));
+
+                    status.addComponent(new Link("Download "
+                            + buffer.getFileName(), new StreamResource(buffer,
+                            buffer.getFileName(), getApplication())));
+
+                    status.setVisible(true);
+                }
+
+            }
+        });
+
         up.addListener(new Upload.ProgressListener() {
 
             public void updateProgress(long readBytes, long contentLenght) {
@@ -102,12 +165,20 @@ public class TestForUpload extends CustomComponent implements
 
         });
 
-        final Button b = new Button("b", this, "readState");
+        final Button b = new Button("Reed state from upload", this, "readState");
 
-        final Button c = new Button("b with gc", this, "gc");
+        final Button c = new Button("Force GC", this, "gc");
 
         main.addComponent(b);
         main.addComponent(c);
+        main.addComponent(beSluggish);
+        main.addComponent(throwExecption);
+        main.addComponent(interrupt);
+        interrupt.addListener(new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                up.interruptUpload();
+            }
+        });
 
         uploadBufferSelector = new Select("Receiver type");
         uploadBufferSelector.setImmediate(true);
@@ -163,7 +234,6 @@ public class TestForUpload extends CustomComponent implements
 
     public void gc() {
         Runtime.getRuntime().gc();
-        readState();
     }
 
     public void readState() {
@@ -183,29 +253,6 @@ public class TestForUpload extends CustomComponent implements
         }
         l.setValue(sb.toString());
         refreshMemUsage();
-    }
-
-    public void uploadFinished(FinishedEvent event) {
-        status.removeAllComponents();
-        final InputStream stream = buffer.getStream();
-        if (stream == null) {
-            status.addComponent(new Label(
-                    "Upload finished, but output buffer is null!!"));
-        } else {
-            status
-                    .addComponent(new Label("<b>Name:</b> "
-                            + event.getFilename(), Label.CONTENT_XHTML));
-            status.addComponent(new Label("<b>Mimetype:</b> "
-                    + event.getMIMEType(), Label.CONTENT_XHTML));
-            status.addComponent(new Label("<b>Size:</b> " + event.getLength()
-                    + " bytes.", Label.CONTENT_XHTML));
-
-            status.addComponent(new Link("Download " + buffer.getFileName(),
-                    new StreamResource(buffer, buffer.getFileName(),
-                            getApplication())));
-
-            status.setVisible(true);
-        }
     }
 
     public interface Buffer extends StreamResource.StreamSource,
@@ -233,13 +280,20 @@ public class TestForUpload extends CustomComponent implements
         }
 
         /**
-         * @see com.vaadin.ui.Upload.Receiver#receiveUpload(String,
-         *      String)
+         * @see com.vaadin.ui.Upload.Receiver#receiveUpload(String, String)
          */
         public OutputStream receiveUpload(String filename, String MIMEType) {
             fileName = filename;
             mimeType = MIMEType;
-            outputBuffer = new ByteArrayOutputStream();
+            outputBuffer = new ByteArrayOutputStream() {
+                @Override
+                public synchronized void write(byte[] b, int off, int len) {
+                    beSluggish();
+                    throwExecption();
+                    super.write(b, off, len);
+                }
+
+            };
             return outputBuffer;
         }
 
@@ -296,14 +350,23 @@ public class TestForUpload extends CustomComponent implements
         }
 
         /**
-         * @see com.vaadin.ui.Upload.Receiver#receiveUpload(String,
-         *      String)
+         * @see com.vaadin.ui.Upload.Receiver#receiveUpload(String, String)
          */
         public OutputStream receiveUpload(String filename, String MIMEType) {
             fileName = filename;
             mimeType = MIMEType;
             try {
-                return new FileOutputStream(file);
+                return new FileOutputStream(file) {
+
+                    @Override
+                    public void write(byte[] b, int off, int len)
+                            throws IOException {
+                        beSluggish();
+                        throwExecption();
+                        super.write(b, off, len);
+                    }
+
+                };
             } catch (final FileNotFoundException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -331,21 +394,6 @@ public class TestForUpload extends CustomComponent implements
 
     }
 
-    public void uploadFailed(FailedEvent event) {
-        System.out.println(event);
-
-        System.out.println(event.getSource());
-
-    }
-
-    public void uploadSucceeded(SucceededEvent event) {
-        pi.setVisible(false);
-        pi2.setVisible(false);
-        l.setValue("Finished upload, idle");
-        System.out.println(event);
-        setBuffer();
-    }
-
     public void updateProgress(long readBytes, long contentLenght) {
         pi.setValue(new Float(readBytes / (float) contentLenght));
 
@@ -354,22 +402,33 @@ public class TestForUpload extends CustomComponent implements
 
     private void refreshMemUsage() {
         memoryStatus.setValue("Not available in Java 1.4");
-        /*
-         * StringBuffer mem = new StringBuffer(); MemoryMXBean mmBean =
-         * ManagementFactory.getMemoryMXBean(); mem.append("Heap (M):");
-         * mem.append(mmBean.getHeapMemoryUsage().getUsed() / 1048576);
-         * mem.append(" |�Non-Heap (M):");
-         * mem.append(mmBean.getNonHeapMemoryUsage().getUsed() / 1048576);
-         * memoryStatus.setValue(mem.toString());
-         */
+
+        StringBuffer mem = new StringBuffer();
+        MemoryMXBean mmBean = ManagementFactory.getMemoryMXBean();
+        mem.append("Heap (M):");
+        mem.append(mmBean.getHeapMemoryUsage().getUsed() / 1048576);
+        mem.append(" | Non-Heap (M):");
+        mem.append(mmBean.getNonHeapMemoryUsage().getUsed() / 1048576);
+        memoryStatus.setValue(mem.toString());
+
     }
 
-    public void uploadStarted(StartedEvent event) {
-        pi.setVisible(true);
-        pi2.setVisible(true);
-        l.setValue("Started uploading file " + event.getFilename());
-        textFieldValue.setValue(" TestFields value at the upload start is:"
-                + textField.getValue());
+    private void beSluggish() {
+        if (beSluggish.booleanValue()) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
     }
 
+    private void throwExecption() {
+        if (throwExecption.booleanValue()) {
+            throwExecption.setValue(false);
+            throw new RuntimeException("Test execption in receiver.");
+        }
+
+    }
 }

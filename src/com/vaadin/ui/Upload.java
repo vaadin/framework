@@ -122,7 +122,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * 
      * @param upload
      */
-    public void receiveUpload(UploadStream upload) {
+    public void receiveUpload(UploadStream upload) throws UploadException {
         if (!isUploading) {
             throw new IllegalStateException("uploading not started");
         }
@@ -174,7 +174,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
                     }
                 }
                 if (interrupted) {
-                    throw new Exception("Upload interrupted by other thread");
+                    throw new UploadInterruptedException();
                 }
             }
 
@@ -188,17 +188,22 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 
         } catch (final Exception e) {
             synchronized (application) {
-                // Download interrupted
-                try {
-                    // still try to close output stream
-                    out.close();
-                } catch (IOException ignored) {
+                if (e instanceof UploadInterruptedException) {
+                    // Download interrupted
+                    try {
+                        // still try to close output stream
+                        out.close();
+                    } catch (IOException e1) {
+                        // NOP
+                    }
                 }
                 fireUploadInterrupted(filename, type, totalBytes, e);
                 endUpload();
                 interrupted = false;
-                // throw cause ahead
-                throw new IllegalStateException("Uploading failed", e);
+                if (!(e instanceof UploadInterruptedException)) {
+                    // throw exception for terminal to be handled
+                    throw new UploadException(e);
+                }
             }
         }
     }
@@ -293,6 +298,19 @@ public class Upload extends AbstractComponent implements Component.Focusable {
             // This should never happen
             throw new java.lang.RuntimeException(
                     "Internal error finding methods in Upload");
+        }
+    }
+
+    private class UploadInterruptedException extends Exception {
+        public UploadInterruptedException() {
+            super("Upload interrupted by other thread");
+        }
+
+    }
+
+    public class UploadException extends Exception {
+        public UploadException(Exception e) {
+            super("Upload failed", e);
         }
     }
 
