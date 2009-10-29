@@ -212,7 +212,7 @@ public class JsonPaintTarget implements PaintTarget {
         if (xml == null || xml.length() <= 0) {
             return "";
         }
-        return escapeXML(new StringBuffer(xml)).toString();
+        return escapeXML(new StringBuilder(xml)).toString();
     }
 
     /**
@@ -220,16 +220,16 @@ public class JsonPaintTarget implements PaintTarget {
      * 
      * @param xml
      *            the String to be substituted.
-     * @return A new StringBuffer instance where all occurrences of XML
+     * @return A new StringBuilder instance where all occurrences of XML
      *         sensitive characters are substituted with entities.
      * 
      */
-    static public StringBuffer escapeXML(StringBuffer xml) {
+    static StringBuilder escapeXML(StringBuilder xml) {
         if (xml == null || xml.length() <= 0) {
-            return new StringBuffer("");
+            return new StringBuilder("");
         }
 
-        final StringBuffer result = new StringBuffer(xml.length() * 2);
+        final StringBuilder result = new StringBuilder(xml.length() * 2);
 
         for (int i = 0; i < xml.length(); i++) {
             final char c = xml.charAt(i);
@@ -247,7 +247,7 @@ public class JsonPaintTarget implements PaintTarget {
         if (s == null) {
             return "";
         }
-        final StringBuffer sb = new StringBuffer();
+        final StringBuilder sb = new StringBuilder();
         for (int i = 0; i < s.length(); i++) {
             final char ch = s.charAt(i);
             switch (ch) {
@@ -531,7 +531,7 @@ public class JsonPaintTarget implements PaintTarget {
             throw new NullPointerException(
                     "Parameters must be non-null strings");
         }
-        final StringBuffer buf = new StringBuffer();
+        final StringBuilder buf = new StringBuilder();
         buf.append("\"" + name + "\":[");
         for (int i = 0; i < values.length; i++) {
             if (i > 0) {
@@ -875,7 +875,7 @@ public class JsonPaintTarget implements PaintTarget {
 
         Vector attr = new Vector();
 
-        StringBuffer data = new StringBuffer();
+        StringBuilder data = new StringBuilder();
 
         public boolean childrenArrayOpen = false;
 
@@ -944,7 +944,7 @@ public class JsonPaintTarget implements PaintTarget {
         }
 
         public String getData() {
-            final StringBuffer buf = new StringBuffer();
+            final StringBuilder buf = new StringBuilder();
             final Iterator it = children.iterator();
             while (it.hasNext()) {
                 buf.append(startField());
@@ -958,7 +958,7 @@ public class JsonPaintTarget implements PaintTarget {
         }
 
         private String attributesAsJsonObject() {
-            final StringBuffer buf = new StringBuffer();
+            final StringBuilder buf = new StringBuilder();
             buf.append(startField());
             buf.append("{");
             for (final Iterator iter = attr.iterator(); iter.hasNext();) {
@@ -981,7 +981,7 @@ public class JsonPaintTarget implements PaintTarget {
             if (variables.size() == 0) {
                 return "";
             }
-            final StringBuffer buf = new StringBuffer();
+            final StringBuilder buf = new StringBuilder();
             buf.append(startField());
             buf.append("\"v\":{");
             final Iterator iter = variables.iterator();
@@ -1119,16 +1119,21 @@ public class JsonPaintTarget implements PaintTarget {
 
         @Override
         public String getJsonPresentation() {
-            String pres = "\"" + name + "\":[";
+            StringBuilder sb = new StringBuilder();
+            sb.append("\"");
+            sb.append(name);
+            sb.append("\":[");
             for (int i = 0; i < value.length;) {
-                pres += "\"" + value[i] + "\"";
+                sb.append("\"");
+                sb.append(escapeJSON(value[i]));
+                sb.append("\"");
                 i++;
                 if (i < value.length) {
-                    pres += ",";
+                    sb.append(",");
                 }
             }
-            pres += "]";
-            return pres;
+            sb.append("]");
+            return sb.toString();
         }
     }
 
