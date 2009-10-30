@@ -381,7 +381,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         if (getParent() != null) {
             // this is subwindow
             Window mainWindow = (Window) getParent();
-            mainWindow.addParameterHandler(handler);
+            mainWindow.removeParameterHandler(handler);
         } else {
             if (handler == null || parameterHandlerList == null) {
                 return;
