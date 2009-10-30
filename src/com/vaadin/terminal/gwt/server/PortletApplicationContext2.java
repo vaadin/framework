@@ -13,6 +13,8 @@ import java.util.LinkedList;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
+import javax.servlet.http.HttpSessionBindingEvent;
+import javax.servlet.http.HttpSessionBindingListener;
 
 import com.vaadin.Application;
 import com.vaadin.service.ApplicationContext;
@@ -24,7 +26,7 @@ import com.vaadin.service.ApplicationContext;
  */
 @SuppressWarnings("serial")
 public class PortletApplicationContext2 implements ApplicationContext,
-        Serializable {
+        HttpSessionBindingListener, Serializable {
 
     protected LinkedList<TransactionListener> listeners;
 
@@ -155,4 +157,37 @@ public class PortletApplicationContext2 implements ApplicationContext,
         }
     }
 
+    protected void removeApplication(Application application) {
+        applications.remove(application);
+    }
+
+    protected void addApplication(Application application) {
+        applications.add(application);
+    }
+
+    public PortletSession getPortletSession() {
+        return session;
+    }
+
+    @Override
+    public void valueBound(HttpSessionBindingEvent event) {
+        // We are not interested in bindings
+    }
+
+    public void valueUnbound(HttpSessionBindingEvent event) {
+        // If we are going to be unbound from the session, the session must be
+        // closing
+        try {
+            while (!applications.isEmpty()) {
+                final Application app = applications.iterator().next();
+                app.close();
+                applicationToAjaxAppMgrMap.remove(app);
+                removeApplication(app);
+            }
+        } catch (Exception e) {
+            // FIXME: Handle exception
+            System.err.println("Could not remove application, leaking memory.");
+            e.printStackTrace();
+        }
+    }
 }
