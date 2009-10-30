@@ -681,7 +681,7 @@ public class IndexedContainer implements Container.Indexed,
     private Serializable generateId() {
         Serializable id;
         do {
-            id = new Integer(nextGeneratedItemId++);
+            id = Integer.valueOf(nextGeneratedItemId++);
         } while (items.containsKey(id));
 
         return id;
