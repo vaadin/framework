@@ -129,7 +129,6 @@ public class TestForUpload extends CustomComponent implements
                 } else {
                     l.setValue("Finished with unknow event");
                 }
-                setBuffer();
 
                 status.removeAllComponents();
                 final InputStream stream = buffer.getStream();
@@ -152,6 +151,7 @@ public class TestForUpload extends CustomComponent implements
                     status.setVisible(true);
                 }
 
+                setBuffer();
             }
         });
 
