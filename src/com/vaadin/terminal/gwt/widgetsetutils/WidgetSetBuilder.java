@@ -88,7 +88,7 @@ public class WidgetSetBuilder {
             }
         }
 
-        changed = changed ? true : content.equals(originalContent);
+        changed = changed || !content.equals(originalContent);
         if (changed) {
             commitChanges(widgetsetfilename, content);
         }
