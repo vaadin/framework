@@ -38,7 +38,6 @@ public class PortletApplicationContext2 implements ApplicationContext,
 
     protected HashMap<Application, PortletCommunicationManager> applicationToAjaxAppMgrMap = new HashMap<Application, PortletCommunicationManager>();
 
-    @Override
     public void addTransactionListener(TransactionListener listener) {
         if (listeners == null) {
             listeners = new LinkedList<TransactionListener>();
@@ -46,12 +45,10 @@ public class PortletApplicationContext2 implements ApplicationContext,
         listeners.add(listener);
     }
 
-    @Override
     public Collection<Application> getApplications() {
         return Collections.unmodifiableCollection(applications);
     }
 
-    @Override
     public File getBaseDirectory() {
         String resultPath = session.getPortletContext().getRealPath("/");
         if (resultPath != null) {
@@ -68,7 +65,6 @@ public class PortletApplicationContext2 implements ApplicationContext,
         return null;
     }
 
-    @Override
     public void removeTransactionListener(TransactionListener listener) {
         if (listeners != null) {
             listeners.remove(listener);
@@ -169,7 +165,6 @@ public class PortletApplicationContext2 implements ApplicationContext,
         return session;
     }
 
-    @Override
     public void valueBound(HttpSessionBindingEvent event) {
         // We are not interested in bindings
     }

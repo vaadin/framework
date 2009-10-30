@@ -16,5 +16,11 @@ public interface Constants {
     public static final String DEFAULT_WIDGETSET = "com.vaadin.terminal.gwt.DefaultWidgetSet";
     
 //    public static final String AJAX_UIDL_URI = "/UIDL";
+    
+    public static final String URL_PARAMETER_REPAINT_ALL = "repaintAll";
+    
+    public static final String URL_PARAMETER_RESTART_APPLICATION = "restartApplication";
+    
+    public static final String URL_PARAMETER_CLOSE_APPLICATION = "closeApplication";
 
 }

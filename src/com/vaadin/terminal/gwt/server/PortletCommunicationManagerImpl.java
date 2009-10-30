@@ -15,24 +15,21 @@ import com.vaadin.terminal.Paintable.RepaintRequestEvent;
 public class PortletCommunicationManagerImpl implements
         PortletCommunicationManager, Paintable.RepaintRequestListener, Serializable {
 
-    @Override
     public void repaintRequested(RepaintRequestEvent event) {
-        // TODO Auto-generated method stub
-        
+        // TODO Implement me!
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
-    @Override
     public void handleFileUpload(ActionRequest request, ActionResponse response)
             throws FileUploadException, IOException {
-        // TODO Auto-generated method stub
-        
+        // TODO Implement me!
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
-    @Override
     public void handleUIDLRequest(ActionRequest request, ActionResponse response)
             throws IOException, PortletException {
-        // TODO Auto-generated method stub
-        
+        // TODO Implement me!
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
 }

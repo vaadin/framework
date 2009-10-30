@@ -13,6 +13,7 @@ import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
+import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
@@ -91,7 +92,7 @@ public abstract class AbstractApplicationPortlet implements Portlet,
 
         try {
             /* Find out which application this request is related to */
-            application = findApplicationInstance(request);
+            application = findApplicationInstance(request, requestType);
             if (application == null) {
                 return;
             }
@@ -167,6 +168,7 @@ public abstract class AbstractApplicationPortlet implements Portlet,
             }
         } catch (final Throwable e) {
             // TODO Handle exceptions
+            e.printStackTrace();
         } finally {
             // Notifies transaction end
             if (application != null) {
@@ -178,8 +180,8 @@ public abstract class AbstractApplicationPortlet implements Portlet,
 
     private void serveStaticResources(ResourceRequest request,
             ResourceResponse response) {
-        // TODO Auto-generated method stub
-
+        // TODO Implement me!
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     public void processAction(ActionRequest request, ActionResponse response)
@@ -194,7 +196,6 @@ public abstract class AbstractApplicationPortlet implements Portlet,
         handleRequest(request, response);
     }
 
-    @Override
     public void serveResource(ResourceRequest request, ResourceResponse response)
             throws PortletException, IOException {
         System.out.println("AbstractApplicationPortlet.serveResource()");
@@ -204,35 +205,105 @@ public abstract class AbstractApplicationPortlet implements Portlet,
     private Window getApplicationWindow(PortletRequest request,
             PortletCommunicationManager applicationManager,
             Application application) throws PortletException {
-        // TODO Auto-generated method stub
-        return null;
+        // TODO Implement me!
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+    
+    boolean requestCanCreateApplication(PortletRequest request, RequestType requestType) {
+        if (requestType == RequestType.UIDL && isRepaintAll(request)) {
+            return true;
+        } else if (requestType == RequestType.RENDER) {
+            return true;
+        }
+        return false;
+    }
+    
+    private boolean isRepaintAll(PortletRequest request) {
+        return (request.getParameter(Constants.URL_PARAMETER_REPAINT_ALL) != null)
+        && (request.getParameter(Constants.URL_PARAMETER_REPAINT_ALL).equals("1"));        
     }
 
     private void startApplication(PortletRequest request,
             Application application,
             PortletCommunicationManager applicationManager)
             throws PortletException, MalformedURLException {
-        // TODO Auto-generated method stub
+        // TODO Implement me!
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     private void endApplication(PortletRequest request,
             PortletResponse response, Application application)
             throws IOException {
-        // TODO Auto-generated method stub
+        // TODO Implement me!
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
-    private Application findApplicationInstance(PortletRequest request)
+    private Application findApplicationInstance(PortletRequest request, RequestType requestType)
             throws PortletException, SessionExpired, MalformedURLException {
-        return null;
+        
+        boolean requestCanCreateApplication = requestCanCreateApplication(request, requestType);
+        
+        /* Find an existing application for this request. */
+        Application application = getExistingApplication(request, requestCanCreateApplication); 
+        
+        if (application != null) {
+            /*
+             * There is an existing application. We can use this as long as the
+             * user not specifically requested to close or restart it.
+             */
+            
+            final boolean restartApplication = (request
+                    .getParameter(Constants.URL_PARAMETER_RESTART_APPLICATION) != null);
+            final boolean closeApplication = (request
+                    .getParameter(Constants.URL_PARAMETER_CLOSE_APPLICATION) != null);
+            
+            if (restartApplication) {
+                closeApplication(application, request.getPortletSession(false));
+                return createApplication(request);
+            } else if (closeApplication) {
+                closeApplication(application, request.getPortletSession(false));
+                return null;
+            } else {
+                return application;
+            }
+        }
+        
+        // No existing application was found
+        
+        if (requestCanCreateApplication) {
+            return createApplication(request);
+        } else {
+            throw new SessionExpired();
+        }
+    }
+    
+    private void closeApplication(Application application, PortletSession session) {
+        // TODO Implement me!
+        throw new UnsupportedOperationException("Not implemented yet");        
+    }
+    
+    private Application createApplication(PortletRequest request)
+    throws PortletException, MalformedURLException {
+        // TODO Implement me!
+        throw new UnsupportedOperationException("Not implemented yet");                
     }
 
+    private Application getExistingApplication(PortletRequest request,
+            boolean allowSessionCreation) throws MalformedURLException,
+            SessionExpired {
+        // TODO Implement me!
+        throw new UnsupportedOperationException("Not implemented yet");        
+    }
+    
     protected void writeAjaxPage(RenderRequest request,
             RenderResponse response, Window window, Application application)
             throws IOException, MalformedURLException, PortletException {
+        
+        System.out.println("AbstractApplicationPortlet.writeAjaxPage()");
+        
+        response.setContentType("text/html");
         final BufferedWriter page = new BufferedWriter(new OutputStreamWriter(
                 response.getPortletOutputStream(), "UTF-8"));
-
-        response.setContentType("text/html");
 
         // TODO Figure out the format of resource URLs
         ResourceURL widgetsetURL = response.createResourceURL();
@@ -254,11 +325,10 @@ public abstract class AbstractApplicationPortlet implements Portlet,
                 + widgetsetURL.toString() + "'><\\/script>\");\n}\n");
 
         page.write("vaadin.vaadinConfigurations[\"" + request.getWindowID() + "\"] = {");
-        page.write("portletMode: true, ");
-        
-        String pathInfo = response.createActionURL().toString();
-
-        page.write("pathInfo: '" + pathInfo + "', ");
+        page.write("appId: null, ");
+        page.write("usePortletURLs: true, ");
+        page.write("portletActionURLBase: '" + response.createActionURL().toString() + "', ");
+        page.write("pathInfo: null, ");
         // TODO Custom window
         if (window != application.getMainWindow()) {
             page.write("windowName: '" + window.getName() + "', ");
