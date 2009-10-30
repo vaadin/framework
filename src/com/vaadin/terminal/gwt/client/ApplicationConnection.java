@@ -305,7 +305,12 @@ public class ApplicationConnection {
         final String rd = uidl_security_key + VAR_BURST_SEPARATOR + requestData;
 
         console.log("Making UIDL Request with params: " + rd);
-        String uri = getAppUri() + "UIDL" + configuration.getPathInfo();
+        String uri;
+        if (configuration.usePortletURLs()) {
+            uri = configuration.getPortletActionURLBase() + "&UIDL=true";
+        } else {
+            uri = getAppUri() + "UIDL" + configuration.getPathInfo();
+        }
         if (repaintAll) {
             // collect some client side data that will be sent to server on
             // initial uidl request
@@ -323,7 +328,12 @@ public class ApplicationConnection {
             // TODO figure out how client and view size could be used better on
             // server. screen size can be accessed via Browser object, but other
             // values currently only via transaction listener.
-            uri += "?repaintAll=1&" + "sh=" + screenHeight + "&sw="
+            if (configuration.usePortletURLs()) {
+                uri += "&";
+            } else {
+                uri += "?";
+            }
+            uri += "repaintAll=1&" + "sh=" + screenHeight + "&sw="
                     + screenWidth + "&cw=" + clientWidth + "&ch="
                     + clientHeight + "&vw=" + offsetWidth + "&vh="
                     + offsetHeight + "&fr=" + token;
@@ -332,7 +342,7 @@ public class ApplicationConnection {
             }
         }
         if (windowName != null && windowName.length() > 0) {
-            uri += (repaintAll ? "&" : "?") + "windowName=" + windowName;
+            uri += (repaintAll || configuration.usePortletURLs() ? "&" : "?") + "windowName=" + windowName;
         }
 
         if (!forceSync) {
