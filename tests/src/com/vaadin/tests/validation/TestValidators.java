@@ -111,6 +111,20 @@ public class TestValidators extends TestBase {
         tf.setValue("12.34");
         form.addField("j", tf);
 
+        tf = new TextField(
+                "A field, must be a floating point number or 4-5 chars");
+        cv = new CompositeValidator(CompositeValidator.MODE_OR,
+                "The field must contain a floating point  or with 4-5 characters");
+        cv
+                .addValidator(new StringLengthValidator(
+                        "String length of '{0}' should be 4-5 characters", 4,
+                        5, false));
+        cv.addValidator(new DoubleValidator(
+                "{0} must be a floating point number"));
+        tf.addValidator(cv);
+        tf.setValue("12.34g");
+        form.addField("jb", tf);
+
         // Postal code that must be 5 digits (10000-99999).
         tf = new TextField("Postal Code");
         tf.setColumns(5);
