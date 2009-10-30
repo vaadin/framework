@@ -36,7 +36,7 @@ public class Button extends AbstractField {
      * 
      */
     public Button() {
-        setValue(new Boolean(false));
+        setValue(Boolean.FALSE);
         setSwitchMode(false);
     }
 
@@ -96,7 +96,7 @@ public class Button extends AbstractField {
      */
     public Button(String caption, boolean initialState) {
         setCaption(caption);
-        setValue(new Boolean(initialState));
+        setValue(Boolean.valueOf(initialState));
         setSwitchMode(true);
     }
 
@@ -167,7 +167,7 @@ public class Button extends AbstractField {
 
                 // If the button is true for some reason, release it
                 if (oldValue.booleanValue()) {
-                    setValue(new Boolean(false));
+                    setValue(Boolean.FALSE);
                 }
             }
         }
@@ -194,7 +194,7 @@ public class Button extends AbstractField {
         if (!switchMode) {
             setImmediate(true);
             if (booleanValue()) {
-                setValue(new Boolean(false));
+                setValue(Boolean.FALSE);
             }
         }
     }
