@@ -6,6 +6,7 @@ package com.vaadin.terminal.gwt.server;
 
 import java.util.Locale;
 
+import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import com.vaadin.terminal.Terminal;
@@ -76,8 +77,31 @@ public class WebBrowser implements Terminal {
         }
     }
 
+    void updateBrowserProperties(PortletRequest request) {
+        locale = request.getLocale();
+        address = null;
+        secureConnection = request.isSecure();
+
+        final String agent = request.getProperty("user-agent");
+        if (agent != null) {
+            browserApplication = agent;
+        }
+
+        final String sw = request.getParameter("sw");
+        if (sw != null) {
+            final String sh = request.getParameter("sh");
+            try {
+                screenHeight = Integer.parseInt(sh);
+                screenWidth = Integer.parseInt(sw);
+            } catch (final NumberFormatException e) {
+                screenHeight = screenWidth = 0;
+            }
+        }
+    }
+
     /**
-     * Get the IP-address of the web browser.
+     * Get the IP-address of the web browser. If the application is running
+     * inside a portlet, this method will return null.
      * 
      * @return IP-address in 1.12.123.123 -format
      */
