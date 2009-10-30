@@ -33,6 +33,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -368,7 +369,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             String seckey = (String) request.getSession().getAttribute(
                     ApplicationConnection.UIDL_SECURITY_TOKEN_ID);
             if (seckey == null) {
-                seckey = "" + (int) (Math.random() * 1000000);
+                seckey = "" + new Random().nextInt(1000000);
                 request.getSession().setAttribute(
                         ApplicationConnection.UIDL_SECURITY_TOKEN_ID, seckey);
             }
@@ -1153,7 +1154,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             String newWindowName = window.getName();
             while (currentlyOpenWindowsInClient.containsKey(newWindowName)) {
                 newWindowName = window.getName() + "_"
-                        + ((int) (Math.random() * 100000000));
+                        + new Random().nextInt(100000000);
             }
 
             window = application.getWindow(newWindowName);
