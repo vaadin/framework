@@ -414,7 +414,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
                     if (va == null) {
                         return (vb == null) ? 0 : -1;
                     } else if (vb == null) {
-                        return (va == null) ? 0 : 1;
+                        return 1;
                     }
 
                     return va.compareTo(vb);
