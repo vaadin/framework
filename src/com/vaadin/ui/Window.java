@@ -601,6 +601,14 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * <code>null</code> window name results the resource to be opened in this
      * window.
      * 
+     * <p>
+     * Note! When opening browser window with name "_self", client will skip
+     * rendering rest of the changes as it considers them irrelevant. This may
+     * speed up opening resource, but it may also put client side into an
+     * inconsistent state with server in case nothing is actually opened to
+     * window (like if browser decided to download the resource instead of
+     * displaying it).
+     * 
      * @param resource
      *            the resource.
      * @param windowName

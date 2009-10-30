@@ -183,8 +183,17 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
             final String url = open.getStringAttribute("src");
             final String target = open.getStringAttribute("name");
             if (target == null) {
-                // This window is closing. Nothing was done in the close event,
-                // so don't need to call it before going to the new url
+                // source will be opened to this browser window, but we may have
+                // to finish rendering this window in case this is a download
+                // (and window stays open).
+                DeferredCommand.addCommand(new Command() {
+                    public void execute() {
+                        goTo(url);
+                    }
+                });
+            } else if ("_self".equals(target)) {
+                // This window is closing (for sure). Only other opens are
+                // relevant in this change. See #3558, #2144
                 isClosed = true;
                 goTo(url);
             } else {
@@ -214,7 +223,8 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
             childIndex++;
         }
         if (isClosed) {
-            // don't render the content
+            // don't render the content, something else will be opened to this
+            // browser view
             rendering = false;
             return;
         }

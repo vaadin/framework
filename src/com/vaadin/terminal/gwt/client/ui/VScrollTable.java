@@ -271,6 +271,16 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
                     .getIntAttribute("rows"));
             if (headerChangedDuringUpdate) {
                 lazyAdjustColumnWidths.schedule(1);
+            } else {
+                // webkits may still bug with their disturbing scrollbar bug,
+                // See #3457
+                // run overflow fix for scrollable area
+                DeferredCommand.addCommand(new Command() {
+                    public void execute() {
+                        Util.runWebkitOverflowAutoFix(bodyContainer
+                                .getElement());
+                    }
+                });
             }
         } else {
             if (scrollBody != null) {
