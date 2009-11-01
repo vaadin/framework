@@ -3,66 +3,55 @@ package com.vaadin.tests.components.textfield;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.terminal.UserError;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Button.ClickEvent;
 
-public class TextFields extends TestBase {
-
-    private TextField textFields[] = new TextField[20];
+public class TextFields extends ComponentTestCase {
 
     @Override
     protected void setup() {
-        HorizontalLayout actionLayout = new HorizontalLayout();
-        actionLayout.setSpacing(true);
-        actionLayout.setMargin(true);
-        for (Component c : createActions()) {
-            actionLayout.addComponent(c);
-        }
-        addComponent(actionLayout);
+        super.setup();
 
-        int index = 0;
+        TextField tf;
 
-        textFields[index] = createTextField("TextField 100% wide");
-        textFields[index].setWidth("100%");
-        addComponent(textFields[index++]);
+        tf = createTextField("TextField 100% wide");
+        tf.setWidth("100%");
+        addTestComponent(tf);
 
-        textFields[index] = createTextField(null,
-                "TextField 100% wide, no caption");
-        textFields[index].setWidth("100%");
-        addComponent(textFields[index++]);
+        tf = createTextField(null, "TextField 100% wide, no caption");
+        tf.setWidth("100%");
+        addTestComponent(tf);
 
-        textFields[index] = createTextField("TextField auto wide");
-        addComponent(textFields[index++]);
+        tf = createTextField("TextField auto wide");
+        addTestComponent(tf);
 
-        textFields[index] = createTextField("TextField with input prompt");
-        textFields[index].setInputPrompt("Please enter a value");
-        addComponent(textFields[index++]);
+        tf = createTextField("TextField with input prompt");
+        tf.setInputPrompt("Please enter a value");
+        addTestComponent(tf);
 
-        textFields[index] = createTextField("100px wide textfield");
-        textFields[index].setWidth("100px");
-        addComponent(textFields[index++]);
+        tf = createTextField("100px wide textfield");
+        tf.setWidth("100px");
+        addTestComponent(tf);
 
-        textFields[index] = createTextField("150px wide, 120px high textfield");
-        textFields[index].setWidth("150px");
-        textFields[index].setHeight("120px");
-        addComponent(textFields[index++]);
+        tf = createTextField("150px wide, 120px high textfield");
+        tf.setWidth("150px");
+        tf.setHeight("120px");
+        addTestComponent(tf);
 
-        textFields[index] = createTextField("50px high textfield");
-        textFields[index].setHeight("50px");
-        addComponent(textFields[index++]);
+        tf = createTextField("50px high textfield");
+        tf.setHeight("50px");
+        addTestComponent(tf);
 
-        textFields[index] = createTextField(null, "No caption");
-        addComponent(textFields[index++]);
+        tf = createTextField(null, "No caption");
+        addTestComponent(tf);
 
-        textFields[index] = createTextField(null, "No caption and input prompt");
-        textFields[index].setInputPrompt("Enter a value");
-        addComponent(textFields[index++]);
+        tf = createTextField(null, "No caption and input prompt");
+        tf.setInputPrompt("Enter a value");
+        addTestComponent(tf);
 
     }
 
@@ -88,6 +77,7 @@ public class TextFields extends TestBase {
         return null;
     }
 
+    @Override
     protected List<Component> createActions() {
         ArrayList<Component> actions = new ArrayList<Component>();
 
@@ -143,56 +133,6 @@ public class TextFields extends TestBase {
         actions.add(enabled);
 
         return actions;
-    }
-
-    protected void setRequired(boolean on) {
-
-        for (TextField tf : textFields) {
-            if (tf == null) {
-                continue;
-            }
-
-            tf.setRequired(on);
-        }
-
-    }
-
-    protected void setErrorIndicators(boolean on) {
-        for (TextField tf : textFields) {
-            if (tf == null) {
-                continue;
-            }
-
-            if (on) {
-                tf.setComponentError(new UserError("It failed!"));
-            } else {
-                tf.setComponentError(null);
-
-            }
-        }
-
-    }
-
-    protected void setEnabled(boolean on) {
-        for (TextField tf : textFields) {
-            if (tf == null) {
-                continue;
-            }
-
-            tf.setEnabled(on);
-        }
-
-    }
-
-    protected void setReadOnly(boolean on) {
-        for (TextField tf : textFields) {
-            if (tf == null) {
-                continue;
-            }
-
-            tf.setReadOnly(on);
-        }
-
     }
 
 }
