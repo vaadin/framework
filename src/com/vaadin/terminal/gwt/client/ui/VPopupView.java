@@ -150,7 +150,7 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
         popup.show();
     }
 
-    private void showPopup(final CustomPopup popup) {
+    protected void showPopup(final CustomPopup popup) {
         int windowTop = RootPanel.get().getAbsoluteTop();
         int windowLeft = RootPanel.get().getAbsoluteLeft();
         int windowRight = windowLeft + RootPanel.get().getOffsetWidth();
