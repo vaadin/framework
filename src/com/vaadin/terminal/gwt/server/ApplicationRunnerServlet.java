@@ -157,18 +157,22 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
             return appClass;
         } catch (Exception e) {
             //
-            for (int i = 0; i < defaultPackages.length; i++) {
-                try {
-                    appClass = (Class<? extends Application>) getClass()
-                            .getClassLoader().loadClass(
-                                    defaultPackages[i] + "." + baseName);
-                } catch (Exception e2) {
-                    // TODO: handle exception
-                }
-                if (appClass != null) {
-                    return appClass;
+            if (defaultPackages != null) {
+                for (int i = 0; i < defaultPackages.length; i++) {
+                    try {
+                        appClass = (Class<? extends Application>) getClass()
+                                .getClassLoader().loadClass(
+                                        defaultPackages[i] + "." + baseName);
+                    } catch (Exception e2) {
+                        // TODO: handle exception
+                        e2.printStackTrace();
+                    }
+                    if (appClass != null) {
+                        return appClass;
+                    }
                 }
             }
+
         }
 
         throw new ClassNotFoundException();
