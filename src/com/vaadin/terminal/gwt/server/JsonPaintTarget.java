@@ -52,7 +52,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     private boolean closed = false;
 
-    private final CommunicationManager manager;
+    private final AbstractCommunicationManager manager;
 
     private int changes = 0;
 
@@ -82,7 +82,7 @@ public class JsonPaintTarget implements PaintTarget {
      * @throws PaintException
      *             if the paint operation failed.
      */
-    public JsonPaintTarget(CommunicationManager manager, PrintWriter outWriter,
+    public JsonPaintTarget(AbstractCommunicationManager manager, PrintWriter outWriter,
             boolean cachingRequired) throws PaintException {
 
         this.manager = manager;

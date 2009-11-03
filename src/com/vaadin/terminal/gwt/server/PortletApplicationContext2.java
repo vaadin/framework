@@ -36,7 +36,7 @@ public class PortletApplicationContext2 implements ApplicationContext,
 
     protected WebBrowser browser = new WebBrowser();
 
-    protected HashMap<Application, CommunicationManager> applicationToAjaxAppMgrMap = new HashMap<Application, CommunicationManager>();
+    protected HashMap<Application, PortletCommunicationManager> applicationToAjaxAppMgrMap = new HashMap<Application, PortletCommunicationManager>();
 
     public void addTransactionListener(TransactionListener listener) {
         if (listeners == null) {
@@ -71,14 +71,14 @@ public class PortletApplicationContext2 implements ApplicationContext,
         }
     }
 
-    protected CommunicationManager getApplicationManager(
+    protected PortletCommunicationManager getApplicationManager(
             Application application) {
-        CommunicationManager mgr = applicationToAjaxAppMgrMap
+        PortletCommunicationManager mgr = applicationToAjaxAppMgrMap
                 .get(application);
 
         if (mgr == null) {
             // Creates a new manager
-            mgr = new CommunicationManager(application);
+            mgr = new PortletCommunicationManager(application);
             applicationToAjaxAppMgrMap.put(application, mgr);
         }
         return mgr;

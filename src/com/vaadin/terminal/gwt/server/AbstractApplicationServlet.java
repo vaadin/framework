@@ -58,6 +58,9 @@ import com.vaadin.ui.Window;
 
 @SuppressWarnings("serial")
 public abstract class AbstractApplicationServlet extends HttpServlet {
+    
+    // TODO Move some (all?) of the constants to a separate interface (shared with portlet)
+
     /**
      * Version number of this release. For example "5.0.0".
      */

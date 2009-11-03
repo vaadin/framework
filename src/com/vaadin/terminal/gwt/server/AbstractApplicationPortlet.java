@@ -37,9 +37,11 @@ import com.vaadin.ui.Window;
 
 public abstract class AbstractApplicationPortlet extends GenericPortlet {
 
+    // TODO Move some (all?) of the constants to a separate interface (shared with servlet)
+    
     private static final String ERROR_NO_WINDOW_FOUND = "No window found. Did you remember to setMainWindow()?";
 
-    private static final String THEME_DIRECTORY_PATH = "VAADIN/themes/";
+    static final String THEME_DIRECTORY_PATH = "VAADIN/themes/";
 
     private static final String WIDGETSET_DIRECTORY_PATH = "VAADIN/widgetsets/";
 
@@ -162,7 +164,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet {
              */
             PortletApplicationContext2 applicationContext = PortletApplicationContext2
                     .getApplicationContext(request.getPortletSession());
-            CommunicationManager applicationManager = applicationContext
+            PortletCommunicationManager applicationManager = applicationContext
                     .getApplicationManager(application);
 
             /* Update browser information from request */
@@ -185,7 +187,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet {
             } else if (requestType == RequestType.UIDL) {
                 // Handles AJAX UIDL requests
                 applicationManager.handleUidlRequest((ResourceRequest) request,
-                        (ResourceResponse) response);
+                        (ResourceResponse) response, this);
                 return;
             } else if (requestType == RequestType.RENDER) {
                 /*
