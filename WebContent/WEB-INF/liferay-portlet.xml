@@ -57,7 +57,21 @@
                 <instanceable>true</instanceable>       
                 <ajaxable>false</ajaxable>
         </portlet>
-    
+        <portlet>
+                <portlet-name>HelloWorldPortlet</portlet-name>
+                <instanceable>true</instanceable>       
+                <ajaxable>false</ajaxable>
+        </portlet>
+        <portlet>
+                <portlet-name>AddressBookPortlet</portlet-name>
+                <instanceable>true</instanceable>       
+                <ajaxable>false</ajaxable>
+        </portlet>          
+        <portlet>
+                <portlet-name>CalcPortlet</portlet-name>
+                <instanceable>true</instanceable>       
+                <ajaxable>false</ajaxable>
+        </portlet>          
         <role-mapper>
                 <role-name>administrator</role-name>
                 <role-link>Administrator</role-link>

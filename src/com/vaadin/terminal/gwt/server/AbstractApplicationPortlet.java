@@ -37,23 +37,27 @@ import com.vaadin.ui.Window;
 
 public abstract class AbstractApplicationPortlet extends GenericPortlet {
 
-    public static final String ERROR_NO_WINDOW_FOUND = "No window found. Did you remember to setMainWindow()?";
+    private static final String ERROR_NO_WINDOW_FOUND = "No window found. Did you remember to setMainWindow()?";
 
-    public static final String THEME_DIRECTORY_PATH = "VAADIN/themes/";
+    private static final String THEME_DIRECTORY_PATH = "VAADIN/themes/";
 
-    public static final String WIDGETSET_DIRECTORY_PATH = "VAADIN/widgetsets/";
+    private static final String WIDGETSET_DIRECTORY_PATH = "VAADIN/widgetsets/";
 
-    public static final String DEFAULT_WIDGETSET = "com.vaadin.terminal.gwt.DefaultWidgetSet";
+    private static final String DEFAULT_WIDGETSET = "com.vaadin.terminal.gwt.DefaultWidgetSet";
 
-    public static final String URL_PARAMETER_REPAINT_ALL = "repaintAll";
+    private static final String DEFAULT_THEME_NAME = "reindeer";    
+    
+    private static final String URL_PARAMETER_REPAINT_ALL = "repaintAll";
 
-    public static final String URL_PARAMETER_RESTART_APPLICATION = "restartApplication";
+    private static final String URL_PARAMETER_RESTART_APPLICATION = "restartApplication";
 
-    public static final String URL_PARAMETER_CLOSE_APPLICATION = "closeApplication";
+    private static final String URL_PARAMETER_CLOSE_APPLICATION = "closeApplication";
 
-    public static final int DEFAULT_BUFFER_SIZE = 32 * 1024;
+    private static final int DEFAULT_BUFFER_SIZE = 32 * 1024;
 
     // TODO Close application when portlet window is closed
+
+    // TODO What happens when the portlet window is resized?
 
     private Properties applicationProperties;
 
@@ -110,14 +114,15 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet {
 
     private boolean isStaticResourceRequest(ResourceRequest request) {
         String resourceID = request.getResourceID();
-        if (resourceID != null && resourceID.startsWith("/VAADIN/")) {
+        if (resourceID != null && !resourceID.startsWith("/VAADIN/")) {
             return true;
         }
         return false;
     }
 
     private boolean isUIDLRequest(ResourceRequest request) {
-        return request.getResourceID().equals("UIDL");
+        return request.getResourceID() != null
+                && request.getResourceID().equals("UIDL");
     }
 
     private boolean isFileUploadRequest(ActionRequest request) {
@@ -126,7 +131,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet {
 
     protected void handleRequest(PortletRequest request,
             PortletResponse response) throws PortletException, IOException {
-        System.out.println("AbstractApplicationPortlet.handleRequest()");
+        System.out.println("AbstractApplicationPortlet.handleRequest() " + System.currentTimeMillis());
 
         RequestType requestType = getRequestType(request);
 
@@ -233,39 +238,34 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet {
         }
     }
 
-    // TODO Vaadin resources cannot be loaded, try to load other resources using the portlet context
-    @Deprecated
+    // TODO Vaadin resources cannot be loaded, try to load other resources using
+    // the portlet context
+
     private void serveStaticResources(ResourceRequest request,
             ResourceResponse response) throws IOException, PortletException {
-        // Currently, we can only provide VAADIN content
         final String resourceID = request.getResourceID();
-        if (resourceID.startsWith("/VAADIN/")) {
-            // Strip leading "/"
-            // final String filename = resourceID.substri
-            final PortletContext pc = getPortletContext();
+        final PortletContext pc = getPortletContext();
 
-            System.out.println("Trying to load resource [" + resourceID + "]");
+        System.out.println("Trying to load resource [" + resourceID + "]");
 
-            InputStream is = pc.getResourceAsStream(resourceID);
-            if (is != null) {
-                final String mimetype = pc.getMimeType(resourceID);
-                if (mimetype != null) {
-                    response.setContentType(mimetype);
-                }
-                final OutputStream os = response.getPortletOutputStream();
-                final byte buffer[] = new byte[DEFAULT_BUFFER_SIZE];
-                int bytes;
-                while ((bytes = is.read(buffer)) >= 0) {
-                    os.write(buffer, 0, bytes);
-                }
-                return;
+        InputStream is = pc.getResourceAsStream(resourceID);
+        if (is != null) {
+            final String mimetype = pc.getMimeType(resourceID);
+            if (mimetype != null) {
+                response.setContentType(mimetype);
             }
-        }
-
+            final OutputStream os = response.getPortletOutputStream();
+            final byte buffer[] = new byte[DEFAULT_BUFFER_SIZE];
+            int bytes;
+            while ((bytes = is.read(buffer)) >= 0) {
+                os.write(buffer, 0, bytes);
+            }
+        } else {
         System.err.println("Requested resource [" + resourceID
                 + "] could not be found");
         response.setProperty(ResourceResponse.HTTP_STATUS_CODE, Integer
                 .toString(HttpServletResponse.SC_NOT_FOUND));
+        }
     }
 
     @Override
@@ -435,11 +435,13 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet {
                 response.getPortletOutputStream(), "UTF-8"));
         ;
 
-        // TODO Make the widgetset URL creation more configurable
+        // TODO The widgetset URL is currently hard-corded for LifeRay
 
-        String widgetsetURL = "/html/VAADIN/widgetsets/" + DEFAULT_WIDGETSET
+        String widgetsetURL = "/html/" + WIDGETSET_DIRECTORY_PATH + DEFAULT_WIDGETSET
                 + "/" + DEFAULT_WIDGETSET + ".nocache.js?"
                 + new Date().getTime();
+        
+        String themeURI = "/html/" + THEME_DIRECTORY_PATH + DEFAULT_THEME_NAME;
 
         page.write("<script type=\"text/javascript\">\n");
         page.write("if(!vaadin || !vaadin.vaadinConfigurations) {\n "
@@ -466,10 +468,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet {
 
         page.write("portletUidlURLBase: '" + uidlUrlBase.toString() + "', ");
         page.write("pathInfo: '', ");
-        page.write("themeUri:");
-        // page.write(themeUri != null ? "'" + themeUri + "'" : "null");
-        page.write("null"); // TODO Fix this
-        page.write(", versionInfo : {vaadinVersion:\"");
+        page.write("themeUri: '" + themeURI + "', ");
+        page.write("versionInfo : {vaadinVersion:\"");
         // page.write(VERSION);
         page.write("UNVERSIONED"); // TODO Fix this
         page.write("\",applicationVersion:\"");
@@ -477,7 +477,26 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet {
         page.write("\"},");
         // TODO Add system messages
         page.write("};\n</script>\n");
-        // TODO Add custom theme
+        
+        //if (themeName != null) {
+            // Custom theme's stylesheet, load only once, in different
+            // script
+            // tag to be dominate styles injected by widget
+            // set
+            page.write("<script type=\"text/javascript\">\n");
+            page.write("//<![CDATA[\n");
+            page.write("if(!vaadin.themesLoaded['" + DEFAULT_THEME_NAME + "']) {\n");
+            page.write("var stylesheet = document.createElement('link');\n");
+            page.write("stylesheet.setAttribute('rel', 'stylesheet');\n");
+            page.write("stylesheet.setAttribute('type', 'text/css');\n");
+            page.write("stylesheet.setAttribute('href', '" + themeURI
+                    + "/styles.css');\n");
+            page
+                    .write("document.getElementsByTagName('head')[0].appendChild(stylesheet);\n");
+            page.write("vaadin.themesLoaded['" + DEFAULT_THEME_NAME + "'] = true;\n}\n");
+            page.write("//]]>\n</script>\n");
+        //} 
+        
         // TODO Warn if widgetset has not been loaded after 15 seconds
 
         /*- Add classnames;
@@ -496,7 +515,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet {
         }
         // TODO Add support for flexible theme names
         String themeClass = "v-theme-"
-                + "reindeer".replaceAll("[^a-zA-Z0-9]", "");
+                + DEFAULT_THEME_NAME.replaceAll("[^a-zA-Z0-9]", "");
 
         String classNames = "v-app v-app-loading " + themeClass + " "
                 + appClass;

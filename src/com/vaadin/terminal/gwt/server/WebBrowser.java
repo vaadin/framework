@@ -77,6 +77,7 @@ public class WebBrowser implements Terminal {
         }
     }
 
+    // TODO: This method depends on the Portlet API.
     void updateBrowserProperties(PortletRequest request) {
         locale = request.getLocale();
         address = null;

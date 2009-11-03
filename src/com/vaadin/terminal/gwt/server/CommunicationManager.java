@@ -79,6 +79,9 @@ import com.vaadin.ui.Upload.UploadException;
 @SuppressWarnings("serial")
 public class CommunicationManager implements Paintable.RepaintRequestListener,
         Serializable {
+    
+    // FIXME Create an abstract class with custom Request/Response/Session interfaces, then create
+    // subclasses for servlets and portlets.
 
     private static String GET_PARAM_REPAINT_ALL = "repaintAll";
 
