@@ -35,9 +35,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+import javax.portlet.PortletException;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 import javax.servlet.ServletException;
-import javax.servlet.ServletInputStream;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -123,10 +126,40 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
     private int timeoutInterval = -1;
 
+    /**
+     * @deprecated use {@link #CommunicationManager(Application)} instead
+     * @param application
+     * @param applicationServlet
+     */
+    @Deprecated
     public CommunicationManager(Application application,
             AbstractApplicationServlet applicationServlet) {
         this.application = application;
         requireLocale(application.getLocale().toString());
+    }
+
+    /**
+     * TODO New constructor - document me!
+     * 
+     * @param application
+     */
+    public CommunicationManager(Application application) {
+        this.application = application;
+        requireLocale(application.getLocale().toString());
+    }
+
+    /**
+     * TODO New method - document me!
+     * 
+     * @param reuqest
+     * @param response
+     * @throws IOException
+     * @throws FileUploadException
+     */
+    public void handleFileUpload(ActionRequest reuqest, ActionResponse response)
+            throws IOException, FileUploadException {
+        // FIXME Implement me!
+        throw new UnsupportedOperationException("Not implemented!");
     }
 
     /**
@@ -233,6 +266,25 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
     }
 
     /**
+     * TODO New method - document me!
+     * 
+     * @param request
+     * @param response
+     * @throws IOException
+     * @throws PortletException
+     * @throws InvalidUIDLSecurityKeyException
+     */
+    public void handleUidlRequest(ResourceRequest request,
+            ResourceResponse response) throws IOException, PortletException,
+            InvalidUIDLSecurityKeyException {
+        try {
+            doHandleUidlRequest(request, response, null);
+        } catch (ServletException e) {
+            throw new PortletException(e.getMessage(), e.getCause());
+        }
+    }
+
+    /**
      * Handles UIDL request
      * 
      * @param request
@@ -244,17 +296,42 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             HttpServletResponse response,
             AbstractApplicationServlet applicationServlet) throws IOException,
             ServletException, InvalidUIDLSecurityKeyException {
+        doHandleUidlRequest(request, response, applicationServlet);
+    }
+
+    private void doHandleUidlRequest(Object request, Object response,
+            AbstractApplicationServlet applicationServlet) throws IOException,
+            ServletException, InvalidUIDLSecurityKeyException {
 
         // repaint requested or session has timed out and new one is created
-        boolean repaintAll = (request.getParameter(GET_PARAM_REPAINT_ALL) != null)
-                || request.getSession().isNew();
+        boolean repaintAll;
+        final OutputStream out;
+
+        if (request instanceof ResourceRequest) {
+            repaintAll = (((ResourceRequest) request)
+                    .getParameter(GET_PARAM_REPAINT_ALL) != null)
+                    || ((ResourceRequest) request).getPortletSession().isNew();
+            // Assume the response is a ResourceResponse
+            out = ((ResourceResponse) response).getPortletOutputStream();
+        } else {
+            repaintAll = (((HttpServletRequest) request)
+                    .getParameter(GET_PARAM_REPAINT_ALL) != null)
+                    || ((HttpServletRequest) request).getSession().isNew();
+            // Assume the response is a HttpServletResponse
+            out = ((HttpServletResponse) response).getOutputStream();
+        }
         boolean analyzeLayouts = false;
         if (repaintAll) {
             // analyzing can be done only with repaintAll
-            analyzeLayouts = (request.getParameter(GET_PARAM_ANALYZE_LAYOUTS) != null);
+            if (request instanceof ResourceRequest) {
+                analyzeLayouts = (((ResourceRequest) request)
+                        .getParameter(GET_PARAM_ANALYZE_LAYOUTS) != null);
+            } else {
+                analyzeLayouts = (((HttpServletRequest) request)
+                        .getParameter(GET_PARAM_ANALYZE_LAYOUTS) != null);
+            }
         }
 
-        final OutputStream out = response.getOutputStream();
         final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
                 new OutputStreamWriter(out, "UTF-8")));
 
@@ -266,15 +343,23 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             // Finds the window within the application
             Window window = null;
             if (application.isRunning()) {
-                window = getApplicationWindow(request, applicationServlet,
+                window = doGetApplicationWindow(request, applicationServlet,
                         application, null);
                 // Returns if no window found
                 if (window == null) {
                     // This should not happen, no windows exists but
                     // application is still open.
-                    System.err
-                            .println("Warning, could not get window for application with request URI "
-                                    + request.getRequestURI());
+                    if (request instanceof ResourceRequest) {
+                        System.err
+                                .println("Warning, could not get window for application with resource ID "
+                                        + ((ResourceRequest) request)
+                                                .getResourceID());
+                    } else {
+                        System.err
+                                .println("Warning, could not get window for application with request URI "
+                                        + ((HttpServletRequest) request)
+                                                .getRequestURI());
+                    }
                     return;
                 }
             } else {
@@ -304,8 +389,13 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                     String msg = ci.getOutOfSyncMessage();
                     String cap = ci.getOutOfSyncCaption();
                     if (msg != null || cap != null) {
-                        applicationServlet.criticalNotification(request,
-                                response, cap, msg, null, ci.getOutOfSyncURL());
+                        if (request instanceof HttpServletRequest) {
+                            applicationServlet.criticalNotification(
+                                    (HttpServletRequest) request,
+                                    (HttpServletResponse) response, cap, msg,
+                                    null, ci.getOutOfSyncURL());
+                        }
+                        // FIXME What about Portlets?
                         // will reload page after this
                         return;
                     }
@@ -328,8 +418,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
         out.close();
     }
 
-    private void paintAfterVariablechanges(HttpServletRequest request,
-            HttpServletResponse response,
+    private void paintAfterVariablechanges(Object request, Object response,
             AbstractApplicationServlet applicationServlet, boolean repaintAll,
             final PrintWriter outWriter, Window window, boolean analyzeLayouts)
             throws IOException, ServletException, PaintException {
@@ -359,18 +448,50 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
         }
 
         // Sets the response type
-        response.setContentType("application/json; charset=UTF-8");
+        if (response instanceof ResourceResponse) {
+            ((ResourceResponse) response)
+                    .setContentType("application/json; charset=UTF-8");
+        } else {
+            ((HttpServletResponse) response)
+                    .setContentType("application/json; charset=UTF-8");
+        }
         // some dirt to prevent cross site scripting
         outWriter.print("for(;;);[{");
 
         // security key
-        if (request.getAttribute(WRITE_SECURITY_TOKEN_FLAG) != null) {
-            String seckey = (String) request.getSession().getAttribute(
-                    ApplicationConnection.UIDL_SECURITY_TOKEN_ID);
+        Object writeSecurityTokenFlag;
+        if (request instanceof ResourceRequest) {
+            writeSecurityTokenFlag = ((ResourceRequest) request)
+                    .getAttribute(WRITE_SECURITY_TOKEN_FLAG);
+        } else {
+            writeSecurityTokenFlag = ((HttpServletRequest) request)
+                    .getAttribute(WRITE_SECURITY_TOKEN_FLAG);
+        }
+
+        if (writeSecurityTokenFlag != null) {
+            String seckey;
+            if (request instanceof ResourceRequest) {
+                seckey = (String) ((ResourceRequest) request)
+                        .getPortletSession().getAttribute(
+                                ApplicationConnection.UIDL_SECURITY_TOKEN_ID);
+            } else {
+                seckey = (String) ((HttpServletRequest) request).getSession()
+                        .getAttribute(
+                                ApplicationConnection.UIDL_SECURITY_TOKEN_ID);
+            }
             if (seckey == null) {
                 seckey = "" + (int) (Math.random() * 1000000);
-                request.getSession().setAttribute(
-                        ApplicationConnection.UIDL_SECURITY_TOKEN_ID, seckey);
+                if (request instanceof ResourceRequest) {
+                    ((ResourceRequest) request)
+                            .getPortletSession()
+                            .setAttribute(
+                                    ApplicationConnection.UIDL_SECURITY_TOKEN_ID,
+                                    seckey);
+                } else {
+                    ((HttpServletRequest) request).getSession().setAttribute(
+                            ApplicationConnection.UIDL_SECURITY_TOKEN_ID,
+                            seckey);
+                }
             }
             outWriter.print("\"" + ApplicationConnection.UIDL_SECURITY_TOKEN_ID
                     + "\":\"");
@@ -389,7 +510,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             List<InvalidLayout> invalidComponentRelativeSizes = null;
 
             // re-get window - may have been changed
-            Window newWindow = getApplicationWindow(request,
+            Window newWindow = doGetApplicationWindow(request,
                     applicationServlet, application, window);
             if (newWindow != window) {
                 window = newWindow;
@@ -561,8 +682,14 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             if (ci != null && ci.getSessionExpiredMessage() == null
                     && ci.getSessionExpiredCaption() == null
                     && ci.isSessionExpiredNotificationEnabled()) {
-                int newTimeoutInterval = request.getSession()
-                        .getMaxInactiveInterval();
+                int newTimeoutInterval;
+                if (request instanceof ResourceRequest) {
+                    newTimeoutInterval = ((ResourceRequest) request)
+                            .getPortletSession().getMaxInactiveInterval();
+                } else {
+                    newTimeoutInterval = ((HttpServletRequest) request)
+                            .getSession().getMaxInactiveInterval();
+                }
                 if (repaintAll || (timeoutInterval != newTimeoutInterval)) {
                     String escapedURL = ci.getSessionExpiredURL() == null ? ""
                             : ci.getSessionExpiredURL().replace("/", "\\/");
@@ -581,8 +708,16 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
             // Precache custom layouts
             String themeName = window.getTheme();
-            if (request.getParameter("theme") != null) {
-                themeName = request.getParameter("theme");
+            String requestThemeName;
+            if (request instanceof ResourceRequest) {
+                requestThemeName = ((ResourceRequest) request)
+                        .getParameter("theme");
+            } else {
+                requestThemeName = ((HttpServletRequest) request)
+                        .getParameter("theme");
+            }
+            if (requestThemeName != null) {
+                themeName = requestThemeName;
             }
             if (themeName == null) {
                 themeName = AbstractApplicationServlet.getDefaultTheme();
@@ -623,9 +758,17 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                         r.close();
                     } catch (final java.io.IOException e) {
                         // FIXME: Handle exception
-                        System.err.println("Resource transfer failed:  "
-                                + request.getRequestURI() + ". ("
-                                + e.getMessage() + ")");
+                        if (request instanceof ResourceRequest) {
+                            System.err.println("Resource transfer failed:  "
+                                    + ((ResourceRequest) request)
+                                            .getResourceID() + ". ("
+                                    + e.getMessage() + ")");
+                        } else {
+                            System.err.println("Resource transfer failed:  "
+                                    + ((HttpServletRequest) request)
+                                            .getRequestURI() + ". ("
+                                    + e.getMessage() + ")");
+                        }
                     }
                     outWriter.print("\""
                             + JsonPaintTarget.escapeJSON(layout.toString())
@@ -682,14 +825,19 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
      * @return true if successful, false if there was an inconsistency
      * @throws IOException
      */
-    private boolean handleVariables(HttpServletRequest request,
-            HttpServletResponse response,
+    private boolean handleVariables(Object request, Object response,
             AbstractApplicationServlet applicationServlet,
             Application application2, Window window) throws IOException,
             InvalidUIDLSecurityKeyException {
         boolean success = true;
+        int contentLength;
+        if (request instanceof ResourceRequest) {
+            contentLength = ((ResourceRequest) request).getContentLength();
+        } else {
+            contentLength = ((HttpServletRequest) request).getContentLength();
+        }
 
-        if (request.getContentLength() > 0) {
+        if (contentLength > 0) {
             String changes = readRequest(request);
 
             // Manage bursts one by one
@@ -703,13 +851,29 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                 if (bursts.length == 1 && "init".equals(bursts[0])) {
                     // init request; don't handle any variables, key sent in
                     // response.
-                    request.setAttribute(WRITE_SECURITY_TOKEN_FLAG, true);
+                    if (request instanceof ResourceRequest) {
+                        ((ResourceRequest) request).setAttribute(
+                                WRITE_SECURITY_TOKEN_FLAG, true);
+                    } else {
+                        ((HttpServletRequest) request).setAttribute(
+                                WRITE_SECURITY_TOKEN_FLAG, true);
+                    }
                     return true;
                 } else {
                     // ApplicationServlet has stored the security token in the
                     // session; check that it matched the one sent in the UIDL
-                    String sessId = (String) request.getSession().getAttribute(
-                            ApplicationConnection.UIDL_SECURITY_TOKEN_ID);
+                    String sessId;
+                    if (request instanceof ResourceRequest) {
+                        sessId = (String) ((ResourceRequest) request)
+                                .getPortletSession()
+                                .getAttribute(
+                                        ApplicationConnection.UIDL_SECURITY_TOKEN_ID);
+                    } else {
+                        sessId = (String) ((HttpServletRequest) request)
+                                .getSession()
+                                .getAttribute(
+                                        ApplicationConnection.UIDL_SECURITY_TOKEN_ID);
+                    }
                     if (sessId == null || !sessId.equals(bursts[0])) {
                         throw new InvalidUIDLSecurityKeyException(
                                 "Security key mismatch");
@@ -841,20 +1005,30 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
     }
 
     /**
-     * Reads the request data from the HttpServletRequest and returns it
-     * converted to an UTF-8 string.
+     * Reads the request data from the HttpServletRequest or ResourceRequest and
+     * returns it converted to an UTF-8 string.
      * 
      * @param request
      * @return
      * @throws IOException
      */
-    private static String readRequest(HttpServletRequest request)
-            throws IOException {
+    private static String readRequest(Object request) throws IOException {
 
-        int requestLength = request.getContentLength();
+        int requestLength;
 
+        if (request instanceof ResourceRequest) {
+            requestLength = ((ResourceRequest) request).getContentLength();
+        } else { // Will throw ClassCastException if invalid request type
+            requestLength = ((HttpServletRequest) request).getContentLength();
+        }
         byte[] buffer = new byte[requestLength];
-        ServletInputStream inputStream = request.getInputStream();
+        InputStream inputStream;
+
+        if (request instanceof ResourceRequest) {
+            inputStream = ((ResourceRequest) request).getPortletInputStream();
+        } else {
+            inputStream = ((HttpServletRequest) request).getInputStream();
+        }
 
         int bytesRemaining = requestLength;
         while (bytesRemaining > 0) {
@@ -1095,11 +1269,47 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             AbstractApplicationServlet applicationServlet,
             Application application, Window assumedWindow)
             throws ServletException {
+        return doGetApplicationWindow((Object) request, applicationServlet,
+                application, assumedWindow);
+    }
+
+    /**
+     * TODO New method - document me!
+     * 
+     * @param request
+     * @param application
+     * @param assumedWindow
+     * @return
+     * @throws PortletException
+     */
+    Window getApplicationWindow(ResourceRequest request,
+            Application application, Window assumedWindow)
+            throws PortletException {
+        try {
+            return doGetApplicationWindow((Object) request, null, application,
+                    assumedWindow);
+        } catch (ServletException e) {
+            throw new PortletException(e.getMessage(), e.getCause());
+        }
+    }
+
+    private Window doGetApplicationWindow(Object request,
+            AbstractApplicationServlet applicationServlet,
+            Application application, Window assumedWindow)
+            throws ServletException {
 
         Window window = null;
 
         // If the client knows which window to use, use it if possible
-        String windowClientRequestedName = request.getParameter("windowName");
+        String windowClientRequestedName;
+        if (request instanceof ResourceRequest) {
+            windowClientRequestedName = ((ResourceRequest) request)
+                    .getParameter("windowName");
+        } else {
+            windowClientRequestedName = ((HttpServletRequest) request)
+                    .getParameter("windowName");
+        }
+
         if (assumedWindow != null
                 && application.getWindows().contains(assumedWindow)) {
             windowClientRequestedName = assumedWindow.getName();
@@ -1112,10 +1322,13 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
         }
 
         // If client does not know what window it wants
-        if (window == null) {
+        if (window == null && request instanceof HttpServletRequest) {
+            // This is only supported if the application is running inside a
+            // servlet
 
             // Get the path from URL
-            String path = applicationServlet.getRequestPathInfo(request);
+            String path = applicationServlet
+                    .getRequestPathInfo((HttpServletRequest) request);
             if (path != null && path.startsWith("/UIDL")) {
                 path = path.substring("/UIDL".length());
             }
@@ -1172,17 +1385,16 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
      * Ends the Application.
      * 
      * @param request
-     *            the HTTP request instance.
+     *            the HTTP/Resource request instance.
      * @param response
-     *            the HTTP response to write to.
+     *            the HTTP/Resource response to write to.
      * @param application
      *            the Application to end.
      * @throws IOException
      *             if the writing failed due to input/output error.
      */
-    private void endApplication(HttpServletRequest request,
-            HttpServletResponse response, Application application)
-            throws IOException {
+    private void endApplication(Object request, Object response,
+            Application application) throws IOException {
 
         String logoutUrl = application.getLogoutURL();
         if (logoutUrl == null) {
@@ -1191,8 +1403,16 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
         // clients JS app is still running, send a special json file to tell
         // client that application has quit and where to point browser now
         // Set the response type
-        response.setContentType("application/json; charset=UTF-8");
-        final ServletOutputStream out = response.getOutputStream();
+        final OutputStream out;
+        if (response instanceof ResourceResponse) {
+            ((ResourceResponse) response)
+                    .setContentType("application/json; charset=UTF-8");
+            out = ((ResourceResponse) response).getPortletOutputStream();
+        } else { // Will throw ClassCastException if invalid response
+            ((HttpServletResponse) response)
+                    .setContentType("application/json; charset=UTF-8");
+            out = ((HttpServletResponse) response).getOutputStream();
+        }
         final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
                 new OutputStreamWriter(out, "UTF-8")));
         outWriter.print("for(;;);[{");
