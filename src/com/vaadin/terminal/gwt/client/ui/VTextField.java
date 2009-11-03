@@ -10,7 +10,9 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.TextBoxBase;
@@ -110,13 +112,32 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
                 : null;
         setPrompting(inputPrompt != null && focusedTextField != this
                 && (text == null || text.equals("")));
+
+        final String fieldValue;
         if (prompting) {
-            setText(inputPrompt);
+            fieldValue = inputPrompt;
             addStyleDependentName(CLASSNAME_PROMPT);
         } else {
-            setText(text);
+            fieldValue = text;
             removeStyleDependentName(CLASSNAME_PROMPT);
         }
+        if (BrowserInfo.get().isGecko()) {
+            /*
+             * Gecko is really sluggish when updating input attached to dom.
+             * Some optimizations seems to work much better in Gecko if we
+             * update the actual content lazily when the rest of the DOM has
+             * stabilized. In tests, about ten times better performance is
+             * achieved with this optimization. See for eg. #2898
+             */
+            DeferredCommand.addCommand(new Command() {
+                public void execute() {
+                    setText(fieldValue);
+                }
+            });
+        } else {
+            setText(fieldValue);
+        }
+
         valueBeforeEdit = uidl.getStringVariable("text");
     }
 
