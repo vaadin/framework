@@ -1,18 +1,14 @@
 <module>
 	<!--
+	    
 		This GWT module defines the Vaadin DefaultWidgetSet. This is
 		the module you want to extend when creating an extended widget set, or
 		when creating a specialized widget set with a subset of the
 		components.
-	-->
-	<!--
-		NOTE that your WidgetSet entry-point (.java) should have the same
-		"logical" name (a.k.a SimpleName) as the specification (.gwt.xml).
-	-->
-	<!--
-		E.g: com/example/gwt/MyWidgetSet.gwt.xml should point to the
-		entry-point
-		com.example.gwt.client[.some.package].MyWidgetSet.java
+		
+		
+		WS Compiler: manually edited
+		
 	-->
 
 	<inherits name="com.google.gwt.user.User" />

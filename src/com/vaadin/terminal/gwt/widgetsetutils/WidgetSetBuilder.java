@@ -20,6 +20,11 @@ import java.util.regex.Pattern;
 /**
  * Helper class to update widgetsets GWT module configuration file. Can be used
  * command line or via IDE tools.
+ * 
+ * <p>
+ * If module definition file contains text "WS Compiler: manually edited", tool
+ * will skip editing file.
+ * 
  */
 public class WidgetSetBuilder {
 
@@ -66,32 +71,41 @@ public class WidgetSetBuilder {
         }
 
         String content = readFile(widgetsetFile);
-        String originalContent = content;
+        if (isEditable(content)) {
+            String originalContent = content;
 
-        Collection<String> oldInheritedWidgetsets = getCurrentWidgetSets(content);
+            Collection<String> oldInheritedWidgetsets = getCurrentWidgetSets(content);
 
-        // add widgetsets that do not exist
-        for (String ws : availableWidgetSets.keySet()) {
-            if (ws.equals(widgetset)) {
-                // do not inherit the module itself
-                continue;
+            // add widgetsets that do not exist
+            for (String ws : availableWidgetSets.keySet()) {
+                if (ws.equals(widgetset)) {
+                    // do not inherit the module itself
+                    continue;
+                }
+                if (!oldInheritedWidgetsets.contains(ws)) {
+                    content = addWidgetSet(ws, content);
+                }
             }
-            if (!oldInheritedWidgetsets.contains(ws)) {
-                content = addWidgetSet(ws, content);
-            }
-        }
 
-        for (String ws : oldInheritedWidgetsets) {
-            if (!availableWidgetSets.containsKey(ws)) {
-                // widgetset not available in classpath
-                content = removeWidgetSet(ws, content);
+            for (String ws : oldInheritedWidgetsets) {
+                if (!availableWidgetSets.containsKey(ws)) {
+                    // widgetset not available in classpath
+                    content = removeWidgetSet(ws, content);
+                }
             }
-        }
 
-        changed = changed || !content.equals(originalContent);
-        if (changed) {
-            commitChanges(widgetsetfilename, content);
+            changed = changed || !content.equals(originalContent);
+            if (changed) {
+                commitChanges(widgetsetfilename, content);
+            }
+        } else {
+            System.out
+                    .println("Widgetset is manually edited. Skipping updates.");
         }
+    }
+
+    private static boolean isEditable(String content) {
+        return !content.contains("WS Compiler: manually edited");
     }
 
     private static String removeWidgetSet(String ws, String content) {
@@ -135,6 +149,7 @@ public class WidgetSetBuilder {
             sb.append(line);
             sb.append("\n");
         }
+        fi.close();
         return sb.toString();
     }
 
