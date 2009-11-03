@@ -307,7 +307,7 @@ public class ApplicationConnection {
         console.log("Making UIDL Request with params: " + rd);
         String uri;
         if (configuration.usePortletURLs()) {
-            uri = configuration.getPortletActionURLBase() + "&UIDL=true";
+            uri = configuration.getPortletUidlURLBase();
         } else {
             uri = getAppUri() + "UIDL" + configuration.getPathInfo();
         }

@@ -25,7 +25,7 @@ public class ApplicationConfiguration {
     private String communicationErrorUrl;
     private boolean useDebugIdInDom = true;
     private boolean usePortletURLs = false;
-    private String portletActionURLBase;
+    private String portletUidlURLBase;
 
     private Class<? extends Paintable>[] classes = new Class[1024];
 
@@ -36,8 +36,8 @@ public class ApplicationConfiguration {
         return usePortletURLs;
     }
     
-    public String getPortletActionURLBase() {
-        return portletActionURLBase;
+    public String getPortletUidlURLBase() {
+        return portletUidlURLBase;
     }
     
     public String getRootPanelId() {
@@ -91,7 +91,7 @@ public class ApplicationConfiguration {
         if($wnd.vaadin.vaadinConfigurations && $wnd.vaadin.vaadinConfigurations[id]) {
             var jsobj = $wnd.vaadin.vaadinConfigurations[id];
             var uri = jsobj.appUri;
-            if(uri[uri.length -1] != "/") {
+            if(uri != null && uri[uri.length -1] != "/") {
                 uri = uri + "/";
             }
             this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::appUri = uri;
@@ -114,8 +114,8 @@ public class ApplicationConfiguration {
             if (jsobj.usePortletURLs) {
                 this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::usePortletURLs = jsobj.usePortletURLs;
             }
-            if (jsobj.portletActionURLBase) {
-                this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::portletActionURLBase = jsobj.portletActionURLBase;
+            if (jsobj.portletUidlURLBase) {
+                this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::portletUidlURLBase = jsobj.portletUidlURLBase;
             }
         } else {
             $wnd.alert("Vaadin app failed to initialize: " + this.id);

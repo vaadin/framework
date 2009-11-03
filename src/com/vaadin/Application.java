@@ -120,6 +120,11 @@ public abstract class Application implements URIHandler,
     private URL applicationUrl;
 
     /**
+     * The ID of the portlet window that this application runs in.
+     */
+    private String portletWindowId;
+    
+    /**
      * Name of the theme currently used by the application.
      */
     private String theme = null;
@@ -181,6 +186,16 @@ public abstract class Application implements URIHandler,
      */
     private Terminal.ErrorListener errorHandler = this;
 
+    // TODO Document me!
+    public String getPortletWindowId() {
+        return portletWindowId;
+    }
+    
+    // TODO Document me!
+    public void setPortletWindowId(String portletWindowId) {
+        this.portletWindowId = portletWindowId;
+    }
+    
     /**
      * <p>
      * Gets a window by name. Returns <code>null</code> if the application is
