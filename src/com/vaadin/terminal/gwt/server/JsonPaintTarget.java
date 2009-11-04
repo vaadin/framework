@@ -869,11 +869,11 @@ public class JsonPaintTarget implements PaintTarget {
     class JsonTag implements Serializable {
         boolean firstField = false;
 
-        Vector variables = new Vector();
+        Vector<Object> variables = new Vector<Object>();
 
-        Vector children = new Vector();
+        Vector<Object> children = new Vector<Object>();
 
-        Vector attr = new Vector();
+        Vector<Object> attr = new Vector<Object>();
 
         StringBuilder data = new StringBuilder();
 
@@ -945,7 +945,7 @@ public class JsonPaintTarget implements PaintTarget {
 
         public String getData() {
             final StringBuilder buf = new StringBuilder();
-            final Iterator it = children.iterator();
+            final Iterator<Object> it = children.iterator();
             while (it.hasNext()) {
                 buf.append(startField());
                 buf.append(it.next());
@@ -961,7 +961,7 @@ public class JsonPaintTarget implements PaintTarget {
             final StringBuilder buf = new StringBuilder();
             buf.append(startField());
             buf.append("{");
-            for (final Iterator iter = attr.iterator(); iter.hasNext();) {
+            for (final Iterator<Object> iter = attr.iterator(); iter.hasNext();) {
                 final String element = (String) iter.next();
                 buf.append(element);
                 if (iter.hasNext()) {
@@ -984,7 +984,7 @@ public class JsonPaintTarget implements PaintTarget {
             final StringBuilder buf = new StringBuilder();
             buf.append(startField());
             buf.append("\"v\":{");
-            final Iterator iter = variables.iterator();
+            final Iterator<Object> iter = variables.iterator();
             while (iter.hasNext()) {
                 final Variable element = (Variable) iter.next();
                 buf.append(element.getJsonPresentation());

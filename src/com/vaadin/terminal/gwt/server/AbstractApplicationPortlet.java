@@ -5,7 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
+import java.security.GeneralSecurityException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
@@ -17,6 +22,7 @@ import java.util.Properties;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.GenericPortlet;
+import javax.portlet.MimeResponse;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletException;
@@ -32,30 +38,25 @@ import javax.portlet.ResourceURL;
 import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.Application;
+import com.vaadin.Application.SystemMessages;
 import com.vaadin.external.org.apache.commons.fileupload.portlet.PortletFileUpload;
+import com.vaadin.terminal.Terminal;
+import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.ui.Window;
 
-public abstract class AbstractApplicationPortlet extends GenericPortlet {
+/**
+ * TODO Document me!
+ * 
+ * @author peholmst
+ */
+public abstract class AbstractApplicationPortlet extends GenericPortlet
+        implements Constants {
 
-    // TODO Move some (all?) of the constants to a separate interface (shared with servlet)
-    
-    private static final String ERROR_NO_WINDOW_FOUND = "No window found. Did you remember to setMainWindow()?";
-
-    static final String THEME_DIRECTORY_PATH = "VAADIN/themes/";
-
-    private static final String WIDGETSET_DIRECTORY_PATH = "VAADIN/widgetsets/";
-
-    private static final String DEFAULT_WIDGETSET = "com.vaadin.terminal.gwt.DefaultWidgetSet";
-
-    private static final String DEFAULT_THEME_NAME = "reindeer";    
-    
-    private static final String URL_PARAMETER_REPAINT_ALL = "repaintAll";
-
-    private static final String URL_PARAMETER_RESTART_APPLICATION = "restartApplication";
-
-    private static final String URL_PARAMETER_CLOSE_APPLICATION = "closeApplication";
-
-    private static final int DEFAULT_BUFFER_SIZE = 32 * 1024;
+    /*
+     * TODO Big parts of this class are directly copy-pasted from
+     * AbstractApplicationServlet. On the long term, it would probably be wise
+     * to try to integrate the common parts into a shared super class.
+     */
 
     // TODO Close application when portlet window is closed
 
@@ -63,10 +64,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet {
 
     private Properties applicationProperties;
 
-    @Override
-    public void destroy() {
-        // TODO Auto-generated method stub
-    }
+    private boolean productionMode = false;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -89,8 +87,119 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet {
             applicationProperties.setProperty(name, context
                     .getInitParameter(name));
         }
-        // TODO Check production mode
-        // TODO Check cross site protection
+        checkProductionMode();
+        checkCrossSiteProtection();
+    }
+
+    private void checkCrossSiteProtection() {
+        if (getApplicationOrSystemProperty(
+                SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION, "false").equals(
+                "true")) {
+            /*
+             * Print an information/warning message about running with xsrf
+             * protection disabled
+             */
+            System.err.println(WARNING_XSRF_PROTECTION_DISABLED);
+        }
+    }
+
+    private void checkProductionMode() {
+        // Check if the application is in production mode.
+        // We are in production mode if Debug=false or productionMode=true
+        if (getApplicationOrSystemProperty(SERVLET_PARAMETER_DEBUG, "true")
+                .equals("false")) {
+            // "Debug=true" is the old way and should no longer be used
+            productionMode = true;
+        } else if (getApplicationOrSystemProperty(
+                SERVLET_PARAMETER_PRODUCTION_MODE, "false").equals("true")) {
+            // "productionMode=true" is the real way to do it
+            productionMode = true;
+        }
+
+        if (!productionMode) {
+            /* Print an information/warning message about running in debug mode */
+            // TODO Maybe we need a different message for portlets?
+            System.err.println(NOT_PRODUCTION_MODE_INFO);
+        }
+    }
+
+    /**
+     * Gets an application property value.
+     * 
+     * @param parameterName
+     *            the Name or the parameter.
+     * @return String value or null if not found
+     */
+    protected String getApplicationProperty(String parameterName) {
+
+        String val = applicationProperties.getProperty(parameterName);
+        if (val != null) {
+            return val;
+        }
+
+        // Try lower case application properties for backward compatibility with
+        // 3.0.2 and earlier
+        val = applicationProperties.getProperty(parameterName.toLowerCase());
+
+        return val;
+    }
+
+    /**
+     * Gets an system property value.
+     * 
+     * @param parameterName
+     *            the Name or the parameter.
+     * @return String value or null if not found
+     */
+    protected String getSystemProperty(String parameterName) {
+        String val = null;
+
+        String pkgName;
+        final Package pkg = getClass().getPackage();
+        if (pkg != null) {
+            pkgName = pkg.getName();
+        } else {
+            final String className = getClass().getName();
+            pkgName = new String(className.toCharArray(), 0, className
+                    .lastIndexOf('.'));
+        }
+        val = System.getProperty(pkgName + "." + parameterName);
+        if (val != null) {
+            return val;
+        }
+
+        // Try lowercased system properties
+        val = System.getProperty(pkgName + "." + parameterName.toLowerCase());
+        return val;
+    }
+
+    /**
+     * Gets an application or system property value.
+     * 
+     * @param parameterName
+     *            the Name or the parameter.
+     * @param defaultValue
+     *            the Default to be used.
+     * @return String value or default if not found
+     */
+    private String getApplicationOrSystemProperty(String parameterName,
+            String defaultValue) {
+
+        String val = null;
+
+        // Try application properties
+        val = getApplicationProperty(parameterName);
+        if (val != null) {
+            return val;
+        }
+
+        // Try system properties
+        val = getSystemProperty(parameterName);
+        if (val != null) {
+            return val;
+        }
+
+        return defaultValue;
     }
 
     enum RequestType {
@@ -131,14 +240,25 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet {
         return PortletFileUpload.isMultipartContent(request);
     }
 
+    /**
+     * Returns true if the servlet is running in production mode. Production
+     * mode disables all debug facilities.
+     * 
+     * @return true if in production mode, false if in debug mode
+     */
+    public boolean isProductionMode() {
+        return productionMode;
+    }
+
     protected void handleRequest(PortletRequest request,
             PortletResponse response) throws PortletException, IOException {
-        System.out.println("AbstractApplicationPortlet.handleRequest() " + System.currentTimeMillis());
+        // System.out.println("AbstractApplicationPortlet.handleRequest() " +
+        // System.currentTimeMillis());
 
         RequestType requestType = getRequestType(request);
 
-        System.out.println("  RequestType: " + requestType);
-        System.out.println("  WindowID: " + request.getWindowID());
+        // System.out.println("  RequestType: " + requestType);
+        // System.out.println("  WindowID: " + request.getWindowID());
 
         if (requestType == RequestType.UNKNOWN) {
             System.out.println("Unknown request type");
@@ -228,9 +348,13 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet {
                 writeAjaxPage((RenderRequest) request,
                         (RenderResponse) response, window, application);
             }
+        } catch (final SessionExpired e) {
+            // Session has expired, notify user
+            handleServiceSessionExpired(request, response);
+        } catch (final GeneralSecurityException e) {
+            handleServiceSecurityException(request, response);
         } catch (final Throwable e) {
-            // TODO Handle exceptions
-            e.printStackTrace();
+            handleServiceException(request, response, application, e);
         } finally {
             // Notifies transaction end
             if (application != null) {
@@ -240,15 +364,12 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet {
         }
     }
 
-    // TODO Vaadin resources cannot be loaded, try to load other resources using
-    // the portlet context
-
     private void serveStaticResources(ResourceRequest request,
             ResourceResponse response) throws IOException, PortletException {
         final String resourceID = request.getResourceID();
         final PortletContext pc = getPortletContext();
 
-        System.out.println("Trying to load resource [" + resourceID + "]");
+//        System.out.println("Trying to load resource [" + resourceID + "]");
 
         InputStream is = pc.getResourceAsStream(resourceID);
         if (is != null) {
@@ -263,31 +384,31 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet {
                 os.write(buffer, 0, bytes);
             }
         } else {
-        System.err.println("Requested resource [" + resourceID
-                + "] could not be found");
-        response.setProperty(ResourceResponse.HTTP_STATUS_CODE, Integer
-                .toString(HttpServletResponse.SC_NOT_FOUND));
+            System.err.println("Requested resource [" + resourceID
+                    + "] could not be found");
+            response.setProperty(ResourceResponse.HTTP_STATUS_CODE, Integer
+                    .toString(HttpServletResponse.SC_NOT_FOUND));
         }
     }
 
     @Override
     public void processAction(ActionRequest request, ActionResponse response)
             throws PortletException, IOException {
-        System.out.println("AbstractApplicationPortlet.processAction()");
+        // System.out.println("AbstractApplicationPortlet.processAction()");
         handleRequest(request, response);
     }
 
     @RenderMode(name = "VIEW")
     public void doRender(RenderRequest request, RenderResponse response)
             throws PortletException, IOException {
-        System.out.println("AbstractApplicationPortlet.render()");
+        // System.out.println("AbstractApplicationPortlet.render()");
         handleRequest(request, response);
     }
 
     @Override
     public void serveResource(ResourceRequest request, ResourceResponse response)
             throws PortletException, IOException {
-        System.out.println("AbstractApplicationPortlet.serveResource()");
+        // System.out.println("AbstractApplicationPortlet.serveResource()");
         handleRequest(request, response);
     }
 
@@ -430,19 +551,18 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet {
             RenderResponse response, Window window, Application application)
             throws IOException, MalformedURLException, PortletException {
 
-        System.out.println("AbstractApplicationPortlet.writeAjaxPage()");
+//        System.out.println("AbstractApplicationPortlet.writeAjaxPage()");
 
         response.setContentType("text/html");
         final BufferedWriter page = new BufferedWriter(new OutputStreamWriter(
                 response.getPortletOutputStream(), "UTF-8"));
-        ;
 
         // TODO The widgetset URL is currently hard-corded for LifeRay
 
-        String widgetsetURL = "/html/" + WIDGETSET_DIRECTORY_PATH + DEFAULT_WIDGETSET
-                + "/" + DEFAULT_WIDGETSET + ".nocache.js?"
+        String widgetsetURL = "/html/" + WIDGETSET_DIRECTORY_PATH
+                + DEFAULT_WIDGETSET + "/" + DEFAULT_WIDGETSET + ".nocache.js?"
                 + new Date().getTime();
-        
+
         String themeURI = "/html/" + THEME_DIRECTORY_PATH + DEFAULT_THEME_NAME;
 
         page.write("<script type=\"text/javascript\">\n");
@@ -479,26 +599,29 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet {
         page.write("\"},");
         // TODO Add system messages
         page.write("};\n</script>\n");
-        
-        //if (themeName != null) {
-            // Custom theme's stylesheet, load only once, in different
-            // script
-            // tag to be dominate styles injected by widget
-            // set
-            page.write("<script type=\"text/javascript\">\n");
-            page.write("//<![CDATA[\n");
-            page.write("if(!vaadin.themesLoaded['" + DEFAULT_THEME_NAME + "']) {\n");
-            page.write("var stylesheet = document.createElement('link');\n");
-            page.write("stylesheet.setAttribute('rel', 'stylesheet');\n");
-            page.write("stylesheet.setAttribute('type', 'text/css');\n");
-            page.write("stylesheet.setAttribute('href', '" + themeURI
-                    + "/styles.css');\n");
-            page
-                    .write("document.getElementsByTagName('head')[0].appendChild(stylesheet);\n");
-            page.write("vaadin.themesLoaded['" + DEFAULT_THEME_NAME + "'] = true;\n}\n");
-            page.write("//]]>\n</script>\n");
-        //} 
-        
+
+        // if (themeName != null) {
+        // Custom theme's stylesheet, load only once, in different
+        // script
+        // tag to be dominate styles injected by widget
+        // set
+        page.write("<script type=\"text/javascript\">\n");
+        page.write("//<![CDATA[\n");
+        page
+                .write("if(!vaadin.themesLoaded['" + DEFAULT_THEME_NAME
+                        + "']) {\n");
+        page.write("var stylesheet = document.createElement('link');\n");
+        page.write("stylesheet.setAttribute('rel', 'stylesheet');\n");
+        page.write("stylesheet.setAttribute('type', 'text/css');\n");
+        page.write("stylesheet.setAttribute('href', '" + themeURI
+                + "/styles.css');\n");
+        page
+                .write("document.getElementsByTagName('head')[0].appendChild(stylesheet);\n");
+        page.write("vaadin.themesLoaded['" + DEFAULT_THEME_NAME
+                + "'] = true;\n}\n");
+        page.write("//]]>\n</script>\n");
+        // }
+
         // TODO Warn if widgetset has not been loaded after 15 seconds
 
         /*- Add classnames;
@@ -549,4 +672,219 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet {
         // TODO Add support for custom class loader
         return getClass().getClassLoader();
     }
+
+    private boolean isOnUnloadRequest(PortletRequest request) {
+        return request.getParameter(ApplicationConnection.PARAM_UNLOADBURST) != null;
+    }
+
+    /**
+     * Get system messages from the current application class
+     * 
+     * @return
+     */
+    protected SystemMessages getSystemMessages() {
+        try {
+            Class<? extends Application> appCls = getApplicationClass();
+            Method m = appCls.getMethod("getSystemMessages", (Class[]) null);
+            return (Application.SystemMessages) m.invoke(null, (Object[]) null);
+        } catch (ClassNotFoundException e) {
+            // This should never happen
+            throw new SystemMessageException(e);
+        } catch (SecurityException e) {
+            throw new SystemMessageException(
+                    "Application.getSystemMessage() should be static public", e);
+        } catch (NoSuchMethodException e) {
+            // This is completely ok and should be silently ignored
+        } catch (IllegalArgumentException e) {
+            // This should never happen
+            throw new SystemMessageException(e);
+        } catch (IllegalAccessException e) {
+            throw new SystemMessageException(
+                    "Application.getSystemMessage() should be static public", e);
+        } catch (InvocationTargetException e) {
+            // This should never happen
+            throw new SystemMessageException(e);
+        }
+        return Application.getSystemMessages();
+    }
+
+    void handleServiceSessionExpired(PortletRequest request,
+            PortletResponse response) throws IOException, PortletException {
+
+        if (isOnUnloadRequest(request)) {
+            /*
+             * Request was an unload request (e.g. window close event) and the
+             * client expects no response if it fails.
+             */
+            return;
+        }
+
+        try {
+            Application.SystemMessages ci = getSystemMessages();
+            if (getRequestType(request) != RequestType.UIDL) {
+                // 'plain' http req - e.g. browser reload;
+                // just go ahead redirect the browser
+                if (response instanceof ActionResponse) {
+                    ((ActionResponse) response).sendRedirect(ci
+                            .getSessionExpiredURL());
+                } else {
+                    // TODO What to do if we are e.g. rendering?
+                }
+            } else {
+                /*
+                 * Session must be invalidated before criticalNotification as it
+                 * commits the response.
+                 */
+                request.getPortletSession().invalidate();
+
+                // send uidl redirect
+                criticalNotification(request, (ResourceResponse) response, ci
+                        .getSessionExpiredCaption(), ci
+                        .getSessionExpiredMessage(), null, ci
+                        .getSessionExpiredURL());
+
+            }
+        } catch (SystemMessageException ee) {
+            throw new PortletException(ee);
+        }
+
+    }
+
+    private void handleServiceSecurityException(PortletRequest request,
+            PortletResponse response) throws IOException, PortletException {
+        if (isOnUnloadRequest(request)) {
+            /*
+             * Request was an unload request (e.g. window close event) and the
+             * client expects no response if it fails.
+             */
+            return;
+        }
+
+        try {
+            Application.SystemMessages ci = getSystemMessages();
+            if (getRequestType(request) != RequestType.UIDL) {
+                // 'plain' http req - e.g. browser reload;
+                // just go ahead redirect the browser
+                if (response instanceof ActionResponse) {
+                    ((ActionResponse) response).sendRedirect(ci
+                            .getCommunicationErrorURL());
+                } else {
+                    // TODO What to do if we are e.g. rendering?
+                }
+            } else {
+                // send uidl redirect
+                criticalNotification(request, (ResourceResponse) response, ci
+                        .getCommunicationErrorCaption(), ci
+                        .getCommunicationErrorMessage(),
+                        INVALID_SECURITY_KEY_MSG, ci.getCommunicationErrorURL());
+                /*
+                 * Invalidate session. Portal integration will fail otherwise
+                 * since the session is not created by the portal.
+                 */
+                request.getPortletSession().invalidate();
+            }
+        } catch (SystemMessageException ee) {
+            throw new PortletException(ee);
+        }
+    }
+
+    private void handleServiceException(PortletRequest request,
+            PortletResponse response, Application application, Throwable e)
+            throws IOException, PortletException {
+        // if this was an UIDL request, response UIDL back to client
+        if (getRequestType(request) == RequestType.UIDL) {
+            Application.SystemMessages ci = getSystemMessages();
+            criticalNotification(request, (ResourceResponse) response, ci
+                    .getInternalErrorCaption(), ci.getInternalErrorMessage(),
+                    null, ci.getInternalErrorURL());
+            if (application != null) {
+                application.getErrorHandler()
+                        .terminalError(new RequestError(e));
+            } else {
+                throw new PortletException(e);
+            }
+        } else {
+            // Re-throw other exceptions
+            throw new PortletException(e);
+        }
+
+    }
+
+    @SuppressWarnings("serial")
+    public class RequestError implements Terminal.ErrorEvent, Serializable {
+
+        private final Throwable throwable;
+
+        public RequestError(Throwable throwable) {
+            this.throwable = throwable;
+        }
+
+        public Throwable getThrowable() {
+            return throwable;
+        }
+
+    }
+
+    /**
+     * Send notification to client's application. Used to notify client of
+     * critical errors and session expiration due to long inactivity. Server has
+     * no knowledge of what application client refers to.
+     * 
+     * @param request
+     *            the Portlet request instance.
+     * @param response
+     *            the Portlet response to write to.
+     * @param caption
+     *            for the notification
+     * @param message
+     *            for the notification
+     * @param details
+     *            a detail message to show in addition to the passed message.
+     *            Currently shown directly but could be hidden behind a details
+     *            drop down.
+     * @param url
+     *            url to load after message, null for current page
+     * @throws IOException
+     *             if the writing failed due to input/output error.
+     */
+    void criticalNotification(PortletRequest request, MimeResponse response,
+            String caption, String message, String details, String url)
+            throws IOException {
+
+        // clients JS app is still running, but server application either
+        // no longer exists or it might fail to perform reasonably.
+        // send a notification to client's application and link how
+        // to "restart" application.
+
+        if (caption != null) {
+            caption = "\"" + caption + "\"";
+        }
+        if (details != null) {
+            if (message == null) {
+                message = details;
+            } else {
+                message += "<br/><br/>" + details;
+            }
+        }
+        if (message != null) {
+            message = "\"" + message + "\"";
+        }
+        if (url != null) {
+            url = "\"" + url + "\"";
+        }
+
+        // Set the response type
+        response.setContentType("application/json; charset=UTF-8");
+        final OutputStream out = response.getPortletOutputStream();
+        final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
+                new OutputStreamWriter(out, "UTF-8")));
+        outWriter.print("for(;;);[{\"changes\":[], \"meta\" : {"
+                + "\"appError\": {" + "\"caption\":" + caption + ","
+                + "\"message\" : " + message + "," + "\"url\" : " + url
+                + "}}, \"resources\": {}, \"locales\":[]}]");
+        outWriter.flush();
+        outWriter.close();
+        out.flush();
+    }
+
 }

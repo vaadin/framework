@@ -57,7 +57,7 @@ import com.vaadin.ui.Window;
  */
 
 @SuppressWarnings("serial")
-public abstract class AbstractApplicationServlet extends HttpServlet {
+public abstract class AbstractApplicationServlet extends HttpServlet implements Constants {
     
     // TODO Move some (all?) of the constants to a separate interface (shared with portlet)
 
@@ -139,55 +139,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
     private Properties applicationProperties;
 
-    private static final String NOT_PRODUCTION_MODE_INFO = ""
-            + "=================================================================\n"
-            + "Vaadin is running in DEBUG MODE.\nAdd productionMode=true to web.xml "
-            + "to disable debug features.\nTo show debug window, add ?debug to "
-            + "your application URL.\n"
-            + "=================================================================";
-
-    private static final String WARNING_XSRF_PROTECTION_DISABLED = ""
-            + "===========================================================\n"
-            + "WARNING: Cross-site request forgery protection is disabled!\n"
-            + "===========================================================";
-
     private boolean productionMode = false;
-
-    private static final String URL_PARAMETER_RESTART_APPLICATION = "restartApplication";
-    private static final String URL_PARAMETER_CLOSE_APPLICATION = "closeApplication";
-    private static final String URL_PARAMETER_REPAINT_ALL = "repaintAll";
-    protected static final String URL_PARAMETER_THEME = "theme";
-
-    private static final String SERVLET_PARAMETER_DEBUG = "Debug";
-    private static final String SERVLET_PARAMETER_PRODUCTION_MODE = "productionMode";
-    static final String SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION = "disable-xsrf-protection";
-
-    // Configurable parameter names
-    private static final String PARAMETER_VAADIN_RESOURCES = "Resources";
-
-    private static final int DEFAULT_BUFFER_SIZE = 32 * 1024;
-
-    private static final int MAX_BUFFER_SIZE = 64 * 1024;
-
-    private static final String AJAX_UIDL_URI = "/UIDL";
-
-    static final String THEME_DIRECTORY_PATH = "VAADIN/themes/";
-
-    private static final int DEFAULT_THEME_CACHETIME = 1000 * 60 * 60 * 24;
-
-    static final String WIDGETSET_DIRECTORY_PATH = "VAADIN/widgetsets/";
-
-    // Name of the default widget set, used if not specified in web.xml
-    private static final String DEFAULT_WIDGETSET = "com.vaadin.terminal.gwt.DefaultWidgetSet";
-
-    // Widget set parameter name
-    private static final String PARAMETER_WIDGETSET = "widgetset";
-
-    private static final String ERROR_NO_WINDOW_FOUND = "No window found. Did you remember to setMainWindow()?";
-
-    private static final String DEFAULT_THEME_NAME = "reindeer";
-
-    private static final String INVALID_SECURITY_KEY_MSG = "Invalid security key.";
 
     private String resourcePath = null;
 

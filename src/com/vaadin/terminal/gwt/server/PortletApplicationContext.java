@@ -35,9 +35,10 @@ import com.vaadin.Application;
 
 /**
  * @author marc
- * 
+ * @deprecated Use Portlet 2.0 class {@link PortletApplicationContext2} instead.
  */
-@SuppressWarnings("serial")
+@SuppressWarnings({"serial", "unchecked"})
+@Deprecated
 public class PortletApplicationContext extends WebApplicationContext implements
         Serializable {
 

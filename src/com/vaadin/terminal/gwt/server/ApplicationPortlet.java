@@ -19,6 +19,10 @@ import javax.portlet.RenderResponse;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.vaadin.Application;
 
+/**
+ * @deprecated Use Portlet 2.0 class {@link ApplicationPortlet2} instead.
+ */
+@Deprecated
 @SuppressWarnings("serial")
 public class ApplicationPortlet implements Portlet, Serializable {
     // portlet configuration parameters

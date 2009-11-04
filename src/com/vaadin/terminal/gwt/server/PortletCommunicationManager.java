@@ -138,7 +138,9 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         public void criticalNotification(Request request, Response response,
                 String cap, String msg, String details, String outOfSyncURL)
                 throws IOException {
-            // TODO Implement me!
+            portlet.criticalNotification((PortletRequest) request
+                    .getWrappedRequest(), (MimeResponse) response
+                    .getWrappedResponse(), cap, msg, details, outOfSyncURL);
         }
 
         public String getRequestPathInfo(Request request) {

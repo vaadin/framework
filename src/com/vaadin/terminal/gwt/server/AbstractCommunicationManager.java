@@ -306,7 +306,7 @@ public abstract class AbstractCommunicationManager implements
                         synchronized (application) {
                             handleChangeVariablesError(application,
                                     uploadComponent, e,
-                                    new HashMap<String, Object>());
+                                    new HashMap<Object, Object>());
                         }
                     }
                 }
@@ -557,8 +557,9 @@ public abstract class AbstractCommunicationManager implements
                     }
                 });
 
-                for (final Iterator i = paintables.iterator(); i.hasNext();) {
-                    final Paintable p = (Paintable) i.next();
+                for (final Iterator<Paintable> i = paintables.iterator(); i
+                        .hasNext();) {
+                    final Paintable p = i.next();
 
                     // TODO CLEAN
                     if (p instanceof Window) {
@@ -692,8 +693,8 @@ public abstract class AbstractCommunicationManager implements
             // TODO We should only precache the layouts that are not
             // cached already (plagiate from usedPaintableTypes)
             int resourceIndex = 0;
-            for (final Iterator i = paintTarget.getUsedResources().iterator(); i
-                    .hasNext();) {
+            for (final Iterator<Object> i = paintTarget.getUsedResources()
+                    .iterator(); i.hasNext();) {
                 final String resource = (String) i.next();
                 InputStream is = null;
                 try {
@@ -827,13 +828,13 @@ public abstract class AbstractCommunicationManager implements
                     final VariableOwner owner = (VariableOwner) idPaintableMap
                             .get(variable[VAR_PID]);
                     if (owner != null && owner.isEnabled()) {
-                        Map m;
+                        Map<Object, Object> m;
                         if (nextVariable != null
                                 && variable[VAR_PID]
                                         .equals(nextVariable[VAR_PID])) {
                             // we have more than one value changes in row for
                             // one variable owner, collect em in HashMap
-                            m = new HashMap();
+                            m = new HashMap<Object, Object>();
                             m.put(variable[VAR_NAME], convertVariableValue(
                                     variable[VAR_TYPE].charAt(0),
                                     variable[VAR_VALUE]));
@@ -973,7 +974,7 @@ public abstract class AbstractCommunicationManager implements
     }
 
     private void handleChangeVariablesError(Application application,
-            Component owner, Exception e, Map m) {
+            Component owner, Exception e, Map<Object, Object> m) {
         boolean handled = false;
         ChangeVariablesErrorEvent errorEvent = new ChangeVariablesErrorEvent(
                 owner, e, m);
@@ -1429,9 +1430,9 @@ public abstract class AbstractCommunicationManager implements
             return value.equals(v);
         }
 
-        public Set entrySet() {
-            final Set s = new HashSet();
-            s.add(new Map.Entry() {
+        public Set<Entry<Object, Object>> entrySet() {
+            final Set<Entry<Object, Object>> s = new HashSet<Entry<Object, Object>>();
+            s.add(new Map.Entry<Object, Object>() {
 
                 public Object getKey() {
                     return name;
@@ -1459,8 +1460,8 @@ public abstract class AbstractCommunicationManager implements
             return false;
         }
 
-        public Set keySet() {
-            final Set s = new HashSet();
+        public Set<Object> keySet() {
+            final Set<Object> s = new HashSet<Object>();
             s.add(name);
             return s;
         }
@@ -1469,7 +1470,7 @@ public abstract class AbstractCommunicationManager implements
             throw new UnsupportedOperationException();
         }
 
-        public void putAll(Map t) {
+        public void putAll(Map<?, ?> t) {
             throw new UnsupportedOperationException();
         }
 
@@ -1481,8 +1482,8 @@ public abstract class AbstractCommunicationManager implements
             return 1;
         }
 
-        public Collection values() {
-            final LinkedList s = new LinkedList();
+        public Collection<Object> values() {
+            final LinkedList<Object> s = new LinkedList<Object>();
             s.add(value);
             return s;
 
