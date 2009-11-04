@@ -17,5 +17,6 @@
 				<portlet id="HelloWorldPortlet" />
 				<portlet id="AddressBookPortlet" />
 				<portlet id="CalcPortlet"/>
+				<portlet id="SamplerPortlet"/>
         </category>
 </display>

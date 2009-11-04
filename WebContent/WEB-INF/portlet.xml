@@ -153,7 +153,29 @@
 			<short-title>Address Book</short-title>
 		</portlet-info>		
 	</portlet>	
-	<!-- TODO -->
+	
+	<portlet>
+		<portlet-name>SamplerPortlet</portlet-name>
+		<display-name>Sampler</display-name>
+		<portlet-class>com.vaadin.terminal.gwt.server.ApplicationPortlet2</portlet-class>
+		<init-param>
+			<name>application</name>
+			<value>com.vaadin.demo.sampler.SamplerApplication</value>
+		</init-param>
+		<init-param>
+			<name>widgetset</name>
+			<value>com.vaadin.demo.sampler.gwt.SamplerWidgetSet</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Sampler</title>
+			<short-title>Sampler</short-title>
+		</portlet-info>		
+	</portlet>
+	
 	<portlet>
 		<portlet-name>CalcPortlet</portlet-name>
 		<display-name>Calc</display-name>

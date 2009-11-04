@@ -72,6 +72,12 @@
                 <instanceable>true</instanceable>       
                 <ajaxable>false</ajaxable>
         </portlet>          
+        <portlet>
+                <portlet-name>SamplerPortlet</portlet-name>
+                <instanceable>true</instanceable>       
+                <ajaxable>false</ajaxable>
+        </portlet>
+        
         <role-mapper>
                 <role-name>administrator</role-name>
                 <role-link>Administrator</role-link>
