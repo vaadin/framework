@@ -332,13 +332,13 @@ public class DateField extends AbstractField {
                 newDate = cal.getTime();
             }
 
-            if (newDate != oldDate
+            if (newDate == null && dateString != null && !"".equals(dateString)
+                    && !dateString.equals(oldDateString)) {
+                setValue(handleUnparsableDateString(dateString));
+            } else if (newDate != oldDate
                     && (newDate == null || !newDate.equals(oldDate))) {
                 setValue(newDate, true); // Don't require a repaint, client
                 // updates itself
-            } else if (dateString != null && !"".equals(dateString)
-                    && !dateString.equals(oldDateString)) {
-                setValue(handleUnparsableDateString(dateString));
             }
         }
     }
