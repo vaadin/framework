@@ -153,7 +153,7 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
     /**
      * Determines the correct position for a popup and displays the popup at
      * that position.
-     * 
+     *
      * By default, the popup is shown centered relative to its host component,
      * ensuring it is visible on the screen if possible.
      *
@@ -218,7 +218,13 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
         }
     }-*/;
 
-    private class CustomPopup extends VOverlay {
+    /**
+     * This class is only protected to enable overriding showPopup, and is
+     * currently not intended to be extended or otherwise used directly. Its API
+     * (other than it being a VOverlay) is to be considered private and
+     * potentially subject to change.
+     */
+    protected class CustomPopup extends VOverlay {
 
         private Paintable popupComponentPaintable = null;
         private Widget popupComponentWidget = null;
