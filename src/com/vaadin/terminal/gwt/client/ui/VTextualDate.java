@@ -41,7 +41,10 @@ public class VTextualDate extends VDateField implements Paintable, Field,
 
     protected int fieldExtraWidth = -1;
 
+    private boolean lenient;
+
     public VTextualDate() {
+
         super();
         text = new TextBox();
         // use normal textfield styles as a basis
@@ -76,6 +79,8 @@ public class VTextualDate extends VDateField implements Paintable, Field,
         if (uidl.hasAttribute("format")) {
             formatStr = uidl.getStringAttribute("format");
         }
+
+        lenient = !uidl.getBooleanAttribute("strict");
 
         buildDate();
         // not a FocusWidget -> needs own tabindex handling
@@ -163,7 +168,18 @@ public class VTextualDate extends VDateField implements Paintable, Field,
             try {
                 DateTimeFormat format = DateTimeFormat
                         .getFormat(getFormatString());
-                date = format.parse(text.getText());
+                if (lenient) {
+                    date = format.parse(text.getText());
+                    if (date != null) {
+                        // if date value was leniently parsed, normalize text
+                        // presentation
+                        text.setValue(DateTimeFormat.getFormat(
+                                getFormatString()).format(date), false);
+                    }
+                } else {
+                    date = format.parseStrict(text.getText());
+                }
+
                 long stamp = date.getTime();
                 if (stamp == 0) {
                     // If date parsing fails in firefox the stamp will be 0
