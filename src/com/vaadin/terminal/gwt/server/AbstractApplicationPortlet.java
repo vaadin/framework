@@ -369,7 +369,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         final String resourceID = request.getResourceID();
         final PortletContext pc = getPortletContext();
 
-//        System.out.println("Trying to load resource [" + resourceID + "]");
+        // System.out.println("Trying to load resource [" + resourceID + "]");
 
         InputStream is = pc.getResourceAsStream(resourceID);
         if (is != null) {
@@ -547,31 +547,66 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         return null;
     }
 
+    protected String getWidgetsetURL(String widgetset) {
+        // TODO The widgetset URL is currently hard-corded for LifeRay
+        return "/html/" + WIDGETSET_DIRECTORY_PATH + widgetset + "/"
+                + widgetset + ".nocache.js?" + new Date().getTime();
+    }
+
+    protected String getThemeURI(String themeName) {
+        // TODO The theme URI is currently hard-corded for LifeRay
+        return "/html/" + THEME_DIRECTORY_PATH + themeName;
+    }
+
     protected void writeAjaxPage(RenderRequest request,
             RenderResponse response, Window window, Application application)
             throws IOException, MalformedURLException, PortletException {
 
-//        System.out.println("AbstractApplicationPortlet.writeAjaxPage()");
+        // System.out.println("AbstractApplicationPortlet.writeAjaxPage()");
 
         response.setContentType("text/html");
         final BufferedWriter page = new BufferedWriter(new OutputStreamWriter(
                 response.getPortletOutputStream(), "UTF-8"));
 
-        // TODO The widgetset URL is currently hard-corded for LifeRay
+        String requestWidgetset = (String) request
+                .getAttribute(AbstractApplicationServlet.REQUEST_WIDGETSET);
+        String sharedWidgetset = (String) request
+                .getAttribute(AbstractApplicationServlet.REQUEST_SHARED_WIDGETSET);
+        if (requestWidgetset == null && sharedWidgetset == null) {
+            requestWidgetset = getApplicationOrSystemProperty(
+                    PARAMETER_WIDGETSET, DEFAULT_WIDGETSET);
+        }
+        String widgetset;
+        if (requestWidgetset != null) {
+            widgetset = requestWidgetset;
+        } else {
+            widgetset = sharedWidgetset;
+        }
+        
+        // TODO Currently, we can only load widgetsets and themes from the portal
+        
+        String themeName = getThemeForWindow(request, window);
 
-        String widgetsetURL = "/html/" + WIDGETSET_DIRECTORY_PATH
-                + DEFAULT_WIDGETSET + "/" + DEFAULT_WIDGETSET + ".nocache.js?"
-                + new Date().getTime();
+        String widgetsetURL = getWidgetsetURL(widgetset);
+        String themeURI = getThemeURI(themeName);
 
-        String themeURI = "/html/" + THEME_DIRECTORY_PATH + DEFAULT_THEME_NAME;
+        // Get system messages
+        Application.SystemMessages systemMessages = null;
+        try {
+            systemMessages = getSystemMessages();
+        } catch (SystemMessageException e) {
+            // failing to get the system messages is always a problem
+            throw new PortletException("CommunicationError!", e);
+        }
 
         page.write("<script type=\"text/javascript\">\n");
         page.write("if(!vaadin || !vaadin.vaadinConfigurations) {\n "
                 + "if(!vaadin) { var vaadin = {}} \n"
                 + "vaadin.vaadinConfigurations = {};\n"
                 + "if (!vaadin.themesLoaded) { vaadin.themesLoaded = {}; }\n");
-        // TODO Add support for production mode
-        page.write("vaadin.debug = true;\n");
+        if (!isProductionMode()) {
+            page.write("vaadin.debug = true;\n");
+        }
         page
                 .write("document.write('<iframe tabIndex=\"-1\" id=\"__gwt_historyFrame\" "
                         + "style=\"width:0;height:0;border:0;overflow:"
@@ -582,7 +617,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         page.write("vaadin.vaadinConfigurations[\"" + request.getWindowID()
                 + "\"] = {");
         page.write("appUri: '', ");
-        // page.write("appId: '', ");
         page.write("usePortletURLs: true, ");
 
         ResourceURL uidlUrlBase = response.createResourceURL();
@@ -592,24 +626,34 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         page.write("pathInfo: '', ");
         page.write("themeUri: '" + themeURI + "', ");
         page.write("versionInfo : {vaadinVersion:\"");
-        // page.write(VERSION);
-        page.write("UNVERSIONED"); // TODO Fix this
+        page.write(AbstractApplicationServlet.VERSION);
         page.write("\",applicationVersion:\"");
         page.write(application.getVersion());
         page.write("\"},");
-        // TODO Add system messages
+        if (systemMessages != null) {
+            // Write the CommunicationError -message to client
+            String caption = systemMessages.getCommunicationErrorCaption();
+            if (caption != null) {
+                caption = "\"" + caption + "\"";
+            }
+            String message = systemMessages.getCommunicationErrorMessage();
+            if (message != null) {
+                message = "\"" + message + "\"";
+            }
+            String url = systemMessages.getCommunicationErrorURL();
+            if (url != null) {
+                url = "\"" + url + "\"";
+            }
+
+            page.write("\"comErrMsg\": {" + "\"caption\":" + caption + ","
+                    + "\"message\" : " + message + "," + "\"url\" : " + url
+                    + "}");
+        }
         page.write("};\n</script>\n");
 
-        // if (themeName != null) {
-        // Custom theme's stylesheet, load only once, in different
-        // script
-        // tag to be dominate styles injected by widget
-        // set
         page.write("<script type=\"text/javascript\">\n");
         page.write("//<![CDATA[\n");
-        page
-                .write("if(!vaadin.themesLoaded['" + DEFAULT_THEME_NAME
-                        + "']) {\n");
+        page.write("if(!vaadin.themesLoaded['" + themeName + "']) {\n");
         page.write("var stylesheet = document.createElement('link');\n");
         page.write("stylesheet.setAttribute('rel', 'stylesheet');\n");
         page.write("stylesheet.setAttribute('type', 'text/css');\n");
@@ -617,10 +661,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 + "/styles.css');\n");
         page
                 .write("document.getElementsByTagName('head')[0].appendChild(stylesheet);\n");
-        page.write("vaadin.themesLoaded['" + DEFAULT_THEME_NAME
-                + "'] = true;\n}\n");
+        page.write("vaadin.themesLoaded['" + themeName + "'] = true;\n}\n");
         page.write("//]]>\n</script>\n");
-        // }
 
         // TODO Warn if widgetset has not been loaded after 15 seconds
 
@@ -638,9 +680,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             appClass += "unknown";
             e.printStackTrace();
         }
-        // TODO Add support for flexible theme names
         String themeClass = "v-theme-"
-                + DEFAULT_THEME_NAME.replaceAll("[^a-zA-Z0-9]", "");
+                + themeName.replaceAll("[^a-zA-Z0-9]", "");
 
         String classNames = "v-app v-app-loading " + themeClass + " "
                 + appClass;
@@ -649,6 +690,38 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 + classNames + "\"></div>\n");
 
         page.close();
+    }
+
+    /**
+     * Returns the theme for given request/window
+     * 
+     * @param request
+     * @param window
+     * @return
+     */
+    private String getThemeForWindow(PortletRequest request, Window window) {
+        // Finds theme name
+        String themeName;
+
+        if (request.getParameter(URL_PARAMETER_THEME) != null) {
+            themeName = request.getParameter(URL_PARAMETER_THEME);
+        } else {
+            themeName = window.getTheme();
+        }
+
+        if (themeName == null) {
+            // no explicit theme for window defined
+            if (request
+                    .getAttribute(AbstractApplicationServlet.REQUEST_DEFAULT_THEME) != null) {
+                // the default theme is defined in request (by portal)
+                themeName = (String) request
+                        .getAttribute(AbstractApplicationServlet.REQUEST_DEFAULT_THEME);
+            } else {
+                // using the default theme defined by Vaadin
+                themeName = DEFAULT_THEME_NAME;
+            }
+        }
+        return themeName;
     }
 
     protected abstract Class<? extends Application> getApplicationClass()
