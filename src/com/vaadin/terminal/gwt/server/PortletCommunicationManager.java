@@ -19,6 +19,8 @@ import com.vaadin.external.org.apache.commons.fileupload.FileItemIterator;
 import com.vaadin.external.org.apache.commons.fileupload.FileUpload;
 import com.vaadin.external.org.apache.commons.fileupload.FileUploadException;
 import com.vaadin.external.org.apache.commons.fileupload.portlet.PortletFileUpload;
+import com.vaadin.terminal.DownloadStream;
+import com.vaadin.ui.Window;
 
 /**
  * TODO document me!
@@ -144,9 +146,14 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         }
 
         public String getRequestPathInfo(Request request) {
-            // We do not use paths in portlet mode
-            throw new UnsupportedOperationException(
-                    "PathInfo not available when running in Portlet mode");
+            if (request.getWrappedRequest() instanceof ResourceRequest) {
+                return ((ResourceRequest) request.getWrappedRequest())
+                        .getResourceID();
+            } else {
+                // We do not use paths in portlet mode
+                throw new UnsupportedOperationException(
+                        "PathInfo only available when using ResourceRequests");
+            }
         }
 
         public InputStream getThemeResourceAsStream(String themeName,
@@ -185,6 +192,14 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
             AbstractApplicationPortlet applicationPortlet)
             throws InvalidUIDLSecurityKeyException, IOException {
         doHandleUidlRequest(new PortletRequestWrapper(request),
+                new PortletResponseWrapper(response),
+                new AbstractApplicationPortletWrapper(applicationPortlet));
+    }
+
+    DownloadStream handleURI(Window window, ResourceRequest request,
+            ResourceResponse response,
+            AbstractApplicationPortlet applicationPortlet) {
+        return handleURI(window, new PortletRequestWrapper(request),
                 new PortletResponseWrapper(response),
                 new AbstractApplicationPortletWrapper(applicationPortlet));
     }

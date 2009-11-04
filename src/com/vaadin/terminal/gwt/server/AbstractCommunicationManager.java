@@ -1616,9 +1616,6 @@ public abstract class AbstractCommunicationManager implements
     protected DownloadStream handleURI(Window window, Request request,
             Response response, Callback callback) {
 
-        // FIXME Check what to do when running as a portlet that does not have
-        // URIs
-
         String uri = callback.getRequestPathInfo(request);
 
         // If no URI is available
