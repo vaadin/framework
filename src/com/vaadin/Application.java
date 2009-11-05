@@ -29,6 +29,8 @@ import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.URIHandler;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.gwt.server.ChangeVariablesErrorEvent;
+import com.vaadin.terminal.gwt.server.PortletApplicationContext;
+import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Window;
 
@@ -365,6 +367,17 @@ public abstract class Application implements URIHandler,
     /**
      * Removes the specified window from the application.
      * 
+     * <p>
+     * Removing the main window of the Application also sets the main window to
+     * null. One must another window to be the main window after this with
+     * {@link #setMainWindow(Window)}.
+     * </p>
+     * 
+     * <p>
+     * Note that removing window from the application does not close the browser
+     * window - the window is only removed from the server-side.
+     * </p>
+     * 
      * @param window
      *            the window to be removed.
      */
@@ -402,6 +415,12 @@ public abstract class Application implements URIHandler,
     /**
      * Gets the user of the application.
      * 
+     * <p>
+     * Vaadin doesn't define of use user object in any way - it only provides
+     * this getter and setter methods for convenience. The user is any object
+     * that has been stored to the application with {@link #setUser(Object)}.
+     * </p>
+     * 
      * @return the User of the application.
      */
     public Object getUser() {
@@ -418,6 +437,11 @@ public abstract class Application implements URIHandler,
      * A component performing the user login procedure can assign the user
      * property of the application and make the user object available to other
      * components of the application.
+     * </p>
+     * <p>
+     * Vaadin doesn't define of use user object in any way - it only provides
+     * getter and setter methods for convenience. The user reference stored to
+     * the application can be read with {@link #getUser()}.
      * </p>
      * 
      * @param user
@@ -444,6 +468,14 @@ public abstract class Application implements URIHandler,
     /**
      * Gets the URL of the application.
      * 
+     * <p>
+     * This is the URL what can be entered to a browser window to start the
+     * application. Navigating to the application URL shows the main window (
+     * {@link #getMainWindow()}) of the application. Note that the main window
+     * can also be shown by navigating to the window url (
+     * {@link com.vaadin.ui.Window#getURL()}).
+     * </p>
+     * 
      * @return the application's URL.
      */
     public URL getURL() {
@@ -451,22 +483,38 @@ public abstract class Application implements URIHandler,
     }
 
     /**
-     * Ends the Application. In effect this will cause the application stop
-     * returning any windows when asked.
+     * Ends the Application.
+     * 
+     * <p>
+     * In effect this will cause the application stop returning any windows when
+     * asked. When the application is closed, its state is removed from the
+     * session and the browser window is redirected to the application logout
+     * url set with {@link #setLogoutURL(String)}. If the logout url has not
+     * been set, the browser window is reloaded and the application is
+     * restarted.
+     * </p>
+     * .
      */
     public void close() {
         applicationIsRunning = false;
     }
 
     /**
-     * Starts the application on the given URL.After this call the application
-     * corresponds to the given URL and it will return windows when asked for
-     * them.
+     * Starts the application on the given URL.
      * 
+     * <p>
+     * This method is called by Vaadin framework when a user navigates to the
+     * application. After this call the application corresponds to the given URL
+     * and it will return windows when asked for them. There is no need to call
+     * this method directly.
+     * </p>
+     * 
+     * <p>
      * Application properties are defined by servlet configuration object
      * {@link javax.servlet.ServletConfig} and they are overridden by
      * context-wide initialization parameters
      * {@link javax.servlet.ServletContext}.
+     * </p>
      * 
      * @param applicationUrl
      *            the URL the application should respond to.
@@ -489,6 +537,12 @@ public abstract class Application implements URIHandler,
     /**
      * Tests if the application is running or if it has been finished.
      * 
+     * <p>
+     * Application starts running when its
+     * {@link #start(URL, Properties, ApplicationContext)} method has been
+     * called and stops when the {@link #close()} is called.
+     * </p>
+     * 
      * @return <code>true</code> if the application is running,
      *         <code>false</code> if not.
      */
@@ -498,6 +552,10 @@ public abstract class Application implements URIHandler,
 
     /**
      * Gets the set of windows contained by the application.
+     * 
+     * <p>
+     * Note that the returned set of windows can not be modified.
+     * </p>
      * 
      * @return the Unmodifiable collection of windows.
      */
@@ -530,8 +588,10 @@ public abstract class Application implements URIHandler,
     /**
      * Sets the application's theme.
      * <p>
-     * Note that this theme can be overridden by the windows. <code>null</code>
-     * implies the default terminal theme.
+     * Note that this theme can be overridden in the the application level
+     * windows with {@link com.vaadin.ui.Window#setTheme(String)}. Setting theme
+     * to be <code>null</code> selects the default theme. For the available
+     * theme names, see the contents of the VAADIN/themes directory.
      * </p>
      * 
      * @param theme
@@ -563,6 +623,14 @@ public abstract class Application implements URIHandler,
     /**
      * Gets the mainWindow of the application.
      * 
+     * <p>
+     * The main window is the window attached to the application URL (
+     * {@link #getURL()}) and thus which is show by default to the user.
+     * </p>
+     * <p>
+     * Note that each application must have at least one main window.
+     * </p>
+     * 
      * @return the main window.
      */
     public Window getMainWindow() {
@@ -588,8 +656,10 @@ public abstract class Application implements URIHandler,
     /**
      * Returns an enumeration of all the names in this application.
      * 
+     * <p>
      * See {@link #start(URL, Properties, ApplicationContext)} how properties
      * are defined.
+     * </p>
      * 
      * @return an enumeration of all the keys in this property list, including
      *         the keys in the default property list.
@@ -676,13 +746,21 @@ public abstract class Application implements URIHandler,
     }
 
     /**
+     * Application URI handling hub.
+     * 
+     * <p>
      * This method gets called by terminal. It has lots of duties like to pass
      * uri handler to proper uri handlers registered to windows etc.
+     * </p>
      * 
+     * <p>
      * In most situations developers should NOT OVERRIDE this method. Instead
      * developers should implement and register uri handlers to windows.
+     * </p>
      * 
-     * @see com.vaadin.terminal.URIHandler#handleURI(URL, String)
+     * <p>
+     * 
+     * @see com.vaadin.terminal.URIHandler#handleURI(URL, String) </p>
      */
     public DownloadStream handleURI(URL context, String relativeUri) {
 
@@ -729,6 +807,9 @@ public abstract class Application implements URIHandler,
     /**
      * Gets the default locale for this application.
      * 
+     * By default this is the preferred locale of the user using the
+     * application. In most cases it is read from the browser defaults.
+     * 
      * @return the locale of this application.
      */
     public Locale getLocale() {
@@ -740,6 +821,9 @@ public abstract class Application implements URIHandler,
 
     /**
      * Sets the default locale for this application.
+     * 
+     * By default this is the preferred locale of the user using the
+     * application. In most cases it is read from the browser defaults.
      * 
      * @param locale
      *            the Locale object.
@@ -841,6 +925,9 @@ public abstract class Application implements URIHandler,
     /**
      * Adds the user change listener.
      * 
+     * This allows one to get notification each time {@link #setUser(Object)} is
+     * called.
+     * 
      * @param listener
      *            the user change listener to add.
      */
@@ -869,6 +956,9 @@ public abstract class Application implements URIHandler,
 
     /**
      * Window detach event.
+     * 
+     * This event is sent each time a window is removed from the application
+     * with {@link com.vaadin.Application#removeWindow(Window)}.
      */
     public class WindowDetachEvent extends EventObject {
 
@@ -906,6 +996,9 @@ public abstract class Application implements URIHandler,
 
     /**
      * Window attach event.
+     * 
+     * This event is sent each time a window is attached tothe application with
+     * {@link com.vaadin.Application#addWindow(Window)}.
      */
     public class WindowAttachEvent extends EventObject {
 
@@ -972,6 +1065,9 @@ public abstract class Application implements URIHandler,
     /**
      * Adds the window attach listener.
      * 
+     * Use this to get notifications each time a window is attached to the
+     * application with {@link #addWindow(Window)}.
+     * 
      * @param listener
      *            the window attach listener to add.
      */
@@ -984,6 +1080,9 @@ public abstract class Application implements URIHandler,
 
     /**
      * Adds the window detach listener.
+     * 
+     * Use this to get notifications each time a window is remove from the
+     * application with {@link #removeWindow(Window)}.
      * 
      * @param listener
      *            the window detach listener to add.
@@ -1059,8 +1158,13 @@ public abstract class Application implements URIHandler,
      * notify the user of various critical situations that can occur, such as
      * session expiration, client/server out of sync, and internal server error.
      * 
-     * You can customize the messages by overriding this method and returning
-     * {@link CustomizedSystemMessages}
+     * You can customize the messages by "overriding" this method and returning
+     * {@link CustomizedSystemMessages}. To "override" this method, re-implement
+     * this method in your application (the class that extends
+     * {@link Application}). Even though overriding static methods is not
+     * possible in Java, Vaadin selects to call the static method from the
+     * subclass instead of the original {@link #getSystemMessages()} if such a
+     * method exists.
      * 
      * @return the SystemMessages for this application
      */
@@ -1125,7 +1229,16 @@ public abstract class Application implements URIHandler,
      * Gets the application context.
      * <p>
      * The application context is the environment where the application is
-     * running in.
+     * running in. The actual implementation class of may contains quite a lot
+     * more functionality than defined in the {@link ApplicationContext}
+     * interface.
+     * </p>
+     * <p>
+     * By default, when you are deploying your application to a servlet
+     * container, the implementation class is {@link WebApplicationContext} -
+     * you can safely cast to this class and use the methods from there. When
+     * you are deploying your application as a portlet, context implementation
+     * is {@link PortletApplicationContext}.
      * </p>
      * 
      * @return the application context.
@@ -1137,7 +1250,7 @@ public abstract class Application implements URIHandler,
     /**
      * Override this method to return correct version number of your
      * Application. Version information is delivered for example to Testing
-     * Tools test results.
+     * Tools test results. By default this returns a string "NONVERSIONED".
      * 
      * @return version string
      */
@@ -1159,7 +1272,9 @@ public abstract class Application implements URIHandler,
     /**
      * Sets the application error handler.
      * 
-     * The default error handler is the application itself.
+     * The default error handler is the application itself. By overriding this,
+     * you can redirect the error messages to your selected target (log for
+     * example).
      * 
      * @param errorHandler
      */
@@ -1171,15 +1286,42 @@ public abstract class Application implements URIHandler,
      * Contains the system messages used to notify the user about various
      * critical situations that can occur.
      * <p>
-     * Customize by overriding the static Application.getSystemMessages() and
-     * returning {@link CustomizedSystemMessages}
+     * Customize by overriding the static
+     * {@link Application#getSystemMessages()} and returning
+     * {@link CustomizedSystemMessages}.
+     * </p>
+     * <p>
+     * The defaults defined in this class are:
+     * <ul>
+     * <li><b>sessionExpiredURL</b> = null</li>
+     * <li><b>sessionExpiredNotificationEnabled</b> = true</li>
+     * <li><b>sessionExpiredCaption</b> = ""</li>
+     * <li><b>sessionExpiredMessage</b> =
+     * "Take note of any unsaved data, and <u>click here</u> to continue."</li>
+     * <li><b>communicationErrorURL</b> = null</li>
+     * <li><b>communicationErrorNotificationEnabled</b> = true</li>
+     * <li><b>communicationErrorCaption</b> = "Communication problem"</li>
+     * <li><b>communicationErrorMessage</b> =
+     * "Take note of any unsaved data, and <u>click here</u> to continue."</li>
+     * <li><b>internalErrorURL</b> = null</li>
+     * <li><b>internalErrorNotificationEnabled</b> = true</li>
+     * <li><b>internalErrorCaption</b> = "Internal error"</li>
+     * <li><b>internalErrorMessage</b> = "Please notify the administrator.<br/>
+     * Take note of any unsaved data, and <u>click here</u> to continue."</li>
+     * <li><b>outOfSyncURL</b> = null</li>
+     * <li><b>outOfSyncNotificationEnabled</b> = true</li>
+     * <li><b>outOfSyncCaption</b> = "Out of sync"</li>
+     * <li><b>outOfSyncMessage</b> = "Something has caused us to be out of sync
+     * with the server.<br/>
+     * Take note of any unsaved data, and <u>click here</u> to re-sync."</li>
+     * </ul>
      * </p>
      * 
      */
     public static class SystemMessages implements Serializable {
         protected String sessionExpiredURL = null;
         protected boolean sessionExpiredNotificationEnabled = true;
-        protected String sessionExpiredCaption = "Session Expired";
+        protected String sessionExpiredCaption = "";
         protected String sessionExpiredMessage = "Take note of any unsaved data, and <u>click here</u> to continue.";
 
         protected String communicationErrorURL = null;
@@ -1189,7 +1331,7 @@ public abstract class Application implements URIHandler,
 
         protected String internalErrorURL = null;
         protected boolean internalErrorNotificationEnabled = true;
-        protected String internalErrorCaption = "Internal Error";
+        protected String internalErrorCaption = "Internal error";
         protected String internalErrorMessage = "Please notify the administrator.<br/>Take note of any unsaved data, and <u>click here</u> to continue.";
 
         protected String outOfSyncURL = null;
@@ -1205,21 +1347,22 @@ public abstract class Application implements URIHandler,
         }
 
         /**
-         * @return the URL to load on null for restart
+         * @return null to indicate that the application will be restarted after
+         *         session expired message has been shown.
          */
         public String getSessionExpiredURL() {
             return sessionExpiredURL;
         }
 
         /**
-         * @return true = notification enabled, false = notification disabled
+         * @return true to show session expiration message.
          */
         public boolean isSessionExpiredNotificationEnabled() {
             return sessionExpiredNotificationEnabled;
         }
 
         /**
-         * @return the notification caption, or null for no caption
+         * @return "" to show no caption.
          */
         public String getSessionExpiredCaption() {
             return (sessionExpiredNotificationEnabled ? sessionExpiredCaption
@@ -1227,7 +1370,8 @@ public abstract class Application implements URIHandler,
         }
 
         /**
-         * @return the notification message, or null for no message
+         * @return 
+         *         "Take note of any unsaved data, and <u>click here</u> to continue."
          */
         public String getSessionExpiredMessage() {
             return (sessionExpiredNotificationEnabled ? sessionExpiredMessage
@@ -1235,21 +1379,22 @@ public abstract class Application implements URIHandler,
         }
 
         /**
-         * @return the URL to load on null for restart
+         * @return null to reload the application after communication error
+         *         message.
          */
         public String getCommunicationErrorURL() {
             return communicationErrorURL;
         }
 
         /**
-         * @return true = notification enabled, false = notification disabled
+         * @return true to show the communication error message.
          */
         public boolean isCommunicationErrorNotificationEnabled() {
             return communicationErrorNotificationEnabled;
         }
 
         /**
-         * @return the notification caption, or null for no caption
+         * @return "Communication problem"
          */
         public String getCommunicationErrorCaption() {
             return (communicationErrorNotificationEnabled ? communicationErrorCaption
@@ -1257,7 +1402,8 @@ public abstract class Application implements URIHandler,
         }
 
         /**
-         * @return the notification message, or null for no message
+         * @return 
+         *         "Take note of any unsaved data, and <u>click here</u> to continue."
          */
         public String getCommunicationErrorMessage() {
             return (communicationErrorNotificationEnabled ? communicationErrorMessage
@@ -1265,21 +1411,22 @@ public abstract class Application implements URIHandler,
         }
 
         /**
-         * @return the URL to load on null for restart
+         * @return null to reload the current URL after internal error message
+         *         has been shown.
          */
         public String getInternalErrorURL() {
             return internalErrorURL;
         }
 
         /**
-         * @return true = notification enabled, false = notification disabled
+         * @return true to enable showing of internal error message.
          */
         public boolean isInternalErrorNotificationEnabled() {
             return internalErrorNotificationEnabled;
         }
 
         /**
-         * @return the notification caption, or null for no caption
+         * @return "Internal error"
          */
         public String getInternalErrorCaption() {
             return (internalErrorNotificationEnabled ? internalErrorCaption
@@ -1287,7 +1434,9 @@ public abstract class Application implements URIHandler,
         }
 
         /**
-         * @return the notification message, or null for no message
+         * @return "Please notify the administrator.<br/>
+         *         Take note of any unsaved data, and <u>click here</u> to
+         *         continue."
          */
         public String getInternalErrorMessage() {
             return (internalErrorNotificationEnabled ? internalErrorMessage
@@ -1295,28 +1444,30 @@ public abstract class Application implements URIHandler,
         }
 
         /**
-         * @return the URL to load on null for restart
+         * @return null to reload the application after out of sync message.
          */
         public String getOutOfSyncURL() {
             return outOfSyncURL;
         }
 
         /**
-         * @return true = notification enabled, false = notification disabled
+         * @return true to enable showing out of sync message
          */
         public boolean isOutOfSyncNotificationEnabled() {
             return outOfSyncNotificationEnabled;
         }
 
         /**
-         * @return the notification caption, or null for no caption
+         * @return "Out of sync"
          */
         public String getOutOfSyncCaption() {
             return (outOfSyncNotificationEnabled ? outOfSyncCaption : null);
         }
 
         /**
-         * @return the notification message, or null for no message
+         * @return "Something has caused us to be out of sync with the server.<br/>
+         *         Take note of any unsaved data, and <u>click here</u> to
+         *         re-sync."
          */
         public String getOutOfSyncMessage() {
             return (outOfSyncNotificationEnabled ? outOfSyncMessage : null);
@@ -1550,6 +1701,13 @@ public abstract class Application implements URIHandler,
 
     }
 
+    /**
+     * Application error is an error message defined on the application level.
+     * 
+     * When an error occurs on the application level, this error message type
+     * should be used. This indicates that the problem is caused by the
+     * application - not by the user.
+     */
     public class ApplicationError implements Terminal.ErrorEvent {
         private final Throwable throwable;
 
