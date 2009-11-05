@@ -20,11 +20,11 @@ import java.util.regex.Pattern;
 /**
  * Helper class to update widgetsets GWT module configuration file. Can be used
  * command line or via IDE tools.
- * 
+ *
  * <p>
  * If module definition file contains text "WS Compiler: manually edited", tool
  * will skip editing file.
- * 
+ *
  */
 public class WidgetSetBuilder {
 
@@ -65,7 +65,22 @@ public class WidgetSetBuilder {
                     + "Google Web Toolkit 1.7.0//EN\" \"http://google"
                     + "-web-toolkit.googlecode.com/svn/tags/1.7.0/dis"
                     + "tro-source/core/src/gwt-module.dtd\">\n");
-            printStream.print("<module>\n\n</module>\n");
+            printStream.print("<module>\n");
+            printStream
+                    .print("    <!--\n"
+                            + "     Uncomment the following to compile the widgetset for one browser only.\n"
+                            + "     This can reduce the GWT compilation time significantly when debugging.\n"
+                            + "     The line should be commented out before deployment to production\n"
+                            + "     environments.\n\n"
+                            + "     Multiple browsers can be specified for GWT 1.7 as a comma separated\n"
+                            + "     list. The supported user agents at the moment of writing were:\n"
+                            + "     ie6,ie8,gecko,gecko1_8,safari,opera\n\n"
+                            + "     The value gecko is used for Firefox 3 and later, gecko1_8 is for\n"
+                            + "     Firefox 2 and safari is used for  webkit based browsers including\n"
+                            + "     Google Chrome.\n"
+                            + "    -->\n"
+                            + "    <!-- <set-property name=\"user.agent\" value=\"gecko\"/> -->\n");
+            printStream.print("\n</module>\n");
             printStream.close();
             changed = true;
         }
