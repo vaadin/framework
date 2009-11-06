@@ -259,6 +259,8 @@ public abstract class AbstractCommunicationManager implements
                     // ignored, upload requests contains only files
                 } else {
                     final String pid = name.split("_")[0];
+                    // TODO Remove debug printlns
+                    System.out.println("Looking up upload component with PID " + pid);
                     final Upload uploadComponent = (Upload) idPaintableMap
                             .get(pid);
                     if (uploadComponent == null) {
@@ -316,13 +318,14 @@ public abstract class AbstractCommunicationManager implements
         }
 
         // Send short response to acknowledge client that request was done
+        /* TODO Acknowledge upload in some other way 
         response.setContentType("text/html");
         final OutputStream out = response.getOutputStream();
         final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
                 new OutputStreamWriter(out, "UTF-8")));
         outWriter.print("<html><body>download handled</body></html>");
         outWriter.flush();
-        out.close();
+        out.close();*/
     }
 
     /**
@@ -342,8 +345,8 @@ public abstract class AbstractCommunicationManager implements
         boolean repaintAll;
         final OutputStream out;
 
-        repaintAll = (request.getParameter(GET_PARAM_REPAINT_ALL) != null)
-                || (request.getSession().isNew());
+        repaintAll = (request.getParameter(GET_PARAM_REPAINT_ALL) != null);
+                //|| (request.getSession().isNew()); FIXME What the h*ll is this??
         out = response.getOutputStream();
 
         boolean analyzeLayouts = false;
@@ -1291,7 +1294,9 @@ public abstract class AbstractCommunicationManager implements
      * @return the paintable Id.
      */
     public String getPaintableId(Paintable paintable) {
-
+        // TODO Remove debug println:s from this method
+        //System.out.println("getPaintableId: " + paintable + " (" + paintable.getClass().getName() + ")");
+        
         String id = paintableIdMap.get(paintable);
         if (id == null) {
             // use testing identifier as id if set
@@ -1301,6 +1306,7 @@ public abstract class AbstractCommunicationManager implements
             } else {
                 id = "PID_S" + id;
             }
+            //System.out.println("  id: " + id);
             Paintable old = idPaintableMap.put(id, paintable);
             if (old != null && old != paintable) {
                 /*

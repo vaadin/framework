@@ -30,7 +30,7 @@ import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
-import javax.portlet.RenderMode;
+import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
@@ -303,129 +303,132 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     protected void handleRequest(PortletRequest request,
             PortletResponse response) throws PortletException, IOException {
-        // System.out.println("AbstractApplicationPortlet.handleRequest() " +
-        // System.currentTimeMillis());
+//        System.out.println("AbstractApplicationPortlet.handleRequest() "
+//                + System.currentTimeMillis());
 
         RequestType requestType = getRequestType(request);
 
-        // System.out.println("  RequestType: " + requestType);
-        // System.out.println("  WindowID: " + request.getWindowID());
+//        System.out.println("  RequestType: " + requestType);
+//        System.out.println("  WindowID: " + request.getWindowID());
 
         if (requestType == RequestType.UNKNOWN) {
-            System.out.println("Unknown request type");
-            return;
+            System.err.println("Unknown request type");
         } else if (requestType == RequestType.STATIC_FILE) {
             serveStaticResources((ResourceRequest) request,
                     (ResourceResponse) response);
-            return;
-        }
+        } else {
+            Application application = null;
+            try {
+                // TODO What about PARAM_UNLOADBURST & redirectToApplication
 
-        Application application = null;
+                /* Find out which application this request is related to */
+                application = findApplicationInstance(request, requestType);
+                if (application == null) {
+                    return;
+                }
+                if (response instanceof MimeResponse) {
+                    application
+                            .setResourceURLGenerator(new PortletResourceURLGenerator(
+                                    (MimeResponse) response));
+                }
 
-        try {
-            /* Find out which application this request is related to */
-            application = findApplicationInstance(request, requestType);
-            if (application == null) {
-                return;
-            }
-            if (response instanceof MimeResponse) {
-                application
-                        .setResourceURLGenerator(new PortletResourceURLGenerator(
-                                (MimeResponse) response));
-            }
-
-            /*
-             * Get or create an application context and an application manager
-             * for the session
-             */
-            PortletApplicationContext2 applicationContext = PortletApplicationContext2
-                    .getApplicationContext(request.getPortletSession());
-            PortletCommunicationManager applicationManager = applicationContext
-                    .getApplicationManager(application);
-
-            /* Update browser information from request */
-            applicationContext.getBrowser().updateBrowserProperties(request);
-
-            /* Start the newly created application */
-            startApplication(request, application, applicationContext);
-
-            /*
-             * Transaction starts. Call transaction listeners. Transaction end
-             * is called in the finally block below.
-             */
-            applicationContext.startTransaction(application, request);
-
-            /* Handle the request */
-            if (requestType == RequestType.FILE_UPLOAD) {
-                applicationManager.handleFileUpload((ActionRequest) request,
-                        (ActionResponse) response);
-                return;
-            } else if (requestType == RequestType.UIDL) {
-                // Handles AJAX UIDL requests
-                applicationManager.handleUidlRequest((ResourceRequest) request,
-                        (ResourceResponse) response, this);
-                return;
-            }
-
-            /*
-             * Removes the application if it has stopped
-             */
-            if (!application.isRunning()) {
-                endApplication(request, response, application);
-                return;
-            }
-
-            /*
-             * Always use the main window when running inside a portlet.
-             */
-            Window window = application.getMainWindow();
-            if (window == null) {
-                throw new PortletException(ERROR_NO_WINDOW_FOUND);
-            }
-
-            /*
-             * Sets terminal type for the window, if not already set
-             */
-            if (window.getTerminal() == null) {
-                window.setTerminal(applicationContext.getBrowser());
-            }
-
-            /*
-             * Handle parameters
-             */
-            final Map<String, String[]> parameters = request.getParameterMap();
-            if (window != null && parameters != null) {
-                window.handleParameters(parameters);
-            }
-
-            if (requestType == RequestType.APPLICATION_RESOURCE) {
-                handleURI(applicationManager, window,
-                        (ResourceRequest) request, (ResourceResponse) response);
-            } else if (requestType == RequestType.RENDER) {
                 /*
-                 * Send initial AJAX page that kickstarts the Vaadin application
+                 * Get or create an application context and an application
+                 * manager for the session
                  */
-                writeAjaxPage((RenderRequest) request,
-                        (RenderResponse) response, window, application);
-            }
-        } catch (final SessionExpired e) {
-            // TODO Figure out a better way to deal with SessionExpired
-            // -exceptions
-            System.err.println("Session has expired");
-            e.printStackTrace(System.err);
-        } catch (final GeneralSecurityException e) {
-            // TODO Figure out a better way to deal with
-            // GeneralSecurityExceptions
-            System.err
-                    .println("General security exception, should never happen");
-            e.printStackTrace(System.err);
-        } catch (final Throwable e) {
-            handleServiceException(request, response, application, e);
-        } finally {
-            // Notifies transaction end
-            if (application != null) {
-                ((PortletApplicationContext2) application.getContext())
-                        .endTransaction(application, request);
+                PortletApplicationContext2 applicationContext = PortletApplicationContext2
+                        .getApplicationContext(request.getPortletSession());
+                PortletCommunicationManager applicationManager = applicationContext
+                        .getApplicationManager(application);
+
+                /* Update browser information from request */
+                applicationContext.getBrowser()
+                        .updateBrowserProperties(request);
+
+                /* Start the newly created application */
+                startApplication(request, application, applicationContext);
+
+                /*
+                 * Transaction starts. Call transaction listeners. Transaction
+                 * end is called in the finally block below.
+                 */
+                applicationContext.startTransaction(application, request);
+
+                /* Handle the request */
+                if (requestType == RequestType.FILE_UPLOAD) {
+                    applicationManager.handleFileUpload(
+                            (ActionRequest) request, (ActionResponse) response);
+                    return;
+                } else if (requestType == RequestType.UIDL) {
+                    // Handles AJAX UIDL requests
+                    applicationManager.handleUidlRequest(
+                            (ResourceRequest) request,
+                            (ResourceResponse) response, this);
+                    return;
+                } else {
+                    /*
+                     * Removes the application if it has stopped
+                     */
+                    if (!application.isRunning()) {
+                        endApplication(request, response, application);
+                        return;
+                    }
+
+                    /*
+                     * Always use the main window when running inside a portlet.
+                     */
+                    Window window = application.getMainWindow();
+                    if (window == null) {
+                        throw new PortletException(ERROR_NO_WINDOW_FOUND);
+                    }
+
+                    /*
+                     * Sets terminal type for the window, if not already set
+                     */
+                    if (window.getTerminal() == null) {
+                        window.setTerminal(applicationContext.getBrowser());
+                    }
+
+                    /*
+                     * Handle parameters
+                     */
+                    final Map<String, String[]> parameters = request
+                            .getParameterMap();
+                    if (window != null && parameters != null) {
+                        window.handleParameters(parameters);
+                    }
+
+                    if (requestType == RequestType.APPLICATION_RESOURCE) {
+                        handleURI(applicationManager, window,
+                                (ResourceRequest) request,
+                                (ResourceResponse) response);
+                    } else if (requestType == RequestType.RENDER) {
+                        writeAjaxPage((RenderRequest) request,
+                                (RenderResponse) response, window, application);
+                    } else {
+                        throw new IllegalStateException(
+                                "handleRequest() without anything to do - should never happen!");
+                    }
+                }
+            } catch (final SessionExpired e) {
+                // TODO Figure out a better way to deal with SessionExpired
+                // -exceptions
+                System.err.println("Session has expired");
+                e.printStackTrace(System.err);
+            } catch (final GeneralSecurityException e) {
+                // TODO Figure out a better way to deal with
+                // GeneralSecurityExceptions
+                System.err
+                        .println("General security exception, should never happen");
+                e.printStackTrace(System.err);
+            } catch (final Throwable e) {
+                handleServiceException(request, response, application, e);
+            } finally {
+                // Notifies transaction end
+                if (application != null) {
+                    ((PortletApplicationContext2) application.getContext())
+                            .endTransaction(application, request);
+                }
             }
         }
     }
@@ -549,21 +552,18 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     @Override
     public void processAction(ActionRequest request, ActionResponse response)
             throws PortletException, IOException {
-        // System.out.println("AbstractApplicationPortlet.processAction()");
         handleRequest(request, response);
     }
-
-    @RenderMode(name = "VIEW")
-    public void doRender(RenderRequest request, RenderResponse response)
+    
+    @Override
+    protected void doView(RenderRequest request, RenderResponse response)
             throws PortletException, IOException {
-        // System.out.println("AbstractApplicationPortlet.render()");
         handleRequest(request, response);
     }
 
     @Override
     public void serveResource(ResourceRequest request, ResourceResponse response)
             throws PortletException, IOException {
-        // System.out.println("AbstractApplicationPortlet.serveResource()");
         handleRequest(request, response);
     }
 
@@ -677,6 +677,11 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
         final PortletSession session = request
                 .getPortletSession(allowSessionCreation);
+
+//        System.out.println("getExistingApplication: allowSessionCreation="
+//                + allowSessionCreation + ", session=" + session);
+//        System.out.println("  - session.isNew() = " + session.isNew());
+
         if (session == null) {
             throw new SessionExpired();
         }
@@ -772,7 +777,14 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
         page.write("vaadin.vaadinConfigurations[\"" + request.getWindowID()
                 + "\"] = {");
-        page.write("appUri: '', ");
+
+        /*
+         * We need this in order to get uploads to work TODO This may cause
+         * weird side effects on other places where appUri is used!
+         */
+        PortletURL appUri = response.createActionURL();
+
+        page.write("appUri: '" + appUri.toString() + "', ");
         page.write("usePortletURLs: true, ");
 
         ResourceURL uidlUrlBase = response.createResourceURL();

@@ -742,8 +742,11 @@ public abstract class Application implements URIHandler,
      *            the resource to get relative location.
      * @return the relative uri of the resource.
      */
+    @Deprecated
     public String getRelativeLocation(ApplicationResource resource) {
 
+        // FIXME Move to ApplicationContext
+        
         // Gets the key
         final String key = (String) resourceKeyMap.get(resource);
 
