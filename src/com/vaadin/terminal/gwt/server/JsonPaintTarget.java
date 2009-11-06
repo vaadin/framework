@@ -1182,7 +1182,7 @@ public class JsonPaintTarget implements PaintTarget {
             }
         }
         usedPaintableTypes.add(class1);
-        return CommunicationManager.getTagForType(class1);
+        return AbstractCommunicationManager.getTagForType(class1);
 
     }
 
