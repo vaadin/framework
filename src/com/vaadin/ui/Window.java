@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -19,6 +20,7 @@ import com.vaadin.Application;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.ParameterHandler;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Sizeable;
@@ -118,6 +120,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     private boolean centerRequested = false;
 
     private Focusable pendingFocus;
+
+    private ArrayList<String> jsExecQueue = null;
+    private ArrayList<ArrayList<Paintable>> jsExecParamsQueue = null;
 
     /* ********************************************************************* */
 
@@ -519,6 +524,26 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
         // Contents of the window panel is painted
         super.paintContent(target);
+
+        // Add executable javascripts if needed
+        if (jsExecQueue != null) {
+            while (jsExecQueue.size() > 0) {
+                String script = jsExecQueue.get(0);
+                ArrayList<Paintable> args = jsExecParamsQueue.get(0);
+                target.startTag("execJS");
+                target.addAttribute("script", script);
+                for (Paintable p : args) {
+                    target.startTag("arg");
+                    target.paintReference(p, "ref");
+                    target.endTag("arg");
+                }
+                target.endTag("execJS");
+                jsExecQueue.remove(0);
+                jsExecParamsQueue.remove(0);
+            }
+            jsExecQueue = null;
+            jsExecParamsQueue = null;
+        }
 
         // Window position
         target.addVariable(this, "positionx", getPositionX());
@@ -1632,4 +1657,67 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         }
     }
 
+    /**
+     * Executes JavaScript in this window.
+     * 
+     * <p>
+     * This method allows one to inject javascript from the server to client.
+     * Client implementation is not required to implenment this functionality,
+     * but currently all web-based clients do implement this.
+     * </p>
+     * 
+     * <p>
+     * The script may contain markers indentified with "$x", where x is a one
+     * digit number. The number of markers must match to the number of optional
+     * Paintable reference parameters. The first marker is $1, second $2 and so
+     * on. If the markers are specified, the markers are replaced in the browser
+     * with references to outmost DOM elements connected to the given
+     * paintables.
+     * </p>
+     * 
+     * <p>
+     * Use example 1: <code>
+       mainWindow.executeJavaScript("alert(foo");
+     * </code>
+     * </p>
+     * 
+     * <p>
+     * Use example 2: <code>
+        Label label = new Label("Label");
+        TextField textfield = new TextField("TestField");
+        mainWindow.addComponent(label);
+        mainWindow.addComponent(textfield);
+        mainWindow.executeJavaScript("$1.style.backgroundColor='yellow';$2.style.borderColor='red';",label,textfield);
+     * </code>
+     * </p>
+     * 
+     * @param script
+     *            JavaScript snippet that will be executed and that might
+     *            optionally contain $1, $2, ... markers.
+     * @param paintables
+     *            References to number of visible paintables that correspond the
+     *            to markers listed in script
+     */
+    public void executeJavaScript(String script, Paintable... paintables) {
+
+        if (getParent() != null) {
+            throw new UnsupportedOperationException(
+                    "Only application level windows can execute javascript.");
+        }
+
+        ArrayList<Paintable> ps = new ArrayList<Paintable>();
+        for (Paintable p : paintables) {
+            ps.add(p);
+        }
+
+        if (jsExecQueue == null) {
+            jsExecQueue = new ArrayList<String>();
+            jsExecParamsQueue = new ArrayList<ArrayList<Paintable>>();
+        }
+
+        jsExecQueue.add(script);
+        jsExecParamsQueue.add(ps);
+
+        requestRepaint();
+    }
 }
