@@ -1667,6 +1667,14 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * </p>
      * 
      * <p>
+     * Use of this method should be avoided. Executing javascript often leads to
+     * cross-browser compatibility issues and regressions that are hard to
+     * resolve. Instead it is recommended to create new widgets with google web
+     * toolkit. For more info on creating own, reusable client-side widgets in
+     * Java, read corresponding chapter on Book of Vaadin.
+     * </p>
+     * 
+     * <p>
      * The script may contain markers indentified with "$x", where x is a one
      * digit number. The number of markers must match to the number of optional
      * Paintable reference parameters. The first marker is $1, second $2 and so
