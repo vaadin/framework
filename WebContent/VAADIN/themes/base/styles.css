@@ -665,6 +665,8 @@ div.v-app-loading {
 	cursor: pointer;
 	overflow: hidden;
 	padding: 1em;
+	max-width:85%;
+	
 }
 .v-Notification h1,
 .v-Notification p,
@@ -673,7 +675,6 @@ div.v-app-loading {
 .v-Notification-warning h1,
 .v-Notification-warning p {
 	display: inline;
-	white-space: nowrap;
 	margin: 0 0.5em 0 0;
 }
 .v-Notification-warning {
@@ -696,9 +697,6 @@ div.v-app-loading {
 .v-Notification-system h1 {
 	display: block;
 	margin: 0;
-}
-.v-Notification-system p {
-	white-space: nowrap;
 }
 
 .v-orderedlayout-margin-top,
