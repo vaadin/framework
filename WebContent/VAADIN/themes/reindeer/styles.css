@@ -622,25 +622,22 @@ div.v-app-loading {
 }
 
 .v-menubar table {
-	white-space: nowrap;
-	border-collapse: collapse;
-	padding: 0;
-	margin: 0;
-}
-.v-menubar table {
-	white-space: nowrap;
 	border-collapse: collapse;
 	padding: 0;
 	margin: 0;
 }
 .v-menubar .menuitem {
 	cursor: default;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+.v-menubar .menuitem * {
+	vertical-align: middle;
 }
 .v-menubar-submenu {
 	background: #fff;
 }
 .v-menubar-submenu table {
-	white-space: nowrap;
 	border-collapse: collapse;
 	padding: 0;
 	margin: 0;
@@ -657,6 +654,20 @@ div.v-app-loading {
 }
 .v-menubar-submenu .menuitem { 
 	cursor: default;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+.v-menubar-submenu .menuitem * { 
+	vertical-align: middle;
+}
+.v-menubar .v-menubar-submenu-indicator {
+	display: none;
+}
+.v-menubar-submenu .v-menubar-submenu-indicator {
+	margin-left: 1em;
+	float: right;
+	height: 100%;
+	font-size: 0.9em;
 }
 
 .v-Notification {
@@ -2979,12 +2990,13 @@ td.v-datefield-calendarpanel-nextyear {
 	text-shadow: rgba(0,0,0,.9) 0 1px 0;
 }
 .v-menubar table {
-	margin-left: 8px;
+	margin: 0 8px;
 	height: 23px;
 }
 .v-menubar .menuitem {
 	padding: 3px 8px;
 	height: 17px;
+	line-height: 16px;
 }
 .v-menubar-submenu {
 	background: #f8f8f9;
@@ -2999,6 +3011,7 @@ td.v-datefield-calendarpanel-nextyear {
 .v-menubar-submenu .menuitem {
 	padding: 1px 15px 1px 10px;
 	height: 16px;
+	line-height: 16px;
 }
 .v-menubar .menuitem-selected,
 .v-menubar-submenu .menuitem-selected {
@@ -3014,13 +3027,18 @@ td.v-datefield-calendarpanel-nextyear {
   -background-image: url(common/img/vertical-sprites-ie6.png);
   background-position: left -423px;
 }
-
-/* Submenu icon (remove after #2849 is fixed) */
-.v-menubar-submenu .menuitem img[align="right"] {
-	margin-right: -15px;
+.v-menubar-submenu .v-menubar-submenu-indicator {
+	background: transparent url(menubar/img/submenu-icon.png) no-repeat right 50%;
+	display: inline;
+	display: inline-block;
+	zoom: 1;
+	width: 16px;
+	margin: 0 -15px 0 5px;
+	text-indent: -999px;
+	vertical-align: middle;
 }
-.v-ie .v-menubar-submenu .menuitem img[align="right"] {
-	margin-top: -14px;
+.v-menubar-submenu .menuitem-selected .v-menubar-submenu-indicator {
+	background-image: url(menubar/img/submenu-icon-hover.png);
 }
 
 .v-Notification {

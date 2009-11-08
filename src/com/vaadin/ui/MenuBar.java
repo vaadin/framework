@@ -29,8 +29,20 @@ public class MenuBar extends AbstractComponent {
     // Number of items in this menu
     private static int numberOfItems = 0;
 
+    /**
+     * @deprecated
+     * @see #setCollapse(boolean)
+     */
+    @Deprecated
     private boolean collapseItems;
+
+    /**
+     * @deprecated
+     * @see #setSubmenuIcon(Resource)
+     */
+    @Deprecated
     private Resource submenuIcon;
+
     private MenuItem moreItem;
 
     /** Paint (serialise) the component for the client. */
@@ -49,9 +61,7 @@ public class MenuBar extends AbstractComponent {
             target.addAttribute("submenuIcon", submenuIcon);
         }
 
-        target.addAttribute("collapseItems", collapseItems);
-
-        if (collapseItems) {
+        if (getWidth() > -1) {
             target.startTag("moreItem");
             target.addAttribute("text", moreItem.getText());
             if (moreItem.getIcon() != null) {
@@ -270,40 +280,46 @@ public class MenuBar extends AbstractComponent {
      * Set the icon to be used if a sub-menu has children. Defaults to null;
      * 
      * @param icon
+     * @deprecated (since 6.2, will be removed in 7.0) Icon is set in theme, no
+     *             need to worry about the visual representation here.
      */
+    @Deprecated
     public void setSubmenuIcon(Resource icon) {
         submenuIcon = icon;
         requestRepaint();
     }
 
     /**
-     * Get the icon used for sub-menus. Returns null if no icon is set.
-     * 
-     * @return
+     * @deprecated
+     * @see #setSubmenuIcon(Resource)
      */
+    @Deprecated
     public Resource getSubmenuIcon() {
         return submenuIcon;
     }
 
     /**
      * Enable or disable collapsing top-level items. Top-level items will
-     * collapse to if there is not enough room for them. Items that don't fit
-     * will be placed under the "More" menu item.
+     * collapse together if there is not enough room for them. Items that don't
+     * fit will be placed under the "More" menu item.
      * 
      * Collapsing is enabled by default.
      * 
      * @param collapse
+     * @deprecated (since 6.2, will be removed in 7.0) Collapsing is always
+     *             enabled if the MenuBar has a specified width.
      */
+    @Deprecated
     public void setCollapse(boolean collapse) {
         collapseItems = collapse;
         requestRepaint();
     }
 
     /**
-     * Collapsing is enabled by default.
-     * 
-     * @return true if the top-level items will be collapsed
+     * @see #setCollapse(boolean)
+     * @deprecated
      */
+    @Deprecated
     public boolean getCollapse() {
         return collapseItems;
     }
@@ -311,8 +327,10 @@ public class MenuBar extends AbstractComponent {
     /**
      * Set the item that is used when collapsing the top level menu. All
      * "overflowing" items will be added below this. The item command will be
-     * ignored. If set to null, the default item with the "More" text is be
+     * ignored. If set to null, the default item with the "More..." text is be
      * used.
+     * 
+     * The item command (if specified) is ignored.
      * 
      * @param item
      */
@@ -320,7 +338,7 @@ public class MenuBar extends AbstractComponent {
         if (item != null) {
             moreItem = item;
         } else {
-            moreItem = new MenuItem("More", null, null);
+            moreItem = new MenuItem("More...", null, null);
         }
         requestRepaint();
     }

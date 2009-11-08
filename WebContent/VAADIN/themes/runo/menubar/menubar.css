@@ -30,3 +30,6 @@
 	color: #fff;
 	background: #5daee8;
 }
+.v-menubar-submenu .v-menubar-submenu-indicator {
+	margin-right: -3px;
+}

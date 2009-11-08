@@ -622,25 +622,22 @@ div.v-app-loading {
 }
 
 .v-menubar table {
-	white-space: nowrap;
-	border-collapse: collapse;
-	padding: 0;
-	margin: 0;
-}
-.v-menubar table {
-	white-space: nowrap;
 	border-collapse: collapse;
 	padding: 0;
 	margin: 0;
 }
 .v-menubar .menuitem {
 	cursor: default;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+.v-menubar .menuitem * {
+	vertical-align: middle;
 }
 .v-menubar-submenu {
 	background: #fff;
 }
 .v-menubar-submenu table {
-	white-space: nowrap;
 	border-collapse: collapse;
 	padding: 0;
 	margin: 0;
@@ -657,6 +654,20 @@ div.v-app-loading {
 }
 .v-menubar-submenu .menuitem { 
 	cursor: default;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+.v-menubar-submenu .menuitem * { 
+	vertical-align: middle;
+}
+.v-menubar .v-menubar-submenu-indicator {
+	display: none;
+}
+.v-menubar-submenu .v-menubar-submenu-indicator {
+	margin-left: 1em;
+	float: right;
+	height: 100%;
+	font-size: 0.9em;
 }
 
 .v-Notification {
@@ -2141,6 +2152,9 @@ div.v-tree-node-leaf {
 .v-menubar-submenu .menuitem-selected {
 	color: #fff;
 	background: #5daee8;
+}
+.v-menubar-submenu .v-menubar-submenu-indicator {
+	margin-right: -3px;
 }
 
 .v-Notification {
