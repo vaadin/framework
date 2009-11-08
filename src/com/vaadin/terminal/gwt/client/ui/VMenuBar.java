@@ -69,12 +69,12 @@ public class VMenuBar extends Widget implements Paintable,
         DOM.appendChild(table, tbody);
 
         if (!subMenu) {
-            setStyleName(CLASSNAME);
+            setStylePrimaryName(CLASSNAME);
             Element tr = DOM.createTR();
             DOM.appendChild(tbody, tr);
             containerElement = tr;
         } else {
-            setStyleName(CLASSNAME + "-submenu");
+            setStylePrimaryName(CLASSNAME + "-submenu");
             containerElement = tbody;
         }
         this.subMenu = subMenu;
@@ -107,6 +107,7 @@ public class VMenuBar extends Widget implements Paintable,
 
         UIDL options = uidl.getChildUIDL(0);
 
+        // FIXME remove in version 7
         if (options.hasAttribute("submenuIcon")) {
             submenuIcon = client.translateVaadinUri(uidl.getChildUIDL(0)
                     .getStringAttribute("submenuIcon"));
@@ -192,6 +193,12 @@ public class VMenuBar extends Widget implements Paintable,
                 iteratorStack.push(itr);
                 itr = item.getChildIterator();
                 currentMenu = new VMenuBar(true);
+                if (uidl.hasAttribute("style")) {
+                    for (String style : uidl.getStringAttribute("style").split(
+                            " ")) {
+                        currentMenu.addStyleDependentName(style);
+                    }
+                }
                 currentItem.setSubMenu(currentMenu);
             }
 
@@ -664,7 +671,8 @@ public class VMenuBar extends Widget implements Paintable,
         // Only collapse if there is more than one item in the root menu and the
         // menu has an explicit size
         if ((getItems().size() > 1 || collapsedRootItems.getItems().size() > 0)
-                && getElement().getStyle().getProperty("width") != null) {
+                && getElement().getStyle().getProperty("width") != null
+                && moreItem != null) {
 
             // Measure the width of the "more" item
             final boolean morePresent = getItems().contains(moreItem);
