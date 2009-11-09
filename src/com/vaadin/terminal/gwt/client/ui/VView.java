@@ -162,7 +162,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
          if (args != null) 
              for (var i=1;i<= args.length;i++) 
                 script = script.replace("$"+i, "$wnd.vaadin.evalargs["+(i-1)+"]");
-         eval(script);
+         eval("{ var document=$doc; var window=$wnd; " + script + "}");
          delete $wnd.vaadin.evalargs;
       } catch (e) {
       }

@@ -1684,18 +1684,30 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * </p>
      * 
      * <p>
-     * Use example 1: <code>
-       mainWindow.executeJavaScript("alert(foo");
+     * Use example 1: Show a alert box in the current window<code>
+       mainWindow.executeJavaScript("alert('foo');");
      * </code>
      * </p>
      * 
      * <p>
-     * Use example 2: <code>
+     * Use example 2: Print current window<code>
+       mainWindow.executeJavaScript("window.print()");
+     * </code>
+     * </p>
+     * 
+     * <p>
+     * Use example 3: Change labels background to yellow<code>
         Label label = new Label("Label");
-        TextField textfield = new TextField("TestField");
         mainWindow.addComponent(label);
-        mainWindow.addComponent(textfield);
-        mainWindow.executeJavaScript("$1.style.backgroundColor='yellow';$2.style.borderColor='red';",label,textfield);
+        mainWindow.executeJavaScript("$1.style.backgroundColor='yellow';",label);
+     * </code>
+     * </p>
+     * 
+     * <p>
+     * Use example 4: Print contents of a label<code>
+        Label label = new Label("This label contains some report");
+        mainWindow.addComponent(label);
+        mainWindow.executeJavaScript("var w = window.open(); w.document.write($1.outerHTML); w.print();",label);
      * </code>
      * </p>
      * 
