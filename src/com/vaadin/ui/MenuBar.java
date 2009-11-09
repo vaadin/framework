@@ -97,6 +97,10 @@ public class MenuBar extends AbstractComponent {
                 target.addAttribute("icon", icon);
             }
 
+            if (!item.isEnabled()) {
+                target.addAttribute("disabled", true);
+            }
+
             if (item.hasChildren()) {
                 iteratorStack.push(itr); // For later use
 
@@ -148,7 +152,7 @@ public class MenuBar extends AbstractComponent {
             }// while
 
             // If we got the clicked item, launch the command.
-            if (found) {
+            if (found && tmpItem.isEnabled()) {
                 tmpItem.getCommand().menuSelected(tmpItem);
             }
         }// if
@@ -327,8 +331,7 @@ public class MenuBar extends AbstractComponent {
     /**
      * Set the item that is used when collapsing the top level menu. All
      * "overflowing" items will be added below this. The item command will be
-     * ignored. If set to null, the default item with the "More..." text is be
-     * used.
+     * ignored. If set to null, the default item with a downwards arrow is used.
      * 
      * The item command (if specified) is ignored.
      * 
@@ -338,7 +341,7 @@ public class MenuBar extends AbstractComponent {
         if (item != null) {
             moreItem = item;
         } else {
-            moreItem = new MenuItem("More...", null, null);
+            moreItem = new MenuItem("", null, null);
         }
         requestRepaint();
     }
@@ -378,6 +381,7 @@ public class MenuBar extends AbstractComponent {
         private List<MenuItem> itsChildren;
         private Resource itsIcon;
         private MenuItem itsParent;
+        private boolean enabled = true;
 
         /**
          * Constructs a new menu item that can optionally have an icon and a
@@ -623,6 +627,15 @@ public class MenuBar extends AbstractComponent {
          */
         protected void setParent(MenuBar.MenuItem parent) {
             itsParent = parent;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+            requestRepaint();
+        }
+
+        public boolean isEnabled() {
+            return enabled;
         }
 
     }// class MenuItem

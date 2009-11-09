@@ -3,12 +3,12 @@
 	padding: 0;
 	margin: 0;
 }
-.v-menubar .menuitem {
+.v-menubar .v-menubar-menuitem {
 	cursor: default;
 	vertical-align: middle;
 	white-space: nowrap;
 }
-.v-menubar .menuitem * {
+.v-menubar .v-menubar-menuitem * {
 	vertical-align: middle;
 }
 .v-menubar-submenu {
@@ -24,25 +24,36 @@
 	padding: 0;
 	margin: 0;
 }
-.v-menubar .menuitem-selected,
-.v-menubar-submenu .menuitem-selected {
+.v-menubar-menuitem-selected{
 	background: #333;
 	color: #fff;
 }
-.v-menubar-submenu .menuitem { 
+.v-menubar-submenu .v-menubar-menuitem { 
 	cursor: default;
 	vertical-align: middle;
 	white-space: nowrap;
 }
-.v-menubar-submenu .menuitem * { 
+.v-menubar-submenu .v-menubar-menuitem * { 
 	vertical-align: middle;
 }
-.v-menubar .v-menubar-submenu-indicator {
+.v-menubar-submenu-indicator {
 	display: none;
+	/* Arial has the most coverage for geometric entity characters */
+	font-family: arial, helvetica, sans-serif;
 }
 .v-menubar-submenu .v-menubar-submenu-indicator {
+	display: inline;
+	display: inline-block;
+	zoom: 1;
 	margin-left: 1em;
 	float: right;
 	height: 100%;
 	font-size: 0.9em;
+}
+.v-menubar-menuitem-disabled {
+	color: #999;
+}
+.v-menubar-more-menuitem {
+	/* Arial has the most coverage for geometric entity characters */
+	font-family: arial, helvetica, sans-serif;
 }

@@ -304,6 +304,7 @@
 	line-height: 16px;
 	color: #787b7e;
 	float: left;
+	clear: left;
 	width: 155px;
 	height: 131px;
 	padding: 15px 175px 0 15px;
