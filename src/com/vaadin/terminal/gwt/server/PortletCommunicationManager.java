@@ -186,6 +186,16 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         doHandleFileUpload(new PortletRequestWrapper(request),
                 new PortletResponseWrapper(response));
     }
+    
+    @Override
+    protected void sendUploadResponse(Request request, Response response)
+            throws IOException {
+        if (response.getWrappedResponse() instanceof ActionResponse) {
+            // FIXME Figure out a better redirect than google... (create a dummy resource URL)
+            ((ActionResponse) response.getWrappedResponse()).sendRedirect("http://www.google.com");
+        } else
+            super.sendUploadResponse(request, response);
+    }
 
     public void handleUidlRequest(ResourceRequest request,
             ResourceResponse response,

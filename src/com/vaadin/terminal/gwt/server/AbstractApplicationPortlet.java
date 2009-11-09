@@ -303,13 +303,13 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     protected void handleRequest(PortletRequest request,
             PortletResponse response) throws PortletException, IOException {
-//        System.out.println("AbstractApplicationPortlet.handleRequest() "
-//                + System.currentTimeMillis());
+        System.out.println("AbstractApplicationPortlet.handleRequest() "
+                + System.currentTimeMillis());
 
         RequestType requestType = getRequestType(request);
 
-//        System.out.println("  RequestType: " + requestType);
-//        System.out.println("  WindowID: " + request.getWindowID());
+        System.out.println("  RequestType: " + requestType);
+        System.out.println("  WindowID: " + request.getWindowID());
 
         if (requestType == RequestType.UNKNOWN) {
             System.err.println("Unknown request type");
@@ -410,7 +410,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                                 "handleRequest() without anything to do - should never happen!");
                     }
                 }
-            } catch (final SessionExpired e) {
+            } catch (final SessionExpiredException e) {
                 // TODO Figure out a better way to deal with SessionExpired
                 // -exceptions
                 System.err.println("Session has expired");
@@ -605,7 +605,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     }
 
     private Application findApplicationInstance(PortletRequest request,
-            RequestType requestType) throws PortletException, SessionExpired,
+            RequestType requestType) throws PortletException, SessionExpiredException,
             MalformedURLException {
 
         boolean requestCanCreateApplication = requestCanCreateApplication(
@@ -642,7 +642,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         if (requestCanCreateApplication) {
             return createApplication(request);
         } else {
-            throw new SessionExpired();
+            throw new SessionExpiredException();
         }
     }
 
@@ -673,7 +673,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     private Application getExistingApplication(PortletRequest request,
             boolean allowSessionCreation) throws MalformedURLException,
-            SessionExpired {
+            SessionExpiredException {
 
         final PortletSession session = request
                 .getPortletSession(allowSessionCreation);
@@ -683,7 +683,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 //        System.out.println("  - session.isNew() = " + session.isNew());
 
         if (session == null) {
-            throw new SessionExpired();
+            throw new SessionExpiredException();
         }
 
         PortletApplicationContext2 context = PortletApplicationContext2

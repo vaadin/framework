@@ -317,15 +317,17 @@ public abstract class AbstractCommunicationManager implements
             throw e;
         }
 
-        // Send short response to acknowledge client that request was done
-        /* TODO Acknowledge upload in some other way 
+        sendUploadResponse(request, response);
+    }
+    
+    protected void sendUploadResponse(Request request, Response response) throws IOException {
         response.setContentType("text/html");
         final OutputStream out = response.getOutputStream();
         final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
                 new OutputStreamWriter(out, "UTF-8")));
         outWriter.print("<html><body>download handled</body></html>");
         outWriter.flush();
-        out.close();*/
+        out.close();
     }
 
     /**

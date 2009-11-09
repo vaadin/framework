@@ -197,6 +197,7 @@ public abstract class Application implements URIHandler,
     }
 
     // TODO Document me!
+    @Deprecated
     public static interface ResourceURLGenerator {
 
         public String generateResourceURL(ApplicationResource resource,
@@ -211,6 +212,7 @@ public abstract class Application implements URIHandler,
     /*
      * Default resource URL generator for servlets
      */
+    @Deprecated
     private static ResourceURLGenerator defaultResourceURLGenerator = new ResourceURLGenerator() {
         public String generateResourceURL(ApplicationResource resource,
                 String mapKey) {
@@ -252,12 +254,15 @@ public abstract class Application implements URIHandler,
 
     };
 
+    @Deprecated
     private ResourceURLGenerator resourceURLGenerator = defaultResourceURLGenerator;
 
+    @Deprecated
     public ResourceURLGenerator getResourceURLGenerator() {
         return resourceURLGenerator;
     }
 
+    @Deprecated
     public void setResourceURLGenerator(
             ResourceURLGenerator resourceURLGenerator) {
         if (resourceURLGenerator == null)
@@ -767,8 +772,11 @@ public abstract class Application implements URIHandler,
      * 
      * @see com.vaadin.terminal.URIHandler#handleURI(URL, String)
      */
+    @Deprecated
     public DownloadStream handleURI(URL context, String relativeUri) {
 
+        // FIXME Move to ApplicationContext
+        
         if (resourceURLGenerator.isResourceURL(context, relativeUri)) {
 
             // Handles the resource request

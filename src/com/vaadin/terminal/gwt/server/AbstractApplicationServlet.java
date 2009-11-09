@@ -424,7 +424,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements 
             // Send initial AJAX page that kickstarts a Vaadin application
             writeAjaxPage(request, response, window, application);
 
-        } catch (final SessionExpired e) {
+        } catch (final SessionExpiredException e) {
             // Session has expired, notify user
             handleServiceSessionExpired(request, response);
         } catch (final GeneralSecurityException e) {
@@ -540,11 +540,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements 
      * @throws IllegalAccessException
      * @throws InstantiationException
      * @throws ServletException
-     * @throws SessionExpired
+     * @throws SessionExpiredException
      */
     private Application findApplicationInstance(HttpServletRequest request,
             RequestType requestType) throws MalformedURLException,
-            ServletException, SessionExpired {
+            ServletException, SessionExpiredException {
 
         boolean requestCanCreateApplication = requestCanCreateApplication(
                 request, requestType);
@@ -588,7 +588,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements 
              * The application was not found and a new one should not be
              * created. Assume the session has expired.
              */
-            throw new SessionExpired();
+            throw new SessionExpiredException();
         }
 
     }
@@ -1722,16 +1722,16 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements 
      * @throws SAXException
      * @throws IllegalAccessException
      * @throws InstantiationException
-     * @throws SessionExpired
+     * @throws SessionExpiredException
      */
     private Application getExistingApplication(HttpServletRequest request,
             boolean allowSessionCreation) throws MalformedURLException,
-            SessionExpired {
+            SessionExpiredException {
 
         // Ensures that the session is still valid
         final HttpSession session = request.getSession(allowSessionCreation);
         if (session == null) {
-            throw new SessionExpired();
+            throw new SessionExpiredException();
         }
 
         WebApplicationContext context = WebApplicationContext
