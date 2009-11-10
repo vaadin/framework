@@ -22,6 +22,9 @@ import java.util.Properties;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.EventPortlet;
+import javax.portlet.EventRequest;
+import javax.portlet.EventResponse;
 import javax.portlet.GenericPortlet;
 import javax.portlet.MimeResponse;
 import javax.portlet.PortletConfig;
@@ -255,7 +258,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     }
 
     enum RequestType {
-        FILE_UPLOAD, UIDL, RENDER, STATIC_FILE, APPLICATION_RESOURCE, DUMMY, UNKNOWN;
+        FILE_UPLOAD, UIDL, RENDER, STATIC_FILE, APPLICATION_RESOURCE, DUMMY, EVENT, UNKNOWN;
     }
 
     protected RequestType getRequestType(PortletRequest request) {
@@ -275,6 +278,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             if (isFileUploadRequest((ActionRequest) request)) {
                 return RequestType.FILE_UPLOAD;
             }
+        } else if (request instanceof EventRequest) {
+            return RequestType.EVENT;
         }
         return RequestType.UNKNOWN;
     }
@@ -310,18 +315,18 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     protected void handleRequest(PortletRequest request,
             PortletResponse response) throws PortletException, IOException {
-        System.out.println("AbstractApplicationPortlet.handleRequest() "
-                + System.currentTimeMillis());
+//        System.out.println("AbstractApplicationPortlet.handleRequest() "
+//                + System.currentTimeMillis());
 
         RequestType requestType = getRequestType(request);
 
-        System.out.println("  RequestType: " + requestType);
-        System.out.println("  WindowID: " + request.getWindowID());
+//        System.out.println("  RequestType: " + requestType);
+//        System.out.println("  WindowID: " + request.getWindowID());
 
         if (requestType == RequestType.UNKNOWN) {
             System.err.println("Unknown request type");
         } else if (requestType == RequestType.DUMMY) {
-            System.out.println("Printing Dummy page");
+//            System.out.println("Printing Dummy page");
             /*
              * This dummy page is used by action responses to redirect to, in
              * order to prevent the boot strap code from being rendered into
@@ -400,6 +405,17 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                             (ResourceRequest) request,
                             (ResourceResponse) response, this);
                     return;
+                } else if (requestType == RequestType.EVENT) {
+                    /*
+                     * Redirect portlet event to application if it implements
+                     * the EventPortlet interface (contains only one method).
+                     */
+                    // TODO Figure out a better way of handling events
+                    if (application instanceof EventPortlet) {
+                        ((EventPortlet) application).processEvent(
+                                (EventRequest) request,
+                                (EventResponse) response);
+                    }
                 } else {
                     /*
                      * Removes the application if it has stopped
@@ -466,6 +482,12 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 }
             }
         }
+    }
+
+    @Override
+    public void processEvent(EventRequest request, EventResponse response)
+            throws PortletException, IOException {
+        handleRequest(request, response);
     }
 
     private boolean handleURI(PortletCommunicationManager applicationManager,

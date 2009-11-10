@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
-	version="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd">
+<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd"
+	version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd">
 	<portlet>
 		<portlet-name>PortletDemoPortlet</portlet-name>
 		<display-name>Vaadin PortletDemo</display-name>
@@ -119,6 +119,7 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
+	
 	<portlet>
 		<portlet-name>HelloWorldPortlet</portlet-name>
 		<display-name>Hello World</display-name>
@@ -135,7 +136,34 @@
 			<title>HelloWorld</title>
 			<short-title>HelloWorld</short-title>
 		</portlet-info>		
+		<supported-processing-event>
+         	<qname xmlns:vaadin="http://www.vaadin.com/hello">vaadin:Hello</qname>
+		</supported-processing-event>
+		<supported-publishing-event>
+         	<qname xmlns:vaadin="http://www.vaadin.com/hello">vaadin:Reply</qname>
+		</supported-publishing-event>
 	</portlet>
+	
+	<portlet>
+		<portlet-name>HelloWorldEventPortlet</portlet-name>
+		<display-name>Hello World Event (non-Vaadin)</display-name>
+		<portlet-class>com.vaadin.demo.HelloWorldEventPortlet</portlet-class>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>HelloWorldEvent (non-Vaadin)</title>
+			<short-title>HelloWorldEvent (non-Vaadin)</short-title>
+		</portlet-info>
+		<supported-processing-event>
+         	<qname xmlns:vaadin="http://www.vaadin.com/hello">vaadin:Reply</qname>
+		</supported-processing-event>
+		<supported-publishing-event>
+         	<qname xmlns:vaadin="http://www.vaadin.com/hello">vaadin:Hello</qname>
+		</supported-publishing-event>
+	</portlet>
+
 	<portlet>
 		<portlet-name>AddressBookPortlet</portlet-name>
 		<display-name>Address Book</display-name>
@@ -270,6 +298,16 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
+	
+	<event-definition>
+		<qname xmlns:vaadin="http://www.vaadin.com/hello">vaadin:Hello</qname>
+		<value-type>java.lang.String</value-type>
+	</event-definition>	
+	
+	<event-definition>
+		<qname xmlns:vaadin="http://www.vaadin.com/hello">vaadin:Reply</qname>
+		<value-type>java.lang.String</value-type>
+	</event-definition>
 
 	<!--
 		This can be used to work around an issue in liferay 5.0-5.1.1
