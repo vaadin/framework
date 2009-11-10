@@ -673,6 +673,12 @@ div.v-app-loading {
 	height: 100%;
 	font-size: 0.9em;
 }
+.v-ie6 .v-menubar-submenu .v-menubar-submenu-indicator {
+	position: absolute;
+	right: 0;
+	margin-right: 0;
+	margin-top: -2px;
+}
 .v-menubar-menuitem-disabled {
 	color: #999;
 }
@@ -1069,8 +1075,8 @@ div.v-progressindicator-indeterminate-disabled {
 .v-ie6 .v-shadow {
 	background: #000;
 	filter: progid:DXImageTransform.Microsoft.Blur(pixelRadius=2) alpha(opacity=20);
-	margin-top: -3px;
-	margin-left: -4px;
+	margin-top: -2px;
+	margin-left: -2px;
 }  
 
 .v-slider {
@@ -3033,7 +3039,7 @@ td.v-datefield-calendarpanel-nextyear {
 	padding: 4px 0;
 }
 .v-menubar-submenu .v-menubar-menuitem {
-	padding: 1px 15px 1px 10px;
+	padding: 1px 20px 1px 10px;
 	height: 16px;
 	line-height: 16px;
 }
@@ -3052,9 +3058,9 @@ td.v-datefield-calendarpanel-nextyear {
   background-position: left -423px;
 }
 .v-menubar-submenu .v-menubar-submenu-indicator {
-	background: transparent url(menubar/img/submenu-icon.png) no-repeat right 50%;
+	background: transparent url(menubar/img/submenu-icon.png) no-repeat right bottom;
 	width: 16px;
-	margin: 0 -15px 0 5px;
+	margin: 0 -20px 0 5px;
 	text-indent: -999px;
 	vertical-align: middle;
 }

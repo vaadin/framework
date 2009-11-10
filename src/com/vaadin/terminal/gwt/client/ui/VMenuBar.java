@@ -12,6 +12,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -51,6 +52,8 @@ public class VMenuBar extends Widget implements Paintable,
     protected VMenuBar parentMenu;
     protected CustomMenuItem selected;
 
+    private Timer layoutTimer;
+
     public VMenuBar() {
         // Create an empty horizontal menubar
         this(false);
@@ -80,7 +83,8 @@ public class VMenuBar extends Widget implements Paintable,
         }
         this.subMenu = subMenu;
 
-        sinkEvents(Event.ONCLICK | Event.ONMOUSEOVER | Event.ONMOUSEOUT);
+        sinkEvents(Event.ONCLICK | Event.ONMOUSEOVER | Event.ONMOUSEOUT
+                | Event.ONLOAD);
     }
 
     /**
@@ -129,7 +133,7 @@ public class VMenuBar extends Widget implements Paintable,
 
             String moreItemText = moreItemUIDL.getStringAttribute("text");
             if ("".equals(moreItemText)) {
-                moreItemText = "&#x25B6;";
+                moreItemText = "&#x25BA;";
             }
             itemHTML.append(moreItemText);
 
@@ -168,7 +172,7 @@ public class VMenuBar extends Widget implements Paintable,
                 itemHTML
                         .append("<span class=\"" + CLASSNAME
                                 + "-submenu-indicator\"" + bgStyle
-                                + ">&#x25B6;</span>");
+                                + ">&#x25BA;</span>");
             }
 
             if (item.hasAttribute("icon")) {
@@ -355,6 +359,13 @@ public class VMenuBar extends Widget implements Paintable,
      */
     @Override
     public void onBrowserEvent(Event e) {
+        super.onBrowserEvent(e);
+
+        // Handle onload events (icon loaded, size changes)
+        if (DOM.eventGetType(e) == Event.ONLOAD) {
+            requestLayout();
+            return;
+        }
 
         Element targetElement = DOM.eventGetTarget(e);
         CustomMenuItem targetItem = null;
@@ -385,8 +396,19 @@ public class VMenuBar extends Widget implements Paintable,
                 break;
             }
         }
+    }
 
-        super.onBrowserEvent(e);
+    private void requestLayout() {
+        if (layoutTimer == null) {
+            layoutTimer = new Timer() {
+                @Override
+                public void run() {
+                    layoutTimer = null;
+                    iLayout();
+                }
+            };
+        }
+        layoutTimer.schedule(100);
     }
 
     /**

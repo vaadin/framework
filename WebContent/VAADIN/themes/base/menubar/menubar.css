@@ -50,6 +50,12 @@
 	height: 100%;
 	font-size: 0.9em;
 }
+.v-ie6 .v-menubar-submenu .v-menubar-submenu-indicator {
+	position: absolute;
+	right: 0;
+	margin-right: 0;
+	margin-top: -2px;
+}
 .v-menubar-menuitem-disabled {
 	color: #999;
 }

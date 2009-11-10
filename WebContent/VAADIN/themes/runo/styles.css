@@ -673,6 +673,12 @@ div.v-app-loading {
 	height: 100%;
 	font-size: 0.9em;
 }
+.v-ie6 .v-menubar-submenu .v-menubar-submenu-indicator {
+	position: absolute;
+	right: 0;
+	margin-right: 0;
+	margin-top: -2px;
+}
 .v-menubar-menuitem-disabled {
 	color: #999;
 }
@@ -1069,8 +1075,8 @@ div.v-progressindicator-indeterminate-disabled {
 .v-ie6 .v-shadow {
 	background: #000;
 	filter: progid:DXImageTransform.Microsoft.Blur(pixelRadius=2) alpha(opacity=20);
-	margin-top: -3px;
-	margin-left: -4px;
+	margin-top: -2px;
+	margin-left: -2px;
 }  
 
 .v-slider {
