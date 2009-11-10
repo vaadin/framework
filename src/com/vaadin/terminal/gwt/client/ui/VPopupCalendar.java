@@ -78,19 +78,36 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
                 public void setPosition(int offsetWidth, int offsetHeight) {
                     final int w = offsetWidth;
                     final int h = offsetHeight;
+                    final int browserWindowWidth = Window.getClientWidth()
+                            + Window.getScrollLeft();
+                    final int browserWindowHeight = Window.getClientHeight()
+                            + Window.getScrollTop();
                     int t = calendarToggle.getAbsoluteTop();
                     int l = calendarToggle.getAbsoluteLeft();
-                    if (l + w > Window.getClientWidth()
-                            + Window.getScrollLeft()) {
-                        l = Window.getClientWidth() + Window.getScrollLeft()
-                                - w;
+
+                    // Add a little extra space to the right to avoid
+                    // problems with IE6/IE7 scrollbars and to make it look
+                    // nicer.
+                    int extraSpace = 30;
+
+                    boolean overflowRight = false;
+                    if (l + +w + extraSpace > browserWindowWidth) {
+                        overflowRight = true;
+                        // Part of the popup is outside the browser window 
+                        // (to the right)
+                        l = browserWindowWidth - w - extraSpace;
                     }
-                    if (t + h + calendarToggle.getOffsetHeight() + 30 > Window
-                            .getClientHeight()
-                            + Window.getScrollTop()) {
-                        t = Window.getClientHeight() + Window.getScrollTop()
-                                - h - calendarToggle.getOffsetHeight() - 30;
-                        l += calendarToggle.getOffsetWidth();
+
+                    if (t + h + calendarToggle.getOffsetHeight() + 30 > browserWindowHeight) {
+                        // Part of the popup is outside the browser window
+                        // (below)
+                        t = browserWindowHeight - h
+                                - calendarToggle.getOffsetHeight() - 30;
+                        if (!overflowRight) {
+                            // Show to the right of the popup button unless we
+                            // are in the lower right corner of the screen
+                            l += calendarToggle.getOffsetWidth();
+                        }
                     }
 
                     // fix size
