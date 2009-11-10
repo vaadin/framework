@@ -31,6 +31,8 @@ import com.vaadin.ui.Window;
 @SuppressWarnings("serial")
 public class PortletCommunicationManager extends AbstractCommunicationManager {
 
+    protected String dummyURL;
+
     private static class PortletRequestWrapper implements Request {
 
         private final PortletRequest request;
@@ -186,13 +188,20 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         doHandleFileUpload(new PortletRequestWrapper(request),
                 new PortletResponseWrapper(response));
     }
-    
+
     @Override
     protected void sendUploadResponse(Request request, Response response)
             throws IOException {
         if (response.getWrappedResponse() instanceof ActionResponse) {
-            // FIXME Figure out a better redirect than google... (create a dummy resource URL)
-            ((ActionResponse) response.getWrappedResponse()).sendRedirect("http://www.google.com");
+            /*
+             * If we do not redirect to some other page, the entire portal page
+             * will be re-printed into the target of the upload request (an
+             * IFRAME), which in turn will cause very strange side effects.
+             */
+            System.out.println("Redirecting to dummyURL: " + dummyURL);
+            ((ActionResponse) response.getWrappedResponse())
+                    .sendRedirect(dummyURL == null ? "http://www.google.com"
+                            : dummyURL);
         } else
             super.sendUploadResponse(request, response);
     }

@@ -255,7 +255,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     }
 
     enum RequestType {
-        FILE_UPLOAD, UIDL, RENDER, STATIC_FILE, APPLICATION_RESOURCE, UNKNOWN;
+        FILE_UPLOAD, UIDL, RENDER, STATIC_FILE, APPLICATION_RESOURCE, DUMMY, UNKNOWN;
     }
 
     protected RequestType getRequestType(PortletRequest request) {
@@ -266,6 +266,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 return RequestType.UIDL;
             } else if (isApplicationResourceRequest((ResourceRequest) request)) {
                 return RequestType.APPLICATION_RESOURCE;
+            } else if (isDummyRequest((ResourceRequest) request)) {
+                return RequestType.DUMMY;
             } else {
                 return RequestType.STATIC_FILE;
             }
@@ -285,6 +287,11 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     private boolean isUIDLRequest(ResourceRequest request) {
         return request.getResourceID() != null
                 && request.getResourceID().equals("UIDL");
+    }
+
+    private boolean isDummyRequest(ResourceRequest request) {
+        return request.getResourceID() != null
+                && request.getResourceID().equals("DUMMY");
     }
 
     private boolean isFileUploadRequest(ActionRequest request) {
@@ -313,13 +320,28 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
         if (requestType == RequestType.UNKNOWN) {
             System.err.println("Unknown request type");
+        } else if (requestType == RequestType.DUMMY) {
+            System.out.println("Printing Dummy page");
+            /*
+             * This dummy page is used by action responses to redirect to, in
+             * order to prevent the boot strap code from being rendered into
+             * strange places such as iframes.
+             */
+            ((ResourceResponse) response).setContentType("text/html");
+            final OutputStream out = ((ResourceResponse) response)
+                    .getPortletOutputStream();
+            final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
+                    new OutputStreamWriter(out, "UTF-8")));
+            outWriter.print("<html><body>dummy page</body></html>");
+            outWriter.flush();
+            out.close();
         } else if (requestType == RequestType.STATIC_FILE) {
             serveStaticResources((ResourceRequest) request,
                     (ResourceResponse) response);
         } else {
             Application application = null;
             try {
-                // TODO What about PARAM_UNLOADBURST & redirectToApplication
+                // TODO What about PARAM_UNLOADBURST & redirectToApplication??
 
                 /* Find out which application this request is related to */
                 application = findApplicationInstance(request, requestType);
@@ -340,6 +362,19 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                         .getApplicationContext(request.getPortletSession());
                 PortletCommunicationManager applicationManager = applicationContext
                         .getApplicationManager(application);
+
+                if (response instanceof RenderResponse
+                        && applicationManager.dummyURL == null) {
+                    /*
+                     * The application manager needs an URL to the dummy page.
+                     * See the PortletCommunicationManager.sendUploadResponse
+                     * method for more information.
+                     */
+                    ResourceURL dummyURL = ((RenderResponse) response)
+                            .createResourceURL();
+                    dummyURL.setResourceID("DUMMY");
+                    applicationManager.dummyURL = dummyURL.toString();
+                }
 
                 /* Update browser information from request */
                 applicationContext.getBrowser()
@@ -411,8 +446,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                     }
                 }
             } catch (final SessionExpiredException e) {
-                // TODO Figure out a better way to deal with SessionExpired
-                // -exceptions
+                // TODO Figure out a better way to deal with
+                // SessionExpiredExceptions
                 System.err.println("Session has expired");
                 e.printStackTrace(System.err);
             } catch (final GeneralSecurityException e) {
@@ -554,7 +589,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             throws PortletException, IOException {
         handleRequest(request, response);
     }
-    
+
     @Override
     protected void doView(RenderRequest request, RenderResponse response)
             throws PortletException, IOException {
@@ -605,8 +640,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     }
 
     private Application findApplicationInstance(PortletRequest request,
-            RequestType requestType) throws PortletException, SessionExpiredException,
-            MalformedURLException {
+            RequestType requestType) throws PortletException,
+            SessionExpiredException, MalformedURLException {
 
         boolean requestCanCreateApplication = requestCanCreateApplication(
                 request, requestType);
@@ -678,10 +713,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         final PortletSession session = request
                 .getPortletSession(allowSessionCreation);
 
-//        System.out.println("getExistingApplication: allowSessionCreation="
-//                + allowSessionCreation + ", session=" + session);
-//        System.out.println("  - session.isNew() = " + session.isNew());
-
         if (session == null) {
             throw new SessionExpiredException();
         }
@@ -721,8 +752,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     protected void writeAjaxPage(RenderRequest request,
             RenderResponse response, Window window, Application application)
             throws IOException, MalformedURLException, PortletException {
-
-        // System.out.println("AbstractApplicationPortlet.writeAjaxPage()");
 
         response.setContentType("text/html");
         final BufferedWriter page = new BufferedWriter(new OutputStreamWriter(
@@ -779,8 +808,10 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 + "\"] = {");
 
         /*
-         * We need this in order to get uploads to work TODO This may cause
-         * weird side effects on other places where appUri is used!
+         * We need this in order to get uploads to work.
+         * 
+         * TODO This may cause weird side effects on other places where appUri
+         * is used!
          */
         PortletURL appUri = response.createActionURL();
 
