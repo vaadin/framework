@@ -122,8 +122,9 @@ public class VUpload extends FormPanel implements Paintable,
 
         if (uidl.hasAttribute("disabled") || uidl.hasAttribute("readonly")) {
             disableUpload();
-        } else if (uidl.getBooleanAttribute("state")) {
-            enableUploaod();
+        } else if (!uidl.getBooleanAttribute("state")) {
+            // Enable the button only if an upload is not in progress
+            enableUpload();
         }
     }
 
@@ -150,13 +151,17 @@ public class VUpload extends FormPanel implements Paintable,
 
     protected void disableUpload() {
         submitButton.setEnabled(false);
-        // fu.getElement().setPropertyBoolean("disabled", true);
+        if (!submitted) {
+            // Cannot disable the fileupload while submitting or the file won't
+            // be submitted at all
+            fu.getElement().setPropertyBoolean("disabled", true);
+        }
         enabled = false;
     }
 
-    protected void enableUploaod() {
+    protected void enableUpload() {
         submitButton.setEnabled(true);
-        // fu.getElement().setPropertyBoolean("disabled", false);
+        fu.getElement().setPropertyBoolean("disabled", false);
         enabled = true;
     }
 
@@ -169,7 +174,7 @@ public class VUpload extends FormPanel implements Paintable,
         panel.remove(fu);
         fu = new MyFileUpload();
         fu.setName(paintableId + "_file");
-        // fu.getElement().setPropertyBoolean("disabled", !enabled);
+        fu.getElement().setPropertyBoolean("disabled", !enabled);
         panel.add(fu);
         panel.add(submitButton);
         if (immediate) {
@@ -189,7 +194,7 @@ public class VUpload extends FormPanel implements Paintable,
         rebuildPanel();
 
         submitted = false;
-        enableUploaod();
+        enableUpload();
     }
 
     public void onSubmit(SubmitEvent event) {
