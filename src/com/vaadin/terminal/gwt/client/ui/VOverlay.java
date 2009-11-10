@@ -213,6 +213,7 @@ public class VOverlay extends PopupPanel {
             zIndex = DOM.getStyleAttribute(getElement(), "zIndex");
         } catch (Exception ignore) {
             // Ignored, will cause no harm
+            zIndex = "1000";
         }
         if (zIndex == null) {
             zIndex = "" + Z_INDEX;
