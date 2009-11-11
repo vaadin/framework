@@ -679,12 +679,24 @@ div.v-app-loading {
 	margin-right: 0;
 	margin-top: -2px;
 }
+.v-ie7 .v-menubar-submenu .v-menubar-submenu-indicator {
+	position: relative;
+	margin-left: 0;
+}
 .v-menubar-menuitem-disabled {
 	color: #999;
 }
 .v-menubar-more-menuitem {
 	/* Arial has the most coverage for geometric entity characters */
 	font-family: arial, helvetica, sans-serif;
+}
+.v-menubar-separator span {
+	display: block;
+	text-indent: -9999px;
+	height: 1px;
+	margin: 3px 0;
+	overflow: hidden;
+	background: #ddd;
 }
 
 .v-Notification {

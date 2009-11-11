@@ -22,6 +22,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ContainerResizedListener;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.Util;
 
 public class VMenuBar extends Widget implements Paintable,
         CloseHandler<PopupPanel>, ContainerResizedListener {
@@ -156,47 +157,53 @@ public class VMenuBar extends Widget implements Paintable,
             String itemText = item.getStringAttribute("text");
             final int itemId = item.getIntAttribute("id");
 
-            boolean itemHasCommand = item.getBooleanAttribute("command");
+            boolean itemHasCommand = item.hasAttribute("command");
 
             // Construct html from the text and the optional icon
             StringBuffer itemHTML = new StringBuffer();
-
-            // Add submenu indicator
-            if (item.getChildCount() > 0) {
-                // FIXME For compatibility reasons: remove in version 7
-                String bgStyle = "";
-                if (submenuIcon != null) {
-                    bgStyle = " style=\"background-image: url(" + submenuIcon
-                            + "); text-indent: -999px; width: 1em;\"";
-                }
-                itemHTML
-                        .append("<span class=\"" + CLASSNAME
-                                + "-submenu-indicator\"" + bgStyle
-                                + ">&#x25BA;</span>");
-            }
-
-            if (item.hasAttribute("icon")) {
-                itemHTML.append("<img src=\""
-                        + client.translateVaadinUri(item
-                                .getStringAttribute("icon")) + "\" class=\""
-                        + Icon.CLASSNAME + "\" alt=\"\" />");
-            }
-
-            itemHTML.append(itemText);
-
             Command cmd = null;
 
-            if (itemHasCommand) {
-                // Construct a command that fires onMenuClick(int) with the
-                // item's id-number
-                cmd = new Command() {
-                    public void execute() {
-                        hostReference.onMenuClick(itemId);
+            if (item.hasAttribute("separator")) {
+                itemHTML.append("<span>---</span>");
+            } else {
+                // Add submenu indicator
+                if (item.getChildCount() > 0) {
+                    // FIXME For compatibility reasons: remove in version 7
+                    String bgStyle = "";
+                    if (submenuIcon != null) {
+                        bgStyle = " style=\"background-image: url("
+                                + submenuIcon
+                                + "); text-indent: -999px; width: 1em;\"";
                     }
-                };
+                    itemHTML.append("<span class=\"" + CLASSNAME
+                            + "-submenu-indicator\"" + bgStyle
+                            + ">&#x25BA;</span>");
+                }
+
+                if (item.hasAttribute("icon")) {
+                    itemHTML
+                            .append("<img src=\""
+                                    + client.translateVaadinUri(item
+                                            .getStringAttribute("icon"))
+                                    + "\" class=\"" + Icon.CLASSNAME
+                                    + "\" alt=\"\" />");
+                }
+
+                itemHTML.append(Util.escapeHTML(itemText));
+
+                if (itemHasCommand) {
+                    // Construct a command that fires onMenuClick(int) with the
+                    // item's id-number
+                    cmd = new Command() {
+                        public void execute() {
+                            hostReference.onMenuClick(itemId);
+                        }
+                    };
+                }
             }
 
             currentItem = currentMenu.addItem(itemHTML.toString(), cmd);
+            currentItem.setSeparator(item.hasAttribute("separator"));
             currentItem.setEnabled(!item.hasAttribute("disabled"));
 
             if (item.getChildCount() > 0) {
@@ -448,7 +455,7 @@ public class VMenuBar extends Widget implements Paintable,
      * @param item
      */
     public void itemOver(CustomMenuItem item) {
-        if (subMenu || menuVisible) {
+        if ((subMenu || menuVisible) && !item.isSeparator()) {
             setSelected(item);
         }
 
@@ -484,6 +491,8 @@ public class VMenuBar extends Widget implements Paintable,
      * @param item
      */
     public void showChildMenu(CustomMenuItem item) {
+        final int shadowSpace = 10;
+
         popup = new VOverlay(true, false, true);
         popup.setWidget(item.getSubMenu());
         popup.addCloseHandler(this);
@@ -509,14 +518,18 @@ public class VMenuBar extends Widget implements Paintable,
         popup.show();
 
         if (left + popup.getOffsetWidth() >= RootPanel.getBodyElement()
-                .getOffsetWidth()) {
+                .getOffsetWidth()
+                - shadowSpace) {
             if (subMenu) {
                 left = item.getParentMenu().getAbsoluteLeft()
-                        - popup.getOffsetWidth();
+                        - popup.getOffsetWidth() - shadowSpace;
             } else {
                 left = RootPanel.getBodyElement().getOffsetWidth()
-                        - popup.getOffsetWidth();
-                ApplicationConnection.getConsole().log("" + left);
+                        - popup.getOffsetWidth() - shadowSpace;
+            }
+            // Accommodate space for shadow
+            if (left < shadowSpace) {
+                left = shadowSpace;
             }
             popup.setPopupPosition(left, top);
         }
@@ -643,6 +656,7 @@ public class VMenuBar extends Widget implements Paintable,
         protected VMenuBar subMenu = null;
         protected VMenuBar parentMenu = null;
         protected boolean enabled = true;
+        protected boolean isSeparator = false;
 
         public CustomMenuItem(String html, Command cmd) {
             setElement(DOM.createTD());
@@ -655,7 +669,7 @@ public class VMenuBar extends Widget implements Paintable,
         }
 
         public void setSelected(boolean selected) {
-            if (selected) {
+            if (selected && !isSeparator) {
                 addStyleDependentName("selected");
             } else {
                 removeStyleDependentName("selected");
@@ -718,6 +732,20 @@ public class VMenuBar extends Widget implements Paintable,
 
         public boolean isEnabled() {
             return enabled;
+        }
+
+        private void setSeparator(boolean separator) {
+            isSeparator = separator;
+            if (separator) {
+                setStyleName(CLASSNAME + "-separator");
+            } else {
+                setStyleName(CLASSNAME + "-menuitem");
+                setEnabled(enabled);
+            }
+        }
+
+        public boolean isSeparator() {
+            return isSeparator;
         }
     }
 

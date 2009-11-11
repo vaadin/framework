@@ -79,35 +79,39 @@ public class MenuBar extends AbstractComponent {
         while (itr.hasNext()) {
 
             MenuItem item = itr.next();
-
             target.startTag("item");
-
-            target.addAttribute("text", item.getText());
             target.addAttribute("id", item.getId());
 
-            Command command = item.getCommand();
-            if (command != null) {
-                target.addAttribute("command", true);
+            if (item.isSeparator()) {
+                target.addAttribute("separator", true);
+                target.endTag("item");
             } else {
-                target.addAttribute("command", false);
-            }
+                target.addAttribute("text", item.getText());
 
-            Resource icon = item.getIcon();
-            if (icon != null) {
-                target.addAttribute("icon", icon);
-            }
+                Command command = item.getCommand();
+                if (command != null) {
+                    target.addAttribute("command", true);
+                }
 
-            if (!item.isEnabled()) {
-                target.addAttribute("disabled", true);
-            }
+                Resource icon = item.getIcon();
+                if (icon != null) {
+                    target.addAttribute("icon", icon);
+                }
 
-            if (item.hasChildren()) {
-                iteratorStack.push(itr); // For later use
+                if (!item.isEnabled()) {
+                    target.addAttribute("disabled", true);
+                }
 
-                // Go through the children
-                itr = item.getChildren().iterator();
-            } else {
-                target.endTag("item"); // Item had no children, end description
+                if (item.hasChildren()) {
+                    iteratorStack.push(itr); // For later use
+
+                    // Go through the children
+                    itr = item.getChildren().iterator();
+                } else {
+                    target.endTag("item"); // Item had no children, end
+                    // description
+                }
+
             }
 
             // The end submenu. More than one submenu may end at once.
@@ -115,7 +119,6 @@ public class MenuBar extends AbstractComponent {
                 itr = iteratorStack.pop();
                 target.endTag("item");
             }
-
         }
 
         target.endTag("items");
@@ -382,6 +385,7 @@ public class MenuBar extends AbstractComponent {
         private Resource itsIcon;
         private MenuItem itsParent;
         private boolean enabled = true;
+        private boolean isSeparator = false;
 
         /**
          * Constructs a new menu item that can optionally have an icon and a
@@ -410,7 +414,27 @@ public class MenuBar extends AbstractComponent {
          * @return True if this item has children
          */
         public boolean hasChildren() {
-            return itsChildren != null;
+            return !isSeparator() && itsChildren != null;
+        }
+
+        /**
+         * Adds a separator to this menu. A separator is a way to visually group
+         * items in a menu, to make it easier for users to find what they are
+         * looking for in the menu.
+         * 
+         * @author Jouni Koivuviita / IT Mill Ltd.
+         * @since 6.2.0
+         */
+        public MenuBar.MenuItem addSeparator() {
+            MenuItem item = addItem("", null, null);
+            item.setSeparator(true);
+            return item;
+        }
+
+        public MenuBar.MenuItem addSeparatorBefore(MenuItem itemToAddBefore) {
+            MenuItem item = addItemBefore("", null, null, itemToAddBefore);
+            item.setSeparator(true);
+            return item;
         }
 
         /**
@@ -439,8 +463,12 @@ public class MenuBar extends AbstractComponent {
          */
         public MenuBar.MenuItem addItem(String caption, Resource icon,
                 MenuBar.Command command) {
+            if (isSeparator()) {
+                throw new UnsupportedOperationException(
+                        "Cannot add items to a separator");
+            }
             if (caption == null) {
-                throw new IllegalArgumentException("caption cannot be null");
+                throw new IllegalArgumentException("Caption cannot be null");
             }
 
             if (itsChildren == null) {
@@ -483,7 +511,6 @@ public class MenuBar extends AbstractComponent {
                 newItem = new MenuItem(caption, icon, command);
                 newItem.setParent(this);
                 itsChildren.add(index, newItem);
-
             } else {
                 newItem = addItem(caption, icon, command);
             }
@@ -546,7 +573,10 @@ public class MenuBar extends AbstractComponent {
          * @return The number of child items
          */
         public int getSize() {
-            return itsChildren.size();
+            if (itsChildren != null) {
+                return itsChildren.size();
+            }
+            return -1;
         }
 
         /**
@@ -604,8 +634,8 @@ public class MenuBar extends AbstractComponent {
                 if (itsChildren.isEmpty()) {
                     itsChildren = null;
                 }
+                requestRepaint();
             }
-            requestRepaint();
         }
 
         /**
@@ -615,8 +645,8 @@ public class MenuBar extends AbstractComponent {
             if (itsChildren != null) {
                 itsChildren.clear();
                 itsChildren = null;
+                requestRepaint();
             }
-            requestRepaint();
         }
 
         /**
@@ -636,6 +666,15 @@ public class MenuBar extends AbstractComponent {
 
         public boolean isEnabled() {
             return enabled;
+        }
+
+        private void setSeparator(boolean isSeparator) {
+            this.isSeparator = isSeparator;
+            requestRepaint();
+        }
+
+        public boolean isSeparator() {
+            return isSeparator;
         }
 
     }// class MenuItem
