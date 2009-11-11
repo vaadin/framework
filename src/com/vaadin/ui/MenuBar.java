@@ -79,6 +79,10 @@ public class MenuBar extends AbstractComponent {
         while (itr.hasNext()) {
 
             MenuItem item = itr.next();
+            if (!item.isVisible()) {
+                continue;
+            }
+
             target.startTag("item");
             target.addAttribute("id", item.getId());
 
@@ -385,6 +389,7 @@ public class MenuBar extends AbstractComponent {
         private Resource itsIcon;
         private MenuItem itsParent;
         private boolean enabled = true;
+        private boolean visible = true;
         private boolean isSeparator = false;
 
         /**
@@ -666,6 +671,15 @@ public class MenuBar extends AbstractComponent {
 
         public boolean isEnabled() {
             return enabled;
+        }
+
+        public void setVisible(boolean visible) {
+            this.visible = visible;
+            requestRepaint();
+        }
+
+        public boolean isVisible() {
+            return visible;
         }
 
         private void setSeparator(boolean isSeparator) {
