@@ -10,7 +10,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -145,38 +144,19 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
      }-*/;
 
     /**
-     * Evaluate given script in browser document.
+     * Evaluate the given script in the browser document.
      * 
      * @param script
-     *            Script to be executed with $1, $2, ... markers to be replaced
-     *            with argument references.
-     * @param args
-     *            JavaScript array of element references to be replaced in
-     *            script
+     *            Script to be executed.
      */
-    private static native void eval(String script, JavaScriptObject args)
+    private static native void eval(String script)
     /*-{
       try {
          if (script == null) return;
-         $wnd.vaadin.evalargs = args;
-         if (args != null) 
-             for (var i=1;i<= args.length;i++) 
-                script = script.replace("$"+i, "$wnd.vaadin.evalargs["+(i-1)+"]");
          $wnd.eval(script);
-         delete $wnd.vaadin.evalargs;
       } catch (e) {
       }
     }-*/;
-
-    /** Helper for creating empty javascript arrays */
-    private native static JavaScriptObject createArray() /*-{
-                                                         return new Array();
-                                                         }-*/;
-
-    /** Add an element to javascript array */
-    private native static void pushArray(JavaScriptObject array, Element e) /*-{
-                                                                            array.push(e);
-                                                                            }-*/;
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         rendering = true;
@@ -300,16 +280,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
                 actionHandler.updateActionMap(childUidl);
             } else if (tag == "execJS") {
                 String script = childUidl.getStringAttribute("script");
-                int argNum = childUidl.getChildCount();
-                JavaScriptObject args = createArray();
-                for (int i = 0; i < argNum; i++) {
-                    String id = childUidl.getChildUIDL(i).getStringAttribute(
-                            "ref");
-                    Paintable p = client.getPaintable(id);
-                    pushArray(args, p == null ? null : ((Widget) p)
-                            .getElement());
-                }
-                eval(script, args);
+                eval(script);
             } else if (tag == "notifications") {
                 for (final Iterator it = childUidl.getChildIterator(); it
                         .hasNext();) {

@@ -20,7 +20,6 @@ import com.vaadin.Application;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.ParameterHandler;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Sizeable;
@@ -122,7 +121,6 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     private Focusable pendingFocus;
 
     private ArrayList<String> jsExecQueue = null;
-    private ArrayList<ArrayList<Paintable>> jsExecParamsQueue = null;
 
     /* ********************************************************************* */
 
@@ -527,22 +525,12 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
         // Add executable javascripts if needed
         if (jsExecQueue != null) {
-            while (jsExecQueue.size() > 0) {
-                String script = jsExecQueue.get(0);
-                ArrayList<Paintable> args = jsExecParamsQueue.get(0);
+            for (String script : jsExecQueue) {
                 target.startTag("execJS");
                 target.addAttribute("script", script);
-                for (Paintable p : args) {
-                    target.startTag("arg");
-                    target.paintReference(p, "ref");
-                    target.endTag("arg");
-                }
                 target.endTag("execJS");
-                jsExecQueue.remove(0);
-                jsExecParamsQueue.remove(0);
             }
             jsExecQueue = null;
-            jsExecParamsQueue = null;
         }
 
         // Window position
@@ -1661,82 +1649,34 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * Executes JavaScript in this window.
      * 
      * <p>
-     * This method allows one to inject javascript from the server to client.
-     * Client implementation is not required to implenment this functionality,
+     * This method allows one to inject javascript from the server to client. A
+     * client implementation is not required to implement this functionality,
      * but currently all web-based clients do implement this.
      * </p>
      * 
      * <p>
-     * Use of this method should be avoided. Executing javascript often leads to
-     * cross-browser compatibility issues and regressions that are hard to
-     * resolve. Instead it is recommended to create new widgets with google web
-     * toolkit. For more info on creating own, reusable client-side widgets in
-     * Java, read corresponding chapter on Book of Vaadin.
-     * </p>
-     * 
-     * <p>
-     * The script may contain markers indentified with "$x", where x is a one
-     * digit number. The number of markers must match to the number of optional
-     * Paintable reference parameters. The first marker is $1, second $2 and so
-     * on. If the markers are specified, the markers are replaced in the browser
-     * with references to outmost DOM elements connected to the given
-     * paintables.
-     * </p>
-     * 
-     * <p>
-     * Use example 1: Show a alert box in the current window<code>
-       mainWindow.executeJavaScript("alert('foo');");
-     * </code>
-     * </p>
-     * 
-     * <p>
-     * Use example 2: Print current window<code>
-       mainWindow.executeJavaScript("window.print()");
-     * </code>
-     * </p>
-     * 
-     * <p>
-     * Use example 3: Change labels background to yellow<code>
-        Label label = new Label("Label");
-        mainWindow.addComponent(label);
-        mainWindow.executeJavaScript("$1.style.backgroundColor='yellow';",label);
-     * </code>
-     * </p>
-     * 
-     * <p>
-     * Use example 4: Print contents of a label<code>
-        Label label = new Label("This label contains some report");
-        mainWindow.addComponent(label);
-        mainWindow.executeJavaScript("var w = window.open(); w.document.write($1.outerHTML); w.print();",label);
-     * </code>
+     * Executing javascript this way often leads to cross-browser compatibility
+     * issues and regressions that are hard to resolve. Use of this method
+     * should be avoided and instead it is recommended to create new widgets
+     * with GWT. For more info on creating own, reusable client-side widgets in
+     * Java, read the corresponding chapter in Book of Vaadin.
      * </p>
      * 
      * @param script
-     *            JavaScript snippet that will be executed and that might
-     *            optionally contain $1, $2, ... markers.
-     * @param paintables
-     *            References to number of visible paintables that correspond the
-     *            to markers listed in script
+     *            JavaScript snippet that will be executed.
      */
-    public void executeJavaScript(String script, Paintable... paintables) {
+    public void executeJavaScript(String script) {
 
         if (getParent() != null) {
             throw new UnsupportedOperationException(
                     "Only application level windows can execute javascript.");
         }
 
-        ArrayList<Paintable> ps = new ArrayList<Paintable>();
-        for (Paintable p : paintables) {
-            ps.add(p);
-        }
-
         if (jsExecQueue == null) {
             jsExecQueue = new ArrayList<String>();
-            jsExecParamsQueue = new ArrayList<ArrayList<Paintable>>();
         }
 
         jsExecQueue.add(script);
-        jsExecParamsQueue.add(ps);
 
         requestRepaint();
     }
