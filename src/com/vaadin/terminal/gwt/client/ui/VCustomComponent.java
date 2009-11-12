@@ -68,6 +68,12 @@ public class VCustomComponent extends SimplePanel implements Container {
         renderSpace.setWidth(getElement().getOffsetWidth());
         renderSpace.setHeight(getElement().getOffsetHeight());
 
+        /*
+         * Needed to update client size if the size of this component has
+         * changed and the child uses relative size(s).
+         */
+        client.runDescendentsLayout(this);
+
         rendering = false;
     }
 
