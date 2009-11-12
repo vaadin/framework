@@ -114,6 +114,15 @@
 			<param-value>com.vaadin.tests.RandomLayoutStress</param-value>
 		</init-param>
 	</servlet>
+	
+	<servlet>
+		<servlet-name>PortletDemo</servlet-name>
+		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.vaadin.demo.PortletDemo</param-value>
+		</init-param>
+	</servlet>	
 
 	<servlet>
 		<servlet-name>Reservr</servlet-name>
@@ -502,6 +511,11 @@
 		<servlet-name>ChatServlet</servlet-name>
 		<url-pattern>/chat/*</url-pattern>
 		<!-- portlet -->
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>PortletDemo</servlet-name>
+		<url-pattern>/PortletDemo/*</url-pattern>
 	</servlet-mapping>
 	
 	<servlet-mapping>

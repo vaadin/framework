@@ -426,7 +426,7 @@ public abstract class AbstractCommunicationManager implements
             }
         }
 
-        out.flush();
+        //out.flush(); - this line will cause errors when deployed on GateIn.
         out.close();
     }
 
