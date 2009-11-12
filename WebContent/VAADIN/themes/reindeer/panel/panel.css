@@ -17,6 +17,8 @@
 	border-bottom: none;
 	border-top: none;
 }
+.blue .v-panel-caption,
+.blue .v-panel-nocaption,
 .blue .v-panel-content {
 	border-color: #a8bcc5;
 }
@@ -24,10 +26,12 @@
 .v-ff3 .v-panel-content {
 	border-color: rgba(0,0,0,.1);
 }
-.v-panel-content > div,
-.v-ie6 .v-panel-content {
+.v-panel-content > div {
 	background: #fff;
 	min-height: 100%;
+}
+.v-ie6 .v-panel-content {
+	background: #fff;
 }
 .v-panel-deco {
 	height: 1px;
@@ -68,6 +72,9 @@
 	border: none;
 }
 .v-panel-content-light > div {
+	background: transparent;
+}
+.v-ie6 .v-panel-content-light {
 	background: transparent;
 }
 .v-panel-deco-light {
