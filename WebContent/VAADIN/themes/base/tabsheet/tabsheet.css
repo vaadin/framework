@@ -39,6 +39,9 @@
 .v-ff2 .v-tabsheet-scroller {
 	position: relative;
 }
+.v-disabled .v-tabsheet-scroller {
+	display: none;
+}
 .v-tabsheet-scrollerPrev,
 .v-tabsheet-scrollerNext,
 .v-tabsheet-scrollerPrev-disabled,
@@ -57,6 +60,33 @@
 .v-tabsheet-tabs .v-caption,
 .v-tabsheet-tabs .v-caption span {
 	white-space: nowrap;
+}
+.v-tabsheet-caption-close {
+	display: inline;
+	display: inline-block;
+	zoom: 1;
+	width: 16px;
+	height: 16px;
+	text-align: center;
+	font-weight: bold;
+	cursor: pointer;
+	vertical-align: middle;
+	user-select: none;
+	-khtml-user-select: none;
+	-ms-user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+}
+.v-tabsheet .v-disabled .v-tabsheet-caption-close {
+	cursor: default;
+	visibility: hidden;
+}
+.v-tabsheet-tabitemcell:hover .v-tabsheet-caption-close,
+.v-ie6 .v-tabsheet-caption-close {
+	visibility: visible;
+}
+.v-ie6 .v-tabsheet-caption-close {
+	float: right;
 }
 .v-tabsheet-tabitem {
 	border: 1px solid #aaa;

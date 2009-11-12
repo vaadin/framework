@@ -1387,6 +1387,9 @@ div.v-progressindicator-indeterminate-disabled {
 .v-ff2 .v-tabsheet-scroller {
 	position: relative;
 }
+.v-disabled .v-tabsheet-scroller {
+	display: none;
+}
 .v-tabsheet-scrollerPrev,
 .v-tabsheet-scrollerNext,
 .v-tabsheet-scrollerPrev-disabled,
@@ -1412,12 +1415,26 @@ div.v-progressindicator-indeterminate-disabled {
 	zoom: 1;
 	width: 16px;
 	height: 16px;
-	background: url(../base/common/img/close.png) no-repeat;
+	text-align: center;
+	font-weight: bold;
 	cursor: pointer;
 	vertical-align: middle;
+	user-select: none;
+	-khtml-user-select: none;
+	-ms-user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
 }
-.v-disabled .v-tabsheet-caption-close {
+.v-tabsheet .v-disabled .v-tabsheet-caption-close {
 	cursor: default;
+	visibility: hidden;
+}
+.v-tabsheet-tabitemcell:hover .v-tabsheet-caption-close,
+.v-ie6 .v-tabsheet-caption-close {
+	visibility: visible;
+}
+.v-ie6 .v-tabsheet-caption-close {
+	float: right;
 }
 .v-tabsheet-tabitem {
 	border: 1px solid #aaa;
@@ -1642,9 +1659,9 @@ div.v-tree-node-leaf {
 	position: absolute;
 	top: 0;
 	right: 0;
-	width: 16px;
-	height: 16px;
-	background: url(../base/common/img/close.png) no-repeat;
+	width: 1em;
+	height: 1em;
+	background: red;
 	cursor: pointer;
 	overflow: hidden;
 }
@@ -3143,6 +3160,8 @@ td.v-datefield-calendarpanel-nextyear {
 	border-bottom: none;
 	border-top: none;
 }
+.blue .v-panel-caption,
+.blue .v-panel-nocaption,
 .blue .v-panel-content {
 	border-color: #a8bcc5;
 }
@@ -3150,10 +3169,12 @@ td.v-datefield-calendarpanel-nextyear {
 .v-ff3 .v-panel-content {
 	border-color: rgba(0,0,0,.1);
 }
-.v-panel-content > div,
-.v-ie6 .v-panel-content {
+.v-panel-content > div {
 	background: #fff;
 	min-height: 100%;
+}
+.v-ie6 .v-panel-content {
+	background: #fff;
 }
 .v-panel-deco {
 	height: 1px;
@@ -3194,6 +3215,9 @@ td.v-datefield-calendarpanel-nextyear {
 	border: none;
 }
 .v-panel-content-light > div {
+	background: transparent;
+}
+.v-ie6 .v-panel-content-light {
 	background: transparent;
 }
 .v-panel-deco-light {
@@ -3967,6 +3991,10 @@ td.v-datefield-calendarpanel-nextyear {
 	border: none;
 }
 
+/* These styles get catenated together on build */
+
+/* Default Tabsheet styles */
+
 .v-tabsheet-tabitemcell,
 .v-tabsheet-spacertd {
 	height: 32px;
@@ -4005,33 +4033,80 @@ td.v-datefield-calendarpanel-nextyear {
   background-position: right -1304px;
 	padding: 9px 8px 0 6px;
 }
+.v-tabsheet-tabitem .v-caption-closable {
+	padding-right: 0;
+	padding-left: 17px;
+}
 .v-tabsheet-tabitem .v-captiontext {
 	height: 16px;
 	line-height: 16px;
 }
 .v-tabsheet-caption-close {
-	
+	float: right;
+	width: 19px;
+	height: 18px;
+	margin: -1px -1px 0;
+	padding-left: 2px;
+	background: transparent;
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -1336px;
+	cursor: default;
+	text-indent: -999px;
+	overflow: hidden;
+}
+.v-ff .v-tabsheet-caption-close,
+.v-ie7 .v-tabsheet-caption-close {
+	margin-top: -17px;
+}
+.v-ie6 .v-tabsheet-caption-close {
+	float: none;
+}
+.v-tabsheet-caption-close:hover {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -1354px;
+}
+.v-tabsheet-caption-close:active {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -1372px;
+}
+.v-tabsheet-tabitem-selected .v-tabsheet-caption-close {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -1390px;
+}
+.v-tabsheet-tabitem-selected .v-tabsheet-caption-close:hover {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -1408px;
+}
+.v-tabsheet-tabitem-selected .v-tabsheet-caption-close:active {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -1426px;
 }
 .v-tabsheet-tabitemcell-selected {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1336px;
+  background-position: left -1444px;
 }
 .v-tabsheet-tabitemcell-selected-first {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1368px;
+  background-position: left -1476px;
 }
 .v-tabsheet-tabitem-selected {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1400px;
+  background-position: left -1508px;
 	color: #232930;
 }
 .v-tabsheet-tabitem-selected .v-caption {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: right -1432px;
+  background-position: right -1540px;
 }
 .v-tabsheet-spacertd div {
 	margin-right: 4px;
@@ -4040,7 +4115,7 @@ td.v-datefield-calendarpanel-nextyear {
 	background: transparent no-repeat right top;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: right -1464px;
+  background-position: right -1572px;
 }
 .v-tabsheet-content {
 	border: 1px solid #dcdcdc;
@@ -4074,65 +4149,10 @@ td.v-datefield-calendarpanel-nextyear {
 	border-top-color: rgba(0,0,0,.1);
 	background: rgba(0,0,0,.08);
 }
-.v-tabsheet-scroller {
-	height: 31px;
-	margin-top: -31px;
-	padding-right: 3px;
-	border-right: 1px solid #afafaf;
-	position: relative;
-	float: right;
-}
-.v-tabsheet-scroller button {
-	margin-top: 7px;
-}
-.v-tabsheet-scrollerPrev,
-.v-tabsheet-scrollerNext,
-.v-tabsheet-scrollerPrev-disabled,
-.v-tabsheet-scrollerNext-disabled {
-	border: none;
-	background: transparent;
-  background-image: url(common/img/vertical-sprites.png);
-  -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1496px;
-	width: 18px;
-	height: 17px;
-	overflow: hidden;
-	cursor: default;
-}
-.v-tabsheet-scroller button::-moz-focus-inner {
-	border: none;
-}
-.v-tabsheet-scrollerNext {
-  background-image: url(common/img/vertical-sprites.png);
-  -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1513px;
-}
-.v-tabsheet-scrollerPrev:active {
-  background-image: url(common/img/vertical-sprites.png);
-  -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1530px;
-}
-.v-tabsheet-scrollerNext:active {
-  background-image: url(common/img/vertical-sprites.png);
-  -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1547px;
-}
-.v-tabsheet-scrollerPrev-disabled,
-.v-tabsheet-scrollerPrev-disabled:active {
-  background-image: url(common/img/vertical-sprites.png);
-  -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1564px;
-	opacity: 1;
-	filter: none;
-}
-.v-tabsheet-scrollerNext-disabled,
-.v-tabsheet-scrollerNext-disabled:active {
-  background-image: url(common/img/vertical-sprites.png);
-  -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1581px;
-	opacity: 1;
-	filter: none;
-}
+
+
+/* Icons & error indicators */
+
 .v-tabsheet-tabs .v-icon,
 .v-tabsheet-tabs .v-captiontext,
 .v-tabsheet-tabs .v-errorindicator {
@@ -4164,13 +4184,73 @@ td.v-datefield-calendarpanel-nextyear {
 	display: inline;
 }
 
+/* Tabsheet scroller styles */
 
-
-
-
+.v-tabsheet-scroller {
+	height: 31px;
+	margin-top: -31px;
+	padding: 0 3px 0 4px;
+	border-right: 1px solid #c2c2c2;
+	border-left: 1px solid #cfcfcf;
+	position: relative;
+	float: right;
+	background: transparent url(tabsheet/img/framed/tab-bg.png) repeat-x left -1px;
+	width: 36px;
+}
+.v-tabsheet-scroller button {
+	margin-top: 7px;
+}
+.v-tabsheet-scrollerPrev,
+.v-tabsheet-scrollerNext,
+.v-tabsheet-scrollerPrev-disabled,
+.v-tabsheet-scrollerNext-disabled {
+	border: none;
+	background: transparent;
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -1604px;
+	width: 18px;
+	height: 17px;
+	overflow: hidden;
+	cursor: default;
+}
+.v-tabsheet-scroller button::-moz-focus-inner {
+	border: none;
+}
+.v-tabsheet-scrollerNext {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -1621px;
+}
+.v-tabsheet-scrollerPrev:active {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -1638px;
+}
+.v-tabsheet-scrollerNext:active {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -1655px;
+}
+.v-tabsheet-scrollerPrev-disabled,
+.v-tabsheet-scrollerPrev-disabled:active {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -1672px;
+	opacity: 1;
+	filter: none;
+}
+.v-tabsheet-scrollerNext-disabled,
+.v-tabsheet-scrollerNext-disabled:active {
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -1689px;
+	opacity: 1;
+	filter: none;
+}
 
 /**
- * Minimal style --------------
+ * Tabsheet "minimal" style --------------
  */
 .v-tabsheet-minimal .v-tabsheet-spacertd div {
 	border-bottom: 1px solid #bfbfbf;
@@ -4210,6 +4290,10 @@ td.v-datefield-calendarpanel-nextyear {
 	background: transparent;
 	padding: 4px 15px 6px 15px;
 }
+.v-tabsheet-minimal .v-tabsheet-tabitem .v-caption-closable,
+.v-tabsheet-minimal .v-tabsheet-tabitem-selected .v-caption-closable {
+	padding-right: 6px;
+}
 .v-tabsheet-content-minimal {
 	border: none;
 }
@@ -4223,19 +4307,57 @@ td.v-datefield-calendarpanel-nextyear {
 .v-tabsheet-minimal .v-tabsheet-scroller {
 	margin-top: -20px;
 	height: 17px;
-	padding-right: 0;
-	border-right: none;
-	position: static;
-	float: none;
+	padding: 0;
+	border: none;
+	background: transparent;
 }
 .v-tabsheet-minimal .v-tabsheet-scroller button {
 	margin-top: 0;
+}
+.v-tabsheet-minimal .v-tabsheet-caption-close,
+.v-tabsheet-minimal .v-tabsheet-caption-close:hover,
+.v-tabsheet-minimal .v-tabsheet-caption-close:active {
+	text-indent: 0;
+	background: transparent;
+	margin-left: 3px;
+	margin-right: -3px;
+	padding: 0;
+	color: #999;
+	width: 15px;
+	height: 15px;
+	line-height: 14px;
+	-webkit-border-radius: 7px;
+	-moz-border-radius: 7px;
+}
+.v-tabsheet-minimal .v-tabsheet-caption-close {
+	margin-top: 1px;
+}
+.v-ff .v-tabsheet-minimal .v-tabsheet-caption-close,
+.v-ie7 .v-tabsheet-minimal .v-tabsheet-caption-close {
+	margin-top: -15px;
+}
+.v-tabsheet-minimal .v-tabsheet-caption-close:hover {
+	color: #fff;
+	background: #aaa;
+}
+.v-tabsheet-minimal .v-tabsheet-caption-close:active {
+	background: #777;
 }
 /* Minimal tabsheet on blue background */
 .blue .v-tabsheet-minimal .v-tabsheet-spacertd div,
 .blue .v-tabsheet-minimal .v-tabsheet-tabitem,
 .blue .v-tabsheet-minimal .v-tabsheet-tabitem-selected  {
 	border-color: #7c8a91;
+}
+.blue .v-tabsheet-minimal .v-tabsheet-caption-close {
+	color: #7c8a91;
+}
+.blue .v-tabsheet-minimal .v-tabsheet-caption-close:hover {
+	color: #BCD3DE;
+	background: #778d98;
+}
+.blue .v-tabsheet-minimal .v-tabsheet-caption-close:active {
+	background: #4f6874;
 }
 /* Minimal tabsheet on black background */
 .black .v-tabsheet-minimal .v-tabsheet-spacertd div,
@@ -4252,14 +4374,19 @@ td.v-datefield-calendarpanel-nextyear {
 	color: #c9ccce;
 	text-shadow: #000 0 0 1px;
 }
-
-
-
-
-
+.black .v-tabsheet-minimal .v-tabsheet-caption-close {
+	color: #72787c;
+}
+.black .v-tabsheet-minimal .v-tabsheet-caption-close:hover {
+	color: #1d2021;
+	background: #4d5154;
+}
+.black .v-tabsheet-minimal .v-tabsheet-caption-close:active {
+	background: #626669;
+}
 
 /**
- * Bar style ---------------
+ * Tabsheet bar style ---------------
  */
 .v-tabsheet-bar .v-tabsheet-tabitemcell,
 .v-tabsheet-bar .v-tabsheet-spacertd {
@@ -4271,20 +4398,20 @@ td.v-datefield-calendarpanel-nextyear {
 .v-tabsheet-bar .v-tabsheet-tabitemcell {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1599px;
+  background-position: left -1707px;
 }
 .v-tabsheet-bar .v-tabsheet-tabitemcell-first {
 	padding-left: 6px;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1619px;
+  background-position: left -1727px;
 }
 .v-tabsheet-bar .v-tabsheet-tabitem,
 .v-tabsheet-bar .v-tabsheet-spacertd div {
 	height: 20px;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1639px;
+  background-position: left -1747px;
 	font-size: 11px;
 	margin: 0;
 }
@@ -4292,43 +4419,86 @@ td.v-datefield-calendarpanel-nextyear {
 	height: 18px;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: right -1659px;
+  background-position: right -1767px;
 	padding: 2px 12px 0 10px;
 }
+.v-tabsheet-bar .v-tabsheet-tabitem .v-caption-closable,
+.v-tabsheet-bar .v-tabsheet-tabitem-selected .v-caption-closable {
+	padding-right: 8px;
+	padding-left: 14px;
+}
+.v-tabsheet-bar .v-tabsheet-caption-close,
+.v-tabsheet-bar .v-tabsheet-caption-close:hover,
+.v-tabsheet-bar .v-tabsheet-caption-close:active {
+	text-indent: 0;
+	background: transparent;
+	margin-left: 3px;
+	margin-right: -3px;
+	padding: 0;
+	color: #3c3c3c;
+	width: 14px;
+	height: 14px;
+	line-height: 12px;
+	-webkit-border-radius: 7px;
+	-moz-border-radius: 7px;
+}
+.v-tabsheet-bar .v-tabsheet-caption-close {
+	margin-top: 0;
+}
+.v-ff .v-tabsheet-bar .v-tabsheet-caption-close,
+.v-ie7 .v-tabsheet-bar .v-tabsheet-caption-close {
+	margin-top: -15px;
+}
+.v-tabsheet-bar .v-tabsheet-caption-close:hover {
+	background: #bfbfbf;
+	-webkit-box-shadow: 0 1px 0 #fff;
+}
+.v-tabsheet-bar .v-tabsheet-caption-close:active {
+	background: #a9a9a9;
+}
+.v-tabsheet-bar .v-tabsheet-tabitem-selected .v-tabsheet-caption-close {
+	color: #404142;
+}
+.v-tabsheet-bar .v-tabsheet-tabitem-selected .v-tabsheet-caption-close:hover {
+	background: #5e666e;
+	color: #fff;
+	text-shadow: 0 -1px 0 #222;
+}
+.v-tabsheet-bar .v-tabsheet-tabitem-selected .v-tabsheet-caption-close:active {
+	background: #404142;
+}
+
 .v-tabsheet-bar .v-tabsheet-tabitemcell-selected {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1679px;
+  background-position: left -1787px;
 }
 .v-tabsheet-bar .v-tabsheet-tabitemcell-selected-first {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1699px;
+  background-position: left -1807px;
 }
 .v-tabsheet-bar .v-tabsheet-tabitem-selected {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1719px;
+  background-position: left -1827px;
 	color: #232930;
 }
 .v-tabsheet-bar .v-tabsheet-tabitem-selected .v-caption {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: right -1739px;
+  background-position: right -1847px;
 }
 .v-tabsheet-bar .v-tabsheet-scroller {
-	margin-top: -19px;
-}
-.v-tabsheet-bar .v-tabsheet-scroller {
-	margin-top: -19px;
-	height: 17px;
-	padding-right: 0;
+	margin-top: -20px;
+	height: 19px;
 	border-right: none;
-	position: static;
-	float: none;
+  background-image: url(common/img/vertical-sprites.png);
+  -background-image: url(common/img/vertical-sprites-ie6.png);
+  background-position: left -1867px;
 }
 .v-tabsheet-bar .v-tabsheet-scroller button {
-	margin-top: 0;
+	margin-top: 1px;
 }
 .v-tabsheet-content-bar {
 	border: none;
@@ -4353,7 +4523,7 @@ td.v-datefield-calendarpanel-nextyear {
 	background-repeat: repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1759px;
+  background-position: left -1887px;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	margin: 0;
@@ -4512,7 +4682,7 @@ input.v-textfield-readonly,
 	background: #4d749f repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1782px;
+  background-position: left -1910px;
 	color: #fff;
 	padding: 1px 2px;
 	-webkit-border-radius: 2px;
@@ -4567,7 +4737,7 @@ input.v-textfield-readonly,
 	background: transparent repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1802px;
+  background-position: left -1930px;
 }
 .v-window-header {
 	font-weight: bold;
@@ -4594,13 +4764,13 @@ input.v-textfield-readonly,
 	background: transparent;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1839px;
+  background-position: left -1967px;
 }
 .v-window-footer {
 	background-repeat: repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1854px;
+  background-position: left -1982px;
 	height: 15px;
 }
 .v-window-closebox {
@@ -4611,17 +4781,17 @@ input.v-textfield-readonly,
 	background: transparent;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1869px;
+  background-position: left -1997px;
 }
 .v-window-closebox:hover {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1885px;
+  background-position: left -2013px;
 }
 .v-window-closebox:active {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1901px;
+  background-position: left -2029px;
 }
 .v-window-contents {
 	background: #fff;
@@ -4654,7 +4824,7 @@ input.v-textfield-readonly,
 	height: 12px;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1917px;
+  background-position: left -2045px;
 }
 .v-window-light .v-window-footer {
 	background: transparent;
@@ -4667,17 +4837,17 @@ input.v-textfield-readonly,
 	height: 15px;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1929px;
+  background-position: left -2057px;
 }
 .v-window-light .v-window-closebox:hover {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1944px;
+  background-position: left -2072px;
 }
 .v-window-light .v-window-closebox:active {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1959px;
+  background-position: left -2087px;
 }
 .v-window-light .v-window-contents {
 	background: transparent;
@@ -4687,7 +4857,7 @@ input.v-textfield-readonly,
 	background: #f7f7f8 repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
-  background-position: left -1974px;
+  background-position: left -2102px;
 }
 .v-ie6 .v-window-light .v-window-wrap2 {
 	background-image: none;

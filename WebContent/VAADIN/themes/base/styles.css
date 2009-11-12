@@ -1387,6 +1387,9 @@ div.v-progressindicator-indeterminate-disabled {
 .v-ff2 .v-tabsheet-scroller {
 	position: relative;
 }
+.v-disabled .v-tabsheet-scroller {
+	display: none;
+}
 .v-tabsheet-scrollerPrev,
 .v-tabsheet-scrollerNext,
 .v-tabsheet-scrollerPrev-disabled,
@@ -1412,12 +1415,26 @@ div.v-progressindicator-indeterminate-disabled {
 	zoom: 1;
 	width: 16px;
 	height: 16px;
-	background: url(common/img/close.png) no-repeat;
+	text-align: center;
+	font-weight: bold;
 	cursor: pointer;
 	vertical-align: middle;
+	user-select: none;
+	-khtml-user-select: none;
+	-ms-user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
 }
-.v-disabled .v-tabsheet-caption-close {
+.v-tabsheet .v-disabled .v-tabsheet-caption-close {
 	cursor: default;
+	visibility: hidden;
+}
+.v-tabsheet-tabitemcell:hover .v-tabsheet-caption-close,
+.v-ie6 .v-tabsheet-caption-close {
+	visibility: visible;
+}
+.v-ie6 .v-tabsheet-caption-close {
+	float: right;
 }
 .v-tabsheet-tabitem {
 	border: 1px solid #aaa;
@@ -1642,9 +1659,9 @@ div.v-tree-node-leaf {
 	position: absolute;
 	top: 0;
 	right: 0;
-	width: 16px;
-	height: 16px;
-	background: url(common/img/close.png) no-repeat;
+	width: 1em;
+	height: 1em;
+	background: red;
 	cursor: pointer;
 	overflow: hidden;
 }
