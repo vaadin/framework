@@ -19,7 +19,7 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
      * request.
      */
     private String[] defaultPackages;
-    private HttpServletRequest request;
+    private ThreadLocal<HttpServletRequest> request = new ThreadLocal<HttpServletRequest>();
 
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
@@ -34,9 +34,9 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
     @Override
     protected void service(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
-        this.request = request;
+        this.request.set(request);
         super.service(request, response);
-        this.request = null;
+        this.request.set(null);
     }
 
     @Override
@@ -150,7 +150,8 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
 
         Class<? extends Application> appClass = null;
 
-        String baseName = getApplicationRunnerApplicationClassName(request);
+        String baseName = getApplicationRunnerApplicationClassName(request
+                .get());
         try {
             appClass = (Class<? extends Application>) getClass()
                     .getClassLoader().loadClass(baseName);
