@@ -222,10 +222,13 @@ public class ClassPathExplorer {
                     System.out.println(url);
                     JarFile jarFile = conn.getJarFile();
                     Manifest manifest = jarFile.getManifest();
-                    Attributes mainAttributes = manifest.getMainAttributes();
-                    if (mainAttributes.getValue("Vaadin-Widgetsets") != null) {
-                        System.err.println("Accepted jar file" + url);
-                        return true;
+                    if (manifest != null) {
+                        Attributes mainAttributes = manifest
+                                .getMainAttributes();
+                        if (mainAttributes.getValue("Vaadin-Widgetsets") != null) {
+                            System.err.println("Accepted jar file" + url);
+                            return true;
+                        }
                     }
                 } catch (MalformedURLException e) {
                     // TODO Auto-generated catch block
