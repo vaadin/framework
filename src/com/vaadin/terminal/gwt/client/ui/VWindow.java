@@ -521,10 +521,12 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
 
         contentAreaBorderPadding = Util.measureHorizontalPaddingAndBorder(
                 contents, 4);
-        int wrapperPaddingBorder = Util.measureHorizontalPaddingAndBorder(wrapper, 0)
+        int wrapperPaddingBorder = Util.measureHorizontalPaddingAndBorder(
+                wrapper, 0)
                 + Util.measureHorizontalPaddingAndBorder(wrapper2, 0);
 
-        contentAreaToRootDifference = wrapperPaddingBorder + contentAreaBorderPadding;
+        contentAreaToRootDifference = wrapperPaddingBorder
+                + contentAreaBorderPadding;
 
     }
 
@@ -807,7 +809,37 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
         }
     }
 
+    /**
+     * Checks if the cursor was inside the browser content area when the event
+     * happened.
+     * 
+     * @param event
+     *            The event to be checked
+     * @return true, if the cursor is inside the browser content area
+     * 
+     *         false, otherwise
+     */
+    private boolean cursorInsideBrowserContentArea(Event event) {
+        if (event.getClientX() < 0 || event.getClientY() < 0) {
+            // Outside to the left or above
+            return false;
+        }
+
+        if (event.getClientX() > Window.getClientWidth()
+                || event.getClientY() > Window.getClientHeight()) {
+            // Outside to the right or below
+            return false;
+        }
+
+        return true;
+    }
+
     private void setSize(Event event, boolean updateVariables) {
+        if (!cursorInsideBrowserContentArea(event)) {
+            // Only drag while cursor is inside the browser client area
+            return;
+        }
+
         int w = event.getScreenX() - startX + origW;
         if (w < MIN_CONTENT_AREA_WIDTH + getContentAreaToRootDifference()) {
             w = MIN_CONTENT_AREA_WIDTH + getContentAreaToRootDifference();
@@ -961,9 +993,12 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
         case Event.ONMOUSEMOVE:
             if (dragging) {
                 centered = false;
-                final int x = DOM.eventGetScreenX(event) - startX + origX;
-                final int y = DOM.eventGetScreenY(event) - startY + origY;
-                setPopupPosition(x, y);
+                if (cursorInsideBrowserContentArea(event)) {
+                    // Only drag while cursor is inside the browser client area
+                    final int x = DOM.eventGetScreenX(event) - startX + origX;
+                    final int y = DOM.eventGetScreenY(event) - startY + origY;
+                    setPopupPosition(x, y);
+                }
                 DOM.eventPreventDefault(event);
             }
             break;
