@@ -13,7 +13,8 @@ import com.vaadin.Application;
 /**
  * <code>ApplicationContext</code> provides information about the running
  * context of the application. Each context is shared by all applications that
- * are open for one user. In web-environment this corresponds to HttpSession.
+ * are open for one user. In a web-environment this corresponds to a
+ * HttpSession.
  * 
  * @author IT Mill Ltd.
  * @version
@@ -25,28 +26,28 @@ public interface ApplicationContext extends Serializable {
     /**
      * Returns application context base directory.
      * 
-     * Typically an application is deployed in a such way that is has
+     * Typically an application is deployed in a such way that is has an
      * application directory. For web applications this directory is the root
-     * directory of the web applications. In some cases application might not
-     * have application directory (for example web applications running inside
-     * of war).
+     * directory of the web applications. In some cases applications might not
+     * have an application directory (for example web applications running
+     * inside a war).
      * 
-     * @return The application base directory
+     * @return The application base directory or null if the application has no
+     *         base directory.
      */
     public File getBaseDirectory();
 
     /**
-     * Gets the applications in this context.
+     * Returns a collection of all the applications in this context.
      * 
-     * Gets all applications in this context. Each application context contains
-     * all applications that are open for one user.
+     * Each application context contains all active applications for one user.
      * 
-     * @return Collection containing all applications in this context
+     * @return A collection containing all the applications in this context.
      */
     public Collection getApplications();
 
     /**
-     * Adds transaction listener to this context.
+     * Adds a transaction listener to this context.
      * 
      * @param listener
      *            the listener to be added.
@@ -55,7 +56,7 @@ public interface ApplicationContext extends Serializable {
     public void addTransactionListener(TransactionListener listener);
 
     /**
-     * Removes transaction listener from this context.
+     * Removes a transaction listener from this context.
      * 
      * @param listener
      *            the listener to be removed.
@@ -64,15 +65,19 @@ public interface ApplicationContext extends Serializable {
     public void removeTransactionListener(TransactionListener listener);
 
     /**
-     * Interface for listening the application transaction events.
-     * Implementations of this interface can be used to listen all transactions
-     * between the client and the application.
+     * Interface for listening to transaction events. Implement this interface
+     * to listen to all transactions between the client and the application.
      * 
      */
     public interface TransactionListener extends Serializable {
 
         /**
          * Invoked at the beginning of every transaction.
+         * 
+         * The transaction is linked to the context, not the application so if
+         * you have multiple applications running in the same context you need
+         * to check that the request is associated with the application you are
+         * interested in. This can be done looking at the application parameter.
          * 
          * @param application
          *            the Application object.
@@ -84,6 +89,11 @@ public interface ApplicationContext extends Serializable {
 
         /**
          * Invoked at the end of every transaction.
+         * 
+         * The transaction is linked to the context, not the application so if
+         * you have multiple applications running in the same context you need
+         * to check that the request is associated with the application you are
+         * interested in. This can be done looking at the application parameter.
          * 
          * @param applcation
          *            the Application object.
