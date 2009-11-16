@@ -22,7 +22,6 @@ import java.util.Properties;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
-import javax.portlet.EventPortlet;
 import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
 import javax.portlet.GenericPortlet;
@@ -387,13 +386,27 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
                 /* Start the newly created application */
                 startApplication(request, application, applicationContext);
-
+                
                 /*
                  * Transaction starts. Call transaction listeners. Transaction
                  * end is called in the finally block below.
                  */
                 applicationContext.startTransaction(application, request);
-
+                
+                /* Notify listeners */
+                
+                // TODO Should this happen before or after the transaction starts?
+                
+                if (request instanceof RenderRequest) {
+                    applicationContext.firePortletRenderRequest(application, (RenderRequest) request, (RenderResponse) response);
+                } else if (request instanceof ActionRequest) {
+                    applicationContext.firePortletActionRequest(application, (ActionRequest) request, (ActionResponse) response);
+                } else if (request instanceof EventRequest) {
+                    applicationContext.firePortletEventRequest(application, (EventRequest) request, (EventResponse) response); 
+                } else if (request instanceof ResourceRequest) {
+                    applicationContext.firePortletResourceRequest(application, (ResourceRequest) request, (ResourceResponse) response);
+                }                
+                
                 /* Handle the request */
                 if (requestType == RequestType.FILE_UPLOAD) {
                     applicationManager.handleFileUpload(
@@ -405,17 +418,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                             (ResourceRequest) request,
                             (ResourceResponse) response, this);
                     return;
-                } else if (requestType == RequestType.EVENT) {
-                    /*
-                     * Redirect portlet event to application if it implements
-                     * the EventPortlet interface (contains only one method).
-                     */
-                    // TODO Figure out a better way of handling events
-                    if (application instanceof EventPortlet) {
-                        ((EventPortlet) application).processEvent(
-                                (EventRequest) request,
-                                (EventResponse) response);
-                    }
                 } else {
                     /*
                      * Removes the application if it has stopped
