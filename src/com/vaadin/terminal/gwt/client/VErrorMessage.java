@@ -30,13 +30,18 @@ public class VErrorMessage extends FlowPanel {
                 if (child instanceof String) {
                     final String errorMessage = (String) child;
                     add(new HTML(errorMessage));
-                } else if (child instanceof UIDL.XML) {
-                    final UIDL.XML xml = (UIDL.XML) child;
-                    add(new HTML(xml.getXMLAsString()));
                 } else {
-                    final VErrorMessage childError = new VErrorMessage();
-                    add(childError);
-                    childError.updateFromUIDL((UIDL) child);
+                    try {
+                        final VErrorMessage childError = new VErrorMessage();
+                        childError.updateFromUIDL((UIDL) child);
+                        add(childError);
+                    } catch (Exception e) {
+                        // TODO XML type error, check if this can even happen
+                        // anymore??
+                        final UIDL.XML xml = (UIDL.XML) child;
+                        add(new HTML(xml.getXMLAsString()));
+
+                    }
                 }
             }
         }
