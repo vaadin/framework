@@ -1650,7 +1650,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
         page
                 .write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>\n");
         page.write("<style type=\"text/css\">"
-                + "html, body {height:100%;}</style>");
+                + "html, body {height:100%;margin:0;}</style>");
 
         // Add favicon links
         page
