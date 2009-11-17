@@ -1,16 +1,16 @@
 /* Standard implementation of the button theme
  * These files contain styles that apply to all browsers
  */
-@import "standard.css";
-@import "primary-style.css";
-@import "small-style.css";
-@import "link-style.css";
+@import "button-standard.css";
+@import "button-primary-style.css";
+@import "button-small-style.css";
+@import "button-link-style.css";
 
 /* Browser-specific corrections to the standard implementation */
-@import "safari.css";
-@import "firefox.css";
-@import "opera.css";
-@import "ie.css";
+@import "button-safari.css";
+@import "button-firefox.css";
+@import "button-opera.css";
+@import "button-ie.css";
 
 
 

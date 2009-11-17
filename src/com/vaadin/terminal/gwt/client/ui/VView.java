@@ -143,6 +143,21 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
          $wnd.location.reload();
      }-*/;
 
+    /**
+     * Evaluate the given script in the browser document.
+     * 
+     * @param script
+     *            Script to be executed.
+     */
+    private static native void eval(String script)
+    /*-{
+      try {
+         if (script == null) return;
+         $wnd.eval(script);
+      } catch (e) {
+      }
+    }-*/;
+
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         rendering = true;
 
@@ -263,6 +278,9 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
                     actionHandler = new ShortcutActionHandler(id, client);
                 }
                 actionHandler.updateActionMap(childUidl);
+            } else if (tag == "execJS") {
+                String script = childUidl.getStringAttribute("script");
+                eval(script);
             } else if (tag == "notifications") {
                 for (final Iterator it = childUidl.getChildIterator(); it
                         .hasNext();) {

@@ -12,16 +12,20 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.ContainerResizedListener;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.Util;
 
 public class VMenuBar extends Widget implements Paintable,
-        CloseHandler<PopupPanel> {
+        CloseHandler<PopupPanel>, ContainerResizedListener {
 
     /** Set the CSS class name to allow styling. */
     public static final String CLASSNAME = "v-menubar";
@@ -32,8 +36,8 @@ public class VMenuBar extends Widget implements Paintable,
 
     protected final VMenuBar hostReference = this;
     protected String submenuIcon = null;
-    protected boolean collapseItems = true;
     protected CustomMenuItem moreItem = null;
+    protected VMenuBar collapsedRootItems;
 
     // Construct an empty command to be used when the item has no command
     // associated
@@ -45,8 +49,11 @@ public class VMenuBar extends Widget implements Paintable,
     protected Element containerElement;
     protected VOverlay popup;
     protected VMenuBar visibleChildMenu;
+    protected boolean menuVisible = false;
     protected VMenuBar parentMenu;
     protected CustomMenuItem selected;
+
+    private Timer layoutTimer;
 
     public VMenuBar() {
         // Create an empty horizontal menubar
@@ -67,23 +74,24 @@ public class VMenuBar extends Widget implements Paintable,
         DOM.appendChild(table, tbody);
 
         if (!subMenu) {
-            setStyleName(CLASSNAME);
+            setStylePrimaryName(CLASSNAME);
             Element tr = DOM.createTR();
             DOM.appendChild(tbody, tr);
             containerElement = tr;
         } else {
-            setStyleName(CLASSNAME + "-submenu");
+            setStylePrimaryName(CLASSNAME + "-submenu");
             containerElement = tbody;
         }
         this.subMenu = subMenu;
 
-        sinkEvents(Event.ONCLICK | Event.ONMOUSEOVER | Event.ONMOUSEOUT);
+        sinkEvents(Event.ONCLICK | Event.ONMOUSEOVER | Event.ONMOUSEOUT
+                | Event.ONLOAD);
     }
 
     /**
      * This method must be implemented to update the client-side component from
      * UIDL data received from server.
-     *
+     * 
      * This method is called when the page is loaded for the first time, and
      * every time UI changes in the component are received from the server.
      */
@@ -105,6 +113,7 @@ public class VMenuBar extends Widget implements Paintable,
 
         UIDL options = uidl.getChildUIDL(0);
 
+        // FIXME remove in version 7
         if (options.hasAttribute("submenuIcon")) {
             submenuIcon = client.translateVaadinUri(uidl.getChildUIDL(0)
                     .getStringAttribute("submenuIcon"));
@@ -112,21 +121,27 @@ public class VMenuBar extends Widget implements Paintable,
             submenuIcon = null;
         }
 
-        collapseItems = options.getBooleanAttribute("collapseItems");
-
-        if (collapseItems) {
+        if (uidl.hasAttribute("width")) {
             UIDL moreItemUIDL = options.getChildUIDL(0);
             StringBuffer itemHTML = new StringBuffer();
 
             if (moreItemUIDL.hasAttribute("icon")) {
                 itemHTML.append("<img src=\""
                         + client.translateVaadinUri(moreItemUIDL
-                                .getStringAttribute("icon"))
-                        + "\" align=\"left\" />");
+                                .getStringAttribute("icon")) + "\" class=\""
+                        + Icon.CLASSNAME + "\" alt=\"\" />");
             }
-            itemHTML.append(moreItemUIDL.getStringAttribute("text"));
+
+            String moreItemText = moreItemUIDL.getStringAttribute("text");
+            if ("".equals(moreItemText)) {
+                moreItemText = "&#x25BA;";
+            }
+            itemHTML.append(moreItemText);
 
             moreItem = new CustomMenuItem(itemHTML.toString(), emptyCommand);
+            collapsedRootItems = new VMenuBar(true);
+            moreItem.setSubMenu(collapsedRootItems);
+            moreItem.addStyleName(CLASSNAME + "-more-menuitem");
         }
 
         UIDL uidlItems = uidl.getChildUIDL(1);
@@ -142,45 +157,66 @@ public class VMenuBar extends Widget implements Paintable,
             String itemText = item.getStringAttribute("text");
             final int itemId = item.getIntAttribute("id");
 
-            boolean itemHasCommand = item.getBooleanAttribute("command");
+            boolean itemHasCommand = item.hasAttribute("command");
 
             // Construct html from the text and the optional icon
             StringBuffer itemHTML = new StringBuffer();
-
-            if (item.hasAttribute("icon")) {
-                itemHTML.append("<img src=\""
-                        + client.translateVaadinUri(item
-                                .getStringAttribute("icon"))
-                        + "\" align=\"left\" />");
-            }
-
-            itemHTML.append(itemText);
-
-            if (currentMenu != this && item.getChildCount() > 0
-                    && submenuIcon != null) {
-                itemHTML.append("<img src=\"" + submenuIcon
-                        + "\" align=\"right\" />");
-            }
-
             Command cmd = null;
 
-            if (itemHasCommand) {
-                // Construct a command that fires onMenuClick(int) with the
-                // item's id-number
-                cmd = new Command() {
-                    public void execute() {
-                        hostReference.onMenuClick(itemId);
+            if (item.hasAttribute("separator")) {
+                itemHTML.append("<span>---</span>");
+            } else {
+                // Add submenu indicator
+                if (item.getChildCount() > 0) {
+                    // FIXME For compatibility reasons: remove in version 7
+                    String bgStyle = "";
+                    if (submenuIcon != null) {
+                        bgStyle = " style=\"background-image: url("
+                                + submenuIcon
+                                + "); text-indent: -999px; width: 1em;\"";
                     }
-                };
+                    itemHTML.append("<span class=\"" + CLASSNAME
+                            + "-submenu-indicator\"" + bgStyle
+                            + ">&#x25BA;</span>");
+                }
+
+                if (item.hasAttribute("icon")) {
+                    itemHTML
+                            .append("<img src=\""
+                                    + client.translateVaadinUri(item
+                                            .getStringAttribute("icon"))
+                                    + "\" class=\"" + Icon.CLASSNAME
+                                    + "\" alt=\"\" />");
+                }
+
+                itemHTML.append(Util.escapeHTML(itemText));
+
+                if (itemHasCommand) {
+                    // Construct a command that fires onMenuClick(int) with the
+                    // item's id-number
+                    cmd = new Command() {
+                        public void execute() {
+                            hostReference.onMenuClick(itemId);
+                        }
+                    };
+                }
             }
 
             currentItem = currentMenu.addItem(itemHTML.toString(), cmd);
+            currentItem.setSeparator(item.hasAttribute("separator"));
+            currentItem.setEnabled(!item.hasAttribute("disabled"));
 
             if (item.getChildCount() > 0) {
                 menuStack.push(currentMenu);
                 iteratorStack.push(itr);
                 itr = item.getChildIterator();
                 currentMenu = new VMenuBar(true);
+                if (uidl.hasAttribute("style")) {
+                    for (String style : uidl.getStringAttribute("style").split(
+                            " ")) {
+                        currentMenu.addStyleDependentName(style);
+                    }
+                }
                 currentItem.setSubMenu(currentMenu);
             }
 
@@ -190,54 +226,14 @@ public class VMenuBar extends Widget implements Paintable,
             }
         }// while
 
-        // we might need to collapse the top-level menu
-        // Only needed if there is more than 1 top level item
-        // TODO and if width is defined
-        if (collapseItems && getItems().size() > 1) {
+        iLayout();
 
-            int topLevelWidth = 0;
-
-            int ourWidth = getOffsetWidth();
-
-            int i = 0;
-            for (; i < getItems().size() && topLevelWidth < ourWidth; i++) {
-                CustomMenuItem item = getItems().get(i);
-                topLevelWidth += item.getOffsetWidth();
-            }
-
-            if (topLevelWidth > getOffsetWidth()) {
-                ArrayList<CustomMenuItem> toBeCollapsed = new ArrayList<CustomMenuItem>();
-                VMenuBar collapsed = new VMenuBar(true);
-                for (int j = i - 2; j < getItems().size(); j++) {
-                    toBeCollapsed.add(getItems().get(j));
-                }
-
-                for (int j = 0; j < toBeCollapsed.size(); j++) {
-                    CustomMenuItem item = toBeCollapsed.get(j);
-                    removeItem(item);
-
-                    // it's ugly, but we have to insert the submenu icon
-                    if (item.getSubMenu() != null && submenuIcon != null) {
-                        StringBuffer itemText = new StringBuffer(item.getHTML());
-                        itemText.append("<img src=\"");
-                        itemText.append(submenuIcon);
-                        itemText.append("\" align=\"right\" />");
-                        item.setHTML(itemText.toString());
-                    }
-
-                    collapsed.addItem(item);
-                }
-
-                moreItem.setSubMenu(collapsed);
-                addItem(moreItem);
-            }
-        }
     }// updateFromUIDL
 
     /**
      * This is called by the items in the menu and it communicates the
      * information to the server
-     *
+     * 
      * @param clickedItemId
      *            id of the item that was clicked
      */
@@ -274,7 +270,7 @@ public class VMenuBar extends Widget implements Paintable,
 
     /**
      * Returns the containing element of the menu
-     *
+     * 
      * @return
      */
     public Element getContainingElement() {
@@ -283,23 +279,30 @@ public class VMenuBar extends Widget implements Paintable,
 
     /**
      * Returns a new child element to add an item to
-     *
+     * 
+     * @param index
+     *            the index in which point to add a new element in a submenu. -1
+     *            will add the new element as the last child (append)
+     * 
      * @return
      */
-    public Element getNewChildElement() {
+    public Element getNewChildElement(int index) {
         if (subMenu) {
             Element tr = DOM.createTR();
-            DOM.appendChild(getContainingElement(), tr);
+            if (index == -1) {
+                DOM.appendChild(getContainingElement(), tr);
+            } else {
+                DOM.insertChild(getContainingElement(), tr, index);
+            }
             return tr;
         } else {
             return getContainingElement();
         }
-
     }
 
     /**
      * Add a new item to this menu
-     *
+     * 
      * @param html
      *            items text
      * @param cmd
@@ -314,19 +317,36 @@ public class VMenuBar extends Widget implements Paintable,
 
     /**
      * Add a new item to this menu
-     *
+     * 
      * @param item
      */
     public void addItem(CustomMenuItem item) {
-        DOM.appendChild(getNewChildElement(), item.getElement());
+        if (items.contains(item)) {
+            return;
+        }
+        DOM.appendChild(getNewChildElement(-1), item.getElement());
         item.setParentMenu(this);
         item.setSelected(false);
         items.add(item);
     }
 
+    public void addItem(CustomMenuItem item, int index) {
+        if (items.contains(item)) {
+            return;
+        }
+        if (subMenu) {
+            DOM.appendChild(getNewChildElement(index), item.getElement());
+        } else {
+            DOM.insertChild(getNewChildElement(-1), item.getElement(), index);
+        }
+        item.setParentMenu(this);
+        item.setSelected(false);
+        items.add(index, item);
+    }
+
     /**
      * Remove the given item from this menu
-     *
+     * 
      * @param item
      */
     public void removeItem(CustomMenuItem item) {
@@ -348,6 +368,12 @@ public class VMenuBar extends Widget implements Paintable,
     public void onBrowserEvent(Event e) {
         super.onBrowserEvent(e);
 
+        // Handle onload events (icon loaded, size changes)
+        if (DOM.eventGetType(e) == Event.ONLOAD) {
+            requestLayout();
+            return;
+        }
+
         Element targetElement = DOM.eventGetTarget(e);
         CustomMenuItem targetItem = null;
         for (int i = 0; i < items.size(); i++) {
@@ -361,11 +387,15 @@ public class VMenuBar extends Widget implements Paintable,
             switch (DOM.eventGetType(e)) {
 
             case Event.ONCLICK:
-                itemClick(targetItem);
+                if (targetItem.isEnabled()) {
+                    itemClick(targetItem);
+                }
                 break;
 
             case Event.ONMOUSEOVER:
-                itemOver(targetItem);
+                if (targetItem.isEnabled()) {
+                    itemOver(targetItem);
+                }
                 break;
 
             case Event.ONMOUSEOUT:
@@ -375,9 +405,22 @@ public class VMenuBar extends Widget implements Paintable,
         }
     }
 
+    private void requestLayout() {
+        if (layoutTimer == null) {
+            layoutTimer = new Timer() {
+                @Override
+                public void run() {
+                    layoutTimer = null;
+                    iLayout();
+                }
+            };
+        }
+        layoutTimer.schedule(100);
+    }
+
     /**
      * When an item is clicked
-     *
+     * 
      * @param item
      */
     public void itemClick(CustomMenuItem item) {
@@ -388,7 +431,8 @@ public class VMenuBar extends Widget implements Paintable,
                 visibleChildMenu.hideChildren();
             }
 
-            hideParents();
+            hideParents(true);
+            menuVisible = false;
             DeferredCommand.addCommand(item.getCommand());
 
         } else {
@@ -396,26 +440,31 @@ public class VMenuBar extends Widget implements Paintable,
                     && item.getSubMenu() != visibleChildMenu) {
                 setSelected(item);
                 showChildMenu(item);
+                menuVisible = true;
+            } else if (!subMenu) {
+                setSelected(null);
+                hideChildren();
+                menuVisible = false;
             }
         }
     }
 
     /**
      * When the user hovers the mouse over the item
-     *
+     * 
      * @param item
      */
     public void itemOver(CustomMenuItem item) {
-        setSelected(item);
-
-        boolean menuWasVisible = visibleChildMenu != null;
-
-        if (menuWasVisible && visibleChildMenu != item.getSubMenu()) {
-            popup.hide();
-            visibleChildMenu = null;
+        if ((subMenu || menuVisible) && !item.isSeparator()) {
+            setSelected(item);
         }
 
-        if (item.getSubMenu() != null && (parentMenu != null || menuWasVisible)
+        if (menuVisible && visibleChildMenu != item.getSubMenu()
+                && popup != null) {
+            popup.hide();
+        }
+
+        if (menuVisible && item.getSubMenu() != null
                 && visibleChildMenu != item.getSubMenu()) {
             showChildMenu(item);
         }
@@ -423,12 +472,14 @@ public class VMenuBar extends Widget implements Paintable,
 
     /**
      * When the mouse is moved away from an item
-     *
+     * 
      * @param item
      */
     public void itemOut(CustomMenuItem item) {
-        if (visibleChildMenu != item.getSubMenu() || visibleChildMenu == null) {
+        if (visibleChildMenu != item.getSubMenu()) {
             hideChildMenu(item);
+            setSelected(null);
+        } else if (visibleChildMenu == null) {
             setSelected(null);
         }
     }
@@ -436,41 +487,63 @@ public class VMenuBar extends Widget implements Paintable,
     /**
      * Shows the child menu of an item. The caller must ensure that the item has
      * a submenu.
-     *
+     * 
      * @param item
      */
     public void showChildMenu(CustomMenuItem item) {
+        final int shadowSpace = 10;
+
         popup = new VOverlay(true, false, true);
         popup.setWidget(item.getSubMenu());
         popup.addCloseHandler(this);
+        popup.addAutoHidePartner(item.getElement());
 
+        int left = 0;
+        int top = 0;
         if (subMenu) {
-            popup.setPopupPosition(item.getParentMenu().getAbsoluteLeft()
-                    + item.getParentMenu().getOffsetWidth(), item
-                    .getAbsoluteTop());
+            left = item.getParentMenu().getAbsoluteLeft()
+                    + item.getParentMenu().getOffsetWidth();
+            top = item.getAbsoluteTop();
         } else {
-            popup.setPopupPosition(item.getAbsoluteLeft(), item.getParentMenu()
-                    .getAbsoluteTop()
-                    + item.getParentMenu().getOffsetHeight());
+            left = item.getAbsoluteLeft();
+            top = item.getParentMenu().getAbsoluteTop()
+                    + item.getParentMenu().getOffsetHeight();
         }
+        popup.setPopupPosition(left, top);
 
         item.getSubMenu().onShow();
         visibleChildMenu = item.getSubMenu();
         item.getSubMenu().setParentMenu(this);
 
         popup.show();
+
+        if (left + popup.getOffsetWidth() >= RootPanel.getBodyElement()
+                .getOffsetWidth()
+                - shadowSpace) {
+            if (subMenu) {
+                left = item.getParentMenu().getAbsoluteLeft()
+                        - popup.getOffsetWidth() - shadowSpace;
+            } else {
+                left = RootPanel.getBodyElement().getOffsetWidth()
+                        - popup.getOffsetWidth() - shadowSpace;
+            }
+            // Accommodate space for shadow
+            if (left < shadowSpace) {
+                left = shadowSpace;
+            }
+            popup.setPopupPosition(left, top);
+        }
     }
 
     /**
      * Hides the submenu of an item
-     *
+     * 
      * @param item
      */
     public void hideChildMenu(CustomMenuItem item) {
         if (visibleChildMenu != null
                 && !(visibleChildMenu == item.getSubMenu())) {
             popup.hide();
-
         }
     }
 
@@ -478,9 +551,25 @@ public class VMenuBar extends Widget implements Paintable,
      * When the menu is shown.
      */
     public void onShow() {
-        if (!items.isEmpty()) {
-            (items.get(0)).setSelected(true);
+        // remove possible previous selection
+        if (selected != null) {
+            selected.setSelected(false);
+            selected = null;
         }
+        menuVisible = true;
+    }
+
+    /**
+     * Listener method, fired when this menu is closed
+     */
+    public void onClose(CloseEvent<PopupPanel> event) {
+        hideChildren();
+        if (event.isAutoClosed()) {
+            hideParents(true);
+            menuVisible = false;
+        }
+        visibleChildMenu = null;
+        popup = null;
     }
 
     /**
@@ -496,22 +585,22 @@ public class VMenuBar extends Widget implements Paintable,
     /**
      * Recursively hide all parent menus
      */
-    public void hideParents() {
-
+    public void hideParents(boolean autoClosed) {
         if (visibleChildMenu != null) {
             popup.hide();
             setSelected(null);
+            menuVisible = !autoClosed;
         }
 
         if (getParentMenu() != null) {
-            getParentMenu().hideParents();
+            getParentMenu().hideParents(autoClosed);
         }
     }
 
     /**
      * Returns the parent menu of this menu, or null if this is the top-level
      * menu
-     *
+     * 
      * @return
      */
     public VMenuBar getParentMenu() {
@@ -520,7 +609,7 @@ public class VMenuBar extends Widget implements Paintable,
 
     /**
      * Set the parent menu of this menu
-     *
+     * 
      * @param parent
      */
     public void setParentMenu(VMenuBar parent) {
@@ -530,7 +619,7 @@ public class VMenuBar extends Widget implements Paintable,
     /**
      * Returns the currently selected item of this menu, or null if nothing is
      * selected
-     *
+     * 
      * @return
      */
     public CustomMenuItem getSelected() {
@@ -539,7 +628,7 @@ public class VMenuBar extends Widget implements Paintable,
 
     /**
      * Set the currently selected item of this menu
-     *
+     * 
      * @param item
      */
     public void setSelected(CustomMenuItem item) {
@@ -556,23 +645,9 @@ public class VMenuBar extends Widget implements Paintable,
     }
 
     /**
-     * Listener method, fired when this menu is closed
-     */
-    public void onClose(CloseEvent<PopupPanel> event) {
-        hideChildren();
-        if (event.isAutoClosed()) {
-            hideParents();
-        }
-        // setSelected(null);
-        visibleChildMenu = null;
-        popup = null;
-
-    }
-
-    /**
-     *
+     * 
      * A class to hold information on menu items
-     *
+     * 
      */
     private class CustomMenuItem extends UIObject implements HasHTML {
 
@@ -580,6 +655,8 @@ public class VMenuBar extends Widget implements Paintable,
         protected Command command = null;
         protected VMenuBar subMenu = null;
         protected VMenuBar parentMenu = null;
+        protected boolean enabled = true;
+        protected boolean isSeparator = false;
 
         public CustomMenuItem(String html, Command cmd) {
             setElement(DOM.createTD());
@@ -588,11 +665,11 @@ public class VMenuBar extends Widget implements Paintable,
             setCommand(cmd);
             setSelected(false);
 
-            addStyleName("menuitem");
+            setStylePrimaryName(CLASSNAME + "-menuitem");
         }
 
         public void setSelected(boolean selected) {
-            if (selected) {
+            if (selected && !isSeparator) {
                 addStyleDependentName("selected");
             } else {
                 removeStyleDependentName("selected");
@@ -642,8 +719,104 @@ public class VMenuBar extends Widget implements Paintable,
 
         public void setText(String text) {
             setHTML(text);
+        }
 
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+            if (enabled) {
+                removeStyleDependentName("disabled");
+            } else {
+                addStyleDependentName("disabled");
+            }
+        }
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        private void setSeparator(boolean separator) {
+            isSeparator = separator;
+            if (separator) {
+                setStyleName(CLASSNAME + "-separator");
+            } else {
+                setStyleName(CLASSNAME + "-menuitem");
+                setEnabled(enabled);
+            }
+        }
+
+        public boolean isSeparator() {
+            return isSeparator;
         }
     }
 
-}// class VMenuBar
+    /**
+     * @author Jouni Koivuviita / IT Mill Ltd.
+     */
+
+    public void iLayout() {
+        // Only collapse if there is more than one item in the root menu and the
+        // menu has an explicit size
+        if ((getItems().size() > 1 || collapsedRootItems.getItems().size() > 0)
+                && getElement().getStyle().getProperty("width") != null
+                && moreItem != null) {
+
+            // Measure the width of the "more" item
+            final boolean morePresent = getItems().contains(moreItem);
+            addItem(moreItem);
+            final int moreItemWidth = moreItem.getOffsetWidth();
+            if (!morePresent) {
+                removeItem(moreItem);
+            }
+
+            // Measure available space
+            int availableWidth = getElement().getClientWidth();
+            final int rootWidth = getElement().getFirstChildElement()
+                    .getOffsetWidth();
+            int diff = availableWidth - rootWidth;
+
+            removeItem(moreItem);
+
+            if (diff < 0) {
+                // Too many items: collapse last items from root menu
+                final int widthNeeded = moreItemWidth - diff;
+                int widthReduced = 0;
+
+                while (widthReduced < widthNeeded && getItems().size() > 0) {
+                    // Move last root menu item to collapsed menu
+                    CustomMenuItem collapse = getItems().get(
+                            getItems().size() - 1);
+                    widthReduced += collapse.getOffsetWidth();
+                    removeItem(collapse);
+                    collapsedRootItems.addItem(collapse, 0);
+                }
+            } else if (collapsedRootItems.getItems().size() > 0) {
+                // Space available for items: expand first items from collapsed
+                // menu
+                int widthAvailable = diff + moreItemWidth;
+                int widthGrowth = 0;
+
+                while (widthAvailable > widthGrowth) {
+                    // Move first item from collapsed menu to the root menu
+                    CustomMenuItem expand = collapsedRootItems.getItems()
+                            .get(0);
+                    collapsedRootItems.removeItem(expand);
+                    addItem(expand);
+                    widthGrowth += expand.getOffsetWidth();
+                    if (collapsedRootItems.getItems().size() > 0) {
+                        widthAvailable -= moreItemWidth;
+                    }
+                    if (widthGrowth > widthAvailable) {
+                        removeItem(expand);
+                        collapsedRootItems.addItem(expand, 0);
+                    } else {
+                        widthAvailable = diff;
+                    }
+                }
+            }
+            if (collapsedRootItems.getItems().size() > 0) {
+                addItem(moreItem);
+            }
+        }
+    }
+
+}

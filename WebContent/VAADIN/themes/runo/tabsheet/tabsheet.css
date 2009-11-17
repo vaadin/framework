@@ -83,6 +83,23 @@
 	padding: 16px 16px 14px 7px;
 	overflow: visible;
 }
+.v-tabsheet-caption-close {
+	margin-left: 3px;
+	margin-right: -3px;
+	width: 16px;
+	height: 16px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	color: #777f85;
+	line-height: 13px;
+}
+.v-tabsheet-caption-close:hover {
+	background: #dce0e0;
+}
+.v-tabsheet-caption-close:active {
+	background: #b6bbbc;
+	color: #fff;
+}
 .v-tabsheet-content {
 	border: 1px solid #babfc0;
 	background-color: #fff;

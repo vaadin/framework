@@ -346,7 +346,6 @@ public class ApplicationConnection {
         }
 
         if (!forceSync) {
-            boolean success = false;
             final RequestBuilder rb = new RequestBuilder(RequestBuilder.POST,
                     uri);
             // TODO enable timeout
@@ -369,11 +368,14 @@ public class ApplicationConnection {
                                 + String.valueOf((new Date()).getTime()
                                         - requestStartTime.getTime()) + "ms");
 
-                        switch (response.getStatusCode()) {
+                        int statusCode = response.getStatusCode();
+                        switch (statusCode) {
                         case 0:
                             showCommunicationError("Invalid status code 0 (server down?)");
                             return;
-                            // TODO could add more cases
+                        case 404:
+                            showCommunicationError("UIDL could not be read from server. Check servlets mappings.");
+                            return;
                         case 503:
                             // We'll assume msec instead of the usual seconds
                             int delay = Integer.parseInt(response

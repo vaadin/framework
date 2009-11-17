@@ -20,6 +20,11 @@ import java.util.regex.Pattern;
 /**
  * Helper class to update widgetsets GWT module configuration file. Can be used
  * command line or via IDE tools.
+ *
+ * <p>
+ * If module definition file contains text "WS Compiler: manually edited", tool
+ * will skip editing file.
+ *
  */
 public class WidgetSetBuilder {
 
@@ -60,38 +65,62 @@ public class WidgetSetBuilder {
                     + "Google Web Toolkit 1.7.0//EN\" \"http://google"
                     + "-web-toolkit.googlecode.com/svn/tags/1.7.0/dis"
                     + "tro-source/core/src/gwt-module.dtd\">\n");
-            printStream.print("<module>\n\n</module>\n");
+            printStream.print("<module>\n");
+            printStream
+                    .print("    <!--\n"
+                            + "     Uncomment the following to compile the widgetset for one browser only.\n"
+                            + "     This can reduce the GWT compilation time significantly when debugging.\n"
+                            + "     The line should be commented out before deployment to production\n"
+                            + "     environments.\n\n"
+                            + "     Multiple browsers can be specified for GWT 1.7 as a comma separated\n"
+                            + "     list. The supported user agents at the moment of writing were:\n"
+                            + "     ie6,ie8,gecko,gecko1_8,safari,opera\n\n"
+                            + "     The value gecko is used for Firefox 3 and later, gecko1_8 is for\n"
+                            + "     Firefox 2 and safari is used for  webkit based browsers including\n"
+                            + "     Google Chrome.\n"
+                            + "    -->\n"
+                            + "    <!-- <set-property name=\"user.agent\" value=\"gecko\"/> -->\n");
+            printStream.print("\n</module>\n");
             printStream.close();
             changed = true;
         }
 
         String content = readFile(widgetsetFile);
-        String originalContent = content;
+        if (isEditable(content)) {
+            String originalContent = content;
 
-        Collection<String> oldInheritedWidgetsets = getCurrentWidgetSets(content);
+            Collection<String> oldInheritedWidgetsets = getCurrentWidgetSets(content);
 
-        // add widgetsets that do not exist
-        for (String ws : availableWidgetSets.keySet()) {
-            if (ws.equals(widgetset)) {
-                // do not inherit the module itself
-                continue;
+            // add widgetsets that do not exist
+            for (String ws : availableWidgetSets.keySet()) {
+                if (ws.equals(widgetset)) {
+                    // do not inherit the module itself
+                    continue;
+                }
+                if (!oldInheritedWidgetsets.contains(ws)) {
+                    content = addWidgetSet(ws, content);
+                }
             }
-            if (!oldInheritedWidgetsets.contains(ws)) {
-                content = addWidgetSet(ws, content);
-            }
-        }
 
-        for (String ws : oldInheritedWidgetsets) {
-            if (!availableWidgetSets.containsKey(ws)) {
-                // widgetset not available in classpath
-                content = removeWidgetSet(ws, content);
+            for (String ws : oldInheritedWidgetsets) {
+                if (!availableWidgetSets.containsKey(ws)) {
+                    // widgetset not available in classpath
+                    content = removeWidgetSet(ws, content);
+                }
             }
-        }
 
-        changed = changed || !content.equals(originalContent);
-        if (changed) {
-            commitChanges(widgetsetfilename, content);
+            changed = changed || !content.equals(originalContent);
+            if (changed) {
+                commitChanges(widgetsetfilename, content);
+            }
+        } else {
+            System.out
+                    .println("Widgetset is manually edited. Skipping updates.");
         }
+    }
+
+    private static boolean isEditable(String content) {
+        return !content.contains("WS Compiler: manually edited");
     }
 
     private static String removeWidgetSet(String ws, String content) {
@@ -135,6 +164,7 @@ public class WidgetSetBuilder {
             sb.append(line);
             sb.append("\n");
         }
+        fi.close();
         return sb.toString();
     }
 

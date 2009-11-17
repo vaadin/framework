@@ -35,7 +35,7 @@ public class TabSheet extends AbstractComponentContainer implements
     /**
      * Linked list of component tabs.
      */
-    private final LinkedList components = new LinkedList();
+    private final LinkedList<Component> components = new LinkedList<Component>();
 
     /**
      * Map containing information related to the tabs (caption, icon etc).
@@ -54,7 +54,9 @@ public class TabSheet extends AbstractComponentContainer implements
      */
     private boolean tabsHidden;
 
-    private LinkedList paintedTabs = new LinkedList();
+    private LinkedList<Component> paintedTabs = new LinkedList<Component>();
+
+    private CloseHandler closeHandler;
 
     /**
      * Constructs a new Tabsheet. Tabsheet is immediate by default.
@@ -64,6 +66,11 @@ public class TabSheet extends AbstractComponentContainer implements
         // expand horizontally by default
         setWidth(100, UNITS_PERCENTAGE);
         setImmediate(true);
+        setCloseHandler(new CloseHandler() {
+            public void onTabClose(TabSheet tabsheet, Component c) {
+                tabsheet.removeComponent(c);
+            }
+        });
     }
 
     /**
@@ -72,7 +79,7 @@ public class TabSheet extends AbstractComponentContainer implements
      * 
      * @return the Iterator of the components inside the container.
      */
-    public Iterator getComponentIterator() {
+    public Iterator<Component> getComponentIterator() {
         return java.util.Collections.unmodifiableList(components).iterator();
     }
 
@@ -93,7 +100,7 @@ public class TabSheet extends AbstractComponentContainer implements
                 if (components.isEmpty()) {
                     selected = null;
                 } else {
-                    selected = (Component) components.getFirst();
+                    selected = components.getFirst();
                     fireSelectedTabChange();
                 }
             }
@@ -168,8 +175,9 @@ public class TabSheet extends AbstractComponentContainer implements
      */
     @Override
     public void moveComponentsFrom(ComponentContainer source) {
-        for (final Iterator i = source.getComponentIterator(); i.hasNext();) {
-            final Component c = (Component) i.next();
+        for (final Iterator<Component> i = source.getComponentIterator(); i
+                .hasNext();) {
+            final Component c = i.next();
             String caption = null;
             Resource icon = null;
             if (TabSheet.class.isAssignableFrom(source.getClass())) {
@@ -199,8 +207,8 @@ public class TabSheet extends AbstractComponentContainer implements
 
         target.startTag("tabs");
 
-        for (final Iterator i = getComponentIterator(); i.hasNext();) {
-            final Component component = (Component) i.next();
+        for (final Iterator<Component> i = getComponentIterator(); i.hasNext();) {
+            final Component component = i.next();
             Tab tab = tabs.get(component);
 
             /*
@@ -234,6 +242,10 @@ public class TabSheet extends AbstractComponentContainer implements
 
             if (!tab.isVisible()) {
                 target.addAttribute("hidden", true);
+            }
+
+            if (tab.isClosable()) {
+                target.addAttribute("closable", true);
             }
 
             final Resource icon = tab.getIcon();
@@ -417,6 +429,13 @@ public class TabSheet extends AbstractComponentContainer implements
             setSelectedTab((Component) keyMapper.get((String) variables
                     .get("selected")));
         }
+        if (variables.containsKey("close")) {
+            final Component tab = (Component) keyMapper.get((String) variables
+                    .get("close"));
+            if (tab != null) {
+                closeHandler.onTabClose(this, tab);
+            }
+        }
     }
 
     /* Documented in superclass */
@@ -453,8 +472,8 @@ public class TabSheet extends AbstractComponentContainer implements
         int oldLocation = -1;
         int newLocation = -1;
         int location = 0;
-        for (final Iterator i = components.iterator(); i.hasNext();) {
-            final Component component = (Component) i.next();
+        for (final Iterator<Component> i = components.iterator(); i.hasNext();) {
+            final Component component = i.next();
 
             if (component == oldComponent) {
                 oldLocation = location;
@@ -636,6 +655,23 @@ public class TabSheet extends AbstractComponentContainer implements
         public void setVisible(boolean visible);
 
         /**
+         * Returns the closability status for the tab.
+         * 
+         * @return true if the tab is allowed to be closed by the end user,
+         *         false for not allowing closing
+         */
+        public boolean isClosable();
+
+        /**
+         * Sets the closability status for the tab.
+         * 
+         * @param visible
+         *            true if the end user is allowed to close the tab, false
+         *            for not allowing to close. Should default to false.
+         */
+        public void setClosable(boolean closable);
+
+        /**
          * Returns the enabled status for the tab.
          * 
          * @return true for enabled, false for disabled
@@ -710,6 +746,7 @@ public class TabSheet extends AbstractComponentContainer implements
         private Resource icon = null;
         private boolean enabled = true;
         private boolean visible = true;
+        private boolean closable = false;
         private String description = null;
         private ErrorMessage componentError = null;
 
@@ -760,6 +797,19 @@ public class TabSheet extends AbstractComponentContainer implements
             requestRepaint();
         }
 
+        public boolean isClosable() {
+            return closable;
+        }
+
+        public void setClosable(boolean closable) {
+            this.closable = closable;
+            requestRepaint();
+        }
+
+        public void close() {
+
+        }
+
         public String getDescription() {
             return description;
         }
@@ -777,6 +827,44 @@ public class TabSheet extends AbstractComponentContainer implements
             this.componentError = componentError;
             requestRepaint();
         }
+    }
 
+    /**
+     * CloseHandler is used to process tab closing events. Default behavior is
+     * to remove the tab from the TabSheet.
+     * 
+     * @author Jouni Koivuviita / IT Mill Ltd.
+     * @since 6.2.0
+     * 
+     */
+    public interface CloseHandler {
+
+        /**
+         * Called when a user has pressed the close icon of a tab in the client
+         * side widget.
+         * 
+         * @param tabsheet
+         *            the TabSheet to which the tab belongs to
+         * @param tabContent
+         *            the component that corresponds to the tab whose close
+         *            button was clicked
+         */
+        void onTabClose(final TabSheet tabsheet, final Component tabContent);
+    }
+
+    /**
+     * Provide a custom {@link CloseHandler} for this TabSheet if you wish to
+     * perform some additional tasks when a user clicks on a tabs close button,
+     * e.g. show a confirmation dialogue before removing the tab.
+     * 
+     * To remove the tab, if you provide your own close handler, you must call
+     * {@link #removeComponent(Component)} yourself.
+     * 
+     * The default CloseHandler for TabSheet will only remove the tab.
+     * 
+     * @param handler
+     */
+    public void setCloseHandler(CloseHandler handler) {
+        closeHandler = handler;
     }
 }

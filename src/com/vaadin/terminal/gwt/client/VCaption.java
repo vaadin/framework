@@ -343,26 +343,26 @@ public class VCaption extends HTML {
         int h;
 
         if (icon != null) {
-            h = icon.getOffsetHeight();
+            h = Util.getRequiredHeight(icon.getElement());
             if (h > height) {
                 height = h;
             }
         }
 
         if (captionText != null) {
-            h = captionText.getOffsetHeight();
+            h = Util.getRequiredHeight(captionText);
             if (h > height) {
                 height = h;
             }
         }
         if (requiredFieldIndicator != null) {
-            h = requiredFieldIndicator.getOffsetHeight();
+            h = Util.getRequiredHeight(requiredFieldIndicator);
             if (h > height) {
                 height = h;
             }
         }
         if (errorIndicatorElement != null) {
-            h = errorIndicatorElement.getOffsetHeight();
+            h = Util.getRequiredHeight(errorIndicatorElement);
             if (h > height) {
                 height = h;
             }

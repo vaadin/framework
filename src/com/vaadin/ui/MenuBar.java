@@ -29,8 +29,20 @@ public class MenuBar extends AbstractComponent {
     // Number of items in this menu
     private static int numberOfItems = 0;
 
+    /**
+     * @deprecated
+     * @see #setCollapse(boolean)
+     */
+    @Deprecated
     private boolean collapseItems;
+
+    /**
+     * @deprecated
+     * @see #setSubmenuIcon(Resource)
+     */
+    @Deprecated
     private Resource submenuIcon;
+
     private MenuItem moreItem;
 
     /** Paint (serialise) the component for the client. */
@@ -49,9 +61,7 @@ public class MenuBar extends AbstractComponent {
             target.addAttribute("submenuIcon", submenuIcon);
         }
 
-        target.addAttribute("collapseItems", collapseItems);
-
-        if (collapseItems) {
+        if (getWidth() > -1) {
             target.startTag("moreItem");
             target.addAttribute("text", moreItem.getText());
             if (moreItem.getIcon() != null) {
@@ -69,31 +79,43 @@ public class MenuBar extends AbstractComponent {
         while (itr.hasNext()) {
 
             MenuItem item = itr.next();
+            if (!item.isVisible()) {
+                continue;
+            }
 
             target.startTag("item");
-
-            target.addAttribute("text", item.getText());
             target.addAttribute("id", item.getId());
 
-            Command command = item.getCommand();
-            if (command != null) {
-                target.addAttribute("command", true);
+            if (item.isSeparator()) {
+                target.addAttribute("separator", true);
+                target.endTag("item");
             } else {
-                target.addAttribute("command", false);
-            }
+                target.addAttribute("text", item.getText());
 
-            Resource icon = item.getIcon();
-            if (icon != null) {
-                target.addAttribute("icon", icon);
-            }
+                Command command = item.getCommand();
+                if (command != null) {
+                    target.addAttribute("command", true);
+                }
 
-            if (item.hasChildren()) {
-                iteratorStack.push(itr); // For later use
+                Resource icon = item.getIcon();
+                if (icon != null) {
+                    target.addAttribute("icon", icon);
+                }
 
-                // Go through the children
-                itr = item.getChildren().iterator();
-            } else {
-                target.endTag("item"); // Item had no children, end description
+                if (!item.isEnabled()) {
+                    target.addAttribute("disabled", true);
+                }
+
+                if (item.hasChildren()) {
+                    iteratorStack.push(itr); // For later use
+
+                    // Go through the children
+                    itr = item.getChildren().iterator();
+                } else {
+                    target.endTag("item"); // Item had no children, end
+                    // description
+                }
+
             }
 
             // The end submenu. More than one submenu may end at once.
@@ -101,7 +123,6 @@ public class MenuBar extends AbstractComponent {
                 itr = iteratorStack.pop();
                 target.endTag("item");
             }
-
         }
 
         target.endTag("items");
@@ -138,7 +159,7 @@ public class MenuBar extends AbstractComponent {
             }// while
 
             // If we got the clicked item, launch the command.
-            if (found) {
+            if (found && tmpItem.isEnabled()) {
                 tmpItem.getCommand().menuSelected(tmpItem);
             }
         }// if
@@ -270,40 +291,46 @@ public class MenuBar extends AbstractComponent {
      * Set the icon to be used if a sub-menu has children. Defaults to null;
      * 
      * @param icon
+     * @deprecated (since 6.2, will be removed in 7.0) Icon is set in theme, no
+     *             need to worry about the visual representation here.
      */
+    @Deprecated
     public void setSubmenuIcon(Resource icon) {
         submenuIcon = icon;
         requestRepaint();
     }
 
     /**
-     * Get the icon used for sub-menus. Returns null if no icon is set.
-     * 
-     * @return
+     * @deprecated
+     * @see #setSubmenuIcon(Resource)
      */
+    @Deprecated
     public Resource getSubmenuIcon() {
         return submenuIcon;
     }
 
     /**
      * Enable or disable collapsing top-level items. Top-level items will
-     * collapse to if there is not enough room for them. Items that don't fit
-     * will be placed under the "More" menu item.
+     * collapse together if there is not enough room for them. Items that don't
+     * fit will be placed under the "More" menu item.
      * 
      * Collapsing is enabled by default.
      * 
      * @param collapse
+     * @deprecated (since 6.2, will be removed in 7.0) Collapsing is always
+     *             enabled if the MenuBar has a specified width.
      */
+    @Deprecated
     public void setCollapse(boolean collapse) {
         collapseItems = collapse;
         requestRepaint();
     }
 
     /**
-     * Collapsing is enabled by default.
-     * 
-     * @return true if the top-level items will be collapsed
+     * @see #setCollapse(boolean)
+     * @deprecated
      */
+    @Deprecated
     public boolean getCollapse() {
         return collapseItems;
     }
@@ -311,8 +338,9 @@ public class MenuBar extends AbstractComponent {
     /**
      * Set the item that is used when collapsing the top level menu. All
      * "overflowing" items will be added below this. The item command will be
-     * ignored. If set to null, the default item with the "More" text is be
-     * used.
+     * ignored. If set to null, the default item with a downwards arrow is used.
+     * 
+     * The item command (if specified) is ignored.
      * 
      * @param item
      */
@@ -320,7 +348,7 @@ public class MenuBar extends AbstractComponent {
         if (item != null) {
             moreItem = item;
         } else {
-            moreItem = new MenuItem("More", null, null);
+            moreItem = new MenuItem("", null, null);
         }
         requestRepaint();
     }
@@ -360,6 +388,9 @@ public class MenuBar extends AbstractComponent {
         private List<MenuItem> itsChildren;
         private Resource itsIcon;
         private MenuItem itsParent;
+        private boolean enabled = true;
+        private boolean visible = true;
+        private boolean isSeparator = false;
 
         /**
          * Constructs a new menu item that can optionally have an icon and a
@@ -388,7 +419,27 @@ public class MenuBar extends AbstractComponent {
          * @return True if this item has children
          */
         public boolean hasChildren() {
-            return itsChildren != null;
+            return !isSeparator() && itsChildren != null;
+        }
+
+        /**
+         * Adds a separator to this menu. A separator is a way to visually group
+         * items in a menu, to make it easier for users to find what they are
+         * looking for in the menu.
+         * 
+         * @author Jouni Koivuviita / IT Mill Ltd.
+         * @since 6.2.0
+         */
+        public MenuBar.MenuItem addSeparator() {
+            MenuItem item = addItem("", null, null);
+            item.setSeparator(true);
+            return item;
+        }
+
+        public MenuBar.MenuItem addSeparatorBefore(MenuItem itemToAddBefore) {
+            MenuItem item = addItemBefore("", null, null, itemToAddBefore);
+            item.setSeparator(true);
+            return item;
         }
 
         /**
@@ -417,8 +468,12 @@ public class MenuBar extends AbstractComponent {
          */
         public MenuBar.MenuItem addItem(String caption, Resource icon,
                 MenuBar.Command command) {
+            if (isSeparator()) {
+                throw new UnsupportedOperationException(
+                        "Cannot add items to a separator");
+            }
             if (caption == null) {
-                throw new IllegalArgumentException("caption cannot be null");
+                throw new IllegalArgumentException("Caption cannot be null");
             }
 
             if (itsChildren == null) {
@@ -461,7 +516,6 @@ public class MenuBar extends AbstractComponent {
                 newItem = new MenuItem(caption, icon, command);
                 newItem.setParent(this);
                 itsChildren.add(index, newItem);
-
             } else {
                 newItem = addItem(caption, icon, command);
             }
@@ -524,7 +578,10 @@ public class MenuBar extends AbstractComponent {
          * @return The number of child items
          */
         public int getSize() {
-            return itsChildren.size();
+            if (itsChildren != null) {
+                return itsChildren.size();
+            }
+            return -1;
         }
 
         /**
@@ -582,8 +639,8 @@ public class MenuBar extends AbstractComponent {
                 if (itsChildren.isEmpty()) {
                     itsChildren = null;
                 }
+                requestRepaint();
             }
-            requestRepaint();
         }
 
         /**
@@ -593,8 +650,8 @@ public class MenuBar extends AbstractComponent {
             if (itsChildren != null) {
                 itsChildren.clear();
                 itsChildren = null;
+                requestRepaint();
             }
-            requestRepaint();
         }
 
         /**
@@ -605,6 +662,33 @@ public class MenuBar extends AbstractComponent {
          */
         protected void setParent(MenuBar.MenuItem parent) {
             itsParent = parent;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+            requestRepaint();
+        }
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setVisible(boolean visible) {
+            this.visible = visible;
+            requestRepaint();
+        }
+
+        public boolean isVisible() {
+            return visible;
+        }
+
+        private void setSeparator(boolean isSeparator) {
+            this.isSeparator = isSeparator;
+            requestRepaint();
+        }
+
+        public boolean isSeparator() {
+            return isSeparator;
         }
 
     }// class MenuItem

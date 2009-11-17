@@ -191,8 +191,8 @@ public class CompositeValidator extends AbstractValidator {
      */
     @Override
     public String getErrorMessage() {
-        if (getErrorMessage() != null) {
-            return getErrorMessage();
+        if (super.getErrorMessage() != null) {
+            return super.getErrorMessage();
         }
 
         // TODO Return composite error message

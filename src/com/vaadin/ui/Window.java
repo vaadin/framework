@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -118,6 +119,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     private boolean centerRequested = false;
 
     private Focusable pendingFocus;
+
+    private ArrayList<String> jsExecQueue = null;
 
     /* ********************************************************************* */
 
@@ -381,7 +384,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         if (getParent() != null) {
             // this is subwindow
             Window mainWindow = (Window) getParent();
-            mainWindow.addParameterHandler(handler);
+            mainWindow.removeParameterHandler(handler);
         } else {
             if (handler == null || parameterHandlerList == null) {
                 return;
@@ -519,6 +522,16 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
         // Contents of the window panel is painted
         super.paintContent(target);
+
+        // Add executable javascripts if needed
+        if (jsExecQueue != null) {
+            for (String script : jsExecQueue) {
+                target.startTag("execJS");
+                target.addAttribute("script", script);
+                target.endTag("execJS");
+            }
+            jsExecQueue = null;
+        }
 
         // Window position
         target.addVariable(this, "positionx", getPositionX());
@@ -1632,4 +1645,39 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         }
     }
 
+    /**
+     * Executes JavaScript in this window.
+     * 
+     * <p>
+     * This method allows one to inject javascript from the server to client. A
+     * client implementation is not required to implement this functionality,
+     * but currently all web-based clients do implement this.
+     * </p>
+     * 
+     * <p>
+     * Executing javascript this way often leads to cross-browser compatibility
+     * issues and regressions that are hard to resolve. Use of this method
+     * should be avoided and instead it is recommended to create new widgets
+     * with GWT. For more info on creating own, reusable client-side widgets in
+     * Java, read the corresponding chapter in Book of Vaadin.
+     * </p>
+     * 
+     * @param script
+     *            JavaScript snippet that will be executed.
+     */
+    public void executeJavaScript(String script) {
+
+        if (getParent() != null) {
+            throw new UnsupportedOperationException(
+                    "Only application level windows can execute javascript.");
+        }
+
+        if (jsExecQueue == null) {
+            jsExecQueue = new ArrayList<String>();
+        }
+
+        jsExecQueue.add(script);
+
+        requestRepaint();
+    }
 }

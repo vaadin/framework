@@ -7,12 +7,13 @@
 	text-shadow: rgba(0,0,0,.9) 0 1px 0;
 }
 .v-menubar table {
-	margin-left: 8px;
+	margin: 0 8px;
 	height: 23px;
 }
-.v-menubar .menuitem {
+.v-menubar .v-menubar-menuitem {
 	padding: 3px 8px;
 	height: 17px;
+	line-height: 16px;
 }
 .v-menubar-submenu {
 	background: #f8f8f9;
@@ -24,25 +25,33 @@
 	overflow: hidden;
 	padding: 4px 0;
 }
-.v-menubar-submenu .menuitem {
-	padding: 1px 15px 1px 10px;
+.v-menubar-submenu .v-menubar-menuitem {
+	padding: 1px 20px 1px 10px;
 	height: 16px;
+	line-height: 16px;
 }
-.v-menubar .menuitem-selected,
-.v-menubar-submenu .menuitem-selected {
+.v-menubar .v-menubar-menuitem-selected,
+.v-menubar-submenu .v-menubar-menuitem-selected {
 	background: #4d749f repeat-x;
 	background-image: url(../common/img/sel-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 	color: #fff;
 	text-shadow: #3b5a7a 0 1px 0;
 }
-.v-menubar .menuitem-selected {
+.v-menubar .v-menubar-menuitem-selected {
 	background-image: url(img/menu-sel-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 }
-
-/* Submenu icon (remove after #2849 is fixed) */
-.v-menubar-submenu .menuitem img[align="right"] {
-	margin-right: -15px;
+.v-menubar-submenu .v-menubar-submenu-indicator {
+	background: transparent url(img/submenu-icon.png) no-repeat right 70%;
+	width: 16px;
+	margin: 0 -20px 0 5px;
+	text-indent: -999px;
+	vertical-align: middle;
 }
-.v-ie .v-menubar-submenu .menuitem img[align="right"] {
-	margin-top: -14px;
+.v-ie7 .v-menubar-submenu .v-menubar-submenu-indicator {
+	margin: 0 -20px 0 0;
+	position: relative;
+	right: -4px;
+}
+.v-menubar-submenu .v-menubar-menuitem-selected .v-menubar-submenu-indicator {
+	background-image: url(img/submenu-icon-hover.png);
 }

@@ -17,7 +17,6 @@
 .v-Notification-warning p {
 	display: inline;
 	font-weight: normal;
-	white-space: nowrap;
 	margin: 0 10px 0 0;
 }
 .v-Notification-warning {

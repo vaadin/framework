@@ -272,15 +272,31 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
                                 c.cc.updateWidgetSize();
                                 int newHeight = c.getHeight();
                                 if (columnWidths[i] < oldWidths[i]
-                                        && newHeight > minRowHeights[j]) {
+                                        && newHeight > minRowHeights[j]
+                                        && c.rowspan == 1) {
+                                    /*
+                                     * The width of this column was reduced and
+                                     * this affected the height. The height is
+                                     * now greater than the previously
+                                     * calculated minHeight for the row.
+                                     */
                                     minRowHeights[j] = newHeight;
                                     if (newHeight > rowHeights[j]) {
+                                        /*
+                                         * The new height is greater than the
+                                         * previously calculated rowHeight -> we
+                                         * need to recalculate heights later on
+                                         */
                                         rowHeights[j] = newHeight;
                                         heightChanged = true;
                                     }
                                 } else if (newHeight < minRowHeights[j]) {
-                                    // need to recalculate new minimum height
-                                    // for this row
+                                    /*
+                                     * The new height of the component is less
+                                     * than the previously calculated min row
+                                     * height. The min row height may be
+                                     * affected and must thus be recalculated
+                                     */
                                     if (dirtyRows == null) {
                                         dirtyRows = new HashSet<Integer>();
                                     }

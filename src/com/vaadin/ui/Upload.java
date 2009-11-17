@@ -244,8 +244,6 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 
         target.addAttribute("buttoncaption", buttonCaption);
 
-        target.addVariable(this, "fake", true);
-
         target.addUploadStreamVariable(this, "stream");
     }
 

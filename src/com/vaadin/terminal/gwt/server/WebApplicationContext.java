@@ -36,7 +36,8 @@ import com.vaadin.service.ApplicationContext;
 public class WebApplicationContext implements ApplicationContext,
         HttpSessionBindingListener, Serializable {
 
-    protected List<TransactionListener> listeners;
+    protected List<TransactionListener> listeners = Collections
+            .synchronizedList(new LinkedList<TransactionListener>());
 
     protected transient HttpSession session;
 
@@ -87,7 +88,7 @@ public class WebApplicationContext implements ApplicationContext,
     }
 
     /**
-     * Gets the application context for HttpSession.
+     * Gets the application context for an HttpSession.
      * 
      * @param session
      *            the HTTP session.
@@ -108,70 +109,68 @@ public class WebApplicationContext implements ApplicationContext,
     }
 
     /**
-     * Adds the transaction listener to this context.
+     * Adds a transaction listener to this context. The transaction listener is
+     * called before and after each each HTTP request related to this session
+     * except when serving static resources.
+     * 
      * 
      * @see com.vaadin.service.ApplicationContext#addTransactionListener(com.vaadin.service.ApplicationContext.TransactionListener)
      */
     public void addTransactionListener(TransactionListener listener) {
-        if (listeners == null) {
-            listeners = new LinkedList<TransactionListener>();
-        }
         listeners.add(listener);
     }
 
     /**
-     * Removes the transaction listener from this context.
+     * Removes a transaction listener from this context. The transaction
+     * listener is called before and after each each HTTP request related to
+     * this session except when serving static resources.
      * 
      * @see com.vaadin.service.ApplicationContext#removeTransactionListener(com.vaadin.service.ApplicationContext.TransactionListener)
      */
     public void removeTransactionListener(TransactionListener listener) {
-        if (listeners != null) {
-            listeners.remove(listener);
-        }
+        listeners.remove(listener);
 
     }
 
     /**
-     * Notifies the transaction start.
+     * Sends a notification that a transaction is starting.
      * 
      * @param application
+     *            The application associated with the transaction.
      * @param request
-     *            the HTTP request.
+     *            the HTTP request that triggered the transaction.
      */
     protected void startTransaction(Application application,
             HttpServletRequest request) {
-        if (listeners == null) {
-            return;
-        }
-        for (final Iterator i = listeners.iterator(); i.hasNext();) {
-            ((ApplicationContext.TransactionListener) i.next())
-                    .transactionStart(application, request);
+        synchronized (listeners) {
+            for (TransactionListener listener : listeners) {
+                listener.transactionStart(application, request);
+            }
         }
     }
 
     /**
-     * Notifies the transaction end.
+     * Sends a notification that a transaction has ended.
      * 
      * @param application
+     *            The application associated with the transaction.
      * @param request
-     *            the HTTP request.
+     *            the HTTP request that triggered the transaction.
      */
     protected void endTransaction(Application application,
             HttpServletRequest request) {
-        if (listeners == null) {
-            return;
-        }
-
         LinkedList<Exception> exceptions = null;
-        for (final Iterator i = listeners.iterator(); i.hasNext();) {
-            try {
-                ((ApplicationContext.TransactionListener) i.next())
-                        .transactionEnd(application, request);
-            } catch (final RuntimeException t) {
-                if (exceptions == null) {
-                    exceptions = new LinkedList<Exception>();
+
+        synchronized (listeners) {
+            for (TransactionListener listener : listeners) {
+                try {
+                    listener.transactionEnd(application, request);
+                } catch (final RuntimeException t) {
+                    if (exceptions == null) {
+                        exceptions = new LinkedList<Exception>();
+                    }
+                    exceptions.add(t);
                 }
-                exceptions.add(t);
             }
         }
 

@@ -150,7 +150,18 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
         popup.show();
     }
 
-    private void showPopup(final CustomPopup popup) {
+    /**
+     * Determines the correct position for a popup and displays the popup at
+     * that position.
+     *
+     * By default, the popup is shown centered relative to its host component,
+     * ensuring it is visible on the screen if possible.
+     *
+     * Can be overridden to customize the popup position.
+     *
+     * @param popup
+     */
+    protected void showPopup(final CustomPopup popup) {
         int windowTop = RootPanel.get().getAbsoluteTop();
         int windowLeft = RootPanel.get().getAbsoluteLeft();
         int windowRight = windowLeft + RootPanel.get().getOffsetWidth();
@@ -207,7 +218,13 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
         }
     }-*/;
 
-    private class CustomPopup extends VOverlay {
+    /**
+     * This class is only protected to enable overriding showPopup, and is
+     * currently not intended to be extended or otherwise used directly. Its API
+     * (other than it being a VOverlay) is to be considered private and
+     * potentially subject to change.
+     */
+    protected class CustomPopup extends VOverlay {
 
         private Paintable popupComponentPaintable = null;
         private Widget popupComponentWidget = null;

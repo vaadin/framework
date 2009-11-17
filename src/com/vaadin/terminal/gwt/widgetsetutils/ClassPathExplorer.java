@@ -41,7 +41,7 @@ import com.vaadin.ui.ClientWidget;
  * appropriate monkey code for gwt directly in annotation processor and get rid
  * of {@link WidgetMapGenerator}. Using annotation processor might be a good
  * idea when dropping Java 1.5 support (integrated to javac in 6).
- *
+ * 
  */
 public class ClassPathExplorer {
     private final static FileFilter DIRECTORIES_ONLY = new FileFilter() {
@@ -75,7 +75,7 @@ public class ClassPathExplorer {
 
     /**
      * Finds available widgetset names.
-     *
+     * 
      * @return
      */
     public static Map<String, URL> getAvailableWidgetSets() {
@@ -133,6 +133,10 @@ public class ClassPathExplorer {
                     JarFile jarFile = conn.getJarFile();
 
                     Manifest manifest = jarFile.getManifest();
+                    if (manifest == null) {
+                        // No manifest so this is not a Vaadin Add-on
+                        return;
+                    }
                     String value = manifest.getMainAttributes().getValue(
                             "Vaadin-Widgetsets");
                     if (value != null) {
@@ -218,10 +222,13 @@ public class ClassPathExplorer {
                     System.out.println(url);
                     JarFile jarFile = conn.getJarFile();
                     Manifest manifest = jarFile.getManifest();
-                    Attributes mainAttributes = manifest.getMainAttributes();
-                    if (mainAttributes.getValue("Vaadin-Widgetsets") != null) {
-                        System.err.println("Accepted jar file" + url);
-                        return true;
+                    if (manifest != null) {
+                        Attributes mainAttributes = manifest
+                                .getMainAttributes();
+                        if (mainAttributes.getValue("Vaadin-Widgetsets") != null) {
+                            System.err.println("Accepted jar file" + url);
+                            return true;
+                        }
                     }
                 } catch (MalformedURLException e) {
                     // TODO Auto-generated catch block
@@ -238,7 +245,7 @@ public class ClassPathExplorer {
 
     /**
      * Recursively add subdirectories and jar files to classpathlocations
-     *
+     * 
      * @param name
      * @param file
      * @param locations
@@ -374,12 +381,12 @@ public class ClassPathExplorer {
     /**
      * Find and return the default source directory where to create new
      * widgetsets.
-     *
+     * 
      * Return the first directory (not a JAR file etc.) on the classpath by
      * default.
-     *
+     * 
      * TODO this could be done better...
-     *
+     * 
      * @return URL
      */
     public static URL getDefaultSourceDirectory() {

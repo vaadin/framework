@@ -36,6 +36,8 @@ public class VTabsheet extends VTabsheetBase {
     private class TabSheetCaption extends VCaption {
 
         private boolean hidden = false;
+        private boolean closable = false;
+        private Element closeButton;
 
         TabSheetCaption() {
             super(null, client);
@@ -57,12 +59,29 @@ public class VTabsheet extends VTabsheetBase {
                 client.registerTooltip(VTabsheet.this, getElement(), null);
             }
 
-            return super.updateCaption(uidl);
+            boolean ret = super.updateCaption(uidl);
+
+            setClosable(uidl.hasAttribute("closable"));
+
+            return ret;
         }
 
         @Override
         public void onBrowserEvent(Event event) {
+            if (closable && event.getTypeInt() == Event.ONCLICK
+                    && event.getEventTarget().cast() == closeButton) {
+                final String tabKey = tabKeys.get(tb.getTabIndex(this))
+                        .toString();
+                if (!disabledTabKeys.contains(tabKey)) {
+                    client.updateVariable(id, "close", tabKey, true);
+                    event.stopPropagation();
+                    event.preventDefault();
+                    return;
+                }
+            }
+
             super.onBrowserEvent(event);
+
             if (event.getTypeInt() == Event.ONLOAD) {
                 // icon onloads may change total width of tabsheet
                 if (isDynamicWidth()) {
@@ -106,6 +125,35 @@ public class VTabsheet extends VTabsheetBase {
 
         public void setHidden(boolean hidden) {
             this.hidden = hidden;
+        }
+
+        public void setClosable(boolean closable) {
+            this.closable = closable;
+            if (closable && closeButton == null) {
+                closeButton = DOM.createSpan();
+                closeButton.setInnerText("x");
+                closeButton
+                        .setClassName(VTabsheet.CLASSNAME + "-caption-close");
+                getElement().insertBefore(closeButton,
+                        getElement().getLastChild());
+            } else if (!closable && closeButton != null) {
+                getElement().removeChild(closeButton);
+                closeButton = null;
+            }
+            if (closable) {
+                addStyleDependentName("closable");
+            } else {
+                removeStyleDependentName("closable");
+            }
+        }
+
+        @Override
+        public int getRequiredWidth() {
+            int width = super.getRequiredWidth();
+            if (closeButton != null) {
+                width += Util.getRequiredWidth(closeButton);
+            }
+            return width;
         }
 
     }
@@ -215,6 +263,10 @@ public class VTabsheet extends VTabsheetBase {
                 return null;
             }
             return (TabSheetCaption) getWidget(index);
+        }
+
+        public int getTabIndex(TabSheetCaption tab) {
+            return getChildren().indexOf(tab);
         }
 
         public void setVisible(int index, boolean visible) {
@@ -804,13 +856,13 @@ public class VTabsheet extends VTabsheetBase {
         // Make sure scrollerIndex is valid
         if (scrollerIndex > tb.getTabCount()) {
             scrollerIndex = getNextVisibleTab(-1);
-        } else if (tb.getTab(scrollerIndex).isHidden()) {
+        } else if (tb.getTabCount() > 0 && tb.getTab(scrollerIndex).isHidden()) {
             scrollerIndex = getNextVisibleTab(scrollerIndex);
         }
 
         boolean scrolled = isScrolledTabs();
         boolean clipped = isClippedTabs();
-        if (tb.isVisible() && (scrolled || clipped)) {
+        if (tb.getTabCount() > 0 && tb.isVisible() && (scrolled || clipped)) {
             DOM.setStyleAttribute(scroller, "display", "");
             DOM.setElementProperty(scrollerPrev, "className",
                     SCROLLER_CLASSNAME + (scrolled ? "Prev" : "Prev-disabled"));

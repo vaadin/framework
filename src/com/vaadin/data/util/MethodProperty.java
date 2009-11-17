@@ -473,21 +473,21 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
         // Gets the return type from get method
         if (type.isPrimitive()) {
             if (type.equals(Boolean.TYPE)) {
-                type = Boolean.class;
+                this.type = Boolean.class;
             } else if (type.equals(Integer.TYPE)) {
-                type = Integer.class;
+                this.type = Integer.class;
             } else if (type.equals(Float.TYPE)) {
-                type = Float.class;
+                this.type = Float.class;
             } else if (type.equals(Double.TYPE)) {
-                type = Double.class;
+                this.type = Double.class;
             } else if (type.equals(Byte.TYPE)) {
-                type = Byte.class;
+                this.type = Byte.class;
             } else if (type.equals(Character.TYPE)) {
-                type = Character.class;
+                this.type = Character.class;
             } else if (type.equals(Short.TYPE)) {
-                type = Short.class;
+                this.type = Short.class;
             } else if (type.equals(Long.TYPE)) {
-                type = Long.class;
+                this.type = Long.class;
             }
         }
 

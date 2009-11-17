@@ -39,19 +39,34 @@ import com.vaadin.terminal.gwt.client.VDebugConsole;
  */
 public class VWindow extends VOverlay implements Container, ScrollListener {
 
-    private static final int MIN_HEIGHT = 100;
+    /**
+     * Minimum allowed height of a window. This refers to the content area, not
+     * the outer borders.
+     */
+    private static final int MIN_CONTENT_AREA_HEIGHT = 100;
 
-    private static final int MIN_WIDTH = 150;
+    /**
+     * Minimum allowed width of a window. This refers to the content area, not
+     * the outer borders.
+     */
+    private static final int MIN_CONTENT_AREA_WIDTH = 150;
 
     private static ArrayList<VWindow> windowOrder = new ArrayList<VWindow>();
 
     public static final String CLASSNAME = "v-window";
 
     /**
-     * Pixels used by inner borders and paddings horizontally (calculated only
-     * once)
+     * Difference between offsetWidth and inner width for the content area.
      */
-    private int borderWidth = -1;
+    private int contentAreaBorderPadding = -1;
+    /**
+     * Pixels used by inner borders and paddings horizontally (calculated only
+     * once). This is the difference between the width of the root element and
+     * the content area, such that if root element width is set to "XYZpx" the
+     * inner width (width-border-padding) of the content area is
+     * X-contentAreaRootDifference.
+     */
+    private int contentAreaToRootDifference = -1;
 
     private static final int STACKING_OFFSET_PIXELS = 15;
 
@@ -120,14 +135,16 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
     // resizes the window.
     boolean centered = false;
 
-    private RenderSpace renderSpace = new RenderSpace(MIN_WIDTH, MIN_HEIGHT,
-            true);
+    private RenderSpace renderSpace = new RenderSpace(MIN_CONTENT_AREA_WIDTH,
+            MIN_CONTENT_AREA_HEIGHT, true);
 
     private String width;
 
     private String height;
 
     private boolean immediate;
+
+    private Element wrapper, wrapper2;
 
     public VWindow() {
         super(false, false, true); // no autohide, not modal, shadow
@@ -198,10 +215,10 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
         DOM.sinkEvents(closeBox, Event.ONCLICK);
         DOM.sinkEvents(contents, Event.ONCLICK);
 
-        final Element wrapper = DOM.createDiv();
+        wrapper = DOM.createDiv();
         DOM.setElementProperty(wrapper, "className", CLASSNAME + "-wrap");
 
-        final Element wrapper2 = DOM.createDiv();
+        wrapper2 = DOM.createDiv();
         DOM.setElementProperty(wrapper2, "className", CLASSNAME + "-wrap2");
 
         DOM.sinkEvents(wrapper, Event.ONKEYDOWN);
@@ -439,39 +456,78 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
             client.updateVariable(id, "width", w, true);
         }
 
+        Util.runWebkitOverflowAutoFix(contentPanel.getElement());
+
     }
 
     private void setNaturalWidth() {
         /*
-         * For some reason IE6 has title DIV set to width 100% which messes this
-         * up. Also IE6 has a 0 wide element so we use the container element.
+         * Use max(layout width, window width) i.e layout content width or
+         * caption width. We remove the previous set width so the width is
+         * allowed to shrink. All widths are measured as outer sizes, i.e. the
+         * borderWidth is added to the content.
          */
-        int naturalWidth;
+
+        DOM.setStyleAttribute(getElement(), "width", "");
+
+        String oldHeaderWidth = ""; // Only for IE6
         if (BrowserInfo.get().isIE6()) {
-            String headerW = headerText.getStyle().getProperty("width");
+            /*
+             * For some reason IE6 has title DIV set to width 100% which
+             * interferes with the header measuring. Also IE6 has width set to
+             * the contentPanel.
+             */
+            oldHeaderWidth = headerText.getStyle().getProperty("width");
+            DOM.setStyleAttribute(contentPanel.getElement(), "width", "auto");
+            DOM.setStyleAttribute(contentPanel.getElement(), "zoom", "1");
             headerText.getStyle().setProperty("width", "auto");
-            naturalWidth = getElement().getOffsetWidth();
-            headerText.getStyle().setProperty("width", headerW);
-        } else {
-            // use max(layout width, window width)
-            // i.e layout content width or caption width
-            int lowidth = contentPanel.getElement().getScrollWidth()
-                    + getBorderWidth(); // layout does not know about border
-            int elwidth = getElement().getOffsetWidth();
-            naturalWidth = (lowidth > elwidth ? lowidth : elwidth);
+        }
+
+        // Content
+        int contentWidth = contentPanel.getElement().getScrollWidth();
+        contentWidth += getContentAreaToRootDifference();
+
+        // Window width (caption)
+        int windowCaptionWidth = getOffsetWidth();
+
+        int naturalWidth = (contentWidth > windowCaptionWidth ? contentWidth
+                : windowCaptionWidth);
+
+        if (BrowserInfo.get().isIE6()) {
+            headerText.getStyle().setProperty("width", oldHeaderWidth);
         }
 
         setWidth(naturalWidth + "px");
     }
 
-    private int getBorderWidth() {
-        if (borderWidth < 0) {
-            if (!isAttached()) {
-                return 0;
-            }
-            borderWidth = Util.measureHorizontalPaddingAndBorder(contents, 4);
+    private int getContentAreaToRootDifference() {
+        if (contentAreaToRootDifference < 0) {
+            measure();
         }
-        return borderWidth;
+        return contentAreaToRootDifference;
+    }
+
+    private int getContentAreaBorderPadding() {
+        if (contentAreaBorderPadding < 0) {
+            measure();
+        }
+        return contentAreaBorderPadding;
+    }
+
+    private void measure() {
+        if (!isAttached()) {
+            return;
+        }
+
+        contentAreaBorderPadding = Util.measureHorizontalPaddingAndBorder(
+                contents, 4);
+        int wrapperPaddingBorder = Util.measureHorizontalPaddingAndBorder(
+                wrapper, 0)
+                + Util.measureHorizontalPaddingAndBorder(wrapper2, 0);
+
+        contentAreaToRootDifference = wrapperPaddingBorder
+                + contentAreaBorderPadding;
+
     }
 
     private void setReadOnly(boolean readonly) {
@@ -753,15 +809,45 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
         }
     }
 
+    /**
+     * Checks if the cursor was inside the browser content area when the event
+     * happened.
+     * 
+     * @param event
+     *            The event to be checked
+     * @return true, if the cursor is inside the browser content area
+     * 
+     *         false, otherwise
+     */
+    private boolean cursorInsideBrowserContentArea(Event event) {
+        if (event.getClientX() < 0 || event.getClientY() < 0) {
+            // Outside to the left or above
+            return false;
+        }
+
+        if (event.getClientX() > Window.getClientWidth()
+                || event.getClientY() > Window.getClientHeight()) {
+            // Outside to the right or below
+            return false;
+        }
+
+        return true;
+    }
+
     private void setSize(Event event, boolean updateVariables) {
+        if (!cursorInsideBrowserContentArea(event)) {
+            // Only drag while cursor is inside the browser client area
+            return;
+        }
+
         int w = event.getScreenX() - startX + origW;
-        if (w < MIN_WIDTH + getBorderWidth()) {
-            w = MIN_WIDTH + getBorderWidth();
+        if (w < MIN_CONTENT_AREA_WIDTH + getContentAreaToRootDifference()) {
+            w = MIN_CONTENT_AREA_WIDTH + getContentAreaToRootDifference();
         }
 
         int h = event.getScreenY() - startY + origH;
-        if (h < MIN_HEIGHT + getExtraHeight()) {
-            h = MIN_HEIGHT + getExtraHeight();
+        if (h < MIN_CONTENT_AREA_HEIGHT + getExtraHeight()) {
+            h = MIN_CONTENT_AREA_HEIGHT + getExtraHeight();
         }
 
         setWidth(w + "px");
@@ -795,22 +881,37 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
             return;
         }
         if (width != null && !"".equals(width)) {
-            int pixelWidth;
-            // Convert non-pixel values to pixels
+            int rootPixelWidth = -1;
             if (width.indexOf("px") < 0) {
+                /*
+                 * Convert non-pixel values to pixels by setting the width and
+                 * then measuring it. Updates the "width" variable with the
+                 * pixel width.
+                 */
                 DOM.setStyleAttribute(getElement(), "width", width);
-                pixelWidth = getElement().getOffsetWidth();
-                width = pixelWidth + "px";
+                rootPixelWidth = getElement().getOffsetWidth();
+                width = rootPixelWidth + "px";
+            } else {
+                rootPixelWidth = Integer.parseInt(width.substring(0, width
+                        .indexOf("px")));
             }
+
+            // "width" now contains the new width in pixels
+
             if (BrowserInfo.get().isIE6()) {
                 getElement().getStyle().setProperty("overflow", "hidden");
             }
+
+            // Apply the new pixel width
             getElement().getStyle().setProperty("width", width);
 
-            pixelWidth = getElement().getOffsetWidth() - getBorderWidth();
-            if (pixelWidth < MIN_WIDTH) {
-                pixelWidth = MIN_WIDTH;
-                int rootWidth = pixelWidth + getBorderWidth();
+            // Caculate the inner width of the content area
+            int contentAreaInnerWidth = rootPixelWidth
+                    - getContentAreaToRootDifference();
+            if (contentAreaInnerWidth < MIN_CONTENT_AREA_WIDTH) {
+                contentAreaInnerWidth = MIN_CONTENT_AREA_WIDTH;
+                int rootWidth = contentAreaInnerWidth
+                        + getContentAreaToRootDifference();
                 DOM.setStyleAttribute(getElement(), "width", rootWidth + "px");
             }
 
@@ -819,10 +920,10 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
             // appear, content flows out of window)
             if (BrowserInfo.get().isIE6()) {
                 DOM.setStyleAttribute(contentPanel.getElement(), "width",
-                        pixelWidth + "px");
+                        contentAreaInnerWidth + "px");
             }
 
-            renderSpace.setWidth(contents.getOffsetWidth() - getBorderWidth());
+            renderSpace.setWidth(contentAreaInnerWidth);
 
             updateShadowSizeAndPosition();
         }
@@ -843,8 +944,8 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
         if (height != null && !"".equals(height)) {
             DOM.setStyleAttribute(getElement(), "height", height);
             int pixels = getElement().getOffsetHeight() - getExtraHeight();
-            if (pixels < MIN_HEIGHT) {
-                pixels = MIN_HEIGHT;
+            if (pixels < MIN_CONTENT_AREA_HEIGHT) {
+                pixels = MIN_CONTENT_AREA_HEIGHT;
                 int rootHeight = pixels + getExtraHeight();
                 DOM.setStyleAttribute(getElement(), "height", (rootHeight)
                         + "px");
@@ -892,9 +993,12 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
         case Event.ONMOUSEMOVE:
             if (dragging) {
                 centered = false;
-                final int x = DOM.eventGetScreenX(event) - startX + origX;
-                final int y = DOM.eventGetScreenY(event) - startY + origY;
-                setPopupPosition(x, y);
+                if (cursorInsideBrowserContentArea(event)) {
+                    // Only drag while cursor is inside the browser client area
+                    final int x = DOM.eventGetScreenX(event) - startX + origX;
+                    final int y = DOM.eventGetScreenY(event) - startY + origY;
+                    setPopupPosition(x, y);
+                }
                 DOM.eventPreventDefault(event);
             }
             break;

@@ -681,7 +681,7 @@ public class IndexedContainer implements Container.Indexed,
     private Serializable generateId() {
         Serializable id;
         do {
-            id = new Integer(nextGeneratedItemId++);
+            id = Integer.valueOf(nextGeneratedItemId++);
         } while (items.containsKey(id));
 
         return id;
@@ -1387,7 +1387,7 @@ public class IndexedContainer implements Container.Indexed,
         for (int i = 0; i < propertyId.length; i++) {
             if (sortable.contains(propertyId[i])) {
                 ids.add(propertyId[i]);
-                orders.add(new Boolean(i < ascending.length ? ascending[i]
+                orders.add(Boolean.valueOf(i < ascending.length ? ascending[i]
                         : true));
             }
         }

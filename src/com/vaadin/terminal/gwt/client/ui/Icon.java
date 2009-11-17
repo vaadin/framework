@@ -10,13 +10,14 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 
 public class Icon extends UIObject {
+    public static final String CLASSNAME = "v-icon";
     private final ApplicationConnection client;
     private String myUri;
 
     public Icon(ApplicationConnection client) {
         setElement(DOM.createImg());
         DOM.setElementProperty(getElement(), "alt", "");
-        setStyleName("v-icon");
+        setStyleName(CLASSNAME);
         this.client = client;
         client.addPngFix(getElement());
     }

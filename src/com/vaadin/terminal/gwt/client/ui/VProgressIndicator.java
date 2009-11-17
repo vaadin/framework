@@ -21,6 +21,7 @@ public class VProgressIndicator extends Widget implements Paintable {
     private final Poller poller;
     private boolean indeterminate = false;
     private boolean pollerSuspendedDueDetach;
+    private int interval;
 
     public VProgressIndicator() {
         setElement(DOM.createDiv());
@@ -33,12 +34,10 @@ public class VProgressIndicator extends Widget implements Paintable {
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (client.updateComponent(this, uidl, true)) {
-            return;
-        }
-
-        poller.cancel();
         this.client = client;
+        if (!uidl.getBooleanAttribute("cached")) {
+            poller.cancel();
+        }
         if (client.updateComponent(this, uidl, true)) {
             return;
         }
@@ -61,7 +60,8 @@ public class VProgressIndicator extends Widget implements Paintable {
         }
 
         if (!uidl.getBooleanAttribute("disabled")) {
-            poller.scheduleRepeating(uidl.getIntAttribute("pollinginterval"));
+            interval = uidl.getIntAttribute("pollinginterval");
+            poller.scheduleRepeating(interval);
         }
     }
 
@@ -69,7 +69,7 @@ public class VProgressIndicator extends Widget implements Paintable {
     protected void onAttach() {
         super.onAttach();
         if (pollerSuspendedDueDetach) {
-            poller.run();
+            poller.scheduleRepeating(interval);
         }
     }
 

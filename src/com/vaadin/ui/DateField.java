@@ -116,6 +116,8 @@ public class DateField extends AbstractField {
      */
     private String dateString;
 
+    private boolean lenient = false;
+
     /* Constructors */
 
     /**
@@ -200,6 +202,10 @@ public class DateField extends AbstractField {
 
         if (getDateFormat() != null) {
             target.addAttribute("format", dateFormat);
+        }
+
+        if (!isLenient()) {
+            target.addAttribute("strict", true);
         }
 
         target.addAttribute("type", type);
@@ -332,13 +338,13 @@ public class DateField extends AbstractField {
                 newDate = cal.getTime();
             }
 
-            if (newDate != oldDate
+            if (newDate == null && dateString != null && !"".equals(dateString)
+                    && !dateString.equals(oldDateString)) {
+                setValue(handleUnparsableDateString(dateString));
+            } else if (newDate != oldDate
                     && (newDate == null || !newDate.equals(oldDate))) {
                 setValue(newDate, true); // Don't require a repaint, client
                 // updates itself
-            } else if (dateString != null && !"".equals(dateString)
-                    && !dateString.equals(oldDateString)) {
-                setValue(handleUnparsableDateString(dateString));
             }
         }
     }
@@ -509,6 +515,34 @@ public class DateField extends AbstractField {
      */
     public String getDateFormat() {
         return dateFormat;
+    }
+
+    /**
+     * Specifies whether or not date/time interpretation in component is to be
+     * lenient.
+     * 
+     * @see Calendar#setLenient(boolean)
+     * @see #isLenient()
+     * 
+     * @param lenient
+     *            true if the lenient mode is to be turned on; false if it is to
+     *            be turned off.
+     */
+    public void setLenient(boolean lenient) {
+        this.lenient = lenient;
+        requestRepaint();
+    }
+
+    /**
+     * Specifies whether or not date/time interpretation is to be lenient.
+     * 
+     * @see #setLenient(boolean)
+     * 
+     * @return true if the interpretation mode of this calendar is lenient;
+     *         false otherwise.
+     */
+    public boolean isLenient() {
+        return lenient;
     }
 
 }
