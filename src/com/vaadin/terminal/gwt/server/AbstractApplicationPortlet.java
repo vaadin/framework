@@ -26,6 +26,7 @@ import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
 import javax.portlet.GenericPortlet;
 import javax.portlet.MimeResponse;
+import javax.portlet.PortalContext;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletException;
@@ -40,6 +41,7 @@ import javax.portlet.ResourceResponse;
 import javax.portlet.ResourceURL;
 import javax.servlet.http.HttpServletResponse;
 
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
 import com.vaadin.external.org.apache.commons.fileupload.portlet.PortletFileUpload;
@@ -55,6 +57,8 @@ import com.vaadin.ui.Window;
  */
 public abstract class AbstractApplicationPortlet extends GenericPortlet
         implements Constants {
+
+    private static final String PORTAL_PARAMETER_VAADIN_THEME = "vaadin.theme";
 
     /*
      * TODO Big parts of this class are directly copy-pasted from
@@ -314,18 +318,18 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     protected void handleRequest(PortletRequest request,
             PortletResponse response) throws PortletException, IOException {
-//        System.out.println("AbstractApplicationPortlet.handleRequest() "
-//                + System.currentTimeMillis());
+        // System.out.println("AbstractApplicationPortlet.handleRequest() "
+        // + System.currentTimeMillis());
 
         RequestType requestType = getRequestType(request);
 
-//        System.out.println("  RequestType: " + requestType);
-//        System.out.println("  WindowID: " + request.getWindowID());
+        // System.out.println("  RequestType: " + requestType);
+        // System.out.println("  WindowID: " + request.getWindowID());
 
         if (requestType == RequestType.UNKNOWN) {
             System.err.println("Unknown request type");
         } else if (requestType == RequestType.DUMMY) {
-//            System.out.println("Printing Dummy page");
+            // System.out.println("Printing Dummy page");
             /*
              * This dummy page is used by action responses to redirect to, in
              * order to prevent the boot strap code from being rendered into
@@ -386,27 +390,33 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
                 /* Start the newly created application */
                 startApplication(request, application, applicationContext);
-                
+
                 /*
                  * Transaction starts. Call transaction listeners. Transaction
                  * end is called in the finally block below.
                  */
                 applicationContext.startTransaction(application, request);
-                
+
                 /* Notify listeners */
-                
-                // TODO Should this happen before or after the transaction starts?
-                
+
+                // TODO Should this happen before or after the transaction
+                // starts?
+
                 if (request instanceof RenderRequest) {
-                    applicationContext.firePortletRenderRequest(application, (RenderRequest) request, (RenderResponse) response);
+                    applicationContext.firePortletRenderRequest(application,
+                            (RenderRequest) request, (RenderResponse) response);
                 } else if (request instanceof ActionRequest) {
-                    applicationContext.firePortletActionRequest(application, (ActionRequest) request, (ActionResponse) response);
+                    applicationContext.firePortletActionRequest(application,
+                            (ActionRequest) request, (ActionResponse) response);
                 } else if (request instanceof EventRequest) {
-                    applicationContext.firePortletEventRequest(application, (EventRequest) request, (EventResponse) response); 
+                    applicationContext.firePortletEventRequest(application,
+                            (EventRequest) request, (EventResponse) response);
                 } else if (request instanceof ResourceRequest) {
-                    applicationContext.firePortletResourceRequest(application, (ResourceRequest) request, (ResourceResponse) response);
-                }                
-                
+                    applicationContext.firePortletResourceRequest(application,
+                            (ResourceRequest) request,
+                            (ResourceResponse) response);
+                }
+
                 /* Handle the request */
                 if (requestType == RequestType.FILE_UPLOAD) {
                     applicationManager.handleFileUpload(
@@ -762,13 +772,13 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         return null;
     }
 
-    protected String getWidgetsetURL(String widgetset) {
+    protected String getWidgetsetURL(String widgetset, PortletRequest request) {
         // TODO The widgetset URL is currently hard-corded for LifeRay
         return "/html/" + WIDGETSET_DIRECTORY_PATH + widgetset + "/"
                 + widgetset + ".nocache.js?" + new Date().getTime();
     }
 
-    protected String getThemeURI(String themeName) {
+    protected String getThemeURI(String themeName, PortletRequest request) {
         // TODO The theme URI is currently hard-corded for LifeRay
         return "/html/" + THEME_DIRECTORY_PATH + themeName;
     }
@@ -777,6 +787,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             RenderResponse response, Window window, Application application)
             throws IOException, MalformedURLException, PortletException {
 
+        System.out.println("writeAjaxPage");
+        
         response.setContentType("text/html");
         final BufferedWriter page = new BufferedWriter(new OutputStreamWriter(
                 response.getPortletOutputStream(), "UTF-8"));
@@ -801,8 +813,17 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
         String themeName = getThemeForWindow(request, window);
 
-        String widgetsetURL = getWidgetsetURL(widgetset);
-        String themeURI = getThemeURI(themeName);
+        String widgetsetURL = getWidgetsetURL(widgetset, request);
+        String themeURI = getThemeURI(themeName, request);
+        
+        //System.out.println("themeName : " + themeName);
+        //System.out.println("widgetsetURL : " + widgetsetURL);
+        //System.out.println("themeURI : " + themeURI);
+
+        // fixed base theme to use - all portal pages with Vaadin
+        // applications will load this exactly once
+        String portalTheme = getPortalProperty(PORTAL_PARAMETER_VAADIN_THEME,
+                request.getPortalContext());
 
         // Get system messages
         Application.SystemMessages systemMessages = null;
@@ -875,16 +896,35 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         page.write("};\n</script>\n");
 
         page.write("<script type=\"text/javascript\">\n");
-        // page.write("//<![CDATA[\n");
-        page.write("if(!vaadin.themesLoaded['" + themeName + "']) {\n");
-        page.write("var stylesheet = document.createElement('link');\n");
-        page.write("stylesheet.setAttribute('rel', 'stylesheet');\n");
-        page.write("stylesheet.setAttribute('type', 'text/css');\n");
-        page.write("stylesheet.setAttribute('href', '" + themeURI
-                + "/styles.css');\n");
+
+        if (portalTheme == null) {
+            portalTheme = DEFAULT_THEME_NAME;
+        }
+
+//        System.out.println("Printing default portal theme " + portalTheme);
+        
+        page.write("if(!vaadin.themesLoaded['" + portalTheme + "']) {\n");
+        page.write("var defaultStylesheet = document.createElement('link');\n");
+        page.write("defaultStylesheet.setAttribute('rel', 'stylesheet');\n");
+        page.write("defaultStylesheet.setAttribute('type', 'text/css');\n");
+        page.write("defaultStylesheet.setAttribute('href', '"
+                + getThemeURI(portalTheme, request) + "/styles.css');\n");
         page
-                .write("document.getElementsByTagName('head')[0].appendChild(stylesheet);\n");
-        page.write("vaadin.themesLoaded['" + themeName + "'] = true;\n}\n");
+                .write("document.getElementsByTagName('head')[0].appendChild(defaultStylesheet);\n");
+        page.write("vaadin.themesLoaded['" + portalTheme + "'] = true;\n}\n");
+
+        if (!portalTheme.equals(themeName)) {
+            page.write("if(!vaadin.themesLoaded['" + themeName + "']) {\n");
+            page.write("var stylesheet = document.createElement('link');\n");
+            page.write("stylesheet.setAttribute('rel', 'stylesheet');\n");
+            page.write("stylesheet.setAttribute('type', 'text/css');\n");
+            page.write("stylesheet.setAttribute('href', '" + themeURI
+                    + "/styles.css');\n");
+            page
+                    .write("document.getElementsByTagName('head')[0].appendChild(stylesheet);\n");
+            page.write("vaadin.themesLoaded['" + themeName + "'] = true;\n}\n");
+        }
+        
         page.write("</script>\n");
 
         // TODO Warn if widgetset has not been loaded after 15 seconds
@@ -1100,6 +1140,32 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         outWriter.flush();
         outWriter.close();
         out.flush();
+    }
+
+    private String getPortalProperty(String name, PortalContext context) {
+        boolean isLifeRay = context.getPortalInfo().toLowerCase().contains(
+                "liferay");
+
+        // TODO test on non-LifeRay platforms
+
+        String value;
+        if (isLifeRay) {
+            value = getLifeRayPortalProperty(name);
+        } else {
+            value = context.getProperty(name);
+        }
+
+        return value;
+    }
+
+    private String getLifeRayPortalProperty(String name) {
+        String value;
+        try {
+            value = PropsUtil.get(name);
+        } catch (Exception e) {
+            value = null;
+        }
+        return value;
     }
 
 }
