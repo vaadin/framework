@@ -75,19 +75,26 @@ public class SystemError extends RuntimeException implements ErrorMessage {
         target.startTag("error");
         target.addAttribute("level", "system");
 
-        // Paint the error message
+        StringBuilder sb = new StringBuilder();
         final String message = getLocalizedMessage();
         if (message != null) {
-            target.addSection("h2", message);
+            sb.append("<h2>");
+            sb.append(message);
+            sb.append("</h2>");
         }
 
         // Paint the exception
         if (cause != null) {
-            target.addSection("h3", "Exception");
+            sb.append("<h3>Exception</h3>");
             final StringWriter buffer = new StringWriter();
             cause.printStackTrace(new PrintWriter(buffer));
-            target.addSection("pre", buffer.toString());
+            sb.append("<pre>");
+            sb.append(buffer.toString());
+            sb.append("</pre>");
         }
+
+        target.addXMLSection("div", sb.toString(),
+                "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd");
 
         target.endTag("error");
 
