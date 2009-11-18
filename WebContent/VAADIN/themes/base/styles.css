@@ -927,6 +927,9 @@ div.v-progressindicator-indeterminate-disabled {
 .v-filterselect-button {
 	float: right;
 	cursor: pointer;
+	width: 1em;
+	height: 1em;
+	background: transparent url(common/img/sprites.png) no-repeat -5px -8px;
 }
 .v-filterselect.v-readonly .v-filterselect-button {
 	display: none;
