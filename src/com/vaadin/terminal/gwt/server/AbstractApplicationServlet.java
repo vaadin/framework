@@ -1385,13 +1385,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
          *      .v-theme-<themeName, remove non-alphanum>
          */
 
-        String appClass = "v-app-";
-        try {
-            appClass += getApplicationClass().getSimpleName();
-        } catch (ClassNotFoundException e) {
-            appClass += "unknown";
-            e.printStackTrace();
-        }
+        String appClass = "v-app-" + getApplicationCSSClassName();
+
         String themeClass = "";
         if (themeName != null) {
             themeClass = "v-theme-" + themeName.replaceAll("[^a-zA-Z0-9]", "");
@@ -1417,6 +1412,24 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
         page.close();
 
+    }
+
+    /**
+     * Returns the application class identifier for use in the application CSS
+     * class name in the root DIV. The application CSS class name is of form
+     * "v-app-"+getApplicationCSSClassName().
+     * 
+     * This method should normally not be overridden.
+     * 
+     * @return The CSS class name to use in combination with "v-app-".
+     */
+    protected String getApplicationCSSClassName() {
+        try {
+            return getApplicationClass().getSimpleName();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return "unknown";
+        }
     }
 
     /**
