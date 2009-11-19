@@ -1928,8 +1928,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
         if (session != null) {
             WebApplicationContext context = WebApplicationContext
                     .getApplicationContext(session);
-            context.applicationToAjaxAppMgrMap.remove(application);
-            // FIXME: Move to WebApplicationContext
             context.removeApplication(application);
         }
     }
