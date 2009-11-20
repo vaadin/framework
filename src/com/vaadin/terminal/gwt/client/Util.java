@@ -541,14 +541,16 @@ public class Util {
      *            with overflow auto
      */
     public static void runWebkitOverflowAutoFix(final Element elem) {
-        // add max version if fix landes sometime to webkit
+        // Add max version if fix lands sometime to Webkit
         if (BrowserInfo.get().getWebkitVersion() > 0) {
+            final String originalOverflow = elem.getStyle().getProperty(
+                    "overflow");
             elem.getStyle().setProperty("overflow", "hidden");
 
             DeferredCommand.addCommand(new Command() {
                 public void execute() {
-                    // Dough, safari scoll auto means actually just a moped
-                    elem.getStyle().setProperty("overflow", "auto");
+                    // Dough, Safari scroll auto means actually just a moped
+                    elem.getStyle().setProperty("overflow", originalOverflow);
                     if (elem.getScrollTop() > 0) {
                         // fix another bug where scrollbar remains in wrong
                         // position
