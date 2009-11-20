@@ -4,14 +4,18 @@
 
 package com.vaadin.ui;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
+import com.vaadin.event.ComponentEventListener;
+import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Sizeable;
+import com.vaadin.tools.ReflectTools;
 
 @SuppressWarnings("serial")
 public abstract class AbstractOrderedLayout extends AbstractLayout implements
@@ -307,4 +311,67 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
         AlignmentUtils.setComponentAlignment(this, component, alignment);
     }
 
+    public interface LayoutClickListener extends ComponentEventListener {
+
+        public static final Method clickMethod = ReflectTools.findMethod(
+                LayoutClickListener.class, "layoutClick",
+                LayoutClickEvent.class);
+
+        /**
+         * Layout has been clicked
+         * 
+         * @param event
+         *            Component click event.
+         */
+        public void layoutClick(LayoutClickEvent event);
+    }
+
+    /**
+     * An event fired when the layout has been clicked. The event contains
+     * information about the target layout (component) and the child component
+     * that was clicked. If no child component was found it is set to null.
+     * 
+     */
+    public static class LayoutClickEvent extends ClickEvent {
+
+        private Component childComponent;
+
+        public LayoutClickEvent(Component source, String mouseButton,
+                Component childComponent) {
+            super(source, mouseButton);
+            this.childComponent = childComponent;
+        }
+
+        public Component getChildComponent() {
+            return childComponent;
+        }
+
+    }
+
+    public void addListener(LayoutClickListener listener) {
+        addEventListener("click", LayoutClickEvent.class, listener,
+                LayoutClickListener.clickMethod);
+    }
+
+    public void removeListener(LayoutClickListener listener) {
+        removeEventListener("click", LayoutClickEvent.class, listener,
+                LayoutClickListener.clickMethod);
+    }
+
+    @Override
+    protected void handleEvent(String event, String[] parameters) {
+        if (event.equals("click")) {
+            String button = parameters[0];
+            String childComponentId = parameters[1];
+            Component childComponent = null;
+            try {
+                int id = Integer.parseInt(childComponentId);
+                childComponent = components.get(id);
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+
+            fireEvent(new LayoutClickEvent(this, button, childComponent));
+        }
+    }
 }

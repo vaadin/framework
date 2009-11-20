@@ -195,6 +195,7 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             }
         }
         focusedTextField = this;
+        client.getEventHandler(this).fireEvent("focus", (String[]) null);
     }
 
     public void onBlur(BlurEvent event) {
@@ -207,6 +208,7 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             addStyleDependentName(CLASSNAME_PROMPT);
         }
         onChange(null);
+        client.getEventHandler(this).fireEvent("blur", (String[]) null);
     }
 
     private void setPrompting(boolean prompting) {

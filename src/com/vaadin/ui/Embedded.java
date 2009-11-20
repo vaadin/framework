@@ -7,6 +7,8 @@ package com.vaadin.ui;
 import java.util.Hashtable;
 import java.util.Iterator;
 
+import com.vaadin.event.MouseEvents.ClickEvent;
+import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
@@ -414,4 +416,20 @@ public class Embedded extends AbstractComponent {
         }
     }
 
+    public void addListener(ClickListener listener) {
+        addEventListener("click", ClickEvent.class, listener,
+                ClickListener.clickMethod);
+    }
+
+    public void removeListener(ClickListener listener) {
+        removeEventListener("click", ClickEvent.class, listener,
+                ClickListener.clickMethod);
+    }
+
+    @Override
+    protected void handleEvent(String event, String[] parameters) {
+        if (event.equals("click")) {
+            fireEvent(new ClickEvent(this, parameters[0]));
+        }
+    }
 }

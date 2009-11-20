@@ -6,9 +6,21 @@ import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 
 class ComponentDetail {
-    private String pid;
+
+    private ComponentEventHandler eventHandler;
     private Paintable component;
     private TooltipInfo tooltipInfo = new TooltipInfo();
+    private String pid;
+
+    public ComponentDetail(ApplicationConnection client, String pid,
+            Paintable component) {
+        this.component = component;
+        this.pid = pid;
+
+        // create the event handler for this component
+        this.eventHandler = new ComponentEventHandler(this, client);
+
+    }
 
     /**
      * Returns a TooltipInfo assosiated with Component. If element is given,
@@ -49,26 +61,10 @@ class ComponentDetail {
     }
 
     /**
-     * @param pid
-     *            the pid to set
-     */
-    void setPid(String pid) {
-        this.pid = pid;
-    }
-
-    /**
      * @return the component
      */
     Paintable getComponent() {
         return component;
-    }
-
-    /**
-     * @param component
-     *            the component to set
-     */
-    void setComponent(Paintable component) {
-        this.component = component;
     }
 
     /**
@@ -110,6 +106,10 @@ class ComponentDetail {
             }
             additionalTooltips.put(key, tooltip);
         }
+    }
+
+    public ComponentEventHandler getEventHandler() {
+        return eventHandler;
     }
 
 }

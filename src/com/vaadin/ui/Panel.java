@@ -11,6 +11,8 @@ import java.util.Map;
 import com.vaadin.event.Action;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.Action.Handler;
+import com.vaadin.event.MouseEvents.ClickEvent;
+import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
@@ -543,4 +545,23 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
             requestRepaint();
         }
     }
+
+    @Override
+    protected void handleEvent(String eventIdentifier, String[] parameters) {
+        if (eventIdentifier.equals("click")) {
+            fireEvent(new ClickEvent(this, parameters[0]));
+        }
+    }
+
+    public void addListener(ClickListener listener) {
+        addEventListener("click", ClickEvent.class, listener,
+                ClickListener.clickMethod);
+    }
+
+    public void removeListener(ClickListener listener) {
+        removeEventListener("click", ClickEvent.class, listener,
+                ClickListener.clickMethod);
+
+    }
+
 }

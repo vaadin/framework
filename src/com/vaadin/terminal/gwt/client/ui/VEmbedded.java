@@ -11,6 +11,8 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.ObjectElement;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -22,7 +24,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
-public class VEmbedded extends HTML implements Paintable {
+public class VEmbedded extends HTML implements Paintable, ClickHandler {
     private static String CLASSNAME = "v-embedded";
 
     private String height;
@@ -33,6 +35,7 @@ public class VEmbedded extends HTML implements Paintable {
 
     public VEmbedded() {
         setStyleName(CLASSNAME);
+        addClickHandler(this);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -236,4 +239,9 @@ public class VEmbedded extends HTML implements Paintable {
 
         client.handleTooltipEvent(event, this);
     }
+
+    public void onClick(ClickEvent event) {
+        client.getEventHandler(this).fireEvent("click", "left");
+    }
+
 }

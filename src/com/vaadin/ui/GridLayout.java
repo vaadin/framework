@@ -15,6 +15,8 @@ import java.util.Map.Entry;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.VGridLayout;
+import com.vaadin.ui.AbstractOrderedLayout.LayoutClickEvent;
+import com.vaadin.ui.AbstractOrderedLayout.LayoutClickListener;
 
 /**
  * <p>
@@ -72,7 +74,7 @@ public class GridLayout extends AbstractLayout implements
     /**
      * Mapping from components to their respective areas.
      */
-    private final LinkedList components = new LinkedList();
+    private final LinkedList<Component> components = new LinkedList<Component>();
 
     /**
      * Mapping from components to alignments (horizontal + vertical).
@@ -1297,6 +1299,36 @@ public class GridLayout extends AbstractLayout implements
 
     public void setComponentAlignment(Component component, String alignment) {
         AlignmentUtils.setComponentAlignment(this, component, alignment);
+    }
+
+    public void addListener(LayoutClickListener listener) {
+        addEventListener("click", LayoutClickEvent.class, listener,
+                LayoutClickListener.clickMethod);
+    }
+
+    public void removeListener(LayoutClickListener listener) {
+        removeEventListener("click", LayoutClickEvent.class, listener,
+                LayoutClickListener.clickMethod);
+    }
+
+    @Override
+    protected void handleEvent(String event, String[] parameters) {
+        if (event.equals("click")) {
+            String button = parameters[0];
+            String childComponentRow = parameters[1];
+            String childComponentCol = parameters[2];
+
+            Component childComponent = null;
+            try {
+                childComponent = getComponent(Integer
+                        .parseInt(childComponentCol), Integer
+                        .parseInt(childComponentRow));
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+
+            fireEvent(new LayoutClickEvent(this, button, childComponent));
+        }
     }
 
 }

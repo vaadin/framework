@@ -845,11 +845,11 @@ public class ApplicationConnection {
         }
     }-*/;
 
-    public void registerPaintable(String id, Paintable paintable) {
-        ComponentDetail componentDetail = new ComponentDetail();
-        componentDetail.setComponent(paintable);
-        idToPaintableDetail.put(id, componentDetail);
-        setPid(((Widget) paintable).getElement(), id);
+    public void registerPaintable(String pid, Paintable paintable) {
+        ComponentDetail componentDetail = new ComponentDetail(this, pid,
+                paintable);
+        idToPaintableDetail.put(pid, componentDetail);
+        setPid(((Widget) paintable).getElement(), pid);
     }
 
     private native void setPid(Element el, String pid)
@@ -1112,6 +1112,10 @@ public class ApplicationConnection {
         if (uidl.getBooleanAttribute("cached")) {
             return true;
         }
+
+        // register the listened events by the server-side to the event-handler
+        // of the component
+        componentDetail.getEventHandler().registerEventsFromUIDL(uidl);
 
         // Visibility
         boolean visible = !uidl.getBooleanAttribute("invisible");
@@ -1778,6 +1782,19 @@ public class ApplicationConnection {
 
     public ApplicationConfiguration getConfiguration() {
         return configuration;
+    }
+
+    /**
+     * returns the event handler for the given paintable
+     * 
+     * @param paintable
+     * @return
+     */
+    public ComponentEventHandler getEventHandler(Paintable paintable) {
+        ComponentDetail componentDetail = idToPaintableDetail
+                .get(getPid(paintable));
+
+        return componentDetail.getEventHandler();
     }
 
 }

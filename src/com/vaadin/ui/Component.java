@@ -326,6 +326,15 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
         public Event(Component source) {
             super(source);
         }
+
+        /**
+         * Gets the Component where the event occurred.
+         * 
+         * @return the Source of the event.
+         */
+        public Component getComponent() {
+            return (Component) getSource();
+        }
     }
 
     /**

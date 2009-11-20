@@ -8,6 +8,10 @@ import java.text.Format;
 import java.util.Map;
 
 import com.vaadin.data.Property;
+import com.vaadin.event.FieldEvents.BlurEvent;
+import com.vaadin.event.FieldEvents.BlurListener;
+import com.vaadin.event.FieldEvents.FocusEvent;
+import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.VTextField;
@@ -545,6 +549,35 @@ public class TextField extends AbstractField {
     public void setMaxLength(int maxLength) {
         this.maxLength = maxLength;
         requestRepaint();
+    }
+
+    @Override
+    protected void handleEvent(String eventIdentifier, String[] parameters) {
+        if (eventIdentifier.equals("focus")) {
+            fireEvent(new FocusEvent(this));
+        } else if (eventIdentifier.equals("blur")) {
+            fireEvent(new BlurEvent(this));
+        }
+    }
+
+    public void addListener(FocusListener listener) {
+        addEventListener("focus", FocusEvent.class, listener,
+                FocusListener.focusMethod);
+    }
+
+    public void removeListener(FocusListener listener) {
+        removeEventListener("focus", FocusEvent.class, listener,
+                FocusListener.focusMethod);
+    }
+
+    public void addListener(BlurListener listener) {
+        addEventListener("blur", BlurEvent.class, listener,
+                BlurListener.blurMethod);
+    }
+
+    public void removeListener(BlurListener listener) {
+        removeEventListener("blur", BlurEvent.class, listener,
+                BlurListener.blurMethod);
     }
 
 }

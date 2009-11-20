@@ -5,6 +5,12 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
@@ -18,7 +24,7 @@ import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.ui.layout.CellBasedLayout;
 import com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer;
 
-public class VOrderedLayout extends CellBasedLayout {
+public class VOrderedLayout extends CellBasedLayout implements ClickHandler {
 
     public static final String CLASSNAME = "v-orderedlayout";
 
@@ -49,6 +55,7 @@ public class VOrderedLayout extends CellBasedLayout {
     public VOrderedLayout() {
         this(CLASSNAME, ORIENTATION_VERTICAL);
         allowOrientationUpdate = true;
+        addDomHandler(this, ClickEvent.getType());
     }
 
     protected VOrderedLayout(String className, int orientation) {
@@ -61,6 +68,7 @@ public class VOrderedLayout extends CellBasedLayout {
         STYLENAME_MARGIN_BOTTOM = className + "-margin-bottom";
         STYLENAME_MARGIN_LEFT = className + "-margin-left";
 
+        addDomHandler(this, ClickEvent.getType());
     }
 
     @Override
@@ -913,6 +921,53 @@ public class VOrderedLayout extends CellBasedLayout {
              */
             client.captionSizeUpdated(component);
         }
+    }
+
+    public void onClick(ClickEvent event) {
+        Integer childComponentId = getChildComponentId((Element) event
+                .getNativeEvent().getEventTarget().cast());
+        String childComponentString = childComponentId.toString();
+        client.getEventHandler(this).fireEvent("click", "left",
+                childComponentString);
+
+    }
+
+    /**
+     * Returns the index of the child component which contains "element".
+     * 
+     * @param element
+     * @return
+     */
+    private int getChildComponentId(Element element) {
+        Element rootElement = getElement();
+        Element parent = DOM.getParent(element);
+        if (parent == null) {
+            return -1;
+        }
+        Element grandParent = DOM.getParent(parent);
+        if (grandParent == null) {
+            return -1;
+        }
+
+        while (grandParent != null && parent != rootElement) {
+            if (grandParent == rootElement) {
+                NodeList<Node> nodes = parent.getChildNodes();
+                int size = nodes.getLength();
+                for (int index = 0; index < size; index++) {
+                    if (nodes.getItem(index) == element) {
+                        return index;
+                    }
+                }
+
+                // This should not happen
+                return -1;
+            }
+
+            element = parent;
+            parent = grandParent;
+            grandParent = DOM.getParent(grandParent);
+        }
+        return -1;
     }
 
 }

@@ -14,6 +14,9 @@ import java.util.Set;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -28,7 +31,8 @@ import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.layout.CellBasedLayout;
 import com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer;
 
-public class VGridLayout extends SimplePanel implements Paintable, Container {
+public class VGridLayout extends SimplePanel implements Paintable, Container,
+        ClickHandler {
 
     public static final String CLASSNAME = "v-gridlayout";
 
@@ -71,6 +75,8 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
         getElement().appendChild(margin);
         setStyleName(CLASSNAME);
         setWidget(canvas);
+
+        addDomHandler(this, ClickEvent.getType());
     }
 
     @Override
@@ -1021,4 +1027,27 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
         }
         return cell;
     }
+
+    public void onClick(ClickEvent event) {
+        String col = null;
+        String row = null;
+
+        Element clickTarget = (Element) event.getNativeEvent().getEventTarget()
+                .cast();
+        Element rootElement = getElement();
+        while (clickTarget != null && clickTarget != rootElement) {
+            Paintable paintable = client.getPaintable(clickTarget);
+            if (paintable != null) {
+                Cell cell = paintableToCell.get(paintable);
+                row = String.valueOf(cell.row);
+                col = String.valueOf(cell.col);
+                break;
+            }
+            clickTarget = DOM.getParent(clickTarget);
+        }
+
+        client.getEventHandler(this).fireEvent("click", "left", row, col);
+
+    }
+
 }

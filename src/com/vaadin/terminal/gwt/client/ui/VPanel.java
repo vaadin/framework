@@ -8,6 +8,8 @@ import java.util.Set;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -22,7 +24,7 @@ import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 
-public class VPanel extends SimplePanel implements Container {
+public class VPanel extends SimplePanel implements Container, ClickHandler {
 
     public static final String CLASSNAME = "v-panel";
 
@@ -91,6 +93,9 @@ public class VPanel extends SimplePanel implements Container {
         DOM.sinkEvents(contentNode, Event.ONSCROLL);
         contentNode.getStyle().setProperty("position", "relative");
         getElement().getStyle().setProperty("overflow", "hidden");
+
+        addDomHandler(this, ClickEvent.getType());
+
     }
 
     @Override
@@ -334,6 +339,8 @@ public class VPanel extends SimplePanel implements Container {
 
     @Override
     public void onBrowserEvent(Event event) {
+        super.onBrowserEvent(event);
+
         final Element target = DOM.eventGetTarget(event);
         final int type = DOM.eventGetType(event);
         if (type == Event.ONKEYDOWN && shortcutHandler != null) {
@@ -516,4 +523,7 @@ public class VPanel extends SimplePanel implements Container {
         detectContainerBorders();
     }
 
+    public void onClick(ClickEvent event) {
+        client.getEventHandler(this).fireEvent("click", "left");
+    }
 }
