@@ -487,6 +487,13 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                     target.startTag("leaf");
                 }
 
+                if (itemStyleGenerator != null) {
+                    String stylename = itemStyleGenerator.getStyle(itemId);
+                    if (stylename != null) {
+                        target.addAttribute("style", stylename);
+                    }
+                }
+
                 // Adds the attributes
                 target.addAttribute("caption", getItemCaption(itemId));
                 final Resource icon = getItemIcon(itemId);
@@ -1003,6 +1010,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
     private int clickListenerCount = 0;
 
+    private ItemStyleGenerator itemStyleGenerator;
+
     public void addListener(ItemClickListener listener) {
         addListener(ItemClickEvent.class, listener,
                 ItemClickEvent.ITEM_CLICK_METHOD);
@@ -1022,6 +1031,45 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         if (clickListenerCount == 0) {
             requestRepaint();
         }
+    }
+
+    /**
+     * Sets the {@link ItemStyleGenerator} to be used with this tree.
+     * 
+     * @param itemStyleGenerator
+     *            item style generator or null to remove generator
+     */
+    public void setItemStyleGenerator(ItemStyleGenerator itemStyleGenerator) {
+        if (this.itemStyleGenerator != itemStyleGenerator) {
+            this.itemStyleGenerator = itemStyleGenerator;
+            requestRepaint();
+        }
+    }
+
+    /**
+     * @return the current {@link ItemStyleGenerator} for this tree. Null if
+     *         {@link ItemStyleGenerator} is not set.
+     */
+    public ItemStyleGenerator getItemStyleGenerator() {
+        return itemStyleGenerator;
+    }
+
+    /**
+     * ItemStyleGenerator can be used to add custom styles to tree items. The
+     * CSS class name that will be added to the cell content is
+     * <tt>v-tree-node-[style name]</tt>.
+     */
+    public interface ItemStyleGenerator extends Serializable {
+
+        /**
+         * Called by Tree when an item is painted.
+         * 
+         * @param itemId
+         *            The itemId of the item to be painted
+         * @return The style name to add to this item. (the CSS class name will
+         *         be v-tree-node-[style name]
+         */
+        public abstract String getStyle(Object itemId);
     }
 
 }

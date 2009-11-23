@@ -15,6 +15,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
@@ -296,6 +297,13 @@ public class VTree extends FlowPanel implements Paintable {
                 addStyleName(CLASSNAME + "-leaf");
             }
             addStyleName(CLASSNAME);
+            if (uidl.hasAttribute("style")) {
+                addStyleName(CLASSNAME + "-" + uidl.getStringAttribute("style"));
+                Widget.setStyleName(nodeCaptionDiv, CLASSNAME + "-caption-"
+                        + uidl.getStringAttribute("style"), true);
+                childNodeContainer.addStyleName(CLASSNAME + "-children-"
+                        + uidl.getStringAttribute("style"));
+            }
 
             if (uidl.getBooleanAttribute("expanded") && !getState()) {
                 setState(true, false);
