@@ -12,6 +12,7 @@ import java.util.List;
  * class for event handlers used by ComponentEventHandler
  * 
  * @author davengo GmbH (Germany/Berlin, www.davengo.com)
+ * @since 6.2
  * 
  */
 public class ComponentEventHandler {
@@ -23,6 +24,20 @@ public class ComponentEventHandler {
     private ComponentDetail detail;
     private ApplicationConnection client;
 
+    /**
+     * creates a new <code>ComponentEventHandler</code> instance for the given
+     * <code>ComponentDetail</code> and <code>ApplicationConntection</code>
+     * instance.
+     * 
+     * @param detail
+     *            the attached ComponentDetail
+     * @param client
+     *            the <code>ApplicationConnection</code> for sending events
+     * 
+     * @see ApplicationConnection
+     * @see ComponentDetail
+     * @since 6.2
+     */
     public ComponentEventHandler(ComponentDetail detail,
             ApplicationConnection client) {
         this.detail = detail;
@@ -39,6 +54,7 @@ public class ComponentEventHandler {
      *            the unique identifier for the event
      * @param parameters
      *            the parameters for the event (can be null)
+     * @since 6.2
      */
     public void fireEvent(String eventIdentifier, String... parameters) {
         fireEvent(eventIdentifier, false, parameters);
@@ -54,11 +70,24 @@ public class ComponentEventHandler {
      *            the unique identifier for the event
      * @param parameters
      *            the parameters for the event (can be null)
+     * @since 6.2
      */
     public void fireComponentEvent(String eventIdentifier, String... parameters) {
         fireEvent(eventIdentifier, true, parameters);
     }
 
+    /**
+     * Transmit the event to the Server (Fires a event which is transmitted to
+     * the server and passed on the the components handleEvent method)
+     * 
+     * @param eventIdentifier
+     *            the unique identifier for the event
+     * @param forceTransmission
+     *            enforce the transmission to the server
+     * @param parameters
+     *            the parameters for the event (can be null)
+     * @since 6.2
+     */
     private void fireEvent(String eventIdentifier, boolean forceTransmission,
             String... parameters) {
 
@@ -86,6 +115,12 @@ public class ComponentEventHandler {
         }
     }
 
+    /**
+     * Registers the Events listened on the server-side from the UIDL
+     * 
+     * @param componentUIDL
+     * @since 6.2
+     */
     void registerEventsFromUIDL(UIDL componentUIDL) {
 
         // read out the request event handlers

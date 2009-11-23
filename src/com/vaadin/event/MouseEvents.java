@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.vaadin.event;
 
 import java.lang.reflect.Method;
@@ -8,12 +12,18 @@ import com.vaadin.ui.Component;
 public interface MouseEvents {
 
     /**
-     * defines the clicked mouse button for a ComponentClickEvents
+     * defines the clicked mouse button for ClickEvents
      */
     public enum MouseButton {
         LEFT, RIGHT, MIDDLE
     }
 
+    /**
+     * <code>ClickEvent</code> class for holding additional event information.
+     * Fired when the user clicks on a <code>Component</code>.
+     * 
+     * @since 6.2
+     */
     public class ClickEvent extends Component.Event {
 
         private MouseButton mouseButton;
@@ -37,6 +47,13 @@ public interface MouseEvents {
 
     }
 
+    /**
+     * <code>ClickListener</code> interface for listening for
+     * <code>ClickEvent</code> fired by a <code>Component</code>.
+     * 
+     * @see ClickEvent
+     * @since 6.2
+     */
     public interface ClickListener extends ComponentEventListener {
 
         public static final Method clickMethod = ReflectTools.findMethod(
@@ -51,10 +68,13 @@ public interface MouseEvents {
         public void click(ClickEvent event);
     }
 
-    /*
-     * component double click event
+    /**
+     * <code>DoubleClickEvent</code> class for holding additional event
+     * information. Fired when the user double-clicks on a
+     * <code>Component</code>.
+     * 
+     * @since 6.2
      */
-
     public class DoubleClickEvent extends Component.Event {
 
         private static final long serialVersionUID = -7644184999481404162L;
@@ -64,6 +84,13 @@ public interface MouseEvents {
         }
     }
 
+    /**
+     * <code>DoubleClickListener</code> interface for listening for
+     * <code>DoubleClickEvent</code> fired by a <code>Component</code>.
+     * 
+     * @see DoubleClickEvent
+     * @since 6.2
+     */
     public interface DoubleClickListener extends ComponentEventListener {
 
         public static final Method doubleClickMethod = ReflectTools.findMethod(

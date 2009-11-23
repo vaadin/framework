@@ -688,7 +688,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
                     target.addAttribute("description", getDescription());
                 }
 
-                // davengo GmbH: add client event variables
                 String[] trigger = new String[] {};
                 String[] events = new String[] {};
                 if (clientEvents != null) {
@@ -866,13 +865,15 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * event-api mechanism for listening on events.
      * 
      * @param eventIdentifier
+     * @since 6.2
      */
     private void listenEvent(String eventIdentifier) {
         if (clientEvents == null) {
             clientEvents = new ClientEventList();
         }
-        clientEvents.listenEvent(eventIdentifier);
-        requestRepaint();
+        final boolean repaint = clientEvents.listenEvent(eventIdentifier);
+        if (repaint)
+            requestRepaint();
     }
 
     /**
@@ -886,11 +887,13 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * event-api mechanism for listening on events.
      * 
      * @param eventIdentifier
+     * @since 6.2
      */
     private void unlistenEvent(String eventIdentifier) {
         if (clientEvents != null) {
-            clientEvents.unlistenEvent(eventIdentifier);
-            requestRepaint();
+            final boolean repaint = clientEvents.unlistenEvent(eventIdentifier);
+            if (repaint)
+                requestRepaint();
         }
     }
 
@@ -957,6 +960,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      *            the object instance who owns the activation method.
      * @param method
      *            the activation method.
+     * 
+     * @since 6.2
      */
     protected void addEventListener(String eventIdentifier, Class<?> eventType,
             Object object, Method method) {
@@ -992,6 +997,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @param target
      *            the target object that has registered to listen to events of
      *            type <code>eventType</code> with one or more methods.
+     * 
+     * @since 6.2
      */
     protected void removeEventListener(String eventIdentifier,
             Class<?> eventType, Object target) {
@@ -1027,6 +1034,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @param method
      *            the method owned by <code>target</code> that's registered to
      *            listen to events of type <code>eventType</code>.
+     * 
+     * @since 6.2
      */
     protected void removeEventListener(String eventIdentifier, Class eventType,
             Object target, Method method) {
