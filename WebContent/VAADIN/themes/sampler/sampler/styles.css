@@ -46,6 +46,7 @@
 }
 
 .v-customcomponent-breadcrumbs .v-link a,
+.v-customcomponent-breadcrumbs .v-link a:link,
 .v-customcomponent-breadcrumbs .v-label {
 	text-decoration: none;
 	color: #000;
@@ -83,7 +84,8 @@
 .v-ie .v-customcomponent-breadcrumbs .v-link-bold {
 	margin-top: 1px;
 }
-.v-customcomponent-breadcrumbs .v-link-bold a {
+.v-customcomponent-breadcrumbs .v-link-bold a,
+.v-customcomponent-breadcrumbs .v-link-bold a:link {
 	display: block;
 	height: 16px;
 	background: transparent url(breadcrumb-current-right.png) no-repeat right top;
@@ -240,6 +242,7 @@
 .v-popupview-popup-quickjump {
 	background: transparent;
 	border: none;
+	padding: 0;
 }
 
 .v-app-SamplerApplication .v-splitpanel-first-container-main-split {
@@ -423,11 +426,13 @@
 .v-sa .v-app-SamplerApplication .feature-info {
 	font-family: helvetica, arial, verdana, sans-serif;
 }
-.v-app-SamplerApplication .feature-info div.v-link a {
+.v-app-SamplerApplication .feature-info div.v-link a,
+.v-app-SamplerApplication .feature-info div.v-link a:link {
 	color: #b7c0c7;
 	font-size: 11px;
 	line-height: 18px;
 	margin-left: 28px;
+	text-decoration: none;
 }
 .v-app-SamplerApplication .feature-info div.v-link a:hover {
 	color: #dcebf6;
@@ -560,6 +565,9 @@
 
 .v-app-SamplerApplication .v-link-showcode {
 	margin-left: 3px;
+}
+.v-app-SamplerApplication .v-link-showcode a {
+	text-decoration: none;
 }
 .v-app-SamplerApplication div > .v-nativebutton-showcode,
 .v-app-SamplerApplication div > .v-nativebutton-showcode:active,

@@ -1,0 +1,10 @@
+.v-link a:link {
+	color: #1b699f;
+	text-decoration: underline;
+}
+.v-link a:visited {
+	color: #5c7485;
+}
+.v-link a:hover {
+	color: #2483c4;
+}

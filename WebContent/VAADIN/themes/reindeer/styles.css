@@ -3041,6 +3041,17 @@ td.v-datefield-calendarpanel-nextyear {
 	background-color: #1e2022;
 }
 
+.v-link a:link {
+	color: #1b699f;
+	text-decoration: underline;
+}
+.v-link a:visited {
+	color: #5c7485;
+}
+.v-link a:hover {
+	color: #2483c4;
+}
+
 .v-menubar {
 	height: 23px;
 	overflow: hidden;
@@ -3226,6 +3237,19 @@ td.v-datefield-calendarpanel-nextyear {
 .v-panel-deco-light {
 	height: 0;
 	border: none;
+}
+
+.v-popupview {
+	background: transparent;
+	text-decoration: underline;
+	color: #1b699f;
+}
+.v-popupview:hover {
+	color: #2483c4;
+}
+.v-popupview-popup {
+	background: #fff;
+	padding: 3px;
 }
 
 .v-progressindicator-wrapper {
