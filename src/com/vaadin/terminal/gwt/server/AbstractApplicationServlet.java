@@ -59,35 +59,48 @@ import com.vaadin.ui.Window;
 @SuppressWarnings("serial")
 public abstract class AbstractApplicationServlet extends HttpServlet {
     /**
-     * Version number of this release. For example "5.0.0".
+     * The version number of this release. For example "6.2.0". Always in the
+     * format "major.minor.revision[.build]". The build part is optional. All of
+     * major, minor, revision must be integers.
      */
     public static final String VERSION;
     /**
-     * Major version number. For example 5 in 5.1.0.
+     * Major version number. For example 5 in 6.2.0.
      */
     public static final int VERSION_MAJOR;
 
     /**
-     * Minor version number. For example 1 in 5.1.0.
+     * Minor version number. For example 1 in 6.2.0.
      */
     public static final int VERSION_MINOR;
 
     /**
-     * Builds number. For example 0-custom_tag in 5.0.0-custom_tag.
+     * Version revision number. For example 0 in 6.2.0.
+     */
+    public static final int VERSION_REVISION;
+
+    /**
+     * Build identifier. For example "nightly-20091123-c9963" in
+     * 6.2.0.nightly-20091123-c9963.
      */
     public static final String VERSION_BUILD;
 
     /* Initialize version numbers from string replaced by build-script. */
     static {
         if ("@VERSION@".equals("@" + "VERSION" + "@")) {
-            VERSION = "5.9.9-INTERNAL-NONVERSIONED-DEBUG-BUILD";
+            VERSION = "9.9.9.INTERNAL-DEBUG-BUILD";
         } else {
             VERSION = "@VERSION@";
         }
-        final String[] digits = VERSION.split("\\.");
+        final String[] digits = VERSION.split("\\.", 4);
         VERSION_MAJOR = Integer.parseInt(digits[0]);
         VERSION_MINOR = Integer.parseInt(digits[1]);
-        VERSION_BUILD = digits[2];
+        VERSION_REVISION = Integer.parseInt(digits[2]);
+        if (digits.length == 4) {
+            VERSION_BUILD = digits[3];
+        } else {
+            VERSION_BUILD = "";
+        }
     }
 
     /**
