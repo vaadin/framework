@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import com.vaadin.Application;
+import com.vaadin.terminal.ApplicationResource;
 
 /**
  * <code>ApplicationContext</code> provides information about the running
@@ -44,8 +45,8 @@ public interface ApplicationContext extends Serializable {
      * 
      * @return A collection containing all the applications in this context.
      */
-    public Collection getApplications();
-
+    public Collection<Application> getApplications();
+    
     /**
      * Adds a transaction listener to this context.
      * 

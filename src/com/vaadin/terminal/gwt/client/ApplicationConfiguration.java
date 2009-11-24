@@ -24,12 +24,22 @@ public class ApplicationConfiguration {
     private String communicationErrorMessage;
     private String communicationErrorUrl;
     private boolean useDebugIdInDom = true;
+    private boolean usePortletURLs = false;
+    private String portletUidlURLBase;
 
     private Class<? extends Paintable>[] classes = new Class[1024];
 
     private static ArrayList<ApplicationConnection> unstartedApplications = new ArrayList<ApplicationConnection>();
     private static ArrayList<ApplicationConnection> runningApplications = new ArrayList<ApplicationConnection>();
 
+    public boolean usePortletURLs() {
+        return usePortletURLs;
+    }
+    
+    public String getPortletUidlURLBase() {
+        return portletUidlURLBase;
+    }
+    
     public String getRootPanelId() {
         return id;
     }
@@ -81,7 +91,7 @@ public class ApplicationConfiguration {
         if($wnd.vaadin.vaadinConfigurations && $wnd.vaadin.vaadinConfigurations[id]) {
             var jsobj = $wnd.vaadin.vaadinConfigurations[id];
             var uri = jsobj.appUri;
-            if(uri[uri.length -1] != "/") {
+            if(uri != null && uri[uri.length -1] != "/") {
                 uri = uri + "/";
             }
             this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::appUri = uri;
@@ -101,7 +111,12 @@ public class ApplicationConfiguration {
                 this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::communicationErrorMessage = jsobj.comErrMsg.message;
                 this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::communicationErrorUrl = jsobj.comErrMsg.url;
             }
-        
+            if (jsobj.usePortletURLs) {
+                this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::usePortletURLs = jsobj.usePortletURLs;
+            }
+            if (jsobj.portletUidlURLBase) {
+                this.@com.vaadin.terminal.gwt.client.ApplicationConfiguration::portletUidlURLBase = jsobj.portletUidlURLBase;
+            }
         } else {
             $wnd.alert("Vaadin app failed to initialize: " + this.id);
         }

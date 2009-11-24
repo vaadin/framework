@@ -109,7 +109,7 @@ public abstract class Application implements URIHandler,
     /**
      * Mapping from window name to window instance.
      */
-    private final Hashtable windows = new Hashtable();
+    private final Hashtable<String, Window> windows = new Hashtable<String, Window>();
 
     /**
      * Main window of the application.
@@ -120,6 +120,11 @@ public abstract class Application implements URIHandler,
      * The application's URL.
      */
     private URL applicationUrl;
+
+    /**
+     * The ID of the portlet window that this application runs in.
+     */
+    private String portletWindowId;
 
     /**
      * Name of the theme currently used by the application.
@@ -144,24 +149,24 @@ public abstract class Application implements URIHandler,
     /**
      * List of listeners listening user changes.
      */
-    private LinkedList userChangeListeners = null;
+    private LinkedList<UserChangeListener> userChangeListeners = null;
 
     /**
      * Window attach listeners.
      */
-    private LinkedList windowAttachListeners = null;
+    private LinkedList<WindowAttachListener> windowAttachListeners = null;
 
     /**
      * Window detach listeners.
      */
-    private LinkedList windowDetachListeners = null;
+    private LinkedList<WindowDetachListener> windowDetachListeners = null;
 
     /**
      * Application resource mapping: key <-> resource.
      */
-    private final Hashtable resourceKeyMap = new Hashtable();
+    private final Hashtable<ApplicationResource, String> resourceKeyMap = new Hashtable<ApplicationResource, String>();
 
-    private final Hashtable keyResourceMap = new Hashtable();
+    private final Hashtable<String, ApplicationResource> keyResourceMap = new Hashtable<String, ApplicationResource>();
 
     private long lastResourceKeyNumber = 0;
 
@@ -182,6 +187,91 @@ public abstract class Application implements URIHandler,
      * left unhandled.
      */
     private Terminal.ErrorListener errorHandler = this;
+
+    // TODO Document me!
+    public String getPortletWindowId() {
+        return portletWindowId;
+    }
+
+    // TODO Document me!
+    public void setPortletWindowId(String portletWindowId) {
+        this.portletWindowId = portletWindowId;
+    }
+
+    // TODO Document me!
+    @Deprecated
+    public static interface ResourceURLGenerator {
+
+        public String generateResourceURL(ApplicationResource resource,
+                String mapKey);
+
+        public boolean isResourceURL(URL context, String relativeUri);
+
+        public String getMapKey(URL context, String relativeUri);
+
+    }
+
+    /*
+     * Default resource URL generator for servlets
+     */
+    @Deprecated
+    private static ResourceURLGenerator defaultResourceURLGenerator = new ResourceURLGenerator() {
+        public String generateResourceURL(ApplicationResource resource,
+                String mapKey) {
+
+            final String filename = resource.getFilename();
+            if (filename == null) {
+                return "APP/" + mapKey + "/";
+            } else {
+                return "APP/" + mapKey + "/" + filename;
+            }
+
+        }
+
+        public boolean isResourceURL(URL context, String relativeUri) {
+            // If the relative uri is null, we are ready
+            if (relativeUri == null) {
+                return false;
+            }
+
+            // Resolves the prefix
+            String prefix = relativeUri;
+            final int index = relativeUri.indexOf('/');
+            if (index >= 0) {
+                prefix = relativeUri.substring(0, index);
+            }
+
+            // Handles the resource requests
+            return (prefix.equals("APP"));
+        }
+
+        public String getMapKey(URL context, String relativeUri) {
+            final int index = relativeUri.indexOf('/');
+            final int next = relativeUri.indexOf('/', index + 1);
+            if (next < 0) {
+                return null;
+            }
+            return relativeUri.substring(index + 1, next);
+        };
+
+    };
+
+    @Deprecated
+    private ResourceURLGenerator resourceURLGenerator = defaultResourceURLGenerator;
+
+    @Deprecated
+    public ResourceURLGenerator getResourceURLGenerator() {
+        return resourceURLGenerator;
+    }
+
+    @Deprecated
+    public void setResourceURLGenerator(
+            ResourceURLGenerator resourceURLGenerator) {
+        if (resourceURLGenerator == null)
+            this.resourceURLGenerator = defaultResourceURLGenerator;
+        else
+            this.resourceURLGenerator = resourceURLGenerator;
+    }
 
     /**
      * <p>
@@ -559,7 +649,7 @@ public abstract class Application implements URIHandler,
      * 
      * @return the Unmodifiable collection of windows.
      */
-    public Collection getWindows() {
+    public Collection<Window> getWindows() {
         return Collections.unmodifiableCollection(windows.values());
     }
 
@@ -599,10 +689,10 @@ public abstract class Application implements URIHandler,
      */
     public void setTheme(String theme) {
         // Collect list of windows not having the current or future theme
-        final LinkedList toBeUpdated = new LinkedList();
+        final LinkedList<Window> toBeUpdated = new LinkedList<Window>();
         final String oldAppTheme = getTheme();
-        for (final Iterator i = getWindows().iterator(); i.hasNext();) {
-            final Window w = (Window) i.next();
+        for (final Iterator<Window> i = getWindows().iterator(); i.hasNext();) {
+            final Window w = i.next();
             final String windowTheme = w.getTheme();
             if ((windowTheme == null)
                     || (!windowTheme.equals(theme) && windowTheme
@@ -615,8 +705,8 @@ public abstract class Application implements URIHandler,
         this.theme = theme;
 
         // Ask windows to update themselves
-        for (final Iterator i = toBeUpdated.iterator(); i.hasNext();) {
-            ((Window) i.next()).requestRepaint();
+        for (final Iterator<Window> i = toBeUpdated.iterator(); i.hasNext();) {
+            i.next().requestRepaint();
         }
     }
 
@@ -665,7 +755,7 @@ public abstract class Application implements URIHandler,
      *         the keys in the default property list.
      * 
      */
-    public Enumeration getPropertyNames() {
+    public Enumeration<?> getPropertyNames() {
         return properties.propertyNames();
     }
 
@@ -727,8 +817,11 @@ public abstract class Application implements URIHandler,
      *            the resource to get relative location.
      * @return the relative uri of the resource.
      */
+    @Deprecated
     public String getRelativeLocation(ApplicationResource resource) {
 
+        // FIXME Move to ApplicationContext
+        
         // Gets the key
         final String key = (String) resourceKeyMap.get(resource);
 
@@ -737,12 +830,7 @@ public abstract class Application implements URIHandler,
             return null;
         }
 
-        final String filename = resource.getFilename();
-        if (filename == null) {
-            return "APP/" + key + "/";
-        } else {
-            return "APP/" + key + "/" + filename;
-        }
+        return resourceURLGenerator.generateResourceURL(resource, key);
     }
 
     /**
@@ -762,29 +850,16 @@ public abstract class Application implements URIHandler,
      * 
      * @see com.vaadin.terminal.URIHandler#handleURI(URL, String) </p>
      */
+    @Deprecated
     public DownloadStream handleURI(URL context, String relativeUri) {
 
-        // If the relative uri is null, we are ready
-        if (relativeUri == null) {
-            return null;
-        }
-
-        // Resolves the prefix
-        String prefix = relativeUri;
-        final int index = relativeUri.indexOf('/');
-        if (index >= 0) {
-            prefix = relativeUri.substring(0, index);
-        }
-
-        // Handles the resource requests
-        if (prefix.equals("APP")) {
+        // FIXME Move to ApplicationContext
+        
+        if (resourceURLGenerator.isResourceURL(context, relativeUri)) {
 
             // Handles the resource request
-            final int next = relativeUri.indexOf('/', index + 1);
-            if (next < 0) {
-                return null;
-            }
-            final String key = relativeUri.substring(index + 1, next);
+            final String key = resourceURLGenerator.getMapKey(context,
+                    relativeUri);
             final ApplicationResource resource = (ApplicationResource) keyResourceMap
                     .get(key);
             if (resource != null) {
@@ -933,7 +1008,7 @@ public abstract class Application implements URIHandler,
      */
     public void addListener(UserChangeListener listener) {
         if (userChangeListeners == null) {
-            userChangeListeners = new LinkedList();
+            userChangeListeners = new LinkedList<UserChangeListener>();
         }
         userChangeListeners.add(listener);
     }
@@ -1073,7 +1148,7 @@ public abstract class Application implements URIHandler,
      */
     public void addListener(WindowAttachListener listener) {
         if (windowAttachListeners == null) {
-            windowAttachListeners = new LinkedList();
+            windowAttachListeners = new LinkedList<WindowAttachListener>();
         }
         windowAttachListeners.add(listener);
     }
@@ -1089,7 +1164,7 @@ public abstract class Application implements URIHandler,
      */
     public void addListener(WindowDetachListener listener) {
         if (windowDetachListeners == null) {
-            windowDetachListeners = new LinkedList();
+            windowDetachListeners = new LinkedList<WindowDetachListener>();
         }
         windowDetachListeners.add(listener);
     }
