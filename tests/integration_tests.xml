@@ -8,8 +8,8 @@
 	<!-- Target deploying demo.war -->
 	<property name="sshHost" value="rndtestlinux.office.itmill.com" />
 	
-	<!-- Key file to use -->
-	<property name="key.file" value="id_rsa" />
+	<!-- Path to key file -->
+	<property name="sshkey.file" value="id_rsa" />
 	
 	<!-- path and name for demo.war to be deployed -->
 	<property name="demo.war" value="demo.war"/>
@@ -27,7 +27,7 @@
 	
 	<!-- Upload war to deploy to ssh host -->
 	<target name="upload-demo">
-		<scp file="${demo.war}" todir="${user}@${sshHost}:servers/demo.war" keyfile="${key.file}" passphrase="${passphrase}" />
+		<scp file="${demo.war}" todir="${user}@${sshHost}:servers/demo.war" keyfile="${sshkey.file}" passphrase="${passphrase}" />
 	</target>
 	
 	<!-- Run sampler deployment test -->
@@ -48,7 +48,7 @@
 	
 	<!-- Start and stop methods for servers -->
 	<target name="start-tomcat-4">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${key.file}" command="ant -f ${ant.hub} start-tomcat-4.1.40" />
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-tomcat-4.1.40" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/sampler_deployment.html" overwrite="true">
 			<filterchain>
 				<replacetokens>
@@ -59,11 +59,11 @@
 	</target>
 
 	<target name="stop-tomcat-4">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${key.file}" command="ant -f ${ant.hub} stop-tomcat-4.1.40" />
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-tomcat-4.1.40" />
 	</target>
 	
 	<target name="start-tomcat-5">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${key.file}" command="ant -f ${ant.hub} start-tomcat-5.5.28" />
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-tomcat-5.5.28" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/sampler_deployment.html" overwrite="true">
 			<filterchain>
 				<replacetokens>
@@ -74,11 +74,11 @@
 	</target>
 
 	<target name="stop-tomcat-5">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${key.file}" command="ant -f ${ant.hub} stop-tomcat-5.5.28" />
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-tomcat-5.5.28" />
 	</target>
 	
 	<target name="start-tomcat-6">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${key.file}" command="ant -f ${ant.hub} start-tomcat-6.0.20" />
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-tomcat-6.0.20" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/sampler_deployment.html" overwrite="true">
 			<filterchain>
 				<replacetokens>
@@ -89,11 +89,11 @@
 	</target>
 
 	<target name="stop-tomcat-6">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${key.file}" command="ant -f ${ant.hub} stop-tomcat-6.0.20" />
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-tomcat-6.0.20" />
 	</target>
 	
 	<target name="start-jetty-5">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${key.file}" command="ant -f ${ant.hub} start-jetty-5.1.15" />
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jetty-5.1.15" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/sampler_deployment.html" overwrite="true">
 			<filterchain>
 				<replacetokens>
@@ -104,11 +104,11 @@
 	</target>
 
 	<target name="stop-jetty-5">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${key.file}" command="ant -f ${ant.hub} stop-jetty-5.1.15" />
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-jetty-5.1.15" />
 	</target>
 
 	<target name="start-jetty-6">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${key.file}" command="ant -f ${ant.hub} start-jetty-6.1.22" />
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jetty-6.1.22" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/sampler_deployment.html" overwrite="true">
 			<filterchain>
 				<replacetokens>
@@ -119,11 +119,11 @@
 	</target>
 
 	<target name="stop-jetty-6">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${key.file}" command="ant -f ${ant.hub} stop-jetty-6.1.22" />
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-jetty-6.1.22" />
 	</target>
 	
 	<target name="start-jetty-7">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${key.file}" command="ant -f ${ant.hub} start-jetty-7.0.0" />
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jetty-7.0.0" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/sampler_deployment.html" overwrite="true">
 			<filterchain>
 				<replacetokens>
@@ -134,11 +134,11 @@
 	</target>
 
 	<target name="stop-jetty-7">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${key.file}" command="ant -f ${ant.hub} stop-jetty-7.0.0" />
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-jetty-7.0.0" />
 	</target>
 	
 	<target name="start-jboss-3">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${key.file}" command="ant -f ${ant.hub} start-jboss-3.2.8" />
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jboss-3.2.8" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/sampler_deployment.html" overwrite="true">
 			<filterchain>
 				<replacetokens>
@@ -149,11 +149,11 @@
 	</target>
 
 	<target name="stop-jboss-3">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${key.file}" command="ant -f ${ant.hub} stop-jboss-3.2.8" />
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-jboss-3.2.8" />
 	</target>
 	
 	<target name="start-jboss-4">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${key.file}" command="ant -f ${ant.hub} start-jboss-4.2.3" />
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jboss-4.2.3" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/sampler_deployment.html" overwrite="true">
 			<filterchain>
 				<replacetokens>
@@ -164,11 +164,11 @@
 	</target>
 
 	<target name="stop-jboss-4">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${key.file}" command="ant -f ${ant.hub} stop-jboss-4.2.3" />
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-jboss-4.2.3" />
 	</target>
 	
 	<target name="start-jboss-5">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${key.file}" command="ant -f ${ant.hub} start-jboss-5.0.1" />
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jboss-5.0.1" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/sampler_deployment.html" overwrite="true">
 			<filterchain>
 				<replacetokens>
@@ -179,11 +179,11 @@
 	</target>
 
 	<target name="stop-jboss-5">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${key.file}" command="ant -f ${ant.hub} stop-jboss-5.0.1" />
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-jboss-5.0.1" />
 	</target>
 	
 	<target name="start-glassfish">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${key.file}" command="ant -f ${ant.hub} start-glassfish-2.1.1" />
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-glassfish-2.1.1" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/sampler_deployment.html" overwrite="true">
 			<filterchain>
 				<replacetokens>
@@ -194,7 +194,7 @@
 	</target>
 	
 	<target name="stop-glassfish">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${key.file}" command="ant -f ${ant.hub} stop-glassfish-2.1.1" />
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-glassfish-2.1.1" />
 	</target>
 	
 	<!-- Test liferay sampler -->
@@ -230,11 +230,11 @@
 	</target>
 	
 	<target name="start-liferay">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${key.file}" command="ant -f ${ant.hub} start-liferay-5.2.3" />
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-liferay-5.2.3" />
 	</target>
 
 	<target name="stop-liferay">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${key.file}" command="ant -f ${ant.hub} stop-liferay-5.2.3" />
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-liferay-5.2.3" />
 	</target>
 	
 	<!-- Run sampler deployment test for WebLogic server -->
@@ -254,7 +254,7 @@
 	</target>
 	
 	<target name="start-weblogic9">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${key.file}" command="ant -f ${ant.hub} start-weblogic-9.2" />
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-weblogic-9.2" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/sampler_deployment.html" overwrite="true">
 			<filterchain>
 				<replacetokens>
@@ -265,11 +265,11 @@
 	</target>
 
 	<target name="stop-weblogic9">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${key.file}" command="ant -f ${ant.hub} stop-weblogic-9.2" />
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-weblogic-9.2" />
 	</target>
 	
 	<target name="start-weblogic10">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${key.file}" command="ant -f ${ant.hub} start-weblogic-10.3" />
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-weblogic-10.3" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/sampler_deployment.html" overwrite="true">
 			<filterchain>
 				<replacetokens>
@@ -280,7 +280,7 @@
 	</target>
 
 	<target name="stop-weblogic10">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${key.file}" command="ant -f ${ant.hub} stop-weblogic-10.3" />
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-weblogic-10.3" />
 	</target>
 	
 	<!-- Server setup, test and teardown targets. -->
@@ -363,7 +363,7 @@
 	
 	<!-- Remove demo.war -->
 	<target name="clean">
-		<sshexec host="${sshHost}" username="${user}" keyfile="${key.file}" command="ant -f ${ant.hub} clean" />
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} clean" />
 	</target>
 	
 	<!-- Remove old screenshots if any -->
