@@ -32,6 +32,7 @@
 	<fileset dir=".." id="html-test-files">
 		<include name="src/com/vaadin/tests/**/**.html" />
 		<include name="tests/**/**.html" />
+		<exclude name="tests/integration-testscripts/**" />
 	</fileset>
 
 	<!-- This target converts HTML tests files to java junit tests. One test file for each browser is created. -->
