@@ -1379,7 +1379,7 @@
     <!-- Automated tests.                                                   -->
     <!-- ================================================================== -->
 
-    <target name="tests" depends="ant-tests, testbench-tests">
+    <target name="tests" depends="ant-tests, testbench-tests, integration-tests">
     </target>
 
     <target name="testbench-tests" depends="init">
@@ -1424,6 +1424,29 @@
         <echo>##teamcity[testFinished name='testingSmoketest']</echo>
 
         <echo>##teamcity[testSuiteFinished name='com.vaadin.tests.test-framework']</echo>
+    </target>
+	
+    <target name="integration-tests" depends="internal-package-war">
+        <!-- Parameters for the test.xml script. -->
+        <fail unless="com.vaadin.testbench.tester.host" message="The 'com.vaadin.testbench.tester.host' property must be defined."/>
+        <fail unless="com.vaadin.testbench.lib.dir" message="The 'com.vaadin.testbench.lib.dir' property must be defined."/>
+        <fail unless="key.file" message="The 'key.file' property must be defined."/>
+
+        <!-- Empty passphrase if no passphrase defined -->
+        <property name="passphrase" value="" />
+
+        <!-- Run the separate test script. -->
+        <ant antfile="tests/integration_tests.xml" target="tomcat4" inheritall="false" inheritrefs="true">
+              <!-- This is provided so that the test script can copy the -->
+              <!-- "tests" classes after unpacking the package.          -->
+		      <property name="output-dir" value="${output-dir}"/>
+
+		      <property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}"/>
+		      <property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}"/>
+		   	  <property name="key.file" value="${key.file}" />
+		   	  <property name="passphrase" value="${passphrase}" />
+		      <property name="demo.war" value="${result-path}/${product-file}-demo-${version.full}.war"/>
+        </ant>
     </target>
 </project>
 

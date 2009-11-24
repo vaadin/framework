@@ -104,7 +104,7 @@
 		<fail unless="com.vaadin.testbench.deployment.url" message="The 'com.vaadin.testbench.deployment.url' property must be defined." />
 	</target>
 
-	<target name="run-tests" depends="remove-error-screens, compile-tests">
+	<target name="run-tests" depends="compile-tests">
 		<foreach maxthreads="10" parallel="true" target="execute-tests" param="target">
 			<path>
 				<fileset dir="${test-output-dir}" includes="**/**.java" />
@@ -162,7 +162,7 @@
 	<!-- ================================================================== -->
 
 	<!-- The default target. -->
-	<target name="run-and-clean-up" depends="check-parameters, run-tests,remove-temp-testclasses">
+	<target name="run-and-clean-up" depends="check-parameters,remove-error-screens,run-tests,remove-temp-testclasses">
 	</target>
 
 	<!-- Also starts the server. -->
