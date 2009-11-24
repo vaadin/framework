@@ -1434,7 +1434,7 @@
 
         <!-- Empty passphrase if no passphrase defined -->
         <property name="passphrase" value="" />
-    	<property name="demo.war" value="${result-path}/${product-file}-demo-${version.full}.war" />
+    	<property name="demo.war" location="${result-path}/${product-file}-demo-${version.full}.war" />
 
         <!-- Run the separate test script. -->
         <ant antfile="tests/integration_tests.xml" target="all" inheritall="false" inheritrefs="true">
