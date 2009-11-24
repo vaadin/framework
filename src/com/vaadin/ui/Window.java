@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -29,7 +29,7 @@ import com.vaadin.terminal.gwt.client.ui.VView;
 
 /**
  * Application window component.
- * 
+ *
  * @author IT Mill Ltd.
  * @version
  * @VERSION@
@@ -126,16 +126,16 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Creates a new empty unnamed window with default layout.
-     * 
+     *
      * <p>
      * To show the window in application, it must be added to application with
      * <code>Application.addWindow</code> method.
      * </p>
-     * 
+     *
      * <p>
      * The windows are scrollable by default.
      * </p>
-     * 
+     *
      * @param caption
      *            the Title of the window.
      */
@@ -145,16 +145,16 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Creates a new empty window with default layout.
-     * 
+     *
      * <p>
      * To show the window in application, it must be added to application with
      * <code>Application.addWindow</code> method.
      * </p>
-     * 
+     *
      * <p>
      * The windows are scrollable by default.
      * </p>
-     * 
+     *
      * @param caption
      *            the Title of the window.
      */
@@ -164,16 +164,16 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Creates a new window.
-     * 
+     *
      * <p>
      * To show the window in application, it must be added to application with
      * <code>Application.addWindow</code> method.
      * </p>
-     * 
+     *
      * <p>
      * The windows are scrollable by default.
      * </p>
-     * 
+     *
      * @param caption
      *            the Title of the window.
      * @param layout
@@ -187,7 +187,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Gets the terminal type.
-     * 
+     *
      * @return the Value of property terminal.
      */
     public Terminal getTerminal() {
@@ -200,7 +200,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * Gets the window of the component. Returns the window where this component
      * belongs to. If the component does not yet belong to a window the returns
      * null.
-     * 
+     *
      * @return the parent window of the component.
      */
     @Override
@@ -212,7 +212,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * Gets the application instance of the component. Returns the application
      * where this component belongs to. If the component does not yet belong to
      * a application the returns null.
-     * 
+     *
      * @return the parent application of the component.
      */
     @Override
@@ -225,18 +225,18 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Getter for property parent.
-     * 
+     *
      * <p>
      * Parent is the visual parent of a component. Each component can belong to
      * only one ComponentContainer at time.
      * </p>
-     * 
+     *
      * <p>
      * For windows attached directly to the application, parent is
      * <code>null</code>. For windows inside other windows, parent is the window
      * containing this window.
      * </p>
-     * 
+     *
      * @return the Value of property parent.
      */
     @Override
@@ -246,12 +246,12 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Setter for property parent.
-     * 
+     *
      * <p>
      * Parent is the visual parent of a component. This is mostly called by
      * containers add method and should not be called directly
      * </p>
-     * 
+     *
      * @param parent
      *            the New value of property parent.
      */
@@ -265,7 +265,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     /**
      * Adds the new URI handler to this window. For sub-windows, URI handlers
      * are attached to root level window.
-     * 
+     *
      * @param handler
      *            the URI handler to add.
      */
@@ -289,7 +289,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Removes the given URI handler from this window.
-     * 
+     *
      * @param handler
      *            the URI handler to remove.
      */
@@ -312,13 +312,13 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     }
 
     /**
-     * Handles uri recursively. Windows uri handler passes uri to all
+     * Handles URI recursively. Window URI handler passes the URI to all
      * {@link URIHandler}s added to it.
      * <p>
      * Note, that instead of overriding this method developer should consider
-     * using {@link Window#addURIHandler(URIHandler)} to add uri handler to
+     * using {@link Window#addURIHandler(URIHandler)} to add URI handler to
      * Window.
-     * 
+     *
      * @param context
      * @param relativeUri
      */
@@ -351,7 +351,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     /**
      * Adds the new parameter handler to this window. For sub windows, parameter
      * handlers are attached to parent windows.
-     * 
+     *
      * @param handler
      *            the parameter handler to add.
      */
@@ -376,7 +376,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Removes the given URI handler from this window.
-     * 
+     *
      * @param handler
      *            the parameter handler to remove.
      */
@@ -415,11 +415,11 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Gets the theme for this window.
-     * 
+     *
      * <p>
      * Subwindows do not support themes and thus return theme used by the parent
      * </p>
-     * 
+     *
      * @return the Name of the theme used in window. If the theme for this
      *         individual window is not explicitly set, the application theme is
      *         used instead. If application is not assigned the
@@ -444,11 +444,11 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Sets the theme for this window.
-     * 
+     *
      * Setting theme for subwindows is not supported.
-     * 
+     *
      * The terminal will reload its host page on theme changes.
-     * 
+     *
      * @param theme
      *            the New theme for this window. Null implies the default theme.
      */
@@ -463,7 +463,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Paints the content of this component.
-     * 
+     *
      * @param event
      *            the Paint Event.
      * @throws PaintException
@@ -594,7 +594,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Opens the given resource in this window.
-     * 
+     *
      * @param resource
      */
     public void open(Resource resource) {
@@ -613,7 +613,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * Opens the given resource in named terminal window. Empty or
      * <code>null</code> window name results the resource to be opened in this
      * window.
-     * 
+     *
      * <p>
      * Note! When opening browser window with name "_self", client will skip
      * rendering rest of the changes as it considers them irrelevant. This may
@@ -621,7 +621,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * inconsistent state with server in case nothing is actually opened to
      * window (like if browser decided to download the resource instead of
      * displaying it).
-     * 
+     *
      * @param resource
      *            the resource.
      * @param windowName
@@ -643,7 +643,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * Opens the given resource in named terminal window with given size and
      * border properties. Empty or <code>null</code> window name results the
      * resource to be opened in this window.
-     * 
+     *
      * @param resource
      * @param windowName
      * @param width
@@ -666,7 +666,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     /**
      * Returns the full url of the window, this returns window specific url even
      * for the main window.
-     * 
+     *
      * @return the URL of the window.
      */
     public URL getURL() {
@@ -685,7 +685,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Gets the unique name of the window that indentifies it on the terminal.
-     * 
+     *
      * <p>
      * Name identifies the URL used to access application-level windows, but is
      * not used for windows inside other windows. all application-level windows
@@ -697,7 +697,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * inside other windows - these windows show as smaller windows inside those
      * windows.
      * </p>
-     * 
+     *
      * @return the Name of the Window.
      */
     public String getName() {
@@ -706,7 +706,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Returns the border.
-     * 
+     *
      * @return the border.
      */
     public int getBorder() {
@@ -715,7 +715,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Sets the border.
-     * 
+     *
      * @param border
      *            the border to set.
      */
@@ -725,7 +725,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Sets the application this window is connected to.
-     * 
+     *
      * <p>
      * This method should not be invoked directly. Instead the
      * {@link com.vaadin.Application#addWindow(Window)} method should be used to
@@ -733,12 +733,12 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * {@link com.vaadin.Application#removeWindow(Window)} method for removing
      * the window from the applicion. These methods call this method implicitly.
      * </p>
-     * 
+     *
      * <p>
      * The method invokes {@link Component#attach()} and
      * {@link Component#detach()} methods when necessary.
      * <p>
-     * 
+     *
      * @param application
      *            the application to set.
      */
@@ -768,12 +768,12 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * <p>
      * The name of the window must be unique inside the application.
      * </p>
-     * 
+     *
      * <p>
      * If the name is null, the the window is given name automatically when it
      * is added to an application.
      * </p>
-     * 
+     *
      * @param name
      *            the name to set.
      */
@@ -792,7 +792,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     /**
      * Sets the terminal type. The terminal type is set by the the terminal
      * adapter and may change from time to time.
-     * 
+     *
      * @param type
      *            the terminal type to set.
      */
@@ -817,7 +817,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
         /**
          * Creates a new open resource.
-         * 
+         *
          * @param resource
          * @param name
          * @param width
@@ -835,7 +835,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
         /**
          * Paints the open-tag inside the window.
-         * 
+         *
          * @param target
          *            the Paint Event.
          * @throws PaintException
@@ -869,7 +869,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     /**
      * Called when one or more variables handled by the implementing class are
      * changed.
-     * 
+     *
      * @see com.vaadin.terminal.VariableOwner#changeVariables(java.lang.Object,
      *      java.util.Map)
      */
@@ -921,14 +921,14 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Method that handles window closing (from UI).
-     * 
+     *
      * <p>
      * By default, sub-windows are removed from their respective parent windows
      * and thus visually closed on browser-side. Browser-level windows also
      * closed on the client-side, but they are not implicitly removed from the
      * application.
      * </p>
-     * 
+     *
      * <p>
      * If one wants change the default behavior, register a window close
      * listenter and do something else. For example, you could re-open the
@@ -951,7 +951,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     /**
      * Gets the distance of Window left border in pixels from left border of the
      * containing (main window).
-     * 
+     *
      * @return the Distance of Window left border in pixels from left border of
      *         the containing (main window). or -1 if unspecified.
      * @since 4.0.0
@@ -963,7 +963,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     /**
      * Sets the distance of Window left border in pixels from left border of the
      * containing (main window).
-     * 
+     *
      * @param positionX
      *            the Distance of Window left border in pixels from left border
      *            of the containing (main window). or -1 if unspecified.
@@ -978,10 +978,10 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     /**
      * Gets the distance of Window top border in pixels from top border of the
      * containing (main window).
-     * 
+     *
      * @return Distance of Window top border in pixels from top border of the
      *         containing (main window). or -1 if unspecified .
-     * 
+     *
      * @since 4.0.0
      */
     public int getPositionY() {
@@ -991,11 +991,11 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     /**
      * Sets the distance of Window top border in pixels from top border of the
      * containing (main window).
-     * 
+     *
      * @param positionY
      *            the Distance of Window top border in pixels from top border of
      *            the containing (main window). or -1 if unspecified
-     * 
+     *
      * @since 4.0.0
      */
     public void setPositionY(int positionY) {
@@ -1019,7 +1019,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     public class CloseEvent extends Component.Event {
 
         /**
-         * 
+         *
          * @param source
          */
         public CloseEvent(Component source) {
@@ -1028,7 +1028,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
         /**
          * Gets the Window.
-         * 
+         *
          * @return the window.
          */
         public Window getWindow() {
@@ -1042,7 +1042,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Adds the listener.
-     * 
+     *
      * @param listener
      *            the listener to add.
      */
@@ -1052,7 +1052,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Removes the listener.
-     * 
+     *
      * @param listener
      *            the listener to remove.
      */
@@ -1087,7 +1087,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     public class ResizeEvent extends Component.Event {
 
         /**
-         * 
+         *
          * @param source
          */
         public ResizeEvent(Component source) {
@@ -1096,7 +1096,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
         /**
          * Get the window form which this event originated
-         * 
+         *
          * @return the window
          */
         public Window getWindow() {
@@ -1106,7 +1106,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Listener for window resize events.
-     * 
+     *
      * @see com.vaadin.ui.Window.ResizeEvent
      */
     public interface ResizeListener extends Serializable {
@@ -1115,7 +1115,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Add a resize listener.
-     * 
+     *
      * @param listener
      */
     public void addListener(ResizeListener listener) {
@@ -1124,7 +1124,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Remove a resize listener.
-     * 
+     *
      * @param listener
      */
     public void removeListener(ResizeListener listener) {
@@ -1146,18 +1146,18 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Adds a window inside another window.
-     * 
+     *
      * <p>
      * Adding windows inside another window creates "subwindows". These windows
      * should not be added to application directly and are not accessible
      * directly with any url. Addding windows implicitly sets their parents.
      * </p>
-     * 
+     *
      * <p>
      * Only one level of subwindows are supported. Thus you can add windows
      * inside such windows whose parent is <code>null</code>.
      * </p>
-     * 
+     *
      * @param window
      * @throws IllegalArgumentException
      *             if a window is added inside non-application level window.
@@ -1188,7 +1188,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Remove the given subwindow from this window.
-     * 
+     *
      * @param window
      *            Window to be removed.
      */
@@ -1201,7 +1201,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Get the set of all child windows.
-     * 
+     *
      * @return Set of child windows.
      */
     public Set<Window> getChildWindows() {
@@ -1211,7 +1211,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     /**
      * Sets sub-window modal, so that widgets behind it cannot be accessed.
      * <b>Note:</b> affects sub-windows only.
-     * 
+     *
      * @param modality
      *            true if modality is to be turned on
      */
@@ -1230,7 +1230,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Sets sub-window resizable. <b>Note:</b> affects sub-windows only.
-     * 
+     *
      * @param resizable
      *            true if resizability is to be turned on
      */
@@ -1240,7 +1240,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     }
 
     /**
-     * 
+     *
      * @return true if window is resizable by the end-user, otherwise false.
      */
     public boolean isResizable() {
@@ -1259,10 +1259,10 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     /**
      * Shows a notification message on the middle of the window. The message
      * automatically disappears ("humanized message").
-     * 
+     *
      * @see #showNotification(com.vaadin.ui.Window.Notification)
      * @see Notification
-     * 
+     *
      * @param caption
      *            The message
      */
@@ -1274,10 +1274,10 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * Shows a notification message the window. The position and behavior of the
      * message depends on the type, which is one of the basic types defined in
      * {@link Notification}, for instance Notification.TYPE_WARNING_MESSAGE.
-     * 
+     *
      * @see #showNotification(com.vaadin.ui.Window.Notification)
      * @see Notification
-     * 
+     *
      * @param caption
      *            The message
      * @param type
@@ -1291,15 +1291,15 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * Shows a notification consisting of a bigger caption and a smaller
      * description on the middle of the window. The message automatically
      * disappears ("humanized message").
-     * 
+     *
      * @see #showNotification(com.vaadin.ui.Window.Notification)
      * @see Notification
-     * 
+     *
      * @param caption
      *            The caption of the message
      * @param description
      *            The message description
-     * 
+     *
      */
     public void showNotification(String caption, String description) {
         addNotification(new Notification(caption, description));
@@ -1310,10 +1310,10 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * description. The position and behavior of the message depends on the
      * type, which is one of the basic types defined in {@link Notification},
      * for instance Notification.TYPE_WARNING_MESSAGE.
-     * 
+     *
      * @see #showNotification(com.vaadin.ui.Window.Notification)
      * @see Notification
-     * 
+     *
      * @param caption
      *            The caption of the message
      * @param description
@@ -1327,13 +1327,13 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Shows a notification message.
-     * 
+     *
      * @see Notification
      * @see #showNotification(String)
      * @see #showNotification(String, int)
      * @see #showNotification(String, String)
      * @see #showNotification(String, String, int)
-     * 
+     *
      * @param notification
      *            The notification message to show
      */
@@ -1355,10 +1355,10 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * Component.Focusable) due we want the last focused component to be focused
      * in client too. Not the one that is rendered last (the case we'd get if
      * implemented in Focusable only).
-     * 
+     *
      * To focus component from Vaadin application, use Focusable.focus(). See
      * {@link Focusable}.
-     * 
+     *
      * @param focusable
      *            to be focused on next paint
      */
@@ -1411,7 +1411,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * configured to show up in a custom position, for a specified time (or
      * until clicked), and with a custom stylename. An icon can also be added.
      * </p>
-     * 
+     *
      */
     public static class Notification implements Serializable {
         public static final int TYPE_HUMANIZED_MESSAGE = 1;
@@ -1439,7 +1439,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
         /**
          * Creates a "humanized" notification message.
-         * 
+         *
          * @param caption
          *            The message to show
          */
@@ -1449,7 +1449,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
         /**
          * Creates a notification message of the specified type.
-         * 
+         *
          * @param caption
          *            The message to show
          * @param type
@@ -1462,7 +1462,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         /**
          * Creates a "humanized" notification message with a bigger caption and
          * smaller description.
-         * 
+         *
          * @param caption
          *            The message caption
          * @param description
@@ -1475,7 +1475,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         /**
          * Creates a notification message of the specified type, with a bigger
          * caption and smaller description.
-         * 
+         *
          * @param caption
          *            The message caption
          * @param description
@@ -1513,7 +1513,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
         /**
          * Gets the caption part of the notification message.
-         * 
+         *
          * @return The message caption
          */
         public String getCaption() {
@@ -1522,7 +1522,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
         /**
          * Sets the caption part of the notification message
-         * 
+         *
          * @param caption
          *            The message caption
          */
@@ -1550,7 +1550,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
         /**
          * Gets the description part of the notification message.
-         * 
+         *
          * @return The message description.
          */
         public String getDescription() {
@@ -1559,7 +1559,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
         /**
          * Sets the description part of the notification message.
-         * 
+         *
          * @param description
          */
         public void setDescription(String description) {
@@ -1568,7 +1568,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
         /**
          * Gets the position of the notification message.
-         * 
+         *
          * @return The position
          */
         public int getPosition() {
@@ -1577,7 +1577,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
         /**
          * Sets the position of the notification message.
-         * 
+         *
          * @param position
          *            The desired notification position
          */
@@ -1587,7 +1587,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
         /**
          * Gets the icon part of the notification message.
-         * 
+         *
          * @return The message icon
          */
         public Resource getIcon() {
@@ -1596,7 +1596,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
         /**
          * Sets the icon part of the notification message.
-         * 
+         *
          * @param icon
          *            The desired message icon
          */
@@ -1606,7 +1606,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
         /**
          * Gets the delay before the notification disappears.
-         * 
+         *
          * @return the delay in msec, -1 indicates the message has to be
          *         clicked.
          */
@@ -1616,7 +1616,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
         /**
          * Sets the delay before the notification disappears.
-         * 
+         *
          * @param delayMsec
          *            the desired delay in msec, -1 to require the user to click
          *            the message
@@ -1627,7 +1627,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
         /**
          * Sets the style name for the notification message.
-         * 
+         *
          * @param styleName
          *            The desired style name.
          */
@@ -1637,7 +1637,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
         /**
          * Gets the style name for the notification message.
-         * 
+         *
          * @return
          */
         public String getStyleName() {
@@ -1647,13 +1647,13 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Executes JavaScript in this window.
-     * 
+     *
      * <p>
      * This method allows one to inject javascript from the server to client. A
      * client implementation is not required to implement this functionality,
      * but currently all web-based clients do implement this.
      * </p>
-     * 
+     *
      * <p>
      * Executing javascript this way often leads to cross-browser compatibility
      * issues and regressions that are hard to resolve. Use of this method
@@ -1661,7 +1661,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * with GWT. For more info on creating own, reusable client-side widgets in
      * Java, read the corresponding chapter in Book of Vaadin.
      * </p>
-     * 
+     *
      * @param script
      *            JavaScript snippet that will be executed.
      */

@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -18,13 +18,18 @@ import com.vaadin.external.org.apache.commons.fileupload.FileItemIterator;
 import com.vaadin.external.org.apache.commons.fileupload.FileUpload;
 import com.vaadin.external.org.apache.commons.fileupload.FileUploadException;
 import com.vaadin.external.org.apache.commons.fileupload.servlet.ServletFileUpload;
+import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.ui.Window;
 
 /**
  * Application manager processes changes and paints for single application
  * instance.
+ *
+ * This class handles applications running as servlets.
  * 
+ * @see AbstractCommunicationManager
+ *
  * @author IT Mill Ltd.
  * @version
  * @VERSION@
@@ -33,6 +38,11 @@ import com.vaadin.ui.Window;
 @SuppressWarnings("serial")
 public class CommunicationManager extends AbstractCommunicationManager {
 
+    /**
+     * Concrete wrapper class for {@link HttpServletRequest}.
+     *
+     * @see Request
+     */
     private static class HttpServletRequestWrapper implements Request {
 
         private final HttpServletRequest request;
@@ -78,6 +88,11 @@ public class CommunicationManager extends AbstractCommunicationManager {
         }
     }
 
+    /**
+     * Concrete wrapper class for {@link HttpServletResponse}.
+     *
+     * @see Response
+     */
     private static class HttpServletResponseWrapper implements Response {
 
         private final HttpServletResponse response;
@@ -100,6 +115,11 @@ public class CommunicationManager extends AbstractCommunicationManager {
 
     }
 
+    /**
+     * Concrete wrapper class for {@link HttpSession}.
+     *
+     * @see Session
+     */
     private static class HttpSessionWrapper implements Session {
 
         private final HttpSession session;
@@ -174,7 +194,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
 
     /**
      * TODO New constructor - document me!
-     * 
+     *
      * @param application
      */
     public CommunicationManager(Application application) {
@@ -187,7 +207,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
     }
 
     @Override
-    protected FileItemIterator getItemIterator(FileUpload upload,
+    protected FileItemIterator getUploadItemIterator(FileUpload upload,
             Request request) throws IOException, FileUploadException {
         return ((ServletFileUpload) upload)
                 .getItemIterator((HttpServletRequest) request
@@ -196,7 +216,9 @@ public class CommunicationManager extends AbstractCommunicationManager {
 
     /**
      * Handles file upload request submitted via Upload component.
-     * 
+     *
+     * TODO document
+     *
      * @param request
      * @param response
      * @throws IOException
@@ -211,7 +233,9 @@ public class CommunicationManager extends AbstractCommunicationManager {
 
     /**
      * Handles UIDL request
-     * 
+     *
+     * TODO document
+     *
      * @param request
      * @param response
      * @throws IOException
@@ -227,9 +251,9 @@ public class CommunicationManager extends AbstractCommunicationManager {
     }
 
     /**
-     * Gets the existing application or create a new one. Get a window within an
-     * application based on the requested URI.
-     * 
+     * Gets the existing application or creates a new one. Get a window within
+     * an application based on the requested URI.
+     *
      * @param request
      *            the HTTP Request.
      * @param application
@@ -237,7 +261,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
      * @param assumedWindow
      *            if the window has been already resolved once, this parameter
      *            must contain the window.
-     * @return Window mathing the given URI or null if not found.
+     * @return Window matching the given URI or null if not found.
      * @throws ServletException
      *             if an exception has occurred that interferes with the
      *             servlet's normal operation.
@@ -252,8 +276,17 @@ public class CommunicationManager extends AbstractCommunicationManager {
     }
 
     /**
-     * TODO Document me!
-     * 
+     * Calls the Window URI handler for a request and returns the
+     * {@link DownloadStream} returned by the handler.
+     *
+     * If the window is the main window of an application, the deprecated
+     * {@link Application#handleURI(java.net.URL, String)} is called first to
+     * handle {@link ApplicationResource}s and the window handler is only called
+     * if it returns null.
+     *
+     * @see AbstractCommunicationManager#handleURI(Window, Request, Response,
+     *      Callback)
+     *
      * @param window
      * @param request
      * @param response

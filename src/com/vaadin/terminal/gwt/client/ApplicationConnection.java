@@ -39,9 +39,23 @@ import com.vaadin.terminal.gwt.client.ui.VContextMenu;
 import com.vaadin.terminal.gwt.client.ui.VNotification;
 import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.terminal.gwt.client.ui.VNotification.HideEvent;
+import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
 
 /**
- * Entry point classes define <code>onModuleLoad()</code>.
+ * This is the client side communication "engine", managing client-server
+ * communication with its server side counterpart
+ * {@link AbstractCommunicationManager}.
+ * 
+ * Client-side widgets receive updates from the corresponding server-side
+ * components as calls to
+ * {@link Paintable#updateFromUIDL(UIDL, ApplicationConnection)} (not to be
+ * confused with the server side interface {@link com.vaadin.terminal.Paintable}
+ * ). Any client-side changes (typically resulting from user actions) are sent
+ * back to the server as variable changes (see {@link #updateVariable()}).
+ * 
+ * TODO document better
+ * 
+ * Entry point classes (widgetsets) define <code>onModuleLoad()</code>.
  */
 public class ApplicationConnection {
     private static final String MODIFIED_CLASSNAME = "v-modified";
@@ -202,7 +216,7 @@ public class ApplicationConnection {
      * <li><code>vaadin.postRequestHooks</code> is a map of functions which gets
      * called after each XHR made by vaadin application. Note, that it is
      * attaching js functions responsibility to create the variable like this:
-     * 
+     *
      * <code><pre>
      * if(!vaadin.postRequestHooks) {vaadin.postRequestHooks = new Object();}
      * postRequestHooks.myHook = function(appId) {
@@ -213,7 +227,7 @@ public class ApplicationConnection {
      * </pre></code> First parameter passed to these functions is the identifier
      * of Vaadin application that made the request.
      * </ul>
-     * 
+     *
      * TODO make this multi-app aware
      */
     private native void initializeClientHooks()
@@ -244,7 +258,7 @@ public class ApplicationConnection {
     /**
      * Runs possibly registered client side post request hooks. This is expected
      * to be run after each uidl request made by Vaadin application.
-     * 
+     *
      * @param appId
      */
     private static native void runPostRequestHooks(String appId)
@@ -267,7 +281,7 @@ public class ApplicationConnection {
     /**
      * Checks if client side is in debug mode. Practically this is invoked by
      * adding ?debug parameter to URI.
-     * 
+     *
      * @return true if client side is currently been debugged
      */
     public native static boolean isDebugMode()
@@ -448,7 +462,7 @@ public class ApplicationConnection {
     /**
      * Shows the communication error notification. The 'details' only go to the
      * console for now.
-     * 
+     *
      * @param details
      *            Optional details for debugging.
      */
@@ -530,7 +544,7 @@ public class ApplicationConnection {
 
     /**
      * This method is called after applying uidl change set to application.
-     * 
+     *
      * It will clean current and queued variable change sets. And send next
      * change set if it exists.
      */
@@ -550,7 +564,7 @@ public class ApplicationConnection {
     /**
      * Cleans given queue of variable changes of such changes that came from
      * components that do not exist anymore.
-     * 
+     *
      * @param variableBurst
      */
     private void cleanVariableBurst(ArrayList<String> variableBurst) {
@@ -907,7 +921,7 @@ public class ApplicationConnection {
 
     /**
      * Returns Paintable element by its id
-     * 
+     *
      * @param id
      *            Paintable ID
      */
@@ -941,12 +955,12 @@ public class ApplicationConnection {
     /**
      * This method sends currently queued variable changes to server. It is
      * called when immediate variable update must happen.
-     * 
+     *
      * To ensure correct order for variable changes (due servers multithreading
      * or network), we always wait for active request to be handler before
      * sending a new one. If there is an active request, we will put varible
      * "burst" to queue that will be purged after current request is handled.
-     * 
+     *
      */
     @SuppressWarnings("unchecked")
     public void sendPendingVariableChanges() {
@@ -968,11 +982,11 @@ public class ApplicationConnection {
 
     /**
      * Build the variable burst and send it to server.
-     * 
+     *
      * When sync is forced, we also force sending of all pending variable-bursts
      * at the same time. This is ok as we can assume that DOM will never be
      * updated after this.
-     * 
+     *
      * @param pendingVariables
      *            Vector of variable changes to send
      * @param forceSync
@@ -1061,9 +1075,9 @@ public class ApplicationConnection {
 
     /**
      * Update generic component features.
-     * 
+     *
      * <h2>Selecting correct implementation</h2>
-     * 
+     *
      * <p>
      * The implementation of a component depends on many properties, including
      * styles, component features, etc. Sometimes the user changes those
@@ -1071,21 +1085,21 @@ public class ApplicationConnection {
      * the beginning of your updateFromUIDL -method automatically replaces your
      * component with more appropriate if the requested implementation changes.
      * </p>
-     * 
+     *
      * <h2>Caption, icon, error messages and description</h2>
-     * 
+     *
      * <p>
      * Component can delegate management of caption, icon, error messages and
      * description to parent layout. This is optional an should be decided by
      * component author
      * </p>
-     * 
+     *
      * <h2>Component visibility and disabling</h2>
-     * 
+     *
      * This method will manage component visibility automatically and if
      * component is an instanceof FocusWidget, also handle component disabling
      * when needed.
-     * 
+     *
      * @param component
      *            Widget to be updated, expected to implement an instance of
      *            Paintable
@@ -1094,7 +1108,7 @@ public class ApplicationConnection {
      * @param manageCaption
      *            True if you want to delegate caption, icon, description and
      *            error message management to parent.
-     * 
+     *
      * @return Returns true iff no further painting is needed by caller
      */
     public boolean updateComponent(Widget component, UIDL uidl,
@@ -1304,7 +1318,7 @@ public class ApplicationConnection {
     /**
      * Traverses recursively child widgets until ContainerResizedListener child
      * widget is found. They will delegate it further if needed.
-     * 
+     *
      * @param container
      */
     private boolean runningLayout = false;
@@ -1367,7 +1381,7 @@ public class ApplicationConnection {
 
     /**
      * Converts relative sizes into pixel sizes.
-     * 
+     *
      * @param child
      * @return true if the child has a relative size
      */
@@ -1514,7 +1528,7 @@ public class ApplicationConnection {
 
     /**
      * Converts relative sizes into pixel sizes.
-     * 
+     *
      * @param child
      * @return true if the child has a relative size
      */
@@ -1531,12 +1545,12 @@ public class ApplicationConnection {
 
     /**
      * Get either existing or new Paintable for given UIDL.
-     * 
+     *
      * If corresponding Paintable has been previously painted, return it.
      * Otherwise create and register a new Paintable from UIDL. Caller must
      * update the returned Paintable from UIDL after it has been connected to
      * parent.
-     * 
+     *
      * @param uidl
      *            UIDL to create Paintable from.
      * @return Either existing or new Paintable corresponding to UIDL.
@@ -1556,7 +1570,7 @@ public class ApplicationConnection {
 
     /**
      * Returns a Paintable element by its root element
-     * 
+     *
      * @param element
      *            Root element of the paintable
      */
@@ -1570,7 +1584,7 @@ public class ApplicationConnection {
 
     /**
      * Singleton method to get instance of app's context menu.
-     * 
+     *
      * @return VContextMenu object
      */
     public VContextMenu getContextMenu() {
@@ -1586,7 +1600,7 @@ public class ApplicationConnection {
      * Translates custom protocols in UIDL URI's to be recognizable by browser.
      * All uri's from UIDL should be routed via this method before giving them
      * to browser due URI's in UIDL may contain custom protocols like theme://.
-     * 
+     *
      * @param uidlUri
      *            Vaadin URI from uidl
      * @return translated URI ready for browser
@@ -1614,7 +1628,7 @@ public class ApplicationConnection {
     /**
      * Listens for Notification hide event, and redirects. Used for system
      * messages, such as session expired.
-     * 
+     *
      */
     private class NotificationRedirect implements VNotification.EventListener {
         String url;
@@ -1634,9 +1648,9 @@ public class ApplicationConnection {
     /**
      * Data showed in tooltips are stored centrilized as it may be needed in
      * varios place: caption, layouts, and in owner components themselves.
-     * 
+     *
      * Updating TooltipInfo is done in updateComponent method.
-     * 
+     *
      */
     public TooltipInfo getTooltipTitleInfo(Paintable titleOwner, Object key) {
         if (null == titleOwner) {
@@ -1656,9 +1670,9 @@ public class ApplicationConnection {
      * Component may want to delegate Tooltip handling to client. Layouts add
      * Tooltip (description, errors) to caption, but some components may want
      * them to appear one other elements too.
-     * 
+     *
      * Events wanted by this handler are same as in Tooltip.TOOLTIP_EVENTS
-     * 
+     *
      * @param event
      * @param owner
      */
@@ -1671,9 +1685,9 @@ public class ApplicationConnection {
      * Component may want to delegate Tooltip handling to client. Layouts add
      * Tooltip (description, errors) to caption, but some components may want
      * them to appear one other elements too.
-     * 
+     *
      * Events wanted by this handler are same as in Tooltip.TOOLTIP_EVENTS
-     * 
+     *
      * @param event
      * @param owner
      * @param key
@@ -1687,7 +1701,7 @@ public class ApplicationConnection {
 
     /**
      * Adds PNG-fix conditionally (only for IE6) to the specified IMG -element.
-     * 
+     *
      * @param el
      *            the IMG element to fix
      */
@@ -1737,7 +1751,7 @@ public class ApplicationConnection {
      * Reset the name of the current browser-window. This should reflect the
      * window-name used in the server, but might be different from the
      * window-object target-name on client.
-     * 
+     *
      * @param stringAttribute
      *            New name for the window.
      */
@@ -1767,14 +1781,14 @@ public class ApplicationConnection {
      * <p>
      * This method can also be used to deregister tooltips by using null as
      * tooltip
-     * 
+     *
      * @param paintable
      *            Paintable "owning" this tooltip
      * @param key
      *            key assosiated with given tooltip. Can be any object. For
      *            example a related dom element. Same key must be given for
      *            {@link #handleTooltipEvent(Event, Paintable, Object)} method.
-     * 
+     *
      * @param tooltip
      *            the TooltipInfo object containing details shown in tooltip,
      *            null if deregistering tooltip

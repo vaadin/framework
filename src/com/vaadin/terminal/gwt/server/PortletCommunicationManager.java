@@ -177,7 +177,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
     }
 
     @Override
-    protected FileItemIterator getItemIterator(FileUpload upload,
+    protected FileItemIterator getUploadItemIterator(FileUpload upload,
             Request request) throws IOException, FileUploadException {
         return ((PortletFileUpload) upload)
                 .getItemIterator((ActionRequest) request.getWrappedRequest());

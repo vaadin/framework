@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -31,6 +31,9 @@ import com.vaadin.ui.CustomLayout;
 
 /**
  * User Interface Description Language Target.
+ * 
+ * TODO document better: role of this class, UIDL format, attributes, variables,
+ * etc.
  * 
  * @author IT Mill Ltd.
  * @version
@@ -74,7 +77,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Creates a new XMLPrintWriter, without automatic line flushing.
-     * 
+     *
      * @param variableMap
      * @param manager
      * @param outWriter
@@ -102,18 +105,18 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Prints the element start tag.
-     * 
+     *
      * <pre>
      *   Todo:
      *    Checking of input values
-     * 
+     *
      * </pre>
-     * 
+     *
      * @param tagName
      *            the name of the start tag.
      * @throws PaintException
      *             if the paint operation failed.
-     * 
+     *
      */
     public void startTag(String tagName, boolean isChildNode)
             throws PaintException {
@@ -146,10 +149,10 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Prints the element end tag.
-     * 
+     *
      * If the parent tag is closed before every child tag is closed an
      * PaintException is raised.
-     * 
+     *
      * @param tag
      *            the name of the end tag.
      * @throws Paintexception
@@ -202,7 +205,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Substitutes the XML sensitive characters with predefined XML entities.
-     * 
+     *
      * @param xml
      *            the String to be substituted.
      * @return A new string instance where all occurrences of XML sensitive
@@ -217,12 +220,12 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Substitutes the XML sensitive characters with predefined XML entities.
-     * 
+     *
      * @param xml
      *            the String to be substituted.
      * @return A new StringBuilder instance where all occurrences of XML
      *         sensitive characters are substituted with entities.
-     * 
+     *
      */
     static StringBuilder escapeXML(StringBuilder xml) {
         if (xml == null || xml.length() <= 0) {
@@ -293,7 +296,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Substitutes a XML sensitive character with predefined XML entity.
-     * 
+     *
      * @param c
      *            the Character to be replaced with an entity.
      * @return String of the entity or null if character is not to be replaced
@@ -318,11 +321,11 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Prints XML-escaped text.
-     * 
+     *
      * @param str
      * @throws PaintException
      *             if the paint operation failed.
-     * 
+     *
      */
     public void addText(String str) throws PaintException {
         tag.addData("\"" + escapeJSON(str) + "\"");
@@ -331,7 +334,7 @@ public class JsonPaintTarget implements PaintTarget {
     /**
      * Adds a boolean attribute to component. Atributes must be added before any
      * content is written.
-     * 
+     *
      * @param name
      *            the Attribute name.
      * @param value
@@ -346,12 +349,12 @@ public class JsonPaintTarget implements PaintTarget {
     /**
      * Adds a resource attribute to component. Attributes must be added before
      * any content is written.
-     * 
+     *
      * @param name
      *            the Attribute name.
      * @param value
      *            the Attribute value.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -395,12 +398,12 @@ public class JsonPaintTarget implements PaintTarget {
     /**
      * Adds a integer attribute to component. Atributes must be added before any
      * content is written.
-     * 
+     *
      * @param name
      *            the Attribute name.
      * @param value
      *            the Attribute value.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -411,12 +414,12 @@ public class JsonPaintTarget implements PaintTarget {
     /**
      * Adds a long attribute to component. Atributes must be added before any
      * content is written.
-     * 
+     *
      * @param name
      *            the Attribute name.
      * @param value
      *            the Attribute value.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -427,12 +430,12 @@ public class JsonPaintTarget implements PaintTarget {
     /**
      * Adds a float attribute to component. Atributes must be added before any
      * content is written.
-     * 
+     *
      * @param name
      *            the Attribute name.
      * @param value
      *            the Attribute value.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -443,12 +446,12 @@ public class JsonPaintTarget implements PaintTarget {
     /**
      * Adds a double attribute to component. Atributes must be added before any
      * content is written.
-     * 
+     *
      * @param name
      *            the Attribute name.
      * @param value
      *            the Attribute value.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -459,12 +462,12 @@ public class JsonPaintTarget implements PaintTarget {
     /**
      * Adds a string attribute to component. Atributes must be added before any
      * content is written.
-     * 
+     *
      * @param name
      *            the String attribute name.
      * @param value
      *            the String attribute value.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -547,14 +550,14 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Adds a string type variable.
-     * 
+     *
      * @param owner
      *            the Listener for variable changes.
      * @param name
      *            the Variable name.
      * @param value
      *            the Variable initial value.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -565,14 +568,14 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Adds a int type variable.
-     * 
+     *
      * @param owner
      *            the Listener for variable changes.
      * @param name
      *            the Variable name.
      * @param value
      *            the Variable initial value.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -583,14 +586,14 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Adds a long type variable.
-     * 
+     *
      * @param owner
      *            the Listener for variable changes.
      * @param name
      *            the Variable name.
      * @param value
      *            the Variable initial value.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -601,14 +604,14 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Adds a float type variable.
-     * 
+     *
      * @param owner
      *            the Listener for variable changes.
      * @param name
      *            the Variable name.
      * @param value
      *            the Variable initial value.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -619,14 +622,14 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Adds a double type variable.
-     * 
+     *
      * @param owner
      *            the Listener for variable changes.
      * @param name
      *            the Variable name.
      * @param value
      *            the Variable initial value.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -637,14 +640,14 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Adds a boolean type variable.
-     * 
+     *
      * @param owner
      *            the Listener for variable changes.
      * @param name
      *            the Variable name.
      * @param value
      *            the Variable initial value.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -655,14 +658,14 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Adds a string array type variable.
-     * 
+     *
      * @param owner
      *            the Listener for variable changes.
      * @param name
      *            the Variable name.
      * @param value
      *            the Variable initial value.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -673,14 +676,14 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Adds a upload stream type variable.
-     * 
+     *
      * TODO not converted for JSON
-     * 
+     *
      * @param owner
      *            the Listener for variable changes.
      * @param name
      *            the Variable name.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -693,9 +696,9 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Prints the single text section.
-     * 
+     *
      * Prints full text section. The section data is escaped
-     * 
+     *
      * @param sectionTagName
      *            the name of the tag.
      * @param sectionData
@@ -711,7 +714,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Adds XML directly to UIDL.
-     * 
+     *
      * @param xml
      *            the Xml to be added.
      * @throws PaintException
@@ -737,7 +740,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Adds XML section with namespace.
-     * 
+     *
      * @param sectionTagName
      *            the name of the tag.
      * @param sectionData
@@ -746,7 +749,7 @@ public class JsonPaintTarget implements PaintTarget {
      *            the namespace to be added.
      * @throws PaintException
      *             if the paint operation failed.
-     * 
+     *
      * @see com.vaadin.terminal.PaintTarget#addXMLSection(String, String,
      *      String)
      */
@@ -773,7 +776,7 @@ public class JsonPaintTarget implements PaintTarget {
     /**
      * Gets the UIDL already printed to stream. Paint target must be closed
      * before the <code>getUIDL</code> can be called.
-     * 
+     *
      * @return the UIDL.
      */
     public String getUIDL() {
@@ -789,7 +792,7 @@ public class JsonPaintTarget implements PaintTarget {
      * <code>getUIDL</code> can be called. Subsequent attempts to write to paint
      * target. If the target was already closed, call to this function is
      * ignored. will generate an exception.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -810,7 +813,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.terminal.PaintTarget#startTag(com.vaadin.terminal
      * .Paintable, java.lang.String)
      */
@@ -850,7 +853,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.terminal.PaintTarget#addCharacterData(java.lang.String )
      */
     public void addCharacterData(String text) throws PaintException {
@@ -862,9 +865,9 @@ public class JsonPaintTarget implements PaintTarget {
     /**
      * This is basically a container for UI components variables, that will be
      * added at the end of JSON object.
-     * 
+     *
      * @author mattitahvonen
-     * 
+     *
      */
     class JsonTag implements Serializable {
         boolean firstField = false;
@@ -935,7 +938,7 @@ public class JsonPaintTarget implements PaintTarget {
         }
 
         /**
-         * 
+         *
          * @param s
          *            json string, object or array
          */
@@ -1143,7 +1146,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Method to check if paintable is already painted into this target.
-     * 
+     *
      * @param p
      * @return true if is not yet painted into this target and is connected to
      *         app
