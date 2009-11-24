@@ -94,9 +94,15 @@
 	cursor: pointer;
 	padding: 0.2em 0.5em;
 }
+.v-tabsheet-tabitem .v-caption {
+	cursor: pointer;
+}
 .v-tabsheet-tabitem-selected {
 	cursor: default;
 	border-bottom-color: #fff;
+}
+.v-tabsheet-tabitem-selected .v-caption {
+	cursor: default;
 }
 .v-tabsheet-content {
 	border: 1px solid #aaa;

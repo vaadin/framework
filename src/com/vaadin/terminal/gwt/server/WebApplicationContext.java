@@ -193,6 +193,7 @@ public class WebApplicationContext implements ApplicationContext,
 
     protected void removeApplication(Application application) {
         applications.remove(application);
+        applicationToAjaxAppMgrMap.remove(application);
     }
 
     protected void addApplication(Application application) {
@@ -216,7 +217,6 @@ public class WebApplicationContext implements ApplicationContext,
             while (!applications.isEmpty()) {
                 final Application app = applications.iterator().next();
                 app.close();
-                applicationToAjaxAppMgrMap.remove(app);
                 removeApplication(app);
             }
         } catch (Exception e) {

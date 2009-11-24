@@ -1396,7 +1396,7 @@ public abstract class Application implements URIHandler,
     public static class SystemMessages implements Serializable {
         protected String sessionExpiredURL = null;
         protected boolean sessionExpiredNotificationEnabled = true;
-        protected String sessionExpiredCaption = "";
+        protected String sessionExpiredCaption = "Session Expired";
         protected String sessionExpiredMessage = "Take note of any unsaved data, and <u>click here</u> to continue.";
 
         protected String communicationErrorURL = null;

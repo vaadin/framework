@@ -233,6 +233,14 @@
 .v-app {
 	height: 100%;
 }
+/* Force arrow cursor for all elements inside the app */
+.v-app,
+.v-window,
+.v-popupview-popup,
+.v-label,
+.v-caption {
+	cursor: default;
+}
 div.v-app-loading {
 	/* You can use this to provide indication for the user that the application is loading. */
 	/* It is applied to the same element as .v-app */
@@ -927,6 +935,9 @@ div.v-progressindicator-indeterminate-disabled {
 .v-filterselect-button {
 	float: right;
 	cursor: pointer;
+	width: 1em;
+	height: 1em;
+	background: transparent url(../base/common/img/sprites.png) no-repeat -5px -8px;
 }
 .v-filterselect.v-readonly .v-filterselect-button {
 	display: none;
@@ -1442,9 +1453,15 @@ div.v-progressindicator-indeterminate-disabled {
 	cursor: pointer;
 	padding: 0.2em 0.5em;
 }
+.v-tabsheet-tabitem .v-caption {
+	cursor: pointer;
+}
 .v-tabsheet-tabitem-selected {
 	cursor: default;
 	border-bottom-color: #fff;
+}
+.v-tabsheet-tabitem-selected .v-caption {
+	cursor: default;
 }
 .v-tabsheet-content {
 	border: 1px solid #aaa;
@@ -3038,6 +3055,16 @@ td.v-datefield-calendarpanel-nextyear {
 	background-color: #1e2022;
 }
 
+.v-link a:link span {
+	color: #1b699f;
+}
+.v-link a:visited span {
+	color: #5c7485;
+}
+.v-link a:hover span {
+	color: #2483c4;
+}
+
 .v-menubar {
 	height: 23px;
 	overflow: hidden;
@@ -3223,6 +3250,19 @@ td.v-datefield-calendarpanel-nextyear {
 .v-panel-deco-light {
 	height: 0;
 	border: none;
+}
+
+.v-popupview {
+	background: transparent;
+	text-decoration: underline;
+	color: #1b699f;
+}
+.v-popupview:hover {
+	color: #2483c4;
+}
+.v-popupview-popup {
+	background: #fff;
+	padding: 3px;
 }
 
 .v-progressindicator-wrapper {
@@ -3757,6 +3797,12 @@ td.v-datefield-calendarpanel-nextyear {
 }
 .v-table-row-odd {
 	background: #eff0f1;
+}
+.v-table-cell-content:last-child {
+	border-right-color: #fff;
+}
+.v-table-row-odd .v-table-cell-content:last-child {
+	border-right-color: #eff0f1;
 }
 .v-table .v-selected,
 .black .v-table .v-selected {

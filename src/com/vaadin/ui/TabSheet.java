@@ -837,7 +837,7 @@ public class TabSheet extends AbstractComponentContainer implements
      * @since 6.2.0
      * 
      */
-    public interface CloseHandler {
+    public interface CloseHandler extends Serializable {
 
         /**
          * Called when a user has pressed the close icon of a tab in the client

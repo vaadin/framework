@@ -56,6 +56,10 @@
 	display: block;
 	float: left;
 }
+.v-customcomponent-breadcrumbs .v-link a:link span,
+.v-customcomponent-breadcrumbs .v-link a:visited span {
+	color: #000;
+}
 .v-customcomponent-breadcrumbs .v-label {
 }
 .v-sa .v-customcomponent-breadcrumbs .v-label {
@@ -70,7 +74,7 @@
 .v-customcomponent-breadcrumbs .v-link span {
 	text-decoration: none;
 }
-.v-customcomponent-breadcrumbs .v-link a:hover {
+.v-customcomponent-breadcrumbs .v-link a:hover span {
 	color: #000;
 	text-decoration: underline;
 }
@@ -89,10 +93,13 @@
 	background: transparent url(breadcrumb-current-right.png) no-repeat right top;
 	font-size: 10px;
 	font-weight: bold;
-	color: #c2c4c6;
-	text-shadow: 0 1px 0 #3a3d43;
 	padding: 4px 9px 0 0;
 	cursor: default;
+}
+.v-customcomponent-breadcrumbs .v-link-bold a:link span,
+.v-customcomponent-breadcrumbs .v-link-bold a:visited span {
+	color: #c2c4c6;
+	text-shadow: 0 1px 0 #3a3d43;
 }
 .v-sa .v-customcomponent-breadcrumbs .v-link-bold a {
 	height: 17px;
@@ -106,7 +113,7 @@
 	padding-top: 2px;
 	padding-bottom: 2px;
 }
-.v-customcomponent-breadcrumbs .v-link-bold a:hover {
+.v-customcomponent-breadcrumbs .v-link-bold a:hover span {
 	color: #c2c4c6;
 	text-decoration: none;
 }
@@ -240,6 +247,7 @@
 .v-popupview-popup-quickjump {
 	background: transparent;
 	border: none;
+	padding: 0;
 }
 
 .v-app-SamplerApplication .v-splitpanel-first-container-main-split {
@@ -424,12 +432,16 @@
 	font-family: helvetica, arial, verdana, sans-serif;
 }
 .v-app-SamplerApplication .feature-info div.v-link a {
-	color: #b7c0c7;
 	font-size: 11px;
 	line-height: 18px;
 	margin-left: 28px;
 }
-.v-app-SamplerApplication .feature-info div.v-link a:hover {
+.v-app-SamplerApplication .feature-info div.v-link a span,
+.v-app-SamplerApplication .feature-info div.v-link a:link span {
+	color: #b7c0c7;
+	text-decoration: none;
+}
+.v-app-SamplerApplication .feature-info div.v-link a:hover span {
 	color: #dcebf6;
 }
 .v-app-SamplerApplication .feature-info div.v-link a span {
@@ -560,6 +572,9 @@
 
 .v-app-SamplerApplication .v-link-showcode {
 	margin-left: 3px;
+}
+.v-app-SamplerApplication .v-link-showcode a {
+	text-decoration: none;
 }
 .v-app-SamplerApplication div > .v-nativebutton-showcode,
 .v-app-SamplerApplication div > .v-nativebutton-showcode:active,

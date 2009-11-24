@@ -62,35 +62,48 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements 
     // TODO Move some (all?) of the constants to a separate interface (shared with portlet)
 
     /**
-     * Version number of this release. For example "5.0.0".
+     * The version number of this release. For example "6.2.0". Always in the
+     * format "major.minor.revision[.build]". The build part is optional. All of
+     * major, minor, revision must be integers.
      */
     public static final String VERSION;
     /**
-     * Major version number. For example 5 in 5.1.0.
+     * Major version number. For example 5 in 6.2.0.
      */
     public static final int VERSION_MAJOR;
 
     /**
-     * Minor version number. For example 1 in 5.1.0.
+     * Minor version number. For example 1 in 6.2.0.
      */
     public static final int VERSION_MINOR;
 
     /**
-     * Builds number. For example 0-custom_tag in 5.0.0-custom_tag.
+     * Version revision number. For example 0 in 6.2.0.
+     */
+    public static final int VERSION_REVISION;
+
+    /**
+     * Build identifier. For example "nightly-20091123-c9963" in
+     * 6.2.0.nightly-20091123-c9963.
      */
     public static final String VERSION_BUILD;
 
     /* Initialize version numbers from string replaced by build-script. */
     static {
         if ("@VERSION@".equals("@" + "VERSION" + "@")) {
-            VERSION = "5.9.9-INTERNAL-NONVERSIONED-DEBUG-BUILD";
+            VERSION = "9.9.9.INTERNAL-DEBUG-BUILD";
         } else {
             VERSION = "@VERSION@";
         }
-        final String[] digits = VERSION.split("\\.");
+        final String[] digits = VERSION.split("\\.", 4);
         VERSION_MAJOR = Integer.parseInt(digits[0]);
         VERSION_MINOR = Integer.parseInt(digits[1]);
-        VERSION_BUILD = digits[2];
+        VERSION_REVISION = Integer.parseInt(digits[2]);
+        if (digits.length == 4) {
+            VERSION_BUILD = digits[3];
+        } else {
+            VERSION_BUILD = "";
+        }
     }
 
     /**
@@ -1340,13 +1353,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements 
          *      .v-theme-<themeName, remove non-alphanum>
          */
 
-        String appClass = "v-app-";
-        try {
-            appClass += getApplicationClass().getSimpleName();
-        } catch (ClassNotFoundException e) {
-            appClass += "unknown";
-            e.printStackTrace();
-        }
+        String appClass = "v-app-" + getApplicationCSSClassName();
+
         String themeClass = "";
         if (themeName != null) {
             themeClass = "v-theme-" + themeName.replaceAll("[^a-zA-Z0-9]", "");
@@ -1372,6 +1380,24 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements 
 
         page.close();
 
+    }
+
+    /**
+     * Returns the application class identifier for use in the application CSS
+     * class name in the root DIV. The application CSS class name is of form
+     * "v-app-"+getApplicationCSSClassName().
+     * 
+     * This method should normally not be overridden.
+     * 
+     * @return The CSS class name to use in combination with "v-app-".
+     */
+    protected String getApplicationCSSClassName() {
+        try {
+            return getApplicationClass().getSimpleName();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return "unknown";
+        }
     }
 
     /**
@@ -1883,8 +1909,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements 
         if (session != null) {
             WebApplicationContext context = WebApplicationContext
                     .getApplicationContext(session);
-            context.applicationToAjaxAppMgrMap.remove(application);
-            // FIXME: Move to WebApplicationContext
             context.removeApplication(application);
         }
     }

@@ -1,0 +1,9 @@
+.v-link a:link span {
+	color: #1b699f;
+}
+.v-link a:visited span {
+	color: #5c7485;
+}
+.v-link a:hover span {
+	color: #2483c4;
+}

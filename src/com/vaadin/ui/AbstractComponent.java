@@ -344,10 +344,25 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      */
     public void setEnabled(boolean enabled) {
         if (this.enabled != enabled) {
-            boolean wasEnabled = isEnabled();
+            boolean wasEnabled = this.enabled;
+            boolean wasEnabledInContext = isEnabled();
+
             this.enabled = enabled;
-            // don't repaint if ancestor is disabled
-            if (wasEnabled != isEnabled()) {
+
+            boolean isEnabled = enabled;
+            boolean isEnabledInContext = isEnabled();
+
+            // If the actual enabled state (as rendered, in context) has not
+            // changed we do not need to repaint except if the parent is
+            // invisible.
+            // If the parent is invisible we must request a repaint so the
+            // component is repainted with the new enabled state when the parent
+            // is set visible again. This workaround is needed as isEnabled
+            // checks isVisible.
+            boolean needRepaint = (wasEnabledInContext != isEnabledInContext)
+                    || (wasEnabled != isEnabled && !parent.isVisible());
+
+            if (needRepaint) {
                 requestRepaint();
             }
         }

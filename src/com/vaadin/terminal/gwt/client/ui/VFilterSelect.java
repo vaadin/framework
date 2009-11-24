@@ -756,13 +756,19 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 && uidl.getStringArrayVariable("selected").length == 0) {
             // select nulled
             if (!filtering || !popupOpenerClicked) {
-                /*
-                 * client.updateComponent overwrites all styles so we must
-                 * ALWAYS set the prompting style at this point, even though we
-                 * think it has been set already...
-                 */
-                prompting = false;
-                setPromptingOn();
+                if (!focused) {
+                    /*
+                     * client.updateComponent overwrites all styles so we must
+                     * ALWAYS set the prompting style at this point, even though
+                     * we think it has been set already...
+                     */
+                    prompting = false;
+                    setPromptingOn();
+                } else {
+                    // we have focus in field, prompting can't be set on,
+                    // instead just clear the input
+                    tb.setValue("");
+                }
             }
             selectedOptionKey = null;
         }

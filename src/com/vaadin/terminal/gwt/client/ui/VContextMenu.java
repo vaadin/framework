@@ -115,19 +115,20 @@ public class VContextMenu extends VOverlay implements SubPartAware {
          * 
          * super.onBrowserEvent(event); }
          */
+
+        private MenuItem getItem(int index) {
+            return super.getItems().get(index);
+        }
     }
 
     public Element getSubPartElement(String subPart) {
         int index = Integer.parseInt(subPart.substring(6));
         // ApplicationConnection.getConsole().log(
         // "Searching element for selection index " + index);
-        Element wrapperdiv = menu.getElement();
-        com.google.gwt.dom.client.TableSectionElement tBody = (TableSectionElement) wrapperdiv
-                .getFirstChildElement().getFirstChildElement();
-        TableRowElement item = tBody.getRows().getItem(index);
-        com.google.gwt.dom.client.Element clickableDivElement = item
-                .getFirstChildElement().getFirstChildElement();
-        return clickableDivElement.cast();
+        MenuItem item = menu.getItem(index);
+        // ApplicationConnection.getConsole().log("Item: " + item);
+        // Item refers to the td, which is the parent of the clickable element
+        return item.getElement().getFirstChildElement().cast();
     }
 
     public String getSubPartName(Element subElement) {

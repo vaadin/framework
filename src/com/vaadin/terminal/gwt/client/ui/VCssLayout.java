@@ -239,14 +239,17 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
 
     public boolean requestLayout(Set<Paintable> children) {
         if (hasSize()) {
-            return false;
-        } else {
             return true;
+        } else {
+            // Size may have changed
+            // TODO optimize this: cache size if not fixed, handle both width
+            // and height separately
+            return false;
         }
     }
 
     private boolean hasSize() {
-        return hasWidth || hasHeight;
+        return hasWidth && hasHeight;
     }
 
     private static final String makeCamelCase(String cssProperty) {

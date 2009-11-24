@@ -1,9 +1,12 @@
 .v-popupview {
 	background: transparent;
+	text-decoration: underline;
+	color: #1b699f;
+}
+.v-popupview:hover {
+	color: #2483c4;
 }
 .v-popupview-popup {
-	border: 1px solid #babfc0;
-	border-bottom: 1px solid #dee2e3;
 	background: #fff;
 	padding: 3px;
 }

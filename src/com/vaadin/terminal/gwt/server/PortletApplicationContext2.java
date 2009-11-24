@@ -43,7 +43,7 @@ import com.vaadin.service.ApplicationContext;
 
 /**
  * TODO Write documentation, fix JavaDoc tags.
- * 
+ *
  * @author peholmst
  */
 @SuppressWarnings("serial")
@@ -178,6 +178,7 @@ public class PortletApplicationContext2 implements ApplicationContext,
 
     protected void removeApplication(Application application) {
         applications.remove(application);
+        applicationToAjaxAppMgrMap.remove(application);
     }
 
     protected void addApplication(Application application) {
