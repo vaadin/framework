@@ -52,7 +52,7 @@ import com.vaadin.ui.Window;
 
 /**
  * TODO Document me!
- * 
+ *
  * @author peholmst
  */
 public abstract class AbstractApplicationPortlet extends GenericPortlet
@@ -183,7 +183,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     /**
      * Gets an application property value.
-     * 
+     *
      * @param parameterName
      *            the Name or the parameter.
      * @return String value or null if not found
@@ -204,7 +204,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     /**
      * Gets an system property value.
-     * 
+     *
      * @param parameterName
      *            the Name or the parameter.
      * @return String value or null if not found
@@ -233,7 +233,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     /**
      * Gets an application or system property value.
-     * 
+     *
      * @param parameterName
      *            the Name or the parameter.
      * @param defaultValue
@@ -309,7 +309,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     /**
      * Returns true if the servlet is running in production mode. Production
      * mode disables all debug facilities.
-     * 
+     *
      * @return true if in production mode, false if in debug mode
      */
     public boolean isProductionMode() {
@@ -385,8 +385,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 }
 
                 /* Update browser information from request */
-                applicationContext.getBrowser()
-                        .updateBrowserProperties(request);
+                updateBrowserProperties(applicationContext.getBrowser(),
+                        request);
 
                 /* Start the newly created application */
                 startApplication(request, application, applicationContext);
@@ -494,6 +494,13 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 }
             }
         }
+    }
+
+    private void updateBrowserProperties(WebBrowser browser,
+            PortletRequest request) {
+        browser.updateBrowserProperties(request.getLocale(), null, request
+                .isSecure(), request.getProperty("user-agent"), request
+                .getParameter("sw"), request.getParameter("sh"));
     }
 
     @Override
@@ -788,7 +795,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             throws IOException, MalformedURLException, PortletException {
 
         System.out.println("writeAjaxPage");
-        
+
         response.setContentType("text/html");
         final BufferedWriter page = new BufferedWriter(new OutputStreamWriter(
                 response.getPortletOutputStream(), "UTF-8"));
@@ -815,7 +822,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
         String widgetsetURL = getWidgetsetURL(widgetset, request);
         String themeURI = getThemeURI(themeName, request);
-        
+
         //System.out.println("themeName : " + themeName);
         //System.out.println("widgetsetURL : " + widgetsetURL);
         //System.out.println("themeURI : " + themeURI);
@@ -854,7 +861,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
         /*
          * We need this in order to get uploads to work.
-         * 
+         *
          * TODO This may cause weird side effects on other places where appUri
          * is used!
          */
@@ -902,7 +909,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         }
 
 //        System.out.println("Printing default portal theme " + portalTheme);
-        
+
         page.write("if(!vaadin.themesLoaded['" + portalTheme + "']) {\n");
         page.write("var defaultStylesheet = document.createElement('link');\n");
         page.write("defaultStylesheet.setAttribute('rel', 'stylesheet');\n");
@@ -924,7 +931,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                     .write("document.getElementsByTagName('head')[0].appendChild(stylesheet);\n");
             page.write("vaadin.themesLoaded['" + themeName + "'] = true;\n}\n");
         }
-        
+
         page.write("</script>\n");
 
         // TODO Warn if widgetset has not been loaded after 15 seconds
@@ -957,7 +964,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     /**
      * Returns the theme for given request/window
-     * 
+     *
      * @param request
      * @param window
      * @return
@@ -1011,7 +1018,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     /**
      * Get system messages from the current application class
-     * 
+     *
      * @return
      */
     protected SystemMessages getSystemMessages() {
@@ -1084,7 +1091,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * Send notification to client's application. Used to notify client of
      * critical errors and session expiration due to long inactivity. Server has
      * no knowledge of what application client refers to.
-     * 
+     *
      * @param request
      *            the Portlet request instance.
      * @param response

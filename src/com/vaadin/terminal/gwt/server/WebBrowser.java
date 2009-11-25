@@ -1,13 +1,10 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal.gwt.server;
 
 import java.util.Locale;
-
-import javax.portlet.PortletRequest;
-import javax.servlet.http.HttpServletRequest;
 
 import com.vaadin.terminal.Terminal;
 
@@ -23,7 +20,7 @@ public class WebBrowser implements Terminal {
 
     /**
      * There is no default-theme for this terminal type.
-     * 
+     *
      * @return Allways returns null.
      */
     public String getDefaultTheme() {
@@ -32,7 +29,7 @@ public class WebBrowser implements Terminal {
 
     /**
      * Get the height of the users display in pixels.
-     * 
+     *
      */
     public int getScreenHeight() {
         return screenHeight;
@@ -40,7 +37,7 @@ public class WebBrowser implements Terminal {
 
     /**
      * Get the width of the users display in pixels.
-     * 
+     *
      */
     public int getScreenWidth() {
         return screenWidth;
@@ -48,53 +45,27 @@ public class WebBrowser implements Terminal {
 
     /**
      * Get the browser user-agent string.
-     * 
+     *
      * @return
      */
     public String getBrowserApplication() {
         return browserApplication;
     }
 
-    void updateBrowserProperties(HttpServletRequest request) {
-        locale = request.getLocale();
-        address = request.getRemoteAddr();
-        secureConnection = request.isSecure();
-
-        final String agent = request.getHeader("user-agent");
-        if (agent != null) {
-            browserApplication = agent;
-        }
-
-        final String sw = request.getParameter("sw");
-        if (sw != null) {
-            final String sh = request.getParameter("sh");
-            try {
-                screenHeight = Integer.parseInt(sh);
-                screenWidth = Integer.parseInt(sw);
-            } catch (final NumberFormatException e) {
-                screenHeight = screenWidth = 0;
-            }
-        }
-    }
-
-    /*
-     * TODO: This method depends on the Portlet API, although this should not be
-     * a problem as the portlet API will only be required if the method is
-     * invoked.
+    /**
+     * For internal use by AbstractApplicationServlet/AbstractApplicationPortlet
+     * only.
      */
-    void updateBrowserProperties(PortletRequest request) {
-        locale = request.getLocale();
-        address = null;
-        secureConnection = request.isSecure();
-
-        final String agent = request.getProperty("user-agent");
+    void updateBrowserProperties(Locale locale, String address,
+            boolean secureConnection, String agent, String sw, String sh) {
+        this.locale = locale;
+        this.address = address;
+        this.secureConnection = secureConnection;
         if (agent != null) {
             browserApplication = agent;
         }
 
-        final String sw = request.getParameter("sw");
         if (sw != null) {
-            final String sh = request.getParameter("sh");
             try {
                 screenHeight = Integer.parseInt(sh);
                 screenWidth = Integer.parseInt(sw);
@@ -107,7 +78,7 @@ public class WebBrowser implements Terminal {
     /**
      * Get the IP-address of the web browser. If the application is running
      * inside a portlet, this method will return null.
-     * 
+     *
      * @return IP-address in 1.12.123.123 -format
      */
     public String getAddress() {
