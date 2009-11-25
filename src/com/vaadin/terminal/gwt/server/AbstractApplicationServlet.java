@@ -45,11 +45,11 @@ import com.vaadin.ui.Window;
 /**
  * Abstract implementation of the ApplicationServlet which handles all
  * communication between the client and the server.
- * 
+ *
  * It is possible to extend this class to provide own functionality but in most
  * cases this is unnecessary.
- * 
- * 
+ *
+ *
  * @author IT Mill Ltd.
  * @version
  * @VERSION@
@@ -57,37 +57,53 @@ import com.vaadin.ui.Window;
  */
 
 @SuppressWarnings("serial")
-public abstract class AbstractApplicationServlet extends HttpServlet {
+public abstract class AbstractApplicationServlet extends HttpServlet implements Constants {
+
+    // TODO Move some (all?) of the constants to a separate interface (shared with portlet)
+
     /**
-     * Version number of this release. For example "5.0.0".
+     * The version number of this release. For example "6.2.0". Always in the
+     * format "major.minor.revision[.build]". The build part is optional. All of
+     * major, minor, revision must be integers.
      */
     public static final String VERSION;
     /**
-     * Major version number. For example 5 in 5.1.0.
+     * Major version number. For example 5 in 6.2.0.
      */
     public static final int VERSION_MAJOR;
 
     /**
-     * Minor version number. For example 1 in 5.1.0.
+     * Minor version number. For example 1 in 6.2.0.
      */
     public static final int VERSION_MINOR;
 
     /**
-     * Builds number. For example 0-custom_tag in 5.0.0-custom_tag.
+     * Version revision number. For example 0 in 6.2.0.
+     */
+    public static final int VERSION_REVISION;
+
+    /**
+     * Build identifier. For example "nightly-20091123-c9963" in
+     * 6.2.0.nightly-20091123-c9963.
      */
     public static final String VERSION_BUILD;
 
     /* Initialize version numbers from string replaced by build-script. */
     static {
         if ("@VERSION@".equals("@" + "VERSION" + "@")) {
-            VERSION = "5.9.9-INTERNAL-NONVERSIONED-DEBUG-BUILD";
+            VERSION = "9.9.9.INTERNAL-DEBUG-BUILD";
         } else {
             VERSION = "@VERSION@";
         }
-        final String[] digits = VERSION.split("\\.");
+        final String[] digits = VERSION.split("\\.", 4);
         VERSION_MAJOR = Integer.parseInt(digits[0]);
         VERSION_MINOR = Integer.parseInt(digits[1]);
-        VERSION_BUILD = digits[2];
+        VERSION_REVISION = Integer.parseInt(digits[2]);
+        if (digits.length == 4) {
+            VERSION_BUILD = digits[3];
+        } else {
+            VERSION_BUILD = "";
+        }
     }
 
     /**
@@ -136,62 +152,14 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
     private Properties applicationProperties;
 
-    private static final String NOT_PRODUCTION_MODE_INFO = ""
-            + "=================================================================\n"
-            + "Vaadin is running in DEBUG MODE.\nAdd productionMode=true to web.xml "
-            + "to disable debug features.\nTo show debug window, add ?debug to "
-            + "your application URL.\n"
-            + "=================================================================";
-
-    private static final String WARNING_XSRF_PROTECTION_DISABLED = ""
-            + "===========================================================\n"
-            + "WARNING: Cross-site request forgery protection is disabled!\n"
-            + "===========================================================";
-
     private boolean productionMode = false;
-
-    private static final String URL_PARAMETER_RESTART_APPLICATION = "restartApplication";
-    private static final String URL_PARAMETER_CLOSE_APPLICATION = "closeApplication";
-    private static final String URL_PARAMETER_REPAINT_ALL = "repaintAll";
-    protected static final String URL_PARAMETER_THEME = "theme";
-
-    private static final String SERVLET_PARAMETER_DEBUG = "Debug";
-    private static final String SERVLET_PARAMETER_PRODUCTION_MODE = "productionMode";
-    static final String SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION = "disable-xsrf-protection";
-
-    // Configurable parameter names
-    private static final String PARAMETER_VAADIN_RESOURCES = "Resources";
-
-    private static final int DEFAULT_BUFFER_SIZE = 32 * 1024;
-
-    private static final int MAX_BUFFER_SIZE = 64 * 1024;
-
-    private static final String AJAX_UIDL_URI = "/UIDL";
-
-    static final String THEME_DIRECTORY_PATH = "VAADIN/themes/";
-
-    private static final int DEFAULT_THEME_CACHETIME = 1000 * 60 * 60 * 24;
-
-    static final String WIDGETSET_DIRECTORY_PATH = "VAADIN/widgetsets/";
-
-    // Name of the default widget set, used if not specified in web.xml
-    private static final String DEFAULT_WIDGETSET = "com.vaadin.terminal.gwt.DefaultWidgetSet";
-
-    // Widget set parameter name
-    private static final String PARAMETER_WIDGETSET = "widgetset";
-
-    private static final String ERROR_NO_WINDOW_FOUND = "No window found. Did you remember to setMainWindow()?";
-
-    private static final String DEFAULT_THEME_NAME = "reindeer";
-
-    private static final String INVALID_SECURITY_KEY_MSG = "Invalid security key.";
 
     private String resourcePath = null;
 
     /**
      * Called by the servlet container to indicate to a servlet that the servlet
      * is being placed into service.
-     * 
+     *
      * @param servletConfig
      *            the object containing the servlet's configuration and
      *            initialization parameters
@@ -260,7 +228,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
     /**
      * Gets an application property value.
-     * 
+     *
      * @param parameterName
      *            the Name or the parameter.
      * @return String value or null if not found
@@ -281,7 +249,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
     /**
      * Gets an system property value.
-     * 
+     *
      * @param parameterName
      *            the Name or the parameter.
      * @return String value or null if not found
@@ -310,7 +278,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
     /**
      * Gets an application or system property value.
-     * 
+     *
      * @param parameterName
      *            the Name or the parameter.
      * @param defaultValue
@@ -340,7 +308,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
     /**
      * Returns true if the servlet is running in production mode. Production
      * mode disables all debug facilities.
-     * 
+     *
      * @return true if in production mode, false if in debug mode
      */
     public boolean isProductionMode() {
@@ -350,7 +318,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
     /**
      * Receives standard HTTP requests from the public service method and
      * dispatches them.
-     * 
+     *
      * @param request
      *            the object that contains the request the client made of the
      *            servlet.
@@ -412,7 +380,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                     .getApplicationManager(application, this);
 
             /* Update browser information from the request */
-            webApplicationContext.getBrowser().updateBrowserProperties(request);
+            updateBrowserProperties(webApplicationContext.getBrowser(), request);
 
             // Start the newly created application
             startApplication(request, application, webApplicationContext);
@@ -469,7 +437,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
             // Send initial AJAX page that kickstarts a Vaadin application
             writeAjaxPage(request, response, window, application);
 
-        } catch (final SessionExpired e) {
+        } catch (final SessionExpiredException e) {
             // Session has expired, notify user
             handleServiceSessionExpired(request, response);
         } catch (final GeneralSecurityException e) {
@@ -484,6 +452,14 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
             }
 
         }
+    }
+
+    private void updateBrowserProperties(WebBrowser browser,
+            HttpServletRequest request) {
+        browser.updateBrowserProperties(request.getLocale(), request
+                .getRemoteAddr(), request.isSecure(), request
+                .getHeader("user-agent"), request.getParameter("sw"), request
+                .getParameter("sh"));
     }
 
     protected ClassLoader getClassLoader() throws ServletException {
@@ -514,7 +490,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      * Send notification to client's application. Used to notify client of
      * critical errors and session expiration due to long inactivity. Server has
      * no knowledge of what application client refers to.
-     * 
+     *
      * @param request
      *            the HTTP request instance.
      * @param response
@@ -576,7 +552,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      * Returns the application instance to be used for the request. If an
      * existing instance is not found a new one is created or null is returned
      * to indicate that the application is not available.
-     * 
+     *
      * @param request
      * @param requestType
      * @return
@@ -585,11 +561,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      * @throws IllegalAccessException
      * @throws InstantiationException
      * @throws ServletException
-     * @throws SessionExpired
+     * @throws SessionExpiredException
      */
     private Application findApplicationInstance(HttpServletRequest request,
             RequestType requestType) throws MalformedURLException,
-            ServletException, SessionExpired {
+            ServletException, SessionExpiredException {
 
         boolean requestCanCreateApplication = requestCanCreateApplication(
                 request, requestType);
@@ -633,7 +609,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
              * The application was not found and a new one should not be
              * created. Assume the session has expired.
              */
-            throw new SessionExpired();
+            throw new SessionExpiredException();
         }
 
     }
@@ -641,7 +617,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
     /**
      * Check if the request should create an application if an existing
      * application is not found.
-     * 
+     *
      * @param request
      * @param requestType
      * @return true if an application should be created, false otherwise
@@ -672,7 +648,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      * Gets resource path using different implementations. Required to
      * supporting different servlet container implementations (application
      * servers).
-     * 
+     *
      * @param servletContext
      * @param path
      *            the resource path.
@@ -701,16 +677,16 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      * processing, when a certain URI is requested. The handlers are invoked
      * before any windows URIs are processed and if a DownloadStream is returned
      * it is sent to the client.
-     * 
+     *
      * @param stream
      *            the download stream.
-     * 
+     *
      * @param request
      *            the HTTP request instance.
      * @param response
      *            the HTTP response to write to.
      * @throws IOException
-     * 
+     *
      * @see com.vaadin.terminal.URIHandler
      */
     @SuppressWarnings("unchecked")
@@ -791,7 +767,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      * Creates a new application and registers it into WebApplicationContext
      * (aka session). This is not meant to be overridden. Override
      * getNewApplication to create the application instance in a custom way.
-     * 
+     *
      * @param request
      * @return
      * @throws ServletException
@@ -832,7 +808,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
     /**
      * Returns the theme for given request/window
-     * 
+     *
      * @param request
      * @param window
      * @return
@@ -863,7 +839,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
     /**
      * Returns the default theme. Must never return null.
-     * 
+     *
      * @return
      */
     public static String getDefaultTheme() {
@@ -873,7 +849,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
     /**
      * Calls URI handlers for the request. If an URI handler returns a
      * DownloadStream the stream is passed to the client for downloading.
-     * 
+     *
      * @param applicationManager
      * @param window
      * @param request
@@ -920,7 +896,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
                  * Invalidate session (weird to have session if we're saying
                  * that it's expired, and worse: portal integration will fail
                  * since the session is not created by the portal.
-                 * 
+                 *
                  * Session must be invalidated before criticalNotification as it
                  * commits the response.
                  */
@@ -976,7 +952,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
     /**
      * Creates a new application for the given request.
-     * 
+     *
      * @param request
      *            the HTTP request.
      * @return A new Application instance.
@@ -987,7 +963,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
     /**
      * Starts the application if it is not already running.
-     * 
+     *
      * @param request
      * @param application
      * @param webApplicationContext
@@ -1014,7 +990,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      * Check if this is a request for a static resource and, if it is, serve the
      * resource to the client. Returns true if a file was served and the request
      * has been handled, false otherwise.
-     * 
+     *
      * @param request
      * @param response
      * @return
@@ -1046,7 +1022,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
     /**
      * Serve resources from VAADIN directory.
-     * 
+     *
      * @param request
      * @param response
      * @throws IOException
@@ -1156,7 +1132,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
     /**
      * Get system messages from the current application class
-     * 
+     *
      * @return
      */
     protected SystemMessages getSystemMessages() {
@@ -1192,10 +1168,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      * Return the URL from where static files, e.g. the widgetset and the theme,
      * are served. In a standard configuration the VAADIN folder inside the
      * returned folder is what is used for widgetsets and themes.
-     * 
+     *
      * The returned folder is usually the same as the context path and
      * independent of the application.
-     * 
+     *
      * @param request
      * @return The location of static resources (should contain the VAADIN
      *         directory). Never ends with a slash (/).
@@ -1217,7 +1193,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
     /**
      * The default method to fetch static files location. This method does not
      * check for request attribute {@value #REQUEST_VAADIN_STATIC_FILE_PATH}.
-     * 
+     *
      * @param request
      * @return
      */
@@ -1260,7 +1236,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
     /**
      * Remove any heading or trailing "what" from the "string".
-     * 
+     *
      * @param string
      * @param what
      * @return
@@ -1279,7 +1255,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
     /**
      * Write a redirect response to the main page of the application.
-     * 
+     *
      * @param request
      * @param response
      * @throws IOException
@@ -1309,7 +1285,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      * {@link #writeAjaxPageHtmlMainDiv(BufferedWriter, String, String, String)}
      * <li> {@link #writeAjaxPageHtmlBodyEnd(BufferedWriter)}
      * </ul>
-     * 
+     *
      * @param request
      *            the HTTP request.
      * @param response
@@ -1418,9 +1394,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      * Returns the application class identifier for use in the application CSS
      * class name in the root DIV. The application CSS class name is of form
      * "v-app-"+getApplicationCSSClassName().
-     * 
+     *
      * This method should normally not be overridden.
-     * 
+     *
      * @return The CSS class name to use in combination with "v-app-".
      */
     protected String getApplicationCSSClassName() {
@@ -1434,10 +1410,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
     /**
      * Get the URI for the application theme.
-     * 
+     *
      * A portal-wide default theme is fetched from the portal shared resource
      * directory (if any), other themes from the portlet.
-     * 
+     *
      * @param themeName
      * @param request
      * @return
@@ -1467,7 +1443,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      * Override this method if you want to add some custom html around around
      * the div element into which the actual vaadin application will be
      * rendered.
-     * 
+     *
      * @param page
      * @param appId
      * @param classNames
@@ -1483,12 +1459,12 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
     }
 
     /**
-     * 
+     *
      * * Method to write the script part of the page which loads needed vaadin
      * scripts and themes.
      * <p>
      * Override this method if you want to add some custom html around scripts.
-     * 
+     *
      * @param window
      * @param themeName
      * @param application
@@ -1630,14 +1606,14 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
     }
 
     /**
-     * 
+     *
      * Method to open the body tag of the html kickstart page.
      * <p>
      * This method is responsible for closing the head tag and opening the body
      * tag.
      * <p>
      * Override this method if you want to add some custom html to the page.
-     * 
+     *
      * @param page
      * @throws IOException
      */
@@ -1652,7 +1628,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      * <p>
      * Override this method if you want to add some custom html to the header of
      * the page.
-     * 
+     *
      * @param page
      * @param title
      * @param themeUri
@@ -1684,7 +1660,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      * <p>
      * Override this method if you want to add some custom html to the very
      * beginning of the page.
-     * 
+     *
      * @param page
      * @throws IOException
      */
@@ -1704,7 +1680,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      * Method to set http request headers for the Vaadin kickstart page.
      * <p>
      * Override this method if you need to customize http headers of the page.
-     * 
+     *
      * @param response
      */
     protected void setAjaxPageHeaders(HttpServletResponse response) {
@@ -1725,7 +1701,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
     /**
      * Gets the current application URL from request.
-     * 
+     *
      * @param request
      *            the HTTP request.
      * @throws MalformedURLException
@@ -1765,7 +1741,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
     /**
      * Gets the existing application for given request. Looks for application
      * instance for given request based on the requested URL.
-     * 
+     *
      * @param request
      *            the HTTP request.
      * @param allowSessionCreation
@@ -1779,16 +1755,16 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
      * @throws SAXException
      * @throws IllegalAccessException
      * @throws InstantiationException
-     * @throws SessionExpired
+     * @throws SessionExpiredException
      */
     private Application getExistingApplication(HttpServletRequest request,
             boolean allowSessionCreation) throws MalformedURLException,
-            SessionExpired {
+            SessionExpiredException {
 
         // Ensures that the session is still valid
         final HttpSession session = request.getSession(allowSessionCreation);
         if (session == null) {
-            throw new SessionExpired();
+            throw new SessionExpiredException();
         }
 
         WebApplicationContext context = WebApplicationContext
@@ -1825,7 +1801,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
     /**
      * Ends the application.
-     * 
+     *
      * @param request
      *            the HTTP request.
      * @param response
@@ -1856,7 +1832,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
     /**
      * Gets the existing application or create a new one. Get a window within an
      * application based on the requested URI.
-     * 
+     *
      * @param request
      *            the HTTP Request.
      * @param application
@@ -1902,7 +1878,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
     /**
      * Returns the path info; note that this _can_ be different than
      * request.getPathInfo() (e.g application runner).
-     * 
+     *
      * @param request
      * @return
      */
@@ -1912,7 +1888,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
     /**
      * Gets relative location of a theme resource.
-     * 
+     *
      * @param theme
      *            the Theme name.
      * @param resource
@@ -1957,7 +1933,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
         /**
          * Gets the contained throwable.
-         * 
+         *
          * @see com.vaadin.terminal.Terminal.ErrorEvent#getThrowable()
          */
         public Throwable getThrowable() {
@@ -1966,7 +1942,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
         /**
          * Gets the source ParameterHandler.
-         * 
+         *
          * @see com.vaadin.terminal.ParameterHandler.ErrorEvent#getParameterHandler()
          */
         public ParameterHandler getParameterHandler() {
@@ -1986,7 +1962,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
         private final Throwable throwable;
 
         /**
-         * 
+         *
          * @param owner
          * @param throwable
          */
@@ -1997,7 +1973,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
         /**
          * Gets the contained throwable.
-         * 
+         *
          * @see com.vaadin.terminal.Terminal.ErrorEvent#getThrowable()
          */
         public Throwable getThrowable() {
@@ -2006,7 +1982,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet {
 
         /**
          * Gets the source URIHandler.
-         * 
+         *
          * @see com.vaadin.terminal.URIHandler.ErrorEvent#getURIHandler()
          */
         public URIHandler getURIHandler() {

@@ -12,5 +12,5 @@ for line in lines:
 	fields = string.split(line, "\t")
 
 	if fields[0] != "id":
-		ticketid = "<a href=\"http://dev.itmill.com/ticket/%s\">#%s</a>" % (fields[0],fields[0])
+		ticketid = "<a href=\"http://dev.vaadin.com/ticket/%s\">#%s</a>" % (fields[0],fields[0])
 		print "  <li>%s: %s</li>" % (ticketid, fields[1])

@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
@@ -39,9 +40,23 @@ import com.vaadin.terminal.gwt.client.ui.VContextMenu;
 import com.vaadin.terminal.gwt.client.ui.VNotification;
 import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.terminal.gwt.client.ui.VNotification.HideEvent;
+import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
 
 /**
- * Entry point classes define <code>onModuleLoad()</code>.
+ * This is the client side communication "engine", managing client-server
+ * communication with its server side counterpart
+ * {@link AbstractCommunicationManager}.
+ * 
+ * Client-side widgets receive updates from the corresponding server-side
+ * components as calls to
+ * {@link Paintable#updateFromUIDL(UIDL, ApplicationConnection)} (not to be
+ * confused with the server side interface {@link com.vaadin.terminal.Paintable}
+ * ). Any client-side changes (typically resulting from user actions) are sent
+ * back to the server as variable changes (see {@link #updateVariable()}).
+ * 
+ * TODO document better
+ * 
+ * Entry point classes (widgetsets) define <code>onModuleLoad()</code>.
  */
 public class ApplicationConnection {
     private static final String MODIFIED_CLASSNAME = "v-modified";
@@ -305,7 +320,12 @@ public class ApplicationConnection {
         final String rd = uidl_security_key + VAR_BURST_SEPARATOR + requestData;
 
         console.log("Making UIDL Request with params: " + rd);
-        String uri = getAppUri() + "UIDL" + configuration.getPathInfo();
+        String uri;
+        if (configuration.usePortletURLs()) {
+            uri = configuration.getPortletUidlURLBase();
+        } else {
+            uri = getAppUri() + "UIDL" + configuration.getPathInfo();
+        }
         if (repaintAll) {
             // collect some client side data that will be sent to server on
             // initial uidl request
@@ -323,7 +343,12 @@ public class ApplicationConnection {
             // TODO figure out how client and view size could be used better on
             // server. screen size can be accessed via Browser object, but other
             // values currently only via transaction listener.
-            uri += "?repaintAll=1&" + "sh=" + screenHeight + "&sw="
+            if (configuration.usePortletURLs()) {
+                uri += "&";
+            } else {
+                uri += "?";
+            }
+            uri += "repaintAll=1&" + "sh=" + screenHeight + "&sw="
                     + screenWidth + "&cw=" + clientWidth + "&ch="
                     + clientHeight + "&vw=" + offsetWidth + "&vh="
                     + offsetHeight + "&fr=" + token;
@@ -332,7 +357,8 @@ public class ApplicationConnection {
             }
         }
         if (windowName != null && windowName.length() > 0) {
-            uri += (repaintAll ? "&" : "?") + "windowName=" + windowName;
+            uri += (repaintAll || configuration.usePortletURLs() ? "&" : "?")
+                    + "windowName=" + windowName;
         }
 
         if (!forceSync) {
@@ -1037,13 +1063,79 @@ public class ApplicationConnection {
     }
 
     public void updateVariable(String paintableId, String variableName,
+            Map<String, Object> map, boolean immediate) {
+        final StringBuffer buf = new StringBuffer();
+        Iterator<String> iterator = map.keySet().iterator();
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            Object value = map.get(key);
+            char transportType = getTransportType(value);
+            buf.append(transportType);
+            buf.append(key);
+            buf.append(VAR_ARRAYITEM_SEPARATOR);
+            if (transportType == 'p') {
+                buf.append(getPid((Paintable) value));
+            } else {
+                buf.append(value);
+            }
+
+            if (iterator.hasNext()) {
+                buf.append(VAR_ARRAYITEM_SEPARATOR);
+            }
+        }
+
+        addVariableToQueue(paintableId, variableName, buf.toString(),
+                immediate, 'm');
+    }
+
+    private char getTransportType(Object value) {
+        if (value instanceof String) {
+            return 's';
+        } else if (value instanceof Paintable) {
+            return 'p';
+        } else if (value instanceof Boolean) {
+            return 'b';
+        } else if (value instanceof Integer) {
+            return 'i';
+        } else if (value instanceof Float) {
+            return 'f';
+        } else if (value instanceof Double) {
+            return 'd';
+        } else if (value instanceof Long) {
+            return 'l';
+        }
+        return 'u';
+    }
+
+    public void updateVariable(String paintableId, String variableName,
+            String[] values, boolean immediate) {
+        final StringBuffer buf = new StringBuffer();
+        for (int i = 0; i < values.length; i++) {
+            if (i > 0) {
+                buf.append(VAR_ARRAYITEM_SEPARATOR);
+            }
+            buf.append(values[i]);
+        }
+        addVariableToQueue(paintableId, variableName, buf.toString(),
+                immediate, 'c');
+    }
+
+    public void updateVariable(String paintableId, String variableName,
             Object[] values, boolean immediate) {
         final StringBuffer buf = new StringBuffer();
         for (int i = 0; i < values.length; i++) {
             if (i > 0) {
                 buf.append(VAR_ARRAYITEM_SEPARATOR);
             }
-            buf.append(values[i].toString());
+            Object value = values[i];
+            char transportType = getTransportType(value);
+            // first char tells the type in array
+            buf.append(transportType);
+            if (transportType == 'p') {
+                buf.append(getPid((Paintable) value));
+            } else {
+                buf.append(value);
+            }
         }
         addVariableToQueue(paintableId, variableName, buf.toString(),
                 immediate, 'a');

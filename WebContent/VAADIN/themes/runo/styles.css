@@ -233,6 +233,14 @@
 .v-app {
 	height: 100%;
 }
+/* Force arrow cursor for all elements inside the app */
+.v-app,
+.v-window,
+.v-popupview-popup,
+.v-label,
+.v-caption {
+	cursor: default;
+}
 div.v-app-loading {
 	/* You can use this to provide indication for the user that the application is loading. */
 	/* It is applied to the same element as .v-app */
@@ -1445,9 +1453,15 @@ div.v-progressindicator-indeterminate-disabled {
 	cursor: pointer;
 	padding: 0.2em 0.5em;
 }
+.v-tabsheet-tabitem .v-caption {
+	cursor: pointer;
+}
 .v-tabsheet-tabitem-selected {
 	cursor: default;
 	border-bottom-color: #fff;
+}
+.v-tabsheet-tabitem-selected .v-caption {
+	cursor: default;
 }
 .v-tabsheet-content {
 	border: 1px solid #aaa;
@@ -2417,6 +2431,9 @@ div.v-tree-node-leaf {
 	overflow: hidden;
 }
 
+.v-popupview {
+	background: transparent;
+}
 .v-popupview-popup {
 	border: 1px solid #babfc0;
 	border-bottom: 1px solid #dee2e3;

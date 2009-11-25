@@ -176,13 +176,13 @@ public class TextField extends AbstractField {
         }
 
         // Adds the number of column and rows
-        final int c = getColumns();
-        final int r = getRows();
-        if (c != 0) {
-            target.addAttribute("cols", String.valueOf(c));
+        final int columns = getColumns();
+        final int rows = getRows();
+        if (columns != 0) {
+            target.addAttribute("cols", String.valueOf(columns));
         }
-        if (r != 0) {
-            target.addAttribute("rows", String.valueOf(r));
+        if (rows != 0) {
+            target.addAttribute("rows", String.valueOf(rows));
             target.addAttribute("multiline", true);
             if (!wordwrap) {
                 target.addAttribute("wordwrap", false);
@@ -328,9 +328,7 @@ public class TextField extends AbstractField {
     }
 
     /**
-     * Sets the number of rows in the editor. If the number of rows is set to 0,
-     * the actual number of displayed rows is determined implicitly by the
-     * adapter.
+     * Sets the number of rows in the editor.
      * 
      * @param rows
      *            the number of rows for this editor.
@@ -339,8 +337,60 @@ public class TextField extends AbstractField {
         if (rows < 0) {
             rows = 0;
         }
-        this.rows = rows;
-        requestRepaint();
+        if (this.rows != rows) {
+            this.rows = rows;
+            requestRepaint();
+        }
+    }
+
+    /**
+     * Sets the height of the {@link TextField} instance.
+     * 
+     * <p>
+     * Setting height for {@link TextField} also has a side-effect that puts
+     * {@link TextField} into multiline mode (aka "textarea"). Multiline mode
+     * can also be achieved by calling {@link #setRows(int)}. The height value
+     * overrides the number of rows set by {@link #setRows(int)}.
+     * <p>
+     * If you want to set height of single line {@link TextField}, call
+     * {@link #setRows(int)} with value 0 after setting the height. Setting rows
+     * to 0 resets the side-effect.
+     * 
+     * @see com.vaadin.ui.AbstractComponent#setHeight(float, int)
+     */
+    @Override
+    public void setHeight(float height, int unit) {
+        super.setHeight(height, unit);
+        if (height > 1) {
+            /*
+             * In html based terminals we most commonly want to make component
+             * to be textarea if height is defined. Setting row field above 0
+             * will render component as textarea.
+             */
+            rows = 2;
+        }
+    }
+
+    /**
+     * Sets the height of the {@link TextField} instance.
+     * 
+     * <p>
+     * Setting height for {@link TextField} also has a side-effect that puts
+     * {@link TextField} into multiline mode (aka "textarea"). Multiline mode
+     * can also be achieved by calling {@link #setRows(int)}. The height value
+     * overrides the number of rows set by {@link #setRows(int)}.
+     * <p>
+     * If you want to set height of single line {@link TextField}, call
+     * {@link #setRows(int)} with value 0 after setting the height. Setting rows
+     * to 0 resets the side-effect.
+     * 
+     * @see com.vaadin.ui.AbstractComponent#setHeight(java.lang.String)
+     */
+    @Override
+    public void setHeight(String height) {
+        // will call setHeight(float, int) the actually does the magic. Method
+        // is overridden just to document side-effects.
+        super.setHeight(height);
     }
 
     /**
@@ -361,7 +411,10 @@ public class TextField extends AbstractField {
      *            word-wrap mode after the call or not.
      */
     public void setWordwrap(boolean wordwrap) {
-        this.wordwrap = wordwrap;
+        if (this.wordwrap != wordwrap) {
+            this.wordwrap = wordwrap;
+            requestRepaint();
+        }
     }
 
     /* Property features */
@@ -395,8 +448,10 @@ public class TextField extends AbstractField {
      *            information.
      */
     public void setSecret(boolean secret) {
-        this.secret = secret;
-        requestRepaint();
+        if (this.secret != secret) {
+            this.secret = secret;
+            requestRepaint();
+        }
     }
 
     /**

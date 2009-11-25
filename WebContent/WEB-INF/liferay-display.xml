@@ -14,6 +14,10 @@
                 <portlet id="NotificationDemoPortlet" />
                 <portlet id="ChatServletPortlet" />
                 <portlet id="BrowserDemoPortlet" />
-
+				<portlet id="HelloWorldPortlet" />
+				<portlet id="AddressBookPortlet" />
+				<portlet id="CalcPortlet"/>
+				<portlet id="SamplerPortlet"/>
+				<portlet id="HelloWorldEventPortlet"/>
         </category>
 </display>

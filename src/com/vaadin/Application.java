@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -41,7 +41,7 @@ import com.vaadin.ui.Window;
  * and manipulation of the user, {@link com.vaadin.ui.Window windows} and
  * themes, and starting and stopping the application.
  * </p>
- * 
+ *
  * <p>
  * As mentioned, all Vaadin applications must inherit this class. However, this
  * is almost all of what one needs to do to create a fully functional
@@ -55,23 +55,23 @@ import com.vaadin.ui.Window;
  * windows correspond to a URL gotten by catenating the window's name to the
  * application URL.
  * </p>
- * 
+ *
  * <p>
  * See the class <code>com.vaadin.demo.HelloWorld</code> for a simple example of
  * a fully working application.
  * </p>
- * 
+ *
  * <p>
  * <strong>Window access.</strong> <code>Application</code> provides methods to
  * list, add and remove the windows it contains.
  * </p>
- * 
+ *
  * <p>
  * <strong>Execution control.</strong> This class includes method to start and
  * finish the execution of the application. Being finished means basically that
  * no windows will be available from the application anymore.
  * </p>
- * 
+ *
  * <p>
  * <strong>Theme selection.</strong> The theme selection process allows a theme
  * to be specified at three different levels. When a window's theme needs to be
@@ -81,7 +81,7 @@ import com.vaadin.ui.Window;
  * the {@link com.vaadin.terminal.Terminal terminal} is used. The terminal
  * always defines a default theme.
  * </p>
- * 
+ *
  * @author IT Mill Ltd.
  * @version
  * @VERSION@
@@ -109,7 +109,7 @@ public abstract class Application implements URIHandler,
     /**
      * Mapping from window name to window instance.
      */
-    private final Hashtable windows = new Hashtable();
+    private final Hashtable<String, Window> windows = new Hashtable<String, Window>();
 
     /**
      * Main window of the application.
@@ -120,6 +120,11 @@ public abstract class Application implements URIHandler,
      * The application's URL.
      */
     private URL applicationUrl;
+
+    /**
+     * The ID of the portlet window that this application runs in.
+     */
+    private String portletWindowId;
 
     /**
      * Name of the theme currently used by the application.
@@ -144,24 +149,24 @@ public abstract class Application implements URIHandler,
     /**
      * List of listeners listening user changes.
      */
-    private LinkedList userChangeListeners = null;
+    private LinkedList<UserChangeListener> userChangeListeners = null;
 
     /**
      * Window attach listeners.
      */
-    private LinkedList windowAttachListeners = null;
+    private LinkedList<WindowAttachListener> windowAttachListeners = null;
 
     /**
      * Window detach listeners.
      */
-    private LinkedList windowDetachListeners = null;
+    private LinkedList<WindowDetachListener> windowDetachListeners = null;
 
     /**
      * Application resource mapping: key <-> resource.
      */
-    private final Hashtable resourceKeyMap = new Hashtable();
+    private final Hashtable<ApplicationResource, String> resourceKeyMap = new Hashtable<ApplicationResource, String>();
 
-    private final Hashtable keyResourceMap = new Hashtable();
+    private final Hashtable<String, ApplicationResource> keyResourceMap = new Hashtable<String, ApplicationResource>();
 
     private long lastResourceKeyNumber = 0;
 
@@ -183,25 +188,111 @@ public abstract class Application implements URIHandler,
      */
     private Terminal.ErrorListener errorHandler = this;
 
+    // TODO Document me!
+    public String getPortletWindowId() {
+        return portletWindowId;
+    }
+
+    // TODO Document me!
+    public void setPortletWindowId(String portletWindowId) {
+        this.portletWindowId = portletWindowId;
+    }
+
+    // TODO Document me!
+    @Deprecated
+    public static interface ResourceURLGenerator extends Serializable {
+
+        public String generateResourceURL(ApplicationResource resource,
+                String mapKey);
+
+        public boolean isResourceURL(URL context, String relativeUri);
+
+        public String getMapKey(URL context, String relativeUri);
+
+    }
+
+    /*
+     * Default resource URL generator for servlets
+     */
+    @Deprecated
+    private static ResourceURLGenerator defaultResourceURLGenerator = new ResourceURLGenerator() {
+        public String generateResourceURL(ApplicationResource resource,
+                String mapKey) {
+
+            final String filename = resource.getFilename();
+            if (filename == null) {
+                return "APP/" + mapKey + "/";
+            } else {
+                return "APP/" + mapKey + "/" + filename;
+            }
+
+        }
+
+        public boolean isResourceURL(URL context, String relativeUri) {
+            // If the relative uri is null, we are ready
+            if (relativeUri == null) {
+                return false;
+            }
+
+            // Resolves the prefix
+            String prefix = relativeUri;
+            final int index = relativeUri.indexOf('/');
+            if (index >= 0) {
+                prefix = relativeUri.substring(0, index);
+            }
+
+            // Handles the resource requests
+            return (prefix.equals("APP"));
+        }
+
+        public String getMapKey(URL context, String relativeUri) {
+            final int index = relativeUri.indexOf('/');
+            final int next = relativeUri.indexOf('/', index + 1);
+            if (next < 0) {
+                return null;
+            }
+            return relativeUri.substring(index + 1, next);
+        };
+
+    };
+
+    @Deprecated
+    private ResourceURLGenerator resourceURLGenerator = defaultResourceURLGenerator;
+
+    @Deprecated
+    public ResourceURLGenerator getResourceURLGenerator() {
+        return resourceURLGenerator;
+    }
+
+    @Deprecated
+    public void setResourceURLGenerator(
+            ResourceURLGenerator resourceURLGenerator) {
+        if (resourceURLGenerator == null) {
+            this.resourceURLGenerator = defaultResourceURLGenerator;
+        } else {
+            this.resourceURLGenerator = resourceURLGenerator;
+        }
+    }
+
     /**
      * <p>
      * Gets a window by name. Returns <code>null</code> if the application is
      * not running or it does not contain a window corresponding to the name.
      * </p>
-     * 
+     *
      * <p>
      * All windows can be referenced by their names in url
      * <code>http://host:port/foo/bar/</code> where
      * <code>http://host:port/foo/</code> is the application url as returned by
      * getURL() and <code>bar</code> is the name of the window.
      * </p>
-     * 
+     *
      * <p>
      * One should note that this method can, as a side effect create new windows
      * if needed by the application. This can be achieved by overriding the
      * default implementation.
      * </p>
-     * 
+     *
      * <p>
      * If for some reason user opens another window with same url that is
      * already open, name is modified by adding "_12345678" postfix to the name,
@@ -210,7 +301,7 @@ public abstract class Application implements URIHandler,
      * If the user has two browser windows pointing to the same window-object on
      * server, synchronization errors are likely to occur.
      * </p>
-     * 
+     *
      * <p>
      * If no browser-level windowing is used, all defaults are fine and this
      * method can be left as is. In case browser-level windows are needed, it is
@@ -233,16 +324,16 @@ public abstract class Application implements URIHandler,
         }
         return w;</pre></code>
      * </p>
-     * 
+     *
      * <p>
      * <strong>Note</strong> that all returned Window objects must be added to
      * this application instance.
-     * 
+     *
      * <p>
      * The method should return null if the window does not exists (and is not
      * created as a side-effect) or if the application is not running anymore.
      * </p>
-     * 
+     *
      * @param name
      *            the name of the window.
      * @return the window associated with the given URI or <code>null</code>
@@ -255,19 +346,19 @@ public abstract class Application implements URIHandler,
         }
 
         // Gets the window by name
-        final Window window = (Window) windows.get(name);
+        final Window window = windows.get(name);
 
         return window;
     }
 
     /**
      * Adds a new window to the application.
-     * 
+     *
      * <p>
      * This implicitly invokes the
      * {@link com.vaadin.ui.Window#setApplication(Application)} method.
      * </p>
-     * 
+     *
      * <p>
      * Note that all application-level windows can be accessed by their names in
      * url <code>http://host:port/foo/bar/</code> where
@@ -277,7 +368,7 @@ public abstract class Application implements URIHandler,
      * inside other windows - these windows show as smaller windows inside those
      * windows.
      * </p>
-     * 
+     *
      * @param window
      *            the new <code>Window</code> to add. If the name of the window
      *            is <code>null</code>, an unique name is automatically given
@@ -350,7 +441,7 @@ public abstract class Application implements URIHandler,
     /**
      * Send information to all listeners about new Windows associated with this
      * application.
-     * 
+     *
      * @param window
      */
     private void fireWindowAttachEvent(Window window) {
@@ -366,18 +457,18 @@ public abstract class Application implements URIHandler,
 
     /**
      * Removes the specified window from the application.
-     * 
+     *
      * <p>
      * Removing the main window of the Application also sets the main window to
      * null. One must another window to be the main window after this with
      * {@link #setMainWindow(Window)}.
      * </p>
-     * 
+     *
      * <p>
      * Note that removing window from the application does not close the browser
      * window - the window is only removed from the server-side.
      * </p>
-     * 
+     *
      * @param window
      *            the window to be removed.
      */
@@ -414,13 +505,13 @@ public abstract class Application implements URIHandler,
 
     /**
      * Gets the user of the application.
-     * 
+     *
      * <p>
      * Vaadin doesn't define of use user object in any way - it only provides
      * this getter and setter methods for convenience. The user is any object
      * that has been stored to the application with {@link #setUser(Object)}.
      * </p>
-     * 
+     *
      * @return the User of the application.
      */
     public Object getUser() {
@@ -443,7 +534,7 @@ public abstract class Application implements URIHandler,
      * getter and setter methods for convenience. The user reference stored to
      * the application can be read with {@link #getUser()}.
      * </p>
-     * 
+     *
      * @param user
      *            the new user.
      */
@@ -467,7 +558,7 @@ public abstract class Application implements URIHandler,
 
     /**
      * Gets the URL of the application.
-     * 
+     *
      * <p>
      * This is the URL what can be entered to a browser window to start the
      * application. Navigating to the application URL shows the main window (
@@ -475,7 +566,7 @@ public abstract class Application implements URIHandler,
      * can also be shown by navigating to the window url (
      * {@link com.vaadin.ui.Window#getURL()}).
      * </p>
-     * 
+     *
      * @return the application's URL.
      */
     public URL getURL() {
@@ -484,7 +575,7 @@ public abstract class Application implements URIHandler,
 
     /**
      * Ends the Application.
-     * 
+     *
      * <p>
      * In effect this will cause the application stop returning any windows when
      * asked. When the application is closed, its state is removed from the
@@ -501,21 +592,21 @@ public abstract class Application implements URIHandler,
 
     /**
      * Starts the application on the given URL.
-     * 
+     *
      * <p>
      * This method is called by Vaadin framework when a user navigates to the
      * application. After this call the application corresponds to the given URL
      * and it will return windows when asked for them. There is no need to call
      * this method directly.
      * </p>
-     * 
+     *
      * <p>
      * Application properties are defined by servlet configuration object
      * {@link javax.servlet.ServletConfig} and they are overridden by
      * context-wide initialization parameters
      * {@link javax.servlet.ServletContext}.
      * </p>
-     * 
+     *
      * @param applicationUrl
      *            the URL the application should respond to.
      * @param applicationProperties
@@ -523,7 +614,7 @@ public abstract class Application implements URIHandler,
      *            configuration.
      * @param context
      *            the context application will be running in.
-     * 
+     *
      */
     public void start(URL applicationUrl, Properties applicationProperties,
             ApplicationContext context) {
@@ -536,13 +627,13 @@ public abstract class Application implements URIHandler,
 
     /**
      * Tests if the application is running or if it has been finished.
-     * 
+     *
      * <p>
      * Application starts running when its
      * {@link #start(URL, Properties, ApplicationContext)} method has been
      * called and stops when the {@link #close()} is called.
      * </p>
-     * 
+     *
      * @return <code>true</code> if the application is running,
      *         <code>false</code> if not.
      */
@@ -552,14 +643,14 @@ public abstract class Application implements URIHandler,
 
     /**
      * Gets the set of windows contained by the application.
-     * 
+     *
      * <p>
      * Note that the returned set of windows can not be modified.
      * </p>
-     * 
+     *
      * @return the Unmodifiable collection of windows.
      */
-    public Collection getWindows() {
+    public Collection<Window> getWindows() {
         return Collections.unmodifiableCollection(windows.values());
     }
 
@@ -578,7 +669,7 @@ public abstract class Application implements URIHandler,
      * theme used by all the windows in it that do not explicitly specify a
      * theme. If the application theme is not explicitly set, the
      * <code>null</code> is returned.
-     * 
+     *
      * @return the name of the application's theme.
      */
     public String getTheme() {
@@ -593,16 +684,16 @@ public abstract class Application implements URIHandler,
      * to be <code>null</code> selects the default theme. For the available
      * theme names, see the contents of the VAADIN/themes directory.
      * </p>
-     * 
+     *
      * @param theme
      *            the new theme for this application.
      */
     public void setTheme(String theme) {
         // Collect list of windows not having the current or future theme
-        final LinkedList toBeUpdated = new LinkedList();
+        final LinkedList<Window> toBeUpdated = new LinkedList<Window>();
         final String oldAppTheme = getTheme();
-        for (final Iterator i = getWindows().iterator(); i.hasNext();) {
-            final Window w = (Window) i.next();
+        for (final Iterator<Window> i = getWindows().iterator(); i.hasNext();) {
+            final Window w = i.next();
             final String windowTheme = w.getTheme();
             if ((windowTheme == null)
                     || (!windowTheme.equals(theme) && windowTheme
@@ -615,14 +706,14 @@ public abstract class Application implements URIHandler,
         this.theme = theme;
 
         // Ask windows to update themselves
-        for (final Iterator i = toBeUpdated.iterator(); i.hasNext();) {
-            ((Window) i.next()).requestRepaint();
+        for (final Iterator<Window> i = toBeUpdated.iterator(); i.hasNext();) {
+            i.next().requestRepaint();
         }
     }
 
     /**
      * Gets the mainWindow of the application.
-     * 
+     *
      * <p>
      * The main window is the window attached to the application URL (
      * {@link #getURL()}) and thus which is show by default to the user.
@@ -630,7 +721,7 @@ public abstract class Application implements URIHandler,
      * <p>
      * Note that each application must have at least one main window.
      * </p>
-     * 
+     *
      * @return the main window.
      */
     public Window getMainWindow() {
@@ -643,7 +734,7 @@ public abstract class Application implements URIHandler,
      * window defaults to first created window. Setting window as a main window
      * of this application also adds the window to this application.
      * </p>
-     * 
+     *
      * @param mainWindow
      *            the mainWindow to set.
      */
@@ -655,27 +746,27 @@ public abstract class Application implements URIHandler,
 
     /**
      * Returns an enumeration of all the names in this application.
-     * 
+     *
      * <p>
      * See {@link #start(URL, Properties, ApplicationContext)} how properties
      * are defined.
      * </p>
-     * 
+     *
      * @return an enumeration of all the keys in this property list, including
      *         the keys in the default property list.
-     * 
+     *
      */
-    public Enumeration getPropertyNames() {
+    public Enumeration<?> getPropertyNames() {
         return properties.propertyNames();
     }
 
     /**
      * Searches for the property with the specified name in this application.
      * This method returns <code>null</code> if the property is not found.
-     * 
+     *
      * See {@link #start(URL, Properties, ApplicationContext)} how properties
      * are defined.
-     * 
+     *
      * @param name
      *            the name of the property.
      * @return the value in this property list with the specified key value.
@@ -687,7 +778,7 @@ public abstract class Application implements URIHandler,
     /**
      * Adds new resource to the application. The resource can be accessed by the
      * user of the application.
-     * 
+     *
      * @param resource
      *            the resource to add.
      */
@@ -708,7 +799,7 @@ public abstract class Application implements URIHandler,
 
     /**
      * Removes the resource from the application.
-     * 
+     *
      * @param resource
      *            the resource to remove.
      */
@@ -722,70 +813,55 @@ public abstract class Application implements URIHandler,
 
     /**
      * Gets the relative uri of the resource.
-     * 
+     *
      * @param resource
      *            the resource to get relative location.
      * @return the relative uri of the resource.
      */
+    @Deprecated
     public String getRelativeLocation(ApplicationResource resource) {
 
+        // FIXME Move to ApplicationContext
+
         // Gets the key
-        final String key = (String) resourceKeyMap.get(resource);
+        final String key = resourceKeyMap.get(resource);
 
         // If the resource is not registered, return null
         if (key == null) {
             return null;
         }
 
-        final String filename = resource.getFilename();
-        if (filename == null) {
-            return "APP/" + key + "/";
-        } else {
-            return "APP/" + key + "/" + filename;
-        }
+        return resourceURLGenerator.generateResourceURL(resource, key);
     }
 
     /**
      * Application URI handling hub.
-     * 
+     *
      * <p>
      * This method gets called by terminal. It has lots of duties like to pass
      * uri handler to proper uri handlers registered to windows etc.
      * </p>
-     * 
+     *
      * <p>
      * In most situations developers should NOT OVERRIDE this method. Instead
      * developers should implement and register uri handlers to windows.
      * </p>
-     * 
+     *
      * <p>
-     * 
+     *
      * @see com.vaadin.terminal.URIHandler#handleURI(URL, String) </p>
      */
+    @Deprecated
     public DownloadStream handleURI(URL context, String relativeUri) {
 
-        // If the relative uri is null, we are ready
-        if (relativeUri == null) {
-            return null;
-        }
+        // FIXME Move to ApplicationContext
 
-        // Resolves the prefix
-        String prefix = relativeUri;
-        final int index = relativeUri.indexOf('/');
-        if (index >= 0) {
-            prefix = relativeUri.substring(0, index);
-        }
-
-        // Handles the resource requests
-        if (prefix.equals("APP")) {
+        if (resourceURLGenerator.isResourceURL(context, relativeUri)) {
 
             // Handles the resource request
-            final int next = relativeUri.indexOf('/', index + 1);
-            if (next < 0) {
-                return null;
-            }
-            final String key = relativeUri.substring(index + 1, next);
-            final ApplicationResource resource = (ApplicationResource) keyResourceMap
+            final String key = resourceURLGenerator.getMapKey(context,
+                    relativeUri);
+            final ApplicationResource resource = keyResourceMap
                     .get(key);
             if (resource != null) {
                 DownloadStream stream = resource.getStream();
@@ -806,10 +882,10 @@ public abstract class Application implements URIHandler,
 
     /**
      * Gets the default locale for this application.
-     * 
+     *
      * By default this is the preferred locale of the user using the
      * application. In most cases it is read from the browser defaults.
-     * 
+     *
      * @return the locale of this application.
      */
     public Locale getLocale() {
@@ -821,13 +897,13 @@ public abstract class Application implements URIHandler,
 
     /**
      * Sets the default locale for this application.
-     * 
+     *
      * By default this is the preferred locale of the user using the
      * application. In most cases it is read from the browser defaults.
-     * 
+     *
      * @param locale
      *            the Locale object.
-     * 
+     *
      */
     public void setLocale(Locale locale) {
         this.locale = locale;
@@ -839,7 +915,7 @@ public abstract class Application implements URIHandler,
      * </p>
      * Application user change event sent when the setUser is called to change
      * the current user of the application.
-     * 
+     *
      * @version
      * @VERSION@
      * @since 3.0
@@ -858,7 +934,7 @@ public abstract class Application implements URIHandler,
 
         /**
          * Constructor for user change event.
-         * 
+         *
          * @param source
          *            the application source.
          * @param newUser
@@ -875,7 +951,7 @@ public abstract class Application implements URIHandler,
 
         /**
          * Gets the new user of the application.
-         * 
+         *
          * @return the new User.
          */
         public Object getNewUser() {
@@ -884,7 +960,7 @@ public abstract class Application implements URIHandler,
 
         /**
          * Gets the previous user of the application.
-         * 
+         *
          * @return the previous Vaadin user, if user has not changed ever on
          *         application it returns <code>null</code>
          */
@@ -894,7 +970,7 @@ public abstract class Application implements URIHandler,
 
         /**
          * Gets the application where the user change occurred.
-         * 
+         *
          * @return the Application.
          */
         public Application getApplication() {
@@ -905,7 +981,7 @@ public abstract class Application implements URIHandler,
     /**
      * The <code>UserChangeListener</code> interface for listening application
      * user changes.
-     * 
+     *
      * @version
      * @VERSION@
      * @since 3.0
@@ -915,7 +991,7 @@ public abstract class Application implements URIHandler,
         /**
          * The <code>applicationUserChanged</code> method Invoked when the
          * application user has changed.
-         * 
+         *
          * @param event
          *            the change event.
          */
@@ -924,23 +1000,23 @@ public abstract class Application implements URIHandler,
 
     /**
      * Adds the user change listener.
-     * 
+     *
      * This allows one to get notification each time {@link #setUser(Object)} is
      * called.
-     * 
+     *
      * @param listener
      *            the user change listener to add.
      */
     public void addListener(UserChangeListener listener) {
         if (userChangeListeners == null) {
-            userChangeListeners = new LinkedList();
+            userChangeListeners = new LinkedList<UserChangeListener>();
         }
         userChangeListeners.add(listener);
     }
 
     /**
      * Removes the user change listener.
-     * 
+     *
      * @param listener
      *            the user change listener to remove.
      */
@@ -956,7 +1032,7 @@ public abstract class Application implements URIHandler,
 
     /**
      * Window detach event.
-     * 
+     *
      * This event is sent each time a window is removed from the application
      * with {@link com.vaadin.Application#removeWindow(Window)}.
      */
@@ -966,7 +1042,7 @@ public abstract class Application implements URIHandler,
 
         /**
          * Creates a event.
-         * 
+         *
          * @param window
          *            the Detached window.
          */
@@ -977,7 +1053,7 @@ public abstract class Application implements URIHandler,
 
         /**
          * Gets the detached window.
-         * 
+         *
          * @return the detached window.
          */
         public Window getWindow() {
@@ -986,7 +1062,7 @@ public abstract class Application implements URIHandler,
 
         /**
          * Gets the application from which the window was detached.
-         * 
+         *
          * @return the Application.
          */
         public Application getApplication() {
@@ -996,7 +1072,7 @@ public abstract class Application implements URIHandler,
 
     /**
      * Window attach event.
-     * 
+     *
      * This event is sent each time a window is attached tothe application with
      * {@link com.vaadin.Application#addWindow(Window)}.
      */
@@ -1006,7 +1082,7 @@ public abstract class Application implements URIHandler,
 
         /**
          * Creates a event.
-         * 
+         *
          * @param window
          *            the Attached window.
          */
@@ -1017,7 +1093,7 @@ public abstract class Application implements URIHandler,
 
         /**
          * Gets the attached window.
-         * 
+         *
          * @return the attached window.
          */
         public Window getWindow() {
@@ -1026,7 +1102,7 @@ public abstract class Application implements URIHandler,
 
         /**
          * Gets the application to which the window was attached.
-         * 
+         *
          * @return the Application.
          */
         public Application getApplication() {
@@ -1041,7 +1117,7 @@ public abstract class Application implements URIHandler,
 
         /**
          * Window attached
-         * 
+         *
          * @param event
          *            the window attach event.
          */
@@ -1055,7 +1131,7 @@ public abstract class Application implements URIHandler,
 
         /**
          * Window detached.
-         * 
+         *
          * @param event
          *            the window detach event.
          */
@@ -1064,39 +1140,39 @@ public abstract class Application implements URIHandler,
 
     /**
      * Adds the window attach listener.
-     * 
+     *
      * Use this to get notifications each time a window is attached to the
      * application with {@link #addWindow(Window)}.
-     * 
+     *
      * @param listener
      *            the window attach listener to add.
      */
     public void addListener(WindowAttachListener listener) {
         if (windowAttachListeners == null) {
-            windowAttachListeners = new LinkedList();
+            windowAttachListeners = new LinkedList<WindowAttachListener>();
         }
         windowAttachListeners.add(listener);
     }
 
     /**
      * Adds the window detach listener.
-     * 
+     *
      * Use this to get notifications each time a window is remove from the
      * application with {@link #removeWindow(Window)}.
-     * 
+     *
      * @param listener
      *            the window detach listener to add.
      */
     public void addListener(WindowDetachListener listener) {
         if (windowDetachListeners == null) {
-            windowDetachListeners = new LinkedList();
+            windowDetachListeners = new LinkedList<WindowDetachListener>();
         }
         windowDetachListeners.add(listener);
     }
 
     /**
      * Removes the window attach listener.
-     * 
+     *
      * @param listener
      *            the window attach listener to remove.
      */
@@ -1111,7 +1187,7 @@ public abstract class Application implements URIHandler,
 
     /**
      * Removes the window detach listener.
-     * 
+     *
      * @param listener
      *            the window detach listener to remove.
      */
@@ -1132,7 +1208,7 @@ public abstract class Application implements URIHandler,
      * Desktop application just closes the application window and
      * web-application redirects the browser to application main URL.
      * </p>
-     * 
+     *
      * @return the URL.
      */
     public String getLogoutURL() {
@@ -1145,7 +1221,7 @@ public abstract class Application implements URIHandler,
      * application running environment: Desktop application just closes the
      * application window and web-application redirects the browser to
      * application main URL.
-     * 
+     *
      * @param logoutURL
      *            the logoutURL to set.
      */
@@ -1157,7 +1233,7 @@ public abstract class Application implements URIHandler,
      * Gets the SystemMessages for this application. SystemMessages are used to
      * notify the user of various critical situations that can occur, such as
      * session expiration, client/server out of sync, and internal server error.
-     * 
+     *
      * You can customize the messages by "overriding" this method and returning
      * {@link CustomizedSystemMessages}. To "override" this method, re-implement
      * this method in your application (the class that extends
@@ -1165,7 +1241,7 @@ public abstract class Application implements URIHandler,
      * possible in Java, Vaadin selects to call the static method from the
      * subclass instead of the original {@link #getSystemMessages()} if such a
      * method exists.
-     * 
+     *
      * @return the SystemMessages for this application
      */
     public static SystemMessages getSystemMessages() {
@@ -1184,7 +1260,7 @@ public abstract class Application implements URIHandler,
      * You can safely override this method in your application in order to
      * direct the errors to some other destination (for example log).
      * </p>
-     * 
+     *
      * @param event
      *            the change event.
      * @see com.vaadin.terminal.Terminal.ErrorListener#terminalError(com.vaadin.terminal.Terminal.ErrorEvent)
@@ -1240,7 +1316,7 @@ public abstract class Application implements URIHandler,
      * you are deploying your application as a portlet, context implementation
      * is {@link PortletApplicationContext}.
      * </p>
-     * 
+     *
      * @return the application context.
      */
     public ApplicationContext getContext() {
@@ -1251,7 +1327,7 @@ public abstract class Application implements URIHandler,
      * Override this method to return correct version number of your
      * Application. Version information is delivered for example to Testing
      * Tools test results. By default this returns a string "NONVERSIONED".
-     * 
+     *
      * @return version string
      */
     public String getVersion() {
@@ -1260,9 +1336,9 @@ public abstract class Application implements URIHandler,
 
     /**
      * Gets the application error handler.
-     * 
+     *
      * The default error handler is the application itself.
-     * 
+     *
      * @return Application error handler
      */
     public Terminal.ErrorListener getErrorHandler() {
@@ -1271,11 +1347,11 @@ public abstract class Application implements URIHandler,
 
     /**
      * Sets the application error handler.
-     * 
+     *
      * The default error handler is the application itself. By overriding this,
      * you can redirect the error messages to your selected target (log for
      * example).
-     * 
+     *
      * @param errorHandler
      */
     public void setErrorHandler(Terminal.ErrorListener errorHandler) {
@@ -1316,7 +1392,7 @@ public abstract class Application implements URIHandler,
      * Take note of any unsaved data, and <u>click here</u> to re-sync."</li>
      * </ul>
      * </p>
-     * 
+     *
      */
     public static class SystemMessages implements Serializable {
         protected String sessionExpiredURL = null;
@@ -1370,7 +1446,7 @@ public abstract class Application implements URIHandler,
         }
 
         /**
-         * @return 
+         * @return
          *         "Take note of any unsaved data, and <u>click here</u> to continue."
          */
         public String getSessionExpiredMessage() {
@@ -1402,7 +1478,7 @@ public abstract class Application implements URIHandler,
         }
 
         /**
-         * @return 
+         * @return
          *         "Take note of any unsaved data, and <u>click here</u> to continue."
          */
         public String getCommunicationErrorMessage() {
@@ -1518,7 +1594,7 @@ public abstract class Application implements URIHandler,
 
         /**
          * Sets the URL to go to when the session has expired.
-         * 
+         *
          * @param sessionExpiredURL
          *            the URL to go to, or null to reload current
          */
@@ -1530,7 +1606,7 @@ public abstract class Application implements URIHandler,
          * Enables or disables the notification. If disabled, the set URL (or
          * current) is loaded directly when next transaction between server and
          * client happens.
-         * 
+         *
          * @param sessionExpiredNotificationEnabled
          *            true = enabled, false = disabled
          */
@@ -1544,7 +1620,7 @@ public abstract class Application implements URIHandler,
          * both caption and message are null, client automatically forwards to
          * sessionExpiredUrl after timeout timer expires. Timer uses value read
          * from HTTPSession.getMaxInactiveInterval()
-         * 
+         *
          * @param sessionExpiredCaption
          *            the caption
          */
@@ -1557,7 +1633,7 @@ public abstract class Application implements URIHandler,
          * both caption and message are null, client automatically forwards to
          * sessionExpiredUrl after timeout timer expires. Timer uses value read
          * from HTTPSession.getMaxInactiveInterval()
-         * 
+         *
          * @param sessionExpiredMessage
          *            the message
          */
@@ -1567,7 +1643,7 @@ public abstract class Application implements URIHandler,
 
         /**
          * Sets the URL to go to when there is a communication error.
-         * 
+         *
          * @param communicationErrorURL
          *            the URL to go to, or null to reload current
          */
@@ -1578,7 +1654,7 @@ public abstract class Application implements URIHandler,
         /**
          * Enables or disables the notification. If disabled, the set URL (or
          * current) is loaded directly.
-         * 
+         *
          * @param communicationErrorNotificationEnabled
          *            true = enabled, false = disabled
          */
@@ -1590,7 +1666,7 @@ public abstract class Application implements URIHandler,
         /**
          * Sets the caption of the notification. Set to null for no caption. If
          * both caption and message is null, the notification is disabled;
-         * 
+         *
          * @param communicationErrorCaption
          *            the caption
          */
@@ -1602,7 +1678,7 @@ public abstract class Application implements URIHandler,
         /**
          * Sets the message of the notification. Set to null for no message. If
          * both caption and message is null, the notification is disabled;
-         * 
+         *
          * @param communicationErrorMessage
          *            the message
          */
@@ -1613,7 +1689,7 @@ public abstract class Application implements URIHandler,
 
         /**
          * Sets the URL to go to when an internal error occurs.
-         * 
+         *
          * @param internalErrorURL
          *            the URL to go to, or null to reload current
          */
@@ -1624,7 +1700,7 @@ public abstract class Application implements URIHandler,
         /**
          * Enables or disables the notification. If disabled, the set URL (or
          * current) is loaded directly.
-         * 
+         *
          * @param internalErrorNotificationEnabled
          *            true = enabled, false = disabled
          */
@@ -1636,7 +1712,7 @@ public abstract class Application implements URIHandler,
         /**
          * Sets the caption of the notification. Set to null for no caption. If
          * both caption and message is null, the notification is disabled;
-         * 
+         *
          * @param internalErrorCaption
          *            the caption
          */
@@ -1647,7 +1723,7 @@ public abstract class Application implements URIHandler,
         /**
          * Sets the message of the notification. Set to null for no message. If
          * both caption and message is null, the notification is disabled;
-         * 
+         *
          * @param internalErrorMessage
          *            the message
          */
@@ -1657,7 +1733,7 @@ public abstract class Application implements URIHandler,
 
         /**
          * Sets the URL to go to when the client is out-of-sync.
-         * 
+         *
          * @param outOfSyncURL
          *            the URL to go to, or null to reload current
          */
@@ -1668,7 +1744,7 @@ public abstract class Application implements URIHandler,
         /**
          * Enables or disables the notification. If disabled, the set URL (or
          * current) is loaded directly.
-         * 
+         *
          * @param outOfSyncNotificationEnabled
          *            true = enabled, false = disabled
          */
@@ -1680,7 +1756,7 @@ public abstract class Application implements URIHandler,
         /**
          * Sets the caption of the notification. Set to null for no caption. If
          * both caption and message is null, the notification is disabled;
-         * 
+         *
          * @param outOfSyncCaption
          *            the caption
          */
@@ -1691,7 +1767,7 @@ public abstract class Application implements URIHandler,
         /**
          * Sets the message of the notification. Set to null for no message. If
          * both caption and message is null, the notification is disabled;
-         * 
+         *
          * @param outOfSyncMessage
          *            the message
          */
@@ -1703,7 +1779,7 @@ public abstract class Application implements URIHandler,
 
     /**
      * Application error is an error message defined on the application level.
-     * 
+     *
      * When an error occurs on the application level, this error message type
      * should be used. This indicates that the problem is caused by the
      * application - not by the user.

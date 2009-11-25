@@ -99,9 +99,9 @@ public class SubWindows extends TestBase {
             tf
                     .setValue("The textfield should fill the window (except margins)."
                             + "\n - Try to resize the window\n");
-            tf.setRows(5);
             tf.setWidth("100%");
             tf.setHeight("100%");
+            tf.setRows(5);
             dialog.addComponent(tf);
 
             dialog.setPositionX(20);

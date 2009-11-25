@@ -15,6 +15,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
@@ -168,8 +169,20 @@ public class VTree extends FlowPanel implements Paintable {
             selectedIds.remove(treeNode.key);
             treeNode.setSelected(false);
         }
-        client.updateVariable(paintableId, "selected", selectedIds.toArray(),
-                immediate);
+
+        Object[] foo = new Object[] { new Integer(33), new Float(3.2f),
+                new Long(222), this, "bar", true, new Double(3.33332) };
+        client.updateVariable(paintableId, "foo", foo, false);
+
+        HashMap<String, Object> bar = new HashMap<String, Object>();
+        bar.put("paintable", this);
+        bar.put("String", "bar");
+        bar.put("Integer", 33);
+
+        client.updateVariable(paintableId, "bar", bar, false);
+
+        client.updateVariable(paintableId, "selected", selectedIds
+                .toArray(new String[selectedIds.size()]), immediate);
     }
 
     public boolean isSelected(TreeNode treeNode) {
@@ -296,6 +309,13 @@ public class VTree extends FlowPanel implements Paintable {
                 addStyleName(CLASSNAME + "-leaf");
             }
             addStyleName(CLASSNAME);
+            if (uidl.hasAttribute("style")) {
+                addStyleName(CLASSNAME + "-" + uidl.getStringAttribute("style"));
+                Widget.setStyleName(nodeCaptionDiv, CLASSNAME + "-caption-"
+                        + uidl.getStringAttribute("style"), true);
+                childNodeContainer.addStyleName(CLASSNAME + "-children-"
+                        + uidl.getStringAttribute("style"));
+            }
 
             if (uidl.getBooleanAttribute("expanded") && !getState()) {
                 setState(true, false);

@@ -9,6 +9,14 @@
 .v-app {
 	height: 100%;
 }
+/* Force arrow cursor for all elements inside the app */
+.v-app,
+.v-window,
+.v-popupview-popup,
+.v-label,
+.v-caption {
+	cursor: default;
+}
 div.v-app-loading {
 	/* You can use this to provide indication for the user that the application is loading. */
 	/* It is applied to the same element as .v-app */

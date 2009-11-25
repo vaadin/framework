@@ -1,16 +1,11 @@
 /**
- * 
+ *
  */
 package com.vaadin.terminal.gwt.server;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -18,7 +13,6 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
 import javax.portlet.PortletSession;
-import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.servlet.http.HttpSession;
@@ -27,17 +21,18 @@ import com.vaadin.Application;
 
 /**
  * @author marc
- * 
+ * @deprecated Use Portlet 2.0 class {@link PortletApplicationContext2} instead.
  */
-@SuppressWarnings("serial")
+@SuppressWarnings({"serial", "unchecked"})
+@Deprecated
 public class PortletApplicationContext extends WebApplicationContext implements
         Serializable {
 
     protected PortletSession portletSession;
 
-    protected Map portletListeners = new HashMap();
+    protected Map<Application, Set<PortletListener>> portletListeners = new HashMap<Application, Set<PortletListener>>();
 
-    protected Map portletToApplication = new HashMap();
+    protected Map<Portlet, Application> portletToApplication = new HashMap<Portlet, Application>();
 
     PortletApplicationContext() {
 
@@ -88,10 +83,8 @@ public class PortletApplicationContext extends WebApplicationContext implements
     @Override
     protected void removeApplication(Application application) {
         portletListeners.remove(application);
-        for (Iterator it = portletToApplication.keySet().iterator(); it
-                .hasNext();) {
-            Object key = it.next();
-            if (key == application) {
+        for (Portlet key : portletToApplication.keySet()) {
+            if (portletToApplication.get(key) == application) {
                 portletToApplication.remove(key);
             }
         }
@@ -103,7 +96,7 @@ public class PortletApplicationContext extends WebApplicationContext implements
     }
 
     public Application getPortletApplication(Portlet portlet) {
-        return (Application) portletToApplication.get(portlet);
+        return portletToApplication.get(portlet);
     }
 
     public PortletSession getPortletSession() {
@@ -111,16 +104,16 @@ public class PortletApplicationContext extends WebApplicationContext implements
     }
 
     public void addPortletListener(Application app, PortletListener listener) {
-        Set l = (Set) portletListeners.get(app);
+        Set<PortletListener> l = portletListeners.get(app);
         if (l == null) {
-            l = new LinkedHashSet();
+            l = new LinkedHashSet<PortletListener>();
             portletListeners.put(app, l);
         }
         l.add(listener);
     }
 
     public void removePortletListener(Application app, PortletListener listener) {
-        Set l = (Set) portletListeners.get(app);
+        Set<PortletListener> l = portletListeners.get(app);
         if (l != null) {
             l.remove(listener);
         }
@@ -147,10 +140,9 @@ public class PortletApplicationContext extends WebApplicationContext implements
     public void firePortletRenderRequest(Portlet portlet,
             RenderRequest request, RenderResponse response) {
         Application app = getPortletApplication(portlet);
-        Set listeners = (Set) portletListeners.get(app);
+        Set<PortletListener> listeners = portletListeners.get(app);
         if (listeners != null) {
-            for (Iterator it = listeners.iterator(); it.hasNext();) {
-                PortletListener l = (PortletListener) it.next();
+            for (PortletListener l : listeners) {
                 l.handleRenderRequest(request, new RestrictedRenderResponse(
                         response));
             }
@@ -160,10 +152,9 @@ public class PortletApplicationContext extends WebApplicationContext implements
     public void firePortletActionRequest(Portlet portlet,
             ActionRequest request, ActionResponse response) {
         Application app = getPortletApplication(portlet);
-        Set listeners = (Set) portletListeners.get(app);
+        Set<PortletListener> listeners = portletListeners.get(app);
         if (listeners != null) {
-            for (Iterator it = listeners.iterator(); it.hasNext();) {
-                PortletListener l = (PortletListener) it.next();
+            for (PortletListener l : listeners) {
                 l.handleActionRequest(request, response);
             }
         }
@@ -175,100 +166,6 @@ public class PortletApplicationContext extends WebApplicationContext implements
 
         public void handleActionRequest(ActionRequest request,
                 ActionResponse response);
-    }
-
-    private class RestrictedRenderResponse implements RenderResponse,
-            Serializable {
-
-        private RenderResponse response;
-
-        private RestrictedRenderResponse(RenderResponse response) {
-            this.response = response;
-        }
-
-        public void addProperty(String key, String value) {
-            response.addProperty(key, value);
-        }
-
-        public PortletURL createActionURL() {
-            return response.createActionURL();
-        }
-
-        public PortletURL createRenderURL() {
-            return response.createRenderURL();
-        }
-
-        public String encodeURL(String path) {
-            return response.encodeURL(path);
-        }
-
-        public void flushBuffer() throws IOException {
-            // NOP
-            // TODO throw?
-        }
-
-        public int getBufferSize() {
-            return response.getBufferSize();
-        }
-
-        public String getCharacterEncoding() {
-            return response.getCharacterEncoding();
-        }
-
-        public String getContentType() {
-            return response.getContentType();
-        }
-
-        public Locale getLocale() {
-            return response.getLocale();
-        }
-
-        public String getNamespace() {
-            return response.getNamespace();
-        }
-
-        public OutputStream getPortletOutputStream() throws IOException {
-            // write forbidden
-            return null;
-        }
-
-        public PrintWriter getWriter() throws IOException {
-            // write forbidden
-            return null;
-        }
-
-        public boolean isCommitted() {
-            return response.isCommitted();
-        }
-
-        public void reset() {
-            // NOP
-            // TODO throw?
-        }
-
-        public void resetBuffer() {
-            // NOP
-            // TODO throw?
-        }
-
-        public void setBufferSize(int size) {
-            // NOP
-            // TODO throw?
-        }
-
-        public void setContentType(String type) {
-            // NOP
-            // TODO throw?
-        }
-
-        public void setProperty(String key, String value) {
-            response.setProperty(key, value);
-        }
-
-        public void setTitle(String title) {
-            response.setTitle(title);
-        }
-
     }
 
 }

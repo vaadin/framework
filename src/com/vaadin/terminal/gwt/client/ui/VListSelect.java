@@ -60,14 +60,14 @@ public class VListSelect extends VOptionGroupBase {
     }
 
     @Override
-    protected Object[] getSelectedItems() {
-        final ArrayList selectedItemKeys = new ArrayList();
+    protected String[] getSelectedItems() {
+        final ArrayList<String> selectedItemKeys = new ArrayList<String>();
         for (int i = 0; i < select.getItemCount(); i++) {
             if (select.isItemSelected(i)) {
                 selectedItemKeys.add(select.getValue(i));
             }
         }
-        return selectedItemKeys.toArray();
+        return selectedItemKeys.toArray(new String[selectedItemKeys.size()]);
     }
 
     @Override

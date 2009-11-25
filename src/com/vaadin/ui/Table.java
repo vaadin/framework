@@ -3187,17 +3187,6 @@ public class Table extends AbstractSelect implements Action.Container,
         }
     }
 
-    /*
-     * Override abstract fields to string method to avoid non-informative null's
-     * in debugger
-     */
-    @Override
-    public String toString() {
-        return "Table:" + getContainerPropertyIds() + ", rows "
-                + getContainerDataSource().size() + " ,value:"
-                + super.toString();
-    }
-
     /**
      * Used to create "generated columns"; columns that exist only in the Table,
      * not in the underlying Container. Implement this interface and pass it to

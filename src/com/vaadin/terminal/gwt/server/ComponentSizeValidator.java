@@ -173,7 +173,7 @@ public class ComponentSizeValidator implements Serializable {
 
         @SuppressWarnings("deprecation")
         public void reportErrors(PrintWriter clientJSON,
-                CommunicationManager communicationManager,
+                AbstractCommunicationManager communicationManager,
                 PrintStream serverErrorStream) {
             clientJSON.write("{");
 

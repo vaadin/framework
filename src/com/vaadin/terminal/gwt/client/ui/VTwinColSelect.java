@@ -110,12 +110,12 @@ public class VTwinColSelect extends VOptionGroupBase {
     }
 
     @Override
-    protected Object[] getSelectedItems() {
-        final ArrayList selectedItemKeys = new ArrayList();
+    protected String[] getSelectedItems() {
+        final ArrayList<String> selectedItemKeys = new ArrayList<String>();
         for (int i = 0; i < selections.getItemCount(); i++) {
             selectedItemKeys.add(selections.getValue(i));
         }
-        return selectedItemKeys.toArray();
+        return selectedItemKeys.toArray(new String[selectedItemKeys.size()]);
     }
 
     private boolean[] getItemsToAdd() {
@@ -162,8 +162,8 @@ public class VTwinColSelect extends VOptionGroupBase {
                     options.removeItem(optionIndex);
                 }
             }
-            client.updateVariable(id, "selected", selectedKeys.toArray(),
-                    isImmediate());
+            client.updateVariable(id, "selected", selectedKeys
+                    .toArray(new String[selectedKeys.size()]), isImmediate());
 
         } else if (event.getSource() == remove) {
             final boolean[] sel = getItemsToRemove();
@@ -181,8 +181,8 @@ public class VTwinColSelect extends VOptionGroupBase {
                     selections.removeItem(selectionIndex);
                 }
             }
-            client.updateVariable(id, "selected", selectedKeys.toArray(),
-                    isImmediate());
+            client.updateVariable(id, "selected", selectedKeys
+                    .toArray(new String[selectedKeys.size()]), isImmediate());
         } else if (event.getSource() == options) {
             // unselect all in other list, to avoid mistakes (i.e wrong button)
             final int c = selections.getItemCount();
