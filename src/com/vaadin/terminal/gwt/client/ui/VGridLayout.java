@@ -222,26 +222,6 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
 
     }
 
-    // private HandlerRegistration clickHandlerRegistration;
-    //
-    // private void handleHandlerRegistration() {
-    // // Handle registering/unregistering of click handler depending on if
-    // // server side listeners have been added or removed.
-    // if (client.hasEventListeners(this, CLICK_EVENT_IDENTIFIER)) {
-    // if (clickHandlerRegistration == null) {
-    // clickHandlerRegistration = addDomHandler(this, ClickEvent
-    // .getType());
-    // }
-    // } else {
-    // if (clickHandlerRegistration != null) {
-    // clickHandlerRegistration.removeHandler();
-    // clickHandlerRegistration = null;
-    //
-    // }
-    // }
-    //
-    // }
-
     private static int[] cloneArray(int[] toBeCloned) {
         int[] clone = new int[toBeCloned.length];
         for (int i = 0; i < clone.length; i++) {
@@ -1068,22 +1048,6 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
         }
         return cell;
     }
-
-    // public void onClick(ClickEvent event) {
-    // // This is only called if there are click listeners registered on server
-    // // side
-    //
-    // Paintable childComponent = getChildComponent((Element) event
-    // .getNativeEvent().getEventTarget().cast());
-    // final MouseEventDetails details = new MouseEventDetails(event
-    // .getNativeEvent());
-    //
-    // Object[] parameters = new Object[] { details.serialize(),
-    // childComponent };
-    // client.updateVariable(client.getPid(this), CLICK_EVENT_IDENTIFIER,
-    // parameters, true);
-    //
-    // }
 
     private Paintable getComponent(Element element) {
         Element rootElement = getElement();

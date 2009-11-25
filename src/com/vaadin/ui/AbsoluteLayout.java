@@ -369,7 +369,7 @@ public class AbsoluteLayout extends AbstractLayout {
 
     private void fireClick(Map<String, Object> parameters) {
         MouseEventDetails mouseDetails = MouseEventDetails
-                .deserialize((String) parameters.get("mouseDetails"));
+                .deSerialize((String) parameters.get("mouseDetails"));
         Component childComponent = (Component) parameters.get("component");
 
         fireEvent(new LayoutClickEvent(this, mouseDetails, childComponent));

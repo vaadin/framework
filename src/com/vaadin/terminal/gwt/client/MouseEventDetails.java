@@ -75,7 +75,7 @@ public class MouseEventDetails {
                 + type;
     }
 
-    public static MouseEventDetails deserialize(String serializedString) {
+    public static MouseEventDetails deSerialize(String serializedString) {
         MouseEventDetails instance = new MouseEventDetails();
         String[] fields = serializedString.split(",");
 

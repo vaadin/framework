@@ -331,7 +331,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         super.changeVariables(source, variables);
 
         if (variables.containsKey(CLICK_EVENT)) {
-            fireClick(variables.get(CLICK_EVENT));
+            fireClick((Map<String, Object>) variables.get(CLICK_EVENT));
         }
 
         // Get new size
@@ -568,9 +568,9 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * @param object
      *            The raw "value" of the variable change from the client side.
      */
-    private void fireClick(Object object) {
+    private void fireClick(Map<String, Object> parameters) {
         MouseEventDetails mouseDetails = MouseEventDetails
-                .deserialize((String) object);
+                .deSerialize((String) parameters.get("mouseDetails"));
         fireEvent(new ClickEvent(this, mouseDetails));
     }
 

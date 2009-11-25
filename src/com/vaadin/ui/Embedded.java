@@ -440,7 +440,7 @@ public class Embedded extends AbstractComponent {
 
     private void fireClick(Map<String, Object> parameters) {
         MouseEventDetails mouseDetails = MouseEventDetails
-                .deserialize((String) parameters.get("mouseDetails"));
+                .deSerialize((String) parameters.get("mouseDetails"));
 
         fireEvent(new ClickEvent(this, mouseDetails));
     }

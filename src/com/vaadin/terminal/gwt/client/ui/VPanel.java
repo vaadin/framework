@@ -8,8 +8,8 @@ import java.util.Set;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DomEvent.Type;
+import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -19,14 +19,13 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 
-public class VPanel extends SimplePanel implements Container, ClickHandler {
+public class VPanel extends SimplePanel implements Container {
 
     public static final String CLICK_EVENT_IDENTIFIER = "click";
     public static final String CLASSNAME = "v-panel";
@@ -77,6 +76,22 @@ public class VPanel extends SimplePanel implements Container, ClickHandler {
 
     private String previousStyleName;
 
+    private ClickEventHandler clickEventHandler = new ClickEventHandler(this,
+            CLICK_EVENT_IDENTIFIER) {
+
+        @Override
+        public ApplicationConnection getApplicationConnection() {
+            return client;
+        }
+
+        @Override
+        protected <H extends EventHandler> HandlerRegistration registerHandler(
+                H handler, Type<H> type) {
+            return addDomHandler(handler, type);
+        }
+
+    };
+
     public VPanel() {
         super();
         DivElement captionWrap = Document.get().createDivElement();
@@ -111,7 +126,7 @@ public class VPanel extends SimplePanel implements Container, ClickHandler {
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         rendering = true;
         if (!uidl.hasAttribute("cached")) {
-            handleHandlerRegistration();
+            clickEventHandler.handleHandlerRegistration();
 
             // Handle caption displaying and style names, prior generics.
             // Affects size
@@ -207,26 +222,6 @@ public class VPanel extends SimplePanel implements Container, ClickHandler {
         }
 
         rendering = false;
-
-    }
-
-    private HandlerRegistration clickHandlerRegistration;
-
-    private void handleHandlerRegistration() {
-        // Handle registering/unregistering of click handler depending on if
-        // server side listeners have been added or removed.
-        if (client.hasEventListeners(this, CLICK_EVENT_IDENTIFIER)) {
-            if (clickHandlerRegistration == null) {
-                clickHandlerRegistration = addDomHandler(this, ClickEvent
-                        .getType());
-            }
-        } else {
-            if (clickHandlerRegistration != null) {
-                clickHandlerRegistration.removeHandler();
-                clickHandlerRegistration = null;
-
-            }
-        }
 
     }
 
@@ -544,15 +539,6 @@ public class VPanel extends SimplePanel implements Container, ClickHandler {
     protected void onAttach() {
         super.onAttach();
         detectContainerBorders();
-    }
-
-    public void onClick(ClickEvent event) {
-        // This is only called if there are click listeners registered on server
-        // side
-        MouseEventDetails details = new MouseEventDetails(event
-                .getNativeEvent());
-        client.updateVariable(client.getPid(this), CLICK_EVENT_IDENTIFIER,
-                details.serialize(), true);
     }
 
 }
