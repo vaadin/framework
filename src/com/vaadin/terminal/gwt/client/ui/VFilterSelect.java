@@ -182,6 +182,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                     "width", "");
 
             setPopupPositionAndShow(this);
+
         }
 
         private void setNextButtonActive(boolean b) {
@@ -500,8 +501,10 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 }
             } else if (item != null
                     && !"".equals(lastFilter)
-                    && item.getText().toLowerCase().startsWith(
-                            lastFilter.toLowerCase())) {
+                    && (filteringmode == FILTERINGMODE_CONTAINS ? item
+                            .getText().toLowerCase().contains(
+                                    lastFilter.toLowerCase()) : item.getText()
+                            .toLowerCase().startsWith(lastFilter.toLowerCase()))) {
                 doItemAction(item, true);
             } else {
                 // currentSuggestion has key="" for nullselection
@@ -595,6 +598,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     private boolean nullSelectItem;
     private boolean enabled;
     private boolean readonly;
+
+    private int filteringmode = FILTERINGMODE_OFF;
 
     // shown in unfocused empty field, disappears on focus (e.g "Search here")
     private static final String CLASSNAME_PROMPT = "prompt";
@@ -697,6 +702,10 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         // not a FocusWidget -> needs own tabindex handling
         if (uidl.hasAttribute("tabindex")) {
             tb.setTabIndex(uidl.getIntAttribute("tabindex"));
+        }
+
+        if (uidl.hasAttribute("filteringmode")) {
+            filteringmode = uidl.getIntAttribute("filteringmode");
         }
 
         immediate = uidl.hasAttribute("immediate");
@@ -950,6 +959,11 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         case KeyCodes.KEY_ENTER:
             if (suggestionPopup.isAttached()) {
                 filterOptions(currentPage);
+            }
+            if (currentSuggestions.size() == 1 && !allowNewItem) {
+                // If there is only one suggestion, select that
+                suggestionPopup.menu.selectItem((MenuItem) suggestionPopup.menu
+                        .getItems().get(0));
             }
             suggestionPopup.menu.doSelectedItemAction();
             break;
