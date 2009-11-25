@@ -12,11 +12,12 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.vaadin.event.LayoutEvents.LayoutClickEvent;
+import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VGridLayout;
-import com.vaadin.ui.AbstractOrderedLayout.LayoutClickEvent;
-import com.vaadin.ui.AbstractOrderedLayout.LayoutClickListener;
 
 /**
  * <p>
@@ -42,6 +43,8 @@ import com.vaadin.ui.AbstractOrderedLayout.LayoutClickListener;
 @ClientWidget(VGridLayout.class)
 public class GridLayout extends AbstractLayout implements
         Layout.AlignmentHandler, Layout.SpacingHandler {
+
+    private static final String CLICK_EVENT = VGridLayout.CLICK_EVENT_IDENTIFIER;
 
     /**
      * Initial grid columns.
@@ -1301,34 +1304,30 @@ public class GridLayout extends AbstractLayout implements
         AlignmentUtils.setComponentAlignment(this, component, alignment);
     }
 
+    @Override
+    public void changeVariables(Object source, Map variables) {
+        super.changeVariables(source, variables);
+        if (variables.containsKey(CLICK_EVENT)) {
+            fireClick((Object[]) variables.get(CLICK_EVENT));
+        }
+
+    }
+
+    private void fireClick(Object[] parameters) {
+        MouseEventDetails mouseDetails = MouseEventDetails
+                .deserialize((String) parameters[0]);
+        Component childComponent = (Component) parameters[1];
+
+        fireEvent(new LayoutClickEvent(this, mouseDetails, childComponent));
+    }
+
     public void addListener(LayoutClickListener listener) {
-        addEventListener("click", LayoutClickEvent.class, listener,
+        addListener(CLICK_EVENT, LayoutClickEvent.class, listener,
                 LayoutClickListener.clickMethod);
     }
 
     public void removeListener(LayoutClickListener listener) {
-        removeEventListener("click", LayoutClickEvent.class, listener,
-                LayoutClickListener.clickMethod);
-    }
-
-    @Override
-    protected void handleEvent(String event, String[] parameters) {
-        if (event.equals("click")) {
-            String button = parameters[0];
-            String childComponentRow = parameters[1];
-            String childComponentCol = parameters[2];
-
-            Component childComponent = null;
-            try {
-                childComponent = getComponent(Integer
-                        .parseInt(childComponentCol), Integer
-                        .parseInt(childComponentRow));
-            } catch (Exception e) {
-                // TODO: handle exception
-            }
-
-            fireEvent(new LayoutClickEvent(this, button, childComponent));
-        }
+        removeListener(CLICK_EVENT, LayoutClickEvent.class, listener);
     }
 
 }

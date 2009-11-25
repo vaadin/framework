@@ -6,12 +6,14 @@ package com.vaadin.ui;
 
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
 
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VEmbedded;
 
 /**
@@ -25,6 +27,8 @@ import com.vaadin.terminal.gwt.client.ui.VEmbedded;
 @SuppressWarnings("serial")
 @ClientWidget(VEmbedded.class)
 public class Embedded extends AbstractComponent {
+
+    private static final String CLICK_EVENT = VEmbedded.CLICK_EVENT_IDENTIFIER;
 
     /**
      * General object type.
@@ -417,19 +421,28 @@ public class Embedded extends AbstractComponent {
     }
 
     public void addListener(ClickListener listener) {
-        addEventListener("click", ClickEvent.class, listener,
+        addListener(CLICK_EVENT, ClickEvent.class, listener,
                 ClickListener.clickMethod);
     }
 
     public void removeListener(ClickListener listener) {
-        removeEventListener("click", ClickEvent.class, listener,
-                ClickListener.clickMethod);
+        removeListener(CLICK_EVENT, ClickEvent.class, listener);
     }
 
     @Override
-    protected void handleEvent(String event, String[] parameters) {
-        if (event.equals("click")) {
-            fireEvent(new ClickEvent(this, parameters[0]));
+    public void changeVariables(Object source, Map variables) {
+        super.changeVariables(source, variables);
+        if (variables.containsKey(CLICK_EVENT)) {
+            fireClick(variables.get(CLICK_EVENT));
         }
+
     }
+
+    private void fireClick(Object parameters) {
+        MouseEventDetails mouseDetails = MouseEventDetails
+                .deserialize((String) parameters);
+
+        fireEvent(new ClickEvent(this, mouseDetails));
+    }
+
 }

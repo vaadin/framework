@@ -13,18 +13,24 @@ import com.google.gwt.dom.client.ObjectElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
-public class VEmbedded extends HTML implements Paintable, ClickHandler {
+public class VEmbedded extends HTML implements Paintable, ClickHandler,
+        MouseUpHandler {
+    public static final String CLICK_EVENT_IDENTIFIER = "click";
+
     private static String CLASSNAME = "v-embedded";
 
     private String height;
@@ -36,6 +42,7 @@ public class VEmbedded extends HTML implements Paintable, ClickHandler {
     public VEmbedded() {
         setStyleName(CLASSNAME);
         addClickHandler(this);
+        addMouseUpHandler(this);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -240,8 +247,29 @@ public class VEmbedded extends HTML implements Paintable, ClickHandler {
         client.handleTooltipEvent(event, this);
     }
 
-    public void onClick(ClickEvent event) {
-        client.getEventHandler(this).fireEvent("click", "left");
+    private void fireClick(MouseEventDetails mouseDetails) {
+        client.updateVariable(client.getPid(this), CLICK_EVENT_IDENTIFIER,
+                mouseDetails.serialize(), true);
     }
 
+    public void onClick(ClickEvent event) {
+        if (client.hasEventListeners(this, CLICK_EVENT_IDENTIFIER)) {
+            MouseEventDetails mouseDetails = new MouseEventDetails(event
+                    .getNativeEvent());
+            fireClick(mouseDetails);
+        }
+    }
+
+    public void onMouseUp(MouseUpEvent event) {
+        if (client.hasEventListeners(this, CLICK_EVENT_IDENTIFIER)) {
+
+            MouseEventDetails mouseDetails = new MouseEventDetails(event
+                    .getNativeEvent());
+            if (mouseDetails.getButton() != MouseEventDetails.BUTTON_LEFT) {
+                // "Click" with right or middle button
+                fireClick(mouseDetails);
+
+            }
+        }
+    }
 }

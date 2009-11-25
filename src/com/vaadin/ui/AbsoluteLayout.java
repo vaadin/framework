@@ -10,8 +10,11 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
+import com.vaadin.event.LayoutEvents.LayoutClickEvent;
+import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VAbsoluteLayout;
 
 /**
@@ -22,6 +25,8 @@ import com.vaadin.terminal.gwt.client.ui.VAbsoluteLayout;
 @SuppressWarnings("serial")
 @ClientWidget(VAbsoluteLayout.class)
 public class AbsoluteLayout extends AbstractLayout {
+
+    private static final String CLICK_EVENT = VAbsoluteLayout.CLICK_EVENT_IDENTIFIER;
 
     private Collection<Component> components = new LinkedHashSet<Component>();
     private Map<Component, ComponentPosition> componentToCoordinates = new HashMap<Component, ComponentPosition>();
@@ -351,6 +356,32 @@ public class AbsoluteLayout extends AbstractLayout {
     private static void validateLength(float topValue, int topUnits2) {
         // TODO throw on invalid value
 
+    }
+
+    @Override
+    public void changeVariables(Object source, Map variables) {
+        super.changeVariables(source, variables);
+        if (variables.containsKey(CLICK_EVENT)) {
+            fireClick((Object[]) variables.get(CLICK_EVENT));
+        }
+
+    }
+
+    private void fireClick(Object[] parameters) {
+        MouseEventDetails mouseDetails = MouseEventDetails
+                .deserialize((String) parameters[0]);
+        Component childComponent = (Component) parameters[1];
+
+        fireEvent(new LayoutClickEvent(this, mouseDetails, childComponent));
+    }
+
+    public void addListener(LayoutClickListener listener) {
+        addListener(CLICK_EVENT, LayoutClickEvent.class, listener,
+                LayoutClickListener.clickMethod);
+    }
+
+    public void removeListener(LayoutClickListener listener) {
+        removeListener(CLICK_EVENT, LayoutClickEvent.class, listener);
     }
 
 }

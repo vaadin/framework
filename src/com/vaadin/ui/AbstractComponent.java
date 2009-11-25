@@ -8,15 +8,16 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.vaadin.Application;
-import com.vaadin.event.ClientEventList;
 import com.vaadin.event.EventRouter;
 import com.vaadin.event.MethodEventSource;
 import com.vaadin.terminal.ErrorMessage;
@@ -24,7 +25,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Terminal;
-import com.vaadin.terminal.gwt.client.ComponentEventHandler;
+import com.vaadin.terminal.gwt.client.EventListenerRegister;
 import com.vaadin.terminal.gwt.server.ComponentSizeValidator;
 import com.vaadin.tools.ReflectTools;
 
@@ -96,10 +97,9 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     private EventRouter eventRouter = null;
 
     /**
-     * The ClientEventList used for collecting client events which should be
-     * transmitted from the client to the server
+     * A set of event identifiers with registered listeners.
      */
-    private ClientEventList clientEvents = null;
+    private Set<String> eventIdentifiers = null;
 
     /**
      * The internal error message of the component.
@@ -688,20 +688,12 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
                     target.addAttribute("description", getDescription());
                 }
 
-                String[] trigger = new String[] {};
-                String[] events = new String[] {};
-                if (clientEvents != null) {
-                    events = clientEvents.getEvents();
+                if (eventIdentifiers != null) {
+                    target
+                            .addAttribute(
+                                    EventListenerRegister.REGISTERED_EVENT_LISTENERS_ATTRIBUTE,
+                                    eventIdentifiers.toArray());
                 }
-                if (events.length != 0) {
-                    target.addVariable(this,
-                            ComponentEventHandler.HANDLER_TRIGGER_VARIABLE,
-                            trigger);
-                    target.addAttribute(
-                            ComponentEventHandler.HANDLER_LISTEN_ATTRIBUTE,
-                            events);
-                }
-                // end of event variables
 
                 paintContent(target);
 
@@ -837,66 +829,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         }
     }
 
-    /**
-     * this method is executed when a event arrives from the event-api.<br>
-     * this should be overridden by components which intend to use the event-api
-     * mechanism for registering Events.
-     * 
-     * @param eventIdentifier
-     * @param parameters
-     */
-    protected void handleEvent(String eventIdentifier, String[] parameters) {
-        // implemented by subclasses
-    }
-
-    /**
-     * listens to the specified event type.<br>
-     * on changes of the registered event by the client-side component, the
-     * method handleEvent(String event, String[] parameters) will be invoked (as
-     * long as either a listener is registered at the component for the given
-     * event type or the forceTransmission flag has been set by the client-side
-     * component). <br>
-     * <br>
-     * <b>for every listener attached to this component this method has to be
-     * called once. the client-event list holds a counter on how-many listeners
-     * are listening for an event.</b><br>
-     * <br>
-     * this method should be executed by components which intend to use the
-     * event-api mechanism for listening on events.
-     * 
-     * @param eventIdentifier
-     * @since 6.2
-     */
-    private void listenEvent(String eventIdentifier) {
-        if (clientEvents == null) {
-            clientEvents = new ClientEventList();
-        }
-        final boolean repaint = clientEvents.listenEvent(eventIdentifier);
-        if (repaint)
-            requestRepaint();
-    }
-
-    /**
-     * stops listening to the specified event type. <br>
-     * <br>
-     * <b>for every listener detached from this component this method has to be
-     * called once. the client-event list holds a counter on how-many listeners
-     * are listening for an event.</b><br>
-     * <br>
-     * this method should be executed by components which intend to use the
-     * event-api mechanism for listening on events.
-     * 
-     * @param eventIdentifier
-     * @since 6.2
-     */
-    private void unlistenEvent(String eventIdentifier) {
-        if (clientEvents != null) {
-            final boolean repaint = clientEvents.unlistenEvent(eventIdentifier);
-            if (repaint)
-                requestRepaint();
-        }
-    }
-
     /* Component variable changes */
 
     /*
@@ -905,25 +837,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * interface.
      */
     public void changeVariables(Object source, Map variables) {
-
-        // handle events when triggered
-        if (variables
-                .containsKey(ComponentEventHandler.HANDLER_TRIGGER_VARIABLE)) {
-            String[] firedEvent = (String[]) variables
-                    .get(ComponentEventHandler.HANDLER_TRIGGER_VARIABLE);
-
-            // detect vaadin events
-            String[] params = new String[firedEvent.length - 1];
-
-            for (int i = 0; i < params.length; i++) {
-                params[i] = firedEvent[i + 1];
-            }
-
-            String event = firedEvent[0];
-
-            handleEvent(event, params);
-
-        }
 
     }
 
@@ -956,20 +869,28 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @param eventType
      *            the type of the listened event. Events of this type or its
      *            subclasses activate the listener.
-     * @param object
+     * @param target
      *            the object instance who owns the activation method.
      * @param method
      *            the activation method.
      * 
      * @since 6.2
      */
-    protected void addEventListener(String eventIdentifier, Class<?> eventType,
-            Object object, Method method) {
+    protected void addListener(String eventIdentifier, Class<?> eventType,
+            Object target, Method method) {
         if (eventRouter == null) {
             eventRouter = new EventRouter();
         }
-        eventRouter.addListener(eventType, object, method);
-        listenEvent(eventIdentifier);
+        if (eventIdentifiers == null) {
+            eventIdentifiers = new HashSet<String>();
+        }
+        boolean needRepaint = !eventRouter.hasListeners(eventType);
+        eventRouter.addListener(eventType, target, method);
+
+        if (needRepaint) {
+            eventIdentifiers.add(eventIdentifier);
+            requestRepaint();
+        }
     }
 
     /**
@@ -1000,49 +921,15 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * 
      * @since 6.2
      */
-    protected void removeEventListener(String eventIdentifier,
-            Class<?> eventType, Object target) {
+    protected void removeListener(String eventIdentifier, Class<?> eventType,
+            Object target) {
         if (eventRouter != null) {
             eventRouter.removeListener(eventType, target);
+            if (!eventRouter.hasListeners(eventType)) {
+                eventIdentifiers.remove(eventIdentifier);
+                requestRepaint();
+            }
         }
-        unlistenEvent(eventIdentifier);
-    }
-
-    /**
-     * Removes one registered listener method. The given method owned by the
-     * given object will no longer be called when the specified events are
-     * generated by this component.
-     * 
-     * <p>
-     * This method additionally informs the event-api to stop routing events
-     * with the given eventIdentifier to the components handleEvent function
-     * call.
-     * </p>
-     * 
-     * <p>
-     * For more information on the inheritable event mechanism see the
-     * {@link com.vaadin.event com.vaadin.event package documentation}.
-     * </p>
-     * 
-     * @param eventIdentifier
-     *            the identifier of the event to stop listening for
-     * @param eventType
-     *            the exact event type the <code>object</code> listens to.
-     * @param target
-     *            target object that has registered to listen to events of type
-     *            <code>eventType</code> with one or more methods.
-     * @param method
-     *            the method owned by <code>target</code> that's registered to
-     *            listen to events of type <code>eventType</code>.
-     * 
-     * @since 6.2
-     */
-    protected void removeEventListener(String eventIdentifier, Class eventType,
-            Object target, Method method) {
-        if (eventRouter != null) {
-            eventRouter.removeListener(eventType, target, method);
-        }
-        unlistenEvent(eventIdentifier);
     }
 
     /**
@@ -1061,16 +948,16 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @param eventType
      *            the type of the listened event. Events of this type or its
      *            subclasses activate the listener.
-     * @param object
+     * @param target
      *            the object instance who owns the activation method.
      * @param method
      *            the activation method.
      */
-    public void addListener(Class eventType, Object object, Method method) {
+    public void addListener(Class eventType, Object target, Method method) {
         if (eventRouter == null) {
             eventRouter = new EventRouter();
         }
-        eventRouter.addListener(eventType, object, method);
+        eventRouter.addListener(eventType, target, method);
     }
 
     /**
@@ -1102,16 +989,16 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @param eventType
      *            the type of the listened event. Events of this type or its
      *            subclasses activate the listener.
-     * @param object
+     * @param target
      *            the object instance who owns the activation method.
      * @param methodName
      *            the name of the activation method.
      */
-    public void addListener(Class eventType, Object object, String methodName) {
+    public void addListener(Class eventType, Object target, String methodName) {
         if (eventRouter == null) {
             eventRouter = new EventRouter();
         }
-        eventRouter.addListener(eventType, object, methodName);
+        eventRouter.addListener(eventType, target, methodName);
     }
 
     /**

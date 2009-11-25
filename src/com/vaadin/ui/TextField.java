@@ -87,6 +87,9 @@ public class TextField extends AbstractField {
      */
     private int maxLength = -1;
 
+    private static final String BLUR_EVENT = VTextField.BLUR_EVENT_IDENTIFIER;
+    private static final String FOCUS_EVENT = VTextField.FOCUS_EVENT_IDENTIFIER;
+
     /* Constructors */
 
     /**
@@ -244,6 +247,13 @@ public class TextField extends AbstractField {
     public void changeVariables(Object source, Map variables) {
 
         super.changeVariables(source, variables);
+
+        if (variables.containsKey(FOCUS_EVENT)) {
+            fireFocus(variables.get(FOCUS_EVENT));
+        }
+        if (variables.containsKey(BLUR_EVENT)) {
+            fireBlur(variables.get(BLUR_EVENT));
+        }
 
         // Sets the text
         if (variables.containsKey("text") && !isReadOnly()) {
@@ -551,33 +561,50 @@ public class TextField extends AbstractField {
         requestRepaint();
     }
 
-    @Override
-    protected void handleEvent(String eventIdentifier, String[] parameters) {
-        if (eventIdentifier.equals("focus")) {
-            fireEvent(new FocusEvent(this));
-        } else if (eventIdentifier.equals("blur")) {
-            fireEvent(new BlurEvent(this));
-        }
+    private void fireFocus(Object object) {
+        fireEvent(new FocusEvent(this));
     }
 
+    private void fireBlur(Object object) {
+        fireEvent(new BlurEvent(this));
+    }
+
+    /**
+     * TODO
+     * 
+     * @param listener
+     */
     public void addListener(FocusListener listener) {
-        addEventListener("focus", FocusEvent.class, listener,
+        addListener(FOCUS_EVENT, FocusEvent.class, listener,
                 FocusListener.focusMethod);
     }
 
+    /**
+     * TODO
+     * 
+     * @param listener
+     */
     public void removeListener(FocusListener listener) {
-        removeEventListener("focus", FocusEvent.class, listener,
-                FocusListener.focusMethod);
+        removeListener(FOCUS_EVENT, FocusEvent.class, listener);
     }
 
+    /**
+     * TODO
+     * 
+     * @param listener
+     */
     public void addListener(BlurListener listener) {
-        addEventListener("blur", BlurEvent.class, listener,
+        addListener(BLUR_EVENT, BlurEvent.class, listener,
                 BlurListener.blurMethod);
     }
 
+    /**
+     * TODO
+     * 
+     * @param listener
+     */
     public void removeListener(BlurListener listener) {
-        removeEventListener("blur", BlurEvent.class, listener,
-                BlurListener.blurMethod);
+        removeListener(BLUR_EVENT, BlurEvent.class, listener);
     }
 
 }

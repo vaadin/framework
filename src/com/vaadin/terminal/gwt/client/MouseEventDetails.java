@@ -1,6 +1,6 @@
 package com.vaadin.terminal.gwt.client;
 
-import com.google.gwt.user.client.DOM;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.Event;
 
 /**
@@ -50,15 +50,15 @@ public class MouseEventDetails {
         return shiftKey;
     }
 
-    public MouseEventDetails(Event evt) {
-        button = DOM.eventGetButton(evt);
-        clientX = DOM.eventGetClientX(evt);
-        clientY = DOM.eventGetClientY(evt);
-        altKey = DOM.eventGetAltKey(evt);
-        ctrlKey = DOM.eventGetCtrlKey(evt);
-        metaKey = DOM.eventGetMetaKey(evt);
-        shiftKey = DOM.eventGetShiftKey(evt);
-        type = DOM.eventGetType(evt);
+    public MouseEventDetails(NativeEvent evt) {
+        button = evt.getButton();
+        clientX = evt.getClientX();
+        clientY = evt.getClientY();
+        altKey = evt.getAltKey();
+        ctrlKey = evt.getCtrlKey();
+        metaKey = evt.getMetaKey();
+        shiftKey = evt.getShiftKey();
+        type = Event.getTypeInt(evt.getType());
     }
 
     private MouseEventDetails() {
@@ -66,12 +66,16 @@ public class MouseEventDetails {
 
     @Override
     public String toString() {
+        return serialize();
+    }
+
+    public String serialize() {
         return "" + button + DELIM + clientX + DELIM + clientY + DELIM + altKey
                 + DELIM + ctrlKey + DELIM + metaKey + DELIM + shiftKey + DELIM
                 + type;
     }
 
-    public static MouseEventDetails deSerialize(String serializedString) {
+    public static MouseEventDetails deserialize(String serializedString) {
         MouseEventDetails instance = new MouseEventDetails();
         String[] fields = serializedString.split(",");
 
@@ -84,6 +88,10 @@ public class MouseEventDetails {
         instance.shiftKey = Boolean.valueOf(fields[6]).booleanValue();
         instance.type = Integer.parseInt(fields[7]);
         return instance;
+    }
+
+    public Class<MouseEventDetails> getType() {
+        return MouseEventDetails.class;
     }
 
     public boolean isDoubleClick() {

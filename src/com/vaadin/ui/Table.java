@@ -1966,7 +1966,7 @@ public class Table extends AbstractSelect implements Action.Container,
                     propertyId = columnIdMap.get(colkey);
                 }
                 MouseEventDetails evt = MouseEventDetails
-                        .deSerialize((String) variables.get("clickEvent"));
+                        .deserialize((String) variables.get("clickEvent"));
                 Item item = getItem(itemId);
                 if (item != null) {
                     fireEvent(new ItemClickEvent(this, item, itemId,

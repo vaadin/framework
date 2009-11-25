@@ -26,7 +26,7 @@ public class EventRouter implements MethodEventSource {
     /**
      * List of registered listeners.
      */
-    private Set listenerList = null;
+    private Set<ListenerMethod> listenerList = null;
 
     /*
      * Registers a new listener with the specified activation method to listen
@@ -35,7 +35,7 @@ public class EventRouter implements MethodEventSource {
      */
     public void addListener(Class eventType, Object object, Method method) {
         if (listenerList == null) {
-            listenerList = new LinkedHashSet();
+            listenerList = new LinkedHashSet<ListenerMethod>();
         }
         listenerList.add(new ListenerMethod(eventType, object, method));
     }
@@ -47,7 +47,7 @@ public class EventRouter implements MethodEventSource {
      */
     public void addListener(Class eventType, Object object, String methodName) {
         if (listenerList == null) {
-            listenerList = new LinkedHashSet();
+            listenerList = new LinkedHashSet<ListenerMethod>();
         }
         listenerList.add(new ListenerMethod(eventType, object, methodName));
     }
@@ -59,9 +59,9 @@ public class EventRouter implements MethodEventSource {
      */
     public void removeListener(Class eventType, Object target) {
         if (listenerList != null) {
-            final Iterator i = listenerList.iterator();
+            final Iterator<ListenerMethod> i = listenerList.iterator();
             while (i.hasNext()) {
-                final ListenerMethod lm = (ListenerMethod) i.next();
+                final ListenerMethod lm = i.next();
                 if (lm.matches(eventType, target)) {
                     i.remove();
                     return;
@@ -77,9 +77,9 @@ public class EventRouter implements MethodEventSource {
      */
     public void removeListener(Class eventType, Object target, Method method) {
         if (listenerList != null) {
-            final Iterator i = listenerList.iterator();
+            final Iterator<ListenerMethod> i = listenerList.iterator();
             while (i.hasNext()) {
-                final ListenerMethod lm = (ListenerMethod) i.next();
+                final ListenerMethod lm = i.next();
                 if (lm.matches(eventType, target, method)) {
                     i.remove();
                     return;
@@ -109,9 +109,9 @@ public class EventRouter implements MethodEventSource {
 
         // Remove the listeners
         if (listenerList != null) {
-            final Iterator i = listenerList.iterator();
+            final Iterator<ListenerMethod> i = listenerList.iterator();
             while (i.hasNext()) {
-                final ListenerMethod lm = (ListenerMethod) i.next();
+                final ListenerMethod lm = i.next();
                 if (lm.matches(eventType, target, method)) {
                     i.remove();
                     return;
@@ -141,10 +141,21 @@ public class EventRouter implements MethodEventSource {
             // Send the event to all listeners. The listeners themselves
             // will filter out unwanted events.
 
-            final Iterator i = listenerList.iterator();
+            final Iterator<ListenerMethod> i = listenerList.iterator();
             while (i.hasNext()) {
-                ((ListenerMethod) i.next()).receiveEvent(event);
+                (i.next()).receiveEvent(event);
             }
         }
+    }
+
+    public boolean hasListeners(Class<?> eventType) {
+        if (listenerList != null) {
+            for (ListenerMethod lm : listenerList) {
+                if (lm.isType(eventType)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

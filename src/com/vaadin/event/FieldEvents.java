@@ -83,41 +83,4 @@ public interface FieldEvents {
         public void blur(BlurEvent event);
     }
 
-    /**
-     * <code>ValueChangeEvent</code> class for holding additional event
-     * information. Fired when the value of a <code>Field</code> changes.
-     * 
-     * @since 6.2
-     */
-    public class ValueChangeEvent extends Component.Event {
-
-        private static final long serialVersionUID = -7644184999481404162L;
-
-        public ValueChangeEvent(Component source) {
-            super(source);
-        }
-    }
-
-    /**
-     * <code>ValueChangeListener</code> interface for listening for
-     * <code>ValueChangeEvent</code> fired by a <code>Field</code>.
-     * 
-     * @see ValueChangeEvent
-     * @since 6.2
-     */
-    public interface ValueChangeListener extends ComponentEventListener {
-
-        public static final Method valueChangeMethod = ReflectTools.findMethod(
-                ValueChangeListener.class, "valueChange",
-                ValueChangeEvent.class);
-
-        /**
-         * Component value was changed
-         * 
-         * @param event
-         *            Component change event.
-         */
-        public void valueChange(ValueChangeEvent event);
-    }
-
 }

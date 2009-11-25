@@ -333,7 +333,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
             Object id = itemIdMapper.get(key);
             MouseEventDetails details = MouseEventDetails
-                    .deSerialize((String) variables.get("clickEvent"));
+                    .deserialize((String) variables.get("clickEvent"));
             Item item = getItem(id);
             if (item != null) {
                 fireEvent(new ItemClickEvent(this, item, id, null, details));

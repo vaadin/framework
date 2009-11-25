@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Container;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.StyleConstants;
@@ -35,6 +36,8 @@ public class VGridLayout extends SimplePanel implements Paintable, Container,
         ClickHandler {
 
     public static final String CLASSNAME = "v-gridlayout";
+
+    public static final String CLICK_EVENT_IDENTIFIER = "click";
 
     private DivElement margin = Document.get().createDivElement();
 
@@ -1029,25 +1032,34 @@ public class VGridLayout extends SimplePanel implements Paintable, Container,
     }
 
     public void onClick(ClickEvent event) {
-        String col = null;
-        String row = null;
+        // This is only called if there are click listeners registered on server
+        // side
 
-        Element clickTarget = (Element) event.getNativeEvent().getEventTarget()
-                .cast();
+        Paintable childComponent = getChildComponent((Element) event
+                .getNativeEvent().getEventTarget().cast());
+        final MouseEventDetails details = new MouseEventDetails(event
+                .getNativeEvent());
+
+        Object[] parameters = new Object[] { details, childComponent };
+        client.updateVariable(client.getPid(this), CLICK_EVENT_IDENTIFIER,
+                parameters, true);
+
+    }
+
+    private Paintable getChildComponent(Element element) {
         Element rootElement = getElement();
-        while (clickTarget != null && clickTarget != rootElement) {
-            Paintable paintable = client.getPaintable(clickTarget);
+        while (element != null && element != rootElement) {
+            Paintable paintable = client.getPaintable(element);
             if (paintable != null) {
                 Cell cell = paintableToCell.get(paintable);
-                row = String.valueOf(cell.row);
-                col = String.valueOf(cell.col);
-                break;
+                if (cell != null) {
+                    return paintable;
+                }
             }
-            clickTarget = DOM.getParent(clickTarget);
+            element = DOM.getParent(element);
         }
 
-        client.getEventHandler(this).fireEvent("click", "left", row, col);
-
+        return null;
     }
 
 }

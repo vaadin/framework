@@ -17,6 +17,7 @@ import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Scrollable;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VPanel;
 
 /**
@@ -32,6 +33,8 @@ import com.vaadin.terminal.gwt.client.ui.VPanel;
 public class Panel extends AbstractComponentContainer implements Scrollable,
         ComponentContainer.ComponentAttachListener,
         ComponentContainer.ComponentDetachListener, Action.Container {
+
+    private static final String CLICK_EVENT = VPanel.CLICK_EVENT_IDENTIFIER;
 
     public static final String STYLE_LIGHT = "light";
 
@@ -327,6 +330,10 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     public void changeVariables(Object source, Map variables) {
         super.changeVariables(source, variables);
 
+        if (variables.containsKey(CLICK_EVENT)) {
+            fireClick(variables.get(CLICK_EVENT));
+        }
+
         // Get new size
         final Integer newWidth = (Integer) variables.get("width");
         final Integer newHeight = (Integer) variables.get("height");
@@ -546,22 +553,25 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         }
     }
 
-    @Override
-    protected void handleEvent(String eventIdentifier, String[] parameters) {
-        if (eventIdentifier.equals("click")) {
-            fireEvent(new ClickEvent(this, parameters[0]));
-        }
-    }
-
     public void addListener(ClickListener listener) {
-        addEventListener("click", ClickEvent.class, listener,
+        addListener(CLICK_EVENT, ClickEvent.class, listener,
                 ClickListener.clickMethod);
     }
 
     public void removeListener(ClickListener listener) {
-        removeEventListener("click", ClickEvent.class, listener,
-                ClickListener.clickMethod);
+        removeListener(CLICK_EVENT, ClickEvent.class, listener);
+    }
 
+    /**
+     * Fire a click event to all click listeners.
+     * 
+     * @param object
+     *            The raw "value" of the variable change from the client side.
+     */
+    private void fireClick(Object object) {
+        MouseEventDetails mouseDetails = MouseEventDetails
+                .deserialize((String) object);
+        fireEvent(new ClickEvent(this, mouseDetails));
     }
 
 }

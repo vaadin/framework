@@ -1115,7 +1115,7 @@ public class ApplicationConnection {
 
         // register the listened events by the server-side to the event-handler
         // of the component
-        componentDetail.getEventHandler().registerEventsFromUIDL(uidl);
+        componentDetail.registerEventListenersFromUIDL(uidl);
 
         // Visibility
         boolean visible = !uidl.getBooleanAttribute("invisible");
@@ -1785,16 +1785,19 @@ public class ApplicationConnection {
     }
 
     /**
-     * returns the event handler for the given paintable
+     * Checks if there is a registered server side listener for the event. The
+     * list of events which has server side listeners is updated automatically
+     * before the component is updated so the value is correct if called from
+     * updatedFromUIDL.
      * 
-     * @param paintable
-     * @return
+     * @param eventIdentifier
+     *            The identifier for the event
+     * @return true if at least one listener has been registered on server side
+     *         for the event identified by eventIdentifier.
      */
-    public ComponentEventHandler getEventHandler(Paintable paintable) {
-        ComponentDetail componentDetail = idToPaintableDetail
-                .get(getPid(paintable));
-
-        return componentDetail.getEventHandler();
+    public boolean hasEventListeners(Paintable paintable, String eventIdentifier) {
+        return idToPaintableDetail.get(getPid(paintable)).hasEventListeners(
+                eventIdentifier);
     }
 
 }

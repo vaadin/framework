@@ -6,43 +6,65 @@ package com.vaadin.event;
 
 import java.lang.reflect.Method;
 
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.Component;
 
 public interface MouseEvents {
 
     /**
-     * defines the clicked mouse button for ClickEvents
-     */
-    public enum MouseButton {
-        LEFT, RIGHT, MIDDLE
-    }
-
-    /**
      * <code>ClickEvent</code> class for holding additional event information.
      * Fired when the user clicks on a <code>Component</code>.
+     * 
+     * ClickEvents are rather terminal dependent events. Correct values in event
+     * details cannot be guaranteed.
      * 
      * @since 6.2
      */
     public class ClickEvent extends Component.Event {
+        public static final int BUTTON_LEFT = MouseEventDetails.BUTTON_LEFT;
+        public static final int BUTTON_MIDDLE = MouseEventDetails.BUTTON_MIDDLE;
+        public static final int BUTTON_RIGHT = MouseEventDetails.BUTTON_RIGHT;
 
-        private MouseButton mouseButton;
+        private MouseEventDetails details;
 
         private static final long serialVersionUID = -7644184999481404162L;
 
-        public ClickEvent(Component source, String mouseButton) {
+        public ClickEvent(Component source, MouseEventDetails mouseEventDetails) {
             super(source);
-            if (mouseButton.equals("left")) {
-                this.mouseButton = MouseButton.LEFT;
-            } else if (mouseButton.equals("right")) {
-                this.mouseButton = MouseButton.RIGHT;
-            } else {
-                this.mouseButton = MouseButton.MIDDLE;
-            }
+            this.details = mouseEventDetails;
         }
 
-        public MouseButton getMouseButton() {
-            return mouseButton;
+        public int getButton() {
+            return details.getButton();
+        }
+
+        public int getClientX() {
+            return details.getClientX();
+        }
+
+        public int getClientY() {
+            return details.getClientY();
+        }
+
+        public boolean isDoubleClick() {
+            return details.isDoubleClick();
+        }
+
+        public boolean isAltKey() {
+            return details.isAltKey();
+        }
+
+        public boolean isCtrlKey() {
+            return details.isCtrlKey();
+        }
+
+        public boolean isMetaKey() {
+            return details.isMetaKey();
+        }
+
+        public boolean isShiftKey() {
+            return details.isShiftKey();
         }
 
     }

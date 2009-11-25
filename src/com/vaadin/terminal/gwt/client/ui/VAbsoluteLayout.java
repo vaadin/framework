@@ -10,6 +10,9 @@ import java.util.Map.Entry;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
@@ -18,18 +21,22 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VCaption;
 
-public class VAbsoluteLayout extends ComplexPanel implements Container {
+public class VAbsoluteLayout extends ComplexPanel implements Container,
+        ClickHandler {
 
     /** Tag name for widget creation */
     public static final String TAGNAME = "absolutelayout";
 
     /** Class name, prefix in styling */
     public static final String CLASSNAME = "v-absolutelayout";
+
+    public static final String CLICK_EVENT_IDENTIFIER = "click";
 
     private DivElement marginElement;
 
@@ -55,6 +62,7 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
         canvas.getStyle().setProperty("overflow", "hidden");
         marginElement.appendChild(canvas);
         getElement().appendChild(marginElement);
+        addDomHandler(this, ClickEvent.getType());
     }
 
     public RenderSpace getAllocatedSpace(Widget child) {
@@ -129,6 +137,8 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
             return;
         }
 
+        handleHandlerRegistration();
+
         HashSet<String> unrenderedPids = new HashSet<String>(
                 pidToComponentWrappper.keySet());
 
@@ -146,6 +156,26 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
             absoluteWrapper.destroy();
         }
         rendering = false;
+    }
+
+    private HandlerRegistration clickHandlerRegistration;
+
+    private void handleHandlerRegistration() {
+        // Handle registering/unregistering of click handler depending on if
+        // server side listeners have been added or removed.
+        if (client.hasEventListeners(this, CLICK_EVENT_IDENTIFIER)) {
+            if (clickHandlerRegistration == null) {
+                clickHandlerRegistration = addDomHandler(this, ClickEvent
+                        .getType());
+            }
+        } else {
+            if (clickHandlerRegistration != null) {
+                clickHandlerRegistration.removeHandler();
+                clickHandlerRegistration = null;
+
+            }
+        }
+
     }
 
     private AbsoluteWrapper getWrapper(ApplicationConnection client,
@@ -388,6 +418,36 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
             measureElement.getStyle().setProperty("width", cssLength);
             return measureElement.getOffsetWidth();
         }
+    }
+
+    public void onClick(ClickEvent event) {
+        // This is only called if there are click listeners registered on server
+        // side
+        Paintable childComponent = getChildComponent((Element) event
+                .getNativeEvent().getEventTarget().cast());
+        final MouseEventDetails details = new MouseEventDetails(event
+                .getNativeEvent());
+
+        Object[] parameters = new Object[] { details, childComponent };
+
+        client.updateVariable(client.getPid(this), CLICK_EVENT_IDENTIFIER,
+                parameters, true);
+    }
+
+    private Paintable getChildComponent(Element target) {
+        while (target != null && target != canvas) {
+            Paintable paintable = client.getPaintable(target);
+            if (paintable != null) {
+                String pid = client.getPid(paintable);
+                AbsoluteWrapper wrapper = pidToComponentWrappper.get(pid);
+                if (wrapper != null) {
+                    return paintable;
+                }
+            }
+            target = DOM.getParent(target);
+        }
+
+        return null;
     }
 
 }

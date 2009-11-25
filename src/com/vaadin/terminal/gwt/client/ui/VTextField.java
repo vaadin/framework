@@ -54,6 +54,9 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
 
     private static final String CLASSNAME_PROMPT = "prompt";
     private static final String ATTR_INPUTPROMPT = "prompt";
+    public static final String FOCUS_EVENT_IDENTIFIER = "focus";
+    public static final String BLUR_EVENT_IDENTIFIER = "blur";
+
     private String inputPrompt = null;
     private boolean prompting = false;
 
@@ -195,7 +198,10 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             }
         }
         focusedTextField = this;
-        client.getEventHandler(this).fireEvent("focus", (String[]) null);
+        if (client.hasEventListeners(this, FOCUS_EVENT_IDENTIFIER)) {
+            client.updateVariable(client.getPid(this), FOCUS_EVENT_IDENTIFIER,
+                    "", true);
+        }
     }
 
     public void onBlur(BlurEvent event) {
@@ -208,7 +214,10 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             addStyleDependentName(CLASSNAME_PROMPT);
         }
         onChange(null);
-        client.getEventHandler(this).fireEvent("blur", (String[]) null);
+        if (client.hasEventListeners(this, BLUR_EVENT_IDENTIFIER)) {
+            client.updateVariable(client.getPid(this), BLUR_EVENT_IDENTIFIER,
+                    "", true);
+        }
     }
 
     private void setPrompting(boolean prompting) {

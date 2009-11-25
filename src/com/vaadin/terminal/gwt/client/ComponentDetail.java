@@ -7,7 +7,7 @@ import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 
 class ComponentDetail {
 
-    private ComponentEventHandler eventHandler;
+    private EventListenerRegister eventListenerRegister = new EventListenerRegister();
     private Paintable component;
     private TooltipInfo tooltipInfo = new TooltipInfo();
     private String pid;
@@ -16,10 +16,6 @@ class ComponentDetail {
             Paintable component) {
         this.component = component;
         this.pid = pid;
-
-        // create the event handler for this component
-        this.eventHandler = new ComponentEventHandler(this, client);
-
     }
 
     /**
@@ -108,8 +104,12 @@ class ComponentDetail {
         }
     }
 
-    public ComponentEventHandler getEventHandler() {
-        return eventHandler;
+    void registerEventListenersFromUIDL(UIDL uidl) {
+        eventListenerRegister.registerEventListenersFromUIDL(uidl);
+    }
+
+    public boolean hasEventListeners(String eventIdentifier) {
+        return eventListenerRegister.hasEventListeners(eventIdentifier);
     }
 
 }
