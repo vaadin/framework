@@ -8,6 +8,7 @@ import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.terminal.ExternalResource;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
@@ -28,19 +29,6 @@ public class TestListeners extends Application implements LayoutClickListener,
         setMainWindow(w);
         HorizontalLayout hl = new HorizontalLayout();
         w.setContent(hl);
-        // Panel p = new Panel("My panel");
-        // p.addListener(new ClickListener() {
-        //
-        // public void click(ClickEvent event) {
-        // getMainWindow().showNotification("Clicked!");
-        //
-        // }
-        // });
-        // w.addComponent(p);
-        // if (true) {
-        // return;
-        // }
-        // VerticalLayout vl = new VerticalLayout();
 
         final AbsoluteLayout al = new AbsoluteLayout();
         al.setWidth("200px");
@@ -186,7 +174,17 @@ public class TestListeners extends Application implements LayoutClickListener,
     public void click(ClickEvent event) {
         getMainWindow().showNotification(
                 "Clicked on " + event.getComponent() + " using "
-                        + event.getButton());
+                        + getButton(event));
+    }
+
+    private String getButton(ClickEvent event) {
+        if (event.getButton() == MouseEventDetails.BUTTON_LEFT) {
+            return "left";
+        } else if (event.getButton() == MouseEventDetails.BUTTON_RIGHT) {
+            return "right";
+        } else {
+            return "middle";
+        }
     }
 
     public void focus(FocusEvent event) {

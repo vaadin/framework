@@ -553,11 +553,29 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         }
     }
 
+    /**
+     * Add a click listener to the Panel. The listener is called whenever the
+     * user clicks inside the Panel. Also when the click targets a component
+     * inside the Panel, provided the targeted component does not prevent the
+     * click event from propagating.
+     * 
+     * Use {@link #removeListener(ClickListener)} to remove the listener.
+     * 
+     * @param listener
+     *            The listener to add
+     */
     public void addListener(ClickListener listener) {
         addListener(CLICK_EVENT, ClickEvent.class, listener,
                 ClickListener.clickMethod);
     }
 
+    /**
+     * Remove a click listener from the Panel. The listener should earlier have
+     * been added using {@link #addListener(ClickListener)}.
+     * 
+     * @param listener
+     *            The listener to remove
+     */
     public void removeListener(ClickListener listener) {
         removeListener(CLICK_EVENT, ClickEvent.class, listener);
     }

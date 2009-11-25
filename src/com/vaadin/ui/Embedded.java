@@ -420,11 +420,28 @@ public class Embedded extends AbstractComponent {
         }
     }
 
+    /**
+     * Add a click listener to the component. The listener is called whenever
+     * the user clicks inside the component. Depending on the content the event
+     * may be blocked and in that case no event is fired.
+     * 
+     * Use {@link #removeListener(ClickListener)} to remove the listener.
+     * 
+     * @param listener
+     *            The listener to add
+     */
     public void addListener(ClickListener listener) {
         addListener(CLICK_EVENT, ClickEvent.class, listener,
                 ClickListener.clickMethod);
     }
 
+    /**
+     * Remove a click listener from the component. The listener should earlier
+     * have been added using {@link #addListener(ClickListener)}.
+     * 
+     * @param listener
+     *            The listener to remove
+     */
     public void removeListener(ClickListener listener) {
         removeListener(CLICK_EVENT, ClickEvent.class, listener);
     }
