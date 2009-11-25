@@ -171,7 +171,7 @@
 	
 	<target name="start-liferay">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-liferay-5.2.3" />
-		<copy file="integration-testscripts/sampler_deployment_liferay.tpl" tofile="integration-testscripts/integration-test-liferay-5.2.3-sampler.html" overwrite="true" />
+		<copy file="integration-testscripts/sampler_deployment_liferay.html" tofile="integration-testscripts/integration-test-liferay-5.2.3-sampler.html" overwrite="true" />
 	</target>
 
 	<target name="stop-liferay">
