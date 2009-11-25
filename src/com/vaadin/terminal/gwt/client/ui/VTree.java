@@ -170,17 +170,6 @@ public class VTree extends FlowPanel implements Paintable {
             treeNode.setSelected(false);
         }
 
-        Object[] foo = new Object[] { new Integer(33), new Float(3.2f),
-                new Long(222), this, "bar", true, new Double(3.33332) };
-        client.updateVariable(paintableId, "foo", foo, false);
-
-        HashMap<String, Object> bar = new HashMap<String, Object>();
-        bar.put("paintable", this);
-        bar.put("String", "bar");
-        bar.put("Integer", 33);
-
-        client.updateVariable(paintableId, "bar", bar, false);
-
         client.updateVariable(paintableId, "selected", selectedIds
                 .toArray(new String[selectedIds.size()]), immediate);
     }
