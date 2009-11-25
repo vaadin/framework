@@ -51,7 +51,7 @@ public class VTablePaging extends Composite implements Table, Paintable,
 
     private int selectMode = Table.SELECT_MODE_NONE;
 
-    private final ArrayList selectedRowKeys = new ArrayList();
+    private final ArrayList<String> selectedRowKeys = new ArrayList<String>();
 
     private int totalRows;
 
@@ -108,10 +108,11 @@ public class VTablePaging extends Composite implements Table, Paintable,
             }
 
             if (uidl.hasAttribute("selected")) {
-                final Set selectedKeys = uidl
+                final Set<String> selectedKeys = uidl
                         .getStringArrayVariableAsSet("selected");
                 selectedRowKeys.clear();
-                for (final Iterator it = selectedKeys.iterator(); it.hasNext();) {
+                for (final Iterator<String> it = selectedKeys.iterator(); it
+                        .hasNext();) {
                     selectedRowKeys.add(it.next());
                 }
             }
@@ -169,10 +170,10 @@ public class VTablePaging extends Composite implements Table, Paintable,
     /**
      * Updates row data from uidl. UpdateFromUIDL delegates updating tBody to
      * this method.
-     *
+     * 
      * Updates may be to different part of tBody, depending on update type. It
      * can be initial row data, scroll up, scroll down...
-     *
+     * 
      * @param uidl
      *            which contains row data
      */
@@ -299,7 +300,7 @@ public class VTablePaging extends Composite implements Table, Paintable,
     /**
      * Abstraction of table cell content. In needs to know on which row it is in
      * case of context click.
-     *
+     * 
      * @author mattitahvonen
      */
     public class BodyCell extends SimplePanel {
@@ -355,7 +356,7 @@ public class VTablePaging extends Composite implements Table, Paintable,
         /**
          * This method is used to set row status. Does not change value on
          * server.
-         *
+         * 
          * @param selected
          */
         public void setSelected(boolean sel) {
@@ -379,7 +380,7 @@ public class VTablePaging extends Composite implements Table, Paintable,
         /**
          * Toggles rows select state. Also updates state to server according to
          * tables immediate flag.
-         *
+         * 
          */
         public void toggleSelected() {
             if (selected) {
@@ -390,13 +391,13 @@ public class VTablePaging extends Composite implements Table, Paintable,
                 }
                 setSelected(true);
             }
-            client.updateVariable(id, "selected", selectedRowKeys.toArray(),
-                    immediate);
+            client.updateVariable(id, "selected", selectedRowKeys
+                    .toArray(new String[selectedRowKeys.size()]), immediate);
         }
 
         /**
          * Shows context menu for this row.
-         *
+         * 
          * @param event
          *            Event which triggered context menu. Correct place for
          *            context menu can be determined with it.

@@ -33,7 +33,7 @@ public interface VariableOwner extends Serializable {
      * @param variables
      *            the Mapping from variable names to new variable values.
      */
-    public void changeVariables(Object source, Map variables);
+    public void changeVariables(Object source, Map<String, Object> variables);
 
     /**
      * <p>

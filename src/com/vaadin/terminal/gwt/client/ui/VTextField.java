@@ -56,6 +56,7 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
     private static final String ATTR_INPUTPROMPT = "prompt";
     private String inputPrompt = null;
     private boolean prompting = false;
+    private boolean listenFocus;
 
     public VTextField() {
         this(DOM.createInputText());
@@ -97,6 +98,8 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         } else {
             setReadOnly(false);
         }
+
+        listenFocus = uidl.getBooleanAttribute("listenFocus");
 
         inputPrompt = uidl.getStringAttribute(ATTR_INPUTPROMPT);
 
@@ -195,6 +198,9 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             }
         }
         focusedTextField = this;
+        if (listenFocus) {
+            client.updateVariable(id, "focus", true, true);
+        }
     }
 
     public void onBlur(BlurEvent event) {

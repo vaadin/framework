@@ -820,7 +820,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * comment here, we use the default documentation from implemented
      * interface.
      */
-    public void changeVariables(Object source, Map variables) {
+    public void changeVariables(Object source, Map<String, Object> variables) {
     }
 
     /* General event framework */

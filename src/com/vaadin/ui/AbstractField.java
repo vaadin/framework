@@ -34,15 +34,15 @@ import com.vaadin.terminal.PaintTarget;
  * </p>
  * 
  * <p>
- * AbstractField also provides the {@link com.vaadin.data.Buffered}
- * interface for buffering the data source value. By default the Field is in
- * write through-mode and {@link #setWriteThrough(boolean)}should be called to
- * enable buffering.
+ * AbstractField also provides the {@link com.vaadin.data.Buffered} interface
+ * for buffering the data source value. By default the Field is in write
+ * through-mode and {@link #setWriteThrough(boolean)}should be called to enable
+ * buffering.
  * </p>
  * 
  * <p>
- * The class also supports {@link com.vaadin.data.Validator validators}
- * to make sure the value contained in the field is valid.
+ * The class also supports {@link com.vaadin.data.Validator validators} to make
+ * sure the value contained in the field is valid.
  * </p>
  * 
  * @author IT Mill Ltd.
@@ -940,7 +940,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     }
 
     @Override
-    public void changeVariables(Object source, Map variables) {
+    public void changeVariables(Object source, Map<String, Object> variables) {
         super.changeVariables(source, variables);
 
     }

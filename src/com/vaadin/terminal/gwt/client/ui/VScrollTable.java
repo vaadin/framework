@@ -1658,7 +1658,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
 
                 // update variable to server
                 client.updateVariable(paintableId, "collapsedcolumns",
-                        collapsedColumns.toArray(), false);
+                        collapsedColumns.toArray(new String[collapsedColumns
+                                .size()]), false);
                 // let rowRequestHandler determine proper rows
                 rowRequestHandler.refreshContent();
             }
@@ -2449,8 +2450,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
                                 // might
                                 // require changes to "clickEvent" immediateness
                                 // also.
-                                client.updateVariable(paintableId, "selected",
-                                        selectedRowKeys.toArray(), immediate);
+                                client
+                                        .updateVariable(
+                                                paintableId,
+                                                "selected",
+                                                selectedRowKeys
+                                                        .toArray(new String[selectedRowKeys
+                                                                .size()]),
+                                                immediate);
                             }
                             break;
                         case Event.ONCONTEXTMENU:

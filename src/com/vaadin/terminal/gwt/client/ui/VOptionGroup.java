@@ -58,8 +58,8 @@ public class VOptionGroup extends VOptionGroupBase {
     }
 
     @Override
-    protected Object[] getSelectedItems() {
-        return selectedKeys.toArray();
+    protected String[] getSelectedItems() {
+        return selectedKeys.toArray(new String[selectedKeys.size()]);
     }
 
     @Override

@@ -31,7 +31,7 @@ abstract class VOptionGroupBase extends Composite implements Paintable, Field,
 
     protected String id;
 
-    protected Set selectedKeys;
+    protected Set<String> selectedKeys;
 
     private boolean immediate;
 
@@ -215,10 +215,10 @@ abstract class VOptionGroupBase extends Composite implements Paintable, Field,
 
     protected abstract void buildOptions(UIDL uidl);
 
-    protected abstract Object[] getSelectedItems();
+    protected abstract String[] getSelectedItems();
 
-    protected Object getSelectedItem() {
-        final Object[] sel = getSelectedItems();
+    protected String getSelectedItem() {
+        final String[] sel = getSelectedItems();
         if (sel.length > 0) {
             return sel[0];
         } else {

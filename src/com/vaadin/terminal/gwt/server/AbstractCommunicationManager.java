@@ -70,7 +70,7 @@ import com.vaadin.ui.Upload.UploadException;
  * communication system between the client code (compiled with GWT into
  * JavaScript) and the server side components. Its client side counterpart is
  * {@link ApplicationConnection}.
- *
+ * 
  * A server side component sends its state to the client in a paint request (see
  * {@link Paintable} and {@link PaintTarget} on the server side). The client
  * widget receives these paint requests as calls to
@@ -78,7 +78,7 @@ import com.vaadin.ui.Upload.UploadException;
  * component communicates back to the server by sending a list of variable
  * changes (see {@link ApplicationConnection#updateVariable()} and
  * {@link VariableOwner#changeVariables(Object, Map)}).
- *
+ * 
  * TODO Document better!
  */
 @SuppressWarnings("serial")
@@ -87,13 +87,13 @@ public abstract class AbstractCommunicationManager implements
 
     /**
      * Generic interface of a (HTTP or Portlet) request to the application.
-     *
+     * 
      * This is a wrapper interface that allows
      * {@link AbstractCommunicationManager} to use a unified API.
-     *
+     * 
      * @see javax.servlet.ServletRequest
      * @see javax.portlet.PortletRequest
-     *
+     * 
      * @author peholmst
      */
     protected interface Request {
@@ -101,9 +101,9 @@ public abstract class AbstractCommunicationManager implements
         /**
          * Gets a {@link Session} wrapper implementation representing the
          * session for which this request was sent.
-         *
+         * 
          * Multiple Vaadin applications can be associated with a single session.
-         *
+         * 
          * @return Session
          */
         public Session getSession();
@@ -111,17 +111,17 @@ public abstract class AbstractCommunicationManager implements
         /**
          * Are the applications in this session running in a portlet or directly
          * as servlets.
-         *
+         * 
          * @return true if in a portlet
          */
         public boolean isRunningInPortlet();
 
         /**
          * Get the named HTTP or portlet request parameter.
-         *
+         * 
          * @see javax.servlet.ServletRequest#getParameter(String)
          * @see javax.portlet.PortletRequest#getParameter(String)
-         *
+         * 
          * @param name
          * @return
          */
@@ -130,7 +130,7 @@ public abstract class AbstractCommunicationManager implements
         /**
          * Returns the length of the request content that can be read from the
          * input stream returned by {@link #getInputStream()}.
-         *
+         * 
          * @return content length in bytes
          */
         public int getContentLength();
@@ -139,7 +139,7 @@ public abstract class AbstractCommunicationManager implements
          * Returns an input stream from which the request content can be read.
          * The request content length can be obtained with
          * {@link #getContentLength()} without reading the full stream contents.
-         *
+         * 
          * @return
          * @throws IOException
          */
@@ -148,7 +148,7 @@ public abstract class AbstractCommunicationManager implements
         /**
          * Returns the request identifier that identifies the target Vaadin
          * window for the request.
-         *
+         * 
          * @return String identifier for the request target window
          */
         public String getRequestID();
@@ -168,7 +168,7 @@ public abstract class AbstractCommunicationManager implements
         /**
          * Gets the underlying request object. The request is typically either a
          * {@link ServletRequest} or a {@link PortletRequest}.
-         *
+         * 
          * @return wrapped request object
          */
         public Object getWrappedRequest();
@@ -177,20 +177,20 @@ public abstract class AbstractCommunicationManager implements
 
     /**
      * Generic interface of a (HTTP or Portlet) response from the application.
-     *
+     * 
      * This is a wrapper interface that allows
      * {@link AbstractCommunicationManager} to use a unified API.
-     *
+     * 
      * @see javax.servlet.ServletResponse
      * @see javax.portlet.PortletResponse
-     *
+     * 
      * @author peholmst
      */
     protected interface Response {
 
         /**
          * Gets the output stream to which the response can be written.
-         *
+         * 
          * @return
          * @throws IOException
          */
@@ -199,7 +199,7 @@ public abstract class AbstractCommunicationManager implements
         /**
          * Sets the MIME content type for the response to be communicated to the
          * browser.
-         *
+         * 
          * @param type
          */
         public void setContentType(String type);
@@ -207,7 +207,7 @@ public abstract class AbstractCommunicationManager implements
         /**
          * Gets the wrapped response object, usually a class implementing either
          * {@link ServletResponse} or {@link PortletResponse}.
-         *
+         * 
          * @return wrapped request object
          */
         public Object getWrappedResponse();
@@ -216,14 +216,14 @@ public abstract class AbstractCommunicationManager implements
 
     /**
      * Generic wrapper interface for a (HTTP or Portlet) session.
-     *
+     * 
      * Several applications can be associated with a single session.
-     *
+     * 
      * TODO Document me!
-     *
+     * 
      * @see javax.servlet.http.HttpSession
      * @see javax.portlet.PortletSession
-     *
+     * 
      * @author peholmst
      */
     protected interface Session {
@@ -242,7 +242,7 @@ public abstract class AbstractCommunicationManager implements
 
     /**
      * TODO Document me!
-     *
+     * 
      * @author peholmst
      */
     protected interface Callback {
@@ -269,6 +269,17 @@ public abstract class AbstractCommunicationManager implements
     private static final int VAR_NAME = 2;
     private static final int VAR_TYPE = 3;
     private static final int VAR_VALUE = 0;
+
+    private static final char VTYPE_PAINTABLE = 'p';
+    private static final char VTYPE_BOOLEAN = 'b';
+    private static final char VTYPE_DOUBLE = 'd';
+    private static final char VTYPE_FLOAT = 'f';
+    private static final char VTYPE_LONG = 'l';
+    private static final char VTYPE_INTEGER = 'i';
+    private static final char VTYPE_STRING = 's';
+    private static final char VTYPE_ARRAY = 'a';
+    private static final char VTYPE_STRINGARRAY = 'c';
+    private static final char VTYPE_MAP = 'm';
 
     private static final String VAR_RECORD_SEPARATOR = "\u001e";
 
@@ -306,7 +317,7 @@ public abstract class AbstractCommunicationManager implements
 
     /**
      * TODO New constructor - document me!
-     *
+     * 
      * @param application
      */
     public AbstractCommunicationManager(Application application) {
@@ -317,26 +328,27 @@ public abstract class AbstractCommunicationManager implements
     /**
      * Create an upload handler that is appropriate to the context in which the
      * application is being run (servlet or portlet).
-     *
+     * 
      * @return new {@link FileUpload} instance
      */
     protected abstract FileUpload createFileUpload();
 
     /**
      * TODO New method - document me!
-     *
+     * 
      * @param upload
      * @param request
      * @return
      * @throws IOException
      * @throws FileUploadException
      */
-    protected abstract FileItemIterator getUploadItemIterator(FileUpload upload,
-            Request request) throws IOException, FileUploadException;
+    protected abstract FileItemIterator getUploadItemIterator(
+            FileUpload upload, Request request) throws IOException,
+            FileUploadException;
 
     /**
      * TODO New method - document me!
-     *
+     * 
      * @param request
      * @param response
      * @throws IOException
@@ -431,12 +443,13 @@ public abstract class AbstractCommunicationManager implements
 
     /**
      * TODO document
-     *
+     * 
      * @param request
      * @param response
      * @throws IOException
      */
-    protected void sendUploadResponse(Request request, Response response) throws IOException {
+    protected void sendUploadResponse(Request request, Response response)
+            throws IOException {
         response.setContentType("text/html");
         final OutputStream out = response.getOutputStream();
         final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
@@ -448,19 +461,19 @@ public abstract class AbstractCommunicationManager implements
 
     /**
      * Internally process a UIDL request from the client.
-     *
+     * 
      * This method calls
      * {@link #handleVariables(Request, Response, Callback, Application, Window)}
      * to process any changes to variables by the client and then repaints
      * affected components using {@link #paintAfterVariableChanges()}.
-     *
+     * 
      * Also, some cleanup is done when a request arrives for an application that
      * has already been closed.
-     *
+     * 
      * The method handleUidlRequest(...) in subclasses should call this method.
-     *
+     * 
      * TODO better documentation
-     *
+     * 
      * @param request
      * @param response
      * @param callback
@@ -476,7 +489,7 @@ public abstract class AbstractCommunicationManager implements
         final OutputStream out;
 
         repaintAll = (request.getParameter(GET_PARAM_REPAINT_ALL) != null);
-                //|| (request.getSession().isNew()); FIXME What the h*ll is this??
+        // || (request.getSession().isNew()); FIXME What the h*ll is this??
         out = response.getOutputStream();
 
         boolean analyzeLayouts = false;
@@ -554,13 +567,13 @@ public abstract class AbstractCommunicationManager implements
             }
         }
 
-        //out.flush(); - this line will cause errors when deployed on GateIn.
+        // out.flush(); - this line will cause errors when deployed on GateIn.
         out.close();
     }
 
     /**
      * TODO document
-     *
+     * 
      * @param request
      * @param response
      * @param callback
@@ -916,11 +929,11 @@ public abstract class AbstractCommunicationManager implements
 
     /**
      * TODO document
-     *
+     * 
      * If this method returns false, something was submitted that we did not
      * expect; this is probably due to the client being out-of-sync and sending
      * variable changes for non-existing pids
-     *
+     * 
      * @return true if successful, false if there was an inconsistency
      */
     private boolean handleVariables(Request request, Response response,
@@ -980,20 +993,19 @@ public abstract class AbstractCommunicationManager implements
                         // TODO this should be Map<String, Object>, but the
                         // VariableOwner API does not guarantee the key is a
                         // string
-                        Map<Object, Object> m;
+                        Map<String, Object> m;
                         if (nextVariable != null
                                 && variable[VAR_PID]
                                         .equals(nextVariable[VAR_PID])) {
                             // we have more than one value changes in row for
                             // one variable owner, collect em in HashMap
-                            m = new HashMap<Object, Object>();
+                            m = new HashMap<String, Object>();
                             m.put(variable[VAR_NAME], convertVariableValue(
                                     variable[VAR_TYPE].charAt(0),
                                     variable[VAR_VALUE]));
                         } else {
                             // use optimized single value map
-                            m = Collections.singletonMap(
-                                    (Object) variable[VAR_NAME],
+                            m = Collections.singletonMap(variable[VAR_NAME],
                                     convertVariableValue(variable[VAR_TYPE]
                                             .charAt(0), variable[VAR_VALUE]));
                         }
@@ -1084,7 +1096,7 @@ public abstract class AbstractCommunicationManager implements
     /**
      * Reads the request data from the Request and returns it converted to an
      * UTF-8 string.
-     *
+     * 
      * @param request
      * @return
      * @throws IOException
@@ -1129,13 +1141,13 @@ public abstract class AbstractCommunicationManager implements
     /**
      * Handles an error (exception) that occurred when processing variable
      * changes from the client or a failure of a file upload.
-     *
+     * 
      * For {@link AbstractField} components,
      * {@link AbstractField#handleError(com.vaadin.ui.AbstractComponent.ComponentErrorEvent)}
      * is called. In all other cases (or if the field does not handle the
      * error), {@link ErrorListener#terminalError(ErrorEvent)} for the
      * application error handler is called.
-     *
+     * 
      * @param application
      * @param owner
      *            component that the error concerns
@@ -1174,28 +1186,34 @@ public abstract class AbstractCommunicationManager implements
     private Object convertVariableValue(char variableType, String strValue) {
         Object val = null;
         switch (variableType) {
-        case 'a':
+        case VTYPE_ARRAY:
+            val = convertArray(strValue);
+            break;
+        case VTYPE_MAP:
+            val = convertMap(strValue);
+            break;
+        case VTYPE_STRINGARRAY:
             val = strValue.split(VAR_ARRAYITEM_SEPARATOR);
             break;
-        case 's':
+        case VTYPE_STRING:
             val = strValue;
             break;
-        case 'i':
+        case VTYPE_INTEGER:
             val = Integer.valueOf(strValue);
             break;
-        case 'l':
+        case VTYPE_LONG:
             val = Long.valueOf(strValue);
             break;
-        case 'f':
+        case VTYPE_FLOAT:
             val = Float.valueOf(strValue);
             break;
-        case 'd':
+        case VTYPE_DOUBLE:
             val = Double.valueOf(strValue);
             break;
-        case 'b':
+        case VTYPE_BOOLEAN:
             val = Boolean.valueOf(strValue);
             break;
-        case 'p':
+        case VTYPE_PAINTABLE:
             val = idPaintableMap.get(strValue);
             break;
         }
@@ -1203,11 +1221,35 @@ public abstract class AbstractCommunicationManager implements
         return val;
     }
 
+    private Object convertMap(String strValue) {
+        String[] parts = strValue.split(VAR_ARRAYITEM_SEPARATOR);
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        for (int i = 0; i < parts.length; i += 2) {
+            String key = parts[i];
+            char variabletype = key.charAt(0);
+            Object value = convertVariableValue(variabletype, parts[i + 1]);
+            map.put(key.substring(1), value);
+        }
+        return map;
+    }
+
+    private Object convertArray(String strValue) {
+        String[] val = strValue.split(VAR_ARRAYITEM_SEPARATOR);
+        Object[] values = new Object[val.length];
+        for (int i = 0; i < values.length; i++) {
+            String string = val[i];
+            // first char of string is typ
+            char variableType = string.charAt(0);
+            values[i] = convertVariableValue(variableType, string.substring(1));
+        }
+        return values;
+    }
+
     /**
-     * Prints the queued (pending) locale definitions to a {@link PrintWriter} in
-     * a (UIDL) format that can be sent to the client and used there in formatting
-     * dates, times etc.
-     *
+     * Prints the queued (pending) locale definitions to a {@link PrintWriter}
+     * in a (UIDL) format that can be sent to the client and used there in
+     * formatting dates, times etc.
+     * 
      * @param outWriter
      */
     private void printLocaleDeclarations(PrintWriter outWriter) {
@@ -1316,7 +1358,7 @@ public abstract class AbstractCommunicationManager implements
             final String timeformat = df.substring(timeStart, df.length());
             /*
              * Doesn't return second or milliseconds.
-             *
+             * 
              * We use timeformat to determine 12/24-hour clock
              */
             final boolean twelve_hour_clock = timeformat.indexOf("a") > -1;
@@ -1342,7 +1384,7 @@ public abstract class AbstractCommunicationManager implements
 
     /**
      * TODO New method - document me!
-     *
+     * 
      * @param request
      * @param callback
      * @param application
@@ -1429,11 +1471,11 @@ public abstract class AbstractCommunicationManager implements
 
     /**
      * Ends the Application.
-     *
+     * 
      * The browser is redirected to the Application logout URL set with
      * {@link Application#setLogoutURL(String)}, or to the application URL if no
      * logout URL is given.
-     *
+     * 
      * @param request
      *            the request instance.
      * @param response
@@ -1468,7 +1510,7 @@ public abstract class AbstractCommunicationManager implements
     /**
      * Gets the Paintable Id. If Paintable has debug id set it will be used
      * prefixed with "PID_S". Otherwise a sequenced ID is created.
-     *
+     * 
      * @param paintable
      * @return the paintable Id.
      */
@@ -1514,7 +1556,7 @@ public abstract class AbstractCommunicationManager implements
     /**
      * Returns dirty components which are in given window. Components in an
      * invisible subtrees are omitted.
-     *
+     * 
      * @param w
      *            root window for which dirty components is to be fetched
      * @return
@@ -1549,7 +1591,7 @@ public abstract class AbstractCommunicationManager implements
                             && !component.getParent().isVisible()) {
                         /*
                          * Do not return components in an invisible subtree.
-                         *
+                         * 
                          * Components that are invisible in visible subree, must
                          * be rendered (to let client know that they need to be
                          * hidden).
@@ -1576,7 +1618,7 @@ public abstract class AbstractCommunicationManager implements
     /**
      * Internally mark a {@link Paintable} as painted and start collecting new
      * repaint requests for it.
-     *
+     * 
      * @param paintable
      */
     private void paintablePainted(Paintable paintable) {
@@ -1595,7 +1637,7 @@ public abstract class AbstractCommunicationManager implements
         private final Throwable throwable;
 
         /**
-         *
+         * 
          * @param owner
          * @param throwable
          */
@@ -1623,11 +1665,11 @@ public abstract class AbstractCommunicationManager implements
      * Queues a locale to be sent to the client (browser) for date and time
      * entry etc. All locale specific information is derived from server-side
      * {@link Locale} instances and sent to the client when needed, eliminating
-     * the need to use the {@link Locale} class and all the framework behind
-     * it on the client.
-     *
+     * the need to use the {@link Locale} class and all the framework behind it
+     * on the client.
+     * 
      * @see Locale#toString()
-     *
+     * 
      * @param value
      */
     public void requireLocale(String value) {
@@ -1644,9 +1686,9 @@ public abstract class AbstractCommunicationManager implements
     /**
      * Constructs a {@link Locale} instance to be sent to the client based on a
      * short locale description string.
-     *
+     * 
      * @see #requireLocale(String)
-     *
+     * 
      * @param value
      * @return
      */
@@ -1687,7 +1729,7 @@ public abstract class AbstractCommunicationManager implements
 
     /**
      * Helper method to test if a component contains another
-     *
+     * 
      * @param parent
      * @param child
      */
@@ -1714,12 +1756,12 @@ public abstract class AbstractCommunicationManager implements
     /**
      * Calls the Window URI handler for a request and returns the
      * {@link DownloadStream} returned by the handler.
-     *
+     * 
      * If the window is the main window of an application, the (deprecated)
      * {@link Application#handleURI(java.net.URL, String)} is called first to
      * handle {@link ApplicationResource}s, and the window handler is only
      * called if it returns null.
-     *
+     * 
      * @param window
      *            the target window of the request
      * @param request
@@ -1799,7 +1841,7 @@ public abstract class AbstractCommunicationManager implements
     /**
      * Helper class for terminal to keep track of data that client is expected
      * to know.
-     *
+     * 
      * TODO make customlayout templates (from theme) to be cached here.
      */
     class OpenWindowCache implements Serializable {
@@ -1807,7 +1849,7 @@ public abstract class AbstractCommunicationManager implements
         private Set<Object> res = new HashSet<Object>();
 
         /**
-         *
+         * 
          * @param paintable
          * @return true if the given class was added to cache
          */
