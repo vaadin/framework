@@ -499,6 +499,7 @@
 	text-indent: 0;
 	text-shadow: none;
 	padding: 0;
+	height: auto;
 }
 
 .v-app-SamplerApplication .feature-info .v-label-section span {
