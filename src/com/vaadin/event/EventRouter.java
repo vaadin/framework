@@ -138,13 +138,17 @@ public class EventRouter implements MethodEventSource {
     public void fireEvent(EventObject event) {
         // It is not necessary to send any events if there are no listeners
         if (listenerList != null) {
+
+            // Make a copy of the listener list to allow listeners to be added
+            // inside listener methods. Fixes #3605.
+
             // Send the event to all listeners. The listeners themselves
             // will filter out unwanted events.
-
-            final Iterator<ListenerMethod> i = listenerList.iterator();
-            while (i.hasNext()) {
-                (i.next()).receiveEvent(event);
+            final Object[] listeners = listenerList.toArray();
+            for (int i = 0; i < listeners.length; i++) {
+                ((ListenerMethod) listeners[i]).receiveEvent(event);
             }
+
         }
     }
 
