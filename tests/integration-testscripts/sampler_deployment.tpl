@@ -55,7 +55,7 @@
 <tr>
 	<td>screenCapture</td>
 	<td></td>
-	<td>@server@_1</td>
+	<td></td>
 </tr>
 <tr>
 	<td>mouseClick</td>
@@ -75,7 +75,7 @@
 <tr>
 	<td>screenCapture</td>
 	<td></td>
-	<td>@server@_2</td>
+	<td></td>
 </tr>
 
 </tbody></table>
