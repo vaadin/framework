@@ -545,6 +545,9 @@ public class Util {
         if (BrowserInfo.get().getWebkitVersion() > 0) {
             final String originalOverflow = elem.getStyle().getProperty(
                     "overflow");
+            if ("hidden".equals(originalOverflow)) {
+                return;
+            }
             elem.getStyle().setProperty("overflow", "hidden");
 
             DeferredCommand.addCommand(new Command() {
