@@ -756,7 +756,8 @@ public class VMenuBar extends Widget implements Paintable,
     public void iLayout() {
         // Only collapse if there is more than one item in the root menu and the
         // menu has an explicit size
-        if ((getItems().size() > 1 || collapsedRootItems.getItems().size() > 0)
+        if ((getItems().size() > 1 || (collapsedRootItems != null && collapsedRootItems
+                .getItems().size() > 0))
                 && getElement().getStyle().getProperty("width") != null
                 && moreItem != null) {
 
