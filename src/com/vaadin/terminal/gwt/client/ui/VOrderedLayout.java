@@ -5,14 +5,13 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.core.client.JsArrayString;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DomEvent.Type;
+import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -23,7 +22,7 @@ import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.ui.layout.CellBasedLayout;
 import com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer;
 
-public class VOrderedLayout extends CellBasedLayout implements ClickHandler {
+public class VOrderedLayout extends CellBasedLayout {
 
     public static final String CLASSNAME = "v-orderedlayout";
 
@@ -53,6 +52,26 @@ public class VOrderedLayout extends CellBasedLayout implements ClickHandler {
 
     private ValueMap alignments;
 
+    private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
+            this, CLICK_EVENT_IDENTIFIER) {
+
+        @Override
+        public ApplicationConnection getApplicationConnection() {
+            return client;
+        }
+
+        @Override
+        protected Paintable getChildComponent(Element element) {
+            return getComponent(element);
+        }
+
+        @Override
+        protected <H extends EventHandler> HandlerRegistration registerHandler(
+                H handler, Type<H> type) {
+            return addDomHandler(handler, type);
+        }
+    };
+
     public VOrderedLayout() {
         this(CLASSNAME, ORIENTATION_VERTICAL);
         allowOrientationUpdate = true;
@@ -81,7 +100,7 @@ public class VOrderedLayout extends CellBasedLayout implements ClickHandler {
             return;
         }
 
-        handleHandlerRegistration();
+        clickEventHandler.handleHandlerRegistration();
 
         if (allowOrientationUpdate) {
             handleOrientationUpdate(uidl);
@@ -246,26 +265,6 @@ public class VOrderedLayout extends CellBasedLayout implements ClickHandler {
         // w.mark("runDescendentsLayout done");
         isRendering = false;
         sizeHasChangedDuringRendering = false;
-    }
-
-    private HandlerRegistration clickHandlerRegistration;
-
-    private void handleHandlerRegistration() {
-        // Handle registering/unregistering of click handler depending on if
-        // server side listeners have been added or removed.
-        if (client.hasEventListeners(this, CLICK_EVENT_IDENTIFIER)) {
-            if (clickHandlerRegistration == null) {
-                clickHandlerRegistration = addDomHandler(this, ClickEvent
-                        .getType());
-            }
-        } else {
-            if (clickHandlerRegistration != null) {
-                clickHandlerRegistration.removeHandler();
-                clickHandlerRegistration = null;
-
-            }
-        }
-
     }
 
     private void layoutSizeMightHaveChanged() {
@@ -943,28 +942,13 @@ public class VOrderedLayout extends CellBasedLayout implements ClickHandler {
         }
     }
 
-    public void onClick(ClickEvent event) {
-        // This is only called if there are click listeners registered on server
-        // side
-
-        Paintable childComponent = getChildComponent((Element) event
-                .getNativeEvent().getEventTarget().cast());
-        final MouseEventDetails details = new MouseEventDetails(event
-                .getNativeEvent());
-
-        Object[] parameters = new Object[] { details, childComponent };
-
-        client.updateVariable(client.getPid(this), CLICK_EVENT_IDENTIFIER,
-                parameters, true);
-    }
-
     /**
      * Returns the child component which contains "element".
      * 
      * @param element
      * @return
      */
-    private Paintable getChildComponent(Element element) {
+    private Paintable getComponent(Element element) {
         Element rootElement = getElement();
         while (element != null && element != rootElement) {
             Paintable paintable = client.getPaintable(element);

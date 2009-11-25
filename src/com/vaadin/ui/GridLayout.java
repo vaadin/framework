@@ -1307,16 +1307,17 @@ public class GridLayout extends AbstractLayout implements
     @Override
     public void changeVariables(Object source, Map variables) {
         super.changeVariables(source, variables);
+
         if (variables.containsKey(CLICK_EVENT)) {
-            fireClick((Object[]) variables.get(CLICK_EVENT));
+            fireClick((Map<String, Object>) variables.get(CLICK_EVENT));
         }
 
     }
 
-    private void fireClick(Object[] parameters) {
+    private void fireClick(Map<String, Object> parameters) {
         MouseEventDetails mouseDetails = MouseEventDetails
-                .deserialize((String) parameters[0]);
-        Component childComponent = (Component) parameters[1];
+                .deserialize((String) parameters.get("mouseDetails"));
+        Component childComponent = (Component) parameters.get("component");
 
         fireEvent(new LayoutClickEvent(this, mouseDetails, childComponent));
     }

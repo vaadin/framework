@@ -11,24 +11,21 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.ObjectElement;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.event.dom.client.DomEvent.Type;
+import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
-public class VEmbedded extends HTML implements Paintable, ClickHandler,
-        MouseUpHandler {
+public class VEmbedded extends HTML implements Paintable {
     public static final String CLICK_EVENT_IDENTIFIER = "click";
 
     private static String CLASSNAME = "v-embedded";
@@ -39,10 +36,24 @@ public class VEmbedded extends HTML implements Paintable, ClickHandler,
 
     private ApplicationConnection client;
 
+    private ClickEventHandler clickEventHandler = new ClickEventHandler(this,
+            CLICK_EVENT_IDENTIFIER) {
+
+        @Override
+        public ApplicationConnection getApplicationConnection() {
+            return client;
+        }
+
+        @Override
+        protected <H extends EventHandler> HandlerRegistration registerHandler(
+                H handler, Type<H> type) {
+            return addDomHandler(handler, type);
+        }
+
+    };
+
     public VEmbedded() {
         setStyleName(CLASSNAME);
-        addClickHandler(this);
-        addMouseUpHandler(this);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -52,6 +63,8 @@ public class VEmbedded extends HTML implements Paintable, ClickHandler,
         this.client = client;
 
         boolean clearBrowserElement = true;
+
+        clickEventHandler.handleHandlerRegistration();
 
         if (uidl.hasAttribute("type")) {
             final String type = uidl.getStringAttribute("type");
@@ -227,8 +240,7 @@ public class VEmbedded extends HTML implements Paintable, ClickHandler,
     protected void onDetach() {
         if (BrowserInfo.get().isIE()) {
             // Force browser to fire unload event when component is detached
-            // from
-            // the view (IE doesn't do this automatically)
+            // from the view (IE doesn't do this automatically)
             if (browserElement != null) {
                 DOM.setElementAttribute(browserElement, "src",
                         "javascript:false");
@@ -247,29 +259,4 @@ public class VEmbedded extends HTML implements Paintable, ClickHandler,
         client.handleTooltipEvent(event, this);
     }
 
-    private void fireClick(MouseEventDetails mouseDetails) {
-        client.updateVariable(client.getPid(this), CLICK_EVENT_IDENTIFIER,
-                mouseDetails.serialize(), true);
-    }
-
-    public void onClick(ClickEvent event) {
-        if (client.hasEventListeners(this, CLICK_EVENT_IDENTIFIER)) {
-            MouseEventDetails mouseDetails = new MouseEventDetails(event
-                    .getNativeEvent());
-            fireClick(mouseDetails);
-        }
-    }
-
-    public void onMouseUp(MouseUpEvent event) {
-        if (client.hasEventListeners(this, CLICK_EVENT_IDENTIFIER)) {
-
-            MouseEventDetails mouseDetails = new MouseEventDetails(event
-                    .getNativeEvent());
-            if (mouseDetails.getButton() != MouseEventDetails.BUTTON_LEFT) {
-                // "Click" with right or middle button
-                fireClick(mouseDetails);
-
-            }
-        }
-    }
 }

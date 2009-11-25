@@ -433,14 +433,14 @@ public class Embedded extends AbstractComponent {
     public void changeVariables(Object source, Map variables) {
         super.changeVariables(source, variables);
         if (variables.containsKey(CLICK_EVENT)) {
-            fireClick(variables.get(CLICK_EVENT));
+            fireClick((Map<String, Object>) variables.get(CLICK_EVENT));
         }
 
     }
 
-    private void fireClick(Object parameters) {
+    private void fireClick(Map<String, Object> parameters) {
         MouseEventDetails mouseDetails = MouseEventDetails
-                .deserialize((String) parameters);
+                .deserialize((String) parameters.get("mouseDetails"));
 
         fireEvent(new ClickEvent(this, mouseDetails));
     }

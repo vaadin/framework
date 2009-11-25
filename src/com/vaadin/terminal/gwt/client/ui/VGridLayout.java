@@ -14,8 +14,9 @@ import java.util.Set;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DomEvent.Type;
+import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbsolutePanel;
@@ -23,7 +24,6 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Container;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.StyleConstants;
@@ -32,8 +32,7 @@ import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.layout.CellBasedLayout;
 import com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer;
 
-public class VGridLayout extends SimplePanel implements Paintable, Container,
-        ClickHandler {
+public class VGridLayout extends SimplePanel implements Paintable, Container {
 
     public static final String CLASSNAME = "v-gridlayout";
 
@@ -73,13 +72,31 @@ public class VGridLayout extends SimplePanel implements Paintable, Container,
 
     private boolean sizeChangedDuringRendering = false;
 
+    private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
+            this, CLICK_EVENT_IDENTIFIER) {
+
+        @Override
+        public ApplicationConnection getApplicationConnection() {
+            return client;
+        }
+
+        @Override
+        protected Paintable getChildComponent(Element element) {
+            return getComponent(element);
+        }
+
+        @Override
+        protected <H extends EventHandler> HandlerRegistration registerHandler(
+                H handler, Type<H> type) {
+            return addDomHandler(handler, type);
+        }
+    };
+
     public VGridLayout() {
         super();
         getElement().appendChild(margin);
         setStyleName(CLASSNAME);
         setWidget(canvas);
-
-        addDomHandler(this, ClickEvent.getType());
     }
 
     @Override
@@ -95,6 +112,7 @@ public class VGridLayout extends SimplePanel implements Paintable, Container,
             rendering = false;
             return;
         }
+        clickEventHandler.handleHandlerRegistration();
 
         canvas.setWidth("0px");
 
@@ -203,6 +221,26 @@ public class VGridLayout extends SimplePanel implements Paintable, Container,
         boolean needsRelativeSizeCheck = false;
 
     }
+
+    // private HandlerRegistration clickHandlerRegistration;
+    //
+    // private void handleHandlerRegistration() {
+    // // Handle registering/unregistering of click handler depending on if
+    // // server side listeners have been added or removed.
+    // if (client.hasEventListeners(this, CLICK_EVENT_IDENTIFIER)) {
+    // if (clickHandlerRegistration == null) {
+    // clickHandlerRegistration = addDomHandler(this, ClickEvent
+    // .getType());
+    // }
+    // } else {
+    // if (clickHandlerRegistration != null) {
+    // clickHandlerRegistration.removeHandler();
+    // clickHandlerRegistration = null;
+    //
+    // }
+    // }
+    //
+    // }
 
     private static int[] cloneArray(int[] toBeCloned) {
         int[] clone = new int[toBeCloned.length];
@@ -1031,22 +1069,23 @@ public class VGridLayout extends SimplePanel implements Paintable, Container,
         return cell;
     }
 
-    public void onClick(ClickEvent event) {
-        // This is only called if there are click listeners registered on server
-        // side
+    // public void onClick(ClickEvent event) {
+    // // This is only called if there are click listeners registered on server
+    // // side
+    //
+    // Paintable childComponent = getChildComponent((Element) event
+    // .getNativeEvent().getEventTarget().cast());
+    // final MouseEventDetails details = new MouseEventDetails(event
+    // .getNativeEvent());
+    //
+    // Object[] parameters = new Object[] { details.serialize(),
+    // childComponent };
+    // client.updateVariable(client.getPid(this), CLICK_EVENT_IDENTIFIER,
+    // parameters, true);
+    //
+    // }
 
-        Paintable childComponent = getChildComponent((Element) event
-                .getNativeEvent().getEventTarget().cast());
-        final MouseEventDetails details = new MouseEventDetails(event
-                .getNativeEvent());
-
-        Object[] parameters = new Object[] { details, childComponent };
-        client.updateVariable(client.getPid(this), CLICK_EVENT_IDENTIFIER,
-                parameters, true);
-
-    }
-
-    private Paintable getChildComponent(Element element) {
+    private Paintable getComponent(Element element) {
         Element rootElement = getElement();
         while (element != null && element != rootElement) {
             Paintable paintable = client.getPaintable(element);
