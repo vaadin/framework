@@ -164,6 +164,8 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
                         appClass = (Class<? extends Application>) getClass()
                                 .getClassLoader().loadClass(
                                         defaultPackages[i] + "." + baseName);
+                    } catch (ClassNotFoundException ee) {
+                        // Ignore as this is expected for many packages
                     } catch (Exception e2) {
                         // TODO: handle exception
                         e2.printStackTrace();
