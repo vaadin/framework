@@ -1,11 +1,10 @@
 /**
- * 
+ *
  */
 package com.vaadin.terminal.gwt.server;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -31,9 +30,9 @@ public class PortletApplicationContext extends WebApplicationContext implements
 
     protected PortletSession portletSession;
 
-    protected Map portletListeners = new HashMap();
+    protected Map<Application, Set<PortletListener>> portletListeners = new HashMap<Application, Set<PortletListener>>();
 
-    protected Map portletToApplication = new HashMap();
+    protected Map<Portlet, Application> portletToApplication = new HashMap<Portlet, Application>();
 
     PortletApplicationContext() {
 
@@ -84,10 +83,8 @@ public class PortletApplicationContext extends WebApplicationContext implements
     @Override
     protected void removeApplication(Application application) {
         portletListeners.remove(application);
-        for (Iterator it = portletToApplication.keySet().iterator(); it
-                .hasNext();) {
-            Object key = it.next();
-            if (key == application) {
+        for (Portlet key : portletToApplication.keySet()) {
+            if (portletToApplication.get(key) == application) {
                 portletToApplication.remove(key);
             }
         }
@@ -99,7 +96,7 @@ public class PortletApplicationContext extends WebApplicationContext implements
     }
 
     public Application getPortletApplication(Portlet portlet) {
-        return (Application) portletToApplication.get(portlet);
+        return portletToApplication.get(portlet);
     }
 
     public PortletSession getPortletSession() {
@@ -107,16 +104,16 @@ public class PortletApplicationContext extends WebApplicationContext implements
     }
 
     public void addPortletListener(Application app, PortletListener listener) {
-        Set l = (Set) portletListeners.get(app);
+        Set<PortletListener> l = portletListeners.get(app);
         if (l == null) {
-            l = new LinkedHashSet();
+            l = new LinkedHashSet<PortletListener>();
             portletListeners.put(app, l);
         }
         l.add(listener);
     }
 
     public void removePortletListener(Application app, PortletListener listener) {
-        Set l = (Set) portletListeners.get(app);
+        Set<PortletListener> l = portletListeners.get(app);
         if (l != null) {
             l.remove(listener);
         }
@@ -143,10 +140,9 @@ public class PortletApplicationContext extends WebApplicationContext implements
     public void firePortletRenderRequest(Portlet portlet,
             RenderRequest request, RenderResponse response) {
         Application app = getPortletApplication(portlet);
-        Set listeners = (Set) portletListeners.get(app);
+        Set<PortletListener> listeners = portletListeners.get(app);
         if (listeners != null) {
-            for (Iterator it = listeners.iterator(); it.hasNext();) {
-                PortletListener l = (PortletListener) it.next();
+            for (PortletListener l : listeners) {
                 l.handleRenderRequest(request, new RestrictedRenderResponse(
                         response));
             }
@@ -156,10 +152,9 @@ public class PortletApplicationContext extends WebApplicationContext implements
     public void firePortletActionRequest(Portlet portlet,
             ActionRequest request, ActionResponse response) {
         Application app = getPortletApplication(portlet);
-        Set listeners = (Set) portletListeners.get(app);
+        Set<PortletListener> listeners = portletListeners.get(app);
         if (listeners != null) {
-            for (Iterator it = listeners.iterator(); it.hasNext();) {
-                PortletListener l = (PortletListener) it.next();
+            for (PortletListener l : listeners) {
                 l.handleActionRequest(request, response);
             }
         }
