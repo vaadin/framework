@@ -11,6 +11,9 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.ObjectElement;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.DomEvent.Type;
+import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -23,6 +26,8 @@ import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
 public class VEmbedded extends HTML implements Paintable {
+    public static final String CLICK_EVENT_IDENTIFIER = "click";
+
     private static String CLASSNAME = "v-embedded";
 
     private String height;
@@ -30,6 +35,17 @@ public class VEmbedded extends HTML implements Paintable {
     private Element browserElement;
 
     private ApplicationConnection client;
+
+    private ClickEventHandler clickEventHandler = new ClickEventHandler(this,
+            CLICK_EVENT_IDENTIFIER) {
+
+        @Override
+        protected <H extends EventHandler> HandlerRegistration registerHandler(
+                H handler, Type<H> type) {
+            return addDomHandler(handler, type);
+        }
+
+    };
 
     public VEmbedded() {
         setStyleName(CLASSNAME);
@@ -42,6 +58,8 @@ public class VEmbedded extends HTML implements Paintable {
         this.client = client;
 
         boolean clearBrowserElement = true;
+
+        clickEventHandler.handleEventHandlerRegistration(client);
 
         if (uidl.hasAttribute("type")) {
             final String type = uidl.getStringAttribute("type");
@@ -217,8 +235,7 @@ public class VEmbedded extends HTML implements Paintable {
     protected void onDetach() {
         if (BrowserInfo.get().isIE()) {
             // Force browser to fire unload event when component is detached
-            // from
-            // the view (IE doesn't do this automatically)
+            // from the view (IE doesn't do this automatically)
             if (browserElement != null) {
                 DOM.setElementAttribute(browserElement, "src",
                         "javascript:false");
@@ -236,4 +253,5 @@ public class VEmbedded extends HTML implements Paintable {
 
         client.handleTooltipEvent(event, this);
     }
+
 }

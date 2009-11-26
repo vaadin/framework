@@ -14,6 +14,10 @@ import java.util.Set;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.event.dom.client.DomEvent.Type;
+import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -31,6 +35,8 @@ import com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer;
 public class VGridLayout extends SimplePanel implements Paintable, Container {
 
     public static final String CLASSNAME = "v-gridlayout";
+
+    public static final String CLICK_EVENT_IDENTIFIER = "click";
 
     private DivElement margin = Document.get().createDivElement();
 
@@ -66,6 +72,21 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
 
     private boolean sizeChangedDuringRendering = false;
 
+    private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
+            this, CLICK_EVENT_IDENTIFIER) {
+
+        @Override
+        protected Paintable getChildComponent(Element element) {
+            return getComponent(element);
+        }
+
+        @Override
+        protected <H extends EventHandler> HandlerRegistration registerHandler(
+                H handler, Type<H> type) {
+            return addDomHandler(handler, type);
+        }
+    };
+
     public VGridLayout() {
         super();
         getElement().appendChild(margin);
@@ -86,6 +107,7 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
             rendering = false;
             return;
         }
+        clickEventHandler.handleEventHandlerRegistration(client);
 
         canvas.setWidth("0px");
 
@@ -1021,4 +1043,21 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
         }
         return cell;
     }
+
+    private Paintable getComponent(Element element) {
+        Element rootElement = getElement();
+        while (element != null && element != rootElement) {
+            Paintable paintable = client.getPaintable(element);
+            if (paintable != null) {
+                Cell cell = paintableToCell.get(paintable);
+                if (cell != null) {
+                    return paintable;
+                }
+            }
+            element = DOM.getParent(element);
+        }
+
+        return null;
+    }
+
 }

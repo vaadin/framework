@@ -638,4 +638,8 @@ public class ListenerMethod implements EventListener, Serializable {
         }
 
     }
+
+    public boolean isType(Class<?> eventType) {
+        return this.eventType == eventType;
+    }
 }

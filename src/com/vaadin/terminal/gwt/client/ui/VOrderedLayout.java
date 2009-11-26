@@ -5,6 +5,10 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.event.dom.client.DomEvent.Type;
+import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
@@ -21,6 +25,8 @@ import com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer;
 public class VOrderedLayout extends CellBasedLayout {
 
     public static final String CLASSNAME = "v-orderedlayout";
+
+    public static final String CLICK_EVENT_IDENTIFIER = "click";
 
     private int orientation;
 
@@ -46,6 +52,21 @@ public class VOrderedLayout extends CellBasedLayout {
 
     private ValueMap alignments;
 
+    private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
+            this, CLICK_EVENT_IDENTIFIER) {
+
+        @Override
+        protected Paintable getChildComponent(Element element) {
+            return getComponent(element);
+        }
+
+        @Override
+        protected <H extends EventHandler> HandlerRegistration registerHandler(
+                H handler, Type<H> type) {
+            return addDomHandler(handler, type);
+        }
+    };
+
     public VOrderedLayout() {
         this(CLASSNAME, ORIENTATION_VERTICAL);
         allowOrientationUpdate = true;
@@ -60,7 +81,6 @@ public class VOrderedLayout extends CellBasedLayout {
         STYLENAME_MARGIN_RIGHT = className + "-margin-right";
         STYLENAME_MARGIN_BOTTOM = className + "-margin-bottom";
         STYLENAME_MARGIN_LEFT = className + "-margin-left";
-
     }
 
     @Override
@@ -74,6 +94,8 @@ public class VOrderedLayout extends CellBasedLayout {
             isRendering = false;
             return;
         }
+
+        clickEventHandler.handleEventHandlerRegistration(client);
 
         if (allowOrientationUpdate) {
             handleOrientationUpdate(uidl);
@@ -913,6 +935,27 @@ public class VOrderedLayout extends CellBasedLayout {
              */
             client.captionSizeUpdated(component);
         }
+    }
+
+    /**
+     * Returns the child component which contains "element".
+     * 
+     * @param element
+     * @return
+     */
+    private Paintable getComponent(Element element) {
+        Element rootElement = getElement();
+        while (element != null && element != rootElement) {
+            Paintable paintable = client.getPaintable(element);
+            if (paintable != null
+                    && widgetToComponentContainer.containsKey(paintable)) {
+                return paintable;
+            } else {
+                element = (Element) element.getParentElement();
+            }
+        }
+
+        return null;
     }
 
 }

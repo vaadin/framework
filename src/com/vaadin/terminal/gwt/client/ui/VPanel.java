@@ -8,6 +8,9 @@ import java.util.Set;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.event.dom.client.DomEvent.Type;
+import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -24,6 +27,7 @@ import com.vaadin.terminal.gwt.client.Util;
 
 public class VPanel extends SimplePanel implements Container {
 
+    public static final String CLICK_EVENT_IDENTIFIER = "click";
     public static final String CLASSNAME = "v-panel";
 
     ApplicationConnection client;
@@ -72,6 +76,17 @@ public class VPanel extends SimplePanel implements Container {
 
     private String previousStyleName;
 
+    private ClickEventHandler clickEventHandler = new ClickEventHandler(this,
+            CLICK_EVENT_IDENTIFIER) {
+
+        @Override
+        protected <H extends EventHandler> HandlerRegistration registerHandler(
+                H handler, Type<H> type) {
+            return addDomHandler(handler, type);
+        }
+
+    };
+
     public VPanel() {
         super();
         DivElement captionWrap = Document.get().createDivElement();
@@ -91,6 +106,7 @@ public class VPanel extends SimplePanel implements Container {
         DOM.sinkEvents(contentNode, Event.ONSCROLL);
         contentNode.getStyle().setProperty("position", "relative");
         getElement().getStyle().setProperty("overflow", "hidden");
+
     }
 
     @Override
@@ -105,6 +121,8 @@ public class VPanel extends SimplePanel implements Container {
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         rendering = true;
         if (!uidl.hasAttribute("cached")) {
+            clickEventHandler.handleEventHandlerRegistration(client);
+
             // Handle caption displaying and style names, prior generics.
             // Affects size
             // calculations
@@ -334,6 +352,8 @@ public class VPanel extends SimplePanel implements Container {
 
     @Override
     public void onBrowserEvent(Event event) {
+        super.onBrowserEvent(event);
+
         final Element target = DOM.eventGetTarget(event);
         final int type = DOM.eventGetType(event);
         if (type == Event.ONKEYDOWN && shortcutHandler != null) {

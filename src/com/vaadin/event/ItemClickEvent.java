@@ -6,42 +6,29 @@ import java.lang.reflect.Method;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Component.Event;
 
 /**
  * 
  * Click event fired by a {@link Component} implementing
- * {@link com.vaadin.data.Container} interface. ItemClickEvents happens
- * on an {@link Item} rendered somehow on terminal. Event may also contain a
- * specific {@link Property} on which the click event happened.
- * 
- * ClickEvents are rather terminal dependent events. Correct values in event
- * details cannot be guaranteed.
- * 
- * EXPERIMENTAL FEATURE, user input is welcome
+ * {@link com.vaadin.data.Container} interface. ItemClickEvents happens on an
+ * {@link Item} rendered somehow on terminal. Event may also contain a specific
+ * {@link Property} on which the click event happened.
  * 
  * @since 5.3
  * 
- *        TODO extract generic super class/interfaces if we implement some other
- *        click events.
  */
 @SuppressWarnings("serial")
-public class ItemClickEvent extends Event implements Serializable {
-    public static final int BUTTON_LEFT = MouseEventDetails.BUTTON_LEFT;
-    public static final int BUTTON_MIDDLE = MouseEventDetails.BUTTON_MIDDLE;
-    public static final int BUTTON_RIGHT = MouseEventDetails.BUTTON_RIGHT;
-
-    private MouseEventDetails details;
+public class ItemClickEvent extends ClickEvent implements Serializable {
     private Item item;
     private Object itemId;
     private Object propertyId;
 
     public ItemClickEvent(Component source, Item item, Object itemId,
             Object propertyId, MouseEventDetails details) {
-        super(source);
-        this.details = details;
+        super(source, details);
         this.item = item;
         this.itemId = itemId;
         this.propertyId = propertyId;
@@ -75,38 +62,6 @@ public class ItemClickEvent extends Event implements Serializable {
      */
     public Object getPropertyId() {
         return propertyId;
-    }
-
-    public int getButton() {
-        return details.getButton();
-    }
-
-    public int getClientX() {
-        return details.getClientX();
-    }
-
-    public int getClientY() {
-        return details.getClientY();
-    }
-
-    public boolean isDoubleClick() {
-        return details.isDoubleClick();
-    }
-
-    public boolean isAltKey() {
-        return details.isAltKey();
-    }
-
-    public boolean isCtrlKey() {
-        return details.isCtrlKey();
-    }
-
-    public boolean isMetaKey() {
-        return details.isMetaKey();
-    }
-
-    public boolean isShiftKey() {
-        return details.isShiftKey();
     }
 
     public static final Method ITEM_CLICK_METHOD;

@@ -2,13 +2,21 @@ package com.vaadin.terminal.gwt.client;
 
 import java.util.HashMap;
 
+import com.google.gwt.core.client.JsArrayString;
 import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 
 class ComponentDetail {
-    private String pid;
+
     private Paintable component;
     private TooltipInfo tooltipInfo = new TooltipInfo();
+    private String pid;
+
+    public ComponentDetail(ApplicationConnection client, String pid,
+            Paintable component) {
+        this.component = component;
+        this.pid = pid;
+    }
 
     /**
      * Returns a TooltipInfo assosiated with Component. If element is given,
@@ -49,26 +57,10 @@ class ComponentDetail {
     }
 
     /**
-     * @param pid
-     *            the pid to set
-     */
-    void setPid(String pid) {
-        this.pid = pid;
-    }
-
-    /**
      * @return the component
      */
     Paintable getComponent() {
         return component;
-    }
-
-    /**
-     * @param component
-     *            the component to set
-     */
-    void setComponent(Paintable component) {
-        this.component = component;
     }
 
     /**
@@ -112,4 +104,38 @@ class ComponentDetail {
         }
     }
 
+    private JsArrayString eventListeners;
+
+    /**
+     * Stores the event listeners registered on server-side and passed along in
+     * the UIDL.
+     * 
+     * @param componentUIDL
+     *            The UIDL for the component
+     * @since 6.2
+     */
+    native void registerEventListenersFromUIDL(UIDL uidl)
+    /*-{
+        this.@com.vaadin.terminal.gwt.client.ComponentDetail::eventListeners = uidl[1].eventListeners;
+    }-*/;
+
+    /**
+     * Checks if there is a registered server side listener for the event.
+     * 
+     * @param eventIdentifier
+     *            The identifier for the event
+     * @return true if at least one listener has been registered on server side
+     *         for the event identified by eventIdentifier.
+     */
+    public boolean hasEventListeners(String eventIdentifier) {
+        if (eventListeners != null) {
+            int l = eventListeners.length();
+            for (int i = 0; i < l; i++) {
+                if (eventListeners.get(i).equals(eventIdentifier)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

@@ -11,10 +11,13 @@ import java.util.Map;
 import com.vaadin.event.Action;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.Action.Handler;
+import com.vaadin.event.MouseEvents.ClickEvent;
+import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Scrollable;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VPanel;
 
 /**
@@ -30,6 +33,8 @@ import com.vaadin.terminal.gwt.client.ui.VPanel;
 public class Panel extends AbstractComponentContainer implements Scrollable,
         ComponentContainer.ComponentAttachListener,
         ComponentContainer.ComponentDetachListener, Action.Container {
+
+    private static final String CLICK_EVENT = VPanel.CLICK_EVENT_IDENTIFIER;
 
     public static final String STYLE_LIGHT = "light";
 
@@ -325,6 +330,10 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     public void changeVariables(Object source, Map variables) {
         super.changeVariables(source, variables);
 
+        if (variables.containsKey(CLICK_EVENT)) {
+            fireClick((Map<String, Object>) variables.get(CLICK_EVENT));
+        }
+
         // Get new size
         final Integer newWidth = (Integer) variables.get("width");
         final Integer newHeight = (Integer) variables.get("height");
@@ -543,4 +552,44 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
             requestRepaint();
         }
     }
+
+    /**
+     * Add a click listener to the Panel. The listener is called whenever the
+     * user clicks inside the Panel. Also when the click targets a component
+     * inside the Panel, provided the targeted component does not prevent the
+     * click event from propagating.
+     * 
+     * Use {@link #removeListener(ClickListener)} to remove the listener.
+     * 
+     * @param listener
+     *            The listener to add
+     */
+    public void addListener(ClickListener listener) {
+        addListener(CLICK_EVENT, ClickEvent.class, listener,
+                ClickListener.clickMethod);
+    }
+
+    /**
+     * Remove a click listener from the Panel. The listener should earlier have
+     * been added using {@link #addListener(ClickListener)}.
+     * 
+     * @param listener
+     *            The listener to remove
+     */
+    public void removeListener(ClickListener listener) {
+        removeListener(CLICK_EVENT, ClickEvent.class, listener);
+    }
+
+    /**
+     * Fire a click event to all click listeners.
+     * 
+     * @param object
+     *            The raw "value" of the variable change from the client side.
+     */
+    private void fireClick(Map<String, Object> parameters) {
+        MouseEventDetails mouseDetails = MouseEventDetails
+                .deSerialize((String) parameters.get("mouseDetails"));
+        fireEvent(new ClickEvent(this, mouseDetails));
+    }
+
 }

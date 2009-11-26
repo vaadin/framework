@@ -877,11 +877,11 @@ public class ApplicationConnection {
         }
     }-*/;
 
-    public void registerPaintable(String id, Paintable paintable) {
-        ComponentDetail componentDetail = new ComponentDetail();
-        componentDetail.setComponent(paintable);
-        idToPaintableDetail.put(id, componentDetail);
-        setPid(((Widget) paintable).getElement(), id);
+    public void registerPaintable(String pid, Paintable paintable) {
+        ComponentDetail componentDetail = new ComponentDetail(this, pid,
+                paintable);
+        idToPaintableDetail.put(pid, componentDetail);
+        setPid(((Widget) paintable).getElement(), pid);
     }
 
     private native void setPid(Element el, String pid)
@@ -1210,6 +1210,10 @@ public class ApplicationConnection {
         if (uidl.getBooleanAttribute("cached")) {
             return true;
         }
+
+        // register the listened events by the server-side to the event-handler
+        // of the component
+        componentDetail.registerEventListenersFromUIDL(uidl);
 
         // Visibility
         boolean visible = !uidl.getBooleanAttribute("invisible");
@@ -1876,6 +1880,22 @@ public class ApplicationConnection {
 
     public ApplicationConfiguration getConfiguration() {
         return configuration;
+    }
+
+    /**
+     * Checks if there is a registered server side listener for the event. The
+     * list of events which has server side listeners is updated automatically
+     * before the component is updated so the value is correct if called from
+     * updatedFromUIDL.
+     * 
+     * @param eventIdentifier
+     *            The identifier for the event
+     * @return true if at least one listener has been registered on server side
+     *         for the event identified by eventIdentifier.
+     */
+    public boolean hasEventListeners(Paintable paintable, String eventIdentifier) {
+        return idToPaintableDetail.get(getPid(paintable)).hasEventListeners(
+                eventIdentifier);
     }
 
 }

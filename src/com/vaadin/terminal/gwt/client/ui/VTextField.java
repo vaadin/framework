@@ -54,6 +54,9 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
 
     private static final String CLASSNAME_PROMPT = "prompt";
     private static final String ATTR_INPUTPROMPT = "prompt";
+    public static final String FOCUS_EVENT_IDENTIFIER = "focus";
+    public static final String BLUR_EVENT_IDENTIFIER = "blur";
+
     private String inputPrompt = null;
     private boolean prompting = false;
 
@@ -166,12 +169,38 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
     }
 
     public void onChange(ChangeEvent event) {
+        valueChange(false);
+    }
+
+    /**
+     * Called when the field value might have changed and/or the field was
+     * blurred. These are combined so the blur event is sent in the same batch
+     * as a possible value change event (these are often connected).
+     * 
+     * @param blurred
+     *            true if the field was blurred
+     */
+    public void valueChange(boolean blurred) {
         if (client != null && id != null) {
+            boolean sendBlurEvent = false;
+            boolean sendValueChange = false;
+
+            if (blurred
+                    && client.hasEventListeners(this, BLUR_EVENT_IDENTIFIER)) {
+                sendBlurEvent = true;
+                client.updateVariable(id, BLUR_EVENT_IDENTIFIER, "", false);
+            }
+
             String newText = getText();
             if (!prompting && newText != null
                     && !newText.equals(valueBeforeEdit)) {
-                client.updateVariable(id, "text", getText(), immediate);
+                sendValueChange = immediate;
+                client.updateVariable(id, "text", getText(), false);
                 valueBeforeEdit = newText;
+            }
+
+            if (sendBlurEvent || sendValueChange) {
+                client.sendPendingVariableChanges();
             }
         }
     }
@@ -195,6 +224,10 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             }
         }
         focusedTextField = this;
+        if (client.hasEventListeners(this, FOCUS_EVENT_IDENTIFIER)) {
+            client.updateVariable(client.getPid(this), FOCUS_EVENT_IDENTIFIER,
+                    "", true);
+        }
     }
 
     public void onBlur(BlurEvent event) {
@@ -206,7 +239,8 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             setText(inputPrompt);
             addStyleDependentName(CLASSNAME_PROMPT);
         }
-        onChange(null);
+
+        valueChange(true);
     }
 
     private void setPrompting(boolean prompting) {

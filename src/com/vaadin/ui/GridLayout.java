@@ -12,8 +12,11 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.vaadin.event.LayoutEvents.LayoutClickEvent;
+import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VGridLayout;
 
 /**
@@ -40,6 +43,8 @@ import com.vaadin.terminal.gwt.client.ui.VGridLayout;
 @ClientWidget(VGridLayout.class)
 public class GridLayout extends AbstractLayout implements
         Layout.AlignmentHandler, Layout.SpacingHandler {
+
+    private static final String CLICK_EVENT = VGridLayout.CLICK_EVENT_IDENTIFIER;
 
     /**
      * Initial grid columns.
@@ -72,7 +77,7 @@ public class GridLayout extends AbstractLayout implements
     /**
      * Mapping from components to their respective areas.
      */
-    private final LinkedList components = new LinkedList();
+    private final LinkedList<Component> components = new LinkedList<Component>();
 
     /**
      * Mapping from components to alignments (horizontal + vertical).
@@ -1297,6 +1302,55 @@ public class GridLayout extends AbstractLayout implements
 
     public void setComponentAlignment(Component component, String alignment) {
         AlignmentUtils.setComponentAlignment(this, component, alignment);
+    }
+
+    @Override
+    public void changeVariables(Object source, Map variables) {
+        super.changeVariables(source, variables);
+
+        if (variables.containsKey(CLICK_EVENT)) {
+            fireClick((Map<String, Object>) variables.get(CLICK_EVENT));
+        }
+
+    }
+
+    private void fireClick(Map<String, Object> parameters) {
+        MouseEventDetails mouseDetails = MouseEventDetails
+                .deSerialize((String) parameters.get("mouseDetails"));
+        Component childComponent = (Component) parameters.get("component");
+
+        fireEvent(new LayoutClickEvent(this, mouseDetails, childComponent));
+    }
+
+    /**
+     * Add a click listener to the layout. The listener is called whenever the
+     * user clicks inside the layout. Also when the click targets a component
+     * inside the Panel, provided the targeted component does not prevent the
+     * click event from propagating. A caption is not considered part of a
+     * component.
+     * 
+     * The child component that was clicked is included in the
+     * {@link LayoutClickEvent}.
+     * 
+     * Use {@link #removeListener(LayoutClickListener)} to remove the listener.
+     * 
+     * @param listener
+     *            The listener to add
+     */
+    public void addListener(LayoutClickListener listener) {
+        addListener(CLICK_EVENT, LayoutClickEvent.class, listener,
+                LayoutClickListener.clickMethod);
+    }
+
+    /**
+     * Remove a click listener from the layout. The listener should earlier have
+     * been added using {@link #addListener(LayoutClickListener)}.
+     * 
+     * @param listener
+     *            The listener to remove
+     */
+    public void removeListener(LayoutClickListener listener) {
+        removeListener(CLICK_EVENT, LayoutClickEvent.class, listener);
     }
 
 }

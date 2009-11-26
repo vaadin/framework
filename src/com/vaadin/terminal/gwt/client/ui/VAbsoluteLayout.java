@@ -10,6 +10,9 @@ import java.util.Map.Entry;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.DomEvent.Type;
+import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
@@ -31,6 +34,8 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
     /** Class name, prefix in styling */
     public static final String CLASSNAME = "v-absolutelayout";
 
+    public static final String CLICK_EVENT_IDENTIFIER = "click";
+
     private DivElement marginElement;
 
     protected final Element canvas = DOM.createDiv();
@@ -46,6 +51,21 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
     protected ApplicationConnection client;
 
     private boolean rendering;
+
+    private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
+            this, CLICK_EVENT_IDENTIFIER) {
+
+        @Override
+        protected Paintable getChildComponent(Element element) {
+            return getComponent(element);
+        }
+
+        @Override
+        protected <H extends EventHandler> HandlerRegistration registerHandler(
+                H handler, Type<H> type) {
+            return addDomHandler(handler, type);
+        }
+    };
 
     public VAbsoluteLayout() {
         setElement(Document.get().createDivElement());
@@ -128,6 +148,8 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
             rendering = false;
             return;
         }
+
+        clickEventHandler.handleEventHandlerRegistration(client);
 
         HashSet<String> unrenderedPids = new HashSet<String>(
                 pidToComponentWrappper.keySet());
@@ -388,6 +410,22 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
             measureElement.getStyle().setProperty("width", cssLength);
             return measureElement.getOffsetWidth();
         }
+    }
+
+    private Paintable getComponent(Element target) {
+        while (target != null && target != canvas) {
+            Paintable paintable = client.getPaintable(target);
+            if (paintable != null) {
+                String pid = client.getPid(paintable);
+                AbsoluteWrapper wrapper = pidToComponentWrappper.get(pid);
+                if (wrapper != null) {
+                    return paintable;
+                }
+            }
+            target = DOM.getParent(target);
+        }
+
+        return null;
     }
 
 }

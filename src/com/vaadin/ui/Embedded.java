@@ -6,10 +6,14 @@ package com.vaadin.ui;
 
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
 
+import com.vaadin.event.MouseEvents.ClickEvent;
+import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VEmbedded;
 
 /**
@@ -23,6 +27,8 @@ import com.vaadin.terminal.gwt.client.ui.VEmbedded;
 @SuppressWarnings("serial")
 @ClientWidget(VEmbedded.class)
 public class Embedded extends AbstractComponent {
+
+    private static final String CLICK_EVENT = VEmbedded.CLICK_EVENT_IDENTIFIER;
 
     /**
      * General object type.
@@ -412,6 +418,48 @@ public class Embedded extends AbstractComponent {
             this.archive = archive;
             requestRepaint();
         }
+    }
+
+    /**
+     * Add a click listener to the component. The listener is called whenever
+     * the user clicks inside the component. Depending on the content the event
+     * may be blocked and in that case no event is fired.
+     * 
+     * Use {@link #removeListener(ClickListener)} to remove the listener.
+     * 
+     * @param listener
+     *            The listener to add
+     */
+    public void addListener(ClickListener listener) {
+        addListener(CLICK_EVENT, ClickEvent.class, listener,
+                ClickListener.clickMethod);
+    }
+
+    /**
+     * Remove a click listener from the component. The listener should earlier
+     * have been added using {@link #addListener(ClickListener)}.
+     * 
+     * @param listener
+     *            The listener to remove
+     */
+    public void removeListener(ClickListener listener) {
+        removeListener(CLICK_EVENT, ClickEvent.class, listener);
+    }
+
+    @Override
+    public void changeVariables(Object source, Map variables) {
+        super.changeVariables(source, variables);
+        if (variables.containsKey(CLICK_EVENT)) {
+            fireClick((Map<String, Object>) variables.get(CLICK_EVENT));
+        }
+
+    }
+
+    private void fireClick(Map<String, Object> parameters) {
+        MouseEventDetails mouseDetails = MouseEventDetails
+                .deSerialize((String) parameters.get("mouseDetails"));
+
+        fireEvent(new ClickEvent(this, mouseDetails));
     }
 
 }
