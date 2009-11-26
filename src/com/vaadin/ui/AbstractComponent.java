@@ -25,7 +25,6 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Terminal;
-import com.vaadin.terminal.gwt.client.EventListenerRegister;
 import com.vaadin.terminal.gwt.server.ComponentSizeValidator;
 import com.vaadin.tools.ReflectTools;
 
@@ -689,10 +688,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
                 }
 
                 if (eventIdentifiers != null) {
-                    target
-                            .addAttribute(
-                                    EventListenerRegister.REGISTERED_EVENT_LISTENERS_ATTRIBUTE,
-                                    eventIdentifiers.toArray());
+                    target.addAttribute("eventListeners", eventIdentifiers
+                            .toArray());
                 }
 
                 paintContent(target);
