@@ -12,6 +12,80 @@ import com.vaadin.ui.Component;
 public interface FieldEvents {
 
     /**
+     * The interface for adding and removing <code>FocusEvent</code> listeners.
+     * By implementing this interface a class explicitly announces that it will
+     * generate a <code>FocusEvent</code> when it receives keyboard focus.
+     * <p>
+     * Note: The general Java convention is not to explicitly declare that a
+     * class generates events, but to directly define the
+     * <code>addListener</code> and <code>removeListener</code> methods. That
+     * way the caller of these methods has no real way of finding out if the
+     * class really will send the events, or if it just defines the methods to
+     * be able to implement an interface.
+     * </p>
+     * @since 6.2
+     * @see FocusListener
+     * @see FocusEvent
+     */
+    public interface FocusNotifier {
+        /**
+         * Adds a <code>FocusListener</code> to the Component which gets fired
+         * when a <code>Field</code> receives keyboard focus.
+         * 
+         * @param listener
+         * @see FocusListener
+         * @since 6.2
+         */
+        public void addListener(FocusListener listener);
+
+        /**
+         * Removes a <code>FocusListener</code> from the Component.
+         * 
+         * @param listener
+         * @see FocusListener
+         * @since 6.2
+         */
+        public void removeListener(FocusListener listener);
+    }
+
+    /**
+     * The interface for adding and removing <code>BlurEvent</code> listeners.
+     * By implementing this interface a class explicitly announces that it will
+     * generate a <code>BlurEvent</code> when it loses keyboard focus.
+     * <p>
+     * Note: The general Java convention is not to explicitly declare that a
+     * class generates events, but to directly define the
+     * <code>addListener</code> and <code>removeListener</code> methods. That
+     * way the caller of these methods has no real way of finding out if the
+     * class really will send the events, or if it just defines the methods to
+     * be able to implement an interface.
+     * </p>
+     * @since 6.2
+     * @see BlurListener
+     * @see BlurEvent
+     */
+    public interface BlurNotifier {
+        /**
+         * Adds a <code>BlurListener</code> to the Component which gets fired
+         * when a <code>Field</code> loses keyboard focus.
+         * 
+         * @param listener
+         * @see BlurListener
+         * @since 6.2
+         */
+        public void addListener(BlurListener listener);
+
+        /**
+         * Removes a <code>BlurListener</code> from the Component.
+         * 
+         * @param listener
+         * @see BlurListener
+         * @since 6.2
+         */
+        public void removeListener(BlurListener listener);
+    }
+
+    /**
      * <code>FocusEvent</code> class for holding additional event information.
      * Fired when a <code>Field</code> receives keyboard focus.
      * 

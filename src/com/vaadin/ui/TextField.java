@@ -8,6 +8,7 @@ import java.text.Format;
 import java.util.Map;
 
 import com.vaadin.data.Property;
+import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
@@ -38,7 +39,8 @@ import com.vaadin.terminal.gwt.client.ui.VTextField;
  */
 @SuppressWarnings("serial")
 @ClientWidget(VTextField.class)
-public class TextField extends AbstractField {
+public class TextField extends AbstractField implements
+        FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 
     /* Private members */
 
@@ -624,40 +626,20 @@ public class TextField extends AbstractField {
         fireEvent(new BlurEvent(this));
     }
 
-    /**
-     * TODO
-     * 
-     * @param listener
-     */
     public void addListener(FocusListener listener) {
         addListener(FOCUS_EVENT, FocusEvent.class, listener,
                 FocusListener.focusMethod);
     }
 
-    /**
-     * TODO
-     * 
-     * @param listener
-     */
     public void removeListener(FocusListener listener) {
         removeListener(FOCUS_EVENT, FocusEvent.class, listener);
     }
 
-    /**
-     * TODO
-     * 
-     * @param listener
-     */
     public void addListener(BlurListener listener) {
         addListener(BLUR_EVENT, BlurEvent.class, listener,
                 BlurListener.blurMethod);
     }
 
-    /**
-     * TODO
-     * 
-     * @param listener
-     */
     public void removeListener(BlurListener listener) {
         removeListener(BLUR_EVENT, BlurEvent.class, listener);
     }
