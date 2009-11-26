@@ -119,8 +119,13 @@ public class VTree extends FlowPanel implements Paintable {
                 continue;
             }
             final TreeNode childTree = new TreeNode();
-            this.add(childTree);
+            if (childTree.ie6compatnode != null) {
+                this.add(childTree);
+            }
             childTree.updateFromUIDL(childUidl, client);
+            if (childTree.ie6compatnode == null) {
+                this.add(childTree);
+            }
         }
         final String selectMode = uidl.getStringAttribute("selectmode");
         selectable = !"none".equals(selectMode);
@@ -256,12 +261,14 @@ public class VTree extends FlowPanel implements Paintable {
 
         protected void constructDom() {
             // workaround for a very weird IE6 issue #1245
-            ie6compatnode = DOM.createDiv();
-            setStyleName(ie6compatnode, CLASSNAME + "-ie6compatnode");
-            DOM.setInnerText(ie6compatnode, " ");
-            DOM.appendChild(getElement(), ie6compatnode);
+            if (BrowserInfo.get().isIE6()) {
+                ie6compatnode = DOM.createDiv();
+                setStyleName(ie6compatnode, CLASSNAME + "-ie6compatnode");
+                DOM.setInnerText(ie6compatnode, " ");
+                DOM.appendChild(getElement(), ie6compatnode);
 
-            DOM.sinkEvents(ie6compatnode, Event.ONCLICK);
+                DOM.sinkEvents(ie6compatnode, Event.ONCLICK);
+            }
 
             nodeCaptionDiv = DOM.createDiv();
             DOM.setElementProperty(nodeCaptionDiv, "className", CLASSNAME
@@ -388,8 +395,13 @@ public class VTree extends FlowPanel implements Paintable {
                     continue;
                 }
                 final TreeNode childTree = new TreeNode();
-                childNodeContainer.add(childTree);
+                if (ie6compatnode != null) {
+                    childNodeContainer.add(childTree);
+                }
                 childTree.updateFromUIDL(childUidl, client);
+                if (ie6compatnode == null) {
+                    childNodeContainer.add(childTree);
+                }
             }
             childrenLoaded = true;
         }
@@ -467,7 +479,7 @@ public class VTree extends FlowPanel implements Paintable {
         @Override
         public void onAttach() {
             super.onAttach();
-            if (BrowserInfo.get().isIE6()) {
+            if (ie6compatnode != null) {
                 fixWidth();
             }
         }
