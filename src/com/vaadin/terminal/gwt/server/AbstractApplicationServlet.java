@@ -1175,15 +1175,15 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements 
      * @param request
      * @return The location of static resources (should contain the VAADIN
      *         directory). Never ends with a slash (/).
-     * @throws MalformedURLException
      */
-    String getStaticFilesLocation(HttpServletRequest request) {
+    private String getStaticFilesLocation(HttpServletRequest request) {
 
         // request may have an attribute explicitly telling location (portal
         // case)
         String staticFileLocation = (String) request
                 .getAttribute(REQUEST_VAADIN_STATIC_FILE_PATH);
         if (staticFileLocation != null) {
+            // TODO remove trailing slash if any?
             return staticFileLocation;
         }
 

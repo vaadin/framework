@@ -260,6 +260,33 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         return defaultValue;
     }
 
+    /**
+     * Return the URL from where static files, e.g. the widgetset and the theme,
+     * are served. In a standard configuration the VAADIN folder inside the
+     * returned folder is what is used for widgetsets and themes.
+     *
+     * @param request
+     * @return The location of static resources (inside which there should be a
+     *         VAADIN directory). Does not end with a slash (/).
+     */
+    private String getStaticFilesLocation(PortletRequest request) {
+        // TODO allow overriding on portlet level?
+        String staticFileLocation = getPortalProperty(
+                Constants.PORTAL_PARAMETER_VAADIN_RESOURCE_PATH, request
+                        .getPortalContext());
+        if (staticFileLocation != null) {
+            // remove trailing slash if any
+            while (staticFileLocation.endsWith(".")) {
+                staticFileLocation = staticFileLocation.substring(0,
+                        staticFileLocation.length() - 1);
+            }
+            return staticFileLocation;
+        } else {
+            // default for Liferay
+            return "/html";
+        }
+    }
+
     enum RequestType {
         FILE_UPLOAD, UIDL, RENDER, STATIC_FILE, APPLICATION_RESOURCE, DUMMY, EVENT, UNKNOWN;
     }
@@ -318,18 +345,11 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     protected void handleRequest(PortletRequest request,
             PortletResponse response) throws PortletException, IOException {
-        // System.out.println("AbstractApplicationPortlet.handleRequest() "
-        // + System.currentTimeMillis());
-
         RequestType requestType = getRequestType(request);
-
-        // System.out.println("  RequestType: " + requestType);
-        // System.out.println("  WindowID: " + request.getWindowID());
 
         if (requestType == RequestType.UNKNOWN) {
             System.err.println("Unknown request type");
         } else if (requestType == RequestType.DUMMY) {
-            // System.out.println("Printing Dummy page");
             /*
              * This dummy page is used by action responses to redirect to, in
              * order to prevent the boot strap code from being rendered into
@@ -555,9 +575,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                         / 1000);
                 response.setProperty("Expires", "" + System.currentTimeMillis()
                         + cacheTime);
-                response.setProperty("Pragma", "cache"); // Required to apply
-                // caching in some
-                // Tomcats
+                // Required to apply caching in some Tomcats
+                response.setProperty("Pragma", "cache");
             }
 
             // Copy download stream parameters directly
@@ -602,8 +621,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             ResourceResponse response) throws IOException, PortletException {
         final String resourceID = request.getResourceID();
         final PortletContext pc = getPortletContext();
-
-        // System.out.println("Trying to load resource [" + resourceID + "]");
 
         InputStream is = pc.getResourceAsStream(resourceID);
         if (is != null) {
@@ -762,9 +779,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 .getApplicationContext(session);
 
         final Collection<Application> applications = context.getApplications();
-        for (final Iterator<Application> i = applications.iterator(); i
-                .hasNext();) {
-            final Application sessionApplication = i.next();
+        for (Application sessionApplication : applications) {
             if (request.getWindowID().equals(
                     sessionApplication.getPortletWindowId())) {
                 if (sessionApplication.isRunning()) {
@@ -780,30 +795,30 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     }
 
     protected String getWidgetsetURL(String widgetset, PortletRequest request) {
-        // TODO The widgetset URL is currently hard-corded for LifeRay
-        return "/html/" + WIDGETSET_DIRECTORY_PATH + widgetset + "/"
+        return getStaticFilesLocation(request) + "/" + WIDGETSET_DIRECTORY_PATH
+                + widgetset + "/"
                 + widgetset + ".nocache.js?" + new Date().getTime();
     }
 
     protected String getThemeURI(String themeName, PortletRequest request) {
-        // TODO The theme URI is currently hard-corded for LifeRay
-        return "/html/" + THEME_DIRECTORY_PATH + themeName;
+        return getStaticFilesLocation(request) + "/" + THEME_DIRECTORY_PATH
+                + themeName;
     }
 
     protected void writeAjaxPage(RenderRequest request,
             RenderResponse response, Window window, Application application)
             throws IOException, MalformedURLException, PortletException {
 
-        System.out.println("writeAjaxPage");
-
         response.setContentType("text/html");
         final BufferedWriter page = new BufferedWriter(new OutputStreamWriter(
                 response.getPortletOutputStream(), "UTF-8"));
 
+        // TODO this is broken, not set as no servlet
         String requestWidgetset = (String) request
                 .getAttribute(AbstractApplicationServlet.REQUEST_WIDGETSET);
-        String sharedWidgetset = (String) request
-                .getAttribute(AbstractApplicationServlet.REQUEST_SHARED_WIDGETSET);
+
+        String sharedWidgetset = getPortalProperty(
+                PORTAL_PARAMETER_VAADIN_WIDGETSET, request.getPortalContext());
         if (requestWidgetset == null && sharedWidgetset == null) {
             requestWidgetset = getApplicationOrSystemProperty(
                     PARAMETER_WIDGETSET, DEFAULT_WIDGETSET);
@@ -822,10 +837,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
         String widgetsetURL = getWidgetsetURL(widgetset, request);
         String themeURI = getThemeURI(themeName, request);
-
-        //System.out.println("themeName : " + themeName);
-        //System.out.println("widgetsetURL : " + widgetsetURL);
-        //System.out.println("themeURI : " + themeURI);
 
         // fixed base theme to use - all portal pages with Vaadin
         // applications will load this exactly once
@@ -861,9 +872,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
         /*
          * We need this in order to get uploads to work.
-         *
-         * TODO This may cause weird side effects on other places where appUri
-         * is used!
          */
         PortletURL appUri = response.createActionURL();
 
@@ -907,8 +915,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         if (portalTheme == null) {
             portalTheme = DEFAULT_THEME_NAME;
         }
-
-//        System.out.println("Printing default portal theme " + portalTheme);
 
         page.write("if(!vaadin.themesLoaded['" + portalTheme + "']) {\n");
         page.write("var defaultStylesheet = document.createElement('link');\n");
@@ -973,24 +979,21 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         // Finds theme name
         String themeName;
 
-        if (request.getParameter(URL_PARAMETER_THEME) != null) {
-            themeName = request.getParameter(URL_PARAMETER_THEME);
-        } else {
-            themeName = window.getTheme();
+        // theme defined for the window?
+        themeName = window.getTheme();
+
+        if (themeName == null) {
+            // no, is the default theme defined by the portal?
+            themeName = getPortalProperty(
+                    Constants.PORTAL_PARAMETER_VAADIN_THEME, request
+                            .getPortalContext());
         }
 
         if (themeName == null) {
-            // no explicit theme for window defined
-            if (request
-                    .getAttribute(AbstractApplicationServlet.REQUEST_DEFAULT_THEME) != null) {
-                // the default theme is defined in request (by portal)
-                themeName = (String) request
-                        .getAttribute(AbstractApplicationServlet.REQUEST_DEFAULT_THEME);
-            } else {
-                // using the default theme defined by Vaadin
-                themeName = DEFAULT_THEME_NAME;
-            }
+            // no, using the default theme defined by Vaadin
+            themeName = DEFAULT_THEME_NAME;
         }
+
         return themeName;
     }
 
@@ -1149,7 +1152,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         out.flush();
     }
 
-    private String getPortalProperty(String name, PortalContext context) {
+    private static String getPortalProperty(String name, PortalContext context) {
         boolean isLifeRay = context.getPortalInfo().toLowerCase().contains(
                 "liferay");
 
@@ -1165,7 +1168,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         return value;
     }
 
-    private String getLifeRayPortalProperty(String name) {
+    private static String getLifeRayPortalProperty(String name) {
         String value;
         try {
             value = PropsUtil.get(name);

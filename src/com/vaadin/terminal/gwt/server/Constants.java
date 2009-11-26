@@ -2,9 +2,9 @@ package com.vaadin.terminal.gwt.server;
 
 /**
  * TODO Document me!
- * 
+ *
  * @author peholmst
- * 
+ *
  */
 public interface Constants {
 
@@ -19,7 +19,7 @@ public interface Constants {
             + "===========================================================\n"
             + "WARNING: Cross-site request forgery protection is disabled!\n"
             + "===========================================================";
-    
+
     static final String URL_PARAMETER_RESTART_APPLICATION = "restartApplication";
     static final String URL_PARAMETER_CLOSE_APPLICATION = "closeApplication";
     static final String URL_PARAMETER_REPAINT_ALL = "repaintAll";
@@ -55,5 +55,10 @@ public interface Constants {
     static final String DEFAULT_THEME_NAME = "reindeer";
 
     static final String INVALID_SECURITY_KEY_MSG = "Invalid security key.";
+
+    // portal configuration parameters
+    static final String PORTAL_PARAMETER_VAADIN_WIDGETSET = "vaadin.widgetset";
+    static final String PORTAL_PARAMETER_VAADIN_RESOURCE_PATH = "vaadin.resources.path";
+    static final String PORTAL_PARAMETER_VAADIN_THEME = "vaadin.theme";
 
 }

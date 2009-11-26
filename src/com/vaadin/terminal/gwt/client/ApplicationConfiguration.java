@@ -35,15 +35,21 @@ public class ApplicationConfiguration {
     public boolean usePortletURLs() {
         return usePortletURLs;
     }
-    
+
     public String getPortletUidlURLBase() {
         return portletUidlURLBase;
     }
-    
+
     public String getRootPanelId() {
         return id;
     }
 
+    /**
+     * Gets the application base URI. Using this other than as the download
+     * action URI can cause problems in Portlet 2.0 deployments.
+     * 
+     * @return application base URI
+     */
     public String getApplicationUri() {
         return appUri;
     }
@@ -120,14 +126,14 @@ public class ApplicationConfiguration {
         } else {
             $wnd.alert("Vaadin app failed to initialize: " + this.id);
         }
-     
+
      }-*/;
 
     /**
      * Inits the ApplicationConfiguration by reading the DOM and instantiating
      * ApplicationConnections accordingly. Call {@link #startNextApplication()}
      * to actually start the applications.
-     * 
+     *
      * @param widgetset
      *            the widgetset that is running the apps
      */
@@ -171,7 +177,7 @@ public class ApplicationConfiguration {
      * once to start the first application; after that, each application should
      * call this once it has started. This ensures that the applications are
      * started synchronously, which is neccessary to avoid session-id problems.
-     * 
+     *
      * @return true if an unstarted application was found
      */
     public static boolean startNextApplication() {

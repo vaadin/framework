@@ -30,11 +30,6 @@ public class ApplicationPortlet implements Portlet, Serializable {
     private static final String PORTLET_PARAMETER_STYLE = "style";
     private static final String PORTLET_PARAMETER_WIDGETSET = "widgetset";
 
-    // portal configuration parameters
-    private static final String PORTAL_PARAMETER_VAADIN_WIDGETSET = "vaadin.widgetset";
-    private static final String PORTAL_PARAMETER_VAADIN_RESOURCE_PATH = "vaadin.resources.path";
-    private static final String PORTAL_PARAMETER_VAADIN_THEME = "vaadin.theme";
-
     // The application to show
     protected String app = null;
     // some applications might require forced height (and, more seldom, width)
@@ -97,16 +92,17 @@ public class ApplicationPortlet implements Portlet, Serializable {
                 // fixed base theme to use - all portal pages with Vaadin
                 // applications will load this exactly once
                 String portalTheme = getPortalProperty(
-                        PORTAL_PARAMETER_VAADIN_THEME, portalCtx);
+                        Constants.PORTAL_PARAMETER_VAADIN_THEME, portalCtx);
 
                 String portalWidgetset = getPortalProperty(
-                        PORTAL_PARAMETER_VAADIN_WIDGETSET, portalCtx);
+                        Constants.PORTAL_PARAMETER_VAADIN_WIDGETSET, portalCtx);
 
                 // location of the widgetset(s) and default theme (to which
                 // /VAADIN/widgetsets/...
                 // is appended)
                 String portalResourcePath = getPortalProperty(
-                        PORTAL_PARAMETER_VAADIN_RESOURCE_PATH, portalCtx);
+                        Constants.PORTAL_PARAMETER_VAADIN_RESOURCE_PATH,
+                        portalCtx);
 
                 if (portalResourcePath != null) {
                     // if portalResourcePath is defined, set it as a request

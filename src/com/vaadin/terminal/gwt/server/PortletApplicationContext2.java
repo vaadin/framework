@@ -27,13 +27,14 @@ import javax.portlet.ResourceResponse;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
-
 import com.vaadin.Application;
 import com.vaadin.service.ApplicationContext;
 
 /**
  * TODO Write documentation, fix JavaDoc tags.
- *
+ * 
+ * TODO is implementing HttpSessionBindingListener correct/useful?
+ * 
  * @author peholmst
  */
 @SuppressWarnings("serial")
@@ -51,13 +52,6 @@ public class PortletApplicationContext2 implements ApplicationContext,
     protected WebBrowser browser = new WebBrowser();
 
     protected HashMap<Application, PortletCommunicationManager> applicationToAjaxAppMgrMap = new HashMap<Application, PortletCommunicationManager>();
-
-    public void addTransactionListener(TransactionListener listener) {
-        if (listeners == null) {
-            listeners = new LinkedList<TransactionListener>();
-        }
-        listeners.add(listener);
-    }
 
     public Collection<Application> getApplications() {
         return Collections.unmodifiableCollection(applications);
@@ -77,6 +71,13 @@ public class PortletApplicationContext2 implements ApplicationContext,
             }
         }
         return null;
+    }
+
+    public void addTransactionListener(TransactionListener listener) {
+        if (listeners == null) {
+            listeners = new LinkedList<TransactionListener>();
+        }
+        listeners.add(listener);
     }
 
     public void removeTransactionListener(TransactionListener listener) {
