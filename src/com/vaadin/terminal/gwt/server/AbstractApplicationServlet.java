@@ -1176,7 +1176,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements 
      * @return The location of static resources (should contain the VAADIN
      *         directory). Never ends with a slash (/).
      */
-    private String getStaticFilesLocation(HttpServletRequest request) {
+    protected String getStaticFilesLocation(HttpServletRequest request) {
 
         // request may have an attribute explicitly telling location (portal
         // case)

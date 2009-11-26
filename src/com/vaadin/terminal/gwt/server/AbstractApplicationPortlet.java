@@ -269,7 +269,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * @return The location of static resources (inside which there should be a
      *         VAADIN directory). Does not end with a slash (/).
      */
-    private String getStaticFilesLocation(PortletRequest request) {
+    protected String getStaticFilesLocation(PortletRequest request) {
         // TODO allow overriding on portlet level?
         String staticFileLocation = getPortalProperty(
                 Constants.PORTAL_PARAMETER_VAADIN_RESOURCE_PATH, request
