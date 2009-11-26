@@ -955,6 +955,8 @@ public class VOrderedLayout extends CellBasedLayout {
             if (paintable != null
                     && widgetToComponentContainer.containsKey(paintable)) {
                 return paintable;
+            } else {
+                element = (Element) element.getParentElement();
             }
         }
 
