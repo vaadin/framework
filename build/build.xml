@@ -1379,9 +1379,21 @@
     <!-- Automated tests.                                                   -->
     <!-- ================================================================== -->
 
-    <target name="tests" depends="ant-tests, testbench-tests, integration-tests">
+    <target name="tests" depends="ant-tests, server-side-tests, testbench-tests, integration-tests">
     </target>
 
+    <target name="server-side-tests" depends="compile-java">
+		<junit printsummary="yes"> 
+			<classpath> 
+				<pathelement path="${result-path}/classes" />
+				<path refid="compile.classpath"/>
+			</classpath>
+
+			<batchtest fork="yes">
+				<fileset dir="tests/src" includes="com/vaadin/tests/server/**/*.java" />
+			</batchtest>
+		</junit>
+    </target>
     <target name="testbench-tests" depends="init">
         <fail unless="product-file" message="The 'product-file' property must be defined."/>
         <fail unless="package-platform" message="The 'package-platform' property must be defined."/>
