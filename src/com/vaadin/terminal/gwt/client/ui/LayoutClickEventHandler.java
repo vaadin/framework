@@ -9,7 +9,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 
-abstract class LayoutClickEventHandler extends ClickEventHandler {
+public abstract class LayoutClickEventHandler extends ClickEventHandler {
 
     LayoutClickEventHandler(Paintable paintable, String clickEventIdentifier) {
         super(paintable, clickEventIdentifier);

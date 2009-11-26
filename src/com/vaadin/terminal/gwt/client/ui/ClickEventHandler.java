@@ -19,8 +19,8 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 
-abstract class ClickEventHandler implements ClickHandler, DoubleClickHandler,
-        ContextMenuHandler, MouseUpHandler {
+public abstract class ClickEventHandler implements ClickHandler,
+        DoubleClickHandler, ContextMenuHandler, MouseUpHandler {
 
     private HandlerRegistration clickHandlerRegistration;
     private HandlerRegistration doubleClickHandlerRegistration;
@@ -29,13 +29,15 @@ abstract class ClickEventHandler implements ClickHandler, DoubleClickHandler,
 
     protected String clickEventIdentifier;
     protected Paintable paintable;
+    private ApplicationConnection client;
 
-    ClickEventHandler(Paintable paintable, String clickEventIdentifier) {
+    public ClickEventHandler(Paintable paintable, String clickEventIdentifier) {
         this.paintable = paintable;
         this.clickEventIdentifier = clickEventIdentifier;
     }
 
-    public void handleHandlerRegistration() {
+    public void handleEventHandlerRegistration(ApplicationConnection client) {
+        this.client = client;
         // Handle registering/unregistering of click handler depending on if
         // server side listeners have been added or removed.
         if (hasEventListener()) {
@@ -70,7 +72,9 @@ abstract class ClickEventHandler implements ClickHandler, DoubleClickHandler,
     protected abstract <H extends EventHandler> HandlerRegistration registerHandler(
             final H handler, DomEvent.Type<H> type);
 
-    public abstract ApplicationConnection getApplicationConnection();
+    protected ApplicationConnection getApplicationConnection() {
+        return client;
+    }
 
     public boolean hasEventListener() {
         return getApplicationConnection().hasEventListeners(paintable,

@@ -40,11 +40,6 @@ public class VEmbedded extends HTML implements Paintable {
             CLICK_EVENT_IDENTIFIER) {
 
         @Override
-        public ApplicationConnection getApplicationConnection() {
-            return client;
-        }
-
-        @Override
         protected <H extends EventHandler> HandlerRegistration registerHandler(
                 H handler, Type<H> type) {
             return addDomHandler(handler, type);
@@ -64,7 +59,7 @@ public class VEmbedded extends HTML implements Paintable {
 
         boolean clearBrowserElement = true;
 
-        clickEventHandler.handleHandlerRegistration();
+        clickEventHandler.handleEventHandlerRegistration(client);
 
         if (uidl.hasAttribute("type")) {
             final String type = uidl.getStringAttribute("type");

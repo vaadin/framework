@@ -56,11 +56,6 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
             this, CLICK_EVENT_IDENTIFIER) {
 
         @Override
-        public ApplicationConnection getApplicationConnection() {
-            return client;
-        }
-
-        @Override
         protected Paintable getChildComponent(Element element) {
             return getComponent(element);
         }
@@ -154,7 +149,7 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
             return;
         }
 
-        clickEventHandler.handleHandlerRegistration();
+        clickEventHandler.handleEventHandlerRegistration(client);
 
         HashSet<String> unrenderedPids = new HashSet<String>(
                 pidToComponentWrappper.keySet());
@@ -416,7 +411,6 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
             return measureElement.getOffsetWidth();
         }
     }
-
 
     private Paintable getComponent(Element target) {
         while (target != null && target != canvas) {

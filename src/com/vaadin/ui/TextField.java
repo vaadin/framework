@@ -248,13 +248,6 @@ public class TextField extends AbstractField {
 
         super.changeVariables(source, variables);
 
-        if (variables.containsKey(FOCUS_EVENT)) {
-            fireFocus(variables.get(FOCUS_EVENT));
-        }
-        if (variables.containsKey(BLUR_EVENT)) {
-            fireBlur(variables.get(BLUR_EVENT));
-        }
-
         // Sets the text
         if (variables.containsKey("text") && !isReadOnly()) {
 
@@ -283,6 +276,13 @@ public class TextField extends AbstractField {
                     requestRepaint();
                 }
             }
+        }
+
+        if (variables.containsKey(FOCUS_EVENT)) {
+            fireFocus(variables.get(FOCUS_EVENT));
+        }
+        if (variables.containsKey(BLUR_EVENT)) {
+            fireBlur(variables.get(BLUR_EVENT));
         }
 
     }

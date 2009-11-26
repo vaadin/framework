@@ -80,11 +80,6 @@ public class VPanel extends SimplePanel implements Container {
             CLICK_EVENT_IDENTIFIER) {
 
         @Override
-        public ApplicationConnection getApplicationConnection() {
-            return client;
-        }
-
-        @Override
         protected <H extends EventHandler> HandlerRegistration registerHandler(
                 H handler, Type<H> type) {
             return addDomHandler(handler, type);
@@ -126,7 +121,7 @@ public class VPanel extends SimplePanel implements Container {
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         rendering = true;
         if (!uidl.hasAttribute("cached")) {
-            clickEventHandler.handleHandlerRegistration();
+            clickEventHandler.handleEventHandlerRegistration(client);
 
             // Handle caption displaying and style names, prior generics.
             // Affects size

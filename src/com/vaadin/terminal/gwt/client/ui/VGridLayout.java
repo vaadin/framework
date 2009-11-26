@@ -76,11 +76,6 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
             this, CLICK_EVENT_IDENTIFIER) {
 
         @Override
-        public ApplicationConnection getApplicationConnection() {
-            return client;
-        }
-
-        @Override
         protected Paintable getChildComponent(Element element) {
             return getComponent(element);
         }
@@ -112,7 +107,7 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
             rendering = false;
             return;
         }
-        clickEventHandler.handleHandlerRegistration();
+        clickEventHandler.handleEventHandlerRegistration(client);
 
         canvas.setWidth("0px");
 

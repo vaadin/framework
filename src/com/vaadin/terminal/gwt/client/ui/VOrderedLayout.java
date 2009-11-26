@@ -56,11 +56,6 @@ public class VOrderedLayout extends CellBasedLayout {
             this, CLICK_EVENT_IDENTIFIER) {
 
         @Override
-        public ApplicationConnection getApplicationConnection() {
-            return client;
-        }
-
-        @Override
         protected Paintable getChildComponent(Element element) {
             return getComponent(element);
         }
@@ -100,7 +95,7 @@ public class VOrderedLayout extends CellBasedLayout {
             return;
         }
 
-        clickEventHandler.handleHandlerRegistration();
+        clickEventHandler.handleEventHandlerRegistration(client);
 
         if (allowOrientationUpdate) {
             handleOrientationUpdate(uidl);

@@ -90,6 +90,18 @@ public class MouseEventDetails {
         return instance;
     }
 
+    public String getButtonName() {
+        if (button == BUTTON_LEFT) {
+            return "left";
+        } else if (button == BUTTON_RIGHT) {
+            return "right";
+        } else if (button == BUTTON_MIDDLE) {
+            return "middle";
+        }
+
+        return "";
+    }
+
     public Class<MouseEventDetails> getType() {
         return MouseEventDetails.class;
     }
