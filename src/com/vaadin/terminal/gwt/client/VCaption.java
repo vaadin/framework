@@ -52,7 +52,9 @@ public class VCaption extends HTML {
         this.client = client;
         owner = component;
 
-        setOwnerPid(getElement(), client.getPid(owner));
+        if (client != null && owner != null) {
+            setOwnerPid(getElement(), client.getPid(owner));
+        }
 
         setStyleName(CLASSNAME);
         sinkEvents(VTooltip.TOOLTIP_EVENTS);
