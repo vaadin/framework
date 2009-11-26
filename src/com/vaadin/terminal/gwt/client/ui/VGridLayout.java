@@ -17,7 +17,6 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -1044,20 +1043,18 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
         return cell;
     }
 
+    /**
+     * Returns the child component which contains "element". The child component
+     * is also returned if "element" is part of its caption.
+     * 
+     * @param element
+     *            An element that is a sub element of the root element in this
+     *            layout
+     * @return The Paintable which the element is a part of. Null if the element
+     *         belongs to the layout and not to a child.
+     */
     private Paintable getComponent(Element element) {
-        Element rootElement = getElement();
-        while (element != null && element != rootElement) {
-            Paintable paintable = client.getPaintable(element);
-            if (paintable != null) {
-                Cell cell = paintableToCell.get(paintable);
-                if (cell != null) {
-                    return paintable;
-                }
-            }
-            element = DOM.getParent(element);
-        }
-
-        return null;
+        return Util.getChildPaintableForElement(client, this, element);
     }
 
 }

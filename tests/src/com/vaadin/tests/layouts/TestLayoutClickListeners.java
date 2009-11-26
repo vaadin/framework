@@ -9,6 +9,7 @@ import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -69,6 +70,7 @@ public class TestLayoutClickListeners extends AbstractTestCase {
         layoutsLayout.addComponent(createClickableGridLayout());
         layoutsLayout.addComponent(createClickableVerticalLayout());
         layoutsLayout.addComponent(createClickableAbsoluteLayout());
+        layoutsLayout.addComponent(createClickableCSSLayout());
 
         VerticalLayout mainLayout = new VerticalLayout();
         mainLayout.setMargin(true);
@@ -108,6 +110,38 @@ public class TestLayoutClickListeners extends AbstractTestCase {
         });
 
         return al;
+
+    }
+
+    private Component createClickableCSSLayout() {
+        final CssLayout cl = new CssLayout();
+        cl.setCaption("CSSLayout");
+        cl.setStyleName("borders");
+        cl.setWidth("300px");
+        cl.setHeight("500px");
+        cl.addComponent(new TextField("This is its caption",
+                "This is a textfield"));
+        cl.addComponent(new TextField("Another textfield caption",
+                "This is another textfield"));
+
+        cl.addComponent(new Button("A button with its own click listener",
+                new Button.ClickListener() {
+
+                    public void buttonClick(
+                            com.vaadin.ui.Button.ClickEvent event) {
+                        log.log("Button " + event.getButton().getCaption()
+                                + " was clicked");
+
+                    }
+                }));
+        cl.addListener(new LayoutClickListener() {
+
+            public void layoutClick(LayoutClickEvent event) {
+                logLayoutClick("CSSLayout", event.getChildComponent());
+            }
+        });
+
+        return cl;
 
     }
 

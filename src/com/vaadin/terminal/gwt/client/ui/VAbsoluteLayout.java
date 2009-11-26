@@ -24,6 +24,7 @@ import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 
 public class VAbsoluteLayout extends ComplexPanel implements Container {
@@ -412,20 +413,18 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
         }
     }
 
-    private Paintable getComponent(Element target) {
-        while (target != null && target != canvas) {
-            Paintable paintable = client.getPaintable(target);
-            if (paintable != null) {
-                String pid = client.getPid(paintable);
-                AbsoluteWrapper wrapper = pidToComponentWrappper.get(pid);
-                if (wrapper != null) {
-                    return paintable;
-                }
-            }
-            target = DOM.getParent(target);
-        }
-
-        return null;
+    /**
+     * Returns the child component which contains "element". The child component
+     * is also returned if "element" is part of its caption.
+     * 
+     * @param element
+     *            An element that is a sub element of the root element in this
+     *            layout
+     * @return The Paintable which the element is a part of. Null if the element
+     *         belongs to the layout and not to a child.
+     */
+    private Paintable getComponent(Element element) {
+        return Util.getChildPaintableForElement(client, this, element);
     }
 
 }

@@ -938,24 +938,17 @@ public class VOrderedLayout extends CellBasedLayout {
     }
 
     /**
-     * Returns the child component which contains "element".
+     * Returns the child component which contains "element". The child component
+     * is also returned if "element" is part of its caption.
      * 
      * @param element
-     * @return
+     *            An element that is a sub element of the root element in this
+     *            layout
+     * @return The Paintable which the element is a part of. Null if the element
+     *         belongs to the layout and not to a child.
      */
     private Paintable getComponent(Element element) {
-        Element rootElement = getElement();
-        while (element != null && element != rootElement) {
-            Paintable paintable = client.getPaintable(element);
-            if (paintable != null
-                    && widgetToComponentContainer.containsKey(paintable)) {
-                return paintable;
-            } else {
-                element = (Element) element.getParentElement();
-            }
-        }
-
-        return null;
+        return Util.getChildPaintableForElement(client, this, element);
     }
 
 }

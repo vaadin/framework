@@ -755,4 +755,49 @@ public class Util {
 
     }
 
+    /**
+     * Locates the child component of <literal>parent</literal> which contains
+     * the element <literal>element</literal>. The child component is also
+     * returned if "element" is part of its caption. If
+     * <literal>element</literal> is not part of any child component, null is
+     * returned.
+     * 
+     * @param client
+     *            A reference to ApplicationConnection
+     * @param parent
+     *            The widget that contains <literal>element</literal>.
+     * @param element
+     *            An element that is a sub element of the parent
+     * @return The Paintable which the element is a part of. Null if the element
+     *         does not belong to a child.
+     */
+    public static Paintable getChildPaintableForElement(
+            ApplicationConnection client, Container parent, Element element) {
+        Element rootElement = ((Widget) parent).getElement();
+        while (element != null && element != rootElement) {
+            Paintable paintable = client.getPaintable(element);
+            if (paintable == null) {
+                String ownerPid = VCaption.getCaptionOwnerPid(element);
+                if (ownerPid != null) {
+                    paintable = client.getPaintable(ownerPid);
+                }
+            }
+
+            if (paintable != null) {
+                try {
+                    if (parent.hasChildComponent((Widget) paintable)) {
+                        return paintable;
+                    }
+                } catch (ClassCastException e) {
+                    // We assume everything is a widget however there is no need
+                    // to crash everything if there is a paintable that is not.
+                }
+            }
+
+            element = (Element) element.getParentElement();
+        }
+
+        return null;
+    }
+
 }

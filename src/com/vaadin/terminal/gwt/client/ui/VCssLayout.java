@@ -10,6 +10,9 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.DomEvent.Type;
+import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -22,16 +25,33 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.StyleConstants;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.ValueMap;
 
 public class VCssLayout extends SimplePanel implements Paintable, Container {
     public static final String TAGNAME = "csslayout";
     public static final String CLASSNAME = "v-" + TAGNAME;
+    public static final String CLICK_EVENT_IDENTIFIER = "click";
 
     private FlowPane panel = new FlowPane();
 
     private Element margin = DOM.createDiv();
+
+    private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
+            this, CLICK_EVENT_IDENTIFIER) {
+
+        @Override
+        protected Paintable getChildComponent(Element element) {
+            return panel.getComponent(element);
+        }
+
+        @Override
+        protected <H extends EventHandler> HandlerRegistration registerHandler(
+                H handler, Type<H> type) {
+            return addDomHandler(handler, type);
+        }
+    };
 
     private boolean hasHeight;
     private boolean hasWidth;
@@ -68,6 +88,7 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
         if (client.updateComponent(this, uidl, true)) {
             return;
         }
+        clickEventHandler.handleEventHandlerRegistration(client);
 
         final VMarginInfo margins = new VMarginInfo(uidl
                 .getIntAttribute("margins"));
@@ -206,6 +227,12 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
                 widgetToCaption.remove(component);
             }
         }
+
+        private Paintable getComponent(Element element) {
+            return Util.getChildPaintableForElement(client, VCssLayout.this,
+                    element);
+        }
+
     }
 
     private RenderSpace space;

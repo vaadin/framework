@@ -334,8 +334,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * Add a click listener to the layout. The listener is called whenever the
      * user clicks inside the layout. Also when the click targets a component
      * inside the Panel, provided the targeted component does not prevent the
-     * click event from propagating. A caption is not considered part of a
-     * component.
+     * click event from propagating.
      * 
      * The child component that was clicked is included in the
      * {@link LayoutClickEvent}.

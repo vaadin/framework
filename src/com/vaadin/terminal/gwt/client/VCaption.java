@@ -51,6 +51,9 @@ public class VCaption extends HTML {
         super();
         this.client = client;
         owner = component;
+
+        setOwnerPid(getElement(), client.getPid(owner));
+
         setStyleName(CLASSNAME);
         sinkEvents(VTooltip.TOOLTIP_EVENTS);
 
@@ -439,5 +442,19 @@ public class VCaption extends HTML {
     protected Element getTextElement() {
         return captionText;
     }
+
+    public static String getCaptionOwnerPid(Element e) {
+        return getOwnerPid(e);
+    }
+
+    private native static void setOwnerPid(Element el, String pid)
+    /*-{
+        el.vOwnerPid = pid;
+    }-*/;
+
+    public native static String getOwnerPid(Element el)
+    /*-{
+        return el.vOwnerPid;
+    }-*/;
 
 }
