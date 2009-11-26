@@ -109,6 +109,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements 
     /**
      * If the attribute is present in the request, a html fragment will be
      * written instead of a whole page.
+     *
+     * It is set to "true" by the {@link ApplicationPortlet} (Portlet 1.0) and
+     * read by {@link AbstractApplicationServlet}.
      */
     public static final String REQUEST_FRAGMENT = ApplicationServlet.class
             .getName()
@@ -116,6 +119,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements 
     /**
      * This request attribute forces widgetsets to be loaded from under the
      * specified base path; e.g shared widgetset for all portlets in a portal.
+     * 
+     * It is set by the {@link ApplicationPortlet} (Portlet 1.0) based on
+     * {@link Constants.PORTAL_PARAMETER_VAADIN_RESOURCE_PATH} and read by
+     * {@link AbstractApplicationServlet}.
      */
     public static final String REQUEST_VAADIN_STATIC_FILE_PATH = ApplicationServlet.class
             .getName()
@@ -123,6 +130,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements 
     /**
      * This request attribute forces widgetset used; e.g for portlets that can
      * not have different widgetsets.
+     *
+     * It is set by the {@link ApplicationPortlet} (Portlet 1.0) based on
+     * {@link ApplicationPortlet.PORTLET_PARAMETER_WIDGETSET} and read by
+     * {@link AbstractApplicationServlet}.
      */
     public static final String REQUEST_WIDGETSET = ApplicationServlet.class
             .getName()
@@ -130,6 +141,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements 
     /**
      * This request attribute indicates the shared widgetset (e.g. portal-wide
      * default widgetset).
+     *
+     * It is set by the {@link ApplicationPortlet} (Portlet 1.0) based on
+     * {@link Constants.PORTAL_PARAMETER_VAADIN_WIDGETSET} and read by
+     * {@link AbstractApplicationServlet}.
      */
     public static final String REQUEST_SHARED_WIDGETSET = ApplicationServlet.class
             .getName()
@@ -137,6 +152,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements 
     /**
      * If set, do not load the default theme but assume that loading it is
      * handled e.g. by ApplicationPortlet.
+     *
+     * It is set by the {@link ApplicationPortlet} (Portlet 1.0) based on
+     * {@link Constants.PORTAL_PARAMETER_VAADIN_THEME} and read by
+     * {@link AbstractApplicationServlet}.
      */
     public static final String REQUEST_DEFAULT_THEME = ApplicationServlet.class
             .getName()
@@ -145,6 +164,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements 
      * This request attribute is used to add styles to the main element. E.g
      * "height:500px" generates a style="height:500px" to the main element,
      * useful from some embedding situations (e.g portlet include.)
+     *
+     * It is typically set by the {@link ApplicationPortlet} (Portlet 1.0) based
+     * on {@link ApplicationPortlet.PORTLET_PARAMETER_STYLE} and read by
+     * {@link AbstractApplicationServlet}.
      */
     public static final String REQUEST_APPSTYLE = ApplicationServlet.class
             .getName()

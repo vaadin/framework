@@ -749,7 +749,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         if (session != null) {
             PortletApplicationContext2 context = PortletApplicationContext2
                     .getApplicationContext(session);
-            context.applicationToAjaxAppMgrMap.remove(application);
             context.removeApplication(application);
         }
     }
@@ -813,21 +812,19 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         final BufferedWriter page = new BufferedWriter(new OutputStreamWriter(
                 response.getPortletOutputStream(), "UTF-8"));
 
-        // TODO this is broken, not set as no servlet
-        String requestWidgetset = (String) request
-                .getAttribute(AbstractApplicationServlet.REQUEST_WIDGETSET);
-
+        // TODO check
+        String requestWidgetset = getApplicationOrSystemProperty(
+                PARAMETER_WIDGETSET, null);
         String sharedWidgetset = getPortalProperty(
                 PORTAL_PARAMETER_VAADIN_WIDGETSET, request.getPortalContext());
-        if (requestWidgetset == null && sharedWidgetset == null) {
-            requestWidgetset = getApplicationOrSystemProperty(
-                    PARAMETER_WIDGETSET, DEFAULT_WIDGETSET);
-        }
+
         String widgetset;
         if (requestWidgetset != null) {
             widgetset = requestWidgetset;
-        } else {
+        } else if (sharedWidgetset != null) {
             widgetset = sharedWidgetset;
+        } else {
+            widgetset = DEFAULT_WIDGETSET;
         }
 
         // TODO Currently, we can only load widgetsets and themes from the

@@ -1,4 +1,4 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
@@ -27,6 +27,9 @@ import com.vaadin.service.ApplicationContext;
 /**
  * Web application context for Vaadin applications.
  * 
+ * This is automatically added as a {@link HttpSessionBindingListener} when
+ * added to a {@link HttpSession}.
+ *
  * @author IT Mill Ltd.
  * @version
  * @VERSION@
@@ -49,7 +52,7 @@ public class WebApplicationContext implements ApplicationContext,
 
     /**
      * Creates a new Web Application Context.
-     * 
+     *
      */
     WebApplicationContext() {
 
@@ -57,7 +60,7 @@ public class WebApplicationContext implements ApplicationContext,
 
     /**
      * Gets the application context base directory.
-     * 
+     *
      * @see com.vaadin.service.ApplicationContext#getBaseDirectory()
      */
     public File getBaseDirectory() {
@@ -71,7 +74,7 @@ public class WebApplicationContext implements ApplicationContext,
 
     /**
      * Gets the http-session application is running in.
-     * 
+     *
      * @return HttpSession this application context resides in.
      */
     public HttpSession getHttpSession() {
@@ -80,7 +83,7 @@ public class WebApplicationContext implements ApplicationContext,
 
     /**
      * Gets the applications in this context.
-     * 
+     *
      * @see com.vaadin.service.ApplicationContext#getApplications()
      */
     public Collection<Application> getApplications() {
@@ -89,7 +92,7 @@ public class WebApplicationContext implements ApplicationContext,
 
     /**
      * Gets the application context for an HttpSession.
-     * 
+     *
      * @param session
      *            the HTTP session.
      * @return the application context for HttpSession.
@@ -112,8 +115,8 @@ public class WebApplicationContext implements ApplicationContext,
      * Adds a transaction listener to this context. The transaction listener is
      * called before and after each each HTTP request related to this session
      * except when serving static resources.
-     * 
-     * 
+     *
+     *
      * @see com.vaadin.service.ApplicationContext#addTransactionListener(com.vaadin.service.ApplicationContext.TransactionListener)
      */
     public void addTransactionListener(TransactionListener listener) {
@@ -124,7 +127,7 @@ public class WebApplicationContext implements ApplicationContext,
      * Removes a transaction listener from this context. The transaction
      * listener is called before and after each each HTTP request related to
      * this session except when serving static resources.
-     * 
+     *
      * @see com.vaadin.service.ApplicationContext#removeTransactionListener(com.vaadin.service.ApplicationContext.TransactionListener)
      */
     public void removeTransactionListener(TransactionListener listener) {
@@ -134,7 +137,7 @@ public class WebApplicationContext implements ApplicationContext,
 
     /**
      * Sends a notification that a transaction is starting.
-     * 
+     *
      * @param application
      *            The application associated with the transaction.
      * @param request
@@ -151,7 +154,7 @@ public class WebApplicationContext implements ApplicationContext,
 
     /**
      * Sends a notification that a transaction has ended.
-     * 
+     *
      * @param application
      *            The application associated with the transaction.
      * @param request
@@ -233,11 +236,11 @@ public class WebApplicationContext implements ApplicationContext,
 
     /**
      * Get the web browser associated with this application context.
-     * 
+     *
      * Because application context is related to the http session and server
      * maintains one session per browser-instance, each context has exactly one
      * web browser associated with it.
-     * 
+     *
      * @return
      */
     public WebBrowser getBrowser() {
@@ -246,10 +249,10 @@ public class WebApplicationContext implements ApplicationContext,
 
     /**
      * Gets communication manager for an application.
-     * 
+     *
      * If this application has not been running before, a new manager is
      * created.
-     * 
+     *
      * @param application
      * @return CommunicationManager
      */

@@ -32,9 +32,10 @@ import com.vaadin.service.ApplicationContext;
 
 /**
  * TODO Write documentation, fix JavaDoc tags.
- * 
- * TODO is implementing HttpSessionBindingListener correct/useful?
- * 
+ *
+ * This is automatically registered as a {@link HttpSessionBindingListener} when
+ * {@link PortletSession#setAttribute()} is called with the context as value.
+ *
  * @author peholmst
  */
 @SuppressWarnings("serial")
