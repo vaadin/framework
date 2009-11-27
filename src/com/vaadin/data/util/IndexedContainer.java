@@ -9,7 +9,6 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.EventObject;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,7 +16,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.vaadin.data.Container;
@@ -49,8 +47,8 @@ import com.vaadin.data.Property;
 @SuppressWarnings("serial")
 public class IndexedContainer implements Container.Indexed,
         Container.ItemSetChangeNotifier, Container.PropertySetChangeNotifier,
-        Property.ValueChangeNotifier, Container.Sortable, Comparator<Object>,
-        Cloneable, Container.Filterable {
+        Property.ValueChangeNotifier, Container.Sortable, Cloneable,
+        Container.Filterable {
 
     /* Internal structure */
 
@@ -108,14 +106,9 @@ public class IndexedContainer implements Container.Indexed,
     private LinkedList itemSetChangeListeners = null;
 
     /**
-     * Temporary store for sorting property ids.
+     * The item sorter which is used for sorting the container.
      */
-    private Object[] sortPropertyId;
-
-    /**
-     * Temporary store for sorting direction.
-     */
-    private boolean[] sortDirection;
+    private ItemSorter itemSorter = new DefaultItemSorter();
 
     /**
      * Filters that are applied to the container to limit the items visible in
@@ -1379,49 +1372,31 @@ public class IndexedContainer implements Container.Indexed,
      * boolean[])
      */
     public void sort(Object[] propertyId, boolean[] ascending) {
+        // Set up the item sorter for the sort operation
+        itemSorter.setSortProperties(this, propertyId, ascending);
 
-        // Removes any non-sortable property ids
-        final List ids = new ArrayList();
-        final List<Boolean> orders = new ArrayList<Boolean>();
-        final Collection sortable = getSortableContainerPropertyIds();
-        for (int i = 0; i < propertyId.length; i++) {
-            if (sortable.contains(propertyId[i])) {
-                ids.add(propertyId[i]);
-                orders.add(Boolean.valueOf(i < ascending.length ? ascending[i]
-                        : true));
-            }
-        }
-
-        if (ids.size() == 0) {
-            return;
-        }
-        sortPropertyId = ids.toArray();
-        sortDirection = new boolean[orders.size()];
-        for (int i = 0; i < sortDirection.length; i++) {
-            sortDirection[i] = (orders.get(i)).booleanValue();
-        }
-
+        // Perform the actual sort
         doSort();
 
+        // Post sort updates
         if (filteredItemIds != null) {
             updateContainerFiltering();
         } else {
             fireContentsChange(-1);
         }
 
-        // Remove temporary references
-        sortPropertyId = null;
-        sortDirection = null;
-
     }
 
     /**
-     * Perform the sorting of the container. Called when everything needed for
-     * the compare function has been set up.
+     * Perform the sorting of the data structures in the container. This is
+     * invoked when the <code>itemSorter</code> has been prepared for the sort
+     * operation. Typically this method calls
+     * <code>Collections.sort(aCollection, getItemSorter())</code> on all arrays
+     * (containing item ids) that need to be sorted.
      * 
      */
-    void doSort() {
-        Collections.sort(itemIds, this);
+    protected void doSort() {
+        Collections.sort(itemIds, getItemSorter());
     }
 
     /*
@@ -1430,7 +1405,7 @@ public class IndexedContainer implements Container.Indexed,
      * @see com.vaadin.data.Container.Sortable#getSortableContainerPropertyIds
      * ()
      */
-    public Collection getSortableContainerPropertyIds() {
+    public Collection<?> getSortableContainerPropertyIds() {
 
         final LinkedList list = new LinkedList();
         for (final Iterator i = propertyIds.iterator(); i.hasNext();) {
@@ -1445,52 +1420,25 @@ public class IndexedContainer implements Container.Indexed,
     }
 
     /**
-     * Compares two items for sorting.
+     * Returns the ItemSorter used for comparing items in a sort. See
+     * {@link #setItemSorter(ItemSorter)} for more information.
      * 
-     * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-     * @see #sort((java.lang.Object[], boolean[])
+     * @return The ItemSorter used for comparing two items in a sort.
      */
-    public int compare(Object o1, Object o2) {
+    public ItemSorter getItemSorter() {
+        return itemSorter;
+    }
 
-        for (int i = 0; i < sortPropertyId.length; i++) {
-
-            // Get the compared properties
-            final Property pp1 = getContainerProperty(o1, sortPropertyId[i]);
-            final Property pp2 = getContainerProperty(o2, sortPropertyId[i]);
-
-            // Get the compared values
-            final Object p1 = pp1 == null ? null : pp1.getValue();
-            final Object p2 = pp2 == null ? null : pp2.getValue();
-
-            // Result of the comparison
-            int r = 0;
-
-            // Normal non-null comparison
-            if (p1 != null && p2 != null) {
-                if ((p1 instanceof Boolean) && (p2 instanceof Boolean)) {
-                    r = p1.equals(p2) ? 0
-                            : ((sortDirection[i] ? 1 : -1) * (((Boolean) p1)
-                                    .booleanValue() ? 1 : -1));
-                } else {
-                    r = sortDirection[i] ? ((Comparable) p1).compareTo(p2)
-                            : -((Comparable) p1).compareTo(p2);
-                }
-            }
-
-            // If both are nulls
-            else if (p1 == p2) {
-                r = 0;
-            } else {
-                r = (sortDirection[i] ? 1 : -1) * (p1 == null ? -1 : 1);
-            }
-
-            // If order can be decided
-            if (r != 0) {
-                return r;
-            }
-        }
-
-        return 0;
+    /**
+     * Sets the ItemSorter used for comparing items in a sort. The ItemSorter is
+     * called for each collection that needs sorting. A default ItemSorter is
+     * used if this is not explicitly set.
+     * 
+     * @param itemSorter
+     *            The ItemSorter used for comparing two items in a sort.
+     */
+    public void setItemSorter(ItemSorter itemSorter) {
+        this.itemSorter = itemSorter;
     }
 
     /**
@@ -1524,10 +1472,7 @@ public class IndexedContainer implements Container.Indexed,
         nc.singlePropertyValueChangeListeners = singlePropertyValueChangeListeners != null ? (Hashtable) singlePropertyValueChangeListeners
                 .clone()
                 : null;
-        nc.sortDirection = sortDirection != null ? (boolean[]) sortDirection
-                .clone() : null;
-        nc.sortPropertyId = sortPropertyId != null ? (Object[]) sortPropertyId
-                .clone() : null;
+
         nc.types = types != null ? (Hashtable) types.clone() : null;
 
         nc.filters = filters == null ? null : (HashSet<Filter>) filters.clone();

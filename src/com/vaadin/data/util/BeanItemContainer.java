@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -51,6 +50,11 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     private List<ItemSetChangeListener> itemSetChangeListeners;
 
     private Set<Filter> filters = new HashSet<Filter>();
+
+    /**
+     * The item sorter which is used for sorting the container.
+     */
+    private ItemSorter itemSorter = new DefaultItemSorter();
 
     /* Special serialization to handle method references */
     private void readObject(java.io.ObjectInputStream in) throws IOException,
@@ -385,44 +389,31 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         return sortables;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.Container.Sortable#sort(java.lang.Object[],
+     * boolean[])
+     */
     public void sort(Object[] propertyId, boolean[] ascending) {
-        for (int i = 0; i < ascending.length; i++) {
-            final boolean asc = ascending[i];
-            final Object property = propertyId[i];
-            // sort allItems, then filter and notify
-            Collections.sort(allItems, new Comparator<BT>() {
-                @SuppressWarnings("unchecked")
-                public int compare(BT a, BT b) {
-                    Comparable va, vb;
-                    if (asc) {
-                        va = (Comparable) getItem(a).getItemProperty(property)
-                                .getValue();
-                        vb = (Comparable) getItem(b).getItemProperty(property)
-                                .getValue();
-                    } else {
-                        va = (Comparable) getItem(b).getItemProperty(property)
-                                .getValue();
-                        vb = (Comparable) getItem(a).getItemProperty(property)
-                                .getValue();
-                    }
+        itemSorter.setSortProperties(this, propertyId, ascending);
 
-                    /*
-                     * Null values are considered less than all others. The
-                     * compareTo method cannot handle null values for the
-                     * standard types.
-                     */
-                    if (va == null) {
-                        return (vb == null) ? 0 : -1;
-                    } else if (vb == null) {
-                        return 1;
-                    }
+        doSort();
 
-                    return va.compareTo(vb);
-                }
-            });
-        }
         // notifies if anything changes in the filtered list, including order
         filterAll();
+    }
+
+    /**
+     * Perform the sorting of the data structures in the container. This is
+     * invoked when the <code>itemSorter</code> has been prepared for the sort
+     * operation. Typically this method calls
+     * <code>Collections.sort(aCollection, getItemSorter())</code> on all arrays
+     * (containing item ids) that need to be sorted.
+     * 
+     */
+    protected void doSort() {
+        Collections.sort(allItems, getItemSorter());
     }
 
     public void addListener(ItemSetChangeListener listener) {
@@ -529,6 +520,14 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     public void valueChange(ValueChangeEvent event) {
         // if a property that is used in a filter is changed, refresh filtering
         filterAll();
+    }
+
+    public ItemSorter getItemSorter() {
+        return itemSorter;
+    }
+
+    public void setItemSorter(ItemSorter itemSorter) {
+        this.itemSorter = itemSorter;
     }
 
 }

@@ -308,12 +308,18 @@ public class HierarchicalContainer extends IndexedContainer implements
         return success;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.util.IndexedContainer#doSort()
+     */
     @Override
-    void doSort() {
+    protected void doSort() {
         super.doSort();
-        Collections.sort(roots, this);
+
+        Collections.sort(roots, getItemSorter());
         for (LinkedList<Object> childList : children.values()) {
-            Collections.sort(childList, this);
+            Collections.sort(childList, getItemSorter());
         }
     }
 
