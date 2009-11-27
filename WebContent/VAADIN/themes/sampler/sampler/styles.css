@@ -1,8 +1,12 @@
 /******************************************************************************
  * Sampler styles
  ******************************************************************************/
+ h3 {
+ 	margin-bottom: 0.2em;
+ }
+ 
 .v-app-SamplerApplication {
-	background-color: white;
+	background-color: #fff;
 }
 
 .v-app-SamplerApplication .v-horizontallayout-topbar {
@@ -128,7 +132,8 @@
 .v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-next.v-pressed,
 .v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-next.v-disabled,
 .v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-tree-switch:active,
-.v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-tree-switch.v-pressed {
+.v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-tree-switch.v-pressed,
+.v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton-down.v-nativebutton-tree-switch {
 	background-position: right bottom;
 }
 .v-app-SamplerApplication .v-horizontallayout-segment .v-nativebutton,
@@ -252,6 +257,7 @@
 
 .v-app-SamplerApplication .v-splitpanel-first-container-main-split {
 	background: #eaebec url(tree-bg.png) repeat-x fixed;
+	font-family: arial, helvetica, verdana, sans-serif;
 }
 
 .v-app-SamplerApplication .v-splitpanel-hsplitter-main-split {
@@ -270,11 +276,17 @@
 }
 
 
+
+.v-app-SamplerApplication .v-splitpanel-first-container-main-split .v-link {
+	padding: 13px 0 5px 18px;
+	font-weight: bold;
+}
+
+
 .v-app-SamplerApplication .v-tree-menu {
-	font-family: arial, helvetica, verdana, sans-serif;
 	font-size: 12px;
 	line-height: 17px;
-	padding: 13px 0;
+	padding: 0 0 13px;
 }
 .v-sa .v-app-SamplerApplication .v-tree-menu {
 	font-family: helvetica, arial, verdana, sans-serif;
@@ -291,33 +303,75 @@
 
 
 /* Sample grid styles */
-.v-app-SamplerApplication .v-csslayout-grid {
-	background: transparent url(grid-bg.png) 0 80px;
-	margin: 0 20px 50px;
+.v-app-SamplerApplication div.v-csslayout-grid {
+	margin-bottom: 50px;
+	min-height: 0;
 }
 
-.v-app-SamplerApplication .v-label-section {
-	font-family: "Helvetica Neue", helvetica, arial, verdana, sans-serif;
-	font-size: 24px;
-	font-weight: normal;
+.v-app-SamplerApplication .v-label-root-section {
+	font-family: arial, helvetica, verdana, sans-serif;
 	line-height: normal;
+	padding: 30px 0 10px 0;
+	margin: 0 30px 10px;
+	height: 30px;
+	border-bottom: 1px solid #d5d8db;
+	color: #707376;
+	clear: left;
+}
+
+.v-sa .v-app-SamplerApplication .v-label-root-section {
+	font-family: helvetica, arial, verdana, sans-serif;
+}
+
+.v-app-SamplerApplication .v-label-root-section em {
+	float: right;
+	margin-top: 12px;
+	font-style: normal;
+	color: #b4b8bc;
+	font-size: 11px;
+	font-weight: bold;
+	text-transform: uppercase;
+	letter-spacing: 0.02em;
+}
+
+.v-app-SamplerApplication .v-label-root-section h2 {
+	font-family: "Helvetica Neue", helvetica, arial, verdana, sans-serif;
+	margin: 0 20px 0 0;
+	font-size: 24px;
+	font-weight: bold;
 	text-shadow: 0 2px 1px #c0c1c2;
 	color: #1e2229;
-	padding: 30px 0 20px 0;
-	height: 30px;
+	float: left;
+}
+.v-app-SamplerApplication .v-label-root-section span {
+	display: block;
+	white-space: nowrap;
+	margin: 12px 10px 0 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.v-csslayout-grid .v-csslayout-root {
+	padding: 0 20px 20px;
+}
+
+.v-csslayout-grid .v-csslayout-featureset {
+	float: left;
+}
+
+.v-csslayout-grid .v-csslayout-featureset-odd {
+	background: #fafafa;
+}
+
+.v-csslayout-grid .v-csslayout-title {
+	clear: left;
 }
 
 .v-csslayout-grid .v-label-subsection {
 	font-size: 11px;
 	line-height: 16px;
 	color: #787b7e;
-	float: left;
-	clear: left;
-	width: 155px;
-	height: 131px;
-	padding: 15px 175px 0 15px;
-	margin-right: -175px;
-	background: transparent url(subsection-bg.png) no-repeat;
+	padding: 15px 0 5px;
 	white-space: normal;
 }
 
@@ -335,7 +389,7 @@
 	float: left;
 	height: 132px;
 	width: 87px;
-	margin: 14px 15px 0;
+	margin: 4px 8px 0 4px;
 	position: relative;
 }
 
@@ -346,7 +400,9 @@
 	position: absolute;
 }
 
-.v-csslayout-grid .screenshot .v-button-caption {
+.v-csslayout-grid .screenshot span,
+.v-csslayout-grid .screenshot a:link span,
+.v-csslayout-grid .screenshot a:visited span {
 	display: block;
 	width: 87px;
 	text-align: center;
@@ -355,26 +411,100 @@
 	font-size: 12px;
 	color: #212325;
 	font-family: arial, helvetica, sans-serif;
-	font-weight: bold;
+	font-weight: normal;
 	line-height: normal;
 	position: absolute;
 	background: transparent url(screenshot-frame.png) no-repeat 4px 2px;
 	padding-top: 84px;
 	height: 30px;
+	color: #222;
 }
-.v-csslayout-grid .screenshot:hover .v-button-caption {
-	background: transparent url(screenshot-frame-hover.png) no-repeat 1px 0px;
+.v-csslayout-grid .screenshot a:hover span {
+	background: transparent url(screenshot-frame-hover.png) no-repeat 1px 0;
+}
+.v-csslayout-grid .new span {
+	background: transparent url(screenshot-frame-new.png) no-repeat 2px 0;
+}
+.v-csslayout-grid .new a:hover span {
+	background: transparent url(screenshot-frame-new-hover.png) no-repeat 1px 0;
 }
 
-/*
-.v-app-SamplerApplication .v-label-subsection {
-	font-family: helvetica, arial, verdana, sans-serif;
-	font-size: 16px;
+
+/* Highlight features (samples directly inside the root) */
+.v-csslayout-grid .highlights-title {
+	height: 40px;
+}
+.v-csslayout-grid .highlights-title h2 {
+	font-size: 36px;
 	font-weight: normal;
-	color: #666666;
-	text-indent: 15px;
-	padding-right: 20px;
-}*/
+}
+.v-csslayout-grid .highlights-title em {
+	margin-top: 24px;
+}
+.v-csslayout-grid .highlights-description {
+	font-size: 14px;
+	line-height: 24px;
+	margin: 10px 30px 20px;
+	white-space: normal;
+	color: #555a5f;
+}
+.v-csslayout-highlight {
+	width: 50%;
+	float: left;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	overflow: visible;
+
+}
+
+.v-sa .v-csslayout-highlight {
+	font-family: Helvetica, Arial, sans-serif;
+}
+
+.v-csslayout-highlight .v-csslayout-margin {
+	margin: 10px 25px 30px;
+}
+
+.highlight .v-link a {
+	display: block;
+	height: 90px;
+	position: relative;
+}
+
+.highlight .v-link .v-icon {
+	margin: 4px 0 4px 5px;
+}
+
+.highlight .v-link span {
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: 4px 0 0 92px;
+	height: 87px;
+	font-size: 18px;
+	font-weight: bold;
+	text-decoration: none;
+	text-shadow: 0 2px 1px #e1e2e2;
+	vertical-align: top;
+	background: transparent url(screenshot-frame.png) no-repeat 3px 3px;
+	text-overflow: ellipsis;
+}
+
+.highlight .v-link a:hover span {
+	background: transparent url(screenshot-frame-hover.png) no-repeat 0 1px;
+}
+
+.highlight .v-label {
+	white-space: normal;
+	margin: -55px 0 0 92px;
+}
+
+.highlight .v-label p {
+	margin-top: 0;
+}
+
+
 
 
 .v-app-SamplerApplication .v-table-featuretable tr.v-table-row,

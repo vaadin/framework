@@ -75,3 +75,7 @@
 	overflow: hidden;
 	background: #ddd;
 }
+.v-menubar .v-icon,
+.v-menubar-submenu .v-icon {
+	margin-right: 3px;
+}
