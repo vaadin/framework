@@ -1,16 +1,10 @@
 package com.vaadin.terminal.gwt.server;
 
 import java.io.File;
-import java.io.PrintWriter;
 import java.io.Serializable;
-import java.io.StringWriter;
 import java.net.URL;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
@@ -18,17 +12,17 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
-import javax.portlet.PortletRequest;
+import javax.portlet.MimeResponse;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
-import javax.servlet.http.HttpSessionBindingEvent;
+import javax.portlet.ResourceURL;
 import javax.servlet.http.HttpSessionBindingListener;
 
 import com.vaadin.Application;
-import com.vaadin.service.ApplicationContext;
+import com.vaadin.terminal.ApplicationResource;
 
 /**
  * TODO Write documentation, fix JavaDoc tags.
@@ -39,24 +33,15 @@ import com.vaadin.service.ApplicationContext;
  * @author peholmst
  */
 @SuppressWarnings("serial")
-public class PortletApplicationContext2 implements ApplicationContext,
-        HttpSessionBindingListener, Serializable {
-
-    protected LinkedList<TransactionListener> listeners;
+public class PortletApplicationContext2 extends AbstractWebApplicationContext {
 
     protected Map<Application, Set<PortletListener>> portletListeners = new HashMap<Application, Set<PortletListener>>();
 
     protected transient PortletSession session;
 
-    protected final HashSet<Application> applications = new HashSet<Application>();
+    protected HashMap<String, Application> portletWindowIdToApplicationMap = new HashMap<String, Application>();
 
-    protected WebBrowser browser = new WebBrowser();
-
-    protected HashMap<Application, PortletCommunicationManager> applicationToAjaxAppMgrMap = new HashMap<Application, PortletCommunicationManager>();
-
-    public Collection<Application> getApplications() {
-        return Collections.unmodifiableCollection(applications);
-    }
+    private MimeResponse mimeResponse;
 
     public File getBaseDirectory() {
         String resultPath = session.getPortletContext().getRealPath("/");
@@ -74,22 +59,9 @@ public class PortletApplicationContext2 implements ApplicationContext,
         return null;
     }
 
-    public void addTransactionListener(TransactionListener listener) {
-        if (listeners == null) {
-            listeners = new LinkedList<TransactionListener>();
-        }
-        listeners.add(listener);
-    }
-
-    public void removeTransactionListener(TransactionListener listener) {
-        if (listeners != null) {
-            listeners.remove(listener);
-        }
-    }
-
     protected PortletCommunicationManager getApplicationManager(
             Application application) {
-        PortletCommunicationManager mgr = applicationToAjaxAppMgrMap
+        PortletCommunicationManager mgr = (PortletCommunicationManager) applicationToAjaxAppMgrMap
                 .get(application);
 
         if (mgr == null) {
@@ -116,90 +88,25 @@ public class PortletApplicationContext2 implements ApplicationContext,
         return cx;
     }
 
-    public WebBrowser getBrowser() {
-        return browser;
-    }
-
-    @SuppressWarnings("unchecked")
-    protected void startTransaction(Application application,
-            PortletRequest request) {
-        if (listeners == null) {
-            return;
-        }
-        for (TransactionListener listener : (LinkedList<TransactionListener>) listeners
-                .clone()) {
-            listener.transactionStart(application, request);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    protected void endTransaction(Application application,
-            PortletRequest request) {
-        if (listeners == null) {
-            return;
-        }
-
-        LinkedList<Exception> exceptions = null;
-        for (TransactionListener listener : (LinkedList<TransactionListener>) listeners
-                .clone()) {
-            try {
-                listener.transactionEnd(application, request);
-            } catch (final RuntimeException e) {
-                if (exceptions == null) {
-                    exceptions = new LinkedList<Exception>();
-                }
-                exceptions.add(e);
-            }
-        }
-
-        // If any runtime exceptions occurred, throw a combined exception
-        if (exceptions != null) {
-            final StringBuffer msg = new StringBuffer();
-            for (Exception e : exceptions) {
-                if (msg.length() == 0) {
-                    msg.append("\n\n--------------------------\n\n");
-                }
-                msg.append(e.getMessage() + "\n");
-                final StringWriter trace = new StringWriter();
-                e.printStackTrace(new PrintWriter(trace, true));
-                msg.append(trace.toString());
-            }
-            throw new RuntimeException(msg.toString());
-        }
-    }
-
+    @Override
     protected void removeApplication(Application application) {
-        applications.remove(application);
-        applicationToAjaxAppMgrMap.remove(application);
+        super.removeApplication(application);
+        // values() is backed by map, removes the key-value pair from the map
+        portletWindowIdToApplicationMap.values().remove(application);
     }
 
-    protected void addApplication(Application application) {
+    protected void addApplication(Application application,
+            String portletWindowId) {
         applications.add(application);
+        portletWindowIdToApplicationMap.put(portletWindowId, application);
+    }
+
+    public Application getApplicationForWindowId(String portletWindowId) {
+        return portletWindowIdToApplicationMap.get(portletWindowId);
     }
 
     public PortletSession getPortletSession() {
         return session;
-    }
-
-    public void valueBound(HttpSessionBindingEvent event) {
-        // We are not interested in bindings
-    }
-
-    public void valueUnbound(HttpSessionBindingEvent event) {
-        // If we are going to be unbound from the session, the session must be
-        // closing
-        try {
-            while (!applications.isEmpty()) {
-                final Application app = applications.iterator().next();
-                app.close();
-                applicationToAjaxAppMgrMap.remove(app);
-                removeApplication(app);
-            }
-        } catch (Exception e) {
-            // FIXME: Handle exception
-            System.err.println("Could not remove application, leaking memory.");
-            e.printStackTrace();
-        }
     }
 
     public void addPortletListener(Application app, PortletListener listener) {
@@ -271,6 +178,31 @@ public class PortletApplicationContext2 implements ApplicationContext,
 
         public void handleResourceRequest(ResourceRequest request,
                 ResourceResponse response);
+    }
+
+    /**
+     * This is for use by {@link AbstractApplicationPortlet} only.
+     *
+     * TODO cleaner implementation, now "semi-static"!
+     *
+     * @param mimeResponse
+     */
+    void setMimeResponse(MimeResponse mimeResponse) {
+        this.mimeResponse = mimeResponse;
+    }
+
+    @Override
+    public String generateApplicationResourceURL(
+            ApplicationResource resource,
+            String mapKey) {
+        ResourceURL resourceURL = mimeResponse.createResourceURL();
+        final String filename = resource.getFilename();
+        if (filename == null) {
+            resourceURL.setResourceID("APP/" + mapKey + "/");
+        } else {
+            resourceURL.setResourceID("APP/" + mapKey + "/" + filename);
+        }
+        return resourceURL.toString();
     }
 
 }

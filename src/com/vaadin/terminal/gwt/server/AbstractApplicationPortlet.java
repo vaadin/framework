@@ -10,9 +10,7 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.security.GeneralSecurityException;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -45,7 +43,6 @@ import com.liferay.portal.kernel.util.PropsUtil;
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
 import com.vaadin.external.org.apache.commons.fileupload.portlet.PortletFileUpload;
-import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.ui.Window;
@@ -60,11 +57,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     private static final String PORTAL_PARAMETER_VAADIN_THEME = "vaadin.theme";
 
-    /*
-     * TODO Big parts of this class are directly copy-pasted from
-     * AbstractApplicationServlet. On the long term, it would probably be wise
-     * to try to integrate the common parts into a shared super class.
-     */
+    // TODO some parts could be shared with AbstractApplicationServlet
 
     // TODO Can we close the application when the portlet is removed? Do we know
     // when the portlet is removed?
@@ -75,54 +68,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     private Properties applicationProperties;
 
     private boolean productionMode = false;
-
-    private static class PortletResourceURLGenerator implements
-            Application.ResourceURLGenerator {
-
-        private final MimeResponse response;
-
-        public PortletResourceURLGenerator(MimeResponse response) {
-            this.response = response;
-        }
-
-        public boolean isResourceURL(URL context, String relativeUri) {
-            // If the relative uri is null, we are ready
-            if (relativeUri == null) {
-                return false;
-            }
-
-            // Resolves the prefix
-            String prefix = relativeUri;
-            final int index = relativeUri.indexOf('/');
-            if (index >= 0) {
-                prefix = relativeUri.substring(0, index);
-            }
-
-            // Handles the resource requests
-            return (prefix.equals("APP"));
-        }
-
-        public String getMapKey(URL context, String relativeUri) {
-            final int index = relativeUri.indexOf('/');
-            final int next = relativeUri.indexOf('/', index + 1);
-            if (next < 0) {
-                return null;
-            }
-            return relativeUri.substring(index + 1, next);
-        }
-
-        public String generateResourceURL(ApplicationResource resource,
-                String mapKey) {
-            ResourceURL resourceURL = response.createResourceURL();
-            final String filename = resource.getFilename();
-            if (filename == null) {
-                resourceURL.setResourceID("APP/" + mapKey + "/");
-            } else {
-                resourceURL.setResourceID("APP/" + mapKey + "/" + filename);
-            }
-            return resourceURL.toString();
-        }
-    };
 
     @SuppressWarnings("unchecked")
     @Override
@@ -376,11 +321,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 if (application == null) {
                     return;
                 }
-                if (response instanceof MimeResponse) {
-                    application
-                            .setResourceURLGenerator(new PortletResourceURLGenerator(
-                                    (MimeResponse) response));
-                }
 
                 /*
                  * Get or create an application context and an application
@@ -388,6 +328,10 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                  */
                 PortletApplicationContext2 applicationContext = PortletApplicationContext2
                         .getApplicationContext(request.getPortletSession());
+                if (response instanceof MimeResponse) {
+                    applicationContext.setMimeResponse((MimeResponse) response);
+                }
+
                 PortletCommunicationManager applicationManager = applicationContext
                         .getApplicationManager(application);
 
@@ -756,10 +700,9 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     private Application createApplication(PortletRequest request)
             throws PortletException, MalformedURLException {
         Application newApplication = getNewApplication(request);
-        newApplication.setPortletWindowId(request.getWindowID());
         final PortletApplicationContext2 context = PortletApplicationContext2
                 .getApplicationContext(request.getPortletSession());
-        context.addApplication(newApplication);
+        context.addApplication(newApplication, request.getWindowID());
         return newApplication;
     }
 
@@ -776,19 +719,17 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
         PortletApplicationContext2 context = PortletApplicationContext2
                 .getApplicationContext(session);
-
-        final Collection<Application> applications = context.getApplications();
-        for (Application sessionApplication : applications) {
-            if (request.getWindowID().equals(
-                    sessionApplication.getPortletWindowId())) {
-                if (sessionApplication.isRunning()) {
-                    return sessionApplication;
-                }
-                PortletApplicationContext2.getApplicationContext(session)
-                        .removeApplication(sessionApplication);
-                break;
-            }
+        Application application = context.getApplicationForWindowId(request
+                .getWindowID());
+        if (application == null) {
+            return null;
         }
+        if (application.isRunning()) {
+            return application;
+        }
+        // application found but not running
+        PortletApplicationContext2.getApplicationContext(session)
+                .removeApplication(application);
 
         return null;
     }
@@ -846,7 +787,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             systemMessages = getSystemMessages();
         } catch (SystemMessageException e) {
             // failing to get the system messages is always a problem
-            throw new PortletException("CommunicationError!", e);
+            throw new PortletException("Failed to obtain system messages!", e);
         }
 
         page.write("<script type=\"text/javascript\">\n");

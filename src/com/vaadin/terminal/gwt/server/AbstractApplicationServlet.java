@@ -68,12 +68,12 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements 
      */
     public static final String VERSION;
     /**
-     * Major version number. For example 5 in 6.2.0.
+     * Major version number. For example 6 in 6.2.0.
      */
     public static final int VERSION_MAJOR;
 
     /**
-     * Minor version number. For example 1 in 6.2.0.
+     * Minor version number. For example 2 in 6.2.0.
      */
     public static final int VERSION_MINOR;
 
@@ -119,7 +119,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements 
     /**
      * This request attribute forces widgetsets to be loaded from under the
      * specified base path; e.g shared widgetset for all portlets in a portal.
-     * 
+     *
      * It is set by the {@link ApplicationPortlet} (Portlet 1.0) based on
      * {@link Constants.PORTAL_PARAMETER_VAADIN_RESOURCE_PATH} and read by
      * {@link AbstractApplicationServlet}.

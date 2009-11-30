@@ -122,11 +122,6 @@ public abstract class Application implements URIHandler,
     private URL applicationUrl;
 
     /**
-     * The ID of the portlet window that this application runs in.
-     */
-    private String portletWindowId;
-
-    /**
      * Name of the theme currently used by the application.
      */
     private String theme = null;
@@ -187,92 +182,6 @@ public abstract class Application implements URIHandler,
      * left unhandled.
      */
     private Terminal.ErrorListener errorHandler = this;
-
-    // TODO Document me!
-    public String getPortletWindowId() {
-        return portletWindowId;
-    }
-
-    // TODO Document me!
-    public void setPortletWindowId(String portletWindowId) {
-        this.portletWindowId = portletWindowId;
-    }
-
-    // TODO Document me!
-    @Deprecated
-    public static interface ResourceURLGenerator extends Serializable {
-
-        public String generateResourceURL(ApplicationResource resource,
-                String mapKey);
-
-        public boolean isResourceURL(URL context, String relativeUri);
-
-        public String getMapKey(URL context, String relativeUri);
-
-    }
-
-    /*
-     * Default resource URL generator for servlets
-     */
-    @Deprecated
-    private static ResourceURLGenerator defaultResourceURLGenerator = new ResourceURLGenerator() {
-        public String generateResourceURL(ApplicationResource resource,
-                String mapKey) {
-
-            final String filename = resource.getFilename();
-            if (filename == null) {
-                return "APP/" + mapKey + "/";
-            } else {
-                return "APP/" + mapKey + "/" + filename;
-            }
-
-        }
-
-        public boolean isResourceURL(URL context, String relativeUri) {
-            // If the relative uri is null, we are ready
-            if (relativeUri == null) {
-                return false;
-            }
-
-            // Resolves the prefix
-            String prefix = relativeUri;
-            final int index = relativeUri.indexOf('/');
-            if (index >= 0) {
-                prefix = relativeUri.substring(0, index);
-            }
-
-            // Handles the resource requests
-            return (prefix.equals("APP"));
-        }
-
-        public String getMapKey(URL context, String relativeUri) {
-            final int index = relativeUri.indexOf('/');
-            final int next = relativeUri.indexOf('/', index + 1);
-            if (next < 0) {
-                return null;
-            }
-            return relativeUri.substring(index + 1, next);
-        };
-
-    };
-
-    @Deprecated
-    private ResourceURLGenerator resourceURLGenerator = defaultResourceURLGenerator;
-
-    @Deprecated
-    public ResourceURLGenerator getResourceURLGenerator() {
-        return resourceURLGenerator;
-    }
-
-    @Deprecated
-    public void setResourceURLGenerator(
-            ResourceURLGenerator resourceURLGenerator) {
-        if (resourceURLGenerator == null) {
-            this.resourceURLGenerator = defaultResourceURLGenerator;
-        } else {
-            this.resourceURLGenerator = resourceURLGenerator;
-        }
-    }
 
     /**
      * <p>
@@ -821,7 +730,7 @@ public abstract class Application implements URIHandler,
     @Deprecated
     public String getRelativeLocation(ApplicationResource resource) {
 
-        // FIXME Move to ApplicationContext
+        // FIXME Move to ApplicationContext?
 
         // Gets the key
         final String key = resourceKeyMap.get(resource);
@@ -831,7 +740,7 @@ public abstract class Application implements URIHandler,
             return null;
         }
 
-        return resourceURLGenerator.generateResourceURL(resource, key);
+        return context.generateApplicationResourceURL(resource, key);
     }
 
     /**
@@ -854,12 +763,13 @@ public abstract class Application implements URIHandler,
     @Deprecated
     public DownloadStream handleURI(URL context, String relativeUri) {
 
-        // FIXME Move to ApplicationContext
+        // FIXME Move to ApplicationContext? - public API, need to leave hook
+        // here
 
-        if (resourceURLGenerator.isResourceURL(context, relativeUri)) {
+        if (this.context.isApplicationResourceURL(context, relativeUri)) {
 
             // Handles the resource request
-            final String key = resourceURLGenerator.getMapKey(context,
+            final String key = this.context.getURLKey(context,
                     relativeUri);
             final ApplicationResource resource = keyResourceMap
                     .get(key);
