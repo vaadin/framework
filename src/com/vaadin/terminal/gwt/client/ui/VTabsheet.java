@@ -908,7 +908,8 @@ public class VTabsheet extends VTabsheetBase {
     }
 
     private boolean isClippedTabs() {
-        return tb.getOffsetWidth() > getOffsetWidth();
+        return tb.getOffsetWidth() > getOffsetWidth()
+                - (isScrolledTabs() ? scroller.getOffsetWidth() : 0);
     }
 
     @Override
