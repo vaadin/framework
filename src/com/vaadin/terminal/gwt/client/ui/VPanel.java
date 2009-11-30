@@ -78,6 +78,7 @@ public class VPanel extends SimplePanel implements Container {
 
     private ClickEventHandler clickEventHandler = new ClickEventHandler(this,
             CLICK_EVENT_IDENTIFIER) {
+
         @Override
         protected <H extends EventHandler> HandlerRegistration registerHandler(
                 H handler, Type<H> type) {
@@ -206,13 +207,21 @@ public class VPanel extends SimplePanel implements Container {
         if (uidl.hasVariable("scrollTop")
                 && uidl.getIntVariable("scrollTop") != scrollTop) {
             scrollTop = uidl.getIntVariable("scrollTop");
-            DOM.setElementPropertyInt(contentNode, "scrollTop", scrollTop);
+            contentNode.setScrollTop(scrollTop);
+            // re-read the actual scrollTop in case invalid value was set
+            // (scrollTop != 0 when no scrollbar exists, other values would be
+            // caught by scroll listener), see #3784
+            scrollTop = contentNode.getScrollTop();
         }
 
         if (uidl.hasVariable("scrollLeft")
                 && uidl.getIntVariable("scrollLeft") != scrollLeft) {
             scrollLeft = uidl.getIntVariable("scrollLeft");
-            DOM.setElementPropertyInt(contentNode, "scrollLeft", scrollLeft);
+            contentNode.setScrollLeft(scrollLeft);
+            // re-read the actual scrollTop in case invalid value was set
+            // (scrollTop != 0 when no scrollbar exists, other values would be
+            // caught by scroll listener), see #3784
+            scrollLeft = contentNode.getScrollLeft();
         }
 
         rendering = false;
