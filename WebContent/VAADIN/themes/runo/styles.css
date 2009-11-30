@@ -3102,7 +3102,7 @@ div.v-tree-node-leaf {
 }
 /* Progress indication */
 .v-tabsheet-loading .v-tabsheet-tabitem-selected .v-captiontext {
-	background: transparent url(common/img/ajax-loader.gif) no-repeat top right;
+	background: transparent url(../base/common/img/ajax-loader.gif) no-repeat top right;
 	margin-left: -10px;
 	padding-left: 10px;
 	margin-right: -10px;
