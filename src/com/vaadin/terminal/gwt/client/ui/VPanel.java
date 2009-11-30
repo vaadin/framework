@@ -78,13 +78,11 @@ public class VPanel extends SimplePanel implements Container {
 
     private ClickEventHandler clickEventHandler = new ClickEventHandler(this,
             CLICK_EVENT_IDENTIFIER) {
-
         @Override
         protected <H extends EventHandler> HandlerRegistration registerHandler(
                 H handler, Type<H> type) {
             return addDomHandler(handler, type);
         }
-
     };
 
     public VPanel() {
@@ -121,7 +119,6 @@ public class VPanel extends SimplePanel implements Container {
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         rendering = true;
         if (!uidl.hasAttribute("cached")) {
-            clickEventHandler.handleEventHandlerRegistration(client);
 
             // Handle caption displaying and style names, prior generics.
             // Affects size
@@ -169,6 +166,8 @@ public class VPanel extends SimplePanel implements Container {
             rendering = false;
             return;
         }
+
+        clickEventHandler.handleEventHandlerRegistration(client);
 
         this.client = client;
         id = uidl.getId();
