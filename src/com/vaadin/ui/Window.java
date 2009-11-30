@@ -185,6 +185,16 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         setSizeUndefined();
     }
 
+    @Override
+    public void addComponent(Component c) {
+        if (c instanceof Window) {
+            throw new IllegalArgumentException(
+                    "Window cannot be added to another via addComponent. "
+                            + "Use addWindow(Window) instead.");
+        }
+        super.addComponent(c);
+    }
+
     /**
      * Gets the terminal type.
      * 
