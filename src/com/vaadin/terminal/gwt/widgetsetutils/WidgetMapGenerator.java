@@ -21,7 +21,7 @@ import com.vaadin.ui.ClientWidget;
 /**
  * GWT generator to build WidgetMapImpl dynamically based on
  * {@link ClientWidget} annotations available in workspace.
- * 
+ *
  */
 public class WidgetMapGenerator extends Generator {
 
@@ -50,7 +50,7 @@ public class WidgetMapGenerator extends Generator {
 
     /**
      * Generate source code for WidgetMapImpl
-     * 
+     *
      * @param logger
      *            Logger object
      * @param context
@@ -67,7 +67,7 @@ public class WidgetMapGenerator extends Generator {
         }
         logger
                 .log(Type.INFO,
-                        "Detecting vaading components in classpath to generate WidgetMapImpl.java ...");
+                        "Detecting Vaadin components in classpath to generate WidgetMapImpl.java ...");
         Date date = new Date();
 
         // init composer, set class properties, create source writer
@@ -100,7 +100,7 @@ public class WidgetMapGenerator extends Generator {
     /**
      * Verifies that all client side components are available for client side
      * GWT module.
-     * 
+     *
      * @param logger
      * @param context
      * @param paintablesHavingWidgetAnnotation
@@ -143,7 +143,7 @@ public class WidgetMapGenerator extends Generator {
      * from widgetset. Properties in gwt.xml is one option. Now only possible by
      * extending this class, overriding getUsedPaintables() method and
      * redefining deferred binding rule.
-     * 
+     *
      * @return a collections of Vaadin components that will be added to
      *         widgetset
      */
@@ -183,7 +183,7 @@ public class WidgetMapGenerator extends Generator {
     }
 
     /**
-     * 
+     *
      * @param sourceWriter
      *            Source writer to output source code
      * @param paintablesHavingWidgetAnnotation
