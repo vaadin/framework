@@ -42,7 +42,7 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler {
      * mouse while clicking it. In this case mouse leaves the button without
      * moving.
      */
-    private boolean clickPending;
+    protected boolean clickPending;
 
     private boolean enabled = true;
 
@@ -81,9 +81,9 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler {
         // Add a11y role "button"
         Accessibility.setRole(getElement(), Accessibility.ROLE_BUTTON);
 
-        wrapper.setClassName(CLASSNAME + "-wrap");
+        wrapper.setClassName(getStylePrimaryName() + "-wrap");
         getElement().appendChild(wrapper);
-        captionElement.setClassName(CLASSNAME + "-caption");
+        captionElement.setClassName(getStylePrimaryName() + "-caption");
         wrapper.appendChild(captionElement);
 
         addClickHandler(this);
