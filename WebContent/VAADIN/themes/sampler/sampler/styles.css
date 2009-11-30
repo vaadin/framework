@@ -294,6 +294,10 @@
 .v-app-SamplerApplication .v-tree-menu .v-tree-node span {
 	display: inline;
 }
+.v-app-SamplerApplication .v-tree-menu .v-tree-node-caption-new span {
+	padding-right: 20px;
+	background: url(new-tree-badge.png) no-repeat right 2px;
+}
 .v-app-SamplerApplication .v-tree-menu .v-tree-node-selected span {
 	background: #7d8490;
 	padding: 1px;
@@ -422,7 +426,9 @@
 .v-csslayout-grid .screenshot a:hover span {
 	background: transparent url(screenshot-frame-hover.png) no-repeat 1px 0;
 }
-.v-csslayout-grid .new span {
+.v-csslayout-grid .new a span,
+.v-csslayout-grid .new a:link span,
+.v-csslayout-grid .new a:visited span {
 	background: transparent url(screenshot-frame-new.png) no-repeat 2px 0;
 }
 .v-csslayout-grid .new a:hover span {
@@ -493,6 +499,14 @@
 
 .highlight .v-link a:hover span {
 	background: transparent url(screenshot-frame-hover.png) no-repeat 0 1px;
+}
+.highlight .new a span,
+.highlight .new a:link span,
+.highlight .new a:visited span {
+	background: transparent url(screenshot-frame-new.png) no-repeat 2px 1px;
+}
+.highlight .new a:hover span {
+	background: transparent url(screenshot-frame-new-hover.png) no-repeat 1px 1px;
 }
 
 .highlight .v-label {
