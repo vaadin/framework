@@ -100,9 +100,9 @@ public class VForm extends ComplexPanel implements Container {
             }
         }
         if (legendEmpty) {
-            DOM.setStyleAttribute(legend, "display", "none");
+            addStyleDependentName("nocaption");
         } else {
-            DOM.setStyleAttribute(legend, "display", "");
+            removeStyleDependentName("nocaption");
         }
 
         if (uidl.hasAttribute("error")) {

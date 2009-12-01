@@ -50,8 +50,14 @@
 	border: none;
 	border-top: 1px solid #babfc0;
 }
+.v-form-nocaption fieldset {
+	border: none;
+}
+.v-form-nocaption legend {
+	display: none;
+}
 .v-form legend {
-	margin: 0;
-	padding: 0 4px 0.3em 4px;
+	margin: 0 0 0 20px;
+	padding: 0 5px;
 	font-weight: bold;
 }
