@@ -17,7 +17,7 @@ import com.vaadin.terminal.Terminal;
  * If Application is used deployed as both Servlet and Portlet, one most likely
  * needs to implement both.
  * <p>
- * Only JSR 268 style Portlets are supported.
+ * Only JSR 286 style Portlets are supported.
  * <p>
  * Interface can be used for several helper tasks including:
  * <ul>
@@ -28,7 +28,7 @@ import com.vaadin.terminal.Terminal;
  * <p>
  * Alternatives for implementing similar features are are Servlet {@link Filter}
  * s and {@link TransactionListener}s in Vaadin.
- * 
+ *
  * @since 6.2
  * @see HttpServletRequestListener
  */
@@ -37,14 +37,14 @@ public interface PortletRequestListener extends Serializable {
     /**
      * This method is called before {@link Terminal} applies the request to
      * Application.
-     * 
+     *
      * @param requestData
      *            the {@link PortletRequest} about to change Application state
      */
     public void onRequestStart(PortletRequest request, PortletResponse response);
 
     /**
-     * This method is called at the end if each request.
+     * This method is called at the end of each request.
      * 
      * @param requestData
      *            the {@link PortletRequest}
