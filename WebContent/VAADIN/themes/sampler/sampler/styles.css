@@ -547,16 +547,20 @@
 }
 
 .v-app-SamplerApplication .v-panel-content-light {
-	border-top: 0px;
+	border-top: none;
 }
 
-.v-app-SamplerApplication .v-horizontallayout-sample-view .v-horizontallayout-margin-top {
-	padding-top: 27px;
+
+
+
+
+/* Feature controls: title, reset, view source */
+
+.v-app-SamplerApplication .feature-controls {
+	background: transparent url(feature-controls-border.png) repeat-x 0 41px;
+	padding-bottom: 10px;
 }
-.v-app-SamplerApplication .v-horizontallayout-sample-view .v-horizontallayout-margin-bottom {
-	padding-bottom: 24px;
-}
-.v-app-SamplerApplication .v-caption-feature-controls {
+.v-app-SamplerApplication .feature-controls .v-label {
 	font-family: "Helvetica Neue", helvetica, arial, sans-serif;
 	font-weight: bold;
 	font-size: 24px;
@@ -564,6 +568,49 @@
 	color: #1e2229;
 	letter-spacing: -0.015em;
 	text-shadow: 0 2px 1px #c0c1c2;
+	padding: 7px 0 8px;
+}
+.v-app-SamplerApplication .feature-controls .new {
+	padding-right: 30px;
+	background: transparent url(new-caption-badge.png) no-repeat right 4px;
+}
+.feature-controls .v-link-showcode,
+.feature-controls .v-nativebutton-reset {
+	padding-top: 18px;
+	display: block;
+	margin: 0 0 0 10px;
+}
+.feature-controls .v-link-showcode a span,
+.feature-controls .v-link-showcode a:link span,
+.feature-controls .v-link-showcode a:visited span,
+.feature-controls .v-link-showcode a:hover span,
+.feature-controls .v-nativebutton-reset,
+.feature-controls .v-nativebutton-reset .v-nativebutton-caption {
+	text-decoration: none;
+	font-size: 12px;
+	color: #2667b4;
+}
+.feature-controls .v-link-showcode a,
+.feature-controls .v-nativebutton-reset {
+	font-family: arial, helvetica, verdana, sans-serif;
+}
+.v-sa .feature-controls .v-link-showcode a,
+.v-sa .feature-controls .v-nativebutton-reset {
+	font-family: helvetica, arial, verdana, sans-serif;
+}
+.feature-controls .v-nativebutton-reset:focus {
+	outline: none;
+}
+
+
+
+
+
+.v-app-SamplerApplication .v-horizontallayout-sample-view .v-horizontallayout-margin-top {
+	padding-top: 27px;
+}
+.v-app-SamplerApplication .v-horizontallayout-sample-view .v-horizontallayout-margin-bottom {
+	padding-bottom: 24px;
 }
 .v-app-SamplerApplication .feature-info {
 	background: #1e2123 url(info-bubble-bg.png) repeat-y;
@@ -658,7 +705,7 @@
 }
 .v-app-SamplerApplication .feature-info .description div.outer-deco {
 	margin: 0 5px 0 9px;
-	width: 353px;
+	width: 303px;
 }
 .v-app-SamplerApplication .feature-info .description div.deco {
 	padding: 0 19px 13px 19px;
@@ -687,7 +734,7 @@
 	border: 1px solid #336391;
 	border-top-color: #161719;
 	border-bottom-color: #2e5b92;
-	width: 353px;
+	width: 303px;
 }
 .v-ie6 .v-app-SamplerApplication .feature-info .sample-description div.outer-deco {
 	border-top: none;
@@ -715,42 +762,9 @@
 	left: -26px;
 }
 
-.v-app-SamplerApplication .v-link-showcode {
-	margin-left: 3px;
-}
-.v-app-SamplerApplication .v-link-showcode a {
-	text-decoration: none;
-}
-.v-app-SamplerApplication div > .v-nativebutton-showcode,
-.v-app-SamplerApplication div > .v-nativebutton-showcode:active,
-.v-app-SamplerApplication div > .v-nativebutton-showcode:focus,
-.v-app-SamplerApplication .v-link-showcode {
-	font-family: arial, helvetica, verdana, sans-serif;
-	display: inline;
-	font-size: 12px;
-	line-height: 20px;
-	height: 20px;
-	margin-right: 3px;
-}
-.v-sa .v-app-SamplerApplication .v-nativebutton-showcode,
-.v-sa .v-app-SamplerApplication .v-link-showcode {
-	font-family: helvetica, arial, verdana, sans-serif;
-}
-.v-app-SamplerApplication div > .v-nativebutton-showcode.v-nativebutton-link span,
-.v-app-SamplerApplication .v-link-showcode span {
-	color: #8b8e91;
-	text-decoration: none;
-}
-.v-app-SamplerApplication div > .v-nativebutton-showcode:hover span,
-.v-app-SamplerApplication div > .v-nativebutton-showcode:active span,
-.v-app-SamplerApplication .v-link-showcode:hover span {
-	color: #62696f;
-	text-decoration: underline;
-}
-.v-app-SamplerApplication .v-panel-content-source {
-	border: 1px solid #eee;
-	background: #fff;
-}
+
+
+
 
 .v-app .v-customcomponent-ModeSwitch button.v-nativebutton {
 	height: 24px;
