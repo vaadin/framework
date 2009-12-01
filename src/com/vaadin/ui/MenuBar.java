@@ -86,6 +86,10 @@ public class MenuBar extends AbstractComponent {
             target.startTag("item");
             target.addAttribute("id", item.getId());
 
+            if (item.getStyleName() != null) {
+                target.addAttribute("style", item.getStyleName());
+            }
+
             if (item.isSeparator()) {
                 target.addAttribute("separator", true);
                 target.endTag("item");
@@ -130,7 +134,7 @@ public class MenuBar extends AbstractComponent {
 
     /** Deserialize changes received from client. */
     @Override
-    public void changeVariables(Object source, Map variables) {
+    public void changeVariables(Object source, Map<String, Object> variables) {
         Stack<MenuItem> items = new Stack<MenuItem>();
         boolean found = false;
 
@@ -391,6 +395,7 @@ public class MenuBar extends AbstractComponent {
         private boolean enabled = true;
         private boolean visible = true;
         private boolean isSeparator = false;
+        private String styleName;
 
         /**
          * Constructs a new menu item that can optionally have an icon and a
@@ -689,6 +694,15 @@ public class MenuBar extends AbstractComponent {
 
         public boolean isSeparator() {
             return isSeparator;
+        }
+
+        public void setStyleName(String styleName) {
+            this.styleName = styleName;
+            requestRepaint();
+        }
+
+        public String getStyleName() {
+            return styleName;
         }
 
     }// class MenuItem
