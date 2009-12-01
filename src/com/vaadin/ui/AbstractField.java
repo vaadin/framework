@@ -318,12 +318,12 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * JavaDoc comment here, we use the default documentation from the
      * implemented interface.
      */
-    public void setWriteThrough(boolean writeTrough)
+    public void setWriteThrough(boolean writeThrough)
             throws Buffered.SourceException, InvalidValueException {
-        if (writeTroughMode == writeTrough) {
+        if (writeTroughMode == writeThrough) {
             return;
         }
-        writeTroughMode = writeTrough;
+        writeTroughMode = writeThrough;
         if (writeTroughMode) {
             commit();
         }
