@@ -207,7 +207,7 @@ public class VMenuBar extends Widget implements Paintable,
             currentItem.setEnabled(!item.hasAttribute("disabled"));
             if (item.hasAttribute("style")) {
                 String itemStyle = item.getStringAttribute("style");
-                currentItem.addStyleName(itemStyle);
+                currentItem.addStyleDependentName(itemStyle);
             }
 
             if (item.getChildCount() > 0) {
