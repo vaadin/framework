@@ -10,7 +10,7 @@
 }
 
 .v-app-SamplerApplication .v-horizontallayout-topbar {
-	border-bottom: 1px solid #fff;
+	border-bottom: 1px solid #eaeaea;
 	background: #5c5d60 url(top-bg.png) repeat-x;
 }
 
@@ -422,17 +422,36 @@
 	padding-top: 84px;
 	height: 30px;
 	color: #222;
+	cursor: pointer;
+}
+.v-ie6 .v-csslayout-grid .screenshot span,
+.v-ie6 .v-csslayout-grid .screenshot a:link span,
+.v-ie6 .v-csslayout-grid .screenshot a:visited span {
+	background-image: url(screenshot-frame-ie6.png);
 }
 .v-csslayout-grid .screenshot a:hover span {
 	background: transparent url(screenshot-frame-hover.png) no-repeat 1px 0;
+}
+.v-ie6 .v-csslayout-grid .screenshot a:hover span {
+	/* Hover images are somehow totally unusable */
+	background: transparent url(screenshot-frame-ie6.png) no-repeat 4px 2px;
 }
 .v-csslayout-grid .new a span,
 .v-csslayout-grid .new a:link span,
 .v-csslayout-grid .new a:visited span {
 	background: transparent url(screenshot-frame-new.png) no-repeat 2px 0;
 }
+.v-ie6 .v-csslayout-grid .new a span,
+.v-ie6 .v-csslayout-grid .new a:link span,
+.v-ie6 .v-csslayout-grid .new a:visited span {
+	background-image: url(screenshot-frame-new-ie6.png);
+}
 .v-csslayout-grid .new a:hover span {
 	background: transparent url(screenshot-frame-new-hover.png) no-repeat 1px 0;
+}
+.v-ie6 .v-csslayout-grid .new a:hover span {
+	/* Hover images are somehow totally unusable */
+	background: transparent url(screenshot-frame-new-ie6.png) no-repeat 2px 0;
 }
 
 
@@ -455,12 +474,14 @@
 	color: #555a5f;
 }
 .v-csslayout-highlight {
-	width: 50%;
+	width: 49.8%;
 	float: left;
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 13px;
 	overflow: visible;
-
+}
+.v-ie6 .v-csslayout-highlight {
+	overflow: hidden;
 }
 
 .v-sa .v-csslayout-highlight {
@@ -496,7 +517,6 @@
 	background: transparent url(screenshot-frame.png) no-repeat 3px 3px;
 	text-overflow: ellipsis;
 }
-
 .highlight .v-link a:hover span {
 	background: transparent url(screenshot-frame-hover.png) no-repeat 0 1px;
 }
@@ -507,6 +527,16 @@
 }
 .highlight .new a:hover span {
 	background: transparent url(screenshot-frame-new-hover.png) no-repeat 1px 1px;
+}
+
+.v-ie6 .highlight .v-link span,
+.v-ie6 .highlight .v-link a:hover span {
+	background: transparent url(screenshot-frame-ie6.png) no-repeat 3px 3px;
+}
+
+.v-ie6 .highlight .new a span,
+.v-ie6 .highlight .new a:hover span {
+	background: transparent url(screenshot-frame-new-ie6.png) no-repeat 2px 1px;
 }
 
 .highlight .v-label {
@@ -589,6 +619,7 @@
 	text-decoration: none;
 	font-size: 12px;
 	color: #2667b4;
+	line-height: normal;
 }
 .feature-controls .v-link-showcode a,
 .feature-controls .v-nativebutton-reset {
