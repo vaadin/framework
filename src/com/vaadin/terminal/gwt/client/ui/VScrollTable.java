@@ -67,6 +67,8 @@ import com.vaadin.terminal.gwt.client.ui.VScrollTable.VScrollTableBody.VScrollTa
 public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
 
     public static final String CLASSNAME = "v-table";
+    public static final String ITEM_CLICK_EVENT_ID = "itemClick";
+
     private static final double CACHE_RATE_DEFAULT = 2;
 
     /**
@@ -135,8 +137,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
     /** flag to indicate that table body has changed */
     private boolean isNewBody = true;
 
-    private boolean emitClickEvents;
-
     /*
      * Read from the "recalcWidths" -attribute. When it is true, the table will
      * recalculate the widths for columns - desirable in some cases. For #1983,
@@ -177,7 +177,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
         this.client = client;
         paintableId = uidl.getStringAttribute("id");
         immediate = uidl.getBooleanAttribute("immediate");
-        emitClickEvents = uidl.getBooleanAttribute("listenClicks");
         final int newTotalRows = uidl.getIntAttribute("totalrows");
         if (newTotalRows != totalRows) {
             if (scrollBody != null) {
@@ -2395,7 +2394,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
             }
 
             private void handleClickEvent(Event event, Element targetTdOrTr) {
-                if (emitClickEvents) {
+                if (client.hasEventListeners(VScrollTable.this,
+                        ITEM_CLICK_EVENT_ID)) {
                     boolean doubleClick = (DOM.eventGetType(event) == Event.ONDBLCLICK);
 
                     /* This row was clicked */

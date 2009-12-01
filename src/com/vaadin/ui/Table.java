@@ -319,8 +319,6 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     private CellStyleGenerator cellStyleGenerator = null;
 
-    private int clickListenerCount;
-
     /*
      * EXPERIMENTAL feature: will tell the client to re-calculate column widths
      * if set to true. Currently no setter: extend to enable.
@@ -1799,7 +1797,7 @@ public class Table extends AbstractSelect implements Action.Container,
      *      java.util.Map)
      */
     @Override
-    public void changeVariables(Object source, Map variables) {
+    public void changeVariables(Object source, Map<String, Object> variables) {
 
         boolean clientNeedsContentRefresh = false;
 
@@ -1810,7 +1808,7 @@ public class Table extends AbstractSelect implements Action.Container,
         if (!isSelectable() && variables.containsKey("selected")) {
             // Not-selectable is a special case, AbstractSelect does not support
             // TODO could be optimized.
-            variables = new HashMap(variables);
+            variables = new HashMap<String, Object>(variables);
             variables.remove("selected");
         }
 
@@ -1954,24 +1952,22 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @param variables
      */
-    private void handleClickEvent(Map variables) {
-        if (clickListenerCount > 0) {
-            if (variables.containsKey("clickEvent")) {
-                String key = (String) variables.get("clickedKey");
-                Object itemId = itemIdMapper.get(key);
-                Object propertyId = null;
-                String colkey = (String) variables.get("clickedColKey");
-                // click is not necessary on a property
-                if (colkey != null) {
-                    propertyId = columnIdMap.get(colkey);
-                }
-                MouseEventDetails evt = MouseEventDetails
-                        .deSerialize((String) variables.get("clickEvent"));
-                Item item = getItem(itemId);
-                if (item != null) {
-                    fireEvent(new ItemClickEvent(this, item, itemId,
-                            propertyId, evt));
-                }
+    private void handleClickEvent(Map<String, Object> variables) {
+        if (variables.containsKey("clickEvent")) {
+            String key = (String) variables.get("clickedKey");
+            Object itemId = itemIdMapper.get(key);
+            Object propertyId = null;
+            String colkey = (String) variables.get("clickedColKey");
+            // click is not necessary on a property
+            if (colkey != null) {
+                propertyId = columnIdMap.get(colkey);
+            }
+            MouseEventDetails evt = MouseEventDetails
+                    .deSerialize((String) variables.get("clickEvent"));
+            Item item = getItem(itemId);
+            if (item != null) {
+                fireEvent(new ItemClickEvent(this, item, itemId, propertyId,
+                        evt));
             }
         }
     }
@@ -2077,10 +2073,6 @@ public class Table extends AbstractSelect implements Action.Container,
                     : "single"));
         } else {
             target.addAttribute("selectmode", "none");
-        }
-
-        if (clickListenerCount > 0) {
-            target.addAttribute("listenClicks", true);
         }
 
         if (cacheRate != CACHE_RATE_DEFAULT) {
@@ -3255,25 +3247,13 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     public void addListener(ItemClickListener listener) {
-        addListener(ItemClickEvent.class, listener,
-                ItemClickEvent.ITEM_CLICK_METHOD);
-        clickListenerCount++;
-        // repaint needed only if click listening became necessary
-        if (clickListenerCount == 1) {
-            requestRepaint();
-        }
-
+        addListener(VScrollTable.ITEM_CLICK_EVENT_ID, ItemClickEvent.class,
+                listener, ItemClickEvent.ITEM_CLICK_METHOD);
     }
 
     public void removeListener(ItemClickListener listener) {
-        removeListener(ItemClickEvent.class, listener,
-                ItemClickEvent.ITEM_CLICK_METHOD);
-        clickListenerCount--;
-        // repaint needed only if click listening is not needed in client
-        // anymore
-        if (clickListenerCount == 0) {
-            requestRepaint();
-        }
+        removeListener(VScrollTable.ITEM_CLICK_EVENT_ID, ItemClickEvent.class,
+                listener);
     }
 
     // Identical to AbstractCompoenentContainer.setEnabled();

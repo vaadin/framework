@@ -328,7 +328,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     @Override
     public void changeVariables(Object source, Map variables) {
 
-        if (clickListenerCount > 0 && variables.containsKey("clickedKey")) {
+        if (variables.containsKey("clickedKey")) {
             String key = (String) variables.get("clickedKey");
 
             Object id = itemIdMapper.get(key);
@@ -429,10 +429,6 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
             if (isNullSelectionAllowed()) {
                 target.addAttribute("nullselect", true);
-            }
-
-            if (clickListenerCount > 0) {
-                target.addAttribute("listenClicks", true);
             }
 
         }
@@ -1008,29 +1004,16 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         }
     }
 
-    private int clickListenerCount = 0;
-
     private ItemStyleGenerator itemStyleGenerator;
 
     public void addListener(ItemClickListener listener) {
-        addListener(ItemClickEvent.class, listener,
+        addListener(VTree.ITEM_CLICK_EVENT_ID, ItemClickEvent.class, listener,
                 ItemClickEvent.ITEM_CLICK_METHOD);
-        clickListenerCount++;
-        // repaint needed only if click listening became necessary
-        if (clickListenerCount == 1) {
-            requestRepaint();
-        }
     }
 
     public void removeListener(ItemClickListener listener) {
-        removeListener(ItemClickEvent.class, listener,
-                ItemClickEvent.ITEM_CLICK_METHOD);
-        clickListenerCount++;
-        // repaint needed only if click listening is not needed in client
-        // anymore
-        if (clickListenerCount == 0) {
-            requestRepaint();
-        }
+        removeListener(VTree.ITEM_CLICK_EVENT_ID, ItemClickEvent.class,
+                listener);
     }
 
     /**

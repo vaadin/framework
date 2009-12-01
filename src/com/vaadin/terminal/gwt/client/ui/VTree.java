@@ -30,6 +30,8 @@ public class VTree extends FlowPanel implements Paintable {
 
     public static final String CLASSNAME = "v-tree";
 
+    public static final String ITEM_CLICK_EVENT_ID = "itemClick";
+
     private Set<String> selectedIds = new HashSet<String>();
     private ApplicationConnection client;
     private String paintableId;
@@ -51,8 +53,6 @@ public class VTree extends FlowPanel implements Paintable {
     private boolean disabled = false;
 
     private boolean readonly;
-
-    private boolean emitClickEvents;
 
     private boolean rendering;
 
@@ -107,7 +107,6 @@ public class VTree extends FlowPanel implements Paintable {
 
         disabled = uidl.getBooleanAttribute("disabled");
         readonly = uidl.getBooleanAttribute("readonly");
-        emitClickEvents = uidl.getBooleanAttribute("listenClicks");
 
         isNullSelectionAllowed = uidl.getBooleanAttribute("nullselect");
 
@@ -219,7 +218,8 @@ public class VTree extends FlowPanel implements Paintable {
             }
             final int type = DOM.eventGetType(event);
             final Element target = DOM.eventGetTarget(event);
-            if (emitClickEvents && target == nodeCaptionSpan
+            if (client.hasEventListeners(VTree.this, ITEM_CLICK_EVENT_ID)
+                    && target == nodeCaptionSpan
                     && (type == Event.ONDBLCLICK || type == Event.ONMOUSEUP)) {
                 fireClick(event);
             }
