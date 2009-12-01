@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import junit.framework.TestCase;
@@ -22,6 +21,7 @@ import org.easymock.EasyMock;
 
 import com.vaadin.Application;
 import com.vaadin.service.ApplicationContext.TransactionListener;
+import com.vaadin.terminal.gwt.server.AbstractWebApplicationContext;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
 
 public class TransactionListenersConcurrency extends TestCase {
@@ -32,7 +32,7 @@ public class TransactionListenersConcurrency extends TestCase {
      * transaction is then started for each application. Some semi-random delays
      * are included so that calls to addTransactionListener and
      * WebApplicationContext.startTransaction are mixed.
-     * 
+     *
      */
     public void testTransactionListeners() throws Exception {
         final List<Throwable> exceptions = new ArrayList<Throwable>();
@@ -81,9 +81,9 @@ public class TransactionListenersConcurrency extends TestCase {
                         // Call the transaction listener using reflection as
                         // startTransaction is protected.
 
-                        Method m = context.getClass().getDeclaredMethod(
-                                "startTransaction", Application.class,
-                                HttpServletRequest.class);
+                        Method m = AbstractWebApplicationContext.class
+                                .getDeclaredMethod("startTransaction",
+                                        Application.class, Object.class);
                         m.setAccessible(true);
                         m.invoke(context, app, null);
                     } catch (Exception e) {
@@ -133,7 +133,7 @@ public class TransactionListenersConcurrency extends TestCase {
 
     /**
      * Creates a HttpSession mock
-     * 
+     *
      */
     private static HttpSession createSession() {
         HttpSession session = createMock(HttpSession.class);
@@ -151,7 +151,7 @@ public class TransactionListenersConcurrency extends TestCase {
     /**
      * A transaction listener that just sleeps for the given amount of time in
      * transactionStart and transactionEnd.
-     * 
+     *
      */
     public static class DelayTransactionListener implements TransactionListener {
 
