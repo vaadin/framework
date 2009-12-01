@@ -136,33 +136,69 @@
 			<title>HelloWorld</title>
 			<short-title>HelloWorld</short-title>
 		</portlet-info>		
-		<supported-processing-event>
-         	<qname xmlns:vaadin="http://www.vaadin.com/hello">vaadin:Hello</qname>
-		</supported-processing-event>
-		<supported-publishing-event>
-         	<qname xmlns:vaadin="http://www.vaadin.com/hello">vaadin:Reply</qname>
-		</supported-publishing-event>
 	</portlet>
 	
+	<!--
 	<portlet>
-		<portlet-name>HelloWorldEventPortlet</portlet-name>
-		<display-name>Hello World Event (non-Vaadin)</display-name>
-		<portlet-class>com.vaadin.demo.HelloWorldEventPortlet</portlet-class>
+		<portlet-name>VaadinInterPortletEventPortlet</portlet-name>
+		<display-name>Hello World Event</display-name>
+		<portlet-class>com.vaadin.terminal.gwt.server.ApplicationPortlet2</portlet-class>
+		<init-param>
+			<name>application</name>
+			<value>com.vaadin.demo.portlet.VaadinInterPortletEventPortlet</value>
+		</init-param>
+		<init-param>
+			<name>widgetset</name>
+			<value>com.vaadin.demo.sampler.gwt.SamplerWidgetSet</value>
+		</init-param>
 		<supports>
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>HelloWorldEvent (non-Vaadin)</title>
-			<short-title>HelloWorldEvent (non-Vaadin)</short-title>
+			<title>Inter-portlet events</title>
+			<short-title>Inter-portlet events</short-title>
+		</portlet-info>		
+		<supported-processing-event>
+         	<qname xmlns:vaadin="http://www.vaadin.com/hello">vaadin:Hello</qname>
+		</supported-processing-event>
+		<supported-processing-event>
+         	<qname xmlns:vaadin="http://www.vaadin.com/hello">vaadin:ReplyToVaadin</qname>
+		</supported-processing-event>
+		<supported-publishing-event>
+         	<qname xmlns:vaadin="http://www.vaadin.com/hello">vaadin:Reply</qname>
+		</supported-publishing-event>
+		<supported-publishing-event>
+         	<qname xmlns:vaadin="http://www.vaadin.com/hello">vaadin:FromVaadin</qname>
+		</supported-publishing-event>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>InterPortletEventPortlet</portlet-name>
+		<display-name>Hello World Event (non-Vaadin)</display-name>
+		<portlet-class>com.vaadin.demo.portlet.InterPortletEventPortlet</portlet-class>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Inter-portlet events (non-Vaadin)</title>
+			<short-title>Inter-portlet events (non-Vaadin)</short-title>
 		</portlet-info>
 		<supported-processing-event>
          	<qname xmlns:vaadin="http://www.vaadin.com/hello">vaadin:Reply</qname>
 		</supported-processing-event>
+		<supported-processing-event>
+         	<qname xmlns:vaadin="http://www.vaadin.com/hello">vaadin:FromVaadin</qname>
+		</supported-processing-event>
 		<supported-publishing-event>
          	<qname xmlns:vaadin="http://www.vaadin.com/hello">vaadin:Hello</qname>
 		</supported-publishing-event>
+		<supported-publishing-event>
+         	<qname xmlns:vaadin="http://www.vaadin.com/hello">vaadin:ReplyToVaadin</qname>
+		</supported-publishing-event>
 	</portlet>
+	-->
 
 	<portlet>
 		<portlet-name>AddressBookPortlet</portlet-name>

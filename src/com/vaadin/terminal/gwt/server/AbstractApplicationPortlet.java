@@ -49,7 +49,7 @@ import com.vaadin.ui.Window;
 
 /**
  * TODO Document me!
- * 
+ *
  * @author peholmst
  */
 public abstract class AbstractApplicationPortlet extends GenericPortlet
@@ -128,7 +128,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     /**
      * Gets an application property value.
-     * 
+     *
      * @param parameterName
      *            the Name or the parameter.
      * @return String value or null if not found
@@ -149,7 +149,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     /**
      * Gets an system property value.
-     * 
+     *
      * @param parameterName
      *            the Name or the parameter.
      * @return String value or null if not found
@@ -178,7 +178,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     /**
      * Gets an application or system property value.
-     * 
+     *
      * @param parameterName
      *            the Name or the parameter.
      * @param defaultValue
@@ -209,7 +209,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * Return the URL from where static files, e.g. the widgetset and the theme,
      * are served. In a standard configuration the VAADIN folder inside the
      * returned folder is what is used for widgetsets and themes.
-     * 
+     *
      * @param request
      * @return The location of static resources (inside which there should be a
      *         VAADIN directory). Does not end with a slash (/).
@@ -233,7 +233,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     }
 
     enum RequestType {
-        FILE_UPLOAD, UIDL, RENDER, STATIC_FILE, APPLICATION_RESOURCE, DUMMY, EVENT, UNKNOWN;
+        FILE_UPLOAD, UIDL, RENDER, STATIC_FILE, APPLICATION_RESOURCE, DUMMY, EVENT, ACTION, UNKNOWN;
     }
 
     protected RequestType getRequestType(PortletRequest request) {
@@ -252,6 +252,9 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         } else if (request instanceof ActionRequest) {
             if (isFileUploadRequest((ActionRequest) request)) {
                 return RequestType.FILE_UPLOAD;
+            } else {
+                // action other than upload
+                return RequestType.ACTION;
             }
         } else if (request instanceof EventRequest) {
             return RequestType.EVENT;
@@ -281,7 +284,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     /**
      * Returns true if the servlet is running in production mode. Production
      * mode disables all debug facilities.
-     * 
+     *
      * @return true if in production mode, false if in debug mode
      */
     public boolean isProductionMode() {
@@ -331,9 +334,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                  */
                 PortletApplicationContext2 applicationContext = PortletApplicationContext2
                         .getApplicationContext(request.getPortletSession());
-                if (response instanceof MimeResponse) {
-                    applicationContext.setMimeResponse((MimeResponse) response);
-                }
+                applicationContext.setResponse(response);
 
                 PortletCommunicationManager applicationManager = applicationContext
                         .getApplicationManager(application);
@@ -445,6 +446,10 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                     } else if (requestType == RequestType.RENDER) {
                         writeAjaxPage((RenderRequest) request,
                                 (RenderResponse) response, window, application);
+                    } else if (requestType == RequestType.EVENT) {
+                        // nothing to do, listeners do all the work
+                    } else if (requestType == RequestType.ACTION) {
+                        // nothing to do, listeners do all the work
                     } else {
                         throw new IllegalStateException(
                                 "handleRequest() without anything to do - should never happen!");
@@ -929,7 +934,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     /**
      * Returns the theme for given request/window
-     * 
+     *
      * @param request
      * @param window
      * @return
@@ -980,7 +985,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     /**
      * Get system messages from the current application class
-     * 
+     *
      * @return
      */
     protected SystemMessages getSystemMessages() {
@@ -1053,7 +1058,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * Send notification to client's application. Used to notify client of
      * critical errors and session expiration due to long inactivity. Server has
      * no knowledge of what application client refers to.
-     * 
+     *
      * @param request
      *            the Portlet request instance.
      * @param response

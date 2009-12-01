@@ -13,16 +13,22 @@ import javax.portlet.ActionResponse;
 import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
 import javax.portlet.MimeResponse;
+import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
+import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 import javax.portlet.ResourceURL;
+import javax.portlet.StateAwareResponse;
 import javax.servlet.http.HttpSessionBindingListener;
+import javax.xml.namespace.QName;
 
 import com.vaadin.Application;
 import com.vaadin.terminal.ApplicationResource;
+import com.vaadin.terminal.ExternalResource;
+import com.vaadin.ui.Window;
 
 /**
  * TODO Write documentation, fix JavaDoc tags.
@@ -41,7 +47,10 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
 
     protected HashMap<String, Application> portletWindowIdToApplicationMap = new HashMap<String, Application>();
 
-    private MimeResponse mimeResponse;
+    private PortletResponse response;
+
+    private Map<String, QName> eventActionDestinationMap = new HashMap<String, QName>();
+    private Map<String, Serializable> eventActionValueMap = new HashMap<String, Serializable>();
 
     public File getBaseDirectory() {
         String resultPath = session.getPortletContext().getRealPath("/");
@@ -137,10 +146,20 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
 
     public void firePortletActionRequest(Application app,
             ActionRequest request, ActionResponse response) {
-        Set<PortletListener> listeners = portletListeners.get(app);
-        if (listeners != null) {
-            for (PortletListener l : listeners) {
-                l.handleActionRequest(request, response);
+        String key = request.getParameter(ActionRequest.ACTION_NAME);
+        if (eventActionDestinationMap.containsKey(key)) {
+            // this action request is only to send queued portlet events
+            response.setEvent(eventActionDestinationMap.get(key), eventActionValueMap
+                    .get(key));
+            // cleanup
+            eventActionDestinationMap.remove(key);
+            eventActionValueMap.remove(key);
+        } else {
+            Set<PortletListener> listeners = portletListeners.get(app);
+            if (listeners != null) {
+                for (PortletListener l : listeners) {
+                    l.handleActionRequest(request, response);
+                }
             }
         }
     }
@@ -187,22 +206,92 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
      *
      * @param mimeResponse
      */
-    void setMimeResponse(MimeResponse mimeResponse) {
-        this.mimeResponse = mimeResponse;
+    void setResponse(PortletResponse response) {
+        this.response = response;
     }
 
     @Override
     public String generateApplicationResourceURL(
             ApplicationResource resource,
             String mapKey) {
-        ResourceURL resourceURL = mimeResponse.createResourceURL();
-        final String filename = resource.getFilename();
-        if (filename == null) {
-            resourceURL.setResourceID("APP/" + mapKey + "/");
+        if (response instanceof MimeResponse) {
+            ResourceURL resourceURL = ((MimeResponse) response)
+                    .createResourceURL();
+            final String filename = resource.getFilename();
+            if (filename == null) {
+                resourceURL.setResourceID("APP/" + mapKey + "/");
+            } else {
+                resourceURL.setResourceID("APP/" + mapKey + "/" + filename);
+            }
+            return resourceURL.toString();
         } else {
-            resourceURL.setResourceID("APP/" + mapKey + "/" + filename);
+            // in a background thread or otherwise outside a request
+            return null;
         }
-        return resourceURL.toString();
     }
 
+    /**
+     * Creates a new action URL.
+     *
+     * @param action
+     * @return action URL or null if called outside a MimeRequest (outside a
+     *         UIDL request or similar)
+     */
+    public PortletURL generateActionURL(String action) {
+        PortletURL url = null;
+        if (response instanceof MimeResponse) {
+            url = ((MimeResponse) response).createActionURL();
+            url.setParameter("javax.portlet.action", action);
+        } else {
+            return null;
+        }
+        return url;
+    }
+
+    /**
+     * Sends a portlet event to the indicated destination.
+     * 
+     * Internally, an action may be created and opened, as an event cannot be
+     * sent directly from all types of requests.
+     * 
+     * The event destinations and values need to be kept in the context until
+     * sent. Any memory leaks if the action fails are limited to the session.
+     * 
+     * Event names for events sent and received by a portlet need to be declared
+     * in portlet.xml .
+     * 
+     * @param window
+     *            a window in which a temporary action URL can be opened if
+     *            necessary
+     * @param name
+     *            event name
+     * @param value
+     *            event value object that is Serializable and, if appropriate,
+     *            has a valid JAXB annotation
+     */
+    public void sendPortletEvent(Window window, QName name, Serializable value)
+            throws IllegalStateException {
+        if (response instanceof MimeResponse) {
+            String actionKey = "" + System.currentTimeMillis();
+            while (eventActionDestinationMap.containsKey(actionKey)) {
+                actionKey = actionKey + ".";
+            }
+            PortletURL actionUrl = generateActionURL(actionKey);
+            if (actionUrl != null) {
+                eventActionDestinationMap.put(actionKey, name);
+                eventActionValueMap.put(actionKey, value);
+                window.open(new ExternalResource(actionUrl.toString()));
+            } else {
+                // this should never happen as we already know the response is a
+                // MimeResponse
+                throw new IllegalStateException(
+                        "Portlet events can only be sent from a portlet request");
+            }
+        } else if (response instanceof StateAwareResponse) {
+            ((StateAwareResponse) response).setEvent(name, value);
+        } else {
+            throw new IllegalStateException(
+                    "Portlet events can only be sent from a portlet request");
+        }
+    }
 }

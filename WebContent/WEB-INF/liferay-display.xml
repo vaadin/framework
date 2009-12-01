@@ -18,6 +18,9 @@
 				<portlet id="AddressBookPortlet" />
 				<portlet id="CalcPortlet"/>
 				<portlet id="SamplerPortlet"/>
-				<portlet id="HelloWorldEventPortlet"/>
+				<!--
+				<portlet id="InterPortletEventPortlet" />
+				<portlet id="VaadinInterPortletEventPortlet" />
+				-->
         </category>
 </display>

@@ -722,10 +722,14 @@ public abstract class Application implements URIHandler,
 
     /**
      * Gets the relative uri of the resource.
+     * 
+     * This method can only be called from within the processing of a UIDL
+     * request, not from a background thread.
      *
      * @param resource
      *            the resource to get relative location.
-     * @return the relative uri of the resource.
+     * @return the relative uri of the resource or null if called in a
+     *         background thread
      */
     @Deprecated
     public String getRelativeLocation(ApplicationResource resource) {

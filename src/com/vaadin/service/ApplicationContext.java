@@ -71,6 +71,10 @@ public interface ApplicationContext extends Serializable {
      * Generate a URL that can be used as the relative location of e.g. an
      * {@link ApplicationResource}.
      * 
+     * This method should only be called from the processing of a UIDL request,
+     * not from a background thread. The return value is null if used outside a
+     * suitable request.
+     * 
      * @deprecated this is subject to change/removal from the interface
      *
      * @param resource
@@ -84,7 +88,7 @@ public interface ApplicationContext extends Serializable {
 
     /**
      * Tests if a URL is for an application resource (APP/...).
-     * 
+     *
      * @deprecated this is subject to change/removal from the interface
      *
      * @param context
@@ -99,7 +103,7 @@ public interface ApplicationContext extends Serializable {
      * the one that was given to
      * {@link #generateApplicationResourceURL(ApplicationResource, String)} when
      * creating the URL.
-     * 
+     *
      * @deprecated this is subject to change/removal from the interface
      *
      * @param context
