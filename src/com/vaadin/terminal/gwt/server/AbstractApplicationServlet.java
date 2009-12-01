@@ -369,6 +369,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         }
 
         Application application = null;
+        boolean transactionStarted = false;
+        boolean requestStarted = false;
 
         try {
             // If a duplicate "close application" URL is received for an
@@ -414,6 +416,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             if (application instanceof HttpServletRequestListener) {
                 ((HttpServletRequestListener) application).onRequestStart(
                         request, response);
+                requestStarted = true;
             }
 
             // Start the newly created application
@@ -424,6 +427,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
              * is called in the finally block below.
              */
             webApplicationContext.startTransaction(application, request);
+            transactionStarted = true;
 
             /* Handle the request */
             if (requestType == RequestType.FILE_UPLOAD) {
@@ -480,14 +484,19 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             handleServiceException(request, response, application, e);
         } finally {
             // Notifies transaction end
-            if (application != null) {
-                ((WebApplicationContext) application.getContext())
-                        .endTransaction(application, request);
+            try {
+                if (transactionStarted) {
+                    ((WebApplicationContext) application.getContext())
+                            .endTransaction(application, request);
 
-                if (application instanceof HttpServletRequestListener) {
+                }
+
+            } finally {
+                if (requestStarted) {
                     ((HttpServletRequestListener) application).onRequestEnd(
                             request, response);
                 }
+
             }
 
         }

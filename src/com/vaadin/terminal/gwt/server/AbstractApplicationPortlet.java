@@ -313,6 +313,9 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                     (ResourceResponse) response);
         } else {
             Application application = null;
+            boolean transactionStarted = false;
+            boolean requestStarted = false;
+
             try {
                 // TODO What about PARAM_UNLOADBURST & redirectToApplication??
 
@@ -359,6 +362,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 if (application instanceof PortletRequestListener) {
                     ((PortletRequestListener) application).onRequestStart(
                             request, response);
+                    requestStarted = true;
                 }
 
                 /* Start the newly created application */
@@ -369,6 +373,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                  * end is called in the finally block below.
                  */
                 applicationContext.startTransaction(application, request);
+                transactionStarted = true;
 
                 /* Notify listeners */
 
@@ -460,15 +465,17 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 handleServiceException(request, response, application, e);
             } finally {
                 // Notifies transaction end
-                if (application != null) {
-                    ((PortletApplicationContext2) application.getContext())
-                            .endTransaction(application, request);
-
-                    if (application instanceof PortletRequestListener) {
+                try {
+                    if (transactionStarted) {
+                        ((PortletApplicationContext2) application.getContext())
+                                .endTransaction(application, request);
+                    }
+                } finally {
+                    if (requestStarted) {
                         ((PortletRequestListener) application).onRequestEnd(
                                 request, response);
-                    }
 
+                    }
                 }
             }
         }
