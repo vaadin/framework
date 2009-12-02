@@ -21,7 +21,7 @@ See configure target to adjust this buildfile.
 	<!-- 
 		Update based on your project structure, by default this buildfile assumes that you 
 		1. use WebContent under your project's root directory
-		2. WebContent/WEB-INF/lib/vaadin-@version@.jar exists
+		2. WebContent/WEB-INF/lib/vaadin-6.2.0.dev-20091201.jar exists
 		3. WebContent/WEB-INF/src contains your project source files
 		4. gwt directory contains extracted GWT distribution for your platform (windows, linux or mac)
 	-->
@@ -49,24 +49,37 @@ See configure target to adjust this buildfile.
 		<property name="client-side-destination" value="${base}WebContent/VAADIN/widgetsets" />
 	</target>
 		
-	<!-- NOTE: Modify this example to compile your own widgetset  -->
+    <!-- NOTE: Modify this example to compile your own widgetset -->
     <target name="configure-widgetset">
-		<!-- Name of the widget set. -->
-        <property name="widgetset" value="com.vaadin.demo.colorpicker.gwt.ColorPickerWidgetSet"/>
-    	
-		<!-- The compiled JAR name -->
-    	<property name="jar-destination" value="${base}colorpicker.jar"/>
+        <echo>Modify this example Ant script to compile your own widget sets.</echo>
 
-		<!-- Title of the widget set (for JAR) -->
-        <property name="widgetset-title" value="ColorPicker"/>
-    	
-		<!-- Version of the widget set (for JAR) -->
-        <property name="widgetset-version" value="1.0"/>
-    	
-		<!-- Vendor of the widget set (for JAR) -->
-    	<property name="widgetset-vendor" value="IT Mill Oy"/>
+    	<!-- Name of the widget set -->
+        <property name="widgetset" value="com.vaadin.demo.widgetset.GeneratedWidgetSet"/>
+        
+        <!-- Path to the widgetset directory. Required only for generated widget sets. -->
+        <!-- Must be relative to $src-location, that is, under the first entry in class path. -->
+        <property name="widgetset-path" value="com/vaadin/demo/widgetset"/>
     </target>
 
+    <!-- Note: Modify this example to compile your own widgetset Jar. -->
+    <target name="configure-jar">
+        <!-- The compiled JAR name -->
+        <property name="jar-destination" value="${base}colorpicker.jar"/>
+
+        <!-- Title of the widget set (for JAR) -->
+        <property name="widgetset-title" value="ColorPicker"/>
+        
+        <!-- Version of the widget set (for JAR) -->
+        <property name="widgetset-version" value="1.0"/>
+        
+        <!-- Vendor of the widget set (for JAR) -->
+        <property name="widgetset-vendor" value="IT Mill Oy"/>
+    </target>
+	
+	<!-- ================================================== -->
+	<!-- Build Targets                                      -->
+    <!-- ================================================== -->
+	
 	<target name="init" depends="configure">
 
 		<echo>Configured for ${gwt-platform} platform.</echo>
@@ -87,11 +100,15 @@ See configure target to adjust this buildfile.
 		<!-- Construct and check classpath -->
 		<!-- Includes paths required for both server and client-side compilation -->
 		<path id="compile.classpath">
+			<!-- The source location must be first, as required by generate-widgetset. -->
+            <pathelement path="${src-location}" />
 			<pathelement path="${server-side-destination}" />
-			<pathelement path="${src-location}" />
 			<pathelement path="${toolkit-jar-location}" />
 			<pathelement path="${gwt-location}/gwt-user.jar" />
 			<pathelement path="${gwt-location}/gwt-dev-${gwt-platform}.jar" />
+		    <fileset dir="${base}WebContent/WEB-INF/lib/">
+		    	<include name="*.jar"/>
+		     </fileset>
 		</path>
 	</target>
 
@@ -104,43 +121,33 @@ See configure target to adjust this buildfile.
 		</javac>
 	</target>
 
-	<!-- Build JAR -->
-	<target name="package-jar" depends="init, configure-widgetset">
-        <jar jarfile="${jar-destination}" compress="true">
-            <manifest>
-                <attribute name="Vaadin-Package-Version" value="1" />
-                <attribute name="Vaadin-Widgetsets" value="${widgetset}" />
-                <attribute name="Implementation-Title" value="${widgetset-title}" />
-                <attribute name="Implementation-Version" value="${widgetset-version}" />
-                <attribute name="Implementation-Vendor" value="${widgetset-vendor}" />
-            	
-            	<!-- The following are Vaadin-specific. -->
-                <attribute name="Vaadin-License-Title" value="Apache2" />
-                <attribute name="Vaadin-License-File" value="http://www.apache.org/licenses/LICENSE-2.0" />
-            </manifest>
-        	
-        	<!-- The built server-side classes are here. -->
-            <fileset dir="${server-side-destination}">
-                <patternset>
-                    <include name="**/*" />
-                </patternset>
-            </fileset>
+	<!-- Generates a combined widget set from all widget    -->
+	<!-- sets in the class path, including project sources. -->
+	<!-- Updates the configuration if it already exists.    -->
+    <target name="generate-widgetset"
+    	    depends="compile-server-side, configure-widgetset">
+    	
+    	<!-- Create the directory if it does not already exist. -->
+    	<mkdir dir="${src-location}/${widgetset-path}"/>
+    	
+     	<java classname="com.vaadin.terminal.gwt.widgetsetutils.WidgetSetBuilder"
+     		  failonerror="yes" fork="yes" maxmemory="256m">
+     		<arg value="${widgetset}"/>
+            <jvmarg value="-Xss1024k"/>
+            <jvmarg value="-Djava.awt.headless=true"/>
+			<classpath>
+				<path refid="compile.classpath"/>
+			</classpath>
+        </java>
+    </target>
 
-        	<!-- Especially all the widget set source files are required. -->
-        	<fileset dir="${src-location}">
-                <patternset>
-                    <include name="**/*" />
-                </patternset>
-            </fileset>
-        </jar>
-	</target>
-	
 	<!-- Build the widget set  -->
-	<target name="compile-widgetset" depends="compile-server-side, configure-widgetset">
+	<target name="compile-widgetset"
+		    depends="compile-server-side, generate-widgetset">
 		<echo>Compiling ${widgetset}...</echo>
-		<echo>Modify this example Ant script to compile your own widget sets.</echo>
 		
-		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="256m">
+		<java classname="com.google.gwt.dev.Compiler"
+			  failonerror="yes" fork="yes" maxmemory="256m">
 			<arg value="-war" />
 			<arg value="${client-side-destination}" />
 			<arg value="${widgetset}" />
@@ -152,4 +159,34 @@ See configure target to adjust this buildfile.
 		</java>
 	</target>
 
+    <!-- Build JAR -->
+    <target name="package-jar" depends="init, configure-widgetset">
+        <jar jarfile="${jar-destination}" compress="true">
+            <manifest>
+                <attribute name="Vaadin-Package-Version" value="1" />
+                <attribute name="Vaadin-Widgetsets" value="${widgetset}" />
+                <attribute name="Implementation-Title" value="${widgetset-title}" />
+                <attribute name="Implementation-Version" value="${widgetset-version}" />
+                <attribute name="Implementation-Vendor" value="${widgetset-vendor}" />
+                
+                <!-- The following are Vaadin-specific. -->
+                <attribute name="Vaadin-License-Title" value="Apache2" />
+                <attribute name="Vaadin-License-File" value="http://www.apache.org/licenses/LICENSE-2.0" />
+            </manifest>
+            
+            <!-- The built server-side classes are here. -->
+            <fileset dir="${server-side-destination}">
+                <patternset>
+                    <include name="**/*" />
+                </patternset>
+            </fileset>
+
+            <!-- Especially all the widget set source files are required. -->
+            <fileset dir="${src-location}">
+                <patternset>
+                    <include name="**/*" />
+                </patternset>
+            </fileset>
+        </jar>
+    </target>
 </project>
