@@ -61,10 +61,10 @@ public class ColorPicker extends AbstractField {</pre>
     <ul>
 	    <li>On the server-side:</li>
 	    <ul>
-	       <li>Listeners are now easier to implement the <b>ReflectTools</b>
-			and with <tt>addListener(String eventIdentifier, Class&lt;?&gt;
-			eventType, Object target, Method method)</tt> methods that
-			automatically inform the client-side that a listener is registered)</li>
+	       <li>Listeners are now easier to implement  with <tt>ReflectTools.findMethod()</tt>
+			and <tt>addListener(String eventIdentifier, Class&lt;?&gt;
+			eventType, Object target, Method method)</tt> methods. The latter
+			automatically inform the client-side that a listener is registered on server side)</li>
 		</ul>
         <li>On the client-side:</li>
         <ul>
