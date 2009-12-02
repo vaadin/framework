@@ -52,6 +52,9 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
     private Map<String, QName> eventActionDestinationMap = new HashMap<String, QName>();
     private Map<String, Serializable> eventActionValueMap = new HashMap<String, Serializable>();
 
+    private Map<String, String> sharedParameterActionNameMap = new HashMap<String, String>();
+    private Map<String, String> sharedParameterActionValueMap = new HashMap<String, String>();
+
     public File getBaseDirectory() {
         String resultPath = session.getPortletContext().getRealPath("/");
         if (resultPath != null) {
@@ -154,7 +157,15 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
             // cleanup
             eventActionDestinationMap.remove(key);
             eventActionValueMap.remove(key);
+        } else if (sharedParameterActionNameMap.containsKey(key)) {
+            // this action request is only to set shared render parameters
+            response.setRenderParameter(sharedParameterActionNameMap.get(key),
+                    sharedParameterActionValueMap.get(key));
+            // cleanup
+            sharedParameterActionNameMap.remove(key);
+            sharedParameterActionValueMap.remove(key);
         } else {
+            // normal action request, notify listeners
             Set<PortletListener> listeners = portletListeners.get(app);
             if (listeners != null) {
                 for (PortletListener l : listeners) {
@@ -250,16 +261,16 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
 
     /**
      * Sends a portlet event to the indicated destination.
-     * 
+     *
      * Internally, an action may be created and opened, as an event cannot be
      * sent directly from all types of requests.
-     * 
+     *
      * The event destinations and values need to be kept in the context until
      * sent. Any memory leaks if the action fails are limited to the session.
-     * 
+     *
      * Event names for events sent and received by a portlet need to be declared
      * in portlet.xml .
-     * 
+     *
      * @param window
      *            a window in which a temporary action URL can be opened if
      *            necessary
@@ -292,6 +303,52 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
         } else {
             throw new IllegalStateException(
                     "Portlet events can only be sent from a portlet request");
+        }
+    }
+
+    /**
+     * Sets a shared portlet parameter.
+     *
+     * Internally, an action may be created and opened, as shared parameters
+     * cannot be set directly from all types of requests.
+     *
+     * The parameters and values need to be kept in the context until sent. Any
+     * memory leaks if the action fails are limited to the session.
+     *
+     * Shared parameters set or read by a portlet need to be declared in
+     * portlet.xml .
+     *
+     * @param window
+     *            a window in which a temporary action URL can be opened if
+     *            necessary
+     * @param name
+     *            parameter identifier
+     * @param value
+     *            parameter value
+     */
+    public void setSharedRenderParameter(Window window, String name,
+            String value) throws IllegalStateException {
+        if (response instanceof MimeResponse) {
+            String actionKey = "" + System.currentTimeMillis();
+            while (sharedParameterActionNameMap.containsKey(actionKey)) {
+                actionKey = actionKey + ".";
+            }
+            PortletURL actionUrl = generateActionURL(actionKey);
+            if (actionUrl != null) {
+                sharedParameterActionNameMap.put(actionKey, name);
+                sharedParameterActionValueMap.put(actionKey, value);
+                window.open(new ExternalResource(actionUrl.toString()));
+            } else {
+                // this should never happen as we already know the response is a
+                // MimeResponse
+                throw new IllegalStateException(
+                        "Shared parameters can only be set from a portlet request");
+            }
+        } else if (response instanceof StateAwareResponse) {
+            ((StateAwareResponse) response).setRenderParameter(name, value);
+        } else {
+            throw new IllegalStateException(
+                    "Shared parameters can only be set from a portlet request");
         }
     }
 }

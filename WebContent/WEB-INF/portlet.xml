@@ -2,6 +2,7 @@
 <portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd"
 	version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd">
+	
 	<portlet>
 		<portlet-name>PortletDemoPortlet</portlet-name>
 		<display-name>Vaadin PortletDemo</display-name>
@@ -137,8 +138,8 @@
 			<short-title>HelloWorld</short-title>
 		</portlet-info>		
 	</portlet>
-	
-	<!--
+
+	<!--	
 	<portlet>
 		<portlet-name>VaadinInterPortletEventPortlet</portlet-name>
 		<display-name>Hello World Event</display-name>
@@ -158,7 +159,7 @@
 		<portlet-info>
 			<title>Inter-portlet events</title>
 			<short-title>Inter-portlet events</short-title>
-		</portlet-info>		
+		</portlet-info>
 		<supported-processing-event>
          	<qname xmlns:vaadin="http://www.vaadin.com/hello">vaadin:Hello</qname>
 		</supported-processing-event>
@@ -171,6 +172,7 @@
 		<supported-publishing-event>
          	<qname xmlns:vaadin="http://www.vaadin.com/hello">vaadin:FromVaadin</qname>
 		</supported-publishing-event>
+		<supported-public-render-parameter>HelloState</supported-public-render-parameter>		
 	</portlet>
 	
 	<portlet>
@@ -197,6 +199,7 @@
 		<supported-publishing-event>
          	<qname xmlns:vaadin="http://www.vaadin.com/hello">vaadin:ReplyToVaadin</qname>
 		</supported-publishing-event>
+		<supported-public-render-parameter>HelloState</supported-public-render-parameter>		
 	</portlet>
 	-->
 
@@ -339,6 +342,10 @@
 		</security-role-ref>
 	</portlet>
 	
+	<!--
+		These can be used to customize the event object types.
+		The types must be serializable and have JAXB binding.
+	-->
 	<event-definition>
 		<qname xmlns:vaadin="http://www.vaadin.com/hello">vaadin:Hello</qname>
 		<value-type>java.lang.String</value-type>
@@ -349,6 +356,11 @@
 		<value-type>java.lang.String</value-type>
 	</event-definition>
 
+	<public-render-parameter>
+		<identifier>HelloState</identifier>
+		<qname xmlns:vaadin="http://www.vaadin.com/params">vaadin:HelloState</qname>
+	</public-render-parameter>
+	
 	<!--
 		This can be used to work around an issue in liferay 5.0-5.1.1
 
