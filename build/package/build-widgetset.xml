@@ -10,7 +10,7 @@ You may use either this script or Vaadin Hosted Mode Browser.launch (in Eclipse)
 to compile your client-side java code. 
 
 By default Vaadin first tries to serve widgetset resources from the file system, if that
-fails then files are streamed from vaadin-<version>.jar. 
+fails then files are streamed from vaadin-@version@.jar. 
 
 See configure target to adjust this buildfile.
 
@@ -21,7 +21,7 @@ See configure target to adjust this buildfile.
 	<!-- 
 		Update based on your project structure, by default this buildfile assumes that you 
 		1. use WebContent under your project's root directory
-		2. WebContent/WEB-INF/lib/vaadin-<version>.jar exists
+		2. WebContent/WEB-INF/lib/vaadin-@version@.jar exists
 		3. WebContent/WEB-INF/src contains your project source files
 		4. gwt directory contains extracted GWT distribution for your platform (windows, linux or mac)
 	-->
@@ -40,12 +40,33 @@ See configure target to adjust this buildfile.
 		<property name="toolkit-jar-location" value="${base}WebContent/WEB-INF/lib/vaadin-@version@.jar" />
 		
 		<!-- where project client-side widgetset source files are located -->
-		<property name="client-side-src-location" value="${base}WebContent/WEB-INF/src" />
-			
+		<property name="src-location" value="${base}WebContent/WEB-INF/src" />
+
+		<!-- where to compile server-side classes -->
+		<property name="server-side-destination" value="${base}WebContent/WEB-INF/classes"/>
+		
 		<!-- where to generate compiled javascript and theme files -->
 		<property name="client-side-destination" value="${base}WebContent/VAADIN/widgetsets" />
 	</target>
 		
+	<!-- NOTE: Modify this example to compile your own widgetset  -->
+    <target name="configure-widgetset">
+		<!-- Name of the widget set. -->
+        <property name="widgetset" value="com.vaadin.demo.colorpicker.gwt.ColorPickerWidgetSet"/>
+    	
+		<!-- The compiled JAR name -->
+    	<property name="jar-destination" value="${base}colorpicker.jar"/>
+
+		<!-- Title of the widget set (for JAR) -->
+        <property name="widgetset-title" value="ColorPicker"/>
+    	
+		<!-- Version of the widget set (for JAR) -->
+        <property name="widgetset-version" value="1.0"/>
+    	
+		<!-- Vendor of the widget set (for JAR) -->
+    	<property name="widgetset-vendor" value="IT Mill Oy"/>
+    </target>
+
 	<target name="init" depends="configure">
 
 		<echo>Configured for ${gwt-platform} platform.</echo>
@@ -53,7 +74,7 @@ See configure target to adjust this buildfile.
 		<echo>  ${gwt-location}/gwt-dev-${gwt-platform}.jar</echo>
 		<echo>  ${gwt-location}/gwt-user.jar</echo>
 		<echo>  ${toolkit-jar-location}</echo>
-		<echo>  ${client-side-src-location}</echo>
+		<echo>  ${src-location}</echo>
 		<echo>Output will be written into ${client-side-destination}</echo>
 
 		<!-- Check that files exist -->
@@ -64,22 +85,65 @@ See configure target to adjust this buildfile.
 		</fail>
 
 		<!-- Construct and check classpath -->
+		<!-- Includes paths required for both server and client-side compilation -->
 		<path id="compile.classpath">
-			<pathelement path="${client-side-src-location}" />
+			<pathelement path="${server-side-destination}" />
+			<pathelement path="${src-location}" />
 			<pathelement path="${toolkit-jar-location}" />
 			<pathelement path="${gwt-location}/gwt-user.jar" />
 			<pathelement path="${gwt-location}/gwt-dev-${gwt-platform}.jar" />
 		</path>
 	</target>
+
+	<!-- Compiled server-side components are needed for building the client-side -->
+	<target name="compile-server-side" depends="init">
+		<javac srcdir="${src-location}" destdir="${server-side-destination}">
+			<classpath>
+				<path refid="compile.classpath"/>
+			</classpath>
+		</javac>
+	</target>
+
+	<!-- Build JAR -->
+	<target name="package-jar" depends="init, configure-widgetset">
+        <jar jarfile="${jar-destination}" compress="true">
+            <manifest>
+                <attribute name="Vaadin-Package-Version" value="1" />
+                <attribute name="Vaadin-Widgetsets" value="${widgetset}" />
+                <attribute name="Implementation-Title" value="${widgetset-title}" />
+                <attribute name="Implementation-Version" value="${widgetset-version}" />
+                <attribute name="Implementation-Vendor" value="${widgetset-vendor}" />
+            	
+            	<!-- The following are Vaadin-specific. -->
+                <attribute name="Vaadin-License-Title" value="Apache2" />
+                <attribute name="Vaadin-License-File" value="http://www.apache.org/licenses/LICENSE-2.0" />
+            </manifest>
+        	
+        	<!-- The built server-side classes are here. -->
+            <fileset dir="${server-side-destination}">
+                <patternset>
+                    <include name="**/*" />
+                </patternset>
+            </fileset>
+
+        	<!-- Especially all the widget set source files are required. -->
+        	<fileset dir="${src-location}">
+                <patternset>
+                    <include name="**/*" />
+                </patternset>
+            </fileset>
+        </jar>
+	</target>
 	
-	<!-- NOTE: Modify this example to compile your own widgetset  -->
-	<target name="compile-widgetset" depends="init">
-		<echo>Compiling com.vaadin.demo.colorpicker.gwt.ColorPickerWidgetSet.</echo>
-		<echo>Modify this example ant-script to compile your own widgetsets.</echo>
-		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="256m">
-			<arg value="-out" />
+	<!-- Build the widget set  -->
+	<target name="compile-widgetset" depends="compile-server-side, configure-widgetset">
+		<echo>Compiling ${widgetset}...</echo>
+		<echo>Modify this example Ant script to compile your own widget sets.</echo>
+		
+		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="256m">
+			<arg value="-war" />
 			<arg value="${client-side-destination}" />
-			<arg value="com.vaadin.demo.colorpicker.gwt.ColorPickerWidgetSet" />
+			<arg value="${widgetset}" />
             <jvmarg value="-Xss1024k"/>
             <jvmarg value="-Djava.awt.headless=true"/>
 			<classpath>

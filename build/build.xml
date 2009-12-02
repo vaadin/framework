@@ -539,7 +539,7 @@
             <filterchain>
                 <expandproperties />
                 <!-- .classpath, *.launch, build-widgetset.xml -->
-                <replacetokens begintoken="&lt;" endtoken=">">
+                <replacetokens begintoken="@" endtoken="@">
                     <token key="version" value="${version.full}" />
                     <token key="/version" value="" />
                 </replacetokens>
