@@ -25,20 +25,60 @@
 
 <ul>
   <li><a href="#overview">Overview</a></li>
-  <li><a href="#changelog">Change Log</a></li>
   <li><a href="#upgrading">General Upgrade Notes</a></li>
   <li><a href="#upgrading-tk5">Instructions for Upgrading from IT Mill Toolkit 5</a></li>
   <li><a href="#oophm">Package for the experimental GWT Out-of-Process Hosted Mode</a></li>
   <li><a href="#known-problems">Important known problems in Vaadin @version@</a></li>
+  <li><a href="#changelog">Change Log</a></li>
   <li><a href="#requirements">Requirements</a></li>
 </ul>
 
-<p>Vaadin @version@ is a bugfix release for Vaadin 6. See the <a href="#changelog">Change
-Log</a> below for a detailed list of issues fixed in this release.</p>
+<p><i><b>This is a prerelease version of Vaadin 6.2</b>, the Release
+Notes will change before the final release.</i> Also notice that the regular
+Vaadin Plugin for Eclipse does not support Vaadin 6.2 yet; you should
+use <tt>http://vaadin.com/eclipse/experimental</tt> as the URL for the
+experimental plugin that supports the upcoming Vaadin 6.2.</p>
 
-<p>For a list of new features and enhancements in the previous minor update release 6.1.0,
-see the <a href="http://vaadin.com/download/release/6.1/6.1.0/release-notes.html">Release
-Notes for Vaadin 6.1.0</a>.</p>
+<p>Vaadin @version@ is an update for Vaadin 6. In addition to various fixes, it
+contains a number of significant enhancements.</p>
+
+<ul>
+    <li>Widget set definition and component-to-widget mapping has been redesigned</li>
+    <ul>
+        <li>Reuse of widgets is now much easier, as it is easier to package and use widget set JARs and otherwise combine widget sets.</li>
+        <li>A widget set definition class is no longer used</li>
+        <li>Server-side component is mapped to a client-side widget with an annotation:
+            <pre>@ClientWidget(com.vaadin.demo.colorpicker.gwt.client.ui.VColorPicker.class)
+public class ColorPicker extends AbstractField {</pre>
+        </li>
+        <li>The <tt>getTag()</tt> method is no longer needed</tt></li>
+        <li>The Vaadin Plugin for Eclipse can create new widget stubs, define the mapping, and create widget set definition files (<tt>.gwt.xml</tt>).</li>
+        <li>See <tt>WebContent/docs/example-source/build-widgetset.xml</tt> for example on how you can compile widget sets and widget set JARs with Ant.</li>
+        <li>A widget set builder allows automatic generation and maintenance of widget configurations, making use of widget set JARs easier.</li>
+    </ul>
+    <li>Other enhancements to development of new components</li>
+    <ul>
+	    <li>On the server-side:</li>
+	    <ul>
+	       <li>Listeners are now easier to implement the <b>ReflectTools</b>
+			and with <tt>addListener(String eventIdentifier, Class&lt;?&gt;
+			eventType, Object target, Method method)</tt> methods that
+			automatically inform the client-side that a listener is registered)</li>
+		</ul>
+        <li>On the client-side:</li>
+        <ul>
+            <li>Ability to check if a listener is registered on server side</li>
+            <li>Typed arrays and maps can now be sent to server with <tt>updateVariable()</tt></li>
+        </ul>
+    </ul>
+    <li>Refactoring widget sets has also provided some optimizations for rendering</li>
+    <li>Portlet 2.0 (JSR 268) support (no separate servlet, no session problems, portlet-to-portlet communication, etc)</li> 
+    <li>OSGi support</li>
+    <li>Enhanced sorting of <b>IndexedContainer</b> and <b>BeanItemContainer</b></li>
+    <li>New layout it Sampler and several new examples</li>
+    <li>JavaScript injection with <tt>Window.excecuteJavaScript()</tt>, "the method that you never want to use, but that is nice to have"</li> 
+    <li><b>Tree</b> style generator, <b>TabSheet</b> close button, plus dozens of other small enhancements and bug fixes</li> 
+</ul>
 
 <p>Problem fixes and enhancements planned for upcoming releases can be found from the <a
 href="http://dev.vaadin.com/roadmap">Vaadin Roadmap</a> in Vaadin Trac.</p>
@@ -47,28 +87,6 @@ href="http://dev.vaadin.com/roadmap">Vaadin Roadmap</a> in Vaadin Trac.</p>
 widget sets and refresh your project in Eclipse. If you are upgrading from earlier than
 6.1.0, notice that Vaadin 6.1 uses GWT 1.7.0 (included in the installation package). See
 <a href="#upgrading">General Upgrade Notes</a> for more details on upgrading.</p>
-
-<h2><a name="changelog">Change Log</a></h2>
-
-<p>The following issues have been fixed in this release:</p>
-
-<ul>
-  <li><a href="http://dev.itmill.com/ticket/3095">#3095</a>: Sorting of a HierarchicalContainer does not work</li>
-  <li><a href="http://dev.itmill.com/ticket/3141">#3141</a>: Multiple problems with tab scrolling</li>
-  <li><a href="http://dev.itmill.com/ticket/3268">#3268</a>: ComboBox erroneus input is not always cleared</li>
-  <li><a href="http://dev.itmill.com/ticket/3305">#3305</a>: Security key is blocked by certain firewalls</li>
-  <li><a href="http://dev.itmill.com/ticket/3306">#3306</a>: Sample NotificationCustom does not seem to support serialization</li>
-  <li><a href="http://dev.itmill.com/ticket/3320">#3320</a>: Create a session cleaner for GAE</li>
-  <li><a href="http://dev.itmill.com/ticket/3343">#3343</a>: IE6 doesn't display cursor when tabbing into a TextField with an input prompt</li>
-  <li><a href="http://dev.itmill.com/ticket/3345">#3345</a>: Combobox should show tooltip for dropdown button</li>
-  <li><a href="http://dev.itmill.com/ticket/3349">#3349</a>: NPE when mainwindow is not set</li>
-  <li><a href="http://dev.itmill.com/ticket/3351">#3351</a>: Sampler uses the same theme for all users</li>
-  <li><a href="http://dev.itmill.com/ticket/3352">#3352</a>: Make a custom theme for Sampler theme select dropdown</li>
-  <li><a href="http://dev.itmill.com/ticket/3363">#3363</a>: Subwindows are not added in order</li>
-  <li><a href="http://dev.itmill.com/ticket/3365">#3365</a>: Form not resizing properly (not getting narrower)</li>
-  <li><a href="http://dev.itmill.com/ticket/3383">#3383</a>: ComboBox input prompt style is removed when input prompt is active</li>
-  <li><a href="http://dev.itmill.com/ticket/3388">#3388</a>: Deploying portlets from two separate wars on the same page in Liferay does not work</li>
-</ul>
 
 <h2><a name="upgrading">General Upgrade Notes</a></h2>
 
@@ -242,10 +260,63 @@ sets with the regular Vaadin package for your platform.</p>
 	GWT code. You need to install the experimental OOPHM package instead
 	(see above) for development. For production, you should use the regular
 	package for Linux.</p></li>
+	
+	<li>
+	<p><a href="http://dev.vaadin.com/ticket/3716">#3716</a>: OOPHM
+	Hosted Mode browser does not work in Firefox 3.0 with <tt>vaadin-oophm-6.x.x/gwt/plugins/firefox3/oophm-xpcom-ff3.xpi</tt>.
+	As a workaround, the old <tt>oophm.xpi</tt> plugin provided in the IT
+	Mill Toolkit 5.3.0 package works just fine with Vaadin OOPHM 6.1.4 and
+	later.</p>
+	</li>
 </ul>
 
 <p>For other known problems, see open tickets at developer site <a
 	href="http://dev.vaadin.com/">dev.vaadin.com</a>.</p>
+
+<h2><a name="changelog">Change Log</a></h2>
+
+<p>The following closed issues have been included in this release:</p>
+	
+<ul>
+  <li><a href="http://dev.vaadin.com/ticket/2719">#2719</a>: Sampler margin demo shows wide right margin without explanation</li>
+  <li><a href="http://dev.vaadin.com/ticket/2918">#2918</a>: Same application is loaded in different portlet instances</li>
+  <li><a href="http://dev.vaadin.com/ticket/3070">#3070</a>: Tree's Items should be easily styled</li>
+  <li><a href="http://dev.vaadin.com/ticket/3088">#3088</a>: ComboBox, If only one item is listed, pressing Enter should choose it, not discard</li>
+  <li><a href="http://dev.vaadin.com/ticket/3117">#3117</a>: Portlet 2.0 (JSR-286) support</li>
+  <li><a href="http://dev.vaadin.com/ticket/3234">#3234</a>: Component Event Listener Framework for all widgets/components</li>
+  <li><a href="http://dev.vaadin.com/ticket/3277">#3277</a>: MenuBar.MenuItem could have setVisible() method</li>
+  <li><a href="http://dev.vaadin.com/ticket/3323">#3323</a>: Redesign sampler main screen</li>
+  <li><a href="http://dev.vaadin.com/ticket/3386">#3386</a>: Add JUnit tests for ensuring compatibility with all supported application servers and portals</li>
+  <li><a href="http://dev.vaadin.com/ticket/3387">#3387</a>: Google AppEngine integration test</li>
+  <li><a href="http://dev.vaadin.com/ticket/3433">#3433</a>: BeanItemContainer's sort is not overridable</li>
+  <li><a href="http://dev.vaadin.com/ticket/3434">#3434</a>: IndexedContainer's compare is not overridable</li>
+  <li><a href="http://dev.vaadin.com/ticket/3499">#3499</a>: PopupView CSS style is broken</li>
+  <li><a href="http://dev.vaadin.com/ticket/3541">#3541</a>: VerticalLayout//HorizontalLayout/GridLayout/AbsoluteLayout/CSSLayout should support click events</li>
+  <li><a href="http://dev.vaadin.com/ticket/3544">#3544</a>: Implement support for focus/blur events in TextField</li>
+  <li><a href="http://dev.vaadin.com/ticket/3553">#3553</a>: Change nightly and develpoment version numbering</li>
+  <li><a href="http://dev.vaadin.com/ticket/3605">#3605</a>: Patch to avoid concurrent modification exceptions in EventRouter</li>
+  <li><a href="http://dev.vaadin.com/ticket/3640">#3640</a>: Update build-widgetsets.xml and verify it works</li>
+  <li><a href="http://dev.vaadin.com/ticket/3655">#3655</a>: ApplicationRunner logs unnecessary java.lang.ClassNotFoundExceptions</li>
+  <li><a href="http://dev.vaadin.com/ticket/3683">#3683</a>: TextField.setRows() API needs reworking</li>
+  <li><a href="http://dev.vaadin.com/ticket/3731">#3731</a>: Implement a simpler alternative to ApplicationContext.TransactionListener</li>
+  <li><a href="http://dev.vaadin.com/ticket/3740">#3740</a>: Tabsheet no longer fully serializable, doesn't work in GAE</li>
+  <li><a href="http://dev.vaadin.com/ticket/3754">#3754</a>: Add data.util.TextFileProperty</li>
+  <li><a href="http://dev.vaadin.com/ticket/3755">#3755</a>: Select throws IllegalArgumentException when browsing pages quickly</li>
+  <li><a href="http://dev.vaadin.com/ticket/3756">#3756</a>: Add support for passing a typed Object[] from client to server</li>
+  <li><a href="http://dev.vaadin.com/ticket/3757">#3757</a>: Add support for passing a typed map from client to server</li>
+  <li><a href="http://dev.vaadin.com/ticket/3759">#3759</a>: Cannot scroll to the last tab in a Tabsheet</li>
+  <li><a href="http://dev.vaadin.com/ticket/3760">#3760</a>: Scrollbars are missing in Safari/Chrome</li>
+  <li><a href="http://dev.vaadin.com/ticket/3762">#3762</a>: Dependency to javax/portlet/PortletRequest, won't work with GAE</li>
+  <li><a href="http://dev.vaadin.com/ticket/3772">#3772</a>: Add notifier interfaces for focus and blur events</li>
+  <li><a href="http://dev.vaadin.com/ticket/3775">#3775</a>: Optimize Tree rendering</li>
+  <li><a href="http://dev.vaadin.com/ticket/3776">#3776</a>: Server side junit test cases should be run automatically on each build</li>
+  <li><a href="http://dev.vaadin.com/ticket/3782">#3782</a>: ClassCastException when adding Window via addComponent</li>
+  <li><a href="http://dev.vaadin.com/ticket/3783">#3783</a>: ClickListener in Panel does not work</li>
+  <li><a href="http://dev.vaadin.com/ticket/3784">#3784</a>: Panel.setScrollTop does not work with invalid values</li>
+  <li><a href="http://dev.vaadin.com/ticket/3785">#3785</a>: Style names for MenuBar.MenuItem</li>
+  <li><a href="http://dev.vaadin.com/ticket/3786">#3786</a>: Add focus and blur events to Select/VFilterSelect and DateField/VTextualDate</li>
+  <li><a href="http://dev.vaadin.com/ticket/3788">#3788</a>: Typo in setWriteThrough's parameter name</li>
+</ul>	
 
 <h2><a name="requirements">Requirements</a></h2>
 
