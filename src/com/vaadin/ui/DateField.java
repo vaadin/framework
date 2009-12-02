@@ -12,9 +12,15 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.vaadin.data.Property;
+import com.vaadin.event.FieldEvents;
+import com.vaadin.event.FieldEvents.BlurEvent;
+import com.vaadin.event.FieldEvents.BlurListener;
+import com.vaadin.event.FieldEvents.FocusEvent;
+import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.VPopupCalendar;
+import com.vaadin.terminal.gwt.client.ui.VTextualDate;
 
 /**
  * <p>
@@ -36,7 +42,8 @@ import com.vaadin.terminal.gwt.client.ui.VPopupCalendar;
  */
 @SuppressWarnings("serial")
 @ClientWidget(VPopupCalendar.class)
-public class DateField extends AbstractField {
+public class DateField extends AbstractField implements
+        FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 
     /* Private members */
 
@@ -84,6 +91,9 @@ public class DateField extends AbstractField {
      * Inline date selector (calendar).
      */
     protected static final String TYPE_INLINE = "inline";
+
+    private static final String BLUR_EVENT = VTextualDate.BLUR_EVENT_IDENTIFIER;
+    private static final String FOCUS_EVENT = VTextualDate.FOCUS_EVENT_IDENTIFIER;
 
     /**
      * Specified widget type.
@@ -347,6 +357,14 @@ public class DateField extends AbstractField {
                 // updates itself
             }
         }
+
+        if (variables.containsKey(FOCUS_EVENT)) {
+            fireEvent(new FocusEvent(this));
+        }
+
+        if (variables.containsKey(BLUR_EVENT)) {
+            fireEvent(new BlurEvent(this));
+        }
     }
 
     /**
@@ -543,6 +561,24 @@ public class DateField extends AbstractField {
      */
     public boolean isLenient() {
         return lenient;
+    }
+
+    public void addListener(FocusListener listener) {
+        addListener(FOCUS_EVENT, FocusEvent.class, listener,
+                FocusListener.focusMethod);
+    }
+
+    public void removeListener(FocusListener listener) {
+        removeListener(FOCUS_EVENT, FocusEvent.class, listener);
+    }
+
+    public void addListener(BlurListener listener) {
+        addListener(BLUR_EVENT, BlurEvent.class, listener,
+                BlurListener.blurMethod);
+    }
+
+    public void removeListener(BlurListener listener) {
+        removeListener(BLUR_EVENT, BlurEvent.class, listener);
     }
 
 }

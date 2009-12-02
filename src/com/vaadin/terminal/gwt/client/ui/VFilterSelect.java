@@ -542,6 +542,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     public static final int FILTERINGMODE_CONTAINS = 2;
 
     private static final String CLASSNAME = "v-filterselect";
+    public static final String FOCUS_EVENT_IDENTIFIER = "focus";
+    public static final String BLUR_EVENT_IDENTIFIER = "blur";
 
     protected int pageLength = 10;
 
@@ -1061,6 +1063,12 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             setPromptingOff("");
         }
         addStyleDependentName("focus");
+
+        if (client.hasEventListeners(this, FOCUS_EVENT_IDENTIFIER)) {
+            client
+                    .updateVariable(paintableId, FOCUS_EVENT_IDENTIFIER, "",
+                            true);
+        }
     }
 
     public void onBlur(BlurEvent event) {
@@ -1080,6 +1088,10 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             }
         }
         removeStyleDependentName("focus");
+
+        if (client.hasEventListeners(this, BLUR_EVENT_IDENTIFIER)) {
+            client.updateVariable(paintableId, BLUR_EVENT_IDENTIFIER, "", true);
+        }
     }
 
     public void focus() {

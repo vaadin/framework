@@ -13,6 +13,11 @@ import java.util.Map;
 import java.util.Set;
 
 import com.vaadin.data.Container;
+import com.vaadin.event.FieldEvents;
+import com.vaadin.event.FieldEvents.BlurEvent;
+import com.vaadin.event.FieldEvents.BlurListener;
+import com.vaadin.event.FieldEvents.FocusEvent;
+import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
@@ -24,13 +29,13 @@ import com.vaadin.terminal.gwt.client.ui.VFilterSelect;
  * set of choices is presented as a set of {@link com.vaadin.data.Item}s in a
  * {@link com.vaadin.data.Container}.
  * </p>
- *
+ * 
  * <p>
  * A <code>Select</code> component may be in single- or multiselect mode.
  * Multiselect mode means that more than one item can be selected
  * simultaneously.
  * </p>
- *
+ * 
  * @author IT Mill Ltd.
  * @version
  * @VERSION@
@@ -38,7 +43,11 @@ import com.vaadin.terminal.gwt.client.ui.VFilterSelect;
  */
 @SuppressWarnings("serial")
 @ClientWidget(VFilterSelect.class)
-public class Select extends AbstractSelect implements AbstractSelect.Filtering {
+public class Select extends AbstractSelect implements AbstractSelect.Filtering,
+        FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
+
+    private static final String BLUR_EVENT_ID = VFilterSelect.BLUR_EVENT_IDENTIFIER;
+    private static final String FOCUS_EVENT_ID = VFilterSelect.FOCUS_EVENT_IDENTIFIER;
 
     /**
      * Holds value of property pageLength. 0 disables paging.
@@ -83,7 +92,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
 
     /**
      * Paints the content of this component.
-     *
+     * 
      * @param target
      *            the Paint Event.
      * @throws PaintException
@@ -229,14 +238,14 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
 
     /**
      * Makes correct sublist of given list of options.
-     *
+     * 
      * If paint is not an option request (affected by page or filter change),
      * page will be the one where possible selection exists.
-     *
+     * 
      * Detects proper first and last item in list to return right page of
      * options. Also, if the current page is beyond the end of the list, it will
      * be adjusted.
-     *
+     * 
      * @param options
      * @param needNullSelectOption
      *            flag to indicate if nullselect option needs to be taken into
@@ -335,12 +344,14 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
 
     /**
      * Invoked when the value of a variable has changed.
-     *
+     * 
      * @see com.vaadin.ui.AbstractComponent#changeVariables(java.lang.Object,
      *      java.util.Map)
      */
     @Override
     public void changeVariables(Object source, Map variables) {
+        // Not calling super.changeVariables due the history of select
+        // component hierarchy
 
         // Selection change
         if (variables.containsKey("selected")) {
@@ -404,11 +415,8 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
                 filterstring = filterstring.toLowerCase();
             }
             optionRepaint();
-            return;
-        }
-
-        // New option entered (and it is allowed)
-        if (isNewItemsAllowed()) {
+        } else if (isNewItemsAllowed()) {
+            // New option entered (and it is allowed)
             final String newitem = (String) variables.get("newitem");
             if (newitem != null && newitem.length() > 0) {
                 getNewItemHandler().addNewItem(newitem);
@@ -416,6 +424,13 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
                 filterstring = null;
                 prevfilterstring = null;
             }
+        }
+
+        if (variables.containsKey(FOCUS_EVENT_ID)) {
+            fireEvent(new FocusEvent(this));
+        }
+        if (variables.containsKey(BLUR_EVENT_ID)) {
+            fireEvent(new BlurEvent(this));
         }
 
     }
@@ -443,13 +458,13 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
     /**
      * Note, one should use more generic setWidth(String) method instead of
      * this. This now days actually converts columns to width with em css unit.
-     *
+     * 
      * Sets the number of columns in the editor. If the number of columns is set
      * 0, the actual number of displayed columns is determined implicitly by the
      * adapter.
-     *
+     * 
      * @deprecated
-     *
+     * 
      * @param columns
      *            the number of columns to set.
      */
@@ -472,6 +487,25 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
     @Deprecated
     public int getColumns() {
         return columns;
+    }
+
+    public void addListener(BlurListener listener) {
+        addListener(BLUR_EVENT_ID, BlurEvent.class, listener,
+                BlurListener.blurMethod);
+    }
+
+    public void removeListener(BlurListener listener) {
+        removeListener(BLUR_EVENT_ID, BlurEvent.class, listener);
+    }
+
+    public void addListener(FocusListener listener) {
+        addListener(FOCUS_EVENT_ID, FocusEvent.class, listener,
+                FocusListener.focusMethod);
+    }
+
+    public void removeListener(FocusListener listener) {
+        removeListener(FOCUS_EVENT_ID, FocusEvent.class, listener);
+
     }
 
 }
