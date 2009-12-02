@@ -136,7 +136,7 @@ public class WidgetSetBuilder {
     }
 
     private static String addWidgetSet(String ws, String content) {
-        return content.replace("</module>", "\n\t<inherits name=\"" + ws
+        return content.replace("</module>", "\n    <inherits name=\"" + ws
                 + "\" />" + "\n</module>");
     }
 
@@ -171,9 +171,9 @@ public class WidgetSetBuilder {
     private static void printUsage() {
         PrintStream o = System.out;
         o.println(WidgetSetBuilder.class.getSimpleName() + " usage:");
-        o.println("\t1. Set the same classpath as you will "
+        o.println("    1. Set the same classpath as you will "
                 + "have for the GWT compiler.");
-        o.println("\t2. Give the widgetsetname (to be created or updated)"
+        o.println("    2. Give the widgetsetname (to be created or updated)"
                 + " as first parameter");
         o.println();
         o
