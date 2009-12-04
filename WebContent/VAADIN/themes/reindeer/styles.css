@@ -832,7 +832,8 @@ div.v-app-loading {
 
 .v-popupview {
 	cursor: pointer;
-	background: #aaa;
+	text-decoration: underline;
+	white-space: nowrap;
 }
 .v-popupview-popup {
 	overflow: auto;
@@ -3263,8 +3264,6 @@ td.v-datefield-calendarpanel-nextyear {
 }
 
 .v-popupview {
-	background: transparent;
-	text-decoration: underline;
 	color: #1b699f;
 }
 .v-popupview:hover {

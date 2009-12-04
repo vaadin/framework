@@ -832,7 +832,8 @@ div.v-app-loading {
 
 .v-popupview {
 	cursor: pointer;
-	background: #aaa;
+	text-decoration: underline;
+	white-space: nowrap;
 }
 .v-popupview-popup {
 	overflow: auto;
