@@ -165,7 +165,7 @@ public class PopupView extends AbstractComponentContainer {
     }
 
     /**
-     * Should the popup automaticly hide when the user takes the mouse cursor
+     * Should the popup automatically hide when the user takes the mouse cursor
      * out of the popup area? If this is false, the user must click outside the
      * popup to close it. The default is true.
      * 
