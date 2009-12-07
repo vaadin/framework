@@ -590,7 +590,7 @@
 	background: transparent url(feature-controls-border.png) repeat-x 0 41px;
 	padding-bottom: 10px;
 }
-.v-app-SamplerApplication .feature-controls .v-label {
+.v-app-SamplerApplication .feature-controls .title {
 	font-family: "Helvetica Neue", helvetica, arial, sans-serif;
 	font-weight: bold;
 	font-size: 24px;
@@ -609,6 +609,10 @@
 	padding-top: 18px;
 	display: block;
 	margin: 0 0 0 10px;
+}
+.feature-controls .v-nativebutton-reset::-moz-focus-inner {
+	border: none;
+	padding: 0;
 }
 .feature-controls .v-link-showcode a span,
 .feature-controls .v-link-showcode a:link span,
