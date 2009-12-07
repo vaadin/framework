@@ -13,7 +13,7 @@ public class TableRowHeight extends TestBase {
 
     @Override
     protected String getDescription() {
-        return "This test case contains 4 tables in various configurations. All tables have a pageLength of "
+        return "This test case contains 5 tables in various configurations. All tables have a pageLength of "
                 + PAGELENGTH
                 + " and thus should show as many rows without any scrollbars (height is undefined for all tables).";
 
@@ -26,29 +26,35 @@ public class TableRowHeight extends TestBase {
 
     private static final int PAGELENGTH = 2;
 
+    @Override
     public void setup() {
-        Table table1 = initTable(PAGELENGTH, false, false);
+        Table table1 = initTable(PAGELENGTH, false, false, false);
         addComponent(new Label("Plain table"));
         addComponent(table1);
 
-        Table table2 = initTable(PAGELENGTH, true, false);
+        Table table2 = initTable(PAGELENGTH, true, false, false);
         addComponent(new Label("Table with label component in generated column"));
         addComponent(table2);
 
-        Table table3 = initTable(PAGELENGTH, false, true);
+        Table table3 = initTable(PAGELENGTH, false, true, false);
         addComponent(new Label(
                 "Table with layout component in generated column"));
         addComponent(table3);
 
-        Table table4 = initTable(PAGELENGTH, true, true);
+        Table table4 = initTable(PAGELENGTH, true, true, false);
         addComponent(new Label(
                 "Table with both label and layout component in generated column"));
         addComponent(table4);
 
+        Table table5 = initTable(PAGELENGTH, true, false, true);
+        addComponent(new Label(
+                "Table with both label and layout component in generated column"));
+        addComponent(table5);
+
     }
 
     private Table initTable(int pageLength, boolean addLabelColGen,
-            boolean addLayoutColGen) {
+            boolean addLayoutColGen, boolean fixedColWidths) {
         Table table = new Table();
         table.setWidth("100%");
         table.setPageLength(pageLength);
@@ -72,6 +78,10 @@ public class TableRowHeight extends TestBase {
         }
         if (addLayoutColGen) {
             table.addGeneratedColumn("name2", new LayoutColumnGenerator());
+        }
+        if (fixedColWidths) {
+            table.setColumnWidth("firstname", 200);
+            table.setColumnWidth("lastname", 300);
         }
 
         return table;
