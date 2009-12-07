@@ -46,9 +46,8 @@ public class TableRowHeight extends TestBase {
                 "Table with both label and layout component in generated column"));
         addComponent(table4);
 
-        Table table5 = initTable(PAGELENGTH, true, false, true);
-        addComponent(new Label(
-                "Table with both label and layout component in generated column"));
+        Table table5 = initTable(PAGELENGTH, false, false, true);
+        addComponent(new Label("Table with label horizontal scrollbar"));
         addComponent(table5);
 
     }
@@ -80,6 +79,7 @@ public class TableRowHeight extends TestBase {
             table.addGeneratedColumn("name2", new LayoutColumnGenerator());
         }
         if (fixedColWidths) {
+            table.setWidth("400px");
             table.setColumnWidth("firstname", 200);
             table.setColumnWidth("lastname", 300);
         }
