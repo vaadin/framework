@@ -629,6 +629,11 @@ div.v-app-loading {
 	border:none;
 }
 
+.v-app-loginpage .v-button,
+.v-app-loginpage .v-button {
+	float: left; /* Force minimum width for button */
+}
+
 .v-menubar table {
 	border-collapse: collapse;
 	padding: 0;
