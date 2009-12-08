@@ -6,6 +6,10 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.Set;
 
+import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.event.dom.client.DomEvent.Type;
+import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
@@ -28,6 +32,25 @@ public class VSplitPanel extends ComplexPanel implements Container,
         ContainerResizedListener {
     public static final String CLASSNAME = "v-splitpanel";
 
+    public static final String SPLITTER_CLICK_EVENT_IDENTIFIER = "sp_click";
+
+    private ClickEventHandler clickEventHandler = new ClickEventHandler(this,
+            SPLITTER_CLICK_EVENT_IDENTIFIER) {
+
+        @Override
+        protected <H extends EventHandler> HandlerRegistration registerHandler(
+                H handler, Type<H> type) {
+            return addDomHandler(handler, type);
+        }
+
+        @Override
+        protected void fireClick(NativeEvent event) {
+            if (splitter.isOrHasChild((Element) event.getEventTarget().cast())) {
+                super.fireClick(event);
+            }
+        }
+    };
+
     public static final int ORIENTATION_HORIZONTAL = 0;
 
     public static final int ORIENTATION_VERTICAL = 1;
@@ -49,6 +72,8 @@ public class VSplitPanel extends ComplexPanel implements Container,
     private final Element splitter = DOM.createDiv();
 
     private boolean resizing;
+
+    private boolean resized = false;
 
     private int origX;
 
@@ -157,6 +182,8 @@ public class VSplitPanel extends ComplexPanel implements Container,
             return;
         }
 
+        clickEventHandler.handleEventHandlerRegistration(client);
+
         if (uidl.hasAttribute("style")) {
             componentStyleNames = uidl.getStringAttribute("style").split(" ");
         } else {
@@ -202,7 +229,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
         // This is needed at least for cases like #3458 to take
         // appearing/disappearing scrollbars into account.
         client.runDescendentsLayout(this);
-        
+
         rendering = false;
 
     }
@@ -353,6 +380,10 @@ public class VSplitPanel extends ComplexPanel implements Container,
             resizing = false;
             break;
         }
+        // Only fire click event listeners if the splitter isn't moved
+        if (!resized) {
+            super.onBrowserEvent(event);
+        }
     }
 
     public void onMouseDown(Event event) {
@@ -362,6 +393,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
         final Element trg = DOM.eventGetTarget(event);
         if (trg == splitter || trg == DOM.getChild(splitter, 0)) {
             resizing = true;
+            resized = false;
             if (BrowserInfo.get().isGecko()) {
                 showDraggingCurtain();
             }
@@ -403,6 +435,9 @@ public class VSplitPanel extends ComplexPanel implements Container,
         }
         DOM.setStyleAttribute(splitter, "left", newX + "px");
         updateSplitPosition(newX);
+        if (origX != newX) {
+            resized = true;
+        }
     }
 
     private void onVerticalMouseMove(int y) {
@@ -416,6 +451,9 @@ public class VSplitPanel extends ComplexPanel implements Container,
         }
         DOM.setStyleAttribute(splitter, "top", newY + "px");
         updateSplitPosition(newY);
+        if (origY != newY) {
+            resized = true;
+        }
     }
 
     public void onMouseUp(Event event) {

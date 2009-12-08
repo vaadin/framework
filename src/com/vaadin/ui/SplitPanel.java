@@ -4,13 +4,19 @@
 
 package com.vaadin.ui;
 
+import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.vaadin.event.ComponentEventListener;
+import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Sizeable;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.ui.VSplitPanel;
 import com.vaadin.terminal.gwt.client.ui.VSplitPanelHorizontal;
+import com.vaadin.tools.ReflectTools;
 
 /**
  * SplitPanel.
@@ -53,6 +59,8 @@ public class SplitPanel extends AbstractLayout {
     private int posUnit = UNITS_PERCENTAGE;
 
     private boolean locked = false;
+
+    private static final String SPLITTER_CLICK_EVENT = VSplitPanel.SPLITTER_CLICK_EVENT_IDENTIFIER;
 
     /**
      * Creates a new split panel. The orientation of the panels is
@@ -331,6 +339,58 @@ public class SplitPanel extends AbstractLayout {
             setSplitPosition(newPos, UNITS_PIXELS);
         }
 
+        if (variables.containsKey(SPLITTER_CLICK_EVENT)) {
+            fireClick((Map<String, Object>) variables.get(SPLITTER_CLICK_EVENT));
+        }
+
+    }
+
+    private void fireClick(Map<String, Object> parameters) {
+        MouseEventDetails mouseDetails = MouseEventDetails
+                .deSerialize((String) parameters.get("mouseDetails"));
+
+        fireEvent(new SplitterClickEvent(this, mouseDetails));
+    }
+
+    /**
+     * <code>SplitterClickListener</code> interface for listening for
+     * <code>SplitterClickEvent</code> fired by a <code>SplitPanel</code>.
+     * 
+     * @see SplitterClickEvent
+     * @since 6.2
+     */
+    public interface SplitterClickListener extends ComponentEventListener {
+
+        public static final Method clickMethod = ReflectTools.findMethod(
+                SplitterClickListener.class, "splitterClick",
+                SplitterClickEvent.class);
+
+        /**
+         * SplitPanel splitter has been clicked
+         * 
+         * @param event
+         *            SplitterClickEvent event.
+         */
+        public void splitterClick(SplitterClickEvent event);
+    }
+
+    public class SplitterClickEvent extends ClickEvent {
+
+        public SplitterClickEvent(Component source,
+                MouseEventDetails mouseEventDetails) {
+            super(source, mouseEventDetails);
+        }
+
+    }
+
+    public void addListener(SplitterClickListener listener) {
+        addListener(SPLITTER_CLICK_EVENT, SplitterClickEvent.class, listener,
+                SplitterClickListener.clickMethod);
+    }
+
+    public void removeListener(SplitterClickListener listener) {
+        removeListener(SPLITTER_CLICK_EVENT, SplitterClickListener.class,
+                listener);
     }
 
 }
