@@ -19,6 +19,8 @@ import java.util.Comparator;
  */
 public class CompileDefaultTheme {
 
+    private static final String ARG_VERSION = "-version";
+
     private static final String THEME_DIR = "./WebContent/VAADIN/themes/";
     private static final String BASE = "base";
     private static final String RUNO = "runo";
@@ -29,9 +31,18 @@ public class CompileDefaultTheme {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
-        combineTheme(new String[] { BASE }, false);
-        combineTheme(new String[] { BASE, RUNO }, false);
-        combineTheme(new String[] { BASE, REINDEER }, true);
+        String ver = null;
+        for (int i = 0; i < args.length; i++) {
+            if (ARG_VERSION.equals(args[i])) {
+                if (args.length >= i) {
+                    ver = args[i + 1];
+                }
+                break;
+            }
+        }
+        combineTheme(new String[] { BASE }, false, ver);
+        combineTheme(new String[] { BASE, RUNO }, false, ver);
+        combineTheme(new String[] { BASE, REINDEER }, true, ver);
     }
 
     /**
@@ -46,9 +57,19 @@ public class CompileDefaultTheme {
      * @throws IOException
      */
     private static void combineTheme(String[] themeNames,
-            boolean useSmartSprites) throws IOException {
+            boolean useSmartSprites, String version) throws IOException {
 
         StringBuffer combinedCss = new StringBuffer();
+
+        // Theme version
+        if (version == null) {
+            version = "9.9.9.INTERNAL-DEBUG-BUILD";
+        }
+        version = version.replaceAll("\\.", "_");
+        combinedCss.append(".v-theme-version:after {content:\"" + version
+                + "\";}\n");
+        combinedCss.append(".v-theme-version-" + version
+                + " {display: none;}\n");
 
         for (int j = 0; j < themeNames.length; j++) {
             File f = new File(THEME_DIR + themeNames[j]);

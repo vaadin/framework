@@ -39,7 +39,7 @@ public final class VDebugConsole extends VOverlay implements Console {
     /* Initialize version numbers from string replaced by build-script. */
     static {
         if ("@VERSION@".equals("@" + "VERSION" + "@")) {
-            VERSION = "5.9.9-INTERNAL-NONVERSIONED-DEBUG-BUILD";
+            VERSION = "9.9.9.INTERNAL-DEBUG-BUILD";
         } else {
             VERSION = "@VERSION@";
         }
@@ -184,6 +184,11 @@ public final class VDebugConsole extends VOverlay implements Console {
                     + "version than the one used on server. Unexpected "
                     + "behavior may occur.");
         }
+
+        log("<div class=\"v-theme-version v-theme-version-"
+                + VERSION.replaceAll("\\.", "_")
+                + "\">Warning: widgetset version " + VERSION
+                + " does not seem to match theme version </div>");
     }
 
     private EventPreview dragpreview = new EventPreview() {
