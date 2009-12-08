@@ -299,9 +299,13 @@
 	background: url(new-tree-badge.png) no-repeat right 2px;
 }
 .v-app-SamplerApplication .v-tree-menu .v-tree-node-selected span {
-	background: #7d8490;
+	background-color: #7d8490;
 	padding: 1px;
 	text-shadow: none;
+}
+.v-app-SamplerApplication .v-tree-menu .v-tree-node-new .v-tree-node-selected span {
+	padding-right: 20px;
+	background-image: url(new-tree-badge-sel.png);
 }
 
 
