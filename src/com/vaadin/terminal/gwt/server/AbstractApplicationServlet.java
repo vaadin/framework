@@ -1667,8 +1667,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      */
     protected void writeAjaxPageHtmlBodyStart(final BufferedWriter page)
             throws IOException {
-        page
-                .write("\n</head>\n<body scroll=\"auto\" class=\"v-generated-body\">\n");
+        page.write("\n</head>\n<body scroll=\"auto\" class=\""
+                + ApplicationConnection.GENERATED_BODY_CLASSNAME + "\">\n");
     }
 
     /**

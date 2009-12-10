@@ -158,6 +158,18 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
       }
     }-*/;
 
+    /**
+     * Returns true if the body is NOT generated, i.e if someone else has made
+     * the page that we're running in. Otherwise we're in charge of the whole
+     * page.
+     * 
+     * @return true if we're running embedded
+     */
+    public boolean isEmbedded() {
+        return !getElement().getOwnerDocument().getBody().getClassName()
+                .contains(ApplicationConnection.GENERATED_BODY_CLASSNAME);
+    }
+
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         rendering = true;
 
@@ -184,8 +196,11 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
             client.setWindowName(uidl.getStringAttribute("name"));
         }
 
-        com.google.gwt.user.client.Window.setTitle(uidl
-                .getStringAttribute("caption"));
+        if (!isEmbedded()) {
+            // only change window title if we're in charge of the whole page
+            com.google.gwt.user.client.Window.setTitle(uidl
+                    .getStringAttribute("caption"));
+        }
 
         // Process children
         int childIndex = 0;
