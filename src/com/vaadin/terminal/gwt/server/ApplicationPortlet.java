@@ -20,9 +20,10 @@ import com.liferay.portal.kernel.util.PropsUtil;
 import com.vaadin.Application;
 
 /**
- * @deprecated Use Portlet 2.0 class {@link ApplicationPortlet2} instead.
+ * Portlet main class for Portlet 1.0 (JSR-168) portlets which consist of a
+ * portlet and a servlet. For Portlet 2.0 (JSR-286, no servlet required), use
+ * {@link ApplicationPortlet2} instead.
  */
-@Deprecated
 @SuppressWarnings("serial")
 public class ApplicationPortlet implements Portlet, Serializable {
     // portlet configuration parameters

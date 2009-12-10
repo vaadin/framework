@@ -50,7 +50,7 @@
 		</init-param>
 		<init-param>
 			<name>style</name>
-			<value>style=height:400px</value>
+			<value>height:400px</value>
 		</init-param>
 		<init-param>
 			<name>widgetset</name>
@@ -90,7 +90,7 @@
 		</init-param>
 		<init-param>
 			<name>style</name>
-			<value>style=height:650px</value>
+			<value>height:650px</value>
 		</init-param>
 		<init-param>
 			<name>widgetset</name>
@@ -311,7 +311,7 @@
 		</init-param>
 		<init-param>
 			<name>style</name>
-			<value>style=height:650px</value>
+			<value>height:650px</value>
 		</init-param>
 		<init-param>
 			<name>widgetset</name>

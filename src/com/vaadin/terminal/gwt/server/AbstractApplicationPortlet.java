@@ -55,6 +55,12 @@ import com.vaadin.ui.Window;
 public abstract class AbstractApplicationPortlet extends GenericPortlet
         implements Constants {
 
+    /**
+     * This portlet parameter is used to add styles to the main element. E.g
+     * "height:500px" generates a style="height:500px" to the main element.
+     */
+    public static final String PORTLET_PARAMETER_STYLE = "style";
+
     private static final String PORTAL_PARAMETER_VAADIN_THEME = "vaadin.theme";
 
     // TODO some parts could be shared with AbstractApplicationServlet
@@ -926,8 +932,13 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         String classNames = "v-app v-app-loading " + themeClass + " "
                 + appClass;
 
+        String style = getApplicationProperty(PORTLET_PARAMETER_STYLE);
+        String divStyle = "";
+        if (style != null) {
+            divStyle = "style=\"" + style + "\"";
+        }
         page.write("<div id=\"" + request.getWindowID() + "\" class=\""
-                + classNames + "\"></div>\n");
+                + classNames + "\" " + divStyle + "></div>\n");
 
         page.close();
     }
