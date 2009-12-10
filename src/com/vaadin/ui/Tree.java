@@ -82,7 +82,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     private KeyMapper actionMapper = null;
 
     /**
-     * Is the tree selectable .
+     * Is the tree selectable on the client side.
      */
     private boolean selectable = true;
 
@@ -288,27 +288,31 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     /**
-     * Getter for property selectable.
+     * Returns the current selectable state. Selectable determines if the a node
+     * can be selected on the client side. Selectable does not affect
+     * {@link #setValue(Object)} or {@link #select(Object)}.
      * 
      * <p>
      * The tree is selectable by default.
      * </p>
      * 
-     * @return the Value of property selectable.
+     * @return the current selectable state.
      */
     public boolean isSelectable() {
         return selectable;
     }
 
     /**
-     * Setter for property selectable.
+     * Sets the selectable state. Selectable determines if the a node can be
+     * selected on the client side. Selectable does not affect
+     * {@link #setValue(Object)} or {@link #select(Object)}.
      * 
      * <p>
      * The tree is selectable by default.
      * </p>
      * 
      * @param selectable
-     *            the New value of property selectable.
+     *            The new selectable state.
      */
     public void setSelectable(boolean selectable) {
         if (this.selectable != selectable) {
