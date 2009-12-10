@@ -603,6 +603,12 @@
 	letter-spacing: -0.015em;
 	text-shadow: 0 2px 1px #c0c1c2;
 	padding: 7px 0 8px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+.v-app-SamplerApplication .feature-controls .title span {
+	margin-right: 12px;
 }
 .v-app-SamplerApplication .feature-controls .new span {
 	padding-right: 30px;
