@@ -1,5 +1,6 @@
 package com.vaadin.data.util;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 import com.vaadin.data.Container;
@@ -10,7 +11,7 @@ import com.vaadin.data.Container.Sortable;
  * The <code>ItemSorter</code> interface can be used in <code>Sortable</code>
  * implementations to provide a custom sorting method. The interface
  */
-public interface ItemSorter extends Comparator<Object>, Cloneable {
+public interface ItemSorter extends Comparator<Object>, Cloneable, Serializable {
 
     /**
      * Sets the parameters for an upcoming sort operation. The parameters

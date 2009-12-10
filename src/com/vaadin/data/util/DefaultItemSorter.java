@@ -1,5 +1,6 @@
 package com.vaadin.data.util;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -157,7 +158,7 @@ public class DefaultItemSorter implements ItemSorter {
      * 
      */
     public static class DefaultPropertyValueComparator implements
-            Comparator<Object> {
+            Comparator<Object>, Serializable {
 
         public int compare(Object o1, Object o2) {
             int r = 0;
