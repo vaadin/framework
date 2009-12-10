@@ -604,7 +604,7 @@
 	text-shadow: 0 2px 1px #c0c1c2;
 	padding: 7px 0 8px;
 }
-.v-app-SamplerApplication .feature-controls .new {
+.v-app-SamplerApplication .feature-controls .new span {
 	padding-right: 30px;
 	background: transparent url(new-caption-badge.png) no-repeat right 4px;
 }
