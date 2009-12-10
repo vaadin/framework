@@ -1,4 +1,4 @@
-package com.vaadin.tests;
+package com.vaadin.tests.server;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
