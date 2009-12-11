@@ -3,13 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="selenium.base" href="" />
-<title>demosampler-all-samples</title>
+<link rel="selenium.base" href="http://rndtestlinux.office.itmill.com:8080/" />
+<title>sampler_deployment</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">sampler-all-samples</td></tr>
+<tr><td rowspan="1" colspan="3">sampler_deployment</td></tr>
 </thead><tbody>
 <tr>
 	<td>openAndWait</td>
@@ -37,6 +37,16 @@
 	<td></td>
 </tr>
 <!--Start scrolling through all samples in order-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=demosampler::/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[6]/VHorizontalLayout[0]/ChildComponentContainer[1]/VNativeButton[0]</td>
+	<td>16,10</td>
+</tr>
+<tr>
+	<td>waitForVaadin</td>
+	<td></td>
+	<td></td>
+</tr>
 <tr>
 	<td>mouseClick</td>
 	<td>vaadin=demosampler::/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[7]/VHorizontalLayout[0]/ChildComponentContainer[1]/VNativeButton[0]</td>
