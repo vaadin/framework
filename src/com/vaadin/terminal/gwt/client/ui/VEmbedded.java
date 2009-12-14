@@ -4,7 +4,9 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Node;
@@ -66,7 +68,7 @@ public class VEmbedded extends HTML implements Paintable {
             if (type.equals("image")) {
                 Element el = null;
                 boolean created = false;
-                NodeList nodes = getElement().getChildNodes();
+                NodeList<Node> nodes = getElement().getChildNodes();
                 if (nodes != null && nodes.getLength() == 1) {
                     Node n = nodes.getItem(0);
                     if (n.getNodeType() == Node.ELEMENT_NODE) {
@@ -130,17 +132,32 @@ public class VEmbedded extends HTML implements Paintable {
         } else if (uidl.hasAttribute("mimetype")) {
             final String mime = uidl.getStringAttribute("mimetype");
             if (mime.equals("application/x-shockwave-flash")) {
-                setHTML("<object width=\"" + width + "\" height=\"" + height
-                        + "\"><param name=\"movie\" value=\""
-                        + getSrc(uidl, client) + "\"><embed src=\""
-                        + getSrc(uidl, client) + "\" width=\"" + width
-                        + "\" height=\"" + height + "\"></embed></object>");
+                String html = "<object width=\"" + width + "\" height=\""
+                        + height + "\">";
+
+                Map<String, String> parameters = getParameters(uidl);
+                if (parameters.get("movie") == null) {
+                    parameters.put("movie", getSrc(uidl, client));
+                }
+
+                for (String name : parameters.keySet()) {
+                    html += "<param name=\"" + escapeAttribute(name)
+                            + "\" value=\""
+                            + escapeAttribute(parameters.get(name)) + "\"/>";
+                }
+
+                html += "<embed src=\"" + getSrc(uidl, client) + "\" width=\""
+                        + width + "\" height=\"" + height + "\"></embed>";
+
+                html += "</object>";
+                setHTML(html);
             } else if (mime.equals("image/svg+xml")) {
                 String data;
-                if (getParameter("data", uidl) == null) {
+                Map<String, String> parameters = getParameters(uidl);
+                if (parameters.get("data") == null) {
                     data = getSrc(uidl, client);
                 } else {
-                    data = "data:image/svg+xml," + getParameter("data", uidl);
+                    data = "data:image/svg+xml," + parameters.get("data");
                 }
                 setHTML("");
                 ObjectElement obj = Document.get().createObjectElement();
@@ -169,21 +186,48 @@ public class VEmbedded extends HTML implements Paintable {
 
     }
 
-    private static String getParameter(String paramName, UIDL uidl) {
-        Iterator childIterator = uidl.getChildIterator();
+    /**
+     * Escapes the string so it is safe to write inside an HTML attribute.
+     * 
+     * @param attribute
+     *            The string to escape
+     * @return An escaped version of <literal>attribute</literal>.
+     */
+    private String escapeAttribute(String attribute) {
+        attribute = attribute.replace("\"", "&quot;");
+        attribute = attribute.replace("'", "&#39;");
+        attribute = attribute.replace(">", "&gt;");
+        attribute = attribute.replace("<", "&lt;");
+        attribute = attribute.replace("&", "&amp;");
+        return attribute;
+    }
+
+    /**
+     * Returns a map (name -> value) of all parameters in the UIDL.
+     * 
+     * @param uidl
+     * @return
+     */
+    private static Map<String, String> getParameters(UIDL uidl) {
+        Map<String, String> parameters = new HashMap<String, String>();
+
+        Iterator<Object> childIterator = uidl.getChildIterator();
         while (childIterator.hasNext()) {
+
             Object child = childIterator.next();
             if (child instanceof UIDL) {
-                UIDL childUIDL = (UIDL) child;
-                if (childUIDL.getTag().equals("embeddedparam")
-                        && childUIDL.getStringAttribute("name").equals(
-                                paramName)) {
-                    return childUIDL.getStringAttribute("value");
-                }
 
+                UIDL childUIDL = (UIDL) child;
+                if (childUIDL.getTag().equals("embeddedparam")) {
+                    String name = childUIDL.getStringAttribute("name");
+                    String value = childUIDL.getStringAttribute("value");
+                    parameters.put(name, value);
+                }
             }
+
         }
-        return null;
+
+        return parameters;
     }
 
     /**
