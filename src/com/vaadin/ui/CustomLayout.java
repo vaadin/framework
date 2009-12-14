@@ -50,7 +50,7 @@ public class CustomLayout extends AbstractLayout {
     /**
      * Custom layout slots containing the components.
      */
-    private final HashMap slots = new HashMap();
+    private final HashMap<String, Component> slots = new HashMap<String, Component>();
 
     private String templateContents = null;
 
@@ -107,7 +107,7 @@ public class CustomLayout extends AbstractLayout {
      *            the location of the component.
      */
     public void addComponent(Component c, String location) {
-        final Component old = (Component) slots.get(location);
+        final Component old = slots.get(location);
         if (old != null) {
             removeComponent(old);
         }
@@ -155,7 +155,7 @@ public class CustomLayout extends AbstractLayout {
      *            the Location identifier of the component.
      */
     public void removeComponent(String location) {
-        this.removeComponent((Component) slots.get(location));
+        this.removeComponent(slots.get(location));
     }
 
     /**
@@ -164,7 +164,7 @@ public class CustomLayout extends AbstractLayout {
      * 
      * @return the Iterator of the components inside the container.
      */
-    public Iterator getComponentIterator() {
+    public Iterator<Component> getComponentIterator() {
         return slots.values().iterator();
     }
 
@@ -177,7 +177,7 @@ public class CustomLayout extends AbstractLayout {
      * @return the Component in the given location or null if not found.
      */
     public Component getComponent(String location) {
-        return (Component) slots.get(location);
+        return slots.get(location);
     }
 
     /**
@@ -197,10 +197,10 @@ public class CustomLayout extends AbstractLayout {
             target.addAttribute("templateContents", templateContents);
         }
         // Adds all items in all the locations
-        for (final Iterator i = slots.keySet().iterator(); i.hasNext();) {
+        for (final Iterator<String> i = slots.keySet().iterator(); i.hasNext();) {
             // Gets the (location,component)
-            final String location = (String) i.next();
-            final Component c = (Component) slots.get(location);
+            final String location = i.next();
+            final Component c = slots.get(location);
             if (c != null) {
                 // Writes the item
                 target.startTag("location");
@@ -217,9 +217,9 @@ public class CustomLayout extends AbstractLayout {
         // Gets the locations
         String oldLocation = null;
         String newLocation = null;
-        for (final Iterator i = slots.keySet().iterator(); i.hasNext();) {
-            final String location = (String) i.next();
-            final Component component = (Component) slots.get(location);
+        for (final Iterator<String> i = slots.keySet().iterator(); i.hasNext();) {
+            final String location = i.next();
+            final Component component = slots.get(location);
             if (component == oldComponent) {
                 oldLocation = location;
             }

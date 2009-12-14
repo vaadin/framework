@@ -386,7 +386,7 @@ public class GridLayout extends AbstractLayout implements
      * 
      * @return the Iterator of the components inside the container.
      */
-    public Iterator getComponentIterator() {
+    public Iterator<Component> getComponentIterator() {
         return Collections.unmodifiableCollection(components).iterator();
     }
 

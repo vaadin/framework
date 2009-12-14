@@ -35,16 +35,16 @@ public abstract class AbstractComponentContainer extends AbstractComponent
      * re-implemented in extending classes for a more powerful implementation.
      */
     public void removeAllComponents() {
-        final LinkedList l = new LinkedList();
+        final LinkedList<Component> l = new LinkedList<Component>();
 
         // Adds all components
-        for (final Iterator i = getComponentIterator(); i.hasNext();) {
+        for (final Iterator<Component> i = getComponentIterator(); i.hasNext();) {
             l.add(i.next());
         }
 
         // Removes all component
-        for (final Iterator i = l.iterator(); i.hasNext();) {
-            removeComponent((Component) i.next());
+        for (final Iterator<Component> i = l.iterator(); i.hasNext();) {
+            removeComponent(i.next());
         }
     }
 
@@ -54,13 +54,14 @@ public abstract class AbstractComponentContainer extends AbstractComponent
      * implemented interface.
      */
     public void moveComponentsFrom(ComponentContainer source) {
-        final LinkedList components = new LinkedList();
-        for (final Iterator i = source.getComponentIterator(); i.hasNext();) {
+        final LinkedList<Component> components = new LinkedList<Component>();
+        for (final Iterator<Component> i = source.getComponentIterator(); i
+                .hasNext();) {
             components.add(i.next());
         }
 
-        for (final Iterator i = components.iterator(); i.hasNext();) {
-            final Component c = (Component) i.next();
+        for (final Iterator<Component> i = components.iterator(); i.hasNext();) {
+            final Component c = i.next();
             source.removeComponent(c);
             addComponent(c);
         }
@@ -76,8 +77,8 @@ public abstract class AbstractComponentContainer extends AbstractComponent
     public void attach() {
         super.attach();
 
-        for (final Iterator i = getComponentIterator(); i.hasNext();) {
-            ((Component) i.next()).attach();
+        for (final Iterator<Component> i = getComponentIterator(); i.hasNext();) {
+            (i.next()).attach();
         }
     }
 
@@ -91,8 +92,8 @@ public abstract class AbstractComponentContainer extends AbstractComponent
     public void detach() {
         super.detach();
 
-        for (final Iterator i = getComponentIterator(); i.hasNext();) {
-            ((Component) i.next()).detach();
+        for (final Iterator<Component> i = getComponentIterator(); i.hasNext();) {
+            (i.next()).detach();
         }
     }
 
@@ -254,9 +255,9 @@ public abstract class AbstractComponentContainer extends AbstractComponent
 
     public void requestRepaintAll() {
         requestRepaint();
-        for (Iterator childIterator = getComponentIterator(); childIterator
+        for (Iterator<Component> childIterator = getComponentIterator(); childIterator
                 .hasNext();) {
-            Component c = (Component) childIterator.next();
+            Component c = childIterator.next();
             if (c instanceof Form) {
                 // Form has children in layout, but is not ComponentContainer
                 c.requestRepaint();

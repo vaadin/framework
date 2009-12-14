@@ -145,14 +145,15 @@ public class CustomComponent extends AbstractComponentContainer {
         this.componentType = componentType;
     }
 
-    private class ComponentIterator implements Iterator, Serializable {
+    private class ComponentIterator implements Iterator<Component>,
+            Serializable {
         boolean first = getCompositionRoot() != null;
 
         public boolean hasNext() {
             return first;
         }
 
-        public Object next() {
+        public Component next() {
             first = false;
             return root;
         }
@@ -162,8 +163,7 @@ public class CustomComponent extends AbstractComponentContainer {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public Iterator getComponentIterator() {
+    public Iterator<Component> getComponentIterator() {
         return new ComponentIterator();
     }
 

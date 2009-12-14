@@ -67,7 +67,7 @@ public interface ComponentContainer extends Component {
      * 
      * @return the component iterator.
      */
-    public Iterator getComponentIterator();
+    public Iterator<Component> getComponentIterator();
 
     /**
      * Causes a repaint of this component, and all components below it.

@@ -159,8 +159,8 @@ public class SplitPanel extends AbstractLayout {
      * 
      * @return the Iterator of the components inside the container.
      */
-    public Iterator getComponentIterator() {
-        return new Iterator() {
+    public Iterator<Component> getComponentIterator() {
+        return new Iterator<Component>() {
             int i = 0;
 
             public boolean hasNext() {
@@ -171,7 +171,7 @@ public class SplitPanel extends AbstractLayout {
                 return false;
             }
 
-            public Object next() {
+            public Component next() {
                 if (!hasNext()) {
                     return null;
                 }

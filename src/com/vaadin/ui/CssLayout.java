@@ -127,7 +127,7 @@ public class CssLayout extends AbstractLayout {
      * 
      * @return the Iterator of the components inside the container.
      */
-    public Iterator getComponentIterator() {
+    public Iterator<Component> getComponentIterator() {
         return components.iterator();
     }
 
