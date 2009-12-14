@@ -368,7 +368,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             // is set visible again. This workaround is needed as isEnabled
             // checks isVisible.
             boolean needRepaint = (wasEnabledInContext != isEnabledInContext)
-                    || (wasEnabled != isEnabled && !parent.isVisible());
+                    || (wasEnabled != isEnabled && (getParent() == null || !getParent()
+                            .isVisible()));
 
             if (needRepaint) {
                 requestRepaint();
