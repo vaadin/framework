@@ -92,8 +92,8 @@ public class VCaption extends HTML {
         if (uidl.hasAttribute(ATTRIBUTE_ICON)) {
             if (icon == null) {
                 icon = new Icon(client);
-                icon.setWidth("0px");
-                icon.setHeight("0px");
+                icon.setWidth("0");
+                icon.setHeight("0");
 
                 DOM.insertChild(getElement(), icon.getElement(),
                         getInsertPosition(ATTRIBUTE_ICON));
@@ -176,8 +176,8 @@ public class VCaption extends HTML {
         if (clearElement == null) {
             clearElement = DOM.createDiv();
             DOM.setStyleAttribute(clearElement, "clear", "both");
-            DOM.setStyleAttribute(clearElement, "width", "0px");
-            DOM.setStyleAttribute(clearElement, "height", "0px");
+            DOM.setStyleAttribute(clearElement, "width", "0");
+            DOM.setStyleAttribute(clearElement, "height", "0");
             DOM.setStyleAttribute(clearElement, "overflow", "hidden");
             DOM.appendChild(getElement(), clearElement);
         }
