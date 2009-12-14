@@ -645,6 +645,9 @@ div.v-app-loading {
 	float: left; /* Force minimum width for button */
 }
 
+.v-ie6 .v-menubar {
+	float: left; /* Force minimum width in IE6 */
+}
 .v-menubar table {
 	border-collapse: collapse;
 	padding: 0;
