@@ -1,3 +1,5 @@
+.v-theme-version:after {content:"9_9_9_INTERNAL-DEBUG-BUILD";}
+.v-theme-version-9_9_9_INTERNAL-DEBUG-BUILD {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -373,6 +375,15 @@ div.v-app-loading {
 .v-label-undef-w {
 	white-space: nowrap;
 }
+/* Revert line-height for heading elements inside labels */
+.v-label h1,
+.v-label h2,
+.v-label h3,
+.v-label h4,
+.v-label h5,
+.v-label h6 {
+	line-height: normal;
+} 
 /* Loading indicator states
  * Note: client side expects that loading indicator has a height. It depends on
  * this css property to ensure browsers have applied all required styles.
