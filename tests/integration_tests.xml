@@ -350,12 +350,12 @@
 			
 	<!-- Upload demo, clean error screenshots and test deployment on all servers -->
 	<target name="all">
+		<antcall target="upload-demo" />
 		<echo>Getting lock</echo>
 		<antcall target="get-lock" />
 		<echo>Got lock</echo>
 		<trycatch property="tried">
 			<try>
-				<antcall target="upload-demo" />
 				<antcall target="tomcat4" />
 				<antcall target="tomcat5" />
 				<antcall target="tomcat6" />
