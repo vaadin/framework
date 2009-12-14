@@ -13,6 +13,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.vaadin.terminal.gwt.client.ui.VUnknownComponent;
+import com.vaadin.terminal.gwt.client.ui.VView;
 
 public class VUIDLBrowser extends Tree {
     /**
@@ -54,15 +55,7 @@ public class VUIDLBrowser extends Tree {
                 String name = uidl.getTag();
                 try {
                     Integer.parseInt(name);
-                    Class<? extends Paintable> widgetClassByDecodedTag = conf
-                            .getWidgetClassByEncodedTag(name);
-                    if (widgetClassByDecodedTag == VUnknownComponent.class) {
-                        name = conf
-                                .getUnknownServerClassNameByEncodedTagName(name)
-                                + "(NO CLIENT IMPLEMENTATION FOUND)";
-                    } else {
-                        name = widgetClassByDecodedTag.getName();
-                    }
+                    name = getNodeName(uidl, conf, name);
                 } catch (Exception e) {
                     // NOP
                 }
@@ -73,6 +66,21 @@ public class VUIDLBrowser extends Tree {
             }
         }
 
+        private String getNodeName(UIDL uidl, ApplicationConfiguration conf,
+                String name) {
+            Class<? extends Paintable> widgetClassByDecodedTag = conf
+                    .getWidgetClassByEncodedTag(name);
+            if (widgetClassByDecodedTag == VUnknownComponent.class) {
+                return conf.getUnknownServerClassNameByEncodedTagName(name)
+                        + "(NO CLIENT IMPLEMENTATION FOUND)";
+            } else if (widgetClassByDecodedTag == VView.class
+                    && uidl.hasAttribute("sub")) {
+                return "com.vaadin.terminal.gwt.ui.VWindow";
+            } else {
+                return widgetClassByDecodedTag.getName();
+            }
+        }
+
         public void dir() {
             TreeItem temp = getChild(0);
             removeItem(temp);
@@ -80,15 +88,7 @@ public class VUIDLBrowser extends Tree {
             String nodeName = uidl.getTag();
             try {
                 Integer.parseInt(nodeName);
-                Class<? extends Paintable> widgetClassByDecodedTag = conf
-                        .getWidgetClassByEncodedTag(nodeName);
-                if (widgetClassByDecodedTag == VUnknownComponent.class) {
-                    nodeName = conf
-                            .getUnknownServerClassNameByEncodedTagName(nodeName)
-                            + "(NO CLIENT IMPLEMENTATION FOUND)";
-                } else {
-                    nodeName = widgetClassByDecodedTag.getName();
-                }
+                nodeName = getNodeName(uidl, conf, nodeName);
             } catch (Exception e) {
                 // NOP
             }
