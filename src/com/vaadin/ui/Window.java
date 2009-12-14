@@ -593,7 +593,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
             if (pendingFocus.getWindow() == this
                     || (pendingFocus.getWindow() != null && pendingFocus
                             .getWindow().getParent() == this)) {
-                target.paintReference(pendingFocus, "focused");
+                target.addAttribute("focused", pendingFocus);
             }
             pendingFocus = null;
         }

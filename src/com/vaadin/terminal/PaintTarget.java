@@ -63,8 +63,9 @@ public interface PaintTarget extends Serializable {
      * is meant to enable component interactions on client side. With reference
      * the client side component can communicate directly to other component.
      * 
-     * Note! This is still an experimental feature and API is likely to change
-     * in future.
+     * Note! This was experimental api and got replaced by
+     * {@link #addAttribute(String, Paintable)} and
+     * {@link #addVariable(VariableOwner, String, Paintable)}.
      * 
      * @param paintable
      *            the Paintable to reference
@@ -72,7 +73,11 @@ public interface PaintTarget extends Serializable {
      * @throws PaintException
      * 
      * @since 5.2
+     * @deprecated use {@link #addAttribute(String, Paintable)} or
+     *             {@link #addVariable(VariableOwner, String, Paintable)}
+     *             instead
      */
+    @Deprecated
     public void paintReference(Paintable paintable, String referenceName)
             throws PaintException;
 
@@ -213,6 +218,20 @@ public interface PaintTarget extends Serializable {
             throws PaintException;
 
     /**
+     * Adds a Paintable type attribute. On client side the value will be a
+     * terminal specific reference to corresponding component on client side
+     * implementation.
+     * 
+     * @param name
+     *            the name of the attribute
+     * @param value
+     *            the Paintable to be referenced on client side
+     * @throws PaintException
+     */
+    public void addAttribute(String name, Paintable value)
+            throws PaintException;
+
+    /**
      * Adds a string type variable.
      * 
      * @param owner
@@ -322,6 +341,26 @@ public interface PaintTarget extends Serializable {
      *             if the paint operation failed.
      */
     public void addVariable(VariableOwner owner, String name, String[] value)
+            throws PaintException;
+
+    /**
+     * Adds a Paintable type variable. On client side the variable value will be
+     * a terminal specific reference to corresponding component on client side
+     * implementation. When updated from client side, terminal will map the
+     * client side component reference back to a corresponding server side
+     * reference.
+     * 
+     * @param owner
+     *            the Listener for variable changes
+     * @param name
+     *            the name of the variable
+     * @param value
+     *            the initial value of the variable
+     * 
+     * @throws PaintException
+     *             if the paint oparation fails
+     */
+    public void addVariable(VariableOwner owner, String name, Paintable value)
             throws PaintException;
 
     /**

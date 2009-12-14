@@ -276,4 +276,14 @@ public final class UIDL extends JavaScriptObject {
         return typeof this[1][name] == "object";
     }-*/;
 
+    public Paintable getPaintableAttribute(String name,
+            ApplicationConnection connection) {
+        return connection.getPaintable(getStringAttribute(name));
+    }
+
+    public Paintable getPaintableVariable(String name,
+            ApplicationConnection connection) {
+        return connection.getPaintable(getStringVariable(name));
+    }
+
 }

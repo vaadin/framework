@@ -170,7 +170,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
                 .contains(ApplicationConnection.GENERATED_BODY_CLASSNAME);
     }
 
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+    public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
         rendering = true;
 
         id = uidl.getId();
@@ -348,12 +348,11 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         }
 
         if (uidl.hasAttribute("focused")) {
-            final String focusPid = uidl.getStringAttribute("focused");
             // set focused component when render phase is finished
             DeferredCommand.addCommand(new Command() {
                 public void execute() {
-                    final Paintable toBeFocused = connection
-                            .getPaintable(focusPid);
+                    final Paintable toBeFocused = uidl.getPaintableAttribute(
+                            "focused", connection);
 
                     /*
                      * Two types of Widgets can be focused, either implementing
