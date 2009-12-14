@@ -1,6 +1,7 @@
 package com.vaadin.terminal.gwt.client;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -26,6 +27,8 @@ public class ApplicationConfiguration {
     private boolean useDebugIdInDom = true;
     private boolean usePortletURLs = false;
     private String portletUidlURLBase;
+
+    private HashMap<String, String> unknownComponents;
 
     private Class<? extends Paintable>[] classes = new Class[1024];
 
@@ -133,7 +136,7 @@ public class ApplicationConfiguration {
      * Inits the ApplicationConfiguration by reading the DOM and instantiating
      * ApplicationConnections accordingly. Call {@link #startNextApplication()}
      * to actually start the applications.
-     *
+     * 
      * @param widgetset
      *            the widgetset that is running the apps
      */
@@ -177,7 +180,7 @@ public class ApplicationConfiguration {
      * once to start the first application; after that, each application should
      * call this once it has started. This ensures that the applications are
      * started synchronously, which is neccessary to avoid session-id problems.
-     *
+     * 
      * @return true if an unstarted application was found
      */
     public static boolean startNextApplication() {
@@ -240,7 +243,19 @@ public class ApplicationConfiguration {
             String key = keyArray.get(i);
             int value = valueMap.getInt(key);
             classes[value] = widgetSet.getImplementationByClassName(key);
+            if (classes[value] == VUnknownComponent.class) {
+                if (unknownComponents == null) {
+                    unknownComponents = new HashMap<String, String>();
+                }
+                unknownComponents.put("" + value, key);
+            }
         }
     }
 
+    String getUnknownServerClassNameByEncodedTagName(String tag) {
+        if (unknownComponents != null) {
+            return unknownComponents.get(tag);
+        }
+        return null;
+    }
 }

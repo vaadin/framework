@@ -17,8 +17,10 @@ public class VUnknownComponent extends Composite implements Paintable {
     com.google.gwt.user.client.ui.Label caption = new com.google.gwt.user.client.ui.Label();;
     Tree uidlTree;
     private VerticalPanel panel;
+    private String serverClassName;
 
-    public VUnknownComponent() {
+    public VUnknownComponent(String serverClassName) {
+        this.serverClassName = serverClassName;
         panel = new VerticalPanel();
         panel.add(caption);
         initWidget(panel);
@@ -30,7 +32,9 @@ public class VUnknownComponent extends Composite implements Paintable {
         if (client.updateComponent(this, uidl, false)) {
             return;
         }
-        setCaption("Client faced an unknown component type. Unrendered UIDL:");
+        setCaption("Widgetset does not contain implementation for "
+                + serverClassName
+                + ". Check its @ClientWidget mapping, widgetsets GWT module descrioption file and re-compile your widgetset. Unrendered UIDL:");
         if (uidlTree != null) {
             uidlTree.removeFromParent();
         }

@@ -12,6 +12,7 @@ import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
+import com.vaadin.terminal.gwt.client.ui.VUnknownComponent;
 
 public class VUIDLBrowser extends Tree {
     /**
@@ -55,7 +56,13 @@ public class VUIDLBrowser extends Tree {
                     Integer.parseInt(name);
                     Class<? extends Paintable> widgetClassByDecodedTag = conf
                             .getWidgetClassByEncodedTag(name);
-                    name = widgetClassByDecodedTag.getName();
+                    if (widgetClassByDecodedTag == VUnknownComponent.class) {
+                        name = conf
+                                .getUnknownServerClassNameByEncodedTagName(name)
+                                + "(NO CLIENT IMPLEMENTATION FOUND)";
+                    } else {
+                        name = widgetClassByDecodedTag.getName();
+                    }
                 } catch (Exception e) {
                     // NOP
                 }
@@ -75,7 +82,13 @@ public class VUIDLBrowser extends Tree {
                 Integer.parseInt(nodeName);
                 Class<? extends Paintable> widgetClassByDecodedTag = conf
                         .getWidgetClassByEncodedTag(nodeName);
-                nodeName = widgetClassByDecodedTag.getName();
+                if (widgetClassByDecodedTag == VUnknownComponent.class) {
+                    nodeName = conf
+                            .getUnknownServerClassNameByEncodedTagName(nodeName)
+                            + "(NO CLIENT IMPLEMENTATION FOUND)";
+                } else {
+                    nodeName = widgetClassByDecodedTag.getName();
+                }
             } catch (Exception e) {
                 // NOP
             }

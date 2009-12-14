@@ -45,8 +45,10 @@ public class DefaultWidgetSet implements WidgetSet {
     public Paintable createWidget(UIDL uidl, ApplicationConfiguration conf) {
         final Class<? extends Paintable> classType = resolveWidgetType(uidl,
                 conf);
-        if (classType == null) {
-            return new VUnknownComponent();
+        if (classType == null || classType == VUnknownComponent.class) {
+            String serverSideName = conf
+                    .getUnknownServerClassNameByEncodedTagName(uidl.getTag());
+            return new VUnknownComponent(serverSideName);
         }
 
         return map.instantiate(classType);
