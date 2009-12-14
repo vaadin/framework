@@ -41,7 +41,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     // filtered and unfiltered item IDs
     private ArrayList<BT> list = new ArrayList<BT>();
     private ArrayList<BT> allItems = new ArrayList<BT>();
-    private final Map<BT, BeanItem> beanToItem = new HashMap<BT, BeanItem>();
+    private final Map<BT, BeanItem<BT>> beanToItem = new HashMap<BT, BeanItem<BT>>();
 
     // internal data model to obtain property IDs etc.
     private final Class<? extends BT> type;
@@ -120,7 +120,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
      * 
      * @see com.vaadin.data.Container.Indexed#addItemAt(int, Object)
      */
-    public BeanItem addItemAt(int index, Object newItemId)
+    public BeanItem<BT> addItemAt(int index, Object newItemId)
             throws UnsupportedOperationException {
         if (index < 0 || index > size()) {
             return null;
@@ -146,7 +146,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
      *            Id of the new item to be added.
      * @return Returns new item or null if the operation fails.
      */
-    private BeanItem addItemAtInternalIndex(int index, Object newItemId) {
+    private BeanItem<BT> addItemAtInternalIndex(int index, Object newItemId) {
         // Make sure that the Item has not been created yet
         if (allItems.contains(newItemId)) {
             return null;
@@ -155,7 +155,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
             BT pojo = (BT) newItemId;
             // "list" will be updated in filterAll()
             allItems.add(index, pojo);
-            BeanItem beanItem = new BeanItem(pojo, model);
+            BeanItem<BT> beanItem = new BeanItem<BT>(pojo, model);
             beanToItem.put(pojo, beanItem);
             // add listeners to be able to update filtering on property changes
             for (Filter filter : filters) {
@@ -196,7 +196,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
      * 
      * @see com.vaadin.data.Container.Ordered#addItemAfter(Object, Object)
      */
-    public BeanItem addItemAfter(Object previousItemId, Object newItemId)
+    public BeanItem<BT> addItemAfter(Object previousItemId, Object newItemId)
             throws UnsupportedOperationException {
         // only add if the previous item is visible
         if (containsId(previousItemId)) {
@@ -273,7 +273,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
      * 
      * @see com.vaadin.data.Container#addItem(Object)
      */
-    public BeanItem addBean(BT bean) {
+    public BeanItem<BT> addBean(BT bean) {
         return addItem(bean);
     }
 
@@ -284,7 +284,8 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
      * 
      * @see com.vaadin.data.Container#addItem(Object)
      */
-    public BeanItem addItem(Object itemId) throws UnsupportedOperationException {
+    public BeanItem<BT> addItem(Object itemId)
+            throws UnsupportedOperationException {
         if (size() > 0) {
             // add immediately after last visible item
             int lastIndex = allItems.indexOf(lastItemId());
@@ -307,7 +308,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         return model.keySet();
     }
 
-    public BeanItem getItem(Object itemId) {
+    public BeanItem<BT> getItem(Object itemId) {
         return beanToItem.get(itemId);
     }
 
@@ -323,7 +324,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         allItems.clear();
         list.clear();
         // detach listeners from all BeanItems
-        for (BeanItem item : beanToItem.values()) {
+        for (BeanItem<BT> item : beanToItem.values()) {
             removeAllValueChangeListeners(item);
         }
         beanToItem.clear();
@@ -350,7 +351,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         return true;
     }
 
-    private void addValueChangeListener(BeanItem beanItem, Object propertyId) {
+    private void addValueChangeListener(BeanItem<BT> beanItem, Object propertyId) {
         Property property = beanItem.getItemProperty(propertyId);
         if (property instanceof ValueChangeNotifier) {
             // avoid multiple notifications for the same property if
@@ -361,14 +362,14 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         }
     }
 
-    private void removeValueChangeListener(BeanItem item, Object propertyId) {
+    private void removeValueChangeListener(BeanItem<BT> item, Object propertyId) {
         Property property = item.getItemProperty(propertyId);
         if (property instanceof ValueChangeNotifier) {
             ((ValueChangeNotifier) property).removeListener(this);
         }
     }
 
-    private void removeAllValueChangeListeners(BeanItem item) {
+    private void removeAllValueChangeListeners(BeanItem<BT> item) {
         for (Object propertyId : item.getItemPropertyIds()) {
             removeValueChangeListener(item, propertyId);
         }
@@ -448,7 +449,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
             list = (ArrayList<BT>) allItems.clone();
         }
         // listen to change events to be able to update filtering
-        for (BeanItem item : beanToItem.values()) {
+        for (BeanItem<BT> item : beanToItem.values()) {
             addValueChangeListener(item, propertyId);
         }
         Filter f = new Filter(propertyId, filterString, ignoreCase,
@@ -493,7 +494,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         if (!filters.isEmpty()) {
             filters = new HashSet<Filter>();
             // stop listening to change events for any property
-            for (BeanItem item : beanToItem.values()) {
+            for (BeanItem<BT> item : beanToItem.values()) {
                 removeAllValueChangeListeners(item);
             }
             filterAll();
@@ -510,7 +511,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
                 }
             }
             // stop listening to change events for the property
-            for (BeanItem item : beanToItem.values()) {
+            for (BeanItem<BT> item : beanToItem.values()) {
                 removeValueChangeListener(item, propertyId);
             }
             filterAll();

@@ -23,12 +23,12 @@ import com.vaadin.data.Property;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class BeanItem extends PropertysetItem {
+public class BeanItem<BT> extends PropertysetItem {
 
     /**
      * The bean which this Item is based on.
      */
-    private final Object bean;
+    private final BT bean;
 
     /**
      * <p>
@@ -47,7 +47,7 @@ public class BeanItem extends PropertysetItem {
      *            the Java Bean to copy properties from.
      * 
      */
-    public BeanItem(Object bean) {
+    public BeanItem(BT bean) {
         this(bean, getPropertyDescriptors(bean.getClass()));
     }
 
@@ -63,7 +63,7 @@ public class BeanItem extends PropertysetItem {
      * @param propertyDescriptors
      *            pre-computed property descriptors
      */
-    BeanItem(Object bean,
+    BeanItem(BT bean,
             LinkedHashMap<String, PropertyDescriptor> propertyDescriptors) {
 
         this.bean = bean;
@@ -98,7 +98,7 @@ public class BeanItem extends PropertysetItem {
      * @param propertyIds
      *            id of the property.
      */
-    public BeanItem(Object bean, Collection<?> propertyIds) {
+    public BeanItem(BT bean, Collection<?> propertyIds) {
 
         this.bean = bean;
 
@@ -140,7 +140,7 @@ public class BeanItem extends PropertysetItem {
      * @param propertyIds
      *            ids of the properties.
      */
-    public BeanItem(Object bean, String[] propertyIds) {
+    public BeanItem(BT bean, String[] propertyIds) {
         this(bean, Arrays.asList(propertyIds));
     }
 
@@ -187,7 +187,7 @@ public class BeanItem extends PropertysetItem {
      * 
      * @return the bean object.
      */
-    public Object getBean() {
+    public BT getBean() {
         return bean;
     }
 
