@@ -634,10 +634,13 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     }
 
     /**
-     * Tests the current value against all registered validators.
+     * Tests the current value against registered validators if the field is not
+     * empty. If the field is empty it is considered valid if it is not required
+     * and invalid otherwise. Validators are never checked for empty fields.
      * 
      * @return <code>true</code> if all registered validators claim that the
-     *         current value is valid, <code>false</code> otherwise.
+     *         current value is valid or if the field is empty and not required,
+     *         <code>false</code> otherwise.
      */
     public boolean isValid() {
 
@@ -665,7 +668,8 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 
     /**
      * Checks the validity of the Validatable by validating the field with all
-     * attached validators.
+     * attached validators except when the field is empty. An empty field is
+     * invalid if it is required and valid otherwise.
      * 
      * The "required" validation is a built-in validation feature. If the field
      * is required, but empty, validation will throw an EmptyValueException with
