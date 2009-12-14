@@ -674,10 +674,10 @@ public class JsonPaintTarget implements PaintTarget {
         return cacheEnabled && isPreviouslyPainted;
     }
 
+    @Deprecated
     public void paintReference(Paintable paintable, String referenceName)
             throws PaintException {
-        final String id = getPaintIdentifier(paintable);
-        addAttribute(referenceName, id);
+        addAttribute(referenceName, paintable);
     }
 
     public String getPaintIdentifier(Paintable paintable) throws PaintException {
