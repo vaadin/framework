@@ -25,9 +25,16 @@
 	<property name="user" value="rnd" />
 	<property name="passphrase" value="" />
 	
+	<!-- add ant contrib -->
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+		<classpath>
+			<pathelement location="../build/lib/ant-contrib-1.0b3.jar"/>
+		</classpath>
+	</taskdef>
+	
 	<!-- Upload war to deploy to ssh host -->
 	<target name="upload-demo">
-		<scp file="${demo.war}" todir="${user}@${sshHost}:servers/demo.war" keyfile="${sshkey.file}" passphrase="${passphrase}" />
+		<scp file="${demo.war}" todir="${user}@${sshHost}:demo.war" keyfile="${sshkey.file}" passphrase="${passphrase}" />
 	</target>
 	
 	<!-- Run sampler deployment test -->
@@ -342,8 +349,47 @@
 	</target>
 			
 	<!-- Upload demo, clean error screenshots and test deployment on all servers -->
-	<target name="all" depends="upload-demo,tomcat4,tomcat5,tomcat6,jetty5,jetty6,jetty7,jboss3,jboss4,jboss5,glassfish,liferay,weblogic9,weblogic10,GAE,clean" />
+	<target name="all">
+		<echo>Getting lock</echo>
+		<antcall target="get-lock" />
+		<echo>Got lock</echo>
+		<trycatch property="tried">
+			<try>
+				<antcall target="upload-demo" />
+				<antcall target="tomcat4" />
+				<antcall target="tomcat5" />
+				<antcall target="tomcat6" />
+				<antcall target="jetty5" />
+				<antcall target="jetty6" />
+				<antcall target="jetty7" />
+				<antcall target="jboss3" />
+				<antcall target="jboss4" />
+				<antcall target="jboss5" />
+				<antcall target="glassfish" />
+				<antcall target="liferay" />
+				<antcall target="weblogic9" />
+				<antcall target="weblogic10" />
+				<antcall target="GAE" />
+			</try>
+			<catch>
+				<echo>${tried}</echo>
+				<echo>Running targets: clean and release-lock</echo>
+			</catch>
+			<finally>
+				<antcall target="clean" />
+				<antcall target="release-lock" />
+			</finally>
+		</trycatch>
+	</target>
 	
+	<target name="get-lock">
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} get-lock" />
+	</target>
+	
+	<target name="release-lock">
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} release-lock" />
+	</target>
+		
 	<!-- Remove demo.war -->
 	<target name="clean">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} clean" />
