@@ -375,7 +375,9 @@ public abstract class AbstractCommunicationManager implements
             while (iter.hasNext()) {
                 final FileItemStream item = iter.next();
                 final String name = item.getFieldName();
-                final String filename = item.getName();
+                // Should report only the filename even if the browser sends the
+                // path
+                final String filename = removePath(item.getName());
                 final String mimeType = item.getContentType();
                 final InputStream stream = item.openStream();
                 if (item.isFormField()) {
@@ -439,6 +441,21 @@ public abstract class AbstractCommunicationManager implements
         }
 
         sendUploadResponse(request, response);
+    }
+
+    /**
+     * Removes any possible path information from the filename and returns the
+     * filename. Separators / and \\ are used.
+     * 
+     * @param name
+     * @return
+     */
+    private static String removePath(String filename) {
+        if (filename != null) {
+            filename = filename.replaceAll("^.*[/\\\\]", "");
+        }
+
+        return filename;
     }
 
     /**
