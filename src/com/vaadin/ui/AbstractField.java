@@ -71,7 +71,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     /**
      * The list of validators.
      */
-    private LinkedList validators = null;
+    private LinkedList<Validator> validators = null;
 
     /**
      * Auto commit mode.
@@ -456,10 +456,11 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 
             // If invalid values are not allowed, the value must be checked
             if (!isInvalidAllowed()) {
-                final Collection v = getValidators();
+                final Collection<Validator> v = getValidators();
                 if (v != null) {
-                    for (final Iterator i = v.iterator(); i.hasNext();) {
-                        ((Validator) i.next()).validate(newValue);
+                    for (final Iterator<Validator> i = v.iterator(); i
+                            .hasNext();) {
+                        (i.next()).validate(newValue);
                     }
                 }
             }
@@ -574,11 +575,12 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 
         // Copy the validators from the data source
         if (dataSource instanceof Validatable) {
-            final Collection validators = ((Validatable) dataSource)
+            final Collection<Validator> validators = ((Validatable) dataSource)
                     .getValidators();
             if (validators != null) {
-                for (final Iterator i = validators.iterator(); i.hasNext();) {
-                    addValidator((Validator) i.next());
+                for (final Iterator<Validator> i = validators.iterator(); i
+                        .hasNext();) {
+                    addValidator(i.next());
                 }
             }
         }
@@ -601,7 +603,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      */
     public void addValidator(Validator validator) {
         if (validators == null) {
-            validators = new LinkedList();
+            validators = new LinkedList<Validator>();
         }
         validators.add(validator);
         requestRepaint();
@@ -613,7 +615,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * @return the Unmodifiable collection that holds all validators for the
      *         field.
      */
-    public Collection getValidators() {
+    public Collection<Validator> getValidators() {
         if (validators == null || validators.isEmpty()) {
             return null;
         }
@@ -657,8 +659,8 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         }
 
         final Object value = getValue();
-        for (final Iterator i = validators.iterator(); i.hasNext();) {
-            if (!((Validator) i.next()).isValid(value)) {
+        for (final Iterator<Validator> i = validators.iterator(); i.hasNext();) {
+            if (!(i.next()).isValid(value)) {
                 return false;
             }
         }
@@ -694,19 +696,19 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 
         // Initialize temps
         Validator.InvalidValueException firstError = null;
-        LinkedList errors = null;
+        LinkedList<InvalidValueException> errors = null;
         final Object value = getValue();
 
         // Gets all the validation errors
-        for (final Iterator i = validators.iterator(); i.hasNext();) {
+        for (final Iterator<Validator> i = validators.iterator(); i.hasNext();) {
             try {
-                ((Validator) i.next()).validate(value);
+                (i.next()).validate(value);
             } catch (final Validator.InvalidValueException e) {
                 if (firstError == null) {
                     firstError = e;
                 } else {
                     if (errors == null) {
-                        errors = new LinkedList();
+                        errors = new LinkedList<InvalidValueException>();
                         errors.add(firstError);
                     }
                     errors.add(e);
@@ -728,8 +730,9 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         final Validator.InvalidValueException[] exceptions = new Validator.InvalidValueException[errors
                 .size()];
         int index = 0;
-        for (final Iterator i = errors.iterator(); i.hasNext();) {
-            exceptions[index++] = (Validator.InvalidValueException) i.next();
+        for (final Iterator<InvalidValueException> i = errors.iterator(); i
+                .hasNext();) {
+            exceptions[index++] = i.next();
         }
 
         throw new Validator.InvalidValueException(null, exceptions);

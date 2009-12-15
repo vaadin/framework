@@ -55,7 +55,7 @@ public interface Validatable extends Serializable {
      * 
      * @return collection of validators or <code>null</code>
      */
-    public Collection<?> getValidators();
+    public Collection<Validator> getValidators();
 
     /**
      * <p>
