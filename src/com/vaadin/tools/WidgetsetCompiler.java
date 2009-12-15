@@ -6,22 +6,22 @@ import com.vaadin.terminal.gwt.widgetsetutils.WidgetSetBuilder;
 
 /**
  * A wrapper for the GWT 1.6 compiler that runs the compiler in a new thread.
- *
+ * 
  * This allows circumventing a J2SE 5.0 bug (6316197) that prevents setting the
  * stack size for the main thread. Thus, larger widgetsets can be compiled.
- *
+ * 
  * This class takes the same command line arguments as the
  * com.google.gwt.dev.GWTCompiler class. The old and deprecated compiler is used
  * for compatibility with GWT 1.5.
- *
+ * 
  * A typical invocation would use e.g. the following arguments
- *
+ * 
  * "-out WebContent/VAADIN/widgetsets com.vaadin.terminal.gwt.DefaultWidgetSet"
- *
+ * 
  * In addition, larger memory usage settings for the VM should be used, e.g.
- *
+ * 
  * "-Xms256M -Xmx512M -Xss8M"
- *
+ * 
  * The source directory containing widgetset and related classes must be
  * included in the classpath, as well as the gwt-dev-[platform].jar and other
  * relevant JARs.
@@ -51,8 +51,12 @@ public class WidgetsetCompiler {
 
                         // TODO expecting this is launched via eclipse WTP
                         // project
+                        System.out
+                                .println("Updating GWT module description file...");
                         WidgetSetBuilder.updateWidgetSet(wsname);
+                        System.out.println("Done.");
 
+                        System.out.println("Starting GWT compiler");
                         System.setProperty("gwt.nowarn.legacy.tools", "true");
                         Class<?> compilerClass = Class
                                 .forName("com.google.gwt.dev.GWTCompiler");
