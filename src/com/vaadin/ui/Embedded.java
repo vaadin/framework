@@ -4,7 +4,7 @@
 
 package com.vaadin.ui;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -63,9 +63,9 @@ public class Embedded extends AbstractComponent {
     private String standby = null;
 
     /**
-     * Hash of object parameteres.
+     * Hash of object parameters.
      */
-    private final Hashtable parameters = new Hashtable();
+    private final Map<String, String> parameters = new HashMap<String, String>();
 
     /**
      * Applet or other client side runnable properties.
@@ -148,9 +148,9 @@ public class Embedded extends AbstractComponent {
         }
 
         // Params
-        for (final Iterator i = getParameterNames(); i.hasNext();) {
+        for (final Iterator<String> i = getParameterNames(); i.hasNext();) {
             target.startTag("embeddedparam");
-            final String key = (String) i.next();
+            final String key = i.next();
             target.addAttribute("name", key);
             target.addAttribute("value", getParameter(key));
             target.endTag("embeddedparam");
@@ -181,7 +181,7 @@ public class Embedded extends AbstractComponent {
      * @return the Value of parameter or null if not found.
      */
     public String getParameter(String name) {
-        return (String) parameters.get(name);
+        return parameters.get(name);
     }
 
     /**
@@ -200,7 +200,7 @@ public class Embedded extends AbstractComponent {
      * 
      * @return the Iterator of parameters names.
      */
-    public Iterator getParameterNames() {
+    public Iterator<String> getParameterNames() {
         return parameters.keySet().iterator();
     }
 
@@ -447,7 +447,7 @@ public class Embedded extends AbstractComponent {
     }
 
     @Override
-    public void changeVariables(Object source, Map variables) {
+    public void changeVariables(Object source, Map<String, Object> variables) {
         super.changeVariables(source, variables);
         if (variables.containsKey(CLICK_EVENT)) {
             fireClick((Map<String, Object>) variables.get(CLICK_EVENT));

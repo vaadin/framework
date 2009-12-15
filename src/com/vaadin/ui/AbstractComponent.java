@@ -47,7 +47,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     /**
      * Style names.
      */
-    private ArrayList styles;
+    private ArrayList<String> styles;
 
     /**
      * Caption text.
@@ -219,8 +219,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     public String getStyleName() {
         String s = "";
         if (styles != null) {
-            for (final Iterator it = styles.iterator(); it.hasNext();) {
-                s += (String) it.next();
+            for (final Iterator<String> it = styles.iterator(); it.hasNext();) {
+                s += it.next();
                 if (it.hasNext()) {
                     s += " ";
                 }
@@ -240,7 +240,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             return;
         }
         if (styles == null) {
-            styles = new ArrayList();
+            styles = new ArrayList<String>();
         }
         styles.clear();
         styles.add(style);
@@ -252,7 +252,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             return;
         }
         if (styles == null) {
-            styles = new ArrayList();
+            styles = new ArrayList<String>();
         }
         if (!styles.contains(style)) {
             styles.add(style);
