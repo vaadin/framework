@@ -3,6 +3,8 @@ package com.vaadin.terminal.gwt.widgetsetutils;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.net.JarURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -17,10 +19,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.vaadin.terminal.Paintable;
 import com.vaadin.ui.ClientWidget;
@@ -44,6 +50,15 @@ import com.vaadin.ui.ClientWidget;
  * 
  */
 public class ClassPathExplorer {
+
+    private static Logger logger = Logger
+            .getLogger("com.vaadin.terminal.gwt.widgetsetutils");
+
+    static {
+        ConsoleHandler consoleHandler = new ConsoleHandler();
+        logger.addHandler(consoleHandler);
+    }
+
     private final static FileFilter DIRECTORIES_ONLY = new FileFilter() {
         public boolean accept(File f) {
             if (f.exists() && f.isDirectory()) {
@@ -64,6 +79,7 @@ public class ClassPathExplorer {
      * Finds server side widgets with {@link ClientWidget} annotation.
      */
     public static Collection<Class<? extends Paintable>> getPaintablesHavingWidgetAnnotation() {
+
         Collection<Class<? extends Paintable>> paintables = new HashSet<Class<? extends Paintable>>();
         Set<URL> keySet = classpathLocations.keySet();
         for (URL url : keySet) {
@@ -149,7 +165,7 @@ public class ClassPathExplorer {
                     }
                 }
             } catch (IOException e) {
-                System.err.println(e);
+                logger.log(Level.WARNING, "Error parsing jar file", e);
             }
 
         }
@@ -173,7 +189,7 @@ public class ClassPathExplorer {
             classpath = classpath.substring(0, classpath.length() - 1);
         }
 
-        System.err.println("Classpath: " + classpath);
+        logger.fine("Classpath: " + classpath);
 
         String[] split = classpath.split(pathSep);
         for (int i = 0; i < split.length; i++) {
@@ -219,14 +235,14 @@ public class ClassPathExplorer {
                     url = new URL("jar:" + url.toExternalForm() + "!/");
                     JarURLConnection conn = (JarURLConnection) url
                             .openConnection();
-                    System.out.println(url);
+                    logger.fine(url.toString());
                     JarFile jarFile = conn.getJarFile();
                     Manifest manifest = jarFile.getManifest();
                     if (manifest != null) {
                         Attributes mainAttributes = manifest
                                 .getMainAttributes();
                         if (mainAttributes.getValue("Vaadin-Widgetsets") != null) {
-                            System.err.println("Accepted jar file" + url);
+                            logger.fine("Accepted jar file" + url);
                             return true;
                         }
                     }
@@ -351,16 +367,34 @@ public class ClassPathExplorer {
                     }
                 }
             } catch (IOException e) {
-                System.err.println(e);
+                logger.warning(e.toString());
             }
         }
 
     }
 
+    // Hide possible errors, exceptions from static initializers from
+    // classes we are inspecting
+    private static PrintStream devnull = new PrintStream(new OutputStream() {
+        @Override
+        public void write(int b) throws IOException {
+            // NOP
+        }
+    });
+
     private static void tryToAdd(final String fullclassName,
             Collection<Class<? extends Paintable>> paintables) {
         try {
+            PrintStream out = System.out;
+            PrintStream err = System.err;
+            System.setErr(devnull);
+            System.setOut(devnull);
+
             Class<?> c = Class.forName(fullclassName);
+
+            System.setErr(err);
+            System.setOut(out);
+
             if (c.getAnnotation(ClientWidget.class) != null) {
                 paintables.add((Class<? extends Paintable>) c);
                 // System.out.println("Found paintable " + fullclassName);
@@ -390,8 +424,8 @@ public class ClassPathExplorer {
      * @return URL
      */
     public static URL getDefaultSourceDirectory() {
-        System.err.println("classpathLocations keys:  "
-                + classpathLocations.keySet());
+        logger.fine("classpathLocations keys:  "
+                + new TreeSet<URL>(classpathLocations.keySet()));
         Iterator<String> it = rawClasspathEntries.iterator();
         while (it.hasNext()) {
             String entry = it.next();
@@ -419,19 +453,20 @@ public class ClassPathExplorer {
     public static void main(String[] args) {
         Collection<Class<? extends Paintable>> paintables = ClassPathExplorer
                 .getPaintablesHavingWidgetAnnotation();
-        System.out.println("Found annotated paintables:");
+        logger.info("Found annotated paintables:");
         for (Class<? extends Paintable> cls : paintables) {
-            System.out.println(cls.getCanonicalName());
+            logger.info(cls.getCanonicalName());
         }
 
-        System.out.println();
-        System.out.println("Searching available widgetsets...");
+        logger.info("");
+        logger.info("Searching available widgetsets...");
 
         Map<String, URL> availableWidgetSets = ClassPathExplorer
                 .getAvailableWidgetSets();
         for (String string : availableWidgetSets.keySet()) {
-            System.out.println(string + " in "
-                    + availableWidgetSets.get(string));
+
+            logger.info(string + " in " + availableWidgetSets.get(string));
         }
     }
+
 }
