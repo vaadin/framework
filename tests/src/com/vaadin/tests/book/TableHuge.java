@@ -30,7 +30,7 @@ public class TableHuge extends CustomComponent {
             this.numberofitems = numberofitems;
         }
 
-        public boolean addContainerProperty(Object propertyId, Class type,
+        public boolean addContainerProperty(Object propertyId, Class<?> type,
                 Object defaultValue) throws UnsupportedOperationException {
             throw new UnsupportedOperationException();
         }

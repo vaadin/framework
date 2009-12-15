@@ -299,7 +299,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
      * @return <code>true</code> if the operation succeeded, <code>false</code>
      *         if not
      */
-    public boolean addContainerProperty(Object propertyId, Class type,
+    public boolean addContainerProperty(Object propertyId, Class<?> type,
             Object defaultValue) throws UnsupportedOperationException {
 
         return container.addContainerProperty(propertyId, type, defaultValue);
@@ -511,8 +511,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object,
+     * @see com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object,
      * java.lang.Object)
      */
     public Item addItemAfter(Object previousItemId, Object newItemId)
@@ -537,8 +536,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object)
+     * @see com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object)
      */
     public Object addItemAfter(Object previousItemId)
             throws UnsupportedOperationException {

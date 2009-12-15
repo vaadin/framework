@@ -235,7 +235,7 @@ public class IndexedContainer implements Container.Indexed,
      * @see com.vaadin.data.Container#addContainerProperty(java.lang.Object,
      * java.lang.Class, java.lang.Object)
      */
-    public boolean addContainerProperty(Object propertyId, Class type,
+    public boolean addContainerProperty(Object propertyId, Class<?> type,
             Object defaultValue) {
 
         // Fails, if nulls are given

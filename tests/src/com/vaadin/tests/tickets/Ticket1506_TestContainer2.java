@@ -102,7 +102,7 @@ public class Ticket1506_TestContainer2 implements Container {
         throw new UnsupportedOperationException("Not implemented");
     }
 
-    public boolean addContainerProperty(Object propertyId, Class type,
+    public boolean addContainerProperty(Object propertyId, Class<?> type,
             Object defaultValue) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not implemented");
     }

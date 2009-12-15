@@ -341,7 +341,7 @@ public class QueryContainer implements Container, Container.Ordered,
      * @throws UnsupportedOperationException
      *             if the addContainerProperty method is not supported.
      */
-    public boolean addContainerProperty(Object propertyId, Class type,
+    public boolean addContainerProperty(Object propertyId, Class<?> type,
             Object defaultValue) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }

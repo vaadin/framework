@@ -2594,7 +2594,7 @@ public class Table extends AbstractSelect implements Action.Container,
      *      Object)
      */
     @Override
-    public boolean addContainerProperty(Object propertyId, Class type,
+    public boolean addContainerProperty(Object propertyId, Class<?> type,
             Object defaultValue) throws UnsupportedOperationException {
 
         boolean visibleColAdded = false;
@@ -2638,7 +2638,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.data.Container#addContainerProperty(Object, Class,
      *      Object)
      */
-    public boolean addContainerProperty(Object propertyId, Class type,
+    public boolean addContainerProperty(Object propertyId, Class<?> type,
             Object defaultValue, String columnHeader, Resource columnIcon,
             String columnAlignment) throws UnsupportedOperationException {
         if (!this.addContainerProperty(propertyId, type, defaultValue)) {

@@ -718,7 +718,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * @see com.vaadin.data.Container#addContainerProperty(java.lang.Object,
      *      java.lang.Class, java.lang.Object)
      */
-    public boolean addContainerProperty(Object propertyId, Class type,
+    public boolean addContainerProperty(Object propertyId, Class<?> type,
             Object defaultValue) throws UnsupportedOperationException {
 
         final boolean retval = items.addContainerProperty(propertyId, type,

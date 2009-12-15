@@ -92,7 +92,7 @@ public class TableEditableBean extends CustomComponent {
             items = new Item[100]; // Yeah this is just a test
         }
 
-        public boolean addContainerProperty(Object propertyId, Class type,
+        public boolean addContainerProperty(Object propertyId, Class<?> type,
                 Object defaultValue) throws UnsupportedOperationException {
             throw new UnsupportedOperationException();
         }

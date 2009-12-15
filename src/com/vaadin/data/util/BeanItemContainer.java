@@ -251,8 +251,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public boolean addContainerProperty(Object propertyId, Class type,
+    public boolean addContainerProperty(Object propertyId, Class<?> type,
             Object defaultValue) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }

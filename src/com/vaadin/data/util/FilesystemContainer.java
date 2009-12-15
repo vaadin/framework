@@ -828,11 +828,10 @@ public class FilesystemContainer implements Container.Hierarchical {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.data.Container#addContainerProperty(java.lang.Object,
+     * @see com.vaadin.data.Container#addContainerProperty(java.lang.Object,
      * java.lang.Class, java.lang.Object)
      */
-    public boolean addContainerProperty(Object propertyId, Class type,
+    public boolean addContainerProperty(Object propertyId, Class<?> type,
             Object defaultValue) throws UnsupportedOperationException {
         throw new UnsupportedOperationException(
                 "File system container does not support this operation");
@@ -882,9 +881,7 @@ public class FilesystemContainer implements Container.Hierarchical {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.data.Container#removeContainerProperty(java.lang.Object
-     * )
+     * @see com.vaadin.data.Container#removeContainerProperty(java.lang.Object )
      */
     public boolean removeContainerProperty(Object propertyId)
             throws UnsupportedOperationException {

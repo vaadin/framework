@@ -510,7 +510,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * @throws UnsupportedOperationException
      *             if the addContainerProperty is not supported.
      */
-    public boolean addContainerProperty(Object propertyId, Class type,
+    public boolean addContainerProperty(Object propertyId, Class<?> type,
             Object defaultValue) throws UnsupportedOperationException {
 
         return container.addContainerProperty(propertyId, type, defaultValue);
