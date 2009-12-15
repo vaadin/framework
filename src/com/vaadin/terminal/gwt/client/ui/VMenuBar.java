@@ -519,8 +519,9 @@ public class VMenuBar extends Widget implements Paintable,
             popup.getElement().getStyle().setProperty("zoom", "");
             DeferredCommand.addCommand(new Command() {
                 public void execute() {
-                    if (popup.getElement().getStyle().getWidth() == null
-                            || popup.getElement().getStyle().getWidth() == "") {
+                    if (popup.getElement().getStyle().getProperty("width") == null
+                            || popup.getElement().getStyle().getProperty(
+                                    "width") == "") {
                         popup.setWidth(popup.getOffsetWidth() + "px");
                     }
                     popup.getElement().getStyle().setProperty("zoom", "1");
