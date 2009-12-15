@@ -3,12 +3,13 @@
 	border-left: 1px solid #c6cbcc;
 }
 .v-menubar .v-menubar-menuitem {
-	padding: 0 10px;
-	margin: 0 10px;
+	padding: 1px 10px;
 	border: 1px solid #c6cbcc;
 	border-left: none;
+	height: 18px;
+	line-height: 18x;
 }
-.v-menubar .v-menubar-menuitem-selected {
+.v-menubar-menuitem-selected {
 	color: #fff;
 	background: #5daee8;
 }
@@ -24,17 +25,11 @@
 	border-left: 1px solid #d0d4d5;
 }
 .v-menubar-submenu .v-menubar-menuitem {
-	padding: 2px 16px 2px 10px;
+	padding-top: 1px;
+	padding-bottom: 1px;
+	line-height: 16px;
+	padding-left: 10px;
 }
-.v-menubar-submenu .v-menubar-menuitem-selected {
-	color: #fff;
-	background: #5daee8;
-}
-.v-menubar-submenu .v-menubar-submenu-indicator {
-	margin-right: -12px;
-	height: 14px;
-}
-.v-ie7 .v-menubar-submenu .v-menubar-submenu-indicator {
-	margin-right: -12px;
-	right: -3px;
+.v-menubar-submenu .v-menubar-menuitem-caption * { 
+	vertical-align: middle;
 }

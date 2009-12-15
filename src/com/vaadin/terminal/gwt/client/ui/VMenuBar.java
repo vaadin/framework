@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Command;
@@ -19,6 +20,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ContainerResizedListener;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -68,24 +70,22 @@ public class VMenuBar extends Widget implements Paintable,
         popup = null;
         visibleChildMenu = null;
 
-        Element table = DOM.createTable();
-        Element tbody = DOM.createTBody();
-        DOM.appendChild(getElement(), table);
-        DOM.appendChild(table, tbody);
+        containerElement = getElement();
 
         if (!subMenu) {
             setStylePrimaryName(CLASSNAME);
-            Element tr = DOM.createTR();
-            DOM.appendChild(tbody, tr);
-            containerElement = tr;
         } else {
             setStylePrimaryName(CLASSNAME + "-submenu");
-            containerElement = tbody;
         }
         this.subMenu = subMenu;
 
         sinkEvents(Event.ONCLICK | Event.ONMOUSEOVER | Event.ONMOUSEOUT
                 | Event.ONLOAD);
+    }
+
+    @Override
+    public void setWidth(String width) {
+        Util.setWidthExcludingPaddingAndBorder(this, width, 0);
     }
 
     /**
@@ -180,6 +180,8 @@ public class VMenuBar extends Widget implements Paintable,
                             + ">&#x25BA;</span>");
                 }
 
+                itemHTML.append("<span class=\"" + CLASSNAME
+                        + "-menuitem-caption\">");
                 if (item.hasAttribute("icon")) {
                     itemHTML
                             .append("<img src=\""
@@ -188,8 +190,7 @@ public class VMenuBar extends Widget implements Paintable,
                                     + "\" class=\"" + Icon.CLASSNAME
                                     + "\" alt=\"\" />");
                 }
-
-                itemHTML.append(Util.escapeHTML(itemText));
+                itemHTML.append(Util.escapeHTML(itemText) + "</span>");
 
                 if (itemHasCommand) {
                     // Construct a command that fires onMenuClick(int) with the
@@ -265,7 +266,7 @@ public class VMenuBar extends Widget implements Paintable,
      * Remove all the items in this menu
      */
     public void clearItems() {
-        Element e = getContainingElement();
+        Element e = getContainerElement();
         while (DOM.getChildCount(e) > 0) {
             DOM.removeChild(e, DOM.getChild(e, 0));
         }
@@ -277,31 +278,8 @@ public class VMenuBar extends Widget implements Paintable,
      * 
      * @return
      */
-    public Element getContainingElement() {
+    public Element getContainerElement() {
         return containerElement;
-    }
-
-    /**
-     * Returns a new child element to add an item to
-     * 
-     * @param index
-     *            the index in which point to add a new element in a submenu. -1
-     *            will add the new element as the last child (append)
-     * 
-     * @return
-     */
-    public Element getNewChildElement(int index) {
-        if (subMenu) {
-            Element tr = DOM.createTR();
-            if (index == -1) {
-                DOM.appendChild(getContainingElement(), tr);
-            } else {
-                DOM.insertChild(getContainingElement(), tr, index);
-            }
-            return tr;
-        } else {
-            return getContainingElement();
-        }
     }
 
     /**
@@ -328,7 +306,7 @@ public class VMenuBar extends Widget implements Paintable,
         if (items.contains(item)) {
             return;
         }
-        DOM.appendChild(getNewChildElement(-1), item.getElement());
+        DOM.appendChild(getContainerElement(), item.getElement());
         item.setParentMenu(this);
         item.setSelected(false);
         items.add(item);
@@ -338,11 +316,7 @@ public class VMenuBar extends Widget implements Paintable,
         if (items.contains(item)) {
             return;
         }
-        if (subMenu) {
-            DOM.appendChild(getNewChildElement(index), item.getElement());
-        } else {
-            DOM.insertChild(getNewChildElement(-1), item.getElement(), index);
-        }
+        DOM.insertChild(getContainerElement(), item.getElement(), index);
         item.setParentMenu(this);
         item.setSelected(false);
         items.add(index, item);
@@ -356,9 +330,9 @@ public class VMenuBar extends Widget implements Paintable,
     public void removeItem(CustomMenuItem item) {
         if (items.contains(item)) {
             int index = items.indexOf(item);
-            Element container = getContainingElement();
 
-            DOM.removeChild(container, DOM.getChild(container, index));
+            DOM.removeChild(getContainerElement(), DOM.getChild(
+                    getContainerElement(), index));
             items.remove(index);
         }
     }
@@ -498,6 +472,7 @@ public class VMenuBar extends Widget implements Paintable,
         final int shadowSpace = 10;
 
         popup = new VOverlay(true, false, true);
+        popup.setStylePrimaryName(CLASSNAME + "-popup");
         popup.setWidget(item.getSubMenu());
         popup.addCloseHandler(this);
         popup.addAutoHidePartner(item.getElement());
@@ -536,6 +511,21 @@ public class VMenuBar extends Widget implements Paintable,
                 left = shadowSpace;
             }
             popup.setPopupPosition(left, top);
+        }
+
+        // IE7 really tests one's patience sometimes
+        // Part of a fix to correct #3850
+        if (BrowserInfo.get().isIE7()) {
+            popup.getElement().getStyle().setProperty("zoom", "");
+            DeferredCommand.addCommand(new Command() {
+                public void execute() {
+                    if (popup.getElement().getStyle().getWidth() == null
+                            || popup.getElement().getStyle().getWidth() == "") {
+                        popup.setWidth(popup.getOffsetWidth() + "px");
+                    }
+                    popup.getElement().getStyle().setProperty("zoom", "1");
+                }
+            });
         }
     }
 
@@ -663,13 +653,14 @@ public class VMenuBar extends Widget implements Paintable,
         protected boolean isSeparator = false;
 
         public CustomMenuItem(String html, Command cmd) {
-            setElement(DOM.createTD());
+            setElement(DOM.createDiv());
 
             setHTML(html);
             setCommand(cmd);
             setSelected(false);
 
             setStylePrimaryName(CLASSNAME + "-menuitem");
+
         }
 
         public void setSelected(boolean selected) {
@@ -715,6 +706,13 @@ public class VMenuBar extends Widget implements Paintable,
         public void setHTML(String html) {
             this.html = html;
             DOM.setInnerHTML(getElement(), html);
+            if (BrowserInfo.get().isIE6() && client != null) {
+                // Find possible icon element
+                final NodeList imgs = getElement().getElementsByTagName("IMG");
+                if (imgs.getLength() > 0) {
+                    client.addPngFix((Element) imgs.getItem(0).cast());
+                }
+            }
         }
 
         public String getText() {
@@ -722,7 +720,7 @@ public class VMenuBar extends Widget implements Paintable,
         }
 
         public void setText(String text) {
-            setHTML(text);
+            setHTML(Util.escapeHTML(text));
         }
 
         public void setEnabled(boolean enabled) {
@@ -775,9 +773,7 @@ public class VMenuBar extends Widget implements Paintable,
 
             // Measure available space
             int availableWidth = getElement().getClientWidth();
-            final int rootWidth = getElement().getFirstChildElement()
-                    .getOffsetWidth();
-            int diff = availableWidth - rootWidth;
+            int diff = availableWidth - getConsumedWidth();
 
             removeItem(moreItem);
 
@@ -822,6 +818,16 @@ public class VMenuBar extends Widget implements Paintable,
                 addItem(moreItem);
             }
         }
+    }
+
+    private int getConsumedWidth() {
+        int w = 0;
+        for (CustomMenuItem item : getItems()) {
+            if (!collapsedRootItems.getItems().contains(item)) {
+                w += item.getOffsetWidth();
+            }
+        }
+        return w;
     }
 
 }

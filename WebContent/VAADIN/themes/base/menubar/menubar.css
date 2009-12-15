@@ -1,43 +1,35 @@
-.v-ie6 .v-menubar {
-	float: left; /* Force minimum width in IE6 */
-}
-.v-menubar table {
-	border-collapse: collapse;
-	padding: 0;
-	margin: 0;
+.v-menubar {
+	float: left; /* Force minimum width */
+	overflow: hidden;
 }
 .v-menubar .v-menubar-menuitem {
 	cursor: default;
 	vertical-align: middle;
 	white-space: nowrap;
+	float: left;
 }
-.v-menubar .v-menubar-menuitem * {
+.v-menubar .v-menubar-menuitem-caption * {
 	vertical-align: middle;
+	white-space: nowrap;
 }
 .v-menubar-submenu {
 	background: #fff;
 }
-.v-menubar-submenu table {
-	border-collapse: collapse;
-	padding: 0;
-	margin: 0;
-}
-.v-menubar-submenu table td {
-	white-space: nowrap;
-	padding: 0;
-	margin: 0;
-}
-.v-menubar-menuitem-selected{
+.v-menubar-menuitem-selected {
 	background: #333;
 	color: #fff;
 }
 .v-menubar-submenu .v-menubar-menuitem { 
 	cursor: default;
-	vertical-align: middle;
-	white-space: nowrap;
+	position: relative;
+	padding-right: 1.5em;
 }
-.v-menubar-submenu .v-menubar-menuitem * { 
-	vertical-align: middle;
+.v-menubar-submenu .v-menubar-menuitem-caption {
+	display: block;
+}
+.v-menubar-submenu .v-menubar-menuitem *,
+.v-menubar-submenu .v-menubar-menuitem-caption * {
+	white-space: nowrap;
 }
 .v-menubar-submenu-indicator {
 	display: none;
@@ -45,23 +37,12 @@
 	font-family: arial, helvetica, sans-serif;
 }
 .v-menubar-submenu .v-menubar-submenu-indicator {
-	display: inline;
-	display: inline-block;
-	zoom: 1;
-	margin-left: 1em;
-	float: right;
-	height: 100%;
-	font-size: 0.9em;
-}
-.v-ie6 .v-menubar-submenu .v-menubar-submenu-indicator {
+	display: block;
 	position: absolute;
 	right: 0;
-	margin-right: 0;
-	margin-top: -2px;
-}
-.v-ie7 .v-menubar-submenu .v-menubar-submenu-indicator {
-	position: relative;
-	margin-left: 0;
+	width: 1em;
+	height: 1em;
+	font-size: 0.9em;
 }
 .v-menubar-menuitem-disabled {
 	color: #999;
@@ -70,13 +51,17 @@
 	/* Arial has the most coverage for geometric entity characters */
 	font-family: arial, helvetica, sans-serif;
 }
+.v-menubar-separator {
+	overflow: hidden;
+}
 .v-menubar-separator span {
 	display: block;
 	text-indent: -9999px;
-	height: 1px;
-	margin: 3px 0;
+	font-size: 1px;
+	line-height: 1px;
+	border-top: 1px solid #ddd;
+	margin: 3px 0 2px;
 	overflow: hidden;
-	background: #ddd;
 }
 .v-menubar .v-icon,
 .v-menubar-submenu .v-icon {
