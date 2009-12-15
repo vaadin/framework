@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.TreeSet;
 
 import com.google.gwt.core.ext.Generator;
 import com.google.gwt.core.ext.GeneratorContext;
@@ -131,9 +132,17 @@ public class WidgetMapGenerator extends Generator {
             }
 
         }
-        logger.log(Type.INFO,
-                "Widget set will contain implementations for following components: "
-                        + paintablesHavingWidgetAnnotation.toString());
+        logger
+                .log(Type.INFO,
+                        "Widget set will contain implementations for following components: ");
+
+        TreeSet<String> classNames = new TreeSet<String>();
+        for (Class<? extends Paintable> class1 : paintablesHavingWidgetAnnotation) {
+            classNames.add(class1.getCanonicalName());
+        }
+        for (String string : classNames) {
+            logger.log(Type.INFO, "\t" + string);
+        }
     }
 
     /**
