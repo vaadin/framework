@@ -914,7 +914,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
             setPositionY(y < 0 ? -1 : y);
         }
 
-        if (!isReadOnly()) {
+        if (isClosable()) {
             // Closing
             final Boolean close = (Boolean) variables.get("close");
             if (close != null && close.booleanValue()) {
@@ -1690,4 +1690,43 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
         requestRepaint();
     }
+
+    /**
+     * Returns the closable status of the sub window. If a sub window is
+     * closable it typically shows an X in the upper right corner. Clicking on
+     * the X sends a close event to the server. Setting closable to false will
+     * remove the X from the sub window and prevent the user from closing the
+     * window.
+     * 
+     * Note! For historical reasons readonly controls the closability of the sub
+     * window and therefore readonly and closable affect each other. Setting
+     * readonly to true will set closable to false and vice versa.
+     * 
+     * Closable only applies to sub windows, not to browser level windows.
+     * 
+     * @return true if the sub window can be closed by the user.
+     */
+    public boolean isClosable() {
+        return !isReadOnly();
+    }
+
+    /**
+     * Set the closable status for the sub window. If a sub window is closable
+     * it typically shows an X in the upper right corner. Clicking on the X
+     * sends a close event to the server. Setting closable to false will remove
+     * the X from the sub window and prevent the user from closing the window.
+     * 
+     * Note! For historical reasons readonly controls the closability of the sub
+     * window and therefore readonly and closable affect each other. Setting
+     * readonly to true will set closable to false and vice versa.
+     * 
+     * Closable only applies to sub windows, not to browser level windows.
+     * 
+     * @param closable
+     *            determines if the sub window can be closed by the user.
+     */
+    public void setClosable(boolean closable) {
+        setReadOnly(!closable);
+    }
+
 }

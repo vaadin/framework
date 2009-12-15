@@ -123,7 +123,7 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
 
     private Element headerText;
 
-    private boolean readonly;
+    private boolean closable = true;
 
     boolean dynamicWidth = false;
     boolean dynamicHeight = false;
@@ -268,9 +268,7 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
 
         immediate = uidl.hasAttribute("immediate");
 
-        if (isReadOnly() != uidl.getBooleanAttribute("readonly")) {
-            setReadOnly(!isReadOnly());
-        }
+        setClosable(!uidl.getBooleanAttribute("readonly"));
 
         // Initialize the position form UIDL
         try {
@@ -530,17 +528,36 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
 
     }
 
-    private void setReadOnly(boolean readonly) {
-        this.readonly = readonly;
-        if (readonly) {
-            DOM.setStyleAttribute(closeBox, "display", "none");
-        } else {
-            DOM.setStyleAttribute(closeBox, "display", "");
+    /**
+     * Sets the closable state of the window. Additionally hides/shows the close
+     * button according to the new state.
+     * 
+     * @param closable
+     *            true if the window can be closed by the user
+     */
+    protected void setClosable(boolean closable) {
+        if (this.closable == closable) {
+            return;
         }
+
+        this.closable = closable;
+        if (closable) {
+            DOM.setStyleAttribute(closeBox, "display", "");
+        } else {
+            DOM.setStyleAttribute(closeBox, "display", "none");
+        }
+
     }
 
-    private boolean isReadOnly() {
-        return readonly;
+    /**
+     * Returns the closable state of the sub window. If the sub window is
+     * closable a decoration (typically an X) is shown to the user. By clicking
+     * on the X the user can close the window.
+     * 
+     * @return true if the sub window is closable
+     */
+    protected boolean isClosable() {
+        return closable;
     }
 
     @Override
@@ -741,7 +758,7 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
                 onResizeEvent(event);
                 event.cancelBubble(true);
             } else if (target == closeBox) {
-                if (type == Event.ONCLICK) {
+                if (type == Event.ONCLICK && isClosable()) {
                     onCloseClick();
                     event.cancelBubble(true);
                 }
