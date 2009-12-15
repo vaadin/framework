@@ -116,6 +116,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     private boolean resizable = true;
 
+    private boolean draggable = true;
+
     private boolean centerRequested = false;
 
     private Focusable pendingFocus;
@@ -497,6 +499,11 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
         if (resizable) {
             target.addAttribute("resizable", true);
+        }
+
+        if (!draggable) {
+            // Inverted to prevent an extra attribute for almost all sub windows
+            target.addAttribute("fixedposition", true);
         }
 
         if (centerRequested) {
@@ -1701,7 +1708,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * Note! For historical reasons readonly controls the closability of the sub
      * window and therefore readonly and closable affect each other. Setting
      * readonly to true will set closable to false and vice versa.
-     * 
+     * <p/>
      * Closable only applies to sub windows, not to browser level windows.
      * 
      * @return true if the sub window can be closed by the user.
@@ -1711,7 +1718,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     }
 
     /**
-     * Set the closable status for the sub window. If a sub window is closable
+     * Sets the closable status for the sub window. If a sub window is closable
      * it typically shows an X in the upper right corner. Clicking on the X
      * sends a close event to the server. Setting closable to false will remove
      * the X from the sub window and prevent the user from closing the window.
@@ -1719,7 +1726,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * Note! For historical reasons readonly controls the closability of the sub
      * window and therefore readonly and closable affect each other. Setting
      * readonly to true will set closable to false and vice versa.
-     * 
+     * <p/>
      * Closable only applies to sub windows, not to browser level windows.
      * 
      * @param closable
@@ -1727,6 +1734,33 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      */
     public void setClosable(boolean closable) {
         setReadOnly(!closable);
+    }
+
+    /**
+     * Indicates whether a sub window can be dragged or not. By default a sub
+     * window is draggable.
+     * <p/>
+     * Draggable only applies to sub windows, not to browser level windows.
+     * 
+     * @param draggable
+     *            true if the sub window can be dragged by the user
+     */
+    public boolean isDraggable() {
+        return draggable;
+    }
+
+    /**
+     * Enables or disables that a sub window can be dragged (moved) by the user.
+     * By default a sub window is draggable.
+     * <p/>
+     * Draggable only applies to sub windows, not to browser level windows.
+     * 
+     * @param draggable
+     *            true if the sub window can be dragged by the user
+     */
+    public void setDraggable(boolean draggable) {
+        this.draggable = draggable;
+        requestRepaint();
     }
 
 }

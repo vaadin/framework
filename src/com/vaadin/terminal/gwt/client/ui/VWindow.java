@@ -118,6 +118,8 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
 
     private boolean resizable = true;
 
+    private boolean draggable = true;
+
     private Element modalityCurtain;
     private Element draggingCurtain;
 
@@ -260,6 +262,8 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
             if (uidl.getBooleanAttribute("resizable") != resizable) {
                 setResizable(!resizable);
             }
+
+            setDraggable(!uidl.hasAttribute("fixedposition"));
         }
 
         if (client.updateComponent(this, uidl, false)) {
@@ -455,6 +459,21 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
         }
 
         Util.runWebkitOverflowAutoFix(contentPanel.getElement());
+
+    }
+
+    private void setDraggable(boolean draggable) {
+        if (this.draggable == draggable) {
+            return;
+        }
+
+        this.draggable = draggable;
+
+        if (!this.draggable) {
+            header.getStyle().setProperty("cursor", "default");
+        } else {
+            header.getStyle().setProperty("cursor", "");
+        }
 
     }
 
@@ -989,14 +1008,16 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
             if (!isActive()) {
                 bringToFront();
             }
-            showDraggingCurtain(true);
-            dragging = true;
-            startX = DOM.eventGetScreenX(event);
-            startY = DOM.eventGetScreenY(event);
-            origX = DOM.getAbsoluteLeft(getElement());
-            origY = DOM.getAbsoluteTop(getElement());
-            DOM.setCapture(getElement());
-            DOM.eventPreventDefault(event);
+            if (draggable) {
+                showDraggingCurtain(true);
+                dragging = true;
+                startX = DOM.eventGetScreenX(event);
+                startY = DOM.eventGetScreenY(event);
+                origX = DOM.getAbsoluteLeft(getElement());
+                origY = DOM.getAbsoluteTop(getElement());
+                DOM.setCapture(getElement());
+                DOM.eventPreventDefault(event);
+            }
             break;
         case Event.ONMOUSEUP:
             dragging = false;
