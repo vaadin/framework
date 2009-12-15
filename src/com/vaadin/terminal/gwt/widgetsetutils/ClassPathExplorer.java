@@ -24,7 +24,6 @@ import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
-import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,11 +52,6 @@ public class ClassPathExplorer {
 
     private static Logger logger = Logger
             .getLogger("com.vaadin.terminal.gwt.widgetsetutils");
-
-    static {
-        ConsoleHandler consoleHandler = new ConsoleHandler();
-        logger.addHandler(consoleHandler);
-    }
 
     private final static FileFilter DIRECTORIES_ONLY = new FileFilter() {
         public boolean accept(File f) {
@@ -100,6 +94,16 @@ public class ClassPathExplorer {
         for (URL url : keySet) {
             searchForWidgetSets(url, widgetsets);
         }
+        StringBuilder sb = new StringBuilder();
+        sb.append("Widgetsets found from classpath:\n");
+        for (String ws : widgetsets.keySet()) {
+            sb.append("\t");
+            sb.append(ws);
+            sb.append(" in ");
+            sb.append(widgetsets.get(ws));
+            sb.append("\n");
+        }
+        logger.info(sb.toString());
         return widgetsets;
     }
 
@@ -242,7 +246,6 @@ public class ClassPathExplorer {
                         Attributes mainAttributes = manifest
                                 .getMainAttributes();
                         if (mainAttributes.getValue("Vaadin-Widgetsets") != null) {
-                            logger.fine("Accepted jar file" + url);
                             return true;
                         }
                     }
