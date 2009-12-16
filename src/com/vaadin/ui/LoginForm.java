@@ -37,6 +37,8 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
  */
 public class LoginForm extends CustomComponent {
 
+    private static final long serialVersionUID = 4081792750778351702L;
+
     private Embedded iframe = new Embedded();
 
     private ApplicationResource loginPage = new ApplicationResource() {
@@ -79,15 +81,16 @@ public class LoginForm extends CustomComponent {
          */
         private static final long serialVersionUID = 1L;
 
-        public void handleParameters(Map parameters) {
+        public void handleParameters(Map<String, String[]> parameters) {
             if (parameters.containsKey("username")) {
                 getWindow().addURIHandler(uriHandler);
 
                 HashMap<String, String> params = new HashMap<String, String>();
                 // expecting single params
-                for (Iterator it = parameters.keySet().iterator(); it.hasNext();) {
-                    String key = (String) it.next();
-                    String value = ((String[]) parameters.get(key))[0];
+                for (Iterator<String> it = parameters.keySet().iterator(); it
+                        .hasNext();) {
+                    String key = it.next();
+                    String value = (parameters.get(key))[0];
                     params.put(key, value);
                 }
                 LoginEvent event = new LoginEvent(params);
@@ -139,7 +142,8 @@ public class LoginForm extends CustomComponent {
      */
     protected byte[] getLoginHTML() {
 
-        String appUri = getApplication().getURL().toString();
+        String appUri = getApplication().getURL().toString()
+                + getWindow().getName() + "/";
 
         return ("<!DOCTYPE html PUBLIC \"-//W3C//DTD "
                 + "XHTML 1.0 Transitional//EN\" "
