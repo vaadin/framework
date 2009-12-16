@@ -800,4 +800,19 @@ public class Util {
         return null;
     }
 
+    /**
+     * Will (attempt) to focus the given DOM Element.
+     * 
+     * @param el
+     *            the element to focus
+     */
+    public static native void focus(Element el)
+    /*-{
+        try {
+            el.focus();
+        } catch (e) {
+
+        }
+    }-*/;
+
 }

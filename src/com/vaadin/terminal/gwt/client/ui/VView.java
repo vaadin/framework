@@ -114,22 +114,13 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
             DOM.setStyleAttribute(fElem, "position", "absolute");
             DOM.setStyleAttribute(fElem, "opacity", "0.1");
             DOM.appendChild(getElement(), fElem);
-            focus(fElem);
+            Util.focus(fElem);
         } else {
-            focus(getElement());
+            Util.focus(getElement());
         }
 
         parentFrame = getParentFrame();
     }
-
-    private static native void focus(Element el)
-    /*-{
-        try {
-            el.focus();
-        } catch (e) {
-
-        }
-    }-*/;
 
     public String getTheme() {
         return theme;

@@ -160,6 +160,9 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
         setPopupPosition(order * STACKING_OFFSET_PIXELS, order
                 * STACKING_OFFSET_PIXELS);
         contentPanel.addScrollListener(this);
+
+        // make it focusable, but last in focus chain
+        DOM.setElementProperty(contentPanel.getElement(), "tabIndex", "0");
     }
 
     private void bringToFront() {
@@ -784,11 +787,17 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
             } else if (dragging || !DOM.isOrHasChild(contents, target)) {
                 onDragEvent(event);
                 event.cancelBubble(true);
+
             } else if (type == Event.ONCLICK) {
                 // clicked inside window, ensure to be on top
                 if (!isActive()) {
                     bringToFront();
                 }
+            }
+
+            if (type == Event.ONMOUSEDOWN) {
+                // !DOM.isOrHasChild(contentPanel.getElement(), target)
+                Util.focus(contentPanel.getElement());
             }
         }
     }
