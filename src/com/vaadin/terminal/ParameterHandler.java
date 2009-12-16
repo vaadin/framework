@@ -16,8 +16,8 @@ import java.util.Map;
  * GET and POST parameters are passed to application as external parameters on
  * Web Adapter. The parameters can be received at any time during the
  * application lifecycle. All the parameter handlers implementing this interface
- * and registered to {@link com.vaadin.ui.Window} receive all the
- * parameters got from the terminal in the given window.
+ * and registered to {@link com.vaadin.ui.Window} receive all the parameters got
+ * from the terminal in the given window.
  * </p>
  * 
  * @author IT Mill Ltd.
@@ -25,7 +25,7 @@ import java.util.Map;
  * @VERSION@
  * @since 3.0
  */
-public interface ParameterHandler extends Serializable{
+public interface ParameterHandler extends Serializable {
 
     /**
      * <p>
@@ -38,7 +38,7 @@ public interface ParameterHandler extends Serializable{
      *            the Inmodifiable name to value[] mapping.
      * 
      */
-    public void handleParameters(Map parameters);
+    public void handleParameters(Map<String, String[]> parameters);
 
     /**
      * ParameterHandler error event.

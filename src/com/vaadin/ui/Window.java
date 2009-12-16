@@ -411,7 +411,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     }
 
     /* Documented by the interface */
-    public void handleParameters(Map parameters) {
+    public void handleParameters(Map<String, String[]> parameters) {
         if (parameterHandlerList != null) {
             Object[] handlers;
             synchronized (parameterHandlerList) {
