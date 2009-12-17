@@ -663,7 +663,12 @@ public class TabSheet extends AbstractComponentContainer implements
         public boolean isClosable();
 
         /**
-         * Sets the closability status for the tab.
+         * Sets the closability status for the tab. A closable tab can be closed
+         * by the user through the user interface. This also controls if a close
+         * button is shown to the user or not.
+         * <p>
+         * Note! Currently only supported by TabSheet, not Accordion.
+         * </p>
          * 
          * @param visible
          *            true if the end user is allowed to close the tab, false
