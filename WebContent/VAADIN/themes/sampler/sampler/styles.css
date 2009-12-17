@@ -349,7 +349,8 @@
 	font-weight: bold;
 	text-shadow: 0 2px 1px #c0c1c2;
 	color: #1e2229;
-	float: left;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 .v-app-SamplerApplication .v-label-root-section span {
 	display: block;
