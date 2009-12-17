@@ -4,10 +4,12 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.Properties;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -28,7 +30,14 @@ public class TestStaticFilesLocation extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        // servlet.init(createServletConfig());
+        servlet = new ApplicationServlet();
+
+        // Workaround to avoid calling init and creating servlet config
+        Field f = AbstractApplicationServlet.class
+                .getDeclaredField("applicationProperties");
+        f.setAccessible(true);
+        f.set(servlet, new Properties());
+
         getStaticFilesLocationMethod = AbstractApplicationServlet.class
                 .getDeclaredMethod(
                         "getStaticFilesLocation",
@@ -100,7 +109,7 @@ public class TestStaticFilesLocation extends TestCase {
         /* Include requests */
         location = testIncludedLocation("http://my.portlet.server", "/user",
                 "/tmpservletlocation1", "");
-        assertEquals("/user", location);
+        assertEquals("Wrong widgetset location", "/user", location);
 
     }
 
@@ -138,6 +147,10 @@ public class TestStaticFilesLocation extends TestCase {
                 .andReturn(realContextPath).anyTimes();
         expect(request.getAttribute("javax.servlet.include.servlet_path"))
                 .andReturn(realServletPath).anyTimes();
+        expect(
+                request
+                        .getAttribute(AbstractApplicationServlet.REQUEST_VAADIN_STATIC_FILE_PATH))
+                .andReturn(null).anyTimes();
 
         return request;
     }
