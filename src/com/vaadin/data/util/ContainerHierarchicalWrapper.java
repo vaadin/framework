@@ -4,8 +4,10 @@
 
 package com.vaadin.data.util;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -42,16 +44,16 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
     private final Container container;
 
     /** Set of IDs of those contained Items that can't have children. */
-    private HashSet noChildrenAllowed = null;
+    private HashSet<Object> noChildrenAllowed = null;
 
-    /** Mapping from Item ID to parent Item */
-    private Hashtable parent = null;
+    /** Mapping from Item ID to parent Item ID */
+    private Hashtable<Object, Object> parent = null;
 
     /** Mapping from Item ID to a list of child IDs */
-    private Hashtable children = null;
+    private Hashtable<Object, LinkedList<Object>> children = null;
 
     /** List that contains all root elements of the container. */
-    private LinkedHashSet roots = null;
+    private LinkedHashSet<Object> roots = null;
 
     /** Is the wrapped container hierarchical by itself ? */
     private boolean hierarchical;
@@ -77,10 +79,10 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
 
         // Create initial order if needed
         if (!hierarchical) {
-            noChildrenAllowed = new HashSet();
-            parent = new Hashtable();
-            children = new Hashtable();
-            roots = new LinkedHashSet(container.getItemIds());
+            noChildrenAllowed = new HashSet<Object>();
+            parent = new Hashtable<Object, Object>();
+            children = new Hashtable<Object, LinkedList<Object>>();
+            roots = new LinkedHashSet<Object>(container.getItemIds());
         }
 
         updateHierarchicalWrapper();
@@ -100,23 +102,52 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
             // Recreate hierarchy and data structures if missing
             if (noChildrenAllowed == null || parent == null || children == null
                     || roots == null) {
-                noChildrenAllowed = new HashSet();
-                parent = new Hashtable();
-                children = new Hashtable();
-                roots = new LinkedHashSet(container.getItemIds());
+                noChildrenAllowed = new HashSet<Object>();
+                parent = new Hashtable<Object, Object>();
+                children = new Hashtable<Object, LinkedList<Object>>();
+                roots = new LinkedHashSet<Object>(container.getItemIds());
             }
 
             // Check that the hierarchy is up-to-date
             else {
 
+                // ensure order of root and child lists is same as in wrapped
+                // container
+                final Collection<?> itemIds = container.getItemIds();
+                Comparator<Object> basedOnOrderFromWrappedContainer = new Comparator<Object>() {
+                    public int compare(Object o1, Object o2) {
+                        if (o1.equals(o2)) {
+                            return 0;
+                        }
+                        for (Object id : itemIds) {
+                            if (id == o1) {
+                                return -1;
+                            } else if (id == o2) {
+                                return 1;
+                            }
+                        }
+                        return 0;
+                    }
+                };
+                Object[] array = roots.toArray();
+                Arrays.sort(array, basedOnOrderFromWrappedContainer);
+                roots = new LinkedHashSet<Object>();
+                for (int i = 0; i < array.length; i++) {
+                    roots.add(array[i]);
+                }
+                for (Object object : children.keySet()) {
+                    LinkedList<Object> object2 = children.get(object);
+                    Collections.sort(object2, basedOnOrderFromWrappedContainer);
+                }
+
                 // Calculate the set of all items in the hierarchy
-                final HashSet s = new HashSet();
+                final HashSet<Object> s = new HashSet<Object>();
                 s.addAll(parent.keySet());
                 s.addAll(children.keySet());
                 s.addAll(roots);
 
                 // Remove unnecessary items
-                for (final Iterator i = s.iterator(); i.hasNext();) {
+                for (final Iterator<Object> i = s.iterator(); i.hasNext();) {
                     final Object id = i.next();
                     if (!container.containsId(id)) {
                         removeFromHierarchyWrapper(id);
@@ -124,8 +155,8 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
                 }
 
                 // Add all the missing items
-                final Collection ids = container.getItemIds();
-                for (final Iterator i = ids.iterator(); i.hasNext();) {
+                final Collection<?> ids = container.getItemIds();
+                for (final Iterator<?> i = ids.iterator(); i.hasNext();) {
                     final Object id = i.next();
                     if (!s.contains(id)) {
                         addToHierarchyWrapper(id);
@@ -153,7 +184,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
         }
         final Object p = parent.get(itemId);
         if (p != null) {
-            final LinkedList c = (LinkedList) children.get(p);
+            final LinkedList<Object> c = children.get(p);
             if (c != null) {
                 c.remove(itemId);
             }
@@ -201,7 +232,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
             return ((Container.Hierarchical) container).getChildren(itemId);
         }
 
-        final Collection c = (Collection) children.get(itemId);
+        final Collection c = children.get(itemId);
         if (c == null) {
             return null;
         }
@@ -353,7 +384,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
         if (newParentId == null) {
 
             // Remove from old parents children list
-            final LinkedList l = (LinkedList) children.get(itemId);
+            final LinkedList<Object> l = children.get(itemId);
             if (l != null) {
                 l.remove(itemId);
                 if (l.isEmpty()) {
@@ -387,9 +418,9 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
 
         // Update parent
         parent.put(itemId, newParentId);
-        LinkedList pcl = (LinkedList) children.get(newParentId);
+        LinkedList<Object> pcl = children.get(newParentId);
         if (pcl == null) {
-            pcl = new LinkedList();
+            pcl = new LinkedList<Object>();
             children.put(newParentId, pcl);
         }
         pcl.add(itemId);
@@ -398,7 +429,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
         if (oldParentId == null) {
             roots.remove(itemId);
         } else {
-            final LinkedList l = (LinkedList) children.get(oldParentId);
+            final LinkedList<Object> l = children.get(oldParentId);
             if (l != null) {
                 l.remove(itemId);
                 if (l.isEmpty()) {
