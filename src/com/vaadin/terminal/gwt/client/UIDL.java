@@ -254,7 +254,7 @@ public final class UIDL extends JavaScriptObject {
                 buf.push(">");
                 buf.push(self[j]);
                 buf.push("</");
-                buf.push("tag");
+                buf.push(j);
                 buf.push(">");
             }
             return buf.join("");
