@@ -10,16 +10,56 @@ import java.util.Set;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
+import com.vaadin.terminal.PaintTarget;
+import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.Component;
 
+/**
+ * When a component is updated, it's client side widget's
+ * {@link Paintable#updateFromUIDL(UIDL, ApplicationConnection)
+ * updateFromUIDL()} will be called with the updated ("changes") UIDL received
+ * from the server.
+ * <p>
+ * UIDL is hierarchical, and there are a few methods to retrieve the children,
+ * {@link #getChildCount()}, {@link #getChildIterator()}
+ * {@link #getChildString(int)}, {@link #getChildUIDL(int)}.
+ * </p>
+ * <p>
+ * It can be helpful to keep in mind that UIDL was originally modeled in XML, so
+ * it's structure is very XML -like. For instance, the first to children in the
+ * underlying UIDL representation will contain the "tag" name and attributes,
+ * but will be skipped by the methods mentioned above.
+ * </p>
+ */
 public final class UIDL extends JavaScriptObject {
 
     protected UIDL() {
     }
 
+    /**
+     * Shorthand for getting the attribute named "id", which for Paintables is
+     * the essential paintableId which binds the server side component to the
+     * client side widget.
+     * 
+     * @return the value of the id attribute, if available
+     */
     public String getId() {
         return getStringAttribute("id");
     }
 
+    /**
+     * Gets the name of this UIDL section, as created with
+     * {@link PaintTarget#startTag(String) PaintTarget.startTag()} in the
+     * server-side {@link Component#paint(PaintTarget) Component.paint()} or
+     * (usually) {@link AbstractComponent#paintContent(PaintTarget)
+     * AbstractComponent.paintContent()}. Note that if the UIDL corresponds to a
+     * Paintable, a component identifier will be returned instead - this is used
+     * internally and is not needed within
+     * {@link Paintable#updateFromUIDL(UIDL, ApplicationConnection)
+     * updateFromUIDL()}.
+     * 
+     * @return the name for this section
+     */
     public native String getTag()
     /*-{
         return this[0];
@@ -40,16 +80,33 @@ public final class UIDL extends JavaScriptObject {
         return Boolean(this[1]["v"]);
     }-*/;
 
+    /**
+     * Gets the named attribute as a String.
+     * 
+     * @param name
+     *            the name of the attribute to get
+     * @return the attribute value
+     */
     public String getStringAttribute(String name) {
         return attr().getString(name);
     }
 
+    /**
+     * Gets the names of the attributes available.
+     * 
+     * @return the names of available attributes
+     */
     public Set<String> getAttributeNames() {
         Set<String> keySet = attr().getKeySet();
         keySet.remove("v");
         return keySet;
     }
 
+    /**
+     * Gets the names of variables available.
+     * 
+     * @return the names of available variables
+     */
     public Set<String> getVariableNames() {
         if (!hasVariables()) {
             return new HashSet<String>();
@@ -59,34 +116,90 @@ public final class UIDL extends JavaScriptObject {
         }
     }
 
+    /**
+     * Gets the named attribute as an int.
+     * 
+     * @param name
+     *            the name of the attribute to get
+     * @return the attribute value
+     */
     public int getIntAttribute(String name) {
         return attr().getInt(name);
     }
 
+    /**
+     * Gets the named attribute as a long.
+     * 
+     * @param name
+     *            the name of the attribute to get
+     * @return the attribute value
+     */
     public long getLongAttribute(String name) {
         return (long) attr().getRawNumber(name);
     }
 
+    /**
+     * Gets the named attribute as a float.
+     * 
+     * @param name
+     *            the name of the attribute to get
+     * @return the attribute value
+     */
     public float getFloatAttribute(String name) {
         return (float) attr().getRawNumber(name);
     }
 
+    /**
+     * Gets the named attribute as a double.
+     * 
+     * @param name
+     *            the name of the attribute to get
+     * @return the attribute value
+     */
     public double getDoubleAttribute(String name) {
         return attr().getRawNumber(name);
     }
 
+    /**
+     * Gets the named attribute as a boolean.
+     * 
+     * @param name
+     *            the name of the attribute to get
+     * @return the attribute value
+     */
     public boolean getBooleanAttribute(String name) {
         return attr().getBoolean(name);
     }
 
+    /**
+     * Gets the named attribute as a Map of named values (key/value pairs).
+     * 
+     * @param name
+     *            the name of the attribute to get
+     * @return the attribute Map
+     */
     public ValueMap getMapAttribute(String name) {
         return attr().getValueMap(name);
     }
 
+    /**
+     * Gets the named attribute as an array of Strings.
+     * 
+     * @param name
+     *            the name of the attribute to get
+     * @return the attribute value
+     */
     public String[] getStringArrayAttribute(String name) {
         return attr().getStringArray(name);
     }
 
+    /**
+     * Gets the named attribute as an int array.
+     * 
+     * @param name
+     *            the name of the attribute to get
+     * @return the attribute value
+     */
     public int[] getIntArrayAttribute(final String name) {
         return attr().getIntArray(name);
     }
@@ -107,15 +220,36 @@ public final class UIDL extends JavaScriptObject {
         return '' + this[1]['v'][name];
     }-*/;
 
+    /**
+     * Indicates whether or not the named attribute is available.
+     * 
+     * @param name
+     *            the name of the attribute to check
+     * @return true if the attribute is available, false otherwise
+     */
     public boolean hasAttribute(final String name) {
         return attr().containsKey(name);
     }
 
+    /**
+     * Gets the UIDL for the child at the given index.
+     * 
+     * @param i
+     *            the index of the child to get
+     * @return the UIDL of the child if it exists
+     */
     public native UIDL getChildUIDL(int i)
     /*-{
         return this[i + 2];
     }-*/;
 
+    /**
+     * Gets the child at the given index as a String.
+     * 
+     * @param i
+     *            the index of the child to get
+     * @return the String representation of the child if it exists
+     */
     public native String getChildString(int i)
     /*-{
         return this[i + 2];
@@ -126,6 +260,23 @@ public final class UIDL extends JavaScriptObject {
         return this[index + 2];
     }-*/;
 
+    /**
+     * Gets an iterator that can be used to iterate trough the children of this
+     * UIDL.
+     * <p>
+     * The Object returned by <code>next()</code> will be appropriately typed -
+     * if it's UIDL, {@link #getTag()} can be used to check which section is in
+     * question.
+     * </p>
+     * <p>
+     * The basic use case is to iterate over the children of an UIDL update, and
+     * update the appropriate part of the widget for each child encountered, e.g
+     * if <code>getTag()</code> returns "color", one would update the widgets
+     * color to reflect the value of the "color" section.
+     * </p>
+     * 
+     * @return an iterator for iterating over UIDL children
+     */
     public Iterator<Object> getChildIterator() {
 
         return new Iterator<Object>() {
@@ -185,9 +336,6 @@ public final class UIDL extends JavaScriptObject {
     }-*/;
 
     /**
-     * 
-     * @return
-     * 
      * @deprecated
      */
     @Deprecated
@@ -195,38 +343,101 @@ public final class UIDL extends JavaScriptObject {
         return toString();
     }
 
+    /**
+     * Checks if the named variable is available.
+     * 
+     * @param name
+     *            the name of the variable desired
+     * @return true if the variable exists, false otherwise
+     */
     public boolean hasVariable(String name) {
         return hasVariables() && var().containsKey(name);
     }
 
+    /**
+     * Gets the value of the named variable.
+     * 
+     * @param name
+     *            the name of the variable
+     * @return the value of the variable
+     */
     public String getStringVariable(String name) {
         return var().getString(name);
     }
 
+    /**
+     * Gets the value of the named variable.
+     * 
+     * @param name
+     *            the name of the variable
+     * @return the value of the variable
+     */
     public int getIntVariable(String name) {
         return var().getInt(name);
     }
 
+    /**
+     * Gets the value of the named variable.
+     * 
+     * @param name
+     *            the name of the variable
+     * @return the value of the variable
+     */
     public long getLongVariable(String name) {
         return (long) var().getRawNumber(name);
     }
 
+    /**
+     * Gets the value of the named variable.
+     * 
+     * @param name
+     *            the name of the variable
+     * @return the value of the variable
+     */
     public float getFloatVariable(String name) {
         return (float) var().getRawNumber(name);
     }
 
+    /**
+     * Gets the value of the named variable.
+     * 
+     * @param name
+     *            the name of the variable
+     * @return the value of the variable
+     */
     public double getDoubleVariable(String name) {
         return var().getRawNumber(name);
     }
 
+    /**
+     * Gets the value of the named variable.
+     * 
+     * @param name
+     *            the name of the variable
+     * @return the value of the variable
+     */
     public boolean getBooleanVariable(String name) {
         return var().getBoolean(name);
     }
 
+    /**
+     * Gets the value of the named variable.
+     * 
+     * @param name
+     *            the name of the variable
+     * @return the value of the variable
+     */
     public String[] getStringArrayVariable(String name) {
         return var().getStringArray(name);
     }
 
+    /**
+     * Gets the value of the named String[] variable as a Set of Strings.
+     * 
+     * @param name
+     *            the name of the variable
+     * @return the value of the variable
+     */
     public Set<String> getStringArrayVariableAsSet(final String name) {
         final HashSet<String> s = new HashSet<String>();
         JsArrayString a = var().getJSStringArray(name);
@@ -236,10 +447,20 @@ public final class UIDL extends JavaScriptObject {
         return s;
     }
 
+    /**
+     * Gets the value of the named variable.
+     * 
+     * @param name
+     *            the name of the variable
+     * @return the value of the variable
+     */
     public int[] getIntArrayVariable(String name) {
         return var().getIntArray(name);
     }
 
+    /**
+     * @deprecated should not be used anymore
+     */
     public final static class XML extends JavaScriptObject {
         protected XML() {
         }
@@ -261,11 +482,22 @@ public final class UIDL extends JavaScriptObject {
         }-*/;
     }
 
+    /**
+     * Returns the number of children.
+     * 
+     * @return the number of children
+     */
     public native int getChildCount()
     /*-{
         return this.length - 2;
     }-*/;
 
+    /**
+     * Shorthand that returns the component errors as UIDL. Only applicable for
+     * Paintables.
+     * 
+     * @return the error UIDL if available
+     */
     public native UIDL getErrors()
     /*-{
         return this[1]['error']; 
@@ -276,11 +508,25 @@ public final class UIDL extends JavaScriptObject {
         return typeof this[1][name] == "object";
     }-*/;
 
+    /**
+     * Gets the Paintable with the id found in the named attributes's value.
+     * 
+     * @param name
+     *            the name of the attribute
+     * @return the Paintable referenced by the attribute, if it exists
+     */
     public Paintable getPaintableAttribute(String name,
             ApplicationConnection connection) {
         return connection.getPaintable(getStringAttribute(name));
     }
 
+    /**
+     * Gets the Paintable with the id found in the named variable's value.
+     * 
+     * @param name
+     *            the name of the variable
+     * @return the Paintable referenced by the variable, if it exists
+     */
     public Paintable getPaintableVariable(String name,
             ApplicationConnection connection) {
         return connection.getPaintable(getStringVariable(name));
