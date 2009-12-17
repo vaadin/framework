@@ -5,6 +5,7 @@ package com.vaadin.terminal.gwt.server;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -83,9 +84,12 @@ public class PortletApplicationContext extends WebApplicationContext implements
     @Override
     protected void removeApplication(Application application) {
         portletListeners.remove(application);
-        for (Portlet key : portletToApplication.keySet()) {
-            if (portletToApplication.get(key) == application) {
-                portletToApplication.remove(key);
+        for (Iterator<Application> it = portletToApplication.values()
+                .iterator(); it.hasNext();) {
+            Application value = it.next();
+            if (value == application) {
+                // values().iterator() is backed by the map
+                it.remove();
             }
         }
         super.removeApplication(application);
