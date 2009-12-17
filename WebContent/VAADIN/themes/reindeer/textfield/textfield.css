@@ -79,12 +79,24 @@ textarea.v-textarea-prompt {
 	height: 16px;
 }
 .v-table input.v-textfield {
-	margin-top: -3px;
-	height: 15px;
+	padding: 2px 2px 1px;
+	height: auto;
 	line-height: normal;
 }
-.v-ie .v-table input.v-textfield {
-	padding-top: 1px;
+.v-sa .v-table  input.v-textfield {
+	padding: 2px 0;
+}
+.v-table-cell-wrapper > input.v-textfield {
+	margin-top: -2px;
+	margin-bottom: -3px;
+}
+.v-ie6 .v-table-cell-wrapper input.v-textfield {
+	margin-top: -2px;
+	margin-bottom: -3px;
+}
+.v-ie6 .v-table-cell-wrapper div input.v-textfield {
+	margin-top: 0;
+	margin-bottom: 0;
 }
 /* Textfield on black background */
 .black .v-textfield {
