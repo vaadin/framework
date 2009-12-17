@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.ContextMenuHandler;
 import com.google.gwt.event.dom.client.DomEvent;
@@ -19,10 +17,9 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 
-public abstract class ClickEventHandler implements ClickHandler,
-        DoubleClickHandler, ContextMenuHandler, MouseUpHandler {
+public abstract class ClickEventHandler implements DoubleClickHandler,
+        ContextMenuHandler, MouseUpHandler {
 
-    private HandlerRegistration clickHandlerRegistration;
     private HandlerRegistration doubleClickHandlerRegistration;
     private HandlerRegistration mouseUpHandlerRegistration;
     private HandlerRegistration contextMenuHandlerRegistration;
@@ -41,9 +38,7 @@ public abstract class ClickEventHandler implements ClickHandler,
         // Handle registering/unregistering of click handler depending on if
         // server side listeners have been added or removed.
         if (hasEventListener()) {
-            if (clickHandlerRegistration == null) {
-                clickHandlerRegistration = registerHandler(this, ClickEvent
-                        .getType());
+            if (mouseUpHandlerRegistration == null) {
                 mouseUpHandlerRegistration = registerHandler(this, MouseUpEvent
                         .getType());
                 contextMenuHandlerRegistration = registerHandler(this,
@@ -52,9 +47,8 @@ public abstract class ClickEventHandler implements ClickHandler,
                         DoubleClickEvent.getType());
             }
         } else {
-            if (clickHandlerRegistration != null) {
+            if (mouseUpHandlerRegistration != null) {
                 // Remove existing handlers
-                clickHandlerRegistration.removeHandler();
                 doubleClickHandlerRegistration.removeHandler();
                 mouseUpHandlerRegistration.removeHandler();
                 contextMenuHandlerRegistration.removeHandler();
@@ -62,7 +56,6 @@ public abstract class ClickEventHandler implements ClickHandler,
                 contextMenuHandlerRegistration = null;
                 mouseUpHandlerRegistration = null;
                 doubleClickHandlerRegistration = null;
-                clickHandlerRegistration = null;
 
             }
         }
@@ -79,12 +72,6 @@ public abstract class ClickEventHandler implements ClickHandler,
     public boolean hasEventListener() {
         return getApplicationConnection().hasEventListeners(paintable,
                 clickEventIdentifier);
-    }
-
-    public void onClick(ClickEvent event) {
-        if (hasEventListener()) {
-            fireClick(event.getNativeEvent());
-        }
     }
 
     protected void fireClick(NativeEvent event) {
@@ -113,11 +100,8 @@ public abstract class ClickEventHandler implements ClickHandler,
         // occured on this element before this mouseup and that no mouseup
         // has occured anywhere after that.
         if (hasEventListener()) {
-            if (event.getNativeButton() != NativeEvent.BUTTON_LEFT) {
-                // "Click" with right or middle button
-                fireClick(event.getNativeEvent());
-
-            }
+            // "Click" with left, right or middle button
+            fireClick(event.getNativeEvent());
         }
     }
 

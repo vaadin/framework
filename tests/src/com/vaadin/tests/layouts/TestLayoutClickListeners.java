@@ -105,7 +105,7 @@ public class TestLayoutClickListeners extends AbstractTestCase {
         al.addListener(new LayoutClickListener() {
 
             public void layoutClick(LayoutClickEvent event) {
-                logLayoutClick("AbsoluteLayout", event.getChildComponent());
+                logLayoutClick("AbsoluteLayout", event);
             }
         });
 
@@ -137,7 +137,7 @@ public class TestLayoutClickListeners extends AbstractTestCase {
         cl.addListener(new LayoutClickListener() {
 
             public void layoutClick(LayoutClickEvent event) {
-                logLayoutClick("CSSLayout", event.getChildComponent());
+                logLayoutClick("CSSLayout", event);
             }
         });
 
@@ -160,22 +160,34 @@ public class TestLayoutClickListeners extends AbstractTestCase {
         gl.addListener(new LayoutClickListener() {
 
             public void layoutClick(LayoutClickEvent event) {
-                logLayoutClick("GridLayout", event.getChildComponent());
+                logLayoutClick("GridLayout", event);
             }
         });
         gl.setRowExpandRatio(3, 1);
         return wrap(gl, "GridLayout");
     }
 
-    protected void logLayoutClick(String layout, Component comp) {
+    protected void logLayoutClick(String layout, LayoutClickEvent event) {
         String target = "&lt;none>";
-        if (comp != null) {
-            target = comp.getCaption();
-            if (target == null && comp instanceof Label) {
-                target = ((Label) comp).getValue().toString();
+        Component component = event.getChildComponent();
+        if (component != null) {
+            target = component.getCaption();
+            if (target == null && component instanceof Label) {
+                target = ((Label) component).getValue().toString();
             }
         }
-        log.log(layout + ": Click on " + target);
+        String button = "left";
+        if (event.getButton() == event.BUTTON_RIGHT) {
+            button = "right";
+        } else if (event.getButton() == event.BUTTON_MIDDLE) {
+            button = "middle";
+
+        }
+        String type = "click";
+        if (event.isDoubleClick()) {
+            type = "double-click";
+        }
+        log.log(layout + ": " + button + " " + type + " on " + target);
 
     }
 
@@ -187,7 +199,7 @@ public class TestLayoutClickListeners extends AbstractTestCase {
         gl.addListener(new LayoutClickListener() {
 
             public void layoutClick(LayoutClickEvent event) {
-                logLayoutClick("VerticalLayout", event.getChildComponent());
+                logLayoutClick("VerticalLayout", event);
 
             }
         });
