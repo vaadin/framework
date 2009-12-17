@@ -4863,6 +4863,9 @@ input.v-textfield-readonly,
 .v-window-contents {
 	background: #fff;
 }
+.v-window-contents > div {
+	outline: none;
+}
 .v-window-modalitycurtain {
 	background: #56595b;
 }
