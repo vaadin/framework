@@ -911,6 +911,15 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     /**
+     * Removes all action handlers
+     */
+    public void removeAllActionHandlers() {
+        actionHandlers = null;
+        actionMapper = null;
+        requestRepaint();
+    }
+
+    /**
      * Gets the visible item ids.
      * 
      * @see com.vaadin.ui.Select#getVisibleItemIds()

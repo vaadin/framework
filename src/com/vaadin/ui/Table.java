@@ -2466,6 +2466,15 @@ public class Table extends AbstractSelect implements Action.Container,
         }
     }
 
+    /**
+     * Removes all action handlers
+     */
+    public void removeAllActionHandlers() {
+        actionHandlers = null;
+        actionMapper = null;
+        requestRepaint();
+    }
+
     /* Property value change listening support */
 
     /**

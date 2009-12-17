@@ -554,6 +554,15 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     }
 
     /**
+     * Removes all action handlers
+     */
+    public void removeAllActionHandlers() {
+        actionHandlers = null;
+        actionMapper = null;
+        requestRepaint();
+    }
+
+    /**
      * Add a click listener to the Panel. The listener is called whenever the
      * user clicks inside the Panel. Also when the click targets a component
      * inside the Panel, provided the targeted component does not prevent the
