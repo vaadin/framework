@@ -246,7 +246,7 @@ public class TextField extends AbstractField implements
      * java.util.Map)
      */
     @Override
-    public void changeVariables(Object source, Map variables) {
+    public void changeVariables(Object source, Map<String, Object> variables) {
 
         super.changeVariables(source, variables);
 
