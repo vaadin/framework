@@ -437,14 +437,10 @@
 .v-csslayout-grid .screenshot a:hover span {
 	background: transparent url(screenshot-frame-hover.png) no-repeat 1px 0;
 }
-.v-ie6 .v-csslayout-grid .screenshot a:hover span {
-	/* Hover images are somehow totally unusable */
-	background: transparent url(screenshot-frame-ie6.png) no-repeat 4px 2px;
-}
 .v-csslayout-grid .new a span,
 .v-csslayout-grid .new a:link span,
 .v-csslayout-grid .new a:visited span {
-	background: transparent url(screenshot-frame-new.png) no-repeat 2px 0;
+	background: transparent url(screenshot-frame-new.png) no-repeat 3px 0;
 }
 .v-ie6 .v-csslayout-grid .new a span,
 .v-ie6 .v-csslayout-grid .new a:link span,
@@ -453,10 +449,6 @@
 }
 .v-csslayout-grid .new a:hover span {
 	background: transparent url(screenshot-frame-new-hover.png) no-repeat 1px 0;
-}
-.v-ie6 .v-csslayout-grid .new a:hover span {
-	/* Hover images are somehow totally unusable */
-	background: transparent url(screenshot-frame-new-ie6.png) no-repeat 2px 0;
 }
 
 
