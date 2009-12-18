@@ -79,7 +79,16 @@ public class ColorPicker extends AbstractField {</pre>
         <li>On the client-side:</li>
         <ul>
             <li>Ability to check if a listener is registered on the server-side</li>
-            <li>Typed arrays and maps can now be sent to server with <tt>updateVariable()</tt></li>
+            <li>Typed arrays and maps can now be sent to server with <tt>updateVariable()</tt>
+				<ul>
+				<li>Note! One regression on update process may appear that is
+				related to this change. Issue exists on custom tailored components
+				that send object arrays to server. Previously Object[] types from
+				clients side became type of String[] on server side. This invalid
+				behaviour is now fixed and an Object[] sent from client side is an
+				Object[] on server side.</li>
+				</ul>
+            </li>
         </ul>
     </ul>
     <li>Refactoring widget sets has also provided some optimizations for rendering</li>
