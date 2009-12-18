@@ -126,8 +126,14 @@ public class ColorPicker extends AbstractField {</pre>
     <ul>
         <li><b>vaadin-maven-plugin</b> can automatically update Vaadin 6.2 widgetsets based on Maven dependencies using the goal <b>update-widgetset</b></li>
     </ul>
-    <li><b>HttpServletRequestListener</b> [TODO]</li>
-    <li><b>PortletRequestListener</b> [TODO]</li>
+    <li><b>HttpServletRequestListener</b></li>
+    <ul>
+    	<li>Similar to <b>TransactionListener</b> but only related to a single Application. Called before and after every servlet request and provides access to <b>HttpServletRequest</b> and <b>HttpServletResponse</b>.</li>
+    </ul>
+    <li><b>PortletRequestListener</b>
+    <ul>
+    	<li>Similar to <b>HttpServletRequestListener</b> but for portlets. Called before and after every portlet request and provides access to <b>PortletRequest</b> and <b>PortletResponse</b>.</li>
+    </ul>
     <li>Sampler has been updated with many new samples.</li>
     <li>Enhancements to various components:</li>
     <ul>
@@ -138,7 +144,10 @@ public class ColorPicker extends AbstractField {</pre>
       <li><b>MenuBar</b>: Many enhancements: Individual items can be styled, support for separators, disabling of items, visibility of items.</li>
       <li><b>DateField</b>: Support for lenient/non-lenient mode. A <b>DateField</b> is now by default in non-lenient mode (only accepts valid dates). </li>
     </ul>
-    <li>Automatic integration tests for the supported servers</li>
+    <li>Automatic integration tests</li>
+    <ul>
+    	<li>All Vaadin builds are now automatically tested on all supported servers.</li>
+    </ul>
     <li>Dozens of other small enhancements and bug fixes</li> 
 </ul>
 
@@ -150,46 +159,34 @@ widget sets and refresh your project in Eclipse. If you are upgrading from earli
 6.2.0, notice that Vaadin 6.2 uses GWT 1.7.0 (included in the installation package). See
 <a href="#upgrading">General Upgrade Notes</a> for more details on upgrading.</p>
 
-<h2><a name="widgetupgrade">Upgrading Custom Component Projects from Earlier Vaadin 6</a></h2>
+<h2><a name="widgetupgrade">Upgrading from an Earlier Vaadin 6 version</a></h2>
 
-<p>If you are using custom components (components from other than the
-<b>DefaultWidgetSet</b>) from an earlier version of Vaadin 6, you will need to upgrade the
-widget set definitions.</p>
-
-<p>[TODO]</p>
-
+<p>
+The widgetsets have been renewed and simplified in Vaadin 6.2 as described above. Existing projects 
+where custom widgets (a custom widgetset) are used must be migrated when upgrading to Vaadin 6.2. 
+Projects where the default widgetset is used do not need migration. For most
+projects this should be a quite painless upgrade.
+</p>
+<p>
+For applications where custom widgets are used (also applicable to widget projects):
 <ul>
-  <li>If using a widget set from another project (most likely from a separate JAR file):</li>
-  <ul>
-    <li>Get a widget set JAR compatible with Vaadin 6.2. If the new JAR does not contain a
-    precompiled widget set (as it normally does not), you need to create a custom widget
-    set for your project. The experimental eclipse plugin will create it for you
-    automatically.</li>
-  </ul>
-  <li>If the project has its own widget set:
-  <ul>
-     <li>Remove <tt>WidgetSet.java</tt> file, this is no more needed</li>
-     <li>If project has client-side components in its own source directory:</li>
-     <ul>
-       <li>Remove <i>getTag()</i> method implementations from server-side components; tag
-       names are no longer used. We have intentionally made the <i>getTag()</i> method
-       <tt>final</tt> to make it easier to find them (they wont compile)</li>
-
-       <li>Annotate server-side components having client side counterpart with
-       <tt>@ClientWidget(VClientSideCounterPart.class)</tt> annotation. Basically these are the
-       same components that had the <i>getTag()</i> method previously. </li>
-     </ul>
-     <li>If (combined) widget set uses widgets from other widget sets (most likely from a separate JAR file)</li>
-     <ul>
-       <li>Update referenced widget sets to support 6.2</li>
-       <li>Add/keep necessary inherits tags in your combined widgetset (<tt>.gwt.xml</tt> file). Eclipse plugin will again try to automatically add these to your widgetset.</li>
-     </ul>
-     <li>If you package a widget set as a JAR for usage in other projects:</li>
-     <ul>
-       <li>Add an entry like Vaadin-Widgetsets: com.vaadin.incubator.fastlayouts.ws.FastLayoutsWidgetSet to JAR files MANIFEST.MF file. This helps tools to detect package as vaadin component package.</li>
-     </ul>
-  </ul>
+<li>Remove the <i>getTag()</i> method from all components and replace it with a @ClientWidget(VClientSideWidget.class) annotation. Tag names are no longer used to map the server-side and client-side part of the component. This is done automatically using the @ClientWidget annotation.</li>
+<li>Remove the <tt>WidgetSet.java</tt> file. This file is no longer needed as the mapping between server and client side is done automatically using @ClientWidget.</li>
 </ul>
+</p>
+<p>
+If you are using widgets from another project (typically in a separate JAR file):
+<ul>
+<li>Acquire a new JAR which is compatible with Vaadin 6.2 and add it to WEB-INF/lib. The widgetset compiler will automatically include the jar in your widgetset.gwt.xml during compilation if using Eclipse. For Ant/Maven you need to specify the location of the widgetset jars that you want to include in the application widgetset.</li>
+</ul>
+</p>
+<p>
+If you package a widget set as a JAR for use in other projects:
+<ul>
+	<li>Replace getTag() with @ClientWidget and remove the <tt>WidgetSet.java</tt> as described above.</li>
+    <li>Add a &quot;Vaadin-Widgetsets: &lt;fully qualified name of widgetset&gt;&quot; row to META-INF/MANIFEST.MF in the jar file. This enables the widgetset compiler to automatically detect and include the widgetset in other projects.</li>
+</ul>
+</p>
 
 <h2><a name="upgrading">General Upgrade Notes</a></h2>
 
