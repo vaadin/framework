@@ -86,6 +86,9 @@ public class VMenuBar extends Widget implements Paintable,
     @Override
     public void setWidth(String width) {
         Util.setWidthExcludingPaddingAndBorder(this, width, 0);
+        hideChildren();
+        setSelected(null);
+        menuVisible = false;
     }
 
     /**
@@ -755,6 +758,7 @@ public class VMenuBar extends Widget implements Paintable,
     /**
      * @author Jouni Koivuviita / IT Mill Ltd.
      */
+    private int paddingWidth = -1;
 
     public void iLayout() {
         // Only collapse if there is more than one item in the root menu and the
@@ -773,7 +777,13 @@ public class VMenuBar extends Widget implements Paintable,
             }
 
             // Measure available space
-            int availableWidth = getElement().getClientWidth();
+            if (paddingWidth == -1) {
+                int widthBefore = getElement().getClientWidth();
+                getElement().getStyle().setProperty("padding", "0");
+                paddingWidth = widthBefore - getElement().getClientWidth();
+                getElement().getStyle().setProperty("padding", "");
+            }
+            int availableWidth = getElement().getClientWidth() - paddingWidth;
             int diff = availableWidth - getConsumedWidth();
 
             removeItem(moreItem);
