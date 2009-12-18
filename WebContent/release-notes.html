@@ -83,26 +83,42 @@ public class ColorPicker extends AbstractField {</pre>
         </ul>
     </ul>
     <li>Refactoring widget sets has also provided some optimizations for rendering</li>
-    <li>Portlet 2.0 (JSR 268) support (no separate servlet, no session problems, portlet-to-portlet communication, etc)</li> 
+    <li>Portlet 2.0 (JSR 268) support</li>
+    <ul>
+    	<li>A separate servlet for each portlet is no longer needed. 
+    	 (no separate servlet, no session problems, portlet-to-portlet communication, etc)</li>
+    </ul> 
     <li>OSGi support</li>
-    <li>Enhanced sorting of <b>IndexedContainer</b> and <b>BeanItemContainer</b> [TODO]</li>
-    <li>Improved event support [TODO]</li>
-    <li>JavaScript injection with <tt>Window.excecuteJavaScript()</tt>, "the method that you never want to use, but that is nice to have"</li> 
+    <ul>
+    	<li>Vaadin now works as a OSGi bundle.</li>
+    </ul>
+    <li>Enhanced sorting of <b>IndexedContainer</b> and <b>BeanItemContainer</b></li>
+    <ul>
+	       <li>Custom sort method can now be used to sort container contents.</li>
+	       
+    <li>Improved event support</li>
+    <ul>
+    	<li>A generic method for sending client side events to the server only when a listener has been registered for the event</li>
+    	<li>All included layouts (<b>AbsoluteLayout</b>,<b>CssLayout</b>,<b>HorizontalLayout</b>,<b>GridLayout</b>,<b>VerticalLayout</b>) support click listeners.</li>
+    	<li>Click events for <b>Panel</b> and <b>Embedded</b>.</li>
+        <li>Focus and blur events for <b>DateField</b>, <b>TextField</b>, and <b>Select</b></li>
+    </ul>
+    <li>JavaScript execution with <tt>Window.excecuteJavaScript()</tt></li>
+    <ul>
+	    <li>Using excecuteJavaScript() you can execute javascript directly from the server side. This can be used e.g. for integration with other systems or implementing print functionality (window.print()). </li>
+    </ul>
     <li>Additional Maven archetypes [TODO]</li>
-    <li>New layout in Sampler and several new examples</li>
     <li><b>HttpServletRequestListener</b> [TODO]</li>
     <li><b>PortletRequestListener</b> [TODO]</li>
-    <li>Window closable support [TODO]</li>
+    <li>Sampler has been updated with many new samples.</li>
     <li>Enhancements to various components:</li>
     <ul>
-      <li><b>Tree</b>: item style generator, rendering optimizations</li> 
-      <li><b>ItemSorter</b> [TODO]</li>
-      <li><b>Tabsheet</b>: a close button for tabs</li>
-      <li><b>SplitPanel</b>: double-click event for a splitter</li>
-      <li><b>MenuBar</b> enhancements [TODO]</li>
-      <li><b>DateField</b>: lenient/non-lenient support [TODO]</li>
-      <li>Click listeners for <b>Panel</b>, <b>Embedded</b>, and layout components [TODO]</li>
-      <li>Focus and blur events for <b>DateField</b>, <b>TextField</b>, and <b>Select</b> [TODO]</li>
+	  <li><b>Window</b>: Additional control over a sub window: close and drag prevention.</li>
+      <li><b>Tree</b>: Item style generator enabling styling of inidividual tree items. Rendering optimizations.</li> 
+      <li><b>Tabsheet</b>: Tabs can be marked as closable. The new <b>CloseHandler</b> can be used to ask for confirmation, prevent closing etc.</li>
+      <li><b>SplitPanel</b>: Double clicking the splitter sends an event which can be handled on server-side.</li>
+      <li><b>MenuBar</b>: Many enhancements: Individual items can be styled, support for separators, disabling of items, visibility of items.</li>
+      <li><b>DateField</b>: Support for lenient/non-lenient mode. A <b>DateField</b> is now by default in non-lenient mode (only accepts valid dates). </li>
     </ul>
     <li>Automatic integration tests for the supported servers</li>
     <li>Dozens of other small enhancements and bug fixes</li> 
