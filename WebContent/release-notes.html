@@ -107,7 +107,16 @@ public class ColorPicker extends AbstractField {</pre>
     <ul>
 	    <li>Using excecuteJavaScript() you can execute javascript directly from the server side. This can be used e.g. for integration with other systems or implementing print functionality (window.print()). </li>
     </ul>
-    <li>Additional Maven archetypes [TODO]</li>
+    <li>Additional Maven archetypes</li>
+    <ul>
+        <li><b>vaadin-archetype-clean</b> with dependency to Vaadin and a minimal application skeleton, no client side widgets</li>
+        <li><b>vaadin-archetype-widget</b> for creation of Vaadin 6.2 widget packages</li>
+        <li><b>vaadin-archetype-sample</b> has been updated for Vaadin 6.2 - use version 1.0.x for earlier Vaadin versions</li>
+    </ul>
+    <li>Maven Vaadin plugin</li>
+    <ul>
+        <li><b>vaadin-maven-plugin</b> can automatically update Vaadin 6.2 widgetsets based on Maven dependencies using the goal <b>update-widgetset</b></li>
+    </ul>
     <li><b>HttpServletRequestListener</b> [TODO]</li>
     <li><b>PortletRequestListener</b> [TODO]</li>
     <li>Sampler has been updated with many new samples.</li>
