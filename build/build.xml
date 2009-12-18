@@ -176,6 +176,8 @@
         <mkdir dir="${result-path}" />
 
         <!-- required when compiling WebContent/VAADIN/widgetsets (and also Java server-side classes) -->
+        <property name="lib-gwt-dev" location="${gwt-dir}/gwt-dev.jar" />
+        <property name="lib-gwt-user" location="${gwt-dir}/gwt-user.jar" />
 
         <echo>We are on ${platform} platform (${os.name} ${os.version}), using gwt version ${gwt-version}.</echo>
 
