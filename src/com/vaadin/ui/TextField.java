@@ -564,6 +564,7 @@ public class TextField extends AbstractField implements
      */
     public void setInputPrompt(String inputPrompt) {
         this.inputPrompt = inputPrompt;
+        requestRepaint();
     }
 
     /**
