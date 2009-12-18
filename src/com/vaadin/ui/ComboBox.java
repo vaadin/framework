@@ -23,66 +23,67 @@ import com.vaadin.terminal.gwt.client.ui.VFilterSelect;
 @ClientWidget(VFilterSelect.class)
 public class ComboBox extends Select {
 
-	private String inputPrompt = null;
+    private String inputPrompt = null;
 
-	public ComboBox() {
-		setMultiSelect(false);
-		setNewItemsAllowed(false);
-	}
+    public ComboBox() {
+        setMultiSelect(false);
+        setNewItemsAllowed(false);
+    }
 
-	public ComboBox(String caption, Collection options) {
-		super(caption, options);
-		setMultiSelect(false);
-		setNewItemsAllowed(false);
-	}
+    public ComboBox(String caption, Collection options) {
+        super(caption, options);
+        setMultiSelect(false);
+        setNewItemsAllowed(false);
+    }
 
-	public ComboBox(String caption, Container dataSource) {
-		super(caption, dataSource);
-		setMultiSelect(false);
-		setNewItemsAllowed(false);
-	}
+    public ComboBox(String caption, Container dataSource) {
+        super(caption, dataSource);
+        setMultiSelect(false);
+        setNewItemsAllowed(false);
+    }
 
-	public ComboBox(String caption) {
-		super(caption);
-		setMultiSelect(false);
-		setNewItemsAllowed(false);
-	}
+    public ComboBox(String caption) {
+        super(caption);
+        setMultiSelect(false);
+        setNewItemsAllowed(false);
+    }
 
-	@Override
-	public void setMultiSelect(boolean multiSelect) {
-		if (multiSelect && !isMultiSelect()) {
-			throw new UnsupportedOperationException("Multiselect not supported");
-		}
-		super.setMultiSelect(multiSelect);
-	}
+    @Override
+    public void setMultiSelect(boolean multiSelect) {
+        if (multiSelect && !isMultiSelect()) {
+            throw new UnsupportedOperationException("Multiselect not supported");
+        }
+        super.setMultiSelect(multiSelect);
+    }
 
-	/**
-	 * Gets the current input prompt.
-	 * 
-	 * @see #setInputPrompt(String)
-	 * @return the current input prompt, or null if not enabled
-	 */
-	public String getInputPrompt() {
-		return inputPrompt;
-	}
+    /**
+     * Gets the current input prompt.
+     * 
+     * @see #setInputPrompt(String)
+     * @return the current input prompt, or null if not enabled
+     */
+    public String getInputPrompt() {
+        return inputPrompt;
+    }
 
-	/**
-	 * Sets the input prompt - a textual prompt that is displayed when the
-	 * select would otherwise be empty, to prompt the user for input.
-	 * 
-	 * @param inputPrompt
-	 *            the desired input prompt, or null to disable
-	 */
-	public void setInputPrompt(String inputPrompt) {
-		this.inputPrompt = inputPrompt;
-	}
+    /**
+     * Sets the input prompt - a textual prompt that is displayed when the
+     * select would otherwise be empty, to prompt the user for input.
+     * 
+     * @param inputPrompt
+     *            the desired input prompt, or null to disable
+     */
+    public void setInputPrompt(String inputPrompt) {
+        this.inputPrompt = inputPrompt;
+        requestRepaint();
+    }
 
-	@Override
-	public void paintContent(PaintTarget target) throws PaintException {
-		if (inputPrompt != null) {
-			target.addAttribute("prompt", inputPrompt);
-		}
-		super.paintContent(target);
-	}
+    @Override
+    public void paintContent(PaintTarget target) throws PaintException {
+        if (inputPrompt != null) {
+            target.addAttribute("prompt", inputPrompt);
+        }
+        super.paintContent(target);
+    }
 
 }
