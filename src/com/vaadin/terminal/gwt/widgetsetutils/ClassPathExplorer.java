@@ -402,13 +402,9 @@ public class ClassPathExplorer {
                 paintables.add((Class<? extends Paintable>) c);
                 // System.out.println("Found paintable " + fullclassName);
             }
-        } catch (ExceptionInInitializerError e) {
-            // e.printStackTrace();
         } catch (ClassNotFoundException e) {
             // e.printStackTrace();
-        } catch (NoClassDefFoundError e) {
-            // NOP
-        } catch (UnsatisfiedLinkError e) {
+        } catch (LinkageError e) {
             // NOP
         } catch (Exception e) {
             e.printStackTrace();

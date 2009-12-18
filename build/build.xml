@@ -25,18 +25,6 @@
     package-oophm
      * vaadin-oophm-<version>.zip
 
-    NOTE: This build script requires directories named ${gwt-dir}/(linux|windows|mac) .
-    See build.properties to define path where your gwt installation is located.
-    You must unpack platform specific binaries under linux, windows and mac directories.
-    ${gwt-dir}/${platform} (linux|windows|mac) are used for
-      a) compile WebContent/VAADIN/widgetsets
-    b) creating platform specific release ZIP/TGZ packages.
-    
-    NOTE FOR USING OOPHM:
-     * To build with oophm define the property platform=oophm
-       * In Eclipse this is done in External Tools Configurations -> properties
-     * If you are using windows you must use JDK 1.6 and not 1.5
-       * To enable building with JDK 1.6, define ignoreversion=1
     -->
 
     <!-- 
@@ -100,13 +88,6 @@
             <arg line="${result-path}/eclipse-test" />
         </exec>
         <!--
-        <exec executable="ln" failonerror="false">
-            <arg line="-s" />
-            <arg line="${gwt-dir}/${package-platform}" />
-            <arg line="${output-dir}/gwt" />
-        </exec>
-        -->
-        <!--
         <antcall target="create-mac-diskimage" inheritAll="true" inheritRefs="true" />
         -->
     </target>
@@ -153,7 +134,7 @@
       <echo>Java Servlet API is available.</echo>
 
       <available classpathref="compile.classpath" classname="javax.servlet.ServletRequestListener" property="servlet.version.is-2.4"/>
-      <fail if="servlet.version.is-2.4" message="Java Servlet API 2.4 or later detected. Vaadin must be compiled exactly with Servlet API 2.3."/>
+      <!--<fail if="servlet.version.is-2.4" message="Java Servlet API 2.4 or later detected. Vaadin must be compiled exactly with Servlet API 2.3."/>-->
       <echo>Java Servlet API specification 2.3 used.</echo>
     </target>
 
@@ -162,27 +143,6 @@
     <!-- ================================================================== -->
 
     <!-- Find out which platform we are in -->
-    <target name="init-platform">
-        <antcontrib:if>
-            <contains string="${os.name}" substring="Windows" />
-            <then>
-                <property name="platform" value="windows" />
-            </then>
-        </antcontrib:if>
-        <antcontrib:if>
-            <equals arg1="${os.name}" arg2="Linux" />
-            <then>
-                <property name="platform" value="linux" />
-            </then>
-        </antcontrib:if>
-        <antcontrib:if>
-            <equals arg1="${os.name}" arg2="Mac OS X" />
-            <then>
-                <property name="platform" value="mac" />
-            </then>
-        </antcontrib:if>
-    </target>
-
     <target name="init-oophm-platform"><property name="platform" value="oophm" /></target>
     <target name="init-oophm" depends="init-oophm-platform,init"></target>
 
@@ -190,7 +150,7 @@
     <target name="package-init">
     </target>
 
-    <target name="init" depends="check-java-version, init-platform">
+    <target name="init" depends="check-java-version">
         <property file="build/build.properties" />
         <property file="build/VERSION.properties" />
         <property file="build/GWT-VERSION.properties" />
@@ -216,9 +176,8 @@
         <mkdir dir="${result-path}" />
 
         <!-- required when compiling WebContent/VAADIN/widgetsets (and also Java server-side classes) -->
-        <property name="lib-gwt-dev" value="gwt-dev-${platform}.jar" />
 
-        <echo>We are on ${platform} platform (${os.name} ${os.version}), using ${gwt-dir}/${platform}/${lib-gwt-dev} (${gwt-version}).</echo>
+        <echo>We are on ${platform} platform (${os.name} ${os.version}), using gwt version ${gwt-version}.</echo>
 
         <!-- Destination files -->
         <property name="lib-jar-name" value="${product-file}-${version.full}.jar" />
@@ -266,8 +225,8 @@
         </path>
         <path id="compile.classpath.client-side">
             <path refid="compile.classpath"/>
-            <pathelement path="${gwt-dir}/${platform}/gwt-user.jar" />
-            <pathelement path="${gwt-dir}/${platform}/${lib-gwt-dev}" />
+            <pathelement path="${lib-gwt-user}" />
+            <pathelement path="${lib-gwt-dev}" />
         </path>
 
     </target>
@@ -283,7 +242,7 @@
                     <include name="**/*" />
                 </patternset>
             </zipfileset>
-            <zipfileset prefix="${product-file}-${package-platform}-${version.full}/gwt" dir="${gwt-dir}/${package-platform}">
+            <zipfileset prefix="${product-file}-${package-platform}-${version.full}/gwt" dir="${gwt-dir}">
                 <patternset>
                     <include name="**/*" />
                     <exclude name="gwt/doc"/>
@@ -307,7 +266,7 @@
                     <include name="**/*" />
                 </patternset>
             </tarfileset>
-            <tarfileset prefix="${product-file}-${package-platform}-${version.full}/gwt" dir="${gwt-dir}/${package-platform}">
+            <tarfileset prefix="${product-file}-${package-platform}-${version.full}/gwt" dir="${gwt-dir}">
                 <patternset>
                     <include name="**/*" />
                 </patternset>
@@ -330,7 +289,7 @@
                     <include name="**/*" />
                 </patternset>
             </zipfileset>
-            <zipfileset prefix="${product-file}-${package-platform}-${version.full}/gwt" dir="${gwt-dir}/${package-platform}">
+            <zipfileset prefix="${product-file}-${package-platform}-${version.full}/gwt" dir="${gwt-dir}">
                 <patternset>
                     <include name="**/*" />
                 </patternset>
@@ -349,7 +308,7 @@
                     <include name="**/*" />
                 </patternset>
             </tarfileset>
-            <tarfileset prefix="${product-file}-${package-platform}-${version.full}/gwt" dir="${gwt-dir}/${package-platform}">
+            <tarfileset prefix="${product-file}-${package-platform}-${version.full}/gwt" dir="${gwt-dir}">
                 <patternset>
                     <include name="**/*" />
                 </patternset>
@@ -545,7 +504,7 @@
                 </replacetokens>
                 <!-- .classpath -->
                 <replacetokens begintoken="&lt;" endtoken=">">
-                    <token key="platform-specific-entries" value="&lt;classpathentry kind=&quot;lib&quot; path=&quot;gwt/gwt-dev-${package-platform}.jar&quot; /&gt;" />
+                    <token key="platform-specific-entries" value="&lt;classpathentry kind=&quot;lib&quot; path=&quot;gwt/gwt-dev.jar&quot; /&gt;" />
                     <token key="/platform-specific-entries" value="" />
                 </replacetokens>
                 <!-- .classpath, HostedMode.launch, build-widgetset.xml -->
@@ -849,8 +808,8 @@
     <target name="unpack-gwt" depends="init">
         <!-- Unpack GWT from JARs. This is needed for excluding Servlet API 2.4. -->
         <delete dir="${result-path}/gwt"/>
-        <unjar src="${gwt-dir}/${platform}/gwt-user.jar" dest="${result-path}/gwt/"/>
-        <unjar src="${gwt-dir}/${platform}/${lib-gwt-dev}" dest="${result-path}/gwt/"/>
+        <unjar src="${lib-gwt-user}" dest="${result-path}/gwt/"/>
+        <unjar src="${lib-gwt-dev}" dest="${result-path}/gwt/"/>
         <delete dir="${result-path}/gwt/javax/servlet"/>
     </target>
 
@@ -916,8 +875,8 @@
             <include name="com/vaadin/terminal/gwt/widgetsetutils/WidgetMapGenerator.java" />
             <!-- <exclude name="**"/> -->
             <classpath>
-                <pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
-                <pathelement location="${gwt-dir}/${platform}/${lib-gwt-dev}" />
+                <pathelement location="${lib-gwt-user}" />
+                <pathelement location="${lib-gwt-dev}" />
                 <pathelement location="${result-path}/classes" />
                 <pathelement location="${result-path}/src/core" />
             </classpath>
@@ -929,8 +888,8 @@
 
 
     <path id="widgetset-compile-classpath">
-        <pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
-        <pathelement location="${gwt-dir}/${platform}/${lib-gwt-dev}" />
+        <pathelement location="${lib-gwt-user}" />
+        <pathelement location="${lib-gwt-dev}" />
         <pathelement location="${result-path}/classes" />
         <pathelement location="${result-path}/src/core" />
         <pathelement location="${result-path}/src/demo" />
@@ -984,8 +943,8 @@
             <jvmarg value="-Xss8M"/>
             <jvmarg value="-Djava.awt.headless=true"/>
             <classpath>
-                <pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
-                <pathelement location="${gwt-dir}/${platform}/${lib-gwt-dev}" />
+                <pathelement location="${lib-gwt-user}" />
+                <pathelement location="${lib-gwt-dev}" />
                 <pathelement location="${result-path}/src/core" />
                 <pathelement location="${result-path}/src/demo" />
                 <!-- demo jars -->
@@ -1050,21 +1009,19 @@
     <target name="compile-client-side" depends="compile-server-side, compile-client-side-sequential, compile-client-side-parallel"/>
 
     <!-- Definitions for building local components, i.e., not for an installation package. -->
-    <target name="init-nonpackage" depends="init-platform">
+    <target name="init-nonpackage">
+        <property file="build/build.properties" />
         <property file="build/VERSION.properties" />
         <property file="build/GWT-VERSION.properties" />
 
         <!-- Definitions for building the client-side. -->
         <property name="widgetsets-output-dir" value="WebContent/VAADIN/widgetsets" />
 
-        <!-- Path to GWT directory. TODO: This should be read from build.properties file. -->
-        <property name="gwt-dir" value="build/gwt" />
-
         <!-- required when compiling WebContent/VAADIN/widgetsets (and also Java server-side classes) -->
-        <property name="lib-gwt-dev" value="gwt-dev-${platform}.jar" />
+        <property name="lib-gwt-dev" location="${gwt-dir}/gwt-dev.jar" />
+        <property name="lib-gwt-user" location="${gwt-dir}/gwt-user.jar" />
 
-        <echo>We are on ${platform} platform, using ${gwt-dir}/${platform}/${lib-gwt-dev}.</echo>
-        <echo>GWT dir: ${gwt-dir}</echo>
+        <echo>We are on ${platform} platform, using ${lib-gwt-dev}.</echo>
         <echo>Widget sets output dir: ${widgetsets-output-dir}</echo>
     </target>
 
@@ -1284,28 +1241,9 @@
     <target name="nightly" depends="clean-result, nightly-init, package-init, init, build, internal-package-linux">
     </target>
 
-    <!-- Create symlink to GWT installation directory. -->
-    <target name="gwt-symlink">
-
-        <!-- Optional property. -->
-        <property name="gwt.link.target" value="../../gwt-1.7"/>
-
-        <!-- Remove the old link, as the link target may have changed. -->
-        <exec executable="rm" dir="build" searchpath="true" failonerror="false">
-            <arg value="gwt"/>
-        </exec>
-
-        <echo>Creating symlink to GWT installation directory.</echo>
-        <exec executable="ln" dir="build" searchpath="true" failonerror="true">
-            <arg value="-s"/> <!-- Symlink.   -->
-            <arg value="-f"/> <!-- Overwrite. -->
-            <arg value="${gwt.link.target}"/>
-            <arg value="gwt"/>
-        </exec>
-    </target>
 
     <!-- Initialize a nightly build. -->
-    <target name="nightly-init" depends="gwt-symlink">
+    <target name="nightly-init">
 
         <!-- Mandatory parameters. -->
         <fail unless="build.number" message="The build.number property must be defined."/>
