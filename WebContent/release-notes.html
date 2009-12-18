@@ -180,7 +180,7 @@ If you are using widgets from another project (typically in a separate JAR file)
 If you package a widget set as a JAR for use in other projects:
 <ul>
 	<li>Replace getTag() with @ClientWidget and remove the <tt>WidgetSet.java</tt> as described above.</li>
-    <li>Add a &quot;Vaadin-Widgetsets: &lt;fully qualified name of widgetset&gt;&quot; row to META-INF/MANIFEST.MF in the jar file. This enables the widgetset compiler to automatically detect and include the widgetset in other projects.</li>
+    <li>Add a &quot;Vaadin-Widgetsets: &lt;fully qualified name of widgetset&gt;&quot; (e.g. &quot;Vaadin-Widgetsets: com.example.widgetset.mywidgetset&quot;) row to META-INF/MANIFEST.MF in the jar file. This enables the widgetset compiler to automatically detect and include the widgetset in other projects.</li>
 </ul>
 </p>
 
