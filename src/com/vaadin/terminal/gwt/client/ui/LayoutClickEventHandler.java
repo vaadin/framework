@@ -11,7 +11,8 @@ import com.vaadin.terminal.gwt.client.Paintable;
 
 public abstract class LayoutClickEventHandler extends ClickEventHandler {
 
-    LayoutClickEventHandler(Paintable paintable, String clickEventIdentifier) {
+    public LayoutClickEventHandler(Paintable paintable,
+            String clickEventIdentifier) {
         super(paintable, clickEventIdentifier);
     }
 
