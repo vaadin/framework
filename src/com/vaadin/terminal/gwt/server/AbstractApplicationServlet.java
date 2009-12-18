@@ -1577,8 +1577,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         }
         page
                 .write("document.write('<iframe tabIndex=\"-1\" id=\"__gwt_historyFrame\" "
-                        + "style=\"width:0;height:0;border:0;overflow:"
-                        + "hidden\" src=\"javascript:false\"></iframe>');\n");
+                        + "style=\"position:absolute;width:0;height:0;border:0;overflow:"
+                        + "hidden;\" src=\"javascript:false\"></iframe>');\n");
         page.write("document.write(\"<script language='javascript' src='"
                 + widgetsetFilePath + "'><\\/script>\");\n}\n");
 
