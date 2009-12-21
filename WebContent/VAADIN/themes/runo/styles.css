@@ -1151,6 +1151,21 @@ div.v-progressindicator-indeterminate-disabled {
 	margin-left: -5px;
 }
 
+.v-slider-feedback {
+	padding: 2px 5px;
+	background: #444;
+	color: #fff;
+	font-size: 11px;
+	line-height: 13px;
+	font-weight: bold;
+	font-family: Arial, Helvetica, sans-serif;
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	margin: -2px 0 0 2px;
+	text-shadow: 0 1px 0 #000;
+}
+
 /* Disabled by default
 .v-slider-error .v-slider-base {
 	background: #FFE0E0;
@@ -2755,7 +2770,7 @@ div.v-tree-node-leaf {
 	height: 12px;
 	margin-left: -5px;
 }
-.v-slider-vertical .v-slider-handle:hover {
+.v-slider-vertical .v-slider-handle-active {
 	background-position: left bottom;
 }
 

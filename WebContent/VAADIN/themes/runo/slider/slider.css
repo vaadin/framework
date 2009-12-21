@@ -51,7 +51,7 @@
 	height: 12px;
 	margin-left: -5px;
 }
-.v-slider-vertical .v-slider-handle:hover {
+.v-slider-vertical .v-slider-handle-active {
 	background-position: left bottom;
 }
 
