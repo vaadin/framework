@@ -709,6 +709,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
              * We must force an update of the row height as this point as it
              * might have been (incorrectly) calculated earlier
              */
+
+            int bodyHeight;
             if (pageLength == totalRows) {
                 /*
                  * A hack to support variable height rows when paging is off.
@@ -717,13 +719,16 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
                  * height.
                  */
                 // int bodyHeight = scrollBody.getOffsetHeight();
-                int bodyHeight = scrollBody.getRequiredHeight();
-                bodyContainer.setHeight(bodyHeight + "px");
-                Util.runWebkitOverflowAutoFix(bodyContainer.getElement());
+                bodyHeight = scrollBody.getRequiredHeight();
             } else {
-                int bodyHeight = (scrollBody.getRowHeight(true) * pageLength);
-                bodyContainer.setHeight(bodyHeight + "px");
+                bodyHeight = (scrollBody.getRowHeight(true) * pageLength);
             }
+            boolean needsSpaceForHorizontalSrollbar = (total > availW);
+            if (needsSpaceForHorizontalSrollbar) {
+                bodyHeight += Util.getNativeScrollbarSize();
+            }
+            bodyContainer.setHeight(bodyHeight + "px");
+            Util.runWebkitOverflowAutoFix(bodyContainer.getElement());
         }
 
         isNewBody = false;
@@ -2804,6 +2809,21 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
                     setColWidth(colIndex, newSpace, false);
                 }
                 colIndex++;
+            }
+            if ((height == null || "".equals(height))
+                    && totalRows == pageLength) {
+                // fix body height (may vary if lazy loading is offhorizontal
+                // scrollbar appears/disappears)
+                int bodyHeight = scrollBody.getRequiredHeight();
+                boolean needsSpaceForHorizontalSrollbar = (availW < usedMinimumWidth);
+                if (needsSpaceForHorizontalSrollbar) {
+                    bodyHeight += Util.getNativeScrollbarSize();
+                }
+                int heightBefore = getOffsetHeight();
+                bodyContainer.setHeight(bodyHeight + "px");
+                if (heightBefore != getOffsetHeight()) {
+                    Util.notifyParentOfSizeChange(VScrollTable.this, false);
+                }
             }
             scrollBody.reLayoutComponents();
             DeferredCommand.addCommand(new Command() {
