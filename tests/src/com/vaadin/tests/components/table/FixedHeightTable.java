@@ -2,7 +2,6 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 public class FixedHeightTable extends TestBase {
@@ -15,23 +14,17 @@ public class FixedHeightTable extends TestBase {
     public void setup() {
 
         table = new Table();
-        table.addContainerProperty("test", TextField.class, null);
+        table.addContainerProperty("test", String.class, null);
         table.setSizeFull();
         // bug: settings rows to 16 or more => last line is not rendered at all
         // on the client-side.
         final int maxRows = 16;
         for (int i = 1; i <= maxRows; i++) {
-            final TextField tf = new TextField();
-            tf.setValue(i);
-            table.addItem(new Object[] { tf }, i);
+            table.addItem(new Object[] { "" + i }, i);
         }
 
-        VerticalLayout vl = new VerticalLayout();
-        vl.setHeight("400px");
-        vl.setWidth("300px");
-        vl.addComponent(table);
-
-        addComponent(vl);
+        getLayout().setHeight("400px");
+        addComponent(table);
     }
 
     @Override
