@@ -753,7 +753,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
                     if (lastInNewSet > totalRows - 1) {
                         lastInNewSet = totalRows - 1;
                     }
-                    rowRequestHandler.setReqRows(lastInNewSet - firstInNewSet);
+                    rowRequestHandler.setReqRows(lastInNewSet - firstInNewSet
+                            + 1);
                     rowRequestHandler.deferRowFetch(1);
                 }
             }
