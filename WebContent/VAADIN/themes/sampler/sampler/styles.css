@@ -332,14 +332,20 @@
 }
 
 .v-app-SamplerApplication .v-label-root-section em {
-	float: right;
-	margin-top: 12px;
+	position: absolute;
+	right: 20px;
+	margin-top: 11px;
+	padding: 2px 10px;
+	background: #fff;
 	font-style: normal;
 	color: #b4b8bc;
 	font-size: 11px;
 	font-weight: bold;
 	text-transform: uppercase;
 	letter-spacing: 0.02em;
+	border-radius: 8px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
 }
 
 .v-app-SamplerApplication .v-label-root-section h2 {
@@ -351,6 +357,7 @@
 	color: #1e2229;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	float: left;
 }
 .v-app-SamplerApplication .v-label-root-section span {
 	display: block;
