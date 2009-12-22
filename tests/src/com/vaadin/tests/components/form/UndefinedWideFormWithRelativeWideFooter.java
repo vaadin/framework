@@ -1,4 +1,4 @@
-package com.vaadin.tests.tickets;
+package com.vaadin.tests.components.form;
 
 import com.vaadin.Application;
 import com.vaadin.ui.Button;
@@ -8,7 +8,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
 @SuppressWarnings("serial")
-public class Ticket3710 extends Application {
+public class UndefinedWideFormWithRelativeWideFooter extends Application {
 
     @Override
     public void init() {
@@ -19,6 +19,8 @@ public class Ticket3710 extends Application {
         final Form f = new Form();
         w.addComponent(f);
         f.setSizeUndefined();
+        f.getLayout().setSizeUndefined();
+
         f.setCaption("Test form with a really long caption");
         f.addField("foo", new TextField("Foo"));
         f.addField("bar", new TextField("A bit longer field caption"));
@@ -30,5 +32,4 @@ public class Ticket3710 extends Application {
         hl.setComponentAlignment(b, "r");
         f.setFooter(hl);
     }
-
 }
