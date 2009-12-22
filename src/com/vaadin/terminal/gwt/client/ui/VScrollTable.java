@@ -2702,10 +2702,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
                 if (currentlyVisible < pageLength
                         && currentlyVisible < totalRows) {
                     // shake scrollpanel to fill empty space
-                    bodyContainer.setScrollPosition(bodyContainer
-                            .getScrollPosition() + 1);
-                    bodyContainer.setScrollPosition(bodyContainer
-                            .getScrollPosition() - 1);
+                    bodyContainer.setScrollPosition(scrollTop + 1);
+                    bodyContainer.setScrollPosition(scrollTop - 1);
                 }
             }
         }
@@ -2876,6 +2874,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
     }
 
     private int contentAreaBorderHeight = -1;
+    private int scrollLeft;
+    private int scrollTop;
 
     /**
      * @return border top + border bottom of the scrollable area of table
@@ -2954,8 +2954,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
      * user scrolls
      */
     public void onScroll(ScrollEvent event) {
-        int scrollLeft = bodyContainer.getElement().getScrollLeft();
-        int scrollTop = bodyContainer.getScrollPosition();
+        scrollLeft = bodyContainer.getElement().getScrollLeft();
+        scrollTop = bodyContainer.getScrollPosition();
         if (!initializedAndAttached) {
             return;
         }
@@ -2966,6 +2966,19 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
         }
 
         rowRequestHandler.cancel();
+
+        if (BrowserInfo.get().isSafari() && event != null && scrollTop == 0) {
+            // due to the webkitoverflowworkaround, top may sometimes report 0
+            // for webkit, although it really is not. Expecting to have the
+            // correct
+            // value available soon.
+            DeferredCommand.addCommand(new Command() {
+                public void execute() {
+                    onScroll(null);
+                }
+            });
+            return;
+        }
 
         // fix headers horizontal scrolling
         tHead.setHorizontalScrollPosition(scrollLeft);
