@@ -10,7 +10,7 @@
 	font-weight: bold;
 }
 /* A more specific selector to make sure padding isn't so easily overridden */
-.div.v-window-header {
+div.v-window-header {
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	-ms-text-overflow: ellipsis;
@@ -31,6 +31,9 @@
 /* Target Firefox 3 (it doesn't need any trickery, so revert the previous) */
 .v-window-contents, x:-moz-any-link, x:default {
 	overflow: visible;
+}
+.v-window-contents > div {
+	outline: none;
 }
 .v-window-footer {
 	overflow: hidden;
