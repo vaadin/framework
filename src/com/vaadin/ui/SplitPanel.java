@@ -284,7 +284,7 @@ public class SplitPanel extends AbstractLayout {
      *            the new size of the first region in percentage
      */
     public void setSplitPosition(int pos) {
-        setSplitPosition(pos, UNITS_PERCENTAGE);
+        setSplitPosition(pos, UNITS_PERCENTAGE, true);
     }
 
     /**
@@ -296,9 +296,27 @@ public class SplitPanel extends AbstractLayout {
      *            the unit (from {@link Sizeable}) in which the size is given.
      */
     public void setSplitPosition(int pos, int unit) {
+        setSplitPosition(pos, unit, true);
+    }
+
+    /**
+     * Moves the position of the splitter.
+     * 
+     * @param pos
+     *            the new size of the first region in percentage
+     * @param unit
+     *            the unit (from {@link Sizeable}) in which the size is given.
+     * @param repaintNotNeeded
+     *            true if client side needs to be updated. Use false if the
+     *            position info has come from the client side, thus it already
+     *            knows the position.
+     */
+    private void setSplitPosition(int pos, int unit, boolean repaintNeeded) {
         this.pos = pos;
         posUnit = unit;
-        requestRepaint();
+        if (repaintNeeded) {
+            requestRepaint();
+        }
     }
 
     /**
@@ -335,8 +353,8 @@ public class SplitPanel extends AbstractLayout {
 
         if (variables.containsKey("position") && !isLocked()) {
             Integer newPos = (Integer) variables.get("position");
-            // Client always sends pixel values
-            setSplitPosition(newPos, UNITS_PIXELS);
+            // Client always sends pixel values. Repaint is not needed.
+            setSplitPosition(newPos, UNITS_PIXELS, false);
         }
 
         if (variables.containsKey(SPLITTER_CLICK_EVENT)) {

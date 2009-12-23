@@ -434,7 +434,6 @@ public class VSplitPanel extends ComplexPanel implements Container,
             newX = getOffsetWidth() - getSplitterSize();
         }
         DOM.setStyleAttribute(splitter, "left", newX + "px");
-        updateSplitPosition(newX);
         if (origX != newX) {
             resized = true;
         }
@@ -450,7 +449,6 @@ public class VSplitPanel extends ComplexPanel implements Container,
             newY = getOffsetHeight() - getSplitterSize();
         }
         DOM.setStyleAttribute(splitter, "top", newY + "px");
-        updateSplitPosition(newY);
         if (origY != newY) {
             resized = true;
         }
@@ -463,6 +461,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
         }
         resizing = false;
         onMouseMove(event);
+        updateSplitPositionToServer();
     }
 
     /**
@@ -593,12 +592,14 @@ public class VSplitPanel extends ComplexPanel implements Container,
 
     /**
      * Updates the new split position back to server.
-     * 
-     * @param pos
-     *            The new position of the split handle.
      */
-    private void updateSplitPosition(int pos) {
+    private void updateSplitPositionToServer() {
         // We always send pixel values to server
+        final String position = orientation == ORIENTATION_HORIZONTAL ? splitter
+                .getStyle().getProperty("left")
+                : splitter.getStyle().getProperty("top");
+        final int pos = Integer.parseInt(position.substring(0, position
+                .length() - 2));
         client.updateVariable(id, "position", pos, immediate);
     }
 
