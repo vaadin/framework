@@ -194,6 +194,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
                 : CACHE_RATE_DEFAULT);
 
         recalcWidths = uidl.hasAttribute("recalcWidths");
+        if (recalcWidths) {
+            tHead.clear();
+        }
 
         if (uidl.hasAttribute("pagelength")) {
             pageLength = uidl.getIntAttribute("pagelength");
