@@ -647,13 +647,15 @@ div.v-app-loading {
 
 .v-menubar {
 	float: left; /* Force minimum width */
-	overflow: hidden;
+	white-space: nowrap;
 }
 .v-menubar .v-menubar-menuitem {
 	cursor: default;
 	vertical-align: middle;
 	white-space: nowrap;
-	float: left;
+	display: inline;
+	display: inline-block;
+	zoom: 1;
 }
 .v-menubar .v-menubar-menuitem-caption * {
 	vertical-align: middle;
@@ -668,6 +670,7 @@ div.v-app-loading {
 }
 .v-menubar-submenu .v-menubar-menuitem { 
 	cursor: default;
+	display: block;
 	position: relative;
 	padding-right: 1.5em;
 }
@@ -3101,7 +3104,6 @@ td.v-datefield-calendarpanel-nextyear {
 
 .v-menubar {
 	height: 23px;
-	overflow: hidden;
 	background: #323336 repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
