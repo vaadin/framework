@@ -1473,6 +1473,11 @@ public class ApplicationConnection {
             }
         }
 
+        if (configuration.useDebugIdInDOM() && uidl.getId().startsWith("PID_S")) {
+            DOM.setElementProperty(component.getElement(), "id", uidl.getId()
+                    .substring(5));
+        }
+
         if (!visible) {
             // component is invisible, delete old size to notify parent, if
             // later make visible
@@ -1574,12 +1579,6 @@ public class ApplicationConnection {
                 parent.updateCaption((Paintable) component, uidl);
             }
         }
-
-        if (configuration.useDebugIdInDOM() && uidl.getId().startsWith("PID_S")) {
-            DOM.setElementProperty(component.getElement(), "id", uidl.getId()
-                    .substring(5));
-        }
-
         /*
          * updateComponentSize need to be after caption update so caption can be
          * taken into account
