@@ -693,10 +693,9 @@ public class ApplicationConnection {
             return;
         }
 
-        ApplicationConnection.getConsole()
-                .log(
-                        "JSON parsing took "
-                                + (new Date().getTime() - start.getTime()));
+        ApplicationConnection.getConsole().log(
+                "JSON parsing took " + (new Date().getTime() - start.getTime())
+                        + "ms");
         // Handle redirect
         if (json.containsKey("redirect")) {
             String url = json.getValueMap("redirect").getString("url");
