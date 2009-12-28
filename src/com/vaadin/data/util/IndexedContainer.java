@@ -63,7 +63,7 @@ public class IndexedContainer implements Container.Indexed,
     /**
      * Linked list of ordered Property IDs.
      */
-    private ArrayList propertyIds = new ArrayList();
+    private ArrayList<Object> propertyIds = new ArrayList<Object>();
 
     /**
      * Property ID to type mapping.

@@ -44,6 +44,7 @@ import com.vaadin.ui.Window;
  * @author IT Mill Ltd.
  * 
  */
+@SuppressWarnings("unchecked")
 public class BasicRandomTest extends com.vaadin.Application implements
         Button.ClickListener {
 
@@ -340,8 +341,7 @@ public class BasicRandomTest extends com.vaadin.Application implements
      * ErrorEvents are printed to default error stream and not in GUI.
      */
     @Override
-    public void terminalError(
-            com.vaadin.terminal.Terminal.ErrorEvent event) {
+    public void terminalError(com.vaadin.terminal.Terminal.ErrorEvent event) {
         final Throwable e = event.getThrowable();
         System.err.println(getUser().toString() + " terminalError: "
                 + e.toString());

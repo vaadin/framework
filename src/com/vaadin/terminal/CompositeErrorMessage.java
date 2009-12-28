@@ -24,7 +24,7 @@ public class CompositeErrorMessage implements ErrorMessage, Serializable {
     /**
      * Array of all the errors.
      */
-    private final List errors;
+    private final List<ErrorMessage> errors;
 
     /**
      * Level of the error.
@@ -39,7 +39,7 @@ public class CompositeErrorMessage implements ErrorMessage, Serializable {
      *            ignored, but at least one message is required.
      */
     public CompositeErrorMessage(ErrorMessage[] errorMessages) {
-        errors = new ArrayList(errorMessages.length);
+        errors = new ArrayList<ErrorMessage>(errorMessages.length);
         level = Integer.MIN_VALUE;
 
         for (int i = 0; i < errorMessages.length; i++) {
@@ -60,12 +60,13 @@ public class CompositeErrorMessage implements ErrorMessage, Serializable {
      *            the Collection of error messages that are listed togeter. At
      *            least one message is required.
      */
-    public CompositeErrorMessage(Collection errorMessages) {
-        errors = new ArrayList(errorMessages.size());
+    public CompositeErrorMessage(Collection<ErrorMessage> errorMessages) {
+        errors = new ArrayList<ErrorMessage>(errorMessages.size());
         level = Integer.MIN_VALUE;
 
-        for (final Iterator i = errorMessages.iterator(); i.hasNext();) {
-            addErrorMessage((ErrorMessage) i.next());
+        for (final Iterator<ErrorMessage> i = errorMessages.iterator(); i
+                .hasNext();) {
+            addErrorMessage(i.next());
         }
 
         if (errors.size() == 0) {
@@ -105,7 +106,7 @@ public class CompositeErrorMessage implements ErrorMessage, Serializable {
      * 
      * @return the error iterator.
      */
-    public Iterator iterator() {
+    public Iterator<ErrorMessage> iterator() {
         return errors.iterator();
     }
 
@@ -115,7 +116,7 @@ public class CompositeErrorMessage implements ErrorMessage, Serializable {
     public void paint(PaintTarget target) throws PaintException {
 
         if (errors.size() == 1) {
-            ((ErrorMessage) errors.iterator().next()).paint(target);
+            (errors.iterator().next()).paint(target);
         } else {
             target.startTag("error");
 
@@ -132,8 +133,9 @@ public class CompositeErrorMessage implements ErrorMessage, Serializable {
             }
 
             // Paint all the exceptions
-            for (final Iterator i = errors.iterator(); i.hasNext();) {
-                ((ErrorMessage) i.next()).paint(target);
+            for (final Iterator<ErrorMessage> i = errors.iterator(); i
+                    .hasNext();) {
+                i.next().paint(target);
             }
 
             target.endTag("error");
@@ -165,7 +167,7 @@ public class CompositeErrorMessage implements ErrorMessage, Serializable {
     public String toString() {
         String retval = "[";
         int pos = 0;
-        for (final Iterator i = errors.iterator(); i.hasNext();) {
+        for (final Iterator<ErrorMessage> i = errors.iterator(); i.hasNext();) {
             if (pos > 0) {
                 retval += ",";
             }

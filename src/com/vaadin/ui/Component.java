@@ -308,13 +308,15 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
      *            and pass it forwards. Null parameter is interpreted as empty
      *            collection.
      */
-    public void childRequestedRepaint(Collection alreadyNotified);
+    public void childRequestedRepaint(
+            Collection<RepaintRequestListener> alreadyNotified);
 
     /* Component event framework */
 
     /**
      * Superclass of all component originated <code>Event</code>s.
      */
+    @SuppressWarnings("serial")
     public class Event extends EventObject {
 
         /**

@@ -119,7 +119,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     /**
      * List of repaint request listeners or null if not listened at all.
      */
-    private LinkedList repaintRequestListeners = null;
+    private LinkedList<RepaintRequestListener> repaintRequestListeners = null;
 
     /**
      * Are all the repaint listeners notified about recent changes ?
@@ -763,7 +763,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     }
 
     /* Documentation copied from interface */
-    public void childRequestedRepaint(Collection alreadyNotified) {
+    public void childRequestedRepaint(
+            Collection<RepaintRequestListener> alreadyNotified) {
         // Invisible components (by flag in this particular component) do not
         // need repaints
         if (!visible) {
@@ -778,7 +779,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * 
      * @param alreadyNotified
      */
-    private void fireRequestRepaintEvent(Collection alreadyNotified) {
+    private void fireRequestRepaintEvent(
+            Collection<RepaintRequestListener> alreadyNotified) {
         // Notify listeners only once
         if (!repaintRequestListenersNotified) {
             // Notify the listeners
@@ -788,12 +790,13 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
                 final RepaintRequestEvent event = new RepaintRequestEvent(this);
                 for (int i = 0; i < listeners.length; i++) {
                     if (alreadyNotified == null) {
-                        alreadyNotified = new LinkedList();
+                        alreadyNotified = new LinkedList<RepaintRequestListener>();
                     }
                     if (!alreadyNotified.contains(listeners[i])) {
                         ((RepaintRequestListener) listeners[i])
                                 .repaintRequested(event);
-                        alreadyNotified.add(listeners[i]);
+                        alreadyNotified
+                                .add((RepaintRequestListener) listeners[i]);
                         repaintRequestListenersNotified = true;
                     }
                 }
@@ -810,7 +813,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     /* Documentation copied from interface */
     public void addListener(RepaintRequestListener listener) {
         if (repaintRequestListeners == null) {
-            repaintRequestListeners = new LinkedList();
+            repaintRequestListeners = new LinkedList<RepaintRequestListener>();
         }
         if (!repaintRequestListeners.contains(listener)) {
             repaintRequestListeners.add(listener);

@@ -62,7 +62,7 @@ public class FilesystemContainer implements Container.Hierarchical {
     /**
      * List of the string identifiers for the available properties.
      */
-    public static Collection FILE_PROPERTIES;
+    public static Collection<String> FILE_PROPERTIES;
 
     private final static Method FILEITEM_LASTMODIFIED;
 
@@ -74,7 +74,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 
     static {
 
-        FILE_PROPERTIES = new ArrayList();
+        FILE_PROPERTIES = new ArrayList<String>();
         FILE_PROPERTIES.add(PROPERTY_NAME);
         FILE_PROPERTIES.add(PROPERTY_ICON);
         FILE_PROPERTIES.add(PROPERTY_SIZE);
@@ -201,10 +201,10 @@ public class FilesystemContainer implements Container.Hierarchical {
      * add a JavaDoc comment here, we use the default documentation from
      * implemented interface.
      */
-    public Collection getChildren(Object itemId) {
+    public Collection<File> getChildren(Object itemId) {
 
         if (!(itemId instanceof File)) {
-            return Collections.unmodifiableCollection(new LinkedList());
+            return Collections.unmodifiableCollection(new LinkedList<File>());
         }
         File[] f;
         if (filter != null) {
@@ -214,10 +214,10 @@ public class FilesystemContainer implements Container.Hierarchical {
         }
 
         if (f == null) {
-            return Collections.unmodifiableCollection(new LinkedList());
+            return Collections.unmodifiableCollection(new LinkedList<File>());
         }
 
-        final List l = Arrays.asList(f);
+        final List<File> l = Arrays.asList(f);
         Collections.sort(l);
 
         return Collections.unmodifiableCollection(l);
@@ -276,7 +276,7 @@ public class FilesystemContainer implements Container.Hierarchical {
      * comment here, we use the default documentation from implemented
      * interface.
      */
-    public Collection rootItemIds() {
+    public Collection<File> rootItemIds() {
 
         File[] f;
 
@@ -292,10 +292,10 @@ public class FilesystemContainer implements Container.Hierarchical {
         }
 
         if (f == null) {
-            return Collections.unmodifiableCollection(new LinkedList());
+            return Collections.unmodifiableCollection(new LinkedList<File>());
         }
 
-        final List l = Arrays.asList(f);
+        final List<File> l = Arrays.asList(f);
         Collections.sort(l);
 
         return Collections.unmodifiableCollection(l);
@@ -392,18 +392,18 @@ public class FilesystemContainer implements Container.Hierarchical {
      * @param f
      *            the root file where to start adding files
      */
-    private void addItemIds(Collection col, File f) {
+    private void addItemIds(Collection<File> col, File f) {
         File[] l;
         if (filter != null) {
             l = f.listFiles(filter);
         } else {
             l = f.listFiles();
         }
-        final List ll = Arrays.asList(l);
+        final List<File> ll = Arrays.asList(l);
         Collections.sort(ll);
 
-        for (final Iterator i = ll.iterator(); i.hasNext();) {
-            final File lf = (File) i.next();
+        for (final Iterator<File> i = ll.iterator(); i.hasNext();) {
+            final File lf = i.next();
             if (lf.isDirectory()) {
                 addItemIds(col, lf);
             } else {
@@ -416,10 +416,10 @@ public class FilesystemContainer implements Container.Hierarchical {
      * Gets the IDs of Items in the filesystem. Don't add a JavaDoc comment
      * here, we use the default documentation from implemented interface.
      */
-    public Collection getItemIds() {
+    public Collection<File> getItemIds() {
 
         if (recursive) {
-            final Collection col = new ArrayList();
+            final Collection<File> col = new ArrayList<File>();
             for (int i = 0; i < roots.length; i++) {
                 addItemIds(col, roots[i]);
             }
@@ -437,10 +437,11 @@ public class FilesystemContainer implements Container.Hierarchical {
             }
 
             if (f == null) {
-                return Collections.unmodifiableCollection(new LinkedList());
+                return Collections
+                        .unmodifiableCollection(new LinkedList<File>());
             }
 
-            final List l = Arrays.asList(f);
+            final List<File> l = Arrays.asList(f);
             Collections.sort(l);
             return Collections.unmodifiableCollection(l);
         }
@@ -492,7 +493,7 @@ public class FilesystemContainer implements Container.Hierarchical {
      * 
      * @return Unmodifiable collection containing all available file properties.
      */
-    public Collection getContainerPropertyIds() {
+    public Collection<String> getContainerPropertyIds() {
         return FILE_PROPERTIES;
     }
 
@@ -505,7 +506,7 @@ public class FilesystemContainer implements Container.Hierarchical {
      *            the ID of the property whose type is requested.
      * @return data type of the requested property, or <code>null</code>
      */
-    public Class getType(Object propertyId) {
+    public Class<?> getType(Object propertyId) {
 
         if (propertyId.equals(PROPERTY_NAME)) {
             return String.class;
@@ -617,7 +618,7 @@ public class FilesystemContainer implements Container.Hierarchical {
          * JavaDoc comment here, we use the default documentation from
          * implemented interface.
          */
-        public Collection getItemPropertyIds() {
+        public Collection<String> getItemPropertyIds() {
             return getContainerPropertyIds();
         }
 
