@@ -91,6 +91,11 @@ public class VTooltip extends VOverlay {
                     if (y + offsetHeight + MARGIN - Window.getScrollTop() > Window
                             .getClientHeight()) {
                         y = tooltipEventMouseY - 5 - offsetHeight;
+                        if (y - Window.getScrollTop() < 0) {
+                            // tooltip does not fit on top of the mouse either,
+                            // put it at the top of the screen
+                            y = Window.getScrollTop();
+                        }
                     }
 
                     setPopupPosition(x, y);
