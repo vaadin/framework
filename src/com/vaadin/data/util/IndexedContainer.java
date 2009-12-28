@@ -362,6 +362,9 @@ public class IndexedContainer implements Container.Indexed,
      * @see com.vaadin.data.Container#removeItem(java.lang.Object)
      */
     public boolean removeItem(Object itemId) {
+        if (itemId == null) {
+            return false;
+        }
 
         if (items.remove(itemId) == null) {
             return false;
