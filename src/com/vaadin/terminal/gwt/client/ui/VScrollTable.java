@@ -2913,6 +2913,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
         if (initializedAndAttached) {
             updatePageLength();
         }
+        if (!rendering) {
+            // Webkit may sometimes get an odd rendering bug (white space
+            // between header and body), see bug #3875. Running
+            // overflow hack here to shake body element a bit.
+            Util.runWebkitOverflowAutoFix(bodyContainer.getElement());
+        }
     }
 
     /*
