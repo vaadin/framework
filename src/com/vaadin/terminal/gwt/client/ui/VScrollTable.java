@@ -209,8 +209,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
         if (firstvisible != lastRequestedFirstvisible && scrollBody != null) {
             // received 'surprising' firstvisible from server: scroll there
             firstRowInViewPort = firstvisible;
-            bodyContainer.setScrollPosition(firstvisible
-                    * scrollBody.getRowHeight());
+            bodyContainer.setScrollPosition((int) (firstvisible * scrollBody
+                    .getRowHeight()));
         }
 
         showRowHeaders = uidl.getBooleanAttribute("rowheaders");
@@ -724,7 +724,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
                 // int bodyHeight = scrollBody.getOffsetHeight();
                 bodyHeight = scrollBody.getRequiredHeight();
             } else {
-                bodyHeight = (scrollBody.getRowHeight(true) * pageLength);
+                bodyHeight = (int) Math.ceil(scrollBody.getRowHeight(true)
+                        * pageLength);
             }
             boolean needsSpaceForHorizontalSrollbar = (total > availW);
             if (needsSpaceForHorizontalSrollbar) {
@@ -741,8 +742,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
             // without
             DeferredCommand.addCommand(new Command() {
                 public void execute() {
-                    bodyContainer.setScrollPosition(firstvisible
-                            * scrollBody.getRowHeight());
+                    bodyContainer
+                            .setScrollPosition((int) (firstvisible * scrollBody
+                                    .getRowHeight()));
                     firstRowInViewPort = firstvisible;
                 }
             });
@@ -781,7 +783,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
                 return true;
             }
         } else {
-            int fakeheight = scrollBody.getRowHeight() * totalRows;
+            int fakeheight = (int) Math.ceil(scrollBody.getRowHeight()
+                    * totalRows);
             int availableHeight = bodyContainer.getElement().getPropertyInt(
                     "clientHeight");
             if (fakeheight > availableHeight) {
@@ -1766,7 +1769,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
 
         public static final int DEFAULT_ROW_HEIGHT = 24;
 
-        private int rowHeight = -1;
+        private double rowHeight = -1;
 
         private final List<Widget> renderedRows = new ArrayList<Widget>();
 
@@ -1897,7 +1900,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
             if (lastRendered < reactLastRow) {
                 // get some cache rows below visible area
                 rowRequestHandler.setReqFirstRow(lastRendered + 1);
-                rowRequestHandler.setReqRows(reactLastRow - lastRendered - 1);
+                rowRequestHandler.setReqRows(reactLastRow - lastRendered);
                 rowRequestHandler.deferRowFetch(1);
             } else if (scrollBody.getFirstRendered() > reactFirstRow) {
                 /*
@@ -2032,23 +2035,23 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
         }
 
         private void fixSpacers() {
-            int prepx = getRowHeight() * firstRendered;
+            int prepx = (int) Math.round(getRowHeight() * firstRendered);
             if (prepx < 0) {
                 prepx = 0;
             }
-            DOM.setStyleAttribute(preSpacer, "height", prepx + "px");
-            int postpx = getRowHeight() * (totalRows - 1 - lastRendered);
+            preSpacer.getStyle().setPropertyPx("height", prepx);
+            int postpx = (int) (getRowHeight() * (totalRows - 1 - lastRendered));
             if (postpx < 0) {
                 postpx = 0;
             }
-            DOM.setStyleAttribute(postSpacer, "height", postpx + "px");
+            postSpacer.getStyle().setPropertyPx("height", postpx);
         }
 
-        public int getRowHeight() {
+        public double getRowHeight() {
             return getRowHeight(false);
         }
 
-        public int getRowHeight(boolean forceUpdate) {
+        public double getRowHeight(boolean forceUpdate) {
             if (tBodyMeasurementsDone && !forceUpdate) {
                 return rowHeight;
             } else {
@@ -2056,7 +2059,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
                 if (tBodyElement.getRows().getLength() > 0) {
                     int tableHeight = getTableHeight();
                     int rowCount = tBodyElement.getRows().getLength();
-                    rowHeight = tableHeight / rowCount;
+                    rowHeight = tableHeight / (double) rowCount;
                 } else {
                     if (isAttached()) {
                         // measure row height by adding a dummy row
@@ -2611,7 +2614,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
                 return new RenderSpace(w, 0) {
                     @Override
                     public int getHeight() {
-                        return getRowHeight();
+                        return (int) getRowHeight();
                     }
                 };
             }
@@ -2688,7 +2691,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
             return;
         }
 
-        int rowHeight = scrollBody.getRowHeight();
+        int rowHeight = (int) scrollBody.getRowHeight();
         int bodyH = bodyContainer.getOffsetHeight();
         int rowsAtOnce = bodyH / rowHeight;
         boolean anotherPartlyVisible = ((bodyH % rowHeight) != 0);
@@ -2925,8 +2928,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
                 if (visible) {
                     DeferredCommand.addCommand(new Command() {
                         public void execute() {
-                            bodyContainer.setScrollPosition(firstRowInViewPort
-                                    * scrollBody.getRowHeight());
+                            bodyContainer
+                                    .setScrollPosition((int) (firstRowInViewPort * scrollBody
+                                            .getRowHeight()));
                         }
                     });
                 }
@@ -2963,8 +2967,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
             return;
         }
         if (!enabled) {
-            bodyContainer.setScrollPosition(firstRowInViewPort
-                    * scrollBody.getRowHeight());
+            bodyContainer
+                    .setScrollPosition((int) (firstRowInViewPort * scrollBody
+                            .getRowHeight()));
             return;
         }
 
@@ -2987,7 +2992,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
         tHead.setHorizontalScrollPosition(scrollLeft);
 
         firstRowInViewPort = (int) Math.ceil(scrollTop
-                / (double) scrollBody.getRowHeight());
+                / scrollBody.getRowHeight());
         if (firstRowInViewPort > totalRows - pageLength) {
             firstRowInViewPort = totalRows - pageLength;
         }
