@@ -57,15 +57,16 @@ public class CompositeErrorMessage implements ErrorMessage, Serializable {
      * Constructor for CompositeErrorMessage.
      * 
      * @param errorMessages
-     *            the Collection of error messages that are listed togeter. At
+     *            the Collection of error messages that are listed together. At
      *            least one message is required.
      */
-    public CompositeErrorMessage(Collection<ErrorMessage> errorMessages) {
+    public CompositeErrorMessage(
+            Collection<? extends ErrorMessage> errorMessages) {
         errors = new ArrayList<ErrorMessage>(errorMessages.size());
         level = Integer.MIN_VALUE;
 
-        for (final Iterator<ErrorMessage> i = errorMessages.iterator(); i
-                .hasNext();) {
+        for (final Iterator<? extends ErrorMessage> i = errorMessages
+                .iterator(); i.hasNext();) {
             addErrorMessage(i.next());
         }
 
