@@ -135,15 +135,24 @@
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-jboss-5.0.1" />
 	</target>
 	
-	<target name="start-glassfish">
+	<target name="start-glassfish2">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-glassfish-2.1.1" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-glassfish-2.1.1-sampler.html" overwrite="true" />
 	</target>
 	
-	<target name="stop-glassfish">
+	<target name="stop-glassfish2">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-glassfish-2.1.1" />
 	</target>
 	
+	<target name="start-glassfish3">
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-glassfish-3" />
+		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-glassfish-3-sampler.html" overwrite="true" />
+	</target>
+	
+	<target name="stop-glassfish3">
+		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-glassfish-3" />
+	</target>
+			
 	<!-- Test liferay sampler -->
 	<target name="test-liferay">
 		<fileset dir="integration-testscripts" id="html-test-files" includes="integration-test-liferay-5.2.3-sampler.html" />
@@ -312,12 +321,20 @@
 		<antcall target="stop-jboss-5"/>
 	</target>
 		
-	<target name="glassfish">
-		<antcall target="start-glassfish"/>
+	<target name="glassfish2">
+		<antcall target="start-glassfish2"/>
 		<antcall target="test-sampler">
 			<param name="server-name" value="glassfish-2.1.1" />
 		</antcall>
-		<antcall target="stop-glassfish"/>
+		<antcall target="stop-glassfish2"/>
+	</target>
+	
+	<target name="glassfish3">
+		<antcall target="start-glassfish3"/>
+		<antcall target="test-sampler">
+			<param name="server-name" value="glassfish-3" />
+		</antcall>
+		<antcall target="stop-glassfish3"/>
 	</target>
 	
 	<target name="liferay">
@@ -365,7 +382,8 @@
 				<antcall target="jboss3" />
 				<antcall target="jboss4" />
 				<antcall target="jboss5" />
-				<antcall target="glassfish" />
+				<antcall target="glassfish2" />
+				<antcall target="glassfish3" />
 				<antcall target="liferay" />
 				<antcall target="weblogic9" />
 				<antcall target="weblogic10" />
