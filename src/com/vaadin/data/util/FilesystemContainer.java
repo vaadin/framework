@@ -32,10 +32,6 @@ import com.vaadin.terminal.Resource;
  * @VERSION@
  * @since 3.0
  */
-/**
- * @author mattitahvonen
- * 
- */
 @SuppressWarnings("serial")
 public class FilesystemContainer implements Container.Hierarchical {
 
@@ -404,10 +400,9 @@ public class FilesystemContainer implements Container.Hierarchical {
 
         for (final Iterator i = ll.iterator(); i.hasNext();) {
             final File lf = (File) i.next();
+            col.add(lf);
             if (lf.isDirectory()) {
                 addItemIds(col, lf);
-            } else {
-                col.add(lf);
             }
         }
     }
