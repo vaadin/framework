@@ -22,5 +22,6 @@
 				<portlet id="InterPortletEventPortlet" />
 				<portlet id="VaadinInterPortletEventPortlet" />
 				-->
+                <portlet id="Portlet Mode Example"/>
         </category>
 </display>

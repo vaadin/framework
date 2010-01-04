@@ -13,6 +13,8 @@ import javax.portlet.ActionResponse;
 import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
 import javax.portlet.MimeResponse;
+import javax.portlet.PortletMode;
+import javax.portlet.PortletModeException;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
 import javax.portlet.PortletURL;
@@ -349,6 +351,33 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
         } else {
             throw new IllegalStateException(
                     "Shared parameters can only be set from a portlet request");
+        }
+    }
+
+    /**
+     * Sets the portlet mode. This may trigger a new render request.
+     *
+     * Portlet modes used by a portlet need to be declared in portlet.xml .
+     *
+     * @param window
+     *            a window in which the render URL can be opened if necessary
+     * @param portletMode
+     *            the portlet mode to switch to
+     * @throws PortletModeException
+     *             if the portlet mode is not allowed for some reason
+     *             (configuration, permissions etc.)
+     */
+    public void setPortletMode(Window window, PortletMode portletMode)
+            throws IllegalStateException, PortletModeException {
+        if (response instanceof MimeResponse) {
+            PortletURL url = ((MimeResponse) response).createRenderURL();
+            url.setPortletMode(portletMode);
+            window.open(new ExternalResource(url.toString()));
+        } else if (response instanceof StateAwareResponse) {
+            ((StateAwareResponse) response).setPortletMode(portletMode);
+        } else {
+            throw new IllegalStateException(
+                    "Portlet mode can only be changed from a portlet request");
         }
     }
 }

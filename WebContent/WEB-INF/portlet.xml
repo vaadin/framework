@@ -201,7 +201,27 @@
 		</supported-publishing-event>
 		<supported-public-render-parameter>HelloState</supported-public-render-parameter>		
 	</portlet>
-	-->
+    -->
+    <portlet>
+        <portlet-name>Portlet Mode Example</portlet-name>
+        <display-name>Portlet Mode Example</display-name>
+        <portlet-class>com.vaadin.demo.portlet.PortletModePortlet</portlet-class>
+        <init-param>
+            <name>widgetset</name>
+            <value>com.vaadin.portal.gwt.PortalDefaultWidgetSet</value>
+        </init-param>
+        <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>view</portlet-mode>
+            <portlet-mode>edit</portlet-mode>
+            <portlet-mode>help</portlet-mode>
+            <portlet-mode>config</portlet-mode>
+        </supports>
+        <portlet-info>
+            <title>PortletModeExample</title>
+            <short-title>PortletModeExample</short-title>
+        </portlet-info>
+    </portlet>
 
 	<portlet>
 		<portlet-name>AddressBookPortlet</portlet-name>
@@ -342,6 +362,13 @@
 		</security-role-ref>
 	</portlet>
 	
+	<!-- Used by the Portlet mode demo -->
+    <custom-portlet-mode>
+        <description>Custom mode</description>
+        <portlet-mode>config</portlet-mode>
+        <portal-managed>false</portal-managed>
+    </custom-portlet-mode>
+
 	<!--
 		These can be used to customize the event object types.
 		The types must be serializable and have JAXB binding.

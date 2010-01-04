@@ -28,10 +28,12 @@ import javax.portlet.PortalContext;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletException;
+import javax.portlet.PortletMode;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
 import javax.portlet.PortletURL;
+import javax.portlet.RenderMode;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
@@ -424,7 +426,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                     /*
                      * Always use the main window when running inside a portlet.
                      */
-                    Window window = application.getMainWindow();
+                    Window window = getPortletWindow(request, application);
                     if (window == null) {
                         throw new PortletException(ERROR_NO_WINDOW_FOUND);
                     }
@@ -490,6 +492,34 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 }
             }
         }
+    }
+
+    /**
+     * Returns a window for a portlet mode. By default, the main window is
+     * returned. To use different portlet modes in a portlet, register windows
+     * named after the portlet modes in the application.
+     *
+     * Alternatively, a PortletListener can change the main window content.
+     *
+     * The window name requested from the application
+     *
+     * @param request
+     * @param application
+     * @return Window to show in the portlet
+     */
+    protected Window getPortletWindow(PortletRequest request,
+            Application application) {
+        PortletMode mode = request.getPortletMode();
+        if (PortletMode.VIEW.equals(mode)) {
+            return application.getMainWindow();
+        } else {
+            Window window = application.getWindow(mode.toString());
+            if (window != null) {
+                return window;
+            }
+        }
+        // no specific window found
+        return application.getMainWindow();
     }
 
     private void updateBrowserProperties(WebBrowser browser,
@@ -624,8 +654,51 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         handleRequest(request, response);
     }
 
+    /**
+     * Handles a request for the "view" (default) portlet mode. In Vaadin, the
+     * basic portlet modes ("view", "edit" and "help") are handled identically,
+     * and their behavior can be changed by registering windows in the
+     * application with window names identical to the portlet mode names.
+     * Alternatively, a PortletListener can change the application main window
+     * contents.
+     *
+     * To implement custom portlet modes, subclass the portlet class and
+     * implement a method annotated with {@link RenderMode} for the custom mode,
+     * calling {@link #handleRequest(PortletRequest, PortletResponse)} directly
+     * from it.
+     *
+     * Note that the portlet class in the portlet configuration needs to be
+     * changed when overriding methods of this class.
+     *
+     * @param request
+     * @param response
+     * @throws PortletException
+     * @throws IOException
+     */
     @Override
     protected void doView(RenderRequest request, RenderResponse response)
+            throws PortletException, IOException {
+        handleRequest(request, response);
+    }
+
+    /**
+     * Handle a request for the "edit" portlet mode.
+     *
+     * @see #doView(RenderRequest, RenderResponse)
+     */
+    @Override
+    protected void doEdit(RenderRequest request, RenderResponse response)
+            throws PortletException, IOException {
+        handleRequest(request, response);
+    }
+
+    /**
+     * Handle a request for the "help" portlet mode.
+     *
+     * @see #doView(RenderRequest, RenderResponse)
+     */
+    @Override
+    protected void doHelp(RenderRequest request, RenderResponse response)
             throws PortletException, IOException {
         handleRequest(request, response);
     }
