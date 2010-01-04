@@ -295,7 +295,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
                     .getIntAttribute("firstrow"), uidl.getIntAttribute("rows"));
             bodyContainer.add(scrollBody);
             initialContentReceived = true;
+            ApplicationConnection.getConsole().log("foo");
             if (isAttached()) {
+                ApplicationConnection.getConsole().log("bar");
                 sizeInit();
             }
             scrollBody.restoreRowVisibility();
@@ -724,7 +726,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
                 // int bodyHeight = scrollBody.getOffsetHeight();
                 bodyHeight = scrollBody.getRequiredHeight();
             } else {
-                bodyHeight = (int) Math.ceil(scrollBody.getRowHeight(true)
+                bodyHeight = (int) Math.round(scrollBody.getRowHeight(true)
                         * pageLength);
             }
             boolean needsSpaceForHorizontalSrollbar = (total > availW);
@@ -783,7 +785,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
                 return true;
             }
         } else {
-            int fakeheight = (int) Math.ceil(scrollBody.getRowHeight()
+            int fakeheight = (int) Math.round(scrollBody.getRowHeight()
                     * totalRows);
             int availableHeight = bodyContainer.getElement().getPropertyInt(
                     "clientHeight");
@@ -1898,11 +1900,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
                 reactLastRow = totalRows - 1;
             }
             if (lastRendered < reactLastRow) {
+                ApplicationConnection.getConsole().log("GET BELOW");
                 // get some cache rows below visible area
                 rowRequestHandler.setReqFirstRow(lastRendered + 1);
                 rowRequestHandler.setReqRows(reactLastRow - lastRendered);
                 rowRequestHandler.deferRowFetch(1);
             } else if (scrollBody.getFirstRendered() > reactFirstRow) {
+                ApplicationConnection.getConsole().log("GET ABOVE");
                 /*
                  * Branch for fetching cache above visible area.
                  * 
