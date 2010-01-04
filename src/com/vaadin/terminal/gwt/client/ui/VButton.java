@@ -394,6 +394,10 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler {
                 int w = Integer
                         .parseInt(width.substring(0, width.length() - 2));
                 w -= getHorizontalBorderAndPaddingWidth(getElement());
+                if (w < 0) {
+                    // validity check for IE
+                    w = 0;
+                }
                 width = w + "px";
             }
         }
