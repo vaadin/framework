@@ -787,7 +787,21 @@ public class VMenuBar extends Widget implements Paintable,
                 paddingWidth = widthBefore - getElement().getClientWidth();
                 getElement().getStyle().setProperty("padding", "");
             }
+            String overflow = "";
+            if (BrowserInfo.get().isIE6()) {
+                // IE6 cannot measure available width correctly without
+                // overflow:hidden
+                overflow = getElement().getStyle().getProperty("overflow");
+                getElement().getStyle().setProperty("overflow", "hidden");
+            }
+
             int availableWidth = getElement().getClientWidth() - paddingWidth;
+
+            if (BrowserInfo.get().isIE6()) {
+                // IE6 cannot measure available width correctly without
+                // overflow:hidden
+                getElement().getStyle().setProperty("overflow", overflow);
+            }
             int diff = availableWidth - getConsumedWidth();
 
             removeItem(moreItem);
