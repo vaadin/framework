@@ -495,28 +495,22 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     }
 
     /**
-     * Returns a window for a portlet mode. By default, the main window is
-     * returned. To use different portlet modes in a portlet, register windows
-     * named after the portlet modes in the application.
-     *
+     * Returns a window for a portlet mode. To define custom content for a
+     * portlet mode, add (in the application) a window whose name matches the
+     * portlet mode name. By default, the main window is returned.
+     * 
      * Alternatively, a PortletListener can change the main window content.
-     *
-     * The window name requested from the application
-     *
+     * 
      * @param request
      * @param application
-     * @return Window to show in the portlet
+     * @return Window to show in the portlet for the given portlet mode
      */
     protected Window getPortletWindow(PortletRequest request,
             Application application) {
         PortletMode mode = request.getPortletMode();
-        if (PortletMode.VIEW.equals(mode)) {
-            return application.getMainWindow();
-        } else {
-            Window window = application.getWindow(mode.toString());
-            if (window != null) {
-                return window;
-            }
+        Window window = application.getWindow(mode.toString());
+        if (window != null) {
+            return window;
         }
         // no specific window found
         return application.getMainWindow();
