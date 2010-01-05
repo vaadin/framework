@@ -7,7 +7,6 @@ import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.MenuBar.MenuItem;
@@ -57,17 +56,6 @@ public class Menubars extends ComponentTestCase {
 
         addTestComponent(m);
 
-    }
-
-    private Component createActionLayout() {
-        HorizontalLayout actionLayout = new HorizontalLayout();
-        actionLayout.setSpacing(true);
-        actionLayout.setMargin(true);
-        for (Component c : createActions()) {
-            actionLayout.addComponent(c);
-        }
-        addComponent(actionLayout);
-        return actionLayout;
     }
 
     private MenuBar createMenuBar(String text, int items) {
