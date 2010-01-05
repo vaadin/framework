@@ -120,14 +120,10 @@ public class WidgetMapGenerator extends Generator {
 
             if (typeOracle.findType(annotation.value().getName()) == null) {
                 // GWT widget not inherited
-                logger
-                        .log(
-                                Type.WARN,
-                                "Widget implementation for "
-                                        + class1.getName()
-                                        + " not available for GWT compiler (but mapped "
-                                        + "for component found in classpath). If this is not "
-                                        + "intentional, check your gwt module definition file.");
+                logger.log(Type.WARN, "Widget class "
+                        + annotation.value().getName()
+                        + " was not found. The component " + class1.getName()
+                        + " will not be included in the widgetset.");
                 iterator.remove();
             }
 

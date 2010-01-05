@@ -693,10 +693,9 @@ public class ApplicationConnection {
             return;
         }
 
-        ApplicationConnection.getConsole()
-                .log(
-                        "JSON parsing took "
-                                + (new Date().getTime() - start.getTime()));
+        ApplicationConnection.getConsole().log(
+                "JSON parsing took " + (new Date().getTime() - start.getTime())
+                        + "ms");
         // Handle redirect
         if (json.containsKey("redirect")) {
             String url = json.getValueMap("redirect").getString("url");
@@ -1474,6 +1473,11 @@ public class ApplicationConnection {
             }
         }
 
+        if (configuration.useDebugIdInDOM() && uidl.getId().startsWith("PID_S")) {
+            DOM.setElementProperty(component.getElement(), "id", uidl.getId()
+                    .substring(5));
+        }
+
         if (!visible) {
             // component is invisible, delete old size to notify parent, if
             // later make visible
@@ -1575,12 +1579,6 @@ public class ApplicationConnection {
                 parent.updateCaption((Paintable) component, uidl);
             }
         }
-
-        if (configuration.useDebugIdInDOM() && uidl.getId().startsWith("PID_S")) {
-            DOM.setElementProperty(component.getElement(), "id", uidl.getId()
-                    .substring(5));
-        }
-
         /*
          * updateComponentSize need to be after caption update so caption can be
          * taken into account

@@ -1,6 +1,5 @@
 .v-menubar {
 	height: 23px;
-	overflow: hidden;
 	background: #323336 repeat-x;
 	background-image: url(img/bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 	color: #d1d3d6;

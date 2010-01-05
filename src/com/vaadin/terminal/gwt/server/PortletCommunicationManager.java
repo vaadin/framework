@@ -24,9 +24,9 @@ import com.vaadin.ui.Window;
 
 /**
  * TODO document me!
- * 
+ *
  * @author peholmst
- * 
+ *
  */
 @SuppressWarnings("serial")
 public class PortletCommunicationManager extends AbstractCommunicationManager {
@@ -165,6 +165,19 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
                             + themeName + "/" + resource);
         }
 
+        /**
+         * Find the application window to use based on the portlet mode. For
+         * internal use only, not in the {@link Callback} interface.
+         *
+         * @param request
+         * @param application
+         * @return
+         */
+        public Window getPortletWindow(PortletRequest request,
+                Application application) {
+            return portlet.getPortletWindow(request, application);
+        }
+
     }
 
     public PortletCommunicationManager(Application application) {
@@ -202,8 +215,9 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
             ((ActionResponse) response.getWrappedResponse())
                     .sendRedirect(dummyURL == null ? "http://www.google.com"
                             : dummyURL);
-        } else
+        } else {
             super.sendUploadResponse(request, response);
+        }
     }
 
     public void handleUidlRequest(ResourceRequest request,
@@ -223,4 +237,18 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
                 new AbstractApplicationPortletWrapper(applicationPortlet));
     }
 
+    @Override
+    protected Window doGetApplicationWindow(Request request, Callback callback,
+            Application application, Window assumedWindow) {
+        // find window based on portlet mode
+        if (assumedWindow == null
+                && callback instanceof AbstractApplicationPortletWrapper
+                && request.getWrappedRequest() instanceof PortletRequest) {
+            assumedWindow = ((AbstractApplicationPortletWrapper) callback)
+                    .getPortletWindow((PortletRequest) request
+                            .getWrappedRequest(), application);
+        }
+        return super.doGetApplicationWindow(request, callback, application,
+                assumedWindow);
+    }
 }

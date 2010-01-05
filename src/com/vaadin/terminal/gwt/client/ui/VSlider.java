@@ -10,6 +10,7 @@ import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
@@ -43,8 +44,17 @@ public class VSlider extends Widget implements Paintable, Field,
     private int resolution;
     private Double value;
     private boolean vertical;
-    private int size = -1;
+    private final int size = -1;
     private boolean arrows;
+
+    private final HTML feedback = new HTML("", false);
+    private final VOverlay feedbackPopup = new VOverlay(true, false, true) {
+        @Override
+        public void show() {
+            super.show();
+            updateFeedbackPosition();
+        }
+    };
 
     /* DOM element for slider's base */
     private final Element base;
@@ -94,6 +104,9 @@ public class VSlider extends Widget implements Paintable, Field,
                 | Event.ONMOUSEOUT);
         DOM.sinkEvents(bigger, Event.ONMOUSEDOWN | Event.ONMOUSEUP
                 | Event.ONMOUSEOUT);
+
+        feedbackPopup.addStyleName(CLASSNAME + "-feedback");
+        feedbackPopup.setWidget(feedback);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -136,6 +149,8 @@ public class VSlider extends Widget implements Paintable, Field,
         resolution = uidl.getIntAttribute("resolution");
         value = new Double(uidl.getDoubleVariable("value"));
 
+        setFeedbackValue(value);
+
         handleSize = uidl.getIntAttribute("hsize");
 
         buildBase();
@@ -151,6 +166,29 @@ public class VSlider extends Widget implements Paintable, Field,
         } else {
             buildHandle();
             setValue(value, false);
+        }
+    }
+
+    private void setFeedbackValue(double value) {
+        String currentValue = "" + value;
+        if (resolution == 0) {
+            currentValue = "" + new Double(value).intValue();
+        }
+        feedback.setText(currentValue);
+    }
+
+    private void updateFeedbackPosition() {
+        if (vertical) {
+            feedbackPopup.setPopupPosition(DOM.getAbsoluteLeft(handle)
+                    + handle.getOffsetWidth(), DOM.getAbsoluteTop(handle)
+                    + handle.getOffsetHeight() / 2
+                    - feedbackPopup.getOffsetHeight() / 2);
+        } else {
+            feedbackPopup.setPopupPosition(DOM.getAbsoluteLeft(handle)
+                    + handle.getOffsetWidth() / 2
+                    - feedbackPopup.getOffsetWidth() / 2, DOM
+                    .getAbsoluteTop(handle)
+                    - feedbackPopup.getOffsetHeight());
         }
     }
 
@@ -244,6 +282,7 @@ public class VSlider extends Widget implements Paintable, Field,
 
         final int range = baseSize - handleSize;
         double v = value.doubleValue();
+
         // Round value to resolution
         if (resolution > 0) {
             v = Math.round(v * Math.pow(10, resolution));
@@ -268,11 +307,9 @@ public class VSlider extends Widget implements Paintable, Field,
 
         DOM.setStyleAttribute(handle, styleAttribute, (Math.round(pos)) + "px");
 
-        // TODO give more detailed info when dragging and do roundup
-        DOM.setElementAttribute(handle, "title", "" + v);
-
         // Update value
         this.value = new Double(v);
+        setFeedbackValue(v);
 
         if (updateToServer) {
             updateValueToServer();
@@ -329,7 +366,10 @@ public class VSlider extends Widget implements Paintable, Field,
         switch (DOM.eventGetType(event)) {
         case Event.ONMOUSEDOWN:
             if (!disabled && !readonly) {
+                feedbackPopup.show();
                 dragging = true;
+                DOM.setElementProperty(handle, "className", CLASSNAME
+                        + "-handle " + CLASSNAME + "-handle-active");
                 DOM.setCapture(getElement());
                 DOM.eventPreventDefault(event); // prevent selecting text
                 DOM.eventCancelBubble(event, true);
@@ -337,12 +377,14 @@ public class VSlider extends Widget implements Paintable, Field,
             break;
         case Event.ONMOUSEMOVE:
             if (dragging) {
-                // DOM.setCapture(getElement());
                 setValueByEvent(event, false);
+                updateFeedbackPosition();
             }
             break;
         case Event.ONMOUSEUP:
+            feedbackPopup.hide();
             dragging = false;
+            DOM.setElementProperty(handle, "className", CLASSNAME + "-handle");
             DOM.releaseCapture(getElement());
             setValueByEvent(event, true);
             break;
@@ -381,8 +423,8 @@ public class VSlider extends Widget implements Paintable, Field,
                 .eventGetClientX(event);
         final String domProperty = vertical ? "offsetHeight" : "offsetWidth";
 
-        final double handleSize = Integer.parseInt(DOM.getElementProperty(
-                handle, domProperty));
+        final int handleSize = Integer.parseInt(DOM.getElementProperty(handle,
+                domProperty));
         final double baseSize = Integer.parseInt(DOM.getElementProperty(base,
                 domProperty));
         final double baseOffset = vertical ? DOM.getAbsoluteTop(base)

@@ -17,7 +17,7 @@
 	height: 10px;
 	margin-top: -5px;
 }
-.v-slider-handle:active {
+.v-slider-handle-active {
 	background-image: url(img/knob-pressed.png); /** sprite-ref: verticals */
 }
 .v-slider-vertical {

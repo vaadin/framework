@@ -1009,13 +1009,11 @@ public class JsonPaintTarget implements PaintTarget {
          * integer strings to optimized transferred data.
          */
         Class<? extends Paintable> class1 = paintable.getClass();
-        ClientWidget annotation = class1.getAnnotation(ClientWidget.class);
-        while (annotation == null) {
+        while (!hasClientWidgetMapping(class1)) {
             Class<?> superclass = class1.getSuperclass();
             if (superclass != null
                     && Paintable.class.isAssignableFrom(superclass)) {
                 class1 = (Class<? extends Paintable>) superclass;
-                annotation = class1.getAnnotation(ClientWidget.class);
             } else {
                 System.out
                         .append("Warning: no superclass of givent has ClientWidget"
@@ -1023,9 +1021,28 @@ public class JsonPaintTarget implements PaintTarget {
                 break;
             }
         }
+
         usedPaintableTypes.add(class1);
         return AbstractCommunicationManager.getTagForType(class1);
 
+    }
+
+    private boolean hasClientWidgetMapping(Class<? extends Paintable> class1) {
+        try {
+            ClientWidget annotation = class1.getAnnotation(ClientWidget.class);
+            return annotation != null;
+        } catch (RuntimeException e) {
+            if (e.getStackTrace()[0].getClassName().equals(
+                    "org.glassfish.web.loader.WebappClassLoader")) {
+                // Glassfish 3 is darn eager to load the value class, even
+                // though we just want to check if the annotation exists.
+                // See #3920, remove this hack when fixed in glassfish
+                return true;
+            } else {
+                // throw exception forward
+                throw e;
+            }
+        }
     }
 
     Collection<Class<? extends Paintable>> getUsedPaintableTypes() {

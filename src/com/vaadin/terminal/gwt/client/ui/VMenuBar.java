@@ -86,9 +86,12 @@ public class VMenuBar extends Widget implements Paintable,
     @Override
     public void setWidth(String width) {
         Util.setWidthExcludingPaddingAndBorder(this, width, 0);
-        hideChildren();
-        setSelected(null);
-        menuVisible = false;
+        if (!subMenu) {
+            // Only needed for root level menu
+            hideChildren();
+            setSelected(null);
+            menuVisible = false;
+        }
     }
 
     /**
@@ -657,7 +660,8 @@ public class VMenuBar extends Widget implements Paintable,
         protected boolean isSeparator = false;
 
         public CustomMenuItem(String html, Command cmd) {
-            setElement(DOM.createDiv());
+            // We need spans to allow inline-block in IE
+            setElement(DOM.createSpan());
 
             setHTML(html);
             setCommand(cmd);

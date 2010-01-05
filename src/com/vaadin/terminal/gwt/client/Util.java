@@ -548,18 +548,29 @@ public class Util {
             if ("hidden".equals(originalOverflow)) {
                 return;
             }
+
+            // check the scrolltop value before hiding the element
+            final int scrolltop = elem.getScrollTop();
             elem.getStyle().setProperty("overflow", "hidden");
 
             DeferredCommand.addCommand(new Command() {
                 public void execute() {
                     // Dough, Safari scroll auto means actually just a moped
                     elem.getStyle().setProperty("overflow", originalOverflow);
-                    if (elem.getScrollTop() > 0) {
+
+                    if (scrolltop > 0 || elem.getScrollTop() > 0) {
+                        int scrollvalue = scrolltop;
+                        if (scrolltop == 0) {
+                            // mysterious are the ways of webkits scrollbar
+                            // handling. In some cases webkit reports bad (0)
+                            // scrolltop before hiding the elment temporary,
+                            // sometimes after.
+                            scrollvalue = elem.getScrollTop();
+                        }
                         // fix another bug where scrollbar remains in wrong
                         // position
-                        int scrolltop = elem.getScrollTop();
-                        elem.setScrollTop(scrolltop - 1);
-                        elem.setScrollTop(scrolltop);
+                        elem.setScrollTop(scrollvalue - 1);
+                        elem.setScrollTop(scrollvalue);
                     }
                 }
             });

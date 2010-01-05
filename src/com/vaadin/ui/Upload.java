@@ -49,6 +49,11 @@ import com.vaadin.terminal.gwt.client.ui.VUpload;
  * selected, instead of the common pattern of file selection field and upload
  * button.
  * 
+ * <p>
+ * Note! Because of browser dependent implementations of <input type="file">
+ * element, setting size for Upload component is not supported. For some
+ * browsers setting size may work to some extend.
+ * 
  * @author IT Mill Ltd.
  * @version
  * @VERSION@

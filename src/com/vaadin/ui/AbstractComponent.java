@@ -521,7 +521,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         }
 
         if (parent != null && this.parent != null) {
-            throw new IllegalStateException("Component already has a parent.");
+            throw new IllegalStateException(getClass().getName()
+                    + " already has a parent.");
         }
 
         // Send detach event if the component have been connected to a window

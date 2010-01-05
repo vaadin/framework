@@ -795,8 +795,8 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
                 }
             }
 
-            if (type == Event.ONMOUSEDOWN) {
-                // !DOM.isOrHasChild(contentPanel.getElement(), target)
+            if (type == Event.ONMOUSEDOWN
+                    && !DOM.isOrHasChild(contentPanel.getElement(), target)) {
                 Util.focus(contentPanel.getElement());
             }
         }

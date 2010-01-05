@@ -647,13 +647,15 @@ div.v-app-loading {
 
 .v-menubar {
 	float: left; /* Force minimum width */
-	overflow: hidden;
+	white-space: nowrap;
 }
 .v-menubar .v-menubar-menuitem {
 	cursor: default;
 	vertical-align: middle;
 	white-space: nowrap;
-	float: left;
+	display: inline;
+	display: inline-block;
+	zoom: 1;
 }
 .v-menubar .v-menubar-menuitem-caption * {
 	vertical-align: middle;
@@ -668,6 +670,7 @@ div.v-app-loading {
 }
 .v-menubar-submenu .v-menubar-menuitem { 
 	cursor: default;
+	display: block;
 	position: relative;
 	padding-right: 1.5em;
 }
@@ -1149,6 +1152,21 @@ div.v-progressindicator-indeterminate-disabled {
 	height: 12px;
 	font-size: 0;
 	margin-left: -5px;
+}
+
+.v-slider-feedback {
+	padding: 2px 5px;
+	background: #444;
+	color: #fff;
+	font-size: 11px;
+	line-height: 13px;
+	font-weight: bold;
+	font-family: Arial, Helvetica, sans-serif;
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	margin: -2px 0 0 2px;
+	text-shadow: 0 1px 0 #000;
 }
 
 /* Disabled by default
@@ -1637,7 +1655,7 @@ div.v-tree-node-leaf {
 	font-weight: bold;
 }
 /* A more specific selector to make sure padding isn't so easily overridden */
-.div.v-window-header {
+div.v-window-header {
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	-ms-text-overflow: ellipsis;
@@ -1658,6 +1676,9 @@ div.v-tree-node-leaf {
 /* Target Firefox 3 (it doesn't need any trickery, so revert the previous) */
 .v-window-contents, x:-moz-any-link, x:default {
 	overflow: visible;
+}
+.v-window-contents > div {
+	outline: none;
 }
 .v-window-footer {
 	overflow: hidden;
@@ -3083,7 +3104,6 @@ td.v-datefield-calendarpanel-nextyear {
 
 .v-menubar {
 	height: 23px;
-	overflow: hidden;
 	background: #323336 repeat-x;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
@@ -3650,7 +3670,7 @@ td.v-datefield-calendarpanel-nextyear {
 	height: 10px;
 	margin-top: -5px;
 }
-.v-slider-handle:active {
+.v-slider-handle-active {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
   background-position: left -895px;
@@ -4236,6 +4256,7 @@ td.v-datefield-calendarpanel-nextyear {
 .v-ie .v-tabsheet-tabs .v-errorindicator {
 	zoom: 1;
 	display: inline;
+	display: inline-block;
 }
 
 /* Tabsheet scroller styles */
@@ -4862,9 +4883,6 @@ input.v-textfield-readonly,
 }
 .v-window-contents {
 	background: #fff;
-}
-.v-window-contents > div {
-	outline: none;
 }
 .v-window-modalitycurtain {
 	background: #56595b;

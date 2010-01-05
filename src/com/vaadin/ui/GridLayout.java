@@ -830,8 +830,9 @@ public class GridLayout extends AbstractLayout implements
     }
 
     /**
-     * An <code>Exception</code> object which is thrown when two Items occupy
-     * the same space on a grid.
+     * Gridlayout does not support laying components on top of each other. An
+     * <code>OverlapsException</code> is thrown when a component already exists
+     * (even partly) at the same space on a grid with the new component.
      * 
      * @author IT Mill Ltd.
      * @version
@@ -849,6 +850,32 @@ public class GridLayout extends AbstractLayout implements
          */
         public OverlapsException(Area existingArea) {
             this.existingArea = existingArea;
+        }
+
+        @Override
+        public String getMessage() {
+            StringBuilder sb = new StringBuilder();
+            Component component = existingArea.getComponent();
+            sb.append(component);
+            sb.append("( type = ");
+            sb.append(component.getClass().getName());
+            if (component.getCaption() != null) {
+                sb.append(", caption = \"");
+                sb.append(component.getCaption());
+                sb.append("\"");
+            }
+            sb.append(")");
+            sb.append(" is already added to ");
+            sb.append(existingArea.column1);
+            sb.append(",");
+            sb.append(existingArea.column1);
+            sb.append(",");
+            sb.append(existingArea.row1);
+            sb.append(",");
+            sb.append(existingArea.row2);
+            sb.append("(column1, column2, row1, row2).");
+
+            return sb.toString();
         }
 
         /**
