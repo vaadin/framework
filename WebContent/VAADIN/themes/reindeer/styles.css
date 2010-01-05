@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"9_9_9_INTERNAL-DEBUG-BUILD";}
-.v-theme-version-9_9_9_INTERNAL-DEBUG-BUILD {display: none;}
+.v-theme-version:after {content:"6_2_0_dev-20091229";}
+.v-theme-version-6_2_0_dev-20091229 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -4256,6 +4256,8 @@ td.v-datefield-calendarpanel-nextyear {
 .v-ie .v-tabsheet-tabs .v-errorindicator {
 	zoom: 1;
 	display: inline;
+}
+.v-ie8 .v-tabsheet-tabs .v-errorindicator {
 	display: inline-block;
 }
 
