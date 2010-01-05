@@ -4,9 +4,15 @@
 
 package com.vaadin.terminal.gwt.server;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -1000,25 +1006,37 @@ public class JsonPaintTarget implements PaintTarget {
         }
     }
 
+    private static final Map<Class<? extends Paintable>, Class<? extends Paintable>> widgetMappingCache = new HashMap<Class<? extends Paintable>, Class<? extends Paintable>>();
+
     @SuppressWarnings("unchecked")
     public String getTag(Paintable paintable) {
-        /*
-         * Client widget annotation is searched from component hierarchy to
-         * detect the component that presumably has client side implementation.
-         * The server side name is used in the transportation, but encoded into
-         * integer strings to optimized transferred data.
-         */
-        Class<? extends Paintable> class1 = paintable.getClass();
-        while (!hasClientWidgetMapping(class1)) {
-            Class<?> superclass = class1.getSuperclass();
-            if (superclass != null
-                    && Paintable.class.isAssignableFrom(superclass)) {
-                class1 = (Class<? extends Paintable>) superclass;
-            } else {
-                System.out
-                        .append("Warning: no superclass of givent has ClientWidget"
-                                + " annotation. Component will not be mapped correctly on client side.");
-                break;
+        Class<? extends Paintable> class1;
+        synchronized (widgetMappingCache) {
+            class1 = widgetMappingCache.get(paintable.getClass());
+        }
+        if (class1 == null) {
+            /*
+             * Client widget annotation is searched from component hierarchy to
+             * detect the component that presumably has client side
+             * implementation. The server side name is used in the
+             * transportation, but encoded into integer strings to optimized
+             * transferred data.
+             */
+            class1 = paintable.getClass();
+            while (!hasClientWidgetMapping(class1)) {
+                Class<?> superclass = class1.getSuperclass();
+                if (superclass != null
+                        && Paintable.class.isAssignableFrom(superclass)) {
+                    class1 = (Class<? extends Paintable>) superclass;
+                } else {
+                    System.out
+                            .append("Warning: no superclass of givent has ClientWidget"
+                                    + " annotation. Component will not be mapped correctly on client side.");
+                    break;
+                }
+            }
+            synchronized (widgetMappingCache) {
+                widgetMappingCache.put(paintable.getClass(), class1);
             }
         }
 
@@ -1029,15 +1047,58 @@ public class JsonPaintTarget implements PaintTarget {
 
     private boolean hasClientWidgetMapping(Class<? extends Paintable> class1) {
         try {
-            ClientWidget annotation = class1.getAnnotation(ClientWidget.class);
-            return annotation != null;
+            return class1.isAnnotationPresent(ClientWidget.class);
         } catch (RuntimeException e) {
             if (e.getStackTrace()[0].getClassName().equals(
                     "org.glassfish.web.loader.WebappClassLoader")) {
+
                 // Glassfish 3 is darn eager to load the value class, even
                 // though we just want to check if the annotation exists.
                 // See #3920, remove this hack when fixed in glassfish
-                return true;
+                // In some situations (depending on class loading order) it
+                // would be enough to return true here, but it is safer to check
+                // the annotation from bytecode
+
+                String name = class1.getName().replace('.', File.separatorChar)
+                        + ".class";
+
+                try {
+                    InputStream stream = class1.getClassLoader()
+                            .getResourceAsStream(name);
+                    BufferedReader bufferedReader = new BufferedReader(
+                            new InputStreamReader(stream));
+                    try {
+                        String line;
+                        boolean atSourcefile = false;
+                        while ((line = bufferedReader.readLine()) != null) {
+                            if (line.startsWith("SourceFile")) {
+                                atSourcefile = true;
+                            }
+                            if (atSourcefile) {
+                                if (line.contains("ClientWidget")) {
+                                    return true;
+                                }
+                            }
+                            // TODO could optize to quit at the end attribute
+                        }
+                    } catch (IOException e1) {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                    } finally {
+                        try {
+                            bufferedReader.close();
+                        } catch (IOException e1) {
+                            // TODO Auto-generated catch block
+                            e1.printStackTrace();
+                        }
+                    }
+
+                } catch (Throwable e2) {
+                    // TODO Auto-generated catch block
+                    e2.printStackTrace();
+                }
+
+                return false;
             } else {
                 // throw exception forward
                 throw e;
