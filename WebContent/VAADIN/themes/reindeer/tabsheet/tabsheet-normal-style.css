@@ -157,5 +157,7 @@
 .v-ie .v-tabsheet-tabs .v-errorindicator {
 	zoom: 1;
 	display: inline;
+}
+.v-ie8 .v-tabsheet-tabs .v-errorindicator {
 	display: inline-block;
 }
