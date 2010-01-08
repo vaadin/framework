@@ -315,6 +315,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      */
     public void setLocale(Locale locale) {
         this.locale = locale;
+        requestRepaint();
     }
 
     /*
