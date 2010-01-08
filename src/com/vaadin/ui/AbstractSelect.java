@@ -793,12 +793,9 @@ public abstract class AbstractSelect extends AbstractField implements
         return retval;
     }
 
-    /**
-     * Removes the item identified by Id from the container. This functionality
-     * is optional. If the function is not implemented, the functions allways
-     * returns false.
+    /*
+     * (non-Javadoc)
      * 
-     * @return True if the operation succeeded.
      * @see com.vaadin.data.Container#removeItem(java.lang.Object)
      */
     public boolean removeItem(Object itemId)
