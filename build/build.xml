@@ -33,6 +33,9 @@
     <target name="package-all" depends="clean-all, package-init, init, build, docs, internal-package-zip, internal-package-war, internal-package-liferay" description="Build public packages.">
     </target>
 
+    <target name="package-zip" depends="clean-all, package-init, init, build, docs, internal-package-zip">
+    </target>
+
     <target name="package-jar" depends="clean-result, package-init, init, libs" description="Create vaadin-x.y.z.jar file.">
     </target>
 
@@ -224,8 +227,8 @@
             <zipfileset prefix="${product-file}-${version.full}/gwt" dir="${gwt-dir}">
                 <patternset>
                     <include name="**/*" />
-                    <exclude name="gwt/doc"/>
-                    <exclude name="gwt/samples"/>
+                    <exclude name="doc**"/>
+                    <exclude name="samples**"/>
                 </patternset>
             </zipfileset>
         </zip>
@@ -861,7 +864,7 @@
     </target>
 
     <!-- Demos  - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <target name="demo" depends="libs, docs">
+    <target name="demo" depends="libs">
         <echo>Building demos</echo>
         <echo>Adding demo class files.</echo>
         <copy todir="${output-dir}/WebContent/WEB-INF/classes">
