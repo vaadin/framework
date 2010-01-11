@@ -120,7 +120,7 @@
       <echo>Java Servlet API is available.</echo>
 
       <available classpathref="compile.classpath" classname="javax.servlet.ServletRequestListener" property="servlet.version.is-2.4"/>
-      <!--<fail if="servlet.version.is-2.4" message="Java Servlet API 2.4 or later detected. Vaadin must be compiled exactly with Servlet API 2.3."/>-->
+      <fail if="servlet.version.is-2.4" message="Java Servlet API 2.4 or later detected. Vaadin must be compiled exactly with Servlet API 2.3."/>
       <echo>Java Servlet API specification 2.3 used.</echo>
     </target>
 
@@ -195,6 +195,8 @@
         	<fileset dir="lib/core">
         	        <include name="**/*.jar"/>
         			<exclude name="**/servlet-api*.jar"/>
+        		    <!-- This has to be excluded because it contains Servlet API > 2.3. -->
+        			<exclude name="gwt/**/*"/>
    	        </fileset>
         	<fileset dir="lib/demo">
         	        <include name="**/*.jar"/>
