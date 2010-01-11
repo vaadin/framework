@@ -996,12 +996,12 @@
 
     <!-- This should be called after the Linux package is ready. -->
     <target name="differences" if="build.differences">
-        <exec executable="python" searchpath="true" failonerror="true" output="${result-path}/differences-linux.txt">
+        <exec executable="python" searchpath="true" failonerror="true" output="${result-path}/differences.txt">
             <arg value="build/bin/package-diff.py"/>
             <arg value="${version.full}"/>
         </exec>
 
-        <echo>##teamcity[publishArtifacts '${result-path}/differences-linux.txt']</echo>
+        <echo>##teamcity[publishArtifacts '${result-path}/differences.txt']</echo>
     </target>
 
     <!-- ================================================================== -->
