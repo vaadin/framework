@@ -130,6 +130,7 @@
 			<!-- true/false system arguments -->
 			<jvmarg value="-Dcom.vaadin.testbench.screenshot.softfail=${com.vaadin.testbench.screenshot.softfail}" />
 			<jvmarg value="-Dcom.vaadin.testbench.screenshot.reference.debug=${com.vaadin.testbench.screenshot.reference.debug}" />
+			<jvmarg value="-Dcom.vaadin.testbench.screenshot.cursor=${com.vaadin.testbench.screenshot.cursor}" />
 
 			<batchtest>
 				<filelist dir="${test-output-dir}" files="${target}" />
