@@ -158,9 +158,8 @@ public class ApplicationConfiguration {
             // Something went wrong: multiple widgetsets inited
             String msg = "Tried to init " + widgetset.getClass().getName()
                     + ", but " + initedWidgetSet.getClass().getName()
-                    + " is already inited.";
-            System.err.println(msg);
-            throw new IllegalStateException(msg);
+                    + " was already inited.";
+            ApplicationConnection.getConsole().log(msg);
         }
         initedWidgetSet = widgetset;
         ArrayList<String> appIds = new ArrayList<String>();
