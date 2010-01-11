@@ -1,18 +1,32 @@
 ==============================================================================
-Vaadin <version></version> Readme
+Vaadin @version@ Readme
 ==============================================================================
 
 -------------
 How to Start?
 -------------
 
-Open a shell window, change to the installation directory, and execute "sh start.sh". It
-will start a web application at port 8888 on the local host and opens a web browser window
-to display the start page of Vaadin Content Browser.
+In Windows:
+  Just double-click start.bat icon. It will start a web application at
+  port 8888 on the local host and opens a web browser window to display
+  the start page of Vaadin Content Browser.
 
-The installation directory is a web application as itself and is directly importable to
-Eclipse IDE by selecting "File / Import / Existing Projects into Workspace" from Eclipse
-main menu. See the manual for detailed instructions.
+In Linux:
+  Open a shell window, change to the installation directory, and execute
+  "sh start.sh". It will start a web application at port 8888 on the local
+  host and opens a web browser window to display the start page of Vaadin
+  Content Browser.
+
+In Mac:
+  Start Terminal.app and run the start.sh script in the installation
+  directory. It will start a web application at port 8888 on the local
+  host and opens a web browser window to display the start page of Vaadin
+  Content Browser.
+
+The installation directory is a web application as itself and can be directly
+imported to the Eclipse IDE by selecting
+"File / Import / Existing Projects into Workspace" from Eclipse main menu.
+See the manual for detailed instructions.
 
 ---------------------------------
 What's Inside the Vaadin Package?
@@ -21,9 +35,9 @@ What's Inside the Vaadin Package?
 You should start exploring Vaadin through the provided Content Browser web
 application within this package; see 'How to Start?' above.
 
-The WebContent directory contains the content available through the Content Browser: the
-Vaadin Library, demos, documentation, and other useful information to get started
-with Vaadin.
+The WebContent directory contains the content available through the Content
+Browser: the Vaadin Library, demos, documentation, and other useful
+information to get started with Vaadin.
 
 Below is a list of most important locations and files:
 
@@ -33,14 +47,11 @@ Start Vaadin
 COPYING
 - license file
 
-WebContent/vaadin-<version></version>.jar
+WebContent/vaadin-@version@.jar
 - Vaadin Library containing Java source and compiled files
 
-WebContent/doc/manual.pdf
-- Vaadin Reference Manual in PDF format
-
-WebContent/doc/manual/index.html
-- Vaadin Reference Manual in HTML format
+WebContent/doc/book-of-vaadin.pdf
+- Book of Vaadin in PDF format
 
 WebContent/doc/api/index.html
 - Vaadin API Documentation as JavaDoc reference

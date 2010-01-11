@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import sys,os
+import sys,os,re
 from sets import Set
 
 ################################################################################
@@ -45,6 +45,29 @@ def listfiles(archive):
 
 	return cleanedfiles
 
+# For Zip archives in Vaadin 6.3.0
+def listZipFiles(archive):
+    pin = os.popen("unzip -l -qq %s | cut -c 29- | sort" % (archive), "r")
+    files = map(lambda x: x.strip(), pin.readlines())
+    pin.close()
+
+    cleanedfiles = []
+    for file in files:
+        # Remove archive file name from the file names
+        slashpos = file.find("/")
+        if slashpos != -1:
+            cleanedname = file[slashpos+1:]
+        else:
+            cleanedname = file
+
+        # Purge GWT compilation files.
+        if cleanedname.find(".cache.html") != -1:
+            continue
+        
+        cleanedfiles.append(cleanedname)
+
+    return cleanedfiles
+
 ################################################################################
 # Difference of two lists of files
 ################################################################################
@@ -59,9 +82,9 @@ def diffFiles(a, b):
 ################################################################################
 # Lists files inside a Zip file (a JAR)
 ################################################################################
-def listZipFiles(zipfile):
-	# Read the zip content listing
-	pin = os.popen("unzip -ql %s" % zipfile, "r")
+def listJarFiles(jarfile):
+	# Read the jar content listing
+	pin = os.popen("unzip -ql %s" % jarfile, "r")
 	lines = map(lambda x: x[:-1], pin.readlines())
 	pin.close()
 
@@ -77,14 +100,25 @@ def listZipFiles(zipfile):
 ################################################################################
 # Lists files inside a Vaadin Jar inside a Tar
 ################################################################################
+# For Vaadin 6.2 Tar
 def listTarVaadinJarFiles(tarfile, vaadinversion):
 	jarfile = "vaadin-linux-%s/WebContent/vaadin-%s.jar" % (vaadinversion, vaadinversion)
 	extractedjar = "/tmp/vaadinjar-tmp-%d.jar" % (os.getpid())
 	tarcmd = "tar zOxf %s %s > %s " % (tarfile, jarfile, extractedjar)
 	command (tarcmd)
-	files = listZipFiles(extractedjar)
+	files = listJarFiles(extractedjar)
 	command ("rm %s" % (extractedjar))
 	return files
+
+# For Vaadin 6.3 Zip
+def listZipVaadinJarFiles(zipfile, vaadinversion):
+    jarfile = "vaadin-%s/WebContent/vaadin-%s.jar" % (vaadinversion, vaadinversion)
+    extractedjar = "/tmp/vaadinjar-tmp-%d.jar" % (os.getpid())
+    tarcmd = "unzip -p %s %s > %s " % (zipfile, jarfile, extractedjar)
+    command (tarcmd)
+    files = listJarFiles(extractedjar)
+    command ("rm %s" % (extractedjar))
+    return files
 
 ################################################################################
 #
@@ -99,6 +133,8 @@ pin.close()
 latestversion  = latestdata[0].strip()
 latestpath     = latestdata[1].strip()
 latestURL      = downloadsite + "/" + latestpath + "/"
+
+# TODO: Remove "linux" after 6.3.0 is released.
 linuxfilename  = "vaadin-linux-%s.tar.gz" % (latestversion)
 linuxpackage   = latestURL + linuxfilename
 locallinuxpackage = "/tmp/%s" % (linuxfilename)
@@ -123,8 +159,8 @@ latestfiles  = listfiles(locallinuxpackage)
 
 # List files in built version.
 builtversion = sys.argv[1]
-builtpackage = "build/result/vaadin-linux-%s.tar.gz" % (builtversion)
-builtfiles = listfiles(builtpackage)
+builtpackage = "build/result/vaadin-%s.zip" % (builtversion)
+builtfiles = listZipFiles(builtpackage)
 
 # Report differences
 
@@ -145,7 +181,7 @@ for item in removed:
 print "\n--------------------------------------------------------------------------------\nVaadin JAR differences"
 
 latestJarFiles = listTarVaadinJarFiles(locallinuxpackage, latestversion)
-builtJarFiles  = listTarVaadinJarFiles(builtpackage,      builtversion)
+builtJarFiles  = listZipVaadinJarFiles(builtpackage,      builtversion)
 
 # New files
 newfiles = diffFiles(builtJarFiles, latestJarFiles)

@@ -9,7 +9,7 @@
 
     When creating release use only "package-*" targets:
     package-all
-     * creates four release packages for three three platforms (below)
+     * creates the release package, a war, and a Liferay war
      
     package-windows
      * vaadin-windows-<version>.zip
@@ -30,31 +30,19 @@
     <!-- 
     Call one of package-* targets unless you understand what you are doing 
     -->
-    <target name="package-all" depends="clean-all, package-init, init, build, docs, internal-package-mac, internal-package-windows, internal-package-linux, internal-package-war, internal-package-liferay" description="Build public packages for Windows, Linux and Mac platforms.">
-    </target>
-
-    <target name="package-mac" depends="clean-result, package-init, init, build, docs, internal-package-mac" description="Create public tar.gz package for Mac.">
-    </target>
-
-    <target name="package-windows" depends="clean-result, package-init, init, build, docs, internal-package-windows" description="Create public ZIP package for Windows.">
-    </target>
-
-    <target name="package-linux" depends="clean-result, package-init, init, build, docs, internal-package-linux" description="Create public tar.bz2 package for Linux.">
-    </target>
-
-    <target name="package-oophm" depends="clean-result, package-init, init-oophm, build, docs, internal-package-oophm" description="Create public tar.gz package for OOPHM.">
+    <target name="package-all" depends="clean-all, package-init, init, build, docs, internal-package-zip, internal-package-war, internal-package-liferay" description="Build public packages.">
     </target>
 
     <target name="package-jar" depends="clean-result, package-init, init, libs" description="Create vaadin-x.y.z.jar file.">
     </target>
 
-    <target name="package-war" depends="clean-result, package-init, init, build, docs, internal-package-linux, internal-package-war">
+    <target name="package-war" depends="clean-result, package-init, init, build, docs, internal-package-zip, internal-package-war">
     </target>
 
-    <target name="package-liferay-zip" depends="clean-result, package-init, init, build, docs, internal-package-linux, internal-package-liferay">
+    <target name="package-liferay-zip" depends="clean-result, package-init, init, build, docs, internal-package-zip, internal-package-liferay">
     </target>
 
-    <target name="package-test" depends="clean-result, nightly-init, package-init, init, build, docs, internal-package-linux, nightly-publish">
+    <target name="package-test" depends="clean-result, nightly-init, package-init, init, build, docs, internal-package-zip, nightly-publish">
     </target>
 
     <!-- ant contrib required for flow control (for loop, if, property override)   -->
@@ -77,19 +65,14 @@
     </target>
 
     <target name="test-package" depends="init" description="used for testing build.xml">
-        <echo>Creating package for Mac platform.</echo>
-        <antcontrib:var name="package-platform" value="mac" />
         <antcontrib:var name="eclipse-launch-vmargs" value="-XstartOnFirstThread -Xms128M -Xmx512M" />
-        <antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
+        <antcall target="add-misc-files" inheritAll="true" inheritRefs="true" />
         <delete file="${result-path}/eclipse-test" followsymlinks="false" />
         <exec executable="ln" failonerror="false">
             <arg line="-s" />
             <arg line="${output-dir}" />
             <arg line="${result-path}/eclipse-test" />
         </exec>
-        <!--
-        <antcall target="create-mac-diskimage" inheritAll="true" inheritRefs="true" />
-        -->
     </target>
 
     <!-- Clean results - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -142,10 +125,6 @@
     <!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- ================================================================== -->
 
-    <!-- Find out which platform we are in -->
-    <target name="init-oophm-platform"><property name="platform" value="oophm" /></target>
-    <target name="init-oophm" depends="init-oophm-platform,init"></target>
-
     <!-- Called only when building installation packages. -->
     <target name="package-init">
     </target>
@@ -179,7 +158,7 @@
         <property name="lib-gwt-dev" location="${gwt-dir}/gwt-dev.jar" />
         <property name="lib-gwt-user" location="${gwt-dir}/gwt-user.jar" />
 
-        <echo>We are on ${platform} platform (${os.name} ${os.version}), using gwt version ${gwt-version}.</echo>
+        <echo>We are using gwt version ${gwt-version}.</echo>
 
         <!-- Destination files -->
         <property name="lib-jar-name" value="${product-file}-${version.full}.jar" />
@@ -233,18 +212,16 @@
 
     </target>
 
-    <target name="internal-package-windows">
-        <antcontrib:var name="package-platform" value="windows" />
-        <echo>Creating package for ${package-platform} platform.</echo>
+    <target name="internal-package-zip">
         <antcontrib:var name="eclipse-launch-vmargs" value="-Xms256M -Xmx512M" />
-        <antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
-        <zip zipfile="${result-path}/${product-file}-${package-platform}-${version.full}.zip">
-            <zipfileset prefix="${product-file}-${package-platform}-${version.full}" dir="${result-path}/${product-file}-${version.full}">
+        <antcall target="add-misc-files" inheritAll="true" inheritRefs="true" />
+        <zip zipfile="${result-path}/${product-file}-${version.full}.zip">
+            <zipfileset prefix="${product-file}-${version.full}" dir="${result-path}/${product-file}-${version.full}">
                 <patternset>
                     <include name="**/*" />
                 </patternset>
             </zipfileset>
-            <zipfileset prefix="${product-file}-${package-platform}-${version.full}/gwt" dir="${gwt-dir}">
+            <zipfileset prefix="${product-file}-${version.full}/gwt" dir="${gwt-dir}">
                 <patternset>
                     <include name="**/*" />
                     <exclude name="gwt/doc"/>
@@ -252,82 +229,17 @@
                 </patternset>
             </zipfileset>
         </zip>
-    </target>
 
-    <target name="internal-package-linux">
-        <antcontrib:var name="package-platform" value="linux" />
-        <echo>Creating package for ${package-platform} platform.</echo>
-        <antcontrib:var name="eclipse-launch-vmargs" value="-Xms256M -Xmx512M" />
-        <antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
-        <tar destfile="${result-path}/${product-file}-${package-platform}-${version.full}.tar.gz" compression="gzip" longfile="gnu">
-            <!-- TODO use very slow but effective bzip2
-            <tar destfile="${result-path}/${product-file}-${package-platform}-${version.full}.tar.bz2" compression="bzip2" longfile="gnu">
-        -->
-            <tarfileset prefix="${product-file}-${package-platform}-${version.full}" dir="${result-path}/${product-file}-${version.full}">
-                <patternset>
-                    <include name="**/*" />
-                </patternset>
-            </tarfileset>
-            <tarfileset prefix="${product-file}-${package-platform}-${version.full}/gwt" dir="${gwt-dir}">
-                <patternset>
-                    <include name="**/*" />
-                </patternset>
-            </tarfileset>
-        </tar>
-
-        <!-- Only the Linux package is currently required for calculating these. -->
-        <!-- Notice that the differences comparison is conditional.              -->
+        <!-- Notice that the differences comparison is conditional. -->
         <antcall target="differences"/>
-    </target>
-
-    <target name="internal-package-oophm">
-        <antcontrib:var name="package-platform" value="oophm" />
-        <echo>Creating package for ${package-platform} platform.</echo>
-        <antcontrib:var name="eclipse-launch-vmargs" value="-Xms256M -Xmx512M" />
-        <antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
-        <zip zipfile="${result-path}/${product-file}-${package-platform}-${version.full}.zip">
-            <zipfileset prefix="${product-file}-${package-platform}-${version.full}" dir="${result-path}/${product-file}-${version.full}">
-                <patternset>
-                    <include name="**/*" />
-                </patternset>
-            </zipfileset>
-            <zipfileset prefix="${product-file}-${package-platform}-${version.full}/gwt" dir="${gwt-dir}">
-                <patternset>
-                    <include name="**/*" />
-                </patternset>
-            </zipfileset>
-        </zip>
-    </target>
-
-    <target name="internal-package-mac">
-        <antcontrib:var name="package-platform" value="mac" />
-        <echo>Creating package for ${package-platform} platform.</echo>
-        <antcontrib:var name="eclipse-launch-vmargs" value="-XstartOnFirstThread -Xms256M -Xmx512M" />
-        <antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
-        <tar destfile="${result-path}/${product-file}-${package-platform}-${version.full}.tar.gz" compression="gzip" longfile="gnu">
-            <tarfileset prefix="${product-file}-${package-platform}-${version.full}" dir="${result-path}/${product-file}-${version.full}">
-                <patternset>
-                    <include name="**/*" />
-                </patternset>
-            </tarfileset>
-            <tarfileset prefix="${product-file}-${package-platform}-${version.full}/gwt" dir="${gwt-dir}">
-                <patternset>
-                    <include name="**/*" />
-                </patternset>
-            </tarfileset>
-        </tar>
-        <!-- TODO: remove me: DISABLE for speed -->
-        <!-- <antcall target="create-mac-diskimage" inheritAll="true" inheritRefs="true" /> -->
     </target>
 
     <target name="internal-package-war">
         <echo>Building WAR</echo>
 
         <!-- Add the files. -->
-        <!-- Warning: This should not really be "platform spefic". -->
-        <antcontrib:var name="package-platform" value="linux" />
         <antcontrib:var name="eclipse-launch-vmargs" value="-Xms256M -Xmx512M" />
-        <antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
+        <antcall target="add-misc-files" inheritAll="true" inheritRefs="true" />
 
         <!-- Copy source tree to class tree.                         -->
         <!-- A workaround for not setting classpath properly in WAR. -->
@@ -367,77 +279,9 @@
         </zip>
         
         <echo>##teamcity[publishArtifacts '${result-path}/${product-file}-${version.full}-liferay.zip']</echo>
-
     </target>
 
-    <target name="create-mac-diskimage">
-        <!-- create Mac disk image (dmg) also -->
-        <property name="mount.dir" value="${result-path}/mac-mounted-image" />
-        <mkdir dir="${mount.dir}" />
-        <delete file="${result-path}/*.dmg" />
-        <antcontrib:if>
-            <equals arg1="${platform}" arg2="mac" />
-            <then>
-                <untar src="${result-path}/${product-file}-${package-platform}-${version.full}.tar.gz" dest="${result-path}/" compression="gzip" />
-                <echo>Creating Mac disk image (dmg)</echo>
-                <!-- create image -->
-                <echo>hdiutil create -format UDRW -volname ${product-file}-${version.full} -srcfolder ${result-path}/${product-file}-${package-platform}-${version.full} ${result-path}/disk-image.dmg</echo>
-                <exec executable="hdiutil" failonerror="true">
-                    <arg line="create -format UDRW -volname ${product-file}-${version.full} -srcfolder ${result-path}/${product-file}-${package-platform}-${version.full} ${result-path}/disk-image.dmg" />
-                </exec>
-                <!-- open image -->
-                <exec executable="hdiutil" failonerror="true">
-                    <arg line='attach' />
-                    <arg line='-readwrite' />
-                    <arg line='-noverify' />
-                    <arg line='-noautoopen' />
-                    <arg line='-mountpoint ${mount.dir}' />
-                    <arg line='${result-path}/disk-image.dmg' />
-                </exec>
-                <!-- make sure root folder is opened when image is -->
-                <exec executable="bless" failonerror="true">
-                    <arg line='--folder ${mount.dir}' />
-                    <arg line='--openfolder ${mount.dir}' />
-                </exec>
-                <!-- hack: wait for completion -->
-                <exec executable="sleep" failonerror="true">
-                    <arg line='2' />
-                </exec>
-                <!-- here we could position items -->
-                <!--
-                <exec executable="osascript" failonerror="true">
-                    <arg line='package/positionItems.scpt ${mount.dir}' />
-                </exec>
-                -->
-                <!-- turn on volume icon -->
-                <exec executable="/Developer/Tools/SetFile" failonerror="true">
-                    <arg line='-a C' />
-                    <arg line='${mount.dir}' />
-                </exec>
-                <!-- set executable bit -->
-                <chmod file="${mount.dir}/start.sh" perm="ugo+x" />
-                <!-- close image -->
-                <exec executable="hdiutil" failonerror="true">
-                    <arg line='detach ${mount.dir}/' />
-                </exec>
-                <!-- make read-only -->
-                <exec executable="hdiutil" failonerror="true">
-                    <arg line='convert ${result-path}/disk-image.dmg' />
-                    <arg line='-format UDZO' />
-                    <arg line='-imagekey zlib-level=9' />
-                    <arg line='-o ${result-path}/${product-file}-${package-platform}-${version.full}.dmg' />
-                </exec>
-                <delete file="${result-path}/disk-image.dmg" />
-                <!-- internet-enable -->
-                <exec executable="hdiutil" failonerror="true">
-                    <arg line='internet-enable ${result-path}/${product-file}-${package-platform}-${version.full}.dmg' />
-                </exec>
-            </then>
-        </antcontrib:if>
-    </target>
-
-    <target name="add-platform-specific-files">
-        <echo>Adding platform specific files for ${package-platform}</echo>
+    <target name="add-misc-files">
         <delete includeemptydirs="true" defaultexcludes="false">
             <fileset dir="${output-dir}">
                 <include name=".*" />
@@ -455,9 +299,6 @@
                 <replacetokens begintoken="@" endtoken="@">
                     <token key="version" value="${version.full}" />
                 </replacetokens>
-                <replacetokens begintoken="@" endtoken="@">
-                    <token key="platform" value="${package-platform}" />
-                </replacetokens>
             </filterchain>
             <fileset dir="WebContent/license">
                 <include name="COPYING" />
@@ -468,11 +309,6 @@
                 <expandproperties />
                 <replacetokens begintoken="@" endtoken="@">
                     <token key="version" value="${version.full}" />
-                    <token key="/version" value="" />
-                </replacetokens>
-                <replacetokens begintoken="@" endtoken="@">
-                    <token key="platform" value="${package-platform}" />
-                    <token key="/platform" value="" />
                 </replacetokens>
                 <replacetokens begintoken="@" endtoken="@">
                     <token key="builddate" value="${build.date}" />
@@ -487,12 +323,11 @@
                 <include name="license/*.txt" />
             </fileset>
         </copy>
-        <copy file="build/package/${package-platform}-readme.txt" tofile="${output-dir}/readme.txt">
+        <copy file="build/package/readme.txt" tofile="${output-dir}/readme.txt">
             <filterchain>
                 <expandproperties />
-                <replacetokens begintoken="&lt;" endtoken=">">
+                <replacetokens begintoken="@" endtoken="@">
                     <token key="version" value="${version.full}" />
-                    <token key="/version" value="" />
                 </replacetokens>
             </filterchain>
         </copy>
@@ -502,17 +337,11 @@
                 <!-- .classpath, *.launch, build-widgetset.xml -->
                 <replacetokens begintoken="@" endtoken="@">
                     <token key="version" value="${version.full}" />
-                    <token key="/version" value="" />
                 </replacetokens>
                 <!-- .classpath -->
                 <replacetokens begintoken="&lt;" endtoken=">">
                     <token key="platform-specific-entries" value="&lt;classpathentry kind=&quot;lib&quot; path=&quot;gwt/gwt-dev.jar&quot; /&gt;" />
                     <token key="/platform-specific-entries" value="" />
-                </replacetokens>
-                <!-- .classpath, HostedMode.launch, build-widgetset.xml -->
-                <!-- We can't use XML notation for this, because it can be inside an attribute definition. -->
-                <replacetokens begintoken="@" endtoken="@">
-                    <token key="platform" value="${package-platform}" />
                 </replacetokens>
                 <!-- .project, *.launch -->
                 <replacetokens begintoken="&lt;" endtoken=">">
@@ -542,80 +371,20 @@
         <mkdir dir="${output-dir}/.settings" />
         <move file="${output-dir}/eclipse-org.eclipse.core.resources.prefs" tofile="${output-dir}/.settings/org.eclipse.core.resources.prefs" />
         <move file="${output-dir}/eclipse-org.eclipse.jdt.core.prefs" tofile="${output-dir}/.settings/org.eclipse.jdt.core.prefs" />
-        <antcontrib:if>
-            <equals arg1="${package-platform}" arg2="windows" />
-            <then>
-                <copy todir="${output-dir}">
-                    <fileset dir="build/package">
-                        <include name="start.bat" />
-                    </fileset>
-                </copy>
-            </then>
-        </antcontrib:if>
-        <antcontrib:if>
-            <equals arg1="${package-platform}" arg2="linux" />
-            <then>
-                <copy todir="${output-dir}">
-                    <fileset dir="build/package">
-                        <include name="start.sh" />
-                    </fileset>
-                </copy>
-                <chmod file="${output-dir}/start.sh" perm="ugo+x" />
-                <exec executable="chmod" failonerror="false">
-                    <arg line="ugo+x" />
-                    <arg line="${output-dir}/start.sh" />
-                </exec>
-            </then>
-        </antcontrib:if>
-        <antcontrib:if>
-            <equals arg1="${package-platform}" arg2="oophm" />
-            <then>
-                <copy todir="${output-dir}">
-                    <fileset dir="build/package">
-                        <include name="start.sh" />
-                    </fileset>
-                </copy>
-                <chmod file="${output-dir}/start.sh" perm="ugo+x" />
-                <exec executable="chmod" failonerror="false">
-                    <arg line="ugo+x" />
-                    <arg line="${output-dir}/start.sh" />
-                </exec>
-            </then>
-        </antcontrib:if>
-        <antcontrib:if>
-            <equals arg1="${package-platform}" arg2="mac" />
-            <then>
-                <copy todir="${output-dir}">
-                    <fileset dir="build/package">
-                        <include name="start.sh" />
-                    </fileset>
-                </copy>
-                <!-- must be done manually -->
-                <!-- <exec executable="cp" failonerror="true">
-                    <arg line="-r" />
-                    <arg line="build/package/Start.app" />
-                    <arg line="${output-dir}" />
-                </exec> -->
-                <!-- but again, ant just fails with any * or other special characters -->
-                <!-- package icon or folder background image / icon placements not in use -->
-                <!--
-                <exec executable="cp" failonerror="true">
-                    <arg line="build/package/Icon*" />
-                    <arg line="${output-dir}" />
-                </exec>
-                <exec executable="cp" failonerror="true">
-                    <arg line="build/package/mac-DS_Store" />
-                    <arg line="${output-dir}/.DS_Store" />
-                </exec>
-                <copy file="build/package/mac-VolumeIcon.icns" tofile="${output-dir}/.VolumeIcon.icns" />
-                -->
-                <chmod file="${output-dir}/start.sh" perm="ugo+x" />
-                <exec executable="chmod" failonerror="false">
-                    <arg line="ugo+x" />
-                    <arg line="${output-dir}/start.sh" />
-                </exec>
-            </then>
-        </antcontrib:if>
+    	
+        <copy todir="${output-dir}">
+            <fileset dir="build/package">
+                <include name="start.bat" />
+                <include name="start.sh" />
+            </fileset>
+        </copy>
+    	
+    	<!-- TODO: Why is this set both with <chmod> and <exec>? -->
+        <chmod file="${output-dir}/start.sh" perm="ugo+x" />
+        <exec executable="chmod" failonerror="false">
+            <arg line="ugo+x" />
+            <arg line="${output-dir}/start.sh" />
+        </exec>
     </target>
 
     <!-- Build server-side, client-side, libraries, and demos.                   -->
@@ -1023,7 +792,7 @@
         <property name="lib-gwt-dev" location="${gwt-dir}/gwt-dev.jar" />
         <property name="lib-gwt-user" location="${gwt-dir}/gwt-user.jar" />
 
-        <echo>We are on ${platform} platform, using ${lib-gwt-dev}.</echo>
+        <echo>We are using ${lib-gwt-dev}.</echo>
         <echo>Widget sets output dir: ${widgetsets-output-dir}</echo>
     </target>
 
@@ -1240,7 +1009,7 @@
     <!-- ================================================================== -->
 
     <!-- Main target for the nightly build. -->
-    <target name="nightly" depends="clean-result, nightly-init, package-init, init, build, internal-package-linux">
+    <target name="nightly" depends="clean-result, nightly-init, package-init, init, build, internal-package-zip">
     </target>
 
 
@@ -1285,14 +1054,13 @@
         <echo>Installing ${output-dir}/WebContent/${lib-jar-name} to ${nightly.publish}</echo>
         <echo>Hopefully you have permissions for the copy operation with SSH.</echo>
 
-        <!-- Only Linux tests allowed. TODO: Generalize this. -->
-        <property name="package.linux.filename" value="${result-path}/${product-file}-${package-platform}-${version.full}.tar.gz"/>
+        <property name="package.filename" value="${result-path}/${product-file}-${version.full}.zip"/>
 
         <!-- Copy the linux installation package and the JAR. -->
         <exec executable="scp" searchpath="true" resultproperty="nightly.install.scp.result">
             <arg value="-B"/>
             <arg value="${output-dir}/WebContent/${lib-jar-name}"/>
-            <arg value="${package.linux.filename}"/>
+            <arg value="${package.filename}"/>
             <arg value="${nightly.publish}"/>
         </exec>
 
@@ -1338,7 +1106,6 @@
     </target>
     <target name="testbench-tests" depends="init">
         <fail unless="product-file" message="The 'product-file' property must be defined."/>
-        <fail unless="package-platform" message="The 'package-platform' property must be defined."/>
         <fail unless="version" message="The 'version' property must be defined."/>
 
         <echo>Version: ${version.full}</echo>
@@ -1348,11 +1115,11 @@
         <fail unless="com.vaadin.testbench.deployment.url" message="The 'com.vaadin.testbench.deployment.url' property must be defined."/>
         <fail unless="com.vaadin.testbench.lib.dir" message="The 'com.vaadin.testbench.lib.dir' property must be defined."/>
 
-        <property name="package.platform.name" value="${product-file}-${package-platform}-${version.full}"/>
+        <property name="package.name" value="${product-file}-${version.full}"/>
 
         <!-- Only Linux tests allowed. TODO: Generalize this. -->
-        <property name="package.linux.filename" value="${result-path}/${package.platform.name}.tar.gz"/>
-        <property name="package.linux.dir" value="${result-path}/${package.platform.name}.tar.gz"/>
+        <property name="package.filename" value="${result-path}/${package.name}.zip"/>
+        <property name="package.dir" value="${result-path}/${package.name}.zip"/>
 
         <!-- Run the separate test script. -->
         <ant antfile="tests/test.xml" target="test-package" inheritall="false" inheritrefs="true">
@@ -1360,9 +1127,9 @@
             <!-- "tests" classes after unpacking the package.          -->
             <property name="output-dir" value="${output-dir}"/>
 
-            <property name="package.filename" value="${package.linux.filename}"/>
+            <property name="package.filename" value="${package.filename}"/>
             <property name="testing.testarea" value="/tmp/testarea"/>
-            <property name="package.name" value="${package.platform.name}"/>
+            <property name="package.name" value="${package.name}"/>
             <property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}"/>
             <property name="com.vaadin.testbench.deployment.url" value="${com.vaadin.testbench.deployment.url}"/>
             <property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}"/>

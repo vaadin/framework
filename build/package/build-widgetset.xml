@@ -23,17 +23,14 @@ See configure target to adjust this buildfile.
 		1. use WebContent under your project's root directory
 		2. WebContent/WEB-INF/lib/vaadin-@version@.jar exists
 		3. WebContent/WEB-INF/src contains your project source files
-		4. gwt directory contains extracted GWT distribution for your platform (windows, linux or mac)
+		4. gwt directory contains extracted GWT distribution
 	-->
 	<target name="configure">
 		
 		<!-- Path from this file to the root of the Vaadin distribution package -->
 		<property name="base" value="../../../" />
 		
-		<!-- which platform we are in, possible values are windows, linux and mac -->
-		<property name="gwt-platform" value="@platform@" />
-		
-		<!-- where platform specific GWT distribution is located -->
+		<!-- where GWT distribution is located -->
 		<property name="gwt-location" value="${base}gwt" />
 		
 		<!-- where Vaadin jar is located -->
@@ -86,9 +83,8 @@ See configure target to adjust this buildfile.
 	
 	<target name="init" depends="configure">
 
-		<echo>Configured for ${gwt-platform} platform.</echo>
 		<echo>Requirements for classpath:</echo>
-		<echo>  ${gwt-location}/gwt-dev-${gwt-platform}.jar</echo>
+		<echo>  ${gwt-location}/gwt-dev.jar</echo>
 		<echo>  ${gwt-location}/gwt-user.jar</echo>
 		<echo>  ${toolkit-jar-location}</echo>
 		<echo>  ${src-location}</echo>
@@ -97,7 +93,7 @@ See configure target to adjust this buildfile.
 		<!-- Check that files exist -->
 		<fail message="Some of the required files (listed above) are missing.">
 			<condition><not><resourcecount count="3">
-				<filelist files="${gwt-location}/gwt-dev-${gwt-platform}.jar,${gwt-location}/gwt-user.jar,${toolkit-jar-location}"/>
+				<filelist files="${gwt-location}/gwt-dev.jar,${gwt-location}/gwt-user.jar,${toolkit-jar-location}"/>
 			</resourcecount></not></condition>
 		</fail>
 
@@ -109,7 +105,7 @@ See configure target to adjust this buildfile.
 			<pathelement path="${server-side-destination}" />
 			<pathelement path="${toolkit-jar-location}" />
 			<pathelement path="${gwt-location}/gwt-user.jar" />
-			<pathelement path="${gwt-location}/gwt-dev-${gwt-platform}.jar" />
+			<pathelement path="${gwt-location}/gwt-dev.jar" />
 		    <fileset dir="${base}WebContent/WEB-INF/lib/">
 		    	<include name="*.jar"/>
 		     </fileset>
