@@ -13,10 +13,10 @@ import com.vaadin.Application;
 
 /**
  * Web application context for Vaadin applications.
- *
+ * 
  * This is automatically added as a {@link HttpSessionBindingListener} when
  * added to a {@link HttpSession}.
- *
+ * 
  * @author IT Mill Ltd.
  * @version
  * @VERSION@
@@ -29,7 +29,7 @@ public class WebApplicationContext extends AbstractWebApplicationContext {
 
     /**
      * Creates a new Web Application Context.
-     *
+     * 
      */
     WebApplicationContext() {
 
@@ -37,7 +37,7 @@ public class WebApplicationContext extends AbstractWebApplicationContext {
 
     /**
      * Gets the application context base directory.
-     *
+     * 
      * @see com.vaadin.service.ApplicationContext#getBaseDirectory()
      */
     public File getBaseDirectory() {
@@ -51,7 +51,7 @@ public class WebApplicationContext extends AbstractWebApplicationContext {
 
     /**
      * Gets the http-session application is running in.
-     *
+     * 
      * @return HttpSession this application context resides in.
      */
     public HttpSession getHttpSession() {
@@ -60,7 +60,7 @@ public class WebApplicationContext extends AbstractWebApplicationContext {
 
     /**
      * Gets the application context for an HttpSession.
-     *
+     * 
      * @param session
      *            the HTTP session.
      * @return the application context for HttpSession.
@@ -85,10 +85,10 @@ public class WebApplicationContext extends AbstractWebApplicationContext {
 
     /**
      * Gets communication manager for an application.
-     *
+     * 
      * If this application has not been running before, a new manager is
      * created.
-     *
+     * 
      * @param application
      * @return CommunicationManager
      */
