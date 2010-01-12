@@ -16,7 +16,7 @@ public class TableCellStyle extends CustomComponent {
         // of the container are integers so we can determine the column number
         // easily.
         table.addContainerProperty("0", String.class, null, "", null, null); // Row
-                                                                             // header
+        // header
         for (int i = 0; i < 8; i++) {
             table.addContainerProperty("" + (i + 1), String.class, null, String
                     .valueOf((char) (65 + i)), null, null);

@@ -93,7 +93,7 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
                     boolean overflowRight = false;
                     if (l + +w + extraSpace > browserWindowWidth) {
                         overflowRight = true;
-                        // Part of the popup is outside the browser window 
+                        // Part of the popup is outside the browser window
                         // (to the right)
                         l = browserWindowWidth - w - extraSpace;
                     }

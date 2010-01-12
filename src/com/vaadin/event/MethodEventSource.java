@@ -14,8 +14,7 @@ import java.lang.reflect.Method;
  * 
  * <p>
  * For more information on the inheritable event mechanism see the
- * {@link com.vaadin.event com.vaadin.event package
- * documentation}.
+ * {@link com.vaadin.event com.vaadin.event package documentation}.
  * </p>
  * 
  * @author IT Mill Ltd.
@@ -35,8 +34,7 @@ public interface MethodEventSource extends Serializable {
      * 
      * <p>
      * For more information on the inheritable event mechanism see the
-     * {@link com.vaadin.event com.vaadin.event package
-     * documentation}.
+     * {@link com.vaadin.event com.vaadin.event package documentation}.
      * </p>
      * 
      * @param eventType
@@ -69,8 +67,7 @@ public interface MethodEventSource extends Serializable {
      * 
      * <p>
      * For more information on the inheritable event mechanism see the
-     * {@link com.vaadin.event com.vaadin.event package
-     * documentation}.
+     * {@link com.vaadin.event com.vaadin.event package documentation}.
      * </p>
      * 
      * @param eventType
@@ -95,8 +92,7 @@ public interface MethodEventSource extends Serializable {
      * 
      * <p>
      * For more information on the inheritable event mechanism see the
-     * {@link com.vaadin.event com.vaadin.event package
-     * documentation}.
+     * {@link com.vaadin.event com.vaadin.event package documentation}.
      * </p>
      * 
      * @param eventType
@@ -114,8 +110,7 @@ public interface MethodEventSource extends Serializable {
      * 
      * <p>
      * For more information on the inheritable event mechanism see the
-     * {@link com.vaadin.event com.vaadin.event package
-     * documentation}.
+     * {@link com.vaadin.event com.vaadin.event package documentation}.
      * </p>
      * 
      * @param eventType
@@ -145,8 +140,7 @@ public interface MethodEventSource extends Serializable {
      * 
      * <p>
      * For more information on the inheritable event mechanism see the
-     * {@link com.vaadin.event com.vaadin.event package
-     * documentation}.
+     * {@link com.vaadin.event com.vaadin.event package documentation}.
      * </p>
      * 
      * @param eventType

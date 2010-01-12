@@ -51,7 +51,7 @@ import com.vaadin.ui.Window;
 
 /**
  * TODO Document me!
- *
+ * 
  * @author peholmst
  */
 public abstract class AbstractApplicationPortlet extends GenericPortlet
@@ -136,7 +136,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     /**
      * Gets an application property value.
-     *
+     * 
      * @param parameterName
      *            the Name or the parameter.
      * @return String value or null if not found
@@ -157,7 +157,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     /**
      * Gets an system property value.
-     *
+     * 
      * @param parameterName
      *            the Name or the parameter.
      * @return String value or null if not found
@@ -186,7 +186,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     /**
      * Gets an application or system property value.
-     *
+     * 
      * @param parameterName
      *            the Name or the parameter.
      * @param defaultValue
@@ -217,7 +217,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * Return the URL from where static files, e.g. the widgetset and the theme,
      * are served. In a standard configuration the VAADIN folder inside the
      * returned folder is what is used for widgetsets and themes.
-     *
+     * 
      * @param request
      * @return The location of static resources (inside which there should be a
      *         VAADIN directory). Does not end with a slash (/).
@@ -292,7 +292,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     /**
      * Returns true if the servlet is running in production mode. Production
      * mode disables all debug facilities.
-     *
+     * 
      * @return true if in production mode, false if in debug mode
      */
     public boolean isProductionMode() {
@@ -655,15 +655,15 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * application with window names identical to the portlet mode names.
      * Alternatively, a PortletListener can change the application main window
      * contents.
-     *
+     * 
      * To implement custom portlet modes, subclass the portlet class and
      * implement a method annotated with {@link RenderMode} for the custom mode,
      * calling {@link #handleRequest(PortletRequest, PortletResponse)} directly
      * from it.
-     *
+     * 
      * Note that the portlet class in the portlet configuration needs to be
      * changed when overriding methods of this class.
-     *
+     * 
      * @param request
      * @param response
      * @throws PortletException
@@ -677,7 +677,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     /**
      * Handle a request for the "edit" portlet mode.
-     *
+     * 
      * @see #doView(RenderRequest, RenderResponse)
      */
     @Override
@@ -688,7 +688,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     /**
      * Handle a request for the "help" portlet mode.
-     *
+     * 
      * @see #doView(RenderRequest, RenderResponse)
      */
     @Override
@@ -1012,7 +1012,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     /**
      * Returns the theme for given request/window
-     *
+     * 
      * @param request
      * @param window
      * @return
@@ -1063,7 +1063,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     /**
      * Get system messages from the current application class
-     *
+     * 
      * @return
      */
     protected SystemMessages getSystemMessages() {
@@ -1136,7 +1136,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * Send notification to client's application. Used to notify client of
      * critical errors and session expiration due to long inactivity. Server has
      * no knowledge of what application client refers to.
-     *
+     * 
      * @param request
      *            the Portlet request instance.
      * @param response

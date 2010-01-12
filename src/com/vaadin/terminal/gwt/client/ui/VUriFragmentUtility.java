@@ -14,7 +14,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 /**
  * Client side implementation for UriFragmentUtility. Uses GWT's History object
  * as an implementation.
- *
+ * 
  */
 public class VUriFragmentUtility extends Widget implements Paintable,
         ValueChangeHandler<String> {

@@ -1,4 +1,5 @@
 package com.vaadin.tests.components.splitpanel;
+
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button;

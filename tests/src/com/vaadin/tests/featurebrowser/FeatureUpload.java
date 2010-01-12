@@ -118,8 +118,7 @@ public class FeatureUpload extends Feature implements Upload.FinishedListener {
         }
 
         /**
-         * @see com.vaadin.ui.Upload.Receiver#receiveUpload(String,
-         *      String)
+         * @see com.vaadin.ui.Upload.Receiver#receiveUpload(String, String)
          */
         public OutputStream receiveUpload(String filename, String MIMEType) {
             fileName = filename;

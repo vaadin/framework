@@ -20,11 +20,11 @@ import java.util.regex.Pattern;
 /**
  * Helper class to update widgetsets GWT module configuration file. Can be used
  * command line or via IDE tools.
- *
+ * 
  * <p>
  * If module definition file contains text "WS Compiler: manually edited", tool
  * will skip editing file.
- *
+ * 
  */
 public class WidgetSetBuilder {
 

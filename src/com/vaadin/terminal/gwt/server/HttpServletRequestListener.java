@@ -24,7 +24,7 @@ import com.vaadin.terminal.Terminal;
  * <p>
  * Alternatives for implementing similar features are are Servlet {@link Filter}
  * s and {@link TransactionListener}s in Vaadin.
- *
+ * 
  * @since 6.2
  * @see PortletRequestListener
  */
@@ -33,7 +33,7 @@ public interface HttpServletRequestListener extends Serializable {
     /**
      * This method is called before {@link Terminal} applies the request to
      * Application.
-     *
+     * 
      * @param request
      * @param response
      */
@@ -42,7 +42,7 @@ public interface HttpServletRequestListener extends Serializable {
 
     /**
      * This method is called at the end of each request.
-     *
+     * 
      * @param request
      * @param response
      */

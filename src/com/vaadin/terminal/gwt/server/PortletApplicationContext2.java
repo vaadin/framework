@@ -34,10 +34,10 @@ import com.vaadin.ui.Window;
 
 /**
  * TODO Write documentation, fix JavaDoc tags.
- *
+ * 
  * This is automatically registered as a {@link HttpSessionBindingListener} when
  * {@link PortletSession#setAttribute()} is called with the context as value.
- *
+ * 
  * @author peholmst
  */
 @SuppressWarnings("serial")
@@ -144,7 +144,8 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
         Set<PortletListener> listeners = portletListeners.get(app);
         if (listeners != null) {
             for (PortletListener l : listeners) {
-                l.handleRenderRequest(request, new RestrictedRenderResponse(response));
+                l.handleRenderRequest(request, new RestrictedRenderResponse(
+                        response));
             }
         }
     }
@@ -154,8 +155,8 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
         String key = request.getParameter(ActionRequest.ACTION_NAME);
         if (eventActionDestinationMap.containsKey(key)) {
             // this action request is only to send queued portlet events
-            response.setEvent(eventActionDestinationMap.get(key), eventActionValueMap
-                    .get(key));
+            response.setEvent(eventActionDestinationMap.get(key),
+                    eventActionValueMap.get(key));
             // cleanup
             eventActionDestinationMap.remove(key);
             eventActionValueMap.remove(key);
@@ -214,9 +215,9 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
 
     /**
      * This is for use by {@link AbstractApplicationPortlet} only.
-     *
+     * 
      * TODO cleaner implementation, now "semi-static"!
-     *
+     * 
      * @param mimeResponse
      */
     void setResponse(PortletResponse response) {
@@ -224,8 +225,7 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
     }
 
     @Override
-    public String generateApplicationResourceURL(
-            ApplicationResource resource,
+    public String generateApplicationResourceURL(ApplicationResource resource,
             String mapKey) {
         if (response instanceof MimeResponse) {
             ResourceURL resourceURL = ((MimeResponse) response)
@@ -245,7 +245,7 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
 
     /**
      * Creates a new action URL.
-     *
+     * 
      * @param action
      * @return action URL or null if called outside a MimeRequest (outside a
      *         UIDL request or similar)
@@ -263,16 +263,16 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
 
     /**
      * Sends a portlet event to the indicated destination.
-     *
+     * 
      * Internally, an action may be created and opened, as an event cannot be
      * sent directly from all types of requests.
-     *
+     * 
      * The event destinations and values need to be kept in the context until
      * sent. Any memory leaks if the action fails are limited to the session.
-     *
+     * 
      * Event names for events sent and received by a portlet need to be declared
      * in portlet.xml .
-     *
+     * 
      * @param window
      *            a window in which a temporary action URL can be opened if
      *            necessary
@@ -310,16 +310,16 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
 
     /**
      * Sets a shared portlet parameter.
-     *
+     * 
      * Internally, an action may be created and opened, as shared parameters
      * cannot be set directly from all types of requests.
-     *
+     * 
      * The parameters and values need to be kept in the context until sent. Any
      * memory leaks if the action fails are limited to the session.
-     *
+     * 
      * Shared parameters set or read by a portlet need to be declared in
      * portlet.xml .
-     *
+     * 
      * @param window
      *            a window in which a temporary action URL can be opened if
      *            necessary
@@ -356,9 +356,9 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
 
     /**
      * Sets the portlet mode. This may trigger a new render request.
-     *
+     * 
      * Portlet modes used by a portlet need to be declared in portlet.xml .
-     *
+     * 
      * @param window
      *            a window in which the render URL can be opened if necessary
      * @param portletMode

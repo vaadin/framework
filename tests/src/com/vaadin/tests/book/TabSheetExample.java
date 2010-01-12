@@ -27,7 +27,7 @@ public class TabSheetExample extends CustomComponent implements
         // First tab contains a button, for which we
         // listen button click events.
         tab1.addListener(this);
-        
+
         // This will cause a selectedTabChange() call.
         tabsheet.addTab(tab1, "First Tab", null);
 
@@ -42,8 +42,8 @@ public class TabSheetExample extends CustomComponent implements
 
     public void buttonClick(ClickEvent event) {
         // Enable the invisible and disabled tabs.
-    	tabsheet.getTab(tab2).setVisible(true);
-    	tabsheet.getTab(tab3).setEnabled(true);
+        tabsheet.getTab(tab2).setVisible(true);
+        tabsheet.getTab(tab3).setEnabled(true);
 
         // Change selection automatically to second tab.
         tabsheet.setSelectedTab(tab2);
@@ -51,19 +51,19 @@ public class TabSheetExample extends CustomComponent implements
 
     public void selectedTabChange(SelectedTabChangeEvent event) {
         // Cast to a TabSheet. This isn't really necessary in
-    	// this example, as we have only one TabSheet component,
-    	// but would be useful if there were multiple TabSheets.
+        // this example, as we have only one TabSheet component,
+        // but would be useful if there were multiple TabSheets.
         final TabSheet source = (TabSheet) event.getSource();
 
         if (source == tabsheet) {
             // If the first tab was selected.
             if (source.getSelectedTab() == tab1) {
-            	// The 2. and 3. tabs may not have been set yet.
-            	if (tabsheet.getTab(tab2) != null
-            		&& tabsheet.getTab(tab3) != null) {
-            		tabsheet.getTab(tab2).setVisible(false);
-            		tabsheet.getTab(tab3).setEnabled(false);
-            	}
+                // The 2. and 3. tabs may not have been set yet.
+                if (tabsheet.getTab(tab2) != null
+                        && tabsheet.getTab(tab3) != null) {
+                    tabsheet.getTab(tab2).setVisible(false);
+                    tabsheet.getTab(tab3).setEnabled(false);
+                }
             }
         }
     }

@@ -15,7 +15,7 @@ import java.io.Serializable;
  * @VERSION@
  * @since 3.0
  */
-public interface Resource extends Serializable{
+public interface Resource extends Serializable {
 
     /**
      * Gets the MIME type of the resource.

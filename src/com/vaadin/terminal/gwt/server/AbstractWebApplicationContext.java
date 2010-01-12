@@ -43,7 +43,7 @@ public abstract class AbstractWebApplicationContext implements
 
     /**
      * Sends a notification that a transaction is starting.
-     *
+     * 
      * @param application
      *            The application associated with the transaction.
      * @param request
@@ -59,7 +59,7 @@ public abstract class AbstractWebApplicationContext implements
 
     /**
      * Sends a notification that a transaction has ended.
-     *
+     * 
      * @param application
      *            The application associated with the transaction.
      * @param request
@@ -130,11 +130,11 @@ public abstract class AbstractWebApplicationContext implements
 
     /**
      * Get the web browser associated with this application context.
-     *
+     * 
      * Because application context is related to the http session and server
      * maintains one session per browser-instance, each context has exactly one
      * web browser associated with it.
-     *
+     * 
      * @return
      */
     public WebBrowser getBrowser() {
@@ -150,8 +150,8 @@ public abstract class AbstractWebApplicationContext implements
         applicationToAjaxAppMgrMap.remove(application);
     }
 
-    public String generateApplicationResourceURL(
-            ApplicationResource resource, String mapKey) {
+    public String generateApplicationResourceURL(ApplicationResource resource,
+            String mapKey) {
 
         final String filename = resource.getFilename();
         if (filename == null) {

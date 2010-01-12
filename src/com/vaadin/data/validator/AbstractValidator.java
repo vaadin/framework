@@ -3,8 +3,8 @@ package com.vaadin.data.validator;
 import com.vaadin.data.Validator;
 
 /**
- * Default Validator base class. See
- * {@link com.vaadin.data.validator.Validator} for more information.
+ * Default Validator base class. See {@link com.vaadin.data.validator.Validator}
+ * for more information.
  * <p>
  * If the validation fails, the exception thrown contains the error message with
  * its argument 0 replaced with the toString() of the object being validated.

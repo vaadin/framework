@@ -11,8 +11,8 @@ import com.vaadin.data.Property;
 
 /**
  * A simple data object containing one typed value. This class is a
- * straightforward implementation of the the
- * {@link com.vaadin.data.Property} interface.
+ * straightforward implementation of the the {@link com.vaadin.data.Property}
+ * interface.
  * 
  * @author IT Mill Ltd.
  * @version

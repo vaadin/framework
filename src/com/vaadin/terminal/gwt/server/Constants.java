@@ -2,9 +2,9 @@ package com.vaadin.terminal.gwt.server;
 
 /**
  * TODO Document me!
- *
+ * 
  * @author peholmst
- *
+ * 
  */
 public interface Constants {
 

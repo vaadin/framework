@@ -2,8 +2,7 @@ package com.vaadin.data.validator;
 
 /**
  * Validator base class for validating strings. See
- * {@link com.vaadin.data.validator.AbstractValidator} for more
- * information.
+ * {@link com.vaadin.data.validator.AbstractValidator} for more information.
  * 
  * <p>
  * If the validation fails, the exception thrown contains the error message with

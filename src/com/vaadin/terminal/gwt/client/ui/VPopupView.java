@@ -153,12 +153,12 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
     /**
      * Determines the correct position for a popup and displays the popup at
      * that position.
-     *
+     * 
      * By default, the popup is shown centered relative to its host component,
      * ensuring it is visible on the screen if possible.
-     *
+     * 
      * Can be overridden to customize the popup position.
-     *
+     * 
      * @param popup
      */
     protected void showPopup(final CustomPopup popup) {

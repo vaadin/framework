@@ -40,7 +40,7 @@ public interface Terminal extends Serializable {
     /**
      * Terminal error event.
      */
-    public interface ErrorEvent extends Serializable{
+    public interface ErrorEvent extends Serializable {
 
         /**
          * Gets the contained throwable.
@@ -52,7 +52,7 @@ public interface Terminal extends Serializable {
     /**
      * Terminal error listener interface.
      */
-    public interface ErrorListener extends Serializable{
+    public interface ErrorListener extends Serializable {
 
         /**
          * Invoked when terminal error occurs.

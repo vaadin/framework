@@ -35,33 +35,35 @@ public class BrowserLauncher {
             // See if the default browser is Konqueror by resolving the symlink.
             boolean isDefaultKonqueror = false;
             try {
-            	// Find out the location of the x-www-browser link from path.
-            	Process process = runtime.exec("which x-www-browser");
-            	BufferedInputStream ins = new BufferedInputStream(process.getInputStream());
-            	BufferedReader bufreader = new BufferedReader(new InputStreamReader(ins));
-            	String defaultLinkPath = bufreader.readLine();
-            	ins.close();
+                // Find out the location of the x-www-browser link from path.
+                Process process = runtime.exec("which x-www-browser");
+                BufferedInputStream ins = new BufferedInputStream(process
+                        .getInputStream());
+                BufferedReader bufreader = new BufferedReader(
+                        new InputStreamReader(ins));
+                String defaultLinkPath = bufreader.readLine();
+                ins.close();
 
-            	// The path is null if the link did not exist.
-            	if (defaultLinkPath != null) {
-	            	// See if the default browser is Konqueror.
-	            	File file = new File(defaultLinkPath);
-	            	String canonical = file.getCanonicalPath();
-	            	if (canonical.indexOf("konqueror") != -1)
-	            		isDefaultKonqueror = true;
-            	}
+                // The path is null if the link did not exist.
+                if (defaultLinkPath != null) {
+                    // See if the default browser is Konqueror.
+                    File file = new File(defaultLinkPath);
+                    String canonical = file.getCanonicalPath();
+                    if (canonical.indexOf("konqueror") != -1)
+                        isDefaultKonqueror = true;
+                }
             } catch (IOException e1) {
-            	// The symlink was probably not found, so this is ok.
+                // The symlink was probably not found, so this is ok.
             }
 
             // Try x-www-browser, which is symlink to the default browser,
             // except if we found that it is Konqueror.
             if (!started && !isDefaultKonqueror) {
-            	try {
-            		runtime.exec("x-www-browser " + url);
-            		started = true;
-            	} catch (final IOException e) {
-            	}
+                try {
+                    runtime.exec("x-www-browser " + url);
+                    started = true;
+                } catch (final IOException e) {
+                }
             }
 
             // Try firefox
