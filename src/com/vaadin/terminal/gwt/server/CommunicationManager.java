@@ -25,11 +25,11 @@ import com.vaadin.ui.Window;
 /**
  * Application manager processes changes and paints for single application
  * instance.
- *
+ * 
  * This class handles applications running as servlets.
  * 
  * @see AbstractCommunicationManager
- *
+ * 
  * @author IT Mill Ltd.
  * @version
  * @VERSION@
@@ -40,7 +40,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
 
     /**
      * Concrete wrapper class for {@link HttpServletRequest}.
-     *
+     * 
      * @see Request
      */
     private static class HttpServletRequestWrapper implements Request {
@@ -90,7 +90,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
 
     /**
      * Concrete wrapper class for {@link HttpServletResponse}.
-     *
+     * 
      * @see Response
      */
     private static class HttpServletResponseWrapper implements Response {
@@ -117,7 +117,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
 
     /**
      * Concrete wrapper class for {@link HttpSession}.
-     *
+     * 
      * @see Session
      */
     private static class HttpSessionWrapper implements Session {
@@ -194,7 +194,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
 
     /**
      * TODO New constructor - document me!
-     *
+     * 
      * @param application
      */
     public CommunicationManager(Application application) {
@@ -216,9 +216,9 @@ public class CommunicationManager extends AbstractCommunicationManager {
 
     /**
      * Handles file upload request submitted via Upload component.
-     *
+     * 
      * TODO document
-     *
+     * 
      * @param request
      * @param response
      * @throws IOException
@@ -233,9 +233,9 @@ public class CommunicationManager extends AbstractCommunicationManager {
 
     /**
      * Handles UIDL request
-     *
+     * 
      * TODO document
-     *
+     * 
      * @param request
      * @param response
      * @throws IOException
@@ -253,7 +253,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
     /**
      * Gets the existing application or creates a new one. Get a window within
      * an application based on the requested URI.
-     *
+     * 
      * @param request
      *            the HTTP Request.
      * @param application
@@ -278,15 +278,15 @@ public class CommunicationManager extends AbstractCommunicationManager {
     /**
      * Calls the Window URI handler for a request and returns the
      * {@link DownloadStream} returned by the handler.
-     *
+     * 
      * If the window is the main window of an application, the deprecated
      * {@link Application#handleURI(java.net.URL, String)} is called first to
      * handle {@link ApplicationResource}s and the window handler is only called
      * if it returns null.
-     *
+     * 
      * @see AbstractCommunicationManager#handleURI(Window, Request, Response,
      *      Callback)
-     *
+     * 
      * @param window
      * @param request
      * @param response
