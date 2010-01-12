@@ -7,34 +7,34 @@ import com.vaadin.ui.Button.ClickEvent;
 
 public class ReplaceComponentNPE extends TestBase {
 
-	@Override
-	protected String getDescription() {
-		return "Clicking 'ReplaceComponent' should replace the 'Button' button with a VericalLayout, and move the button inside the verticalLayout. Visually this can be seen by the added margins of the VerticalLayout.";
-	}
+    @Override
+    protected String getDescription() {
+        return "Clicking 'ReplaceComponent' should replace the 'Button' button with a VericalLayout, and move the button inside the verticalLayout. Visually this can be seen by the added margins of the VerticalLayout.";
+    }
 
-	@Override
-	protected Integer getTicketNumber() {
-		return 3195;
-	}
+    @Override
+    protected Integer getTicketNumber() {
+        return 3195;
+    }
 
-	final Button button = new Button("Button");
-	final VerticalLayout outer = new VerticalLayout();
+    final Button button = new Button("Button");
+    final VerticalLayout outer = new VerticalLayout();
 
-	@Override
-	protected void setup() {
-		outer.setMargin(true);
-		
-		Button changer = new Button("ReplaceComponent");
-		changer.addListener(new Button.ClickListener() {
-			public void buttonClick(ClickEvent event) {
-				getLayout().replaceComponent(button, outer);
-				outer.addComponent(button);
-			}
-		});
+    @Override
+    protected void setup() {
+        outer.setMargin(true);
 
-		getLayout().addComponent(button);
-		getLayout().addComponent(changer);
+        Button changer = new Button("ReplaceComponent");
+        changer.addListener(new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                getLayout().replaceComponent(button, outer);
+                outer.addComponent(button);
+            }
+        });
 
-	}
+        getLayout().addComponent(button);
+        getLayout().addComponent(changer);
+
+    }
 
 }

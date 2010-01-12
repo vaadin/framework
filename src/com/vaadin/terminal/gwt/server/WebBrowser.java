@@ -20,7 +20,7 @@ public class WebBrowser implements Terminal {
 
     /**
      * There is no default-theme for this terminal type.
-     *
+     * 
      * @return Allways returns null.
      */
     public String getDefaultTheme() {
@@ -29,7 +29,7 @@ public class WebBrowser implements Terminal {
 
     /**
      * Get the height of the users display in pixels.
-     *
+     * 
      */
     public int getScreenHeight() {
         return screenHeight;
@@ -37,7 +37,7 @@ public class WebBrowser implements Terminal {
 
     /**
      * Get the width of the users display in pixels.
-     *
+     * 
      */
     public int getScreenWidth() {
         return screenWidth;
@@ -45,7 +45,7 @@ public class WebBrowser implements Terminal {
 
     /**
      * Get the browser user-agent string.
-     *
+     * 
      * @return
      */
     public String getBrowserApplication() {
@@ -78,7 +78,7 @@ public class WebBrowser implements Terminal {
     /**
      * Get the IP-address of the web browser. If the application is running
      * inside a portlet, this method will return null.
-     *
+     * 
      * @return IP-address in 1.12.123.123 -format
      */
     public String getAddress() {

@@ -23,6 +23,7 @@ public interface FieldEvents {
      * class really will send the events, or if it just defines the methods to
      * be able to implement an interface.
      * </p>
+     * 
      * @since 6.2
      * @see FocusListener
      * @see FocusEvent
@@ -60,6 +61,7 @@ public interface FieldEvents {
      * class really will send the events, or if it just defines the methods to
      * be able to implement an interface.
      * </p>
+     * 
      * @since 6.2
      * @see BlurListener
      * @see BlurEvent

@@ -182,7 +182,7 @@ public class ApplicationPortlet implements Portlet, Serializable {
                      * servlet to extend the session lifetime after each Vaadin
                      * request. This hack can be removed when supporting portlet
                      * 2.0 and resourceRequests.
-                     *
+                     * 
                      * TODO make this configurable, this is not necessary with
                      * some custom session configurations.
                      */

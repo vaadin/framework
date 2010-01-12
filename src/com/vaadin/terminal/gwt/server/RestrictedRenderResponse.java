@@ -19,12 +19,11 @@ import org.w3c.dom.Element;
 
 /**
  * Read-only wrapper for a {@link RenderResponse}.
- *
+ * 
  * Only for use by {@link PortletApplicationContext} and
  * {@link PortletApplicationContext2}.
  */
-class RestrictedRenderResponse implements RenderResponse,
-        Serializable {
+class RestrictedRenderResponse implements RenderResponse, Serializable {
 
     private RenderResponse response;
 
@@ -115,8 +114,7 @@ class RestrictedRenderResponse implements RenderResponse,
         response.setTitle(title);
     }
 
-    public void setNextPossiblePortletModes(
-            Collection<PortletMode> portletModes) {
+    public void setNextPossiblePortletModes(Collection<PortletMode> portletModes) {
         // NOP
         // TODO throw?
     }

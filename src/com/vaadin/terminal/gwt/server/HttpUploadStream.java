@@ -15,8 +15,7 @@ import java.io.InputStream;
  * @since 5.0
  */
 @SuppressWarnings("serial")
-public class HttpUploadStream implements
-        com.vaadin.terminal.UploadStream {
+public class HttpUploadStream implements com.vaadin.terminal.UploadStream {
 
     /**
      * Holds value of property variableName.

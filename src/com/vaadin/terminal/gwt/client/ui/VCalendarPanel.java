@@ -263,7 +263,7 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
     }
 
     /**
-     *
+     * 
      * @param forceRedraw
      *            Build all from scratch, in case of e.g. locale changes
      */
@@ -447,8 +447,8 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
             Object sender = event.getSource();
             Cell cell = cal.days.getCellForEvent(event);
             if (sender != cal.days || cell == null || cell.getRowIndex() < 1
-                    || cell.getRowIndex() > 6
-                    || !cal.datefield.isEnabled() || cal.datefield.isReadonly()) {
+                    || cell.getRowIndex() > 6 || !cal.datefield.isEnabled()
+                    || cal.datefield.isReadonly()) {
                 return;
             }
 
@@ -540,7 +540,7 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
 
     /**
      * Sets focus to Calendar panel.
-     *
+     * 
      * @param focus
      */
     public void setFocus(boolean focus) {

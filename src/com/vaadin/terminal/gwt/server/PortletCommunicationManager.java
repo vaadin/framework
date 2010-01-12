@@ -24,9 +24,9 @@ import com.vaadin.ui.Window;
 
 /**
  * TODO document me!
- *
+ * 
  * @author peholmst
- *
+ * 
  */
 @SuppressWarnings("serial")
 public class PortletCommunicationManager extends AbstractCommunicationManager {
@@ -168,7 +168,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         /**
          * Find the application window to use based on the portlet mode. For
          * internal use only, not in the {@link Callback} interface.
-         *
+         * 
          * @param request
          * @param application
          * @return

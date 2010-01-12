@@ -455,8 +455,8 @@ public class GeneratedColumnExample extends CustomComponent {
                         null);
         table.addContainerProperty("quantity", Double.class, null,
                 "Quantity (l)", null, null);
-        table.addContainerProperty("price", Double.class, null, "Price (€/l)",
-                null, null);
+        table.addContainerProperty("price", Double.class, null,
+                "Price (€/l)", null, null);
         table.addContainerProperty("total", Double.class, null, "Total (€)",
                 null, null);
         table.addContainerProperty("consumption", Double.class, null,

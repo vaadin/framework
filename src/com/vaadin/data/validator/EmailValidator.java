@@ -5,8 +5,8 @@ package com.vaadin.data.validator;
  * complete according to RFC 822 but handles the vast majority of valid e-mail
  * addresses correctly.
  * 
- * See {@link com.vaadin.data.validator.AbstractStringValidator} for
- * more information.
+ * See {@link com.vaadin.data.validator.AbstractStringValidator} for more
+ * information.
  * 
  * @author IT Mill Ltd.
  * @version

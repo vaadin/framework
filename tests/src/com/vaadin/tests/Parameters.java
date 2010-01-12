@@ -26,8 +26,8 @@ import com.vaadin.ui.Window;
  * 
  * @since 3.1.1
  */
-public class Parameters extends com.vaadin.Application implements
-        URIHandler, ParameterHandler {
+public class Parameters extends com.vaadin.Application implements URIHandler,
+        ParameterHandler {
 
     private final Label context = new Label();
 

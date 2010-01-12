@@ -89,7 +89,7 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
 
     /**
      * Parses application runner URIs.
-     *
+     * 
      * If request URL is e.g.
      * http://localhost:8080/vaadin/run/com.vaadin.demo.Calc then
      * <ul>
@@ -97,7 +97,7 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
      * <li>Runner servlet=run</li>
      * <li>Vaadin application=com.vaadin.demo.Calc</li>
      * </ul>
-     *
+     * 
      * @param request
      * @return string array containing widgetset URI, application URI and
      *         context, runner, application classname

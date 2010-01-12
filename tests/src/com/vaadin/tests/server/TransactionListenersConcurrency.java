@@ -32,7 +32,7 @@ public class TransactionListenersConcurrency extends TestCase {
      * transaction is then started for each application. Some semi-random delays
      * are included so that calls to addTransactionListener and
      * WebApplicationContext.startTransaction are mixed.
-     *
+     * 
      */
     public void testTransactionListeners() throws Exception {
         final List<Throwable> exceptions = new ArrayList<Throwable>();
@@ -133,7 +133,7 @@ public class TransactionListenersConcurrency extends TestCase {
 
     /**
      * Creates a HttpSession mock
-     *
+     * 
      */
     private static HttpSession createSession() {
         HttpSession session = createMock(HttpSession.class);
@@ -151,7 +151,7 @@ public class TransactionListenersConcurrency extends TestCase {
     /**
      * A transaction listener that just sleeps for the given amount of time in
      * transactionStart and transactionEnd.
-     *
+     * 
      */
     public static class DelayTransactionListener implements TransactionListener {
 

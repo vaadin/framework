@@ -8,8 +8,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 
-public abstract class Robustness extends com.vaadin.Application
-        implements Button.ClickListener {
+public abstract class Robustness extends com.vaadin.Application implements
+        Button.ClickListener {
 
     static int totalCount = 0;
 

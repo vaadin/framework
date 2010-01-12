@@ -1,4 +1,5 @@
 package com.vaadin.tests.components.textfield;
+
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.TextField;
 

@@ -15,7 +15,7 @@ import java.io.Serializable;
  * @VERSION@
  * @since 3.0
  */
-public interface Sizeable extends Serializable{
+public interface Sizeable extends Serializable {
 
     /**
      * Unit code representing pixels.

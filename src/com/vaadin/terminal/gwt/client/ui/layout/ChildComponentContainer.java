@@ -40,7 +40,7 @@ public class ChildComponentContainer extends Panel {
     private int captionHeight = 0;
 
     /**
-     *
+     * 
      * Padding added to the container when it is larger than the component.
      */
     private Size containerExpansion = new Size(0, 0);
@@ -189,14 +189,14 @@ public class ChildComponentContainer extends Panel {
         /*
          * Must remove width specification from container before rendering to
          * allow components to grow in horizontal direction.
-         *
+         * 
          * For fixed width layouts we specify the width directly so that height
          * is automatically calculated correctly (e.g. for Labels).
          */
         /*
          * This should no longer be needed (after #2563) as all components are
          * such that they can be rendered inside a 0x0 DIV.
-         *
+         * 
          * The exception seems to be complex components (Tree and Table) on
          * Opera (#3444).
          */
@@ -611,7 +611,7 @@ public class ChildComponentContainer extends Panel {
     /**
      * Return true if the size of the widget has been specified in the selected
      * orientation.
-     *
+     * 
      * @return
      */
     public boolean widgetHasSizeSpecified(int orientation) {
@@ -654,7 +654,7 @@ public class ChildComponentContainer extends Panel {
     /**
      * Sets the normalized expand ratio of this slot. The fraction that this
      * slot will use of "excess space".
-     *
+     * 
      * @param expandRatio
      */
     public void setNormalizedExpandRatio(double expandRatio) {

@@ -38,7 +38,7 @@ public class TableEditable extends CustomComponent {
             // Create the table row.
             table.addItem(new Object[] { calendar.getTime(),
                     new Boolean(false), "" }, new Integer(i)); // Item
-                                                               // identifier
+            // identifier
         }
 
         table.setPageLength(8);

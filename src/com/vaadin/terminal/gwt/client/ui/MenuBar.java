@@ -42,9 +42,13 @@ import com.google.gwt.user.client.ui.Widget;
  * <img class='gallery' src='MenuBar.png'/>
  * </p>
  * 
- * <h3>CSS Style Rules</h3> <ul class='css'> <li>.gwt-MenuBar { the menu bar
- * itself }</li> <li>.gwt-MenuBar .gwt-MenuItem { menu items }</li> <li>
- * .gwt-MenuBar .gwt-MenuItem-selected { selected menu items }</li> </ul>
+ * <h3>CSS Style Rules</h3>
+ * <ul class='css'>
+ * <li>.gwt-MenuBar { the menu bar itself }</li>
+ * <li>.gwt-MenuBar .gwt-MenuItem { menu items }</li>
+ * <li>
+ * .gwt-MenuBar .gwt-MenuItem-selected { selected menu items }</li>
+ * </ul>
  * 
  * <p>
  * <h3>Example</h3>
