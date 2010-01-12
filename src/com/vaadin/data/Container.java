@@ -541,6 +541,24 @@ public interface Container extends Serializable {
          *         <code>false</code> if not (is a leaf)
          */
         public boolean hasChildren(Object itemId);
+
+        /**
+         * <p>
+         * Removes the Item identified by <code>ItemId</code> from the
+         * Container.
+         * </p>
+         * 
+         * <p>
+         * Note that this does not remove any children the item might have.
+         * </p>
+         * 
+         * @param itemId
+         *            ID of the Item to remove
+         * @return <code>true</code> if the operation succeeded,
+         *         <code>false</code> if not
+         */
+        public boolean removeItem(Object itemId)
+                throws UnsupportedOperationException;
     }
 
     /**
@@ -555,17 +573,15 @@ public interface Container extends Serializable {
      * visible in the container.
      * 
      * When an {@link com.vaadin.data.Ordered} or
-     * {@link com.vaadin.data.Indexed} container is filtered, all
-     * operations of these interfaces should only use the filtered contents and
-     * the filtered indices to the container.
+     * {@link com.vaadin.data.Indexed} container is filtered, all operations of
+     * these interfaces should only use the filtered contents and the filtered
+     * indices to the container.
      * 
-     * Adding items (if supported) to a filtered
-     * {@link com.vaadin.data.Ordered} or
-     * {@link com.vaadin.data.Indexed} container should insert them
+     * Adding items (if supported) to a filtered {@link com.vaadin.data.Ordered}
+     * or {@link com.vaadin.data.Indexed} container should insert them
      * immediately after the indicated visible item. The unfiltered position of
-     * items added at index 0, at index
-     * {@link com.vaadin.data.Container#size()} or at an undefined
-     * position is up to the implementation.
+     * items added at index 0, at index {@link com.vaadin.data.Container#size()}
+     * or at an undefined position is up to the implementation.
      * 
      * @since 5.0
      */

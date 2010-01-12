@@ -8,7 +8,6 @@ import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.Button.ClickEvent;
 
@@ -52,17 +51,6 @@ public class Buttons extends ComponentTestCase {
             addTestComponent(l);
         }
 
-    }
-
-    private Component createActionLayout() {
-        HorizontalLayout actionLayout = new HorizontalLayout();
-        actionLayout.setSpacing(true);
-        actionLayout.setMargin(true);
-        for (Component c : createActions()) {
-            actionLayout.addComponent(c);
-        }
-        addComponent(actionLayout);
-        return actionLayout;
     }
 
     private Button createButton(String text, boolean nativeButton) {
