@@ -32,6 +32,8 @@ public class ApplicationConfiguration {
 
     private Class<? extends Paintable>[] classes = new Class[1024];
 
+    private String windowId;
+
     private static ArrayList<ApplicationConnection> unstartedApplications = new ArrayList<ApplicationConnection>();
     private static ArrayList<ApplicationConnection> runningApplications = new ArrayList<ApplicationConnection>();
 
@@ -239,7 +241,7 @@ public class ApplicationConfiguration {
     public void addComponentMappings(ValueMap valueMap, WidgetSet widgetSet) {
         JsArrayString keyArray = valueMap.getKeyArray();
         for (int i = 0; i < keyArray.length(); i++) {
-            String key = keyArray.get(i);
+            String key = keyArray.get(i).intern();
             int value = valueMap.getInt(key);
             classes[value] = widgetSet.getImplementationByClassName(key);
             if (classes[value] == VUnknownComponent.class) {
@@ -247,8 +249,18 @@ public class ApplicationConfiguration {
                     unknownComponents = new HashMap<String, String>();
                 }
                 unknownComponents.put("" + value, key);
+            } else if (key == "com.vaadin.ui.Window") {
+                windowId = "" + value;
             }
         }
+    }
+
+    /**
+     * @return the integer value that is used to code top level windows
+     *         "com.vaadin.ui.Window"
+     */
+    String getEncodedWindowTag() {
+        return windowId;
     }
 
     String getUnknownServerClassNameByEncodedTagName(String tag) {

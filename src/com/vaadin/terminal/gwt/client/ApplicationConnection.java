@@ -789,7 +789,8 @@ public class ApplicationConnection {
                     updatedWidgets.add(idToPaintableDetail.get(uidl.getId())
                             .getComponent());
                 } else {
-                    if (!uidl.getTag().equals("0")) {
+                    if (!uidl.getTag().equals(
+                            configuration.getEncodedWindowTag())) {
                         ClientExceptionHandler
                                 .displayError("Received update for "
                                         + uidl.getTag()
