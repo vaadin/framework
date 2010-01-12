@@ -34,6 +34,8 @@ public class VSplitPanel extends ComplexPanel implements Container,
 
     public static final String SPLITTER_CLICK_EVENT_IDENTIFIER = "sp_click";
 
+    protected static final String DRAGGING_CURTAIN_STYLE_NAME = "vsplitpanel-dragging-curtain-ff";
+
     private ClickEventHandler clickEventHandler = new ClickEventHandler(this,
             SPLITTER_CLICK_EVENT_IDENTIFIER) {
 
@@ -45,7 +47,10 @@ public class VSplitPanel extends ComplexPanel implements Container,
 
         @Override
         protected void fireClick(NativeEvent event) {
-            if (splitter.isOrHasChild((Element) event.getEventTarget().cast())) {
+            Element target = event.getEventTarget().cast();
+            if (splitter.isOrHasChild(target)
+                    || (target.getClassName()
+                            .equals(DRAGGING_CURTAIN_STYLE_NAME))) {
                 super.fireClick(event);
             }
         }
@@ -183,7 +188,6 @@ public class VSplitPanel extends ComplexPanel implements Container,
         }
 
         clickEventHandler.handleEventHandlerRegistration(client);
-
         if (uidl.hasAttribute("style")) {
             componentStyleNames = uidl.getStringAttribute("style").split(" ");
         } else {
@@ -472,6 +476,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
         if (draggingCurtain == null) {
             draggingCurtain = DOM.createDiv();
             DOM.setStyleAttribute(draggingCurtain, "position", "absolute");
+            draggingCurtain.setClassName(DRAGGING_CURTAIN_STYLE_NAME);
             DOM.setStyleAttribute(draggingCurtain, "top", "0px");
             DOM.setStyleAttribute(draggingCurtain, "left", "0px");
             DOM.setStyleAttribute(draggingCurtain, "width", "100%");
