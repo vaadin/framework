@@ -1841,18 +1841,16 @@ public abstract class AbstractCommunicationManager implements
         }
     }
 
-    private static HashMap<Class<? extends Paintable>, Integer> typeToKey = new HashMap<Class<? extends Paintable>, Integer>();
-    private static int nextTypeKey = 0;
+    private HashMap<Class<? extends Paintable>, Integer> typeToKey = new HashMap<Class<? extends Paintable>, Integer>();
+    private int nextTypeKey = 0;
 
-    static String getTagForType(Class<? extends Paintable> class1) {
-        synchronized (typeToKey) {
-            Integer object = typeToKey.get(class1);
-            if (object == null) {
-                object = nextTypeKey++;
-                typeToKey.put(class1, object);
-            }
-            return object.toString();
+    String getTagForType(Class<? extends Paintable> class1) {
+        Integer object = typeToKey.get(class1);
+        if (object == null) {
+            object = nextTypeKey++;
+            typeToKey.put(class1, object);
         }
+        return object.toString();
     }
 
     /**
