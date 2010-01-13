@@ -4,15 +4,15 @@
 
 package com.vaadin.ui;
 
+import com.vaadin.terminal.PaintException;
+import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.ui.VCustomLayout;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Iterator;
-
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.VCustomLayout;
 
 /**
  * <p>
@@ -90,7 +90,10 @@ public class CustomLayout extends AbstractLayout {
 
     /**
      * Constructor for custom layout with given template name. Template file is
-     * fetched from "<theme>/layout/<templateName>".
+     * fetched from VAADIN/themes/themename/layouts/templatename.html - see
+     * {@link #setTemplateName(String)} for details.
+     * 
+     * @see #setTemplateName(String)
      */
     public CustomLayout(String template) {
         templateName = template;
