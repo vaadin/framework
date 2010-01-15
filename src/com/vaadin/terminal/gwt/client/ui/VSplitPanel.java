@@ -40,7 +40,14 @@ public class VSplitPanel extends ComplexPanel implements Container,
         @Override
         protected <H extends EventHandler> HandlerRegistration registerHandler(
                 H handler, Type<H> type) {
-            return addDomHandler(handler, type);
+            if ((Event.getEventsSunk(splitter) & Event.getTypeInt(type
+                    .getName())) != 0) {
+                // If we are already sinking the event for the splitter we do
+                // not want to additionally sink it for the root element
+                return addHandler(handler, type);
+            } else {
+                return addDomHandler(handler, type);
+            }
         }
 
         @Override
@@ -138,7 +145,6 @@ public class VSplitPanel extends ComplexPanel implements Container,
         constructDom();
         setOrientation(orientation);
         DOM.sinkEvents(splitter, (Event.MOUSEEVENTS));
-        DOM.sinkEvents(getElement(), (Event.MOUSEEVENTS));
     }
 
     protected void constructDom() {
