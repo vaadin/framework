@@ -375,7 +375,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
             // Dragging curtain interferes with click events if added in
             // mousedown so we add it only when needed i.e., if the mouse moves
             // outside the splitter.
-            if (resizing && BrowserInfo.get().isGecko()) {
+            if (resizing) {
                 showDraggingCurtain();
             }
             break;
@@ -461,9 +461,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
 
     public void onMouseUp(Event event) {
         DOM.releaseCapture(getElement());
-        if (BrowserInfo.get().isGecko()) {
-            hideDraggingCurtain();
-        }
+        hideDraggingCurtain();
         resizing = false;
         onMouseMove(event);
         updateSplitPositionToServer();
@@ -474,6 +472,9 @@ public class VSplitPanel extends ComplexPanel implements Container,
      * iframe.
      */
     private void showDraggingCurtain() {
+        if (!isDraggingCurtainRequired()) {
+            return;
+        }
         if (draggingCurtain == null) {
             draggingCurtain = DOM.createDiv();
             DOM.setStyleAttribute(draggingCurtain, "position", "absolute");
@@ -486,6 +487,15 @@ public class VSplitPanel extends ComplexPanel implements Container,
 
             DOM.appendChild(RootPanel.getBodyElement(), draggingCurtain);
         }
+    }
+
+    /**
+     * A dragging curtain is required in Gecko and Webkit.
+     * 
+     * @return true if the browser requires a dragging curtain
+     */
+    private boolean isDraggingCurtainRequired() {
+        return (BrowserInfo.get().isGecko() || BrowserInfo.get().isWebkit());
     }
 
     /**
