@@ -35,17 +35,8 @@
 </ul>
 
 <p>Vaadin @version@ is a maintenance release for Vaadin 6.2,
-containing a number of important fixes. In addition to the fixes listed in the <a
-	href="#changelog">Change Log</a> below, the release includes the following fix or enhacements:</p>
-
-<ul>
-  <li>Enhancements for the Portlet 2.0 support (<a href="http://dev.vaadin.com/ticket/3918">#3918</a>)</li>
-  <ul>
-    <li>Support for the edit and help modes</li>
-    <li>Support for custom modes and changing modes programmatically</li>
-    <li>See <a href="http://dev.vaadin.com/browser/versions/6.2/demo/src/com/vaadin/demo/portlet/PortletModeExample.java"><tt>com/vaadin/demo/portlet/PortletModeExample.java</tt></a> in the demo source code in the installation package for an example</li>
-  </ul>
-</ul>
+containing a number of important fixes. The fixes are listed in the <a
+	href="#changelog">Change Log</a> below.</p>
 
 <p>For recent major enhancements, see the <a
 	href="http://vaadin.com/download/release/6.2/6.2.0/release-notes.html">Release
@@ -64,33 +55,19 @@ widget sets and refresh your project in Eclipse. If you are upgrading from earli
 <p>The following closed issues have been included in this release:</p>
 	
 <ul>
-  <li><a href="http://dev.vaadin.com/ticket/1211">#1211</a>: ISlider: Provide proper feedback (current value) to user when moving handle</li>
-  <li><a href="http://dev.vaadin.com/ticket/3522">#3522</a>: IE8/reindeer: Error indicator is missing background when inside tabsheet</li>
-  <li><a href="http://dev.vaadin.com/ticket/3607">#3607</a>: Component Already Has A Parent. This exception should be detailed</li>
-  <li><a href="http://dev.vaadin.com/ticket/3617">#3617</a>: NullPointerException in IndexedContainer.removeItem()</li>
-  <li><a href="http://dev.vaadin.com/ticket/3764">#3764</a>: (Safari) Vertical scrolling in Table is broken when horizontal scrolling is used</li>
-  <li><a href="http://dev.vaadin.com/ticket/3793">#3793</a>: VScrollTable adds horizontal scrollbar on top of rows</li>
-  <li><a href="http://dev.vaadin.com/ticket/3799">#3799</a>: column autoresizing doesn't seem to work anymore</li>
-  <li><a href="http://dev.vaadin.com/ticket/3803">#3803</a>: Better description for GridLayout's OverlapsException</li>
-  <li><a href="http://dev.vaadin.com/ticket/3814">#3814</a>: Table does not render last row in a container when in 100% height</li>
-  <li><a href="http://dev.vaadin.com/ticket/3826">#3826</a>: Table breaks (white area) when container property value is changed (SA, FF)</li>
-  <li><a href="http://dev.vaadin.com/ticket/3832">#3832</a>: Include widget class in missing widget warning message</li>
-  <li><a href="http://dev.vaadin.com/ticket/3840">#3840</a>: setDebugId does not set ID's on hidden fields</li>
-  <li><a href="http://dev.vaadin.com/ticket/3864">#3864</a>: FileSystemContainer in Table throws NPE</li>
-  <li><a href="http://dev.vaadin.com/ticket/3875">#3875</a>: Webkit rendering bug causes whitespace between header and first row in table</li>
-  <li><a href="http://dev.vaadin.com/ticket/3882">#3882</a>: Top of a tooltip (or error in tooltip) is not visible</li>
-  <li><a href="http://dev.vaadin.com/ticket/3889">#3889</a>: Multiple new samples use main window instead of current window</li>
-  <li><a href="http://dev.vaadin.com/ticket/3893">#3893</a>: ProgressIndicator sample should synchronize UI updates using the application</li>
-  <li><a href="http://dev.vaadin.com/ticket/3901">#3901</a>: Checkbox - In IE7 the outline focuses around the caption, rather than around the input component</li>
-  <li><a href="http://dev.vaadin.com/ticket/3902">#3902</a>: VWindow focus handling broken</li>
-  <li><a href="http://dev.vaadin.com/ticket/3904">#3904</a>: VSplitPanel sends unnecessary split position events</li>
-  <li><a href="http://dev.vaadin.com/ticket/3907">#3907</a>: Undefined wide MenuBar will drop items that do not fit in view</li>
-  <li><a href="http://dev.vaadin.com/ticket/3908">#3908</a>: MenuBar doesn't open sub-submenus with hover in IE7</li>
-  <li><a href="http://dev.vaadin.com/ticket/3917">#3917</a>: Menubar is not collapsed in IE6</li>
-  <li><a href="http://dev.vaadin.com/ticket/3918">#3918</a>: PortletListener (2.0) does not support edit mode</li>
-  <li><a href="http://dev.vaadin.com/ticket/3920">#3920</a>: Glassfish v3 does not work with Vaadin</li>
-  <li><a href="http://dev.vaadin.com/ticket/3929">#3929</a>: Button border/padding measurement is broken in IE6</li>
-  <li><a href="http://dev.vaadin.com/ticket/3933">#3933</a>: Sampler CheckBox example does not notify</li>
+  <li><a href="http://dev.vaadin.com/ticket/3792">#3792</a>: SplitPanel resizing issue with RichTextArea in Safari/Chrome</li>
+  <li><a href="http://dev.vaadin.com/ticket/3854">#3854</a>: SplitterClickListener doesn't work properly when SplitPanel is locked.</li>
+  <li><a href="http://dev.vaadin.com/ticket/3932">#3932</a>: Disabled menus can still be opened</li>
+  <li><a href="http://dev.vaadin.com/ticket/3934">#3934</a>: Changing locale should repaint component</li>
+  <li><a href="http://dev.vaadin.com/ticket/3948">#3948</a>: Document that Container.Hierarchical.removeItem should not remove children</li>
+  <li><a href="http://dev.vaadin.com/ticket/3969">#3969</a>: VView not found after hot code swap</li>
+  <li><a href="http://dev.vaadin.com/ticket/3974">#3974</a>: "IE reports ""xyzproject.gwt.client.XYZWidgetSet is already inited."" as an error"</li>
+  <li><a href="http://dev.vaadin.com/ticket/3982">#3982</a>: SplitPanel.SplitterClickListener doesn't work with FF3.5</li>
+  <li><a href="http://dev.vaadin.com/ticket/3986">#3986</a>: SplitPanel.SplitterClickListener doesn't recognize double-click with FF3.5</li>
+  <li><a href="http://dev.vaadin.com/ticket/3987">#3987</a>: DefaultItemSorter fails for a filtered container</li>
+  <li><a href="http://dev.vaadin.com/ticket/3990">#3990</a>: FileUploadException is thrown on upload if a debug id is set for the Upload component</li>
+  <li><a href="http://dev.vaadin.com/ticket/3992">#3992</a>: SplitPanel with splitter click listener prevents context menus from appearing</li>
+  <li><a href="http://dev.vaadin.com/ticket/3999">#3999</a>: SplitPanel splitter click events are no longer sent if the SplitPanel is locked after the splitter has been moved</li>
 </ul>
 
 <h2><a name="widgetupgrade">Upgrading from an Earlier Version of Vaadin 6</a></h2>
