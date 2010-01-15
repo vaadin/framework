@@ -383,7 +383,8 @@ public abstract class AbstractCommunicationManager implements
                 if (item.isFormField()) {
                     // ignored, upload requests contains only files
                 } else {
-                    final String pid = name.split("_")[0];
+                    int separatorPos = name.lastIndexOf("_");
+                    final String pid = name.substring(0, separatorPos);
                     final Upload uploadComponent = (Upload) idPaintableMap
                             .get(pid);
                     if (uploadComponent == null) {
