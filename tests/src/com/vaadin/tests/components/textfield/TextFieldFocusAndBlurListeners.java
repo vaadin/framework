@@ -7,7 +7,7 @@ import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.tests.layouts.TestLayoutClickListeners.Log;
+import com.vaadin.tests.util.Log;
 import com.vaadin.ui.TextField;
 
 public class TextFieldFocusAndBlurListeners extends TestBase implements

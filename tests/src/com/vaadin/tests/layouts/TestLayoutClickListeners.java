@@ -1,11 +1,9 @@
 package com.vaadin.tests.layouts;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.tests.components.AbstractTestCase;
+import com.vaadin.tests.util.Log;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -21,41 +19,6 @@ import com.vaadin.ui.Window;
 public class TestLayoutClickListeners extends AbstractTestCase {
 
     private Log log = new Log(5);
-
-    public static class Log extends VerticalLayout {
-        List<Label> eventLabels = new ArrayList<Label>();
-
-        public Log(int nr) {
-            for (int i = 0; i < nr; i++) {
-                Label l = createEventLabel();
-                eventLabels.add(l);
-                addComponent(l);
-            }
-
-            setCaption("Events:");
-        }
-
-        public void clear() {
-            for (Label l : eventLabels) {
-                l.setValue("");
-            }
-        }
-
-        public void log(String event) {
-            int nr = eventLabels.size();
-            for (int i = nr - 1; i > 0; i--) {
-                eventLabels.get(i).setValue(eventLabels.get(i - 1).getValue());
-            }
-            eventLabels.get(0).setValue(event);
-        }
-
-        private Label createEventLabel() {
-            Label l = new Label("&nbsp;", Label.CONTENT_XHTML);
-            l.setWidth(null);
-            return l;
-        }
-
-    }
 
     @Override
     public void init() {

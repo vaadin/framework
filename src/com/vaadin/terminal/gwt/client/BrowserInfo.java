@@ -176,6 +176,10 @@ public class BrowserInfo {
         return isGecko;
     }
 
+    public boolean isWebkit() {
+        return isAppleWebKit;
+    }
+
     public boolean isFF2() {
         return isGecko && version == 1.8;
     }

@@ -57,6 +57,8 @@ public class VMenuBar extends Widget implements Paintable,
 
     private Timer layoutTimer;
 
+    private boolean enabled = true;
+
     public VMenuBar() {
         // Create an empty horizontal menubar
         this(false);
@@ -107,6 +109,7 @@ public class VMenuBar extends Widget implements Paintable,
         if (client.updateComponent(this, uidl, true)) {
             return;
         }
+        this.enabled = !uidl.getBooleanAttribute("disabled");
 
         // For future connections
         this.client = client;
@@ -371,13 +374,13 @@ public class VMenuBar extends Widget implements Paintable,
             switch (DOM.eventGetType(e)) {
 
             case Event.ONCLICK:
-                if (targetItem.isEnabled()) {
+                if (isEnabled() && targetItem.isEnabled()) {
                     itemClick(targetItem);
                 }
                 break;
 
             case Event.ONMOUSEOVER:
-                if (targetItem.isEnabled()) {
+                if (isEnabled() && targetItem.isEnabled()) {
                     itemOver(targetItem);
                 }
                 break;
@@ -387,6 +390,10 @@ public class VMenuBar extends Widget implements Paintable,
                 break;
             }
         }
+    }
+
+    private boolean isEnabled() {
+        return enabled;
     }
 
     private void requestLayout() {

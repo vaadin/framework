@@ -62,6 +62,20 @@ public class DefaultItemSorter implements ItemSorter {
         Item item1 = container.getItem(o1);
         Item item2 = container.getItem(o2);
 
+        /*
+         * Items can be null if the container is filtered. Null is considered
+         * "less" than not-null.
+         */
+        if (item1 == null) {
+            if (item2 == null) {
+                return 0;
+            } else {
+                return 1;
+            }
+        } else if (item2 == null) {
+            return -1;
+        }
+
         for (int i = 0; i < sortPropertyIds.length; i++) {
 
             int result = compareProperty(sortPropertyIds[i], sortDirections[i],

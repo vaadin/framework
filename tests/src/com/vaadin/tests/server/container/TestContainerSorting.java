@@ -32,6 +32,31 @@ public class TestContainerSorting extends TestCase {
         super.setUp();
     }
 
+    public void testEmptyFilteredIndexedContainer() {
+        IndexedContainer ic = new IndexedContainer();
+
+        addProperties(ic);
+        populate(ic);
+
+        ic.addContainerFilter(PROPERTY_STRING_ID, "aasdfasdfasdf", true, false);
+        ic.sort(new Object[] { PROPERTY_STRING_ID }, new boolean[] { true });
+
+    }
+
+    public void testFilteredIndexedContainer() {
+        IndexedContainer ic = new IndexedContainer();
+
+        addProperties(ic);
+        populate(ic);
+
+        ic.addContainerFilter(PROPERTY_STRING_ID, "a", true, false);
+        ic.sort(new Object[] { PROPERTY_STRING_ID }, new boolean[] { true });
+        verifyOrder(ic,
+                new String[] { ITEM_ANOTHER_NULL, ITEM_DATA_MINUS1,
+                        ITEM_DATA_MINUS1_NULL, ITEM_DATA_MINUS2,
+                        ITEM_DATA_MINUS2_NULL, });
+    }
+
     public void testIndexedContainer() {
         IndexedContainer ic = new IndexedContainer();
 

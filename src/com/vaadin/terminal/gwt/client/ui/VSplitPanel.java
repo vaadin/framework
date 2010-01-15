@@ -40,12 +40,29 @@ public class VSplitPanel extends ComplexPanel implements Container,
         @Override
         protected <H extends EventHandler> HandlerRegistration registerHandler(
                 H handler, Type<H> type) {
-            return addDomHandler(handler, type);
+            if ((Event.getEventsSunk(splitter) & Event.getTypeInt(type
+                    .getName())) != 0) {
+                // If we are already sinking the event for the splitter we do
+                // not want to additionally sink it for the root element
+                return addHandler(handler, type);
+            } else {
+                return addDomHandler(handler, type);
+            }
         }
 
         @Override
+        public void onContextMenu(
+                com.google.gwt.event.dom.client.ContextMenuEvent event) {
+            Element target = event.getNativeEvent().getEventTarget().cast();
+            if (splitter.isOrHasChild(target)) {
+                super.onContextMenu(event);
+            }
+        };
+
+        @Override
         protected void fireClick(NativeEvent event) {
-            if (splitter.isOrHasChild((Element) event.getEventTarget().cast())) {
+            Element target = event.getEventTarget().cast();
+            if (splitter.isOrHasChild(target)) {
                 super.fireClick(event);
             }
         }
@@ -127,7 +144,6 @@ public class VSplitPanel extends ComplexPanel implements Container,
         setHeight(MIN_SIZE + "px");
         constructDom();
         setOrientation(orientation);
-        DOM.sinkEvents(splitter, (Event.MOUSEEVENTS));
         DOM.sinkEvents(getElement(), (Event.MOUSEEVENTS));
     }
 
@@ -183,7 +199,6 @@ public class VSplitPanel extends ComplexPanel implements Container,
         }
 
         clickEventHandler.handleEventHandlerRegistration(client);
-
         if (uidl.hasAttribute("style")) {
             componentStyleNames = uidl.getStringAttribute("style").split(" ");
         } else {
@@ -371,6 +386,14 @@ public class VSplitPanel extends ComplexPanel implements Container,
         case Event.ONMOUSEDOWN:
             onMouseDown(event);
             break;
+        case Event.ONMOUSEOUT:
+            // Dragging curtain interferes with click events if added in
+            // mousedown so we add it only when needed i.e., if the mouse moves
+            // outside the splitter.
+            if (resizing) {
+                showDraggingCurtain();
+            }
+            break;
         case Event.ONMOUSEUP:
             if (resizing) {
                 onMouseUp(event);
@@ -383,6 +406,10 @@ public class VSplitPanel extends ComplexPanel implements Container,
         // Only fire click event listeners if the splitter isn't moved
         if (!resized) {
             super.onBrowserEvent(event);
+        } else if (DOM.eventGetType(event) == Event.ONMOUSEUP) {
+            // Reset the resized flag after a mouseup has occured so the next
+            // mousedown/mouseup can be interpreted as a click.
+            resized = false;
         }
     }
 
@@ -393,10 +420,6 @@ public class VSplitPanel extends ComplexPanel implements Container,
         final Element trg = DOM.eventGetTarget(event);
         if (trg == splitter || trg == DOM.getChild(splitter, 0)) {
             resizing = true;
-            resized = false;
-            if (BrowserInfo.get().isGecko()) {
-                showDraggingCurtain();
-            }
             DOM.setCapture(getElement());
             origX = DOM.getElementPropertyInt(splitter, "offsetLeft");
             origY = DOM.getElementPropertyInt(splitter, "offsetTop");
@@ -456,9 +479,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
 
     public void onMouseUp(Event event) {
         DOM.releaseCapture(getElement());
-        if (BrowserInfo.get().isGecko()) {
-            hideDraggingCurtain();
-        }
+        hideDraggingCurtain();
         resizing = false;
         onMouseMove(event);
         updateSplitPositionToServer();
@@ -469,6 +490,9 @@ public class VSplitPanel extends ComplexPanel implements Container,
      * iframe.
      */
     private void showDraggingCurtain() {
+        if (!isDraggingCurtainRequired()) {
+            return;
+        }
         if (draggingCurtain == null) {
             draggingCurtain = DOM.createDiv();
             DOM.setStyleAttribute(draggingCurtain, "position", "absolute");
@@ -478,8 +502,18 @@ public class VSplitPanel extends ComplexPanel implements Container,
             DOM.setStyleAttribute(draggingCurtain, "height", "100%");
             DOM.setStyleAttribute(draggingCurtain, "zIndex", ""
                     + VOverlay.Z_INDEX);
+
             DOM.appendChild(RootPanel.getBodyElement(), draggingCurtain);
         }
+    }
+
+    /**
+     * A dragging curtain is required in Gecko and Webkit.
+     * 
+     * @return true if the browser requires a dragging curtain
+     */
+    private boolean isDraggingCurtainRequired() {
+        return (BrowserInfo.get().isGecko() || BrowserInfo.get().isWebkit());
     }
 
     /**
