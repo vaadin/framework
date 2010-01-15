@@ -144,7 +144,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
         setHeight(MIN_SIZE + "px");
         constructDom();
         setOrientation(orientation);
-        DOM.sinkEvents(splitter, (Event.MOUSEEVENTS));
+        DOM.sinkEvents(getElement(), (Event.MOUSEEVENTS));
     }
 
     protected void constructDom() {
