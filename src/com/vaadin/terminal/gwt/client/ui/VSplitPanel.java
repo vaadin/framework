@@ -34,8 +34,6 @@ public class VSplitPanel extends ComplexPanel implements Container,
 
     public static final String SPLITTER_CLICK_EVENT_IDENTIFIER = "sp_click";
 
-    protected static final String DRAGGING_CURTAIN_STYLE_NAME = "vsplitpanel-dragging-curtain-ff";
-
     private ClickEventHandler clickEventHandler = new ClickEventHandler(this,
             SPLITTER_CLICK_EVENT_IDENTIFIER) {
 
@@ -48,9 +46,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
         @Override
         protected void fireClick(NativeEvent event) {
             Element target = event.getEventTarget().cast();
-            if (splitter.isOrHasChild(target)
-                    || (target.getClassName()
-                            .equals(DRAGGING_CURTAIN_STYLE_NAME))) {
+            if (splitter.isOrHasChild(target)) {
                 super.fireClick(event);
             }
         }
@@ -474,15 +470,20 @@ public class VSplitPanel extends ComplexPanel implements Container,
      */
     private void showDraggingCurtain() {
         if (draggingCurtain == null) {
+            // Ensure splitter is above dragging curtain so events will be
+            // handled properly
+            splitter.getStyle().setProperty("zIndex",
+                    "" + (VOverlay.Z_INDEX + 1));
+
             draggingCurtain = DOM.createDiv();
             DOM.setStyleAttribute(draggingCurtain, "position", "absolute");
-            draggingCurtain.setClassName(DRAGGING_CURTAIN_STYLE_NAME);
             DOM.setStyleAttribute(draggingCurtain, "top", "0px");
             DOM.setStyleAttribute(draggingCurtain, "left", "0px");
             DOM.setStyleAttribute(draggingCurtain, "width", "100%");
             DOM.setStyleAttribute(draggingCurtain, "height", "100%");
             DOM.setStyleAttribute(draggingCurtain, "zIndex", ""
                     + VOverlay.Z_INDEX);
+
             DOM.appendChild(RootPanel.getBodyElement(), draggingCurtain);
         }
     }
@@ -493,6 +494,9 @@ public class VSplitPanel extends ComplexPanel implements Container,
     private void hideDraggingCurtain() {
         if (draggingCurtain != null) {
             DOM.removeChild(RootPanel.getBodyElement(), draggingCurtain);
+
+            // Remove temporary splitter zIndex set in showDraggingCurtain
+            splitter.getStyle().setProperty("zIndex", "");
             draggingCurtain = null;
         }
     }
