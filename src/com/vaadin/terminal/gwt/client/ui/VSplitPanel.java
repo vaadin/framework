@@ -406,6 +406,10 @@ public class VSplitPanel extends ComplexPanel implements Container,
         // Only fire click event listeners if the splitter isn't moved
         if (!resized) {
             super.onBrowserEvent(event);
+        } else if (DOM.eventGetType(event) == Event.ONMOUSEUP) {
+            // Reset the resized flag after a mouseup has occured so the next
+            // mousedown/mouseup can be interpreted as a click.
+            resized = false;
         }
     }
 
@@ -416,7 +420,6 @@ public class VSplitPanel extends ComplexPanel implements Container,
         final Element trg = DOM.eventGetTarget(event);
         if (trg == splitter || trg == DOM.getChild(splitter, 0)) {
             resizing = true;
-            resized = false;
             DOM.setCapture(getElement());
             origX = DOM.getElementPropertyInt(splitter, "offsetLeft");
             origY = DOM.getElementPropertyInt(splitter, "offsetTop");
