@@ -371,6 +371,14 @@ public class VSplitPanel extends ComplexPanel implements Container,
         case Event.ONMOUSEDOWN:
             onMouseDown(event);
             break;
+        case Event.ONMOUSEOUT:
+            // Dragging curtain interferes with click events if added in
+            // mousedown so we add it only when needed i.e., if the mouse moves
+            // outside the splitter.
+            if (resizing && BrowserInfo.get().isGecko()) {
+                showDraggingCurtain();
+            }
+            break;
         case Event.ONMOUSEUP:
             if (resizing) {
                 onMouseUp(event);
@@ -394,9 +402,6 @@ public class VSplitPanel extends ComplexPanel implements Container,
         if (trg == splitter || trg == DOM.getChild(splitter, 0)) {
             resizing = true;
             resized = false;
-            if (BrowserInfo.get().isGecko()) {
-                showDraggingCurtain();
-            }
             DOM.setCapture(getElement());
             origX = DOM.getElementPropertyInt(splitter, "offsetLeft");
             origY = DOM.getElementPropertyInt(splitter, "offsetTop");
@@ -470,11 +475,6 @@ public class VSplitPanel extends ComplexPanel implements Container,
      */
     private void showDraggingCurtain() {
         if (draggingCurtain == null) {
-            // Ensure splitter is above dragging curtain so events will be
-            // handled properly
-            splitter.getStyle().setProperty("zIndex",
-                    "" + (VOverlay.Z_INDEX + 1));
-
             draggingCurtain = DOM.createDiv();
             DOM.setStyleAttribute(draggingCurtain, "position", "absolute");
             DOM.setStyleAttribute(draggingCurtain, "top", "0px");
@@ -494,9 +494,6 @@ public class VSplitPanel extends ComplexPanel implements Container,
     private void hideDraggingCurtain() {
         if (draggingCurtain != null) {
             DOM.removeChild(RootPanel.getBodyElement(), draggingCurtain);
-
-            // Remove temporary splitter zIndex set in showDraggingCurtain
-            splitter.getStyle().setProperty("zIndex", "");
             draggingCurtain = null;
         }
     }
