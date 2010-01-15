@@ -2,7 +2,6 @@ package com.vaadin.tests.components;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Layout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -26,13 +25,13 @@ public abstract class TestBase extends AbstractTestCase {
     }
 
     private Window window;
-    private Layout layout;
+    private VerticalLayout layout;
 
     public TestBase() {
 
     }
 
-    protected Layout getLayout() {
+    protected VerticalLayout getLayout() {
         return layout;
     }
 
