@@ -24,7 +24,6 @@ import com.vaadin.Application;
  * @author marc
  */
 @SuppressWarnings( { "serial", "unchecked" })
-@Deprecated
 public class PortletApplicationContext extends WebApplicationContext implements
         Serializable {
 
