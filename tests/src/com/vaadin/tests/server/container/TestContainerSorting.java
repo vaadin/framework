@@ -32,6 +32,17 @@ public class TestContainerSorting extends TestCase {
         super.setUp();
     }
 
+    public void testEmptyFilteredIndexedContainer() {
+        IndexedContainer ic = new IndexedContainer();
+
+        addProperties(ic);
+        populate(ic);
+
+        ic.addContainerFilter(PROPERTY_STRING_ID, "aasdfasdfasdf", true, false);
+        ic.sort(new Object[] { PROPERTY_STRING_ID }, new boolean[] { true });
+
+    }
+
     public void testFilteredIndexedContainer() {
         IndexedContainer ic = new IndexedContainer();
 
