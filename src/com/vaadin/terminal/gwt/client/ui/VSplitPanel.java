@@ -44,6 +44,15 @@ public class VSplitPanel extends ComplexPanel implements Container,
         }
 
         @Override
+        public void onContextMenu(
+                com.google.gwt.event.dom.client.ContextMenuEvent event) {
+            Element target = event.getNativeEvent().getEventTarget().cast();
+            if (splitter.isOrHasChild(target)) {
+                super.onContextMenu(event);
+            }
+        };
+
+        @Override
         protected void fireClick(NativeEvent event) {
             Element target = event.getEventTarget().cast();
             if (splitter.isOrHasChild(target)) {
