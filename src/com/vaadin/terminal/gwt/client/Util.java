@@ -233,7 +233,7 @@ public class Util {
             if (src.indexOf(".png") < 1) return;
             var w = el.width || 16; 
             var h = el.height || 16;
-            if(h==30 || w==28) {
+            if(h==30 || w==28) {
                 setTimeout(function(){
                     el.style.height = el.height + "px";
                     el.style.width = el.width + "px";
