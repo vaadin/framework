@@ -1,18 +1,18 @@
-/* 
+/*
 @ITMillApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.ui;
-
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.VCustomLayout;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Iterator;
+
+import com.vaadin.terminal.PaintException;
+import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.ui.VCustomLayout;
 
 /**
  * <p>
@@ -37,6 +37,8 @@ import java.util.Iterator;
  * </p>
  * 
  * @author IT Mill Ltd.
+ * @author Duy B. Vo (<a
+ *         href="mailto:devduy@gmail.com?subject=Vaadin">devduy@gmail.com</a>)
  * @version
  * @VERSION@
  * @since 3.0
@@ -57,6 +59,14 @@ public class CustomLayout extends AbstractLayout {
     private String templateName = null;
 
     /**
+     * Default constructor only used by subclasses because the subclasses are
+     * responsible for setting the appropriate fields.
+     */
+    protected CustomLayout() {
+        setWidth(100, UNITS_PERCENTAGE);
+    }
+
+    /**
      * Constructs a custom layout with the template given in the stream.
      * 
      * @param templateStream
@@ -68,10 +78,24 @@ public class CustomLayout extends AbstractLayout {
      * @throws IOException
      */
     public CustomLayout(InputStream templateStream) throws IOException {
+        this();
+        initTemplateContentsFromInputStream(templateStream);
+    }
 
+    /**
+     * Constructor for custom layout with given template name. Template file is
+     * fetched from "<theme>/layout/<templateName>".
+     */
+    public CustomLayout(String template) {
+        this();
+        templateName = template;
+    }
+
+    protected void initTemplateContentsFromInputStream(
+            InputStream templateStream) throws IOException {
         InputStreamReader reader = new InputStreamReader(templateStream,
                 "UTF-8");
-        StringBuffer b = new StringBuffer(BUFFER_SIZE);
+        StringBuilder b = new StringBuilder(BUFFER_SIZE);
 
         char[] cbuf = new char[BUFFER_SIZE];
         int offset = 0;
@@ -85,19 +109,6 @@ public class CustomLayout extends AbstractLayout {
         }
 
         templateContents = b.toString();
-        setWidth(100, UNITS_PERCENTAGE);
-    }
-
-    /**
-     * Constructor for custom layout with given template name. Template file is
-     * fetched from VAADIN/themes/themename/layouts/templatename.html - see
-     * {@link #setTemplateName(String)} for details.
-     * 
-     * @see #setTemplateName(String)
-     */
-    public CustomLayout(String template) {
-        templateName = template;
-        setWidth(100, UNITS_PERCENTAGE);
     }
 
     /**
@@ -249,7 +260,9 @@ public class CustomLayout extends AbstractLayout {
      * 
      * @param name
      *            template name
+     * @deprecated Use {@link #setTemplateName(String)} instead
      */
+    @Deprecated
     @Override
     public void setStyle(String name) {
         setTemplateName(name);
@@ -258,6 +271,11 @@ public class CustomLayout extends AbstractLayout {
     /** Get the name of the template */
     public String getTemplateName() {
         return templateName;
+    }
+
+    /** Get the contents of the template */
+    public String getTemplateContents() {
+        return templateContents;
     }
 
     /**
@@ -272,6 +290,17 @@ public class CustomLayout extends AbstractLayout {
     public void setTemplateName(String templateName) {
         this.templateName = templateName;
         templateContents = null;
+        requestRepaint();
+    }
+
+    /**
+     * Set the contents of the template used to draw the custom layout.
+     * 
+     * @param templateContents
+     */
+    public void setTemplateContents(String templateContents) {
+        this.templateContents = templateContents;
+        templateName = null;
         requestRepaint();
     }
 
