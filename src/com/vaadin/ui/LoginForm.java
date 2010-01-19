@@ -32,7 +32,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
  * default component tries to guess the right place for theme css.
  * <p>
  * Note, this is a new Ajax terminal specific component and is likely to change.
- *
+ * 
  * @since 5.3
  */
 public class LoginForm extends CustomComponent {
@@ -43,9 +43,6 @@ public class LoginForm extends CustomComponent {
 
     private ApplicationResource loginPage = new ApplicationResource() {
 
-        /**
-         *
-         */
         private static final long serialVersionUID = 1L;
 
         public Application getApplication() {
@@ -76,9 +73,6 @@ public class LoginForm extends CustomComponent {
 
     private ParameterHandler paramHandler = new ParameterHandler() {
 
-        /**
-         *
-         */
         private static final long serialVersionUID = 1L;
 
         public void handleParameters(Map<String, String[]> parameters) {
@@ -100,9 +94,6 @@ public class LoginForm extends CustomComponent {
     };
 
     private URIHandler uriHandler = new URIHandler() {
-        /**
-         *
-         */
         private static final long serialVersionUID = 1L;
         private final String responce = "<html><body>Login form handeled."
                 + "<script type='text/javascript'>top.vaadin.forceSync();"
@@ -137,7 +128,7 @@ public class LoginForm extends CustomComponent {
      * Returns byte array containing login page html. If you need to override
      * the login html, use the default html as basis. Login page sets its target
      * with javascript.
-     *
+     * 
      * @return byte array containing login page html
      */
     protected byte[] getLoginHTML() {
@@ -211,9 +202,6 @@ public class LoginForm extends CustomComponent {
      */
     public class LoginEvent extends Event {
 
-        /**
-         *
-         */
         private static final long serialVersionUID = 1L;
         private Map<String, String> params;
 
@@ -224,7 +212,7 @@ public class LoginForm extends CustomComponent {
 
         /**
          * Access method to form values by field names.
-         *
+         * 
          * @param name
          * @return value in given field
          */
@@ -244,7 +232,7 @@ public class LoginForm extends CustomComponent {
     public interface LoginListener extends Serializable {
         /**
          * This method is fired on each login form post.
-         *
+         * 
          * @param event
          */
         public void onLogin(LoginForm.LoginEvent event);
@@ -268,7 +256,7 @@ public class LoginForm extends CustomComponent {
 
     /**
      * Adds LoginListener to handle login logic
-     *
+     * 
      * @param listener
      */
     public void addListener(LoginListener listener) {
@@ -277,7 +265,7 @@ public class LoginForm extends CustomComponent {
 
     /**
      * Removes LoginListener
-     *
+     * 
      * @param listener
      */
     public void removeListener(LoginListener listener) {
