@@ -2892,7 +2892,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
      */
     private int getContentAreaBorderHeight() {
         if (contentAreaBorderHeight < 0) {
-            if (BrowserInfo.get().isIE7()) {
+            if (BrowserInfo.get().isIE7() || BrowserInfo.get().isIE6()) {
                 contentAreaBorderHeight = Util
                         .measureVerticalBorder(bodyContainer.getElement());
             } else {
