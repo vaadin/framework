@@ -1244,19 +1244,24 @@ public abstract class AbstractCommunicationManager implements
         HashMap<String, Object> map = new HashMap<String, Object>();
         for (int i = 0; i < parts.length; i += 2) {
             String key = parts[i];
-            char variabletype = key.charAt(0);
-            Object value = convertVariableValue(variabletype, parts[i + 1]);
-            map.put(key.substring(1), value);
+            if (key.length() > 0) {
+                char variabletype = key.charAt(0);
+                Object value = convertVariableValue(variabletype, parts[i + 1]);
+                map.put(key.substring(1), value);
+            }
         }
         return map;
     }
 
     private Object convertArray(String strValue) {
         String[] val = strValue.split(VAR_ARRAYITEM_SEPARATOR);
+        if (val.length == 0 || (val.length == 1 && val[0].length() == 0)) {
+            return new Object[0];
+        }
         Object[] values = new Object[val.length];
         for (int i = 0; i < values.length; i++) {
             String string = val[i];
-            // first char of string is typ
+            // first char of string is type
             char variableType = string.charAt(0);
             values[i] = convertVariableValue(variableType, string.substring(1));
         }

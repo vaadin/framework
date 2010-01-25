@@ -1324,11 +1324,12 @@ public class ApplicationConnection {
 
     /**
      * Sends a new value for the given paintables given variable to the server.
-     * <p>
+     * 
      * The update is actually queued to be sent at a suitable time. If immediate
      * is true, the update is sent as soon as possible. If immediate is false,
      * the update will be sent along with the next immediate update.
-     * </p>
+     * 
+     * A null array is sent as an empty array.
      * 
      * @param paintableId
      *            the id of the paintable that owns the variable
@@ -1342,11 +1343,13 @@ public class ApplicationConnection {
     public void updateVariable(String paintableId, String variableName,
             String[] values, boolean immediate) {
         final StringBuffer buf = new StringBuffer();
-        for (int i = 0; i < values.length; i++) {
-            if (i > 0) {
-                buf.append(VAR_ARRAYITEM_SEPARATOR);
+        if (values != null) {
+            for (int i = 0; i < values.length; i++) {
+                if (i > 0) {
+                    buf.append(VAR_ARRAYITEM_SEPARATOR);
+                }
+                buf.append(values[i]);
             }
-            buf.append(values[i]);
         }
         addVariableToQueue(paintableId, variableName, buf.toString(),
                 immediate, 'c');
@@ -1354,11 +1357,13 @@ public class ApplicationConnection {
 
     /**
      * Sends a new value for the given paintables given variable to the server.
-     * <p>
+     * 
      * The update is actually queued to be sent at a suitable time. If immediate
      * is true, the update is sent as soon as possible. If immediate is false,
-     * the update will be sent along with the next immediate update.
-     * </p>
+     * the update will be sent along with the next immediate update. </p>
+     * 
+     * A null array is sent as an empty array.
+     * 
      * 
      * @param paintableId
      *            the id of the paintable that owns the variable
@@ -1372,18 +1377,20 @@ public class ApplicationConnection {
     public void updateVariable(String paintableId, String variableName,
             Object[] values, boolean immediate) {
         final StringBuffer buf = new StringBuffer();
-        for (int i = 0; i < values.length; i++) {
-            if (i > 0) {
-                buf.append(VAR_ARRAYITEM_SEPARATOR);
-            }
-            Object value = values[i];
-            char transportType = getTransportType(value);
-            // first char tells the type in array
-            buf.append(transportType);
-            if (transportType == 'p') {
-                buf.append(getPid((Paintable) value));
-            } else {
-                buf.append(value);
+        if (values != null) {
+            for (int i = 0; i < values.length; i++) {
+                if (i > 0) {
+                    buf.append(VAR_ARRAYITEM_SEPARATOR);
+                }
+                Object value = values[i];
+                char transportType = getTransportType(value);
+                // first char tells the type in array
+                buf.append(transportType);
+                if (transportType == 'p') {
+                    buf.append(getPid((Paintable) value));
+                } else {
+                    buf.append(value);
+                }
             }
         }
         addVariableToQueue(paintableId, variableName, buf.toString(),
