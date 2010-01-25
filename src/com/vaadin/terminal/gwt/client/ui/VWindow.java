@@ -1065,6 +1065,10 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
         } else if (vaadinModality) {
             // return false when modal and outside window
             final Element target = event.getTarget().cast();
+            if (DOM.getCaptureElement() != null) {
+                // Allow events when capture is set
+                return true;
+            }
 
             if (!DOM.isOrHasChild(getElement(), target)) {
                 // not within the modal window, but let's see if it's in the

@@ -245,7 +245,13 @@ public class FileTypeResolver implements Serializable {
         dotIndex++;
 
         if (fileName.length() > dotIndex) {
-            final String ext = fileName.substring(dotIndex);
+            String ext = fileName.substring(dotIndex);
+
+            // Ignore any query parameters
+            int queryStringStart = ext.indexOf('?');
+            if (queryStringStart > 0) {
+                ext = ext.substring(0, queryStringStart);
+            }
 
             // Return type from extension map, if found
             final String type = (String) extToMIMEMap.get(ext);

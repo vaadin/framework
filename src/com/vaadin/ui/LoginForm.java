@@ -43,9 +43,6 @@ public class LoginForm extends CustomComponent {
 
     private ApplicationResource loginPage = new ApplicationResource() {
 
-        /**
-         * 
-         */
         private static final long serialVersionUID = 1L;
 
         public Application getApplication() {
@@ -76,9 +73,6 @@ public class LoginForm extends CustomComponent {
 
     private ParameterHandler paramHandler = new ParameterHandler() {
 
-        /**
-         * 
-         */
         private static final long serialVersionUID = 1L;
 
         public void handleParameters(Map<String, String[]> parameters) {
@@ -100,9 +94,6 @@ public class LoginForm extends CustomComponent {
     };
 
     private URIHandler uriHandler = new URIHandler() {
-        /**
-         * 
-         */
         private static final long serialVersionUID = 1L;
         private final String responce = "<html><body>Login form handeled."
                 + "<script type='text/javascript'>top.vaadin.forceSync();"
@@ -175,7 +166,7 @@ public class LoginForm extends CustomComponent {
                 + "<div class='v-app v-app-loginpage' style=\"background:transparent;\">"
                 + "<iframe name='logintarget' style='width:0;height:0;"
                 + "border:0;margin:0;padding:0;'></iframe>"
-                + "<form id='loginf' target='logintarget' onkeypress=\"submitOnEnter(event)\">"
+                + "<form id='loginf' target='logintarget' onkeypress=\"submitOnEnter(event)\" method=\"post\">"
                 + "<div>Username</div><div >"
                 + "<input class='v-textfield' style='display:block;' type='text' name='username'></div>"
                 + "<div>Password</div>"
@@ -211,9 +202,6 @@ public class LoginForm extends CustomComponent {
      */
     public class LoginEvent extends Event {
 
-        /**
-         * 
-         */
         private static final long serialVersionUID = 1L;
         private Map<String, String> params;
 

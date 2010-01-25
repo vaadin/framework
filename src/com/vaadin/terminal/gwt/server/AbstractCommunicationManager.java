@@ -59,6 +59,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
@@ -1211,7 +1212,7 @@ public abstract class AbstractCommunicationManager implements
             val = convertMap(strValue);
             break;
         case VTYPE_STRINGARRAY:
-            val = strValue.split(VAR_ARRAYITEM_SEPARATOR);
+            val = convertStringArray(strValue);
             break;
         case VTYPE_STRING:
             val = strValue;
@@ -1244,19 +1245,44 @@ public abstract class AbstractCommunicationManager implements
         HashMap<String, Object> map = new HashMap<String, Object>();
         for (int i = 0; i < parts.length; i += 2) {
             String key = parts[i];
-            char variabletype = key.charAt(0);
-            Object value = convertVariableValue(variabletype, parts[i + 1]);
-            map.put(key.substring(1), value);
+            if (key.length() > 0) {
+                char variabletype = key.charAt(0);
+                Object value = convertVariableValue(variabletype, parts[i + 1]);
+                map.put(key.substring(1), value);
+            }
         }
         return map;
     }
 
+    private String[] convertStringArray(String strValue) {
+        // need to return delimiters and filter them out; otherwise empty
+        // strings are lost
+        // an extra empty delimiter at the end is automatically eliminated
+        StringTokenizer tokenizer = new StringTokenizer(strValue,
+                VAR_ARRAYITEM_SEPARATOR, true);
+        List<String> tokens = new ArrayList<String>();
+        String prevToken = VAR_ARRAYITEM_SEPARATOR;
+        while (tokenizer.hasMoreTokens()) {
+            String token = tokenizer.nextToken();
+            if (!VAR_ARRAYITEM_SEPARATOR.equals(token)) {
+                tokens.add(token);
+            } else if (VAR_ARRAYITEM_SEPARATOR.equals(prevToken)) {
+                tokens.add("");
+            }
+            prevToken = token;
+        }
+        return tokens.toArray(new String[tokens.size()]);
+    }
+
     private Object convertArray(String strValue) {
         String[] val = strValue.split(VAR_ARRAYITEM_SEPARATOR);
+        if (val.length == 0 || (val.length == 1 && val[0].length() == 0)) {
+            return new Object[0];
+        }
         Object[] values = new Object[val.length];
         for (int i = 0; i < values.length; i++) {
             String string = val[i];
-            // first char of string is typ
+            // first char of string is type
             char variableType = string.charAt(0);
             values[i] = convertVariableValue(variableType, string.substring(1));
         }
