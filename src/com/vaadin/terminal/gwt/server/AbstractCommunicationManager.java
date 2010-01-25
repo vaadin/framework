@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
@@ -1211,7 +1212,7 @@ public abstract class AbstractCommunicationManager implements
             val = convertMap(strValue);
             break;
         case VTYPE_STRINGARRAY:
-            val = strValue.split(VAR_ARRAYITEM_SEPARATOR);
+            val = convertStringArray(strValue);
             break;
         case VTYPE_STRING:
             val = strValue;
@@ -1251,6 +1252,26 @@ public abstract class AbstractCommunicationManager implements
             }
         }
         return map;
+    }
+
+    private String[] convertStringArray(String strValue) {
+        // need to return delimiters and filter them out; otherwise empty
+        // strings are lost
+        // an extra empty delimiter at the end is automatically eliminated
+        StringTokenizer tokenizer = new StringTokenizer(strValue,
+                VAR_ARRAYITEM_SEPARATOR, true);
+        List<String> tokens = new ArrayList<String>();
+        String prevToken = VAR_ARRAYITEM_SEPARATOR;
+        while (tokenizer.hasMoreTokens()) {
+            String token = tokenizer.nextToken();
+            if (!VAR_ARRAYITEM_SEPARATOR.equals(token)) {
+                tokens.add(token);
+            } else if (VAR_ARRAYITEM_SEPARATOR.equals(prevToken)) {
+                tokens.add("");
+            }
+            prevToken = token;
+        }
+        return tokens.toArray(new String[tokens.size()]);
     }
 
     private Object convertArray(String strValue) {

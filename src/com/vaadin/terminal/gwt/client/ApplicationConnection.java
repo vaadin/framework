@@ -1345,10 +1345,11 @@ public class ApplicationConnection {
         final StringBuffer buf = new StringBuffer();
         if (values != null) {
             for (int i = 0; i < values.length; i++) {
-                if (i > 0) {
-                    buf.append(VAR_ARRAYITEM_SEPARATOR);
-                }
                 buf.append(values[i]);
+                // there will be an extra separator at the end to differentiate
+                // between an empty array and one containing an empty string
+                // only
+                buf.append(VAR_ARRAYITEM_SEPARATOR);
             }
         }
         addVariableToQueue(paintableId, variableName, buf.toString(),
