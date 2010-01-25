@@ -16,7 +16,6 @@ import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
@@ -503,7 +502,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
             DOM.setStyleAttribute(draggingCurtain, "zIndex", ""
                     + VOverlay.Z_INDEX);
 
-            DOM.appendChild(RootPanel.getBodyElement(), draggingCurtain);
+            DOM.appendChild(wrapper, draggingCurtain);
         }
     }
 
@@ -521,7 +520,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
      */
     private void hideDraggingCurtain() {
         if (draggingCurtain != null) {
-            DOM.removeChild(RootPanel.getBodyElement(), draggingCurtain);
+            DOM.removeChild(wrapper, draggingCurtain);
             draggingCurtain = null;
         }
     }
