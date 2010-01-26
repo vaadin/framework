@@ -164,7 +164,9 @@ public class ClassPathExplorer {
                         for (int i = 0; i < widgetsetNames.length; i++) {
                             String widgetsetname = widgetsetNames[i].trim()
                                     .intern();
-                            widgetsets.put(widgetsetname, location);
+                            if (!widgetsetname.equals("")) {
+                                widgetsets.put(widgetsetname, location);
+                            }
                         }
                     }
                 }
