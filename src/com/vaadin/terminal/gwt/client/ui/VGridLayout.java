@@ -191,6 +191,7 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
         renderRemainingComponents(pendingCells);
 
         for (Cell cell : relativeHeighted) {
+            // rendering done above so cell.cc should not be null
             Widget widget2 = cell.cc.getWidget();
             client.handleComponentRelativeSize(widget2);
             cell.cc.updateWidgetSize();
@@ -685,19 +686,20 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
             Cell cell = paintableToCell.get(paintable);
             if (!cell.hasRelativeHeight() || !cell.hasRelativeWidth()) {
                 // cell sizes will only stay still if only relatively
-                // sized
-                // components
+                // sized components
                 // check if changed child affects min col widths
-                cell.cc.setWidth("");
-                cell.cc.setHeight("");
+                if (cell.cc != null) {
+                    cell.cc.setWidth("");
+                    cell.cc.setHeight("");
 
-                cell.cc.updateWidgetSize();
+                    cell.cc.updateWidgetSize();
 
-                /*
-                 * If this is the result of an caption icon onload event the
-                 * caption size may have changed
-                 */
-                cell.cc.updateCaptionSize();
+                    /*
+                     * If this is the result of an caption icon onload event the
+                     * caption size may have changed
+                     */
+                    cell.cc.updateCaptionSize();
+                }
 
                 int width = cell.getWidth();
                 int allocated = columnWidths[cell.col];
@@ -853,9 +855,16 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
         }
 
         public RenderSpace getAllocatedSpace() {
-            return new RenderSpace(getAvailableWidth()
-                    - cc.getCaptionWidthAfterComponent(), getAvailableHeight()
-                    - cc.getCaptionHeightAboveComponent());
+            if (cc != null) {
+                return new RenderSpace(getAvailableWidth()
+                        - cc.getCaptionWidthAfterComponent(),
+                        getAvailableHeight()
+                                - cc.getCaptionHeightAboveComponent());
+            } else {
+                // this should not happen normally
+                return new RenderSpace(getAvailableWidth(),
+                        getAvailableHeight());
+            }
         }
 
         public boolean hasContent() {
@@ -965,6 +974,8 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
         int rowspan = 1;
         UIDL childUidl;
         int alignment;
+        // may be null after setUidl() if content has vanished or changed, set
+        // in render()
         ChildComponentContainer cc;
 
         public void setUidl(UIDL c) {
@@ -986,21 +997,21 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
             if (childUidl != null) {
                 if (c == null) {
                     // content has vanished, old content will be removed from
-                    // canvas
-                    // later durin render phase
+                    // canvas later during the render phase
                     cc = null;
                 } else if (cc != null
                         && cc.getWidget() != client.getPaintable(c)) {
                     // content has changed
-                    cc = null;
-                    if (widgetToComponentContainer.containsKey(client
-                            .getPaintable(c))) {
-                        // cc exist for this component (moved) use that for this
-                        // cell
-                        cc = widgetToComponentContainer.get(client
-                                .getPaintable(c));
+                    Paintable newPaintable = client.getPaintable(c);
+                    if (widgetToComponentContainer.containsKey(newPaintable)) {
+                        // if a key in the map, newPaintable must be a widget
+                        replaceChildComponent(cc.getWidget(),
+                                (Widget) newPaintable);
+                        cc = widgetToComponentContainer.get(newPaintable);
                         cc.setWidth("");
                         cc.setHeight("");
+                    } else {
+                        cc = null;
                     }
                 }
             }
