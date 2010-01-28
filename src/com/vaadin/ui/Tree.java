@@ -22,14 +22,20 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.ContainerHierarchicalWrapper;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.event.AbstractDropHandler;
 import com.vaadin.event.Action;
+import com.vaadin.event.DataBindedTransferrable;
+import com.vaadin.event.DropHandler;
+import com.vaadin.event.HasDropHandler;
 import com.vaadin.event.ItemClickEvent;
+import com.vaadin.event.Transferable;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.event.ItemClickEvent.ItemClickSource;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
+import com.vaadin.terminal.TransferTranslator;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VTree;
 
@@ -45,7 +51,7 @@ import com.vaadin.terminal.gwt.client.ui.VTree;
 @SuppressWarnings("serial")
 @ClientWidget(VTree.class)
 public class Tree extends AbstractSelect implements Container.Hierarchical,
-        Action.Container, ItemClickSource {
+        Action.Container, ItemClickSource, TransferTranslator, HasDropHandler {
 
     private static final Method EXPAND_METHOD;
 
@@ -101,6 +107,68 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * updates are allowed.
      */
     private boolean initialPaint = true;
+
+    // TODO sort DD members and methods
+    public static int DRAG_SORTABLE = 1;
+    public static int DRAG_OUT = 2;
+    public static int DRAG_NONE = 0;
+
+    private int itemDragModes = DRAG_OUT;
+
+    class TreeTransferrable implements DataBindedTransferrable {
+
+        private final HashMap<String, Object> data = new HashMap<String, Object>();
+
+        public Object getItemId() {
+            return data.get("itemId");
+        }
+
+        public Object getPropertyId() {
+            return getItemCaptionPropertyId();
+        }
+
+        public Component getSourceComponent() {
+            return Tree.this;
+        }
+
+        public Object getData(String dataFlawor) {
+            return data.get(dataFlawor);
+        }
+
+        public Collection<String> getDataFlawors() {
+            return data.keySet();
+        }
+
+        public void setData(String dataFlawor, Object value) {
+            data.put(dataFlawor, value);
+        }
+    }
+
+    public Transferable getTransferrable(Transferable transferable,
+            Map<String, Object> rawVariables, boolean isDropTarget) {
+        if (transferable == null) {
+            transferable = new TreeTransferrable();
+        }
+        Map<String, Object> payload = (Map<String, Object>) rawVariables
+                .get("payload");
+        if (isDropTarget) {
+            // updating drag target variables
+            Object object = payload.get("itemIdOver");
+            Object object2 = itemIdMapper.get((String) object);
+            transferable.setData("itemIdOver", object2);
+            payload.remove("itemIdOver");
+        } else {
+            // updating drag source variables
+            Object object = payload.get("itemId");
+            if (object != null) {
+                transferable.setData("itemId", itemIdMapper
+                        .get((String) object));
+            }
+            payload.remove("itemId");
+        }
+
+        return transferable;
+    }
 
     /* Tree constructors */
 
@@ -435,6 +503,10 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 target.addAttribute("nullselect", true);
             }
 
+            if (itemDragModes != 0) {
+                target.addAttribute("dragModes", itemDragModes);
+            }
+
         }
 
         // Initialize variables
@@ -579,6 +651,11 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
             // New items
             target.addVariable(this, "newitem", new String[] {});
+
+            if (abstractDropHandler != null) {
+                abstractDropHandler.paint(target);
+            }
+
         }
     }
 
@@ -1019,6 +1096,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
     private ItemStyleGenerator itemStyleGenerator;
 
+    private AbstractDropHandler abstractDropHandler;
+
     public void addListener(ItemClickListener listener) {
         addListener(VTree.ITEM_CLICK_EVENT_ID, ItemClickEvent.class, listener,
                 ItemClickEvent.ITEM_CLICK_METHOD);
@@ -1073,6 +1152,14 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     public boolean removeItem(Object itemId)
             throws UnsupportedOperationException {
         return super.removeItem(itemId);
+    }
+
+    public DropHandler getDropHandler() {
+        return abstractDropHandler;
+    }
+
+    public void setDropHandler(AbstractDropHandler abstractDropHandler) {
+        this.abstractDropHandler = abstractDropHandler;
     }
 
 }

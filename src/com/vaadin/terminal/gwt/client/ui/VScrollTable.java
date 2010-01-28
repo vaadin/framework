@@ -40,6 +40,8 @@ import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.VScrollTable.VScrollTableBody.VScrollTableRow;
+import com.vaadin.terminal.gwt.client.ui.dd.DragAndDropManager;
+import com.vaadin.terminal.gwt.client.ui.dd.Transferable;
 
 /**
  * VScrollTable
@@ -148,6 +150,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
     private String height;
     private String width = "";
     private boolean rendering = false;
+    private int dragmode;
 
     public VScrollTable() {
         bodyContainer.addScrollHandler(this);
@@ -189,6 +192,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
             }
             totalRows = newTotalRows;
         }
+
+        dragmode = uidl.hasAttribute("dragmode") ? uidl
+                .getIntAttribute("dragmode") : 0;
 
         setCacheRate(uidl.hasAttribute("cr") ? uidl.getDoubleAttribute("cr")
                 : CACHE_RATE_DEFAULT);
@@ -2228,13 +2234,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
 
             private String[] actionKeys = null;
             private final TableRowElement rowElement;
+            private boolean mDown;
 
             private VScrollTableRow(int rowKey) {
                 this.rowKey = rowKey;
                 rowElement = Document.get().createTRElement();
                 setElement(rowElement);
-                DOM.sinkEvents(getElement(), Event.ONMOUSEUP | Event.ONDBLCLICK
-                        | Event.ONCONTEXTMENU);
+                DOM.sinkEvents(getElement(), Event.MOUSEEVENTS
+                        | Event.ONDBLCLICK | Event.ONCONTEXTMENU);
             }
 
             private void paintComponent(Paintable p, UIDL uidl) {
@@ -2458,6 +2465,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
                             handleClickEvent(event, targetTdOrTr);
                             break;
                         case Event.ONMOUSEUP:
+                            mDown = false;
                             handleClickEvent(event, targetTdOrTr);
                             if (event.getButton() == Event.BUTTON_LEFT
                                     && selectMode > Table.SELECT_MODE_NONE) {
@@ -2479,6 +2487,31 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
                         case Event.ONCONTEXTMENU:
                             showContextMenu(event);
                             break;
+                        case Event.ONMOUSEDOWN:
+                            if (dragmode != 0) {
+                                mDown = true;
+                                event.preventDefault();
+                            }
+                            break;
+                        case Event.ONMOUSEOUT:
+                            mDown = false;
+                            break;
+                        case Event.ONMOUSEMOVE:
+                            if (mDown && dragmode != 0) {
+                                Transferable transferable = new Transferable();
+                                transferable.setComponent(VScrollTable.this);
+                                transferable.setItemId("" + rowKey);
+
+                                // TODO propertyId
+                                com.vaadin.terminal.gwt.client.ui.dd.DragEvent ev = DragAndDropManager
+                                        .get().startDrag(transferable, event,
+                                                true);
+                                Element cloneNode = (Element) getElement()
+                                        .cloneNode(true);
+                                cloneNode.getStyle().setOpacity(0.4);
+                                ev.setDragImage(cloneNode);
+                                mDown = false;
+                            }
                         default:
                             break;
                         }

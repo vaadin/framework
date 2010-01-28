@@ -14,6 +14,11 @@
 	cursor: pointer;
 	line-height: inherit;
 	}
+
+.v-button.v-button-link.v-disabled,
+.v-button.v-button-link.v-disabled .v-button-wrap {
+	cursor: default;
+	}
 	
 .v-button-link .v-button-caption,
 .v-nativebutton-link .v-nativebutton-caption {

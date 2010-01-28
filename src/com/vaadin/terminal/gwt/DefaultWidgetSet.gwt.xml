@@ -14,10 +14,6 @@
 	<inherits name="com.google.gwt.user.User" />
 
 	<inherits name="com.google.gwt.http.HTTP" />
-
-	<inherits name="com.google.gwt.xml.XML" />
-
-	<inherits name="com.google.gwt.json.JSON" />
 	
 	<source path="client" />
 	
@@ -27,10 +23,18 @@
 		<when-property-is name="user.agent" value="ie6"/>
 	</replace-with>
 
+	<!-- Opera needs a different implementation due to GWT issue 3956 (#4099) -->
+	<replace-with class="com.google.gwt.user.client.impl.HistoryImplTimer">
+		<when-type-is class="com.google.gwt.user.client.impl.HistoryImpl" />
+		<when-property-is name="user.agent" value="opera" />
+	</replace-with>
+
 	<generate-with class="com.vaadin.terminal.gwt.widgetsetutils.WidgetMapGenerator">
 		<when-type-is class="com.vaadin.terminal.gwt.client.WidgetMap"/>
 	</generate-with>
 	
 	<entry-point class="com.vaadin.terminal.gwt.client.DefaultWidgetSet" />
+	
+	<set-property name="user.agent" value="safari,gecko1_8"/>
 	
 </module>

@@ -129,16 +129,6 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
                         return 0;
                     }
                 };
-                Object[] array = roots.toArray();
-                Arrays.sort(array, basedOnOrderFromWrappedContainer);
-                roots = new LinkedHashSet<Object>();
-                for (int i = 0; i < array.length; i++) {
-                    roots.add(array[i]);
-                }
-                for (Object object : children.keySet()) {
-                    LinkedList<Object> object2 = children.get(object);
-                    Collections.sort(object2, basedOnOrderFromWrappedContainer);
-                }
 
                 // Calculate the set of all items in the hierarchy
                 final HashSet<Object> s = new HashSet<Object>();
@@ -163,6 +153,18 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
                         s.add(id);
                     }
                 }
+
+                Object[] array = roots.toArray();
+                Arrays.sort(array, basedOnOrderFromWrappedContainer);
+                roots = new LinkedHashSet<Object>();
+                for (int i = 0; i < array.length; i++) {
+                    roots.add(array[i]);
+                }
+                for (Object object : children.keySet()) {
+                    LinkedList<Object> object2 = children.get(object);
+                    Collections.sort(object2, basedOnOrderFromWrappedContainer);
+                }
+
             }
         }
     }
@@ -204,6 +206,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      */
     private void addToHierarchyWrapper(Object itemId) {
         roots.add(itemId);
+
     }
 
     /*

@@ -10,7 +10,7 @@
 		<script type="text/javascript">
 		window.onload = function() {
 			try {
-				if(window.location.search && (window.location.search.indexOf('gwt.hosted') != -1 || window.location.search.indexOf('gwt.codesvr') != -1)) {
+				if(window.location.search && -1 != window.location.search.indexOf('gwt.hosted')) {
 					var hostedParam = window.location.search;
 					var demolinks = document.getElementsByTagName("a");
 					for (var k = 0; k < demolinks.length; k++) {

@@ -23,7 +23,9 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.ContainerOrderedWrapper;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.Action;
+import com.vaadin.event.DataBindedTransferrable;
 import com.vaadin.event.ItemClickEvent;
+import com.vaadin.event.Transferable;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.event.ItemClickEvent.ItemClickSource;
@@ -31,6 +33,7 @@ import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
+import com.vaadin.terminal.TransferTranslator;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VScrollTable;
 
@@ -54,7 +57,15 @@ import com.vaadin.terminal.gwt.client.ui.VScrollTable;
 @SuppressWarnings("serial")
 @ClientWidget(VScrollTable.class)
 public class Table extends AbstractSelect implements Action.Container,
-        Container.Ordered, Container.Sortable, ItemClickSource {
+        Container.Ordered, Container.Sortable, ItemClickSource,
+        TransferTranslator {
+
+    /**
+     * Modes that Table support as drag sourse.
+     */
+    public enum DragModes {
+        NONE, ROWS, CELLS
+    }
 
     private static final int CELL_KEY = 0;
 
@@ -326,6 +337,8 @@ public class Table extends AbstractSelect implements Action.Container,
     protected boolean alwaysRecalculateColumnWidths = false;
 
     private double cacheRate = CACHE_RATE_DEFAULT;
+
+    private DragModes dragMode = DragModes.NONE;
 
     /* Table constructors */
 
@@ -2014,6 +2027,10 @@ public class Table extends AbstractSelect implements Action.Container,
             target.addAttribute("tabindex", getTabIndex());
         }
 
+        if (dragMode != DragModes.NONE) {
+            target.addAttribute("dragmode", dragMode.ordinal());
+        }
+
         // Initialize temps
         final Object[] colids = getVisibleColumns();
         final int cols = colids.length;
@@ -3298,5 +3315,62 @@ public class Table extends AbstractSelect implements Action.Container,
                 }
             }
         }
+    }
+
+    public void setDragMode(DragModes newDragMode) {
+        dragMode = newDragMode;
+        requestRepaint();
+    }
+
+    class TableTransferrable implements DataBindedTransferrable {
+
+        private final HashMap<String, Object> data = new HashMap<String, Object>();
+
+        public Object getItemId() {
+            return data.get("itemId");
+        }
+
+        public Object getPropertyId() {
+            return getItemCaptionPropertyId();
+        }
+
+        public Component getSourceComponent() {
+            return Table.this;
+        }
+
+        public Object getData(String dataFlawor) {
+            return data.get(dataFlawor);
+        }
+
+        public Collection<String> getDataFlawors() {
+            return data.keySet();
+        }
+
+        public void setData(String dataFlawor, Object value) {
+            data.put(dataFlawor, value);
+        }
+
+    }
+
+    private void updateTransferrable(Map<String, Object> rawVariables,
+            Transferable tr, boolean isDropTarget) {
+        Map<String, Object> payload = (Map<String, Object>) rawVariables
+                .get("payload");
+        if (!isDropTarget) {
+            Object object = payload.get("itemId");
+            if (object != null) {
+                tr.setData("itemId", itemIdMapper.get((String) object));
+                payload.remove("itemId");
+            }
+        }
+    }
+
+    public Transferable getTransferrable(Transferable transferable,
+            Map<String, Object> rawVariables, boolean isDropTarget) {
+        if (transferable == null) {
+            transferable = new TableTransferrable();
+        }
+        updateTransferrable(rawVariables, transferable, isDropTarget);
+        return transferable;
     }
 }

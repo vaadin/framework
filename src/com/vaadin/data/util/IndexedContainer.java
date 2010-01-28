@@ -557,6 +557,9 @@ public class IndexedContainer implements Container.Indexed,
                 return null;
             }
         }
+        if (index < 0) {
+            index = 0;
+        }
 
         return addItemAt(index, newItemId);
     }

@@ -139,6 +139,25 @@ public class HierarchicalContainer extends IndexedContainer implements
         return true;
     }
 
+    @Override
+    public Item addItemAt(int index, Object newItemId) {
+        Item retval = super.addItemAt(index, newItemId);
+        if (getParent(newItemId) == null) {
+            int refIndex = roots.size() - 1;
+            int indexOfId = indexOfId(roots.get(refIndex));
+            while (indexOfId > index) {
+                refIndex--;
+                if (refIndex < 0) {
+                    // inserts as first
+                    break;
+                }
+                indexOfId = indexOfId(roots.get(refIndex));
+            }
+            roots.add(refIndex + 1, newItemId);
+        }
+        return retval;
+    }
+
     /**
      * <p>
      * Sets the parent of an Item. The new parent item must exist and be able to
@@ -293,7 +312,12 @@ public class HierarchicalContainer extends IndexedContainer implements
             if (isRoot(itemId)) {
                 roots.remove(itemId);
             }
-            children.remove(itemId);
+            LinkedList<Object> remove = children.remove(itemId);
+            if (remove != null) {
+                for (Object object : remove) {
+                    removeItem(object);
+                }
+            }
             final Object p = parent.get(itemId);
             if (p != null) {
                 final LinkedList c = children.get(p);
