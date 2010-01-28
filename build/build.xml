@@ -1373,7 +1373,7 @@
             <sysproperty key="pomFile" value="maven/pom.xml" />
             <sysproperty key="repositoryId" value="vaadin-snapshots" />
             <sysproperty key="url" value="http://oss.sonatype.org/content/repositories/vaadin-snapshots" />
-            <sysproperty key="gpg.passphrase" value="${maven.gpg.passphrase}" />
+            <sysproperty key="gpg.passphrase" value="${gpg.passphrase}" />
         </artifact:mvn>
     </target>
 
