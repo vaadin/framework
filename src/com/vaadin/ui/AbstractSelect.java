@@ -1486,6 +1486,24 @@ public abstract class AbstractSelect extends AbstractField implements
     }
 
     /**
+     * For multi-selectable fields, also an empty collection of values is
+     * considered to be an empty field.
+     * 
+     * @see AbstractField#isEmpty().
+     */
+    @Override
+    protected boolean isEmpty() {
+        if (!multiSelect) {
+            return super.isEmpty();
+        } else {
+            Object value = getValue();
+            return super.isEmpty()
+                    || (value instanceof Collection && ((Collection) value)
+                            .isEmpty());
+        }
+    }
+
+    /**
      * Allow of disallow empty selection. If the select is in single-select
      * mode, you can make an item represent the empty selection by calling
      * <code>setNullSelectionItemId()</code>. This way you can for instance set
