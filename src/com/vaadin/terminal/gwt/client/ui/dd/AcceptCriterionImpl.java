@@ -10,9 +10,9 @@ import com.vaadin.terminal.gwt.client.UIDL;
 public class AcceptCriterionImpl {
 
     private final class OverTreeNode implements AcceptCriteria {
-        public boolean accept(Transferable transferable, UIDL configuration) {
-            Boolean containsKey = (Boolean) transferable
-                    .getData("itemIdOverIsNode");
+        public boolean accept(DragEvent drag, UIDL configuration) {
+            Boolean containsKey = (Boolean) drag.getEventDetails().get(
+                    "itemIdOverIsNode");
             if (containsKey != null && containsKey.booleanValue()) {
                 return true;
             }
@@ -21,11 +21,9 @@ public class AcceptCriterionImpl {
     }
 
     private final class ComponentCriteria implements AcceptCriteria {
-        public boolean accept(Transferable transferable, UIDL configuration) {
+        public boolean accept(DragEvent drag, UIDL configuration) {
             try {
-                // FIXME should have access to client too, change transferrable
-                // to DragEvent??
-                Paintable component = transferable.getComponent();
+                Paintable component = drag.getTransferrable().getComponent();
                 String requiredPid = configuration
                         .getStringAttribute("component");
                 String pid = ((Widget) component).getElement()
@@ -38,7 +36,7 @@ public class AcceptCriterionImpl {
     }
 
     private final class And implements AcceptCriteria {
-        public boolean accept(Transferable transferable, UIDL configuration) {
+        public boolean accept(DragEvent drag, UIDL configuration) {
             UIDL childUIDL = configuration.getChildUIDL(0);
             UIDL childUIDL2 = configuration.getChildUIDL(1);
             AcceptCriteria acceptCriteria = AcceptCriterion.get(childUIDL
@@ -50,21 +48,21 @@ public class AcceptCriterionImpl {
                         "And criteria didn't found a chidl criteria");
                 return false;
             }
-            boolean accept = acceptCriteria.accept(transferable, childUIDL);
-            boolean accept2 = acceptCriteria2.accept(transferable, childUIDL2);
+            boolean accept = acceptCriteria.accept(drag, childUIDL);
+            boolean accept2 = acceptCriteria2.accept(drag, childUIDL2);
             return accept && accept2;
         }
     }
 
     private final class AcceptAll implements AcceptCriteria {
-        public boolean accept(Transferable transferable, UIDL configuration) {
+        public boolean accept(DragEvent drag, UIDL configuration) {
             return true;
         }
     }
 
     private final class HasItemId implements AcceptCriteria {
-        public boolean accept(Transferable transferable, UIDL configuration) {
-            return transferable.getItemId() != null;
+        public boolean accept(DragEvent drag, UIDL configuration) {
+            return drag.getTransferrable().getItemId() != null;
         }
     }
 

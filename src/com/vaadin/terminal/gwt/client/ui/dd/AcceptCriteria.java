@@ -4,6 +4,6 @@ import com.vaadin.terminal.gwt.client.UIDL;
 
 public interface AcceptCriteria {
 
-    public boolean accept(Transferable transferable, UIDL configuration);
+    public boolean accept(DragEvent drag, UIDL configuration);
 
 }

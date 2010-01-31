@@ -345,19 +345,21 @@ public class DragAndDropManager {
             try {
                 MouseEventDetails mouseEventDetails = new MouseEventDetails(
                         currentDrag.currentGwtEvent);
-                transferable.setData("mouseEvent", mouseEventDetails
-                        .serialize());
+                currentDrag.getEventDetails().put("mouseEvent",
+                        mouseEventDetails.serialize());
             } catch (Exception e) {
                 // NOP, (at least oophm on Safari) can't serialize html dd event
                 // to
                 // mouseevent
             }
         } else {
-            transferable.setData("mouseEvent", null);
+            currentDrag.getEventDetails().put("mouseEvent", null);
         }
+        client.updateVariable(DD_SERVICE, "evt", currentDrag.getEventDetails(),
+                false);
 
-        client.updateVariable(DD_SERVICE, "payload", transferable
-                .getVariableMap(), true);
+        client.updateVariable(DD_SERVICE, "tra", transferable.getVariableMap(),
+                true);
 
     }
 

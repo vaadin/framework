@@ -33,7 +33,7 @@ import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.TransferTranslator;
+import com.vaadin.terminal.DragSource;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VScrollTable;
 
@@ -58,7 +58,7 @@ import com.vaadin.terminal.gwt.client.ui.VScrollTable;
 @ClientWidget(VScrollTable.class)
 public class Table extends AbstractSelect implements Action.Container,
         Container.Ordered, Container.Sortable, ItemClickSource,
-        TransferTranslator {
+        DragSource {
 
     /**
      * Modes that Table support as drag sourse.
@@ -3352,25 +3352,21 @@ public class Table extends AbstractSelect implements Action.Container,
 
     }
 
-    private void updateTransferrable(Map<String, Object> rawVariables,
-            Transferable tr, boolean isDropTarget) {
-        Map<String, Object> payload = (Map<String, Object>) rawVariables
-                .get("payload");
-        if (!isDropTarget) {
-            Object object = payload.get("itemId");
-            if (object != null) {
-                tr.setData("itemId", itemIdMapper.get((String) object));
-                payload.remove("itemId");
-            }
+    private void updateTransferrable(Map<String, Object> payload,
+            Transferable tr) {
+        Object object = payload.get("itemId");
+        if (object != null) {
+            tr.setData("itemId", itemIdMapper.get((String) object));
+            payload.remove("itemId");
         }
     }
 
     public Transferable getTransferrable(Transferable transferable,
-            Map<String, Object> rawVariables, boolean isDropTarget) {
+            Map<String, Object> rawVariables) {
         if (transferable == null) {
             transferable = new TableTransferrable();
         }
-        updateTransferrable(rawVariables, transferable, isDropTarget);
+        updateTransferrable(rawVariables, transferable);
         return transferable;
     }
 }

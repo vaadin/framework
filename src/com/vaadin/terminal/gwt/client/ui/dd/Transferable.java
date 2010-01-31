@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.vaadin.terminal.TransferTranslator;
+import com.vaadin.terminal.DragSource;
 import com.vaadin.terminal.gwt.client.Paintable;
 
 /**
@@ -32,7 +32,7 @@ public class Transferable {
      * This is commonly actually a key to property id on client side than the
      * actual propertyId.
      * 
-     * Translated by terminal and {@link TransferTranslator}
+     * Translated by terminal and {@link DragSource}
      * 
      * @return the propertyId
      */
@@ -44,7 +44,7 @@ public class Transferable {
      * This is commonly actually a key to property id on client side than the
      * actual propertyId.
      * 
-     * Translated by terminal and {@link TransferTranslator}
+     * Translated by terminal and {@link DragSource}
      * 
      * @param propertyId
      *            the propertyId to set
@@ -64,7 +64,7 @@ public class Transferable {
      * This is commonly actually a key to item id on client side than the actual
      * itemId.
      * 
-     * Translated by terminal and {@link TransferTranslator}
+     * Translated by terminal and {@link DragSource}
      * 
      * @param itemId
      *            the itemId to set

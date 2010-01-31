@@ -10,13 +10,14 @@ public class DragRequest {
     private DragEventType dragEventType;
     private Transferable transferable;
     private Map<String, Object> responseData;
+    private Object eventDetails;
 
     public DragRequest(DragEventType dragEventType, Transferable transferable) {
         this.dragEventType = dragEventType;
         this.transferable = transferable;
     }
 
-    public Transferable getTransferrable() {
+    public Transferable getTransferable() {
         return transferable;
     }
 
@@ -41,6 +42,14 @@ public class DragRequest {
             responseData = new HashMap<String, Object>();
         }
         responseData.put(key, value);
+    }
+
+    public void setEventDetails(Object eventDetails) {
+        this.eventDetails = eventDetails;
+    }
+
+    public Object getEventDetails() {
+        return eventDetails;
     }
 
 }

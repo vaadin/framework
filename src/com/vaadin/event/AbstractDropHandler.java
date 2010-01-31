@@ -4,6 +4,8 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.dd.DragAndDropManager.DragEventType;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Tree.Location;
+import com.vaadin.ui.Tree.TreeDropDetails;
 
 /**
  * An implementation of DropHandler interface.
@@ -19,12 +21,9 @@ public abstract class AbstractDropHandler implements DropHandler {
      * Criterion that can be used create policy to accept/discard dragged
      * content (presented by {@link Transferable}).
      * 
-     * TODO figure out how this can be done partly on client at least in some
-     * cases. isClientSideFilterable() tms.
-     * 
      */
     public interface AcceptCriterion {
-        public boolean accepts(Transferable transferable);
+        public boolean accepts(DragRequest request);
     }
 
     public interface ClientSideVerifiable extends AcceptCriterion {
@@ -41,7 +40,7 @@ public abstract class AbstractDropHandler implements DropHandler {
     }
 
     private static final class AcceptAll implements ClientSideVerifiable {
-        public boolean accepts(Transferable transferable) {
+        public boolean accepts(DragRequest event) {
             return true;
         }
 
@@ -65,8 +64,8 @@ public abstract class AbstractDropHandler implements DropHandler {
             this.f2 = f2;
         }
 
-        public boolean accepts(Transferable transferable) {
-            return f1.accepts(transferable) && f2.accepts(transferable);
+        public boolean accepts(DragRequest event) {
+            return f1.accepts(event) && f2.accepts(event);
         }
 
         public boolean isClientSideVerifiable() {
@@ -95,9 +94,9 @@ public abstract class AbstractDropHandler implements DropHandler {
             this.component = component;
         }
 
-        public boolean accepts(Transferable transferable) {
-            if (transferable instanceof ComponentTransferrable) {
-                return ((ComponentTransferrable) transferable)
+        public boolean accepts(DragRequest event) {
+            if (event.getTransferable() instanceof ComponentTransferrable) {
+                return ((ComponentTransferrable) event.getTransferable())
                         .getSourceComponent() == component;
             } else {
                 return false;
@@ -117,7 +116,8 @@ public abstract class AbstractDropHandler implements DropHandler {
     }
 
     private static final class IsDataBinded implements ClientSideVerifiable {
-        public boolean accepts(Transferable transferable) {
+        public boolean accepts(DragRequest event) {
+            Transferable transferable = event.getTransferable();
             if (transferable instanceof DataBindedTransferrable) {
                 return ((DataBindedTransferrable) transferable).getItemId() != null;
             }
@@ -142,8 +142,8 @@ public abstract class AbstractDropHandler implements DropHandler {
             this.acceptCriterion = acceptCriterion;
         }
 
-        public boolean accepts(Transferable transferable) {
-            return !acceptCriterion.accepts(transferable);
+        public boolean accepts(DragRequest event) {
+            return !acceptCriterion.accepts(event);
         }
 
     }
@@ -157,17 +157,18 @@ public abstract class AbstractDropHandler implements DropHandler {
             this.f2 = f2;
         }
 
-        public boolean accepts(Transferable transferable) {
-            return f1.accepts(transferable) || f2.accepts(transferable);
+        public boolean accepts(DragRequest event) {
+            return f1.accepts(event) || f2.accepts(event);
         }
     }
 
     public static class OverTreeNode implements ClientSideVerifiable {
 
-        public boolean accepts(Transferable transferable) {
+        public boolean accepts(DragRequest event) {
             try {
-                return transferable.getData("detail").toString().toLowerCase()
-                        .equals("center");
+                TreeDropDetails eventDetails = (TreeDropDetails) event
+                        .getEventDetails();
+                return eventDetails.getDropLocation() == Location.MIDDLE;
             } catch (Exception e) {
                 return false;
             }
@@ -197,8 +198,8 @@ public abstract class AbstractDropHandler implements DropHandler {
      * @seecom.vaadin.event.DropHandler#acceptTransferrable(com.vaadin.event.
      * Transferable)
      */
-    public boolean acceptTransferrable(Transferable transferable) {
-        return acceptCriterion.accepts(transferable);
+    public boolean acceptTransferrable(DragRequest request) {
+        return acceptCriterion.accepts(request);
     }
 
     private boolean clientSideVerifiable() {
@@ -210,11 +211,10 @@ public abstract class AbstractDropHandler implements DropHandler {
     }
 
     public void handleDragRequest(DragRequest event) {
-        boolean acceptTransferrable = acceptTransferrable(event
-                .getTransferrable());
+        boolean acceptTransferrable = acceptTransferrable(event);
         if (acceptTransferrable) {
             if (event.getType() == DragEventType.DROP) {
-                receive(event.getTransferrable());
+                receive(event.getTransferable(), event.getEventDetails());
             } else {
                 event.setResponseParameter("accepted", true);
             }
@@ -237,7 +237,7 @@ public abstract class AbstractDropHandler implements DropHandler {
      * 
      * @see com.vaadin.event.DropHandler#receive(com.vaadin.event.Transferable)
      */
-    public abstract void receive(Transferable transferable);
+    public abstract void receive(Transferable transferable, Object dropDetails);
 
     public void setAcceptCriterion(AcceptCriterion acceptCriterion) {
         this.acceptCriterion = acceptCriterion;

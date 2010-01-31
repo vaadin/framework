@@ -7,6 +7,7 @@ import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.event.AbstractDropHandler;
 import com.vaadin.event.ComponentTransferrable;
 import com.vaadin.event.DataBindedTransferrable;
+import com.vaadin.event.DragRequest;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.AbstractDropHandler.AcceptCriterion;
 import com.vaadin.terminal.ExternalResource;
@@ -20,6 +21,8 @@ import com.vaadin.ui.Link;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Table.DragModes;
+import com.vaadin.ui.Tree.Location;
+import com.vaadin.ui.Tree.TreeDropDetails;
 
 /**
  * DD playground. Better quality example/prototype codes in {@link DDTest2}.
@@ -57,7 +60,8 @@ public class DDTest1 extends TestBase {
                 .setCaption("Pane2 (accept needs server side visit, only \"Bar\")");
 
         AcceptCriterion f = new AcceptCriterion() {
-            public boolean accepts(Transferable transferable) {
+            public boolean accepts(DragRequest request) {
+                Transferable transferable = request.getTransferable();
                 // System.out.println("Simulating 500ms processing...");
                 // try {
                 // Thread.sleep(200);
@@ -112,22 +116,22 @@ public class DDTest1 extends TestBase {
         AbstractDropHandler itemSorter = new AbstractDropHandler() {
 
             @Override
-            public void receive(Transferable transferable) {
+            public void receive(Transferable transferable, Object dropdetails) {
+                TreeDropDetails details = (TreeDropDetails) dropdetails;
                 // TODO set properties, so same sorter could be used in Table
                 if (transferable instanceof DataBindedTransferrable) {
                     DataBindedTransferrable transferrable2 = (DataBindedTransferrable) transferable;
 
                     Object itemId = transferrable2.getItemId();
 
-                    Object itemIdOver = transferable.getData("itemIdOver");
+                    Object itemIdOver = details.getItemIdOver();
 
-                    String detail = ((String) transferable.getData("detail"))
-                            .toLowerCase();
+                    Location dropLocation = details.getDropLocation();
 
-                    if ("center".equals(detail)) {
+                    if (dropLocation == Location.MIDDLE) {
                         t.setParent(itemId, itemIdOver);
                         return;
-                    } else if ("top".equals(detail)) {
+                    } else if (Location.TOP == dropLocation) {
                         // if on top of the caption area, add before
                         itemIdOver = idx.prevItemId(itemIdOver);
                     }
@@ -142,7 +146,7 @@ public class DDTest1 extends TestBase {
 
                     if (removed) {
 
-                        if (detail == null) {
+                        if (dropLocation == null) {
                             System.err
                                     .println("No detail of drop place available");
                         }

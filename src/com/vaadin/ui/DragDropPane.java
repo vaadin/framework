@@ -1,5 +1,7 @@
 package com.vaadin.ui;
 
+import java.util.Map;
+
 import com.vaadin.event.AbstractDropHandler;
 import com.vaadin.event.ComponentTransferrable;
 import com.vaadin.event.DataBindedTransferrable;
@@ -43,7 +45,10 @@ public class DragDropPane extends AbsoluteLayout implements HasDropHandler {
         if (dropHandler == null) {
             dropHandler = new AbstractDropHandler() {
                 @Override
-                public void receive(Transferable transferable) {
+                public void receive(Transferable transferable,
+                        Object dropDetails) {
+
+                    DragEventDetails ed = (DragEventDetails) dropDetails;
                     if (transferable instanceof ComponentTransferrable) {
                         ComponentTransferrable ctr = (ComponentTransferrable) transferable;
                         Component component = ctr.getSourceComponent();
@@ -68,14 +73,11 @@ public class DragDropPane extends AbsoluteLayout implements HasDropHandler {
                                 // this
                                 DragDropPane.this.addComponent(component);
                             }
-                            Integer left = (Integer) transferable
-                                    .getData("absoluteLeft");
-                            Integer top = (Integer) transferable
-                                    .getData("absoluteTop");
 
-                            MouseEventDetails eventDetails = MouseEventDetails
-                                    .deSerialize((String) transferable
-                                            .getData("mouseEvent"));
+                            Integer left = ed.getAbsoluteLeft();
+                            Integer top = ed.getAbsoluteTop();
+
+                            MouseEventDetails eventDetails = ed.getMouseEvent();
 
                             int clientX = eventDetails.getClientX();
                             int clientY = eventDetails.getClientY();
@@ -91,12 +93,8 @@ public class DragDropPane extends AbsoluteLayout implements HasDropHandler {
                         } else {
                             // drag ended inside the this Pane
 
-                            MouseEventDetails start = MouseEventDetails
-                                    .deSerialize((String) transferable
-                                            .getData("mouseDown"));
-                            MouseEventDetails eventDetails = MouseEventDetails
-                                    .deSerialize((String) transferable
-                                            .getData("mouseEvent"));
+                            MouseEventDetails start = ed.getMouseDownEvent();
+                            MouseEventDetails eventDetails = ed.getMouseEvent();
 
                             int deltaX = eventDetails.getClientX()
                                     - start.getClientX();
@@ -159,6 +157,38 @@ public class DragDropPane extends AbsoluteLayout implements HasDropHandler {
 
     public AbstractDropHandler getDropHandler() {
         return abstractDropHandler;
+    }
+
+    class DragEventDetails {
+
+        private Map<String, Object> vars;
+
+        public DragEventDetails(Map<String, Object> rawVariables) {
+            vars = rawVariables;
+        }
+
+        public Integer getAbsoluteTop() {
+            return (Integer) vars.get("absoluteTop");
+        }
+
+        public Integer getAbsoluteLeft() {
+            return (Integer) vars.get("absoluteLeft");
+        }
+
+        public MouseEventDetails getMouseDownEvent() {
+            return MouseEventDetails
+                    .deSerialize((String) vars.get("mouseDown"));
+        }
+
+        public MouseEventDetails getMouseEvent() {
+            return MouseEventDetails.deSerialize((String) vars
+                    .get("mouseEvent"));
+        }
+
+    }
+
+    public Object getDragEventDetails(Map<String, Object> rawVariables) {
+        return new DragEventDetails(rawVariables);
     }
 
 }

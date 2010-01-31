@@ -1,6 +1,7 @@
 package com.vaadin.tests.dd;
 
 import com.vaadin.event.ComponentTransferrable;
+import com.vaadin.event.DragRequest;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.AbstractDropHandler.AcceptCriterion;
 import com.vaadin.ui.DragDropPane;
@@ -15,7 +16,8 @@ public class AcceptFromComponent extends Window {
         DragDropPane pane = new DragDropPane();
         setContent(pane);
         pane.getDropHandler().setAcceptCriterion(new AcceptCriterion() {
-            public boolean accepts(Transferable transferable) {
+            public boolean accepts(DragRequest request) {
+                Transferable transferable = request.getTransferable();
                 if (transferable instanceof ComponentTransferrable) {
                     ComponentTransferrable componentTransferrable = (ComponentTransferrable) transferable;
                     if (componentTransferrable.getSourceComponent() == tree1) {

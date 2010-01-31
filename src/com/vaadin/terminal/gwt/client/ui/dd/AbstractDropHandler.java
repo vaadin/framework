@@ -58,7 +58,7 @@ public abstract class AbstractDropHandler implements DropHandler {
                             }
                         }
                     });
-        } else if (validates(drag.getTransferrable())) {
+        } else if (validates(drag)) {
             dragAccepted(drag);
         }
     }
@@ -68,17 +68,17 @@ public abstract class AbstractDropHandler implements DropHandler {
     /**
      * Returns true if client side rules are met.
      * 
-     * @param transferable
+     * @param drag
      * @return
      */
-    protected boolean validates(Transferable transferable) {
+    protected boolean validates(DragEvent drag) {
         if (criterioUIDL != null) {
             String criteriaName = criterioUIDL.getStringAttribute("name");
             AcceptCriteria acceptCriteria = AcceptCriterion.get(criteriaName);
             if (acceptCriteria != null) {
                 // ApplicationConnection.getConsole().log(
                 // "Criteria : " + acceptCriteria.getClass().getName());
-                return acceptCriteria.accept(transferable, criterioUIDL);
+                return acceptCriteria.accept(drag, criterioUIDL);
             }
         }
         return false;
@@ -88,7 +88,7 @@ public abstract class AbstractDropHandler implements DropHandler {
         if (serverValidate) {
             return true;
         } else {
-            return validates(drag.getTransferrable());
+            return validates(drag);
         }
     }
 

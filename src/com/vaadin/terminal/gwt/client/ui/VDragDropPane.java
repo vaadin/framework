@@ -1,5 +1,7 @@
 package com.vaadin.terminal.gwt.client.ui;
 
+import java.util.Map;
+
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.event.dom.client.MouseDownEvent;
@@ -47,7 +49,7 @@ public class VDragDropPane extends VAbsoluteLayout implements Container,
                 cloneNode.getStyle().setBackgroundColor("#999");
                 cloneNode.getStyle().setOpacity(0.4);
                 drag.setDragImage(cloneNode);
-                drag.getTransferrable().setData(
+                drag.getEventDetails().put(
                         "mouseDown",
                         new MouseEventDetails(event.getNativeEvent())
                                 .serialize());
@@ -206,7 +208,7 @@ public class VDragDropPane extends VAbsoluteLayout implements Container,
                         return false;
                     }
 
-                    Transferable transferable = drag.getTransferrable();
+                    Map<String, Object> transferable = drag.getEventDetails();
 
                     // this is absolute layout based, and we may want to set
                     // component
@@ -216,8 +218,8 @@ public class VDragDropPane extends VAbsoluteLayout implements Container,
                     int absoluteLeft = getAbsoluteLeft();
                     int absoluteTop = getAbsoluteTop();
 
-                    transferable.setData("absoluteLeft", absoluteLeft);
-                    transferable.setData("absoluteTop", absoluteTop);
+                    transferable.put("absoluteLeft", absoluteLeft);
+                    transferable.put("absoluteTop", absoluteTop);
 
                     getStyleElement().getStyle().setBackgroundColor("yellow");
                     return super.drop(drag);

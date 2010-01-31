@@ -31,11 +31,11 @@ import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.event.ItemClickEvent.ItemClickSource;
+import com.vaadin.terminal.DragSource;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.TransferTranslator;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VTree;
 
@@ -51,7 +51,7 @@ import com.vaadin.terminal.gwt.client.ui.VTree;
 @SuppressWarnings("serial")
 @ClientWidget(VTree.class)
 public class Tree extends AbstractSelect implements Container.Hierarchical,
-        Action.Container, ItemClickSource, TransferTranslator, HasDropHandler {
+        Action.Container, ItemClickSource, DragSource, HasDropHandler {
 
     private static final Method EXPAND_METHOD;
 
@@ -145,27 +145,16 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     public Transferable getTransferrable(Transferable transferable,
-            Map<String, Object> rawVariables, boolean isDropTarget) {
+            Map<String, Object> payload) {
         if (transferable == null) {
             transferable = new TreeTransferrable();
         }
-        Map<String, Object> payload = (Map<String, Object>) rawVariables
-                .get("payload");
-        if (isDropTarget) {
-            // updating drag target variables
-            Object object = payload.get("itemIdOver");
-            Object object2 = itemIdMapper.get((String) object);
-            transferable.setData("itemIdOver", object2);
-            payload.remove("itemIdOver");
-        } else {
-            // updating drag source variables
-            Object object = payload.get("itemId");
-            if (object != null) {
-                transferable.setData("itemId", itemIdMapper
-                        .get((String) object));
-            }
-            payload.remove("itemId");
+        // updating drag source variables
+        Object object = payload.get("itemId");
+        if (object != null) {
+            transferable.setData("itemId", itemIdMapper.get((String) object));
         }
+        payload.remove("itemId");
 
         return transferable;
     }
@@ -1160,6 +1149,45 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
     public void setDropHandler(AbstractDropHandler abstractDropHandler) {
         this.abstractDropHandler = abstractDropHandler;
+    }
+
+    public Object getDragEventDetails(Map<String, Object> rawVariables) {
+        return new TreeDropDetails(rawVariables);
+    }
+
+    public enum Location {
+        TOP, BOTTOM, MIDDLE
+    }
+
+    public class TreeDropDetails {
+
+        private Map<String, Object> vars;
+        private Object idOver;
+
+        TreeDropDetails(Map<String, Object> rawVariables) {
+            vars = rawVariables;
+            // eagar fetch itemid, mapper may be emptied
+            String keyover = (String) vars.get("itemIdOver");
+            if (keyover != null) {
+                idOver = itemIdMapper.get(keyover);
+            }
+        }
+
+        public Object getItemIdOver() {
+            return idOver;
+        }
+
+        public Location getDropLocation() {
+            String s = (String) vars.get("detail");
+            if ("Top".equals(s)) {
+                return Location.TOP;
+            } else if ("Bottom".equals(s)) {
+                return Location.BOTTOM;
+            } else {
+                return Location.MIDDLE;
+            }
+        }
+
     }
 
 }

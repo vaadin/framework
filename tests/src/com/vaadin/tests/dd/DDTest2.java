@@ -18,6 +18,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Tree.TreeDropDetails;
 
 public class DDTest2 extends TestBase {
 
@@ -53,7 +54,7 @@ public class DDTest2 extends TestBase {
 
         AbstractDropHandler dropHandler = new AbstractDropHandler() {
             @Override
-            public void receive(Transferable transferable) {
+            public void receive(Transferable transferable, Object dropdetails) {
                 /*
                  * We know transferrable is from table, so it is of type
                  * DataBindedTransferrable
@@ -63,14 +64,16 @@ public class DDTest2 extends TestBase {
                 Table fromTable = (Table) tr.getSourceComponent();
                 String name = fromTable.getItem(itemId).getItemProperty("Name")
                         .toString();
+
                 tree1.addItem(name);
                 tree1.setChildrenAllowed(name, false);
 
                 /*
-                 * As we also accept only drops on folders, we know data
-                 * contains itemIdOver
+                 * As we also accept only drops on folders, we know dropDetails
+                 * is from Tree and it contains itemIdOver.
                  */
-                Object idOver = tr.getData("itemIdOver");
+                TreeDropDetails details = (TreeDropDetails) dropdetails;
+                Object idOver = details.getItemIdOver();
                 tree1.setParent(name, idOver);
 
                 /*
@@ -99,12 +102,14 @@ public class DDTest2 extends TestBase {
 
         dropHandler = new AbstractDropHandler() {
             @Override
-            public void receive(Transferable transferable) {
+            public void receive(Transferable transferable, Object dropdetails) {
+                TreeDropDetails details = (TreeDropDetails) dropdetails;
+
                 if (transferable instanceof DataBindedTransferrable) {
                     DataBindedTransferrable tr = (DataBindedTransferrable) transferable;
 
                     Object itemId = tree2.addItem();
-                    tree2.setParent(itemId, tr.getData("itemIdOver"));
+                    tree2.setParent(itemId, details.getItemIdOver());
                     if (tr.getSourceComponent() == tree1) {
                         // use item id from tree1 as caption
                         tree2.setItemCaption(itemId, (String) tr.getItemId());

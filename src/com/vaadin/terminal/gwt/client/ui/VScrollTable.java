@@ -41,6 +41,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.VScrollTable.VScrollTableBody.VScrollTableRow;
 import com.vaadin.terminal.gwt.client.ui.dd.DragAndDropManager;
+import com.vaadin.terminal.gwt.client.ui.dd.DragEvent;
 import com.vaadin.terminal.gwt.client.ui.dd.Transferable;
 
 /**
@@ -2503,9 +2504,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
                                 transferable.setItemId("" + rowKey);
 
                                 // TODO propertyId
-                                com.vaadin.terminal.gwt.client.ui.dd.DragEvent ev = DragAndDropManager
-                                        .get().startDrag(transferable, event,
-                                                true);
+                                DragEvent ev = DragAndDropManager.get()
+                                        .startDrag(transferable, event, true);
                                 Element cloneNode = (Element) getElement()
                                         .cloneNode(true);
                                 cloneNode.getStyle().setOpacity(0.4);

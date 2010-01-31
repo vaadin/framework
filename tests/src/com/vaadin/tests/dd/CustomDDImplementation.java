@@ -1,5 +1,7 @@
 package com.vaadin.tests.dd;
 
+import java.util.Map;
+
 import com.vaadin.event.AbstractDropHandler;
 import com.vaadin.event.DragRequest;
 import com.vaadin.event.DropHandler;
@@ -41,9 +43,9 @@ public class CustomDDImplementation extends CustomComponent {
 
         public DropHandler getDropHandler() {
             return new DropHandler() {
-                public void handleDragRequest(DragRequest event) {
-                    Transferable transferable = event.getTransferrable();
-                    DragEventType type = event.getType();
+                public void handleDragRequest(DragRequest dragRequest) {
+                    Transferable transferable = dragRequest.getTransferable();
+                    DragEventType type = dragRequest.getType();
                     switch (type) {
                     case DROP:
                         // Do something with data
@@ -53,7 +55,7 @@ public class CustomDDImplementation extends CustomComponent {
                     case ENTER:
                         // eg. validate transferrable
                         if (transferable.getDataFlawors().contains("Foo")) {
-                            event.getResponseData().put("valueFor",
+                            dragRequest.getResponseData().put("valueFor",
                                     "clientSideCallBack");
                         }
 
@@ -70,6 +72,15 @@ public class CustomDDImplementation extends CustomComponent {
 
                 }
             };
+        }
+
+        public Object getDragEventDetails(Map<String, Object> rawVariables) {
+            /*
+             * If client side sets some event details, translate them to desired
+             * server side presentation here. The returned object will be passed
+             * for drop handler.
+             */
+            return null;
         }
 
     }

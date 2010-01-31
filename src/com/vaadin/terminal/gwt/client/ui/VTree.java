@@ -162,7 +162,7 @@ public class VTree extends FlowPanel implements Paintable, HasDropHandler {
     }
 
     private void updateTreeRelatedTransferData(DragEvent drag) {
-        drag.getTransferrable().setData("itemIdOver", currentMouseOverKey);
+        drag.getEventDetails().put("itemIdOver", currentMouseOverKey);
 
         if (currentMouseOverKey != null) {
             String detail = getDropDetail(drag.getCurrentGwtEvent());
@@ -171,9 +171,8 @@ public class VTree extends FlowPanel implements Paintable, HasDropHandler {
                     && "Center".equals(detail)) {
                 overTreeNode = true;
             }
-            drag.getTransferrable().setData("itemIdOverIsNode", overTreeNode);
-
-            drag.getTransferrable().setData("detail", detail);
+            drag.getEventDetails().put("itemIdOverIsNode", overTreeNode);
+            drag.getEventDetails().put("detail", detail);
 
         }
     }
@@ -194,10 +193,10 @@ public class VTree extends FlowPanel implements Paintable, HasDropHandler {
 
                 @Override
                 public void dragOver(final DragEvent currentDrag) {
-                    final Object oldIdOver = currentDrag.getTransferrable()
-                            .getData("itemIdOver");
+                    final Object oldIdOver = currentDrag.getEventDetails().get(
+                            "itemIdOver");
                     final String oldDetail = (String) currentDrag
-                            .getTransferrable().getData("detail");
+                            .getEventDetails().get("detail");
                     /*
                      * Using deferred command, so event bubbles to TreeNode
                      * event listener. Currently here via preview
@@ -209,7 +208,7 @@ public class VTree extends FlowPanel implements Paintable, HasDropHandler {
                             boolean nodeHasChanged = (currentMouseOverKey != null && currentMouseOverKey != oldIdOver)
                                     || (oldIdOver != null);
                             boolean detailHasChanded = !detail
-                                    .equals(oldIdOver);
+                                    .equals(oldDetail);
 
                             if (nodeHasChanged || detailHasChanded) {
                                 ApplicationConnection.getConsole().log(
@@ -236,8 +235,7 @@ public class VTree extends FlowPanel implements Paintable, HasDropHandler {
                                             DragEventType.OVER, accpectedCb);
 
                                 } else {
-                                    if (validates(currentDrag
-                                            .getTransferrable())) {
+                                    if (validates(currentDrag)) {
                                         accpectedCb.handleResponse(null);
                                     } else {
                                         keyToNode.get(currentMouseOverKey)

@@ -1,6 +1,8 @@
 package com.vaadin.terminal.gwt.client.ui.dd;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.Element;
@@ -24,6 +26,8 @@ public class DragEvent {
     private int id;
 
     private Date start;
+
+    private HashMap<String, Object> dropDetails = new HashMap<String, Object>();
 
     DragEvent(Transferable t, NativeEvent startEvent) {
         transferable = t;
@@ -61,6 +65,17 @@ public class DragEvent {
      */
     public void setDragImage(Element node) {
         DragAndDropManager.get().setDragElement(node);
+    }
+
+    /**
+     * TODO consider using similar smaller (than map) api as in Transferable
+     * 
+     * TODO clean up when drop handler changes
+     * 
+     * @return
+     */
+    public Map<String, Object> getEventDetails() {
+        return dropDetails;
     }
 
 }

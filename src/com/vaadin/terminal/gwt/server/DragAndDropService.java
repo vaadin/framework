@@ -10,7 +10,7 @@ import com.vaadin.event.DragRequest;
 import com.vaadin.event.DropHandler;
 import com.vaadin.event.HasDropHandler;
 import com.vaadin.event.Transferable;
-import com.vaadin.terminal.TransferTranslator;
+import com.vaadin.terminal.DragSource;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.gwt.client.ui.dd.DragAndDropManager.DragEventType;
 import com.vaadin.ui.Component;
@@ -38,6 +38,12 @@ public class DragAndDropService implements VariableOwner {
         currentRequest = constructDragRequest(variables, dropHandlerOwner);
 
         DropHandler dropHandler = (dropHandlerOwner).getDropHandler();
+
+        Object eventDetails = dropHandlerOwner
+                .getDragEventDetails((Map<String, Object>) variables.get("evt"));
+
+        currentRequest.setEventDetails(eventDetails);
+
         dropHandler.handleDragRequest(currentRequest);
         if (currentRequest.getType() == DragEventType.DROP) {
             // TODO transferable should also be cleaned on each non-dnd
@@ -70,10 +76,13 @@ public class DragAndDropService implements VariableOwner {
 
         final Component sourceComponent = (Component) variables
                 .get("component");
+
+        variables = (Map<String, Object>) variables.get("tra");
+
         if (sourceComponent != null
-                && sourceComponent instanceof TransferTranslator) {
-            transferable = ((TransferTranslator) sourceComponent)
-                    .getTransferrable(transferable, variables, false);
+                && sourceComponent instanceof DragSource) {
+            transferable = ((DragSource) sourceComponent)
+                    .getTransferrable(transferable, variables);
         } else {
             if (transferable == null) {
                 if (sourceComponent != null) {
@@ -118,19 +127,10 @@ public class DragAndDropService implements VariableOwner {
                 }
             }
         }
-        /*
-         * Also let dropHandler translate variables if it implements
-         * TransferTranslator
-         */
-        if (dropHandlerOwner instanceof TransferTranslator) {
-            transferable = ((TransferTranslator) dropHandlerOwner)
-                    .getTransferrable(transferable, variables, true);
-        }
 
         /*
          * Add remaining (non-handled) variables to transferable as is
          */
-        variables = (Map<String, Object>) variables.get("payload");
         for (String key : variables.keySet()) {
             transferable.setData(key, variables.get(key));
         }
