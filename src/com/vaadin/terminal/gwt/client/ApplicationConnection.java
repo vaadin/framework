@@ -40,7 +40,7 @@ import com.vaadin.terminal.gwt.client.ui.VContextMenu;
 import com.vaadin.terminal.gwt.client.ui.VNotification;
 import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.terminal.gwt.client.ui.VNotification.HideEvent;
-import com.vaadin.terminal.gwt.client.ui.dd.DragAndDropManager;
+import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
 import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
 
 /**
@@ -808,7 +808,7 @@ public class ApplicationConnection {
 
         if (json.containsKey("dd")) {
             // response contains data for drag and drop service
-            DragAndDropManager.get().handleServerResponse(
+            VDragAndDropManager.get().handleServerResponse(
                     json.getValueMap("dd"));
         }
 
