@@ -59,7 +59,11 @@
 	-moz-box-sizing: border-box;
 	-ms-box-sizing: border-box;
 	box-sizing: border-box;
-	}
+}
+
+.v-button.v-disabled {
+	cursor: default;
+}
 
 .v-ie6 .v-button {
 	display: inline;

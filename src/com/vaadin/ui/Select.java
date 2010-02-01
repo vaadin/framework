@@ -234,6 +234,12 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
         currentPage = -1; // current page is always set by client
 
         optionRequest = true;
+
+        // Hide the error indicator if needed
+        if (isRequired() && isEmpty() && getComponentError() == null
+                && getErrorMessage() != null) {
+            target.addAttribute("hideErrors", true);
+        }
     }
 
     /**

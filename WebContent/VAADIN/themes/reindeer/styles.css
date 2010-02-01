@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_2_0_dev-20091229";}
-.v-theme-version-6_2_0_dev-20091229 {display: none;}
+.v-theme-version:after {content:"9_9_9_INTERNAL-DEBUG-BUILD";}
+.v-theme-version-9_9_9_INTERNAL-DEBUG-BUILD {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -59,7 +59,11 @@
 	-moz-box-sizing: border-box;
 	-ms-box-sizing: border-box;
 	box-sizing: border-box;
-	}
+}
+
+.v-button.v-disabled {
+	cursor: default;
+}
 
 .v-ie6 .v-button {
 	display: inline;
@@ -2176,6 +2180,11 @@ div.v-window-header {
 	padding: 0;
 	cursor: pointer;
 	line-height: inherit;
+	}
+
+.v-button.v-button-link.v-disabled,
+.v-button.v-button-link.v-disabled .v-button-wrap {
+	cursor: default;
 	}
 	
 .v-button-link .v-button-caption,
