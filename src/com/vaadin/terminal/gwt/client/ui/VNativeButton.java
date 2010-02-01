@@ -48,6 +48,8 @@ public class VNativeButton extends Button implements Paintable, ClickHandler {
         getElement().appendChild(captionElement);
         captionElement.setClassName(getStyleName() + "-caption");
 
+        addClickHandler(this);
+
         sinkEvents(VTooltip.TOOLTIP_EVENTS);
         sinkEvents(Event.ONMOUSEDOWN);
         sinkEvents(Event.ONMOUSEUP);
