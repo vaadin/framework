@@ -11,7 +11,11 @@ import com.vaadin.terminal.gwt.client.Paintable;
  * Client side counterpart for Transferable in com.vaadin.event.Transferable
  * 
  */
-public class Transferable {
+public class VTransferable {
+
+    private Paintable component;
+
+    private final Map<String, Object> variables = new HashMap<String, Object>();
 
     /**
      * @return the component
@@ -73,8 +77,6 @@ public class Transferable {
         variables.put("itemId", itemId);
     }
 
-    private Paintable component;
-
     public Object getData(String dataFlawor) {
         return variables.get(dataFlawor);
     }
@@ -87,10 +89,8 @@ public class Transferable {
         return variables.keySet();
     }
 
-    private final Map<String, Object> variables = new HashMap<String, Object>();
-
     /**
-     * This method should only be called by {@link DragAndDropManager}.
+     * This method should only be called by {@link VDragAndDropManager}.
      * 
      * @return data in this Transferable that needs to be moved to server.
      */

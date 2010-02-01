@@ -27,7 +27,7 @@ import com.vaadin.terminal.gwt.client.ValueMap;
  * {@link #get()} to get instance.
  * 
  */
-public class DragAndDropManager {
+public class VDragAndDropManager {
 
     public enum DragEventType {
         ENTER, LEAVE, OVER, DROP
@@ -35,40 +35,40 @@ public class DragAndDropManager {
 
     private static final String DD_SERVICE = "DD";
 
-    private static DragAndDropManager instance;
+    private static VDragAndDropManager instance;
     private HandlerRegistration handlerRegistration;
-    private DragEvent currentDrag;
+    private VDragEvent currentDrag;
 
     /**
      * If dragging is currently on a drophandler, this field has reference to it
      */
-    private DropHandler currentDropHandler;
+    private VDropHandler currentDropHandler;
 
-    public DropHandler getCurrentDropHandler() {
+    public VDropHandler getCurrentDropHandler() {
         return currentDropHandler;
     }
 
     /**
-     * If drag and drop operation is not handled by {@link DragAndDropManager}s
-     * internal handler, this can be used to update current {@link DropHandler}.
+     * If drag and drop operation is not handled by {@link VDragAndDropManager}s
+     * internal handler, this can be used to update current {@link VDropHandler}.
      * 
      * @param currentDropHandler
      */
-    public void setCurrentDropHandler(DropHandler currentDropHandler) {
+    public void setCurrentDropHandler(VDropHandler currentDropHandler) {
         this.currentDropHandler = currentDropHandler;
     }
 
-    private AcceptCallback acceptCallback;
+    private VAcceptCallback acceptCallback;
 
-    public static DragAndDropManager get() {
+    public static VDragAndDropManager get() {
         if (instance == null) {
-            instance = new DragAndDropManager();
+            instance = new VDragAndDropManager();
         }
         return instance;
     }
 
     /* Singleton */
-    private DragAndDropManager() {
+    private VDragAndDropManager() {
     }
 
     /**
@@ -78,26 +78,26 @@ public class DragAndDropManager {
      * Cancels possible existing drag. TODO figure out if this is always a bug
      * if one is active. Maybe a good and cheap lifesaver thought.
      * <p>
-     * If possible, method automatically detects current {@link DropHandler} and
-     * fires {@link DropHandler#dragEnter(DragEvent)} event on it.
+     * If possible, method automatically detects current {@link VDropHandler} and
+     * fires {@link VDropHandler#dragEnter(VDragEvent)} event on it.
      * <p>
      * May also be used to control the drag and drop operation. If this option
-     * is used, {@link DropHandler} is searched on mouse events and appropriate
+     * is used, {@link VDropHandler} is searched on mouse events and appropriate
      * methods on it called automatically.
      * 
      * @param transferable
      * @param nativeEvent
      * @param handleDragEvents
-     *            if true, {@link DragAndDropManager} handles the drag and drop
+     *            if true, {@link VDragAndDropManager} handles the drag and drop
      *            operation GWT event preview.
      * @return
      */
-    public DragEvent startDrag(Transferable transferable,
+    public VDragEvent startDrag(VTransferable transferable,
             NativeEvent startEvent, boolean handleDragEvents) {
         interruptDrag();
 
-        currentDrag = new DragEvent(transferable, startEvent);
-        DropHandler dh = null;
+        currentDrag = new VDragEvent(transferable, startEvent);
+        VDropHandler dh = null;
         if (startEvent != null) {
             dh = findDragTarget((Element) startEvent.getEventTarget().cast());
         }
@@ -135,7 +135,7 @@ public class DragAndDropManager {
                             case Event.ONMOUSEOVER:
                                 ApplicationConnection.getConsole().log(
                                         event.getNativeEvent().getType());
-                                DropHandler target = findDragTarget(targetElement);
+                                VDropHandler target = findDragTarget(targetElement);
                                 if (target != null && target != currentDrag) {
                                     currentDropHandler = target;
                                     target.dragEnter(currentDrag);
@@ -152,7 +152,7 @@ public class DragAndDropManager {
 
                                 Element relatedTarget = (Element) nativeEvent
                                         .getRelatedEventTarget().cast();
-                                DropHandler newDragHanler = findDragTarget(relatedTarget);
+                                VDropHandler newDragHanler = findDragTarget(relatedTarget);
                                 if (dragElement != null
                                         && dragElement
                                                 .isOrHasChild(relatedTarget)) {
@@ -221,7 +221,7 @@ public class DragAndDropManager {
      * @param element
      * @return
      */
-    private DropHandler findDragTarget(Element element) {
+    private VDropHandler findDragTarget(Element element) {
 
         EventListener eventListener = Event.getEventListener(element);
         while (eventListener == null) {
@@ -237,7 +237,7 @@ public class DragAndDropManager {
             return null;
         } else {
             Widget w = (Widget) eventListener;
-            while (!(w instanceof HasDropHandler)) {
+            while (!(w instanceof VHasDropHandler)) {
                 w = w.getParent();
                 if (w == null) {
                     break;
@@ -248,7 +248,7 @@ public class DragAndDropManager {
                         "No suitable DropHandler found2");
                 return null;
             } else {
-                DropHandler dh = ((HasDropHandler) w).getDropHandler();
+                VDropHandler dh = ((VHasDropHandler) w).getDropHandler();
                 if (dh == null) {
                     ApplicationConnection.getConsole().log(
                             "No suitable DropHandler found3");
@@ -300,7 +300,7 @@ public class DragAndDropManager {
      * 
      * @param acceptCallback
      */
-    public void visitServer(DragEventType type, AcceptCallback acceptCallback) {
+    public void visitServer(DragEventType type, VAcceptCallback acceptCallback) {
         doRequest(type);
         this.acceptCallback = acceptCallback;
     }
@@ -325,7 +325,7 @@ public class DragAndDropManager {
                 false);
         client.updateVariable(DD_SERVICE, "dhowner", paintable, false);
 
-        Transferable transferable = currentDrag.getTransferrable();
+        VTransferable transferable = currentDrag.getTransferrable();
 
         if (transferable.getItemId() != null) {
             client.updateVariable(DD_SERVICE, "itemId", transferable

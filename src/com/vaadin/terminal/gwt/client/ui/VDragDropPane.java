@@ -15,22 +15,22 @@ import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ui.dd.AbstractDropHandler;
-import com.vaadin.terminal.gwt.client.ui.dd.DragAndDropManager;
-import com.vaadin.terminal.gwt.client.ui.dd.DragEvent;
-import com.vaadin.terminal.gwt.client.ui.dd.HasDropHandler;
-import com.vaadin.terminal.gwt.client.ui.dd.Html5DragEvent;
-import com.vaadin.terminal.gwt.client.ui.dd.Transferable;
+import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
+import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
+import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
+import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
+import com.vaadin.terminal.gwt.client.ui.dd.VHtml5DragEvent;
+import com.vaadin.terminal.gwt.client.ui.dd.VTransferable;
 
 public class VDragDropPane extends VAbsoluteLayout implements Container,
-        HasDropHandler {
+        VHasDropHandler {
 
     private String paintableId;
 
     /**
      * DragEvent is stored here in case of HTML5 drag event.
      */
-    private DragEvent vaadinDragEvent;
+    private VDragEvent vaadinDragEvent;
 
     public VDragDropPane() {
         super();
@@ -40,9 +40,9 @@ public class VDragDropPane extends VAbsoluteLayout implements Container,
                         .getEventTarget();
                 Paintable paintable = client.getPaintable((Element) eventTarget
                         .cast());
-                Transferable transferable = new Transferable();
+                VTransferable transferable = new VTransferable();
                 transferable.setComponent(paintable);
-                DragEvent drag = DragAndDropManager.get().startDrag(
+                VDragEvent drag = VDragAndDropManager.get().startDrag(
                         transferable, event.getNativeEvent(), true);
                 Element cloneNode = (Element) ((Widget) paintable).getElement()
                         .cloneNode(true);
@@ -90,20 +90,20 @@ public class VDragDropPane extends VAbsoluteLayout implements Container,
         
     }-*/;
 
-    public boolean html5DragEnter(Html5DragEvent event) {
+    public boolean html5DragEnter(VHtml5DragEvent event) {
         ApplicationConnection.getConsole().log("HTML 5 Drag Enter");
-        Transferable transferable = new Transferable();
+        VTransferable transferable = new VTransferable();
 
         // TODO refine api somehow so that we will now not use the event preview
         // method provided by manager
-        vaadinDragEvent = DragAndDropManager.get().startDrag(transferable,
+        vaadinDragEvent = VDragAndDropManager.get().startDrag(transferable,
                 event, false);
         event.preventDefault();
         event.stopPropagation();
         return false;
     }
 
-    public boolean html5DragLeave(Html5DragEvent event) {
+    public boolean html5DragLeave(VHtml5DragEvent event) {
         ApplicationConnection.getConsole().log("HTML 5 Drag Leave posponed...");
         DeferredCommand.addCommand(new Command() {
             public void execute() {
@@ -123,7 +123,7 @@ public class VDragDropPane extends VAbsoluteLayout implements Container,
         return false;
     }
 
-    public boolean html5DragOver(Html5DragEvent event) {
+    public boolean html5DragOver(VHtml5DragEvent event) {
         ApplicationConnection.getConsole().log("HTML 5 Drag Over");
         getDropHandler().dragOver(vaadinDragEvent);
         // needed to be set for Safari, otherwise drop will not happen
@@ -139,9 +139,9 @@ public class VDragDropPane extends VAbsoluteLayout implements Container,
         return false;
     }
 
-    public boolean html5DragDrop(Html5DragEvent event) {
+    public boolean html5DragDrop(VHtml5DragEvent event) {
         ApplicationConnection.getConsole().log("HTML 5 Drag Drop");
-        Transferable transferable = vaadinDragEvent.getTransferrable();
+        VTransferable transferable = vaadinDragEvent.getTransferrable();
 
         JsArrayString types = event.getTypes();
         for (int i = 0; i < types.length(); i++) {
@@ -160,7 +160,7 @@ public class VDragDropPane extends VAbsoluteLayout implements Container,
             transferable.setData("fileContents", fileAsString);
         }
 
-        DragAndDropManager.get().endDrag();
+        VDragAndDropManager.get().endDrag();
         vaadinDragEvent = null;
         event.preventDefault();
         event.stopPropagation();
@@ -178,11 +178,11 @@ public class VDragDropPane extends VAbsoluteLayout implements Container,
         }
     }
 
-    private AbstractDropHandler dropHandler;
+    private VAbstractDropHandler dropHandler;
 
-    public AbstractDropHandler getDropHandler() {
+    public VAbstractDropHandler getDropHandler() {
         if (dropHandler == null) {
-            dropHandler = new AbstractDropHandler() {
+            dropHandler = new VAbstractDropHandler() {
 
                 @Override
                 public Paintable getPaintable() {
@@ -190,13 +190,13 @@ public class VDragDropPane extends VAbsoluteLayout implements Container,
                 }
 
                 @Override
-                public void dragLeave(DragEvent drag) {
+                public void dragLeave(VDragEvent drag) {
                     ApplicationConnection.getConsole().log("DragLeave");
                     getStyleElement().getStyle().setBackgroundColor("yellow");
                 }
 
                 @Override
-                public boolean drop(DragEvent drag) {
+                public boolean drop(VDragEvent drag) {
                     ApplicationConnection.getConsole().log(
                             "Drop" + drag.sinceStart());
 
@@ -226,7 +226,7 @@ public class VDragDropPane extends VAbsoluteLayout implements Container,
                 }
 
                 @Override
-                protected void dragAccepted(DragEvent drag) {
+                protected void dragAccepted(VDragEvent drag) {
                     getStyleElement().getStyle().setBackgroundColor("green");
                 }
 

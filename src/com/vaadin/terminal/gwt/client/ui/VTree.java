@@ -27,19 +27,19 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ValueMap;
-import com.vaadin.terminal.gwt.client.ui.dd.AbstractDropHandler;
-import com.vaadin.terminal.gwt.client.ui.dd.AcceptCallback;
-import com.vaadin.terminal.gwt.client.ui.dd.DragAndDropManager;
-import com.vaadin.terminal.gwt.client.ui.dd.DragEvent;
-import com.vaadin.terminal.gwt.client.ui.dd.DropHandler;
-import com.vaadin.terminal.gwt.client.ui.dd.HasDropHandler;
-import com.vaadin.terminal.gwt.client.ui.dd.Transferable;
-import com.vaadin.terminal.gwt.client.ui.dd.DragAndDropManager.DragEventType;
+import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
+import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCallback;
+import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
+import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
+import com.vaadin.terminal.gwt.client.ui.dd.VDropHandler;
+import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
+import com.vaadin.terminal.gwt.client.ui.dd.VTransferable;
+import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager.DragEventType;
 
 /**
  * 
  */
-public class VTree extends FlowPanel implements Paintable, HasDropHandler {
+public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
 
     public static final String CLASSNAME = "v-tree";
 
@@ -72,7 +72,7 @@ public class VTree extends FlowPanel implements Paintable, HasDropHandler {
 
     private int dragModes;
 
-    private AbstractDropHandler dropHandler;
+    private VAbstractDropHandler dropHandler;
 
     public VTree() {
         super();
@@ -161,7 +161,7 @@ public class VTree extends FlowPanel implements Paintable, HasDropHandler {
 
     }
 
-    private void updateTreeRelatedTransferData(DragEvent drag) {
+    private void updateTreeRelatedTransferData(VDragEvent drag) {
         drag.getEventDetails().put("itemIdOver", currentMouseOverKey);
 
         if (currentMouseOverKey != null) {
@@ -179,20 +179,20 @@ public class VTree extends FlowPanel implements Paintable, HasDropHandler {
 
     private void updateDropHandler(UIDL childUidl) {
         if (dropHandler == null) {
-            dropHandler = new AbstractDropHandler() {
+            dropHandler = new VAbstractDropHandler() {
 
                 @Override
-                public void dragEnter(DragEvent drag) {
+                public void dragEnter(VDragEvent drag) {
                     updateTreeRelatedTransferData(drag);
                     super.dragEnter(drag);
                 }
 
                 @Override
-                protected void dragAccepted(final DragEvent drag) {
+                protected void dragAccepted(final VDragEvent drag) {
                 }
 
                 @Override
-                public void dragOver(final DragEvent currentDrag) {
+                public void dragOver(final VDragEvent currentDrag) {
                     final Object oldIdOver = currentDrag.getEventDetails().get(
                             "itemIdOver");
                     final String oldDetail = (String) currentDrag
@@ -217,7 +217,7 @@ public class VTree extends FlowPanel implements Paintable, HasDropHandler {
                                                 + detail);
 
                                 updateTreeRelatedTransferData(currentDrag);
-                                AcceptCallback accpectedCb = new AcceptCallback() {
+                                VAcceptCallback accpectedCb = new VAcceptCallback() {
                                     public void handleResponse(
                                             ValueMap responseData) {
                                         if (responseData == null // via client
@@ -231,7 +231,7 @@ public class VTree extends FlowPanel implements Paintable, HasDropHandler {
                                     }
                                 };
                                 if (validateOnServer()) {
-                                    DragAndDropManager.get().visitServer(
+                                    VDragAndDropManager.get().visitServer(
                                             DragEventType.OVER, accpectedCb);
 
                                 } else {
@@ -253,7 +253,7 @@ public class VTree extends FlowPanel implements Paintable, HasDropHandler {
                 }
 
                 @Override
-                public void dragLeave(DragEvent drag) {
+                public void dragLeave(VDragEvent drag) {
                     cleanUp();
                 }
 
@@ -265,7 +265,7 @@ public class VTree extends FlowPanel implements Paintable, HasDropHandler {
                 }
 
                 @Override
-                public boolean drop(DragEvent drag) {
+                public boolean drop(VDragEvent drag) {
                     cleanUp();
                     return super.drop(drag);
                 }
@@ -436,10 +436,10 @@ public class VTree extends FlowPanel implements Paintable, HasDropHandler {
                         ApplicationConnection.getConsole().log(
                                 "TreeNode drag start " + event.getType());
                         // start actual drag on slight move when mouse is down
-                        Transferable t = new Transferable();
+                        VTransferable t = new VTransferable();
                         t.setComponent(VTree.this);
                         t.setItemId(key);
-                        DragEvent drag = DragAndDropManager.get().startDrag(t,
+                        VDragEvent drag = VDragAndDropManager.get().startDrag(t,
                                 mouseDownEvent, true);
                         Element node = (Element) nodeCaptionDiv.cloneNode(true);
                         node.getStyle().setOpacity(0.4);
@@ -713,7 +713,7 @@ public class VTree extends FlowPanel implements Paintable, HasDropHandler {
         }
     }
 
-    public DropHandler getDropHandler() {
+    public VDropHandler getDropHandler() {
         return dropHandler;
     }
 }

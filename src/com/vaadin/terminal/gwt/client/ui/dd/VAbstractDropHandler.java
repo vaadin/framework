@@ -3,9 +3,9 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ValueMap;
-import com.vaadin.terminal.gwt.client.ui.dd.DragAndDropManager.DragEventType;
+import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager.DragEventType;
 
-public abstract class AbstractDropHandler implements DropHandler {
+public abstract class VAbstractDropHandler implements VDropHandler {
 
     private boolean serverValidate;
     private UIDL criterioUIDL;
@@ -31,27 +31,27 @@ public abstract class AbstractDropHandler implements DropHandler {
     /**
      * Default implementation does nothing.
      */
-    public void dragOver(DragEvent currentDrag) {
+    public void dragOver(VDragEvent currentDrag) {
 
     }
 
     /**
      * Default implementation does nothing.
      */
-    public void dragLeave(DragEvent drag) {
+    public void dragLeave(VDragEvent drag) {
         // TODO Auto-generated method stub
 
     }
 
     /**
      * If transferrable is accepted (either via server visit or client side
-     * rules) the default implementation calls {@link #dragAccepted(DragEvent)}
+     * rules) the default implementation calls {@link #dragAccepted(VDragEvent)}
      * method.
      */
-    public void dragEnter(final DragEvent drag) {
+    public void dragEnter(final VDragEvent drag) {
         if (serverValidate) {
-            DragAndDropManager.get().visitServer(DragEventType.ENTER,
-                    new AcceptCallback() {
+            VDragAndDropManager.get().visitServer(DragEventType.ENTER,
+                    new VAcceptCallback() {
                         public void handleResponse(ValueMap responseData) {
                             if (responseData.containsKey("accepted")) {
                                 dragAccepted(drag);
@@ -63,7 +63,7 @@ public abstract class AbstractDropHandler implements DropHandler {
         }
     }
 
-    abstract protected void dragAccepted(DragEvent drag);
+    abstract protected void dragAccepted(VDragEvent drag);
 
     /**
      * Returns true if client side rules are met.
@@ -71,10 +71,10 @@ public abstract class AbstractDropHandler implements DropHandler {
      * @param drag
      * @return
      */
-    protected boolean validates(DragEvent drag) {
+    protected boolean validates(VDragEvent drag) {
         if (criterioUIDL != null) {
             String criteriaName = criterioUIDL.getStringAttribute("name");
-            AcceptCriteria acceptCriteria = AcceptCriterion.get(criteriaName);
+            VAcceptCriteria acceptCriteria = VAcceptCriterion.get(criteriaName);
             if (acceptCriteria != null) {
                 // ApplicationConnection.getConsole().log(
                 // "Criteria : " + acceptCriteria.getClass().getName());
@@ -84,7 +84,7 @@ public abstract class AbstractDropHandler implements DropHandler {
         return false;
     }
 
-    public boolean drop(DragEvent drag) {
+    public boolean drop(VDragEvent drag) {
         if (serverValidate) {
             return true;
         } else {

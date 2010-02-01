@@ -13,11 +13,11 @@ import com.google.gwt.user.client.Element;
  * 
  * 
  */
-public class DragEvent {
+public class VDragEvent {
 
     private static int eventId = 0;
 
-    private Transferable transferable;
+    private VTransferable transferable;
 
     NativeEvent currentGwtEvent;
 
@@ -29,14 +29,14 @@ public class DragEvent {
 
     private HashMap<String, Object> dropDetails = new HashMap<String, Object>();
 
-    DragEvent(Transferable t, NativeEvent startEvent) {
+    VDragEvent(VTransferable t, NativeEvent startEvent) {
         transferable = t;
         this.startEvent = startEvent;
         id = eventId++;
         start = new Date();
     }
 
-    public Transferable getTransferrable() {
+    public VTransferable getTransferrable() {
         return transferable;
     }
 
@@ -55,8 +55,8 @@ public class DragEvent {
     /**
      * Sets the element that will be used as "drag icon".
      * 
-     * TODO decide if this method should be here or in {@link Transferable} (in
-     * HTML5 it is in DataTransfer) or {@link DragAndDropManager}
+     * TODO decide if this method should be here or in {@link VTransferable} (in
+     * HTML5 it is in DataTransfer) or {@link VDragAndDropManager}
      * 
      * TODO should be possible to override behaviour an set to HTML5
      * DataTransfer
@@ -64,7 +64,7 @@ public class DragEvent {
      * @param node
      */
     public void setDragImage(Element node) {
-        DragAndDropManager.get().setDragElement(node);
+        VDragAndDropManager.get().setDragElement(node);
     }
 
     /**

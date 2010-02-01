@@ -7,10 +7,10 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 
-public class AcceptCriterionImpl {
+public class VAcceptCriterionImpl {
 
-    private final class OverTreeNode implements AcceptCriteria {
-        public boolean accept(DragEvent drag, UIDL configuration) {
+    private final class OverTreeNode implements VAcceptCriteria {
+        public boolean accept(VDragEvent drag, UIDL configuration) {
             Boolean containsKey = (Boolean) drag.getEventDetails().get(
                     "itemIdOverIsNode");
             if (containsKey != null && containsKey.booleanValue()) {
@@ -20,8 +20,8 @@ public class AcceptCriterionImpl {
         }
     }
 
-    private final class ComponentCriteria implements AcceptCriteria {
-        public boolean accept(DragEvent drag, UIDL configuration) {
+    private final class ComponentCriteria implements VAcceptCriteria {
+        public boolean accept(VDragEvent drag, UIDL configuration) {
             try {
                 Paintable component = drag.getTransferrable().getComponent();
                 String requiredPid = configuration
@@ -35,13 +35,13 @@ public class AcceptCriterionImpl {
         }
     }
 
-    private final class And implements AcceptCriteria {
-        public boolean accept(DragEvent drag, UIDL configuration) {
+    private final class And implements VAcceptCriteria {
+        public boolean accept(VDragEvent drag, UIDL configuration) {
             UIDL childUIDL = configuration.getChildUIDL(0);
             UIDL childUIDL2 = configuration.getChildUIDL(1);
-            AcceptCriteria acceptCriteria = AcceptCriterion.get(childUIDL
+            VAcceptCriteria acceptCriteria = VAcceptCriterion.get(childUIDL
                     .getStringAttribute("name"));
-            AcceptCriteria acceptCriteria2 = AcceptCriterion.get(childUIDL2
+            VAcceptCriteria acceptCriteria2 = VAcceptCriterion.get(childUIDL2
                     .getStringAttribute("name"));
             if (acceptCriteria == null || acceptCriteria2 == null) {
                 ApplicationConnection.getConsole().log(
@@ -54,14 +54,14 @@ public class AcceptCriterionImpl {
         }
     }
 
-    private final class AcceptAll implements AcceptCriteria {
-        public boolean accept(DragEvent drag, UIDL configuration) {
+    private final class AcceptAll implements VAcceptCriteria {
+        public boolean accept(VDragEvent drag, UIDL configuration) {
             return true;
         }
     }
 
-    private final class HasItemId implements AcceptCriteria {
-        public boolean accept(DragEvent drag, UIDL configuration) {
+    private final class HasItemId implements VAcceptCriteria {
+        public boolean accept(VDragEvent drag, UIDL configuration) {
             return drag.getTransferrable().getItemId() != null;
         }
     }
@@ -73,8 +73,8 @@ public class AcceptCriterionImpl {
      * 
      * TODO use fully qualified names of server side counterparts as keys
      */
-    public void populateCriterionMap(Map<String, AcceptCriteria> map) {
-        AcceptCriteria crit;
+    public void populateCriterionMap(Map<String, VAcceptCriteria> map) {
+        VAcceptCriteria crit;
 
         crit = new HasItemId();
         map.put("needsItemId", crit);

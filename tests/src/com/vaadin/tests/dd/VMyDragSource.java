@@ -13,8 +13,8 @@ import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ui.dd.DragAndDropManager;
-import com.vaadin.terminal.gwt.client.ui.dd.Transferable;
+import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
+import com.vaadin.terminal.gwt.client.ui.dd.VTransferable;
 
 /**
  * Example code to implement Component that has something to drag.
@@ -67,13 +67,13 @@ public class VMyDragSource extends Composite implements Paintable,
                 // Start the drag and drop operation
 
                 // create Transferable, that contains the payload
-                Transferable transferable = new Transferable();
+                VTransferable transferable = new VTransferable();
                 transferable.setData("Text", "myPayload");
 
                 // Tell DragAndDropManager to start a drag and drop operation.
                 // Also let it handle all events (last parameter true). Could
                 // also do all event handling here too.
-                DragAndDropManager.get().startDrag(transferable,
+                VDragAndDropManager.get().startDrag(transferable,
                         mDownEvent.getNativeEvent(), true);
 
                 mouseDown = false;

@@ -5,36 +5,36 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ValueMap;
-import com.vaadin.terminal.gwt.client.ui.dd.AcceptCallback;
-import com.vaadin.terminal.gwt.client.ui.dd.DragAndDropManager;
-import com.vaadin.terminal.gwt.client.ui.dd.DragEvent;
-import com.vaadin.terminal.gwt.client.ui.dd.DropHandler;
-import com.vaadin.terminal.gwt.client.ui.dd.HasDropHandler;
-import com.vaadin.terminal.gwt.client.ui.dd.DragAndDropManager.DragEventType;
+import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCallback;
+import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
+import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
+import com.vaadin.terminal.gwt.client.ui.dd.VDropHandler;
+import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
+import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager.DragEventType;
 
-public class VMyDropTarget extends Composite implements HasDropHandler,
-        DropHandler, Paintable {
+public class VMyDropTarget extends Composite implements VHasDropHandler,
+        VDropHandler, Paintable {
 
     private ApplicationConnection client;
 
-    public void dragEnter(DragEvent drag) {
-        DragAndDropManager.get().visitServer(DragEventType.ENTER,
-                new AcceptCallback() {
+    public void dragEnter(VDragEvent drag) {
+        VDragAndDropManager.get().visitServer(DragEventType.ENTER,
+                new VAcceptCallback() {
                     public void handleResponse(ValueMap responseData) {
                         // show hints, error messages etc
                     }
                 });
     }
 
-    public void dragLeave(DragEvent drag) {
+    public void dragLeave(VDragEvent drag) {
         // TODO Auto-generated method stub
     }
 
-    public void dragOver(DragEvent currentDrag) {
+    public void dragOver(VDragEvent currentDrag) {
         // TODO Auto-generated method stub
     }
 
-    public boolean drop(DragEvent drag) {
+    public boolean drop(VDragEvent drag) {
         // TODO Auto-generated method stub
         // return true to tell DDManager do server visit
         return false;
@@ -45,7 +45,7 @@ public class VMyDropTarget extends Composite implements HasDropHandler,
         return this;
     }
 
-    public DropHandler getDropHandler() {
+    public VDropHandler getDropHandler() {
         // Drophandler implemented by Paintable itself
         return this;
     }
