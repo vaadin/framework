@@ -2,7 +2,6 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 
 import java.util.Map;
 
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -26,9 +25,10 @@ public class VAcceptCriterionImpl {
                 Paintable component = drag.getTransferrable().getComponent();
                 String requiredPid = configuration
                         .getStringAttribute("component");
-                String pid = ((Widget) component).getElement()
-                        .getPropertyString("tkPid");
-                return pid.equals(requiredPid);
+                Paintable paintable = VDragAndDropManager.get()
+                        .getCurrentDropHandler().getApplicationConnection()
+                        .getPaintable(requiredPid);
+                return paintable == component;
             } catch (Exception e) {
             }
             return false;
