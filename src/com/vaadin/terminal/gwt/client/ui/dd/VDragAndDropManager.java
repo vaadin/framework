@@ -6,6 +6,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
@@ -29,6 +30,77 @@ import com.vaadin.terminal.gwt.client.ValueMap;
  */
 public class VDragAndDropManager {
 
+    private final class DefaultDragAndDropEventHandler implements
+            NativePreviewHandler {
+        public void onPreviewNativeEvent(NativePreviewEvent event) {
+            updateCurrentEvent(event.getNativeEvent());
+            updateDragImagePosition();
+
+            NativeEvent nativeEvent = event.getNativeEvent();
+            Element targetElement = (Element) nativeEvent.getEventTarget()
+                    .cast();
+            if (dragElement != null && targetElement.isOrHasChild(dragElement)) {
+                ApplicationConnection.getConsole().log(
+                        "Event on dragImage, ignored");
+                event.cancel();
+                nativeEvent.stopPropagation();
+                return;
+            }
+
+            int typeInt = event.getTypeInt();
+            switch (typeInt) {
+            case Event.ONMOUSEOVER:
+                ApplicationConnection.getConsole().log(
+                        event.getNativeEvent().getType());
+                VDropHandler target = findDragTarget(targetElement);
+                if (target != null && target != currentDrag) {
+                    currentDropHandler = target;
+                    target.dragEnter(currentDrag);
+                } else if (target == null && currentDropHandler != null) {
+                    ApplicationConnection.getConsole().log("Invalid state!?");
+                    currentDropHandler = null;
+                }
+                break;
+            case Event.ONMOUSEOUT:
+                ApplicationConnection.getConsole().log(
+                        event.getNativeEvent().getType());
+
+                Element relatedTarget = (Element) nativeEvent
+                        .getRelatedEventTarget().cast();
+                VDropHandler newDragHanler = findDragTarget(relatedTarget);
+                if (dragElement != null
+                        && dragElement.isOrHasChild(relatedTarget)) {
+                    ApplicationConnection.getConsole().log(
+                            "Mouse out of dragImage, ignored");
+                    return;
+                }
+
+                if (currentDropHandler != null
+                        && currentDropHandler != newDragHanler) {
+                    currentDropHandler.dragLeave(currentDrag);
+                    currentDropHandler = null;
+                    acceptCallback = null;
+                }
+                break;
+            case Event.ONMOUSEMOVE:
+                if (currentDropHandler != null) {
+                    currentDropHandler.dragOver(currentDrag);
+                }
+                nativeEvent.preventDefault();
+
+                break;
+
+            case Event.ONMOUSEUP:
+                endDrag();
+                break;
+
+            default:
+                break;
+            }
+
+        }
+    }
+
     public enum DragEventType {
         ENTER, LEAVE, OVER, DROP
     }
@@ -50,7 +122,8 @@ public class VDragAndDropManager {
 
     /**
      * If drag and drop operation is not handled by {@link VDragAndDropManager}s
-     * internal handler, this can be used to update current {@link VDropHandler}.
+     * internal handler, this can be used to update current {@link VDropHandler}
+     * .
      * 
      * @param currentDropHandler
      */
@@ -59,6 +132,8 @@ public class VDragAndDropManager {
     }
 
     private VAcceptCallback acceptCallback;
+
+    private HandlerRegistration deferredStartRegistration;
 
     public static VDragAndDropManager get() {
         if (instance == null) {
@@ -71,6 +146,8 @@ public class VDragAndDropManager {
     private VDragAndDropManager() {
     }
 
+    private NativePreviewHandler defaultDragAndDropEventHandler = new DefaultDragAndDropEventHandler();
+
     /**
      * This method is used to start Vaadin client side drag and drop operation.
      * Operation may be started by virtually any Widget.
@@ -78,8 +155,8 @@ public class VDragAndDropManager {
      * Cancels possible existing drag. TODO figure out if this is always a bug
      * if one is active. Maybe a good and cheap lifesaver thought.
      * <p>
-     * If possible, method automatically detects current {@link VDropHandler} and
-     * fires {@link VDropHandler#dragEnter(VDragEvent)} event on it.
+     * If possible, method automatically detects current {@link VDropHandler}
+     * and fires {@link VDropHandler#dragEnter(VDragEvent)} event on it.
      * <p>
      * May also be used to control the drag and drop operation. If this option
      * is used, {@link VDropHandler} is searched on mouse events and appropriate
@@ -93,101 +170,75 @@ public class VDragAndDropManager {
      * @return
      */
     public VDragEvent startDrag(VTransferable transferable,
-            NativeEvent startEvent, boolean handleDragEvents) {
+            final NativeEvent startEvent, final boolean handleDragEvents) {
         interruptDrag();
 
         currentDrag = new VDragEvent(transferable, startEvent);
-        VDropHandler dh = null;
-        if (startEvent != null) {
-            dh = findDragTarget((Element) startEvent.getEventTarget().cast());
-        }
-        if (dh != null) {
-            // drag has started on a DropHandler, kind of drag over happens
-            currentDropHandler = dh;
-            updateCurrentEvent(startEvent);
-            dh.dragEnter(currentDrag);
-        }
+        updateCurrentEvent(startEvent);
+
+        final Command startDrag = new Command() {
+
+            public void execute() {
+                VDropHandler dh = null;
+                if (startEvent != null) {
+                    dh = findDragTarget((Element) currentDrag.currentGwtEvent
+                            .getEventTarget().cast());
+                }
+                if (dh != null) {
+                    // drag has started on a DropHandler, kind of drag over
+                    // happens
+                    currentDropHandler = dh;
+                    dh.dragEnter(currentDrag);
+                }
+
+                if (handleDragEvents) {
+                    handlerRegistration = Event
+                            .addNativePreviewHandler(defaultDragAndDropEventHandler);
+                }
+            }
+        };
 
         if (handleDragEvents) {
+            // only really start drag event on mousemove
+            if (Event.as(startEvent).getTypeInt() == Event.ONMOUSEDOWN) {
 
-            handlerRegistration = Event
-                    .addNativePreviewHandler(new NativePreviewHandler() {
+                deferredStartRegistration = Event
+                        .addNativePreviewHandler(new NativePreviewHandler() {
 
-                        public void onPreviewNativeEvent(
-                                NativePreviewEvent event) {
-                            updateCurrentEvent(event.getNativeEvent());
-                            updateDragImagePosition();
+                            public void onPreviewNativeEvent(
+                                    NativePreviewEvent event) {
+                                int typeInt = event.getTypeInt();
+                                switch (typeInt) {
+                                case Event.ONKEYDOWN:
+                                case Event.ONKEYPRESS:
+                                case Event.ONKEYUP:
+                                    // don't cancel possible drag start
+                                    break;
+                                case Event.ONMOUSEMOVE:
+                                    deferredStartRegistration.removeHandler();
+                                    deferredStartRegistration = null;
+                                    updateCurrentEvent(event.getNativeEvent());
+                                    startDrag.execute();
+                                default:
+                                    // on any other events, clean up the
+                                    // deferred drag start
 
-                            NativeEvent nativeEvent = event.getNativeEvent();
-                            Element targetElement = (Element) nativeEvent
-                                    .getEventTarget().cast();
-                            if (dragElement != null
-                                    && targetElement.isOrHasChild(dragElement)) {
-                                ApplicationConnection.getConsole().log(
-                                        "Event on dragImage, ignored");
-                                event.cancel();
-                                nativeEvent.stopPropagation();
-                                return;
+                                    deferredStartRegistration.removeHandler();
+                                    deferredStartRegistration = null;
+                                    break;
+                                }
+
                             }
+                        });
 
-                            int typeInt = event.getTypeInt();
-                            switch (typeInt) {
-                            case Event.ONMOUSEOVER:
-                                ApplicationConnection.getConsole().log(
-                                        event.getNativeEvent().getType());
-                                VDropHandler target = findDragTarget(targetElement);
-                                if (target != null && target != currentDrag) {
-                                    currentDropHandler = target;
-                                    target.dragEnter(currentDrag);
-                                } else if (target == null
-                                        && currentDropHandler != null) {
-                                    ApplicationConnection.getConsole().log(
-                                            "Invalid state!?");
-                                    currentDropHandler = null;
-                                }
-                                break;
-                            case Event.ONMOUSEOUT:
-                                ApplicationConnection.getConsole().log(
-                                        event.getNativeEvent().getType());
+            } else {
+                startDrag.execute();
+            }
 
-                                Element relatedTarget = (Element) nativeEvent
-                                        .getRelatedEventTarget().cast();
-                                VDropHandler newDragHanler = findDragTarget(relatedTarget);
-                                if (dragElement != null
-                                        && dragElement
-                                                .isOrHasChild(relatedTarget)) {
-                                    ApplicationConnection.getConsole().log(
-                                            "Mouse out of dragImage, ignored");
-                                    return;
-                                }
-
-                                if (currentDropHandler != null
-                                        && currentDropHandler != newDragHanler) {
-                                    currentDropHandler.dragLeave(currentDrag);
-                                    currentDropHandler = null;
-                                    acceptCallback = null;
-                                }
-                                break;
-                            case Event.ONMOUSEMOVE:
-                                if (currentDropHandler != null) {
-                                    currentDropHandler.dragOver(currentDrag);
-                                }
-                                nativeEvent.preventDefault();
-
-                                break;
-
-                            case Event.ONMOUSEUP:
-                                endDrag();
-                                break;
-
-                            default:
-                                break;
-                            }
-
-                        }
-
-                    });
+        } else {
+            startDrag.execute();
         }
+
         return currentDrag;
     }
 
@@ -222,14 +273,18 @@ public class VDragAndDropManager {
      * @return
      */
     private VDropHandler findDragTarget(Element element) {
-
         EventListener eventListener = Event.getEventListener(element);
         while (eventListener == null) {
             element = element.getParentElement();
             if (element == null) {
                 break;
             }
-            eventListener = Event.getEventListener(element);
+            try {
+                eventListener = Event.getEventListener(element);
+            } catch (Exception e) {
+                // CCE Should not happen but it does to me // MT 1.2.2010
+                e.printStackTrace();
+            }
         }
         if (eventListener == null) {
             ApplicationConnection.getConsole().log(
