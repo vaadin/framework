@@ -3,7 +3,7 @@ package com.vaadin.ui;
 import java.util.Map;
 
 import com.vaadin.event.AbstractDropHandler;
-import com.vaadin.event.ComponentTransferrable;
+import com.vaadin.event.ComponentTransferable;
 import com.vaadin.event.DataBindedTransferrable;
 import com.vaadin.event.HasDropHandler;
 import com.vaadin.event.Transferable;
@@ -49,8 +49,8 @@ public class DragDropPane extends AbsoluteLayout implements HasDropHandler {
                         Object dropDetails) {
 
                     DragEventDetails ed = (DragEventDetails) dropDetails;
-                    if (transferable instanceof ComponentTransferrable) {
-                        ComponentTransferrable ctr = (ComponentTransferrable) transferable;
+                    if (transferable instanceof ComponentTransferable) {
+                        ComponentTransferable ctr = (ComponentTransferable) transferable;
                         Component component = ctr.getSourceComponent();
 
                         if (component.getParent() != DragDropPane.this) {

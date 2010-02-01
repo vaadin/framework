@@ -2,7 +2,7 @@ package com.vaadin.event;
 
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.dd.DragAndDropManager.DragEventType;
+import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager.DragEventType;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Tree.Location;
 import com.vaadin.ui.Tree.TreeDropDetails;
@@ -95,8 +95,8 @@ public abstract class AbstractDropHandler implements DropHandler {
         }
 
         public boolean accepts(DragRequest event) {
-            if (event.getTransferable() instanceof ComponentTransferrable) {
-                return ((ComponentTransferrable) event.getTransferable())
+            if (event.getTransferable() instanceof ComponentTransferable) {
+                return ((ComponentTransferable) event.getTransferable())
                         .getSourceComponent() == component;
             } else {
                 return false;

@@ -2,7 +2,7 @@ package com.vaadin.event;
 
 import com.vaadin.ui.Component;
 
-public interface ComponentTransferrable extends Transferable {
+public interface ComponentTransferable extends Transferable {
 
     /**
      * @return the component where the drag operation started

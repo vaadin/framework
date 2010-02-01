@@ -3,7 +3,7 @@ package com.vaadin.event;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.vaadin.terminal.gwt.client.ui.dd.DragAndDropManager.DragEventType;
+import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager.DragEventType;
 
 public class DragRequest {
 

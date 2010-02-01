@@ -5,14 +5,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.vaadin.event.ComponentTransferrable;
+import com.vaadin.event.ComponentTransferable;
 import com.vaadin.event.DragRequest;
 import com.vaadin.event.DropHandler;
 import com.vaadin.event.HasDropHandler;
 import com.vaadin.event.Transferable;
 import com.vaadin.terminal.DragSource;
 import com.vaadin.terminal.VariableOwner;
-import com.vaadin.terminal.gwt.client.ui.dd.DragAndDropManager.DragEventType;
+import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager.DragEventType;
 import com.vaadin.ui.Component;
 
 public class DragAndDropService implements VariableOwner {
@@ -86,7 +86,7 @@ public class DragAndDropService implements VariableOwner {
         } else {
             if (transferable == null) {
                 if (sourceComponent != null) {
-                    transferable = new ComponentTransferrable() {
+                    transferable = new ComponentTransferable() {
 
                         private Map<String, Object> td = new HashMap<String, Object>();
 

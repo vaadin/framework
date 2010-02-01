@@ -7,7 +7,7 @@ import com.vaadin.event.DragRequest;
 import com.vaadin.event.DropHandler;
 import com.vaadin.event.HasDropHandler;
 import com.vaadin.event.Transferable;
-import com.vaadin.terminal.gwt.client.ui.dd.DragAndDropManager.DragEventType;
+import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager.DragEventType;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.Component;

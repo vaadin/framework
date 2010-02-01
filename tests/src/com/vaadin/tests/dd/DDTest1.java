@@ -5,7 +5,7 @@ import java.util.Collection;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.event.AbstractDropHandler;
-import com.vaadin.event.ComponentTransferrable;
+import com.vaadin.event.ComponentTransferable;
 import com.vaadin.event.DataBindedTransferrable;
 import com.vaadin.event.DragRequest;
 import com.vaadin.event.Transferable;
@@ -70,8 +70,8 @@ public class DDTest1 extends TestBase {
                 // e.printStackTrace();
                 // }
                 // System.out.println("Done get to work.");
-                if (transferable instanceof ComponentTransferrable) {
-                    ComponentTransferrable ct = (ComponentTransferrable) transferable;
+                if (transferable instanceof ComponentTransferable) {
+                    ComponentTransferable ct = (ComponentTransferable) transferable;
 
                     Component component = ct.getSourceComponent();
                     if (component != null) {

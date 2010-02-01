@@ -1,6 +1,6 @@
 package com.vaadin.event;
 
-public interface DataBindedTransferrable extends ComponentTransferrable {
+public interface DataBindedTransferrable extends ComponentTransferable {
 
     public Object getItemId();
 
