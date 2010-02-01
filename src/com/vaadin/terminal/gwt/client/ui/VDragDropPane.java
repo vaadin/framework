@@ -73,19 +73,19 @@ public class VDragDropPane extends VAbsoluteLayout implements Container,
         var me = this;
          
         el.addEventListener("dragenter",  function(ev) {
-            return me.@com.vaadin.terminal.gwt.client.ui.VDragDropPane::html5DragEnter(Lcom/vaadin/terminal/gwt/client/ui/dd/Html5DragEvent;)(ev);
+            return me.@com.vaadin.terminal.gwt.client.ui.VDragDropPane::html5DragEnter(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
         }, false);
         
         el.addEventListener("dragleave",  function(ev) {
-            return me.@com.vaadin.terminal.gwt.client.ui.VDragDropPane::html5DragLeave(Lcom/vaadin/terminal/gwt/client/ui/dd/Html5DragEvent;)(ev);
+            return me.@com.vaadin.terminal.gwt.client.ui.VDragDropPane::html5DragLeave(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
         }, false);
 
         el.addEventListener("dragover",  function(ev) {
-            return me.@com.vaadin.terminal.gwt.client.ui.VDragDropPane::html5DragOver(Lcom/vaadin/terminal/gwt/client/ui/dd/Html5DragEvent;)(ev);
+            return me.@com.vaadin.terminal.gwt.client.ui.VDragDropPane::html5DragOver(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
         }, false);
 
         el.addEventListener("drop",  function(ev) {
-            return me.@com.vaadin.terminal.gwt.client.ui.VDragDropPane::html5DragDrop(Lcom/vaadin/terminal/gwt/client/ui/dd/Html5DragEvent;)(ev);
+            return me.@com.vaadin.terminal.gwt.client.ui.VDragDropPane::html5DragDrop(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
         }, false);
         
     }-*/;
