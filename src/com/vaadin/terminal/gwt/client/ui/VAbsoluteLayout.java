@@ -158,8 +158,7 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
         for (Iterator<Object> childIterator = uidl.getChildIterator(); childIterator
                 .hasNext();) {
             UIDL cc = (UIDL) childIterator.next();
-            // skip the last one (support for VDragDropPane
-            if (childIterator.hasNext()) {
+            if (cc.getTag().equals("cc")) {
                 UIDL componentUIDL = cc.getChildUIDL(0);
                 unrenderedPids.remove(componentUIDL.getId());
                 getWrapper(client, componentUIDL).updateFromUIDL(cc);
