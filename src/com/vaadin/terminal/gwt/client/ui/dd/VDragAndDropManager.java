@@ -69,8 +69,8 @@ public class VDragAndDropManager {
                         // pretty much all events are mousemove althout below
                         // kind of happens mouseover
                         switch (typeInt) {
-                        case Event.ONMOUSEOUT:
                         case Event.ONMOUSEOVER:
+                        case Event.ONMOUSEOUT:
                             ApplicationConnection
                                     .getConsole()
                                     .log(
@@ -102,6 +102,9 @@ public class VDragAndDropManager {
                         default:
                             // just update element over and let the actual
                             // handling code do the thing
+                            ApplicationConnection.getConsole().log(
+                                    "Target just modified on "
+                                            + event.getType());
                             currentDrag
                                     .setElementOver((com.google.gwt.user.client.Element) targetElement);
                             break;
@@ -122,7 +125,11 @@ public class VDragAndDropManager {
                 ApplicationConnection.getConsole().log(
                         event.getNativeEvent().getType());
                 VDropHandler target = findDragTarget(targetElement);
-                if (target != null && target != currentDrag) {
+
+                if (target != null && target != currentDropHandler) {
+                    if (currentDropHandler != null) {
+                        currentDropHandler.dragLeave(currentDrag);
+                    }
                     currentDropHandler = target;
                     target.dragEnter(currentDrag);
                 } else if (target == null && currentDropHandler != null) {
