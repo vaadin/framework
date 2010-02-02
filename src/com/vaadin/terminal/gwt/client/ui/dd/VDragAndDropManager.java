@@ -313,6 +313,8 @@ public class VDragAndDropManager {
                                         break;
                                     }
                                 case Event.ONMOUSEMOVE:
+                                    deferredStartRegistration.removeHandler();
+                                    deferredStartRegistration = null;
                                     updateCurrentEvent(event.getNativeEvent());
                                     startDrag.execute();
                                     break;
