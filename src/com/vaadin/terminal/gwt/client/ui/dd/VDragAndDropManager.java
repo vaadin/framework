@@ -2,6 +2,7 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Position;
@@ -68,14 +69,12 @@ public class VDragAndDropManager {
                         // pretty much all events are mousemove althout below
                         // kind of happens mouseover
                         switch (typeInt) {
-                        case Event.ONMOUSEOVER:
                         case Event.ONMOUSEOUT:
+                        case Event.ONMOUSEOVER:
                             ApplicationConnection
                                     .getConsole()
                                     .log(
                                             "IGNORING proxy image event, fired because of hack or not significant");
-                            // TODO consider if mouseover should actually do
-                            // same as mouse move.
                             return;
                         case Event.ONMOUSEMOVE:
                             VDropHandler findDragTarget = findDragTarget(targetElement);
@@ -97,8 +96,8 @@ public class VDragAndDropManager {
                                         .setElementOver((com.google.gwt.user.client.Element) targetElement);
                                 currentDropHandler.dragOver(currentDrag);
                             }
-                            nativeEvent.preventDefault(); // prevent text
-                            // selection on IE
+                            // prevent text selection on IE
+                            nativeEvent.preventDefault();
                             return;
                         default:
                             // just update element over and let the actual
@@ -128,6 +127,7 @@ public class VDragAndDropManager {
                     target.dragEnter(currentDrag);
                 } else if (target == null && currentDropHandler != null) {
                     ApplicationConnection.getConsole().log("Invalid state!?");
+                    currentDropHandler.dragLeave(currentDrag);
                     currentDropHandler = null;
                 }
                 break;
@@ -280,26 +280,61 @@ public class VDragAndDropManager {
                                     NativePreviewEvent event) {
                                 int typeInt = event.getTypeInt();
                                 switch (typeInt) {
+                                case Event.ONMOUSEOVER:
+                                    if (typeInt == Event.ONMOUSEOVER) {
+                                        if (dragElement == null
+                                                || !dragElement
+                                                        .isOrHasChild((Node) event
+                                                                .getNativeEvent()
+                                                                .getCurrentEventTarget()
+                                                                .cast())) {
+                                            // drag image appeared below, ignore
+                                            ApplicationConnection.getConsole()
+                                                    .log("Drag image appeared");
+                                            break;
+                                        }
+                                    }
                                 case Event.ONKEYDOWN:
                                 case Event.ONKEYPRESS:
                                 case Event.ONKEYUP:
                                     // don't cancel possible drag start
                                     break;
+                                case Event.ONMOUSEOUT:
+
+                                    if (dragElement == null
+                                            || !dragElement
+                                                    .isOrHasChild((Node) event
+                                                            .getNativeEvent()
+                                                            .getRelatedEventTarget()
+                                                            .cast())) {
+                                        // drag image appeared below, ignore
+                                        ApplicationConnection.getConsole().log(
+                                                "Drag image appeared");
+                                        break;
+                                    }
                                 case Event.ONMOUSEMOVE:
-                                    deferredStartRegistration.removeHandler();
-                                    deferredStartRegistration = null;
                                     updateCurrentEvent(event.getNativeEvent());
                                     startDrag.execute();
+                                    break;
                                 default:
                                     // on any other events, clean up the
                                     // deferred drag start
+                                    ApplicationConnection.getConsole().log(
+                                            "Drag did not start due event"
+                                                    + event.getNativeEvent()
+                                                            .getType());
 
                                     deferredStartRegistration.removeHandler();
                                     deferredStartRegistration = null;
+                                    if (dragElement != null) {
+                                        RootPanel.getBodyElement().removeChild(
+                                                dragElement);
+                                    }
                                     break;
                                 }
 
                             }
+
                         });
 
             } else {
