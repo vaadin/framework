@@ -98,7 +98,7 @@ public class VDragAndDropManager {
                                 currentDropHandler.dragOver(currentDrag);
                             }
                             nativeEvent.preventDefault(); // prevent text
-                                                          // selection on IE
+                            // selection on IE
                             return;
                         default:
                             // just update element over and let the actual
@@ -512,6 +512,7 @@ public class VDragAndDropManager {
             Style style = node.getStyle();
             style.setPosition(Position.ABSOLUTE);
             style.setZIndex(600000);
+            updateDragImagePosition();
             RootPanel.getBodyElement().appendChild(node);
         }
     }
