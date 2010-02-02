@@ -46,7 +46,7 @@ public class VDragDropPane extends VAbsoluteLayout implements Container,
                 VDragEvent drag = VDragAndDropManager.get().startDrag(
                         transferable, event.getNativeEvent(), true);
                 drag.createDragImage(((Widget) paintable).getElement(), true);
-                drag.getEventDetails().put(
+                drag.getDropDetails().put(
                         "mouseDown",
                         new MouseEventDetails(event.getNativeEvent())
                                 .serialize());
@@ -141,7 +141,7 @@ public class VDragDropPane extends VAbsoluteLayout implements Container,
 
     public boolean html5DragDrop(VHtml5DragEvent event) {
         ApplicationConnection.getConsole().log("HTML 5 Drag Drop");
-        VTransferable transferable = vaadinDragEvent.getTransferrable();
+        VTransferable transferable = vaadinDragEvent.getTransferable();
 
         JsArrayString types = event.getTypes();
         for (int i = 0; i < types.length(); i++) {
@@ -214,7 +214,7 @@ public class VDragDropPane extends VAbsoluteLayout implements Container,
                         return false;
                     }
 
-                    Map<String, Object> transferable = drag.getEventDetails();
+                    Map<String, Object> transferable = drag.getDropDetails();
 
                     // this is absolute layout based, and we may want to set
                     // component

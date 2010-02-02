@@ -24,9 +24,11 @@ import com.vaadin.data.util.ContainerHierarchicalWrapper;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.AbstractDropHandler;
 import com.vaadin.event.Action;
-import com.vaadin.event.DataBindedTransferrable;
+import com.vaadin.event.DataBindedTransferable;
+import com.vaadin.event.DragDropDataTranslator;
+import com.vaadin.event.DragDropDetailsImpl;
 import com.vaadin.event.DropHandler;
-import com.vaadin.event.HasDropHandler;
+import com.vaadin.event.DropTarget;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
@@ -51,7 +53,8 @@ import com.vaadin.terminal.gwt.client.ui.VTree;
 @SuppressWarnings("serial")
 @ClientWidget(VTree.class)
 public class Tree extends AbstractSelect implements Container.Hierarchical,
-        Action.Container, ItemClickSource, DragSource, HasDropHandler {
+        Action.Container, ItemClickSource, DragSource, DropTarget,
+        DragDropDataTranslator {
 
     private static final Method EXPAND_METHOD;
 
@@ -115,7 +118,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
     private int itemDragModes = DRAG_OUT;
 
-    class TreeTransferrable implements DataBindedTransferrable {
+    class TreeTransferable implements DataBindedTransferable {
 
         private final HashMap<String, Object> data = new HashMap<String, Object>();
 
@@ -144,10 +147,10 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         }
     }
 
-    public Transferable getTransferrable(Transferable transferable,
+    public Transferable getTransferable(Transferable transferable,
             Map<String, Object> payload) {
         if (transferable == null) {
-            transferable = new TreeTransferrable();
+            transferable = new TreeTransferable();
         }
         // updating drag source variables
         Object object = payload.get("itemId");
@@ -641,8 +644,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
             // New items
             target.addVariable(this, "newitem", new String[] {});
 
-            if (abstractDropHandler != null) {
-                abstractDropHandler.paint(target);
+            if (dropHandler instanceof AbstractDropHandler) {
+                ((AbstractDropHandler) dropHandler).paint(target);
             }
 
         }
@@ -1085,7 +1088,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
     private ItemStyleGenerator itemStyleGenerator;
 
-    private AbstractDropHandler abstractDropHandler;
+    private DropHandler dropHandler;
 
     public void addListener(ItemClickListener listener) {
         addListener(VTree.ITEM_CLICK_EVENT_ID, ItemClickEvent.class, listener,
@@ -1144,30 +1147,25 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     public DropHandler getDropHandler() {
-        return abstractDropHandler;
+        return dropHandler;
     }
 
-    public void setDropHandler(AbstractDropHandler abstractDropHandler) {
-        this.abstractDropHandler = abstractDropHandler;
-    }
-
-    public Object getDragEventDetails(Map<String, Object> rawVariables) {
-        return new TreeDropDetails(rawVariables);
+    public void setDropHandler(DropHandler dropHandler) {
+        this.dropHandler = dropHandler;
     }
 
     public enum Location {
         TOP, BOTTOM, MIDDLE
     }
 
-    public class TreeDropDetails {
+    public class TreeDropDetails extends DragDropDetailsImpl {
 
-        private Map<String, Object> vars;
         private Object idOver;
 
         TreeDropDetails(Map<String, Object> rawVariables) {
-            vars = rawVariables;
+            super(rawVariables);
             // eagar fetch itemid, mapper may be emptied
-            String keyover = (String) vars.get("itemIdOver");
+            String keyover = (String) get("itemIdOver");
             if (keyover != null) {
                 idOver = itemIdMapper.get(keyover);
             }
@@ -1178,7 +1176,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         }
 
         public Location getDropLocation() {
-            String s = (String) vars.get("detail");
+            String s = (String) get("detail");
             if ("Top".equals(s)) {
                 return Location.TOP;
             } else if ("Bottom".equals(s)) {
@@ -1188,6 +1186,11 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
             }
         }
 
+    }
+
+    public TreeDropDetails translateDragDropDetails(
+            Map<String, Object> clientVariables) {
+        return new TreeDropDetails(clientVariables);
     }
 
 }

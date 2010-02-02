@@ -10,7 +10,7 @@ public class VAcceptCriterionImpl {
 
     private final class OverTreeNode implements VAcceptCriteria {
         public boolean accept(VDragEvent drag, UIDL configuration) {
-            Boolean containsKey = (Boolean) drag.getEventDetails().get(
+            Boolean containsKey = (Boolean) drag.getDropDetails().get(
                     "itemIdOverIsNode");
             if (containsKey != null && containsKey.booleanValue()) {
                 return true;
@@ -22,7 +22,7 @@ public class VAcceptCriterionImpl {
     private final class ComponentCriteria implements VAcceptCriteria {
         public boolean accept(VDragEvent drag, UIDL configuration) {
             try {
-                Paintable component = drag.getTransferrable().getComponent();
+                Paintable component = drag.getTransferable().getComponent();
                 String requiredPid = configuration
                         .getStringAttribute("component");
                 Paintable paintable = VDragAndDropManager.get()
@@ -62,7 +62,7 @@ public class VAcceptCriterionImpl {
 
     private final class HasItemId implements VAcceptCriteria {
         public boolean accept(VDragEvent drag, UIDL configuration) {
-            return drag.getTransferrable().getItemId() != null;
+            return drag.getTransferable().getItemId() != null;
         }
     }
 

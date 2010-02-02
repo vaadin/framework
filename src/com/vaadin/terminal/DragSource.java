@@ -24,7 +24,7 @@ public interface DragSource {
      * @param rawVariables
      * @return
      */
-    public Transferable getTransferrable(Transferable transferable,
+    public Transferable getTransferable(Transferable transferable,
             Map<String, Object> rawVariables);
 
 }

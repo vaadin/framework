@@ -395,9 +395,9 @@ public class VDragAndDropManager {
         }
         if (currentDropHandler != null) {
             // we have dropped on a drop target
-            boolean sendTransferrableToServer = currentDropHandler
+            boolean sendTransferableToServer = currentDropHandler
                     .drop(currentDrag);
-            if (sendTransferrableToServer) {
+            if (sendTransferableToServer) {
                 doRequest(DragEventType.DROP);
             }
             currentDropHandler = null;
@@ -451,7 +451,7 @@ public class VDragAndDropManager {
                 false);
         client.updateVariable(DD_SERVICE, "dhowner", paintable, false);
 
-        VTransferable transferable = currentDrag.getTransferrable();
+        VTransferable transferable = currentDrag.getTransferable();
 
         if (transferable.getItemId() != null) {
             client.updateVariable(DD_SERVICE, "itemId", transferable
@@ -471,7 +471,7 @@ public class VDragAndDropManager {
             try {
                 MouseEventDetails mouseEventDetails = new MouseEventDetails(
                         currentDrag.currentGwtEvent);
-                currentDrag.getEventDetails().put("mouseEvent",
+                currentDrag.getDropDetails().put("mouseEvent",
                         mouseEventDetails.serialize());
             } catch (Exception e) {
                 // NOP, (at least oophm on Safari) can't serialize html dd event
@@ -479,9 +479,9 @@ public class VDragAndDropManager {
                 // mouseevent
             }
         } else {
-            currentDrag.getEventDetails().put("mouseEvent", null);
+            currentDrag.getDropDetails().put("mouseEvent", null);
         }
-        client.updateVariable(DD_SERVICE, "evt", currentDrag.getEventDetails(),
+        client.updateVariable(DD_SERVICE, "evt", currentDrag.getDropDetails(),
                 false);
 
         client.updateVariable(DD_SERVICE, "tra", transferable.getVariableMap(),

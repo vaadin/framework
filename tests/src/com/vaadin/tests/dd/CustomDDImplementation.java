@@ -1,11 +1,11 @@
 package com.vaadin.tests.dd;
 
-import java.util.Map;
-
 import com.vaadin.event.AbstractDropHandler;
+import com.vaadin.event.DragDropDetails;
+import com.vaadin.event.DragDropHandler;
 import com.vaadin.event.DragRequest;
 import com.vaadin.event.DropHandler;
-import com.vaadin.event.HasDropHandler;
+import com.vaadin.event.DropTarget;
 import com.vaadin.event.Transferable;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager.DragEventType;
 import com.vaadin.ui.AbstractComponent;
@@ -39,18 +39,14 @@ public class CustomDDImplementation extends CustomComponent {
      * 
      */
     @ClientWidget(VMyDropTarget.class)
-    class MyDropTarget extends AbstractComponent implements HasDropHandler {
-
+    class MyDropTarget extends AbstractComponent implements DropTarget {
         public DropHandler getDropHandler() {
-            return new DropHandler() {
-                public void handleDragRequest(DragRequest dragRequest) {
-                    Transferable transferable = dragRequest.getTransferable();
+            return new DragDropHandler() {
+                public void handleDragRequest(DragRequest dragRequest,
+                        Transferable transferable,
+                        DragDropDetails dragDropDetails) {
                     DragEventType type = dragRequest.getType();
                     switch (type) {
-                    case DROP:
-                        // Do something with data
-
-                        break;
 
                     case ENTER:
                         // eg. validate transferrable
@@ -71,16 +67,13 @@ public class CustomDDImplementation extends CustomComponent {
                     }
 
                 }
-            };
-        }
 
-        public Object getDragEventDetails(Map<String, Object> rawVariables) {
-            /*
-             * If client side sets some event details, translate them to desired
-             * server side presentation here. The returned object will be passed
-             * for drop handler.
-             */
-            return null;
+                public boolean drop(Transferable transferable,
+                        DragDropDetails dropDetails) {
+                    // Do something with data
+                    return true;
+                }
+            };
         }
 
     }

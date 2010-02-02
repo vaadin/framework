@@ -45,7 +45,7 @@ public class VDragEvent {
         start = new Date();
     }
 
-    public VTransferable getTransferrable() {
+    public VTransferable getTransferable() {
         return transferable;
     }
 
@@ -109,7 +109,7 @@ public class VDragEvent {
      * 
      * @return
      */
-    public Map<String, Object> getEventDetails() {
+    public Map<String, Object> getDropDetails() {
         return dropDetails;
     }
 

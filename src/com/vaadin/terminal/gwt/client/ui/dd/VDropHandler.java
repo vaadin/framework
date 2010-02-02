@@ -10,26 +10,37 @@ import com.vaadin.terminal.gwt.client.Paintable;
 public interface VDropHandler {
 
     /**
-     * Called by D'D' manager when drag gets over this drop handler.
+     * Called by DragAndDropManager when a drag operation is in progress and the
+     * cursor enters the area occupied by this Paintable.
      * 
-     * @param drag
+     * @param dragEvent
+     *            DragEvent which contains the transferable and other
+     *            information for the operation
      */
-    public void dragEnter(VDragEvent drag);
+    public void dragEnter(VDragEvent dragEvent);
 
     /**
-     * Called by D'D' manager when drag gets out this drop handler.
+     * Called by DragAndDropManager when a drag operation is in progress and the
+     * cursor leaves the area occupied by this Paintable.
      * 
-     * @param drag
+     * @param dragEvent
+     *            DragEvent which contains the transferable and other
+     *            information for the operation
      */
-    public void dragLeave(VDragEvent drag);
+    public void dragLeave(VDragEvent dragEvent);
 
     /**
-     * The actual drop happened on this drop handler.
+     * Called by DragAndDropManager when a drag operation was in progress and a
+     * drop was performed on this Paintable.
      * 
-     * @param drag
-     * @return true if Tranferrable of this drag event needs to be sent to
-     *         server, false if drop was finally canceled or no server visit is
-     *         needed
+     * 
+     * @param dragEvent
+     *            DragEvent which contains the transferable and other
+     *            information for the operation
+     * 
+     * @return true if the Tranferrable of this drag event needs to be sent to
+     *         the server, false if drop is rejected or no server side event
+     *         should be sent
      */
     public boolean drop(VDragEvent drag);
 
@@ -45,7 +56,7 @@ public interface VDropHandler {
     public void dragOver(VDragEvent currentDrag);
 
     /**
-     * Returns the Paintable into which this DragHandler is assosiated
+     * Returns the Paintable into which this DragHandler is associated
      */
     public Paintable getPaintable();
 

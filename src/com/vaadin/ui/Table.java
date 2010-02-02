@@ -23,17 +23,17 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.ContainerOrderedWrapper;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.Action;
-import com.vaadin.event.DataBindedTransferrable;
+import com.vaadin.event.DataBindedTransferable;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.event.ItemClickEvent.ItemClickSource;
+import com.vaadin.terminal.DragSource;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.DragSource;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VScrollTable;
 
@@ -57,8 +57,7 @@ import com.vaadin.terminal.gwt.client.ui.VScrollTable;
 @SuppressWarnings("serial")
 @ClientWidget(VScrollTable.class)
 public class Table extends AbstractSelect implements Action.Container,
-        Container.Ordered, Container.Sortable, ItemClickSource,
-        DragSource {
+        Container.Ordered, Container.Sortable, ItemClickSource, DragSource {
 
     /**
      * Modes that Table support as drag sourse.
@@ -3322,7 +3321,7 @@ public class Table extends AbstractSelect implements Action.Container,
         requestRepaint();
     }
 
-    class TableTransferrable implements DataBindedTransferrable {
+    class TableTransferable implements DataBindedTransferable {
 
         private final HashMap<String, Object> data = new HashMap<String, Object>();
 
@@ -3352,8 +3351,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     }
 
-    private void updateTransferrable(Map<String, Object> payload,
-            Transferable tr) {
+    private void updateTransferable(Map<String, Object> payload, Transferable tr) {
         Object object = payload.get("itemId");
         if (object != null) {
             tr.setData("itemId", itemIdMapper.get((String) object));
@@ -3361,12 +3359,12 @@ public class Table extends AbstractSelect implements Action.Container,
         }
     }
 
-    public Transferable getTransferrable(Transferable transferable,
+    public TableTransferable getTransferable(Transferable transferable,
             Map<String, Object> rawVariables) {
         if (transferable == null) {
-            transferable = new TableTransferrable();
+            transferable = new TableTransferable();
         }
-        updateTransferrable(rawVariables, transferable);
-        return transferable;
+        updateTransferable(rawVariables, transferable);
+        return (TableTransferable) transferable;
     }
 }

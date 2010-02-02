@@ -164,7 +164,7 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
 
         currentMouseOverKey = findCurrentMouseOverKey(drag.getElementOver());
 
-        drag.getEventDetails().put("itemIdOver", currentMouseOverKey);
+        drag.getDropDetails().put("itemIdOver", currentMouseOverKey);
 
         if (currentMouseOverKey != null) {
             String detail = getDropDetail(drag.getCurrentGwtEvent());
@@ -173,8 +173,8 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                     && "Center".equals(detail)) {
                 overTreeNode = true;
             }
-            drag.getEventDetails().put("itemIdOverIsNode", overTreeNode);
-            drag.getEventDetails().put("detail", detail);
+            drag.getDropDetails().put("itemIdOverIsNode", overTreeNode);
+            drag.getDropDetails().put("detail", detail);
 
         }
     }
@@ -218,10 +218,10 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
 
                 @Override
                 public void dragOver(final VDragEvent currentDrag) {
-                    final Object oldIdOver = currentDrag.getEventDetails().get(
+                    final Object oldIdOver = currentDrag.getDropDetails().get(
                             "itemIdOver");
                     final String oldDetail = (String) currentDrag
-                            .getEventDetails().get("detail");
+                            .getDropDetails().get("detail");
 
                     updateTreeRelatedDragData(currentDrag);
                     final String detail = getDropDetail(currentDrag

@@ -7,7 +7,8 @@ import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.demo.tutorial.addressbook.data.Person;
 import com.vaadin.demo.tutorial.addressbook.data.PersonContainer;
 import com.vaadin.event.AbstractDropHandler;
-import com.vaadin.event.DataBindedTransferrable;
+import com.vaadin.event.DataBindedTransferable;
+import com.vaadin.event.DragDropDetails;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.AbstractDropHandler.AcceptCriterion;
 import com.vaadin.event.AbstractDropHandler.And;
@@ -54,12 +55,13 @@ public class DDTest2 extends TestBase {
 
         AbstractDropHandler dropHandler = new AbstractDropHandler() {
             @Override
-            public void receive(Transferable transferable, Object dropdetails) {
+            public void receive(Transferable transferable,
+                    DragDropDetails dropdetails) {
                 /*
                  * We know transferrable is from table, so it is of type
                  * DataBindedTransferrable
                  */
-                DataBindedTransferrable tr = (DataBindedTransferrable) transferable;
+                DataBindedTransferable tr = (DataBindedTransferable) transferable;
                 Object itemId = tr.getItemId();
                 Table fromTable = (Table) tr.getSourceComponent();
                 String name = fromTable.getItem(itemId).getItemProperty("Name")
@@ -102,11 +104,12 @@ public class DDTest2 extends TestBase {
 
         dropHandler = new AbstractDropHandler() {
             @Override
-            public void receive(Transferable transferable, Object dropdetails) {
+            public void receive(Transferable transferable,
+                    DragDropDetails dropdetails) {
                 TreeDropDetails details = (TreeDropDetails) dropdetails;
 
-                if (transferable instanceof DataBindedTransferrable) {
-                    DataBindedTransferrable tr = (DataBindedTransferrable) transferable;
+                if (transferable instanceof DataBindedTransferable) {
+                    DataBindedTransferable tr = (DataBindedTransferable) transferable;
 
                     Object itemId = tree2.addItem();
                     tree2.setParent(itemId, details.getItemIdOver());

@@ -44,7 +44,7 @@ public abstract class VAbstractDropHandler implements VDropHandler {
     }
 
     /**
-     * If transferrable is accepted (either via server visit or client side
+     * If transferable is accepted (either via server visit or client side
      * rules) the default implementation calls {@link #dragAccepted(VDragEvent)}
      * method.
      */

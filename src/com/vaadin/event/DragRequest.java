@@ -8,17 +8,10 @@ import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager.DragEventType;
 public class DragRequest {
 
     private DragEventType dragEventType;
-    private Transferable transferable;
     private Map<String, Object> responseData;
-    private Object eventDetails;
 
-    public DragRequest(DragEventType dragEventType, Transferable transferable) {
+    public DragRequest(DragEventType dragEventType) {
         this.dragEventType = dragEventType;
-        this.transferable = transferable;
-    }
-
-    public Transferable getTransferable() {
-        return transferable;
     }
 
     public DragEventType getType() {
@@ -42,14 +35,6 @@ public class DragRequest {
             responseData = new HashMap<String, Object>();
         }
         responseData.put(key, value);
-    }
-
-    public void setEventDetails(Object eventDetails) {
-        this.eventDetails = eventDetails;
-    }
-
-    public Object getEventDetails() {
-        return eventDetails;
     }
 
 }

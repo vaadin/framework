@@ -4,8 +4,11 @@ import java.util.Map;
 
 import com.vaadin.event.AbstractDropHandler;
 import com.vaadin.event.ComponentTransferable;
-import com.vaadin.event.DataBindedTransferrable;
-import com.vaadin.event.HasDropHandler;
+import com.vaadin.event.DataBindedTransferable;
+import com.vaadin.event.DragDropDataTranslator;
+import com.vaadin.event.DragDropDetails;
+import com.vaadin.event.DragDropDetailsImpl;
+import com.vaadin.event.DropTarget;
 import com.vaadin.event.Transferable;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
@@ -34,7 +37,8 @@ import com.vaadin.terminal.gwt.client.MouseEventDetails;
  */
 @SuppressWarnings("serial")
 @ClientWidget(com.vaadin.terminal.gwt.client.ui.VDragDropPane.class)
-public class DragDropPane extends AbsoluteLayout implements HasDropHandler {
+public class DragDropPane extends AbsoluteLayout implements DropTarget,
+        DragDropDataTranslator {
 
     private AbstractDropHandler abstractDropHandler;
 
@@ -46,7 +50,7 @@ public class DragDropPane extends AbsoluteLayout implements HasDropHandler {
             dropHandler = new AbstractDropHandler() {
                 @Override
                 public void receive(Transferable transferable,
-                        Object dropDetails) {
+                        DragDropDetails dropDetails) {
 
                     DragEventDetails ed = (DragEventDetails) dropDetails;
                     if (transferable instanceof ComponentTransferable) {
@@ -54,14 +58,14 @@ public class DragDropPane extends AbsoluteLayout implements HasDropHandler {
                         Component component = ctr.getSourceComponent();
 
                         if (component.getParent() != DragDropPane.this) {
-                            if (transferable instanceof DataBindedTransferrable) {
+                            if (transferable instanceof DataBindedTransferable) {
                                 // Item has been dragged, construct a Label from
                                 // Item id
                                 Label l = new Label();
                                 l.setSizeUndefined();
                                 l
                                         .setValue("ItemId : "
-                                                + ((DataBindedTransferrable) transferable)
+                                                + ((DataBindedTransferable) transferable)
                                                         .getItemId());
                                 DragDropPane.this.addComponent(l);
                                 component = l;
@@ -159,36 +163,33 @@ public class DragDropPane extends AbsoluteLayout implements HasDropHandler {
         return abstractDropHandler;
     }
 
-    class DragEventDetails {
-
-        private Map<String, Object> vars;
+    class DragEventDetails extends DragDropDetailsImpl {
 
         public DragEventDetails(Map<String, Object> rawVariables) {
-            vars = rawVariables;
+            super(rawVariables);
         }
 
         public Integer getAbsoluteTop() {
-            return (Integer) vars.get("absoluteTop");
+            return (Integer) get("absoluteTop");
         }
 
         public Integer getAbsoluteLeft() {
-            return (Integer) vars.get("absoluteLeft");
+            return (Integer) get("absoluteLeft");
         }
 
         public MouseEventDetails getMouseDownEvent() {
-            return MouseEventDetails
-                    .deSerialize((String) vars.get("mouseDown"));
+            return MouseEventDetails.deSerialize((String) get("mouseDown"));
         }
 
         public MouseEventDetails getMouseEvent() {
-            return MouseEventDetails.deSerialize((String) vars
-                    .get("mouseEvent"));
+            return MouseEventDetails.deSerialize((String) get("mouseEvent"));
         }
 
     }
 
-    public Object getDragEventDetails(Map<String, Object> rawVariables) {
-        return new DragEventDetails(rawVariables);
+    public DragDropDetails translateDragDropDetails(
+            Map<String, Object> clientVariables) {
+        return new DragEventDetails(clientVariables);
     }
 
 }
