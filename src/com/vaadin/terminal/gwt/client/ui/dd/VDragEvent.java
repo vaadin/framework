@@ -4,7 +4,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.TableElement;
+import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Element;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
@@ -127,10 +130,18 @@ public class VDragEvent {
      */
     public void createDragImage(Element element, boolean alignImageToEvent) {
         Element cloneNode = (Element) element.cloneNode(true);
-        cloneNode.getStyle().setOpacity(0.4);
         if (BrowserInfo.get().isIE()) {
-            cloneNode.getStyle().setProperty("filter", "alpha(opacity=70)");
+            if (cloneNode.getTagName().toLowerCase().equals("tr")) {
+                TableElement table = Document.get().createTableElement();
+                TableSectionElement tbody = Document.get().createTBodyElement();
+                table.appendChild(tbody);
+                tbody.appendChild(cloneNode);
+                cloneNode = table.cast();
+            }
+            cloneNode.getStyle().setProperty("filter", "alpha(opacity=40)");
         }
+        cloneNode.getStyle().setOpacity(0.4);
+
         if (alignImageToEvent) {
             int absoluteTop = element.getAbsoluteTop();
             int absoluteLeft = element.getAbsoluteLeft();
