@@ -3,6 +3,7 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -16,6 +17,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ValueMap;
 
 /**
@@ -32,22 +34,90 @@ public class VDragAndDropManager {
 
     private final class DefaultDragAndDropEventHandler implements
             NativePreviewHandler {
+
         public void onPreviewNativeEvent(NativePreviewEvent event) {
-            updateCurrentEvent(event.getNativeEvent());
+            NativeEvent nativeEvent = event.getNativeEvent();
+            updateCurrentEvent(nativeEvent);
             updateDragImagePosition();
 
-            NativeEvent nativeEvent = event.getNativeEvent();
+            int typeInt = event.getTypeInt();
             Element targetElement = (Element) nativeEvent.getEventTarget()
                     .cast();
-            if (dragElement != null && targetElement.isOrHasChild(dragElement)) {
-                ApplicationConnection.getConsole().log(
-                        "Event on dragImage, ignored");
-                event.cancel();
-                nativeEvent.stopPropagation();
-                return;
+            if (dragElement != null && dragElement.isOrHasChild(targetElement)) {
+
+                // to detect the "real" target, hide dragelement temporary and
+                // use elementFromPoint
+                String display = dragElement.getStyle().getDisplay();
+                dragElement.getStyle().setDisplay(Display.NONE);
+                try {
+                    int x = nativeEvent.getClientX();
+                    int y = nativeEvent.getClientY();
+                    // Util.browserDebugger();
+                    targetElement = Util.getElementFromPoint(x, y);
+                    if (targetElement == null) {
+                        ApplicationConnection.getConsole().log(
+                                "Event on dragImage, ignored");
+                        event.cancel();
+                        nativeEvent.stopPropagation();
+                        return;
+
+                    } else {
+                        ApplicationConnection.getConsole().log(
+                                "Event on dragImage, target changed");
+                        // special handling for events over dragImage
+                        // pretty much all events are mousemove althout below
+                        // kind of happens mouseover
+                        switch (typeInt) {
+                        case Event.ONMOUSEOVER:
+                        case Event.ONMOUSEOUT:
+                            ApplicationConnection
+                                    .getConsole()
+                                    .log(
+                                            "IGNORING proxy image event, fired because of hack or not significant");
+                            // TODO consider if mouseover should actually do
+                            // same as mouse move.
+                            return;
+                        case Event.ONMOUSEMOVE:
+                            VDropHandler findDragTarget = findDragTarget(targetElement);
+                            if (findDragTarget != currentDropHandler) {
+                                // dragleave on old
+                                if (currentDropHandler != null) {
+                                    currentDropHandler.dragLeave(currentDrag);
+                                    acceptCallback = null;
+                                }
+                                // dragenter on new
+                                currentDropHandler = findDragTarget;
+                                if (currentDropHandler != null) {
+                                    currentDrag
+                                            .setElementOver((com.google.gwt.user.client.Element) targetElement);
+                                    currentDropHandler.dragEnter(currentDrag);
+                                }
+                            } else if (findDragTarget != null) {
+                                currentDrag
+                                        .setElementOver((com.google.gwt.user.client.Element) targetElement);
+                                currentDropHandler.dragOver(currentDrag);
+                            }
+                            nativeEvent.preventDefault(); // prevent text
+                                                          // selection on IE
+                            return;
+                        default:
+                            // just update element over and let the actual
+                            // handling code do the thing
+                            currentDrag
+                                    .setElementOver((com.google.gwt.user.client.Element) targetElement);
+                            break;
+                        }
+
+                    }
+                } catch (Exception e) {
+                    ApplicationConnection.getConsole().log(
+                            "FIXME : ERROR in elementFromPoint hack.");
+                    e.printStackTrace();
+                } finally {
+                    dragElement.getStyle().setProperty("display", display);
+                }
             }
 
-            int typeInt = event.getTypeInt();
             switch (typeInt) {
             case Event.ONMOUSEOVER:
                 ApplicationConnection.getConsole().log(
@@ -99,6 +169,7 @@ public class VDragAndDropManager {
             }
 
         }
+
     }
 
     public enum DragEventType {
@@ -258,8 +329,8 @@ public class VDragAndDropManager {
     private void updateDragImagePosition() {
         if (currentDrag.currentGwtEvent != null && dragElement != null) {
             Style style = dragElement.getStyle();
-            int clientY = currentDrag.currentGwtEvent.getClientY() + 6;
-            int clientX = currentDrag.currentGwtEvent.getClientX() + 6;
+            int clientY = currentDrag.currentGwtEvent.getClientY();
+            int clientX = currentDrag.currentGwtEvent.getClientX();
             style.setTop(clientY, Unit.PX);
             style.setLeft(clientX, Unit.PX);
         }

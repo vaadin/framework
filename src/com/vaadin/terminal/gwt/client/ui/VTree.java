@@ -11,11 +11,10 @@ import java.util.Set;
 
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -161,7 +160,10 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
 
     }
 
-    private void updateTreeRelatedTransferData(VDragEvent drag) {
+    private void updateTreeRelatedDragData(VDragEvent drag) {
+
+        currentMouseOverKey = findCurrentMouseOverKey(drag.getElementOver());
+
         drag.getEventDetails().put("itemIdOver", currentMouseOverKey);
 
         if (currentMouseOverKey != null) {
@@ -177,13 +179,36 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
         }
     }
 
+    private String findCurrentMouseOverKey(Element elementOver) {
+        TreeNode treeNode = null;
+        Element curEl = elementOver;
+        while (curEl != null) {
+            try {
+                EventListener eventListener = Event.getEventListener(curEl);
+                if (eventListener != null) {
+                    // found a widget
+                    if (eventListener instanceof TreeNode) {
+                        treeNode = (TreeNode) eventListener;
+                    }
+                    break;
+                } else {
+                    curEl = (Element) curEl.getParentElement();
+                }
+            } catch (Exception e) {
+                ApplicationConnection.getConsole().log(e.getMessage());
+                e.printStackTrace();
+            }
+        }
+        return treeNode == null ? null : treeNode.key;
+    }
+
     private void updateDropHandler(UIDL childUidl) {
         if (dropHandler == null) {
             dropHandler = new VAbstractDropHandler() {
 
                 @Override
                 public void dragEnter(VDragEvent drag) {
-                    updateTreeRelatedTransferData(drag);
+                    updateTreeRelatedDragData(drag);
                     super.dragEnter(drag);
                 }
 
@@ -197,59 +222,47 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                             "itemIdOver");
                     final String oldDetail = (String) currentDrag
                             .getEventDetails().get("detail");
-                    /*
-                     * Using deferred command, so event bubbles to TreeNode
-                     * event listener. Currently here via preview
-                     */
-                    DeferredCommand.addCommand(new Command() {
-                        public void execute() {
-                            final String detail = getDropDetail(currentDrag
-                                    .getCurrentGwtEvent());
-                            boolean nodeHasChanged = (currentMouseOverKey != null && currentMouseOverKey != oldIdOver)
-                                    || (oldIdOver != null);
-                            boolean detailHasChanded = !detail
-                                    .equals(oldDetail);
 
-                            if (nodeHasChanged || detailHasChanded) {
-                                ApplicationConnection.getConsole().log(
-                                        "Change in Transferable "
-                                                + currentMouseOverKey + " "
-                                                + detail);
+                    updateTreeRelatedDragData(currentDrag);
+                    final String detail = getDropDetail(currentDrag
+                            .getCurrentGwtEvent());
+                    boolean nodeHasChanged = (currentMouseOverKey != null && currentMouseOverKey != oldIdOver)
+                            || (oldIdOver != null);
+                    boolean detailHasChanded = !detail.equals(oldDetail);
 
-                                updateTreeRelatedTransferData(currentDrag);
-                                VAcceptCallback accpectedCb = new VAcceptCallback() {
-                                    public void handleResponse(
-                                            ValueMap responseData) {
-                                        if (responseData == null // via client
-                                                // side
-                                                // validation
-                                                || responseData
-                                                        .containsKey("accepted")) {
-                                            keyToNode.get(currentMouseOverKey)
-                                                    .emphasis(detail);
-                                        }
-                                    }
-                                };
-                                if (validateOnServer()) {
-                                    VDragAndDropManager.get().visitServer(
-                                            DragEventType.OVER, accpectedCb);
-
-                                } else {
-                                    if (validates(currentDrag)) {
-                                        accpectedCb.handleResponse(null);
-                                    } else {
-                                        keyToNode.get(currentMouseOverKey)
-                                                .emphasis(null);
-                                    }
-                                    if (oldIdOver != null
-                                            && oldIdOver != currentMouseOverKey) {
-                                        keyToNode.get(oldIdOver).emphasis(null);
-                                    }
+                    if (nodeHasChanged || detailHasChanded) {
+                        ApplicationConnection.getConsole().log(
+                                "Change in Transferable " + currentMouseOverKey
+                                        + " " + detail);
+                        VAcceptCallback accpectedCb = new VAcceptCallback() {
+                            public void handleResponse(ValueMap responseData) {
+                                if (responseData == null // via client
+                                        // side
+                                        // validation
+                                        || responseData.containsKey("accepted")) {
+                                    keyToNode.get(currentMouseOverKey)
+                                            .emphasis(detail);
                                 }
                             }
+                        };
+                        if (validateOnServer()) {
+                            VDragAndDropManager.get().visitServer(
+                                    DragEventType.OVER, accpectedCb);
 
+                        } else {
+                            if (validates(currentDrag)) {
+                                accpectedCb.handleResponse(null);
+                            } else {
+                                keyToNode.get(currentMouseOverKey).emphasis(
+                                        null);
+                            }
+                            if (oldIdOver != null
+                                    && oldIdOver != currentMouseOverKey) {
+                                keyToNode.get(oldIdOver).emphasis(null);
+                            }
                         }
-                    });
+                    }
+
                 }
 
                 @Override
@@ -385,9 +398,9 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
         public void emphasis(String string) {
             // ApplicationConnection.getConsole().log("OUTLINE" + string);
             Style style = nodeCaptionDiv.getStyle();
-            String top = "Top".equals(string) ? "2px solid green" : null;
-            String bottom = "Bottom".equals(string) ? "2px solid green" : null;
-            String bg = "Center".equals(string) ? "green" : null;
+            String top = "Top".equals(string) ? "2px solid green" : "";
+            String bottom = "Bottom".equals(string) ? "2px solid green" : "";
+            String bg = "Center".equals(string) ? "green" : "";
 
             style.setProperty("borderTop", top);
             style.setProperty("borderBottom", bottom);
@@ -439,12 +452,10 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                         VTransferable t = new VTransferable();
                         t.setComponent(VTree.this);
                         t.setItemId(key);
-                        VDragEvent drag = VDragAndDropManager.get().startDrag(t,
-                                mouseDownEvent, true);
-                        Element node = (Element) nodeCaptionDiv.cloneNode(true);
-                        node.getStyle().setOpacity(0.4);
-                        node.getStyle().setBackgroundColor("#999");
-                        drag.setDragImage(node);
+                        VDragEvent drag = VDragAndDropManager.get().startDrag(
+                                t, mouseDownEvent, true);
+
+                        drag.createDragImage(nodeCaptionDiv, true);
                         event.stopPropagation();
 
                         mouseDownEvent = null;
@@ -453,6 +464,8 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                     mouseDownEvent = null;
                 }
                 if (type == Event.ONMOUSEOVER) {
+                    ApplicationConnection.getConsole().log(
+                            "Treenode mouse over");
                     mouseDownEvent = null;
                     currentMouseOverKey = key;
                     event.stopPropagation();

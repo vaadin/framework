@@ -2492,6 +2492,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
                             if (dragmode != 0) {
                                 mDown = true;
                                 event.preventDefault();
+                                event.stopPropagation();
                             }
                             break;
                         case Event.ONMOUSEOUT:
@@ -2506,11 +2507,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
                                 // TODO propertyId
                                 VDragEvent ev = VDragAndDropManager.get()
                                         .startDrag(transferable, event, true);
-                                Element cloneNode = (Element) getElement()
-                                        .cloneNode(true);
-                                cloneNode.getStyle().setOpacity(0.4);
-                                ev.setDragImage(cloneNode);
+                                ev.createDragImage(getElement(), true);
+
                                 mDown = false;
+                                // prevent text selection
+                                event.preventDefault();
+                                event.stopPropagation();
                             }
                         default:
                             break;

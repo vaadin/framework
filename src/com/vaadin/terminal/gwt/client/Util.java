@@ -37,6 +37,25 @@ public class Util {
             debugger;
     }-*/;
 
+    /**
+     * 
+     * Returns the topmost element of from given coordinates.
+     * 
+     * TODO fix crossplat issues clientX vs pageX. See quircksmode
+     * 
+     * @param x
+     * @param y
+     * @return the element at given coordinates
+     */
+    public static native Element getElementFromPoint(int clientX, int clientY)
+    /*-{
+        var el = $wnd.document.elementFromPoint(clientX, clientY);
+        if(el.nodeType == 3) {
+            el = el.parentNode;
+        }
+        return el;
+    }-*/;
+
     private static final int LAZY_SIZE_CHANGE_TIMEOUT = 400;
     private static Set<Paintable> latelyChangedWidgets = new HashSet<Paintable>();
 

@@ -11,6 +11,7 @@ import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
@@ -44,11 +45,7 @@ public class VDragDropPane extends VAbsoluteLayout implements Container,
                 transferable.setComponent(paintable);
                 VDragEvent drag = VDragAndDropManager.get().startDrag(
                         transferable, event.getNativeEvent(), true);
-                Element cloneNode = (Element) ((Widget) paintable).getElement()
-                        .cloneNode(true);
-                cloneNode.getStyle().setBackgroundColor("#999");
-                cloneNode.getStyle().setOpacity(0.4);
-                drag.setDragImage(cloneNode);
+                drag.createDragImage(((Widget) paintable).getElement(), true);
                 drag.getEventDetails().put(
                         "mouseDown",
                         new MouseEventDetails(event.getNativeEvent())
@@ -57,7 +54,10 @@ public class VDragDropPane extends VAbsoluteLayout implements Container,
             }
         }, MouseDownEvent.getType());
 
-        hookHtml5Events(getElement());
+        if (!BrowserInfo.get().isIE()) {
+            // TODO make this IE compatible
+            hookHtml5Events(getElement());
+        }
         getStyleElement().getStyle().setBackgroundColor("yellow");
 
     }
@@ -183,6 +183,12 @@ public class VDragDropPane extends VAbsoluteLayout implements Container,
     public VAbstractDropHandler getDropHandler() {
         if (dropHandler == null) {
             dropHandler = new VAbstractDropHandler() {
+
+                @Override
+                public void dragEnter(VDragEvent drag) {
+                    ApplicationConnection.getConsole().log("DDPane DragEnter");
+                    super.dragEnter(drag);
+                }
 
                 @Override
                 public Paintable getPaintable() {
