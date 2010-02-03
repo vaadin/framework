@@ -39,6 +39,12 @@
     <target name="package-jar" depends="clean-result, package-init, init, libs" description="Create vaadin-x.y.z.jar file.">
     </target>
 
+	<!-- Compiles only the default widgetset. -->
+    <target name="package-jar-quick" depends="clean-result, package-init, init" description="Create vaadin-x.y.z.jar file quick.">
+    	<property name="compile.only.default-widgetset" value="1"/>
+    	<antcall target="libs"/>
+    </target>
+
     <target name="package-war" depends="clean-result, package-init, init, build, docs, internal-package-zip, internal-package-war">
     </target>
 
@@ -697,13 +703,13 @@
     	</antcall>
     </target>
 	
-    <target name="compile-widgetset-portal-default">
+    <target name="compile-widgetset-portal-default" unless="compile.only.default-widgetset">
     	<antcall target="compile-widgetset">
     		<param name="widgetset" value="com.vaadin.portal.gwt.PortalDefaultWidgetSet"/>
     	</antcall>
     </target>
 
-    <target name="compile-widgetset-reserver">
+    <target name="compile-widgetset-reserver" unless="compile.only.default-widgetset">
         <condition property="googlemaps-jar" value="${output-dir}/WebContent/demo/lib/gwt-maps/gwt-maps.jar">
             <available file="${output-dir}/WebContent/demo/lib/gwt-maps/gwt-maps.jar" />
         </condition>
@@ -734,17 +740,17 @@
         <echo>Compiled ReservationWidgetSet</echo>
     </target>
 
-	 <target name="compile-widgetset-sampler">
+	 <target name="compile-widgetset-sampler" unless="compile.only.default-widgetset">
 	    	<antcall target="compile-widgetset">
 	    		<param name="widgetset" value="com.vaadin.demo.sampler.gwt.SamplerWidgetSet"/>
 	    	</antcall>
 	    </target>
-	 <target name="compile-widgetset-coverflow">
+	 <target name="compile-widgetset-coverflow" unless="compile.only.default-widgetset">
 	    	<antcall target="compile-widgetset">
 	    		<param name="widgetset" value="com.vaadin.demo.coverflow.gwt.CoverflowWidgetSet"/>
 	    	</antcall>
 	    </target>
-	 <target name="compile-widgetset-colorpicker">
+	 <target name="compile-widgetset-colorpicker" unless="compile.only.default-widgetset">
 	    	<antcall target="compile-widgetset">
 	    		<param name="widgetset" value="com.vaadin.demo.colorpicker.gwt.ColorPickerWidgetSet"/>
 	    	</antcall>
