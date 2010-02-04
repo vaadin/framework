@@ -1109,7 +1109,7 @@ public class ApplicationConnection {
      * @param newValue
      *            the new value to be sent
      * @param immediate
-     *            true if the update is to be sent as suun as possible
+     *            true if the update is to be sent as soon as possible
      */
     public void updateVariable(String paintableId, String variableName,
             Paintable newValue, boolean immediate) {
@@ -1132,7 +1132,7 @@ public class ApplicationConnection {
      * @param newValue
      *            the new value to be sent
      * @param immediate
-     *            true if the update is to be sent as suun as possible
+     *            true if the update is to be sent as soon as possible
      */
 
     public void updateVariable(String paintableId, String variableName,
@@ -1155,7 +1155,7 @@ public class ApplicationConnection {
      * @param newValue
      *            the new value to be sent
      * @param immediate
-     *            true if the update is to be sent as suun as possible
+     *            true if the update is to be sent as soon as possible
      */
 
     public void updateVariable(String paintableId, String variableName,
@@ -1179,7 +1179,7 @@ public class ApplicationConnection {
      * @param newValue
      *            the new value to be sent
      * @param immediate
-     *            true if the update is to be sent as suun as possible
+     *            true if the update is to be sent as soon as possible
      */
 
     public void updateVariable(String paintableId, String variableName,
@@ -1203,7 +1203,7 @@ public class ApplicationConnection {
      * @param newValue
      *            the new value to be sent
      * @param immediate
-     *            true if the update is to be sent as suun as possible
+     *            true if the update is to be sent as soon as possible
      */
 
     public void updateVariable(String paintableId, String variableName,
@@ -1227,7 +1227,7 @@ public class ApplicationConnection {
      * @param newValue
      *            the new value to be sent
      * @param immediate
-     *            true if the update is to be sent as suun as possible
+     *            true if the update is to be sent as soon as possible
      */
 
     public void updateVariable(String paintableId, String variableName,
@@ -1251,7 +1251,7 @@ public class ApplicationConnection {
      * @param newValue
      *            the new value to be sent
      * @param immediate
-     *            true if the update is to be sent as suun as possible
+     *            true if the update is to be sent as soon as possible
      */
 
     public void updateVariable(String paintableId, String variableName,
@@ -1275,7 +1275,7 @@ public class ApplicationConnection {
      * @param newValue
      *            the new value to be sent
      * @param immediate
-     *            true if the update is to be sent as suun as possible
+     *            true if the update is to be sent as soon as possible
      */
     public void updateVariable(String paintableId, String variableName,
             Map<String, Object> map, boolean immediate) {
@@ -1338,7 +1338,7 @@ public class ApplicationConnection {
      * @param newValue
      *            the new value to be sent
      * @param immediate
-     *            true if the update is to be sent as suun as possible
+     *            true if the update is to be sent as soon as possible
      */
     public void updateVariable(String paintableId, String variableName,
             String[] values, boolean immediate) {
@@ -1373,7 +1373,7 @@ public class ApplicationConnection {
      * @param newValue
      *            the new value to be sent
      * @param immediate
-     *            true if the update is to be sent as suun as possible
+     *            true if the update is to be sent as soon as possible
      */
     public void updateVariable(String paintableId, String variableName,
             Object[] values, boolean immediate) {
