@@ -70,23 +70,42 @@ public class VDragDropPane extends VAbsoluteLayout implements Container,
     private native void hookHtml5Events(Element el)
     /*-{
 
-        var me = this;
-         
-        el.addEventListener("dragenter",  function(ev) {
-            return me.@com.vaadin.terminal.gwt.client.ui.VDragDropPane::html5DragEnter(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
-        }, false);
+            var me = this;
+            
+            if(el.addEventListener) {
+                el.addEventListener("dragenter",  function(ev) {
+                    return me.@com.vaadin.terminal.gwt.client.ui.VDragDropPane::html5DragEnter(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
+                }, false);
+                
+                el.addEventListener("dragleave",  function(ev) {
+                    return me.@com.vaadin.terminal.gwt.client.ui.VDragDropPane::html5DragLeave(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
+                }, false);
         
-        el.addEventListener("dragleave",  function(ev) {
-            return me.@com.vaadin.terminal.gwt.client.ui.VDragDropPane::html5DragLeave(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
-        }, false);
-
-        el.addEventListener("dragover",  function(ev) {
-            return me.@com.vaadin.terminal.gwt.client.ui.VDragDropPane::html5DragOver(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
-        }, false);
-
-        el.addEventListener("drop",  function(ev) {
-            return me.@com.vaadin.terminal.gwt.client.ui.VDragDropPane::html5DragDrop(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
-        }, false);
+                el.addEventListener("dragover",  function(ev) {
+                    return me.@com.vaadin.terminal.gwt.client.ui.VDragDropPane::html5DragOver(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
+                }, false);
+        
+                el.addEventListener("drop",  function(ev) {
+                    return me.@com.vaadin.terminal.gwt.client.ui.VDragDropPane::html5DragDrop(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
+                }, false);
+            
+            } else {
+                el.attachEvent("ondragenter",  function(ev) {
+                            return me.@com.vaadin.terminal.gwt.client.ui.VDragDropPane::html5DragEnter(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
+                });
+                
+                el.attachEvent("ondragleave",  function(ev) {
+                        return me.@com.vaadin.terminal.gwt.client.ui.VDragDropPane::html5DragLeave(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
+                });
+        
+                el.attachEvent("ondragover",  function(ev) {
+                    return me.@com.vaadin.terminal.gwt.client.ui.VDragDropPane::html5DragOver(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
+                });
+        
+                el.attachEvent("ondrop",  function(ev) {
+                    return me.@com.vaadin.terminal.gwt.client.ui.VDragDropPane::html5DragDrop(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
+                });
+            }
         
     }-*/;
 
