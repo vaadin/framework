@@ -11,20 +11,9 @@
     package-all
      * creates the release package, a war, and a Liferay war
      
-    package-windows
-     * vaadin-windows-<version>.zip
-    
-    package-linux
-     * vaadin-linux-<version>.tar.bz2
-     
-    package-mac
-     * vaadin-mac-<version>.tar.gz
-     * vaadin-mac-<version>.dmg
-
     In addition, the OOPHM package has the following target for building:
     package-oophm
      * vaadin-oophm-<version>.zip
-
     -->
 
     <!-- 
