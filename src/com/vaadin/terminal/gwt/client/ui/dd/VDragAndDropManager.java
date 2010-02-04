@@ -335,9 +335,11 @@ public class VDragAndDropManager {
 
                                     deferredStartRegistration.removeHandler();
                                     deferredStartRegistration = null;
+                                    currentDrag = null;
                                     if (dragElement != null) {
                                         RootPanel.getBodyElement().removeChild(
                                                 dragElement);
+                                        dragElement = null;
                                     }
                                     break;
                                 }
