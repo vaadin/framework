@@ -35,6 +35,4 @@
 	
 	<entry-point class="com.vaadin.terminal.gwt.client.DefaultWidgetSet" />
 	
-	<set-property name="user.agent" value="safari,gecko1_8"/>
-	
 </module>
