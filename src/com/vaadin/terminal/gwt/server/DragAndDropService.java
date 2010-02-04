@@ -22,9 +22,9 @@ import com.vaadin.ui.Component;
 public class DragAndDropService implements VariableOwner {
 
     private static final long serialVersionUID = -4745268869323400203L;
-    
+
     public static final String DROPTARGET_KEY = "target";
-    
+
     private int lastVisitId;
 
     private DragRequest currentRequest;
@@ -116,8 +116,9 @@ public class DragAndDropService implements VariableOwner {
         DragDropDetails dragDropDetails = constructDragDropDetails(dropTarget,
                 variables);
 
-        dragDropHandler.handleDragRequest(constructDragRequest(variables,
-                transferable), transferable, dragDropDetails);
+        currentRequest = constructDragRequest(variables, transferable);
+        dragDropHandler.handleDragRequest(currentRequest, transferable,
+                dragDropDetails);
     }
 
     private static DragRequest constructDragRequest(
