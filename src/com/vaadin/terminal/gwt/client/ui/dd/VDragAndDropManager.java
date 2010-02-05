@@ -304,6 +304,7 @@ public class VDragAndDropManager {
                                 case Event.ONKEYDOWN:
                                 case Event.ONKEYPRESS:
                                 case Event.ONKEYUP:
+                                case Event.ONBLUR:
                                     // don't cancel possible drag start
                                     break;
                                 case Event.ONMOUSEOUT:
