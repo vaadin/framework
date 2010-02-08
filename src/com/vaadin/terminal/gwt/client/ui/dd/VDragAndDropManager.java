@@ -11,6 +11,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -288,18 +289,16 @@ public class VDragAndDropManager {
                                 int typeInt = event.getTypeInt();
                                 switch (typeInt) {
                                 case Event.ONMOUSEOVER:
-                                    if (typeInt == Event.ONMOUSEOVER) {
-                                        if (dragElement == null
-                                                || !dragElement
-                                                        .isOrHasChild((Node) event
-                                                                .getNativeEvent()
-                                                                .getCurrentEventTarget()
-                                                                .cast())) {
-                                            // drag image appeared below, ignore
-                                            ApplicationConnection.getConsole()
-                                                    .log("Drag image appeared");
-                                            break;
-                                        }
+                                    if (dragElement == null
+                                            || !dragElement
+                                                    .isOrHasChild((Node) event
+                                                            .getNativeEvent()
+                                                            .getCurrentEventTarget()
+                                                            .cast())) {
+                                        // drag image appeared below, ignore
+                                        ApplicationConnection.getConsole().log(
+                                                "Drag image appeared");
+                                        break;
                                     }
                                 case Event.ONKEYDOWN:
                                 case Event.ONKEYPRESS:
@@ -560,8 +559,26 @@ public class VDragAndDropManager {
             style.setPosition(Position.ABSOLUTE);
             style.setZIndex(600000);
             updateDragImagePosition();
-            RootPanel.getBodyElement().appendChild(node);
+
+            /*
+             * To make our default dnd handler as compatible as possible, we
+             * need to defer the appearance of dragElement. Otherwise events
+             * that are derived from sequences of other events might not fire as
+             * domchanged will fire between them.
+             */
+            lazyAttachDragElement.schedule(300);
         }
     }
+
+    private final Timer lazyAttachDragElement = new Timer() {
+
+        @Override
+        public void run() {
+            if (dragElement != null) {
+                RootPanel.getBodyElement().appendChild(dragElement);
+            }
+
+        }
+    };
 
 }
