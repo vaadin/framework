@@ -9,6 +9,7 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.TableElement;
 import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.user.client.Element;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 
@@ -49,14 +50,26 @@ public class VDragEvent {
         return transferable;
     }
 
+    /**
+     * Returns the the latest {@link NativeEvent} that relates to this drag and
+     * drop operation. For example on {@link VDropHandler#dragEnter(VDragEvent)}
+     * this is commonly a {@link MouseOverEvent}.
+     * 
+     * @return
+     */
     public NativeEvent getCurrentGwtEvent() {
         return currentGwtEvent;
     }
 
-    public int getEventId() {
+    int getEventId() {
         return id;
     }
 
+    /**
+     * @deprecated will be removed from final implementation, here just to aid
+     *             development.
+     */
+    @Deprecated
     public long sinceStart() {
         return new Date().getTime() - start.getTime();
     }
@@ -64,11 +77,11 @@ public class VDragEvent {
     /**
      * Detecting the element on which the the event is happening may be
      * problematic during drag and drop operation. This is especially the case
-     * if a drag image (often called drag proxy) is kept under the mouse cursor
-     * (see {@link #createDragImage(Element, boolean)}. Drag and drop event
-     * handlers (like the one provided by {@link VDragAndDropManager} ) should
-     * set elmentOver field to reflect the the actual element on which the
-     * pointer currently is (drag image excluded). {@link VDropHandler}s can
+     * if a drag image (often called also drag proxy) is kept under the mouse
+     * cursor (see {@link #createDragImage(Element, boolean)}. Drag and drop
+     * event handlers (like the one provided by {@link VDragAndDropManager} )
+     * should set elmentOver field to reflect the the actual element on which
+     * the pointer currently is (drag image excluded). {@link VDropHandler}s can
      * then more easily react properly on drag events by reading the element via
      * this method.
      * 
@@ -93,8 +106,8 @@ public class VDragEvent {
      * TODO decide if this method should be here or in {@link VTransferable} (in
      * HTML5 it is in DataTransfer) or {@link VDragAndDropManager}
      * 
-     * TODO should be possible to override behaviour an set to HTML5
-     * DataTransfer
+     * TODO should be possible to override behavior. Like to proxy the element
+     * to HTML5 DataTransfer
      * 
      * @param node
      */

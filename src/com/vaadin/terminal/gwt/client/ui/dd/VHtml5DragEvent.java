@@ -3,6 +3,10 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.NativeEvent;
 
+/**
+ * Helper class to access html5 style drag events.
+ * 
+ */
 public class VHtml5DragEvent extends NativeEvent {
     protected VHtml5DragEvent() {
     }

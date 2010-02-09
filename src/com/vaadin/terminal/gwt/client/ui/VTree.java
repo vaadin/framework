@@ -25,7 +25,6 @@ import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.ValueMap;
 import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCallback;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
@@ -33,7 +32,6 @@ import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
 import com.vaadin.terminal.gwt.client.ui.dd.VDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VTransferable;
-import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager.DragEventType;
 
 /**
  * 
@@ -214,6 +212,7 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
 
                 @Override
                 protected void dragAccepted(final VDragEvent drag) {
+
                 }
 
                 @Override
@@ -234,32 +233,15 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                         ApplicationConnection.getConsole().log(
                                 "Change in Transferable " + currentMouseOverKey
                                         + " " + detail);
-                        VAcceptCallback accpectedCb = new VAcceptCallback() {
-                            public void handleResponse(ValueMap responseData) {
-                                if (responseData == null // via client
-                                        // side
-                                        // validation
-                                        || responseData.containsKey("accepted")) {
-                                    keyToNode.get(currentMouseOverKey)
-                                            .emphasis(detail);
-                                }
-                            }
-                        };
-                        if (validateOnServer()) {
-                            VDragAndDropManager.get().visitServer(
-                                    DragEventType.OVER, accpectedCb);
-
-                        } else {
-                            if (validates(currentDrag)) {
-                                accpectedCb.handleResponse(null);
-                            } else {
+                        validate(new VAcceptCallback() {
+                            public void accepted() {
                                 keyToNode.get(currentMouseOverKey).emphasis(
-                                        null);
+                                        detail);
                             }
-                            if (oldIdOver != null
-                                    && oldIdOver != currentMouseOverKey) {
-                                keyToNode.get(oldIdOver).emphasis(null);
-                            }
+                        }, currentDrag);
+                        if (oldIdOver != null
+                                && oldIdOver != currentMouseOverKey) {
+                            keyToNode.get(oldIdOver).emphasis(null);
                         }
                     }
 
@@ -451,7 +433,7 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                         // start actual drag on slight move when mouse is down
                         VTransferable t = new VTransferable();
                         t.setComponent(VTree.this);
-                        t.setItemId(key);
+                        t.setData("itemId", key);
                         VDragEvent drag = VDragAndDropManager.get().startDrag(
                                 t, mouseDownEvent, true);
 

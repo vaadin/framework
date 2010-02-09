@@ -18,6 +18,9 @@ public class VTransferable {
     private final Map<String, Object> variables = new HashMap<String, Object>();
 
     /**
+     * Returns the component currently being dragged or from which the
+     * transferable is created (eg. a tree which node is dragged).
+     * 
      * @return the component
      */
     public Paintable getComponent() {
@@ -25,56 +28,18 @@ public class VTransferable {
     }
 
     /**
+     * Sets the component currently being dragged or from which the transferable
+     * is created (eg. a tree which node is dragged).
+     * <p>
+     * The server side counterpart of the componennt may implement
+     * {@link DragSource} interface if it wants to translate or complement the
+     * server side instance of this Transferable.
+     * 
      * @param component
      *            the component to set
      */
     public void setComponent(Paintable component) {
         this.component = component;
-    }
-
-    /**
-     * This is commonly actually a key to property id on client side than the
-     * actual propertyId.
-     * 
-     * Translated by terminal and {@link DragSource}
-     * 
-     * @return the propertyId
-     */
-    public String getPropertyId() {
-        return (String) variables.get("propertyId");
-    }
-
-    /**
-     * This is commonly actually a key to property id on client side than the
-     * actual propertyId.
-     * 
-     * Translated by terminal and {@link DragSource}
-     * 
-     * @param propertyId
-     *            the propertyId to set
-     */
-    public void setPropertyId(String propertyId) {
-        variables.put("propertyId", propertyId);
-    }
-
-    /**
-     * @return the itemId
-     */
-    public String getItemId() {
-        return (String) variables.get("itemId");
-    }
-
-    /**
-     * This is commonly actually a key to item id on client side than the actual
-     * itemId.
-     * 
-     * Translated by terminal and {@link DragSource}
-     * 
-     * @param itemId
-     *            the itemId to set
-     */
-    public void setItemId(String itemId) {
-        variables.put("itemId", itemId);
     }
 
     public Object getData(String dataFlawor) {
@@ -90,11 +55,11 @@ public class VTransferable {
     }
 
     /**
-     * This method should only be called by {@link VDragAndDropManager}.
+     * This helper method should only be called by {@link VDragAndDropManager}.
      * 
      * @return data in this Transferable that needs to be moved to server.
      */
-    public Map<String, Object> getVariableMap() {
+    Map<String, Object> getVariableMap() {
         return variables;
     }
 

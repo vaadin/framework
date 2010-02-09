@@ -62,14 +62,14 @@ public class VAcceptCriterionImpl {
 
     private final class HasItemId implements VAcceptCriteria {
         public boolean accept(VDragEvent drag, UIDL configuration) {
-            return drag.getTransferable().getItemId() != null;
+            return drag.getTransferable().getData("itemId") != null;
         }
     }
 
     /**
-     * TODO this method could be written by generator
+     * TODO this class/method must be written by generator
      * 
-     * TODO consider moving implementations to top level classes
+     * TODO move implementations to top level classes.
      * 
      * TODO use fully qualified names of server side counterparts as keys
      */

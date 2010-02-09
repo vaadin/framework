@@ -5,6 +5,9 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 
+/**
+ * A class via all AcceptCriteria instances are fetched by an identifier.
+ */
 public class VAcceptCriterion {
     protected static Map<String, VAcceptCriteria> criterion = new HashMap<String, VAcceptCriteria>();
     private static VAcceptCriterionImpl impl;

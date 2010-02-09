@@ -228,6 +228,12 @@ public class VDragAndDropManager {
     private NativePreviewHandler defaultDragAndDropEventHandler = new DefaultDragAndDropEventHandler();
 
     /**
+     * Flag to indicate if drag operation has really started or not. Null check
+     * of currentDrag field is not enough as a lazy start may be pending.
+     */
+    private boolean isStarted;
+
+    /**
      * This method is used to start Vaadin client side drag and drop operation.
      * Operation may be started by virtually any Widget.
      * <p>
@@ -251,6 +257,7 @@ public class VDragAndDropManager {
     public VDragEvent startDrag(VTransferable transferable,
             final NativeEvent startEvent, final boolean handleDragEvents) {
         interruptDrag();
+        isStarted = false;
 
         currentDrag = new VDragEvent(transferable, startEvent);
         updateCurrentEvent(startEvent);
@@ -258,6 +265,7 @@ public class VDragAndDropManager {
         final Command startDrag = new Command() {
 
             public void execute() {
+                isStarted = true;
                 VDropHandler dh = null;
                 if (startEvent != null) {
                     dh = findDragTarget((Element) currentDrag.currentGwtEvent
@@ -273,84 +281,86 @@ public class VDragAndDropManager {
                 if (handleDragEvents) {
                     handlerRegistration = Event
                             .addNativePreviewHandler(defaultDragAndDropEventHandler);
+                    if (dragElement != null
+                            && dragElement.getParentElement() == null) {
+                        // deferred attaching drag image is on going, we can
+                        // hurry with it now
+                        lazyAttachDragElement.cancel();
+                        lazyAttachDragElement.run();
+                    }
                 }
             }
         };
 
-        if (handleDragEvents) {
+        if (handleDragEvents
+                && Event.as(startEvent).getTypeInt() == Event.ONMOUSEDOWN) {
             // only really start drag event on mousemove
-            if (Event.as(startEvent).getTypeInt() == Event.ONMOUSEDOWN) {
+            deferredStartRegistration = Event
+                    .addNativePreviewHandler(new NativePreviewHandler() {
 
-                deferredStartRegistration = Event
-                        .addNativePreviewHandler(new NativePreviewHandler() {
-
-                            public void onPreviewNativeEvent(
-                                    NativePreviewEvent event) {
-                                int typeInt = event.getTypeInt();
-                                switch (typeInt) {
-                                case Event.ONMOUSEOVER:
-                                    if (dragElement == null
-                                            || !dragElement
-                                                    .isOrHasChild((Node) event
-                                                            .getNativeEvent()
-                                                            .getCurrentEventTarget()
-                                                            .cast())) {
-                                        // drag image appeared below, ignore
-                                        ApplicationConnection.getConsole().log(
-                                                "Drag image appeared");
-                                        break;
-                                    }
-                                case Event.ONKEYDOWN:
-                                case Event.ONKEYPRESS:
-                                case Event.ONKEYUP:
-                                case Event.ONBLUR:
-                                    // don't cancel possible drag start
-                                    break;
-                                case Event.ONMOUSEOUT:
-
-                                    if (dragElement == null
-                                            || !dragElement
-                                                    .isOrHasChild((Node) event
-                                                            .getNativeEvent()
-                                                            .getRelatedEventTarget()
-                                                            .cast())) {
-                                        // drag image appeared below, ignore
-                                        ApplicationConnection.getConsole().log(
-                                                "Drag image appeared");
-                                        break;
-                                    }
-                                case Event.ONMOUSEMOVE:
-                                    deferredStartRegistration.removeHandler();
-                                    deferredStartRegistration = null;
-                                    updateCurrentEvent(event.getNativeEvent());
-                                    startDrag.execute();
-                                    break;
-                                default:
-                                    // on any other events, clean up the
-                                    // deferred drag start
+                        public void onPreviewNativeEvent(
+                                NativePreviewEvent event) {
+                            int typeInt = event.getTypeInt();
+                            switch (typeInt) {
+                            case Event.ONMOUSEOVER:
+                                if (dragElement == null
+                                        || !dragElement
+                                                .isOrHasChild((Node) event
+                                                        .getNativeEvent()
+                                                        .getCurrentEventTarget()
+                                                        .cast())) {
+                                    // drag image appeared below, ignore
                                     ApplicationConnection.getConsole().log(
-                                            "Drag did not start due event"
-                                                    + event.getNativeEvent()
-                                                            .getType());
-
-                                    deferredStartRegistration.removeHandler();
-                                    deferredStartRegistration = null;
-                                    currentDrag = null;
-                                    if (dragElement != null) {
-                                        RootPanel.getBodyElement().removeChild(
-                                                dragElement);
-                                        dragElement = null;
-                                    }
+                                            "Drag image appeared");
                                     break;
                                 }
+                            case Event.ONKEYDOWN:
+                            case Event.ONKEYPRESS:
+                            case Event.ONKEYUP:
+                            case Event.ONBLUR:
+                                // don't cancel possible drag start
+                                break;
+                            case Event.ONMOUSEOUT:
 
+                                if (dragElement == null
+                                        || !dragElement
+                                                .isOrHasChild((Node) event
+                                                        .getNativeEvent()
+                                                        .getRelatedEventTarget()
+                                                        .cast())) {
+                                    // drag image appeared below, ignore
+                                    ApplicationConnection.getConsole().log(
+                                            "Drag image appeared");
+                                    break;
+                                }
+                            case Event.ONMOUSEMOVE:
+                                deferredStartRegistration.removeHandler();
+                                deferredStartRegistration = null;
+                                updateCurrentEvent(event.getNativeEvent());
+                                startDrag.execute();
+                                break;
+                            default:
+                                // on any other events, clean up the
+                                // deferred drag start
+                                ApplicationConnection.getConsole().log(
+                                        "Drag did not start due event"
+                                                + event.getNativeEvent()
+                                                        .getType());
+
+                                deferredStartRegistration.removeHandler();
+                                deferredStartRegistration = null;
+                                currentDrag = null;
+                                if (dragElement != null) {
+                                    RootPanel.getBodyElement().removeChild(
+                                            dragElement);
+                                    dragElement = null;
+                                }
+                                break;
                             }
 
-                        });
+                        }
 
-            } else {
-                startDrag.execute();
-            }
+                    });
 
         } else {
             startDrag.execute();
@@ -454,7 +464,9 @@ public class VDragAndDropManager {
         currentDrag = null;
 
         if (dragElement != null) {
-            RootPanel.getBodyElement().removeChild(dragElement);
+            if (dragElement.getParentElement() != null) {
+                RootPanel.getBodyElement().removeChild(dragElement);
+            }
             dragElement = null;
         }
     }
@@ -472,8 +484,8 @@ public class VDragAndDropManager {
      * 
      * @param acceptCallback
      */
-    public void visitServer(DragEventType type, VAcceptCallback acceptCallback) {
-        doRequest(type);
+    public void visitServer(VAcceptCallback acceptCallback) {
+        doRequest(DragEventType.ENTER);
         this.acceptCallback = acceptCallback;
     }
 
@@ -498,15 +510,6 @@ public class VDragAndDropManager {
         client.updateVariable(DD_SERVICE, "dhowner", paintable, false);
 
         VTransferable transferable = currentDrag.getTransferable();
-
-        if (transferable.getItemId() != null) {
-            client.updateVariable(DD_SERVICE, "itemId", transferable
-                    .getItemId(), false);
-        }
-        if (transferable.getPropertyId() != null) {
-            client.updateVariable(DD_SERVICE, "propertyId", transferable
-                    .getPropertyId(), false);
-        }
 
         client.updateVariable(DD_SERVICE, "component", transferable
                 .getComponent(), false);
@@ -541,7 +544,9 @@ public class VDragAndDropManager {
         }
         int visitId = valueMap.getInt("visitId");
         if (this.visitId == visitId) {
-            acceptCallback.handleResponse(valueMap);
+            if (valueMap.containsKey("accepted")) {
+                acceptCallback.accepted();
+            }
             acceptCallback = null;
         }
     }
@@ -560,13 +565,18 @@ public class VDragAndDropManager {
             style.setZIndex(600000);
             updateDragImagePosition();
 
-            /*
-             * To make our default dnd handler as compatible as possible, we
-             * need to defer the appearance of dragElement. Otherwise events
-             * that are derived from sequences of other events might not fire as
-             * domchanged will fire between them.
-             */
-            lazyAttachDragElement.schedule(300);
+            if (isStarted) {
+                lazyAttachDragElement.run();
+            } else {
+                /*
+                 * To make our default dnd handler as compatible as possible, we
+                 * need to defer the appearance of dragElement. Otherwise events
+                 * that are derived from sequences of other events might not
+                 * fire as domchanged will fire between them or mouse up might
+                 * happen on dragElement.
+                 */
+                lazyAttachDragElement.schedule(300);
+            }
         }
     }
 
@@ -574,7 +584,7 @@ public class VDragAndDropManager {
 
         @Override
         public void run() {
-            if (dragElement != null) {
+            if (dragElement != null && dragElement.getParentElement() == null) {
                 RootPanel.getBodyElement().appendChild(dragElement);
             }
 

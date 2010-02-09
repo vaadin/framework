@@ -2502,7 +2502,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
                             if (mDown && dragmode != 0) {
                                 VTransferable transferable = new VTransferable();
                                 transferable.setComponent(VScrollTable.this);
-                                transferable.setItemId("" + rowKey);
+                                transferable.setData("itemId", "" + rowKey);
 
                                 // TODO propertyId
                                 VDragEvent ev = VDragAndDropManager.get()
