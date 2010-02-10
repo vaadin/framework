@@ -453,18 +453,17 @@ div.v-app-loading {
 .v-csslayout {
 	overflow: hidden;
 }
-
 .v-csslayout-margin-top {
-	padding-top: 2em;	
+	padding-top: 12px;	
 }
 .v-csslayout-margin-bottom {
-	padding-bottom: 2em;	
+	padding-bottom: 12px;	
 }
 .v-csslayout-margin-left {
-	padding-left: 2em;	
+	padding-left: 12px;	
 }
 .v-csslayout-margin-right {
-	padding-right: 2em;	
+	padding-right: 12px;	
 }
 
 .v-customcomponent {
@@ -528,6 +527,9 @@ div.v-app-loading {
 .v-datefield-time .v-label {
 	display: inline;
 }
+.v-datefield-popup {
+	background: #fff;
+}
 /* Disabled by default
 .v-datefield-error .v-textfield,
 .v-datefield-error .v-datefield-calendarpanel {
@@ -567,7 +569,7 @@ div.v-app-loading {
 .v-formlayout-spacing .v-formlayout-row .v-formlayout-captioncell, 
 .v-formlayout-spacing .v-formlayout-row .v-formlayout-contentcell,
 .v-formlayout-spacing .v-formlayout-row .v-formlayout-errorcell {
-	padding-top: 1em;
+	padding-top: 6px;
 }
 .v-formlayout-spacing .v-formlayout-firstrow .v-formlayout-captioncell, 
 .v-formlayout-spacing .v-formlayout-firstrow .v-formlayout-contentcell,
@@ -577,38 +579,38 @@ div.v-app-loading {
 .v-formlayout-margin-top .v-formlayout-firstrow .v-formlayout-captioncell, 
 .v-formlayout-margin-top .v-formlayout-firstrow .v-formlayout-contentcell,
 .v-formlayout-margin-top .v-formlayout-firstrow .v-formlayout-errorcell {
-	padding-top: 2em;
+	padding-top: 12px;
 }
 .v-formlayout-margin-bottom .v-formlayout-lastrow .v-formlayout-captioncell,
 .v-formlayout-margin-bottom .v-formlayout-lastrow .v-formlayout-contentcell,
 .v-formlayout-margin-bottom .v-formlayout-lastrow .v-formlayout-errorcell {
-	padding-bottom: 2em;
+	padding-bottom: 12px;
 }
 .v-formlayout-margin-left .v-formlayout-captioncell {
-	padding-left: 2em;
+	padding-left: 12px;
 } 
 .v-formlayout-margin-right .v-formlayout-contentcell {
-	padding-right: 2em;
+	padding-right: 12px;
 }
 .v-formlayout-captioncell .v-caption .v-required-field-indicator {
 	float: none;
 }
 
 .v-gridlayout-margin-top {
-	padding-top: 2em;
+	padding-top: 12px;
 }
 .v-gridlayout-margin-bottom {
-	padding-bottom: 2em;
+	padding-bottom: 12px;
 }
 .v-gridlayout-margin-left {
-	padding-left: 2em;
+	padding-left: 12px;
 } 
 .v-gridlayout-margin-right {
-	padding-right: 2em;
+	padding-right: 12px;
 }
 .v-gridlayout-spacing-on {
-	padding-left: 1em;
-	padding-top: 1em;
+	padding-left: 6px;
+	padding-top: 6px;
 	overflow: hidden;
 }
 .v-gridlayout-spacing,
@@ -765,28 +767,28 @@ div.v-app-loading {
 .v-orderedlayout-margin-top,
 .v-horizontallayout-margin-top,
 .v-verticallayout-margin-top {
-	padding-top: 2em;
+	padding-top: 12px;
 }
 .v-orderedlayout-margin-right,
 .v-horizontallayout-margin-right,
 .v-verticallayout-margin-right {
-	padding-right: 2em;
+	padding-right: 12px;
 }
 .v-orderedlayout-margin-bottom,
 .v-horizontallayout-margin-bottom,
 .v-verticallayout-margin-bottom {
-	padding-bottom: 2em;
+	padding-bottom: 12px;
 }
 .v-orderedlayout-margin-left,
 .v-horizontallayout-margin-left,
 .v-verticallayout-margin-left {
-	padding-left: 2em;
+	padding-left: 12px;
 }
 .v-orderedlayout-spacing-on,
 .v-horizontallayout-spacing-on,
 .v-verticallayout-spacing-on {
-	padding-top: 1em;
-	padding-left: 1em;
+	padding-top: 6px;
+	padding-left: 6px;
 }
 /* This can be used to define spacing if spacing is off server side */
 .v-orderedlayout-spacing-off,
