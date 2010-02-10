@@ -8,11 +8,14 @@ import java.util.Stack;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -27,7 +30,8 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 
 public class VMenuBar extends Widget implements Paintable,
-        CloseHandler<PopupPanel>, ContainerResizedListener {
+CloseHandler<PopupPanel>, ContainerResizedListener,
+ValueChangeHandler<String> {
 
     /** Set the CSS class name to allow styling. */
     public static final String CLASSNAME = "v-menubar";
@@ -76,6 +80,8 @@ public class VMenuBar extends Widget implements Paintable,
 
         if (!subMenu) {
             setStylePrimaryName(CLASSNAME);
+            // Monitor back&forward buttons
+            History.addValueChangeHandler(this);
         } else {
             setStylePrimaryName(CLASSNAME + "-submenu");
         }
@@ -866,4 +872,12 @@ public class VMenuBar extends Widget implements Paintable,
         return w;
     }
 
+    public void onValueChange(ValueChangeEvent<String> arg0) {
+        // Close menu if user uses back & forward buttons #4109
+        if (!subMenu) {
+            setSelected(null);
+            hideChildren();
+            menuVisible = false;
+        }
+    }
 }
