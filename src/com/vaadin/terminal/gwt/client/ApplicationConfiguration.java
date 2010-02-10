@@ -148,6 +148,7 @@ public class ApplicationConfiguration {
         int lastdot = module.lastIndexOf(".");
         String base = module.substring(0, lastdot);
         String simpleName = module.substring(lastdot + 1);
+        // TODO figure out (ask around) WTF this is almost-removed
         // if (!wsname.startsWith(base) || !wsname.endsWith(simpleName)) {
         // // WidgetSet module name does not match implementation name;
         // // probably inherited WidgetSet with entry-point. Skip.
@@ -161,7 +162,7 @@ public class ApplicationConfiguration {
             String msg = "Tried to init " + widgetset.getClass().getName()
                     + ", but " + initedWidgetSet.getClass().getName()
                     + " was already inited.";
-            ApplicationConnection.getConsole().log(msg);
+            throw new IllegalStateException(msg);
         }
         initedWidgetSet = widgetset;
         ArrayList<String> appIds = new ArrayList<String>();
