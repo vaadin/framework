@@ -140,6 +140,7 @@ public class VEmbedded extends HTML implements Paintable {
                     parameters.put("movie", getSrc(uidl, client));
                 }
 
+                // Add the parameters to the Object
                 for (String name : parameters.keySet()) {
                     html += "<param name=\"" + escapeAttribute(name)
                             + "\" value=\""
@@ -147,9 +148,15 @@ public class VEmbedded extends HTML implements Paintable {
                 }
 
                 html += "<embed src=\"" + getSrc(uidl, client) + "\" width=\""
-                        + width + "\" height=\"" + height + "\"></embed>";
+                        + width + "\" height=\"" + height + "\" ";
 
-                html += "</object>";
+                // Add the parameters to the Embed
+                for (String name : parameters.keySet()) {
+                    html += escapeAttribute(name) + "=\""
+                    + escapeAttribute(parameters.get(name)) + "\" ";
+                }
+
+                html += "></embed></object>";
                 setHTML(html);
             } else if (mime.equals("image/svg+xml")) {
                 String data;
