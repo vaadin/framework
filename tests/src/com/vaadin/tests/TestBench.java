@@ -18,7 +18,6 @@ import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.ExpandLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
@@ -201,13 +200,13 @@ public class TestBench extends com.vaadin.Application implements
 
         bodyLayout.addStyleName("light");
         bodyLayout.setSizeFull();
-        bodyLayout.setLayout(new ExpandLayout());
+        bodyLayout.setContent(new VerticalLayout());
 
         mainLayout.addComponent(bodyLayout);
 
         mainLayout.setSplitPosition(30);
 
-        mainWindow.setLayout(mainLayout);
+        mainWindow.setContent(mainLayout);
 
         setMainWindow(mainWindow);
     }

@@ -9,11 +9,11 @@ import java.io.File;
 import com.vaadin.data.util.FilesystemContainer;
 import com.vaadin.data.util.FilesystemContainer.FileItem;
 import com.vaadin.demo.util.SampleDirectory;
-import com.vaadin.ui.ExpandLayout;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Tree;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.Component.Listener;
@@ -45,17 +45,16 @@ public class TreeFilesystemContainer extends com.vaadin.Application implements
     public void init() {
         final Window w = new Window("Tree FilesystemContainer demo");
         setMainWindow(w);
-        final ExpandLayout main = new ExpandLayout();
-        w.setLayout(main);
+        final VerticalLayout main = new VerticalLayout();
+        w.setContent(main);
         main.setMargin(true);
         main.setSpacing(true);
 
-        propertyPanel.setHeight(120);
+        propertyPanel.setHeight("120px");
         main.addComponent(propertyPanel);
-        explorerPanel.setHeight(100);
-        explorerPanel.setHeightUnits(Panel.UNITS_PERCENTAGE);
+        explorerPanel.setHeight("100%");
         main.addComponent(explorerPanel);
-        main.expand(explorerPanel);
+        main.setExpandRatio(explorerPanel, 1);
 
         // Explorer panel contains tree
         explorerPanel.addComponent(filesystem);

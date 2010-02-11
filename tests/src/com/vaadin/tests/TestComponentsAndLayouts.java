@@ -26,7 +26,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Embedded;
-import com.vaadin.ui.ExpandLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
@@ -45,6 +44,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.Upload;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.Component.Listener;
@@ -197,20 +197,6 @@ public class TestComponentsAndLayouts extends Application implements Listener,
         // //////////////////////////////////////////////////////////////////////
         // ////
         if (false) {
-            target
-                    .addComponent(new Label(
-                            "<hr /><h1>Components inside ExpandLayout (height 250px)</h3>",
-                            Label.CONTENT_XHTML));
-            final ExpandLayout el = new ExpandLayout();
-            el.setHeight(250, Component.UNITS_PIXELS);
-            el.expand(new Label("This label will expand on expand layout"));
-            populateLayout(el);
-            target.addComponent(el);
-        }
-
-        // //////////////////////////////////////////////////////////////////////
-        // ////
-        if (false) {
             target.addComponent(new Label(
                     "<hr /><h1>Components inside Panel</h3>",
                     Label.CONTENT_XHTML));
@@ -224,36 +210,15 @@ public class TestComponentsAndLayouts extends Application implements Listener,
         if (false) {
             target
                     .addComponent(new Label(
-                            "<hr /><h1>Components inside vertical SplitPanel (splitpanel is under 250height ExpandLayout)</h3>",
-                            Label.CONTENT_XHTML));
-            final ExpandLayout sp1l = new ExpandLayout();
-            sp1l.setHeight(250, ExpandLayout.UNITS_PIXELS);
-            final SplitPanel sp1 = new SplitPanel(
-                    SplitPanel.ORIENTATION_VERTICAL);
-            sp1l.addComponent(sp1);
-            final OrderedLayout sp1first = new OrderedLayout();
-            final OrderedLayout sp1second = new OrderedLayout();
-            sp1.setFirstComponent(sp1first);
-            populateLayout(sp1first);
-            populateLayout(sp1second);
-            sp1.setSecondComponent(sp1second);
-            target.addComponent(sp1l);
-        }
-
-        // //////////////////////////////////////////////////////////////////////
-        // ////
-        if (false) {
-            target
-                    .addComponent(new Label(
                             "<hr /><h1>Components inside horizontal SplitPanel (splitpanel is under 250px height ExpandLayout)</h3>",
                             Label.CONTENT_XHTML));
-            final ExpandLayout sp2l = new ExpandLayout();
+            final VerticalLayout sp2l = new VerticalLayout();
             sp2l.setHeight(250, SplitPanel.UNITS_PIXELS);
             final SplitPanel sp2 = new SplitPanel(
                     SplitPanel.ORIENTATION_HORIZONTAL);
             sp2l.addComponent(sp2);
-            final OrderedLayout sp2first = new OrderedLayout();
-            final OrderedLayout sp2second = new OrderedLayout();
+            final VerticalLayout sp2first = new VerticalLayout();
+            final VerticalLayout sp2second = new VerticalLayout();
             sp2.setFirstComponent(sp2first);
             populateLayout(sp2first);
             populateLayout(sp2second);
@@ -278,8 +243,8 @@ public class TestComponentsAndLayouts extends Application implements Listener,
         final Embedded emb = new Embedded("Embedded " + count++, flashResource);
         emb.setType(Embedded.TYPE_OBJECT);
         emb.setMimeType("application/x-shockwave-flash");
-        emb.setWidth(250);
-        emb.setHeight(100);
+        emb.setWidth("250px");
+        emb.setHeight("100px");
         test(layout, emb);
 
         final Panel panel = new Panel("Panel " + count++);
@@ -333,9 +298,9 @@ public class TestComponentsAndLayouts extends Application implements Listener,
         test(layout, table);
 
         final TabSheet tabsheet = new TabSheet();
-        final OrderedLayout tab1 = new OrderedLayout();
+        final VerticalLayout tab1 = new VerticalLayout();
         tab1.addComponent(new Label("tab1 " + count++));
-        final OrderedLayout tab2 = new OrderedLayout();
+        final VerticalLayout tab2 = new VerticalLayout();
         tab2.addComponent(new Label("tab2 " + count++));
         tabsheet.addTab(tab1, "Default (not configured) TabSheet tab1",
                 new ClassResource("m.gif", this));
@@ -344,9 +309,9 @@ public class TestComponentsAndLayouts extends Application implements Listener,
         test(layout, tabsheet);
 
         final Accordion accordion = new Accordion();
-        final OrderedLayout acc1 = new OrderedLayout();
+        final VerticalLayout acc1 = new VerticalLayout();
         acc1.addComponent(new Label("acc1 " + count++));
-        final OrderedLayout acc2 = new OrderedLayout();
+        final VerticalLayout acc2 = new VerticalLayout();
         acc2.addComponent(new Label("acc2 " + count++));
         accordion.addTab(acc1, "Default (not configured) Accordion acc1",
                 new ClassResource("m.gif", this));

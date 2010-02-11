@@ -14,14 +14,12 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Embedded;
-import com.vaadin.ui.ExpandLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.RichTextArea;
@@ -33,12 +31,13 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.Upload;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Component.Listener;
 
 public class TestCaptionWrapper extends CustomComponent implements Listener {
 
-    OrderedLayout main = new OrderedLayout();
+    VerticalLayout main = new VerticalLayout();
 
     final String eventListenerString = "Component.Listener feedback: ";
     Label eventListenerFeedback = new Label(eventListenerString
@@ -72,13 +71,13 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
 
         final Panel panel = new Panel("Panel");
         test(panel);
-        populateLayout(panel.getLayout());
+        populateLayout((Layout) panel.getContent());
 
         final TabSheet tabsheet = new TabSheet();
         test(tabsheet);
-        final OrderedLayout tab1 = new OrderedLayout();
+        final VerticalLayout tab1 = new VerticalLayout();
         tab1.addComponent(new Label("try tab2"));
-        final OrderedLayout tab2 = new OrderedLayout();
+        final VerticalLayout tab2 = new VerticalLayout();
         test(tab2);
         populateLayout(tab2);
         tabsheet.addTab(tab1, "TabSheet tab1", new ClassResource("m.gif",
@@ -86,7 +85,7 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
         tabsheet.addTab(tab2, "TabSheet tab2", new ClassResource("m.gif",
                 getApplication()));
 
-        final ExpandLayout expandLayout = new ExpandLayout();
+        final VerticalLayout expandLayout = new VerticalLayout();
         test(expandLayout);
         populateLayout(expandLayout);
 
@@ -96,7 +95,7 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
 
         final Window window = new Window("TEST: Window");
         test(window);
-        populateLayout(window.getLayout());
+        populateLayout((Layout) window.getContent());
 
     }
 
