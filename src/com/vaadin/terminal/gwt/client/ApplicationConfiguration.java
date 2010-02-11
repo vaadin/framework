@@ -148,20 +148,14 @@ public class ApplicationConfiguration {
         int lastdot = module.lastIndexOf(".");
         String base = module.substring(0, lastdot);
         String simpleName = module.substring(lastdot + 1);
-        // TODO figure out (ask around) WTF this is almost-removed
-        // if (!wsname.startsWith(base) || !wsname.endsWith(simpleName)) {
-        // // WidgetSet module name does not match implementation name;
-        // // probably inherited WidgetSet with entry-point. Skip.
-        // GWT.log("Ignored init for " + wsname + " when starting " + module,
-        // null);
-        // return;
-        // }
 
         if (initedWidgetSet != null) {
-            // Something went wrong: multiple widgetsets inited
-            String msg = "Tried to init " + widgetset.getClass().getName()
-                    + ", but " + initedWidgetSet.getClass().getName()
-                    + " was already inited.";
+            // Multiple widgetsets inited; can happen with custom WS + entry
+            // point
+            String msg = "Ignoring " + widgetset.getClass().getName()
+                    + ", because " + initedWidgetSet.getClass().getName()
+                    + " was already inited (if this is wrong, your entry point"
+                    + " is probably not first your .gwt.xml).";
             throw new IllegalStateException(msg);
         }
         initedWidgetSet = widgetset;
