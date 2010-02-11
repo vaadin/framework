@@ -1,6 +1,5 @@
 package com.vaadin.tests.robustness;
 
-import com.vaadin.automatedtests.util.Log;
 import com.vaadin.tests.util.RandomComponents;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComponentContainer;
@@ -70,16 +69,28 @@ public abstract class Robustness extends com.vaadin.Application implements
             label = null;
             stressLayout = null;
             System.out.println("main.getLayout()=" + main.getLayout());
-            System.out.println(Log.getMemoryStatistics());
+            System.out.println(getMemoryStatistics());
         } else if (event.getButton() == close) {
             System.out.println("Before close, memory statistics:");
-            System.out.println(Log.getMemoryStatistics());
+            System.out.println(getMemoryStatistics());
             close();
             // Still valueUnbound (session expiration) needs to occur for GC to
             // do its work
             System.out.println("After close, memory statistics:");
-            System.out.println(Log.getMemoryStatistics());
+            System.out.println(getMemoryStatistics());
         }
+    }
+
+    public static String getMemoryStatistics() {
+        // You should call gc before printing statistics (if you are not using a
+        // profiler)
+        System.gc();
+        long inUse = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime()
+                .freeMemory());
+        return "Memory:\n" + inUse + " (Used)\n"
+                + Runtime.getRuntime().totalMemory() + " (Total)\n"
+                + Runtime.getRuntime().freeMemory() + " (Free)\n";
+
     }
 
     public abstract void create();

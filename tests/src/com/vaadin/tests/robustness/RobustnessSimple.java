@@ -1,6 +1,5 @@
 package com.vaadin.tests.robustness;
 
-import com.vaadin.automatedtests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.OrderedLayout;
@@ -23,7 +22,7 @@ public class RobustnessSimple extends Robustness implements
 
         // CASE single orderedlayout with a label containing 1Mb of data
         // fill with random components
-        Label label = new Label("Label " + Log.getMemoryStatistics(),
+        Label label = new Label("Label " + getMemoryStatistics(),
                 Label.CONTENT_PREFORMATTED);
         byte[] data = new byte[1024 * 1024];
         label.setData(data);
