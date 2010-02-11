@@ -834,7 +834,6 @@
                     <exclude name="${toolkit-package}/demo/**" />
                     <exclude name="${toolkit-package}/tests/**"/>
                     <exclude name="${toolkit-package}/launcher/**" />
-                    <exclude name="${toolkit-package}/automatedtests/**" />
                 </patternset>
             </fileset>
             <!-- fileupload, see build/external/fileupload/build.xml -->
