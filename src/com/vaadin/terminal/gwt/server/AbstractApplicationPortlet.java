@@ -28,12 +28,10 @@ import javax.portlet.PortalContext;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletException;
-import javax.portlet.PortletMode;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
 import javax.portlet.PortletURL;
-import javax.portlet.RenderMode;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
@@ -426,7 +424,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                     /*
                      * Always use the main window when running inside a portlet.
                      */
-                    Window window = getPortletWindow(request, application);
+                    Window window = application.getMainWindow();
                     if (window == null) {
                         throw new PortletException(ERROR_NO_WINDOW_FOUND);
                     }
@@ -492,28 +490,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 }
             }
         }
-    }
-
-    /**
-     * Returns a window for a portlet mode. To define custom content for a
-     * portlet mode, add (in the application) a window whose name matches the
-     * portlet mode name. By default, the main window is returned.
-     * 
-     * Alternatively, a PortletListener can change the main window content.
-     * 
-     * @param request
-     * @param application
-     * @return Window to show in the portlet for the given portlet mode
-     */
-    protected Window getPortletWindow(PortletRequest request,
-            Application application) {
-        PortletMode mode = request.getPortletMode();
-        Window window = application.getWindow(mode.toString());
-        if (window != null) {
-            return window;
-        }
-        // no specific window found
-        return application.getMainWindow();
     }
 
     private void updateBrowserProperties(WebBrowser browser,
@@ -648,53 +624,26 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         handleRequest(request, response);
     }
 
-    /**
-     * Handles a request for the "view" (default) portlet mode. In Vaadin, the
-     * basic portlet modes ("view", "edit" and "help") are handled identically,
-     * and their behavior can be changed by registering windows in the
-     * application with window names identical to the portlet mode names.
-     * Alternatively, a PortletListener can change the application main window
-     * contents.
-     * 
-     * To implement custom portlet modes, subclass the portlet class and
-     * implement a method annotated with {@link RenderMode} for the custom mode,
-     * calling {@link #handleRequest(PortletRequest, PortletResponse)} directly
-     * from it.
-     * 
-     * Note that the portlet class in the portlet configuration needs to be
-     * changed when overriding methods of this class.
-     * 
-     * @param request
-     * @param response
-     * @throws PortletException
-     * @throws IOException
-     */
     @Override
-    protected void doView(RenderRequest request, RenderResponse response)
+    protected void doDispatch(RenderRequest request, RenderResponse response)
             throws PortletException, IOException {
-        handleRequest(request, response);
-    }
+        try {
+            // try to let super handle - it'll call methods annotated for
+            // handling, the default doXYZ(), or throw if a handler for the mode
+            // is not found
+            super.doDispatch(request, response);
 
-    /**
-     * Handle a request for the "edit" portlet mode.
-     * 
-     * @see #doView(RenderRequest, RenderResponse)
-     */
-    @Override
-    protected void doEdit(RenderRequest request, RenderResponse response)
-            throws PortletException, IOException {
-        handleRequest(request, response);
-    }
+        } catch (PortletException e) {
+            if (e.getCause() == null) {
+                // No cause interpreted as 'unknown mode' - pass that trough
+                // so that the application can handle
+                handleRequest(request, response);
 
-    /**
-     * Handle a request for the "help" portlet mode.
-     * 
-     * @see #doView(RenderRequest, RenderResponse)
-     */
-    @Override
-    protected void doHelp(RenderRequest request, RenderResponse response)
-            throws PortletException, IOException {
-        handleRequest(request, response);
+            } else {
+                // Something else failed, pass on
+                throw e;
+            }
+        }
     }
 
     @Override

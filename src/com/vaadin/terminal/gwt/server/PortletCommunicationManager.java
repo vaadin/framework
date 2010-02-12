@@ -165,19 +165,6 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
                             + themeName + "/" + resource);
         }
 
-        /**
-         * Find the application window to use based on the portlet mode. For
-         * internal use only, not in the {@link Callback} interface.
-         * 
-         * @param request
-         * @param application
-         * @return
-         */
-        public Window getPortletWindow(PortletRequest request,
-                Application application) {
-            return portlet.getPortletWindow(request, application);
-        }
-
     }
 
     public PortletCommunicationManager(Application application) {
@@ -237,18 +224,4 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
                 new AbstractApplicationPortletWrapper(applicationPortlet));
     }
 
-    @Override
-    protected Window doGetApplicationWindow(Request request, Callback callback,
-            Application application, Window assumedWindow) {
-        // find window based on portlet mode
-        if (assumedWindow == null
-                && callback instanceof AbstractApplicationPortletWrapper
-                && request.getWrappedRequest() instanceof PortletRequest) {
-            assumedWindow = ((AbstractApplicationPortletWrapper) callback)
-                    .getPortletWindow((PortletRequest) request
-                            .getWrappedRequest(), application);
-        }
-        return super.doGetApplicationWindow(request, callback, application,
-                assumedWindow);
-    }
 }
