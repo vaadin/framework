@@ -2,14 +2,16 @@ package com.vaadin.ui;
 
 import java.util.Map;
 
-import com.vaadin.event.AbstractDropHandler;
 import com.vaadin.event.ComponentTransferable;
 import com.vaadin.event.DataBindedTransferable;
-import com.vaadin.event.DragDropDataTranslator;
-import com.vaadin.event.DragDropDetails;
-import com.vaadin.event.DragDropDetailsImpl;
-import com.vaadin.event.DropTarget;
 import com.vaadin.event.Transferable;
+import com.vaadin.event.dd.DropEvent;
+import com.vaadin.event.dd.DropHandler;
+import com.vaadin.event.dd.DropTarget;
+import com.vaadin.event.dd.TargetDetails;
+import com.vaadin.event.dd.TargetDetailsImpl;
+import com.vaadin.event.dd.acceptCriteria.AcceptAll;
+import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
@@ -37,113 +39,20 @@ import com.vaadin.terminal.gwt.client.MouseEventDetails;
  */
 @SuppressWarnings("serial")
 @ClientWidget(com.vaadin.terminal.gwt.client.ui.VDragDropPane.class)
-public class DragDropPane extends AbsoluteLayout implements DropTarget,
-        DragDropDataTranslator {
+public class DragDropPane extends AbsoluteLayout implements DropTarget {
 
-    private AbstractDropHandler abstractDropHandler;
+    private DropHandler dropHandler;
 
-    public DragDropPane(AbstractDropHandler dropHandler) {
+    public DragDropPane(DropHandler dropHandler) {
         setWidth("400px");
         setHeight("300px");
 
         if (dropHandler == null) {
-            dropHandler = new AbstractDropHandler() {
-                @Override
-                public void receive(Transferable transferable,
-                        DragDropDetails dropDetails) {
-
-                    DragEventDetails ed = (DragEventDetails) dropDetails;
-                    if (transferable instanceof ComponentTransferable) {
-                        ComponentTransferable ctr = (ComponentTransferable) transferable;
-                        Component component = ctr.getSourceComponent();
-
-                        if (component.getParent() != DragDropPane.this) {
-                            if (transferable instanceof DataBindedTransferable) {
-                                // Item has been dragged, construct a Label from
-                                // Item id
-                                Label l = new Label();
-                                l.setSizeUndefined();
-                                l
-                                        .setValue("ItemId : "
-                                                + ((DataBindedTransferable) transferable)
-                                                        .getItemId());
-                                DragDropPane.this.addComponent(l);
-                                component = l;
-
-                            } else {
-                                // we have a component that is been dragged, add
-                                // it
-                                // to
-                                // this
-                                DragDropPane.this.addComponent(component);
-                            }
-
-                            Integer left = ed.getAbsoluteLeft();
-                            Integer top = ed.getAbsoluteTop();
-
-                            MouseEventDetails eventDetails = ed.getMouseEvent();
-
-                            int clientX = eventDetails.getClientX();
-                            int clientY = eventDetails.getClientY();
-
-                            try {
-                                DragDropPane.this.getPosition(component)
-                                        .setTopValue(clientY - top);
-                                DragDropPane.this.getPosition(component)
-                                        .setLeftValue(clientX - left);
-                            } catch (Exception e) {
-                                // TODO: handle exception
-                            }
-                        } else {
-                            // drag ended inside the this Pane
-
-                            MouseEventDetails start = ed.getMouseDownEvent();
-                            MouseEventDetails eventDetails = ed.getMouseEvent();
-
-                            int deltaX = eventDetails.getClientX()
-                                    - start.getClientX();
-                            int deltaY = eventDetails.getClientY()
-                                    - start.getClientY();
-
-                            ComponentPosition p = DragDropPane.this
-                                    .getPosition(component);
-                            p.setTopValue(p.getTopValue() + deltaY);
-                            p.setLeftValue(p.getLeftValue() + deltaX);
-
-                        }
-
-                    } else {
-                        // drag coming outside of Vaadin
-                        String object = (String) transferable
-                                .getData("text/plain");
-
-                        String content = (String) transferable
-                                .getData("fileContents");
-
-                        Label l = new Label();
-                        l.setCaption("Generated from HTML5 drag:");
-                        if (object != null) {
-                            l.setValue(object);
-                        } else {
-                            l.setValue("HTML5 dd");
-                        }
-
-                        l.setDescription(content);
-                        l.setSizeUndefined();
-
-                        DragDropPane.this.addComponent(l);
-
-                    }
-
-                }
-            };
-            if (dropHandler instanceof AbstractDropHandler) {
-                AbstractDropHandler new_name = dropHandler;
-                new_name
-                        .setAcceptCriterion(AbstractDropHandler.CRITERION_ACCEPT_ALL);
-            }
+            this.dropHandler = new ImportPrettyMuchAnything();
+        } else {
+            this.dropHandler = dropHandler;
         }
-        abstractDropHandler = dropHandler;
+
     }
 
     public DragDropPane() {
@@ -153,43 +62,135 @@ public class DragDropPane extends AbsoluteLayout implements DropTarget,
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
-        if (abstractDropHandler instanceof AbstractDropHandler) {
-            AbstractDropHandler new_name = abstractDropHandler;
-            new_name.paint(target);
+        dropHandler.getAcceptCriterion().paint(target);
+    }
+
+    public DropHandler getDropHandler() {
+        return dropHandler;
+    }
+
+    public static class ImportPrettyMuchAnything implements DropHandler {
+        public void drop(DropEvent event) {
+            DragDropPane pane = (DragDropPane) event.getDropTargetData()
+                    .getTarget();
+
+            DragEventDetails ed = (DragEventDetails) event.getDropTargetData();
+            Transferable transferable = event.getTransferable();
+            if (transferable instanceof ComponentTransferable) {
+                ComponentTransferable ctr = (ComponentTransferable) transferable;
+                Component component = ctr.getSourceComponent();
+
+                if (component.getParent() != pane) {
+                    if (transferable instanceof DataBindedTransferable) {
+                        // Item has been dragged, construct a Label from
+                        // Item id
+                        Label l = new Label();
+                        l.setSizeUndefined();
+                        l.setValue("ItemId : "
+                                + ((DataBindedTransferable) transferable)
+                                        .getItemId());
+                        pane.addComponent(l);
+                        component = l;
+
+                    } else {
+                        // we have a component that is been dragged, add
+                        // it
+                        // to
+                        // this
+                        pane.addComponent(component);
+                    }
+
+                    Integer left = ed.getAbsoluteLeft();
+                    Integer top = ed.getAbsoluteTop();
+
+                    MouseEventDetails eventDetails = ed.getMouseEvent();
+
+                    int clientX = eventDetails.getClientX();
+                    int clientY = eventDetails.getClientY();
+
+                    try {
+                        pane.getPosition(component).setTopValue(clientY - top);
+                        pane.getPosition(component)
+                                .setLeftValue(clientX - left);
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                    }
+                } else {
+                    // drag ended inside the this Pane
+
+                    MouseEventDetails start = ed.getMouseDownEvent();
+                    MouseEventDetails eventDetails = ed.getMouseEvent();
+
+                    int deltaX = eventDetails.getClientX() - start.getClientX();
+                    int deltaY = eventDetails.getClientY() - start.getClientY();
+
+                    ComponentPosition p = pane.getPosition(component);
+                    p.setTopValue(p.getTopValue() + deltaY);
+                    p.setLeftValue(p.getLeftValue() + deltaX);
+
+                }
+
+            } else {
+                // drag coming outside of Vaadin
+                String object = (String) transferable.getData("text/plain");
+
+                String content = (String) transferable.getData("fileContents");
+
+                Label l = new Label();
+                l.setCaption("Generated from HTML5 drag:");
+                if (object != null) {
+                    l.setValue(object);
+                } else {
+                    l.setValue("HTML5 dd");
+                }
+
+                l.setDescription(content);
+                l.setSizeUndefined();
+
+                pane.addComponent(l);
+
+            }
+            return;
+        }
+
+        public AcceptCriterion getAcceptCriterion() {
+            return AcceptAll.get();
         }
     }
 
-    public AbstractDropHandler getDropHandler() {
-        return abstractDropHandler;
-    }
-
-    class DragEventDetails extends DragDropDetailsImpl {
+    class DragEventDetails extends TargetDetailsImpl {
 
         public DragEventDetails(Map<String, Object> rawVariables) {
             super(rawVariables);
         }
 
         public Integer getAbsoluteTop() {
-            return (Integer) get("absoluteTop");
+            return (Integer) getData("absoluteTop");
         }
 
         public Integer getAbsoluteLeft() {
-            return (Integer) get("absoluteLeft");
+            return (Integer) getData("absoluteLeft");
         }
 
         public MouseEventDetails getMouseDownEvent() {
-            return MouseEventDetails.deSerialize((String) get("mouseDown"));
+            return MouseEventDetails.deSerialize((String) getData("mouseDown"));
         }
 
         public MouseEventDetails getMouseEvent() {
-            return MouseEventDetails.deSerialize((String) get("mouseEvent"));
+            return MouseEventDetails
+                    .deSerialize((String) getData("mouseEvent"));
         }
 
     }
 
-    public DragDropDetails translateDragDropDetails(
+    public TargetDetails translateDragDropDetails(
             Map<String, Object> clientVariables) {
         return new DragEventDetails(clientVariables);
+    }
+
+    public void setDropHandler(DropHandler dropHandler2) {
+        dropHandler = dropHandler2;
+        requestRepaint();
     }
 
 }

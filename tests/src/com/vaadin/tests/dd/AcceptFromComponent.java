@@ -1,9 +1,10 @@
 package com.vaadin.tests.dd;
 
 import com.vaadin.event.ComponentTransferable;
-import com.vaadin.event.DragDropDetails;
 import com.vaadin.event.Transferable;
-import com.vaadin.event.AbstractDropHandler.AcceptCriterion;
+import com.vaadin.event.dd.DragAndDropEvent;
+import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
+import com.vaadin.event.dd.acceptCriteria.ServerSideCriterion;
 import com.vaadin.ui.DragDropPane;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Window;
@@ -15,9 +16,14 @@ public class AcceptFromComponent extends Window {
 
         DragDropPane pane = new DragDropPane();
         setContent(pane);
-        pane.getDropHandler().setAcceptCriterion(new AcceptCriterion() {
-            public boolean accepts(Transferable transferable,
-                    DragDropDetails dragDropDetails) {
+        pane.setSizeFull();
+        setWidth("450px");
+        setHeight("150px");
+
+        final ServerSideCriterion serverSideCriterion = new ServerSideCriterion() {
+
+            public boolean accepts(DragAndDropEvent dragEvent) {
+                Transferable transferable = dragEvent.getTransferable();
                 if (transferable instanceof ComponentTransferable) {
                     ComponentTransferable componentTransferrable = (ComponentTransferable) transferable;
                     if (componentTransferrable.getSourceComponent() == tree1) {
@@ -26,10 +32,15 @@ public class AcceptFromComponent extends Window {
                 }
                 return false;
             }
+        };
+
+        pane.setDropHandler(new DragDropPane.ImportPrettyMuchAnything() {
+            @Override
+            public AcceptCriterion getAcceptCriterion() {
+                return serverSideCriterion;
+            }
         });
-        pane.setSizeFull();
-        setWidth("450px");
-        setHeight("150px");
+
     }
 
 }

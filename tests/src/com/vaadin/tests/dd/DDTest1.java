@@ -4,12 +4,15 @@ import java.util.Collection;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.HierarchicalContainer;
-import com.vaadin.event.AbstractDropHandler;
 import com.vaadin.event.ComponentTransferable;
 import com.vaadin.event.DataBindedTransferable;
-import com.vaadin.event.DragDropDetails;
 import com.vaadin.event.Transferable;
-import com.vaadin.event.AbstractDropHandler.AcceptCriterion;
+import com.vaadin.event.dd.DragAndDropEvent;
+import com.vaadin.event.dd.DropEvent;
+import com.vaadin.event.dd.DropHandler;
+import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
+import com.vaadin.event.dd.acceptCriteria.IsDataBinded;
+import com.vaadin.event.dd.acceptCriteria.ServerSideCriterion;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Component;
@@ -54,37 +57,44 @@ public class DDTest1 extends TestBase {
         pane1.addComponent(label);
 
         DragDropPane pane2 = new DragDropPane();
-        pane2.setDebugId("pane2");
-        pane2.setSizeFull();
         pane2
-                .setCaption("Pane2 (accept needs server side visit, only \"Bar\")");
+                .setCaption("Pane2 (accept needs server side visit, check for \"Bar\")");
+        DropHandler dropHandler = new DragDropPane.ImportPrettyMuchAnything() {
+            private final AcceptCriterion crit = new ServerSideCriterion() {
+                public boolean accepts(DragAndDropEvent dragEvent) {
+                    Transferable transferable = dragEvent.getTransferable();
+                    // System.out.println("Simulating 500ms processing...");
+                    // try {
+                    // Thread.sleep(200);
+                    // } catch (InterruptedException e) {
+                    // // TODO Auto-generated catch block
+                    // e.printStackTrace();
+                    // }
+                    // System.out.println("Done get to work.");
+                    if (transferable instanceof ComponentTransferable) {
+                        ComponentTransferable ct = (ComponentTransferable) transferable;
 
-        AcceptCriterion f = new AcceptCriterion() {
-            public boolean accepts(Transferable transferable,
-                    DragDropDetails dragDropDetails) {
-                // System.out.println("Simulating 500ms processing...");
-                // try {
-                // Thread.sleep(200);
-                // } catch (InterruptedException e) {
-                // // TODO Auto-generated catch block
-                // e.printStackTrace();
-                // }
-                // System.out.println("Done get to work.");
-                if (transferable instanceof ComponentTransferable) {
-                    ComponentTransferable ct = (ComponentTransferable) transferable;
-
-                    Component component = ct.getSourceComponent();
-                    if (component != null) {
-                        if (component.toString() != null
-                                && component.toString().contains("Bar")) {
-                            return true;
+                        Component component = ct.getSourceComponent();
+                        if (component != null) {
+                            if (component.toString() != null
+                                    && component.toString().contains("Bar")) {
+                                return true;
+                            }
                         }
                     }
+                    return false;
                 }
-                return false;
+            };
+
+            @Override
+            public AcceptCriterion getAcceptCriterion() {
+                return crit;
             }
+
         };
-        pane2.getDropHandler().setAcceptCriterion(f);
+        pane2.setDropHandler(dropHandler);
+        pane2.setDebugId("pane2");
+        pane2.setSizeFull();
 
         DragDropPane pane3 = new DragDropPane();
         pane3.setSizeFull();
@@ -113,55 +123,7 @@ public class DDTest1 extends TestBase {
          * 
          * TODO fix algorithm, broken in some cases.
          */
-        AbstractDropHandler itemSorter = new AbstractDropHandler() {
-
-            @Override
-            public void receive(Transferable transferable,
-                    DragDropDetails dropdetails) {
-                TreeDropDetails details = (TreeDropDetails) dropdetails;
-                // TODO set properties, so same sorter could be used in Table
-                if (transferable instanceof DataBindedTransferable) {
-                    DataBindedTransferable transferrable2 = (DataBindedTransferable) transferable;
-
-                    Object itemId = transferrable2.getItemId();
-
-                    Object itemIdOver = details.getItemIdOver();
-
-                    Location dropLocation = details.getDropLocation();
-
-                    if (dropLocation == Location.MIDDLE) {
-                        t.setParent(itemId, itemIdOver);
-                        return;
-                    } else if (Location.TOP == dropLocation) {
-                        // if on top of the caption area, add before
-                        itemIdOver = idx.prevItemId(itemIdOver);
-                    }
-
-                    if (itemId.equals(itemIdOver)) {
-                        // the location is same
-                        return;
-                    }
-
-                    HierarchicalContainer subtree = getSubTree(idx, itemId);
-                    boolean removed = idx.removeItem(itemId);
-
-                    if (removed) {
-
-                        if (dropLocation == null) {
-                            System.err
-                                    .println("No detail of drop place available");
-                        }
-
-                        Item addItemAfter = idx
-                                .addItemAfter(itemIdOver, itemId);
-                        populateSubTree(idx, subtree, itemId);
-                        // ensure the same parent as with related item
-                        Object parent = idx.getParent(itemIdOver);
-                        idx.setParent(itemId, parent);
-                    }
-                }
-
-            }
+        DropHandler itemSorter = new DropHandler() {
 
             private void populateSubTree(HierarchicalContainer idx,
                     HierarchicalContainer subtree, Object itemId) {
@@ -224,13 +186,61 @@ public class DDTest1 extends TestBase {
 
             }
 
-        };
+            public void drop(DropEvent event) {
+                TreeDropDetails details = (TreeDropDetails) event
+                        .getDropTargetData();
+                // TODO set properties, so same sorter could be used in Table
+                Transferable transferable = event.getTransferable();
+                if (transferable instanceof DataBindedTransferable) {
+                    DataBindedTransferable transferrable2 = (DataBindedTransferable) transferable;
 
-        /*
-         * Accept only drags that have item identifiers
-         */
-        itemSorter
-                .setAcceptCriterion(AbstractDropHandler.CRITERION_HAS_ITEM_ID);
+                    Object itemId = transferrable2.getItemId();
+
+                    Object itemIdOver = details.getItemIdOver();
+
+                    Location dropLocation = details.getDropLocation();
+
+                    if (dropLocation == Location.MIDDLE) {
+                        t.setParent(itemId, itemIdOver);
+                        return;
+                    } else if (Location.TOP == dropLocation) {
+                        // if on top of the caption area, add before
+                        itemIdOver = idx.prevItemId(itemIdOver);
+                    }
+
+                    if (itemId.equals(itemIdOver)) {
+                        // the location is same
+                        return;
+                    }
+
+                    HierarchicalContainer subtree = getSubTree(idx, itemId);
+                    boolean removed = idx.removeItem(itemId);
+
+                    if (removed) {
+
+                        if (dropLocation == null) {
+                            System.err
+                                    .println("No detail of drop place available");
+                        }
+
+                        Item addItemAfter = idx
+                                .addItemAfter(itemIdOver, itemId);
+                        populateSubTree(idx, subtree, itemId);
+                        // ensure the same parent as with related item
+                        Object parent = idx.getParent(itemIdOver);
+                        idx.setParent(itemId, parent);
+                    }
+                }
+
+                return;
+            }
+
+            public AcceptCriterion getAcceptCriterion() {
+                // TODO should actually check that source is same as target
+                return IsDataBinded.get();
+            }
+
+        };
 
         t.setDropHandler(itemSorter);
 

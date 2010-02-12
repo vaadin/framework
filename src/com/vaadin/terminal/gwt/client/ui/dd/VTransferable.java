@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.vaadin.terminal.DragSource;
+import com.vaadin.event.dd.DragSource;
 import com.vaadin.terminal.gwt.client.Paintable;
 
 /**

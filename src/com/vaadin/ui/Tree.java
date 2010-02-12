@@ -22,18 +22,18 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.ContainerHierarchicalWrapper;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.event.AbstractDropHandler;
 import com.vaadin.event.Action;
 import com.vaadin.event.DataBindedTransferable;
-import com.vaadin.event.DragDropDataTranslator;
-import com.vaadin.event.DragDropDetailsImpl;
-import com.vaadin.event.DropHandler;
-import com.vaadin.event.DropTarget;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.event.ItemClickEvent.ItemClickSource;
-import com.vaadin.terminal.DragSource;
+import com.vaadin.event.dd.DragAndDropEvent;
+import com.vaadin.event.dd.DragSource;
+import com.vaadin.event.dd.DropHandler;
+import com.vaadin.event.dd.DropTarget;
+import com.vaadin.event.dd.TargetDetailsImpl;
+import com.vaadin.event.dd.acceptCriteria.ServerSideCriterion;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
@@ -53,8 +53,7 @@ import com.vaadin.terminal.gwt.client.ui.VTree;
 @SuppressWarnings("serial")
 @ClientWidget(VTree.class)
 public class Tree extends AbstractSelect implements Container.Hierarchical,
-        Action.Container, ItemClickSource, DragSource, DropTarget,
-        DragDropDataTranslator {
+        Action.Container, ItemClickSource, DragSource, DropTarget {
 
     private static final Method EXPAND_METHOD;
 
@@ -135,6 +134,9 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         }
 
         public Object getData(String dataFlawor) {
+            if (dataFlawor.equals("Text")) {
+                return getItemCaption(getItemId());
+            }
             return data.get(dataFlawor);
         }
 
@@ -644,8 +646,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
             // New items
             target.addVariable(this, "newitem", new String[] {});
 
-            if (dropHandler instanceof AbstractDropHandler) {
-                ((AbstractDropHandler) dropHandler).paint(target);
+            if (dropHandler != null) {
+                dropHandler.getAcceptCriterion().paint(target);
             }
 
         }
@@ -1158,14 +1160,14 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         TOP, BOTTOM, MIDDLE
     }
 
-    public class TreeDropDetails extends DragDropDetailsImpl {
+    public class TreeDropDetails extends TargetDetailsImpl {
 
         private Object idOver;
 
         TreeDropDetails(Map<String, Object> rawVariables) {
             super(rawVariables);
             // eagar fetch itemid, mapper may be emptied
-            String keyover = (String) get("itemIdOver");
+            String keyover = (String) getData("itemIdOver");
             if (keyover != null) {
                 idOver = itemIdMapper.get(keyover);
             }
@@ -1176,7 +1178,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         }
 
         public Location getDropLocation() {
-            String s = (String) get("detail");
+            String s = (String) getData("detail");
             if ("Top".equals(s)) {
                 return Location.TOP;
             } else if ("Bottom".equals(s)) {
@@ -1191,6 +1193,83 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     public TreeDropDetails translateDragDropDetails(
             Map<String, Object> clientVariables) {
         return new TreeDropDetails(clientVariables);
+    }
+
+    /**
+     * API for {@link TreeDropCriterion}
+     * 
+     * @param itemId
+     * @return
+     */
+    private String key(Object itemId) {
+        return itemIdMapper.key(itemId);
+    }
+
+    /**
+     * An example of lazy initializing criterion. Initially pretty much no data
+     * is sent to client, on first accepts set (per drag request) the client
+     * side data structure is initialized and no subsequent requests requests
+     * are needed during that drag and drop operation.
+     * <p>
+     * See client side counterpart
+     */
+    public static abstract class TreeDropCriterion extends ServerSideCriterion {
+
+        private Tree tree;
+
+        private Set<Object> allowedItemIds;
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * com.vaadin.event.dd.acceptCriteria.ServerSideCriterion#getIdentifier
+         * ()
+         */
+        @Override
+        protected String getIdentifier() {
+            return TreeDropCriterion.class.getCanonicalName();
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * com.vaadin.event.dd.acceptCriteria.AcceptCriterion#accepts(com.vaadin
+         * .event.dd.DragAndDropEvent)
+         */
+        public boolean accepts(DragAndDropEvent dragEvent) {
+            TreeDropDetails dropTargetData = (TreeDropDetails) dragEvent
+                    .getDropTargetData();
+            tree = (Tree) dragEvent.getDropTargetData().getTarget();
+            allowedItemIds = getAllowedItemIds(dragEvent, tree);
+            return allowedItemIds.contains(dropTargetData.getItemIdOver());
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * com.vaadin.event.dd.acceptCriteria.AcceptCriterion#paintResponse(
+         * com.vaadin.terminal.PaintTarget)
+         */
+        @Override
+        public void paintResponse(PaintTarget target) throws PaintException {
+            /*
+             * send allowed nodes to client so subsequent requests can be
+             * avoided
+             */
+            Object[] array = allowedItemIds.toArray();
+            for (int i = 0; i < array.length; i++) {
+                String key = tree.key(array[i]);
+                array[i] = key;
+            }
+            target.addAttribute("allowedIds", array);
+        }
+
+        protected abstract Set<Object> getAllowedItemIds(
+                DragAndDropEvent dragEvent, Tree tree);
+
     }
 
 }

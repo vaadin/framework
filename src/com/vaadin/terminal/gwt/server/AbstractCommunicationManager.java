@@ -4,32 +4,6 @@
 
 package com.vaadin.terminal.gwt.server;
 
-import com.vaadin.Application;
-import com.vaadin.Application.SystemMessages;
-import com.vaadin.external.org.apache.commons.fileupload.FileItemIterator;
-import com.vaadin.external.org.apache.commons.fileupload.FileItemStream;
-import com.vaadin.external.org.apache.commons.fileupload.FileUpload;
-import com.vaadin.external.org.apache.commons.fileupload.FileUploadException;
-import com.vaadin.external.org.apache.commons.fileupload.ProgressListener;
-import com.vaadin.terminal.ApplicationResource;
-import com.vaadin.terminal.DownloadStream;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Paintable;
-import com.vaadin.terminal.URIHandler;
-import com.vaadin.terminal.UploadStream;
-import com.vaadin.terminal.VariableOwner;
-import com.vaadin.terminal.Paintable.RepaintRequestEvent;
-import com.vaadin.terminal.Terminal.ErrorEvent;
-import com.vaadin.terminal.Terminal.ErrorListener;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.server.ComponentSizeValidator.InvalidLayout;
-import com.vaadin.ui.AbstractField;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.Upload;
-import com.vaadin.ui.Window;
-import com.vaadin.ui.Upload.UploadException;
-
 import java.io.BufferedWriter;
 import java.io.CharArrayWriter;
 import java.io.IOException;
@@ -65,6 +39,32 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+
+import com.vaadin.Application;
+import com.vaadin.Application.SystemMessages;
+import com.vaadin.external.org.apache.commons.fileupload.FileItemIterator;
+import com.vaadin.external.org.apache.commons.fileupload.FileItemStream;
+import com.vaadin.external.org.apache.commons.fileupload.FileUpload;
+import com.vaadin.external.org.apache.commons.fileupload.FileUploadException;
+import com.vaadin.external.org.apache.commons.fileupload.ProgressListener;
+import com.vaadin.terminal.ApplicationResource;
+import com.vaadin.terminal.DownloadStream;
+import com.vaadin.terminal.PaintException;
+import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.Paintable;
+import com.vaadin.terminal.URIHandler;
+import com.vaadin.terminal.UploadStream;
+import com.vaadin.terminal.VariableOwner;
+import com.vaadin.terminal.Paintable.RepaintRequestEvent;
+import com.vaadin.terminal.Terminal.ErrorEvent;
+import com.vaadin.terminal.Terminal.ErrorListener;
+import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.server.ComponentSizeValidator.InvalidLayout;
+import com.vaadin.ui.AbstractField;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Upload;
+import com.vaadin.ui.Window;
+import com.vaadin.ui.Upload.UploadException;
 
 /**
  * This is a common base class for the server-side implementations of the
@@ -1132,7 +1132,7 @@ public abstract class AbstractCommunicationManager implements
 
     private VariableOwner getDragAndDropService() {
         if (dragAndDropService == null) {
-            dragAndDropService = new DragAndDropService();
+            dragAndDropService = new DragAndDropService(this);
         }
         return dragAndDropService;
     }

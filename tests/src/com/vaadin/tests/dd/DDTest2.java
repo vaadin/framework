@@ -1,17 +1,23 @@
 package com.vaadin.tests.dd;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.demo.tutorial.addressbook.data.Person;
 import com.vaadin.demo.tutorial.addressbook.data.PersonContainer;
-import com.vaadin.event.AbstractDropHandler;
 import com.vaadin.event.DataBindedTransferable;
-import com.vaadin.event.DragDropDetails;
 import com.vaadin.event.Transferable;
-import com.vaadin.event.AbstractDropHandler.AcceptCriterion;
-import com.vaadin.event.AbstractDropHandler.And;
+import com.vaadin.event.dd.DragAndDropEvent;
+import com.vaadin.event.dd.DropEvent;
+import com.vaadin.event.dd.DropHandler;
+import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
+import com.vaadin.event.dd.acceptCriteria.And;
+import com.vaadin.event.dd.acceptCriteria.ComponentFilter;
+import com.vaadin.event.dd.acceptCriteria.IsDataBinded;
+import com.vaadin.event.dd.acceptCriteria.OverTreeNode;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.tests.components.TestBase;
@@ -29,6 +35,8 @@ public class DDTest2 extends TestBase {
     Tree tree1 = new Tree("Tree that accepts table rows to folders");
     Table table = new Table("Drag rows to Tree on left or right");
     Tree tree2 = new Tree("Accepts items, copies values");
+
+    private Tree tree3;
 
     @Override
     protected void setup() {
@@ -48,20 +56,68 @@ public class DDTest2 extends TestBase {
         populateTable();
         addComponent(hl);
 
+        tree3 = new Tree(
+                "Tree with lazy loading criteria, of first server visit caches accept rules for all captions");
+
+        tree3.addItem("Drag on me");
+        tree3.addItem("Or me");
+        /*
+         * An example of lazy initializing drop criterion with component
+         * specific api for easy rule writing.
+         * 
+         * Example is pretty stupid (accepts drop on all nodes, but by
+         * explicitly defining them here), but demonstrates lazy initialization
+         * option if rules are heavy.
+         */
+        final AcceptCriterion crit = new Tree.TreeDropCriterion() {
+
+            @Override
+            protected Set<Object> getAllowedItemIds(DragAndDropEvent dragEvent,
+                    Tree tree) {
+                HashSet<Object> hashSet = new HashSet<Object>(tree.getItemIds());
+                return hashSet;
+            }
+        };
+
+        tree3.setDropHandler(new DropHandler() {
+            public void drop(DropEvent dropEvent) {
+                Transferable transferable = dropEvent.getTransferable();
+                String data = (String) transferable.getData("Text");
+                if (data == null) {
+                    data = "-no Text data flawor-";
+                }
+                tree3.addItem(data);
+                TreeDropDetails dropTargetData = (TreeDropDetails) dropEvent
+                        .getDropTargetData();
+                tree3.setParent(data, dropTargetData.getItemIdOver());
+
+            }
+
+            public AcceptCriterion getAcceptCriterion() {
+                return crit;
+            }
+        });
+
+        addComponent(tree3);
+
         /*
          * Make table rows draggable
          */
         table.setDragMode(Table.DragModes.ROWS);
 
-        AbstractDropHandler dropHandler = new AbstractDropHandler() {
-            @Override
-            public void receive(Transferable transferable,
-                    DragDropDetails dropdetails) {
+        AcceptCriterion onNode = new OverTreeNode();
+        AcceptCriterion fromTree = new ComponentFilter(table);
+        final And and = new And(fromTree, onNode);
+
+        DropHandler dropHandler = new DropHandler() {
+
+            public void drop(DropEvent event) {
                 /*
                  * We know transferrable is from table, so it is of type
                  * DataBindedTransferrable
                  */
-                DataBindedTransferable tr = (DataBindedTransferable) transferable;
+                DataBindedTransferable tr = (DataBindedTransferable) event
+                        .getTransferable();
                 Object itemId = tr.getItemId();
                 Table fromTable = (Table) tr.getSourceComponent();
                 String name = fromTable.getItem(itemId).getItemProperty("Name")
@@ -74,7 +130,8 @@ public class DDTest2 extends TestBase {
                  * As we also accept only drops on folders, we know dropDetails
                  * is from Tree and it contains itemIdOver.
                  */
-                TreeDropDetails details = (TreeDropDetails) dropdetails;
+                TreeDropDetails details = (TreeDropDetails) event
+                        .getDropTargetData();
                 Object idOver = details.getItemIdOver();
                 tree1.setParent(name, idOver);
 
@@ -82,14 +139,12 @@ public class DDTest2 extends TestBase {
                  * Remove the item from table
                  */
                 table.removeItem(itemId);
+            }
 
+            public AcceptCriterion getAcceptCriterion() {
+                return and;
             }
         };
-        AcceptCriterion onNode = new AbstractDropHandler.OverTreeNode();
-        AcceptCriterion fromTree = new AbstractDropHandler.ComponentFilter(
-                table);
-        And and = new AbstractDropHandler.And(fromTree, onNode);
-        dropHandler.setAcceptCriterion(and);
         tree1.setDropHandler(dropHandler);
 
         /*
@@ -102,11 +157,11 @@ public class DDTest2 extends TestBase {
          * source. Also make drags from tree1 possible.
          */
 
-        dropHandler = new AbstractDropHandler() {
-            @Override
-            public void receive(Transferable transferable,
-                    DragDropDetails dropdetails) {
-                TreeDropDetails details = (TreeDropDetails) dropdetails;
+        dropHandler = new DropHandler() {
+            public void drop(DropEvent event) {
+                TreeDropDetails details = (TreeDropDetails) event
+                        .getDropTargetData();
+                Transferable transferable = event.getTransferable();
 
                 if (transferable instanceof DataBindedTransferable) {
                     DataBindedTransferable tr = (DataBindedTransferable) transferable;
@@ -141,9 +196,11 @@ public class DDTest2 extends TestBase {
                     }
                 }
             }
+
+            public AcceptCriterion getAcceptCriterion() {
+                return IsDataBinded.get();
+            }
         };
-        dropHandler
-                .setAcceptCriterion(AbstractDropHandler.CRITERION_HAS_ITEM_ID);
 
         tree2.setDropHandler(dropHandler);
 
@@ -157,10 +214,10 @@ public class DDTest2 extends TestBase {
 
         w.addWindow(acceptAnyThing);
         acceptAnyThing.setPositionY(450);
-        acceptAnyThing.setPositionX(0);
+        acceptAnyThing.setPositionX(150);
         w.addWindow(acceptFromTree1viaServerCheck);
         acceptFromTree1viaServerCheck.setPositionY(450);
-        acceptFromTree1viaServerCheck.setPositionX(300);
+        acceptFromTree1viaServerCheck.setPositionX(450);
 
     }
 

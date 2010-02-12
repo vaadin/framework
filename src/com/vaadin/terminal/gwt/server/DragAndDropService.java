@@ -6,15 +6,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.vaadin.event.ComponentTransferable;
-import com.vaadin.event.DragDropDataTranslator;
-import com.vaadin.event.DragDropDetails;
-import com.vaadin.event.DragDropDetailsImpl;
-import com.vaadin.event.DragDropHandler;
-import com.vaadin.event.DragRequest;
-import com.vaadin.event.DropHandler;
-import com.vaadin.event.DropTarget;
 import com.vaadin.event.Transferable;
-import com.vaadin.terminal.DragSource;
+import com.vaadin.event.dd.DragEvent;
+import com.vaadin.event.dd.DragSource;
+import com.vaadin.event.dd.DropEvent;
+import com.vaadin.event.dd.DropHandler;
+import com.vaadin.event.dd.DropTarget;
+import com.vaadin.event.dd.TargetDetails;
+import com.vaadin.event.dd.TargetDetailsImpl;
+import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
+import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager.DragEventType;
 import com.vaadin.ui.Component;
@@ -27,11 +28,21 @@ public class DragAndDropService implements VariableOwner {
 
     private int lastVisitId;
 
-    private DragRequest currentRequest;
-
     private int currentEventId;
 
     private Transferable transferable;
+
+    private boolean lastVisitAccepted = false;
+
+    private DragEvent dragEvent;
+
+    private final AbstractCommunicationManager manager;
+
+    private AcceptCriterion acceptCriterion;
+
+    public DragAndDropService(AbstractCommunicationManager manager) {
+        this.manager = manager;
+    }
 
     public void changeVariables(Object source, Map<String, Object> variables) {
         Object owner = variables.get("dhowner");
@@ -50,7 +61,8 @@ public class DragAndDropService implements VariableOwner {
         DropTarget dropTarget = (DropTarget) owner;
         lastVisitId = (Integer) variables.get("visitId");
 
-        // Is this a drop request or a drag/move request?
+        // request may be dropRequest or request during drag operation (commonly
+        // dragover or dragenter)
         boolean dropRequest = isDropRequest(variables);
         if (dropRequest) {
             handleDropRequest(dropTarget, variables);
@@ -83,10 +95,11 @@ public class DragAndDropService implements VariableOwner {
          * source for Transferable, drop target for DragDropDetails).
          */
         Transferable transferable = constructTransferable(dropTarget, variables);
-        DragDropDetails dropData = constructDragDropDetails(dropTarget,
-                variables);
-
-        dropHandler.drop(transferable, dropData);
+        TargetDetails dropData = constructDragDropDetails(dropTarget, variables);
+        DropEvent dropEvent = new DropEvent(transferable, dropData);
+        if (dropHandler.getAcceptCriterion().accepts(dropEvent)) {
+            dropHandler.drop(dropEvent);
+        }
     }
 
     /**
@@ -99,34 +112,20 @@ public class DragAndDropService implements VariableOwner {
             Map<String, Object> variables) {
         lastVisitId = (Integer) variables.get("visitId");
 
-        DropHandler dropHandler = (dropTarget).getDropHandler();
-        if (!(dropHandler instanceof DragDropHandler)) {
-            System.err
-                    .println("DragRequest could not be send to handler as DropHandle does not implement DragDropHandler");
-            return;
-        }
+        acceptCriterion = dropTarget.getDropHandler().getAcceptCriterion();
 
-        DragDropHandler dragDropHandler = (DragDropHandler) dropHandler;
         /*
          * Construct the Transferable and the DragDropDetails for the drag
          * operation based on the info passed from the client widgets (drag
          * source for Transferable, current target for DragDropDetails).
          */
         Transferable transferable = constructTransferable(dropTarget, variables);
-        DragDropDetails dragDropDetails = constructDragDropDetails(dropTarget,
+        TargetDetails dragDropDetails = constructDragDropDetails(dropTarget,
                 variables);
 
-        currentRequest = constructDragRequest(variables, transferable);
-        dragDropHandler.handleDragRequest(currentRequest, transferable,
-                dragDropDetails);
-    }
+        dragEvent = new DragEvent(transferable, dragDropDetails);
 
-    private static DragRequest constructDragRequest(
-            Map<String, Object> variables, Transferable transferable) {
-
-        int type = (Integer) variables.get("type");
-        DragRequest dragRequest = new DragRequest(DragEventType.values()[type]);
-        return dragRequest;
+        lastVisitAccepted = acceptCriterion.accepts(dragEvent);
     }
 
     /**
@@ -139,23 +138,20 @@ public class DragAndDropService implements VariableOwner {
      * @return
      */
     @SuppressWarnings("unchecked")
-    private DragDropDetails constructDragDropDetails(DropTarget dropTarget,
+    private TargetDetails constructDragDropDetails(DropTarget dropTarget,
             Map<String, Object> variables) {
         Map<String, Object> rawDragDropDetails = (Map<String, Object>) variables
                 .get("evt");
 
-        DragDropDetails dropData = null;
-        if (dropTarget instanceof DragDropDataTranslator) {
-            dropData = ((DragDropDataTranslator) dropTarget)
-                    .translateDragDropDetails(rawDragDropDetails);
-        }
+        TargetDetails dropData = dropTarget
+                .translateDragDropDetails(rawDragDropDetails);
 
         if (dropData == null) {
             // Create a default DragDropDetails with all the raw variables
-            dropData = new DragDropDetailsImpl(rawDragDropDetails);
+            dropData = new TargetDetailsImpl(rawDragDropDetails);
         }
 
-        dropData.put(DROPTARGET_KEY, dropTarget);
+        dropData.setData(DROPTARGET_KEY, dropTarget);
 
         return dropData;
     }
@@ -249,30 +245,30 @@ public class DragAndDropService implements VariableOwner {
         return true;
     }
 
-    void printJSONResponse(PrintWriter outWriter) {
+    void printJSONResponse(PrintWriter outWriter) throws PaintException {
         if (isDirty()) {
-            // TODO paint responsedata
-            outWriter.print(", dd : {");
-            outWriter.print("visitId:");
-            outWriter.print(lastVisitId);
-            Map<String, Object> responseData = currentRequest.getResponseData();
-            if (responseData != null) {
-                for (String key : responseData.keySet()) {
-                    Object object = responseData.get(key);
-                    outWriter.print(",\"");
-                    // TODO JSON escaping for key and object
-                    outWriter.print(key);
-                    outWriter.print("\":");
-                    outWriter.print(object);
-                }
+
+            outWriter.print(", \"dd\":");
+
+            JsonPaintTarget jsonPaintTarget = new JsonPaintTarget(manager,
+                    outWriter, false);
+            jsonPaintTarget.startTag("dd");
+            jsonPaintTarget.addAttribute("visitId", lastVisitId);
+            if (acceptCriterion != null) {
+                jsonPaintTarget.addAttribute("accepted", lastVisitAccepted);
+                acceptCriterion.paintResponse(jsonPaintTarget);
             }
-            outWriter.print("}");
-            currentRequest = null;
+            jsonPaintTarget.endTag("dd");
+            jsonPaintTarget.close();
+            lastVisitId = -1;
+            lastVisitAccepted = false;
+            acceptCriterion = null;
+            dragEvent = null;
         }
     }
 
     private boolean isDirty() {
-        if (currentRequest != null) {
+        if (lastVisitId > 0) {
             return true;
         }
         return false;

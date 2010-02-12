@@ -4,8 +4,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCallback;
-import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
 import com.vaadin.terminal.gwt.client.ui.dd.VDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
@@ -16,11 +14,6 @@ public class VMyDropTarget extends Composite implements VHasDropHandler,
     private ApplicationConnection client;
 
     public void dragEnter(VDragEvent drag) {
-        VDragAndDropManager.get().visitServer(new VAcceptCallback() {
-            public void accepted() {
-                // show drag hints here
-            }
-        });
     }
 
     public void dragLeave(VDragEvent drag) {

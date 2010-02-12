@@ -131,7 +131,7 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
             if ("actions".equals(childUidl.getTag())) {
                 updateActionMap(childUidl);
                 continue;
-            } else if ("dh".equals(childUidl.getTag())) {
+            } else if ("-ac".equals(childUidl.getTag())) {
                 updateDropHandler(childUidl);
                 continue;
             }
@@ -206,8 +206,6 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
 
                 @Override
                 public void dragEnter(VDragEvent drag) {
-                    updateTreeRelatedDragData(drag);
-                    super.dragEnter(drag);
                 }
 
                 @Override
@@ -227,16 +225,20 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                             .getCurrentGwtEvent());
                     boolean nodeHasChanged = (currentMouseOverKey != null && currentMouseOverKey != oldIdOver)
                             || (oldIdOver != null);
-                    boolean detailHasChanded = !detail.equals(oldDetail);
+                    boolean detailHasChanded = (detail != null && !detail
+                            .equals(oldDetail))
+                            || (detail == null && oldDetail != null);
 
                     if (nodeHasChanged || detailHasChanded) {
                         ApplicationConnection.getConsole().log(
                                 "Change in Transferable " + currentMouseOverKey
                                         + " " + detail);
+                        final String newKey = currentMouseOverKey;
                         validate(new VAcceptCallback() {
-                            public void accepted() {
-                                keyToNode.get(currentMouseOverKey).emphasis(
-                                        detail);
+                            public void accepted(VDragEvent event) {
+                                if (newKey != null) {
+                                    keyToNode.get(newKey).emphasis(detail);
+                                }
                             }
                         }, currentDrag);
                         if (oldIdOver != null
@@ -276,11 +278,14 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
 
             };
         }
-        dropHandler.updateRules(childUidl);
+        dropHandler.updateAcceptRules(childUidl);
     }
 
     public String getDropDetail(NativeEvent event) {
         TreeNode treeNode = keyToNode.get(currentMouseOverKey);
+        if (treeNode == null) {
+            return null;
+        }
         // TODO no scroll support
         int offsetHeight = treeNode.nodeCaptionDiv.getOffsetHeight();
         int absoluteTop = treeNode.getAbsoluteTop();

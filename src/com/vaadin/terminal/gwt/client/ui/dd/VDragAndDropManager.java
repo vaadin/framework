@@ -1,5 +1,7 @@
 package com.vaadin.terminal.gwt.client.ui.dd;
 
+import java.util.LinkedList;
+
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
@@ -19,6 +21,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ValueMap;
 
@@ -83,7 +86,7 @@ public class VDragAndDropManager {
                                 // dragleave on old
                                 if (currentDropHandler != null) {
                                     currentDropHandler.dragLeave(currentDrag);
-                                    acceptCallback = null;
+                                    serverCallback = null;
                                 }
                                 // dragenter on new
                                 currentDropHandler = findDragTarget;
@@ -115,7 +118,7 @@ public class VDragAndDropManager {
                 } catch (Exception e) {
                     ApplicationConnection.getConsole().log(
                             "FIXME : ERROR in elementFromPoint hack.");
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 } finally {
                     dragElement.getStyle().setProperty("display", display);
                 }
@@ -157,7 +160,7 @@ public class VDragAndDropManager {
                         && currentDropHandler != newDragHanler) {
                     currentDropHandler.dragLeave(currentDrag);
                     currentDropHandler = null;
-                    acceptCallback = null;
+                    serverCallback = null;
                 }
                 break;
             case Event.ONMOUSEMOVE:
@@ -210,7 +213,7 @@ public class VDragAndDropManager {
         this.currentDropHandler = currentDropHandler;
     }
 
-    private VAcceptCallback acceptCallback;
+    private VDragEventServerCallback serverCallback;
 
     private HandlerRegistration deferredStartRegistration;
 
@@ -457,7 +460,7 @@ public class VDragAndDropManager {
                 doRequest(DragEventType.DROP);
             }
             currentDropHandler = null;
-            acceptCallback = null;
+            serverCallback = null;
 
         }
 
@@ -484,9 +487,9 @@ public class VDragAndDropManager {
      * 
      * @param acceptCallback
      */
-    public void visitServer(VAcceptCallback acceptCallback) {
+    public void visitServer(VDragEventServerCallback acceptCallback) {
         doRequest(DragEventType.ENTER);
-        this.acceptCallback = acceptCallback;
+        serverCallback = acceptCallback;
     }
 
     private void doRequest(DragEventType drop) {
@@ -539,15 +542,27 @@ public class VDragAndDropManager {
     }
 
     public void handleServerResponse(ValueMap valueMap) {
-        if (acceptCallback == null) {
+        if (serverCallback == null) {
             return;
         }
-        int visitId = valueMap.getInt("visitId");
+        UIDL uidl = (UIDL) valueMap.cast();
+        int visitId = uidl.getIntAttribute("visitId");
+
         if (this.visitId == visitId) {
-            if (valueMap.containsKey("accepted")) {
-                acceptCallback.accepted();
+            serverCallback.handleResponse(uidl.getBooleanAttribute("accepted"),
+                    uidl);
+            serverCallback = null;
+        }
+        runDeferredCommands();
+    }
+
+    private void runDeferredCommands() {
+        if (deferredCommands != null && !deferredCommands.isEmpty()) {
+            Command command = deferredCommands.poll();
+            command.execute();
+            if (!isBusy()) {
+                runDeferredCommands();
             }
-            acceptCallback = null;
         }
     }
 
@@ -590,5 +605,40 @@ public class VDragAndDropManager {
 
         }
     };
+
+    private LinkedList<Command> deferredCommands;
+
+    private boolean isBusy() {
+        return serverCallback != null;
+    }
+
+    /**
+     * Method to que tasks until all dd related server visits are done
+     * 
+     * @param command
+     */
+    private void defer(Command command) {
+        if (deferredCommands == null) {
+            deferredCommands = new LinkedList<Command>();
+        }
+        deferredCommands.add(command);
+    }
+
+    /**
+     * Method to execute commands when all existing dd related tasks are
+     * completed (some may require server visit).
+     * <p>
+     * Using this method may be handy if criterion that uses lazy initialization
+     * are used. Check
+     * 
+     * @param command
+     */
+    public void executeWhenReady(Command command) {
+        if (isBusy()) {
+            defer(command);
+        } else {
+            command.execute();
+        }
+    }
 
 }

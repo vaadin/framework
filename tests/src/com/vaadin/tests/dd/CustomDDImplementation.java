@@ -1,13 +1,13 @@
 package com.vaadin.tests.dd;
 
-import com.vaadin.event.AbstractDropHandler;
-import com.vaadin.event.DragDropDetails;
-import com.vaadin.event.DragDropHandler;
-import com.vaadin.event.DragRequest;
-import com.vaadin.event.DropHandler;
-import com.vaadin.event.DropTarget;
-import com.vaadin.event.Transferable;
-import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager.DragEventType;
+import java.util.Map;
+
+import com.vaadin.event.dd.DropEvent;
+import com.vaadin.event.dd.DropHandler;
+import com.vaadin.event.dd.DropTarget;
+import com.vaadin.event.dd.TargetDetails;
+import com.vaadin.event.dd.acceptCriteria.AcceptAll;
+import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.Component;
@@ -41,39 +41,27 @@ public class CustomDDImplementation extends CustomComponent {
     @ClientWidget(VMyDropTarget.class)
     class MyDropTarget extends AbstractComponent implements DropTarget {
         public DropHandler getDropHandler() {
-            return new DragDropHandler() {
-                public void handleDragRequest(DragRequest dragRequest,
-                        Transferable transferable,
-                        DragDropDetails dragDropDetails) {
-                    DragEventType type = dragRequest.getType();
-                    switch (type) {
+            return new DropHandler() {
 
-                    case ENTER:
-                        // eg. validate transferrable
-                        if (transferable.getDataFlawors().contains("Foo")) {
-                            dragRequest.getResponseData().put("valueFor",
-                                    "clientSideCallBack");
-                        }
-
-                        break;
-                    case OVER:
-
-                        break;
-                    case LEAVE:
-
-                        break;
-                    default:
-                        break;
-                    }
-
-                }
-
-                public boolean drop(Transferable transferable,
-                        DragDropDetails dropDetails) {
+                public void drop(DropEvent event) {
                     // Do something with data
-                    return true;
+                    return;
                 }
+
+                public AcceptCriterion getAcceptCriterion() {
+                    return AcceptAll.get();
+                }
+
             };
+        }
+
+        public TargetDetails translateDragDropDetails(
+                Map<String, Object> clientVariables) {
+            // If component has some special drop details that it needs to
+            // translate for server side use, developer must return a
+            // DragDropDetails here. If details does not exist or raw client
+            // side data is ok, it is safe to return null here.
+            return null;
         }
 
     }

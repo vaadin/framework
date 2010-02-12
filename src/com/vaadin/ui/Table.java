@@ -29,7 +29,7 @@ import com.vaadin.event.Transferable;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.event.ItemClickEvent.ItemClickSource;
-import com.vaadin.terminal.DragSource;
+import com.vaadin.event.dd.DragSource;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;

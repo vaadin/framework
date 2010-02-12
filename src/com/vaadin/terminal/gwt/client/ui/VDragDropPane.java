@@ -41,16 +41,19 @@ public class VDragDropPane extends VAbsoluteLayout implements Container,
                         .getEventTarget();
                 Paintable paintable = client.getPaintable((Element) eventTarget
                         .cast());
-                VTransferable transferable = new VTransferable();
-                transferable.setComponent(paintable);
-                VDragEvent drag = VDragAndDropManager.get().startDrag(
-                        transferable, event.getNativeEvent(), true);
-                drag.createDragImage(((Widget) paintable).getElement(), true);
-                drag.getDropDetails().put(
-                        "mouseDown",
-                        new MouseEventDetails(event.getNativeEvent())
-                                .serialize());
-                event.preventDefault(); // prevent text selection
+                if (paintable != null) {
+                    VTransferable transferable = new VTransferable();
+                    transferable.setComponent(paintable);
+                    VDragEvent drag = VDragAndDropManager.get().startDrag(
+                            transferable, event.getNativeEvent(), true);
+                    drag.createDragImage(((Widget) paintable).getElement(),
+                            true);
+                    drag.getDropDetails().put(
+                            "mouseDown",
+                            new MouseEventDetails(event.getNativeEvent())
+                                    .serialize());
+                    event.preventDefault(); // prevent text selection
+                }
             }
         }, MouseDownEvent.getType());
 
@@ -193,7 +196,7 @@ public class VDragDropPane extends VAbsoluteLayout implements Container,
         if (!uidl.hasAttribute("cached")) {
             int childCount = uidl.getChildCount();
             UIDL childUIDL = uidl.getChildUIDL(childCount - 1);
-            getDropHandler().updateRules(childUIDL);
+            getDropHandler().updateAcceptRules(childUIDL);
         }
     }
 

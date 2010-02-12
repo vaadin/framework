@@ -1,4 +1,4 @@
-package com.vaadin.terminal;
+package com.vaadin.event.dd;
 
 import java.util.Map;
 

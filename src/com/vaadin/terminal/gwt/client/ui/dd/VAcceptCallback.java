@@ -10,6 +10,6 @@ public interface VAcceptCallback {
      * the drag and drop operation ends or the {@link VAbstractDropHandler} has
      * changed before response arrives, the method is never called.
      */
-    public void accepted();
+    public void accepted(VDragEvent event);
 
 }

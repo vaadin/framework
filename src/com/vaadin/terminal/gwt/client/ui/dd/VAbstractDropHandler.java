@@ -1,33 +1,31 @@
 package com.vaadin.terminal.gwt.client.ui.dd;
 
-import com.vaadin.event.AbstractDropHandler;
-import com.vaadin.event.DropTarget;
+import com.google.gwt.user.client.Command;
 import com.vaadin.event.Transferable;
-import com.vaadin.event.AbstractDropHandler.AcceptCriterion;
+import com.vaadin.event.dd.DropTarget;
+import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 
 public abstract class VAbstractDropHandler implements VDropHandler {
 
-    private boolean mustValidateOnServer = true;
     private UIDL criterioUIDL;
+    private VAcceptCriteria acceptCriteria;
 
     /**
      * Implementor/user of {@link VAbstractDropHandler} must pass the UIDL
-     * painted by {@link AbstractDropHandler} (the server side counterpart) to
-     * this method. Practically the details about {@link AcceptCriterion} are
-     * saved.
+     * painted by {@link AcceptCriterion} to this method. Practically the
+     * details about {@link AcceptCriterion} are saved.
      * 
      * @param uidl
      */
-    public void updateRules(UIDL uidl) {
-        mustValidateOnServer = uidl.getBooleanAttribute("serverValidate");
-        int childCount = uidl.getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            UIDL childUIDL = uidl.getChildUIDL(i);
-            if (childUIDL.getTag().equals("acceptCriterion")) {
-                criterioUIDL = childUIDL;
-            }
+    public void updateAcceptRules(UIDL uidl) {
+        criterioUIDL = uidl;
+        acceptCriteria = VAcceptCriterion.get(uidl.getStringAttribute("name"));
+        if (acceptCriteria == null) {
+            throw new IllegalArgumentException(
+                    "No accept criteria found with given name "
+                            + uidl.getStringAttribute("name"));
         }
     }
 
@@ -62,7 +60,8 @@ public abstract class VAbstractDropHandler implements VDropHandler {
      */
     public void dragEnter(final VDragEvent drag) {
         validate(new VAcceptCallback() {
-            public void accepted() {
+
+            public void accepted(VDragEvent event) {
                 dragAccepted(drag);
             }
         }, drag);
@@ -79,32 +78,17 @@ public abstract class VAbstractDropHandler implements VDropHandler {
      */
     abstract protected void dragAccepted(VDragEvent drag);
 
-    protected void validate(VAcceptCallback cb, VDragEvent event) {
-        if (mustValidateOnServer) {
-            VDragAndDropManager.get().visitServer(cb);
-        } else if (validateOnClient(event)) {
-            cb.accepted();
-        }
+    protected void validate(final VAcceptCallback cb, final VDragEvent event) {
+        Command checkCriteria = new Command() {
+            public void execute() {
+                acceptCriteria.accept(event, criterioUIDL, cb);
+            }
+        };
+
+        VDragAndDropManager.get().executeWhenReady(checkCriteria);
     }
 
-    /**
-     * Returns true if client side rules are met.
-     * 
-     * @param drag
-     * @return
-     */
-    protected boolean validateOnClient(VDragEvent drag) {
-        if (criterioUIDL != null) {
-            String criteriaName = criterioUIDL.getStringAttribute("name");
-            VAcceptCriteria acceptCriteria = VAcceptCriterion.get(criteriaName);
-            if (acceptCriteria != null) {
-                // ApplicationConnection.getConsole().log(
-                // "Criteria : " + acceptCriteria.getClass().getName());
-                return acceptCriteria.accept(drag, criterioUIDL);
-            }
-        }
-        return false;
-    }
+    boolean validated = false;
 
     /**
      * The default implemmentation visits server if {@link AcceptCriterion} 
@@ -112,11 +96,18 @@ public abstract class VAbstractDropHandler implements VDropHandler {
      * client.
      */
     public boolean drop(VDragEvent drag) {
-        if (mustValidateOnServer) {
+        if (acceptCriteria.needsServerSideCheck(drag, criterioUIDL)) {
             return true;
         } else {
-            return validateOnClient(drag);
+            validated = false;
+            acceptCriteria.accept(drag, criterioUIDL, new VAcceptCallback() {
+                public void accepted(VDragEvent event) {
+                    validated = true;
+                }
+            });
+            return validated;
         }
+
     }
 
     /**
