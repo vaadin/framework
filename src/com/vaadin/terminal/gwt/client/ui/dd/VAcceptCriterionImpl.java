@@ -53,16 +53,19 @@ public class VAcceptCriterionImpl {
     private final class And implements VAcceptCriteria {
         private boolean b1;
         private boolean b2;
+        private VAcceptCriteria crit1;
+        private VAcceptCriteria crit2;
 
         public void accept(VDragEvent drag, UIDL configuration,
                 VAcceptCallback callback) {
-
-            VAcceptCriteria crit1 = getCriteria(drag, configuration, 0);
-            VAcceptCriteria crit2 = getCriteria(drag, configuration, 1);
-            if (crit1 == null || crit2 == null) {
-                ApplicationConnection.getConsole().log(
-                        "And criteria didn't found a chidl criteria");
-                return;
+            if (crit1 == null) {
+                crit1 = getCriteria(drag, configuration, 0);
+                crit2 = getCriteria(drag, configuration, 1);
+                if (crit1 == null || crit2 == null) {
+                    ApplicationConnection.getConsole().log(
+                            "And criteria didn't found a chidl criteria");
+                    return;
+                }
             }
 
             b1 = false;
@@ -80,7 +83,7 @@ public class VAcceptCriterionImpl {
             };
 
             crit1.accept(drag, configuration.getChildUIDL(0), accept1cb);
-            crit2.accept(drag, configuration.getChildUIDL(0), callback);
+            crit2.accept(drag, configuration.getChildUIDL(0), accept2cb);
             if (b1 && b2) {
                 callback.accepted(drag);
             }
@@ -93,11 +96,7 @@ public class VAcceptCriterionImpl {
         }
 
         public boolean needsServerSideCheck(VDragEvent drag, UIDL criterioUIDL) {
-            return false; // enforce on server side
-            // return getCriteria(drag, criterioUIDL, 0).needsServerSideCheck(
-            // drag, criterioUIDL.getChildUIDL(0))
-            // && getCriteria(drag, criterioUIDL, 1).needsServerSideCheck(
-            // drag, criterioUIDL.getChildUIDL(1));
+            return false; // TODO enforce on server side
         }
     }
 
