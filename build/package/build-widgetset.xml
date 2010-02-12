@@ -27,26 +27,33 @@ See configure target to adjust this buildfile.
 	-->
 	<target name="configure">
 		
-		<!-- Path from this file to the root of the Vaadin distribution package -->
-		<property name="base" value="../../../" />
+		<!-- Path from this file to the project root -->
+		<property name="base"
+			      value="../../../" />
 		
-		<!-- which platform we are in, possible values are windows, linux and mac -->
-		<property name="gwt-platform" value="@platform@" />
+		<!-- The platform (windows, linux, mac, or oophm) -->
+		<property name="gwt-platform"
+			      value="@platform@" />
 		
-		<!-- where platform specific GWT distribution is located -->
-		<property name="gwt-location" value="${base}gwt" />
+		<!-- Location of platform-specific GWT distribution -->
+		<property name="gwt-location"
+			      value="${base}gwt" />
 		
-		<!-- where Vaadin jar is located -->
-		<property name="toolkit-jar-location" value="${base}WebContent/WEB-INF/lib/vaadin-@version@.jar" />
+		<!-- Location of Vaadin JAR -->
+		<property name="toolkit-jar-location"
+			      value="${base}WebContent/WEB-INF/lib/vaadin-@version@.jar" />
 		
-		<!-- where project client-side widgetset source files are located -->
-		<property name="src-location" value="${base}WebContent/WEB-INF/src" />
+		<!-- Location of project source code -->
+		<property name="src-location"
+			      value="${base}WebContent/WEB-INF/src" />
 
-		<!-- where to compile server-side classes -->
-		<property name="server-side-destination" value="${base}WebContent/WEB-INF/classes"/>
+		<!-- Target where to compile server-side classes -->
+		<property name="server-side-destination"
+			      value="${base}WebContent/WEB-INF/classes"/>
 		
-		<!-- where to generate compiled javascript and theme files -->
-		<property name="client-side-destination" value="${base}WebContent/VAADIN/widgetsets" />
+		<!-- Target where to compile the widget set -->
+		<property name="client-side-destination"
+			      value="${base}WebContent/VAADIN/widgetsets" />
 	</target>
 		
     <!-- NOTE: Modify this example to compile your own widgetset -->
@@ -60,8 +67,10 @@ See configure target to adjust this buildfile.
         <!-- from all widget sets included in the class path.    -->
         <!-- <property name="generate.widgetset" value="1"/>     --> 
         
-        <!-- Path to the widgetset directory. Required only for generated widget sets. -->
-        <!-- Must be relative to $src-location, that is, under the first entry in class path. -->
+        <!-- Path to the widgetset directory. Required only for -->
+        <!-- generated widget sets. Must be relative to         -->
+    	<!-- $src-location, that is, under the first entry in   -->
+    	<!--  class path.                                       -->
         <property name="widgetset-path" value="com/vaadin/demo/widgetset"/>
     </target>
 
@@ -111,7 +120,7 @@ See configure target to adjust this buildfile.
 			<pathelement path="${gwt-location}/gwt-user.jar" />
 			<pathelement path="${gwt-location}/gwt-dev-${gwt-platform}.jar" />
 		    <fileset dir="${base}WebContent/WEB-INF/lib/">
-		    	<include name="*.jar"/>
+		    	<include name="**/*.jar"/>
 		     </fileset>
 		</path>
 	</target>
