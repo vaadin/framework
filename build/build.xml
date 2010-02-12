@@ -702,6 +702,7 @@
     		<include name="**/*.html" />
     		<include name="**/*.css" />
     		<include name="**/*.xml" />
+    		<exclude name="src/com/vaadin/demo/tools/*"/>
 		</patternset>
 		<patternset id="non-preprocessable-files">
 			<exclude name="**/.svn" />
