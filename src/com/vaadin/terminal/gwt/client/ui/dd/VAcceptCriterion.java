@@ -6,11 +6,10 @@ import com.google.gwt.core.client.GWT;
  * A class via all AcceptCriteria instances are fetched by an identifier.
  */
 public class VAcceptCriterion {
-    private static VAcceptCriterionImpl impl;
+    private static VAcceptCriterionFactory impl;
 
     static {
-        impl = GWT.create(VAcceptCriterionImpl.class);
-        impl.init();
+        impl = GWT.create(VAcceptCriterionFactory.class);
     }
 
     public static VAcceptCriteria get(String name) {

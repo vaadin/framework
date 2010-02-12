@@ -22,7 +22,7 @@ public class ComponentFilter implements AcceptCriterion {
 
     public void paint(PaintTarget target) throws PaintException {
         target.startTag("-ac");
-        target.addAttribute("name", "component");
+        target.addAttribute("name", getClass().getCanonicalName());
         target.addAttribute("component", component);
         target.endTag("-ac");
     }

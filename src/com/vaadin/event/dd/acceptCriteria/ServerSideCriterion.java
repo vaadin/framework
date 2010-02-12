@@ -31,6 +31,6 @@ public abstract class ServerSideCriterion implements Serializable,
     }
 
     protected String getIdentifier() {
-        return "-ss";
+        return ServerSideCriterion.class.getCanonicalName();
     }
 }

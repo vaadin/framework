@@ -26,7 +26,7 @@ public class And implements AcceptCriterion {
 
     public void paint(PaintTarget target) throws PaintException {
         target.startTag("-ac");
-        target.addAttribute("name", "and");
+        target.addAttribute("name", getClass().getCanonicalName());
         (f1).paint(target);
         (f2).paint(target);
         target.endTag("-ac");

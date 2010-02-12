@@ -17,7 +17,7 @@ public class OverTreeNode implements AcceptCriterion {
 
     public void paint(PaintTarget target) throws PaintException {
         target.startTag("-ac");
-        target.addAttribute("name", "overTreeNode");
+        target.addAttribute("name", getClass().getCanonicalName());
         target.endTag("-ac");
     }
 

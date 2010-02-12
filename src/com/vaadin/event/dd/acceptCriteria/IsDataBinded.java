@@ -20,7 +20,7 @@ public final class IsDataBinded implements AcceptCriterion {
 
     public void paint(PaintTarget target) throws PaintException {
         target.startTag("-ac");
-        target.addAttribute("name", "needsItemId");
+        target.addAttribute("name", getClass().getCanonicalName());
         target.endTag("-ac");
     }
 
