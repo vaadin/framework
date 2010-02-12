@@ -51,9 +51,8 @@ href="#changelog">Change Log</a> below.</p>
 		mode name with, for example, <tt>PortletMode.EDIT.toString()</tt>.</li>
 
     <li>The feature leads to an identity problem when a window with the
-		same name is open in more than one browser window. There is no simple
-		way to work around this new problem and we therefore revert the bad
-		solution and see of we can find a better solution at a later time.</li>
+		same name is open in more than one browser window, causing
+		a synchronization error.</li>
 
 	<li>Reverting this feature breaks backward compatibility with the
 		Portlet 2.0 support in Vaadin versions 6.2.1 to 6.2.3</li>
