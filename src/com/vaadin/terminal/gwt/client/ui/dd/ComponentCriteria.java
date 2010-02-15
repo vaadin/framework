@@ -12,12 +12,16 @@ final class ComponentCriteria implements VAcceptCriteria {
             VAcceptCallback callback) {
         try {
             Paintable component = drag.getTransferable().getComponent();
-            String requiredPid = configuration.getStringAttribute("component");
-            Paintable paintable = VDragAndDropManager.get()
-                    .getCurrentDropHandler().getApplicationConnection()
-                    .getPaintable(requiredPid);
-            if (paintable == component) {
-                callback.accepted(drag);
+            int c = configuration.getIntAttribute("c");
+            for (int i = 0; i < c; i++) {
+                String requiredPid = configuration
+                        .getStringAttribute("component" + i);
+                Paintable paintable = VDragAndDropManager.get()
+                        .getCurrentDropHandler().getApplicationConnection()
+                        .getPaintable(requiredPid);
+                if (paintable == component) {
+                    callback.accepted(drag);
+                }
             }
         } catch (Exception e) {
         }

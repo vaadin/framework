@@ -9,35 +9,34 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.ui.Component;
 
-public class ComponentFilter implements AcceptCriterion {
-    private Component component;
+public class ComponentFilter extends ClientSideCriterion {
+    private Component[] component;
 
-    public ComponentFilter(Component component) {
+    public ComponentFilter(Component... component) {
         this.component = component;
     }
 
-    public boolean isClientSideVerifiable() {
-        return true;
-    }
-
-    public void paint(PaintTarget target) throws PaintException {
-        target.startTag("-ac");
-        target.addAttribute("name", getClass().getCanonicalName());
-        target.addAttribute("component", component);
-        target.endTag("-ac");
+    @Override
+    public void paintContent(PaintTarget target) throws PaintException {
+        super.paintContent(target);
+        target.addAttribute("c", component.length);
+        for (int i = 0; i < component.length; i++) {
+            target.addAttribute("component" + i, component[i]);
+        }
     }
 
     public boolean accepts(DragAndDropEvent dragEvent) {
         if (dragEvent.getTransferable() instanceof ComponentTransferable) {
-            return ((ComponentTransferable) dragEvent.getTransferable())
-                    .getSourceComponent() == component;
-        } else {
-            return false;
+            Component sourceComponent = ((ComponentTransferable) dragEvent
+                    .getTransferable()).getSourceComponent();
+            for (Component c : component) {
+                if (c == sourceComponent) {
+                    return true;
+                }
+            }
         }
+
+        return false;
     }
 
-    public void paintResponse(PaintTarget target) throws PaintException {
-        // TODO Auto-generated method stub
-
-    }
 }

@@ -23,7 +23,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.ContainerHierarchicalWrapper;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.Action;
-import com.vaadin.event.DataBindedTransferable;
+import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
@@ -117,7 +117,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
     private int itemDragModes = DRAG_OUT;
 
-    class TreeTransferable implements DataBindedTransferable {
+    class TreeTransferable implements DataBoundTransferable {
 
         private final HashMap<String, Object> data = new HashMap<String, Object>();
 
@@ -1186,6 +1186,11 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
             } else {
                 return Location.MIDDLE;
             }
+        }
+
+        @Override
+        public Tree getTarget() {
+            return (Tree) super.getTarget();
         }
 
     }

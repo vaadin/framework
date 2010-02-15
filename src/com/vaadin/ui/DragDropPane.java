@@ -3,7 +3,7 @@ package com.vaadin.ui;
 import java.util.Map;
 
 import com.vaadin.event.ComponentTransferable;
-import com.vaadin.event.DataBindedTransferable;
+import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -81,13 +81,13 @@ public class DragDropPane extends AbsoluteLayout implements DropTarget {
                 Component component = ctr.getSourceComponent();
 
                 if (component.getParent() != pane) {
-                    if (transferable instanceof DataBindedTransferable) {
+                    if (transferable instanceof DataBoundTransferable) {
                         // Item has been dragged, construct a Label from
                         // Item id
                         Label l = new Label();
                         l.setSizeUndefined();
                         l.setValue("ItemId : "
-                                + ((DataBindedTransferable) transferable)
+                                + ((DataBoundTransferable) transferable)
                                         .getItemId());
                         pane.addComponent(l);
                         component = l;

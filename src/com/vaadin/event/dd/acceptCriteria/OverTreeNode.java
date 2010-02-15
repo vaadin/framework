@@ -4,36 +4,39 @@
 package com.vaadin.event.dd.acceptCriteria;
 
 import com.vaadin.event.dd.DragAndDropEvent;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
+import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.Location;
 import com.vaadin.ui.Tree.TreeDropDetails;
 
-public class OverTreeNode implements AcceptCriterion {
+/**
+ * Accepts transferable only on tree Node (middle of the node + can has child)
+ * 
+ * TODO relocate close to {@link Tree} as this is tree specifif
+ * 
+ */
+public class OverTreeNode extends ClientSideCriterion {
 
-    public boolean isClientSideVerifiable() {
-        return true;
-    }
-
-    public void paint(PaintTarget target) throws PaintException {
-        target.startTag("-ac");
-        target.addAttribute("name", getClass().getCanonicalName());
-        target.endTag("-ac");
-    }
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
     public boolean accepts(DragAndDropEvent dragEvent) {
         try {
+            // must be over tree node and in the middle of it (not top or bottom
+            // part)
             TreeDropDetails eventDetails = (TreeDropDetails) dragEvent
                     .getDropTargetData();
+
+            Object itemIdOver = eventDetails.getItemIdOver();
+            if (!eventDetails.getTarget().areChildrenAllowed(itemIdOver)) {
+                return false;
+            }
+
             return eventDetails.getDropLocation() == Location.MIDDLE;
         } catch (Exception e) {
             return false;
         }
-    }
-
-    public void paintResponse(PaintTarget target) throws PaintException {
-        // TODO Auto-generated method stub
-
     }
 
 }

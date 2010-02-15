@@ -4,11 +4,12 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.demo.tutorial.addressbook.data.Person;
 import com.vaadin.demo.tutorial.addressbook.data.PersonContainer;
-import com.vaadin.event.DataBindedTransferable;
+import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropEvent;
@@ -16,7 +17,8 @@ import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptCriteria.And;
 import com.vaadin.event.dd.acceptCriteria.ComponentFilter;
-import com.vaadin.event.dd.acceptCriteria.IsDataBinded;
+import com.vaadin.event.dd.acceptCriteria.IsDatabound;
+import com.vaadin.event.dd.acceptCriteria.Or;
 import com.vaadin.event.dd.acceptCriteria.OverTreeNode;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
@@ -105,9 +107,12 @@ public class DDTest2 extends TestBase {
          */
         table.setDragMode(Table.DragModes.ROWS);
 
-        AcceptCriterion onNode = new OverTreeNode();
-        AcceptCriterion fromTree = new ComponentFilter(table);
-        final And and = new And(fromTree, onNode);
+        OverTreeNode onNode = new OverTreeNode();
+        ComponentFilter fromTable = new ComponentFilter(table);
+
+        ComponentFilter fromTree = new ComponentFilter(tree1);
+        final Or fromTree1OrTable = new Or(fromTable, fromTree);
+        final And and = new And(fromTree1OrTable, onNode);
 
         DropHandler dropHandler = new DropHandler() {
 
@@ -116,15 +121,28 @@ public class DDTest2 extends TestBase {
                  * We know transferrable is from table, so it is of type
                  * DataBindedTransferrable
                  */
-                DataBindedTransferable tr = (DataBindedTransferable) event
+                DataBoundTransferable tr = (DataBoundTransferable) event
                         .getTransferable();
                 Object itemId = tr.getItemId();
-                Table fromTable = (Table) tr.getSourceComponent();
-                String name = fromTable.getItem(itemId).getItemProperty("Name")
-                        .toString();
+                Container sourceContainer = (Container) tr.getSourceComponent();
+                if (sourceContainer != tree1) {
+                    // if the source is from table (not from tree1 itself),
+                    // transfer Name property and use it as an indentifier in
+                    // tree1
+                    String name = sourceContainer.getItem(itemId)
+                            .getItemProperty("Name").toString();
 
-                tree1.addItem(name);
-                tree1.setChildrenAllowed(name, false);
+                    tree1.addItem(name);
+                    tree1.setChildrenAllowed(name, false);
+
+                    /*
+                     * Remove the item from table
+                     */
+                    sourceContainer.removeItem(itemId);
+
+                    itemId = name;
+
+                }
 
                 /*
                  * As we also accept only drops on folders, we know dropDetails
@@ -133,12 +151,8 @@ public class DDTest2 extends TestBase {
                 TreeDropDetails details = (TreeDropDetails) event
                         .getDropTargetData();
                 Object idOver = details.getItemIdOver();
-                tree1.setParent(name, idOver);
+                tree1.setParent(itemId, idOver);
 
-                /*
-                 * Remove the item from table
-                 */
-                table.removeItem(itemId);
             }
 
             public AcceptCriterion getAcceptCriterion() {
@@ -163,8 +177,8 @@ public class DDTest2 extends TestBase {
                         .getDropTargetData();
                 Transferable transferable = event.getTransferable();
 
-                if (transferable instanceof DataBindedTransferable) {
-                    DataBindedTransferable tr = (DataBindedTransferable) transferable;
+                if (transferable instanceof DataBoundTransferable) {
+                    DataBoundTransferable tr = (DataBoundTransferable) transferable;
 
                     Object itemId = tree2.addItem();
                     tree2.setParent(itemId, details.getItemIdOver());
@@ -198,7 +212,7 @@ public class DDTest2 extends TestBase {
             }
 
             public AcceptCriterion getAcceptCriterion() {
-                return IsDataBinded.get();
+                return IsDatabound.get();
             }
         };
 

@@ -5,13 +5,13 @@ import java.util.Collection;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.event.ComponentTransferable;
-import com.vaadin.event.DataBindedTransferable;
+import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
-import com.vaadin.event.dd.acceptCriteria.IsDataBinded;
+import com.vaadin.event.dd.acceptCriteria.IsDatabound;
 import com.vaadin.event.dd.acceptCriteria.ServerSideCriterion;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.tests.components.TestBase;
@@ -191,8 +191,8 @@ public class DDTest1 extends TestBase {
                         .getDropTargetData();
                 // TODO set properties, so same sorter could be used in Table
                 Transferable transferable = event.getTransferable();
-                if (transferable instanceof DataBindedTransferable) {
-                    DataBindedTransferable transferrable2 = (DataBindedTransferable) transferable;
+                if (transferable instanceof DataBoundTransferable) {
+                    DataBoundTransferable transferrable2 = (DataBoundTransferable) transferable;
 
                     Object itemId = transferrable2.getItemId();
 
@@ -237,7 +237,7 @@ public class DDTest1 extends TestBase {
 
             public AcceptCriterion getAcceptCriterion() {
                 // TODO should actually check that source is same as target
-                return IsDataBinded.get();
+                return IsDatabound.get();
             }
 
         };

@@ -13,7 +13,7 @@ public abstract class ClientSideCriterion implements Serializable,
      */
     private static final long serialVersionUID = 1L;
 
-    public final boolean isClientSideVerifiable() {
+    public boolean isClientSideVerifiable() {
         return true;
     }
 
@@ -24,10 +24,12 @@ public abstract class ClientSideCriterion implements Serializable,
         target.endTag("-ac");
     }
 
-    public void paintContent(PaintTarget target) {
+    public void paintContent(PaintTarget target) throws PaintException {
     }
 
-    abstract protected String getIdentifier();
+    protected String getIdentifier() {
+        return getClass().getCanonicalName();
+    }
 
     public void paintResponse(PaintTarget target) throws PaintException {
         // NOP, nothing to do as this is client side verified criterion

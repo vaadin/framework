@@ -6,8 +6,8 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 
-@ServerCriterion("com.vaadin.event.dd.acceptCriteria.And")
-final class And implements VAcceptCriteria {
+@ServerCriterion("com.vaadin.event.dd.acceptCriteria.Or")
+final class Or implements VAcceptCriteria {
     private boolean b1;
     private boolean b2;
     private VAcceptCriteria crit1;
@@ -20,7 +20,7 @@ final class And implements VAcceptCriteria {
             crit2 = getCriteria(drag, configuration, 1);
             if (crit1 == null || crit2 == null) {
                 ApplicationConnection.getConsole().log(
-                        "And criteria didn't found a chidl criteria");
+                        "Or criteria didn't found a chidl criteria");
                 return;
             }
         }
@@ -41,7 +41,7 @@ final class And implements VAcceptCriteria {
 
         crit1.accept(drag, configuration.getChildUIDL(0), accept1cb);
         crit2.accept(drag, configuration.getChildUIDL(1), accept2cb);
-        if (b1 && b2) {
+        if (b1 || b2) {
             callback.accepted(drag);
         }
     }
@@ -55,4 +55,5 @@ final class And implements VAcceptCriteria {
     public boolean needsServerSideCheck(VDragEvent drag, UIDL criterioUIDL) {
         return false; // TODO enforce on server side
     }
+
 }

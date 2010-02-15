@@ -23,7 +23,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.ContainerOrderedWrapper;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.Action;
-import com.vaadin.event.DataBindedTransferable;
+import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.Action.Handler;
@@ -3321,7 +3321,7 @@ public class Table extends AbstractSelect implements Action.Container,
         requestRepaint();
     }
 
-    class TableTransferable implements DataBindedTransferable {
+    class TableTransferable implements DataBoundTransferable {
 
         private final HashMap<String, Object> data = new HashMap<String, Object>();
 
