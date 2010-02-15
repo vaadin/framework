@@ -101,7 +101,11 @@ public class VDragEvent {
     }
 
     /**
-     * Sets the element that will be used as "drag icon".
+     * Sets the drag image used for current drag and drop operation. Drag image
+     * is displayed next to mouse cursor during drag and drop.
+     * <p>
+     * The element to be used as drag image will automatically get CSS style
+     * name "v-drag-element".
      * 
      * TODO decide if this method should be here or in {@link VTransferable} (in
      * HTML5 it is in DataTransfer) or {@link VDragAndDropManager}
@@ -126,10 +130,24 @@ public class VDragEvent {
         return dropDetails;
     }
 
-    public void setDragImage(Element cloneNode, int offsetX, int offsetY) {
-        cloneNode.getStyle().setMarginLeft(offsetX, Unit.PX);
-        cloneNode.getStyle().setMarginTop(offsetY, Unit.PX);
-        VDragAndDropManager.get().setDragElement(cloneNode);
+    /**
+     * Sets the drag image used for current drag and drop operation. Drag image
+     * is displayed next to mouse cursor during drag and drop.
+     * <p>
+     * The element to be used as drag image will automatically get CSS style
+     * name "v-drag-element".
+     * 
+     * @param element
+     *            the dom element to be positioned next to mouse cursor
+     * @param offsetX
+     *            the horizontal offset of drag image from mouse cursor
+     * @param offsetY
+     *            the vertical offset of drag image from mouse cursor
+     */
+    public void setDragImage(Element element, int offsetX, int offsetY) {
+        element.getStyle().setMarginLeft(offsetX, Unit.PX);
+        element.getStyle().setMarginTop(offsetY, Unit.PX);
+        VDragAndDropManager.get().setDragElement(element);
 
     }
 
@@ -151,10 +169,7 @@ public class VDragEvent {
                 tbody.appendChild(cloneNode);
                 cloneNode = table.cast();
             }
-            cloneNode.getStyle().setProperty("filter", "alpha(opacity=40)");
         }
-        cloneNode.getStyle().setOpacity(0.4);
-
         if (alignImageToEvent) {
             int absoluteTop = element.getAbsoluteTop();
             int absoluteLeft = element.getAbsoluteLeft();

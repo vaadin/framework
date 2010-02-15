@@ -219,3 +219,11 @@ div.v-app-loading {
 .v-window textarea {
 	padding: 2px;
 }
+
+.v-drag-element {
+	z-index:60000;
+	position:absolute;
+    opacity: 0.4;
+    filter: alpha(opacity=40);
+    border: 1px solid #999;
+}

@@ -167,7 +167,8 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
         if (currentMouseOverKey != null) {
             String detail = getDropDetail(drag.getCurrentGwtEvent());
             Boolean overTreeNode = null;
-            if (!keyToNode.get(currentMouseOverKey).isLeaf()
+            TreeNode treeNode = keyToNode.get(currentMouseOverKey);
+            if (treeNode != null && !treeNode.isLeaf()
                     && "Center".equals(detail)) {
                 overTreeNode = true;
             }
@@ -243,7 +244,10 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                         }, currentDrag);
                         if (oldIdOver != null
                                 && oldIdOver != currentMouseOverKey) {
-                            keyToNode.get(oldIdOver).emphasis(null);
+                            TreeNode treeNode = keyToNode.get(oldIdOver);
+                            if (treeNode != null) {
+                                treeNode.emphasis(null);
+                            }
                         }
                     }
 

@@ -44,7 +44,6 @@ public class DDTest2 extends TestBase {
     protected void setup() {
         Window w = getLayout().getWindow();
         /* darn reindeer has no icons */
-        w.setTheme("runo");
 
         hl.addComponent(tree1);
         hl.addComponent(table);
@@ -252,9 +251,9 @@ public class DDTest2 extends TestBase {
     }
 
     private final static ThemeResource FOLDER = new ThemeResource(
-            "icons/16/folder.png");
+            "../runo/icons/16/folder.png");
     private final static ThemeResource DOC = new ThemeResource(
-            "icons/16/document.png");
+            "../runo/icons/16/document.png");
 
     private void popuplateTrees() {
         HierarchicalContainer hc = new HierarchicalContainer();

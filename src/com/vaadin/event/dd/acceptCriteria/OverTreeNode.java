@@ -16,9 +16,6 @@ import com.vaadin.ui.Tree.TreeDropDetails;
  */
 public class OverTreeNode extends ClientSideCriterion {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
     public boolean accepts(DragAndDropEvent dragEvent) {

@@ -7,7 +7,6 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
-import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
@@ -575,9 +574,7 @@ public class VDragAndDropManager {
             }
 
             dragElement = node;
-            Style style = node.getStyle();
-            style.setPosition(Position.ABSOLUTE);
-            style.setZIndex(600000);
+            dragElement.addClassName("v-drag-element");
             updateDragImagePosition();
 
             if (isStarted) {

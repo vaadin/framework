@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"9_9_9_INTERNAL-DEBUG-BUILD";}
-.v-theme-version-9_9_9_INTERNAL-DEBUG-BUILD {display: none;}
+.v-theme-version:after {content:"6_3_0_dev-20100215";}
+.v-theme-version-6_3_0_dev-20100215 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -448,6 +448,14 @@ div.v-app-loading {
 .v-window select,
 .v-window textarea {
 	padding: 2px;
+}
+
+.v-drag-element {
+	z-index:60000;
+	position:absolute;
+    opacity: 0.4;
+    filter: alpha(opacity=40);
+    border: 1px solid #999;
 }
 
 .v-csslayout {
