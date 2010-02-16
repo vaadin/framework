@@ -11,7 +11,6 @@ import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
@@ -43,7 +42,8 @@ public class VDragDropPane extends VAbsoluteLayout implements Container,
                         .cast());
                 if (paintable != null) {
                     VTransferable transferable = new VTransferable();
-                    transferable.setComponent(paintable);
+                    transferable.setDragSource(VDragDropPane.this);
+                    transferable.setData("component", paintable);
                     VDragEvent drag = VDragAndDropManager.get().startDrag(
                             transferable, event.getNativeEvent(), true);
                     drag.createDragImage(((Widget) paintable).getElement(),
@@ -57,10 +57,8 @@ public class VDragDropPane extends VAbsoluteLayout implements Container,
             }
         }, MouseDownEvent.getType());
 
-        if (!BrowserInfo.get().isIE()) {
-            // TODO make this IE compatible
-            hookHtml5Events(getElement());
-        }
+        hookHtml5Events(getElement());
+
         getStyleElement().getStyle().setBackgroundColor("yellow");
 
     }

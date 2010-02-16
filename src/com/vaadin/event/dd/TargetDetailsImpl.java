@@ -24,4 +24,5 @@ public class TargetDetailsImpl implements TargetDetails {
     public DropTarget getTarget() {
         return (DropTarget) data.get(DragAndDropService.DROPTARGET_KEY);
     }
+
 }

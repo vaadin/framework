@@ -362,11 +362,7 @@ public class VDragAndDropManager {
                                 deferredStartRegistration.removeHandler();
                                 deferredStartRegistration = null;
                                 currentDrag = null;
-                                if (dragElement != null) {
-                                    RootPanel.getBodyElement().removeChild(
-                                            dragElement);
-                                    dragElement = null;
-                                }
+                                clearDragElement();
                                 break;
                             }
 
@@ -469,6 +465,10 @@ public class VDragAndDropManager {
 
         currentDrag = null;
 
+        clearDragElement();
+    }
+
+    private void clearDragElement() {
         if (dragElement != null) {
             if (dragElement.getParentElement() != null) {
                 RootPanel.getBodyElement().removeChild(dragElement);
@@ -518,7 +518,7 @@ public class VDragAndDropManager {
         VTransferable transferable = currentDrag.getTransferable();
 
         client.updateVariable(DD_SERVICE, "component", transferable
-                .getComponent(), false);
+                .getDragSource(), false);
 
         client.updateVariable(DD_SERVICE, "type", drop.ordinal(), false);
 
@@ -572,7 +572,7 @@ public class VDragAndDropManager {
     void setDragElement(Element node) {
         if (currentDrag != null) {
             if (dragElement != null && dragElement != node) {
-                RootPanel.getBodyElement().removeChild(dragElement);
+                clearDragElement();
             } else if (node == dragElement) {
                 return;
             }

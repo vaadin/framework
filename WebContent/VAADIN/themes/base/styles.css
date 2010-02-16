@@ -458,6 +458,21 @@ div.v-app-loading {
     border: 1px solid #999;
 }
 
+
+.v-ddwrapper {
+	background-color: cyan;
+}
+
+.v-ddwrapper-over-center {
+	background-color: LightGreen;
+}
+.v-ddwrapper-over-top {
+	border-top: 2px solid green;
+}
+.v-ddwrapper-over-bottom {
+	border-bottom: 2px solid green;
+}
+
 .v-csslayout {
 	overflow: hidden;
 }
@@ -1621,16 +1636,15 @@ div.v-tree-node-leaf {
 	color: #fff;
 }
 
-.v-tree-node-drag-top .v-tree-node-caption {
+.v-tree-node-caption-drag-top {
 	border-top:2px solid green;
 }
-.v-tree-node-drag-bottom .v-tree-node-caption {
+.v-tree-node-caption-drag-bottom {
 	border-bottom:2px solid green;
 }
-.v-tree-node-drag-center .v-tree-node-caption {
+.v-tree-node-caption-drag-center {
 	background-color:green;
 }
-
 
 .v-tree-node-children {
 	padding-left: 1em;

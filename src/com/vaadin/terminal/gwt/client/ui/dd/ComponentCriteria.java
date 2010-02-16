@@ -11,7 +11,7 @@ final class ComponentCriteria implements VAcceptCriteria {
     public void accept(VDragEvent drag, UIDL configuration,
             VAcceptCallback callback) {
         try {
-            Paintable component = drag.getTransferable().getComponent();
+            Paintable component = drag.getTransferable().getDragSource();
             int c = configuration.getIntAttribute("c");
             for (int i = 0; i < c; i++) {
                 String requiredPid = configuration

@@ -18,12 +18,12 @@ public class VTransferable {
     private final Map<String, Object> variables = new HashMap<String, Object>();
 
     /**
-     * Returns the component currently being dragged or from which the
-     * transferable is created (eg. a tree which node is dragged).
+     * Returns the component from which the transferable is created (eg. a tree
+     * which node is dragged).
      * 
      * @return the component
      */
-    public Paintable getComponent() {
+    public Paintable getDragSource() {
         return component;
     }
 
@@ -38,7 +38,7 @@ public class VTransferable {
      * @param component
      *            the component to set
      */
-    public void setComponent(Paintable component) {
+    public void setDragSource(Paintable component) {
         this.component = component;
     }
 

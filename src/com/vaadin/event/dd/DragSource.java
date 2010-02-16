@@ -1,10 +1,11 @@
 package com.vaadin.event.dd;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import com.vaadin.event.Transferable;
 
-public interface DragSource {
+public interface DragSource extends Serializable {
 
     /**
      * DragSource may convert client side variables to meaningful values on

@@ -227,3 +227,18 @@ div.v-app-loading {
     filter: alpha(opacity=40);
     border: 1px solid #999;
 }
+
+
+.v-ddwrapper {
+	background-color: cyan;
+}
+
+.v-ddwrapper-over-center {
+	background-color: LightGreen;
+}
+.v-ddwrapper-over-top {
+	border-top: 2px solid green;
+}
+.v-ddwrapper-over-bottom {
+	border-bottom: 2px solid green;
+}

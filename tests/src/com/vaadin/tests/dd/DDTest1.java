@@ -74,7 +74,8 @@ public class DDTest1 extends TestBase {
                     if (transferable instanceof ComponentTransferable) {
                         ComponentTransferable ct = (ComponentTransferable) transferable;
 
-                        Component component = ct.getSourceComponent();
+                        Component component = (Component) ct
+                                .getData("component");
                         if (component != null) {
                             if (component.toString() != null
                                     && component.toString().contains("Bar")) {

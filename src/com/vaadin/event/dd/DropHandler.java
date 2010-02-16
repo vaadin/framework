@@ -1,9 +1,11 @@
 package com.vaadin.event.dd;
 
+import java.io.Serializable;
+
 import com.vaadin.event.dd.acceptCriteria.AcceptAll;
 import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
 
-public interface DropHandler {
+public interface DropHandler extends Serializable {
 
     public void drop(DropEvent dropEvent);
 

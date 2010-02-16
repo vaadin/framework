@@ -72,7 +72,6 @@ public abstract class VAbstractDropHandler implements VDropHandler {
      */
     public void dragEnter(final VDragEvent drag) {
         validate(new VAcceptCallback() {
-
             public void accepted(VDragEvent event) {
                 dragAccepted(drag);
             }

@@ -5,7 +5,7 @@ import com.vaadin.ui.Component;
 public interface ComponentTransferable extends Transferable {
 
     /**
-     * @return the component where the drag operation started
+     * @return the component that started the drag operation
      */
     public Component getSourceComponent();
 

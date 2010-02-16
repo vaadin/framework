@@ -78,7 +78,12 @@ public class DragDropPane extends AbsoluteLayout implements DropTarget {
             Transferable transferable = event.getTransferable();
             if (transferable instanceof ComponentTransferable) {
                 ComponentTransferable ctr = (ComponentTransferable) transferable;
-                Component component = ctr.getSourceComponent();
+                // use "component" (from DragDropPane) if available, else take
+                // the source component
+                Component component = (Component) ctr.getData("component");
+                if (component == null) {
+                    component = ctr.getSourceComponent();
+                }
 
                 if (component.getParent() != pane) {
                     if (transferable instanceof DataBoundTransferable) {

@@ -207,7 +207,7 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                     final String detail = getDropDetail(currentDrag
                             .getCurrentGwtEvent());
                     boolean nodeHasChanged = (currentMouseOverKey != null && currentMouseOverKey != oldIdOver)
-                            || (oldIdOver != null);
+                            || (currentMouseOverKey == null && oldIdOver != null);
                     boolean detailHasChanded = (detail != null && !detail
                             .equals(oldDetail))
                             || (detail == null && oldDetail != null);
@@ -273,7 +273,7 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
             return null;
         }
         VerticalDropLocation verticalDropLocation = VerticalDropLocation.get(
-                treeNode.getElement(), event.getClientY(), 0.2);
+                treeNode.nodeCaptionDiv, event.getClientY(), 0.2);
         return verticalDropLocation.toString();
     }
 
@@ -361,6 +361,13 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                     .equals(string));
             UIObject.setStyleName(getElement(), base + "center", "Center"
                     .equals(string));
+            base = "v-tree-node-caption-drag-";
+            UIObject.setStyleName(nodeCaptionDiv, base + "top", "Top"
+                    .equals(string));
+            UIObject.setStyleName(nodeCaptionDiv, base + "bottom", "Bottom"
+                    .equals(string));
+            UIObject.setStyleName(nodeCaptionDiv, base + "center", "Center"
+                    .equals(string));
         }
 
         @Override
@@ -405,7 +412,7 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                                 "TreeNode drag start " + event.getType());
                         // start actual drag on slight move when mouse is down
                         VTransferable t = new VTransferable();
-                        t.setComponent(VTree.this);
+                        t.setDragSource(VTree.this);
                         t.setData("itemId", key);
                         VDragEvent drag = VDragAndDropManager.get().startDrag(
                                 t, mouseDownEvent, true);
