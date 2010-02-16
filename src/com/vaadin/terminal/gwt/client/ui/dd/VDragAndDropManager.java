@@ -11,7 +11,6 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
@@ -66,8 +65,8 @@ public class VDragAndDropManager {
                         return;
 
                     } else {
-                        ApplicationConnection.getConsole().log(
-                                "Event on dragImage, target changed");
+                        // ApplicationConnection.getConsole().log(
+                        // "Event on dragImage, target changed");
                         // special handling for events over dragImage
                         // pretty much all events are mousemove althout below
                         // kind of happens mouseover
@@ -89,6 +88,13 @@ public class VDragAndDropManager {
                                 }
                                 // dragenter on new
                                 currentDropHandler = findDragTarget;
+                                if (findDragTarget != null) {
+                                    ApplicationConnection.getConsole().log(
+                                            "DropHandler now"
+                                                    + currentDropHandler
+                                                            .getPaintable());
+                                }
+
                                 if (currentDropHandler != null) {
                                     currentDrag
                                             .setElementOver((com.google.gwt.user.client.Element) targetElement);
@@ -114,10 +120,10 @@ public class VDragAndDropManager {
                         }
 
                     }
-                } catch (Exception e) {
+                } catch (RuntimeException e) {
                     ApplicationConnection.getConsole().log(
-                            "FIXME : ERROR in elementFromPoint hack.");
-                    throw new RuntimeException(e);
+                            "ERROR during elementFromPoint hack.");
+                    throw e;
                 } finally {
                     dragElement.getStyle().setProperty("display", display);
                 }
@@ -133,7 +139,11 @@ public class VDragAndDropManager {
                     if (currentDropHandler != null) {
                         currentDropHandler.dragLeave(currentDrag);
                     }
+
                     currentDropHandler = target;
+                    ApplicationConnection.getConsole().log(
+                            "DropHandler now"
+                                    + currentDropHandler.getPaintable());
                     target.dragEnter(currentDrag);
                 } else if (target == null && currentDropHandler != null) {
                     ApplicationConnection.getConsole().log("Invalid state!?");
@@ -402,25 +412,12 @@ public class VDragAndDropManager {
      * @return
      */
     private VDropHandler findDragTarget(Element element) {
-        EventListener eventListener = Event.getEventListener(element);
-        while (eventListener == null) {
-            element = element.getParentElement();
-            if (element == null) {
-                break;
+        try {
+            Widget w = Util.findWidget(
+                    (com.google.gwt.user.client.Element) element, null);
+            if (w == null) {
+                return null;
             }
-            try {
-                eventListener = Event.getEventListener(element);
-            } catch (Exception e) {
-                // CCE Should not happen but it does to me // MT 1.2.2010
-                e.printStackTrace();
-            }
-        }
-        if (eventListener == null) {
-            ApplicationConnection.getConsole().log(
-                    "No suitable DropHandler found");
-            return null;
-        } else {
-            Widget w = (Widget) eventListener;
             while (!(w instanceof VHasDropHandler)) {
                 w = w.getParent();
                 if (w == null) {
@@ -439,7 +436,14 @@ public class VDragAndDropManager {
                 }
                 return dh;
             }
+
+        } catch (Exception e) {
+            ApplicationConnection.getConsole().log(
+                    "FIXME: Exception when detecting drop handler");
+            e.printStackTrace();
+            return null;
         }
+
     }
 
     private void updateCurrentEvent(NativeEvent event) {

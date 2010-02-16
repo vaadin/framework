@@ -86,6 +86,19 @@
 	padding: 0;
 	cursor: pointer;
 }
+
+/* TODO remove important, replace with better anchors or order */
+.v-table tr.v-table-row-drag-center {
+	background-color: cyan !important;
+}
+/* TODO consider using height neutral styling (scrollbar issues when pagelength = table.length ) */
+.v-table-row-drag-top .v-table-cell-content {
+	border-top: 1px solid cyan ;
+}
+.v-table-row-drag-bottom .v-table-cell-content {
+	border-bottom: 1px solid cyan;
+}
+
 .v-table-body-noselection .v-table-row,
 .v-table-body-noselection .v-table-row-odd {
 	cursor: default;

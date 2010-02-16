@@ -1157,7 +1157,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     public enum Location {
-        TOP, BOTTOM, MIDDLE
+        TOP, BOTTOM, MIDDLE;
     }
 
     public class TreeDropDetails extends TargetDetailsImpl {

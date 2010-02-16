@@ -30,12 +30,17 @@ import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.event.ItemClickEvent.ItemClickSource;
 import com.vaadin.event.dd.DragSource;
+import com.vaadin.event.dd.DropHandler;
+import com.vaadin.event.dd.DropTarget;
+import com.vaadin.event.dd.TargetDetails;
+import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VScrollTable;
+import com.vaadin.ui.Tree.Location;
 
 /**
  * <p>
@@ -57,7 +62,8 @@ import com.vaadin.terminal.gwt.client.ui.VScrollTable;
 @SuppressWarnings("serial")
 @ClientWidget(VScrollTable.class)
 public class Table extends AbstractSelect implements Action.Container,
-        Container.Ordered, Container.Sortable, ItemClickSource, DragSource {
+        Container.Ordered, Container.Sortable, ItemClickSource, DragSource,
+        DropTarget {
 
     /**
      * Modes that Table support as drag sourse.
@@ -338,6 +344,8 @@ public class Table extends AbstractSelect implements Action.Container,
     private double cacheRate = CACHE_RATE_DEFAULT;
 
     private DragModes dragMode = DragModes.NONE;
+
+    private DropHandler dropHandler;
 
     /* Table constructors */
 
@@ -2372,6 +2380,10 @@ public class Table extends AbstractSelect implements Action.Container,
             }
         }
         target.endTag("visiblecolumns");
+
+        if (dropHandler != null) {
+            dropHandler.getAcceptCriterion().paint(target);
+        }
     }
 
     /**
@@ -3366,5 +3378,55 @@ public class Table extends AbstractSelect implements Action.Container,
         }
         updateTransferable(rawVariables, transferable);
         return (TableTransferable) transferable;
+    }
+
+    public DropHandler getDropHandler() {
+        return dropHandler;
+    }
+
+    public void setDropHandler(DropHandler dropHandler) {
+        this.dropHandler = dropHandler;
+    }
+
+    /*
+     * TODO add propertyId
+     */
+    public class TableTargetDetails extends TargetDetailsImpl {
+        private Object idOver;
+
+        public TableTargetDetails(Map<String, Object> rawDropData) {
+            super(rawDropData);
+            // eagar fetch itemid, mapper may be emptied
+            String keyover = (String) getData("itemIdOver");
+            if (keyover != null) {
+                idOver = itemIdMapper.get(keyover);
+            }
+        }
+
+        public Object getItemIdOver() {
+            return idOver;
+        }
+
+        public Location getDropLocation() {
+            String s = (String) getData("detail");
+            if ("Top".equals(s)) {
+                return Location.TOP;
+            } else if ("Bottom".equals(s)) {
+                return Location.BOTTOM;
+            } else {
+                return Location.MIDDLE;
+            }
+        }
+
+        @Override
+        public Table getTarget() {
+            return (Table) super.getTarget();
+        }
+
+    }
+
+    public TargetDetails translateDragDropDetails(
+            Map<String, Object> clientVariables) {
+        return new TableTargetDetails(clientVariables);
     }
 }

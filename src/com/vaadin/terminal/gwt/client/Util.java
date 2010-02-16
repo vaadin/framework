@@ -16,6 +16,8 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -844,5 +846,34 @@ public class Util {
 
         }
     }-*/;
+
+    /**
+     * Helper method to find first instance of given Widget type found by
+     * traversing DOM upwards.
+     * 
+     * @param element
+     * @param class1
+     */
+    public static <T> T findWidget(Element element, Class class1) {
+        if (element != null) {
+            EventListener eventListener = null;
+            while (eventListener == null && element != null) {
+                eventListener = Event.getEventListener(element);
+                if (eventListener == null) {
+                    element = (Element) element.getParentElement();
+                }
+            }
+            if (eventListener != null) {
+                Widget w = (Widget) eventListener;
+                while (w != null) {
+                    if (class1 == null || w.getClass() == class1) {
+                        return (T) w;
+                    }
+                    w = w.getParent();
+                }
+            }
+        }
+        return null;
+    }
 
 }

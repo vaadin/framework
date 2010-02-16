@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_3_0_dev-20100215";}
-.v-theme-version-6_3_0_dev-20100215 {display: none;}
+.v-theme-version:after {content:"6_3_0_dev-20100216";}
+.v-theme-version-6_3_0_dev-20100216 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -1330,6 +1330,19 @@ div.v-progressindicator-indeterminate-disabled {
 	padding: 0;
 	cursor: pointer;
 }
+
+/* TODO remove important, replace with better anchors or order */
+.v-table tr.v-table-row-drag-center {
+	background-color: cyan !important;
+}
+/* TODO consider using height neutral styling (scrollbar issues when pagelength = table.length ) */
+.v-table-row-drag-top .v-table-cell-content {
+	border-top: 1px solid cyan ;
+}
+.v-table-row-drag-bottom .v-table-cell-content {
+	border-bottom: 1px solid cyan;
+}
+
 .v-table-body-noselection .v-table-row,
 .v-table-body-noselection .v-table-row-odd {
 	cursor: default;
@@ -1602,10 +1615,23 @@ div.v-tree-node-leaf {
 .v-tree-node-caption .v-icon {
 	vertical-align: middle;
 }
+
 .v-tree-node-selected span {
 	background: #999;
 	color: #fff;
 }
+
+.v-tree-node-drag-top .v-tree-node-caption {
+	border-top:2px solid green;
+}
+.v-tree-node-drag-bottom .v-tree-node-caption {
+	border-bottom:2px solid green;
+}
+.v-tree-node-drag-center .v-tree-node-caption {
+	background-color:green;
+}
+
+
 .v-tree-node-children {
 	padding-left: 1em;
 }

@@ -10,14 +10,13 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
@@ -32,6 +31,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
 import com.vaadin.terminal.gwt.client.ui.dd.VDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VTransferable;
+import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 
 /**
  * 
@@ -179,25 +179,7 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
     }
 
     private String findCurrentMouseOverKey(Element elementOver) {
-        TreeNode treeNode = null;
-        Element curEl = elementOver;
-        while (curEl != null) {
-            try {
-                EventListener eventListener = Event.getEventListener(curEl);
-                if (eventListener != null) {
-                    // found a widget
-                    if (eventListener instanceof TreeNode) {
-                        treeNode = (TreeNode) eventListener;
-                    }
-                    break;
-                } else {
-                    curEl = (Element) curEl.getParentElement();
-                }
-            } catch (Exception e) {
-                ApplicationConnection.getConsole().log(e.getMessage());
-                e.printStackTrace();
-            }
-        }
+        TreeNode treeNode = Util.findWidget(elementOver, TreeNode.class);
         return treeNode == null ? null : treeNode.key;
     }
 
@@ -290,24 +272,9 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
         if (treeNode == null) {
             return null;
         }
-        // TODO no scroll support
-        int offsetHeight = treeNode.nodeCaptionDiv.getOffsetHeight();
-        int absoluteTop = treeNode.getAbsoluteTop();
-        int clientY = event.getClientY();
-        int fromTop = clientY - absoluteTop;
-
-        String detail;
-        float percentageFromTop = (fromTop / (float) offsetHeight);
-        if (percentageFromTop < 0.2) {
-            detail = "Top";
-        } else if (percentageFromTop > 0.8) {
-            detail = "Bottom";
-        } else {
-            detail = "Center";
-        }
-
-        return detail;
-
+        VerticalDropLocation verticalDropLocation = VerticalDropLocation.get(
+                treeNode.getElement(), event.getClientY(), 0.2);
+        return verticalDropLocation.toString();
     }
 
     private void handleUpdate(UIDL uidl) {
@@ -387,16 +354,13 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
         }
 
         public void emphasis(String string) {
-            // ApplicationConnection.getConsole().log("OUTLINE" + string);
-            Style style = nodeCaptionDiv.getStyle();
-            String top = "Top".equals(string) ? "2px solid green" : "";
-            String bottom = "Bottom".equals(string) ? "2px solid green" : "";
-            String bg = "Center".equals(string) ? "green" : "";
-
-            style.setProperty("borderTop", top);
-            style.setProperty("borderBottom", bottom);
-            style.setBackgroundColor(bg);
-
+            String base = "v-tree-node-drag-";
+            UIObject.setStyleName(getElement(), base + "top", "Top"
+                    .equals(string));
+            UIObject.setStyleName(getElement(), base + "bottom", "Bottom"
+                    .equals(string));
+            UIObject.setStyleName(getElement(), base + "center", "Center"
+                    .equals(string));
         }
 
         @Override

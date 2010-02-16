@@ -40,9 +40,13 @@ import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.VScrollTable.VScrollTableBody.VScrollTableRow;
+import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
+import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCallback;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
+import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VTransferable;
+import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 
 /**
  * VScrollTable
@@ -67,7 +71,8 @@ import com.vaadin.terminal.gwt.client.ui.dd.VTransferable;
  * 
  * TODO implement unregistering for child components in Cells
  */
-public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
+public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
+        VHasDropHandler {
 
     public static final String CLASSNAME = "v-table";
     public static final String ITEM_CLICK_EVENT_ID = "itemClick";
@@ -263,6 +268,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
         }
 
         UIDL rowData = null;
+        UIDL ac = null;
         for (final Iterator it = uidl.getChildIterator(); it.hasNext();) {
             final UIDL c = (UIDL) it.next();
             if (c.getTag().equals("rows")) {
@@ -271,7 +277,20 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
                 updateActionMap(c);
             } else if (c.getTag().equals("visiblecolumns")) {
                 tHead.updateCellsFromUIDL(c);
+            } else if (c.getTag().equals("-ac")) {
+                ac = c;
             }
+        }
+        if (ac == null) {
+            if (dropHandler != null) {
+                // remove dropHandler if not present anymore
+                dropHandler = null;
+            }
+        } else {
+            if (dropHandler == null) {
+                dropHandler = new VScrollTableDropHandler();
+            }
+            dropHandler.updateAcceptRules(ac);
         }
         updateHeader(uidl.getStringArrayAttribute("vcolorder"));
 
@@ -2921,6 +2940,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
     private int contentAreaBorderHeight = -1;
     private int scrollLeft;
     private int scrollTop;
+    private VScrollTableDropHandler dropHandler;
 
     /**
      * @return border top + border bottom of the scrollable area of table
@@ -3097,6 +3117,159 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler {
                     + pageLength + pageLength * cache_rate) - lastRendered));
             rowRequestHandler.deferRowFetch();
         }
+    }
+
+    public VScrollTableDropHandler getDropHandler() {
+        return dropHandler;
+    }
+
+    private static class TableDDDetails {
+        int overkey = -1;
+        VerticalDropLocation dropLocation;
+        String colkey;
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj instanceof TableDDDetails) {
+                TableDDDetails other = (TableDDDetails) obj;
+                return dropLocation == other.dropLocation
+                        && overkey == other.overkey
+                        && ((colkey != null && colkey.equals(other.colkey)) || (colkey == null && other.colkey == null));
+            }
+            return false;
+        }
+
+        // @Override
+        // public int hashCode() {
+        // return overkey;
+        // }
+    }
+
+    public class VScrollTableDropHandler extends VAbstractDropHandler {
+
+        private static final String ROWSTYLEBASE = "v-table-row-drag-";
+        private TableDDDetails dropDetails;
+        private TableDDDetails lastEmphasized;
+
+        @Override
+        public void dragEnter(VDragEvent drag) {
+            updateDropDetails(drag);
+            super.dragEnter(drag);
+        }
+
+        private void updateDropDetails(VDragEvent drag) {
+            dropDetails = new TableDDDetails();
+            Element elementOver = drag.getElementOver();
+
+            VScrollTableRow row = Util.findWidget(elementOver,
+                    VScrollTableRow.class);
+            if (row != null) {
+                dropDetails.overkey = row.rowKey;
+                Element tr = row.getElement();
+                Element element = elementOver;
+                while (element != null && element.getParentElement() != tr) {
+                    element = (Element) element.getParentElement();
+                }
+                int childIndex = DOM.getChildIndex(tr, element);
+                dropDetails.colkey = tHead.getHeaderCell(childIndex)
+                        .getColKey();
+                dropDetails.dropLocation = VerticalDropLocation.get(row
+                        .getElement(), drag.getCurrentGwtEvent().getClientY(),
+                        0.2);
+            }
+
+            drag.getDropDetails().put("itemIdOver", dropDetails.overkey + "");
+            drag.getDropDetails().put(
+                    "detail",
+                    dropDetails.dropLocation != null ? dropDetails.dropLocation
+                            .toString() : null);
+
+        }
+
+        @Override
+        public void dragOver(VDragEvent drag) {
+            TableDDDetails oldDetails = dropDetails;
+            updateDropDetails(drag);
+            if (!oldDetails.equals(dropDetails)) {
+                deEmphasis();
+                VAcceptCallback cb = new VAcceptCallback() {
+                    public void accepted(VDragEvent event) {
+                        dragAccepted(event);
+                    }
+                };
+                validate(cb, drag);
+            }
+        }
+
+        @Override
+        public void dragLeave(VDragEvent drag) {
+            deEmphasis();
+            super.dragLeave(drag);
+        }
+
+        @Override
+        public boolean drop(VDragEvent drag) {
+            deEmphasis();
+            return super.drop(drag);
+        }
+
+        private void deEmphasis() {
+            if (lastEmphasized == null) {
+                return;
+            }
+            for (Widget w : scrollBody.renderedRows) {
+                VScrollTableRow row = (VScrollTableRow) w;
+                if (lastEmphasized != null
+                        && row.rowKey == lastEmphasized.overkey) {
+                    if (row != null) {
+                        String stylename = ROWSTYLEBASE
+                                + lastEmphasized.dropLocation.toString()
+                                        .toLowerCase();
+                        VScrollTableRow.setStyleName(row.getElement(),
+                                stylename, false);
+                    }
+                    lastEmphasized = null;
+                    return;
+                }
+            }
+        }
+
+        /**
+         * TODO needs different drop modes ?? (on cells, on rows), now only
+         * supports rows
+         */
+        private void emphasis(TableDDDetails details) {
+            deEmphasis();
+            // iterate old and new emphasized row
+            for (Widget w : scrollBody.renderedRows) {
+                VScrollTableRow row = (VScrollTableRow) w;
+                if (details != null && details.overkey == row.rowKey) {
+                    if (row != null) {
+                        String stylename = ROWSTYLEBASE
+                                + details.dropLocation.toString().toLowerCase();
+                        VScrollTableRow.setStyleName(row.getElement(),
+                                stylename, true);
+                    }
+                    lastEmphasized = details;
+                    return;
+                }
+            }
+        }
+
+        @Override
+        protected void dragAccepted(VDragEvent drag) {
+            emphasis(dropDetails);
+        }
+
+        @Override
+        public Paintable getPaintable() {
+            return VScrollTable.this;
+        }
+
+        public ApplicationConnection getApplicationConnection() {
+            return client;
+        }
+
     }
 
 }

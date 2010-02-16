@@ -1,5 +1,7 @@
 package com.vaadin.terminal.gwt.client.ui.dd;
 
+import java.util.Iterator;
+
 import com.google.gwt.user.client.Command;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DropTarget;
@@ -10,7 +12,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 public abstract class VAbstractDropHandler implements VDropHandler {
 
     private UIDL criterioUIDL;
-    private VAcceptCriteria acceptCriteria;
+    private VAcceptCriteria acceptCriteria = new AcceptAll();
 
     /**
      * Implementor/user of {@link VAbstractDropHandler} must pass the UIDL
@@ -21,6 +23,16 @@ public abstract class VAbstractDropHandler implements VDropHandler {
      */
     public void updateAcceptRules(UIDL uidl) {
         criterioUIDL = uidl;
+        /*
+         * supports updating the accept rule root directly or so that it is
+         * contained in given uidl node
+         */
+        if (!uidl.getTag().equals("-ac")) {
+            Iterator<Object> childIterator = uidl.getChildIterator();
+            while (!uidl.getTag().equals("-ac") && childIterator.hasNext()) {
+                uidl = (UIDL) childIterator.next();
+            }
+        }
         acceptCriteria = VAcceptCriterion.get(uidl.getStringAttribute("name"));
         if (acceptCriteria == null) {
             throw new IllegalArgumentException(
@@ -32,7 +44,7 @@ public abstract class VAbstractDropHandler implements VDropHandler {
     /**
      * Default implementation does nothing.
      */
-    public void dragOver(VDragEvent currentDrag) {
+    public void dragOver(VDragEvent drag) {
 
     }
 
