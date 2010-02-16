@@ -479,54 +479,99 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
             return false;
         }
 
+        // Register and attach the created field
         addField(id, field);
 
         return true;
     }
 
     /**
-     * Adds the field to form.
+     * Registers the field with the form and adds the field to the form layout.
      * 
      * <p>
      * The property id must not be already used in the form.
      * </p>
      * 
      * <p>
-     * This field is added to the form layout in the default position (the
-     * position used by {@link Layout#addComponent(Component)} method. In the
-     * special case that the underlying layout is a custom layout, string
-     * representation of the property id is used instead of the default
-     * location.
+     * This field is added to the layout using the
+     * {@link #attachField(Object, Field)} method.
      * </p>
      * 
      * @param propertyId
      *            the Property id the the field.
      * @param field
-     *            the New field added to the form.
+     *            the field which should be added to the form.
      */
     public void addField(Object propertyId, Field field) {
+        registerField(propertyId, field);
+        attachField(propertyId, field);
+        requestRepaint();
+    }
 
-        if (propertyId != null && field != null) {
-            fields.put(propertyId, field);
-            field.addListener(fieldValueChangeListener);
-            if (!propertyIds.contains(propertyId)) {
-                // adding a field directly
-                propertyIds.addLast(propertyId);
-            }
-            field.setReadThrough(readThrough);
-            field.setWriteThrough(writeThrough);
-            if (isImmediate() && field instanceof AbstractComponent) {
-                ((AbstractComponent) field).setImmediate(true);
-            }
-            if (layout instanceof CustomLayout) {
-                ((CustomLayout) layout).addComponent(field, propertyId
-                        .toString());
-            } else {
-                layout.addComponent(field);
-            }
-
-            requestRepaint();
+    /**
+     * Register the field with the form. All registered fields are validated
+     * when the form is validated and also committed when the form is committed.
+     * 
+     * <p>
+     * The property id must not be already used in the form.
+     * </p>
+     * 
+     * 
+     * @param propertyId
+     *            the Property id of the field.
+     * @param field
+     *            the Field that should be registered
+     */
+    private void registerField(Object propertyId, Field field) {
+        if (propertyId == null || field == null) {
+            return;
         }
+
+        fields.put(propertyId, field);
+        field.addListener(fieldValueChangeListener);
+        if (!propertyIds.contains(propertyId)) {
+            // adding a field directly
+            propertyIds.addLast(propertyId);
+        }
+
+        // Update the read and write through status and immediate to match the
+        // form.
+        // Should this also include invalidCommitted (#3993)?
+        field.setReadThrough(readThrough);
+        field.setWriteThrough(writeThrough);
+        if (isImmediate() && field instanceof AbstractComponent) {
+            ((AbstractComponent) field).setImmediate(true);
+        }
+    }
+
+    /**
+     * Adds the field to the form layout.
+     * <p>
+     * The field is added to the form layout in the default position (the
+     * position used by {@link Layout#addComponent(Component)}. If the
+     * underlying layout is a {@link CustomLayout} the field is added to the
+     * CustomLayout location given by the string representation of the property
+     * id using {@link CustomLayout#addComponent(Component, String)}.
+     * </p>
+     * 
+     * <p>
+     * Override this method to control how the fields are added to the layout.
+     * </p>
+     * 
+     * @param propertyId
+     * @param field
+     */
+    protected void attachField(Object propertyId, Field field) {
+        if (propertyId == null || field == null) {
+            return;
+        }
+
+        if (layout instanceof CustomLayout) {
+            ((CustomLayout) layout).addComponent(field, propertyId.toString());
+        } else {
+            layout.addComponent(field);
+        }
+
     }
 
     /**
