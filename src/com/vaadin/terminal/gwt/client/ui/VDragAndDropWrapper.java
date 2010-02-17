@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCallback;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
@@ -201,6 +202,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
         private static final String OVER_STYLE = "v-ddwrapper-over";
         private VerticalDropLocation verticalDropLocation;
+        private HorizontalDropLocation horizontalDropLocation;
 
         @Override
         public void dragEnter(VDragEvent drag) {
@@ -242,6 +244,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             dd.put("absoluteTop", absoluteTop);
 
             dd.put("verticalLocation", verticalDropLocation.toString());
+            dd.put("horizontalLocation", horizontalDropLocation.toString());
 
             return super.drop(drag);
         }
@@ -252,6 +255,9 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                         false);
                 VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
                         + verticalDropLocation.toString().toLowerCase(), false);
+                VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
+                        + horizontalDropLocation.toString().toLowerCase(),
+                        false);
             }
         }
 
@@ -264,11 +270,13 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             deEmphasis();
             verticalDropLocation = VerticalDropLocation.get(getElement(), drag
                     .getCurrentGwtEvent().getClientY(), 0.2);
-            // TODO add more detailed stylenames depending on which part of
-            // wrapper the drag currently is (vertical done, needs horizontal)
+            horizontalDropLocation = HorizontalDropLocation.get(getElement(),
+                    drag.getCurrentGwtEvent().getClientX(), 0.2);
             VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE, true);
             VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
                     + verticalDropLocation.toString().toLowerCase(), true);
+            VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
+                    + horizontalDropLocation.toString().toLowerCase(), true);
 
             // TODO build (to be an example) an emphasis mode where drag image
             // is fitted before or after the content

@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_3_0_dev-20100216";}
-.v-theme-version-6_3_0_dev-20100216 {display: none;}
+.v-theme-version:after {content:"6_3_0_dev-20100217";}
+.v-theme-version-6_3_0_dev-20100217 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -450,6 +450,8 @@ div.v-app-loading {
 	padding: 2px;
 }
 
+/* TODO jouni: replace debug colors */
+
 .v-drag-element {
 	z-index:60000;
 	position:absolute;
@@ -458,11 +460,11 @@ div.v-app-loading {
     border: 1px solid #999;
 }
 
-
 .v-ddwrapper {
 	background-color: cyan;
 }
 
+.v-ddwrapper-over-middle,
 .v-ddwrapper-over-center {
 	background-color: LightGreen;
 }
@@ -471,6 +473,12 @@ div.v-app-loading {
 }
 .v-ddwrapper-over-bottom {
 	border-bottom: 2px solid green;
+}
+.v-ddwrapper-over-left {
+	border-left: 2px solid green;
+}
+.v-ddwrapper-over-right {
+	border-right: 2px solid green;
 }
 
 .v-csslayout {

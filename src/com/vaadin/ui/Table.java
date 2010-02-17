@@ -3409,9 +3409,9 @@ public class Table extends AbstractSelect implements Action.Container,
 
         public Location getDropLocation() {
             String s = (String) getData("detail");
-            if ("Top".equals(s)) {
+            if ("TOP".equals(s)) {
                 return Location.TOP;
-            } else if ("Bottom".equals(s)) {
+            } else if ("BOTTOM".equals(s)) {
                 return Location.BOTTOM;
             } else {
                 return Location.MIDDLE;

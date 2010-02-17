@@ -3,7 +3,7 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 import com.google.gwt.user.client.Element;
 
 public enum VerticalDropLocation {
-    Top, Bottom, Center;
+    TOP, BOTTOM, MIDDLE;
 
     public static VerticalDropLocation get(Element element, int clientY,
             double topBottomRatio) {
@@ -14,11 +14,11 @@ public enum VerticalDropLocation {
 
         float percentageFromTop = (fromTop / (float) offsetHeight);
         if (percentageFromTop < topBottomRatio) {
-            return Top;
+            return TOP;
         } else if (percentageFromTop > 1 - topBottomRatio) {
-            return Bottom;
+            return BOTTOM;
         } else {
-            return Center;
+            return MIDDLE;
         }
     }
 }

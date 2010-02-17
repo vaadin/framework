@@ -50,6 +50,18 @@ public class DDTest5 extends TestBase {
     protected void setup() {
         Window w = getLayout().getWindow();
 
+        VerticalSortableCssLayoutWithWrappers verticalSortableCssLayoutWithWrappers = new VerticalSortableCssLayoutWithWrappers();
+        w.addWindow(verticalSortableCssLayoutWithWrappers);
+        verticalSortableCssLayoutWithWrappers.setPositionX(200);
+        verticalSortableCssLayoutWithWrappers.setPositionY(40); /*
+                                                                 * FIXME:
+                                                                 * subwindow
+                                                                 * horizontal
+                                                                 * position does
+                                                                 * not work if
+                                                                 * only x set
+                                                                 */
+
         Label l;
 
         l = new Label("Drag me");
@@ -70,7 +82,8 @@ public class DDTest5 extends TestBase {
         cssLayout.setHeight("300px");
 
         dragAndDropWrapper2 = new DragAndDropWrapper(cssLayout);
-        dragAndDropWrapper2.setCaption("Drop here");
+        dragAndDropWrapper2
+                .setCaption("Drop here or sort with dd (wrapper(csslayout(n*wrapper(label))))");
 
         dh = new DropHandler() {
 
@@ -118,7 +131,7 @@ public class DDTest5 extends TestBase {
                             wrappedLabel = (WrappedLabel) sourceComponent;
                         }
                         if (dropEvent.getDropTargetData().getData(
-                                "verticalLocation").equals("Top")) {
+                                "verticalLocation").equals("TOP")) {
                             // before reference if dropped on topmost part
                             i--;
                             if (i < 0) {
@@ -159,7 +172,7 @@ public class DDTest5 extends TestBase {
 
     @Override
     protected String getDescription() {
-        return "dd";
+        return "dd: DragAndDropWrapper to build various use cases completely on server side";
     }
 
     @Override

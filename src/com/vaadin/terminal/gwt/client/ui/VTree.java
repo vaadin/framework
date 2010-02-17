@@ -169,7 +169,7 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
             Boolean overTreeNode = null;
             TreeNode treeNode = keyToNode.get(currentMouseOverKey);
             if (treeNode != null && !treeNode.isLeaf()
-                    && "Center".equals(detail)) {
+                    && "MIDDLE".equals(detail)) {
                 overTreeNode = true;
             }
             drag.getDropDetails().put("itemIdOverIsNode", overTreeNode);
@@ -355,18 +355,18 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
 
         public void emphasis(String string) {
             String base = "v-tree-node-drag-";
-            UIObject.setStyleName(getElement(), base + "top", "Top"
+            UIObject.setStyleName(getElement(), base + "top", "TOP"
                     .equals(string));
-            UIObject.setStyleName(getElement(), base + "bottom", "Bottom"
+            UIObject.setStyleName(getElement(), base + "bottom", "BOTTOM"
                     .equals(string));
-            UIObject.setStyleName(getElement(), base + "center", "Center"
+            UIObject.setStyleName(getElement(), base + "center", "MIDDLE"
                     .equals(string));
             base = "v-tree-node-caption-drag-";
-            UIObject.setStyleName(nodeCaptionDiv, base + "top", "Top"
+            UIObject.setStyleName(nodeCaptionDiv, base + "top", "TOP"
                     .equals(string));
-            UIObject.setStyleName(nodeCaptionDiv, base + "bottom", "Bottom"
+            UIObject.setStyleName(nodeCaptionDiv, base + "bottom", "BOTTOM"
                     .equals(string));
-            UIObject.setStyleName(nodeCaptionDiv, base + "center", "Center"
+            UIObject.setStyleName(nodeCaptionDiv, base + "center", "MIDDLE"
                     .equals(string));
         }
 
@@ -426,8 +426,6 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                     mouseDownEvent = null;
                 }
                 if (type == Event.ONMOUSEOVER) {
-                    ApplicationConnection.getConsole().log(
-                            "Treenode mouse over");
                     mouseDownEvent = null;
                     currentMouseOverKey = key;
                     event.stopPropagation();
