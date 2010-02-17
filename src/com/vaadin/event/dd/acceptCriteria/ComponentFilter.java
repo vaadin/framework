@@ -7,8 +7,10 @@ import com.vaadin.event.ComponentTransferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.ui.dd.VComponentFilter;
 import com.vaadin.ui.Component;
 
+@ClientCriterion(VComponentFilter.class)
 public class ComponentFilter extends ClientSideCriterion {
     private Component[] component;
 

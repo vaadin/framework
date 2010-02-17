@@ -11,6 +11,7 @@ import com.vaadin.terminal.PaintTarget;
  * TODO consider replacing this with Union
  * 
  */
+@ClientCriterion(com.vaadin.terminal.gwt.client.ui.dd.VAnd.class)
 public class And extends ClientSideCriterion {
     /**
      * 

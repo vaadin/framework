@@ -3,7 +3,6 @@ package com.vaadin.terminal.gwt.widgetsetutils;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Date;
-import java.util.LinkedList;
 
 import com.google.gwt.core.ext.Generator;
 import com.google.gwt.core.ext.GeneratorContext;
@@ -14,7 +13,9 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
-import com.vaadin.terminal.gwt.client.ui.dd.ServerCriterion;
+import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
+import com.vaadin.event.dd.acceptCriteria.ClientCriterion;
+import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCriteria;
 import com.vaadin.ui.ClientWidget;
 
 /**
@@ -89,27 +90,6 @@ public class AcceptCriterionGenerator extends Generator {
 
     }
 
-    private Collection<JClassType> getAvailableCriteria(GeneratorContext context) {
-
-        Collection<JClassType> crits = new LinkedList<JClassType>();
-
-        JClassType[] types = context.getTypeOracle().getTypes();
-        for (int i = 0; i < types.length; i++) {
-            JClassType jClassType = types[i];
-            JClassType[] implementedInterfaces = jClassType
-                    .getImplementedInterfaces();
-            for (int j = 0; j < implementedInterfaces.length; j++) {
-                String qualifiedSourceName = implementedInterfaces[j]
-                        .getQualifiedSourceName();
-                if (qualifiedSourceName
-                        .equals("com.vaadin.terminal.gwt.client.ui.dd.VAcceptCriteria")) {
-                    crits.add(jClassType);
-                }
-            }
-        }
-        return crits;
-    }
-
     private void generateInstantiatorMethod(SourceWriter sourceWriter,
             GeneratorContext context, TreeLogger logger) {
 
@@ -118,30 +98,21 @@ public class AcceptCriterionGenerator extends Generator {
 
         sourceWriter.println("name = name.intern();");
 
-        Collection<JClassType> paintablesHavingWidgetAnnotation = getAvailableCriteria(context);
+        Collection<Class<? extends AcceptCriterion>> clientSideVerifiableCriterion = ClassPathExplorer
+                .getCriterion();
 
-        for (JClassType jClassType : paintablesHavingWidgetAnnotation) {
-            ServerCriterion annotation = jClassType
-                    .getAnnotation(ServerCriterion.class);
-            if (annotation == null) {
-                // throw new RuntimeException(
-                // "No server side implementation defined for "
-                // + jClassType.getName());
-                continue;
-            } else {
-                System.out.print("Printing for instantiation rule for "
-                        + annotation.value());
-            }
-            String serversideclass = annotation.value();
-
+        for (Class<? extends AcceptCriterion> class1 : clientSideVerifiableCriterion) {
+            String canonicalName = class1.getCanonicalName();
+            Class<? extends VAcceptCriteria> clientClass = class1
+                    .getAnnotation(ClientCriterion.class).value();
             sourceWriter.print("if (\"");
-            sourceWriter.print(serversideclass);
+            sourceWriter.print(canonicalName);
             sourceWriter.print("\" == name) return GWT.create(");
-            sourceWriter.print(jClassType.getName());
+            sourceWriter.print(clientClass.getCanonicalName());
             sourceWriter.println(".class );");
             sourceWriter.print("else ");
-
         }
+
         sourceWriter.println("return null;");
         sourceWriter.outdent();
         sourceWriter.println("}");

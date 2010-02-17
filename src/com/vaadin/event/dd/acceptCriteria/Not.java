@@ -4,7 +4,9 @@
 package com.vaadin.event.dd.acceptCriteria;
 
 import com.vaadin.event.dd.DragAndDropEvent;
+import com.vaadin.terminal.gwt.client.ui.dd.VNot;
 
+@ClientCriterion(VNot.class)
 public class Not extends ClientSideCriterion {
 
     private AcceptCriterion acceptCriterion;

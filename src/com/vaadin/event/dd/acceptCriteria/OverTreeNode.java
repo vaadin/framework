@@ -4,6 +4,7 @@
 package com.vaadin.event.dd.acceptCriteria;
 
 import com.vaadin.event.dd.DragAndDropEvent;
+import com.vaadin.terminal.gwt.client.ui.dd.VOverTreeNode;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.Location;
 import com.vaadin.ui.Tree.TreeDropDetails;
@@ -14,6 +15,7 @@ import com.vaadin.ui.Tree.TreeDropDetails;
  * TODO relocate close to {@link Tree} as this is tree specifif
  * 
  */
+@ClientCriterion(VOverTreeNode.class)
 public class OverTreeNode extends ClientSideCriterion {
 
     private static final long serialVersionUID = 1L;

@@ -4,7 +4,9 @@ import java.io.Serializable;
 
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.ui.dd.VServerAccept;
 
+@ClientCriterion(VServerAccept.class)
 public abstract class ServerSideCriterion implements Serializable,
         AcceptCriterion {
 

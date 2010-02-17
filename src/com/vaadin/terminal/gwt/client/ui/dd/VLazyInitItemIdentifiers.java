@@ -7,8 +7,12 @@ import java.util.HashSet;
 
 import com.vaadin.terminal.gwt.client.UIDL;
 
-@ServerCriterion("com.vaadin.ui.Tree.TreeDropCriterion")
-final class LazyInitItemIdentifiers implements VAcceptCriteria {
+/**
+ * 
+ * @deprecated example class testing custom behavior
+ */
+@Deprecated
+final public class VLazyInitItemIdentifiers implements VAcceptCriteria {
     private boolean loaded = false;
     private HashSet<String> hashSet;
     private VDragEvent lastDragEvent;

@@ -6,8 +6,7 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 
-@ServerCriterion("com.vaadin.event.dd.acceptCriteria.And")
-final class And implements VAcceptCriteria {
+final public class VAnd implements VAcceptCriteria {
     private boolean b1;
     private boolean b2;
     private VAcceptCriteria crit1;

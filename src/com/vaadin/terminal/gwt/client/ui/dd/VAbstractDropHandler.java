@@ -12,7 +12,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 public abstract class VAbstractDropHandler implements VDropHandler {
 
     private UIDL criterioUIDL;
-    private VAcceptCriteria acceptCriteria = new AcceptAll();
+    private VAcceptCriteria acceptCriteria = new VAcceptAll();
 
     /**
      * Implementor/user of {@link VAbstractDropHandler} must pass the UIDL

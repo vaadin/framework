@@ -33,6 +33,7 @@ import com.vaadin.event.dd.DragSource;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.TargetDetailsImpl;
+import com.vaadin.event.dd.acceptCriteria.ClientCriterion;
 import com.vaadin.event.dd.acceptCriteria.ServerSideCriterion;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
@@ -40,6 +41,7 @@ import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VTree;
+import com.vaadin.terminal.gwt.client.ui.dd.VLazyInitItemIdentifiers;
 
 /**
  * Tree component. A Tree can be used to select an item (or multiple items) from
@@ -1218,6 +1220,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * <p>
      * See client side counterpart
      */
+    @ClientCriterion(VLazyInitItemIdentifiers.class)
     public static abstract class TreeDropCriterion extends ServerSideCriterion {
 
         private Tree tree;

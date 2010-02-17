@@ -6,8 +6,7 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 
-@ServerCriterion("com.vaadin.event.dd.acceptCriteria.ComponentFilter")
-final class ComponentCriteria implements VAcceptCriteria {
+final public class VComponentFilter implements VAcceptCriteria {
     public void accept(VDragEvent drag, UIDL configuration,
             VAcceptCallback callback) {
         try {

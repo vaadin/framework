@@ -6,11 +6,13 @@ package com.vaadin.event.dd.acceptCriteria;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.ui.dd.VOr;
 
 /**
  * TODO consider replacing this with intersection
  * 
  */
+@ClientCriterion(VOr.class)
 public class Or extends ClientSideCriterion {
     /**
      * 
