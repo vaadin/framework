@@ -11,7 +11,10 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCallback;
@@ -198,14 +201,18 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         return dropHandler;
     }
 
-    private class CustomDropHandler extends VAbstractDropHandler {
+    protected VerticalDropLocation verticalDropLocation;
+    protected HorizontalDropLocation horizontalDropLocation;
+    private VerticalDropLocation emphasizedVDrop;
+    private HorizontalDropLocation emphasizedHDrop;
 
-        private static final String OVER_STYLE = "v-ddwrapper-over";
-        private VerticalDropLocation verticalDropLocation;
-        private HorizontalDropLocation horizontalDropLocation;
+    private static final String OVER_STYLE = "v-ddwrapper-over";
+
+    public class CustomDropHandler extends VAbstractDropHandler {
 
         @Override
         public void dragEnter(VDragEvent drag) {
+            updateDropDetails(drag);
             ApplicationConnection.getConsole().log("DDWrapper DragEnter");
             super.dragEnter(drag);
         }
@@ -213,11 +220,12 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         @Override
         public void dragLeave(VDragEvent drag) {
             ApplicationConnection.getConsole().log("DDWrapper DragLeave");
-            deEmphasis();
+            deEmphasis(true);
         }
 
         @Override
         public void dragOver(final VDragEvent drag) {
+            updateDropDetails(drag);
             validate(new VAcceptCallback() {
                 public void accepted(VDragEvent event) {
                     dragAccepted(drag);
@@ -228,7 +236,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         @Override
         public boolean drop(VDragEvent drag) {
             ApplicationConnection.getConsole().log("Drop" + drag.sinceStart());
-            deEmphasis();
+            deEmphasis(true);
 
             Map<String, Object> dd = drag.getDropDetails();
 
@@ -243,44 +251,17 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             dd.put("absoluteLeft", absoluteLeft);
             dd.put("absoluteTop", absoluteTop);
 
-            dd.put("verticalLocation", verticalDropLocation.toString());
-            dd.put("horizontalLocation", horizontalDropLocation.toString());
+            if (verticalDropLocation != null) {
+                dd.put("verticalLocation", verticalDropLocation.toString());
+                dd.put("horizontalLocation", horizontalDropLocation.toString());
+            }
 
             return super.drop(drag);
-        }
-
-        private void deEmphasis() {
-            if (verticalDropLocation != null) {
-                VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE,
-                        false);
-                VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
-                        + verticalDropLocation.toString().toLowerCase(), false);
-                VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
-                        + horizontalDropLocation.toString().toLowerCase(),
-                        false);
-            }
         }
 
         @Override
         protected void dragAccepted(VDragEvent drag) {
             emphasis(drag);
-        }
-
-        private void emphasis(VDragEvent drag) {
-            deEmphasis();
-            verticalDropLocation = VerticalDropLocation.get(getElement(), drag
-                    .getCurrentGwtEvent().getClientY(), 0.2);
-            horizontalDropLocation = HorizontalDropLocation.get(getElement(),
-                    drag.getCurrentGwtEvent().getClientX(), 0.2);
-            VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE, true);
-            VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
-                    + verticalDropLocation.toString().toLowerCase(), true);
-            VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
-                    + horizontalDropLocation.toString().toLowerCase(), true);
-
-            // TODO build (to be an example) an emphasis mode where drag image
-            // is fitted before or after the content
-
         }
 
         @Override
@@ -340,5 +321,62 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             }
         
     }-*/;
+
+    public void updateDropDetails(VDragEvent drag) {
+        verticalDropLocation = VerticalDropLocation.get(getElement(), drag
+                .getCurrentGwtEvent().getClientY(), 0.2);
+        drag.getDropDetails().put("verticalLocation",
+                verticalDropLocation.toString());
+        horizontalDropLocation = HorizontalDropLocation.get(getElement(), drag
+                .getCurrentGwtEvent().getClientX(), 0.2);
+        drag.getDropDetails().put("horizontalLocation",
+                horizontalDropLocation.toString());
+    }
+
+    protected void deEmphasis(boolean doLayout) {
+        Size size = null;
+        if (doLayout) {
+            size = new RenderInformation.Size(getOffsetWidth(),
+                    getOffsetHeight());
+        }
+        if (emphasizedVDrop != null) {
+            VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE, false);
+            VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
+                    + emphasizedVDrop.toString().toLowerCase(), false);
+            VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
+                    + emphasizedHDrop.toString().toLowerCase(), false);
+        }
+        if (doLayout) {
+            handleVaadinRelatedSizeChange(size);
+        }
+    }
+
+    protected void emphasis(VDragEvent drag) {
+        Size size = new RenderInformation.Size(getOffsetWidth(),
+                getOffsetHeight());
+        deEmphasis(false);
+        VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE, true);
+        VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
+                + verticalDropLocation.toString().toLowerCase(), true);
+        VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
+                + horizontalDropLocation.toString().toLowerCase(), true);
+        emphasizedVDrop = verticalDropLocation;
+        emphasizedHDrop = horizontalDropLocation;
+
+        // TODO build (to be an example) an emphasis mode where drag image
+        // is fitted before or after the content
+        handleVaadinRelatedSizeChange(size);
+
+    }
+
+    protected void handleVaadinRelatedSizeChange(Size originalSize) {
+        if (isDynamicHeight() || isDynamicWidth()) {
+            if (!originalSize.equals(new RenderInformation.Size(
+                    getOffsetWidth(), getOffsetHeight()))) {
+                Util.notifyParentOfSizeChange(VDragAndDropWrapper.this, false);
+            }
+        }
+        client.handleComponentRelativeSize(VDragAndDropWrapper.this);
+    }
 
 }

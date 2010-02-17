@@ -84,6 +84,7 @@ public class VDragAndDropManager {
                                 // dragleave on old
                                 if (currentDropHandler != null) {
                                     currentDropHandler.dragLeave(currentDrag);
+                                    currentDrag.getDropDetails().clear();
                                     serverCallback = null;
                                 }
                                 // dragenter on new
@@ -138,6 +139,7 @@ public class VDragAndDropManager {
                 if (target != null && target != currentDropHandler) {
                     if (currentDropHandler != null) {
                         currentDropHandler.dragLeave(currentDrag);
+                        currentDrag.getDropDetails().clear();
                     }
 
                     currentDropHandler = target;
@@ -148,6 +150,7 @@ public class VDragAndDropManager {
                 } else if (target == null && currentDropHandler != null) {
                     ApplicationConnection.getConsole().log("Invalid state!?");
                     currentDropHandler.dragLeave(currentDrag);
+                    currentDrag.getDropDetails().clear();
                     currentDropHandler = null;
                 }
                 break;
@@ -168,6 +171,7 @@ public class VDragAndDropManager {
                 if (currentDropHandler != null
                         && currentDropHandler != newDragHanler) {
                     currentDropHandler.dragLeave(currentDrag);
+                    currentDrag.getDropDetails().clear();
                     currentDropHandler = null;
                     serverCallback = null;
                 }

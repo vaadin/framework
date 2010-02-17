@@ -8,24 +8,28 @@ import com.vaadin.event.dd.DropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.TargetDetails;
-import com.vaadin.event.dd.acceptCriteria.AcceptAll;
 import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
+import com.vaadin.event.dd.acceptCriteria.And;
+import com.vaadin.event.dd.acceptCriteria.DropDetailEquals;
+import com.vaadin.event.dd.acceptCriteria.Not;
+import com.vaadin.event.dd.acceptCriteria.SourceIsSameAsTarget;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.DragAndDropWrapper;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
 
-public class VerticalSortableCssLayoutWithWrappers extends Window {
+/**
+ * Same as with css layout but tests size change propagation on emphasis +
+ * rules.
+ * 
+ * 
+ */
+public class HorizontalLayoutSortableWithWrappers extends Window {
 
     static int count;
 
-    private CssLayout cssLayout = new CssLayout() {
-        @Override
-        protected String getCss(Component c) {
-            return "float:left; width:60px;height:60px;background: yellow;padding:2px;";
-        };
-    };
+    private HorizontalLayout layout = new HorizontalLayout();
 
     class WrappedLabel extends DragAndDropWrapper {
 
@@ -33,9 +37,9 @@ public class VerticalSortableCssLayoutWithWrappers extends Window {
 
         public WrappedLabel(String content) {
             super(new Label(content + " c:" + ++count));
-            setSizeUndefined(); // via css
-            setHeight("60px"); // FIXME custom component seems to be broken:
-                               // can't set height with css only
+            getCompositionRoot().setWidth("60px");
+            getCompositionRoot().setHeight("60px");
+            setSizeUndefined();
             setDragStartMode(DragStartMode.WRAPPER);
         }
 
@@ -47,9 +51,12 @@ public class VerticalSortableCssLayoutWithWrappers extends Window {
     }
 
     private DropHandler dh = new DropHandler() {
+        AcceptCriterion crit = new And(new DropDetailEquals(
+                "horizontalLocation", "LEFT"), new Not(
+                new SourceIsSameAsTarget()));
 
         public AcceptCriterion getAcceptCriterion() {
-            return AcceptAll.get();
+            return crit;
         }
 
         public void drop(DropEvent dropEvent) {
@@ -59,7 +66,7 @@ public class VerticalSortableCssLayoutWithWrappers extends Window {
                 Component sourceComponent = ct.getSourceComponent();
                 if (sourceComponent instanceof WrappedLabel) {
                     int index = 1;
-                    Iterator<Component> componentIterator = cssLayout
+                    Iterator<Component> componentIterator = layout
                             .getComponentIterator();
                     Component next = componentIterator.next();
                     TargetDetails dropTargetData = dropEvent
@@ -79,8 +86,8 @@ public class VerticalSortableCssLayoutWithWrappers extends Window {
                         }
                     }
 
-                    cssLayout.removeComponent(sourceComponent);
-                    cssLayout.addComponent(sourceComponent, index);
+                    layout.removeComponent(sourceComponent);
+                    layout.addComponent(sourceComponent, index);
                 }
             }
             // TODO Auto-generated method stub
@@ -88,16 +95,16 @@ public class VerticalSortableCssLayoutWithWrappers extends Window {
         }
     };
 
-    public VerticalSortableCssLayoutWithWrappers() {
-        setCaption("Horizontally sortable csslayout via (ddwrappers):Try sorting block by draggin them");
-        DragAndDropWrapper pane = new DragAndDropWrapper(cssLayout);
+    public HorizontalLayoutSortableWithWrappers() {
+        setCaption("Horizontally sortable layout via (ddwrappers):Try sorting blocks by draggin them");
+        DragAndDropWrapper pane = new DragAndDropWrapper(layout);
         setContent(pane);
         pane.setSizeFull();
         setWidth("400px");
         setHeight("100px");
 
         for (int i = 0; i < 4; i++) {
-            cssLayout.addComponent(new WrappedLabel("Block"));
+            layout.addComponent(new WrappedLabel("Block"));
         }
 
     }

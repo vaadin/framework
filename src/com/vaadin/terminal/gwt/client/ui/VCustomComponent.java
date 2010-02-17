@@ -93,11 +93,11 @@ public class VCustomComponent extends SimplePanel implements Container {
         return updated;
     }
 
-    private boolean isDynamicWidth() {
+    protected boolean isDynamicWidth() {
         return width == null || width.equals("");
     }
 
-    private boolean isDynamicHeight() {
+    protected boolean isDynamicHeight() {
         return height == null || height.equals("");
     }
 
@@ -138,7 +138,7 @@ public class VCustomComponent extends SimplePanel implements Container {
         if (!height.equals(this.height)) {
             this.height = height;
             if (!rendering) {
-                client.runDescendentsLayout(this);
+                client.handleComponentRelativeSize(getWidget());
             }
         }
     }
@@ -151,7 +151,7 @@ public class VCustomComponent extends SimplePanel implements Container {
         if (!width.equals(this.width)) {
             this.width = width;
             if (!rendering) {
-                client.runDescendentsLayout(this);
+                client.handleComponentRelativeSize(getWidget());
             }
         }
     }
