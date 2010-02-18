@@ -1,20 +1,19 @@
 package com.vaadin.terminal.gwt.client.ui.dd;
 
-import com.vaadin.terminal.gwt.client.UIDL;
+import com.google.gwt.core.client.GWT;
 
-public interface VAcceptCriteria {
+/**
+ * A class via all AcceptCriteria instances are fetched by an identifier.
+ */
+public class VAcceptCriteria {
+    private static VAcceptCriterionFactory impl;
 
-    /**
-     * Checks if current drag event has valid drop target and target accepts the
-     * transferable. If drop target is valid, callback is used.
-     * 
-     * @param drag
-     * @param configuration
-     * @param callback
-     */
-    public void accept(VDragEvent drag, UIDL configuration,
-            VAcceptCallback callback);
+    static {
+        impl = GWT.create(VAcceptCriterionFactory.class);
+    }
 
-    public boolean needsServerSideCheck(VDragEvent drag, UIDL criterioUIDL);
+    public static VAcceptCriterion get(String name) {
+        return impl.get(name);
+    }
 
 }

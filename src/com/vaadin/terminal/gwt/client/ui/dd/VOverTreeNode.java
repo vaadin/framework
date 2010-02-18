@@ -5,7 +5,7 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 
 import com.vaadin.terminal.gwt.client.UIDL;
 
-final public class VOverTreeNode implements VAcceptCriteria {
+final public class VOverTreeNode implements VAcceptCriterion {
     public void accept(VDragEvent drag, UIDL configuration,
             VAcceptCallback callback) {
         Boolean containsKey = (Boolean) drag.getDropDetails().get(

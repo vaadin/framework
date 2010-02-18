@@ -5,7 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCriteria;
+import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCriterion;
 
 /**
  * TODO
@@ -18,5 +18,5 @@ public @interface ClientCriterion {
     /**
      * @return the client side counterpart for the annotated criterion
      */
-    Class<? extends VAcceptCriteria> value();
+    Class<? extends VAcceptCriterion> value();
 }

@@ -5,7 +5,7 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 
 import com.vaadin.terminal.gwt.client.UIDL;
 
-final public class VDropDetailEquals implements VAcceptCriteria {
+final public class VDropDetailEquals implements VAcceptCriterion {
     public void accept(VDragEvent drag, UIDL configuration,
             VAcceptCallback callback) {
         String name = configuration.getStringAttribute("p");

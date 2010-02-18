@@ -5,7 +5,7 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 
 import com.vaadin.terminal.gwt.client.UIDL;
 
-final public class VServerAccept implements VAcceptCriteria {
+final public class VServerAccept implements VAcceptCriterion {
     public void accept(final VDragEvent drag, UIDL configuration,
             final VAcceptCallback callback) {
 

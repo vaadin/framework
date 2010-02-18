@@ -12,7 +12,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 public abstract class VAbstractDropHandler implements VDropHandler {
 
     private UIDL criterioUIDL;
-    private VAcceptCriteria acceptCriteria = new VAcceptAll();
+    private VAcceptCriterion acceptCriteria = new VAcceptAll();
 
     /**
      * Implementor/user of {@link VAbstractDropHandler} must pass the UIDL
@@ -33,7 +33,7 @@ public abstract class VAbstractDropHandler implements VDropHandler {
                 uidl = (UIDL) childIterator.next();
             }
         }
-        acceptCriteria = VAcceptCriterion.get(uidl.getStringAttribute("name"));
+        acceptCriteria = VAcceptCriteria.get(uidl.getStringAttribute("name"));
         if (acceptCriteria == null) {
             throw new IllegalArgumentException(
                     "No accept criteria found with given name "

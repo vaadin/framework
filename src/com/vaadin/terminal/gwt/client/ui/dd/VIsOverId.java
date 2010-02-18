@@ -7,7 +7,7 @@ import java.util.Set;
 
 import com.vaadin.terminal.gwt.client.UIDL;
 
-final public class VIsOverId implements VAcceptCriteria {
+final public class VIsOverId implements VAcceptCriterion {
     public void accept(VDragEvent drag, UIDL configuration,
             VAcceptCallback callback) {
         try {

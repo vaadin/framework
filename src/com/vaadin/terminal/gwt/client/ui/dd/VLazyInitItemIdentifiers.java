@@ -12,7 +12,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
  * @deprecated example class testing custom behavior
  */
 @Deprecated
-final public class VLazyInitItemIdentifiers implements VAcceptCriteria {
+final public class VLazyInitItemIdentifiers implements VAcceptCriterion {
     private boolean loaded = false;
     private HashSet<String> hashSet;
     private VDragEvent lastDragEvent;

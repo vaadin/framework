@@ -6,11 +6,11 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 
-final public class VAnd implements VAcceptCriteria {
+final public class VAnd implements VAcceptCriterion {
     private boolean b1;
     private boolean b2;
-    private VAcceptCriteria crit1;
-    private VAcceptCriteria crit2;
+    private VAcceptCriterion crit1;
+    private VAcceptCriterion crit2;
 
     public void accept(VDragEvent drag, UIDL configuration,
             VAcceptCallback callback) {
@@ -45,10 +45,10 @@ final public class VAnd implements VAcceptCriteria {
         }
     }
 
-    private VAcceptCriteria getCriteria(VDragEvent drag, UIDL configuration,
+    private VAcceptCriterion getCriteria(VDragEvent drag, UIDL configuration,
             int i) {
         UIDL childUIDL = configuration.getChildUIDL(i);
-        return VAcceptCriterion.get(childUIDL.getStringAttribute("name"));
+        return VAcceptCriteria.get(childUIDL.getStringAttribute("name"));
     }
 
     public boolean needsServerSideCheck(VDragEvent drag, UIDL criterioUIDL) {

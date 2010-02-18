@@ -15,7 +15,7 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptCriteria.ClientCriterion;
-import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCriteria;
+import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCriterion;
 import com.vaadin.ui.ClientWidget;
 
 /**
@@ -93,7 +93,7 @@ public class AcceptCriterionGenerator extends Generator {
     private void generateInstantiatorMethod(SourceWriter sourceWriter,
             GeneratorContext context, TreeLogger logger) {
 
-        sourceWriter.println("public VAcceptCriteria get(String name) {");
+        sourceWriter.println("public VAcceptCriterion get(String name) {");
         sourceWriter.indent();
 
         sourceWriter.println("name = name.intern();");
@@ -103,7 +103,7 @@ public class AcceptCriterionGenerator extends Generator {
 
         for (Class<? extends AcceptCriterion> class1 : clientSideVerifiableCriterion) {
             String canonicalName = class1.getCanonicalName();
-            Class<? extends VAcceptCriteria> clientClass = class1
+            Class<? extends VAcceptCriterion> clientClass = class1
                     .getAnnotation(ClientCriterion.class).value();
             sourceWriter.print("if (\"");
             sourceWriter.print(canonicalName);

@@ -2,7 +2,7 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 
 public abstract class VAcceptCriterionFactory {
 
-    public abstract VAcceptCriteria get(String name);
+    public abstract VAcceptCriterion get(String name);
     // name = name.intern();
     // // FIXME make all lazy inited and possibility to use instances per
     // // handler
