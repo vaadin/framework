@@ -14,6 +14,7 @@ import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -45,9 +46,14 @@ import com.vaadin.Application.SystemMessages;
 import com.vaadin.external.org.apache.commons.fileupload.portlet.PortletFileUpload;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.Terminal;
+import com.vaadin.terminal.gwt.client.ApplicationConfiguration;
+import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.ui.Window;
 
 /**
+ * Portlet 2.0 base class. This replaces the servlet in servlet/portlet 1.0
+ * deployments and handles various portlet requests from the browser.
+ * 
  * TODO Document me!
  * 
  * @author peholmst
@@ -191,7 +197,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      *            the Default to be used.
      * @return String value or default if not found
      */
-    private String getApplicationOrSystemProperty(String parameterName,
+    protected String getApplicationOrSystemProperty(String parameterName,
             String defaultValue) {
 
         String val = null;
@@ -238,7 +244,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         }
     }
 
-    enum RequestType {
+    protected enum RequestType {
         FILE_UPLOAD, UIDL, RENDER, STATIC_FILE, APPLICATION_RESOURCE, DUMMY, EVENT, ACTION, UNKNOWN;
     }
 
@@ -302,7 +308,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         RequestType requestType = getRequestType(request);
 
         if (requestType == RequestType.UNKNOWN) {
-            System.err.println("Unknown request type");
+            handleUnknownRequest(request, response);
         } else if (requestType == RequestType.DUMMY) {
             /*
              * This dummy page is used by action responses to redirect to, in
@@ -421,45 +427,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                         return;
                     }
 
-                    /*
-                     * Always use the main window when running inside a portlet.
-                     */
-                    Window window = application.getMainWindow();
-                    if (window == null) {
-                        throw new PortletException(ERROR_NO_WINDOW_FOUND);
-                    }
-
-                    /*
-                     * Sets terminal type for the window, if not already set
-                     */
-                    if (window.getTerminal() == null) {
-                        window.setTerminal(applicationContext.getBrowser());
-                    }
-
-                    /*
-                     * Handle parameters
-                     */
-                    final Map<String, String[]> parameters = request
-                            .getParameterMap();
-                    if (window != null && parameters != null) {
-                        window.handleParameters(parameters);
-                    }
-
-                    if (requestType == RequestType.APPLICATION_RESOURCE) {
-                        handleURI(applicationManager, window,
-                                (ResourceRequest) request,
-                                (ResourceResponse) response);
-                    } else if (requestType == RequestType.RENDER) {
-                        writeAjaxPage((RenderRequest) request,
-                                (RenderResponse) response, window, application);
-                    } else if (requestType == RequestType.EVENT) {
-                        // nothing to do, listeners do all the work
-                    } else if (requestType == RequestType.ACTION) {
-                        // nothing to do, listeners do all the work
-                    } else {
-                        throw new IllegalStateException(
-                                "handleRequest() without anything to do - should never happen!");
-                    }
+                    handleOtherRequest(request, response, requestType,
+                            application, applicationContext, applicationManager);
                 }
             } catch (final SessionExpiredException e) {
                 // TODO Figure out a better way to deal with
@@ -492,6 +461,73 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         }
     }
 
+    protected void handleUnknownRequest(PortletRequest request,
+            PortletResponse response) {
+        System.err.println("Unknown request type");
+    }
+
+    /**
+     * Handle a portlet request that is not for static files, UIDL or upload.
+     * Also render requests are handled here.
+     * 
+     * This method is called after starting the application and calling portlet
+     * and transaction listeners.
+     * 
+     * @param request
+     * @param response
+     * @param requestType
+     * @param application
+     * @param applicationContext
+     * @param applicationManager
+     * @throws PortletException
+     * @throws IOException
+     * @throws MalformedURLException
+     */
+    protected void handleOtherRequest(PortletRequest request,
+            PortletResponse response, RequestType requestType,
+            Application application,
+            PortletApplicationContext2 applicationContext,
+            PortletCommunicationManager applicationManager)
+            throws PortletException, IOException, MalformedURLException {
+        /*
+         * Always use the main window when running inside a portlet.
+         */
+        Window window = application.getMainWindow();
+        if (window == null) {
+            throw new PortletException(ERROR_NO_WINDOW_FOUND);
+        }
+
+        /*
+         * Sets terminal type for the window, if not already set
+         */
+        if (window.getTerminal() == null) {
+            window.setTerminal(applicationContext.getBrowser());
+        }
+
+        /*
+         * Handle parameters
+         */
+        final Map<String, String[]> parameters = request.getParameterMap();
+        if (window != null && parameters != null) {
+            window.handleParameters(parameters);
+        }
+
+        if (requestType == RequestType.APPLICATION_RESOURCE) {
+            handleURI(applicationManager, window, (ResourceRequest) request,
+                    (ResourceResponse) response);
+        } else if (requestType == RequestType.RENDER) {
+            writeAjaxPage((RenderRequest) request, (RenderResponse) response,
+                    window, application);
+        } else if (requestType == RequestType.EVENT) {
+            // nothing to do, listeners do all the work
+        } else if (requestType == RequestType.ACTION) {
+            // nothing to do, listeners do all the work
+        } else {
+            throw new IllegalStateException(
+                    "handleRequest() without anything to do - should never happen!");
+        }
+    }
+
     private void updateBrowserProperties(WebBrowser browser,
             PortletRequest request) {
         browser.updateBrowserProperties(request.getLocale(), null, request
@@ -505,7 +541,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         handleRequest(request, response);
     }
 
-    private boolean handleURI(PortletCommunicationManager applicationManager,
+    protected boolean handleURI(PortletCommunicationManager applicationManager,
             Window window, ResourceRequest request, ResourceResponse response)
             throws IOException {
         // Handles the URI
@@ -523,8 +559,9 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     }
 
     @SuppressWarnings("unchecked")
-    private void handleDownload(DownloadStream stream, ResourceRequest request,
-            ResourceResponse response) throws IOException {
+    protected void handleDownload(DownloadStream stream,
+            ResourceRequest request, ResourceResponse response)
+            throws IOException {
 
         if (stream.getParameter("Location") != null) {
             response.setProperty(ResourceResponse.HTTP_STATUS_CODE, Integer
@@ -782,17 +819,63 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         return null;
     }
 
+    /**
+     * Returns the URL from which the widgetset is served on the portal.
+     * 
+     * @param widgetset
+     * @param request
+     * @return
+     */
     protected String getWidgetsetURL(String widgetset, PortletRequest request) {
         return getStaticFilesLocation(request) + "/" + WIDGETSET_DIRECTORY_PATH
                 + widgetset + "/" + widgetset + ".nocache.js?"
                 + new Date().getTime();
     }
 
+    /**
+     * Returns the theme URI for the named theme on the portal.
+     * 
+     * Note that this is not the only location referring to the theme URI - also
+     * e.g. PortletCommunicationManager uses its own way to access the portlet
+     * 2.0 theme resources.
+     * 
+     * @param themeName
+     * @param request
+     * @return
+     */
     protected String getThemeURI(String themeName, PortletRequest request) {
         return getStaticFilesLocation(request) + "/" + THEME_DIRECTORY_PATH
                 + themeName;
     }
 
+    /**
+     * Writes the html host page (aka kickstart page) that starts the actual
+     * Vaadin application.
+     * 
+     * If one needs to override parts of the portlet HTML contents creation, it
+     * is suggested that one overrides one of several submethods including:
+     * <ul>
+     * <li>
+     * {@link #writeAjaxPageHtmlMainDiv(RenderRequest, RenderResponse, BufferedWriter, String)}
+     * <li>
+     * {@link #getVaadinConfigurationMap(RenderRequest, RenderResponse, Application, String)}
+     * <li>
+     * {@link #writeAjaxPageHtmlVaadinScripts(RenderRequest, RenderResponse, BufferedWriter, Application, String)}
+     * </ul>
+     * 
+     * @param request
+     *            the portlet request.
+     * @param response
+     *            the portlet response to write to.
+     * @param window
+     * @param application
+     * @throws IOException
+     *             if the writing failed due to input/output error.
+     * @throws MalformedURLException
+     *             if the application is denied access the persistent data store
+     *             represented by the given URL.
+     * @throws PortletException
+     */
     protected void writeAjaxPage(RenderRequest request,
             RenderResponse response, Window window, Application application)
             throws IOException, MalformedURLException, PortletException {
@@ -801,132 +884,13 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         final BufferedWriter page = new BufferedWriter(new OutputStreamWriter(
                 response.getPortletOutputStream(), "UTF-8"));
 
-        // TODO check
-        String requestWidgetset = getApplicationOrSystemProperty(
-                PARAMETER_WIDGETSET, null);
-        String sharedWidgetset = getPortalProperty(
-                PORTAL_PARAMETER_VAADIN_WIDGETSET, request.getPortalContext());
-
-        String widgetset;
-        if (requestWidgetset != null) {
-            widgetset = requestWidgetset;
-        } else if (sharedWidgetset != null) {
-            widgetset = sharedWidgetset;
-        } else {
-            widgetset = DEFAULT_WIDGETSET;
-        }
-
         // TODO Currently, we can only load widgetsets and themes from the
         // portal
 
         String themeName = getThemeForWindow(request, window);
 
-        String widgetsetURL = getWidgetsetURL(widgetset, request);
-        String themeURI = getThemeURI(themeName, request);
-
-        // fixed base theme to use - all portal pages with Vaadin
-        // applications will load this exactly once
-        String portalTheme = getPortalProperty(PORTAL_PARAMETER_VAADIN_THEME,
-                request.getPortalContext());
-
-        // Get system messages
-        Application.SystemMessages systemMessages = null;
-        try {
-            systemMessages = getSystemMessages();
-        } catch (SystemMessageException e) {
-            // failing to get the system messages is always a problem
-            throw new PortletException("Failed to obtain system messages!", e);
-        }
-
-        page.write("<script type=\"text/javascript\">\n");
-        page.write("if(!vaadin || !vaadin.vaadinConfigurations) {\n "
-                + "if(!vaadin) { var vaadin = {}} \n"
-                + "vaadin.vaadinConfigurations = {};\n"
-                + "if (!vaadin.themesLoaded) { vaadin.themesLoaded = {}; }\n");
-        if (!isProductionMode()) {
-            page.write("vaadin.debug = true;\n");
-        }
-        page
-                .write("document.write('<iframe tabIndex=\"-1\" id=\"__gwt_historyFrame\" "
-                        + "style=\"width:0;height:0;border:0;overflow:"
-                        + "hidden\" src=\"javascript:false\"></iframe>');\n");
-        page.write("document.write(\"<script language='javascript' src='"
-                + widgetsetURL + "'><\\/script>\");\n}\n");
-
-        page.write("vaadin.vaadinConfigurations[\"" + request.getWindowID()
-                + "\"] = {");
-
-        /*
-         * We need this in order to get uploads to work.
-         */
-        PortletURL appUri = response.createActionURL();
-
-        page.write("appUri: '" + appUri.toString() + "', ");
-        page.write("usePortletURLs: true, ");
-
-        ResourceURL uidlUrlBase = response.createResourceURL();
-        uidlUrlBase.setResourceID("UIDL");
-
-        page.write("portletUidlURLBase: '" + uidlUrlBase.toString() + "', ");
-        page.write("pathInfo: '', ");
-        page.write("themeUri: '" + themeURI + "', ");
-        page.write("versionInfo : {vaadinVersion:\"");
-        page.write(AbstractApplicationServlet.VERSION);
-        page.write("\",applicationVersion:\"");
-        page.write(application.getVersion());
-        page.write("\"},");
-        if (systemMessages != null) {
-            // Write the CommunicationError -message to client
-            String caption = systemMessages.getCommunicationErrorCaption();
-            if (caption != null) {
-                caption = "\"" + caption + "\"";
-            }
-            String message = systemMessages.getCommunicationErrorMessage();
-            if (message != null) {
-                message = "\"" + message + "\"";
-            }
-            String url = systemMessages.getCommunicationErrorURL();
-            if (url != null) {
-                url = "\"" + url + "\"";
-            }
-
-            page.write("\"comErrMsg\": {" + "\"caption\":" + caption + ","
-                    + "\"message\" : " + message + "," + "\"url\" : " + url
-                    + "}");
-        }
-        page.write("};\n</script>\n");
-
-        page.write("<script type=\"text/javascript\">\n");
-
-        if (portalTheme == null) {
-            portalTheme = DEFAULT_THEME_NAME;
-        }
-
-        page.write("if(!vaadin.themesLoaded['" + portalTheme + "']) {\n");
-        page.write("var defaultStylesheet = document.createElement('link');\n");
-        page.write("defaultStylesheet.setAttribute('rel', 'stylesheet');\n");
-        page.write("defaultStylesheet.setAttribute('type', 'text/css');\n");
-        page.write("defaultStylesheet.setAttribute('href', '"
-                + getThemeURI(portalTheme, request) + "/styles.css');\n");
-        page
-                .write("document.getElementsByTagName('head')[0].appendChild(defaultStylesheet);\n");
-        page.write("vaadin.themesLoaded['" + portalTheme + "'] = true;\n}\n");
-
-        if (!portalTheme.equals(themeName)) {
-            page.write("if(!vaadin.themesLoaded['" + themeName + "']) {\n");
-            page.write("var stylesheet = document.createElement('link');\n");
-            page.write("stylesheet.setAttribute('rel', 'stylesheet');\n");
-            page.write("stylesheet.setAttribute('type', 'text/css');\n");
-            page.write("stylesheet.setAttribute('href', '" + themeURI
-                    + "/styles.css');\n");
-            page
-                    .write("document.getElementsByTagName('head')[0].appendChild(stylesheet);\n");
-            page.write("vaadin.themesLoaded['" + themeName + "'] = true;\n}\n");
-        }
-
-        page.write("</script>\n");
-
-        // TODO Warn if widgetset has not been loaded after 15 seconds
+        writeAjaxPageHtmlVaadinScripts(request, response, page, application,
+                themeName);
 
         /*- Add classnames;
          *      .v-app
@@ -934,7 +898,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
          *      .v-app-<simpleName for app class>
          *      .v-theme-<themeName, remove non-alphanum>
          */
-
         String appClass = "v-app-";
         try {
             appClass += getApplicationClass().getSimpleName();
@@ -953,10 +916,270 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         if (style != null) {
             divStyle = "style=\"" + style + "\"";
         }
-        page.write("<div id=\"" + request.getWindowID() + "\" class=\""
-                + classNames + "\" " + divStyle + "></div>\n");
+
+        writeAjaxPageHtmlMainDiv(request, response, page,
+                request.getWindowID(), classNames, divStyle);
 
         page.close();
+    }
+
+    /**
+     * This method writes the scripts to load the widgetset and the themes as
+     * well as define Vaadin configuration parameters on the HTML fragment that
+     * starts the actual Vaadin application.
+     * 
+     * @param request
+     * @param response
+     * @param writer
+     * @param application
+     * @param themeName
+     * @throws IOException
+     * @throws PortletException
+     */
+    protected void writeAjaxPageHtmlVaadinScripts(RenderRequest request,
+            RenderResponse response, final BufferedWriter writer,
+            Application application, String themeName) throws IOException,
+            PortletException {
+        String themeURI = getThemeURI(themeName, request);
+
+        // fixed base theme to use - all portal pages with Vaadin
+        // applications will load this exactly once
+        String portalTheme = getPortalProperty(PORTAL_PARAMETER_VAADIN_THEME,
+                request.getPortalContext());
+
+        writer.write("<script type=\"text/javascript\">\n");
+        writer.write("if(!vaadin || !vaadin.vaadinConfigurations) {\n "
+                + "if(!vaadin) { var vaadin = {}} \n"
+                + "vaadin.vaadinConfigurations = {};\n"
+                + "if (!vaadin.themesLoaded) { vaadin.themesLoaded = {}; }\n");
+        if (!isProductionMode()) {
+            writer.write("vaadin.debug = true;\n");
+        }
+
+        writeAjaxPageScriptWidgetset(request, response, writer);
+
+        Map<String, String> config = getVaadinConfigurationMap(request,
+                response, application, themeURI);
+        writeAjaxPageScriptConfigurations(request, response, writer, config);
+
+        writer.write("</script>\n");
+
+        writeAjaxPageHtmlTheme(request, writer, themeName, themeURI,
+                portalTheme);
+
+        // TODO Warn if widgetset has not been loaded after 15 seconds
+    }
+
+    /**
+     * Writes the script to load the widgetset on the HTML fragment created by
+     * the portlet.
+     * 
+     * @param request
+     * @param response
+     * @param writer
+     * @throws IOException
+     */
+    protected void writeAjaxPageScriptWidgetset(RenderRequest request,
+            RenderResponse response, final BufferedWriter writer)
+            throws IOException {
+        String requestWidgetset = getApplicationOrSystemProperty(
+                PARAMETER_WIDGETSET, null);
+        String sharedWidgetset = getPortalProperty(
+                PORTAL_PARAMETER_VAADIN_WIDGETSET, request.getPortalContext());
+
+        String widgetset;
+        if (requestWidgetset != null) {
+            widgetset = requestWidgetset;
+        } else if (sharedWidgetset != null) {
+            widgetset = sharedWidgetset;
+        } else {
+            widgetset = DEFAULT_WIDGETSET;
+        }
+        String widgetsetURL = getWidgetsetURL(widgetset, request);
+        writer
+                .write("document.write('<iframe tabIndex=\"-1\" id=\"__gwt_historyFrame\" "
+                        + "style=\"width:0;height:0;border:0;overflow:"
+                        + "hidden\" src=\"javascript:false\"></iframe>');\n");
+        writer.write("document.write(\"<script language='javascript' src='"
+                + widgetsetURL + "'><\\/script>\");\n}\n");
+    }
+
+    /**
+     * Returns the configuration parameters to pass to the client.
+     * 
+     * To add configuration parameters for the client, override, call the super
+     * method and then modify the map. Overriding this method may also require
+     * client side changes in {@link ApplicationConnection} and
+     * {@link ApplicationConfiguration}.
+     * 
+     * Note that this method must escape and quote the values when appropriate.
+     * 
+     * The map returned is typically a {@link LinkedHashMap} to preserve
+     * insertion order, but it is not guaranteed to be one.
+     * 
+     * @param request
+     * @param response
+     * @param application
+     * @param themeURI
+     * @return modifiable Map from parameter name to its full value
+     * @throws PortletException
+     */
+    protected Map<String, String> getVaadinConfigurationMap(
+            RenderRequest request, RenderResponse response,
+            Application application, String themeURI) throws PortletException {
+        Map<String, String> config = new LinkedHashMap<String, String>();
+
+        /*
+         * We need this in order to get uploads to work.
+         */
+        PortletURL appUri = response.createActionURL();
+        config.put("appUri", "'" + appUri.toString() + "'");
+        config.put("usePortletURLs", "true");
+        ResourceURL uidlUrlBase = response.createResourceURL();
+        uidlUrlBase.setResourceID("UIDL");
+        config.put("portletUidlURLBase", "'" + uidlUrlBase.toString() + "'");
+        config.put("pathInfo", "''");
+        config.put("themeUri", "'" + themeURI + "'");
+
+        String versionInfo = "{vaadinVersion:\""
+                + AbstractApplicationServlet.VERSION
+                + "\",applicationVersion:\"" + application.getVersion() + "\"}";
+        config.put("versionInfo", versionInfo);
+
+        // Get system messages
+        Application.SystemMessages systemMessages = null;
+        try {
+            systemMessages = getSystemMessages();
+        } catch (SystemMessageException e) {
+            // failing to get the system messages is always a problem
+            throw new PortletException("Failed to obtain system messages!", e);
+        }
+        if (systemMessages != null) {
+            // Write the CommunicationError -message to client
+            String caption = systemMessages.getCommunicationErrorCaption();
+            if (caption != null) {
+                caption = "\"" + caption + "\"";
+            }
+            String message = systemMessages.getCommunicationErrorMessage();
+            if (message != null) {
+                message = "\"" + message + "\"";
+            }
+            String url = systemMessages.getCommunicationErrorURL();
+            if (url != null) {
+                url = "\"" + url + "\"";
+            }
+
+            config.put("\"comErrMsg\"", "{" + "\"caption\":" + caption + ","
+                    + "\"message\" : " + message + "," + "\"url\" : " + url
+                    + "}");
+        }
+
+        return config;
+    }
+
+    /**
+     * Constructs the Vaadin configuration section for
+     * {@link ApplicationConnection} and {@link ApplicationConfiguration}.
+     * 
+     * Typically this method should not be overridden. Instead, modify
+     * {@link #getVaadinConfigurationMap(RenderRequest, RenderResponse, Application, String)}
+     * .
+     * 
+     * @param request
+     * @param response
+     * @param writer
+     * @param config
+     * @throws IOException
+     * @throws PortletException
+     */
+    protected void writeAjaxPageScriptConfigurations(RenderRequest request,
+            RenderResponse response, final BufferedWriter writer,
+            Map<String, String> config) throws IOException, PortletException {
+
+        writer.write("vaadin.vaadinConfigurations[\"" + request.getWindowID()
+                + "\"] = {");
+
+        Iterator<String> keyIt = config.keySet().iterator();
+        while (keyIt.hasNext()) {
+            String key = keyIt.next();
+            writer.write(key + ": " + config.get(key));
+            if (keyIt.hasNext()) {
+                writer.write(", ");
+            }
+        }
+
+        writer.write("};\n");
+    }
+
+    /**
+     * Writes the Vaadin theme loading section of the portlet HTML. Loads both
+     * the portal theme and the portlet theme in this order, skipping loading of
+     * themes that are already loaded (matched by name).
+     * 
+     * @param request
+     * @param writer
+     * @param themeName
+     * @param themeURI
+     * @param portalTheme
+     * @throws IOException
+     */
+    protected void writeAjaxPageHtmlTheme(RenderRequest request,
+            final BufferedWriter writer, String themeName, String themeURI,
+            String portalTheme) throws IOException {
+        writer.write("<script type=\"text/javascript\">\n");
+
+        if (portalTheme == null) {
+            portalTheme = DEFAULT_THEME_NAME;
+        }
+
+        writer.write("if(!vaadin.themesLoaded['" + portalTheme + "']) {\n");
+        writer
+                .write("var defaultStylesheet = document.createElement('link');\n");
+        writer.write("defaultStylesheet.setAttribute('rel', 'stylesheet');\n");
+        writer.write("defaultStylesheet.setAttribute('type', 'text/css');\n");
+        writer.write("defaultStylesheet.setAttribute('href', '"
+                + getThemeURI(portalTheme, request) + "/styles.css');\n");
+        writer
+                .write("document.getElementsByTagName('head')[0].appendChild(defaultStylesheet);\n");
+        writer.write("vaadin.themesLoaded['" + portalTheme + "'] = true;\n}\n");
+
+        if (!portalTheme.equals(themeName)) {
+            writer.write("if(!vaadin.themesLoaded['" + themeName + "']) {\n");
+            writer.write("var stylesheet = document.createElement('link');\n");
+            writer.write("stylesheet.setAttribute('rel', 'stylesheet');\n");
+            writer.write("stylesheet.setAttribute('type', 'text/css');\n");
+            writer.write("stylesheet.setAttribute('href', '" + themeURI
+                    + "/styles.css');\n");
+            writer
+                    .write("document.getElementsByTagName('head')[0].appendChild(stylesheet);\n");
+            writer.write("vaadin.themesLoaded['" + themeName
+                    + "'] = true;\n}\n");
+        }
+
+        writer.write("</script>\n");
+    }
+
+    /**
+     * Method to write the div element into which that actual Vaadin application
+     * is rendered.
+     * <p>
+     * Override this method if you want to add some custom html around around
+     * the div element into which the actual Vaadin application will be
+     * rendered.
+     * 
+     * @param request
+     * @param response
+     * @param writer
+     * @param id
+     * @param classNames
+     * @param divStyle
+     * @throws IOException
+     */
+    protected void writeAjaxPageHtmlMainDiv(RenderRequest request,
+            RenderResponse response, final BufferedWriter writer, String id,
+            String classNames, String divStyle) throws IOException {
+        writer.write("<div id=\"" + id + "\" class=\""
+                + classNames + "\" " + divStyle + "></div>\n");
     }
 
     /**
@@ -966,7 +1189,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * @param window
      * @return
      */
-    private String getThemeForWindow(PortletRequest request, Window window) {
+    protected String getThemeForWindow(PortletRequest request, Window window) {
         // Finds theme name
         String themeName;
 
@@ -1143,7 +1366,18 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         out.flush();
     }
 
-    private static String getPortalProperty(String name, PortalContext context) {
+    /**
+     * Returns a portal configuration property.
+     * 
+     * Liferay is handled separately as
+     * {@link PortalContext#getProperty(String)} does not return portal
+     * properties from e.g. portal-ext.properties .
+     * 
+     * @param name
+     * @param context
+     * @return
+     */
+    protected static String getPortalProperty(String name, PortalContext context) {
         boolean isLifeRay = context.getPortalInfo().toLowerCase().contains(
                 "liferay");
 

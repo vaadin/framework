@@ -1489,7 +1489,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * is rendered.
      * <p>
      * Override this method if you want to add some custom html around around
-     * the div element into which the actual vaadin application will be
+     * the div element into which the actual Vaadin application will be
      * rendered.
      * 
      * @param page
@@ -1507,8 +1507,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     }
 
     /**
-     * 
-     * * Method to write the script part of the page which loads needed vaadin
+     * Method to write the script part of the page which loads needed Vaadin
      * scripts and themes.
      * <p>
      * Override this method if you want to add some custom html around scripts.
