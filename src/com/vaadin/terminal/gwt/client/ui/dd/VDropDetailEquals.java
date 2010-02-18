@@ -5,18 +5,13 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 
 import com.vaadin.terminal.gwt.client.UIDL;
 
-final public class VDropDetailEquals implements VAcceptCriterion {
-    public void accept(VDragEvent drag, UIDL configuration,
-            VAcceptCallback callback) {
+final public class VDropDetailEquals extends VAcceptCriterion {
+
+    @Override
+    public boolean validates(VDragEvent drag, UIDL configuration) {
         String name = configuration.getStringAttribute("p");
         String value = configuration.getStringAttribute("v");
         Object object = drag.getDropDetails().get(name);
-        if (value.equals(object)) {
-            callback.accepted(drag);
-        }
-    }
-
-    public boolean needsServerSideCheck(VDragEvent drag, UIDL criterioUIDL) {
-        return false;
+        return value.equals(object);
     }
 }

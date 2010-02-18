@@ -4,12 +4,12 @@ import java.io.Serializable;
 
 import com.vaadin.event.Transferable;
 
-public abstract class DragAndDropEvent implements Serializable {
+public class DragAndDropEvent implements Serializable {
     private static final long serialVersionUID = -2232591107911385564L;
     private Transferable transferable;
-    private TargetDetails dropDetails;
+    private DropTargetDetails dropDetails;
 
-    public DragAndDropEvent(Transferable tr, TargetDetails details) {
+    public DragAndDropEvent(Transferable tr, DropTargetDetails details) {
         transferable = tr;
         dropDetails = details;
     }
@@ -18,7 +18,7 @@ public abstract class DragAndDropEvent implements Serializable {
         return transferable;
     }
 
-    public TargetDetails getDropTargetData() {
+    public DropTargetDetails getDropTargetData() {
         return dropDetails;
     }
 }

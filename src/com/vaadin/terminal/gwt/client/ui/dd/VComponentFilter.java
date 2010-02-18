@@ -6,9 +6,10 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 
-final public class VComponentFilter implements VAcceptCriterion {
-    public void accept(VDragEvent drag, UIDL configuration,
-            VAcceptCallback callback) {
+final public class VComponentFilter extends VAcceptCriterion {
+
+    @Override
+    public boolean validates(VDragEvent drag, UIDL configuration) {
         try {
             Paintable component = drag.getTransferable().getDragSource();
             int c = configuration.getIntAttribute("c");
@@ -19,15 +20,11 @@ final public class VComponentFilter implements VAcceptCriterion {
                         .getCurrentDropHandler().getApplicationConnection()
                         .getPaintable(requiredPid);
                 if (paintable == component) {
-                    callback.accepted(drag);
+                    return true;
                 }
             }
         } catch (Exception e) {
         }
-        return;
-    }
-
-    public boolean needsServerSideCheck(VDragEvent drag, UIDL criterioUIDL) {
         return false;
     }
 }

@@ -5,15 +5,10 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 
 import com.vaadin.terminal.gwt.client.UIDL;
 
-final public class VDataBound implements VAcceptCriterion {
-    public void accept(VDragEvent drag, UIDL configuration,
-            VAcceptCallback callback) {
-        if (drag.getTransferable().getData("itemId") != null) {
-            callback.accepted(drag);
-        }
-    }
+final public class VDataBound extends VAcceptCriterion {
 
-    public boolean needsServerSideCheck(VDragEvent drag, UIDL criterioUIDL) {
-        return false;
+    @Override
+    public boolean validates(VDragEvent drag, UIDL configuration) {
+        return drag.getTransferable().getData("itemId") != null;
     }
 }

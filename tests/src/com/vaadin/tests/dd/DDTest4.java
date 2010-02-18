@@ -5,7 +5,7 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.demo.tutorial.addressbook.data.Person;
 import com.vaadin.demo.tutorial.addressbook.data.PersonContainer;
 import com.vaadin.event.DataBoundTransferable;
-import com.vaadin.event.dd.DropEvent;
+import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptCriteria.ComponentFilter;
@@ -56,7 +56,7 @@ public class DDTest4 extends TestBase {
                 return crit;
             }
 
-            public void drop(DropEvent dropEvent) {
+            public void drop(DragAndDropEvent dropEvent) {
                 AbstractSelectDropDetails dropTargetData = (AbstractSelectDropDetails) dropEvent
                         .getDropTargetData();
                 DataBoundTransferable transferable = (DataBoundTransferable) dropEvent

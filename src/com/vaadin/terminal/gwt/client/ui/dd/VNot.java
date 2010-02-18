@@ -6,10 +6,15 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 
-final public class VNot implements VAcceptCriterion {
+/**
+ * TODO implementation could now be simplified/optimized
+ * 
+ */
+final public class VNot extends VAcceptCriterion {
     private boolean b1;
     private VAcceptCriterion crit1;
 
+    @Override
     public void accept(VDragEvent drag, UIDL configuration,
             VAcceptCallback callback) {
         if (crit1 == null) {
@@ -41,7 +46,13 @@ final public class VNot implements VAcceptCriterion {
         return VAcceptCriteria.get(childUIDL.getStringAttribute("name"));
     }
 
+    @Override
     public boolean needsServerSideCheck(VDragEvent drag, UIDL criterioUIDL) {
         return false; // TODO enforce on server side
+    }
+
+    @Override
+    public boolean validates(VDragEvent drag, UIDL configuration) {
+        return false; // not used
     }
 }

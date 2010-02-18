@@ -12,11 +12,12 @@ import com.vaadin.terminal.gwt.client.UIDL;
  * @deprecated example class testing custom behavior
  */
 @Deprecated
-final public class VLazyInitItemIdentifiers implements VAcceptCriterion {
+final public class VLazyInitItemIdentifiers extends VAcceptCriterion {
     private boolean loaded = false;
     private HashSet<String> hashSet;
     private VDragEvent lastDragEvent;
 
+    @Override
     public void accept(final VDragEvent drag, UIDL configuration,
             final VAcceptCallback callback) {
         if (lastDragEvent == null || lastDragEvent != drag) {
@@ -51,7 +52,13 @@ final public class VLazyInitItemIdentifiers implements VAcceptCriterion {
 
     }
 
+    @Override
     public boolean needsServerSideCheck(VDragEvent drag, UIDL criterioUIDL) {
         return loaded;
+    }
+
+    @Override
+    public boolean validates(VDragEvent drag, UIDL configuration) {
+        return false; // not used is this implementation
     }
 }

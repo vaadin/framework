@@ -5,11 +5,11 @@ import java.util.Map;
 
 import com.vaadin.terminal.gwt.server.DragAndDropService;
 
-public class TargetDetailsImpl implements TargetDetails {
+public class DropTargetDetailsImpl implements DropTargetDetails {
 
     private HashMap<String, Object> data = new HashMap<String, Object>();
 
-    public TargetDetailsImpl(Map<String, Object> rawDropData) {
+    public DropTargetDetailsImpl(Map<String, Object> rawDropData) {
         data.putAll(rawDropData);
     }
 

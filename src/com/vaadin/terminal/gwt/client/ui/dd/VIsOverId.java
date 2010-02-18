@@ -7,22 +7,17 @@ import java.util.Set;
 
 import com.vaadin.terminal.gwt.client.UIDL;
 
-final public class VIsOverId implements VAcceptCriterion {
-    public void accept(VDragEvent drag, UIDL configuration,
-            VAcceptCallback callback) {
+final public class VIsOverId extends VAcceptCriterion {
+
+    @Override
+    public boolean validates(VDragEvent drag, UIDL configuration) {
         try {
             Set<String> stringArrayVariableAsSet = configuration
                     .getStringArrayVariableAsSet("keys");
-            if (stringArrayVariableAsSet.contains(drag.getDropDetails().get(
-                    "itemIdOver"))) {
-                callback.accepted(drag);
-            }
+            return stringArrayVariableAsSet.contains(drag.getDropDetails().get(
+                    "itemIdOver"));
         } catch (Exception e) {
         }
-        return;
-    }
-
-    public boolean needsServerSideCheck(VDragEvent drag, UIDL criterioUIDL) {
         return false;
     }
 }

@@ -2,7 +2,7 @@ package com.vaadin.tests.dd;
 
 import java.util.Iterator;
 
-import com.vaadin.event.dd.DropEvent;
+import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.acceptCriteria.AcceptAll;
@@ -91,7 +91,7 @@ public class DDTest5 extends TestBase {
                 return AcceptAll.get();
             }
 
-            public void drop(DropEvent dropEvent) {
+            public void drop(DragAndDropEvent dropEvent) {
 
                 /*
                  * TODO wrap componentns in wrappers (so we can build reordering

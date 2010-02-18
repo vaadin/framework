@@ -18,14 +18,9 @@ public interface DragSource extends Serializable {
      * 
      * <p>
      * 
-     * @param transferable
-     *            the Transferable object if one has been created for this drag
-     *            and drop operation, null if Transferable is not yet
-     *            instantiated
      * @param rawVariables
-     * @return
+     * @return the drag source related transferable
      */
-    public Transferable getTransferable(Transferable transferable,
-            Map<String, Object> rawVariables);
+    public Transferable getTransferable(Map<String, Object> rawVariables);
 
 }

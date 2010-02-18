@@ -7,13 +7,12 @@ import java.util.Map;
 
 import com.vaadin.event.ComponentTransferable;
 import com.vaadin.event.Transferable;
-import com.vaadin.event.dd.DragEvent;
+import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DragSource;
-import com.vaadin.event.dd.DropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
-import com.vaadin.event.dd.TargetDetails;
-import com.vaadin.event.dd.TargetDetailsImpl;
+import com.vaadin.event.dd.DropTargetDetails;
+import com.vaadin.event.dd.DropTargetDetailsImpl;
 import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.VariableOwner;
@@ -30,11 +29,9 @@ public class DragAndDropService implements VariableOwner {
 
     private int currentEventId;
 
-    private Transferable transferable;
-
     private boolean lastVisitAccepted = false;
 
-    private DragEvent dragEvent;
+    private DragAndDropEvent dragEvent;
 
     private final AbstractCommunicationManager manager;
 
@@ -95,8 +92,10 @@ public class DragAndDropService implements VariableOwner {
          * source for Transferable, drop target for DragDropDetails).
          */
         Transferable transferable = constructTransferable(dropTarget, variables);
-        TargetDetails dropData = constructDragDropDetails(dropTarget, variables);
-        DropEvent dropEvent = new DropEvent(transferable, dropData);
+        DropTargetDetails dropData = constructDragDropDetails(dropTarget,
+                variables);
+        DragAndDropEvent dropEvent = new DragAndDropEvent(transferable,
+                dropData);
         if (dropHandler.getAcceptCriterion().accepts(dropEvent)) {
             dropHandler.drop(dropEvent);
         }
@@ -120,10 +119,10 @@ public class DragAndDropService implements VariableOwner {
          * source for Transferable, current target for DragDropDetails).
          */
         Transferable transferable = constructTransferable(dropTarget, variables);
-        TargetDetails dragDropDetails = constructDragDropDetails(dropTarget,
-                variables);
+        DropTargetDetails dragDropDetails = constructDragDropDetails(
+                dropTarget, variables);
 
-        dragEvent = new DragEvent(transferable, dragDropDetails);
+        dragEvent = new DragAndDropEvent(transferable, dragDropDetails);
 
         lastVisitAccepted = acceptCriterion.accepts(dragEvent);
     }
@@ -138,17 +137,17 @@ public class DragAndDropService implements VariableOwner {
      * @return
      */
     @SuppressWarnings("unchecked")
-    private TargetDetails constructDragDropDetails(DropTarget dropTarget,
+    private DropTargetDetails constructDragDropDetails(DropTarget dropTarget,
             Map<String, Object> variables) {
         Map<String, Object> rawDragDropDetails = (Map<String, Object>) variables
                 .get("evt");
 
-        TargetDetails dropData = dropTarget
+        DropTargetDetails dropData = dropTarget
                 .translateDragDropDetails(rawDragDropDetails);
 
         if (dropData == null) {
             // Create a default DragDropDetails with all the raw variables
-            dropData = new TargetDetailsImpl(rawDragDropDetails);
+            dropData = new DropTargetDetailsImpl(rawDragDropDetails);
         }
 
         dropData.setData(DROPTARGET_KEY, dropTarget);
@@ -169,9 +168,6 @@ public class DragAndDropService implements VariableOwner {
     private Transferable constructTransferable(DropTarget dropHandlerOwner,
             Map<String, Object> variables) {
         int eventId = (Integer) variables.get("eventId");
-        if (currentEventId != eventId) {
-            transferable = null;
-        }
         currentEventId = eventId;
 
         final Component sourceComponent = (Component) variables
@@ -179,33 +175,15 @@ public class DragAndDropService implements VariableOwner {
 
         variables = (Map<String, Object>) variables.get("tra");
 
+        Transferable transferable = null;
         if (sourceComponent != null && sourceComponent instanceof DragSource) {
-            transferable = ((DragSource) sourceComponent).getTransferable(
-                    transferable, variables);
+            transferable = ((DragSource) sourceComponent)
+                    .getTransferable(variables);
         } else {
             if (transferable == null) {
                 if (sourceComponent != null) {
-                    transferable = new ComponentTransferable() {
-
-                        private Map<String, Object> td = new HashMap<String, Object>();
-
-                        public Component getSourceComponent() {
-                            return sourceComponent;
-                        }
-
-                        public Object getData(String dataFlawor) {
-                            return td.get(dataFlawor);
-                        }
-
-                        public void setData(String dataFlawor, Object value) {
-                            td.put(dataFlawor, value);
-                        }
-
-                        public Collection<String> getDataFlawors() {
-                            return td.keySet();
-                        }
-
-                    };
+                    transferable = new ComponentTransferable(sourceComponent,
+                            variables);
                 } else {
                     transferable = new Transferable() {
                         private Map<String, Object> td = new HashMap<String, Object>();
@@ -225,13 +203,6 @@ public class DragAndDropService implements VariableOwner {
                     };
                 }
             }
-        }
-
-        /*
-         * Add remaining (non-handled) variables to transferable as is
-         */
-        for (String key : variables.keySet()) {
-            transferable.setData(key, variables.get(key));
         }
 
         return transferable;

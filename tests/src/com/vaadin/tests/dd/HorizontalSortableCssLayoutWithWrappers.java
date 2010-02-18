@@ -4,10 +4,10 @@ import java.util.Iterator;
 
 import com.vaadin.event.ComponentTransferable;
 import com.vaadin.event.Transferable;
-import com.vaadin.event.dd.DropEvent;
+import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
-import com.vaadin.event.dd.TargetDetails;
+import com.vaadin.event.dd.DropTargetDetails;
 import com.vaadin.event.dd.acceptCriteria.AcceptAll;
 import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
 import com.vaadin.ui.Component;
@@ -52,7 +52,7 @@ public class HorizontalSortableCssLayoutWithWrappers extends Window {
             return AcceptAll.get();
         }
 
-        public void drop(DropEvent dropEvent) {
+        public void drop(DragAndDropEvent dropEvent) {
             Transferable transferable = dropEvent.getTransferable();
             if (transferable instanceof ComponentTransferable) {
                 ComponentTransferable ct = (ComponentTransferable) transferable;
@@ -62,7 +62,7 @@ public class HorizontalSortableCssLayoutWithWrappers extends Window {
                     Iterator<Component> componentIterator = cssLayout
                             .getComponentIterator();
                     Component next = componentIterator.next();
-                    TargetDetails dropTargetData = dropEvent
+                    DropTargetDetails dropTargetData = dropEvent
                             .getDropTargetData();
                     DropTarget target = dropTargetData.getTarget();
                     while (next != target) {

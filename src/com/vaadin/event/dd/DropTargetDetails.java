@@ -2,7 +2,7 @@ package com.vaadin.event.dd;
 
 import java.io.Serializable;
 
-public interface TargetDetails extends Serializable {
+public interface DropTargetDetails extends Serializable {
 
     public Object getData(String key);
 

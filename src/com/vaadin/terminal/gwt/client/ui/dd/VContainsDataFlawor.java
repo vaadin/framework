@@ -5,18 +5,11 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 
 import com.vaadin.terminal.gwt.client.UIDL;
 
-final public class VContainsDataFlawor implements VAcceptCriterion {
-    public void accept(VDragEvent drag, UIDL configuration,
-            VAcceptCallback callback) {
-        String name = configuration.getStringAttribute("p");
-        boolean contains = drag.getTransferable().getDataFlawors().contains(
-                name);
-        if (contains) {
-            callback.accepted(drag);
-        }
-    }
+final public class VContainsDataFlawor extends VAcceptCriterion {
 
-    public boolean needsServerSideCheck(VDragEvent drag, UIDL criterioUIDL) {
-        return false;
+    @Override
+    public boolean validates(VDragEvent drag, UIDL configuration) {
+        String name = configuration.getStringAttribute("p");
+        return drag.getTransferable().getDataFlawors().contains(name);
     }
 }

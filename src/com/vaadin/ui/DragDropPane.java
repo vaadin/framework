@@ -5,11 +5,11 @@ import java.util.Map;
 import com.vaadin.event.ComponentTransferable;
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.Transferable;
-import com.vaadin.event.dd.DropEvent;
+import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
-import com.vaadin.event.dd.TargetDetails;
-import com.vaadin.event.dd.TargetDetailsImpl;
+import com.vaadin.event.dd.DropTargetDetails;
+import com.vaadin.event.dd.DropTargetDetailsImpl;
 import com.vaadin.event.dd.acceptCriteria.AcceptAll;
 import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
 import com.vaadin.terminal.PaintException;
@@ -70,7 +70,7 @@ public class DragDropPane extends AbsoluteLayout implements DropTarget {
     }
 
     public static class ImportPrettyMuchAnything implements DropHandler {
-        public void drop(DropEvent event) {
+        public void drop(DragAndDropEvent event) {
             DragDropPane pane = (DragDropPane) event.getDropTargetData()
                     .getTarget();
 
@@ -163,7 +163,7 @@ public class DragDropPane extends AbsoluteLayout implements DropTarget {
         }
     }
 
-    class DragEventDetails extends TargetDetailsImpl {
+    class DragEventDetails extends DropTargetDetailsImpl {
 
         public DragEventDetails(Map<String, Object> rawVariables) {
             super(rawVariables);
@@ -188,7 +188,7 @@ public class DragDropPane extends AbsoluteLayout implements DropTarget {
 
     }
 
-    public TargetDetails translateDragDropDetails(
+    public DropTargetDetails translateDragDropDetails(
             Map<String, Object> clientVariables) {
         return new DragEventDetails(clientVariables);
     }

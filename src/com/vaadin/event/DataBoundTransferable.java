@@ -1,9 +1,18 @@
 package com.vaadin.event;
 
-public interface DataBoundTransferable extends ComponentTransferable {
+import java.util.Map;
 
-    public Object getItemId();
+import com.vaadin.ui.Component;
 
-    public Object getPropertyId();
+public abstract class DataBoundTransferable extends ComponentTransferable {
+
+    public DataBoundTransferable(Component sourceComponent,
+            Map<String, Object> rawVariables) {
+        super(sourceComponent, rawVariables);
+    }
+
+    public abstract Object getItemId();
+
+    public abstract Object getPropertyId();
 
 }

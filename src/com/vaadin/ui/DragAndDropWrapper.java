@@ -1,6 +1,5 @@
 package com.vaadin.ui;
 
-import java.util.Collection;
 import java.util.Map;
 
 import com.vaadin.event.ComponentTransferable;
@@ -8,7 +7,7 @@ import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragSource;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
-import com.vaadin.event.dd.TargetDetails;
+import com.vaadin.event.dd.DropTargetDetails;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper;
@@ -17,28 +16,11 @@ import com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper;
 public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         DragSource {
 
-    public class DDWrapperTransferable implements ComponentTransferable {
-        private final Map<String, Object> rawVariables;
+    public class DDWrapperTransferable extends ComponentTransferable {
 
-        private DDWrapperTransferable(Map<String, Object> rawVariables) {
-            this.rawVariables = rawVariables;
-        }
-
-        public void setData(String dataFlawor, Object value) {
-            // TODO Auto-generated method stub
-
-        }
-
-        public Collection<String> getDataFlawors() {
-            return rawVariables.keySet();
-        }
-
-        public Object getData(String dataFlawor) {
-            return rawVariables.get(dataFlawor);
-        }
-
-        public Component getSourceComponent() {
-            return DragAndDropWrapper.this;
+        public DDWrapperTransferable(Component sourceComponent,
+                Map<String, Object> rawVariables) {
+            super(sourceComponent, rawVariables);
         }
 
         /**
@@ -48,7 +30,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
          * @return
          */
         public Component getDraggedComponent() {
-            Component object = (Component) rawVariables.get("component");
+            Component object = (Component) getData("component");
             return object;
         }
     }
@@ -87,15 +69,14 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         requestRepaint();
     }
 
-    public TargetDetails translateDragDropDetails(
+    public DropTargetDetails translateDragDropDetails(
             Map<String, Object> clientVariables) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    public Transferable getTransferable(Transferable transferable,
-            final Map<String, Object> rawVariables) {
-        return new DDWrapperTransferable(rawVariables);
+    public Transferable getTransferable(final Map<String, Object> rawVariables) {
+        return new DDWrapperTransferable(this, rawVariables);
     }
 
     public void setDragStartMode(DragStartMode dragStartMode) {

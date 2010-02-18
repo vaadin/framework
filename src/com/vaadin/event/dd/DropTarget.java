@@ -18,7 +18,7 @@ public interface DropTarget extends Component {
      * Called before a drop operation to translate the drop data provided by the
      * client widget. Should return a DropData implementation with the new
      * values. If null is returned the terminal implementation will
-     * automatically create a {@link TargetDetails} with all the client
+     * automatically create a {@link DropTargetDetails} with all the client
      * variables.
      * <p>
      * If this method returns null the data from client side will be passed
@@ -28,7 +28,7 @@ public interface DropTarget extends Component {
      *            Parameters passed from the client side widget.
      * @return A DropData object with the translated data or null.
      */
-    public TargetDetails translateDragDropDetails(
+    public DropTargetDetails translateDragDropDetails(
             Map<String, Object> clientVariables);
 
 }

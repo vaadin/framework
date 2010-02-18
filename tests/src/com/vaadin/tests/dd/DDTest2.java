@@ -12,7 +12,6 @@ import com.vaadin.demo.tutorial.addressbook.data.PersonContainer;
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
-import com.vaadin.event.dd.DropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptCriteria.And;
@@ -82,7 +81,7 @@ public class DDTest2 extends TestBase {
         };
 
         tree3.setDropHandler(new DropHandler() {
-            public void drop(DropEvent dropEvent) {
+            public void drop(DragAndDropEvent dropEvent) {
                 Transferable transferable = dropEvent.getTransferable();
                 String data = (String) transferable.getData("Text");
                 if (data == null) {
@@ -116,7 +115,7 @@ public class DDTest2 extends TestBase {
 
         DropHandler dropHandler = new DropHandler() {
 
-            public void drop(DropEvent event) {
+            public void drop(DragAndDropEvent event) {
                 /*
                  * We know transferrable is from table, so it is of type
                  * DataBindedTransferrable
@@ -172,7 +171,7 @@ public class DDTest2 extends TestBase {
          */
 
         dropHandler = new DropHandler() {
-            public void drop(DropEvent event) {
+            public void drop(DragAndDropEvent event) {
                 AbstractSelectDropDetails details = (AbstractSelectDropDetails) event
                         .getDropTargetData();
                 Transferable transferable = event.getTransferable();

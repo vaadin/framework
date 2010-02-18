@@ -118,49 +118,31 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
     private int itemDragModes = DRAG_OUT;
 
-    class TreeTransferable implements DataBoundTransferable {
+    class TreeTransferable extends DataBoundTransferable {
 
-        private final HashMap<String, Object> data = new HashMap<String, Object>();
-
-        public Object getItemId() {
-            return data.get("itemId");
+        public TreeTransferable(Component sourceComponent,
+                Map<String, Object> rawVariables) {
+            super(sourceComponent, rawVariables);
         }
 
+        @Override
+        public Object getItemId() {
+            return getData("itemId");
+        }
+
+        @Override
         public Object getPropertyId() {
             return getItemCaptionPropertyId();
         }
-
-        public Component getSourceComponent() {
-            return Tree.this;
-        }
-
-        public Object getData(String dataFlawor) {
-            if (dataFlawor.equals("Text")) {
-                return getItemCaption(getItemId());
-            }
-            return data.get(dataFlawor);
-        }
-
-        public Collection<String> getDataFlawors() {
-            return data.keySet();
-        }
-
-        public void setData(String dataFlawor, Object value) {
-            data.put(dataFlawor, value);
-        }
     }
 
-    public Transferable getTransferable(Transferable transferable,
-            Map<String, Object> payload) {
-        if (transferable == null) {
-            transferable = new TreeTransferable();
-        }
+    public Transferable getTransferable(Map<String, Object> payload) {
+        TreeTransferable transferable = new TreeTransferable(this, payload);
         // updating drag source variables
         Object object = payload.get("itemId");
         if (object != null) {
             transferable.setData("itemId", itemIdMapper.get((String) object));
         }
-        payload.remove("itemId");
 
         return transferable;
     }

@@ -25,7 +25,6 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.Action;
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.Transferable;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.event.ItemClickEvent.ItemClickSource;
@@ -3330,51 +3329,31 @@ public class Table extends AbstractSelect implements Action.Container,
         requestRepaint();
     }
 
-    class TableTransferable implements DataBoundTransferable {
+    class TableTransferable extends DataBoundTransferable {
 
-        private final HashMap<String, Object> data = new HashMap<String, Object>();
-
-        public Object getItemId() {
-            return data.get("itemId");
+        public TableTransferable(Map<String, Object> rawVariables) {
+            super(Table.this, rawVariables);
+            Object object = rawVariables.get("itemId");
+            if (object != null) {
+                setData("itemId", itemIdMapper.get((String) object));
+            }
         }
 
+        @Override
+        public Object getItemId() {
+            return getData("itemId");
+        }
+
+        @Override
         public Object getPropertyId() {
             return getItemCaptionPropertyId();
         }
 
-        public Component getSourceComponent() {
-            return Table.this;
-        }
-
-        public Object getData(String dataFlawor) {
-            return data.get(dataFlawor);
-        }
-
-        public Collection<String> getDataFlawors() {
-            return data.keySet();
-        }
-
-        public void setData(String dataFlawor, Object value) {
-            data.put(dataFlawor, value);
-        }
-
     }
 
-    private void updateTransferable(Map<String, Object> payload, Transferable tr) {
-        Object object = payload.get("itemId");
-        if (object != null) {
-            tr.setData("itemId", itemIdMapper.get((String) object));
-            payload.remove("itemId");
-        }
-    }
-
-    public TableTransferable getTransferable(Transferable transferable,
-            Map<String, Object> rawVariables) {
-        if (transferable == null) {
-            transferable = new TableTransferable();
-        }
-        updateTransferable(rawVariables, transferable);
-        return (TableTransferable) transferable;
+    public TableTransferable getTransferable(Map<String, Object> rawVariables) {
+        TableTransferable transferable = new TableTransferable(rawVariables);
+        return transferable;
     }
 
     public DropHandler getDropHandler() {

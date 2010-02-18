@@ -22,7 +22,7 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
-import com.vaadin.event.dd.TargetDetailsImpl;
+import com.vaadin.event.dd.DropTargetDetailsImpl;
 import com.vaadin.event.dd.acceptCriteria.ClientCriterion;
 import com.vaadin.event.dd.acceptCriteria.ClientSideCriterion;
 import com.vaadin.terminal.KeyMapper;
@@ -1756,7 +1756,7 @@ public abstract class AbstractSelect extends AbstractField implements
 
     }
 
-    public class AbstractSelectDropDetails extends TargetDetailsImpl {
+    public class AbstractSelectDropDetails extends DropTargetDetailsImpl {
 
         private Object idOver;
 

@@ -7,7 +7,7 @@ import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
 
 public interface DropHandler extends Serializable {
 
-    public void drop(DropEvent dropEvent);
+    public void drop(DragAndDropEvent dropEvent);
 
     /**
      * Returns the {@link AcceptCriterion} used to evaluate whether the

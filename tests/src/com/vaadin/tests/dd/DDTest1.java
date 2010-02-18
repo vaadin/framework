@@ -8,7 +8,6 @@ import com.vaadin.event.ComponentTransferable;
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
-import com.vaadin.event.dd.DropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptCriteria.IsDatabound;
@@ -65,7 +64,7 @@ public class DDTest1 extends TestBase {
                     Transferable transferable = dragEvent.getTransferable();
                     // System.out.println("Simulating 500ms processing...");
                     // try {
-                    // Thread.sleep(200);
+                    // Thread.sleep(9000);
                     // } catch (InterruptedException e) {
                     // // TODO Auto-generated catch block
                     // e.printStackTrace();
@@ -187,7 +186,7 @@ public class DDTest1 extends TestBase {
 
             }
 
-            public void drop(DropEvent event) {
+            public void drop(DragAndDropEvent event) {
                 AbstractSelectDropDetails details = (AbstractSelectDropDetails) event
                         .getDropTargetData();
                 // TODO set properties, so same sorter could be used in Table
