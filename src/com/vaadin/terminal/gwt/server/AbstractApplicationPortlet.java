@@ -461,7 +461,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         }
     }
 
-    protected void handleUnknownRequest(PortletRequest request,
+    private void handleUnknownRequest(PortletRequest request,
             PortletResponse response) {
         System.err.println("Unknown request type");
     }
@@ -483,7 +483,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * @throws IOException
      * @throws MalformedURLException
      */
-    protected void handleOtherRequest(PortletRequest request,
+    private void handleOtherRequest(PortletRequest request,
             PortletResponse response, RequestType requestType,
             Application application,
             PortletApplicationContext2 applicationContext,
@@ -541,7 +541,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         handleRequest(request, response);
     }
 
-    protected boolean handleURI(PortletCommunicationManager applicationManager,
+    private boolean handleURI(PortletCommunicationManager applicationManager,
             Window window, ResourceRequest request, ResourceResponse response)
             throws IOException {
         // Handles the URI
@@ -559,9 +559,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     }
 
     @SuppressWarnings("unchecked")
-    protected void handleDownload(DownloadStream stream,
-            ResourceRequest request, ResourceResponse response)
-            throws IOException {
+    private void handleDownload(DownloadStream stream, ResourceRequest request,
+            ResourceResponse response) throws IOException {
 
         if (stream.getParameter("Location") != null) {
             response.setProperty(ResourceResponse.HTTP_STATUS_CODE, Integer
