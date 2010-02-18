@@ -32,15 +32,12 @@ import com.vaadin.event.ItemClickEvent.ItemClickSource;
 import com.vaadin.event.dd.DragSource;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
-import com.vaadin.event.dd.TargetDetails;
-import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VScrollTable;
-import com.vaadin.ui.Tree.Location;
 
 /**
  * <p>
@@ -3388,45 +3385,8 @@ public class Table extends AbstractSelect implements Action.Container,
         this.dropHandler = dropHandler;
     }
 
-    /*
-     * TODO add propertyId
-     */
-    public class TableTargetDetails extends TargetDetailsImpl {
-        private Object idOver;
-
-        public TableTargetDetails(Map<String, Object> rawDropData) {
-            super(rawDropData);
-            // eagar fetch itemid, mapper may be emptied
-            String keyover = (String) getData("itemIdOver");
-            if (keyover != null) {
-                idOver = itemIdMapper.get(keyover);
-            }
-        }
-
-        public Object getItemIdOver() {
-            return idOver;
-        }
-
-        public Location getDropLocation() {
-            String s = (String) getData("detail");
-            if ("TOP".equals(s)) {
-                return Location.TOP;
-            } else if ("BOTTOM".equals(s)) {
-                return Location.BOTTOM;
-            } else {
-                return Location.MIDDLE;
-            }
-        }
-
-        @Override
-        public Table getTarget() {
-            return (Table) super.getTarget();
-        }
-
-    }
-
-    public TargetDetails translateDragDropDetails(
+    public AbstractSelectDropDetails translateDragDropDetails(
             Map<String, Object> clientVariables) {
-        return new TableTargetDetails(clientVariables);
+        return new AbstractSelectDropDetails(clientVariables);
     }
 }

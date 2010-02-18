@@ -23,9 +23,9 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Tree;
+import com.vaadin.ui.AbstractSelect.AbstractSelectDropDetails;
 import com.vaadin.ui.Table.DragModes;
 import com.vaadin.ui.Tree.Location;
-import com.vaadin.ui.Tree.TreeDropDetails;
 
 /**
  * DD playground. Better quality example/prototype codes in {@link DDTest2}.
@@ -188,7 +188,7 @@ public class DDTest1 extends TestBase {
             }
 
             public void drop(DropEvent event) {
-                TreeDropDetails details = (TreeDropDetails) event
+                AbstractSelectDropDetails details = (AbstractSelectDropDetails) event
                         .getDropTargetData();
                 // TODO set properties, so same sorter could be used in Table
                 Transferable transferable = event.getTransferable();

@@ -19,10 +19,19 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.event.DataBoundTransferable;
+import com.vaadin.event.Transferable;
+import com.vaadin.event.dd.DragAndDropEvent;
+import com.vaadin.event.dd.TargetDetailsImpl;
+import com.vaadin.event.dd.acceptCriteria.ClientCriterion;
+import com.vaadin.event.dd.acceptCriteria.ClientSideCriterion;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
+import com.vaadin.terminal.gwt.client.ui.dd.VIdentifierIs;
+import com.vaadin.terminal.gwt.client.ui.dd.VIsOverId;
+import com.vaadin.ui.Tree.Location;
 
 /**
  * <p>
@@ -1677,6 +1686,102 @@ public abstract class AbstractSelect extends AbstractField implements
         public void itemPropertySetChange(
                 com.vaadin.data.Item.PropertySetChangeEvent event) {
             requestRepaint();
+        }
+
+    }
+
+    /**
+     * Criterion for selects that support drop (Tree and Table). With this
+     * criterion drop is accepted on given identifier or set of identifiers.
+     */
+    @ClientCriterion(VIsOverId.class)
+    public static class IsOverId extends AbstractItemSetCriterion {
+
+        public IsOverId(AbstractSelect select, Object... itemId) {
+            super(select, itemId);
+        }
+
+        public boolean accepts(DragAndDropEvent dragEvent) {
+            AbstractSelectDropDetails dropTargetData = (AbstractSelectDropDetails) dragEvent
+                    .getDropTargetData();
+            return itemIds.contains(dropTargetData.getItemIdOver());
+        }
+
+    }
+
+    private static abstract class AbstractItemSetCriterion extends
+            ClientSideCriterion {
+        protected final Collection<Object> itemIds = new HashSet<Object>();
+        private AbstractSelect select;
+
+        public AbstractItemSetCriterion(AbstractSelect select, Object... itemId) {
+            if (itemIds == null || select == null) {
+                throw new IllegalArgumentException(
+                        "Accepted item identifiers must be accepted.");
+            }
+            Collections.addAll(itemIds, itemId);
+            this.select = select;
+        }
+
+        @Override
+        public void paintContent(PaintTarget target) throws PaintException {
+            super.paintContent(target);
+            String[] keys = new String[itemIds.size()];
+            int i = 0;
+            for (Object itemId : itemIds) {
+                String key = select.itemIdMapper.key(itemId);
+                keys[i++] = key;
+            }
+            target.addVariable(select, "keys", keys);
+        }
+
+    }
+
+    /**
+     * Criterion for selects that support drop (Tree and Table). With this
+     * criterion drop is accepted only if {@link Transferable} (from this
+     * {@link AbstractSelect}) contains given item identifier or identifiers.
+     */
+    @ClientCriterion(VIdentifierIs.class)
+    public static class IdentifierIs extends AbstractItemSetCriterion {
+        public IdentifierIs(AbstractSelect select, Object... itemId) {
+            super(select, itemId);
+        }
+
+        public boolean accepts(DragAndDropEvent dragEvent) {
+            DataBoundTransferable transferable = (DataBoundTransferable) dragEvent
+                    .getTransferable();
+            return itemIds.contains(transferable.getItemId());
+        }
+
+    }
+
+    public class AbstractSelectDropDetails extends TargetDetailsImpl {
+
+        private Object idOver;
+
+        AbstractSelectDropDetails(Map<String, Object> rawVariables) {
+            super(rawVariables);
+            // eagar fetch itemid, mapper may be emptied
+            String keyover = (String) getData("itemIdOver");
+            if (keyover != null) {
+                idOver = itemIdMapper.get(keyover);
+            }
+        }
+
+        public Object getItemIdOver() {
+            return idOver;
+        }
+
+        public Location getDropLocation() {
+            String s = (String) getData("detail");
+            if ("TOP".equals(s)) {
+                return Location.TOP;
+            } else if ("BOTTOM".equals(s)) {
+                return Location.BOTTOM;
+            } else {
+                return Location.MIDDLE;
+            }
         }
 
     }

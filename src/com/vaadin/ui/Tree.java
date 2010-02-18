@@ -32,7 +32,6 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DragSource;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
-import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.event.dd.acceptCriteria.ClientCriterion;
 import com.vaadin.event.dd.acceptCriteria.ServerSideCriterion;
 import com.vaadin.terminal.KeyMapper;
@@ -1162,32 +1161,10 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         TOP, BOTTOM, MIDDLE;
     }
 
-    public class TreeDropDetails extends TargetDetailsImpl {
-
-        private Object idOver;
+    public class TreeDropDetails extends AbstractSelectDropDetails {
 
         TreeDropDetails(Map<String, Object> rawVariables) {
             super(rawVariables);
-            // eagar fetch itemid, mapper may be emptied
-            String keyover = (String) getData("itemIdOver");
-            if (keyover != null) {
-                idOver = itemIdMapper.get(keyover);
-            }
-        }
-
-        public Object getItemIdOver() {
-            return idOver;
-        }
-
-        public Location getDropLocation() {
-            String s = (String) getData("detail");
-            if ("TOP".equals(s)) {
-                return Location.TOP;
-            } else if ("BOTTOM".equals(s)) {
-                return Location.BOTTOM;
-            } else {
-                return Location.MIDDLE;
-            }
         }
 
         @Override
@@ -1247,7 +1224,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
          * .event.dd.DragAndDropEvent)
          */
         public boolean accepts(DragAndDropEvent dragEvent) {
-            TreeDropDetails dropTargetData = (TreeDropDetails) dragEvent
+            AbstractSelectDropDetails dropTargetData = (AbstractSelectDropDetails) dragEvent
                     .getDropTargetData();
             tree = (Tree) dragEvent.getDropTargetData().getTarget();
             allowedItemIds = getAllowedItemIds(dragEvent, tree);

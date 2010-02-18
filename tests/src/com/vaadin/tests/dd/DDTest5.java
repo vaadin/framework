@@ -50,7 +50,7 @@ public class DDTest5 extends TestBase {
     protected void setup() {
         Window w = getLayout().getWindow();
 
-        VerticalSortableCssLayoutWithWrappers verticalSortableCssLayoutWithWrappers = new VerticalSortableCssLayoutWithWrappers();
+        HorizontalSortableCssLayoutWithWrappers verticalSortableCssLayoutWithWrappers = new HorizontalSortableCssLayoutWithWrappers();
         w.addWindow(verticalSortableCssLayoutWithWrappers);
         verticalSortableCssLayoutWithWrappers.setPositionX(200);
         verticalSortableCssLayoutWithWrappers.setPositionY(40); /*

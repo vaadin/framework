@@ -23,11 +23,12 @@ import com.vaadin.event.dd.acceptCriteria.OverTreeNode;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Tree.TreeDropDetails;
+import com.vaadin.ui.AbstractSelect.AbstractSelectDropDetails;
 
 public class DDTest2 extends TestBase {
 
@@ -88,7 +89,7 @@ public class DDTest2 extends TestBase {
                     data = "-no Text data flawor-";
                 }
                 tree3.addItem(data);
-                TreeDropDetails dropTargetData = (TreeDropDetails) dropEvent
+                AbstractSelect.AbstractSelectDropDetails dropTargetData = (AbstractSelect.AbstractSelectDropDetails) dropEvent
                         .getDropTargetData();
                 tree3.setParent(data, dropTargetData.getItemIdOver());
 
@@ -147,7 +148,7 @@ public class DDTest2 extends TestBase {
                  * As we also accept only drops on folders, we know dropDetails
                  * is from Tree and it contains itemIdOver.
                  */
-                TreeDropDetails details = (TreeDropDetails) event
+                AbstractSelectDropDetails details = (AbstractSelectDropDetails) event
                         .getDropTargetData();
                 Object idOver = details.getItemIdOver();
                 tree1.setParent(itemId, idOver);
@@ -172,7 +173,7 @@ public class DDTest2 extends TestBase {
 
         dropHandler = new DropHandler() {
             public void drop(DropEvent event) {
-                TreeDropDetails details = (TreeDropDetails) event
+                AbstractSelectDropDetails details = (AbstractSelectDropDetails) event
                         .getDropTargetData();
                 Transferable transferable = event.getTransferable();
 

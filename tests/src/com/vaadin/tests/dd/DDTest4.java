@@ -15,7 +15,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Table.TableTargetDetails;
+import com.vaadin.ui.AbstractSelect.AbstractSelectDropDetails;
 import com.vaadin.ui.Tree.Location;
 
 public class DDTest4 extends TestBase {
@@ -57,7 +57,7 @@ public class DDTest4 extends TestBase {
             }
 
             public void drop(DropEvent dropEvent) {
-                Table.TableTargetDetails dropTargetData = (TableTargetDetails) dropEvent
+                AbstractSelectDropDetails dropTargetData = (AbstractSelectDropDetails) dropEvent
                         .getDropTargetData();
                 DataBoundTransferable transferable = (DataBoundTransferable) dropEvent
                         .getTransferable();
