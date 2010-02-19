@@ -15,7 +15,7 @@ import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.DragAndDropWrapper.DDWrapperTransferable;
+import com.vaadin.ui.DragAndDropWrapper.WrapperTransferable;
 import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
 
 public class DDTest5 extends TestBase {
@@ -98,8 +98,8 @@ public class DDTest5 extends TestBase {
                  * here)
                  */
 
-                if (dropEvent.getTransferable() instanceof DDWrapperTransferable) {
-                    DDWrapperTransferable transferable = (DDWrapperTransferable) dropEvent
+                if (dropEvent.getTransferable() instanceof WrapperTransferable) {
+                    WrapperTransferable transferable = (WrapperTransferable) dropEvent
                             .getTransferable();
                     Component sourceComponent = transferable
                             .getSourceComponent();

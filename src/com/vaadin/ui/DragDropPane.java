@@ -2,7 +2,7 @@ package com.vaadin.ui;
 
 import java.util.Map;
 
-import com.vaadin.event.ComponentTransferable;
+import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
@@ -36,7 +36,10 @@ import com.vaadin.terminal.gwt.client.MouseEventDetails;
  * layouts wouldn't need changes (and have regression risk/ performance
  * penalty).
  * 
+ * @deprecated use {@link DragAndDropWrapper} instead
+ * 
  */
+@Deprecated
 @SuppressWarnings("serial")
 @ClientWidget(com.vaadin.terminal.gwt.client.ui.VDragDropPane.class)
 public class DragDropPane extends AbsoluteLayout implements DropTarget {
@@ -76,8 +79,8 @@ public class DragDropPane extends AbsoluteLayout implements DropTarget {
 
             DragEventDetails ed = (DragEventDetails) event.getDropTargetData();
             Transferable transferable = event.getTransferable();
-            if (transferable instanceof ComponentTransferable) {
-                ComponentTransferable ctr = (ComponentTransferable) transferable;
+            if (transferable instanceof TransferableImpl) {
+                TransferableImpl ctr = (TransferableImpl) transferable;
                 // use "component" (from DragDropPane) if available, else take
                 // the source component
                 Component component = (Component) ctr.getData("component");

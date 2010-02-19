@@ -3,7 +3,7 @@
  */
 package com.vaadin.event.dd.acceptCriteria;
 
-import com.vaadin.event.ComponentTransferable;
+import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.terminal.gwt.client.ui.dd.VSourceIsSameAsTarget;
@@ -13,8 +13,8 @@ import com.vaadin.ui.Component;
 public class SourceIsSameAsTarget extends ClientSideCriterion {
 
     public boolean accepts(DragAndDropEvent dragEvent) {
-        if (dragEvent.getTransferable() instanceof ComponentTransferable) {
-            Component sourceComponent = ((ComponentTransferable) dragEvent
+        if (dragEvent.getTransferable() instanceof TransferableImpl) {
+            Component sourceComponent = ((TransferableImpl) dragEvent
                     .getTransferable()).getSourceComponent();
             DropTarget target = dragEvent.getDropTargetData().getTarget();
             return sourceComponent == target;

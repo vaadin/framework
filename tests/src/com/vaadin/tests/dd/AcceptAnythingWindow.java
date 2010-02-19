@@ -1,17 +1,138 @@
 package com.vaadin.tests.dd;
 
-import com.vaadin.ui.DragDropPane;
+import com.vaadin.event.DataBoundTransferable;
+import com.vaadin.event.Transferable;
+import com.vaadin.event.TransferableImpl;
+import com.vaadin.event.dd.DragAndDropEvent;
+import com.vaadin.event.dd.DropHandler;
+import com.vaadin.event.dd.acceptCriteria.AcceptAll;
+import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.ui.AbsoluteLayout;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.DragAndDropWrapper;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
+import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
+import com.vaadin.ui.DragAndDropWrapper.WrapperDropDetails;
+import com.vaadin.ui.DragAndDropWrapper.WrapperTransferable;
 
 public class AcceptAnythingWindow extends Window {
 
+    private AbsoluteLayout layout = new AbsoluteLayout();
+
     public AcceptAnythingWindow() {
         setCaption("Drop anything here");
-        DragDropPane pane = new DragDropPane();
-        setContent(pane);
-        pane.setSizeFull();
+
+        final DragAndDropWrapper wrapper = new DragAndDropWrapper(layout);
+        wrapper.setDropHandler(new DropHandler() {
+
+            public AcceptCriterion getAcceptCriterion() {
+                return AcceptAll.get();
+            }
+
+            public void drop(DragAndDropEvent event) {
+                WrapperDropDetails ed = (WrapperDropDetails) event
+                        .getDropTargetData();
+                Transferable transferable = event.getTransferable();
+                TransferableImpl ctr = (TransferableImpl) transferable;
+                // use "component" (from DragDropPane) if available, else
+                // take
+                // the source component
+                Component component = ctr.getSourceComponent();
+                if (component == wrapper) {
+                    WrapperTransferable tr = (WrapperTransferable) transferable;
+                    component = tr.getDraggedComponent();
+                }
+
+                if (component != null) {
+
+                    if (component.getParent() != layout) {
+                        if (transferable instanceof DataBoundTransferable) {
+                            // Item has been dragged, construct a Label from
+                            // Item id
+                            Label l = new Label();
+                            l.setSizeUndefined();
+                            l.setValue("ItemId : "
+                                    + ((DataBoundTransferable) transferable)
+                                            .getItemId());
+                            layout.addComponent(l);
+                            component = l;
+
+                        } else {
+                            // we have a component that is been dragged, add
+                            // it
+                            // to
+                            // this
+                            layout.addComponent(component);
+                        }
+
+                        Integer left = ed.getAbsoluteLeft();
+                        Integer top = ed.getAbsoluteTop();
+
+                        MouseEventDetails eventDetails = ed.getMouseEvent();
+
+                        int clientX = eventDetails.getClientX();
+                        int clientY = eventDetails.getClientY();
+
+                        try {
+                            layout.getPosition(component).setTopValue(
+                                    clientY - top);
+                            layout.getPosition(component).setLeftValue(
+                                    clientX - left);
+                        } catch (Exception e) {
+                            // TODO: handle exception
+                        }
+                    } else {
+
+                        WrapperTransferable tr = (WrapperTransferable) transferable;
+                        // drag ended inside the this Pane
+
+                        MouseEventDetails start = tr.getMouseDownEvent();
+                        MouseEventDetails eventDetails = ed.getMouseEvent();
+
+                        int deltaX = eventDetails.getClientX()
+                                - start.getClientX();
+                        int deltaY = eventDetails.getClientY()
+                                - start.getClientY();
+
+                        ComponentPosition p = layout.getPosition(component);
+                        p.setTopValue(p.getTopValue() + deltaY);
+                        p.setLeftValue(p.getLeftValue() + deltaX);
+
+                    }
+
+                } else {
+                    // drag coming outside of Vaadin
+                    String object = (String) transferable.getData("text/plain");
+
+                    String content = (String) transferable
+                            .getData("fileContents");
+
+                    Label l = new Label();
+                    l.setCaption("Generated from HTML5 drag:");
+                    if (object != null) {
+                        l.setValue(object);
+                    } else {
+                        l.setValue("HTML5 dd");
+                    }
+
+                    l.setDescription(content);
+                    l.setSizeUndefined();
+
+                    layout.addComponent(l);
+
+                }
+                return;
+            }
+        });
+
+        wrapper.setDragStartMode(DragStartMode.COMPONENT);
+        wrapper.setSizeFull();
+        setContent(wrapper);
+
         setWidth("250px");
         setHeight("100px");
     }
-
 }

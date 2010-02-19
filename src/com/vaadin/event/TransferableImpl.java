@@ -6,11 +6,11 @@ import java.util.Map;
 
 import com.vaadin.ui.Component;
 
-public class ComponentTransferable implements Transferable {
+public class TransferableImpl implements Transferable {
     private Map<String, Object> rawVariables = new HashMap<String, Object>();
     private Component sourceComponent;
 
-    public ComponentTransferable(Component sourceComponent,
+    public TransferableImpl(Component sourceComponent,
             Map<String, Object> rawVariables) {
         this.sourceComponent = sourceComponent;
         this.rawVariables = rawVariables;

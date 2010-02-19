@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.vaadin.ui.Component;
 
-public abstract class DataBoundTransferable extends ComponentTransferable {
+public abstract class DataBoundTransferable extends TransferableImpl {
 
     public DataBoundTransferable(Component sourceComponent,
             Map<String, Object> rawVariables) {

@@ -1,6 +1,6 @@
 package com.vaadin.tests.dd;
 
-import com.vaadin.event.ComponentTransferable;
+import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
@@ -24,8 +24,8 @@ public class AcceptFromComponent extends Window {
 
             public boolean accepts(DragAndDropEvent dragEvent) {
                 Transferable transferable = dragEvent.getTransferable();
-                if (transferable instanceof ComponentTransferable) {
-                    ComponentTransferable componentTransferrable = (ComponentTransferable) transferable;
+                if (transferable instanceof TransferableImpl) {
+                    TransferableImpl componentTransferrable = (TransferableImpl) transferable;
                     if (componentTransferrable.getSourceComponent() == tree1) {
                         return true;
                     }

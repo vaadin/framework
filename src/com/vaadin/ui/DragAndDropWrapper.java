@@ -2,23 +2,27 @@ package com.vaadin.ui;
 
 import java.util.Map;
 
-import com.vaadin.event.ComponentTransferable;
+import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragSource;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.DropTargetDetails;
+import com.vaadin.event.dd.DropTargetDetailsImpl;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper;
+import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
+import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 
 @ClientWidget(VDragAndDropWrapper.class)
 public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         DragSource {
 
-    public class DDWrapperTransferable extends ComponentTransferable {
+    public class WrapperTransferable extends TransferableImpl {
 
-        public DDWrapperTransferable(Component sourceComponent,
+        public WrapperTransferable(Component sourceComponent,
                 Map<String, Object> rawVariables) {
             super(sourceComponent, rawVariables);
         }
@@ -33,6 +37,61 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
             Component object = (Component) getData("component");
             return object;
         }
+
+        /**
+         * @return the mouse down event that started the drag and drop operation
+         */
+        public MouseEventDetails getMouseDownEvent() {
+            return MouseEventDetails.deSerialize((String) getData("mouseDown"));
+        }
+
+    }
+
+    public class WrapperDropDetails extends DropTargetDetailsImpl {
+
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
+
+        public WrapperDropDetails(Map<String, Object> rawDropData) {
+            super(rawDropData);
+        }
+
+        /**
+         * @return the absolute position of wrapper on the page
+         */
+        public Integer getAbsoluteLeft() {
+            return (Integer) getData("absoluteLeft");
+        }
+
+        /**
+         * 
+         * @return the absolute position of wrapper on the page
+         */
+        public Integer getAbsoluteTop() {
+            return (Integer) getData("absoluteTop");
+        }
+
+        /**
+         * @return details about the actual event that caused the event details.
+         *         Practically mouse move or mouse up.
+         */
+        public MouseEventDetails getMouseEvent() {
+            return MouseEventDetails
+                    .deSerialize((String) getData("mouseEvent"));
+        }
+
+        public VerticalDropLocation verticalDropLocation() {
+            return VerticalDropLocation
+                    .valueOf((String) getData("verticalLocation"));
+        }
+
+        public HorizontalDropLocation horizontalDropLocation() {
+            return HorizontalDropLocation
+                    .valueOf((String) getData("horizontalLocation"));
+        }
+
     }
 
     public enum DragStartMode {
@@ -71,12 +130,11 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
 
     public DropTargetDetails translateDragDropDetails(
             Map<String, Object> clientVariables) {
-        // TODO Auto-generated method stub
-        return null;
+        return new WrapperDropDetails(clientVariables);
     }
 
     public Transferable getTransferable(final Map<String, Object> rawVariables) {
-        return new DDWrapperTransferable(this, rawVariables);
+        return new WrapperTransferable(this, rawVariables);
     }
 
     public void setDragStartMode(DragStartMode dragStartMode) {

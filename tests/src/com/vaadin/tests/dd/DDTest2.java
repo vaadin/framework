@@ -1,8 +1,6 @@
 package com.vaadin.tests.dd;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
@@ -19,6 +17,7 @@ import com.vaadin.event.dd.acceptCriteria.ComponentFilter;
 import com.vaadin.event.dd.acceptCriteria.IsDatabound;
 import com.vaadin.event.dd.acceptCriteria.Or;
 import com.vaadin.event.dd.acceptCriteria.OverTreeNode;
+import com.vaadin.event.dd.acceptCriteria.ServerSideCriterion;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.tests.components.TestBase;
@@ -28,6 +27,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.AbstractSelect.AbstractSelectDropDetails;
+import com.vaadin.ui.Tree.TreeDropDetails;
 
 public class DDTest2 extends TestBase {
 
@@ -70,13 +70,19 @@ public class DDTest2 extends TestBase {
          * explicitly defining them here), but demonstrates lazy initialization
          * option if rules are heavy.
          */
-        final AcceptCriterion crit = new Tree.TreeDropCriterion() {
+        final AcceptCriterion crit = new ServerSideCriterion() {
+            public boolean accepts(DragAndDropEvent dragEvent) {
 
-            @Override
-            protected Set<Object> getAllowedItemIds(DragAndDropEvent dragEvent,
-                    Tree tree) {
-                HashSet<Object> hashSet = new HashSet<Object>(tree.getItemIds());
-                return hashSet;
+                TreeDropDetails dropTargetData = (TreeDropDetails) dragEvent
+                        .getDropTargetData();
+
+                Object itemIdOver = dropTargetData.getItemIdOver();
+
+                int i = r.nextInt();
+                if (i % 2 == 0) {
+                    return true;
+                }
+                return false;
             }
         };
 

@@ -3,7 +3,7 @@
  */
 package com.vaadin.event.dd.acceptCriteria;
 
-import com.vaadin.event.ComponentTransferable;
+import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
@@ -28,8 +28,8 @@ public class ComponentFilter extends ClientSideCriterion {
     }
 
     public boolean accepts(DragAndDropEvent dragEvent) {
-        if (dragEvent.getTransferable() instanceof ComponentTransferable) {
-            Component sourceComponent = ((ComponentTransferable) dragEvent
+        if (dragEvent.getTransferable() instanceof TransferableImpl) {
+            Component sourceComponent = ((TransferableImpl) dragEvent
                     .getTransferable()).getSourceComponent();
             for (Component c : component) {
                 if (c == sourceComponent) {

@@ -2,7 +2,7 @@ package com.vaadin.tests.dd;
 
 import java.util.Iterator;
 
-import com.vaadin.event.ComponentTransferable;
+import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -54,8 +54,8 @@ public class HorizontalSortableCssLayoutWithWrappers extends Window {
 
         public void drop(DragAndDropEvent dropEvent) {
             Transferable transferable = dropEvent.getTransferable();
-            if (transferable instanceof ComponentTransferable) {
-                ComponentTransferable ct = (ComponentTransferable) transferable;
+            if (transferable instanceof TransferableImpl) {
+                TransferableImpl ct = (TransferableImpl) transferable;
                 Component sourceComponent = ct.getSourceComponent();
                 if (sourceComponent instanceof WrappedLabel) {
                     int index = 1;

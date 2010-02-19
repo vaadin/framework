@@ -1210,6 +1210,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                     .getDropTargetData();
             tree = (Tree) dragEvent.getDropTargetData().getTarget();
             allowedItemIds = getAllowedItemIds(dragEvent, tree);
+
             return allowedItemIds.contains(dropTargetData.getItemIdOver());
         }
 

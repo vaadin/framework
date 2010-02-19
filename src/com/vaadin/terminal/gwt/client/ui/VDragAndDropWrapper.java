@@ -10,6 +10,7 @@ import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -68,6 +69,9 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                         paintable = VDragAndDropWrapper.this;
                     }
 
+                    transferable.setData("mouseDown", new MouseEventDetails(
+                            event.getNativeEvent()).serialize());
+
                     startDrag.createDragImage(
                             ((Widget) paintable).getElement(), true);
                     event.preventDefault(); // prevent text selection
@@ -112,6 +116,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         }
         ApplicationConnection.getConsole().log("HTML 5 Drag Enter");
         VTransferable transferable = new VTransferable();
+        transferable.setDragSource(this);
 
         vaadinDragEvent = VDragAndDropManager.get().startDrag(transferable,
                 event, false);

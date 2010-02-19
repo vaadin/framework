@@ -1,11 +1,9 @@
 package com.vaadin.terminal.gwt.server;
 
 import java.io.PrintWriter;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
-import com.vaadin.event.ComponentTransferable;
+import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DragSource;
@@ -179,30 +177,9 @@ public class DragAndDropService implements VariableOwner {
         if (sourceComponent != null && sourceComponent instanceof DragSource) {
             transferable = ((DragSource) sourceComponent)
                     .getTransferable(variables);
-        } else {
-            if (transferable == null) {
-                if (sourceComponent != null) {
-                    transferable = new ComponentTransferable(sourceComponent,
-                            variables);
-                } else {
-                    transferable = new Transferable() {
-                        private Map<String, Object> td = new HashMap<String, Object>();
-
-                        public Object getData(String dataFlawor) {
-                            return td.get(dataFlawor);
-                        }
-
-                        public void setData(String dataFlawor, Object value) {
-                            td.put(dataFlawor, value);
-                        }
-
-                        public Collection<String> getDataFlawors() {
-                            return td.keySet();
-                        }
-
-                    };
-                }
-            }
+        }
+        if (transferable == null) {
+            transferable = new TransferableImpl(sourceComponent, variables);
         }
 
         return transferable;

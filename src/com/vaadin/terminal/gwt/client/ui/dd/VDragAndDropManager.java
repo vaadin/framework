@@ -534,8 +534,7 @@ public class VDragAndDropManager {
                         mouseEventDetails.serialize());
             } catch (Exception e) {
                 // NOP, (at least oophm on Safari) can't serialize html dd event
-                // to
-                // mouseevent
+                // to mouseevent
             }
         } else {
             currentDrag.getDropDetails().put("mouseEvent", null);
