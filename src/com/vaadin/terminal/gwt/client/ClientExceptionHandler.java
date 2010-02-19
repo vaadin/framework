@@ -3,7 +3,7 @@ package com.vaadin.terminal.gwt.client;
 public class ClientExceptionHandler {
 
     public static void displayError(Throwable e) {
-        displayError(e.getMessage());
+        displayError(e.getClass().getName() + ": " + e.getMessage());
         e.printStackTrace();
     }
 
