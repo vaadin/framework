@@ -184,10 +184,11 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
 
             // loop oldWidgetWrappers that where not re-attached and unregister
             // them
-            for (final Iterator<Widget> it = oldWidgets.iterator(); it
-                    .hasNext();) {
-                final Paintable w = (Paintable) it.next();
-                client.unregisterPaintable(w);
+            for (Widget w : oldWidgets) {
+                if (w instanceof Paintable) {
+                    final Paintable p = (Paintable) w;
+                    client.unregisterPaintable(p);
+                }
                 widgetToCaption.remove(w);
             }
         }
