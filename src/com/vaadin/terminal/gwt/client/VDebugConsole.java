@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
@@ -304,6 +305,10 @@ public final class VDebugConsole extends VOverlay implements Console {
      * @see com.vaadin.terminal.gwt.client.Console#log(java.lang.String)
      */
     public void log(String msg) {
+        if (msg == null) {
+            msg = "null";
+        }
+
         panel.add(new HTML(msg));
         System.out.println(msg);
         consoleLog(msg);
@@ -315,7 +320,14 @@ public final class VDebugConsole extends VOverlay implements Console {
      * @see com.vaadin.terminal.gwt.client.Console#error(java.lang.String)
      */
     public void error(String msg) {
-        panel.add((new HTML(msg)));
+        if (msg == null) {
+            msg = "null";
+        }
+
+        HTML html = new HTML(msg);
+        html.getElement().getStyle().setColor("#f00");
+        html.getElement().getStyle().setFontWeight(FontWeight.BOLD);
+        panel.add(html);
         System.err.println(msg);
         consoleErr(msg);
     }
@@ -327,7 +339,13 @@ public final class VDebugConsole extends VOverlay implements Console {
      * Object)
      */
     public void printObject(Object msg) {
-        panel.add((new Label(msg.toString())));
+        String str;
+        if (msg == null) {
+            str = "null";
+        } else {
+            str = msg.toString();
+        }
+        panel.add((new Label(str)));
         consoleLog(msg.toString());
     }
 
