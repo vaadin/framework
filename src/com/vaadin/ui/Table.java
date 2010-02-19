@@ -502,6 +502,8 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Assures the visual refresh
+        // FIXME: Is this really needed? Header captions should not affect
+        // content so requestRepaint() should be sufficient.
         resetPageBuffer();
         refreshRenderedCells();
     }
@@ -971,6 +973,8 @@ public class Table extends AbstractSelect implements Action.Container,
         columnHeaders.put(propertyId, header);
 
         // Assures the visual refresh
+        // FIXME: Is this really needed? Header captions should not affect
+        // content so requestRepaint() should be sufficient.
         refreshRenderedCells();
     }
 
