@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.core.client.JsArray;
-import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
@@ -325,8 +324,8 @@ public final class VDebugConsole extends VOverlay implements Console {
         }
 
         HTML html = new HTML(msg);
-        html.getElement().getStyle().setColor("#f00");
-        html.getElement().getStyle().setFontWeight(FontWeight.BOLD);
+        html.getElement().getStyle().setProperty("color", "#f00");
+        html.getElement().getStyle().setProperty("font-weight", "bold");
         panel.add(html);
         System.err.println(msg);
         consoleErr(msg);
