@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 
 import com.vaadin.Application;
 import com.vaadin.service.FileTypeResolver;
+import com.vaadin.terminal.Terminal.ErrorEvent;
 
 /**
  * <code>FileResources</code> are files or directories on local filesystem. The
@@ -67,7 +68,16 @@ public class FileResource implements ApplicationResource {
             ds.setCacheTime(cacheTime);
             return ds;
         } catch (final FileNotFoundException e) {
-            // No logging for non-existing files at this level.
+            // Log the exception using the application error handler
+            getApplication().getErrorHandler().terminalError(new ErrorEvent() {
+
+                @Override
+                public Throwable getThrowable() {
+                    return e;
+                }
+
+            });
+
             return null;
         }
     }
