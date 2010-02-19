@@ -213,12 +213,14 @@ public class VUIDLBrowser extends Tree implements MouseOutHandler {
 
     private static void highlight(Paintable paintable) {
         Widget w = (Widget) paintable;
-        Style style = highlight.getStyle();
-        style.setTop(w.getAbsoluteTop(), Unit.PX);
-        style.setLeft(w.getAbsoluteLeft(), Unit.PX);
-        style.setWidth(w.getOffsetWidth(), Unit.PX);
-        style.setHeight(w.getOffsetHeight(), Unit.PX);
-        RootPanel.getBodyElement().appendChild(highlight);
+        if (w != null) {
+            Style style = highlight.getStyle();
+            style.setTop(w.getAbsoluteTop(), Unit.PX);
+            style.setLeft(w.getAbsoluteLeft(), Unit.PX);
+            style.setWidth(w.getOffsetWidth(), Unit.PX);
+            style.setHeight(w.getOffsetHeight(), Unit.PX);
+            RootPanel.getBodyElement().appendChild(highlight);
+        }
     }
 
     private static void deHiglight() {

@@ -29,8 +29,8 @@ import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.gwt.client.ui.dd.VIdentifierIs;
 import com.vaadin.terminal.gwt.client.ui.dd.VIsOverId;
+import com.vaadin.terminal.gwt.client.ui.dd.VItemIdIs;
 import com.vaadin.ui.Tree.Location;
 
 /**
@@ -1742,9 +1742,9 @@ public abstract class AbstractSelect extends AbstractField implements
      * criterion drop is accepted only if {@link Transferable} (from this
      * {@link AbstractSelect}) contains given item identifier or identifiers.
      */
-    @ClientCriterion(VIdentifierIs.class)
-    public static class IdentifierIs extends AbstractItemSetCriterion {
-        public IdentifierIs(AbstractSelect select, Object... itemId) {
+    @ClientCriterion(VItemIdIs.class)
+    public static class ItemIdIs extends AbstractItemSetCriterion {
+        public ItemIdIs(AbstractSelect select, Object... itemId) {
             super(select, itemId);
         }
 

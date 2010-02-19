@@ -7,7 +7,7 @@ import java.util.Set;
 
 import com.vaadin.terminal.gwt.client.UIDL;
 
-final public class VIdentifierIs extends VAcceptCriterion {
+final public class VItemIdIs extends VAcceptCriterion {
 
     @Override
     public boolean validates(VDragEvent drag, UIDL configuration) {

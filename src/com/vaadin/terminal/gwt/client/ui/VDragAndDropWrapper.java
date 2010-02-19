@@ -29,18 +29,9 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 
 /**
  * 
- * Must have features:
- * 
- * stylenames to root element depending on place on component
- * 
- * 
- * allow size to change on emphasis/deemphasis (behave well for vaadin layout
- * system)
- * 
- * html5 drops
+ * Must have features pending:
  * 
  * drop details: locations + sizes in document hierarchy up to wrapper
- * 
  * 
  */
 public class VDragAndDropWrapper extends VCustomComponent implements
@@ -65,7 +56,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                     transferable.setData("component", paintable);
                     VDragEvent startDrag = VDragAndDropManager.get().startDrag(
                             transferable, event.getNativeEvent(), true);
-                    if (dragStarMode == WRAPPER) {
+                    if (dragStarMode == WRAPPER || paintable == null) {
                         paintable = VDragAndDropWrapper.this;
                     }
 
@@ -382,6 +373,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             }
         }
         client.handleComponentRelativeSize(VDragAndDropWrapper.this);
+        Util.notifyParentOfSizeChange(this, false);
+
     }
 
 }

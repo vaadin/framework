@@ -37,13 +37,13 @@ public class AcceptAnythingWindow extends Window {
                         .getDropTargetData();
                 Transferable transferable = event.getTransferable();
                 TransferableImpl ctr = (TransferableImpl) transferable;
-                // use "component" (from DragDropPane) if available, else
-                // take
-                // the source component
                 Component component = ctr.getSourceComponent();
                 if (component == wrapper) {
+                    // if the drag source was wrapper we are interested about
+                    // the dragged component
                     WrapperTransferable tr = (WrapperTransferable) transferable;
                     component = tr.getDraggedComponent();
+                    // html5 drag created by wrapper set component null
                 }
 
                 if (component != null) {
