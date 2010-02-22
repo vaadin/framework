@@ -65,7 +65,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Modes that Table support as drag sourse.
      */
     public enum DragModes {
-        NONE, ROWS, CELLS
+        NONE, ROWS
     }
 
     private static final int CELL_KEY = 0;
