@@ -24,6 +24,24 @@
 	padding-top: 7px;
 	padding-left: 6px;
 }
+/* Different for historical reasons: previously was inherited directly from Base theme */
+/* TODO unify these values in version 7 */
+.v-gridlayout-margin-top {
+	padding-top: 24px;
+}
+.v-gridlayout-margin-bottom {
+	padding-bottom: 24px;
+}
+.v-gridlayout-margin-left {
+	padding-left: 24px;
+} 
+.v-gridlayout-margin-right {
+	padding-right: 24px;
+}
+.v-gridlayout-spacing-on {
+	padding-left: 12px;
+	padding-top: 12px;
+}
 /* Blue background */
 .v-verticallayout-blue,
 .v-horizontallayout-blue,
