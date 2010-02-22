@@ -3364,8 +3364,8 @@ public class Table extends AbstractSelect implements Action.Container,
         this.dropHandler = dropHandler;
     }
 
-    public AbstractSelectDropDetails translateDragDropDetails(
+    public AbstractSelectDropTargetDetails translateDropTargetDetails(
             Map<String, Object> clientVariables) {
-        return new AbstractSelectDropDetails(clientVariables);
+        return new AbstractSelectDropTargetDetails(clientVariables);
     }
 }

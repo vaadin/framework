@@ -8,8 +8,15 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.dd.VDropDetailEquals;
 
+/**
+ * Criteria for checking if drop target details contain the specific property
+ * with the specific value.
+ * 
+ * @since 6.3
+ * 
+ */
 @ClientCriterion(VDropDetailEquals.class)
-public final class DropDetailEquals extends ClientSideCriterion {
+public final class DropTargetDetailEquals extends ClientSideCriterion {
 
     private String propertyName;
     private String value;
@@ -20,7 +27,7 @@ public final class DropDetailEquals extends ClientSideCriterion {
      * @param propertyName
      * @param value
      */
-    public DropDetailEquals(String propertyName, String value) {
+    public DropTargetDetailEquals(String propertyName, String value) {
         this.propertyName = propertyName;
         this.value = value;
     }
@@ -33,7 +40,7 @@ public final class DropDetailEquals extends ClientSideCriterion {
     }
 
     public boolean accepts(DragAndDropEvent dragEvent) {
-        Object data = dragEvent.getDropTargetData().getData(propertyName);
+        Object data = dragEvent.getDropTargetDetails().getData(propertyName);
         return value.equals(data);
     }
 }

@@ -11,6 +11,12 @@ import com.vaadin.event.dd.DropHandler;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 
+/**
+ * TODO Javadoc
+ * 
+ * @since 6.3
+ * 
+ */
 public interface AcceptCriterion extends Serializable {
 
     /**

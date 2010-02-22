@@ -8,6 +8,12 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.dd.VNot;
 
+/**
+ * TODO Javadoc
+ * 
+ * @since 6.3
+ * 
+ */
 @ClientCriterion(VNot.class)
 public class Not extends ClientSideCriterion {
 

@@ -13,10 +13,9 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptCriteria.And;
-import com.vaadin.event.dd.acceptCriteria.ComponentFilter;
-import com.vaadin.event.dd.acceptCriteria.IsDatabound;
+import com.vaadin.event.dd.acceptCriteria.IsDragSource;
+import com.vaadin.event.dd.acceptCriteria.IsDataBound;
 import com.vaadin.event.dd.acceptCriteria.Or;
-import com.vaadin.event.dd.acceptCriteria.OverTreeNode;
 import com.vaadin.event.dd.acceptCriteria.ServerSideCriterion;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
@@ -26,8 +25,9 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.AbstractSelect.AbstractSelectDropDetails;
-import com.vaadin.ui.Tree.TreeDropDetails;
+import com.vaadin.ui.AbstractSelect.AbstractSelectDropTargetDetails;
+import com.vaadin.ui.Tree.OverTreeNode;
+import com.vaadin.ui.Tree.TreeDropTargetDetails;
 
 public class DDTest2 extends TestBase {
 
@@ -73,8 +73,8 @@ public class DDTest2 extends TestBase {
         final AcceptCriterion crit = new ServerSideCriterion() {
             public boolean accepts(DragAndDropEvent dragEvent) {
 
-                TreeDropDetails dropTargetData = (TreeDropDetails) dragEvent
-                        .getDropTargetData();
+                TreeDropTargetDetails dropTargetData = (TreeDropTargetDetails) dragEvent
+                        .getDropTargetDetails();
 
                 Object itemIdOver = dropTargetData.getItemIdOver();
 
@@ -94,8 +94,8 @@ public class DDTest2 extends TestBase {
                     data = "-no Text data flawor-";
                 }
                 tree3.addItem(data);
-                AbstractSelect.AbstractSelectDropDetails dropTargetData = (AbstractSelect.AbstractSelectDropDetails) dropEvent
-                        .getDropTargetData();
+                AbstractSelect.AbstractSelectDropTargetDetails dropTargetData = (AbstractSelect.AbstractSelectDropTargetDetails) dropEvent
+                        .getDropTargetDetails();
                 tree3.setParent(data, dropTargetData.getItemIdOver());
 
             }
@@ -113,9 +113,9 @@ public class DDTest2 extends TestBase {
         table.setDragMode(Table.DragModes.ROWS);
 
         OverTreeNode onNode = new OverTreeNode();
-        ComponentFilter fromTable = new ComponentFilter(table);
+        IsDragSource fromTable = new IsDragSource(table);
 
-        ComponentFilter fromTree = new ComponentFilter(tree1);
+        IsDragSource fromTree = new IsDragSource(tree1);
         final Or fromTree1OrTable = new Or(fromTable, fromTree);
         final And and = new And(fromTree1OrTable, onNode);
 
@@ -153,8 +153,8 @@ public class DDTest2 extends TestBase {
                  * As we also accept only drops on folders, we know dropDetails
                  * is from Tree and it contains itemIdOver.
                  */
-                AbstractSelectDropDetails details = (AbstractSelectDropDetails) event
-                        .getDropTargetData();
+                AbstractSelectDropTargetDetails details = (AbstractSelectDropTargetDetails) event
+                        .getDropTargetDetails();
                 Object idOver = details.getItemIdOver();
                 tree1.setParent(itemId, idOver);
 
@@ -178,8 +178,8 @@ public class DDTest2 extends TestBase {
 
         dropHandler = new DropHandler() {
             public void drop(DragAndDropEvent event) {
-                AbstractSelectDropDetails details = (AbstractSelectDropDetails) event
-                        .getDropTargetData();
+                AbstractSelectDropTargetDetails details = (AbstractSelectDropTargetDetails) event
+                        .getDropTargetDetails();
                 Transferable transferable = event.getTransferable();
 
                 if (transferable instanceof DataBoundTransferable) {
@@ -217,7 +217,7 @@ public class DDTest2 extends TestBase {
             }
 
             public AcceptCriterion getAcceptCriterion() {
-                return IsDatabound.get();
+                return IsDataBound.get();
             }
         };
 

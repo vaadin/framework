@@ -74,10 +74,10 @@ public class DragDropPane extends AbsoluteLayout implements DropTarget {
 
     public static class ImportPrettyMuchAnything implements DropHandler {
         public void drop(DragAndDropEvent event) {
-            DragDropPane pane = (DragDropPane) event.getDropTargetData()
+            DragDropPane pane = (DragDropPane) event.getDropTargetDetails()
                     .getTarget();
 
-            DragEventDetails ed = (DragEventDetails) event.getDropTargetData();
+            DragEventDetails ed = (DragEventDetails) event.getDropTargetDetails();
             Transferable transferable = event.getTransferable();
             if (transferable instanceof TransferableImpl) {
                 TransferableImpl ctr = (TransferableImpl) transferable;
@@ -191,7 +191,7 @@ public class DragDropPane extends AbsoluteLayout implements DropTarget {
 
     }
 
-    public DropTargetDetails translateDragDropDetails(
+    public DropTargetDetails translateDropTargetDetails(
             Map<String, Object> clientVariables) {
         return new DragEventDetails(clientVariables);
     }

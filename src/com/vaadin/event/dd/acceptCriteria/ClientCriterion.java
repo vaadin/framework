@@ -10,7 +10,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCriterion;
 /**
  * TODO
  * 
- * @since 6.2
+ * @since 6.3
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

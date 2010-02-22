@@ -50,7 +50,7 @@ public class VTransferable {
         variables.put(dataFlawor, value);
     }
 
-    public Collection<String> getDataFlawors() {
+    public Collection<String> getDataFlavors() {
         return variables.keySet();
     }
 

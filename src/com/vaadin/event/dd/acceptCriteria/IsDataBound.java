@@ -7,14 +7,20 @@ import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.terminal.gwt.client.ui.dd.VDataBound;
 
+/**
+ * TODO Javadoc
+ * 
+ * @since 6.3
+ * 
+ */
 @ClientCriterion(VDataBound.class)
-public final class IsDatabound extends ClientSideCriterion {
-    private static IsDatabound singleton = new IsDatabound();
+public final class IsDataBound extends ClientSideCriterion {
+    private static IsDataBound singleton = new IsDataBound();
 
-    private IsDatabound() {
+    private IsDataBound() {
     }
 
-    public static IsDatabound get() {
+    public static IsDataBound get() {
         return singleton;
     }
 

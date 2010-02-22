@@ -6,14 +6,15 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.dd.VServerAccept;
 
+/**
+ * TODO Javadoc
+ * 
+ * @since 6.3
+ * 
+ */
 @ClientCriterion(VServerAccept.class)
 public abstract class ServerSideCriterion implements Serializable,
         AcceptCriterion {
-
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1L;
 
     public final boolean isClientSideVerifiable() {
         return false;

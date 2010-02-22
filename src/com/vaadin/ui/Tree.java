@@ -33,6 +33,7 @@ import com.vaadin.event.dd.DragSource;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.acceptCriteria.ClientCriterion;
+import com.vaadin.event.dd.acceptCriteria.ClientSideCriterion;
 import com.vaadin.event.dd.acceptCriteria.ServerSideCriterion;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
@@ -41,6 +42,7 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VTree;
 import com.vaadin.terminal.gwt.client.ui.dd.VLazyInitItemIdentifiers;
+import com.vaadin.terminal.gwt.client.ui.dd.VOverTreeNode;
 
 /**
  * Tree component. A Tree can be used to select an item (or multiple items) from
@@ -119,35 +121,6 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     public enum DragMode {
         NONE, NODES;
 
-    }
-
-    class TreeTransferable extends DataBoundTransferable {
-
-        public TreeTransferable(Component sourceComponent,
-                Map<String, Object> rawVariables) {
-            super(sourceComponent, rawVariables);
-        }
-
-        @Override
-        public Object getItemId() {
-            return getData("itemId");
-        }
-
-        @Override
-        public Object getPropertyId() {
-            return getItemCaptionPropertyId();
-        }
-    }
-
-    public Transferable getTransferable(Map<String, Object> payload) {
-        TreeTransferable transferable = new TreeTransferable(this, payload);
-        // updating drag source variables
-        Object object = payload.get("itemId");
-        if (object != null) {
-            transferable.setData("itemId", itemIdMapper.get((String) object));
-        }
-
-        return transferable;
     }
 
     /* Tree constructors */
@@ -1146,9 +1119,14 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         TOP, BOTTOM, MIDDLE;
     }
 
-    public class TreeDropDetails extends AbstractSelectDropDetails {
+    /**
+     * TODO Javadoc!
+     * 
+     * @since 6.3
+     */
+    public class TreeDropTargetDetails extends AbstractSelectDropTargetDetails {
 
-        TreeDropDetails(Map<String, Object> rawVariables) {
+        TreeDropTargetDetails(Map<String, Object> rawVariables) {
             super(rawVariables);
         }
 
@@ -1159,9 +1137,14 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
     }
 
-    public TreeDropDetails translateDragDropDetails(
+    /**
+     * TODO Javadoc!
+     * 
+     * @since 6.3
+     */
+    public TreeDropTargetDetails translateDropTargetDetails(
             Map<String, Object> clientVariables) {
-        return new TreeDropDetails(clientVariables);
+        return new TreeDropTargetDetails(clientVariables);
     }
 
     /**
@@ -1172,6 +1155,45 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      */
     private String key(Object itemId) {
         return itemIdMapper.key(itemId);
+    }
+
+    /**
+     * TODO Javadoc!
+     * 
+     * @since 6.3
+     */
+    public class TreeTransferable extends DataBoundTransferable {
+
+        public TreeTransferable(Component sourceComponent,
+                Map<String, Object> rawVariables) {
+            super(sourceComponent, rawVariables);
+        }
+
+        @Override
+        public Object getItemId() {
+            return getData("itemId");
+        }
+
+        @Override
+        public Object getPropertyId() {
+            return getItemCaptionPropertyId();
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.event.dd.DragSource#getTransferable(java.util.Map)
+     */
+    public Transferable getTransferable(Map<String, Object> payload) {
+        TreeTransferable transferable = new TreeTransferable(this, payload);
+        // updating drag source variables
+        Object object = payload.get("itemId");
+        if (object != null) {
+            transferable.setData("itemId", itemIdMapper.get((String) object));
+        }
+
+        return transferable;
     }
 
     /**
@@ -1209,9 +1231,9 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
          * .event.dd.DragAndDropEvent)
          */
         public boolean accepts(DragAndDropEvent dragEvent) {
-            AbstractSelectDropDetails dropTargetData = (AbstractSelectDropDetails) dragEvent
-                    .getDropTargetData();
-            tree = (Tree) dragEvent.getDropTargetData().getTarget();
+            AbstractSelectDropTargetDetails dropTargetData = (AbstractSelectDropTargetDetails) dragEvent
+                    .getDropTargetDetails();
+            tree = (Tree) dragEvent.getDropTargetDetails().getTarget();
             allowedItemIds = getAllowedItemIds(dragEvent, tree);
 
             return allowedItemIds.contains(dropTargetData.getItemIdOver());
@@ -1243,4 +1265,34 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
     }
 
+    /**
+     * Accepts transferable only on tree Node (middle of the node + can has
+     * child)
+     * 
+     * @since 6.3
+     */
+    @ClientCriterion(VOverTreeNode.class)
+    public static class OverTreeNode extends ClientSideCriterion {
+
+        private static final long serialVersionUID = 1L;
+
+        public boolean accepts(DragAndDropEvent dragEvent) {
+            try {
+                // must be over tree node and in the middle of it (not top or
+                // bottom part)
+                TreeDropTargetDetails eventDetails = (TreeDropTargetDetails) dragEvent
+                        .getDropTargetDetails();
+
+                Object itemIdOver = eventDetails.getItemIdOver();
+                if (!eventDetails.getTarget().areChildrenAllowed(itemIdOver)) {
+                    return false;
+                }
+
+                return eventDetails.getDropLocation() == Location.MIDDLE;
+            } catch (Exception e) {
+                return false;
+            }
+        }
+
+    }
 }

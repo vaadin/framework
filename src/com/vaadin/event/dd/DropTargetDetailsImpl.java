@@ -5,6 +5,12 @@ import java.util.Map;
 
 import com.vaadin.terminal.gwt.server.DragAndDropService;
 
+/**
+ * TODO Javadoc
+ * 
+ * @since 6.3
+ * 
+ */
 public class DropTargetDetailsImpl implements DropTargetDetails {
 
     private HashMap<String, Object> data = new HashMap<String, Object>();

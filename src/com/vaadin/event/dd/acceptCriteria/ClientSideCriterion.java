@@ -5,34 +5,46 @@ import java.io.Serializable;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 
+/**
+ * Parent class for criteria that can be completely validated on client side.
+ * All classes that provide criteria that can be completely validated on client
+ * side should extend this class.
+ * 
+ * @since 6.3
+ */
 public abstract class ClientSideCriterion implements Serializable,
-		AcceptCriterion {
+        AcceptCriterion {
 
-	/**
+    /*
+     * All criteria that extend this must be completely validatable on client
+     * side.
      * 
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.event.dd.acceptCriteria.AcceptCriterion#isClientSideVerifiable
+     * ()
      */
-	private static final long serialVersionUID = 1L;
+    public final boolean isClientSideVerifiable() {
+        return true;
+    }
 
-	public final boolean isClientSideVerifiable() {
-		return true;
-	}
+    public void paint(PaintTarget target) throws PaintException {
+        target.startTag("-ac");
+        target.addAttribute("name", getIdentifier());
+        paintContent(target);
+        target.endTag("-ac");
+    }
 
-	public void paint(PaintTarget target) throws PaintException {
-		target.startTag("-ac");
-		target.addAttribute("name", getIdentifier());
-		paintContent(target);
-		target.endTag("-ac");
-	}
+    protected void paintContent(PaintTarget target) throws PaintException {
+    }
 
-	public void paintContent(PaintTarget target) throws PaintException {
-	}
+    protected String getIdentifier() {
+        return getClass().getCanonicalName();
+    }
 
-	protected String getIdentifier() {
-		return getClass().getCanonicalName();
-	}
-
-	public final void paintResponse(PaintTarget target) throws PaintException {
-		// NOP, nothing to do as this is client side verified criterion
-	}
+    public final void paintResponse(PaintTarget target) throws PaintException {
+        // NOP, nothing to do as this is client side verified criterion
+    }
 
 }

@@ -141,7 +141,7 @@ public class DragAndDropService implements VariableOwner {
                 .get("evt");
 
         DropTargetDetails dropData = dropTarget
-                .translateDragDropDetails(rawDragDropDetails);
+                .translateDropTargetDetails(rawDragDropDetails);
 
         if (dropData == null) {
             // Create a default DragDropDetails with all the raw variables

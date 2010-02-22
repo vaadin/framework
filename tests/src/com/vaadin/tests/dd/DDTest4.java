@@ -8,14 +8,14 @@ import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
-import com.vaadin.event.dd.acceptCriteria.ComponentFilter;
+import com.vaadin.event.dd.acceptCriteria.IsDragSource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.AbstractSelect.AbstractSelectDropDetails;
+import com.vaadin.ui.AbstractSelect.AbstractSelectDropTargetDetails;
 import com.vaadin.ui.Tree.Location;
 
 public class DDTest4 extends TestBase {
@@ -50,15 +50,15 @@ public class DDTest4 extends TestBase {
 
         table.setDropHandler(new DropHandler() {
             // accept only drags from this table
-            AcceptCriterion crit = new ComponentFilter(table);
+            AcceptCriterion crit = new IsDragSource(table);
 
             public AcceptCriterion getAcceptCriterion() {
                 return crit;
             }
 
             public void drop(DragAndDropEvent dropEvent) {
-                AbstractSelectDropDetails dropTargetData = (AbstractSelectDropDetails) dropEvent
-                        .getDropTargetData();
+                AbstractSelectDropTargetDetails dropTargetData = (AbstractSelectDropTargetDetails) dropEvent
+                        .getDropTargetDetails();
                 DataBoundTransferable transferable = (DataBoundTransferable) dropEvent
                         .getTransferable();
                 Object itemIdOver = dropTargetData.getItemIdOver();

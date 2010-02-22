@@ -5,6 +5,12 @@ import java.io.Serializable;
 import com.vaadin.event.dd.acceptCriteria.AcceptAll;
 import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
 
+/**
+ * TODO Javadoc
+ * 
+ * @since 6.3
+ * 
+ */
 public interface DropHandler extends Serializable {
 
     public void drop(DragAndDropEvent dropEvent);

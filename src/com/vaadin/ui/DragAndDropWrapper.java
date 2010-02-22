@@ -128,7 +128,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         requestRepaint();
     }
 
-    public DropTargetDetails translateDragDropDetails(
+    public DropTargetDetails translateDropTargetDetails(
             Map<String, Object> clientVariables) {
         return new WrapperDropDetails(clientVariables);
     }

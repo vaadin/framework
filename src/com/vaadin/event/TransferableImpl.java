@@ -6,6 +6,11 @@ import java.util.Map;
 
 import com.vaadin.ui.Component;
 
+/**
+ * TODO Javadoc!
+ * 
+ * @since 6.3
+ */
 public class TransferableImpl implements Transferable {
     private Map<String, Object> rawVariables = new HashMap<String, Object>();
     private Component sourceComponent;
@@ -20,15 +25,15 @@ public class TransferableImpl implements Transferable {
         return sourceComponent;
     }
 
-    public Object getData(String dataFlawor) {
-        return rawVariables.get(dataFlawor);
+    public Object getData(String dataFlavor) {
+        return rawVariables.get(dataFlavor);
     }
 
-    public void setData(String dataFlawor, Object value) {
-        rawVariables.put(dataFlawor, value);
+    public void setData(String dataFlavor, Object value) {
+        rawVariables.put(dataFlavor, value);
     }
 
-    public Collection<String> getDataFlawors() {
+    public Collection<String> getDataFlavors() {
         return rawVariables.keySet();
     }
 

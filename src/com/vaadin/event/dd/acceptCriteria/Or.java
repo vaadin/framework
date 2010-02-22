@@ -9,7 +9,9 @@ import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.dd.VOr;
 
 /**
- * TODO consider replacing this with intersection
+ * TODO Javadoc
+ * 
+ * @since 6.3
  * 
  */
 @ClientCriterion(VOr.class)

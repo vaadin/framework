@@ -10,9 +10,9 @@ import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.DropTargetDetails;
 import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptCriteria.And;
-import com.vaadin.event.dd.acceptCriteria.DropDetailEquals;
+import com.vaadin.event.dd.acceptCriteria.DropTargetDetailEquals;
 import com.vaadin.event.dd.acceptCriteria.Not;
-import com.vaadin.event.dd.acceptCriteria.SourceIsSameAsTarget;
+import com.vaadin.event.dd.acceptCriteria.IsSameSourceAndTarget;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.HorizontalLayout;
@@ -51,9 +51,9 @@ public class HorizontalLayoutSortableWithWrappers extends Window {
     }
 
     private DropHandler dh = new DropHandler() {
-        AcceptCriterion crit = new And(new DropDetailEquals(
+        AcceptCriterion crit = new And(new DropTargetDetailEquals(
                 "horizontalLocation", "LEFT"), new Not(
-                new SourceIsSameAsTarget()));
+                new IsSameSourceAndTarget()));
 
         public AcceptCriterion getAcceptCriterion() {
             return crit;
@@ -70,7 +70,7 @@ public class HorizontalLayoutSortableWithWrappers extends Window {
                             .getComponentIterator();
                     Component next = componentIterator.next();
                     DropTargetDetails dropTargetData = dropEvent
-                            .getDropTargetData();
+                            .getDropTargetDetails();
                     DropTarget target = dropTargetData.getTarget();
                     while (next != target) {
                         if (next != sourceComponent) {

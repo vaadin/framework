@@ -7,14 +7,21 @@ import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.dd.VComponentFilter;
+import com.vaadin.terminal.gwt.client.ui.dd.VIsDragSource;
 import com.vaadin.ui.Component;
 
-@ClientCriterion(VComponentFilter.class)
-public class ComponentFilter extends ClientSideCriterion {
+/**
+ * Client side criteria that checks if the drag source is one of the given
+ * components.
+ * 
+ * @since 6.3
+ */
+@ClientCriterion(VIsDragSource.class)
+public class IsDragSource extends ClientSideCriterion {
+
     private Component[] component;
 
-    public ComponentFilter(Component... component) {
+    public IsDragSource(Component... component) {
         this.component = component;
     }
 

@@ -6,6 +6,12 @@ package com.vaadin.event.dd.acceptCriteria;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.terminal.gwt.client.ui.dd.VAcceptAll;
 
+/**
+ * Criterion that accepts all drops anywhere on the component.
+ * 
+ * @since 6.3
+ * 
+ */
 @ClientCriterion(VAcceptAll.class)
 public final class AcceptAll extends ClientSideCriterion {
 

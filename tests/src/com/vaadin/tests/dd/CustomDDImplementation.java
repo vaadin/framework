@@ -55,7 +55,7 @@ public class CustomDDImplementation extends CustomComponent {
             };
         }
 
-        public DropTargetDetails translateDragDropDetails(
+        public DropTargetDetails translateDropTargetDetails(
                 Map<String, Object> clientVariables) {
             // If component has some special drop details that it needs to
             // translate for server side use, developer must return a

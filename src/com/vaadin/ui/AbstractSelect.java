@@ -20,7 +20,6 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.DataBoundTransferable;
-import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropTargetDetailsImpl;
 import com.vaadin.event.dd.acceptCriteria.ClientCriterion;
@@ -1691,24 +1690,33 @@ public abstract class AbstractSelect extends AbstractField implements
     }
 
     /**
-     * Criterion for selects that support drop (Tree and Table). With this
-     * criterion drop is accepted on given identifier or set of identifiers.
+     * Criterion which accepts a drop only if the drop target is (one of) the
+     * given item identifier(s). Meaningful only for drop targets that extends
+     * AbstractSelect.
+     * 
+     * @since 6.3
      */
     @ClientCriterion(VIsOverId.class)
-    public static class IsOverId extends AbstractItemSetCriterion {
+    public static class DropTargetItemId extends AbstractItemSetCriterion {
 
-        public IsOverId(AbstractSelect select, Object... itemId) {
+        public DropTargetItemId(AbstractSelect select, Object... itemId) {
             super(select, itemId);
         }
 
         public boolean accepts(DragAndDropEvent dragEvent) {
-            AbstractSelectDropDetails dropTargetData = (AbstractSelectDropDetails) dragEvent
-                    .getDropTargetData();
+            AbstractSelectDropTargetDetails dropTargetData = (AbstractSelectDropTargetDetails) dragEvent
+                    .getDropTargetDetails();
             return itemIds.contains(dropTargetData.getItemIdOver());
         }
 
     }
 
+    /**
+     * TODO Javadoc!
+     * 
+     * @since 6.3
+     * 
+     */
     private static abstract class AbstractItemSetCriterion extends
             ClientSideCriterion {
         protected final Collection<Object> itemIds = new HashSet<Object>();
@@ -1738,13 +1746,17 @@ public abstract class AbstractSelect extends AbstractField implements
     }
 
     /**
-     * Criterion for selects that support drop (Tree and Table). With this
-     * criterion drop is accepted only if {@link Transferable} (from this
-     * {@link AbstractSelect}) contains given item identifier or identifiers.
+     * Criterion which accepts a drop only if the transferable contains the
+     * given item identifier(s). The item ids relate to the drag source
+     * (AbstractSelect).
+     * 
+     * @since 6.3
      */
     @ClientCriterion(VItemIdIs.class)
-    public static class ItemIdIs extends AbstractItemSetCriterion {
-        public ItemIdIs(AbstractSelect select, Object... itemId) {
+    public static class TransferableContainsItemId extends
+            AbstractItemSetCriterion {
+        public TransferableContainsItemId(AbstractSelect select,
+                Object... itemId) {
             super(select, itemId);
         }
 
@@ -1756,11 +1768,20 @@ public abstract class AbstractSelect extends AbstractField implements
 
     }
 
-    public class AbstractSelectDropDetails extends DropTargetDetailsImpl {
+    /**
+     * TODO Javadoc!
+     * 
+     * @since 6.3
+     */
+    public class AbstractSelectDropTargetDetails extends DropTargetDetailsImpl {
 
         private Object idOver;
 
-        AbstractSelectDropDetails(Map<String, Object> rawVariables) {
+        /**
+         * TODO Javadoc!
+         * 
+         */
+        AbstractSelectDropTargetDetails(Map<String, Object> rawVariables) {
             super(rawVariables);
             // eagar fetch itemid, mapper may be emptied
             String keyover = (String) getData("itemIdOver");
@@ -1769,10 +1790,19 @@ public abstract class AbstractSelect extends AbstractField implements
             }
         }
 
+        /**
+         * TODO Javadoc!
+         * 
+         */
         public Object getItemIdOver() {
             return idOver;
         }
 
+        /**
+         * TODO Javadoc!
+         * 
+         * @since 6.3
+         */
         public Location getDropLocation() {
             String s = (String) getData("detail");
             if ("TOP".equals(s)) {

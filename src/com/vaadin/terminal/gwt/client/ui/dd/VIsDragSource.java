@@ -1,12 +1,14 @@
-/**
- * 
- */
 package com.vaadin.terminal.gwt.client.ui.dd;
 
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 
-final public class VComponentFilter extends VAcceptCriterion {
+/**
+ * TODO Javadoc!
+ * 
+ * @since 6.3
+ */
+final public class VIsDragSource extends VAcceptCriterion {
 
     @Override
     public boolean validates(VDragEvent drag, UIDL configuration) {

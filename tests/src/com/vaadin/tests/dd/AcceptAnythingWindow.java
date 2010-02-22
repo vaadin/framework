@@ -34,7 +34,7 @@ public class AcceptAnythingWindow extends Window {
 
             public void drop(DragAndDropEvent event) {
                 WrapperDropDetails ed = (WrapperDropDetails) event
-                        .getDropTargetData();
+                        .getDropTargetDetails();
                 Transferable transferable = event.getTransferable();
                 TransferableImpl ctr = (TransferableImpl) transferable;
                 Component component = ctr.getSourceComponent();

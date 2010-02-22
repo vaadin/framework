@@ -5,30 +5,29 @@ import java.util.Map;
 import com.vaadin.ui.Component;
 
 /**
- * DropTarget is a marker interface for components supporting drop operations. A
+ * DropTarget is an interface for components supporting drop operations. A
  * component that wants to receive drop events should implement this interface
  * and provide a DropHandler which will handle the actual drop event.
  * 
+ * @since 6.3
  */
 public interface DropTarget extends Component {
 
     public DropHandler getDropHandler();
 
     /**
-     * Called before a drop operation to translate the drop data provided by the
-     * client widget. Should return a DropData implementation with the new
-     * values. If null is returned the terminal implementation will
-     * automatically create a {@link DropTargetDetails} with all the client
-     * variables.
-     * <p>
-     * If this method returns null the data from client side will be passed
-     * through as-is without conversion.
+     * Called before a drop operation to translate the drop target details
+     * provided by the client widget (drop target). Should return a DropData
+     * implementation with the new values. If null is returned the terminal
+     * implementation will automatically create a {@link DropTargetDetails} with
+     * all the client variables.
      * 
      * @param rawVariables
      *            Parameters passed from the client side widget.
-     * @return A DropData object with the translated data or null.
+     * @return A DropTargetDetails object with the translated data or null to
+     *         use a default implementation.
      */
-    public DropTargetDetails translateDragDropDetails(
+    public DropTargetDetails translateDropTargetDetails(
             Map<String, Object> clientVariables);
 
 }

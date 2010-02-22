@@ -8,15 +8,15 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 
 /**
- * TODO consider replacing this with Union
+ * Criterion that joins two {@link ClientSideCriterion} together and validates
+ * if both sub criterion validate.
+ * 
+ * @since 6.3
  * 
  */
 @ClientCriterion(com.vaadin.terminal.gwt.client.ui.dd.VAnd.class)
 public class And extends ClientSideCriterion {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1L;
+
     private AcceptCriterion f1;
     private AcceptCriterion f2;
 
@@ -25,20 +25,11 @@ public class And extends ClientSideCriterion {
         this.f2 = f2;
     }
 
-    // @Override
-    // public boolean isClientSideVerifiable() {
-    // boolean a1 = f1 instanceof AcceptCriterion ? (f1)
-    // .isClientSideVerifiable() : false;
-    // boolean a2 = f2 instanceof AcceptCriterion ? (f2)
-    // .isClientSideVerifiable() : false;
-    // return a1 && a2;
-    // }
-
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
-        (f1).paint(target);
-        (f2).paint(target);
+        f1.paint(target);
+        f2.paint(target);
     }
 
     public boolean accepts(DragAndDropEvent dragEvent) {
