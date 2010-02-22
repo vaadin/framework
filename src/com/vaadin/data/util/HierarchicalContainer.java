@@ -91,7 +91,11 @@ public class HierarchicalContainer extends IndexedContainer implements
      * interface.
      */
     public boolean isRoot(Object itemId) {
-        return parent.get(itemId) == null;
+        if (parent.containsKey(itemId)) {
+            return false;
+        }
+
+        return containsId(itemId);
     }
 
     /*
