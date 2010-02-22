@@ -111,12 +111,15 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      */
     private boolean initialPaint = true;
 
-    // TODO sort DD members and methods
-    public static int DRAG_SORTABLE = 1;
-    public static int DRAG_OUT = 2;
-    public static int DRAG_NONE = 0;
+    private DragMode dragMode = DragMode.NONE;
 
-    private int itemDragModes = DRAG_OUT;
+    /**
+     * Supported drag modes for Tree.
+     */
+    public enum DragMode {
+        NONE, NODES;
+
+    }
 
     class TreeTransferable extends DataBoundTransferable {
 
@@ -480,8 +483,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 target.addAttribute("nullselect", true);
             }
 
-            if (itemDragModes != 0) {
-                target.addAttribute("dragModes", itemDragModes);
+            if (dragMode != DragMode.NONE) {
+                target.addAttribute("dragMode", dragMode.ordinal());
             }
 
         }

@@ -67,7 +67,7 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
 
     private boolean rendering;
 
-    private int dragModes;
+    private int dragMode = 0;
 
     private VAbstractDropHandler dropHandler;
 
@@ -150,8 +150,10 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
 
         selectedIds = uidl.getStringArrayVariableAsSet("selected");
 
-        if (uidl.hasAttribute("dragModes")) {
-            dragModes = uidl.getIntAttribute("dragModes");
+        if (uidl.hasAttribute("dragMode")) {
+            dragMode = uidl.getIntAttribute("dragMode");
+        } else {
+            dragMode = 0;
         }
 
         rendering = false;
@@ -396,7 +398,7 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                 showContextMenu(event);
             }
 
-            if (dragModes != 0 || dropHandler != null) {
+            if (dragMode != 0 || dropHandler != null) {
                 if (type == Event.ONMOUSEDOWN) {
                     if (nodeCaptionDiv.isOrHasChild(event.getTarget())) {
                         ApplicationConnection.getConsole().log(
