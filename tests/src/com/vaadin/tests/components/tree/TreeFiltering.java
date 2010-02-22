@@ -55,6 +55,7 @@ public class TreeFiltering extends Application {
 
             }
         });
+
         mainWindow.addComponent(b2);
         final Button num = new Button("Add filter '0'", new ClickListener() {
             public void buttonClick(final ClickEvent event) {
@@ -62,6 +63,7 @@ public class TreeFiltering extends Application {
 
             }
         });
+
         mainWindow.addComponent(num);
         final Button r = new Button("Remove filter", new ClickListener() {
             public void buttonClick(final ClickEvent event) {
@@ -70,6 +72,7 @@ public class TreeFiltering extends Application {
             }
         });
         mainWindow.addComponent(r);
+
         setMainWindow(mainWindow);
     }
 
