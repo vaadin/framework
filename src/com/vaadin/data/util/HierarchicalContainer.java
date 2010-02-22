@@ -51,7 +51,10 @@ public class HierarchicalContainer extends IndexedContainer implements
      * here, we use the default documentation from implemented interface.
      */
     public boolean areChildrenAllowed(Object itemId) {
-        return !noChildrenAllowed.contains(itemId);
+        if (noChildrenAllowed.contains(itemId)) {
+            return false;
+        }
+        return containsId(itemId);
     }
 
     /*
