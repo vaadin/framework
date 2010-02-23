@@ -1053,25 +1053,60 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         }
     }
 
+    /**
+     * An interface used for listening to Window close events. Add the
+     * CloseListener to a browser level window or a sub window and
+     * {@link CloseListener#windowClose(CloseEvent)} will be called whenever the
+     * user closes the window.
+     * 
+     * <p>
+     * Note that removing windows using {@link #removeWindow(Window)} will not
+     * fire the CloseListener.
+     * </p>
+     */
     public interface CloseListener extends Serializable {
+        /**
+         * Called when the user closes a window. Use
+         * {@link CloseEvent#getWindow()} to get a reference to the
+         * {@link Window} that was closed.
+         * 
+         * @param e
+         *            Event containing
+         */
         public void windowClose(CloseEvent e);
     }
 
     /**
-     * Adds the listener.
+     * Adds a CloseListener to the window.
+     * 
+     * For a sub window the CloseListener is fired when the user closes it
+     * (clicks on the close button).
+     * 
+     * For a browser level window the CloseListener is fired when the browser
+     * level window is closed. Note that closing a browser level window does not
+     * mean it will be destroyed.
+     * 
+     * <p>
+     * Note that removing windows using {@link #removeWindow(Window)} will not
+     * fire the CloseListener.
+     * </p>
      * 
      * @param listener
-     *            the listener to add.
+     *            the CloseListener to add.
      */
     public void addListener(CloseListener listener) {
         addListener(CloseEvent.class, listener, WINDOW_CLOSE_METHOD);
     }
 
     /**
-     * Removes the listener.
+     * Removes the CloseListener from the window.
+     * 
+     * <p>
+     * For more information on CloseListeners see {@link CloseListener}.
+     * </p>
      * 
      * @param listener
-     *            the listener to remove.
+     *            the CloseListener to remove.
      */
     public void removeListener(CloseListener listener) {
         addListener(CloseEvent.class, listener, WINDOW_CLOSE_METHOD);
