@@ -372,10 +372,6 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
 
         onResize(Window.getClientWidth(), Window.getClientHeight());
 
-        if (BrowserInfo.get().isSafari()) {
-            Util.runWebkitOverflowAutoFix(getElement());
-        }
-
         // finally set scroll position from UIDL
         if (uidl.hasVariable("scrollTop")) {
             scrollable = true;
@@ -385,6 +381,12 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
             DOM.setElementPropertyInt(getElement(), "scrollLeft", scrollLeft);
         } else {
             scrollable = false;
+        }
+
+        // Safari workaround must be run after scrollTop is updated as it sets
+        // scrollTop using a deferred command.
+        if (BrowserInfo.get().isSafari()) {
+            Util.runWebkitOverflowAutoFix(getElement());
         }
 
         rendering = false;
