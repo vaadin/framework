@@ -85,7 +85,7 @@ public abstract class AbstractContainerTest extends TestCase {
     protected static final Object PROP2 = "PROP2";
     protected static final Object PROP3 = "PROP3";
 
-    protected void testBasicContainerOperations(Container.Filterable container) {
+    protected void testBasicContainerOperations(Container container) {
         initializeContainer(container);
 
         // Basic container

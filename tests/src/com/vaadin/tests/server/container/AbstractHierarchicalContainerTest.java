@@ -8,6 +8,7 @@ import com.vaadin.data.Container.Hierarchical;
 import com.vaadin.data.Container.Sortable;
 
 public class AbstractHierarchicalContainerTest extends AbstractContainerTest {
+
     private void validateHierarchicalContainer(Hierarchical container,
             Object expectedFirstItemId, Object expectedLastItemId,
             Object itemIdInSet, Object itemIdNotInSet, int expectedSize,
@@ -44,19 +45,19 @@ public class AbstractHierarchicalContainerTest extends AbstractContainerTest {
             }
         }
 
-        // isRoot should return false for unknown items (#4215)
+        // isRoot should return false for unknown items
         assertFalse(container.isRoot(itemIdNotInSet));
 
         // hasChildren should return false for unknown items
         assertFalse(container.hasChildren(itemIdNotInSet));
 
-        // areChildrenAllowed should return false for unknown items (#4216)
+        // areChildrenAllowed should return false for unknown items
         assertFalse(container.areChildrenAllowed(itemIdNotInSet));
 
         // removeItem of unknown items should return false
         assertFalse(container.removeItem(itemIdNotInSet));
 
-        assertEquals(countNodes(container), expectedSize);
+        assertEquals(expectedSize, countNodes(container));
 
         validateHierarchy(container);
     }
@@ -158,8 +159,7 @@ public class AbstractHierarchicalContainerTest extends AbstractContainerTest {
         validateHierarchicalContainer(container,
                 "com.vaadin.data.BufferedValidatable",
                 "com.vaadin.ui.TabSheet",
-                "com.vaadin.terminal.gwt.client.Focusable",
-                "com.vaadin.data.Buffered", 20, 0);
+                "com.vaadin.terminal.gwt.client.Focusable", "blah", 20, 0);
 
         // filter out every second item except hierarchy items
         filterable.removeAllContainerFilters();
@@ -179,20 +179,6 @@ public class AbstractHierarchicalContainerTest extends AbstractContainerTest {
                 "com.vaadin.data.util.IndexedContainer",
                 "com.vaadin.terminal.gwt.client.ui.VUriFragmentUtility",
                 packages + other, 0);
-        //
-        // int packages = 21;
-        // validateHierarchicalContainer(container, "com",
-        // "com.vaadin.util.SerializerHelper",
-        // "com.vaadin.terminal.ApplicationResource", "blah",
-        // sampleData.length + packages, 1);
-        //
-        // sortable.sort(new Object[] { PROP2 }, new boolean[] { true });
-        //
-        // validateHierarchicalContainer(container,
-        // "com.vaadin.terminal.gwt.server.ApplicationPortlet2",
-        // "com.vaadin.data.util.ObjectProperty",
-        // "com.vaadin.terminal.ApplicationResource", "blah",
-        // sampleData.length + packages, 1);
 
     }
 
