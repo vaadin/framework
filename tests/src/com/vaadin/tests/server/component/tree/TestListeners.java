@@ -121,14 +121,12 @@ public class TestListeners extends TestCase implements ExpandListener,
         assertEquals(0, collapseCalled);
     }
 
-    @Override
     public void nodeExpand(ExpandEvent event) {
         lastExpanded = event.getItemId();
         expandCalled++;
 
     }
 
-    @Override
     public void nodeCollapse(CollapseEvent event) {
         lastCollapsed = event.getItemId();
         collapseCalled++;

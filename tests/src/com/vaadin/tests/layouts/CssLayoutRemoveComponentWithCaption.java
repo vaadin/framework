@@ -15,7 +15,6 @@ public class CssLayoutRemoveComponentWithCaption extends TestBase {
         final TextField tf = new TextField("Caption");
         Button b = new Button("Remove field and add new", new ClickListener() {
 
-            @Override
             public void buttonClick(ClickEvent event) {
                 layout.removeComponent(tf);
                 addComponent(new TextField("new field"));
