@@ -1,23 +1,20 @@
 package com.vaadin.tests.components.tree;
 
-import com.vaadin.Application;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.HierarchicalContainer;
+import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Tree;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 
-public class TreeFiltering extends Application {
+public class TreeFiltering extends TestBase {
 
     @Override
-    public void init() {
-        final Window mainWindow = new Window("Vaadintest Application");
+    public void setup() {
 
         final Tree ccTree = new Tree();
-        mainWindow.addComponent(ccTree);
-
+        addComponent(ccTree);
         final HierarchicalContainer cont = new HierarchicalContainer();
         cont.addContainerProperty("caption", String.class, "");
 
@@ -48,7 +45,7 @@ public class TreeFiltering extends Application {
 
             }
         });
-        mainWindow.addComponent(b);
+        addComponent(b);
         final Button b2 = new Button("Add filter 'Num'", new ClickListener() {
             public void buttonClick(final ClickEvent event) {
                 cont.addContainerFilter("caption", "Num", true, false);
@@ -56,7 +53,7 @@ public class TreeFiltering extends Application {
             }
         });
 
-        mainWindow.addComponent(b2);
+        addComponent(b2);
         final Button num = new Button("Add filter '0'", new ClickListener() {
             public void buttonClick(final ClickEvent event) {
                 cont.addContainerFilter("caption", "0", true, false);
@@ -64,16 +61,24 @@ public class TreeFiltering extends Application {
             }
         });
 
-        mainWindow.addComponent(num);
+        addComponent(num);
         final Button r = new Button("Remove filter", new ClickListener() {
             public void buttonClick(final ClickEvent event) {
                 cont.removeAllContainerFilters();
 
             }
         });
-        mainWindow.addComponent(r);
+        addComponent(r);
+    }
 
-        setMainWindow(mainWindow);
+    @Override
+    protected String getDescription() {
+        return "Filtering in a tree should work as expected. Roots and their children which match the filter should be shown. Other nodes should be hidden";
+    }
+
+    @Override
+    protected Integer getTicketNumber() {
+        return 4192;
     }
 
 }
