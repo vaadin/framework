@@ -51,7 +51,10 @@ public class HierarchicalContainer extends IndexedContainer implements
      * here, we use the default documentation from implemented interface.
      */
     public boolean areChildrenAllowed(Object itemId) {
-        return !noChildrenAllowed.contains(itemId);
+        if (noChildrenAllowed.contains(itemId)) {
+            return false;
+        }
+        return containsId(itemId);
     }
 
     /*
@@ -91,7 +94,11 @@ public class HierarchicalContainer extends IndexedContainer implements
      * interface.
      */
     public boolean isRoot(Object itemId) {
-        return parent.get(itemId) == null;
+        if (parent.containsKey(itemId)) {
+            return false;
+        }
+
+        return containsId(itemId);
     }
 
     /*

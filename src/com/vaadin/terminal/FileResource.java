@@ -71,7 +71,6 @@ public class FileResource implements ApplicationResource {
             // Log the exception using the application error handler
             getApplication().getErrorHandler().terminalError(new ErrorEvent() {
 
-                @Override
                 public Throwable getThrowable() {
                     return e;
                 }

@@ -217,7 +217,12 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
             return ((Container.Hierarchical) container)
                     .areChildrenAllowed(itemId);
         }
-        return !noChildrenAllowed.contains(itemId);
+
+        if (noChildrenAllowed.contains(itemId)) {
+            return false;
+        }
+
+        return containsId(itemId);
     }
 
     /*
@@ -281,7 +286,11 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
             return ((Container.Hierarchical) container).isRoot(itemId);
         }
 
-        return parent.get(itemId) == null;
+        if (parent.containsKey(itemId)) {
+            return false;
+        }
+
+        return containsId(itemId);
     }
 
     /*

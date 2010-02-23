@@ -21,7 +21,6 @@ public class NonExistingFileResource extends TestBase {
         Button b = new Button("Download " + filename);
         b.addListener(new Button.ClickListener() {
 
-            @Override
             public void buttonClick(ClickEvent event) {
                 FileResource res = new FileResource(new File(getContext()
                         .getBaseDirectory()
