@@ -301,9 +301,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     .getIntAttribute("firstrow"), uidl.getIntAttribute("rows"));
             bodyContainer.add(scrollBody);
             initialContentReceived = true;
-            ApplicationConnection.getConsole().log("foo");
             if (isAttached()) {
-                ApplicationConnection.getConsole().log("bar");
                 sizeInit();
             }
             scrollBody.restoreRowVisibility();
@@ -737,6 +735,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             }
             boolean needsSpaceForHorizontalSrollbar = (total > availW);
             if (needsSpaceForHorizontalSrollbar) {
+                ApplicationConnection.getConsole().log(
+                        "needsSpaceForHorizontalSrollbar: "
+                                + Util.getNativeScrollbarSize());
                 bodyHeight += Util.getNativeScrollbarSize();
             }
             bodyContainer.setHeight(bodyHeight + "px");
