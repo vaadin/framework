@@ -1109,7 +1109,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      *            the CloseListener to remove.
      */
     public void removeListener(CloseListener listener) {
-        addListener(CloseEvent.class, listener, WINDOW_CLOSE_METHOD);
+        removeListener(CloseEvent.class, listener, WINDOW_CLOSE_METHOD);
     }
 
     protected void fireClose() {
