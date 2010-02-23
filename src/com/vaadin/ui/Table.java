@@ -36,14 +36,20 @@ import com.vaadin.terminal.gwt.client.ui.VScrollTable;
 
 /**
  * <p>
- * <code>TableComponent</code> is used for representing data or components in
- * pageable and selectable table.
+ * <code>Table</code> is used for representing data or components in a pageable
+ * and selectable table.
  * </p>
  * 
  * <p>
- * Note! Since version 5, components in Table will not have their caption nor
- * icon rendered. In order to workaround this limitation, wrap your component in
- * a Layout.
+ * Scalability of the Table is largely dictated by the container. A table does
+ * not have a limit for the number of items and is just as fast with hundreds of
+ * thousands of items as with just a few. The current GWT implementation with
+ * scrolling however limits the number of rows to around 500000, depending on
+ * the browser and the pixel height of rows.
+ * </p>
+ * 
+ * <p>
+ * Components in a Table will not have their caption nor icon rendered.
  * </p>
  * 
  * @author IT Mill Ltd.
