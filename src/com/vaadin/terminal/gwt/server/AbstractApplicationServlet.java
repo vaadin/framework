@@ -604,7 +604,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         }
 
         if (caption != null) {
-            caption = "\"" + caption + "\"";
+            caption = "\"" + JsonPaintTarget.escapeJSON(caption) + "\"";
         }
         if (details != null) {
             if (message == null) {
@@ -613,11 +613,12 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 message += "<br/><br/>" + details;
             }
         }
+
         if (message != null) {
-            message = "\"" + message + "\"";
+            message = "\"" + JsonPaintTarget.escapeJSON(message) + "\"";
         }
         if (url != null) {
-            url = "\"" + url + "\"";
+            url = "\"" + JsonPaintTarget.escapeJSON(url) + "\"";
         }
 
         // Set the response type
