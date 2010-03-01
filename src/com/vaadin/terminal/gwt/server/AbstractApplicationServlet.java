@@ -535,35 +535,37 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     }
 
     /**
-     * Send notification to client's application. Used to notify client of
-     * critical errors and session expiration due to long inactivity. Server has
-     * no knowledge of what application client refers to.
+     * Send a notification to client's application. Used to notify client of
+     * critical errors, session expiration and more. Server has no knowledge of
+     * what application client refers to.
      * 
      * @param request
      *            the HTTP request instance.
      * @param response
      *            the HTTP response to write to.
      * @param caption
-     *            for the notification
+     *            the notification caption
      * @param message
-     *            for the notification
+     *            to notification body
      * @param details
-     *            a detail message to show in addition to the passed message.
-     *            Currently shown directly but could be hidden behind a details
-     *            drop down.
+     *            a detail message to show in addition to the message. Currently
+     *            shown directly below the message but could be hidden behind a
+     *            details drop down in the future. Mainly used to give
+     *            additional information not necessarily useful to the end user.
      * @param url
-     *            url to load after message, null for current page
+     *            url to load when the message is dismissed. Null will reload
+     *            the current page.
      * @throws IOException
      *             if the writing failed due to input/output error.
      */
-    void criticalNotification(HttpServletRequest request,
+    protected final void criticalNotification(HttpServletRequest request,
             HttpServletResponse response, String caption, String message,
             String details, String url) throws IOException {
 
-        // clients JS app is still running, but server application either
-        // no longer exists or it might fail to perform reasonably.
-        // send a notification to client's application and link how
-        // to "restart" application.
+        if (!isUIDLRequest(request)) {
+            throw new RuntimeException(
+                    "criticalNotification can only be used in UIDL requests");
+        }
 
         if (caption != null) {
             caption = "\"" + caption + "\"";
