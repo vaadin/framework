@@ -469,7 +469,13 @@ public class IndexedContainer implements Container.Indexed,
             return null;
         }
         try {
-            return itemIds.get(itemIds.indexOf(itemId) + 1);
+            int idx = itemIds.indexOf(itemId);
+            if (idx == -1) {
+                // If the given Item is not found in the Container,
+                // null is returned.
+                return null;
+            }
+            return itemIds.get(idx + 1);
         } catch (final IndexOutOfBoundsException e) {
             return null;
         }
