@@ -548,6 +548,11 @@ public class IndexedContainer implements Container.Indexed,
      * java.lang.Object)
      */
     public Item addItemAfter(Object previousItemId, Object newItemId) {
+        // Adding an item after null item adds the item as first item of the
+        // ordered container.
+        if (previousItemId == null) {
+            return addItemAt(0, newItemId);
+        }
 
         // Get the index of the addition
         int index = -1;
