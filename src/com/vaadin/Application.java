@@ -1303,6 +1303,13 @@ public abstract class Application implements URIHandler,
      * <li><b>outOfSyncMessage</b> = "Something has caused us to be out of sync
      * with the server.<br/>
      * Take note of any unsaved data, and <u>click here</u> to re-sync."</li>
+     * <li><b>cookiesDisabledURL</b> = null</li>
+     * <li><b>outOfSyncNotificationEnabled</b> = true</li>
+     * <li><b>outOfSyncCaption</b> = "Cookies disabled"</li>
+     * <li><b>outOfSyncMessage</b> = "This application requires cookies to
+     * function.<br/>
+     * Please enable cookies in your browser and <u>click here</u> to try again.
+     * </li>
      * </ul>
      * </p>
      * 
@@ -1327,6 +1334,11 @@ public abstract class Application implements URIHandler,
         protected boolean outOfSyncNotificationEnabled = true;
         protected String outOfSyncCaption = "Out of sync";
         protected String outOfSyncMessage = "Something has caused us to be out of sync with the server.<br/>Take note of any unsaved data, and <u>click here</u> to re-sync.";
+
+        protected String cookiesDisabledURL = null;
+        protected boolean cookiesDisabledNotificationEnabled = true;
+        protected String cookiesDisabledCaption = "Cookies disabled";
+        protected String cookiesDisabledMessage = "This application requires cookies to function.<br/>Please enable cookies in your browser and <u>click here</u> to try again.";
 
         /**
          * Use {@link CustomizedSystemMessages} to customize
@@ -1460,6 +1472,52 @@ public abstract class Application implements URIHandler,
          */
         public String getOutOfSyncMessage() {
             return (outOfSyncNotificationEnabled ? outOfSyncMessage : null);
+        }
+
+        /**
+         * Returns the URL the user should be redirected to after dismissing the
+         * "you have to enable your cookies" message. Typically null.
+         * 
+         * @return A URL the user should be redirected to after dismissing the
+         *         message or null to reload the current URL.
+         */
+        public String getCookiesDisabledURL() {
+            return cookiesDisabledURL;
+        }
+
+        /**
+         * Determines if "cookies disabled" messages should be shown to the end
+         * user or not. If the notification is disabled the user will be
+         * immediately redirected to the URL returned by
+         * {@link #getCookiesDisabledURL()}.
+         * 
+         * @return true to show "cookies disabled" messages to the end user,
+         *         false to redirect to the given URL directly
+         */
+        public boolean isCookiesDisabledNotificationEnabled() {
+            return cookiesDisabledNotificationEnabled;
+        }
+
+        /**
+         * Returns the caption of the message shown to the user when cookies are
+         * disabled in the browser.
+         * 
+         * @return The caption of the "cookies disabled" message
+         */
+        public String getCookiesDisabledCaption() {
+            return (cookiesDisabledNotificationEnabled ? cookiesDisabledCaption
+                    : null);
+        }
+
+        /**
+         * Returns the message shown to the user when cookies are disabled in
+         * the browser.
+         * 
+         * @return The "cookies disabled" message
+         */
+        public String getCookiesDisabledMessage() {
+            return (cookiesDisabledNotificationEnabled ? cookiesDisabledMessage
+                    : null);
         }
 
     }
@@ -1686,6 +1744,54 @@ public abstract class Application implements URIHandler,
          */
         public void setOutOfSyncMessage(String outOfSyncMessage) {
             this.outOfSyncMessage = outOfSyncMessage;
+        }
+
+        /**
+         * Sets the URL to redirect to when the browser has cookies disabled.
+         * 
+         * @param cookiesDisabledURL
+         *            the URL to redirect to, or null to reload the current URL
+         */
+        public void setCookiesDisabledURL(String cookiesDisabledURL) {
+            this.cookiesDisabledURL = cookiesDisabledURL;
+        }
+
+        /**
+         * Enables or disables the notification for "cookies disabled" messages.
+         * If disabled, the URL returned by {@link #getCookiesDisabledURL()} is
+         * loaded directly.
+         * 
+         * @param cookiesDisabledNotificationEnabled
+         *            true to enable "cookies disabled" messages, false
+         *            otherwise
+         */
+        public void setCookiesDisabledNotificationEnabled(
+                boolean cookiesDisabledNotificationEnabled) {
+            this.cookiesDisabledNotificationEnabled = cookiesDisabledNotificationEnabled;
+        }
+
+        /**
+         * Sets the caption of the "cookies disabled" notification. Set to null
+         * for no caption. If both caption and message is null, the notification
+         * is disabled.
+         * 
+         * @param cookiesDisabledCaption
+         *            the caption for the "cookies disabled" notification
+         */
+        public void setCookiesDisableCaption(String cookiesDisabledCaption) {
+            this.cookiesDisabledCaption = cookiesDisabledCaption;
+        }
+
+        /**
+         * Sets the message of the "cookies disabled" notification. Set to null
+         * for no message. If both caption and message is null, the notification
+         * is disabled.
+         * 
+         * @param cookiesDisabledMessage
+         *            the message for the "cookies disabled" notification
+         */
+        public void setCookiesDisableMessage(String cookiesDisabledMessage) {
+            this.cookiesDisabledMessage = cookiesDisabledMessage;
         }
 
     }

@@ -362,6 +362,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             HttpServletResponse response) throws ServletException, IOException {
 
         RequestType requestType = getRequestType(request);
+        if (!ensureCookiesEnabled(requestType, request, response)) {
+            return;
+        }
 
         if (requestType == RequestType.STATIC_FILE) {
             serveStaticResources(request, response);
@@ -500,6 +503,39 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             }
 
         }
+    }
+
+    /**
+     * Check that cookie support is enabled in the browser. Only checks UIDL
+     * requests.
+     * 
+     * @param requestType
+     *            Type of the request as returned by
+     *            {@link #getRequestType(HttpServletRequest)}
+     * @param request
+     *            The request from the browser
+     * @param response
+     *            The response to which an error can be written
+     * @return false if cookies are disabled, true otherwise
+     * @throws IOException
+     */
+    private boolean ensureCookiesEnabled(RequestType requestType,
+            HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        if (requestType == RequestType.UIDL && !isRepaintAll(request)) {
+            // In all other but the first UIDL request a cookie should be
+            // returned by the browser.
+            // This can be removed if cookieless mode (#3228) is supported
+            if (request.getRequestedSessionId() == null) {
+                // User has cookies disabled
+                criticalNotification(request, response, getSystemMessages()
+                        .getCookiesDisabledCaption(), getSystemMessages()
+                        .getCookiesDisabledMessage(), null, getSystemMessages()
+                        .getCookiesDisabledURL());
+                return false;
+            }
+        }
+        return true;
     }
 
     private void updateBrowserProperties(WebBrowser browser,
