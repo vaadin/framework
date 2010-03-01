@@ -576,7 +576,11 @@ public class IndexedContainer implements Container.Indexed,
         // Creates a new id
         final Object id = generateId();
 
-        return addItemAfter(previousItemId, id);
+        if (addItemAfter(previousItemId, id) != null) {
+            return id;
+        } else {
+            return null;
+        }
     }
 
     /*
