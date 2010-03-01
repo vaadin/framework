@@ -130,6 +130,10 @@
     <target name="init" depends="check-java-version">
         <property file="build/build.properties" />
         <property file="build/VERSION.properties" />
+    	<antcontrib:propertyregex property="version.major" input="${version}" regexp="([^\.]*)\.([^\.]*)\.([^\.]*)" select="\1"/>
+    	<antcontrib:propertyregex property="version.minor" input="${version}" regexp="([^\.]*)\.([^\.]*)\.([^\.]*)" select="\2"/>
+    	<antcontrib:propertyregex property="version.revision" input="${version}" regexp="([^\.]*)\.([^\.]*)\.([^\.]*)" select="\3"/>
+
         <property file="build/GWT-VERSION.properties" />
         <property file="build/html-style.properties" />
 
@@ -1070,7 +1074,22 @@
     </target>
 
     
-    <target name="nightly-maven-publish" depends="">
+    <target name="nightly-maven-pom.xml">
+    	<echo>Creating pom.xml for nightly build</echo>
+    	<fail unless="version.major" message="Major version must be defined in version.major"/>
+    	<fail unless="version.minor" message="Major version must be defined in version.minor"/>
+        <copy tofile="build/maven/pom.xml">
+            <filterchain>
+                <expandproperties />
+                <replacetokens begintoken="@" endtoken="@">
+                    <token key="VERSION-MAJOR.MINOR" value="${version.major}.${version.minor}" />
+                </replacetokens>
+            </filterchain>
+            <fileset file="build/maven/pom-template.xml"/>
+        </copy>
+    </target>
+	
+    <target name="nightly-maven-publish" depends="nightly-maven-pom.xml">
         <property file="${gpg.passphrase.file}" />
         <echo>Publishing ${output-dir}/WebContent/${lib-jar-name} to Maven repository</echo>
         <artifact:mvn>

@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.vaadin</groupId>
   <artifactId>vaadin</artifactId>
-  <version>6.3-SNAPSHOT</version>
+  <version>@VERSION-MAJOR.MINOR@-SNAPSHOT</version>
   <name>Vaadin</name>
   <organization>
     <name>Oy IT Mill Ltd</name>
