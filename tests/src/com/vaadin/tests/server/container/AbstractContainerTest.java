@@ -94,6 +94,73 @@ public abstract class AbstractContainerTest extends TestCase {
                 sampleData.length);
     }
 
+    protected void testContainerOrdered(Container.Ordered container) {
+        Object id = container.addItem();
+        assertNotNull(id);
+        Item item = container.getItem(id);
+        assertNotNull(item);
+
+        assertEquals(id, container.firstItemId());
+        assertEquals(id, container.lastItemId());
+
+        // isFirstId
+        assertTrue(container.isFirstId(id));
+        assertTrue(container.isFirstId(container.firstItemId()));
+        // isLastId
+        assertTrue(container.isLastId(id));
+        assertTrue(container.isLastId(container.lastItemId()));
+
+        // Add a new item before the first
+        // addItemAfter
+        Object newFirstId = container.addItemAfter(null);
+        assertNotNull(newFirstId);
+        assertNotNull(container.getItem(newFirstId));
+
+        // isFirstId
+        assertTrue(container.isFirstId(newFirstId));
+        assertTrue(container.isFirstId(container.firstItemId()));
+        // isLastId
+        assertTrue(container.isLastId(id));
+        assertTrue(container.isLastId(container.lastItemId()));
+
+        // nextItemId
+        assertEquals(id, container.nextItemId(newFirstId));
+        assertNull(container.nextItemId(id));
+        assertNull(container.nextItemId("not-in-container"));
+
+        // prevItemId
+        assertEquals(newFirstId, container.prevItemId(id));
+        assertNull(container.prevItemId(newFirstId));
+        assertNull(container.prevItemId("not-in-container"));
+
+        // addItemAfter(Object)
+        Object newSecondItemId = container.addItemAfter(newFirstId);
+        // order is now: newFirstId, newSecondItemId, id
+        assertNotNull(newSecondItemId);
+        assertNotNull(container.getItem(newSecondItemId));
+        assertEquals(id, container.nextItemId(newSecondItemId));
+        assertEquals(newFirstId, container.prevItemId(newSecondItemId));
+
+        // addItemAfter(Object,Object)
+        String fourthId = "id of the fourth item";
+        Item fourth = container.addItemAfter(newFirstId, fourthId);
+        // order is now: newFirstId, fourthId, newSecondItemId, id
+        assertNotNull(fourth);
+        assertEquals(fourth, container.getItem(fourthId));
+        assertEquals(newSecondItemId, container.nextItemId(fourthId));
+        assertEquals(newFirstId, container.prevItemId(fourthId));
+
+        // addItemAfter(Object,Object)
+        Object fifthId = new Object();
+        Item fifth = container.addItemAfter(null, fifthId);
+        // order is now: fifthId, newFirstId, fourthId, newSecondItemId, id
+        assertNotNull(fifth);
+        assertEquals(fifth, container.getItem(fifthId));
+        assertEquals(newFirstId, container.nextItemId(fifthId));
+        assertNull(container.prevItemId(fifthId));
+
+    }
+
     protected void testContainerFiltering(Container.Filterable container) {
         initializeContainer(container);
 

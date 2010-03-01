@@ -20,4 +20,8 @@ public class TestIndexedContainer extends AbstractContainerTest {
         testContainerSortingAndFiltering(new IndexedContainer());
     }
 
+    public void testContainerOrdered() {
+        testContainerOrdered(new IndexedContainer());
+    }
+
 }
