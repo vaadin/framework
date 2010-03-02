@@ -1561,7 +1561,7 @@ public class IndexedContainer implements Container.Indexed,
         }
     }
 
-    private void updateContainerFiltering() {
+    protected void updateContainerFiltering() {
 
         // Clearing filters?
         if (filters == null || filters.isEmpty()) {
@@ -1583,12 +1583,16 @@ public class IndexedContainer implements Container.Indexed,
         // Filter
         for (final Iterator i = itemIds.iterator(); i.hasNext();) {
             final Object id = i.next();
-            if (passesFilters(new IndexedContainerItem(id))) {
+            if (passesFilters(id)) {
                 filteredItemIds.add(id);
             }
         }
 
         fireContentsChange(-1);
+    }
+
+    protected final boolean passesFilters(Object itemId) {
+        return passesFilters(new IndexedContainerItem(itemId));
     }
 
     private boolean passesFilters(Item item) {

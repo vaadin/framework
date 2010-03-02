@@ -42,9 +42,19 @@ public class HierarchicalContainer extends IndexedContainer implements
     private final HashMap<Object, LinkedList<Object>> children = new HashMap<Object, LinkedList<Object>>();
 
     /**
+     * Mapping from Item ID to a list of child IDs when filtered
+     */
+    private HashMap<Object, LinkedList<Object>> filteredChildren = null;
+
+    /**
      * List that contains all root elements of the container.
      */
     private final LinkedList<Object> roots = new LinkedList<Object>();
+
+    /**
+     * List that contains all filtered root elements of the container.
+     */
+    private LinkedList<Object> filteredRoots = null;
 
     /*
      * Can the specified Item have any children? Don't add a JavaDoc comment
@@ -63,7 +73,14 @@ public class HierarchicalContainer extends IndexedContainer implements
      * interface.
      */
     public Collection getChildren(Object itemId) {
-        final Collection c = children.get(itemId);
+        LinkedList<Object> c;
+
+        if (filteredChildren != null) {
+            c = filteredChildren.get(itemId);
+        } else {
+            c = children.get(itemId);
+        }
+
         if (c == null) {
             return null;
         }
@@ -85,7 +102,11 @@ public class HierarchicalContainer extends IndexedContainer implements
      * interface.
      */
     public boolean hasChildren(Object itemId) {
-        return children.get(itemId) != null;
+        if (filteredChildren != null) {
+            return filteredChildren.containsKey(itemId);
+        } else {
+            return children.containsKey(itemId);
+        }
     }
 
     /*
@@ -94,6 +115,10 @@ public class HierarchicalContainer extends IndexedContainer implements
      * interface.
      */
     public boolean isRoot(Object itemId) {
+        if (filteredRoots != null && !filteredRoots.contains(itemId)) {
+            return false;
+        }
+
         if (parent.containsKey(itemId)) {
             return false;
         }
@@ -107,7 +132,11 @@ public class HierarchicalContainer extends IndexedContainer implements
      * interface.
      */
     public Collection rootItemIds() {
-        return Collections.unmodifiableCollection(roots);
+        if (filteredRoots != null) {
+            return Collections.unmodifiableCollection(filteredRoots);
+        } else {
+            return Collections.unmodifiableCollection(roots);
+        }
     }
 
     /**
@@ -179,20 +208,39 @@ public class HierarchicalContainer extends IndexedContainer implements
             return true;
         }
 
-        // Making root
+        // Making root?
         if (newParentId == null) {
-
+            // The itemId should become a root so we need to
+            // - Remove it from the old parent's children list (also filtered list)
+            // - Add it as a root
+            // - Remove it from the item -> parent list (parent is null for roots)
+            
             // Removes from old parents children list
-            final LinkedList l = children.get(itemId);
+            final LinkedList<Object> l = children.get(itemId);
             if (l != null) {
                 l.remove(itemId);
                 if (l.isEmpty()) {
                     children.remove(itemId);
                 }
+
+                if (filteredChildren != null) {
+                    LinkedList<Object> f = filteredChildren.get(itemId);
+                    if (f != null) {
+                        f.remove(itemId);
+                        if (f.isEmpty()) {
+                            filteredChildren.remove(f);
+                        }
+                    }
+                }
             }
 
             // Add to be a root
             roots.add(itemId);
+            if (filteredRoots != null) {
+                if (passesFilters(itemId)) {
+                    filteredRoots.add(itemId);
+                }
+            }
 
             // Updates parent
             parent.remove(itemId);
@@ -200,6 +248,13 @@ public class HierarchicalContainer extends IndexedContainer implements
             return true;
         }
 
+        // We get here when the item should not become a root and we need to
+        // - Verify the new parent exists and can have children
+        // - Check that the new parent is not a child of the selected itemId
+        // - Updated the item -> parent mapping to point to the new parent
+        // - Remove the item from the roots list if it was a root
+        // - Remove the item from the old parent's children list if it was not a root
+        
         // Checks that the new parent exists in container and can have
         // children
         if (!containsId(newParentId) || noChildrenAllowed.contains(newParentId)) {
@@ -217,22 +272,44 @@ public class HierarchicalContainer extends IndexedContainer implements
 
         // Updates parent
         parent.put(itemId, newParentId);
-        LinkedList pcl = children.get(newParentId);
+        LinkedList<Object> pcl = children.get(newParentId);
         if (pcl == null) {
-            pcl = new LinkedList();
+            // Create an empty list for holding children if one were not
+            // previously created
+            pcl = new LinkedList<Object>();
             children.put(newParentId, pcl);
         }
         pcl.add(itemId);
+
+        // Add children list for filtered case also
+        if (filteredChildren != null) {
+            LinkedList<Object> f = filteredChildren.get(newParentId);
+            if (f == null) {
+                // Create an empty list for holding children if one were not
+                // previously created
+                f = new LinkedList<Object>();
+                filteredChildren.put(newParentId, f);
+            }
+        }
 
         // Removes from old parent or root
         if (oldParentId == null) {
             roots.remove(itemId);
         } else {
-            final LinkedList l = children.get(oldParentId);
+            final LinkedList<Object> l = children.get(oldParentId);
             if (l != null) {
                 l.remove(itemId);
                 if (l.isEmpty()) {
                     children.remove(oldParentId);
+                }
+            }
+            if (filteredChildren != null) {
+                LinkedList<Object> f = filteredChildren.get(oldParentId);
+                if (f != null) {
+                    f.remove(itemId);
+                    if (f.isEmpty()) {
+                        filteredChildren.remove(oldParentId);
+                    }
                 }
             }
         }
@@ -247,12 +324,21 @@ public class HierarchicalContainer extends IndexedContainer implements
      */
     @Override
     public Object addItem() {
-        final Object id = super.addItem();
-        if (id != null && !roots.contains(id)) {
-            roots.add(id);
+        final Object itemId = super.addItem();
+        if (itemId == null) {
+            return null;
         }
-        return id;
 
+        if (!roots.contains(itemId)) {
+            roots.add(itemId);
+            if (filteredRoots != null) {
+                if (passesFilters(itemId)) {
+                    filteredRoots.add(itemId);
+                }
+            }
+        }
+
+        return itemId;
     }
 
     /*
@@ -263,9 +349,18 @@ public class HierarchicalContainer extends IndexedContainer implements
     @Override
     public Item addItem(Object itemId) {
         final Item item = super.addItem(itemId);
-        if (item != null) {
-            roots.add(itemId);
+        if (item == null) {
+            return null;
         }
+
+        roots.add(itemId);
+
+        if (filteredRoots != null) {
+            if (passesFilters(itemId)) {
+                filteredRoots.add(itemId);
+            }
+        }
+
         return item;
     }
 
@@ -283,6 +378,12 @@ public class HierarchicalContainer extends IndexedContainer implements
             parent.clear();
             children.clear();
             noChildrenAllowed.clear();
+            if (filteredRoots != null) {
+                filteredRoots = null;
+            }
+            if (filteredChildren != null) {
+                filteredChildren = null;
+            }
         }
         return success;
     }
@@ -297,15 +398,41 @@ public class HierarchicalContainer extends IndexedContainer implements
         final boolean success = super.removeItem(itemId);
 
         if (success) {
-            if (isRoot(itemId)) {
-                roots.remove(itemId);
+
+            // Remove from roots if this was a root
+            if (roots.remove(itemId)) {
+
+                // If filtering is enabled we might need to remove it from the
+                // filtered list also
+                if (filteredRoots != null) {
+                    filteredRoots.remove(itemId);
+                }
             }
-            children.remove(itemId);
-            final Object p = parent.get(itemId);
-            if (p != null) {
-                final LinkedList c = children.get(p);
+
+            // Clear the children list. Old children will now be unattached
+            // FIXME Should these be made into roots?
+            if (children.remove(itemId) != null) {
+                if (filteredChildren != null) {
+                    filteredChildren.remove(itemId);
+                }
+            }
+
+            // Parent of the item that we are removing will contain the item id
+            // in its children list
+            final Object parentItemId = parent.get(itemId);
+            if (parentItemId != null) {
+                final LinkedList<Object> c = children.get(parentItemId);
                 if (c != null) {
                     c.remove(itemId);
+
+                    // Found in the children list so might also be in the
+                    // filteredChildren list
+                    if (filteredChildren != null) {
+                        LinkedList<Object> f = filteredChildren.get(parentItemId);
+                        if (f != null) {
+                            f.remove(parentItemId);
+                        }
+                    }
                 }
             }
             parent.remove(itemId);
@@ -330,4 +457,39 @@ public class HierarchicalContainer extends IndexedContainer implements
         }
     }
 
+    /*
+     * Overridden to provide filtering for root & children items.
+     * 
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.util.IndexedContainer#updateContainerFiltering()
+     */
+    @Override
+    protected void updateContainerFiltering() {
+        super.updateContainerFiltering();
+
+        filteredRoots = new LinkedList<Object>();
+        filteredChildren = new HashMap<Object, LinkedList<Object>>();
+
+        // Filter root item ids
+        for (Object rootId : roots) {
+            if (passesFilters(rootId)) {
+                filteredRoots.add(rootId);
+            }
+        }
+
+        // Filter children
+        for (Object parent : children.keySet()) {
+            if (passesFilters(parent)) {
+                LinkedList<Object> filtered = new LinkedList<Object>();
+                filteredChildren.put(parent, filtered);
+                for (Object child : children.get(parent)) {
+                    if (passesFilters(child)) {
+                        filtered.add(child);
+                    }
+                }
+            }
+        }
+
+    }
 }

@@ -21,6 +21,10 @@ public class TestHierarchicalContainer extends
         testContainerSorting(new HierarchicalContainer());
     }
 
+    public void testOrdered() {
+        testContainerOrdered(new HierarchicalContainer());
+    }
+
     public void testHierarchicalSorting() {
         testHierarchicalSorting(new HierarchicalContainer());
     }

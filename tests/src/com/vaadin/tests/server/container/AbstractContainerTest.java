@@ -81,9 +81,10 @@ public abstract class AbstractContainerTest extends TestCase {
 
     }
 
-    protected static final Object PROP1 = "PROP1";
-    protected static final Object PROP2 = "PROP2";
-    protected static final Object PROP3 = "PROP3";
+    protected static final Object FULLY_QUALIFIED_NAME = "PROP1";
+    protected static final Object SIMPLE_NAME = "simplename";
+    protected static final Object REVERSE_FULLY_QUALIFIED_NAME = "PROP2";
+    protected static final Object ID_NUMBER = "PROP3";
 
     protected void testBasicContainerOperations(Container container) {
         initializeContainer(container);
@@ -165,7 +166,7 @@ public abstract class AbstractContainerTest extends TestCase {
         initializeContainer(container);
 
         // Filter by "contains ab"
-        container.addContainerFilter(PROP1, "ab", false, false);
+        container.addContainerFilter(FULLY_QUALIFIED_NAME, "ab", false, false);
 
         validateContainer(container, "com.vaadin.data.BufferedValidatable",
                 "com.vaadin.ui.TabSheet",
@@ -174,7 +175,8 @@ public abstract class AbstractContainerTest extends TestCase {
 
         // Filter by "contains da" (reversed as ad here)
         container.removeAllContainerFilters();
-        container.addContainerFilter(PROP2, "ad", false, false);
+        container.addContainerFilter(REVERSE_FULLY_QUALIFIED_NAME, "ad", false,
+                false);
 
         validateContainer(container, "com.vaadin.data.Buffered",
                 "com.vaadin.terminal.gwt.server.ComponentSizeValidator",
@@ -188,12 +190,14 @@ public abstract class AbstractContainerTest extends TestCase {
         initializeContainer(sortable);
 
         // Filter by "contains ab"
-        filterable.addContainerFilter(PROP1, "ab", false, false);
+        filterable.addContainerFilter(FULLY_QUALIFIED_NAME, "ab", false, false);
 
         // Must be able to sort based on PROP1 for this test
-        assertTrue(sortable.getSortableContainerPropertyIds().contains(PROP1));
+        assertTrue(sortable.getSortableContainerPropertyIds().contains(
+                FULLY_QUALIFIED_NAME));
 
-        sortable.sort(new Object[] { PROP1 }, new boolean[] { true });
+        sortable.sort(new Object[] { FULLY_QUALIFIED_NAME },
+                new boolean[] { true });
 
         validateContainer(sortable, "com.vaadin.data.BufferedValidatable",
                 "com.vaadin.ui.TableFieldFactory",
@@ -207,17 +211,21 @@ public abstract class AbstractContainerTest extends TestCase {
         initializeContainer(container);
 
         // Must be able to sort based on PROP1 for this test
-        assertTrue(sortable.getSortableContainerPropertyIds().contains(PROP1));
-        assertTrue(sortable.getSortableContainerPropertyIds().contains(PROP2));
+        assertTrue(sortable.getSortableContainerPropertyIds().contains(
+                FULLY_QUALIFIED_NAME));
+        assertTrue(sortable.getSortableContainerPropertyIds().contains(
+                REVERSE_FULLY_QUALIFIED_NAME));
 
-        sortable.sort(new Object[] { PROP1 }, new boolean[] { true });
+        sortable.sort(new Object[] { FULLY_QUALIFIED_NAME },
+                new boolean[] { true });
 
         validateContainer(container, "com.vaadin.Application",
                 "com.vaadin.util.SerializerHelper",
                 "com.vaadin.terminal.ApplicationResource", "blah",
                 sampleData.length);
 
-        sortable.sort(new Object[] { PROP2 }, new boolean[] { true });
+        sortable.sort(new Object[] { REVERSE_FULLY_QUALIFIED_NAME },
+                new boolean[] { true });
 
         validateContainer(container,
                 "com.vaadin.terminal.gwt.server.ApplicationPortlet2",
@@ -233,17 +241,30 @@ public abstract class AbstractContainerTest extends TestCase {
             container.removeContainerProperty(propertyId);
         }
 
-        container.addContainerProperty(PROP1, String.class, "");
-        container.addContainerProperty(PROP2, String.class, null);
-        container.addContainerProperty(PROP3, Integer.class, null);
+        container.addContainerProperty(FULLY_QUALIFIED_NAME, String.class, "");
+        container.addContainerProperty(SIMPLE_NAME, String.class, "");
+        container.addContainerProperty(REVERSE_FULLY_QUALIFIED_NAME,
+                String.class, null);
+        container.addContainerProperty(ID_NUMBER, Integer.class, null);
 
         for (int i = 0; i < sampleData.length; i++) {
             String id = sampleData[i];
             Item item = container.addItem(id);
 
-            item.getItemProperty(PROP1).setValue(sampleData[i]);
-            item.getItemProperty(PROP2).setValue(reverse(sampleData[i]));
-            item.getItemProperty(PROP3).setValue(i);
+            item.getItemProperty(FULLY_QUALIFIED_NAME).setValue(sampleData[i]);
+            item.getItemProperty(SIMPLE_NAME).setValue(
+                    getSimpleName(sampleData[i]));
+            item.getItemProperty(REVERSE_FULLY_QUALIFIED_NAME).setValue(
+                    reverse(sampleData[i]));
+            item.getItemProperty(ID_NUMBER).setValue(i);
+        }
+    }
+
+    protected String getSimpleName(String name) {
+        if (name.contains(".")) {
+            return name.substring(name.lastIndexOf('.') + 1);
+        } else {
+            return name;
         }
     }
 
