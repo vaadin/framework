@@ -562,26 +562,34 @@ public interface Container extends Serializable {
     }
 
     /**
-     * Interface is implemented by containers that allow reducing their visible
-     * contents with set of filters.
-     * 
+     * Interface that is implemented by containers which allow reducing their
+     * visible contents based on a set of filters.
+     * <p>
      * When a set of filters are set, only items that match the filters are
      * included in the visible contents of the container. Still new items that
      * do not match filters can be added to the container. Multiple filters can
      * be added and the container remembers the state of the filters. When
      * multiple filters are added, all filters must match for an item to be
      * visible in the container.
-     * 
+     * </p>
+     * <p>
      * When an {@link com.vaadin.data.Ordered} or
      * {@link com.vaadin.data.Indexed} container is filtered, all operations of
      * these interfaces should only use the filtered contents and the filtered
      * indices to the container.
-     * 
+     * </p>
+     * <p>
+     * How filtering is performed when a {@link Hierarchical} container
+     * implements {@link Filterable} is implementation specific and should be
+     * documented in the implementing class.
+     * </p>
+     * <p>
      * Adding items (if supported) to a filtered {@link com.vaadin.data.Ordered}
      * or {@link com.vaadin.data.Indexed} container should insert them
      * immediately after the indicated visible item. The unfiltered position of
      * items added at index 0, at index {@link com.vaadin.data.Container#size()}
      * or at an undefined position is up to the implementation.
+     * </p>
      * 
      * @since 5.0
      */
