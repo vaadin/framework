@@ -631,6 +631,23 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             public void onLoad(LoadEvent event) {
                 updateRootWidth();
                 updateSelectedIconPosition();
+
+                /*
+                 * We need to re-calculate the widths in IE at load time to
+                 * ensure that the text is not placed behind the icon. #3991
+                 */
+                if (BrowserInfo.get().isIE()) {
+                    int tbWidth = Util.getRequiredWidth(tb);
+                    int openerWidth = Util.getRequiredWidth(popupOpener);
+                    int iconWidth = selectedItemIcon.isAttached() ? Util
+                            .measureMarginLeft(tb.getElement())
+                            - Util.measureMarginLeft(selectedItemIcon
+                                    .getElement()) : 0;
+
+                    int w = tbWidth + openerWidth + iconWidth;
+                    tb.setWidth((tbWidth - getTextboxPadding()) + "px");
+                    setTextboxWidth(w);
+                }
             }
         });
 
@@ -883,8 +900,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             panel.remove(selectedItemIcon);
             updateRootWidth();
         } else {
-            selectedItemIcon.setUrl(iconUri);
             panel.insert(selectedItemIcon, 0);
+            selectedItemIcon.setUrl(iconUri);
             updateRootWidth();
             updateSelectedIconPosition();
         }
