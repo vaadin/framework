@@ -756,7 +756,6 @@
         <!-- We can't call these with 'depends' because of the 'unless' specifier. -->
         <antcall target="compile-widgetset-default"/>
         <antcall target="compile-widgetset-portal-default"/>
-        <antcall target="compile-widgetset-reserver"/>
         <antcall target="compile-widgetset-sampler"/>
         <antcall target="compile-widgetset-colorpicker"/>
         <antcall target="compile-widgetset-coverflow"/>
@@ -769,7 +768,6 @@
         <parallel threadsperprocessor="1">
             <antcall target="compile-widgetset-default"/>
             <antcall target="compile-widgetset-portal-default"/>
-            <antcall target="compile-widgetset-reserver"/>
             <antcall target="compile-widgetset-sampler"/>
             <antcall target="compile-widgetset-colorpicker"/>
             <antcall target="compile-widgetset-coverflow"/>
