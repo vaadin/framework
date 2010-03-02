@@ -182,11 +182,11 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         return beanItem;
     }
 
-
     /**
      * Adds the bean to all internal data structures at the given position.
      * Fails if the bean is already in the container or is not assignable to the
-     * correct type. Returns the new BeanItem if the bean was added successfully.
+     * correct type. Returns the new BeanItem if the bean was added
+     * successfully.
      * 
      * <p>
      * Caller should call {@link #filterAll()} after calling this method to
@@ -225,6 +225,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
 
         return beanItem;
     }
+
     @SuppressWarnings("unchecked")
     public BT getIdByIndex(int index) {
         return filteredItems.get(index);
