@@ -39,7 +39,7 @@ import com.vaadin.data.Property.ValueChangeNotifier;
 public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         ItemSetChangeNotifier, ValueChangeListener {
     // filtered and unfiltered item IDs
-    private ArrayList<BT> list = new ArrayList<BT>();
+    private ArrayList<BT> filteredItems = new ArrayList<BT>();
     private ArrayList<BT> allItems = new ArrayList<BT>();
     private final Map<BT, BeanItem<BT>> beanToItem = new HashMap<BT, BeanItem<BT>>();
 
@@ -172,11 +172,11 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     }
 
     public BT getIdByIndex(int index) {
-        return list.get(index);
+        return filteredItems.get(index);
     }
 
     public int indexOfId(Object itemId) {
-        return list.indexOf(itemId);
+        return filteredItems.indexOf(itemId);
     }
 
     /**
@@ -296,7 +296,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
 
     public boolean containsId(Object itemId) {
         // only look at visible items after filtering
-        return list.contains(itemId);
+        return filteredItems.contains(itemId);
     }
 
     public Property getContainerProperty(Object itemId, Object propertyId) {
@@ -312,7 +312,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     }
 
     public Collection<BT> getItemIds() {
-        return (Collection<BT>) list.clone();
+        return (Collection<BT>) filteredItems.clone();
     }
 
     public Class<?> getType(Object propertyId) {
@@ -321,7 +321,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
 
     public boolean removeAllItems() throws UnsupportedOperationException {
         allItems.clear();
-        list.clear();
+        filteredItems.clear();
         // detach listeners from all BeanItems
         for (BeanItem<BT> item : beanToItem.values()) {
             removeAllValueChangeListeners(item);
@@ -345,7 +345,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         removeAllValueChangeListeners(getItem(itemId));
         // remove item
         beanToItem.remove(itemId);
-        list.remove(itemId);
+        filteredItems.remove(itemId);
         fireItemSetChange();
         return true;
     }
@@ -375,7 +375,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     }
 
     public int size() {
-        return list.size();
+        return filteredItems.size();
     }
 
     public Collection<Object> getSortableContainerPropertyIds() {
@@ -445,7 +445,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     public void addContainerFilter(Object propertyId, String filterString,
             boolean ignoreCase, boolean onlyMatchPrefix) {
         if (filters.isEmpty()) {
-            list = (ArrayList<BT>) allItems.clone();
+            filteredItems = (ArrayList<BT>) allItems.clone();
         }
         // listen to change events to be able to update filtering
         for (BeanItem<BT> item : beanToItem.values()) {
@@ -465,22 +465,22 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
      */
     protected void filterAll() {
         // avoid notification if the filtering had no effect
-        List<BT> originalItems = list;
+        List<BT> originalItems = filteredItems;
         // it is somewhat inefficient to do a (shallow) clone() every time
-        list = (ArrayList<BT>) allItems.clone();
+        filteredItems = (ArrayList<BT>) allItems.clone();
         for (Filter f : filters) {
             filter(f);
         }
         // check if exactly the same items are there after filtering to avoid
         // unnecessary notifications
         // this may be slow in some cases as it uses BT.equals()
-        if (!originalItems.equals(list)) {
+        if (!originalItems.equals(filteredItems)) {
             fireItemSetChange();
         }
     }
 
     protected void filter(Filter f) {
-        Iterator<BT> iterator = list.iterator();
+        Iterator<BT> iterator = filteredItems.iterator();
         while (iterator.hasNext()) {
             BT bean = iterator.next();
             if (!f.passesFilter(getItem(bean))) {
