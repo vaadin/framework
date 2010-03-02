@@ -38,9 +38,23 @@ import com.vaadin.data.Property.ValueChangeNotifier;
 @SuppressWarnings("serial")
 public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         ItemSetChangeNotifier, ValueChangeListener {
-    // filtered and unfiltered item IDs
-    private ArrayList<BT> filteredItems = new ArrayList<BT>();
-    private ArrayList<BT> allItems = new ArrayList<BT>();
+    /**
+     * The filteredItems variable contains the items that are visible outside
+     * the container. If filters are enabled this contains a subset of allItems,
+     * if no filters are set this contains the same items as allItems.
+     */
+    private ListSet<BT> filteredItems = new ListSet<BT>();
+
+    /**
+     * The allItems variable always contains all the items in the container.
+     * Some or all of these are also in the filteredItems list.
+     */
+    private ListSet<BT> allItems = new ListSet<BT>();
+
+    /**
+     * Maps all pojos (item ids) in the container (including filtered) to their
+     * corresponding BeanItem.
+     */
     private final Map<BT, BeanItem<BT>> beanToItem = new HashMap<BT, BeanItem<BT>>();
 
     // internal data model to obtain property IDs etc.
@@ -89,6 +103,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
      * @throws IllegalArgumentException
      *             If the collection is null or empty.
      */
+    @SuppressWarnings("unchecked")
     public BeanItemContainer(Collection<BT> collection)
             throws IllegalArgumentException {
         if (collection == null || collection.isEmpty()) {
@@ -98,10 +113,22 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
 
         type = (Class<? extends BT>) collection.iterator().next().getClass();
         model = BeanItem.getPropertyDescriptors(type);
-        int i = 0;
-        for (BT bt : collection) {
-            addItemAt(i++, bt);
+        addAll(collection);
+    }
+
+    private void addAll(Collection<BT> collection) {
+        // Pre-allocate space for the collection
+        allItems.ensureCapacity(allItems.size() + collection.size());
+
+        int idx = size();
+        for (BT bean : collection) {
+            if (internalAddAt(idx, bean) != null) {
+                idx++;
+            }
         }
+
+        // Filter the contents when all items have been added
+        filterAll();
     }
 
     /**
@@ -147,30 +174,58 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
      * @return Returns new item or null if the operation fails.
      */
     private BeanItem<BT> addItemAtInternalIndex(int index, Object newItemId) {
-        // Make sure that the Item has not been created yet
-        if (allItems.contains(newItemId)) {
-            return null;
-        }
-        if (type.isAssignableFrom(newItemId.getClass())) {
-            BT pojo = (BT) newItemId;
-            // "list" will be updated in filterAll()
-            allItems.add(index, pojo);
-            BeanItem<BT> beanItem = new BeanItem<BT>(pojo, model);
-            beanToItem.put(pojo, beanItem);
-            // add listeners to be able to update filtering on property changes
-            for (Filter filter : filters) {
-                // addValueChangeListener avoids adding duplicates
-                addValueChangeListener(beanItem, filter.propertyId);
-            }
-
-            // it is somewhat suboptimal to filter all items
+        BeanItem<BT> beanItem = internalAddAt(index, (BT) newItemId);
+        if (beanItem != null) {
             filterAll();
-            return beanItem;
-        } else {
-            return null;
         }
+
+        return beanItem;
     }
 
+
+    /**
+     * Adds the bean to all internal data structures at the given position.
+     * Fails if the bean is already in the container or is not assignable to the
+     * correct type. Returns the new BeanItem if the bean was added successfully.
+     * 
+     * <p>
+     * Caller should call {@link #filterAll()} after calling this method to
+     * ensure the filtered list is updated.
+     * </p>
+     * 
+     * @param position
+     *            The position at which the bean should be inserted
+     * @param bean
+     *            The bean to insert
+     * 
+     * @return true if the bean was added successfully, false otherwise
+     */
+    private BeanItem<BT> internalAddAt(int position, BT bean) {
+        // Make sure that the item has not been added previously
+        if (allItems.contains(bean)) {
+            return null;
+        }
+
+        if (!type.isAssignableFrom(bean.getClass())) {
+            return null;
+        }
+
+        // "filteredList" will be updated in filterAll() which should be invoked
+        // by the caller after calling this method.
+        allItems.add(position, bean);
+        BeanItem<BT> beanItem = new BeanItem<BT>(bean, model);
+        beanToItem.put(bean, beanItem);
+
+        // add listeners to be able to update filtering on property
+        // changes
+        for (Filter filter : filters) {
+            // addValueChangeListener avoids adding duplicates
+            addValueChangeListener(beanItem, filter.propertyId);
+        }
+
+        return beanItem;
+    }
+    @SuppressWarnings("unchecked")
     public BT getIdByIndex(int index) {
         return filteredItems.get(index);
     }
@@ -311,6 +366,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         return beanToItem.get(itemId);
     }
 
+    @SuppressWarnings("unchecked")
     public Collection<BT> getItemIds() {
         return (Collection<BT>) filteredItems.clone();
     }
@@ -445,7 +501,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     public void addContainerFilter(Object propertyId, String filterString,
             boolean ignoreCase, boolean onlyMatchPrefix) {
         if (filters.isEmpty()) {
-            filteredItems = (ArrayList<BT>) allItems.clone();
+            filteredItems = (ListSet<BT>) allItems.clone();
         }
         // listen to change events to be able to update filtering
         for (BeanItem<BT> item : beanToItem.values()) {
@@ -467,7 +523,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         // avoid notification if the filtering had no effect
         List<BT> originalItems = filteredItems;
         // it is somewhat inefficient to do a (shallow) clone() every time
-        filteredItems = (ArrayList<BT>) allItems.clone();
+        filteredItems = (ListSet<BT>) allItems.clone();
         for (Filter f : filters) {
             filter(f);
         }
