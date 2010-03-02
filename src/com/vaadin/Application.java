@@ -1304,9 +1304,9 @@ public abstract class Application implements URIHandler,
      * with the server.<br/>
      * Take note of any unsaved data, and <u>click here</u> to re-sync."</li>
      * <li><b>cookiesDisabledURL</b> = null</li>
-     * <li><b>outOfSyncNotificationEnabled</b> = true</li>
-     * <li><b>outOfSyncCaption</b> = "Cookies disabled"</li>
-     * <li><b>outOfSyncMessage</b> = "This application requires cookies to
+     * <li><b>cookiesDisabledNotificationEnabled</b> = true</li>
+     * <li><b>cookiesDisabledCaption</b> = "Cookies disabled"</li>
+     * <li><b>cookiesDisabledMessage</b> = "This application requires cookies to
      * function.<br/>
      * Please enable cookies in your browser and <u>click here</u> to try again.
      * </li>
