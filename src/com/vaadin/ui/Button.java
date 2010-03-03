@@ -13,6 +13,7 @@ import com.vaadin.data.Property;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.VButton;
+import com.vaadin.ui.themes.BaseTheme;
 
 /**
  * A generic button component.
@@ -239,7 +240,12 @@ public class Button extends AbstractField {
 
     private static final Method BUTTON_CLICK_METHOD;
 
-    /* Button style with no decorations. Looks like a link, acts like a button */
+    /**
+     * Button style with no decorations. Looks like a link, acts like a button
+     * 
+     * @deprecated use {@link BaseTheme#BUTTON_LINK} instead.
+     */
+    @Deprecated
     public static final String STYLE_LINK = "link";
 
     static {
