@@ -1310,6 +1310,10 @@ div.v-progressindicator-indeterminate-disabled {
 .v-table-header-cell-desc .v-table-caption-container {
 	background: transparent url(../base/common/img/sprites.png) no-repeat right -10px;
 }
+.v-table-caption-container .v-icon,
+.v-table-header-drag .v-icon {
+	vertical-align: middle;
+}
 .v-table-body {
 	border: 1px solid #aaa;
 }
@@ -1372,6 +1376,9 @@ div.v-progressindicator-indeterminate-disabled {
 	filter: alpha(opacity=90);
 	margin-top: 20px;
 	z-index: 30000;
+}
+.v-table-header-drag .v-icon {
+	vertical-align: middle;
 }
 .v-table-scrollposition {
 	width: 160px;

@@ -2,7 +2,9 @@
 	line-height: 18px;
 }
 .v-label-h1,
+.v-label h1,
 .v-label-h2,
+.v-label h2,
 .v-caption-h1,
 .v-caption-h2 {
 	font-size: 24px;
@@ -13,6 +15,7 @@
 	text-shadow: #fff 0 -1px 1px;
 }
 .v-label-h2,
+.v-label h2,
 .v-caption-h2 {
 	font-size: 16px;
 	line-height: 22px;
@@ -24,7 +27,9 @@
 }
 
 .blue .v-label-h1,
+.blue .v-label h1,
 .blue .v-label-h2,
+.blue .v-label h2,
 .blue .v-caption-h1,
 .blue .v-caption-h2 {
 	color: #fff;
@@ -35,7 +40,9 @@
 }
 
 .black .v-label-h1,
+.black .v-label h1,
 .black .v-label-h2,
+.black .v-label h2,
 .black .v-caption-h1,
 .black .v-caption-h2 {
 	color: #fff;
