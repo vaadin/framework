@@ -4,7 +4,6 @@ import java.util.Collection;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.HierarchicalContainer;
-import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
@@ -13,6 +12,7 @@ import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptCriteria.IsDataBound;
 import com.vaadin.event.dd.acceptCriteria.ServerSideCriterion;
 import com.vaadin.terminal.ExternalResource;
+import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DragDropPane;
@@ -22,9 +22,9 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Tree;
-import com.vaadin.ui.AbstractSelect.AbstractSelectDropTargetDetails;
 import com.vaadin.ui.Table.DragModes;
-import com.vaadin.ui.Tree.Location;
+import com.vaadin.ui.Tree.TreeDragMode;
+import com.vaadin.ui.Tree.TreeDropTargetDetails;
 
 /**
  * DD playground. Better quality example/prototype codes in {@link DDTest2}.
@@ -64,22 +64,23 @@ public class DDTest1 extends TestBase {
                     Transferable transferable = dragEvent.getTransferable();
                     // System.out.println("Simulating 500ms processing...");
                     // try {
-                    // Thread.sleep(9000);
+                    // Thread.sleep(200);
                     // } catch (InterruptedException e) {
                     // // TODO Auto-generated catch block
                     // e.printStackTrace();
                     // }
                     // System.out.println("Done get to work.");
-                    if (transferable instanceof TransferableImpl) {
-                        TransferableImpl ct = (TransferableImpl) transferable;
 
-                        Component component = (Component) ct
-                                .getData("component");
-                        if (component != null) {
-                            if (component.toString() != null
-                                    && component.toString().contains("Bar")) {
-                                return true;
-                            }
+                    Component component = (Component) transferable
+                            .getData("component");
+                    if (component == null) {
+                        component = transferable.getSourceComponent();
+                    }
+
+                    if (component != null) {
+                        if (component.toString() != null
+                                && component.toString().contains("Bar")) {
+                            return true;
                         }
                     }
                     return false;
@@ -116,6 +117,7 @@ public class DDTest1 extends TestBase {
         t.addItem("Child");
         t.setParent("Child", "Foo");
         t.setSizeFull();
+        t.setDragMode(TreeDragMode.NODE);
 
         /*
          * Moves items in tree (and could work in Table too). Also supports
@@ -187,7 +189,7 @@ public class DDTest1 extends TestBase {
             }
 
             public void drop(DragAndDropEvent event) {
-                AbstractSelectDropTargetDetails details = (AbstractSelectDropTargetDetails) event
+                TreeDropTargetDetails details = (TreeDropTargetDetails) event
                         .getDropTargetDetails();
                 // TODO set properties, so same sorter could be used in Table
                 Transferable transferable = event.getTransferable();
@@ -198,12 +200,16 @@ public class DDTest1 extends TestBase {
 
                     Object itemIdOver = details.getItemIdOver();
 
-                    Location dropLocation = details.getDropLocation();
+                    // TODO could use the "folder" node id to make the drop
+                    // logic simpler
+                    Object itemIdInto = details.getItemIdInto();
+                    VerticalDropLocation dropLocation = details
+                            .getDropLocation();
 
-                    if (dropLocation == Location.MIDDLE) {
+                    if (dropLocation == VerticalDropLocation.MIDDLE) {
                         t.setParent(itemId, itemIdOver);
                         return;
-                    } else if (Location.TOP == dropLocation) {
+                    } else if (VerticalDropLocation.TOP == dropLocation) {
                         // if on top of the caption area, add before
                         itemIdOver = idx.prevItemId(itemIdOver);
                     }

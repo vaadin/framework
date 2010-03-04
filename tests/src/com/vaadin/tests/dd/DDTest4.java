@@ -8,15 +8,15 @@ import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
-import com.vaadin.event.dd.acceptCriteria.IsDragSource;
+import com.vaadin.event.dd.acceptCriteria.DragSourceIs;
 import com.vaadin.terminal.ThemeResource;
+import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.Tree;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.AbstractSelect.AbstractSelectDropTargetDetails;
-import com.vaadin.ui.Tree.Location;
 
 public class DDTest4 extends TestBase {
 
@@ -25,11 +25,16 @@ public class DDTest4 extends TestBase {
     HorizontalLayout hl = new HorizontalLayout();
     Table table = new Table("Drag and drop sortable table");
 
-    private Tree tree3;
-
     @Override
     protected void setup() {
         Window w = getLayout().getWindow();
+
+        TestUtils
+                .injectCSS(
+                        w,
+                        ".v-table-row-drag-middle .v-table-cell-content {"
+                                + "        background-color: inherit ; border-bottom: 1px solid cyan;"
+                                + "}");
         /* darn reindeer has no icons */
 
         // hl.addComponent(tree1);
@@ -40,6 +45,8 @@ public class DDTest4 extends TestBase {
         hl.setExpandRatio(table, 1);
         table.setWidth("100%");
         table.setPageLength(10);
+        table.setRowHeaderMode(Table.ROW_HEADER_MODE_ID);
+        table.setSelectable(true);
         populateTable();
         addComponent(hl);
 
@@ -50,7 +57,7 @@ public class DDTest4 extends TestBase {
 
         table.setDropHandler(new DropHandler() {
             // accept only drags from this table
-            AcceptCriterion crit = new IsDragSource(table);
+            AcceptCriterion crit = new DragSourceIs(table);
 
             public AcceptCriterion getAcceptCriterion() {
                 return crit;
@@ -74,9 +81,12 @@ public class DDTest4 extends TestBase {
                 IndexedContainer clone = null;
                 try {
                     clone = (IndexedContainer) containerDataSource.clone();
-                    int newIndex = containerDataSource.indexOfId(itemIdOver);
-                    if (dropTargetData.getDropLocation() != Location.TOP) {
+                    int newIndex = containerDataSource.indexOfId(itemIdOver) - 1;
+                    if (dropTargetData.getDropLocation() != VerticalDropLocation.TOP) {
                         newIndex++;
+                    }
+                    if (newIndex < 0) {
+                        newIndex = 0;
                     }
                     containerDataSource.removeItem(itemId);
                     Item newItem = containerDataSource.addItemAt(newIndex,

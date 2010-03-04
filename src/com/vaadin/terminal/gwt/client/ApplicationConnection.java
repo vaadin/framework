@@ -1325,6 +1325,8 @@ public class ApplicationConnection {
             return 'd';
         } else if (value instanceof Long) {
             return 'l';
+        } else if (value instanceof Enum) {
+            return 's'; // transported as string representation
         }
         return 'u';
     }

@@ -2,7 +2,6 @@ package com.vaadin.ui;
 
 import java.util.Map;
 
-import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
@@ -77,10 +76,10 @@ public class DragDropPane extends AbsoluteLayout implements DropTarget {
             DragDropPane pane = (DragDropPane) event.getDropTargetDetails()
                     .getTarget();
 
-            DragEventDetails ed = (DragEventDetails) event.getDropTargetDetails();
-            Transferable transferable = event.getTransferable();
-            if (transferable instanceof TransferableImpl) {
-                TransferableImpl ctr = (TransferableImpl) transferable;
+            DragEventDetails ed = (DragEventDetails) event
+                    .getDropTargetDetails();
+            Transferable ctr = event.getTransferable();
+            if (ctr.getSourceComponent() != null) {
                 // use "component" (from DragDropPane) if available, else take
                 // the source component
                 Component component = (Component) ctr.getData("component");
@@ -89,14 +88,13 @@ public class DragDropPane extends AbsoluteLayout implements DropTarget {
                 }
 
                 if (component.getParent() != pane) {
-                    if (transferable instanceof DataBoundTransferable) {
+                    if (ctr instanceof DataBoundTransferable) {
                         // Item has been dragged, construct a Label from
                         // Item id
                         Label l = new Label();
                         l.setSizeUndefined();
                         l.setValue("ItemId : "
-                                + ((DataBoundTransferable) transferable)
-                                        .getItemId());
+                                + ((DataBoundTransferable) ctr).getItemId());
                         pane.addComponent(l);
                         component = l;
 
@@ -140,9 +138,9 @@ public class DragDropPane extends AbsoluteLayout implements DropTarget {
 
             } else {
                 // drag coming outside of Vaadin
-                String object = (String) transferable.getData("text/plain");
+                String object = (String) ctr.getData("text/plain");
 
-                String content = (String) transferable.getData("fileContents");
+                String content = (String) ctr.getData("fileContents");
 
                 Label l = new Label();
                 l.setCaption("Generated from HTML5 drag:");

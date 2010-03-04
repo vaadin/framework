@@ -634,6 +634,9 @@ public class VDragAndDropManager {
      * <p>
      * Using this method may be handy if criterion that uses lazy initialization
      * are used. Check
+     * <p>
+     * TODO Optimization: consider if we actually only need to keep the last
+     * command in queue here.
      * 
      * @param command
      */

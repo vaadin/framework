@@ -15,8 +15,8 @@ import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.DragAndDropWrapper.WrapperTransferable;
 import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
+import com.vaadin.ui.DragAndDropWrapper.WrapperTransferable;
 
 public class DDTest5 extends TestBase {
 

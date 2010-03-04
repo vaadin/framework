@@ -2510,15 +2510,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         case Event.ONMOUSEDOWN:
                             if (dragmode != 0) {
                                 mDown = true;
-                                event.preventDefault();
-                                event.stopPropagation();
-                            }
-                            break;
-                        case Event.ONMOUSEOUT:
-                            mDown = false;
-                            break;
-                        case Event.ONMOUSEMOVE:
-                            if (mDown && dragmode != 0) {
                                 VTransferable transferable = new VTransferable();
                                 transferable.setDragSource(VScrollTable.this);
                                 transferable.setData("itemId", "" + rowKey);
@@ -2527,12 +2518,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                 VDragEvent ev = VDragAndDropManager.get()
                                         .startDrag(transferable, event, true);
                                 ev.createDragImage(getElement(), true);
-
-                                mDown = false;
-                                // prevent text selection
                                 event.preventDefault();
                                 event.stopPropagation();
                             }
+                            break;
+                        case Event.ONMOUSEOUT:
+                            mDown = false;
+                            break;
                         default:
                             break;
                         }

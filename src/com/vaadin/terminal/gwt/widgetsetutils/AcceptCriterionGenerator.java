@@ -102,6 +102,8 @@ public class AcceptCriterionGenerator extends Generator {
                 .getCriterion();
 
         for (Class<? extends AcceptCriterion> class1 : clientSideVerifiableCriterion) {
+            logger.log(Type.INFO, "creating mapping for "
+                    + class1.getCanonicalName());
             String canonicalName = class1.getCanonicalName();
             Class<? extends VAcceptCriterion> clientClass = class1
                     .getAnnotation(ClientCriterion.class).value();

@@ -8,7 +8,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
  * 
  * @since 6.3
  */
-final public class VIsDragSource extends VAcceptCriterion {
+final public class VDragSourceIs extends VAcceptCriterion {
 
     @Override
     public boolean validates(VDragEvent drag, UIDL configuration) {

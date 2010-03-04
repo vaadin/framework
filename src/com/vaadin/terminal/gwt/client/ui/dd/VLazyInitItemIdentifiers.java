@@ -9,9 +9,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 
 /**
  * 
- * @deprecated example class testing custom behavior
  */
-@Deprecated
 final public class VLazyInitItemIdentifiers extends VAcceptCriterion {
     private boolean loaded = false;
     private HashSet<String> hashSet;

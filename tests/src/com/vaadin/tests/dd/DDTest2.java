@@ -13,7 +13,7 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptCriteria.And;
-import com.vaadin.event.dd.acceptCriteria.IsDragSource;
+import com.vaadin.event.dd.acceptCriteria.DragSourceIs;
 import com.vaadin.event.dd.acceptCriteria.IsDataBound;
 import com.vaadin.event.dd.acceptCriteria.Or;
 import com.vaadin.event.dd.acceptCriteria.ServerSideCriterion;
@@ -26,7 +26,8 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.AbstractSelect.AbstractSelectDropTargetDetails;
-import com.vaadin.ui.Tree.OverTreeNode;
+import com.vaadin.ui.Tree.OverFolderNode;
+import com.vaadin.ui.Tree.TreeDragMode;
 import com.vaadin.ui.Tree.TreeDropTargetDetails;
 
 public class DDTest2 extends TestBase {
@@ -45,6 +46,10 @@ public class DDTest2 extends TestBase {
         Window w = getLayout().getWindow();
         /* darn reindeer has no icons */
 
+        /* Make all trees (their nodes actually) draggable */
+        tree1.setDragMode(TreeDragMode.NODE);
+        tree2.setDragMode(TreeDragMode.NODE);
+
         hl.addComponent(tree1);
         hl.addComponent(table);
         hl.addComponent(tree2);
@@ -59,6 +64,7 @@ public class DDTest2 extends TestBase {
 
         tree3 = new Tree(
                 "Tree with lazy loading criteria, of first server visit caches accept rules for all captions");
+        tree3.setDragMode(TreeDragMode.NODE);
 
         tree3.addItem("Drag on me");
         tree3.addItem("Or me");
@@ -112,11 +118,15 @@ public class DDTest2 extends TestBase {
          */
         table.setDragMode(Table.DragModes.ROWS);
 
-        OverTreeNode onNode = new OverTreeNode();
-        IsDragSource fromTable = new IsDragSource(table);
+        OverFolderNode onNode = new OverFolderNode();
+        DragSourceIs fromTable = new DragSourceIs(table);
 
-        IsDragSource fromTree = new IsDragSource(tree1);
+        DragSourceIs fromTree = new DragSourceIs(tree1);
         final Or fromTree1OrTable = new Or(fromTable, fromTree);
+        // Or could in the case be replaced with, keeping here as an example and
+        // test
+        DragSourceIs treeOrTable = new DragSourceIs(table, tree1);
+
         final And and = new And(fromTree1OrTable, onNode);
 
         DropHandler dropHandler = new DropHandler() {

@@ -67,9 +67,9 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
 
     private boolean rendering;
 
-    private int dragMode = 0;
-
     private VAbstractDropHandler dropHandler;
+
+    private int dragMode;
 
     public VTree() {
         super();
@@ -123,6 +123,9 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
         disabled = uidl.getBooleanAttribute("disabled");
         readonly = uidl.getBooleanAttribute("readonly");
 
+        dragMode = uidl.hasAttribute("dragMode") ? uidl
+                .getIntAttribute("dragMode") : 0;
+
         isNullSelectionAllowed = uidl.getBooleanAttribute("nullselect");
 
         clear();
@@ -150,12 +153,6 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
 
         selectedIds = uidl.getStringArrayVariableAsSet("selected");
 
-        if (uidl.hasAttribute("dragMode")) {
-            dragMode = uidl.getIntAttribute("dragMode");
-        } else {
-            dragMode = 0;
-        }
-
         rendering = false;
 
     }
@@ -164,16 +161,16 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
 
         currentMouseOverKey = findCurrentMouseOverKey(drag.getElementOver());
 
-        drag.getDropDetails().put("itemIdOver", currentMouseOverKey);
-
         if (currentMouseOverKey != null) {
-            String detail = getDropDetail(drag.getCurrentGwtEvent());
+            VerticalDropLocation detail = getDropDetail(drag
+                    .getCurrentGwtEvent());
             Boolean overTreeNode = null;
             TreeNode treeNode = keyToNode.get(currentMouseOverKey);
             if (treeNode != null && !treeNode.isLeaf()
-                    && "MIDDLE".equals(detail)) {
+                    && detail == VerticalDropLocation.MIDDLE) {
                 overTreeNode = true;
             }
+            drag.getDropDetails().put("itemIdOver", currentMouseOverKey);
             drag.getDropDetails().put("itemIdOverIsNode", overTreeNode);
             drag.getDropDetails().put("detail", detail);
 
@@ -202,16 +199,15 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                 public void dragOver(final VDragEvent currentDrag) {
                     final Object oldIdOver = currentDrag.getDropDetails().get(
                             "itemIdOver");
-                    final String oldDetail = (String) currentDrag
+                    final VerticalDropLocation oldDetail = (VerticalDropLocation) currentDrag
                             .getDropDetails().get("detail");
 
                     updateTreeRelatedDragData(currentDrag);
-                    final String detail = getDropDetail(currentDrag
+                    final VerticalDropLocation detail = getDropDetail(currentDrag
                             .getCurrentGwtEvent());
                     boolean nodeHasChanged = (currentMouseOverKey != null && currentMouseOverKey != oldIdOver)
                             || (currentMouseOverKey == null && oldIdOver != null);
-                    boolean detailHasChanded = (detail != null && !detail
-                            .equals(oldDetail))
+                    boolean detailHasChanded = (detail != null && detail != oldDetail)
                             || (detail == null && oldDetail != null);
 
                     if (nodeHasChanged || detailHasChanded) {
@@ -219,13 +215,6 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                                 "Change in Transferable " + currentMouseOverKey
                                         + " " + detail);
                         final String newKey = currentMouseOverKey;
-                        validate(new VAcceptCallback() {
-                            public void accepted(VDragEvent event) {
-                                if (newKey != null) {
-                                    keyToNode.get(newKey).emphasis(detail);
-                                }
-                            }
-                        }, currentDrag);
                         if (oldIdOver != null
                                 && oldIdOver != currentMouseOverKey) {
                             TreeNode treeNode = keyToNode.get(oldIdOver);
@@ -233,6 +222,13 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                                 treeNode.emphasis(null);
                             }
                         }
+                        validate(new VAcceptCallback() {
+                            public void accepted(VDragEvent event) {
+                                if (newKey != null) {
+                                    keyToNode.get(newKey).emphasis(detail);
+                                }
+                            }
+                        }, currentDrag);
                     }
 
                 }
@@ -269,14 +265,14 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
         dropHandler.updateAcceptRules(childUidl);
     }
 
-    public String getDropDetail(NativeEvent event) {
+    public VerticalDropLocation getDropDetail(NativeEvent event) {
         TreeNode treeNode = keyToNode.get(currentMouseOverKey);
         if (treeNode == null) {
             return null;
         }
         VerticalDropLocation verticalDropLocation = VerticalDropLocation.get(
                 treeNode.nodeCaptionDiv, event.getClientY(), 0.2);
-        return verticalDropLocation.toString();
+        return verticalDropLocation;
     }
 
     private void handleUpdate(UIDL uidl) {
@@ -325,11 +321,11 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
         return selectedIds.contains(treeNode.key);
     }
 
-    protected class TreeNode extends SimplePanel implements ActionOwner {
+    public class TreeNode extends SimplePanel implements ActionOwner {
 
         public static final String CLASSNAME = "v-tree-node";
 
-        String key;
+        public String key;
 
         private String[] actionKeys = null;
 
@@ -355,21 +351,66 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                     | Event.ONCONTEXTMENU);
         }
 
-        public void emphasis(String string) {
+        protected void emphasis(VerticalDropLocation detail) {
             String base = "v-tree-node-drag-";
-            UIObject.setStyleName(getElement(), base + "top", "TOP"
-                    .equals(string));
-            UIObject.setStyleName(getElement(), base + "bottom", "BOTTOM"
-                    .equals(string));
-            UIObject.setStyleName(getElement(), base + "center", "MIDDLE"
-                    .equals(string));
+            UIObject.setStyleName(getElement(), base + "top",
+                    VerticalDropLocation.TOP == detail);
+            UIObject.setStyleName(getElement(), base + "bottom",
+                    VerticalDropLocation.BOTTOM == detail);
+            UIObject.setStyleName(getElement(), base + "center",
+                    VerticalDropLocation.MIDDLE == detail);
             base = "v-tree-node-caption-drag-";
-            UIObject.setStyleName(nodeCaptionDiv, base + "top", "TOP"
-                    .equals(string));
-            UIObject.setStyleName(nodeCaptionDiv, base + "bottom", "BOTTOM"
-                    .equals(string));
-            UIObject.setStyleName(nodeCaptionDiv, base + "center", "MIDDLE"
-                    .equals(string));
+            UIObject.setStyleName(nodeCaptionDiv, base + "top",
+                    VerticalDropLocation.TOP == detail);
+            UIObject.setStyleName(nodeCaptionDiv, base + "bottom",
+                    VerticalDropLocation.BOTTOM == detail);
+            UIObject.setStyleName(nodeCaptionDiv, base + "center",
+                    VerticalDropLocation.MIDDLE == detail);
+
+            // also add classname to "folder node" into which the drag is
+            // targeted
+
+            TreeNode folder = null;
+            /* Possible parent of this TreeNode will be stored here */
+            TreeNode parentFolder = getParentNode();
+
+            // TODO fix my bugs
+            if (isLeaf()) {
+                folder = parentFolder;
+                // note, parent folder may be null if this is root node => no
+                // folder target exists
+            } else {
+                if (detail == VerticalDropLocation.TOP) {
+                    folder = parentFolder;
+                } else {
+                    folder = this;
+                }
+                // ensure we remove the dragfolder classname from the previous
+                // folder node
+                setDragFolderStyleName(this, false);
+                setDragFolderStyleName(parentFolder, false);
+            }
+            if (folder != null) {
+                setDragFolderStyleName(folder, detail != null);
+            }
+
+        }
+
+        private TreeNode getParentNode() {
+            Widget parent2 = getParent().getParent();
+            if (parent2 instanceof TreeNode) {
+                return (TreeNode) parent2;
+            }
+            return null;
+        }
+
+        private void setDragFolderStyleName(TreeNode folder, boolean add) {
+            if (folder != null) {
+                UIObject.setStyleName(folder.getElement(),
+                        "v-tree-node-dragfolder", add);
+                UIObject.setStyleName(folder.nodeCaptionDiv,
+                        "v-tree-node-caption-dragfolder", add);
+            }
         }
 
         @Override
@@ -401,10 +442,13 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
             if (dragMode != 0 || dropHandler != null) {
                 if (type == Event.ONMOUSEDOWN) {
                     if (nodeCaptionDiv.isOrHasChild(event.getTarget())) {
-                        ApplicationConnection.getConsole().log(
-                                "TreeNode m down");
-                        event.preventDefault(); // prevent text selection
-                        mouseDownEvent = event;
+                        if (dragMode > 0) {
+
+                            ApplicationConnection.getConsole().log(
+                                    "TreeNode m down");
+                            event.preventDefault(); // prevent text selection
+                            mouseDownEvent = event;
+                        }
                     }
                 } else if (type == Event.ONMOUSEMOVE
                         || type == Event.ONMOUSEOUT) {
@@ -690,5 +734,9 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
 
     public VDropHandler getDropHandler() {
         return dropHandler;
+    }
+
+    public TreeNode getNodeByKey(String key) {
+        return keyToNode.get(key);
     }
 }

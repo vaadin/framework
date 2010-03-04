@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_3_0_dev-20100217";}
-.v-theme-version-6_3_0_dev-20100217 {display: none;}
+.v-theme-version:after {content:"6_3_0_dev-20100304";}
+.v-theme-version-6_3_0_dev-20100304 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -1354,18 +1354,6 @@ div.v-progressindicator-indeterminate-disabled {
 	cursor: pointer;
 }
 
-/* TODO remove important, replace with better anchors or order */
-.v-table tr.v-table-row-drag-center {
-	background-color: cyan !important;
-}
-/* TODO consider using height neutral styling (scrollbar issues when pagelength = table.length ) */
-.v-table-row-drag-top .v-table-cell-content {
-	border-top: 1px solid cyan ;
-}
-.v-table-row-drag-bottom .v-table-cell-content {
-	border-bottom: 1px solid cyan;
-}
-
 .v-table-body-noselection .v-table-row,
 .v-table-body-noselection .v-table-row-odd {
 	cursor: default;
@@ -1431,6 +1419,19 @@ div.v-progressindicator-indeterminate-disabled {
 .v-off {
 	color: #ddd;
 }
+
+/* TODO remove important, replace with better anchors or order */
+.v-table-row-drag-middle .v-table-cell-content {
+	background-color: cyan;
+}
+/* TODO consider using height neutral styling (scrollbar issues when pagelength = table.length ) */
+.v-table-row-drag-top .v-table-cell-content {
+	border-top: 1px solid cyan ;
+}
+.v-table-row-drag-bottom .v-table-cell-content {
+	border-bottom: 1px solid cyan;
+}
+
 
 .v-tabsheet,
 .v-tabsheet-content,

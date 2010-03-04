@@ -30,7 +30,7 @@ import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.ui.dd.VIsOverId;
 import com.vaadin.terminal.gwt.client.ui.dd.VItemIdIs;
-import com.vaadin.ui.Tree.Location;
+import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 
 /**
  * <p>
@@ -1775,7 +1775,10 @@ public abstract class AbstractSelect extends AbstractField implements
      */
     public class AbstractSelectDropTargetDetails extends DropTargetDetailsImpl {
 
-        private Object idOver;
+        /**
+         * The treenode id over which the drag event happened.
+         */
+        protected Object idOver;
 
         /**
          * TODO Javadoc!
@@ -1791,7 +1794,8 @@ public abstract class AbstractSelect extends AbstractField implements
         }
 
         /**
-         * TODO Javadoc!
+         * If the drag operation is currently over an Item, this method returns
+         * the identifier of the Item.
          * 
          */
         public Object getItemIdOver() {
@@ -1801,17 +1805,11 @@ public abstract class AbstractSelect extends AbstractField implements
         /**
          * TODO Javadoc!
          * 
-         * @since 6.3
          */
-        public Location getDropLocation() {
-            String s = (String) getData("detail");
-            if ("TOP".equals(s)) {
-                return Location.TOP;
-            } else if ("BOTTOM".equals(s)) {
-                return Location.BOTTOM;
-            } else {
-                return Location.MIDDLE;
-            }
+        public VerticalDropLocation getDropLocation() {
+            VerticalDropLocation valueOf = VerticalDropLocation
+                    .valueOf((String) getData("detail"));
+            return valueOf;
         }
 
     }
