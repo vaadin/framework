@@ -3,6 +3,7 @@ package com.vaadin.terminal.gwt.server;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -13,6 +14,8 @@ import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequestWrapper;
 
 import com.vaadin.Application;
 import com.vaadin.external.org.apache.commons.fileupload.FileItemIterator;
@@ -54,7 +57,20 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         }
 
         public String getParameter(String name) {
-            return request.getParameter(name);
+            String value = request.getParameter(name);
+            if (value == null) {
+                // for GateIn portlet container simple-portal
+                try {
+                    Method getRealReq = request.getClass().getMethod(
+                            "getRealRequest");
+                    HttpServletRequestWrapper origRequest = (HttpServletRequestWrapper) getRealReq
+                            .invoke(request);
+                    value = origRequest.getParameter(name);
+                } catch (Exception e) {
+                    // do nothing - not on GateIn simple-portal
+                }
+            }
+            return value;
         }
 
         public String getRequestID() {
@@ -209,11 +225,12 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
 
     public void handleUidlRequest(ResourceRequest request,
             ResourceResponse response,
-            AbstractApplicationPortlet applicationPortlet)
+            AbstractApplicationPortlet applicationPortlet, Window window)
             throws InvalidUIDLSecurityKeyException, IOException {
         doHandleUidlRequest(new PortletRequestWrapper(request),
                 new PortletResponseWrapper(response),
-                new AbstractApplicationPortletWrapper(applicationPortlet));
+                new AbstractApplicationPortletWrapper(applicationPortlet),
+                window);
     }
 
     DownloadStream handleURI(Window window, ResourceRequest request,
@@ -222,6 +239,31 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         return handleURI(window, new PortletRequestWrapper(request),
                 new PortletResponseWrapper(response),
                 new AbstractApplicationPortletWrapper(applicationPortlet));
+    }
+
+    /**
+     * Gets the existing application or creates a new one. Get a window within
+     * an application based on the requested URI.
+     * 
+     * @param request
+     *            the portlet Request.
+     * @param applicationPortlet
+     * @param application
+     *            the Application to query for window.
+     * @param assumedWindow
+     *            if the window has been already resolved once, this parameter
+     *            must contain the window.
+     * @return Window matching the given URI or null if not found.
+     * @throws ServletException
+     *             if an exception has occurred that interferes with the
+     *             servlet's normal operation.
+     */
+    Window getApplicationWindow(PortletRequest request,
+            AbstractApplicationPortlet applicationPortlet,
+            Application application, Window assumedWindow) {
+        return doGetApplicationWindow(new PortletRequestWrapper(request),
+                new AbstractApplicationPortletWrapper(applicationPortlet),
+                application, assumedWindow);
     }
 
 }

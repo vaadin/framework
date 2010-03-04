@@ -321,8 +321,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
                     new OutputStreamWriter(out, "UTF-8")));
             outWriter.print("<html><body>dummy page</body></html>");
-            outWriter.flush();
-            out.close();
+            outWriter.close();
         } else if (requestType == RequestType.STATIC_FILE) {
             serveStaticResources((ResourceRequest) request,
                     (ResourceResponse) response);
@@ -390,20 +389,43 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
                 /* Notify listeners */
 
+                // Finds the window within the application
+                Window window = null;
+                synchronized (application) {
+                    if (application.isRunning()) {
+                        switch (requestType) {
+                        case FILE_UPLOAD:
+                            // no window
+                            break;
+                        case APPLICATION_RESOURCE:
+                            // use main window - should not need any window
+                            window = application.getMainWindow();
+                            break;
+                        default:
+                            window = applicationManager.getApplicationWindow(
+                                    request, this, application, null);
+                        }
+                        // if window not found, not a problem - use null
+                    }
+                }
+
                 // TODO Should this happen before or after the transaction
                 // starts?
                 if (request instanceof RenderRequest) {
                     applicationContext.firePortletRenderRequest(application,
-                            (RenderRequest) request, (RenderResponse) response);
+                            window, (RenderRequest) request,
+                            (RenderResponse) response);
                 } else if (request instanceof ActionRequest) {
                     applicationContext.firePortletActionRequest(application,
-                            (ActionRequest) request, (ActionResponse) response);
+                            window, (ActionRequest) request,
+                            (ActionResponse) response);
                 } else if (request instanceof EventRequest) {
                     applicationContext.firePortletEventRequest(application,
-                            (EventRequest) request, (EventResponse) response);
+                            window, (EventRequest) request,
+                            (EventResponse) response);
                 } else if (request instanceof ResourceRequest) {
                     applicationContext.firePortletResourceRequest(application,
-                            (ResourceRequest) request,
+                            window, (ResourceRequest) request,
                             (ResourceResponse) response);
                 }
 
@@ -416,7 +438,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                     // Handles AJAX UIDL requests
                     applicationManager.handleUidlRequest(
                             (ResourceRequest) request,
-                            (ResourceResponse) response, this);
+                            (ResourceResponse) response, this, window);
                     return;
                 } else {
                     /*
@@ -428,7 +450,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                     }
 
                     handleOtherRequest(request, response, requestType,
-                            application, applicationContext, applicationManager);
+                            application, window, applicationContext,
+                            applicationManager);
                 }
             } catch (final SessionExpiredException e) {
                 // TODO Figure out a better way to deal with
@@ -485,14 +508,10 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      */
     private void handleOtherRequest(PortletRequest request,
             PortletResponse response, RequestType requestType,
-            Application application,
+            Application application, Window window,
             PortletApplicationContext2 applicationContext,
             PortletCommunicationManager applicationManager)
             throws PortletException, IOException, MalformedURLException {
-        /*
-         * Always use the main window when running inside a portlet.
-         */
-        Window window = application.getMainWindow();
         if (window == null) {
             throw new PortletException(ERROR_NO_WINDOW_FOUND);
         }
@@ -623,6 +642,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
             while ((bytesRead = data.read(buffer)) > 0) {
                 out.write(buffer, 0, bytesRead);
+                // TODO this may cause problems on GateIn
                 out.flush();
             }
             out.close();
@@ -1360,9 +1380,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 + "\"appError\": {" + "\"caption\":" + caption + ","
                 + "\"message\" : " + message + "," + "\"url\" : " + url
                 + "}}, \"resources\": {}, \"locales\":[]}]");
-        outWriter.flush();
         outWriter.close();
-        out.flush();
     }
 
     /**

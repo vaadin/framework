@@ -238,16 +238,22 @@ public class CommunicationManager extends AbstractCommunicationManager {
      * 
      * @param request
      * @param response
+     * @param applicationServlet
+     * @param window
+     *            target window of the UIDL request, can be null if window not
+     *            found
      * @throws IOException
      * @throws ServletException
      */
     public void handleUidlRequest(HttpServletRequest request,
             HttpServletResponse response,
-            AbstractApplicationServlet applicationServlet) throws IOException,
-            ServletException, InvalidUIDLSecurityKeyException {
+            AbstractApplicationServlet applicationServlet, Window window)
+            throws IOException, ServletException,
+            InvalidUIDLSecurityKeyException {
         doHandleUidlRequest(new HttpServletRequestWrapper(request),
                 new HttpServletResponseWrapper(response),
-                new AbstractApplicationServletWrapper(applicationServlet));
+                new AbstractApplicationServletWrapper(applicationServlet),
+                window);
     }
 
     /**

@@ -4,32 +4,6 @@
 
 package com.vaadin.terminal.gwt.server;
 
-import com.vaadin.Application;
-import com.vaadin.Application.SystemMessages;
-import com.vaadin.external.org.apache.commons.fileupload.FileItemIterator;
-import com.vaadin.external.org.apache.commons.fileupload.FileItemStream;
-import com.vaadin.external.org.apache.commons.fileupload.FileUpload;
-import com.vaadin.external.org.apache.commons.fileupload.FileUploadException;
-import com.vaadin.external.org.apache.commons.fileupload.ProgressListener;
-import com.vaadin.terminal.ApplicationResource;
-import com.vaadin.terminal.DownloadStream;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Paintable;
-import com.vaadin.terminal.URIHandler;
-import com.vaadin.terminal.UploadStream;
-import com.vaadin.terminal.VariableOwner;
-import com.vaadin.terminal.Paintable.RepaintRequestEvent;
-import com.vaadin.terminal.Terminal.ErrorEvent;
-import com.vaadin.terminal.Terminal.ErrorListener;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.server.ComponentSizeValidator.InvalidLayout;
-import com.vaadin.ui.AbstractField;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.Upload;
-import com.vaadin.ui.Window;
-import com.vaadin.ui.Upload.UploadException;
-
 import java.io.BufferedWriter;
 import java.io.CharArrayWriter;
 import java.io.IOException;
@@ -65,6 +39,32 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+
+import com.vaadin.Application;
+import com.vaadin.Application.SystemMessages;
+import com.vaadin.external.org.apache.commons.fileupload.FileItemIterator;
+import com.vaadin.external.org.apache.commons.fileupload.FileItemStream;
+import com.vaadin.external.org.apache.commons.fileupload.FileUpload;
+import com.vaadin.external.org.apache.commons.fileupload.FileUploadException;
+import com.vaadin.external.org.apache.commons.fileupload.ProgressListener;
+import com.vaadin.terminal.ApplicationResource;
+import com.vaadin.terminal.DownloadStream;
+import com.vaadin.terminal.PaintException;
+import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.Paintable;
+import com.vaadin.terminal.URIHandler;
+import com.vaadin.terminal.UploadStream;
+import com.vaadin.terminal.VariableOwner;
+import com.vaadin.terminal.Paintable.RepaintRequestEvent;
+import com.vaadin.terminal.Terminal.ErrorEvent;
+import com.vaadin.terminal.Terminal.ErrorListener;
+import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.server.ComponentSizeValidator.InvalidLayout;
+import com.vaadin.ui.AbstractField;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Upload;
+import com.vaadin.ui.Window;
+import com.vaadin.ui.Upload.UploadException;
 
 /**
  * This is a common base class for the server-side implementations of the
@@ -496,11 +496,14 @@ public abstract class AbstractCommunicationManager implements
      * @param request
      * @param response
      * @param callback
+     * @param window
+     *            target window for the UIDL request, can be null if target not
+     *            found
      * @throws IOException
      * @throws InvalidUIDLSecurityKeyException
      */
     protected void doHandleUidlRequest(Request request, Response response,
-            Callback callback) throws IOException,
+            Callback callback, Window window) throws IOException,
             InvalidUIDLSecurityKeyException {
 
         // repaint requested or session has timed out and new one is created
@@ -526,10 +529,7 @@ public abstract class AbstractCommunicationManager implements
         synchronized (application) {
 
             // Finds the window within the application
-            Window window = null;
             if (application.isRunning()) {
-                window = doGetApplicationWindow(request, callback, application,
-                        null);
                 // Returns if no window found
                 if (window == null) {
                     // This should not happen, no windows exists but
@@ -586,8 +586,7 @@ public abstract class AbstractCommunicationManager implements
             }
         }
 
-        // out.flush(); - this line will cause errors when deployed on GateIn.
-        out.close();
+        outWriter.close();
     }
 
     /**
@@ -941,7 +940,6 @@ public abstract class AbstractCommunicationManager implements
 
             outWriter.print("}]");
         }
-        outWriter.flush();
         outWriter.close();
 
     }
@@ -1846,7 +1844,7 @@ public abstract class AbstractCommunicationManager implements
                 }
                 return stream;
             } else {
-                // Resolve the prefix end inded
+                // Resolve the prefix end index
                 final int index = uri.indexOf('/');
                 if (index > 0) {
                     String prefix = uri.substring(0, index);

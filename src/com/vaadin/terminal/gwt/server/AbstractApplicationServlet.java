@@ -438,7 +438,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 return;
             } else if (requestType == RequestType.UIDL) {
                 // Handles AJAX UIDL requests
-                applicationManager.handleUidlRequest(request, response, this);
+                Window window = applicationManager.getApplicationWindow(
+                        request, this, application, null);
+                applicationManager.handleUidlRequest(request, response, this,
+                        window);
                 return;
             }
 
