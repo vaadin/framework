@@ -1778,7 +1778,7 @@ public abstract class Application implements URIHandler,
          * @param cookiesDisabledCaption
          *            the caption for the "cookies disabled" notification
          */
-        public void setCookiesDisableCaption(String cookiesDisabledCaption) {
+        public void setCookiesDisabledCaption(String cookiesDisabledCaption) {
             this.cookiesDisabledCaption = cookiesDisabledCaption;
         }
 
@@ -1790,7 +1790,7 @@ public abstract class Application implements URIHandler,
          * @param cookiesDisabledMessage
          *            the message for the "cookies disabled" notification
          */
-        public void setCookiesDisableMessage(String cookiesDisabledMessage) {
+        public void setCookiesDisabledMessage(String cookiesDisabledMessage) {
             this.cookiesDisabledMessage = cookiesDisabledMessage;
         }
 
