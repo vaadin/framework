@@ -40,6 +40,7 @@ import com.vaadin.terminal.gwt.client.ui.VContextMenu;
 import com.vaadin.terminal.gwt.client.ui.VNotification;
 import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.terminal.gwt.client.ui.VNotification.HideEvent;
+import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
 import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
 
 /**
@@ -596,7 +597,7 @@ public class ApplicationConnection {
         for (int i = 1; i < variableBurst.size(); i += 2) {
             String id = variableBurst.get(i);
             id = id.substring(0, id.indexOf(VAR_FIELD_SEPARATOR));
-            if (!idToPaintableDetail.containsKey(id)) {
+            if (!idToPaintableDetail.containsKey(id) && !id.startsWith("DD")) {
                 // variable owner does not exist anymore
                 variableBurst.remove(i - 1);
                 variableBurst.remove(i - 1);
@@ -803,6 +804,12 @@ public class ApplicationConnection {
             } catch (final Throwable e) {
                 ClientExceptionHandler.displayError(e);
             }
+        }
+
+        if (json.containsKey("dd")) {
+            // response contains data for drag and drop service
+            VDragAndDropManager.get().handleServerResponse(
+                    json.getValueMap("dd"));
         }
 
         // Check which widgets' size has been updated
@@ -1318,6 +1325,8 @@ public class ApplicationConnection {
             return 'd';
         } else if (value instanceof Long) {
             return 'l';
+        } else if (value instanceof Enum) {
+            return 's'; // transported as string representation
         }
         return 'u';
     }

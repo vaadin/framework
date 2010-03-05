@@ -24,10 +24,22 @@ div.v-tree-node-leaf {
 .v-tree-node-caption .v-icon {
 	vertical-align: middle;
 }
+
 .v-tree-node-selected span {
 	background: #999;
 	color: #fff;
 }
+
+.v-tree-node-caption-drag-top {
+	border-top:2px solid green;
+}
+.v-tree-node-caption-drag-bottom {
+	border-bottom:2px solid green;
+}
+.v-tree-node-caption-drag-center {
+	background-color:green;
+}
+
 .v-tree-node-children {
 	padding-left: 1em;
 }

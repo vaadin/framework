@@ -4,18 +4,31 @@
 package com.vaadin.terminal.gwt.client;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ui.VUnknownComponent;
 import com.vaadin.terminal.gwt.client.ui.VView;
+import com.vaadin.terminal.gwt.client.ui.VWindow;
 
-public class VUIDLBrowser extends Tree {
+public class VUIDLBrowser extends Tree implements MouseOutHandler {
     /**
      * 
      */
@@ -38,6 +51,27 @@ public class VUIDLBrowser extends Tree {
                 }
             }
         });
+
+        addSelectionHandler(new SelectionHandler<TreeItem>() {
+            public void onSelection(SelectionEvent<TreeItem> event) {
+                UIDLItem selectedItem = (UIDLItem) event.getSelectedItem();
+                List<ApplicationConnection> runningApplications = ApplicationConfiguration
+                        .getRunningApplications();
+
+                // TODO this does not work properly with multiple application on
+                // same
+                // host page
+                for (ApplicationConnection applicationConnection : runningApplications) {
+                    Paintable paintable = applicationConnection
+                            .getPaintable(selectedItem.uidl.getId());
+                    highlight(paintable);
+                }
+
+            }
+        });
+
+        addMouseOutHandler(VUIDLBrowser.this);
+
     }
 
     @Override
@@ -64,6 +98,7 @@ public class VUIDLBrowser extends Tree {
             } catch (Exception e) {
                 setText(uidl.toString());
             }
+
         }
 
         private String getNodeName(UIDL uidl, ApplicationConfiguration conf,
@@ -161,6 +196,41 @@ public class VUIDLBrowser extends Tree {
                 }
             }
         }
+    }
+
+    static Element highlight = Document.get().createDivElement();
+
+    static {
+        Style style = highlight.getStyle();
+        style.setPosition(Position.ABSOLUTE);
+        style.setZIndex(VWindow.Z_INDEX + 1000);
+        style.setBackgroundColor("red");
+        style.setOpacity(0.2);
+        if (BrowserInfo.get().isIE()) {
+            style.setProperty("filter", "alpha(opacity=20)");
+        }
+    }
+
+    private static void highlight(Paintable paintable) {
+        Widget w = (Widget) paintable;
+        if (w != null) {
+            Style style = highlight.getStyle();
+            style.setTop(w.getAbsoluteTop(), Unit.PX);
+            style.setLeft(w.getAbsoluteLeft(), Unit.PX);
+            style.setWidth(w.getOffsetWidth(), Unit.PX);
+            style.setHeight(w.getOffsetHeight(), Unit.PX);
+            RootPanel.getBodyElement().appendChild(highlight);
+        }
+    }
+
+    private static void deHiglight() {
+        if (highlight.getParentElement() != null) {
+            highlight.getParentElement().removeChild(highlight);
+        }
+    }
+
+    public void onMouseOut(MouseOutEvent event) {
+        deHiglight();
     }
 
 }

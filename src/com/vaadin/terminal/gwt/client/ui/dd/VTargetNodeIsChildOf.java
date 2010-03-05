@@ -1,0 +1,37 @@
+/**
+ * 
+ */
+package com.vaadin.terminal.gwt.client.ui.dd;
+
+import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.ui.VTree;
+import com.vaadin.terminal.gwt.client.ui.VTree.TreeNode;
+
+final public class VTargetNodeIsChildOf extends VAcceptCriterion {
+
+    @Override
+    public boolean validates(VDragEvent drag, UIDL configuration) {
+
+        VTree tree = (VTree) VDragAndDropManager.get().getCurrentDropHandler()
+                .getPaintable();
+        TreeNode treeNode = tree.getNodeByKey((String) drag.getDropDetails()
+                .get("itemIdOver"));
+        if (treeNode != null) {
+            Widget parent2 = treeNode.getParent().getParent();
+            int depth = configuration.getIntAttribute("depth");
+            if (depth < 0) {
+                depth = Integer.MAX_VALUE;
+            }
+            for (int i = 0; i < depth && parent2 instanceof TreeNode; i++) {
+                if (configuration.getStringAttribute("key").equals(
+                        ((TreeNode) parent2).key)) {
+                    return true;
+                }
+                parent2 = parent2.getParent().getParent();
+            }
+        }
+
+        return false;
+    }
+}

@@ -50,6 +50,7 @@ public class AbsoluteLayout extends AbstractLayout {
     public void addComponent(Component c) {
         components.add(c);
         super.addComponent(c);
+        requestRepaint();
     }
 
     @Override

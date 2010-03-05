@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ui.VButton;
 import com.vaadin.terminal.gwt.client.ui.VCheckBox;
 import com.vaadin.terminal.gwt.client.ui.VDateFieldCalendar;
+import com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper;
 import com.vaadin.terminal.gwt.client.ui.VFilterSelect;
 import com.vaadin.terminal.gwt.client.ui.VListSelect;
 import com.vaadin.terminal.gwt.client.ui.VNativeSelect;

@@ -16,6 +16,8 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -35,6 +37,25 @@ public class Util {
     /*-{
         if($wnd.console)
             debugger;
+    }-*/;
+
+    /**
+     * 
+     * Returns the topmost element of from given coordinates.
+     * 
+     * TODO fix crossplat issues clientX vs pageX. See quircksmode
+     * 
+     * @param x
+     * @param y
+     * @return the element at given coordinates
+     */
+    public static native Element getElementFromPoint(int clientX, int clientY)
+    /*-{
+        var el = $wnd.document.elementFromPoint(clientX, clientY);
+        if(el.nodeType == 3) {
+            el = el.parentNode;
+        }
+        return el;
     }-*/;
 
     private static final int LAZY_SIZE_CHANGE_TIMEOUT = 400;
@@ -825,5 +846,34 @@ public class Util {
 
         }
     }-*/;
+
+    /**
+     * Helper method to find first instance of given Widget type found by
+     * traversing DOM upwards.
+     * 
+     * @param element
+     * @param class1
+     */
+    public static <T> T findWidget(Element element, Class class1) {
+        if (element != null) {
+            EventListener eventListener = null;
+            while (eventListener == null && element != null) {
+                eventListener = Event.getEventListener(element);
+                if (eventListener == null) {
+                    element = (Element) element.getParentElement();
+                }
+            }
+            if (eventListener != null) {
+                Widget w = (Widget) eventListener;
+                while (w != null) {
+                    if (class1 == null || w.getClass() == class1) {
+                        return (T) w;
+                    }
+                    w = w.getParent();
+                }
+            }
+        }
+        return null;
+    }
 
 }

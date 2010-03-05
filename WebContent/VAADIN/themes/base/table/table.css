@@ -90,6 +90,7 @@
 	padding: 0;
 	cursor: pointer;
 }
+
 .v-table-body-noselection .v-table-row,
 .v-table-body-noselection .v-table-row-odd {
 	cursor: default;
@@ -158,3 +159,16 @@
 .v-off {
 	color: #ddd;
 }
+
+/* TODO remove important, replace with better anchors or order */
+.v-table-row-drag-middle .v-table-cell-content {
+	background-color: cyan;
+}
+/* TODO consider using height neutral styling (scrollbar issues when pagelength = table.length ) */
+.v-table-row-drag-top .v-table-cell-content {
+	border-top: 1px solid cyan ;
+}
+.v-table-row-drag-bottom .v-table-cell-content {
+	border-bottom: 1px solid cyan;
+}
+

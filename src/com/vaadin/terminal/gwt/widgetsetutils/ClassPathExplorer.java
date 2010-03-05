@@ -26,6 +26,8 @@ import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
+import com.vaadin.event.dd.acceptCriteria.ClientCriterion;
 import com.vaadin.terminal.Paintable;
 import com.vaadin.ui.ClientWidget;
 
@@ -80,6 +82,15 @@ public class ClassPathExplorer {
         }
         return paintables;
 
+    }
+
+    public static Collection<Class<? extends AcceptCriterion>> getCriterion() {
+        if (acceptCriterion.isEmpty()) {
+            // accept criterion are searched as a side effect, normally after
+            // paintable detection
+            getPaintablesHavingWidgetAnnotation();
+        }
+        return acceptCriterion;
     }
 
     /**
@@ -386,6 +397,8 @@ public class ClassPathExplorer {
         }
     });
 
+    private static Set<Class<? extends AcceptCriterion>> acceptCriterion = new HashSet<Class<? extends AcceptCriterion>>();
+
     private static void tryToAdd(final String fullclassName,
             Collection<Class<? extends Paintable>> paintables) {
         try {
@@ -402,7 +415,10 @@ public class ClassPathExplorer {
             if (c.getAnnotation(ClientWidget.class) != null) {
                 paintables.add((Class<? extends Paintable>) c);
                 // System.out.println("Found paintable " + fullclassName);
+            } else if (c.getAnnotation(ClientCriterion.class) != null) {
+                acceptCriterion.add((Class<? extends AcceptCriterion>) c);
             }
+
         } catch (ClassNotFoundException e) {
             // e.printStackTrace();
         } catch (LinkageError e) {

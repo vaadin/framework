@@ -316,6 +316,8 @@ public abstract class AbstractCommunicationManager implements
 
     private int timeoutInterval = -1;
 
+    private DragAndDropService dragAndDropService;
+
     /**
      * TODO New constructor - document me!
      * 
@@ -938,6 +940,10 @@ public abstract class AbstractCommunicationManager implements
             // add any pending locale definitions requested by the client
             printLocaleDeclarations(outWriter);
 
+            if (dragAndDropService != null) {
+                dragAndDropService.printJSONResponse(outWriter);
+            }
+
             outWriter.print("}]");
         }
         outWriter.close();
@@ -1004,8 +1010,7 @@ public abstract class AbstractCommunicationManager implements
                     if (i + 1 < variableRecords.length) {
                         nextVariable = variableRecords[i + 1];
                     }
-                    final VariableOwner owner = (VariableOwner) idPaintableMap
-                            .get(variable[VAR_PID]);
+                    final VariableOwner owner = getVariableOwner(variable[VAR_PID]);
                     if (owner != null && owner.isEnabled()) {
                         // TODO this should be Map<String, Object>, but the
                         // VariableOwner API does not guarantee the key is a
@@ -1056,8 +1061,13 @@ public abstract class AbstractCommunicationManager implements
                                 }
                             }
                         } catch (Exception e) {
-                            handleChangeVariablesError(application2,
-                                    (Component) owner, e, m);
+                            if (owner instanceof Component) {
+                                handleChangeVariablesError(application2,
+                                        (Component) owner, e, m);
+                            } else {
+                                // TODO DragDropService error handling
+                                throw new RuntimeException(e);
+                            }
                         }
                     } else {
 
@@ -1108,6 +1118,21 @@ public abstract class AbstractCommunicationManager implements
             }
         }
         return success;
+    }
+
+    private VariableOwner getVariableOwner(String string) {
+        VariableOwner owner = (VariableOwner) idPaintableMap.get(string);
+        if (owner == null && string.startsWith("DD")) {
+            return getDragAndDropService();
+        }
+        return owner;
+    }
+
+    private VariableOwner getDragAndDropService() {
+        if (dragAndDropService == null) {
+            dragAndDropService = new DragAndDropService(this);
+        }
+        return dragAndDropService;
     }
 
     /**

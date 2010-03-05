@@ -568,6 +568,9 @@ public class IndexedContainer implements Container.Indexed,
                 return null;
             }
         }
+        if (index < 0) {
+            index = 0;
+        }
 
         return addItemAt(index, newItemId);
     }
@@ -965,7 +968,7 @@ public class IndexedContainer implements Container.Indexed,
      * @param addedItemIndex
      *            index of new item if change event was an item addition
      */
-    private void fireContentsChange(int addedItemIndex) {
+    protected void fireContentsChange(int addedItemIndex) {
         if (itemSetChangeListeners != null) {
             final Object[] l = itemSetChangeListeners.toArray();
             final Container.ItemSetChangeEvent event = new IndexedContainer.ItemSetChangeEvent(

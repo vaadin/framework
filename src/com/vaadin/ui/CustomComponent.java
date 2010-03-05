@@ -126,8 +126,11 @@ public class CustomComponent extends AbstractComponentContainer {
      * The component type is textual type of the component. This is included in
      * the UIDL as component tag attribute.
      * 
+     * @deprecated not more useful as the whole tag system has been removed
+     * 
      * @return the component type.
      */
+    @Deprecated
     public String getComponentType() {
         return componentType;
     }
@@ -138,9 +141,12 @@ public class CustomComponent extends AbstractComponentContainer {
      * The component type is textual type of the component. This is included in
      * the UIDL as component tag attribute.
      * 
+     * @deprecated not more useful as the whole tag system has been removed
+     * 
      * @param componentType
      *            the componentType to set.
      */
+    @Deprecated
     public void setComponentType(String componentType) {
         this.componentType = componentType;
     }

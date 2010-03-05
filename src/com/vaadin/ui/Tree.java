@@ -23,15 +23,28 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.ContainerHierarchicalWrapper;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.Action;
+import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.ItemClickEvent;
+import com.vaadin.event.Transferable;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.event.ItemClickEvent.ItemClickSource;
+import com.vaadin.event.dd.DragAndDropEvent;
+import com.vaadin.event.dd.DragSource;
+import com.vaadin.event.dd.DropHandler;
+import com.vaadin.event.dd.DropTarget;
+import com.vaadin.event.dd.acceptCriteria.ClientCriterion;
+import com.vaadin.event.dd.acceptCriteria.ClientSideCriterion;
+import com.vaadin.event.dd.acceptCriteria.ServerSideCriterion;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VTree;
+import com.vaadin.terminal.gwt.client.ui.dd.VLazyInitItemIdentifiers;
+import com.vaadin.terminal.gwt.client.ui.dd.VOverTreeNode;
+import com.vaadin.terminal.gwt.client.ui.dd.VTargetNodeIsChildOf;
+import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.tools.ReflectTools;
 
 /**
@@ -46,7 +59,7 @@ import com.vaadin.tools.ReflectTools;
 @SuppressWarnings("serial")
 @ClientWidget(VTree.class)
 public class Tree extends AbstractSelect implements Container.Hierarchical,
-        Action.Container, ItemClickSource {
+        Action.Container, ItemClickSource, DragSource, DropTarget {
 
     /* Private members */
 
@@ -85,6 +98,16 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * updates are allowed.
      */
     private boolean initialPaint = true;
+
+    /**
+     * Supported drag modes for Tree.
+     */
+    public enum TreeDragMode {
+        NONE, NODE
+        // , SUBTREE
+    }
+
+    private TreeDragMode dragMode = TreeDragMode.NONE;
 
     /* Tree constructors */
 
@@ -419,6 +442,10 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 target.addAttribute("nullselect", true);
             }
 
+            if (dragMode != TreeDragMode.NONE) {
+                target.addAttribute("dragMode", dragMode.ordinal());
+            }
+
         }
 
         // Initialize variables
@@ -563,6 +590,11 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
             // New items
             target.addVariable(this, "newitem", new String[] {});
+
+            if (dropHandler != null) {
+                dropHandler.getAcceptCriterion().paint(target);
+            }
+
         }
     }
 
@@ -1012,6 +1044,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
     private ItemStyleGenerator itemStyleGenerator;
 
+    private DropHandler dropHandler;
+
     public void addListener(ItemClickListener listener) {
         addListener(VTree.ITEM_CLICK_EVENT_ID, ItemClickEvent.class, listener,
                 ItemClickEvent.ITEM_CLICK_METHOD);
@@ -1066,6 +1100,293 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     public boolean removeItem(Object itemId)
             throws UnsupportedOperationException {
         return super.removeItem(itemId);
+    }
+
+    public DropHandler getDropHandler() {
+        return dropHandler;
+    }
+
+    public void setDropHandler(DropHandler dropHandler) {
+        this.dropHandler = dropHandler;
+    }
+
+    /**
+     * TODO Javadoc!
+     * 
+     * @since 6.3
+     */
+    public class TreeDropTargetDetails extends AbstractSelectDropTargetDetails {
+
+        TreeDropTargetDetails(Map<String, Object> rawVariables) {
+            super(rawVariables);
+        }
+
+        @Override
+        public Tree getTarget() {
+            return (Tree) super.getTarget();
+        }
+
+        /**
+         * If the event is on a node that can not have children (see
+         * {@link Tree#areChildrenAllowed(Object)}), this method returns the
+         * parent item id of the target item (see {@link #getItemIdOver()} ).
+         * The identifier of the parent node is also returned if the cursor is
+         * on the top part of node. Else this method returns the same as
+         * {@link #getItemIdOver()}.
+         * <p>
+         * In other words this method returns the identifier of the "folder"
+         * into the drag operation is targeted.
+         * <p>
+         * If the method returns null, the current target is on a root node or
+         * on other undefined area over the tree component.
+         * <p>
+         * The default Tree implementation marks the targetted tree node with
+         * CSS classnames v-tree-node-dragfolder and
+         * v-tree-node-caption-dragfolder (for the caption element).
+         */
+        public Object getItemIdInto() {
+
+            Object itemIdOver = getItemIdOver();
+            if (areChildrenAllowed(itemIdOver)
+                    && getDropLocation() == VerticalDropLocation.MIDDLE) {
+                return itemIdOver;
+            }
+            return getParent(itemIdOver);
+        }
+
+    }
+
+    /**
+     * TODO Javadoc!
+     * 
+     * @since 6.3
+     */
+    public TreeDropTargetDetails translateDropTargetDetails(
+            Map<String, Object> clientVariables) {
+        return new TreeDropTargetDetails(clientVariables);
+    }
+
+    /**
+     * API for {@link TreeDropCriterion}
+     * 
+     * @param itemId
+     * @return
+     */
+    private String key(Object itemId) {
+        return itemIdMapper.key(itemId);
+    }
+
+    public void setDragMode(TreeDragMode dragMode) {
+        this.dragMode = dragMode;
+    }
+
+    public TreeDragMode getDragMode() {
+        return dragMode;
+    }
+
+    /**
+     * TODO Javadoc!
+     * 
+     * @since 6.3
+     */
+    public class TreeTransferable extends DataBoundTransferable {
+
+        public TreeTransferable(Component sourceComponent,
+                Map<String, Object> rawVariables) {
+            super(sourceComponent, rawVariables);
+        }
+
+        @Override
+        public Object getItemId() {
+            return getData("itemId");
+        }
+
+        @Override
+        public Object getPropertyId() {
+            return getItemCaptionPropertyId();
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.event.dd.DragSource#getTransferable(java.util.Map)
+     */
+    public Transferable getTransferable(Map<String, Object> payload) {
+        TreeTransferable transferable = new TreeTransferable(this, payload);
+        // updating drag source variables
+        Object object = payload.get("itemId");
+        if (object != null) {
+            transferable.setData("itemId", itemIdMapper.get((String) object));
+        }
+
+        return transferable;
+    }
+
+    /**
+     * An example of lazy initializing criterion. Initially pretty much no data
+     * is sent to client, on first accepts set (per drag request) the client
+     * side data structure is initialized and no subsequent requests requests
+     * are needed during that drag and drop operation.
+     * <p>
+     * See client side counterpart
+     */
+    @ClientCriterion(VLazyInitItemIdentifiers.class)
+    public static abstract class TreeDropCriterion extends ServerSideCriterion {
+
+        private Tree tree;
+
+        private Set<Object> allowedItemIds;
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * com.vaadin.event.dd.acceptCriteria.ServerSideCriterion#getIdentifier
+         * ()
+         */
+        @Override
+        protected String getIdentifier() {
+            return TreeDropCriterion.class.getCanonicalName();
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * com.vaadin.event.dd.acceptCriteria.AcceptCriterion#accepts(com.vaadin
+         * .event.dd.DragAndDropEvent)
+         */
+        public boolean accepts(DragAndDropEvent dragEvent) {
+            AbstractSelectDropTargetDetails dropTargetData = (AbstractSelectDropTargetDetails) dragEvent
+                    .getDropTargetDetails();
+            tree = (Tree) dragEvent.getDropTargetDetails().getTarget();
+            allowedItemIds = getAllowedItemIds(dragEvent, tree);
+
+            return allowedItemIds.contains(dropTargetData.getItemIdOver());
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * com.vaadin.event.dd.acceptCriteria.AcceptCriterion#paintResponse(
+         * com.vaadin.terminal.PaintTarget)
+         */
+        @Override
+        public void paintResponse(PaintTarget target) throws PaintException {
+            /*
+             * send allowed nodes to client so subsequent requests can be
+             * avoided
+             */
+            Object[] array = allowedItemIds.toArray();
+            for (int i = 0; i < array.length; i++) {
+                String key = tree.key(array[i]);
+                array[i] = key;
+            }
+            target.addAttribute("allowedIds", array);
+        }
+
+        protected abstract Set<Object> getAllowedItemIds(
+                DragAndDropEvent dragEvent, Tree tree);
+
+    }
+
+    /**
+     * Accepts transferable only on tree Node (middle of the node + can has
+     * child)
+     * 
+     * TODO replace by composition of itemIdIs + drop property
+     * 
+     * @since 6.3
+     */
+    @ClientCriterion(VOverTreeNode.class)
+    public static class OverFolderNode extends ClientSideCriterion {
+
+        private static final long serialVersionUID = 1L;
+
+        public boolean accepts(DragAndDropEvent dragEvent) {
+            try {
+                // must be over tree node and in the middle of it (not top or
+                // bottom
+                // part)
+                TreeDropTargetDetails eventDetails = (TreeDropTargetDetails) dragEvent
+                        .getDropTargetDetails();
+
+                Object itemIdOver = eventDetails.getItemIdOver();
+                if (!eventDetails.getTarget().areChildrenAllowed(itemIdOver)) {
+                    return false;
+                }
+                // return true if directly over
+                return eventDetails.getDropLocation() == VerticalDropLocation.MIDDLE;
+            } catch (Exception e) {
+                return false;
+            }
+        }
+    }
+
+    /**
+     * Checks to parent (or parent hierarchy) for the item identifier given in
+     * constructor. If the parent is found, content is accepted.
+     */
+    @ClientCriterion(VTargetNodeIsChildOf.class)
+    public class TargetNodeIsChildOf extends ClientSideCriterion {
+
+        private Object parentItemId;
+        private int depthToCheck = 1;
+
+        /**
+         * 
+         * @param parentItemId
+         */
+        public TargetNodeIsChildOf(Object parentItemId) {
+            this.parentItemId = parentItemId;
+        }
+
+        /**
+         * 
+         * @param parentItemId
+         * @param depthToCheck
+         *            the depth that tree is traversed upwards to seek for the
+         *            parent, -1 means that the whole structure should be
+         *            checked
+         */
+        public TargetNodeIsChildOf(Object parentItemId, int depthToCheck) {
+            this.parentItemId = parentItemId;
+            this.depthToCheck = depthToCheck;
+        }
+
+        private static final long serialVersionUID = 1L;
+
+        public boolean accepts(DragAndDropEvent dragEvent) {
+            try {
+                TreeDropTargetDetails eventDetails = (TreeDropTargetDetails) dragEvent
+                        .getDropTargetDetails();
+
+                if (eventDetails.getItemIdOver() != null) {
+                    Object itemIdOver = eventDetails.getItemIdOver();
+                    Object parent2 = getParent(itemIdOver);
+                    int i = 0;
+                    while (parent2 != null && i < depthToCheck) {
+                        if (parent2.equals(parentItemId)) {
+                            return true;
+                        }
+                        i++;
+                    }
+                }
+                return false;
+            } catch (Exception e) {
+                return false;
+            }
+        }
+
+        @Override
+        public void paintContent(PaintTarget target) throws PaintException {
+            super.paintContent(target);
+            target.addAttribute("depth", depthToCheck);
+            target.addAttribute("key", key(parentItemId));
+        }
+
     }
 
 }

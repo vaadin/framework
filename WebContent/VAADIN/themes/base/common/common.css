@@ -219,3 +219,34 @@ div.v-app-loading {
 .v-window textarea {
 	padding: 2px;
 }
+
+/* TODO jouni: replace debug colors */
+
+.v-drag-element {
+	z-index:60000;
+	position:absolute;
+    opacity: 0.4;
+    filter: alpha(opacity=40);
+    border: 1px solid #999;
+}
+
+.v-ddwrapper {
+	background-color: cyan;
+}
+
+.v-ddwrapper-over-middle,
+.v-ddwrapper-over-center {
+	background-color: LightGreen;
+}
+.v-ddwrapper-over-top {
+	border-top: 2px solid green;
+}
+.v-ddwrapper-over-bottom {
+	border-bottom: 2px solid green;
+}
+.v-ddwrapper-over-left {
+	border-left: 2px solid green;
+}
+.v-ddwrapper-over-right {
+	border-right: 2px solid green;
+}

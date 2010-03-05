@@ -19,10 +19,18 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.event.DataBoundTransferable;
+import com.vaadin.event.dd.DragAndDropEvent;
+import com.vaadin.event.dd.DropTargetDetailsImpl;
+import com.vaadin.event.dd.acceptCriteria.ClientCriterion;
+import com.vaadin.event.dd.acceptCriteria.ClientSideCriterion;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
+import com.vaadin.terminal.gwt.client.ui.dd.VIsOverId;
+import com.vaadin.terminal.gwt.client.ui.dd.VItemIdIs;
+import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 
 /**
  * <p>
@@ -1677,6 +1685,131 @@ public abstract class AbstractSelect extends AbstractField implements
         public void itemPropertySetChange(
                 com.vaadin.data.Item.PropertySetChangeEvent event) {
             requestRepaint();
+        }
+
+    }
+
+    /**
+     * Criterion which accepts a drop only if the drop target is (one of) the
+     * given item identifier(s). Meaningful only for drop targets that extends
+     * AbstractSelect.
+     * 
+     * @since 6.3
+     */
+    @ClientCriterion(VIsOverId.class)
+    public static class DropTargetItemId extends AbstractItemSetCriterion {
+
+        public DropTargetItemId(AbstractSelect select, Object... itemId) {
+            super(select, itemId);
+        }
+
+        public boolean accepts(DragAndDropEvent dragEvent) {
+            AbstractSelectDropTargetDetails dropTargetData = (AbstractSelectDropTargetDetails) dragEvent
+                    .getDropTargetDetails();
+            return itemIds.contains(dropTargetData.getItemIdOver());
+        }
+
+    }
+
+    /**
+     * TODO Javadoc!
+     * 
+     * @since 6.3
+     * 
+     */
+    private static abstract class AbstractItemSetCriterion extends
+            ClientSideCriterion {
+        protected final Collection<Object> itemIds = new HashSet<Object>();
+        private AbstractSelect select;
+
+        public AbstractItemSetCriterion(AbstractSelect select, Object... itemId) {
+            if (itemIds == null || select == null) {
+                throw new IllegalArgumentException(
+                        "Accepted item identifiers must be accepted.");
+            }
+            Collections.addAll(itemIds, itemId);
+            this.select = select;
+        }
+
+        @Override
+        public void paintContent(PaintTarget target) throws PaintException {
+            super.paintContent(target);
+            String[] keys = new String[itemIds.size()];
+            int i = 0;
+            for (Object itemId : itemIds) {
+                String key = select.itemIdMapper.key(itemId);
+                keys[i++] = key;
+            }
+            target.addVariable(select, "keys", keys);
+        }
+
+    }
+
+    /**
+     * Criterion which accepts a drop only if the transferable contains the
+     * given item identifier(s). The item ids relate to the drag source
+     * (AbstractSelect).
+     * 
+     * @since 6.3
+     */
+    @ClientCriterion(VItemIdIs.class)
+    public static class TransferableContainsItemId extends
+            AbstractItemSetCriterion {
+        public TransferableContainsItemId(AbstractSelect select,
+                Object... itemId) {
+            super(select, itemId);
+        }
+
+        public boolean accepts(DragAndDropEvent dragEvent) {
+            DataBoundTransferable transferable = (DataBoundTransferable) dragEvent
+                    .getTransferable();
+            return itemIds.contains(transferable.getItemId());
+        }
+
+    }
+
+    /**
+     * TODO Javadoc!
+     * 
+     * @since 6.3
+     */
+    public class AbstractSelectDropTargetDetails extends DropTargetDetailsImpl {
+
+        /**
+         * The treenode id over which the drag event happened.
+         */
+        protected Object idOver;
+
+        /**
+         * TODO Javadoc!
+         * 
+         */
+        AbstractSelectDropTargetDetails(Map<String, Object> rawVariables) {
+            super(rawVariables);
+            // eagar fetch itemid, mapper may be emptied
+            String keyover = (String) getData("itemIdOver");
+            if (keyover != null) {
+                idOver = itemIdMapper.get(keyover);
+            }
+        }
+
+        /**
+         * If the drag operation is currently over an Item, this method returns
+         * the identifier of the Item.
+         * 
+         */
+        public Object getItemIdOver() {
+            return idOver;
+        }
+
+        /**
+         * TODO Javadoc!
+         * 
+         */
+        public VerticalDropLocation getDropLocation() {
+            VerticalDropLocation valueOf = VerticalDropLocation
+                    .valueOf((String) getData("detail"));
+            return valueOf;
         }
 
     }

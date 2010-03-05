@@ -12,8 +12,6 @@ import org.mortbay.jetty.Server;
 import org.mortbay.jetty.nio.SelectChannelConnector;
 import org.mortbay.jetty.webapp.WebAppContext;
 
-import com.vaadin.launcher.util.BrowserLauncher;
-
 /**
  * Class for running Jetty servlet container within Eclipse project.
  * 
@@ -42,7 +40,7 @@ public class DevelopmentServerLauncher {
         // Start Browser
         System.out.println("Starting Web Browser.");
         if (url != null) {
-            BrowserLauncher.openBrowser(url);
+            // BrowserLauncher.openBrowser(url);
         }
 
     }

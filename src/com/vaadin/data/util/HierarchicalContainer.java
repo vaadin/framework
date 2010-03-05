@@ -211,10 +211,12 @@ public class HierarchicalContainer extends IndexedContainer implements
         // Making root?
         if (newParentId == null) {
             // The itemId should become a root so we need to
-            // - Remove it from the old parent's children list (also filtered list)
+            // - Remove it from the old parent's children list (also filtered
+            // list)
             // - Add it as a root
-            // - Remove it from the item -> parent list (parent is null for roots)
-            
+            // - Remove it from the item -> parent list (parent is null for
+            // roots)
+
             // Removes from old parents children list
             final LinkedList<Object> l = children.get(itemId);
             if (l != null) {
@@ -245,6 +247,8 @@ public class HierarchicalContainer extends IndexedContainer implements
             // Updates parent
             parent.remove(itemId);
 
+            fireContentsChange(-1);
+
             return true;
         }
 
@@ -253,8 +257,9 @@ public class HierarchicalContainer extends IndexedContainer implements
         // - Check that the new parent is not a child of the selected itemId
         // - Updated the item -> parent mapping to point to the new parent
         // - Remove the item from the roots list if it was a root
-        // - Remove the item from the old parent's children list if it was not a root
-        
+        // - Remove the item from the old parent's children list if it was not a
+        // root
+
         // Checks that the new parent exists in container and can have
         // children
         if (!containsId(newParentId) || noChildrenAllowed.contains(newParentId)) {
@@ -314,7 +319,48 @@ public class HierarchicalContainer extends IndexedContainer implements
             }
         }
 
+        fireContentsChange(-1);
+
         return true;
+    }
+
+    /**
+     * TODO javadoc
+     * 
+     * @param itemId
+     * @param siblingId
+     */
+    public void moveAfterSibling(Object itemId, Object siblingId) {
+        Object parent2 = getParent(itemId);
+        LinkedList<Object> childrenList;
+        if (parent2 == null) {
+            childrenList = roots;
+        } else {
+            childrenList = children.get(parent2);
+        }
+        if (siblingId == null) {
+            childrenList.remove(itemId);
+            childrenList.addFirst(itemId);
+
+        } else {
+            int oldIndex = childrenList.indexOf(itemId);
+            int indexOfSibling = childrenList.indexOf(siblingId);
+            if (indexOfSibling != -1 && oldIndex != -1) {
+                int newIndex;
+                if (oldIndex > indexOfSibling) {
+                    newIndex = indexOfSibling + 1;
+                } else {
+                    newIndex = indexOfSibling;
+                }
+                childrenList.remove(oldIndex);
+                childrenList.add(newIndex, itemId);
+            } else {
+                throw new IllegalArgumentException(
+                        "Given identifiers no not have the same parent.");
+            }
+        }
+        fireContentsChange(-1);
+
     }
 
     /*
@@ -398,7 +444,6 @@ public class HierarchicalContainer extends IndexedContainer implements
         final boolean success = super.removeItem(itemId);
 
         if (success) {
-
             // Remove from roots if this was a root
             if (roots.remove(itemId)) {
 
@@ -409,11 +454,14 @@ public class HierarchicalContainer extends IndexedContainer implements
                 }
             }
 
-            // Clear the children list. Old children will now be unattached
-            // FIXME Should these be made into roots?
-            if (children.remove(itemId) != null) {
+            // Clear the children list. Old children will now become root nodes
+            LinkedList<Object> childNodeIds = children.remove(itemId);
+            if (childNodeIds != null) {
                 if (filteredChildren != null) {
                     filteredChildren.remove(itemId);
+                }
+                for (Object childId : childNodeIds) {
+                    setParent(childId, null);
                 }
             }
 
@@ -428,7 +476,8 @@ public class HierarchicalContainer extends IndexedContainer implements
                     // Found in the children list so might also be in the
                     // filteredChildren list
                     if (filteredChildren != null) {
-                        LinkedList<Object> f = filteredChildren.get(parentItemId);
+                        LinkedList<Object> f = filteredChildren
+                                .get(parentItemId);
                         if (f != null) {
                             f.remove(parentItemId);
                         }
@@ -440,6 +489,35 @@ public class HierarchicalContainer extends IndexedContainer implements
         }
 
         return success;
+    }
+
+    /**
+     * Removes the Item identified by ItemId from the Container and all its
+     * children.
+     * 
+     * @see #removeItem(Object)
+     * @param itemId
+     *            the identifier of the Item to remove
+     * @return true if the operation succeeded
+     */
+    public boolean removeItemRecursively(Object itemId) {
+        boolean success = true;
+        Collection<Object> children2 = getChildren(itemId);
+        if (children2 != null) {
+            Object[] array = children2.toArray();
+            for (int i = 0; i < array.length; i++) {
+                boolean removeItemRecursively = removeItemRecursively(array[i]);
+                if (!removeItemRecursively) {
+                    success = false;
+                }
+            }
+        }
+        boolean removeItem = removeItem(itemId);
+        if (!removeItem) {
+            success = false;
+        }
+        return success;
+
     }
 
     /*
@@ -492,4 +570,5 @@ public class HierarchicalContainer extends IndexedContainer implements
         }
 
     }
+
 }
