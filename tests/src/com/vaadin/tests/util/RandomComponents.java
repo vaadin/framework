@@ -3,9 +3,11 @@ package com.vaadin.tests.util;
 import java.util.ArrayList;
 import java.util.Random;
 
-import com.vaadin.automatedtests.util.MultiListener;
+import com.vaadin.data.Container.ItemSetChangeEvent;
 import com.vaadin.data.Container.ItemSetChangeListener;
+import com.vaadin.data.Container.PropertySetChangeEvent;
 import com.vaadin.data.Container.PropertySetChangeListener;
+import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.demo.featurebrowser.ButtonExample;
 import com.vaadin.demo.featurebrowser.ClientCachingExample;
@@ -37,6 +39,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.Button.ClickEvent;
 
 public class RandomComponents {
 
@@ -269,6 +272,31 @@ public class RandomComponents {
         final ThemeResource res = new ThemeResource("test.png");
         final Embedded em = new Embedded("Embedded " + caption, res);
         return em;
+    }
+
+    public class MultiListener implements Button.ClickListener,
+            PropertySetChangeListener, ItemSetChangeListener,
+            ValueChangeListener {
+
+        public void buttonClick(ClickEvent event) {
+            System.out.println("ClickEvent from "
+                    + event.getButton().getCaption());
+        }
+
+        public void containerPropertySetChange(PropertySetChangeEvent event) {
+            System.out.println("containerPropertySetChange from "
+                    + event.getContainer());
+        }
+
+        public void containerItemSetChange(ItemSetChangeEvent event) {
+            System.out.println("containerItemSetChange from "
+                    + event.getContainer());
+        }
+
+        public void valueChange(ValueChangeEvent event) {
+            System.out.println("valueChange from " + event.getProperty());
+        }
+
     }
 
 }

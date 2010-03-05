@@ -498,11 +498,14 @@ public abstract class AbstractCommunicationManager implements
      * @param request
      * @param response
      * @param callback
+     * @param window
+     *            target window for the UIDL request, can be null if target not
+     *            found
      * @throws IOException
      * @throws InvalidUIDLSecurityKeyException
      */
     protected void doHandleUidlRequest(Request request, Response response,
-            Callback callback) throws IOException,
+            Callback callback, Window window) throws IOException,
             InvalidUIDLSecurityKeyException {
 
         // repaint requested or session has timed out and new one is created
@@ -528,10 +531,7 @@ public abstract class AbstractCommunicationManager implements
         synchronized (application) {
 
             // Finds the window within the application
-            Window window = null;
             if (application.isRunning()) {
-                window = doGetApplicationWindow(request, callback, application,
-                        null);
                 // Returns if no window found
                 if (window == null) {
                     // This should not happen, no windows exists but
@@ -588,8 +588,7 @@ public abstract class AbstractCommunicationManager implements
             }
         }
 
-        // out.flush(); - this line will cause errors when deployed on GateIn.
-        out.close();
+        outWriter.close();
     }
 
     /**
@@ -947,7 +946,6 @@ public abstract class AbstractCommunicationManager implements
 
             outWriter.print("}]");
         }
-        outWriter.flush();
         outWriter.close();
 
     }
@@ -1871,7 +1869,7 @@ public abstract class AbstractCommunicationManager implements
                 }
                 return stream;
             } else {
-                // Resolve the prefix end inded
+                // Resolve the prefix end index
                 final int index = uri.indexOf('/');
                 if (index > 0) {
                     String prefix = uri.substring(0, index);

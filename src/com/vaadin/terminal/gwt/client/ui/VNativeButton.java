@@ -19,7 +19,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
-public class VNativeButton extends Button implements Paintable {
+public class VNativeButton extends Button implements Paintable, ClickHandler {
 
     public static final String CLASSNAME = "v-nativebutton";
 
@@ -48,18 +48,8 @@ public class VNativeButton extends Button implements Paintable {
         getElement().appendChild(captionElement);
         captionElement.setClassName(getStyleName() + "-caption");
 
-        addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                if (id == null || client == null) {
-                    return;
-                }
-                if (BrowserInfo.get().isSafari()) {
-                    VNativeButton.this.setFocus(true);
-                }
-                client.updateVariable(id, "state", true, true);
-                clickPending = false;
-            }
-        });
+        addClickHandler(this);
+
         sinkEvents(VTooltip.TOOLTIP_EVENTS);
         sinkEvents(Event.ONMOUSEDOWN);
         sinkEvents(Event.ONMOUSEUP);
@@ -177,6 +167,26 @@ public class VNativeButton extends Button implements Paintable {
         if (BrowserInfo.get().isIE7()) {
             super.setWidth(width);
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event
+     * .dom.client.ClickEvent)
+     */
+    public void onClick(ClickEvent event) {
+        if (id == null || client == null) {
+            return;
+        }
+
+        if (BrowserInfo.get().isSafari()) {
+            VNativeButton.this.setFocus(true);
+        }
+
+        client.updateVariable(id, "state", true, true);
+        clickPending = false;
     }
 
 }

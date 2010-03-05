@@ -4,14 +4,14 @@ import com.vaadin.Application;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.ExpandLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -93,8 +93,7 @@ public class ScrollbarStressTest extends Application {
             }
         });
 
-        OrderedLayout ol = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        HorizontalLayout ol = new HorizontalLayout();
         ol.addComponent(context);
         ol.addComponent(testComponent);
         ol.addComponent(width);
@@ -104,17 +103,17 @@ public class ScrollbarStressTest extends Application {
         ol.setMargin(true);
 
         Window controller = new Window("Controller");
-        controller.setLayout(ol);
+        controller.setContent(ol);
         main.addWindow(controller);
     }
 
     protected void drawInExpandLayout() {
         main.removeAllComponents();
-        main.getLayout().setSizeFull();
+        main.getContent().setSizeFull();
 
-        OrderedLayout ol = new OrderedLayout();
+        VerticalLayout ol = new VerticalLayout();
 
-        ExpandLayout el = new ExpandLayout();
+        VerticalLayout el = new VerticalLayout();
 
         el.removeAllComponents();
 
@@ -125,18 +124,18 @@ public class ScrollbarStressTest extends Application {
 
         el.addComponent(ol);
 
-        main.getLayout().addComponent(el);
+        main.getContent().addComponent(el);
         main.removeWindow(subwindow);
 
     }
 
     protected void drawInTabSheet(boolean verticalAkaAccordion) {
         main.removeAllComponents();
-        main.getLayout().setSizeFull();
+        main.getContent().setSizeFull();
 
-        OrderedLayout ol = new OrderedLayout();
+        VerticalLayout ol = new VerticalLayout();
         ol.setCaption("Tab 1");
-        OrderedLayout ol2 = new OrderedLayout();
+        VerticalLayout ol2 = new VerticalLayout();
         ol2.setCaption("Tab 2");
 
         TabSheet ts = (verticalAkaAccordion ? accordion : tabsheet);
@@ -162,10 +161,10 @@ public class ScrollbarStressTest extends Application {
 
     private void drawInSplitPanel() {
         main.removeAllComponents();
-        main.getLayout().setSizeFull();
+        main.getContent().setSizeFull();
 
-        OrderedLayout ol = new OrderedLayout();
-        OrderedLayout ol2 = new OrderedLayout();
+        VerticalLayout ol = new VerticalLayout();
+        VerticalLayout ol2 = new VerticalLayout();
 
         splitPanel.setFirstComponent(ol);
         splitPanel.setSecondComponent(ol2);
@@ -185,11 +184,11 @@ public class ScrollbarStressTest extends Application {
 
     private void drawInPanel() {
         main.removeAllComponents();
-        main.getLayout().setSizeFull();
+        main.getContent().setSizeFull();
 
-        OrderedLayout ol = new OrderedLayout();
+        VerticalLayout ol = new VerticalLayout();
         panel.setSizeFull();
-        panel.setLayout(ol);
+        panel.setContent(ol);
 
         ol.setWidth((String) width.getValue());
         ol.setHeight((String) height.getValue());
@@ -201,20 +200,20 @@ public class ScrollbarStressTest extends Application {
 
     private void drawInSubwindow() {
         main.removeAllComponents();
-        main.getLayout().setSizeFull();
-        OrderedLayout ol = new OrderedLayout();
+        main.getContent().setSizeFull();
+        VerticalLayout ol = new VerticalLayout();
         ol.setWidth((String) width.getValue());
         ol.setHeight((String) height.getValue());
 
         ol.addComponent(getTestComponent());
-        subwindow.setLayout(ol);
+        subwindow.setContent(ol);
         main.addWindow(subwindow);
     }
 
     private void drawInMainWindow() {
         main.removeAllComponents();
-        OrderedLayout ol = new OrderedLayout();
-        main.setLayout(ol);
+        VerticalLayout ol = new VerticalLayout();
+        main.setContent(ol);
         ol.setWidth((String) width.getValue());
         ol.setHeight((String) height.getValue());
 

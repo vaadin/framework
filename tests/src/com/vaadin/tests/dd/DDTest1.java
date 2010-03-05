@@ -206,36 +206,34 @@ public class DDTest1 extends TestBase {
                     VerticalDropLocation dropLocation = details
                             .getDropLocation();
 
+                    Object itemIdAfter = itemIdOver;
                     if (dropLocation == VerticalDropLocation.MIDDLE) {
                         t.setParent(itemId, itemIdOver);
                         return;
                     } else if (VerticalDropLocation.TOP == dropLocation) {
                         // if on top of the caption area, add before
-                        itemIdOver = idx.prevItemId(itemIdOver);
-                    }
-
-                    if (itemId.equals(itemIdOver)) {
-                        // the location is same
-                        return;
-                    }
-
-                    HierarchicalContainer subtree = getSubTree(idx, itemId);
-                    boolean removed = idx.removeItem(itemId);
-
-                    if (removed) {
-
-                        if (dropLocation == null) {
-                            System.err
-                                    .println("No detail of drop place available");
+                        Collection children;
+                        if (itemIdInto != null) {
+                            // seek the previous from child list
+                            children = idx.getChildren(itemIdInto);
+                        } else {
+                            children = idx.rootItemIds();
                         }
-
-                        Item addItemAfter = idx
-                                .addItemAfter(itemIdOver, itemId);
-                        populateSubTree(idx, subtree, itemId);
-                        // ensure the same parent as with related item
-                        Object parent = idx.getParent(itemIdOver);
-                        idx.setParent(itemId, parent);
+                        Object ref = null;
+                        for (Object object : children) {
+                            if (object.equals(itemIdOver)) {
+                                itemIdAfter = ref;
+                                break;
+                            }
+                            ref = object;
+                        }
                     }
+                    idx.setParent(itemId, itemIdInto);
+
+                    if (dropLocation == null) {
+                        System.err.println("No detail of drop place available");
+                    }
+                    idx.moveAfterSibling(itemId, itemIdAfter);
                 }
 
                 return;

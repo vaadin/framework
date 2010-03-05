@@ -362,6 +362,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             HttpServletResponse response) throws ServletException, IOException {
 
         RequestType requestType = getRequestType(request);
+        if (!ensureCookiesEnabled(requestType, request, response)) {
+            return;
+        }
 
         if (requestType == RequestType.STATIC_FILE) {
             serveStaticResources(request, response);
@@ -435,7 +438,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 return;
             } else if (requestType == RequestType.UIDL) {
                 // Handles AJAX UIDL requests
-                applicationManager.handleUidlRequest(request, response, this);
+                Window window = applicationManager.getApplicationWindow(
+                        request, this, application, null);
+                applicationManager.handleUidlRequest(request, response, this,
+                        window);
                 return;
             }
 
@@ -502,6 +508,39 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         }
     }
 
+    /**
+     * Check that cookie support is enabled in the browser. Only checks UIDL
+     * requests.
+     * 
+     * @param requestType
+     *            Type of the request as returned by
+     *            {@link #getRequestType(HttpServletRequest)}
+     * @param request
+     *            The request from the browser
+     * @param response
+     *            The response to which an error can be written
+     * @return false if cookies are disabled, true otherwise
+     * @throws IOException
+     */
+    private boolean ensureCookiesEnabled(RequestType requestType,
+            HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        if (requestType == RequestType.UIDL && !isRepaintAll(request)) {
+            // In all other but the first UIDL request a cookie should be
+            // returned by the browser.
+            // This can be removed if cookieless mode (#3228) is supported
+            if (request.getRequestedSessionId() == null) {
+                // User has cookies disabled
+                criticalNotification(request, response, getSystemMessages()
+                        .getCookiesDisabledCaption(), getSystemMessages()
+                        .getCookiesDisabledMessage(), null, getSystemMessages()
+                        .getCookiesDisabledURL());
+                return false;
+            }
+        }
+        return true;
+    }
+
     private void updateBrowserProperties(WebBrowser browser,
             HttpServletRequest request) {
         browser.updateBrowserProperties(request.getLocale(), request
@@ -535,38 +574,40 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     }
 
     /**
-     * Send notification to client's application. Used to notify client of
-     * critical errors and session expiration due to long inactivity. Server has
-     * no knowledge of what application client refers to.
+     * Send a notification to client's application. Used to notify client of
+     * critical errors, session expiration and more. Server has no knowledge of
+     * what application client refers to.
      * 
      * @param request
      *            the HTTP request instance.
      * @param response
      *            the HTTP response to write to.
      * @param caption
-     *            for the notification
+     *            the notification caption
      * @param message
-     *            for the notification
+     *            to notification body
      * @param details
-     *            a detail message to show in addition to the passed message.
-     *            Currently shown directly but could be hidden behind a details
-     *            drop down.
+     *            a detail message to show in addition to the message. Currently
+     *            shown directly below the message but could be hidden behind a
+     *            details drop down in the future. Mainly used to give
+     *            additional information not necessarily useful to the end user.
      * @param url
-     *            url to load after message, null for current page
+     *            url to load when the message is dismissed. Null will reload
+     *            the current page.
      * @throws IOException
      *             if the writing failed due to input/output error.
      */
-    void criticalNotification(HttpServletRequest request,
+    protected final void criticalNotification(HttpServletRequest request,
             HttpServletResponse response, String caption, String message,
             String details, String url) throws IOException {
 
-        // clients JS app is still running, but server application either
-        // no longer exists or it might fail to perform reasonably.
-        // send a notification to client's application and link how
-        // to "restart" application.
+        if (!isUIDLRequest(request)) {
+            throw new RuntimeException(
+                    "criticalNotification can only be used in UIDL requests");
+        }
 
         if (caption != null) {
-            caption = "\"" + caption + "\"";
+            caption = "\"" + JsonPaintTarget.escapeJSON(caption) + "\"";
         }
         if (details != null) {
             if (message == null) {
@@ -575,11 +616,12 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 message += "<br/><br/>" + details;
             }
         }
+
         if (message != null) {
-            message = "\"" + message + "\"";
+            message = "\"" + JsonPaintTarget.escapeJSON(message) + "\"";
         }
         if (url != null) {
-            url = "\"" + url + "\"";
+            url = "\"" + JsonPaintTarget.escapeJSON(url) + "\"";
         }
 
         // Set the response type
@@ -1489,7 +1531,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * is rendered.
      * <p>
      * Override this method if you want to add some custom html around around
-     * the div element into which the actual vaadin application will be
+     * the div element into which the actual Vaadin application will be
      * rendered.
      * 
      * @param page
@@ -1507,8 +1549,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     }
 
     /**
-     * 
-     * * Method to write the script part of the page which loads needed vaadin
+     * Method to write the script part of the page which loads needed Vaadin
      * scripts and themes.
      * <p>
      * Override this method if you want to add some custom html around scripts.

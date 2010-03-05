@@ -189,7 +189,6 @@ public class VPanel extends SimplePanel implements Container {
         }
         layout.updateFromUIDL(layoutUidl, client);
 
-        runHacks(false);
         // We may have actions attached to this panel
         if (uidl.getChildCount() > 1) {
             final int cnt = uidl.getChildCount();
@@ -223,6 +222,10 @@ public class VPanel extends SimplePanel implements Container {
             // caught by scroll listener), see #3784
             scrollLeft = contentNode.getScrollLeft();
         }
+
+        // Must be run after scrollTop is set as Webkit overflow fix re-sets the
+        // scrollTop
+        runHacks(false);
 
         rendering = false;
 
@@ -393,7 +396,8 @@ public class VPanel extends SimplePanel implements Container {
         super.setHeight(height);
         if (height != null && height != "") {
             final int targetHeight = getOffsetHeight();
-            int containerHeight = targetHeight - captionNode.getOffsetHeight()
+            int containerHeight = targetHeight
+                    - captionNode.getParentElement().getOffsetHeight()
                     - bottomDecoration.getOffsetHeight()
                     - getContainerBorderHeight();
             if (containerHeight < 0) {

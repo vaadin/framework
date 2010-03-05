@@ -19,7 +19,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -175,7 +174,9 @@ public class ClassPathExplorer {
                         for (int i = 0; i < widgetsetNames.length; i++) {
                             String widgetsetname = widgetsetNames[i].trim()
                                     .intern();
-                            widgetsets.put(widgetsetname, location);
+                            if (!widgetsetname.equals("")) {
+                                widgetsets.put(widgetsetname, location);
+                            }
                         }
                     }
                 }
@@ -439,8 +440,15 @@ public class ClassPathExplorer {
      * @return URL
      */
     public static URL getDefaultSourceDirectory() {
-        logger.fine("classpathLocations keys:  "
-                + new TreeSet<URL>(classpathLocations.keySet()));
+        if (logger.isLoggable(Level.FINE)) {
+            logger.fine("classpathLocations keys:");
+            ArrayList<URL> locations = new ArrayList<URL>(classpathLocations
+                    .keySet());
+            for (URL location : locations) {
+                logger.fine(location.toString());
+            }
+        }
+
         Iterator<String> it = rawClasspathEntries.iterator();
         while (it.hasNext()) {
             String entry = it.next();

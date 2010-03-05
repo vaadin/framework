@@ -11,20 +11,9 @@
     package-all
      * creates the release package, a war, and a Liferay war
      
-    package-windows
-     * vaadin-windows-<version>.zip
-    
-    package-linux
-     * vaadin-linux-<version>.tar.bz2
-     
-    package-mac
-     * vaadin-mac-<version>.tar.gz
-     * vaadin-mac-<version>.dmg
-
     In addition, the OOPHM package has the following target for building:
     package-oophm
      * vaadin-oophm-<version>.zip
-
     -->
 
     <!-- 
@@ -37,6 +26,12 @@
     </target>
 
     <target name="package-jar" depends="clean-result, package-init, init, libs" description="Create vaadin-x.y.z.jar file.">
+    </target>
+
+	<!-- Compiles only the default widgetset. -->
+    <target name="package-jar-quick" depends="clean-result, package-init, init" description="Create vaadin-x.y.z.jar file quick.">
+    	<property name="compile.only.default-widgetset" value="1"/>
+    	<antcall target="libs"/>
     </target>
 
     <target name="package-war" depends="clean-result, package-init, init, build, docs, internal-package-zip, internal-package-war">
@@ -135,6 +130,10 @@
     <target name="init" depends="check-java-version">
         <property file="build/build.properties" />
         <property file="build/VERSION.properties" />
+    	<antcontrib:propertyregex property="version.major" input="${version}" regexp="([^\.]*)\.([^\.]*)\.([^\.]*)" select="\1"/>
+    	<antcontrib:propertyregex property="version.minor" input="${version}" regexp="([^\.]*)\.([^\.]*)\.([^\.]*)" select="\2"/>
+    	<antcontrib:propertyregex property="version.revision" input="${version}" regexp="([^\.]*)\.([^\.]*)\.([^\.]*)" select="\3"/>
+
         <property file="build/GWT-VERSION.properties" />
         <property file="build/html-style.properties" />
 
@@ -697,13 +696,13 @@
     	</antcall>
     </target>
 	
-    <target name="compile-widgetset-portal-default">
+    <target name="compile-widgetset-portal-default" unless="compile.only.default-widgetset">
     	<antcall target="compile-widgetset">
     		<param name="widgetset" value="com.vaadin.portal.gwt.PortalDefaultWidgetSet"/>
     	</antcall>
     </target>
 
-    <target name="compile-widgetset-reserver">
+    <target name="compile-widgetset-reserver" unless="compile.only.default-widgetset">
         <condition property="googlemaps-jar" value="${output-dir}/WebContent/demo/lib/gwt-maps/gwt-maps.jar">
             <available file="${output-dir}/WebContent/demo/lib/gwt-maps/gwt-maps.jar" />
         </condition>
@@ -734,17 +733,17 @@
         <echo>Compiled ReservationWidgetSet</echo>
     </target>
 
-	 <target name="compile-widgetset-sampler">
+	 <target name="compile-widgetset-sampler" unless="compile.only.default-widgetset">
 	    	<antcall target="compile-widgetset">
 	    		<param name="widgetset" value="com.vaadin.demo.sampler.gwt.SamplerWidgetSet"/>
 	    	</antcall>
 	    </target>
-	 <target name="compile-widgetset-coverflow">
+	 <target name="compile-widgetset-coverflow" unless="compile.only.default-widgetset">
 	    	<antcall target="compile-widgetset">
 	    		<param name="widgetset" value="com.vaadin.demo.coverflow.gwt.CoverflowWidgetSet"/>
 	    	</antcall>
 	    </target>
-	 <target name="compile-widgetset-colorpicker">
+	 <target name="compile-widgetset-colorpicker" unless="compile.only.default-widgetset">
 	    	<antcall target="compile-widgetset">
 	    		<param name="widgetset" value="com.vaadin.demo.colorpicker.gwt.ColorPickerWidgetSet"/>
 	    	</antcall>
@@ -757,7 +756,6 @@
         <!-- We can't call these with 'depends' because of the 'unless' specifier. -->
         <antcall target="compile-widgetset-default"/>
         <antcall target="compile-widgetset-portal-default"/>
-        <antcall target="compile-widgetset-reserver"/>
         <antcall target="compile-widgetset-sampler"/>
         <antcall target="compile-widgetset-colorpicker"/>
         <antcall target="compile-widgetset-coverflow"/>
@@ -770,7 +768,6 @@
         <parallel threadsperprocessor="1">
             <antcall target="compile-widgetset-default"/>
             <antcall target="compile-widgetset-portal-default"/>
-            <antcall target="compile-widgetset-reserver"/>
             <antcall target="compile-widgetset-sampler"/>
             <antcall target="compile-widgetset-colorpicker"/>
             <antcall target="compile-widgetset-coverflow"/>
@@ -839,7 +836,6 @@
                     <exclude name="${toolkit-package}/demo/**" />
                     <exclude name="${toolkit-package}/tests/**"/>
                     <exclude name="${toolkit-package}/launcher/**" />
-                    <exclude name="${toolkit-package}/automatedtests/**" />
                 </patternset>
             </fileset>
             <!-- fileupload, see build/external/fileupload/build.xml -->
@@ -1076,7 +1072,22 @@
     </target>
 
     
-    <target name="nightly-maven-publish" depends="">
+    <target name="nightly-maven-pom.xml">
+    	<echo>Creating pom.xml for nightly build</echo>
+    	<fail unless="version.major" message="Major version must be defined in version.major"/>
+    	<fail unless="version.minor" message="Major version must be defined in version.minor"/>
+        <copy tofile="build/maven/pom.xml">
+            <filterchain>
+                <expandproperties />
+                <replacetokens begintoken="@" endtoken="@">
+                    <token key="VERSION-MAJOR.MINOR" value="${version.major}.${version.minor}" />
+                </replacetokens>
+            </filterchain>
+            <fileset file="build/maven/pom-template.xml"/>
+        </copy>
+    </target>
+	
+    <target name="nightly-maven-publish" depends="nightly-maven-pom.xml">
         <property file="${gpg.passphrase.file}" />
         <echo>Publishing ${output-dir}/WebContent/${lib-jar-name} to Maven repository</echo>
         <artifact:mvn>

@@ -82,7 +82,7 @@ def listChangedFiles():
 		line = line[:-1]
 
 		# Extract the file state and name
-		(filestate, filename) = re.split(r'[ \+]+', line)
+		(filestate, filename) = re.split(r'[ \+]+', line.lstrip())
 
 		# Ignore files in build directory
 		if (filename.startswith("build/merge/") \

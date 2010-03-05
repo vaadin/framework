@@ -21,11 +21,11 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Embedded;
-import com.vaadin.ui.ExpandLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 
@@ -46,8 +46,8 @@ public class TestSizeableIncomponents extends Application {
         setMainWindow(w);
         w.setTheme("demo");
 
-        final ExpandLayout main = new ExpandLayout();
-        w.setLayout(main);
+        final VerticalLayout main = new VerticalLayout();
+        w.setContent(main);
 
         select = new ComboBox();
         select.setImmediate(true);
@@ -85,8 +85,7 @@ public class TestSizeableIncomponents extends Application {
             }
         });
 
-        OrderedLayout controllers = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        HorizontalLayout controllers = new HorizontalLayout();
         controllers.addComponent(prev);
         controllers.addComponent(select);
         controllers.addComponent(next);
@@ -116,10 +115,10 @@ public class TestSizeableIncomponents extends Application {
 
         testPanel = new Panel();
         testPanel.setSizeFull();
-        testPanel.setLayout(new ExpandLayout());
+        testPanel.setContent(new VerticalLayout());
         testPanel.setStyleName("testable");
         main.addComponent(testPanel);
-        main.expand(testPanel);
+        main.setExpandRatio(testPanel, 1);
 
     }
 
@@ -147,8 +146,8 @@ public class TestSizeableIncomponents extends Application {
                         t.addConfiguration(new Configuration("100px*100px") {
                             @Override
                             void configure(Component c) {
-                                c.setWidth(60);
-                                c.setHeight(60);
+                                c.setWidth("60px");
+                                c.setHeight("60px");
                             }
                         });
                         t = new Testable(c);
@@ -177,7 +176,7 @@ public class TestSizeableIncomponents extends Application {
 
                                 Panel p = new Panel(
                                         "Wrapper panel (400px*400px)");
-                                p.setLayout(new ExpandLayout());
+                                p.setContent(new VerticalLayout());
                                 p.setWidth("400px");
                                 p.setHeight("400px");
                                 p.addComponent(c);

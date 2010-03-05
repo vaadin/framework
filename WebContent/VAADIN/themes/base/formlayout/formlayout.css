@@ -15,7 +15,7 @@
 .v-formlayout-spacing .v-formlayout-row .v-formlayout-captioncell, 
 .v-formlayout-spacing .v-formlayout-row .v-formlayout-contentcell,
 .v-formlayout-spacing .v-formlayout-row .v-formlayout-errorcell {
-	padding-top: 1em;
+	padding-top: 6px;
 }
 .v-formlayout-spacing .v-formlayout-firstrow .v-formlayout-captioncell, 
 .v-formlayout-spacing .v-formlayout-firstrow .v-formlayout-contentcell,
@@ -25,18 +25,18 @@
 .v-formlayout-margin-top .v-formlayout-firstrow .v-formlayout-captioncell, 
 .v-formlayout-margin-top .v-formlayout-firstrow .v-formlayout-contentcell,
 .v-formlayout-margin-top .v-formlayout-firstrow .v-formlayout-errorcell {
-	padding-top: 2em;
+	padding-top: 12px;
 }
 .v-formlayout-margin-bottom .v-formlayout-lastrow .v-formlayout-captioncell,
 .v-formlayout-margin-bottom .v-formlayout-lastrow .v-formlayout-contentcell,
 .v-formlayout-margin-bottom .v-formlayout-lastrow .v-formlayout-errorcell {
-	padding-bottom: 2em;
+	padding-bottom: 12px;
 }
 .v-formlayout-margin-left .v-formlayout-captioncell {
-	padding-left: 2em;
+	padding-left: 12px;
 } 
 .v-formlayout-margin-right .v-formlayout-contentcell {
-	padding-right: 2em;
+	padding-right: 12px;
 }
 .v-formlayout-captioncell .v-caption .v-required-field-indicator {
 	float: none;

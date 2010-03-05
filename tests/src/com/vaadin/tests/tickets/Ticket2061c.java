@@ -8,12 +8,11 @@ import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.ExpandLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OrderedLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
@@ -28,14 +27,14 @@ public class Ticket2061c extends Application implements
     public void init() {
         mainWindow = new Window("Vaadin");
         mainWindow.setSizeFull();
-        mainWindow.getLayout().setSizeFull();
+        mainWindow.getContent().setSizeFull();
         setMainWindow(mainWindow);
 
-        OrderedLayout ol = new OrderedLayout();
+        VerticalLayout ol = new VerticalLayout();
         ol.setWidth("200px");
         ol.setHeight("200px");
 
-        OrderedLayout ol2 = new OrderedLayout();
+        VerticalLayout ol2 = new VerticalLayout();
         ol2.setSizeFull();
 
         p = new Panel("This is a panel");
@@ -63,7 +62,7 @@ public class Ticket2061c extends Application implements
 
         private Table table = new Table();
         private String[] columns;
-        private ExpandLayout layout = new ExpandLayout();
+        private VerticalLayout layout = new VerticalLayout();
 
         public MyTable(int columnNumber, String id) {
             setDebugId(id);

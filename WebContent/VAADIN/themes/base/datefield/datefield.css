@@ -51,6 +51,9 @@
 .v-datefield-time .v-label {
 	display: inline;
 }
+.v-datefield-popup {
+	background: #fff;
+}
 /* Disabled by default
 .v-datefield-error .v-textfield,
 .v-datefield-error .v-datefield-calendarpanel {

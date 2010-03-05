@@ -45,6 +45,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VLazyInitItemIdentifiers;
 import com.vaadin.terminal.gwt.client.ui.dd.VOverTreeNode;
 import com.vaadin.terminal.gwt.client.ui.dd.VTargetNodeIsChildOf;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
+import com.vaadin.tools.ReflectTools;
 
 /**
  * Tree component. A Tree can be used to select an item (or multiple items) from
@@ -60,29 +61,12 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 public class Tree extends AbstractSelect implements Container.Hierarchical,
         Action.Container, ItemClickSource, DragSource, DropTarget {
 
-    private static final Method EXPAND_METHOD;
-
-    private static final Method COLLAPSE_METHOD;
-
-    static {
-        try {
-            EXPAND_METHOD = ExpandListener.class.getDeclaredMethod(
-                    "nodeExpand", new Class[] { ExpandEvent.class });
-            COLLAPSE_METHOD = CollapseListener.class.getDeclaredMethod(
-                    "nodeCollapse", new Class[] { CollapseEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
-            // This should never happen
-            throw new java.lang.RuntimeException(
-                    "Internal error finding methods in Tree");
-        }
-    }
-
     /* Private members */
 
     /**
      * Set of expanded nodes.
      */
-    private final HashSet expanded = new HashSet();
+    private final HashSet<Object> expanded = new HashSet<Object>();
 
     /**
      * List of action handlers.
@@ -775,6 +759,9 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      */
     public interface ExpandListener extends Serializable {
 
+        public static final Method EXPAND_METHOD = ReflectTools.findMethod(
+                ExpandListener.class, "nodeExpand", ExpandEvent.class);
+
         /**
          * A node has been expanded.
          * 
@@ -791,7 +778,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      *            the Listener to be added.
      */
     public void addListener(ExpandListener listener) {
-        addListener(ExpandEvent.class, listener, EXPAND_METHOD);
+        addListener(ExpandEvent.class, listener, ExpandListener.EXPAND_METHOD);
     }
 
     /**
@@ -801,7 +788,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      *            the Listener to be removed.
      */
     public void removeListener(ExpandListener listener) {
-        removeListener(ExpandEvent.class, listener, EXPAND_METHOD);
+        removeListener(ExpandEvent.class, listener,
+                ExpandListener.EXPAND_METHOD);
     }
 
     /**
@@ -860,6 +848,9 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      */
     public interface CollapseListener extends Serializable {
 
+        public static final Method COLLAPSE_METHOD = ReflectTools.findMethod(
+                CollapseListener.class, "nodeCollapse", CollapseEvent.class);
+
         /**
          * A node has been collapsed.
          * 
@@ -876,7 +867,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      *            the Listener to be added.
      */
     public void addListener(CollapseListener listener) {
-        addListener(CollapseEvent.class, listener, COLLAPSE_METHOD);
+        addListener(CollapseEvent.class, listener,
+                CollapseListener.COLLAPSE_METHOD);
     }
 
     /**
@@ -886,7 +878,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      *            the Listener to be removed.
      */
     public void removeListener(CollapseListener listener) {
-        removeListener(CollapseEvent.class, listener, COLLAPSE_METHOD);
+        removeListener(CollapseEvent.class, listener,
+                CollapseListener.COLLAPSE_METHOD);
     }
 
     /**
@@ -1155,7 +1148,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
             Object itemIdOver = getItemIdOver();
             if (areChildrenAllowed(itemIdOver)
-                    && getDropLocation() != VerticalDropLocation.TOP) {
+                    && getDropLocation() == VerticalDropLocation.MIDDLE) {
                 return itemIdOver;
             }
             return getParent(itemIdOver);

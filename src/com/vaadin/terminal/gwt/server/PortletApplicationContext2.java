@@ -139,18 +139,18 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
         }
     }
 
-    public void firePortletRenderRequest(Application app,
+    public void firePortletRenderRequest(Application app, Window window,
             RenderRequest request, RenderResponse response) {
         Set<PortletListener> listeners = portletListeners.get(app);
         if (listeners != null) {
             for (PortletListener l : listeners) {
                 l.handleRenderRequest(request, new RestrictedRenderResponse(
-                        response));
+                        response), window);
             }
         }
     }
 
-    public void firePortletActionRequest(Application app,
+    public void firePortletActionRequest(Application app, Window window,
             ActionRequest request, ActionResponse response) {
         String key = request.getParameter(ActionRequest.ACTION_NAME);
         if (eventActionDestinationMap.containsKey(key)) {
@@ -172,28 +172,28 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
             Set<PortletListener> listeners = portletListeners.get(app);
             if (listeners != null) {
                 for (PortletListener l : listeners) {
-                    l.handleActionRequest(request, response);
+                    l.handleActionRequest(request, response, window);
                 }
             }
         }
     }
 
-    public void firePortletEventRequest(Application app, EventRequest request,
-            EventResponse response) {
+    public void firePortletEventRequest(Application app, Window window,
+            EventRequest request, EventResponse response) {
         Set<PortletListener> listeners = portletListeners.get(app);
         if (listeners != null) {
             for (PortletListener l : listeners) {
-                l.handleEventRequest(request, response);
+                l.handleEventRequest(request, response, window);
             }
         }
     }
 
-    public void firePortletResourceRequest(Application app,
+    public void firePortletResourceRequest(Application app, Window window,
             ResourceRequest request, ResourceResponse response) {
         Set<PortletListener> listeners = portletListeners.get(app);
         if (listeners != null) {
             for (PortletListener l : listeners) {
-                l.handleResourceRequest(request, response);
+                l.handleResourceRequest(request, response, window);
             }
         }
     }
@@ -201,16 +201,16 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
     public interface PortletListener extends Serializable {
 
         public void handleRenderRequest(RenderRequest request,
-                RenderResponse response);
+                RenderResponse response, Window window);
 
         public void handleActionRequest(ActionRequest request,
-                ActionResponse response);
+                ActionResponse response, Window window);
 
         public void handleEventRequest(EventRequest request,
-                EventResponse response);
+                EventResponse response, Window window);
 
         public void handleResourceRequest(ResourceRequest request,
-                ResourceResponse response);
+                ResourceResponse response, Window window);
     }
 
     /**

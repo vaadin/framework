@@ -38,7 +38,14 @@ public class DefaultWidgetSet implements WidgetSet {
      * This is the entry point method. It will start the first
      */
     public void onModuleLoad() {
-        ApplicationConfiguration.initConfigurations(this);
+        try {
+            ApplicationConfiguration.initConfigurations(this);
+        } catch (Exception e) {
+            // Log & don't continue;
+            // custom WidgetSets w/ entry points will cause this
+            ApplicationConnection.getConsole().log(e.getMessage());
+            return;
+        }
         ApplicationConfiguration.startNextApplication(); // start first app
         map = GWT.create(WidgetMap.class);
     }

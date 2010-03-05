@@ -19,6 +19,8 @@ import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Scrollable;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VPanel;
+import com.vaadin.ui.themes.Reindeer;
+import com.vaadin.ui.themes.Runo;
 
 /**
  * Panel - a simple single component container.
@@ -36,6 +38,16 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
 
     private static final String CLICK_EVENT = VPanel.CLICK_EVENT_IDENTIFIER;
 
+    /**
+     * Removes extra decorations from the Panel.
+     * 
+     * @deprecated this style is no longer part of the core framework and this
+     *             component, even though most built-in themes implement this
+     *             style. Use the constant specified in the theme class file
+     *             that you're using, if it provides one, e.g.
+     *             {@link Reindeer#PANEL_LIGHT} or {@link Runo#PANEL_LIGHT} .
+     */
+    @Deprecated
     public static final String STYLE_LIGHT = "light";
 
     /**

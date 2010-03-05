@@ -469,7 +469,13 @@ public class IndexedContainer implements Container.Indexed,
             return null;
         }
         try {
-            return itemIds.get(itemIds.indexOf(itemId) + 1);
+            int idx = itemIds.indexOf(itemId);
+            if (idx == -1) {
+                // If the given Item is not found in the Container,
+                // null is returned.
+                return null;
+            }
+            return itemIds.get(idx + 1);
         } catch (final IndexOutOfBoundsException e) {
             return null;
         }
@@ -548,6 +554,11 @@ public class IndexedContainer implements Container.Indexed,
      * java.lang.Object)
      */
     public Item addItemAfter(Object previousItemId, Object newItemId) {
+        // Adding an item after null item adds the item as first item of the
+        // ordered container.
+        if (previousItemId == null) {
+            return addItemAt(0, newItemId);
+        }
 
         // Get the index of the addition
         int index = -1;
@@ -574,7 +585,11 @@ public class IndexedContainer implements Container.Indexed,
         // Creates a new id
         final Object id = generateId();
 
-        return addItemAfter(previousItemId, id);
+        if (addItemAfter(previousItemId, id) != null) {
+            return id;
+        } else {
+            return null;
+        }
     }
 
     /*
@@ -953,7 +968,7 @@ public class IndexedContainer implements Container.Indexed,
      * @param addedItemIndex
      *            index of new item if change event was an item addition
      */
-    private void fireContentsChange(int addedItemIndex) {
+    protected void fireContentsChange(int addedItemIndex) {
         if (itemSetChangeListeners != null) {
             final Object[] l = itemSetChangeListeners.toArray();
             final Container.ItemSetChangeEvent event = new IndexedContainer.ItemSetChangeEvent(
@@ -1549,7 +1564,7 @@ public class IndexedContainer implements Container.Indexed,
         }
     }
 
-    private void updateContainerFiltering() {
+    protected void updateContainerFiltering() {
 
         // Clearing filters?
         if (filters == null || filters.isEmpty()) {
@@ -1571,12 +1586,16 @@ public class IndexedContainer implements Container.Indexed,
         // Filter
         for (final Iterator i = itemIds.iterator(); i.hasNext();) {
             final Object id = i.next();
-            if (passesFilters(new IndexedContainerItem(id))) {
+            if (passesFilters(id)) {
                 filteredItemIds.add(id);
             }
         }
 
         fireContentsChange(-1);
+    }
+
+    protected final boolean passesFilters(Object itemId) {
+        return passesFilters(new IndexedContainerItem(itemId));
     }
 
     private boolean passesFilters(Item item) {
