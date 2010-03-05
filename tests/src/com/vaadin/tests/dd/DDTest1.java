@@ -206,28 +206,13 @@ public class DDTest1 extends TestBase {
                     VerticalDropLocation dropLocation = details
                             .getDropLocation();
 
-                    Object itemIdAfter = itemIdOver;
-                    if (dropLocation == VerticalDropLocation.MIDDLE) {
+                    Object itemIdAfter = details.getItemIdAfter();
+
+                    if (itemIdOver.equals(itemIdInto)) { // directly on a node
                         t.setParent(itemId, itemIdOver);
                         return;
-                    } else if (VerticalDropLocation.TOP == dropLocation) {
-                        // if on top of the caption area, add before
-                        Collection children;
-                        if (itemIdInto != null) {
-                            // seek the previous from child list
-                            children = idx.getChildren(itemIdInto);
-                        } else {
-                            children = idx.rootItemIds();
-                        }
-                        Object ref = null;
-                        for (Object object : children) {
-                            if (object.equals(itemIdOver)) {
-                                itemIdAfter = ref;
-                                break;
-                            }
-                            ref = object;
-                        }
                     }
+
                     idx.setParent(itemId, itemIdInto);
 
                     if (dropLocation == null) {

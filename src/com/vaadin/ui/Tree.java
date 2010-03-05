@@ -1154,6 +1154,41 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
             return getParent(itemIdOver);
         }
 
+        /**
+         * If drop is targeted into "folder node" (see {@link #getItemIdInto()}
+         * ), this method returns the item id after the drag was targeted. TODO
+         * could this be said any more difficult :-)
+         * 
+         * @return
+         */
+        public Object getItemIdAfter() {
+            Object itemIdOver = getItemIdOver();
+            Object itemIdInto2 = getItemIdInto();
+            if (itemIdOver.equals(itemIdInto2)) {
+                return null;
+            }
+            VerticalDropLocation dropLocation = getDropLocation();
+            if (VerticalDropLocation.TOP == dropLocation) {
+                // if on top of the caption area, add before
+                Collection children;
+                Object itemIdInto = getItemIdInto();
+                if (itemIdInto != null) {
+                    // seek the previous from child list
+                    children = getChildren(itemIdInto);
+                } else {
+                    children = rootItemIds();
+                }
+                Object ref = null;
+                for (Object object : children) {
+                    if (object.equals(itemIdOver)) {
+                        return ref;
+                    }
+                    ref = object;
+                }
+            }
+            return itemIdOver;
+        }
+
     }
 
     /**
