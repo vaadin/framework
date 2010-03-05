@@ -642,7 +642,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
             while ((bytesRead = data.read(buffer)) > 0) {
                 out.write(buffer, 0, bytesRead);
-                // TODO this may cause problems on GateIn
                 out.flush();
             }
             out.close();
