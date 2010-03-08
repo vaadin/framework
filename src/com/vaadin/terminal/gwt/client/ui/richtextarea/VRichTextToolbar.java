@@ -23,11 +23,12 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.i18n.client.Constants;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.ImageBundle;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.RichTextArea;
@@ -41,65 +42,47 @@ import com.google.gwt.user.client.ui.ToggleButton;
 public class VRichTextToolbar extends Composite {
 
     /**
-     * This {@link ImageBundle} is used for all the button icons. Using an image
+     * This {@link ClientBundle} is used for all the button icons. Using a
      * bundle allows all of these images to be packed into a single image, which
      * saves a lot of HTTP requests, drastically improving startup time.
      */
-    public interface Images extends ImageBundle {
+    public interface Images extends ClientBundle {
 
-        @ImageBundle.Resource("bold.gif")
-        AbstractImagePrototype bold();
+      ImageResource bold();
 
-        @ImageBundle.Resource("createLink.gif")
-        AbstractImagePrototype createLink();
+      ImageResource createLink();
 
-        @ImageBundle.Resource("hr.gif")
-        AbstractImagePrototype hr();
+      ImageResource hr();
 
-        @ImageBundle.Resource("indent.gif")
-        AbstractImagePrototype indent();
+      ImageResource indent();
 
-        @ImageBundle.Resource("insertImage.gif")
-        AbstractImagePrototype insertImage();
+      ImageResource insertImage();
 
-        @ImageBundle.Resource("italic.gif")
-        AbstractImagePrototype italic();
+      ImageResource italic();
 
-        @ImageBundle.Resource("justifyCenter.gif")
-        AbstractImagePrototype justifyCenter();
+      ImageResource justifyCenter();
 
-        @ImageBundle.Resource("justifyLeft.gif")
-        AbstractImagePrototype justifyLeft();
+      ImageResource justifyLeft();
 
-        @ImageBundle.Resource("justifyRight.gif")
-        AbstractImagePrototype justifyRight();
+      ImageResource justifyRight();
 
-        @ImageBundle.Resource("ol.gif")
-        AbstractImagePrototype ol();
+      ImageResource ol();
 
-        @ImageBundle.Resource("outdent.gif")
-        AbstractImagePrototype outdent();
+      ImageResource outdent();
 
-        @ImageBundle.Resource("removeFormat.gif")
-        AbstractImagePrototype removeFormat();
+      ImageResource removeFormat();
 
-        @ImageBundle.Resource("removeLink.gif")
-        AbstractImagePrototype removeLink();
+      ImageResource removeLink();
 
-        @ImageBundle.Resource("strikeThrough.gif")
-        AbstractImagePrototype strikeThrough();
+      ImageResource strikeThrough();
 
-        @ImageBundle.Resource("subscript.gif")
-        AbstractImagePrototype subscript();
+      ImageResource subscript();
 
-        @ImageBundle.Resource("superscript.gif")
-        AbstractImagePrototype superscript();
+      ImageResource superscript();
 
-        @ImageBundle.Resource("ul.gif")
-        AbstractImagePrototype ul();
+      ImageResource ul();
 
-        @ImageBundle.Resource("underline.gif")
-        AbstractImagePrototype underline();
+      ImageResource underline();
     }
 
     /**
@@ -254,11 +237,9 @@ public class VRichTextToolbar extends Composite {
                 extended.removeFormat();
             } else if (sender == richText) {
                 // We use the RichTextArea's onKeyUp event to update the toolbar
-                // status.
-                // This will catch any cases where the user moves the cursur
-                // using the
-                // keyboard, or uses one of the browser's built-in keyboard
-                // shortcuts.
+                // status. This will catch any cases where the user moves the
+                // cursur using the keyboard, or uses one of the browser's
+                // built-in keyboard shortcuts.
                 updateStatus();
             }
         }
@@ -266,11 +247,9 @@ public class VRichTextToolbar extends Composite {
         public void onKeyUp(KeyUpEvent event) {
             if (event.getSource() == richText) {
                 // We use the RichTextArea's onKeyUp event to update the toolbar
-                // status.
-                // This will catch any cases where the user moves the cursor
-                // using the
-                // keyboard, or uses one of the browser's built-in keyboard
-                // shortcuts.
+                // status. This will catch any cases where the user moves the
+                // cursor using the keyboard, or uses one of the browser's
+                // built-in keyboard shortcuts.
                 updateStatus();
             }
         }
@@ -284,7 +263,7 @@ public class VRichTextToolbar extends Composite {
 
     private final Images images = (Images) GWT.create(Images.class);
     private final Strings strings = (Strings) GWT.create(Strings.class);
-    private final EventHandler listener = new EventHandler();
+    private final EventHandler handler = new EventHandler();
 
     private final RichTextArea richText;
     private final RichTextArea.BasicFormatter basic;
@@ -383,17 +362,16 @@ public class VRichTextToolbar extends Composite {
             bottomPanel.add(fonts = createFontList());
             bottomPanel.add(fontSizes = createFontSizes());
 
-            // We only use these listeners for updating status, so don't hook
-            // them up
-            // unless at least basic editing is supported.
-            richText.addKeyUpHandler(listener);
-            richText.addClickHandler(listener);
+            // We only use these handlers for updating status, so don't hook
+            // them up unless at least basic editing is supported.
+            richText.addKeyUpHandler(handler);
+            richText.addClickHandler(handler);
         }
     }
 
     private ListBox createColorList(String caption) {
         final ListBox lb = new ListBox();
-        lb.addChangeHandler(listener);
+        lb.addChangeHandler(handler);
         lb.setVisibleItemCount(1);
 
         lb.addItem(caption);
@@ -408,7 +386,7 @@ public class VRichTextToolbar extends Composite {
 
     private ListBox createFontList() {
         final ListBox lb = new ListBox();
-        lb.addChangeHandler(listener);
+        lb.addChangeHandler(handler);
         lb.setVisibleItemCount(1);
 
         lb.addItem(strings.font(), "");
@@ -424,7 +402,7 @@ public class VRichTextToolbar extends Composite {
 
     private ListBox createFontSizes() {
         final ListBox lb = new ListBox();
-        lb.addChangeHandler(listener);
+        lb.addChangeHandler(handler);
         lb.setVisibleItemCount(1);
 
         lb.addItem(strings.size());
@@ -438,17 +416,17 @@ public class VRichTextToolbar extends Composite {
         return lb;
     }
 
-    private PushButton createPushButton(AbstractImagePrototype img, String tip) {
-        final PushButton pb = new PushButton(img.createImage());
-        pb.addClickHandler(listener);
+    private PushButton createPushButton(ImageResource img, String tip) {
+        final PushButton pb = new PushButton(new Image(img));
+        pb.addClickHandler(handler);
         pb.setTitle(tip);
         return pb;
     }
 
-    private ToggleButton createToggleButton(AbstractImagePrototype img,
+    private ToggleButton createToggleButton(ImageResource img,
             String tip) {
-        final ToggleButton tb = new ToggleButton(img.createImage());
-        tb.addClickHandler(listener);
+        final ToggleButton tb = new ToggleButton(new Image(img));
+        tb.addClickHandler(handler);
         tb.setTitle(tip);
         return tb;
     }
