@@ -1127,7 +1127,7 @@
 			</classpath>
 
 			<batchtest fork="yes">
-				<fileset dir="tests/src" includes="com/vaadin/tests/server/**/*.java" />
+				<fileset dir="tests/src" includes="com/vaadin/tests/server/**/*.java" excludes="**/Abstract*.java" />
 			</batchtest>
 		</junit>
     </target>
