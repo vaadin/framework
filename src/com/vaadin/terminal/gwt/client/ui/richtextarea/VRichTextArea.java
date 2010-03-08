@@ -20,7 +20,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RichTextArea;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -99,13 +98,6 @@ public class VRichTextArea extends Composite implements Paintable, Field,
         id = uidl.getId();
 
         if (uidl.hasVariable("text")) {
-            if (BrowserInfo.get().isIE()) {
-                // rta is rather buggy in IE (as pretty much everything is)
-                // it needs some "shaking" not to fall into uneditable state
-                // see #2374
-                rta.getBasicFormatter().toggleBold();
-                rta.getBasicFormatter().toggleBold();
-            }
             rta.setHTML(uidl.getStringVariable("text"));
 
         }
