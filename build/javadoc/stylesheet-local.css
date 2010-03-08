@@ -1,0 +1,14 @@
+
+/***********************************************************************/
+/* Custom Vaadin API JavaDoc style definitions                         */
+/*                                                                     */
+/* This stylesheet is appended to the generated JavaDoc stylesheet.css */
+/***********************************************************************/
+
+/* As Eclipse forces a newline before the ending </pre> tag, we need
+   to compensate for the extra line. This requires that the 'code'
+   style class is inserted into the source files as JavaDoc does
+   not add any particular style in the generated files. */
+pre.code {
+	margin-bottom: -1.5em;
+}

@@ -16,9 +16,7 @@
      * vaadin-oophm-<version>.zip
     -->
 
-    <!-- 
-    Call one of package-* targets unless you understand what you are doing 
-    -->
+    <!--Call one of package-* targets unless you understand what you are doing. -->
     <target name="package-all" depends="clean-all, package-init, init, build, docs, internal-package-zip, internal-package-war, internal-package-liferay" description="Build public packages.">
     </target>
 
@@ -448,11 +446,17 @@
             <filter token="ITMillApache2LicenseForJavaFiles" value="${ITMillApache2LicenseForJavaFiles}" />
             <filter token="VERSION" value="${version.full}" />
         </filterset>
+    	
+    	<!-- Adds a style class to JavaDoc <pre> tags for style customization. -->
+        <filterset id="pre-css-style" begintoken="     * &lt;" endtoken="&gt;">
+            <filter token="pre" value="     * &lt;pre class='code'&gt;" />
+        </filterset>
 
         <echo>Copying src directory and processing copied files.</echo>
         <echo>Replacing &lt;version&gt; tag with build version for java/html/css/xml files.</echo>
-        <copy todir="${result-path}/src/core">
+        <copy todir="${result-path}/src/core" overwrite="yes">
         	<filterset refid="version-and-license"/>
+            <filterset refid="pre-css-style"/>
             <fileset dir="src">
                 <patternset refid="preprocessable-files" />
             </fileset>
@@ -464,7 +468,6 @@
                 <patternset refid="preprocessable-files" />
             </fileset>
         </copy>
-
 
 		<antcontrib:if>
 			<isset property="build.include.tests"/>
@@ -976,7 +979,9 @@
     <!-- Documentation: Add Javadoc to doc                                  -->
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
     <target name="javadoc" depends="init, preprocess-src">
-        <javadoc destdir="${output-dir}/WebContent/docs/api" author="true" version="true" use="true" windowtitle="${product-name}" classpathref="compile.classpath.client-side">
+        <property name="javadoc.destdir" value="${output-dir}/WebContent/docs/api"/>
+    	
+        <javadoc destdir="${javadoc.destdir}" author="true" version="true" use="true" windowtitle="${product-name}" classpathref="compile.classpath.client-side">
             <packageset dir="${result-path}/src/core">
                 <include name="${toolkit-package}/**" />
             </packageset>
@@ -986,6 +991,12 @@
             <link offline="true" href="http://java.sun.com/j2se/1.5.0/docs/api/" packagelistLoc="build/javadoc/j2se-1.5.0" />
             <link offline="true" href="http://java.sun.com/j2ee/1.4/docs/api/" packagelistLoc="build/javadoc/j2ee-1.4" />
         </javadoc>
+
+        <!-- Append local style definitions. -->
+        <echo>Appending local style definitions</echo>
+        <concat destfile="${javadoc.destdir}/stylesheet.css" append="yes">
+            <filelist dir="build/javadoc" files="stylesheet-local.css"/>
+        </concat>
     </target>
 
     <!-- java2html converter -->
