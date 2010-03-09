@@ -14,19 +14,13 @@
 	<inherits name="com.google.gwt.user.User" />
 
 	<inherits name="com.google.gwt.http.HTTP" />
-	
+
 	<source path="client" />
 	
 	<!-- Use our own history impl for IE to workaround #2931.	--> 
 	<replace-with class="com.vaadin.terminal.gwt.client.HistoryImplIEVaadin">
 		<when-type-is class="com.google.gwt.user.client.impl.HistoryImpl"/>
 		<when-property-is name="user.agent" value="ie6"/>
-	</replace-with>
-
-	<!-- Opera needs a different implementation due to GWT issue 3956 (#4099) -->
-	<replace-with class="com.google.gwt.user.client.impl.HistoryImplTimer">
-		<when-type-is class="com.google.gwt.user.client.impl.HistoryImpl" />
-		<when-property-is name="user.agent" value="opera" />
 	</replace-with>
 
 	<generate-with class="com.vaadin.terminal.gwt.widgetsetutils.WidgetMapGenerator">
