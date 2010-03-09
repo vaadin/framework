@@ -29,8 +29,7 @@ Vaadin Development
 When developing the Vaadin Library itself, change to "build" directory and
 run "ant widgetsets" to compile all widgetsets or "ant widgetset-default",
 "ant-widgetset-reserver", or "ant widgetset-colorpicker" to compile individual
-widgetsets. You must have GWT installed under build/gwt, under the proper
-platform directory.
+widgetsets. You must have GWT installed under build/gwt.
 
 See http://dev.vaadin.com/wiki/DevDocs/StartingDevelopment for instructions for
 installing GWT and compiling widgetsets for Vaadin development.
