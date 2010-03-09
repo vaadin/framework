@@ -1,3 +1,6 @@
+/*
+@ITMillApache2LicenseForJavaFiles@
+ */
 package com.vaadin.terminal.gwt.client.ui;
 
 import com.vaadin.terminal.gwt.client.ApplicationConnection;

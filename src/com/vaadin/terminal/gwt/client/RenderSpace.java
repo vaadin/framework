@@ -1,3 +1,6 @@
+/*
+@ITMillApache2LicenseForJavaFiles@
+ */
 package com.vaadin.terminal.gwt.client;
 
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
