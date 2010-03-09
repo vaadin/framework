@@ -23,6 +23,12 @@
 		<when-property-is name="user.agent" value="ie6"/>
 	</replace-with>
 
+	<!-- Safari needs a different implementation due to GWT bug. See #4279 (vaadin trac) -->
+	<replace-with class="com.vaadin.terminal.gwt.client.ui.richtextarea.CustomWebkitRichTextArea">
+		<when-type-is class="com.google.gwt.user.client.ui.impl.RichTextAreaImpl" />
+		<when-property-is name="user.agent" value="safari" />
+	</replace-with>
+
 	<generate-with class="com.vaadin.terminal.gwt.widgetsetutils.WidgetMapGenerator">
 		<when-type-is class="com.vaadin.terminal.gwt.client.WidgetMap"/>
 	</generate-with>
