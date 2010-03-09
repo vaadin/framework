@@ -225,9 +225,8 @@ div.v-app-loading {
 .v-drag-element {
 	z-index:60000;
 	position:absolute;
-    opacity: 0.4;
-    filter: alpha(opacity=40);
-    border: 1px solid #999;
+    opacity: 0.5;
+    filter: alpha(opacity=50);
 }
 
 .v-ddwrapper {

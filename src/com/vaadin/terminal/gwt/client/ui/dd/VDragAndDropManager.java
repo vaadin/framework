@@ -599,6 +599,10 @@ public class VDragAndDropManager {
         }
     }
 
+    Element getDragElement() {
+        return dragElement;
+    }
+
     private final Timer lazyAttachDragElement = new Timer() {
 
         @Override

@@ -1,5 +1,7 @@
 package com.vaadin.tests.dd;
 
+import java.util.Collection;
+
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.demo.tutorial.addressbook.data.Person;
@@ -34,8 +36,11 @@ public class DDTest4 extends TestBase {
                         w,
                         ".v-table-row-drag-middle .v-table-cell-content {"
                                 + "        background-color: inherit ; border-bottom: 1px solid cyan;"
-                                + "}");
-        /* darn reindeer has no icons */
+                                + "}"
+                                + ".v-table-row-drag-middle .v-table-cell-wrapper {"
+                                + "        margin-bottom: -1px;" + "}" + ""
+
+                );
 
         // hl.addComponent(tree1);
         hl.addComponent(table);
@@ -47,6 +52,7 @@ public class DDTest4 extends TestBase {
         table.setPageLength(10);
         table.setRowHeaderMode(Table.ROW_HEADER_MODE_ID);
         table.setSelectable(true);
+        table.setMultiSelect(true);
         populateTable();
         addComponent(hl);
 
@@ -78,25 +84,45 @@ public class DDTest4 extends TestBase {
                 // IndexedContainer goodies... (hint: don't use it in real apps)
                 IndexedContainer containerDataSource = (IndexedContainer) table
                         .getContainerDataSource();
-                IndexedContainer clone = null;
-                try {
-                    clone = (IndexedContainer) containerDataSource.clone();
-                    int newIndex = containerDataSource.indexOfId(itemIdOver) - 1;
-                    if (dropTargetData.getDropLocation() != VerticalDropLocation.TOP) {
-                        newIndex++;
+                int newIndex = containerDataSource.indexOfId(itemIdOver) - 1;
+                if (dropTargetData.getDropLocation() != VerticalDropLocation.TOP) {
+                    newIndex++;
+                }
+                if (newIndex < 0) {
+                    newIndex = 0;
+                }
+                Object idAfter = containerDataSource.getIdByIndex(newIndex);
+                Collection selections = (Collection) table.getValue();
+                if (selections != null && selections.contains(itemId)) {
+                    // dragged a selected item, if multiple rows selected, drag
+                    // them too (functionality similar to apple mail)
+                    for (Object object : selections) {
+                        moveAfter(containerDataSource, object, idAfter);
                     }
-                    if (newIndex < 0) {
-                        newIndex = 0;
-                    }
-                    containerDataSource.removeItem(itemId);
-                    Item newItem = containerDataSource.addItemAt(newIndex,
-                            itemId);
 
+                } else {
+                    // move just the dragged row, not considering selection at
+                    // all
+                    moveAfter(containerDataSource, itemId, idAfter);
+                }
+
+            }
+
+            private void moveAfter(IndexedContainer containerDataSource,
+                    Object itemId, Object idAfter) {
+                try {
+                    IndexedContainer clone = null;
+                    clone = (IndexedContainer) containerDataSource.clone();
+                    containerDataSource.removeItem(itemId);
+                    Item newItem = containerDataSource.addItemAfter(idAfter,
+                            itemId);
                     Item item = clone.getItem(itemId);
                     for (Object propId : item.getItemPropertyIds()) {
                         newItem.getItemProperty(propId).setValue(
                                 item.getItemProperty(propId).getValue());
                     }
+
+                    // TODO Auto-generated method stub
                 } catch (CloneNotSupportedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();

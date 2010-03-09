@@ -17,6 +17,7 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
+import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -2522,7 +2523,29 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                 // TODO propertyId
                                 VDragEvent ev = VDragAndDropManager.get()
                                         .startDrag(transferable, event, true);
-                                ev.createDragImage(getElement(), true);
+                                if (selectMode == SELECT_MODE_MULTI
+                                        && selectedRowKeys
+                                                .contains("" + rowKey)) {
+                                    ev.createDragImage(
+                                            (Element) scrollBody.tBodyElement
+                                                    .cast(), true);
+                                    Element dragImage = ev.getDragImage();
+                                    int i = 0;
+                                    for (Iterator<Widget> iterator = scrollBody
+                                            .iterator(); iterator.hasNext();) {
+                                        VScrollTableRow next = (VScrollTableRow) iterator
+                                                .next();
+                                        Element child = (Element) dragImage
+                                                .getChild(i++);
+                                        if (!selectedRowKeys.contains(""
+                                                + next.rowKey)) {
+                                            child.getStyle().setVisibility(
+                                                    Visibility.HIDDEN);
+                                        }
+                                    }
+                                } else {
+                                    ev.createDragImage(getElement(), true);
+                                }
                                 event.preventDefault();
                                 event.stopPropagation();
                             }
@@ -3272,5 +3295,5 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     public void onValueChange(ValueChangeEvent<String> arg0) {
         client.getContextMenu().hide();
     }
-    
+
 }

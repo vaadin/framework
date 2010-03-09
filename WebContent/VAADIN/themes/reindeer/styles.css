@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_3_0_dev-20100305";}
-.v-theme-version-6_3_0_dev-20100305 {display: none;}
+.v-theme-version:after {content:"6_3_0_dev-20100309";}
+.v-theme-version-6_3_0_dev-20100309 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -455,9 +455,8 @@ div.v-app-loading {
 .v-drag-element {
 	z-index:60000;
 	position:absolute;
-    opacity: 0.4;
-    filter: alpha(opacity=40);
-    border: 1px solid #999;
+    opacity: 0.5;
+    filter: alpha(opacity=50);
 }
 
 .v-ddwrapper {
@@ -1429,17 +1428,23 @@ div.v-progressindicator-indeterminate-disabled {
 	color: #ddd;
 }
 
-/* TODO remove important, replace with better anchors or order */
 .v-table-row-drag-middle .v-table-cell-content {
 	background-color: cyan;
 }
-/* TODO consider using height neutral styling (scrollbar issues when pagelength = table.length ) */
 .v-table-row-drag-top .v-table-cell-content {
 	border-top: 1px solid cyan ;
+}
+.v-table-row-drag-top .v-table-cell-wrapper {
+	margin-top: -1px; /* compensate the space consumed by border hint */
 }
 .v-table-row-drag-bottom .v-table-cell-content {
 	border-bottom: 1px solid cyan;
 }
+.v-table-row-drag-bottom .v-table-cell-wrapper {
+	margin-bottom: -1px; /* compensate the space consumed by border hint */
+}
+
+
 
 
 .v-tabsheet,
@@ -4160,6 +4165,8 @@ td.v-datefield-calendarpanel-nextyear {
 .v-table-borderless .v-table-body {
 	border: none;
 }
+
+
 
 /* These styles get catenated together on build */
 

@@ -148,7 +148,14 @@ public class VDragEvent {
         element.getStyle().setMarginLeft(offsetX, Unit.PX);
         element.getStyle().setMarginTop(offsetY, Unit.PX);
         VDragAndDropManager.get().setDragElement(element);
+    }
 
+    /**
+     * @return the current Element used as a drag image (aka drag proxy) or null
+     *         if drag image is not currently set for this drag operation.
+     */
+    public Element getDragImage() {
+        return (Element) VDragAndDropManager.get().getDragElement();
     }
 
     /**
