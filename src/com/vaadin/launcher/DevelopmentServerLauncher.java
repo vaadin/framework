@@ -12,6 +12,8 @@ import org.mortbay.jetty.Server;
 import org.mortbay.jetty.nio.SelectChannelConnector;
 import org.mortbay.jetty.webapp.WebAppContext;
 
+import com.vaadin.launcher.util.BrowserLauncher;
+
 /**
  * Class for running Jetty servlet container within Eclipse project.
  * 
@@ -31,7 +33,7 @@ public class DevelopmentServerLauncher {
     public static void main(String[] args) {
 
         // Pass-through of arguments for Jetty
-        final Map serverArgs = parseArguments(args);
+        final Map<String, String> serverArgs = parseArguments(args);
 
         // Start Jetty
         System.out.println("Starting Jetty servlet container.");
@@ -39,8 +41,10 @@ public class DevelopmentServerLauncher {
 
         // Start Browser
         System.out.println("Starting Web Browser.");
-        if (url != null) {
-            // BrowserLauncher.openBrowser(url);
+        if (!serverArgs.containsKey("nogui") && url != null) {
+
+            // Open browser into application URL
+            BrowserLauncher.openBrowser(url);
         }
 
     }
@@ -51,7 +55,8 @@ public class DevelopmentServerLauncher {
      * @param serverArgs
      * @return
      */
-    protected static String runServer(Map serverArgs, String mode) {
+    protected static String runServer(Map<String, String> serverArgs,
+            String mode) {
 
         // Add help for System.out
         System.out
@@ -77,8 +82,8 @@ public class DevelopmentServerLauncher {
             server.setConnectors(new Connector[] { connector });
 
             final WebAppContext webappcontext = new WebAppContext();
-            webappcontext.setContextPath(serverArgs.get("context").toString());
-            webappcontext.setWar(serverArgs.get("webroot").toString());
+            webappcontext.setContextPath(serverArgs.get("context"));
+            webappcontext.setWar(serverArgs.get("webroot"));
 
             server.setHandler(webappcontext);
 
@@ -99,7 +104,8 @@ public class DevelopmentServerLauncher {
      * @param key
      * @param value
      */
-    private static void assignDefault(Map map, String key, String value) {
+    private static void assignDefault(Map<String, String> map, String key,
+            String value) {
         if (!map.containsKey(key)) {
             map.put(key, value);
         }
@@ -113,8 +119,8 @@ public class DevelopmentServerLauncher {
      * @param args
      * @return map of arguments key value pairs.
      */
-    protected static Map parseArguments(String[] args) {
-        final Map map = new HashMap();
+    protected static Map<String, String> parseArguments(String[] args) {
+        final Map<String, String> map = new HashMap<String, String>();
         for (int i = 0; i < args.length; i++) {
             final int d = args[i].indexOf("=");
             if (d > 0 && d < args[i].length() && args[i].startsWith("--")) {
