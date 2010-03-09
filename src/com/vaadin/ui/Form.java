@@ -464,20 +464,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
         }
 
         // Configures the field
-        try {
-            field.setPropertyDataSource(property);
-            String caption = id.toString();
-            if (caption.length() > 50) {
-                caption = caption.substring(0, 47) + "...";
-            }
-            if (caption.length() > 0) {
-                caption = "" + Character.toUpperCase(caption.charAt(0))
-                        + caption.substring(1, caption.length());
-            }
-            field.setCaption(caption);
-        } catch (final Throwable ignored) {
-            return false;
-        }
+        field.setPropertyDataSource(property);
 
         // Register and attach the created field
         addField(id, field);
