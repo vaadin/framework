@@ -85,13 +85,13 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
      * List of listeners who are interested in the read-only status changes of
      * the MethodProperty
      */
-    private LinkedList readOnlyStatusChangeListeners = null;
+    private LinkedList<ReadOnlyStatusChangeListener> readOnlyStatusChangeListeners = null;
 
     /**
      * List of listeners who are interested in the value changes of the
      * MethodProperty
      */
-    private LinkedList valueChangeListeners = null;
+    private LinkedList<ValueChangeListener> valueChangeListeners = null;
 
     /* Special serialization to handle method references */
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
@@ -181,6 +181,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
      * @param beanPropertyName
      *            the name of the property to bind to.
      */
+    @SuppressWarnings("unchecked")
     public MethodProperty(Object instance, String beanPropertyName) {
 
         final Class beanClass = instance.getClass();
@@ -274,6 +275,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
      *            the name of the setter method.
      * 
      */
+    @SuppressWarnings("unchecked")
     public MethodProperty(Class type, Object instance, String getMethodName,
             String setMethodName) {
         this(type, instance, getMethodName, setMethodName, new Object[] {},
@@ -303,6 +305,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
      * @param setMethod
      *            the setter method.
      */
+    @SuppressWarnings("unchecked")
     public MethodProperty(Class type, Object instance, Method getMethod,
             Method setMethod) {
         this(type, instance, getMethod, setMethod, new Object[] {},
@@ -345,6 +348,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
      *            replaced with <code>newValue</code> when
      *            {@link #setValue(Object newValue)} is called.
      */
+    @SuppressWarnings("unchecked")
     public MethodProperty(Class type, Object instance, String getMethodName,
             String setMethodName, Object[] getArgs, Object[] setArgs,
             int setArgumentIndex) {
@@ -525,6 +529,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
      *            replaced with <code>newValue</code> when
      *            {@link #setValue(Object newValue)} is called.
      */
+    @SuppressWarnings("unchecked")
     public MethodProperty(Class type, Object instance, Method getMethod,
             Method setMethod, Object[] getArgs, Object[] setArgs,
             int setArgumentIndex) {
@@ -583,6 +588,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
      * 
      * @return type of the Property
      */
+    @SuppressWarnings("unchecked")
     public final Class getType() {
         return type;
     }
@@ -670,6 +676,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
      *         native type directly or through <code>String</code>.
      * @see #invokeSetMethod(Object)
      */
+    @SuppressWarnings("unchecked")
     public void setValue(Object newValue) throws Property.ReadOnlyException,
             Property.ConversionException {
 
@@ -847,7 +854,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
      */
     public void addListener(Property.ReadOnlyStatusChangeListener listener) {
         if (readOnlyStatusChangeListeners == null) {
-            readOnlyStatusChangeListeners = new LinkedList();
+            readOnlyStatusChangeListeners = new LinkedList<ReadOnlyStatusChangeListener>();
         }
         readOnlyStatusChangeListeners.add(listener);
     }
@@ -914,7 +921,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
 
     public void addListener(ValueChangeListener listener) {
         if (valueChangeListeners == null) {
-            valueChangeListeners = new LinkedList();
+            valueChangeListeners = new LinkedList<ValueChangeListener>();
         }
         valueChangeListeners.add(listener);
 
