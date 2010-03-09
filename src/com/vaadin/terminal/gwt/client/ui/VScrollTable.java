@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
@@ -2514,7 +2515,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                             showContextMenu(event);
                             break;
                         case Event.ONMOUSEDOWN:
-                            if (dragmode != 0) {
+                            if (dragmode != 0
+                                    && event.getButton() == NativeEvent.BUTTON_LEFT) {
                                 mDown = true;
                                 VTransferable transferable = new VTransferable();
                                 transferable.setDragSource(VScrollTable.this);

@@ -442,7 +442,8 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
             if (dragMode != 0 || dropHandler != null) {
                 if (type == Event.ONMOUSEDOWN) {
                     if (nodeCaptionDiv.isOrHasChild(event.getTarget())) {
-                        if (dragMode > 0) {
+                        if (dragMode > 0
+                                && event.getButton() == NativeEvent.BUTTON_LEFT) {
 
                             ApplicationConnection.getConsole().log(
                                     "TreeNode m down");
