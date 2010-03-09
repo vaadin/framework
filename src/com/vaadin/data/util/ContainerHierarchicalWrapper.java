@@ -181,6 +181,14 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      */
     private void removeFromHierarchyWrapper(Object itemId) {
 
+        LinkedList<Object> oprhanedChildren = children.remove(itemId);
+        if (oprhanedChildren != null) {
+            for (Object object : oprhanedChildren) {
+                // make orphaned children root nodes
+                setParent(object, null);
+            }
+        }
+
         if (isRoot(itemId)) {
             roots.remove(itemId);
         }
@@ -192,7 +200,6 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
             }
         }
         parent.remove(itemId);
-        children.remove(itemId);
         noChildrenAllowed.remove(itemId);
     }
 
