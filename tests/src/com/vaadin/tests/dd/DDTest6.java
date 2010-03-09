@@ -1,7 +1,10 @@
 package com.vaadin.tests.dd;
 
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.ContainerHierarchicalWrapper;
+import com.vaadin.event.Action;
 import com.vaadin.event.DataBoundTransferable;
+import com.vaadin.event.Action.Handler;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptCriteria.AcceptAll;
@@ -75,6 +78,22 @@ public class DDTest6 extends TestBase {
         };
 
         tree1.setDropHandler(dropHandler);
+
+        Handler actionHandler = new Handler() {
+
+            private Action[] actions = new Action[] { new Action("Remove") };
+
+            public void handleAction(Action action, Object sender, Object target) {
+                ContainerHierarchicalWrapper containerDataSource = (ContainerHierarchicalWrapper) tree1
+                        .getContainerDataSource();
+                containerDataSource.removeItemRecursively(target);
+            }
+
+            public Action[] getActions(Object target, Object sender) {
+                return actions;
+            }
+        };
+        tree1.addActionHandler(actionHandler);
 
         l.addComponent(tree1);
 

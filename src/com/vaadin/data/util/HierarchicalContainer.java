@@ -492,29 +492,44 @@ public class HierarchicalContainer extends IndexedContainer implements
     }
 
     /**
-     * Removes the Item identified by ItemId from the Container and all its
-     * children.
+     * Removes the Item identified by given itemId and all its children.
      * 
      * @see #removeItem(Object)
      * @param itemId
-     *            the identifier of the Item to remove
+     *            the identifier of the Item to be removed
      * @return true if the operation succeeded
      */
     public boolean removeItemRecursively(Object itemId) {
+        return removeItemRecursively(this, itemId);
+    }
+
+    /**
+     * Removes the Item identified by given itemId and all its children from the
+     * given Container.
+     * 
+     * @param container
+     *            the container where the item is to be removed
+     * @param itemId
+     *            the identifier of the Item to be removed
+     * @return true if the operation succeeded
+     */
+    public static boolean removeItemRecursively(
+            Container.Hierarchical container, Object itemId) {
         boolean success = true;
-        Collection<Object> children2 = getChildren(itemId);
+        Collection<?> children2 = container.getChildren(itemId);
         if (children2 != null) {
             Object[] array = children2.toArray();
             for (int i = 0; i < array.length; i++) {
-                boolean removeItemRecursively = removeItemRecursively(array[i]);
+                boolean removeItemRecursively = removeItemRecursively(
+                        container, array[i]);
                 if (!removeItemRecursively) {
                     success = false;
                 }
             }
         }
-        boolean removeItem = removeItem(itemId);
-        if (!removeItem) {
-            success = false;
+        // remove the root of subtree if children where succesfully removed
+        if (success) {
+            success = container.removeItem(itemId);
         }
         return success;
 

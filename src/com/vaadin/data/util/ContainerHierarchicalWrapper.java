@@ -518,7 +518,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
 
     /**
      * Removes an Item specified by the itemId from the underlying container and
-     * from the hierarcy.
+     * from the hierarchy.
      * 
      * @param itemId
      *            the ID of the Item to be removed.
@@ -537,6 +537,18 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
         }
 
         return success;
+    }
+
+    /**
+     * Removes the Item identified by given itemId and all its children.
+     * 
+     * @see #removeItem(Object)
+     * @param itemId
+     *            the identifier of the Item to be removed
+     * @return true if the operation succeeded
+     */
+    public boolean removeItemRecursively(Object itemId) {
+        return HierarchicalContainer.removeItemRecursively(this, itemId);
     }
 
     /**
