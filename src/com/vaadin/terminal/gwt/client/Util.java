@@ -43,7 +43,8 @@ public class Util {
      * 
      * Returns the topmost element of from given coordinates.
      * 
-     * TODO fix crossplat issues clientX vs pageX. See quircksmode
+     * TODO fix crossplat issues clientX vs pageX. See quircksmode. Not critical
+     * for vaadin as we scroll div istead of page.
      * 
      * @param x
      * @param y
@@ -849,13 +850,17 @@ public class Util {
 
     /**
      * Helper method to find first instance of given Widget type found by
-     * traversing DOM upwards.
+     * traversing DOM upwards from given element.
      * 
      * @param element
+     *            the element where to start seeking of Widget
      * @param class1
+     *            the Widget type to seek for
      */
-    public static <T> T findWidget(Element element, Class class1) {
+    public static <T> T findWidget(Element element,
+            Class<? extends Widget> class1) {
         if (element != null) {
+            /* First seek for the first EventListener (~Widget) from dom */
             EventListener eventListener = null;
             while (eventListener == null && element != null) {
                 eventListener = Event.getEventListener(element);
@@ -864,6 +869,10 @@ public class Util {
                 }
             }
             if (eventListener != null) {
+                /*
+                 * Then find the first widget of type class1 from widget
+                 * hierarchy
+                 */
                 Widget w = (Widget) eventListener;
                 while (w != null) {
                     if (class1 == null || w.getClass() == class1) {
