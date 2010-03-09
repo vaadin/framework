@@ -25,15 +25,16 @@ public class ReflectTools {
      * @param parameterTypes
      *            The parameter types for the method.
      * @return A reference to the method
+     * @throws ExceptionInInitializerError
+     *             Wraps any exception in an {@link ExceptionInInitializerError}
+     *             so this method can be called from a static initializer.
      */
     public static Method findMethod(Class<?> cls, String methodName,
-            Class<?>... parameterTypes) {
+            Class<?>... parameterTypes) throws ExceptionInInitializerError {
         try {
             return cls.getDeclaredMethod(methodName, parameterTypes);
         } catch (Exception e) {
-            // Print the stack trace as
-            e.printStackTrace(System.err);
+            throw new ExceptionInInitializerError(e);
         }
-        return null;
     }
 }
