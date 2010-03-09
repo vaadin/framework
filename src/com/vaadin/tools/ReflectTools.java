@@ -2,6 +2,13 @@ package com.vaadin.tools;
 
 import java.lang.reflect.Method;
 
+/**
+ * An util class with helpers for reflection operations. Used internally by
+ * Vaadin and should not be used by application developers. Subject to change at
+ * any time.
+ * 
+ * @since 6.2
+ */
 public class ReflectTools {
     /**
      * Locates the method in the given class. Returns null if the method is not
@@ -14,7 +21,7 @@ public class ReflectTools {
      *            The name of the method
      * @param parameterTypes
      *            The parameter types for the method.
-     * @return A method reference or null if the method was not found
+     * @return A reference to the method
      */
     public static Method findMethod(Class<?> cls, String methodName,
             Class<?>... parameterTypes) {
