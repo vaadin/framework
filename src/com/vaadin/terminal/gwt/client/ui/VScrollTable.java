@@ -21,14 +21,11 @@ import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -77,7 +74,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
  * TODO implement unregistering for child components in Cells
  */
 public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
-        VHasDropHandler, ValueChangeHandler<String> {
+        VHasDropHandler {
 
     public static final String CLASSNAME = "v-table";
     public static final String ITEM_CLICK_EVENT_ID = "itemClick";
@@ -173,8 +170,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         rowRequestHandler = new RowRequestHandler();
 
-        // Handle back & forward browser buttons
-        History.addValueChangeHandler(this);
     }
 
     @SuppressWarnings("unchecked")
@@ -1679,6 +1674,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             }
         }
 
+        @Override
+        protected void onDetach() {
+            super.onDetach();
+            client.getContextMenu().ensureHidden(this);
+        }
+
         class VisibleColumnAction extends Action {
 
             String colKey;
@@ -2291,6 +2292,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         paintable.updateFromUIDL(uidl, client);
                     }
                 }
+            }
+
+            @Override
+            protected void onDetach() {
+                super.onDetach();
+                client.getContextMenu().ensureHidden(this);
             }
 
             public String getKey() {
@@ -3292,10 +3299,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             return client;
         }
 
-    }
-
-    public void onValueChange(ValueChangeEvent<String> arg0) {
-        client.getContextMenu().hide();
     }
 
 }

@@ -155,4 +155,15 @@ public class VContextMenu extends VOverlay implements SubPartAware {
             return null;
         }
     }
+
+    /**
+     * Hides context menu if it is currently shown by given action owner.
+     * 
+     * @param actionOwner
+     */
+    public void ensureHidden(ActionOwner actionOwner) {
+        if (this.actionOwner == actionOwner) {
+            hide();
+        }
+    }
 }
