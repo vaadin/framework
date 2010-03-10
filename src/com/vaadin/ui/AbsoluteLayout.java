@@ -341,6 +341,11 @@ public class AbsoluteLayout extends AbstractLayout {
             return zIndex;
         }
 
+        @Override
+        public String toString() {
+            return getCSSString();
+        }
+
     }
 
     @Override

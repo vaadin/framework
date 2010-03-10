@@ -1,23 +1,43 @@
 package com.vaadin.tests.dd;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
+
+import com.google.gwt.dev.util.collect.HashSet;
+import com.vaadin.data.Property;
+import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.ContainerHierarchicalWrapper;
 import com.vaadin.event.Action;
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.Action.Handler;
+import com.vaadin.event.LayoutEvents.LayoutClickEvent;
+import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptCriteria.AcceptAll;
 import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
+import com.vaadin.event.dd.acceptCriteria.IsSameSourceAndTarget;
+import com.vaadin.event.dd.acceptCriteria.Not;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.TestUtils;
+import com.vaadin.ui.AbsoluteLayout;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.DragAndDropWrapper;
+import com.vaadin.ui.Embedded;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.Tree;
+import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
 import com.vaadin.ui.Tree.TreeDragMode;
 import com.vaadin.ui.Tree.TreeDropTargetDetails;
+import com.vaadin.ui.Tree.TreeTransferable;
 
 public class DDTest6 extends TestBase {
 
@@ -29,18 +49,27 @@ public class DDTest6 extends TestBase {
 
     private DropHandler dh;
 
+    private static Tree tree1;
+
+    private SplitPanel sp;
+
     private static int count;
+
+    private static DDTest6 instance;
 
     @Override
     protected void setup() {
-        SplitPanel sp = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
+        instance = this; // Note, test only works with single app per server if
+        // get()
+        // not converted to thread local
 
+        sp = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
+        sp.setSplitPosition(20);
         CssLayout l = new CssLayout();
         sp.setFirstComponent(l);
-        CssLayout l2 = new CssLayout();
-        sp.setSecondComponent(l2);
 
-        final Tree tree1 = new Tree("Volume 1");
+        tree1 = new Tree("Volume 1");
+        tree1.setImmediate(true);
 
         BeanItemContainer<File> fs1 = new BeanItemContainer<File>(File.class);
         tree1.setContainerDataSource(fs1);
@@ -66,14 +95,22 @@ public class DDTest6 extends TestBase {
             }
 
             public void drop(DragAndDropEvent dropEvent) {
-                DataBoundTransferable transferable = (DataBoundTransferable) dropEvent
-                        .getTransferable();
+                File file = null;
+                Folder folder = null;
                 TreeDropTargetDetails dropTargetData = (TreeDropTargetDetails) dropEvent
                         .getDropTargetDetails();
+                folder = (Folder) dropTargetData.getItemIdInto();
+                if (dropEvent.getTransferable() instanceof DataBoundTransferable) {
+                    DataBoundTransferable transferable = (DataBoundTransferable) dropEvent
+                            .getTransferable();
+                    file = (File) transferable.getItemId();
+                } else if (dropEvent.getTransferable().getSourceComponent() instanceof FileIcon) {
+                    FileIcon draggedIcon = (FileIcon) dropEvent
+                            .getTransferable().getSourceComponent();
+                    file = draggedIcon.file;
 
-                tree1.setParent(transferable.getItemId(), dropTargetData
-                        .getItemIdInto());
-
+                }
+                setParent(file, folder);
             }
         };
 
@@ -95,7 +132,21 @@ public class DDTest6 extends TestBase {
         };
         tree1.addActionHandler(actionHandler);
 
+        tree1.addListener(new Property.ValueChangeListener() {
+            public void valueChange(ValueChangeEvent event) {
+                Object value = event.getProperty().getValue();
+                if (value != null && !(value instanceof Folder)) {
+                    value = tree1.getParent(value);
+                }
+                FolderView folderView = FolderView.get((Folder) value);
+                sp.setSecondComponent(folderView);
+                folderView.reload();
+            }
+        });
+
         l.addComponent(tree1);
+
+        sp.setSecondComponent(FolderView.get(null));
 
         getLayout().setSizeFull();
         getLayout().addComponent(sp);
@@ -103,6 +154,7 @@ public class DDTest6 extends TestBase {
                 .injectCSS(
                         getLayout().getWindow(),
                         ""
+                                + ".v-tree .v-icon {height:16px;} "
                                 + ".v-tree-node-caption-drag-top {/*border-top: none;*/} "
                                 + ".v-tree-node-caption-drag-bottom {border-bottom: none ;} "
                                 + ".v-tree-node-caption-drag-center {background-color: transparent;}"
@@ -111,9 +163,9 @@ public class DDTest6 extends TestBase {
     }
 
     private final static ThemeResource FOLDER = new ThemeResource(
-            "../runo/icons/16/folder.png");
+            "../runo/icons/64/folder.png");
     private final static ThemeResource DOC = new ThemeResource(
-            "../runo/icons/16/document.png");
+            "../runo/icons/64/document.png");
 
     public static class File {
         private Resource icon = DOC;
@@ -159,4 +211,190 @@ public class DDTest6 extends TestBase {
         return 119;
     }
 
+    static class FolderView extends DragAndDropWrapper implements DropHandler {
+
+        static final HashMap<Folder, FolderView> views = new HashMap<Folder, FolderView>();
+
+        public static FolderView get(Folder f) {
+
+            FolderView folder2 = views.get(f);
+            if (folder2 == null) {
+                folder2 = new FolderView(f);
+                views.put(f, folder2);
+            }
+            return folder2;
+        }
+
+        private Folder folder;
+        private AbsoluteLayout l;
+        private int x;
+        private int y;
+
+        private FolderView(Folder f) {
+            super(new AbsoluteLayout());
+            l = (AbsoluteLayout) getCompositionRoot();
+            setSizeFull();
+            l.setSizeFull();
+            folder = f;
+
+            setDropHandler(this);
+        }
+
+        @Override
+        public void attach() {
+            reload();
+            super.attach();
+        }
+
+        void reload() {
+            Collection<?> children = folder == null ? DDTest6.get().tree1
+                    .rootItemIds() : DDTest6.get().tree1.getChildren(folder);
+            if (children == null) {
+                l.removeAllComponents();
+                return;
+            } else {
+                // make modifiable
+                children = new HashSet<Object>(children);
+            }
+            Set<Component> removed = new HashSet<Component>();
+            for (Iterator<Component> componentIterator = l
+                    .getComponentIterator(); componentIterator.hasNext();) {
+                FileIcon next = (FileIcon) componentIterator.next();
+                if (!children.contains(next.file)) {
+                    removed.add(next);
+                } else {
+                    children.remove(next.file);
+                }
+            }
+
+            for (Component component : removed) {
+                l.removeComponent(component);
+            }
+
+            for (Object object : children) {
+                FileIcon fileIcon = new FileIcon((File) object);
+                l.addComponent(fileIcon);
+                ComponentPosition position = l.getPosition(fileIcon);
+                position.setTop((y++ / 5) % 5 * 100, UNITS_PIXELS);
+                position.setLeft(x++ % 5 * 100, UNITS_PIXELS);
+            }
+
+        }
+
+        public void drop(DragAndDropEvent dropEvent) {
+
+            if (dropEvent.getTransferable().getSourceComponent() instanceof FileIcon) {
+                // update the position
+
+                DragAndDropWrapper.WrapperTransferable transferable = (WrapperTransferable) dropEvent
+                        .getTransferable();
+                MouseEventDetails mouseDownEvent = transferable
+                        .getMouseDownEvent();
+
+                WrapperDropDetails dropTargetDetails = (WrapperDropDetails) dropEvent
+                        .getDropTargetDetails();
+                MouseEventDetails mouseEvent = dropTargetDetails
+                        .getMouseEvent();
+
+                int deltaX = mouseEvent.getClientX()
+                        - mouseDownEvent.getClientX();
+                int deltaY = mouseEvent.getClientY()
+                        - mouseDownEvent.getClientY();
+
+                ComponentPosition position = l.getPosition(transferable
+                        .getSourceComponent());
+                position.setTop(position.getTopValue() + deltaY, UNITS_PIXELS);
+                position
+                        .setLeft(position.getLeftValue() + deltaX, UNITS_PIXELS);
+
+            } else if (dropEvent.getTransferable().getSourceComponent() == tree1) {
+
+                // dragged something from tree to the folder shown
+
+                File draggedFile = (File) ((TreeTransferable) dropEvent
+                        .getTransferable()).getItemId();
+                DDTest6.get().setParent(draggedFile, folder);
+            }
+        }
+
+        public AcceptCriterion getAcceptCriterion() {
+            return AcceptAll.get();
+        }
+
+    }
+
+    static class FileIcon extends DragAndDropWrapper {
+        private final File file;
+        private CssLayout l;
+
+        public FileIcon(final File file) {
+            super(new CssLayout());
+            l = (CssLayout) getCompositionRoot();
+            setWidth(null);
+            l.setWidth(null);
+            setDragStartMode(DragStartMode.WRAPPER); // drag all contained
+            // components, not just the
+            // one on it started
+            this.file = file;
+            Resource icon2 = file.getIcon();
+            String name = file.getName();
+            l.addComponent(new Embedded(null, icon2));
+            l.addComponent(new Label(name));
+
+            l.addListener(new LayoutClickListener() {
+                public void layoutClick(LayoutClickEvent event) {
+                    if (file instanceof Folder) {
+                        if (event.isDoubleClick()) {
+                            get().tree1.setValue(file);
+                        }
+
+                    }
+
+                }
+            });
+
+            if (file instanceof Folder) {
+
+                setDropHandler(new DropHandler() {
+
+                    public AcceptCriterion getAcceptCriterion() {
+                        return new Not(IsSameSourceAndTarget.get());
+                    }
+
+                    public void drop(DragAndDropEvent dropEvent) {
+                        File f = null;
+
+                        if (dropEvent.getTransferable().getSourceComponent() instanceof FileIcon) {
+                            FileIcon new_name = (FileIcon) dropEvent
+                                    .getTransferable().getSourceComponent();
+                            f = new_name.file;
+                        } else if (dropEvent.getTransferable()
+                                .getSourceComponent() == tree1) {
+                            f = (File) ((DataBoundTransferable) dropEvent
+                                    .getTransferable()).getItemId();
+                        }
+                        // TODO accept drags from Tree too
+
+                        if (f != null) {
+                            get().setParent(f, (Folder) FileIcon.this.file);
+                        }
+
+                    }
+                });
+
+            }
+        }
+    }
+
+    static DDTest6 get() {
+        return instance;
+    }
+
+    public void setParent(File file, Folder newParent) {
+        tree1.setParent(file, newParent);
+        if (sp.getSecondComponent() instanceof FolderView) {
+            FolderView view = (FolderView) sp.getSecondComponent();
+            view.reload();
+        }
+    }
 }

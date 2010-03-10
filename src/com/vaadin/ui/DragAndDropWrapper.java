@@ -5,8 +5,8 @@ package com.vaadin.ui;
 
 import java.util.Map;
 
-import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.Transferable;
+import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.dd.DragSource;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
@@ -98,7 +98,18 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
     }
 
     public enum DragStartMode {
-        NONE, COMPONENT, WRAPPER
+        /**
+         * {@link DragAndDropWrapper} does not start drag events at all
+         */
+        NONE,
+        /**
+         * The component on which the drag started will be shown as drag image.
+         */
+        COMPONENT,
+        /**
+         * The whole wrapper is used as a drag image when dragging.
+         */
+        WRAPPER
     }
 
     private DragStartMode dragStartMode = DragStartMode.NONE;

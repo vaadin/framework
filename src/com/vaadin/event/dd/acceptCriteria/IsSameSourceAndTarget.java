@@ -21,6 +21,11 @@ import com.vaadin.ui.Component;
 @ClientCriterion(VSourceIsSameAsTarget.class)
 public class IsSameSourceAndTarget extends ClientSideCriterion {
 
+    private static IsSameSourceAndTarget instance;
+
+    private IsSameSourceAndTarget() {
+    }
+
     public boolean accepts(DragAndDropEvent dragEvent) {
         if (dragEvent.getTransferable() instanceof TransferableImpl) {
             Component sourceComponent = ((TransferableImpl) dragEvent
@@ -30,6 +35,13 @@ public class IsSameSourceAndTarget extends ClientSideCriterion {
         }
 
         return false;
+    }
+
+    public static IsSameSourceAndTarget get() {
+        if (instance == null) {
+            instance = new IsSameSourceAndTarget();
+        }
+        return instance;
     }
 
 }

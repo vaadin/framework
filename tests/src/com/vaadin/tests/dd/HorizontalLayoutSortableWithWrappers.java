@@ -2,8 +2,8 @@ package com.vaadin.tests.dd;
 
 import java.util.Iterator;
 
-import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.Transferable;
+import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
@@ -11,8 +11,8 @@ import com.vaadin.event.dd.DropTargetDetails;
 import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptCriteria.And;
 import com.vaadin.event.dd.acceptCriteria.DropTargetDetailEquals;
-import com.vaadin.event.dd.acceptCriteria.Not;
 import com.vaadin.event.dd.acceptCriteria.IsSameSourceAndTarget;
+import com.vaadin.event.dd.acceptCriteria.Not;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.HorizontalLayout;
@@ -52,8 +52,8 @@ public class HorizontalLayoutSortableWithWrappers extends Window {
 
     private DropHandler dh = new DropHandler() {
         AcceptCriterion crit = new And(new DropTargetDetailEquals(
-                "horizontalLocation", "LEFT"), new Not(
-                new IsSameSourceAndTarget()));
+                "horizontalLocation", "LEFT"), new Not(IsSameSourceAndTarget
+                .get()));
 
         public AcceptCriterion getAcceptCriterion() {
             return crit;
