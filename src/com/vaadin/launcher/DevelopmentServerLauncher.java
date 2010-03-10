@@ -40,8 +40,8 @@ public class DevelopmentServerLauncher {
         final String url = runServer(serverArgs, "Development Server Mode");
 
         // Start Browser
-        System.out.println("Starting Web Browser.");
         if (!serverArgs.containsKey("nogui") && url != null) {
+            System.out.println("Starting Web Browser.");
 
             // Open browser into application URL
             BrowserLauncher.openBrowser(url);
