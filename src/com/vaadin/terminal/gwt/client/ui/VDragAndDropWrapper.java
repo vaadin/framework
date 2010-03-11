@@ -5,6 +5,7 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.Map;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
@@ -28,8 +29,10 @@ import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
 import com.vaadin.terminal.gwt.client.ui.dd.VDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VHtml5DragEvent;
+import com.vaadin.terminal.gwt.client.ui.dd.VHtml5File;
 import com.vaadin.terminal.gwt.client.ui.dd.VTransferable;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
+import com.vaadin.terminal.gwt.client.ui.dd.VHtml5File.Callback;
 
 /**
  * 
@@ -50,8 +53,6 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         addDomHandler(new MouseDownHandler() {
             public void onMouseDown(MouseDownEvent event) {
                 if (dragStarMode > 0) {
-                    // TODO should support drag mode WRAPPER too, now works for
-                    // COMPONENT
                     VTransferable transferable = new VTransferable();
                     transferable.setDragSource(VDragAndDropWrapper.this);
 
@@ -87,6 +88,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     private final static int COMPONENT = 1;
     private final static int WRAPPER = 2;
     private int dragStarMode;
+    private int filecounter = 0;
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -186,6 +188,43 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             }
         }
 
+        int fileCount = event.getFileCount();
+        if (fileCount > 0) {
+            transferable.setData("filecount", fileCount);
+            for (int i = 0; i < fileCount; i++) {
+                final int fileId = filecounter++;
+                final VHtml5File file = event.getFile(fileCount);
+                transferable.setData("fn" + fileId, file.getName());
+                transferable.setData("ft" + fileId, file.getType());
+                transferable.setData("fs" + fileId, file.getSize());
+                DeferredCommand.addCommand(new Command() {
+                    public void execute() {
+                        /*
+                         * File contents is sent deferred to allow quick
+                         * reaction on GUI although file upload may last long.
+                         * TODO make this use apache file upload instead of our
+                         * variable post like in upload. Currently stalls the
+                         * GUI during upload. Also need to use dataurl to
+                         * support all possible bytes in file content
+                         */
+                        file.readAsDataUrl(new Callback() {
+                            public void handleFile(JavaScriptObject object) {
+                                client.updateVariable(client
+                                        .getPid(VDragAndDropWrapper.this),
+                                        "file" + fileId, object.toString(),
+                                        true);
+
+                            }
+                        });
+
+                    }
+                });
+            }
+
+        }
+
+        // TODO remove this when above cleaner and more standard compliance
+        // system works
         String fileAsString = event.getFileAsString(0);
         if (fileAsString != null) {
             ApplicationConnection.getConsole().log(fileAsString);
