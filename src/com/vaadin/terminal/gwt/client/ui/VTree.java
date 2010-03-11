@@ -24,6 +24,7 @@ import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.ui.dd.DDUtil;
 import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCallback;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
@@ -270,7 +271,7 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
         if (treeNode == null) {
             return null;
         }
-        VerticalDropLocation verticalDropLocation = VerticalDropLocation.get(
+        VerticalDropLocation verticalDropLocation = DDUtil.getVerticalDropLocation(
                 treeNode.nodeCaptionDiv, event.getClientY(), 0.2);
         return verticalDropLocation;
     }

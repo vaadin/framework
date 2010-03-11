@@ -19,6 +19,7 @@ import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
+import com.vaadin.terminal.gwt.client.ui.dd.DDUtil;
 import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCallback;
@@ -325,12 +326,12 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     }-*/;
 
     public void updateDropDetails(VDragEvent drag) {
-        verticalDropLocation = VerticalDropLocation.get(getElement(), drag
-                .getCurrentGwtEvent().getClientY(), 0.2);
+        verticalDropLocation = DDUtil.getVerticalDropLocation(getElement(),
+                drag.getCurrentGwtEvent().getClientY(), 0.2);
         drag.getDropDetails().put("verticalLocation",
                 verticalDropLocation.toString());
-        horizontalDropLocation = HorizontalDropLocation.get(getElement(), drag
-                .getCurrentGwtEvent().getClientX(), 0.2);
+        horizontalDropLocation = DDUtil.getHorizontalDropLocation(getElement(),
+                drag.getCurrentGwtEvent().getClientX(), 0.2);
         drag.getDropDetails().put("horizontalLocation",
                 horizontalDropLocation.toString());
     }

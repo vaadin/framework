@@ -42,6 +42,7 @@ import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.VScrollTable.VScrollTableBody.VScrollTableRow;
+import com.vaadin.terminal.gwt.client.ui.dd.DDUtil;
 import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCallback;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
@@ -3202,7 +3203,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 int childIndex = DOM.getChildIndex(tr, element);
                 dropDetails.colkey = tHead.getHeaderCell(childIndex)
                         .getColKey();
-                dropDetails.dropLocation = VerticalDropLocation.get(row
+                dropDetails.dropLocation = DDUtil.getVerticalDropLocation(row
                         .getElement(), drag.getCurrentGwtEvent().getClientY(),
                         0.2);
             }
