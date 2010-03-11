@@ -2800,8 +2800,9 @@ public class Table extends AbstractSelect implements Action.Container,
                 return;
             }
         }
-        // ensure that page still has first item in page
-        setCurrentPageFirstItemIndex(getCurrentPageFirstItemIndex());
+        // ensure that page still has first item in page, ignore buffer refresh
+        // (forced in this method)
+        setCurrentPageFirstItemIndex(getCurrentPageFirstItemIndex(), false);
 
         resetPageBuffer();
         refreshRenderedCells();
