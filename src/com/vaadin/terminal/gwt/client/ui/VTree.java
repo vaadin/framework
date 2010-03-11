@@ -731,6 +731,12 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                 fixWidth();
             }
         }
+
+        @Override
+        protected void onDetach() {
+            super.onDetach();
+            client.getContextMenu().ensureHidden(this);
+        }
     }
 
     public VDropHandler getDropHandler() {
