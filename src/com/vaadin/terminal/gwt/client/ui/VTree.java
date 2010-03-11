@@ -483,5 +483,11 @@ public class VTree extends FlowPanel implements Paintable {
                 fixWidth();
             }
         }
+
+        @Override
+        protected void onDetach() {
+            super.onDetach();
+            client.getContextMenu().ensureHidden(this);
+        }
     }
 }
