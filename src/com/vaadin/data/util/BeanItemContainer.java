@@ -258,7 +258,9 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     public BeanItem<BT> addItemAfter(Object previousItemId, Object newItemId)
             throws UnsupportedOperationException {
         // only add if the previous item is visible
-        if (containsId(previousItemId)) {
+        if (previousItemId == null) {
+            return addItemAtInternalIndex(0, newItemId);
+        } else if (containsId(previousItemId)) {
             return addItemAtInternalIndex(allItems.indexOf(previousItemId) + 1,
                     newItemId);
         } else {
