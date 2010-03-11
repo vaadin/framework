@@ -325,7 +325,7 @@ public final class VDebugConsole extends VOverlay implements Console {
 
         HTML html = new HTML(msg);
         html.getElement().getStyle().setProperty("color", "#f00");
-        html.getElement().getStyle().setProperty("font-weight", "bold");
+        html.getElement().getStyle().setProperty("fontWeight", "bold");
         panel.add(html);
         System.err.println(msg);
         consoleErr(msg);
