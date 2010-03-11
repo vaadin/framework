@@ -8,14 +8,11 @@ import java.util.Stack;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -30,8 +27,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 
 public class VMenuBar extends Widget implements Paintable,
-CloseHandler<PopupPanel>, ContainerResizedListener,
-ValueChangeHandler<String> {
+CloseHandler<PopupPanel>, ContainerResizedListener {
 
     /** Set the CSS class name to allow styling. */
     public static final String CLASSNAME = "v-menubar";
@@ -80,8 +76,6 @@ ValueChangeHandler<String> {
 
         if (!subMenu) {
             setStylePrimaryName(CLASSNAME);
-            // Monitor back&forward buttons
-            History.addValueChangeHandler(this);
         } else {
             setStylePrimaryName(CLASSNAME + "-submenu");
         }
@@ -115,7 +109,7 @@ ValueChangeHandler<String> {
         if (client.updateComponent(this, uidl, true)) {
             return;
         }
-        this.enabled = !uidl.getBooleanAttribute("disabled");
+        enabled = !uidl.getBooleanAttribute("disabled");
 
         // For future connections
         this.client = client;
@@ -395,6 +389,16 @@ ValueChangeHandler<String> {
                 itemOut(targetItem);
                 break;
             }
+        }
+    }
+
+    @Override
+    protected void onDetach() {
+        super.onDetach();
+        if (!subMenu) {
+            setSelected(null);
+            hideChildren();
+            menuVisible = false;
         }
     }
 
@@ -870,14 +874,5 @@ ValueChangeHandler<String> {
             }
         }
         return w;
-    }
-
-    public void onValueChange(ValueChangeEvent<String> arg0) {
-        // Close menu if user uses back & forward buttons #4109
-        if (!subMenu) {
-            setSelected(null);
-            hideChildren();
-            menuVisible = false;
-        }
     }
 }
