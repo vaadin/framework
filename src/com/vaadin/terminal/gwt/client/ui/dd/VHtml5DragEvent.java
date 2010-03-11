@@ -9,6 +9,7 @@ import com.google.gwt.dom.client.NativeEvent;
 /**
  * Helper class to access html5 style drag events.
  * 
+ * TODO Gears support ?
  */
 public class VHtml5DragEvent extends NativeEvent {
     protected VHtml5DragEvent() {
@@ -50,4 +51,15 @@ public class VHtml5DragEvent extends NativeEvent {
     /*-{
             return this.dataTransfer.effectAllowed;
      }-*/;
+
+    public final native int getFileCount()
+    /*-{
+            return this.dataTransfer.files ? this.dataTransfer.files.length : 0;
+     }-*/;
+
+    public final native VHtml5File getFile(int fileIndex)
+    /*-{
+            return this.dataTransfer.files[i];
+     }-*/;
+
 }

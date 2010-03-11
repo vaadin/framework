@@ -4,6 +4,7 @@
 package com.vaadin.ui;
 
 import java.util.Map;
+import java.util.Set;
 
 import com.vaadin.event.Transferable;
 import com.vaadin.event.TransferableImpl;
@@ -18,6 +19,7 @@ import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper;
 import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
+import com.vaadin.ui.Upload.Receiver;
 
 @ClientWidget(VDragAndDropWrapper.class)
 public class DragAndDropWrapper extends CustomComponent implements DropTarget,
@@ -46,6 +48,39 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
          */
         public MouseEventDetails getMouseDownEvent() {
             return MouseEventDetails.deSerialize((String) getData("mouseDown"));
+        }
+
+        public Html5File[] getFiles() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        public class Html5File {
+
+            public String getFileName() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+
+            // public int getFileSize() {
+            // // TODO Auto-generated method stub
+            // return 0;
+            // }
+
+            /**
+             * HTML5 drags are read from client disk with a callback. This and
+             * possibly long transfer time forces us to receive dragged file
+             * contents with a callback.
+             * 
+             * @param receiver
+             *            the callback that returns stream where the
+             *            implementation writes the file contents as it arrives.
+             */
+            public void receive(Receiver receiver) {
+                // TODO Auto-generated method stub
+
+            }
+
         }
 
     }
@@ -158,5 +193,15 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
 
     public DragStartMode getDragStartMode() {
         return dragStartMode;
+    }
+
+    @Override
+    public void changeVariables(Object source, Map<String, Object> variables) {
+        super.changeVariables(source, variables);
+
+        Set<String> keySet = variables.keySet();
+        for (String string : keySet) {
+            // TODO get files
+        }
     }
 }
