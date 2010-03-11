@@ -438,12 +438,15 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
 
         updateShadowSizeAndPosition();
 
+        boolean sizeReduced = false;
         // ensure window is not larger than browser window
         if (getOffsetWidth() > Window.getClientWidth()) {
             setWidth(Window.getClientWidth() + "px");
+            sizeReduced = true;
         }
         if (getOffsetHeight() > Window.getClientHeight()) {
             setHeight(Window.getClientHeight() + "px");
+            sizeReduced = true;
         }
 
         if (dynamicHeight && layoutRelativeHeight) {
@@ -459,6 +462,12 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
 
             client.updateVariable(id, "height", h, false);
             client.updateVariable(id, "width", w, true);
+        }
+
+        if (sizeReduced) {
+            // If we changed the size we need to update the size of the child
+            // component if it is relative (#3407)
+            client.runDescendentsLayout(this);
         }
 
         Util.runWebkitOverflowAutoFix(contentPanel.getElement());
