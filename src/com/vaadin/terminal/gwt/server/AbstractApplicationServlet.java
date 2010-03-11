@@ -1081,12 +1081,12 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
     /**
      * Check if this is a request for a static resource and, if it is, serve the
-     * resource to the client. Returns true if a file was served and the request
-     * has been handled, false otherwise.
+     * resource to the client.
      * 
      * @param request
      * @param response
-     * @return
+     * @return true if a file was served and the request has been handled, false
+     *         otherwise.
      * @throws IOException
      * @throws ServletException
      */
@@ -1101,12 +1101,13 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
         if ((request.getContextPath() != null)
                 && (request.getRequestURI().startsWith("/VAADIN/"))) {
-            serveStaticResourcesInVAADIN(request.getRequestURI(), response);
+            serveStaticResourcesInVAADIN(request.getRequestURI(), request,
+                    response);
             return true;
         } else if (request.getRequestURI().startsWith(
                 request.getContextPath() + "/VAADIN/")) {
             serveStaticResourcesInVAADIN(request.getRequestURI().substring(
-                    request.getContextPath().length()), response);
+                    request.getContextPath().length()), request, response);
             return true;
         }
 
@@ -1116,24 +1117,27 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     /**
      * Serve resources from VAADIN directory.
      * 
+     * @param filename
+     *            The filename to serve. Should always start with /VAADIN/.
      * @param request
      * @param response
      * @throws IOException
      * @throws ServletException
      */
     private void serveStaticResourcesInVAADIN(String filename,
-            HttpServletResponse response) throws IOException, ServletException {
+            HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
 
         final ServletContext sc = getServletContext();
-        InputStream is = sc.getResourceAsStream(filename);
-        if (is == null) {
+        URL resourceUrl = sc.getResource(filename);
+        if (resourceUrl == null) {
             // try if requested file is found from classloader
 
             // strip leading "/" otherwise stream from JAR wont work
             filename = filename.substring(1);
-            is = getClassLoader().getResourceAsStream(filename);
+            resourceUrl = getClassLoader().getResource(filename);
 
-            if (is == null) {
+            if (resourceUrl == null) {
                 // cannot serve requested file
                 System.err
                         .println("Requested resource ["
@@ -1144,16 +1148,95 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 return;
             }
         }
+
+        // Find the modification timestamp
+        long lastModifiedTime = 0;
+        try {
+            lastModifiedTime = resourceUrl.openConnection().getLastModified();
+            // Remove milliseconds to avoid comparison problems (milliseconds
+            // are not returned by the browser in the "If-Modified-Since"
+            // header).
+            lastModifiedTime = lastModifiedTime - lastModifiedTime % 1000;
+
+            if (browserHasNewestVersion(request, lastModifiedTime)) {
+                response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+                return;
+            }
+        } catch (Exception e) {
+            // Failed to find out last modified timestamp. Continue without it.
+            e.printStackTrace();
+        }
+
+        // Set type mime type if we can determine it based on the filename
         final String mimetype = sc.getMimeType(filename);
         if (mimetype != null) {
             response.setContentType(mimetype);
         }
+
+        // Provide modification timestamp to the browser if it is known.
+        if (lastModifiedTime > 0) {
+            response.setDateHeader("Last-Modified", lastModifiedTime);
+            /*
+             * The browser is allowed to cache for 5 minutes without checking if
+             * the file has changed. This forces browsers to fetch a new version
+             * when the Vaadin version is updated. This will cause more requests
+             * to the servlet than without this but for high volume sites the
+             * static files should never be served through the servlet.
+             */
+            response.setHeader("Cache-Control", "max-age: 900");
+        }
+
+        // Write the resource to the client.
         final OutputStream os = response.getOutputStream();
         final byte buffer[] = new byte[DEFAULT_BUFFER_SIZE];
         int bytes;
+        InputStream is = resourceUrl.openStream();
         while ((bytes = is.read(buffer)) >= 0) {
             os.write(buffer, 0, bytes);
         }
+        is.close();
+    }
+
+    /**
+     * Checks if the browser has an up to date cached version of requested
+     * resource. Currently the check is performed using the "If-Modified-Since"
+     * header. Could be expanded if needed.
+     * 
+     * @param request
+     *            The HttpServletRequest from the browser.
+     * @param resourceLastModifiedTimestamp
+     *            The timestamp when the resource was last modified. 0 if the
+     *            last modification time is unknown.
+     * @return true if the If-Modified-Since header tells the cached version in
+     *         the browser is up to date, false otherwise
+     */
+    private boolean browserHasNewestVersion(HttpServletRequest request,
+            long resourceLastModifiedTimestamp) {
+        if (resourceLastModifiedTimestamp < 1) {
+            // We do not know when it was modified so the browser cannot have an
+            // up-to-date version
+            return false;
+        }
+        /*
+         * The browser can request the resource conditionally using an
+         * If-Modified-Since header. Check this against the last modification
+         * time.
+         */
+        try {
+            // If-Modified-Since represents the timestamp of the version cached
+            // in the browser
+            long headerIfModifiedSince = request
+                    .getDateHeader("If-Modified-Since");
+
+            if (headerIfModifiedSince >= resourceLastModifiedTimestamp) {
+                // Browser has this an up-to-date version of the resource
+                return true;
+            }
+        } catch (Exception e) {
+            // Failed to parse header. Fail silently - the browser does not have
+            // an up-to-date version in its cache.
+        }
+        return false;
     }
 
     enum RequestType {
