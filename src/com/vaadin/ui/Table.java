@@ -3340,7 +3340,15 @@ public class Table extends AbstractSelect implements Action.Container,
         requestRepaint();
     }
 
-    class TableTransferable extends DataBoundTransferable {
+    /**
+     * Concrete implementation of {@link DataBoundTransferable} for data
+     * transferred from a table.
+     * 
+     * @see {@link DataBoundTransferable}.
+     * 
+     * @since 6.3
+     */
+    protected class TableTransferable extends DataBoundTransferable {
 
         public TableTransferable(Map<String, Object> rawVariables) {
             super(Table.this, rawVariables);
@@ -3357,6 +3365,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         @Override
         public Object getPropertyId() {
+            // FIXME incorrect implementation, drag can also concern a cell
             return getItemCaptionPropertyId();
         }
 

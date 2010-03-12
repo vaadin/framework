@@ -139,10 +139,10 @@ public class DDTest2 extends TestBase {
                 DataBoundTransferable tr = (DataBoundTransferable) event
                         .getTransferable();
                 Object itemId = tr.getItemId();
-                Container sourceContainer = (Container) tr.getSourceComponent();
-                if (sourceContainer != tree1) {
+                Container sourceContainer = tr.getSourceContainer();
+                if (tr.getSourceComponent() != tree1) {
                     // if the source is from table (not from tree1 itself),
-                    // transfer Name property and use it as an indentifier in
+                    // transfer Name property and use it as an identifier in
                     // tree1
                     String name = sourceContainer.getItem(itemId)
                             .getItemProperty("Name").toString();

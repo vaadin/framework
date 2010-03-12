@@ -37,7 +37,6 @@ import com.vaadin.ui.Tree;
 import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
 import com.vaadin.ui.Tree.TreeDragMode;
 import com.vaadin.ui.Tree.TreeDropTargetDetails;
-import com.vaadin.ui.Tree.TreeTransferable;
 
 public class DDTest6 extends TestBase {
 
@@ -311,7 +310,7 @@ public class DDTest6 extends TestBase {
 
                 // dragged something from tree to the folder shown
 
-                File draggedFile = (File) ((TreeTransferable) dropEvent
+                File draggedFile = (File) ((DataBoundTransferable) dropEvent
                         .getTransferable()).getItemId();
                 DDTest6.get().setParent(draggedFile, folder);
             }

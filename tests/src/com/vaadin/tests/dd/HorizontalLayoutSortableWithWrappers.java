@@ -96,7 +96,7 @@ public class HorizontalLayoutSortableWithWrappers extends Window {
     };
 
     public HorizontalLayoutSortableWithWrappers() {
-        setCaption("Horizontally sortable layout via (ddwrappers):Try sorting blocks by draggin them");
+        setCaption("Horizontally sortable layout via (ddwrappers): Try sorting blocks by dragging them");
         DragAndDropWrapper pane = new DragAndDropWrapper(layout);
         setContent(pane);
         pane.setSizeFull();

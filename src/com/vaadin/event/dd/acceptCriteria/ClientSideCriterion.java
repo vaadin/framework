@@ -13,6 +13,11 @@ import com.vaadin.terminal.PaintTarget;
  * All classes that provide criteria that can be completely validated on client
  * side should extend this class.
  * 
+ * It is recommended that subclasses of ClientSideCriterion re-validate the
+ * condition on the server side in
+ * {@link AcceptCriterion#accepts(com.vaadin.event.dd.DragAndDropEvent)} after
+ * the client side validation has accepted a transfer.
+ * 
  * @since 6.3
  */
 public abstract class ClientSideCriterion implements Serializable,

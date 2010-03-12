@@ -62,9 +62,7 @@ public class AcceptAnythingWindow extends Window {
 
                         } else {
                             // we have a component that is been dragged, add
-                            // it
-                            // to
-                            // this
+                            // it to this
                             layout.addComponent(component);
                         }
 

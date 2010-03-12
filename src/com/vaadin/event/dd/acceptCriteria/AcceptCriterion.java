@@ -15,20 +15,36 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 
 /**
- * TODO Javadoc
+ * Criterion that can be used create policy to accept/discard dragged content
+ * (presented by {@link Transferable}).
+ * 
+ * The drag and drop mechanism will verify the criteria returned by
+ * {@link DropHandler#getAcceptCriterion()} before calling
+ * {@link DropHandler#drop(DragAndDropEvent)}.
+ * 
+ * The criteria can be evaluated either on the client (browser - see
+ * {@link ClientSideCriterion}) or on the server (see
+ * {@link ServerSideCriterion}). If no constraints are needed, an
+ * {@link AcceptAll} can be used.
+ * 
+ * In addition to accepting or rejecting a possible drop, criteria can provide
+ * additional hints for client side painting.
+ * 
+ * @see DropHandler
+ * @see ClientSideCriterion
+ * @see ServerSideCriterion
  * 
  * @since 6.3
- * 
  */
 public interface AcceptCriterion extends Serializable {
 
     /**
-     * Criterion that can be used create policy to accept/discard dragged
-     * content (presented by {@link Transferable}).
+     * Returns whether the criteria can be checked on the client or whether a
+     * server request is needed to check the criteria.
      * 
-     * May depend on state, like in OR or AND, so to be really
-     * ClientSideVerifiable needs to return true here (instead of just
-     * implementing marker interface).
+     * This requirement may depend on the state of the criterion (e.g. logical
+     * operations between criteria), so this cannot be based on a marker
+     * interface.
      */
     public boolean isClientSideVerifiable();
 
@@ -46,11 +62,11 @@ public interface AcceptCriterion extends Serializable {
     public void paintResponse(PaintTarget target) throws PaintException;
 
     /**
-     * Validates the data in event to be approriate for
+     * Validates the data in event to be appropriate for
      * {@link DropHandler#drop(com.vaadin.event.dd.DropEvent)} method.
      * <p>
-     * Note, that event if your criterion is matched on client side, it is a
-     * very good manner to validate the data on server side too.
+     * Note that even if your criterion is matched on client side, it is a very
+     * good manner to validate the data on server side too.
      * 
      * @param dragEvent
      * @return

@@ -10,7 +10,7 @@ import com.vaadin.ui.Component;
 /**
  * DropTarget is an interface for components supporting drop operations. A
  * component that wants to receive drop events should implement this interface
- * and provide a DropHandler which will handle the actual drop event.
+ * and provide a {@link DropHandler} which will handle the actual drop event.
  * 
  * @since 6.3
  */

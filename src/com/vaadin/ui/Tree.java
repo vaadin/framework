@@ -1220,11 +1220,14 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     /**
-     * TODO Javadoc!
+     * Concrete implementation of {@link DataBoundTransferable} for data
+     * transferred from a tree.
+     * 
+     * @see {@link DataBoundTransferable}.
      * 
      * @since 6.3
      */
-    public class TreeTransferable extends DataBoundTransferable {
+    protected class TreeTransferable extends DataBoundTransferable {
 
         public TreeTransferable(Component sourceComponent,
                 Map<String, Object> rawVariables) {

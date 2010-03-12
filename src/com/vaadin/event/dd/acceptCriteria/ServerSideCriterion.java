@@ -5,15 +5,27 @@ package com.vaadin.event.dd.acceptCriteria;
 
 import java.io.Serializable;
 
+import com.vaadin.event.Transferable;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.dd.VServerAccept;
 
 /**
- * TODO Javadoc
+ * Parent class for criteria that are verified on the server side during a drag
+ * operation to accept/discard dragged content (presented by
+ * {@link Transferable}).
+ * 
+ * Subclasses should implement the
+ * {@link AcceptCriterion#accepts(com.vaadin.event.dd.DragAndDropEvent)} method.
+ * 
+ * As all server side state can be used to make a decision, this is more
+ * flexible than {@link ClientSideCriterion}. However, this does require
+ * additional requests from the browser to the server during a drag operation.
+ * 
+ * @see AcceptCriterion
+ * @see ClientSideCriterion
  * 
  * @since 6.3
- * 
  */
 @ClientCriterion(VServerAccept.class)
 public abstract class ServerSideCriterion implements Serializable,
