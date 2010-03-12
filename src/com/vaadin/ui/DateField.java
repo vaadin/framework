@@ -120,12 +120,6 @@ public class DateField extends AbstractField implements
      */
     private String dateFormat;
 
-    /**
-     * Read-only content of an VTextualDate field - null for other types of date
-     * fields.
-     */
-    private String dateString;
-
     private boolean lenient = false;
 
     /* Constructors */
@@ -280,15 +274,13 @@ public class DateField extends AbstractField implements
 
             // Old and new dates
             final Date oldDate = (Date) getValue();
-            final String oldDateString = dateString;
             Date newDate = null;
 
             // this enables analyzing invalid input on the server
             Object o = variables.get("dateString");
+            String dateString = null;
             if (o != null) {
                 dateString = o.toString();
-            } else {
-                dateString = null;
             }
 
             // Gets the new date in parts
@@ -348,9 +340,22 @@ public class DateField extends AbstractField implements
                 newDate = cal.getTime();
             }
 
-            if (newDate == null && dateString != null && !"".equals(dateString)
-                    && !dateString.equals(oldDateString)) {
-                setValue(handleUnparsableDateString(dateString));
+            if (newDate == null && dateString != null && !"".equals(dateString)) {
+                try {
+                    setValue(handleUnparsableDateString(dateString));
+                    /*
+                     * Ensure the value is sent to the client if the value is
+                     * set to the same as the previous (#4304). Does not repaint
+                     * if handleUnparsableDateString throws an exception. In
+                     * this case the invalid text remains in the DateField.
+                     */
+                    requestRepaint();
+                } catch (ConversionException e) {
+                    // FIXME: Should not throw the exception but set an error
+                    // message for the field. And should retain the entered
+                    // value.
+                    throw e;
+                }
             } else if (newDate != oldDate
                     && (newDate == null || !newDate.equals(oldDate))) {
                 setValue(newDate, true); // Don't require a repaint, client
