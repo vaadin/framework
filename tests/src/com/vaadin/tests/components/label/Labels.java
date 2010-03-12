@@ -21,12 +21,12 @@ public class Labels extends ComponentTestCase {
         super.setup();
 
         Label l;
-        l = createLabel("This is an undefined wide label which do not wrap. It should be clipped at the end of the screen"
+        l = createLabel("This is an undefined\nwide\nlabel               which do not wrap. It should be clipped at the end of the screen"
                 + LoremIpsum.get(1000));
         l.setWidth(null);
         addTestComponent(l);
 
-        l = createLabel("This is a 200px wide simple label which wrap");
+        l = createLabel("This is a 200px wide simple label which\n\n\nwrap");
         l.setWidth("200px");
         addTestComponent(l);
 
@@ -35,14 +35,14 @@ public class Labels extends ComponentTestCase {
         l.setWidth("100%");
         addTestComponent(l);
 
-        l = createLabel("This is a 100% wide simple with fixed 65px height. It should wrap. "
+        l = createLabel("This is a\n\n     100%\t\t\t   \twide simple with fixed 65px height. It should wrap. "
                 + LoremIpsum.get(5000));
         l.setWidth("100%");
         l.setHeight("65px");
         addTestComponent(l);
 
         l = createLabel(
-                "<div style='border: 1px solid red'><h1>Hello</h1><p/><h2>I am a rich Label</h3></div>",
+                "<div style='border: 1px solid red'><h1>Hello\n\n\n</h1><p/><h2>I am a rich Label</h3></div>",
                 "This is an XHTML label with rich content");
         l.setContentMode(Label.CONTENT_XHTML);
         addTestComponent(l);
