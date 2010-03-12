@@ -60,6 +60,13 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
         }
         calendarToggle.setEnabled(enabled);
 
+        // not a FocusWidget -> needs own tabindex handling
+        if (uidl.hasAttribute("tabindex")) {
+            // Set the same tab index as for the textfield. Tabbing then works
+            // as expected.
+            calendarToggle.setTabIndex(uidl.getIntAttribute("tabindex"));
+        }
+
         if (lastReadOnlyState != readonly) {
             updateWidth();
         }
