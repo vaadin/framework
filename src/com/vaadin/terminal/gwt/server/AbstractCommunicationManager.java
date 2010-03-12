@@ -62,6 +62,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.server.ComponentSizeValidator.InvalidLayout;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Upload.UploadException;
@@ -359,6 +360,7 @@ public abstract class AbstractCommunicationManager implements
      */
     protected void doHandleFileUpload(Request request, Response response)
             throws IOException, FileUploadException {
+
         // Create a new file upload handler
         final FileUpload upload = createFileUpload();
 
@@ -386,22 +388,6 @@ public abstract class AbstractCommunicationManager implements
                 if (item.isFormField()) {
                     // ignored, upload requests contains only files
                 } else {
-                    int separatorPos = name.lastIndexOf("_");
-                    final String pid = name.substring(0, separatorPos);
-                    final Upload uploadComponent = (Upload) idPaintableMap
-                            .get(pid);
-                    if (uploadComponent == null) {
-                        throw new FileUploadException(
-                                "Upload component not found");
-                    }
-                    if (uploadComponent.isReadOnly()) {
-                        throw new FileUploadException(
-                                "Warning: ignored file upload because upload component is set as read-only");
-                    }
-                    synchronized (application) {
-                        // put upload component into receiving state
-                        uploadComponent.startUpload();
-                    }
                     final UploadStream upstream = new UploadStream() {
 
                         public String getContentName() {
@@ -422,22 +408,55 @@ public abstract class AbstractCommunicationManager implements
 
                     };
 
-                    // tell UploadProgressListener which component is receiving
-                    // file
-                    pl.setUpload(uploadComponent);
+                    if (name.startsWith("XHRFILE")) {
+                        String[] split = item.getFieldName().substring(7)
+                                .split("\\.");
+                        DragAndDropWrapper ddw = (DragAndDropWrapper) idPaintableMap
+                                .get(split[0]);
+                        
+                        ddw.receiveFile(upstream, split[1]);
 
-                    try {
-                        uploadComponent.receiveUpload(upstream);
-                    } catch (UploadException e) {
-                        // error happened while receiving file. Handle the
-                        // error in the same manner as it would have happened in
-                        // variable change.
+                        String debugId = ddw.getDebugId();
+
+                    } else {
+
+                        int separatorPos = name.lastIndexOf("_");
+                        final String pid = name.substring(0, separatorPos);
+                        final Upload uploadComponent = (Upload) idPaintableMap
+                                .get(pid);
+                        if (uploadComponent == null) {
+                            throw new FileUploadException(
+                                    "Upload component not found");
+                        }
+                        if (uploadComponent.isReadOnly()) {
+                            throw new FileUploadException(
+                                    "Warning: ignored file upload because upload component is set as read-only");
+                        }
                         synchronized (application) {
-                            handleChangeVariablesError(application,
-                                    uploadComponent, e,
-                                    new HashMap<String, Object>());
+                            // put upload component into receiving state
+                            uploadComponent.startUpload();
+                        }
+
+                        // tell UploadProgressListener which component is
+                        // receiving
+                        // file
+                        pl.setUpload(uploadComponent);
+
+                        try {
+                            uploadComponent.receiveUpload(upstream);
+                        } catch (UploadException e) {
+                            // error happened while receiving file. Handle the
+                            // error in the same manner as it would have
+                            // happened in
+                            // variable change.
+                            synchronized (application) {
+                                handleChangeVariablesError(application,
+                                        uploadComponent, e,
+                                        new HashMap<String, Object>());
+                            }
                         }
                     }
+
                 }
             }
         } catch (final FileUploadException e) {

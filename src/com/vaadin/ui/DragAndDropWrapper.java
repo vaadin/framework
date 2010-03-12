@@ -3,8 +3,11 @@
  */
 package com.vaadin.ui;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import com.vaadin.event.Transferable;
 import com.vaadin.event.TransferableImpl;
@@ -15,10 +18,13 @@ import com.vaadin.event.dd.DropTargetDetails;
 import com.vaadin.event.dd.DropTargetDetailsImpl;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.UploadStream;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper;
 import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
+import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
+import com.vaadin.ui.DragAndDropWrapper.WrapperTransferable.Html5File;
 import com.vaadin.ui.Upload.Receiver;
 
 @ClientWidget(VDragAndDropWrapper.class)
@@ -27,9 +33,24 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
 
     public class WrapperTransferable extends TransferableImpl {
 
+        private Html5File[] files;
+
         public WrapperTransferable(Component sourceComponent,
                 Map<String, Object> rawVariables) {
             super(sourceComponent, rawVariables);
+            Integer fc = (Integer) rawVariables.get("filecount");
+            if (fc != null) {
+                files = new Html5File[fc];
+                for (int i = 0; i < fc; i++) {
+                    Html5File file = new Html5File();
+                    String id = (String) rawVariables.get("fi" + i);
+                    file.name = (String) rawVariables.get("fn" + i);
+                    file.size = (Integer) rawVariables.get("fs" + i);
+                    file.type = (String) rawVariables.get("ft" + i);
+                    files[i] = file;
+                    receivers.put(id, file);
+                }
+            }
         }
 
         /**
@@ -51,21 +72,28 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         }
 
         public Html5File[] getFiles() {
-            // TODO Auto-generated method stub
-            return null;
+            return files;
         }
 
         public class Html5File {
 
+            public String name;
+            private String id;
+            private int size;
+            private Receiver receiver;
+            private String type;
+
             public String getFileName() {
-                // TODO Auto-generated method stub
-                return null;
+                return name;
             }
 
-            // public int getFileSize() {
-            // // TODO Auto-generated method stub
-            // return 0;
-            // }
+            public int getFileSize() {
+                return size;
+            }
+
+            public String getType() {
+                return type;
+            }
 
             /**
              * HTML5 drags are read from client disk with a callback. This and
@@ -77,13 +105,14 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
              *            implementation writes the file contents as it arrives.
              */
             public void receive(Receiver receiver) {
-                // TODO Auto-generated method stub
-
+                this.receiver = receiver;
             }
 
         }
 
     }
+
+    private Map<String, Html5File> receivers = new HashMap<String, Html5File>();
 
     public class WrapperDropDetails extends DropTargetDetailsImpl {
 
@@ -195,13 +224,34 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         return dragStartMode;
     }
 
-    @Override
-    public void changeVariables(Object source, Map<String, Object> variables) {
-        super.changeVariables(source, variables);
+    /**
+     * This method should only be used by Vaadin terminal implementation. This
+     * is not end user api.
+     * 
+     * TODO should fire progress events + end/succes events like upload
+     * 
+     * @param upstream
+     * @param fileId
+     */
+    public void receiveFile(UploadStream upstream, String fileId) {
+        Html5File file = receivers.get(fileId);
+        if (file != null && file.receiver != null) {
+            OutputStream receiveUpload = file.receiver.receiveUpload(file
+                    .getFileName(), "TODO");
 
-        Set<String> keySet = variables.keySet();
-        for (String string : keySet) {
-            // TODO get files
+            InputStream stream = upstream.getStream();
+            byte[] buf = new byte[AbstractApplicationServlet.MAX_BUFFER_SIZE];
+            int bytesRead;
+            try {
+                while ((bytesRead = stream.read(buf)) != -1) {
+                    receiveUpload.write(buf, 0, bytesRead);
+                }
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
         }
+
     }
 }

@@ -14,17 +14,17 @@ public class VHtml5File extends JavaScriptObject {
 
     public native final String getName()
     /*-{
-        return name;
+        return this.name;
      }-*/;
 
     public native final String getType()
     /*-{
-        return type;
+        return this.type;
      }-*/;
 
     public native final int getSize()
     /*-{
-        return size;
+        return this.size;
     }-*/;
 
     public native final void readAsBinary(final Callback callback)
@@ -33,7 +33,9 @@ public class VHtml5File extends JavaScriptObject {
         r.onloadend = function(content) {
             callback.@com.vaadin.terminal.gwt.client.ui.dd.VHtml5File.Callback::handleFile(Lcom/google/gwt/core/client/JavaScriptObject;)(content);
         };
-        r.readAsBinary(this);
+        r.readAsBinaryString(this);
+        var j = 0;
+        
     }-*/;
 
     public native final void readAsDataUrl(final Callback callback)

@@ -1,5 +1,9 @@
 package com.vaadin.tests.dd;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,7 +26,9 @@ import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptCriteria.IsSameSourceAndTarget;
 import com.vaadin.event.dd.acceptCriteria.Not;
 import com.vaadin.terminal.Resource;
+import com.vaadin.terminal.StreamResource;
 import com.vaadin.terminal.ThemeResource;
+import com.vaadin.terminal.StreamResource.StreamSource;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.TestUtils;
@@ -34,9 +40,12 @@ import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.Tree;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
+import com.vaadin.ui.DragAndDropWrapper.WrapperTransferable.Html5File;
 import com.vaadin.ui.Tree.TreeDragMode;
 import com.vaadin.ui.Tree.TreeDropTargetDetails;
+import com.vaadin.ui.Upload.Receiver;
 
 public class DDTest6 extends TestBase {
 
@@ -51,6 +60,8 @@ public class DDTest6 extends TestBase {
     private static Tree tree1;
 
     private SplitPanel sp;
+
+    private BeanItemContainer<File> fs1;
 
     private static int count;
 
@@ -70,7 +81,7 @@ public class DDTest6 extends TestBase {
         tree1 = new Tree("Volume 1");
         tree1.setImmediate(true);
 
-        BeanItemContainer<File> fs1 = new BeanItemContainer<File>(File.class);
+        fs1 = new BeanItemContainer<File>(File.class);
         tree1.setContainerDataSource(fs1);
         for (int i = 0; i < files.length; i++) {
             fs1.addBean(files[i]);
@@ -169,9 +180,16 @@ public class DDTest6 extends TestBase {
     public static class File {
         private Resource icon = DOC;
         private String name;
+        private ByteArrayOutputStream bas;
+        private String type;
 
         public File(String fileName) {
             name = fileName;
+        }
+
+        public File(String fileName, ByteArrayOutputStream bas) {
+            this(fileName);
+            this.bas = bas;
         }
 
         public void setIcon(Resource icon) {
@@ -189,6 +207,28 @@ public class DDTest6 extends TestBase {
         public String getName() {
             return name;
         }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public Resource getResource() {
+            StreamSource streamSource = new StreamSource() {
+                public InputStream getStream() {
+                    if (bas != null) {
+                        byte[] byteArray = bas.toByteArray();
+                        return new ByteArrayInputStream(byteArray);
+                    }
+                    // TODO Auto-generated method stub
+                    return null;
+                }
+            };
+            return new StreamResource(streamSource, getName(), DDTest6.get());
+        }
     }
 
     public static class Folder extends File {
@@ -202,12 +242,22 @@ public class DDTest6 extends TestBase {
 
     @Override
     protected String getDescription() {
-        return "dd: tree and web desktop tests. TODO add traditional icon area on right side with DragAndDropWrapper and absolutelayouts + more files, auto-opening folders";
+        return "dd: tree and web desktop tests. FF36 supports draggin files from client side. (try dragging png image + double click) TODO more files, auto-opening folders";
     }
 
     @Override
     protected Integer getTicketNumber() {
         return 119;
+    }
+
+    private void openFile(File file) {
+        // ATM supports only images.
+
+        Embedded embedded = new Embedded(file.getName(), file.getResource());
+        Window w = new Window(file.getName());
+        w.addComponent(embedded);
+        getMainWindow().addWindow(w);
+
     }
 
     static class FolderView extends DragAndDropWrapper implements DropHandler {
@@ -313,6 +363,35 @@ public class DDTest6 extends TestBase {
                 File draggedFile = (File) ((DataBoundTransferable) dropEvent
                         .getTransferable()).getItemId();
                 DDTest6.get().setParent(draggedFile, folder);
+            } else {
+                // expecting this to be an html5 drag
+                WrapperTransferable tr = (WrapperTransferable) dropEvent
+                        .getTransferable();
+                Html5File[] files2 = tr.getFiles();
+                if (files2 != null) {
+                    for (Html5File html5File : files2) {
+                        String fileName = html5File.getFileName();
+                        // int bytes = html5File.getFileSize();
+                        final ByteArrayOutputStream bas = new ByteArrayOutputStream();
+
+                        Receiver receiver = new Receiver() {
+                            public OutputStream receiveUpload(String filename,
+                                    String MIMEType) {
+                                return bas;
+                            }
+                        };
+
+                        html5File.receive(receiver);
+
+                        File file = new File(fileName, bas);
+                        file.setType(html5File.getType());
+                        DDTest6.get().fs1.addBean(file);
+                        DDTest6.get().tree1.setChildrenAllowed(file, false);
+                        DDTest6.get().setParent(file, folder);
+                    }
+
+                }
+
             }
         }
 
@@ -342,11 +421,15 @@ public class DDTest6 extends TestBase {
 
             l.addListener(new LayoutClickListener() {
                 public void layoutClick(LayoutClickEvent event) {
-                    if (file instanceof Folder) {
-                        if (event.isDoubleClick()) {
+                    if (event.isDoubleClick()) {
+                        if (file instanceof Folder) {
                             get().tree1.setValue(file);
+                        } else {
+                            String type = file.getType();
+                            if (type != null && type.equals("image/png")) {
+                                DDTest6.get().openFile(file);
+                            }
                         }
-
                     }
 
                 }
@@ -372,7 +455,6 @@ public class DDTest6 extends TestBase {
                             f = (File) ((DataBoundTransferable) dropEvent
                                     .getTransferable()).getItemId();
                         }
-                        // TODO accept drags from Tree too
 
                         if (f != null) {
                             get().setParent(f, (Folder) FileIcon.this.file);

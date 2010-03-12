@@ -59,7 +59,7 @@ public class VHtml5DragEvent extends NativeEvent {
 
     public final native VHtml5File getFile(int fileIndex)
     /*-{
-            return this.dataTransfer.files[i];
+            return this.dataTransfer.files[fileIndex];
      }-*/;
 
 }

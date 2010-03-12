@@ -13,6 +13,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.xhr.client.XMLHttpRequest;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
@@ -193,42 +194,14 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             transferable.setData("filecount", fileCount);
             for (int i = 0; i < fileCount; i++) {
                 final int fileId = filecounter++;
-                final VHtml5File file = event.getFile(fileCount);
-                transferable.setData("fn" + fileId, file.getName());
-                transferable.setData("ft" + fileId, file.getType());
-                transferable.setData("fs" + fileId, file.getSize());
-                DeferredCommand.addCommand(new Command() {
-                    public void execute() {
-                        /*
-                         * File contents is sent deferred to allow quick
-                         * reaction on GUI although file upload may last long.
-                         * TODO make this use apache file upload instead of our
-                         * variable post like in upload. Currently stalls the
-                         * GUI during upload. Also need to use dataurl to
-                         * support all possible bytes in file content
-                         */
-                        file.readAsDataUrl(new Callback() {
-                            public void handleFile(JavaScriptObject object) {
-                                client.updateVariable(client
-                                        .getPid(VDragAndDropWrapper.this),
-                                        "file" + fileId, object.toString(),
-                                        true);
-
-                            }
-                        });
-
-                    }
-                });
+                final VHtml5File file = event.getFile(i);
+                transferable.setData("fi" + i, "" + fileId);
+                transferable.setData("fn" + i, file.getName());
+                transferable.setData("ft" + i, file.getType());
+                transferable.setData("fs" + i, file.getSize());
+                postFile(fileId, file);
             }
 
-        }
-
-        // TODO remove this when above cleaner and more standard compliance
-        // system works
-        String fileAsString = event.getFileAsString(0);
-        if (fileAsString != null) {
-            ApplicationConnection.getConsole().log(fileAsString);
-            transferable.setData("fileContents", fileAsString);
         }
 
         VDragAndDropManager.get().endDrag();
@@ -238,6 +211,97 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
         return false;
     }
+
+    static class ExtendedXHR extends XMLHttpRequest {
+
+        protected ExtendedXHR() {
+        }
+
+        public final native void sendBinary(JavaScriptObject data)
+        /*-{
+            //this.overrideMimeType('text/plain; charset=x-user-defined-binary');
+            this.sendAsBinary(data);
+        }-*/;
+
+    }
+
+    /**
+     * 
+     * Currently supports only FF36 as no other browser supprots natively File
+     * api.
+     * 
+     * @param fileId
+     * @param data
+     */
+    private void postFile(final int fileId, final VHtml5File file) {
+        DeferredCommand.addCommand(new Command() {
+            public void execute() {
+                /*
+                 * File contents is sent deferred to allow quick reaction on GUI
+                 * although file upload may last long. TODO make this use apache
+                 * file upload instead of our variable post like in upload.
+                 * Currently stalls the GUI during upload. Also need to use
+                 * dataurl to support all possible bytes in file content
+                 */
+                file.readAsBinary(new Callback() {
+                    public void handleFile(final JavaScriptObject object) {
+
+                        DeferredCommand.addCommand(new Command() {
+
+                            public void execute() {
+
+                                ExtendedXHR extendedXHR = (ExtendedXHR) ExtendedXHR
+                                        .create();
+                                extendedXHR.open("POST", client.getAppUri());
+                                extendedXHR
+                                        .setRequestHeader(
+                                                "PaintableId",
+                                                client
+                                                        .getPid(VDragAndDropWrapper.this));
+                                extendedXHR.setRequestHeader("FileId", ""
+                                        + fileId);
+
+                                // extendedXHR.setRequestHeader("Connection",
+                                // "close");
+
+                                multipartSend(
+                                        extendedXHR,
+                                        object,
+                                        "XHRFILE"
+                                                + client
+                                                        .getPid(VDragAndDropWrapper.this)
+                                                + "." + fileId);
+
+                            }
+                        });
+                    }
+                });
+
+            }
+        });
+
+    }
+
+    private native void multipartSend(JavaScriptObject xhr,
+            JavaScriptObject data, String name)
+    /*-{
+     
+        var boundaryString = "------------------------------------------VAADINXHRFILEUPLOAD";
+        var boundary = "--" + boundaryString;
+        var CRLF = "\r\n";
+        xhr.setRequestHeader("Content-type", "multipart/form-data; boundary=\"" + boundaryString + "\"");
+        var requestBody = boundary
+                + CRLF
+                + "Content-Disposition: form-data; name=\""+name+"\"; filename=\"file\""
+                + CRLF
+                + "Content-Type: application/octet-stream" // hard coded, type sent separately
+                + CRLF + CRLF + data.target.result + CRLF + boundary + "--" + CRLF;
+        xhr.setRequestHeader("Content-Length", requestBody.length);
+        
+        
+        xhr.sendAsBinary(requestBody);
+         
+     }-*/;
 
     public VDropHandler getDropHandler() {
         return dropHandler;
