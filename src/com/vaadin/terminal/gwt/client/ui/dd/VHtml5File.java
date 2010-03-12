@@ -30,8 +30,8 @@ public class VHtml5File extends JavaScriptObject {
     public native final void readAsBinary(final Callback callback)
     /*-{
         var r = new FileReader();
-        r.onloadend = function(v) {
-            callback@com.vaadin.terminal.gwt.client.ui.dd.VHtml5File.Callback::handleFile(Lcom/google/gwt/core/client/JavaScriptObject)(v);
+        r.onloadend = function(content) {
+            callback.@com.vaadin.terminal.gwt.client.ui.dd.VHtml5File.Callback::handleFile(Lcom/google/gwt/core/client/JavaScriptObject;)(content);
         };
         r.readAsBinary(this);
     }-*/;
@@ -39,8 +39,8 @@ public class VHtml5File extends JavaScriptObject {
     public native final void readAsDataUrl(final Callback callback)
     /*-{
         var r = new FileReader();
-        r.onloadend = function(v) {
-            callback@com.vaadin.terminal.gwt.client.ui.dd.VHtml5File.Callback::handleFile(Lcom/google/gwt/core/client/JavaScriptObject)(v);
+        r.onloadend = function(content) {
+            callback.@com.vaadin.terminal.gwt.client.ui.dd.VHtml5File.Callback::handleFile(Lcom/google/gwt/core/client/JavaScriptObject;)(content);
         };
         r.readAsDataURL(this);
     }-*/;
