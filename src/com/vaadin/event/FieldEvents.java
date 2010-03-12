@@ -8,7 +8,11 @@ import java.lang.reflect.Method;
 
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Field;
 
+/**
+ * Interface that serves as a wrapper for {@link Field} related events.
+ */
 public interface FieldEvents {
 
     /**
@@ -95,8 +99,6 @@ public interface FieldEvents {
      */
     public class FocusEvent extends Component.Event {
 
-        private static final long serialVersionUID = -7644184999481404162L;
-
         public FocusEvent(Component source) {
             super(source);
         }
@@ -130,8 +132,6 @@ public interface FieldEvents {
      * @since 6.2
      */
     public class BlurEvent extends Component.Event {
-
-        private static final long serialVersionUID = -7644184999481404162L;
 
         public BlurEvent(Component source) {
             super(source);
