@@ -82,8 +82,9 @@ public class VTextualDate extends VDateField implements Paintable, Field,
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         int origRes = currentResolution;
+        String oldLocale = currentLocale;
         super.updateFromUIDL(uidl, client);
-        if (origRes != currentResolution) {
+        if (origRes != currentResolution || oldLocale != currentLocale) {
             // force recreating format string
             formatStr = null;
         }
