@@ -1807,9 +1807,11 @@ public abstract class AbstractSelect extends AbstractField implements
          * 
          */
         public VerticalDropLocation getDropLocation() {
-            VerticalDropLocation valueOf = VerticalDropLocation
-                    .valueOf((String) getData("detail"));
-            return valueOf;
+            String detail = (String) getData("detail");
+            if (detail == null) {
+                return null;
+            }
+            return VerticalDropLocation.valueOf(detail);
         }
 
     }
