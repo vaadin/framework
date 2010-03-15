@@ -26,6 +26,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 import com.vaadin.ui.DragAndDropWrapper.WrapperTransferable.Html5File;
 import com.vaadin.ui.Upload.Receiver;
+import com.vaadin.ui.Upload.UploadException;
 
 @ClientWidget(VDragAndDropWrapper.class)
 public class DragAndDropWrapper extends CustomComponent implements DropTarget,
@@ -75,10 +76,14 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
             return files;
         }
 
+        /**
+         * {@link DragAndDropWrapper} can receive also files from client
+         * computer if appropriate HTML 5 features are supported on client side.
+         * This class wraps information about dragged file on server side.
+         */
         public class Html5File {
 
             public String name;
-            private String id;
             private int size;
             private Receiver receiver;
             private String type;
@@ -96,15 +101,20 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
             }
 
             /**
-             * HTML5 drags are read from client disk with a callback. This and
-             * possibly long transfer time forces us to receive dragged file
-             * contents with a callback.
+             * Sets the {@link Receiver} that into which the file contents will
+             * be written. Usage of Reveiver is similar to {@link Upload}
+             * component.
+             * 
+             * <p>
+             * <em>Note!</em> receiving file contents is experimental feature
+             * depending on HTML 5 API's. It is supported only by Firefox 3.6 at
+             * this time.
              * 
              * @param receiver
              *            the callback that returns stream where the
              *            implementation writes the file contents as it arrives.
              */
-            public void receive(Receiver receiver) {
+            public void setReceiver(Receiver receiver) {
                 this.receiver = receiver;
             }
 
@@ -178,6 +188,12 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
 
     private DragStartMode dragStartMode = DragStartMode.NONE;
 
+    /**
+     * Wraps given component in a {@link DragAndDropWrapper}.
+     * 
+     * @param root
+     *            the component to be wrapped
+     */
     public DragAndDropWrapper(Component root) {
         super(root);
     }
@@ -228,12 +244,15 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
      * This method should only be used by Vaadin terminal implementation. This
      * is not end user api.
      * 
-     * TODO should fire progress events + end/succes events like upload
+     * TODO should fire progress events + end/succes events like upload. Not
+     * critical until we have a wider browser support for HTML5 File API
      * 
      * @param upstream
      * @param fileId
+     * @throws UploadException
      */
-    public void receiveFile(UploadStream upstream, String fileId) {
+    public void receiveFile(UploadStream upstream, String fileId)
+            throws UploadException {
         Html5File file = receivers.get(fileId);
         if (file != null && file.receiver != null) {
             OutputStream receiveUpload = file.receiver.receiveUpload(file
@@ -247,10 +266,10 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
                     receiveUpload.write(buf, 0, bytesRead);
                 }
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                throw new UploadException(e);
             }
-
+            // clean up the reference when file is downloaded
+            receivers.remove(fileId);
         }
 
     }

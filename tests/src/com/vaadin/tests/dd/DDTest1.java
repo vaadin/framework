@@ -15,7 +15,6 @@ import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.DragDropPane;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
@@ -58,42 +57,41 @@ public class DDTest1 extends TestBase {
         DragDropPane pane2 = new DragDropPane();
         pane2
                 .setCaption("Pane2 (accept needs server side visit, check for \"Bar\")");
-        DropHandler dropHandler = new DragDropPane.ImportPrettyMuchAnything() {
-            private final AcceptCriterion crit = new ServerSideCriterion() {
-                public boolean accepts(DragAndDropEvent dragEvent) {
-                    Transferable transferable = dragEvent.getTransferable();
-                    // System.out.println("Simulating 500ms processing...");
-                    // try {
-                    // Thread.sleep(200);
-                    // } catch (InterruptedException e) {
-                    // // TODO Auto-generated catch block
-                    // e.printStackTrace();
-                    // }
-                    // System.out.println("Done get to work.");
+        final AcceptCriterion crit = new ServerSideCriterion() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
 
-                    Component component = (Component) transferable
-                            .getData("component");
-                    if (component == null) {
-                        component = transferable.getSourceComponent();
-                    }
+            public boolean accepts(DragAndDropEvent dragEvent) {
+                Transferable transferable = dragEvent.getTransferable();
+                // System.out.println("Simulating 500ms processing...");
+                // try {
+                // Thread.sleep(200);
+                // } catch (InterruptedException e) {
+                // // TODO Auto-generated catch block
+                // e.printStackTrace();
+                // }
+                // System.out.println("Done get to work.");
 
-                    if (component != null) {
-                        if (component.toString() != null
-                                && component.toString().contains("Bar")) {
-                            return true;
-                        }
-                    }
-                    return false;
+                Component component = (Component) transferable
+                        .getData("component");
+                if (component == null) {
+                    component = transferable.getSourceComponent();
                 }
-            };
 
-            @Override
-            public AcceptCriterion getAcceptCriterion() {
-                return crit;
+                if (component != null) {
+                    if (component.toString() != null
+                            && component.toString().contains("Bar")) {
+                        return true;
+                    }
+                }
+                return false;
             }
-
         };
-        pane2.setDropHandler(dropHandler);
+
+        pane2.setAcceptCriterion(crit);
+
         pane2.setDebugId("pane2");
         pane2.setSizeFull();
 

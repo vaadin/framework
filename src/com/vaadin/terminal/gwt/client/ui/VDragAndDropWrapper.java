@@ -226,7 +226,6 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     }
 
     /**
-     * 
      * Currently supports only FF36 as no other browser supprots natively File
      * api.
      * 
@@ -238,48 +237,27 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             public void execute() {
                 /*
                  * File contents is sent deferred to allow quick reaction on GUI
-                 * although file upload may last long. TODO make this use apache
-                 * file upload instead of our variable post like in upload.
-                 * Currently stalls the GUI during upload. Also need to use
-                 * dataurl to support all possible bytes in file content
+                 * although file upload may last long.
                  */
                 file.readAsBinary(new Callback() {
                     public void handleFile(final JavaScriptObject object) {
 
-                        DeferredCommand.addCommand(new Command() {
+                        ExtendedXHR extendedXHR = (ExtendedXHR) ExtendedXHR
+                                .create();
+                        extendedXHR.open("POST", client.getAppUri());
+                        String name = "XHRFILE" + getPid() + "." + fileId;
+                        multipartSend(extendedXHR, object, name);
 
-                            public void execute() {
-
-                                ExtendedXHR extendedXHR = (ExtendedXHR) ExtendedXHR
-                                        .create();
-                                extendedXHR.open("POST", client.getAppUri());
-                                extendedXHR
-                                        .setRequestHeader(
-                                                "PaintableId",
-                                                client
-                                                        .getPid(VDragAndDropWrapper.this));
-                                extendedXHR.setRequestHeader("FileId", ""
-                                        + fileId);
-
-                                // extendedXHR.setRequestHeader("Connection",
-                                // "close");
-
-                                multipartSend(
-                                        extendedXHR,
-                                        object,
-                                        "XHRFILE"
-                                                + client
-                                                        .getPid(VDragAndDropWrapper.this)
-                                                + "." + fileId);
-
-                            }
-                        });
                     }
                 });
 
             }
         });
 
+    }
+
+    private String getPid() {
+        return client.getPid(this);
     }
 
     private native void multipartSend(JavaScriptObject xhr,

@@ -381,7 +381,7 @@ public class DDTest6 extends TestBase {
                             }
                         };
 
-                        html5File.receive(receiver);
+                        html5File.setReceiver(receiver);
 
                         File file = new File(fileName, bas);
                         file.setType(html5File.getType());

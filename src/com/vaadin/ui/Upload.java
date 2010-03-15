@@ -311,7 +311,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 
     }
 
-    public class UploadException extends Exception {
+    public static class UploadException extends Exception {
         public UploadException(Exception e) {
             super("Upload failed", e);
         }

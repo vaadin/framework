@@ -413,10 +413,15 @@ public abstract class AbstractCommunicationManager implements
                                 .split("\\.");
                         DragAndDropWrapper ddw = (DragAndDropWrapper) idPaintableMap
                                 .get(split[0]);
-                        
-                        ddw.receiveFile(upstream, split[1]);
 
-                        String debugId = ddw.getDebugId();
+                        try {
+                            ddw.receiveFile(upstream, split[1]);
+                        } catch (UploadException e) {
+                            synchronized (application) {
+                                handleChangeVariablesError(application, ddw, e,
+                                        new HashMap<String, Object>());
+                            }
+                        }
 
                     } else {
 
