@@ -216,12 +216,10 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                                 "Change in Transferable " + currentMouseOverKey
                                         + " " + detail);
                         final String newKey = currentMouseOverKey;
-                        if (oldIdOver != null
-                                && oldIdOver != currentMouseOverKey) {
-                            TreeNode treeNode = keyToNode.get(oldIdOver);
-                            if (treeNode != null) {
-                                treeNode.emphasis(null);
-                            }
+                        TreeNode treeNode = keyToNode.get(oldIdOver);
+                        if (treeNode != null) {
+                        	// clear old styles
+                            treeNode.emphasis(null);
                         }
                         validate(new VAcceptCallback() {
                             public void accepted(VDragEvent event) {
@@ -271,8 +269,9 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
         if (treeNode == null) {
             return null;
         }
-        VerticalDropLocation verticalDropLocation = DDUtil.getVerticalDropLocation(
-                treeNode.nodeCaptionDiv, event.getClientY(), 0.2);
+        VerticalDropLocation verticalDropLocation = DDUtil
+                .getVerticalDropLocation(treeNode.nodeCaptionDiv, event
+                        .getClientY(), 0.2);
         return verticalDropLocation;
     }
 
