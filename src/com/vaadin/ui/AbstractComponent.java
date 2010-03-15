@@ -310,6 +310,19 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     /**
      * Sets the locale of this component.
      * 
+     * <pre>
+     * // Component for which the locale is meaningful
+     * InlineDateField date = new InlineDateField("Datum");
+     *         
+     * // German language specified with ISO 639-1 language
+     * // code and ISO 3166-1 alpha-2 country code. 
+     * date.setLocale(new Locale("de", "DE"));
+     *         
+     * date.setResolution(DateField.RESOLUTION_DAY);
+     * layout.addComponent(date);
+     * </pre>
+
+     * 
      * @param locale
      *            the locale to become this component's locale.
      */

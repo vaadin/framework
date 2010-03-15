@@ -12,6 +12,7 @@ import java.util.Locale;
 
 import com.vaadin.Application;
 import com.vaadin.data.Property;
+import com.vaadin.event.FieldEvents;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.Resource;
@@ -34,9 +35,9 @@ import com.vaadin.terminal.VariableOwner;
  * <p>
  * The {@link #getParent()} method allows retrieving the parent component of a
  * component. While there is a {@link #setParent(Component) setParent()}, you
- * rarely need it as you usually add components with the
+ * rarely need it as you normally add components with the
  * {@link ComponentContainer#addComponent(Component) addComponent()} method of
- * the {@code ComponentContainer} interface, which automatically sets the
+ * the layout or other {@code ComponentContainer}, which automatically sets the
  * parent.
  * </p>
  * 
@@ -408,11 +409,16 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
     public void setReadOnly(boolean readOnly);
 
     /**
-     * Gets the caption of the component. See {@link #setCaption(String)} for a
-     * detailed description of the caption.
+     * Gets the caption of the component.
+     * 
+     * <p>
+     * See {@link #setCaption(String)} for a detailed description of the
+     * caption.
+     * </p>
      * 
      * @return the caption of the component or {@code null} if the caption is
      *         not set.
+     * @see #setCaption(String)
      */
     public String getCaption();
 
@@ -458,10 +464,12 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
      * display it inside the component.
      * </p>
      * 
+     * <p>
      * This method will trigger a
      * {@link com.vaadin.terminal.Paintable.RepaintRequestEvent
      * RepaintRequestEvent}. A reimplementation should call the superclass
      * implementation.
+     * </p>
      * 
      * @param caption
      *            the new caption for the component. If the caption is {@code
@@ -471,8 +479,11 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
     public void setCaption(String caption);
 
     /**
-     * Gets the icon of the component. See {@link #setIcon(Resource)} for a
-     * detailed description of the icon.
+     * Gets the icon resource of the component.
+     * 
+     * <p>
+     * See {@link #setIcon(Resource)} for a detailed description of the icon.
+     * </p>
      * 
      * @return the icon resource of the component or {@code null} if the
      *         component has no icon
@@ -563,7 +574,11 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
      * 
      * <p>
      * The method will return {@code null} if the component has not yet been
-     * attached to an application.
+     * attached to an application. This is often a problem in constructors of
+     * regular components and in the initializers of custom composite
+     * components. A standard workaround is to move the problematic
+     * initialization to {@link #attach()}, as described in the documentation of
+     * the method.
      * </p>
      * 
      * @return the parent application of the component or <code>null</code>.
@@ -631,6 +646,8 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
      * <p>
      * The attachment logic is implemented in {@link AbstractComponent}.
      * </p>
+     * 
+     * @see #getApplication()
      */
     public void attach();
 
@@ -652,31 +669,51 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
     public void detach();
 
     /**
-     * Gets the locale of this component.
+     * Gets the locale of the component.
      * 
-     * @return This component's locale. If this component does not have a
-     *         locale, the locale of its parent is returned. Eventually locale
-     *         of application is returned. If application does not have its own
-     *         locale the locale is determined by
-     *         <code>Locale.getDefautlt</code>. Returns null if the component
-     *         does not have its own locale and has not yet been added to a
-     *         containment hierarchy such that the locale can be determined from
-     *         the containing parent.
+     * <p>
+     * If a component does not have a locale set, the locale of its parent is
+     * returned, and so on. Eventually, if no parent has locale set, the locale
+     * of the application is returned. If the application does not have a locale
+     * set, it is determined by <code>Locale.getDefault()</code>.
+     * </p>
+     * 
+     * <p>
+     * As the component must be attached before its locale can be acquired,
+     * using this method in the internationalization of component captions, etc.
+     * is generally not feasible. For such use case, we recommend using an
+     * otherwise acquired reference to the application locale.
+     * </p>
+     * 
+     * @return Locale of this component or {@code null} if the component and
+     *         none of its parents has a locale set and the component is not yet
+     *         attached to an application.
      */
     public Locale getLocale();
 
     /**
-     * The children must call this method when they need repainting. The call
-     * must be made event in the case the children sent the repaint request
-     * themselves.
+     * The child components of the component must call this method when they
+     * need repainting. The call must be made even in the case in which the
+     * children sent the repaint request themselves.
+     * 
+     * <p>
+     * A repaint request is ignored if the component is invisible.
+     * </p>
+     * 
+     * <p>
+     * This method is called automatically by {@link AbstractComponent}, which
+     * also provides a default implementation of it. As this is a somewhat
+     * internal feature, it is rarely necessary to reimplement this or call it
+     * explicitly.
+     * </p>
      * 
      * @param alreadyNotified
      *            the collection of repaint request listeners that have been
      *            already notified by the child. This component should not
-     *            renotify the listed listeners again. The container given as
+     *            re-notify the listed listeners again. The container given as
      *            parameter must be modifiable as the component might modify it
-     *            and pass it forwards. Null parameter is interpreted as empty
-     *            collection.
+     *            and pass it forward. A {@code null} parameter is interpreted
+     *            as an empty collection.
      */
     public void childRequestedRepaint(
                                       Collection<RepaintRequestListener> alreadyNotified);
@@ -684,25 +721,49 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
     /* Component event framework */
 
     /**
-     * Superclass of all component originated <code>Event</code>s.
+     * Superclass of all component originated events.
+     * 
+     * <p>
+     * Events are the basis of all user interaction handling in Vaadin. To
+     * handle events, you provide a listener object that receives the events of
+     * the particular event type.
+     * </p>
+     * 
+     * <pre>
+     * Button button = new Button(&quot;Click Me!&quot;);
+     * button.addListener(new Button.ClickListener() {
+     *     public void buttonClick(ClickEvent event) {
+     *         getWindow().showNotification(&quot;Thank You!&quot;);
+     *     }
+     * });
+     * layout.addComponent(button);
+     * </pre>
+     * 
+     * <p>
+     * Notice that while each of the event types have their corresponding
+     * listener types; the listener interfaces are not required to inherit the
+     * {@code Component.Listener} interface.
+     * </p>
+     * 
+     * @see Component.Listener
      */
     @SuppressWarnings("serial")
     public class Event extends EventObject {
 
         /**
-         * Constructs a new event with a specified source component.
+         * Constructs a new event with the specified source component.
          * 
          * @param source
-         *            the source component of the event.
+         *            the source component of the event
          */
         public Event(Component source) {
             super(source);
         }
 
         /**
-         * Gets the Component where the event occurred.
+         * Gets the component where the event occurred.
          * 
-         * @return the Source of the event.
+         * @return the source component of the event
          */
         public Component getComponent() {
             return (Component) getSource();
@@ -711,11 +772,88 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
 
     /**
      * Listener interface for receiving <code>Component.Event</code>s.
+     * 
+     * <p>
+     * Listener interfaces are the basis of all user interaction handling in
+     * Vaadin. You have or create a listener object that receives the events.
+     * All event types have their corresponding listener types; they are not,
+     * however, required to inherit the {@code Component.Listener} interface,
+     * and they rarely do so.
+     * </p>
+     * 
+     * <p>
+     * This generic listener interface is useful typically when you wish to
+     * handle events from different component types in a single listener method
+     * ({@code componentEvent()}. If you handle component events in an anonymous
+     * listener class, you normally use the component specific listener class,
+     * such as {@link com.vaadin.ui.Button.ClickEvent}.
+     * </p>
+     * 
+     * <pre>
+     * class Listening extends CustomComponent implements Listener {
+     *     Button ok; // Stored for determining the source of an event
+     * 
+     *     Label status; // For displaying info about the event
+     * 
+     *     public Listening() {
+     *         VerticalLayout layout = new VerticalLayout();
+     * 
+     *         // Some miscellaneous component
+     *         TextField name = new TextField(&quot;Say it all here&quot;);
+     *         name.addListener(this);
+     *         name.setImmediate(true);
+     *         layout.addComponent(name);
+     * 
+     *         // Handle button clicks as generic events instead
+     *         // of Button.ClickEvent events
+     *         ok = new Button(&quot;OK&quot;);
+     *         ok.addListener(this);
+     *         layout.addComponent(ok);
+     * 
+     *         // For displaying information about an event
+     *         status = new Label(&quot;&quot;);
+     *         layout.addComponent(status);
+     * 
+     *         setCompositionRoot(layout);
+     *     }
+     * 
+     *     public void componentEvent(Event event) {
+     *         // Act according to the source of the event
+     *         if (event.getSource() == ok &amp;&amp; event.getClass() == Button.ClickEvent.class)
+     *             getWindow().showNotification(&quot;Click!&quot;);
+     * 
+     *         // Display source component and event class names
+     *         status.setValue(&quot;Event from &quot; + event.getSource().getClass().getName() + &quot;: &quot; + event.getClass().getName());
+     *     }
+     * }
+     * 
+     * Listening listening = new Listening();
+     * layout.addComponent(listening);
+     * </pre>
+     * 
+     * @see Component#addListener(Listener)
      */
     public interface Listener extends EventListener, Serializable {
 
         /**
          * Notifies the listener of a component event.
+         * 
+         * <p>
+         * As the event can typically come from one of many source components,
+         * you may need to differentiate between the event source by component
+         * reference, class, etc.
+         * </p>
+         * 
+         * <pre>
+         * public void componentEvent(Event event) {
+         *     // Act according to the source of the event
+         *     if (event.getSource() == ok &amp;&amp; event.getClass() == Button.ClickEvent.class)
+         *         getWindow().showNotification(&quot;Click!&quot;);
+         * 
+         *     // Display source component and event class names
+         *     status.setValue(&quot;Event from &quot; + event.getSource().getClass().getName() + &quot;: &quot; + event.getClass().getName());
+         * }
+         * </pre>
          * 
          * @param event
          *            the event that has occured.
@@ -724,10 +862,54 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
     }
 
     /**
-     * Registers a new component event listener for this component.
+     * Registers a new (generic) component event listener for the component.
+     * 
+     * <pre>
+     * class Listening extends CustomComponent implements Listener {
+     *     // Stored for determining the source of an event
+     *     Button ok;
+     * 
+     *     Label status; // For displaying info about the event
+     * 
+     *     public Listening() {
+     *         VerticalLayout layout = new VerticalLayout();
+     * 
+     *         // Some miscellaneous component
+     *         TextField name = new TextField(&quot;Say it all here&quot;);
+     *         name.addListener(this);
+     *         name.setImmediate(true);
+     *         layout.addComponent(name);
+     * 
+     *         // Handle button clicks as generic events instead
+     *         // of Button.ClickEvent events
+     *         ok = new Button(&quot;OK&quot;);
+     *         ok.addListener(this);
+     *         layout.addComponent(ok);
+     * 
+     *         // For displaying information about an event
+     *         status = new Label(&quot;&quot;);
+     *         layout.addComponent(status);
+     * 
+     *         setCompositionRoot(layout);
+     *     }
+     * 
+     *     public void componentEvent(Event event) {
+     *         // Act according to the source of the event
+     *         if (event.getSource() == ok)
+     *             getWindow().showNotification(&quot;Click!&quot;);
+     * 
+     *         status.setValue(&quot;Event from &quot; + event.getSource().getClass().getName() + &quot;: &quot; + event.getClass().getName());
+     *     }
+     * }
+     * 
+     * Listening listening = new Listening();
+     * layout.addComponent(listening);
+     * </pre>
      * 
      * @param listener
      *            the new Listener to be registered.
+     * @see Component.Event
+     * @see #removeListener(Listener)
      */
     public void addListener(Component.Listener listener);
 
@@ -737,11 +919,19 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
      * 
      * @param listener
      *            the listener to be removed.
+     * @see #addListener(Listener)
      */
     public void removeListener(Component.Listener listener);
 
     /**
-     * Class of all component originated <code>ErrorEvent</code>s.
+     * Class of all component originated error events.
+     * 
+     * <p>
+     * The component error event is normally fired by
+     * {@link AbstractComponent#setComponentError(ErrorMessage)}. The component
+     * errors are set by the framework in some situations and can be set by user
+     * code. They are indicated in a component with an error indicator.
+     * </p>
      */
     @SuppressWarnings("serial")
     public class ErrorEvent extends Event {
@@ -786,30 +976,128 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
     }
 
     /**
-     * Interface implemented by components which can obtain input focus.
+     * A sub-interface implemented by components that can obtain input focus.
+     * This includes all {@link Field} components as well as some other
+     * components, such as {@link Upload}.
+     * 
+     * <p>
+     * Focus can be set with {@link #focus()}. This interface does not provide
+     * an accessor that would allow finding out the currently focused component;
+     * focus information can be acquired for some (but not all) {@link Field}
+     * components through the {@link com.vaadin.event.FieldEvents.FocusListener}
+     * and {@link com.vaadin.event.FieldEvents.BlurListener} interfaces.
+     * </p>
+     * 
+     * @see FieldEvents
      */
     public interface Focusable extends Component {
 
         /**
          * Sets the focus to this component.
+         * 
+         * <pre>
+         * Form loginBox = new Form();
+         * loginBox.setCaption(&quot;Login&quot;);
+         * layout.addComponent(loginBox);
+         * 
+         * // Create the first field which will be focused
+         * TextField username = new TextField(&quot;User name&quot;);
+         * loginBox.addField(&quot;username&quot;, username);
+         * 
+         * // Set focus to the user name
+         * username.focus();
+         * 
+         * TextField password = new TextField(&quot;Password&quot;);
+         * loginBox.addField(&quot;password&quot;, password);
+         * 
+         * Button login = new Button(&quot;Login&quot;);
+         * loginBox.getFooter().addComponent(login);
+         * </pre>
+         * 
+         * <p>
+         * Notice that this interface does not provide an accessor that would
+         * allow finding out the currently focused component. Focus information
+         * can be acquired for some (but not all) {@link Field} components
+         * through the {@link com.vaadin.event.FieldEvents.FocusListener} and
+         * {@link com.vaadin.event.FieldEvents.BlurListener} interfaces.
+         * </p>
+         * 
+         * @see com.vaadin.event.FieldEvents
+         * @see com.vaadin.event.FieldEvents.FocusEvent
+         * @see com.vaadin.event.FieldEvents.FocusListener
+         * @see com.vaadin.event.FieldEvents.BlurEvent
+         * @see com.vaadin.event.FieldEvents.BlurListener
          */
         public void focus();
 
         /**
-         * Gets the Tabulator index of this Focusable component.
+         * Gets the <i>tabulator index</i> of the {@code Focusable} component.
          * 
-         * @return tab index set for this Focusable component
+         * @return tab index set for the {@code Focusable} component
+         * @see #setTabIndex(int)
          */
         public int getTabIndex();
 
         /**
-         * Sets the tab index of this field. The tab index property is used to
-         * specify the natural tab order of fields.
+         * Sets the <i>tabulator index</i> of the {@code Focusable} component.
+         * The tab index property is used to specify the order in which the
+         * fields are focused when the user presses the Tab key. Components with
+         * a defined tab index are focused sequentially first, and then the
+         * components with no tab index.
+         * 
+         * <pre>
+         * Form loginBox = new Form();
+         * loginBox.setCaption(&quot;Login&quot;);
+         * layout.addComponent(loginBox);
+         * 
+         * // Create the first field which will be focused
+         * TextField username = new TextField(&quot;User name&quot;);
+         * loginBox.addField(&quot;username&quot;, username);
+         * 
+         * // Set focus to the user name
+         * username.focus();
+         * 
+         * TextField password = new TextField(&quot;Password&quot;);
+         * loginBox.addField(&quot;password&quot;, password);
+         * 
+         * Button login = new Button(&quot;Login&quot;);
+         * loginBox.getFooter().addComponent(login);
+         * 
+         * // An additional component which natural focus order would
+         * // be after the button.
+         * CheckBox remember = new CheckBox(&quot;Remember me&quot;);
+         * loginBox.getFooter().addComponent(remember);
+         * 
+         * username.setTabIndex(1);
+         * password.setTabIndex(2);
+         * remember.setTabIndex(3); // Different than natural place 
+         * login.setTabIndex(4);
+         * </pre>
+         * 
+         * <p>
+         * After all focusable user interface components are done, the browser
+         * can begin again from the component with the smallest tab index, or it
+         * can take the focus out of the page, for example, to the location bar.
+         * </p>
+         * 
+         * <p>
+         * If the tab index is not set (is set to zero), the default tab order
+         * is used. The order is somewhat browser-dependent, but generally
+         * follows the HTML structure of the page.
+         * </p>
+         * 
+         * <p>
+         * A negative value means that the component is completely removed from
+         * the tabulation order and can not be reached by pressing the Tab key
+         * at all.
+         * </p>
          * 
          * @param tabIndex
          *            the tab order of this component. Indexes usually start
-         *            from 1. Negative value means that field is not wanted to
-         *            tabbing sequence.
+         *            from 1. Zero means that default tab order should be used.
+         *            A negative value means that the field should not be
+         *            included in the tabbing sequence.
+         * @see #getTabIndex()
          */
         public void setTabIndex(int tabIndex);
 
