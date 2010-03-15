@@ -1177,13 +1177,13 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         if (lastModifiedTime > 0) {
             response.setDateHeader("Last-Modified", lastModifiedTime);
             /*
-             * The browser is allowed to cache for 5 minutes without checking if
+             * The browser is allowed to cache for 1 hour without checking if
              * the file has changed. This forces browsers to fetch a new version
              * when the Vaadin version is updated. This will cause more requests
              * to the servlet than without this but for high volume sites the
              * static files should never be served through the servlet.
              */
-            response.setHeader("Cache-Control", "max-age: 900");
+            response.setHeader("Cache-Control", "max-age: 3600");
         }
 
         // Write the resource to the client.
