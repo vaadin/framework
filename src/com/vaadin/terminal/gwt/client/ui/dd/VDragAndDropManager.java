@@ -308,6 +308,8 @@ public class VDragAndDropManager {
                         lazyAttachDragElement.run();
                     }
                 }
+                // just capture something to prevent text selection in IE
+                Event.setCapture(RootPanel.getBodyElement());
             }
         };
 
@@ -473,6 +475,10 @@ public class VDragAndDropManager {
         currentDrag = null;
 
         clearDragElement();
+
+        // release the capture (set to prevent text selection in IE)
+        Event.releaseCapture(RootPanel.getBodyElement());
+
     }
 
     private void clearDragElement() {
