@@ -1678,7 +1678,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         @Override
         protected void onDetach() {
             super.onDetach();
-            client.getContextMenu().ensureHidden(this);
+            if (client != null) {
+                client.getContextMenu().ensureHidden(this);
+            }
         }
 
         class VisibleColumnAction extends Action {
