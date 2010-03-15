@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_3_0_dev-20100309";}
-.v-theme-version-6_3_0_dev-20100309 {display: none;}
+.v-theme-version:after {content:"6_3_0_dev-20100315";}
+.v-theme-version-6_3_0_dev-20100315 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -1661,9 +1661,11 @@ div.v-tree-node-leaf {
 
 .v-tree-node-caption-drag-top {
 	border-top:2px solid green;
+	margin-top: -2px;
 }
 .v-tree-node-caption-drag-bottom {
 	border-bottom:2px solid green;
+	margin-bottom: -2px;
 }
 .v-tree-node-caption-drag-center {
 	background-color:green;
