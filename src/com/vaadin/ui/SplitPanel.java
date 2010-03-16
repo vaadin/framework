@@ -105,6 +105,11 @@ public class SplitPanel extends AbstractLayout {
     }
 
     public void setFirstComponent(Component c) {
+        if (firstComponent == c) {
+            // Nothing to do
+            return;
+        }
+
         if (firstComponent != null) {
             // detach old
             removeComponent(firstComponent);
@@ -114,6 +119,11 @@ public class SplitPanel extends AbstractLayout {
     }
 
     public void setSecondComponent(Component c) {
+        if (c == secondComponent) {
+            // Nothing to do
+            return;
+        }
+
         if (secondComponent != null) {
             // detach old
             removeComponent(secondComponent);
