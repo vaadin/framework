@@ -220,7 +220,7 @@ public abstract class AbstractContainerTest extends TestCase {
                 new boolean[] { true });
 
         validateContainer(container, "com.vaadin.Application",
-                "com.vaadin.util.SerializerHelper",
+                "org.vaadin.test.LastClass",
                 "com.vaadin.terminal.ApplicationResource", "blah",
                 sampleData.length);
 
@@ -504,6 +504,6 @@ public abstract class AbstractContainerTest extends TestCase {
             "com.vaadin.ui.Tree", "com.vaadin.ui.TwinColSelect",
             "com.vaadin.ui.Upload", "com.vaadin.ui.UriFragmentUtility",
             "com.vaadin.ui.VerticalLayout", "com.vaadin.ui.Window",
-            "com.vaadin.util.SerializerHelper" };
+            "com.vaadin.util.SerializerHelper", "org.vaadin.test.LastClass" };
 
 }

@@ -139,12 +139,12 @@ public class AbstractHierarchicalContainerTest extends AbstractContainerTest {
     protected void testHierarchicalContainer(Container.Hierarchical container) {
         initializeContainer(container);
 
-        int packages = 21;
+        int packages = 21 + 3;
         int expectedSize = sampleData.length + packages;
         validateHierarchicalContainer(container, "com",
-                "com.vaadin.util.SerializerHelper",
+                "org.vaadin.test.LastClass",
                 "com.vaadin.terminal.ApplicationResource", "blah",
-                expectedSize, 1, true);
+                expectedSize, 2, true);
 
     }
 
@@ -162,12 +162,12 @@ public class AbstractHierarchicalContainerTest extends AbstractContainerTest {
         sortable.sort(new Object[] { FULLY_QUALIFIED_NAME },
                 new boolean[] { true });
 
-        int packages = 21;
+        int packages = 21 + 3;
         int expectedSize = sampleData.length + packages;
         validateHierarchicalContainer(container, "com",
-                "com.vaadin.util.SerializerHelper",
+                "org.vaadin.test.LastClass",
                 "com.vaadin.terminal.ApplicationResource", "blah",
-                expectedSize, 1, true);
+                expectedSize, 2, true);
 
         sortable.sort(new Object[] { REVERSE_FULLY_QUALIFIED_NAME },
                 new boolean[] { true });
@@ -176,7 +176,7 @@ public class AbstractHierarchicalContainerTest extends AbstractContainerTest {
                 "com.vaadin.terminal.gwt.server.ApplicationPortlet2",
                 "com.vaadin.data.util.ObjectProperty",
                 "com.vaadin.terminal.ApplicationResource", "blah",
-                expectedSize, 1, true);
+                expectedSize, 2, true);
 
     }
 
