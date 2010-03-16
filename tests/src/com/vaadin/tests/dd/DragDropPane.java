@@ -1,5 +1,9 @@
 package com.vaadin.tests.dd;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
@@ -12,6 +16,8 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
+import com.vaadin.ui.DragAndDropWrapper.WrapperTransferable.Html5File;
+import com.vaadin.ui.Upload.Receiver;
 
 /**
  * replacement for a proto class to keep tests working
@@ -104,11 +110,14 @@ public class DragDropPane extends DragAndDropWrapper implements DropHandler {
 
         else {
             // drag coming outside of Vaadin
-            String object = (String) ctr.getData("text/plain");
 
-            String content = (String) ctr.getData("fileContents");
+            WrapperTransferable wtr = (WrapperTransferable) ctr;
 
-            Label l = new Label();
+            String object = (String) ctr.getData("Text");
+            String html = (String) ctr.getData("Html");
+            String url = (String) ctr.getData("Url");
+
+            final Label l = new Label();
             l.setCaption("Generated from HTML5 drag:");
             if (object != null) {
                 l.setValue(object);
@@ -116,7 +125,28 @@ public class DragDropPane extends DragAndDropWrapper implements DropHandler {
                 l.setValue("HTML5 dd");
             }
 
-            l.setDescription(content);
+            Html5File[] files = wtr.getFiles();
+            if (files != null) {
+                for (Html5File html5File : files) {
+                    l.setCaption(html5File.getFileName());
+                    html5File.setReceiver(new Receiver() {
+                        public OutputStream receiveUpload(String filename,
+                                String MIMEType) {
+
+                            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream() {
+                                @Override
+                                public void close() throws IOException {
+                                    super.close();
+                                    l.setValue((new String(toByteArray())
+                                            .substring(0, 80) + "..."));
+                                }
+                            };
+                            return byteArrayOutputStream;
+                        }
+                    });
+                }
+            }
+
             l.setSizeUndefined();
 
             root.addComponent(l);

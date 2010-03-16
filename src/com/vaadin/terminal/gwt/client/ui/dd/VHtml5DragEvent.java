@@ -17,7 +17,8 @@ public class VHtml5DragEvent extends NativeEvent {
 
     public final native JsArrayString getTypes()
     /*-{
-        return this.dataTransfer.types;
+        // IE does not support types, return some basic values
+        return this.dataTransfer.types ? this.dataTransfer.types : ["Text","Url","Html"];
      }-*/;
 
     public final native String getDataAsText(String type)

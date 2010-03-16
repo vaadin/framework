@@ -103,7 +103,7 @@ public class AcceptAnythingWindow extends Window {
 
                 } else {
                     // drag coming outside of Vaadin
-                    String object = (String) transferable.getData("text/plain");
+                    String object = (String) transferable.getData("Text");
 
                     String content = (String) transferable
                             .getData("fileContents");

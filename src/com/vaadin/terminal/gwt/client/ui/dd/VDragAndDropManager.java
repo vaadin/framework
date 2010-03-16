@@ -43,7 +43,7 @@ public class VDragAndDropManager {
 
         public void onPreviewNativeEvent(NativePreviewEvent event) {
             NativeEvent nativeEvent = event.getNativeEvent();
-            updateCurrentEvent(nativeEvent);
+            currentDrag.setCurrentGwtEvent(nativeEvent);
             updateDragImagePosition();
 
             int typeInt = event.getTypeInt();
@@ -279,7 +279,7 @@ public class VDragAndDropManager {
         isStarted = false;
 
         currentDrag = new VDragEvent(transferable, startEvent);
-        updateCurrentEvent(startEvent);
+        currentDrag.setCurrentGwtEvent(startEvent);
 
         final Command startDrag = new Command() {
 
@@ -287,8 +287,8 @@ public class VDragAndDropManager {
                 isStarted = true;
                 VDropHandler dh = null;
                 if (startEvent != null) {
-                    dh = findDragTarget((Element) currentDrag.currentGwtEvent
-                            .getEventTarget().cast());
+                    dh = findDragTarget((Element) currentDrag
+                            .getCurrentGwtEvent().getEventTarget().cast());
                 }
                 if (dh != null) {
                     // drag has started on a DropHandler, kind of drag over
@@ -357,7 +357,8 @@ public class VDragAndDropManager {
                             case Event.ONMOUSEMOVE:
                                 deferredStartRegistration.removeHandler();
                                 deferredStartRegistration = null;
-                                updateCurrentEvent(event.getNativeEvent());
+                                currentDrag.setCurrentGwtEvent(event
+                                        .getNativeEvent());
                                 startDrag.execute();
                                 break;
                             default:
@@ -386,24 +387,26 @@ public class VDragAndDropManager {
         return currentDrag;
     }
 
-    private void interruptDrag() {
+    public void interruptDrag() {
         if (currentDrag != null) {
             ApplicationConnection.getConsole()
                     .log("Drag operation interrupted");
             if (currentDropHandler != null) {
-                currentDrag.currentGwtEvent = null;
+                currentDrag.setCurrentGwtEvent(null);
                 currentDropHandler.dragLeave(currentDrag);
                 currentDropHandler = null;
+                serverCallback = null;
+                visitId = -1; // ignore possibly on going server check
             }
             currentDrag = null;
         }
     }
 
     private void updateDragImagePosition() {
-        if (currentDrag.currentGwtEvent != null && dragElement != null) {
+        if (currentDrag.getCurrentGwtEvent() != null && dragElement != null) {
             Style style = dragElement.getStyle();
-            int clientY = currentDrag.currentGwtEvent.getClientY();
-            int clientX = currentDrag.currentGwtEvent.getClientX();
+            int clientY = currentDrag.getCurrentGwtEvent().getClientY();
+            int clientX = currentDrag.getCurrentGwtEvent().getClientX();
             style.setTop(clientY, Unit.PX);
             style.setLeft(clientX, Unit.PX);
         }
@@ -449,10 +452,6 @@ public class VDragAndDropManager {
             return null;
         }
 
-    }
-
-    private void updateCurrentEvent(NativeEvent event) {
-        currentDrag.currentGwtEvent = event;
     }
 
     public void endDrag() {
@@ -535,10 +534,10 @@ public class VDragAndDropManager {
 
         client.updateVariable(DD_SERVICE, "type", drop.ordinal(), false);
 
-        if (currentDrag.currentGwtEvent != null) {
+        if (currentDrag.getCurrentGwtEvent() != null) {
             try {
                 MouseEventDetails mouseEventDetails = new MouseEventDetails(
-                        currentDrag.currentGwtEvent);
+                        currentDrag.getCurrentGwtEvent());
                 currentDrag.getDropDetails().put("mouseEvent",
                         mouseEventDetails.serialize());
             } catch (Exception e) {

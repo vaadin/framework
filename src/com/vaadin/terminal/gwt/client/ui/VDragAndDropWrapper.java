@@ -13,8 +13,10 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.xhr.client.ReadyStateChangeHandler;
 import com.google.gwt.xhr.client.XMLHttpRequest;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderInformation;
@@ -94,6 +96,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     private final static int WRAPPER = 2;
     private int dragStarMode;
     private int filecounter = 0;
+    private boolean dragLeavPostponed;
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -119,12 +122,18 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         if (dropHandler == null) {
             return true;
         }
+        if (dragLeavPostponed) {
+            // returned quickly back to wrapper
+            dragLeavPostponed = false;
+            return false;
+        }
         ApplicationConnection.getConsole().log("HTML 5 Drag Enter");
         VTransferable transferable = new VTransferable();
         transferable.setDragSource(this);
 
         vaadinDragEvent = VDragAndDropManager.get().startDrag(transferable,
                 event, false);
+        VDragAndDropManager.get().setCurrentDropHandler(getDropHandler());
         event.preventDefault();
         event.stopPropagation();
         return false;
@@ -136,17 +145,21 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         }
 
         ApplicationConnection.getConsole().log("HTML 5 Drag Leave posponed...");
+        dragLeavPostponed = true;
         DeferredCommand.addCommand(new Command() {
             public void execute() {
                 // Yes, dragleave happens before drop. Makes no sense to me.
                 // IMO shouldn't fire leave at all if drop happens (I guess this
                 // is what IE does).
                 // In Vaadin we fire it only if drop did not happen.
-                if (vaadinDragEvent != null) {
+                if (dragLeavPostponed
+                        && vaadinDragEvent != null
+                        && VDragAndDropManager.get().getCurrentDropHandler() == getDropHandler()) {
                     ApplicationConnection.getConsole().log(
                             "...HTML 5 Drag Leave");
-                    getDropHandler().dragLeave(vaadinDragEvent);
+                    VDragAndDropManager.get().interruptDrag();
                 }
+                dragLeavPostponed = false;
             }
         });
         event.preventDefault();
@@ -160,14 +173,18 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         }
 
         ApplicationConnection.getConsole().log("HTML 5 Drag Over");
+        vaadinDragEvent.setCurrentGwtEvent(event);
         getDropHandler().dragOver(vaadinDragEvent);
         // needed to be set for Safari, otherwise drop will not happen
-        String s = event.getEffectAllowed();
-        if ("all".equals(s) || s.contains("opy")) {
-            event.setDragEffect("copy");
-        } else {
-            event.setDragEffect(s);
-            ApplicationConnection.getConsole().log("Drag effect set to " + s);
+        if (BrowserInfo.get().isWebkit()) {
+            String s = event.getEffectAllowed();
+            if ("all".equals(s) || s.contains("opy")) {
+                event.setDragEffect("copy");
+            } else {
+                event.setDragEffect(s);
+                ApplicationConnection.getConsole().log(
+                        "Drag effect set to " + s);
+            }
         }
         event.preventDefault();
         event.stopPropagation();
@@ -175,7 +192,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     }
 
     public boolean html5DragDrop(VHtml5DragEvent event) {
-        if (dropHandler == null) {
+        if (dropHandler == null || !currentlyValid) {
             return true;
         }
 
@@ -183,16 +200,21 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         VTransferable transferable = vaadinDragEvent.getTransferable();
 
         JsArrayString types = event.getTypes();
+        ApplicationConnection.getConsole().log("Types fetched");
         for (int i = 0; i < types.length(); i++) {
             String type = types.get(i);
             ApplicationConnection.getConsole().log("Type: " + type);
-            if ("text/plain".equals(type)) {
+            if ("Text".equals(type) || "Url".equals(type)
+                    || "text/html".equals(type)) {
                 String data = event.getDataAsText(type);
-                ApplicationConnection.getConsole().log(type + " : " + data);
-                transferable.setData("text/plain", data);
+                if (data != null) {
+                    ApplicationConnection.getConsole().log(type + " : " + data);
+                    transferable.setData(type, data);
+                }
             }
         }
 
+        ApplicationConnection.getConsole().log("checking files");
         int fileCount = event.getFileCount();
         if (fileCount > 0) {
             transferable.setData("filecount", fileCount);
@@ -207,6 +229,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             }
 
         }
+
+        ApplicationConnection.getConsole().log("Ending drag");
 
         VDragAndDropManager.get().endDrag();
         vaadinDragEvent = null;
@@ -230,7 +254,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     }
 
     /**
-     * Currently supports only FF36 as no other browser supprots natively File
+     * Currently supports only FF36 as no other browser supports natively File
      * api.
      * 
      * @param fileId
@@ -248,8 +272,18 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
                         ExtendedXHR extendedXHR = (ExtendedXHR) ExtendedXHR
                                 .create();
-                        extendedXHR.open("POST", client.getAppUri());
                         String name = "XHRFILE" + getPid() + "." + fileId;
+                        extendedXHR
+                                .setOnReadyStateChange(new ReadyStateChangeHandler() {
+                                    public void onReadyStateChange(
+                                            XMLHttpRequest xhr) {
+                                        if (xhr.getReadyState() == XMLHttpRequest.DONE) {
+                                            client.sendPendingVariableChanges();
+                                            xhr.clearOnReadyStateChange();
+                                        }
+                                    }
+                                });
+                        extendedXHR.open("POST", client.getAppUri());
                         multipartSend(extendedXHR, object, name);
 
                     }
@@ -294,6 +328,11 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     private VerticalDropLocation emphasizedVDrop;
     private HorizontalDropLocation emphasizedHDrop;
 
+    /**
+     * Flag used by html5 dd
+     */
+    private boolean currentlyValid;
+
     private static final String OVER_STYLE = "v-ddwrapper-over";
 
     public class CustomDropHandler extends VAbstractDropHandler {
@@ -302,6 +341,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         public void dragEnter(VDragEvent drag) {
             updateDropDetails(drag);
             ApplicationConnection.getConsole().log("DDWrapper DragEnter");
+            currentlyValid = false;
             super.dragEnter(drag);
         }
 
@@ -309,16 +349,20 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         public void dragLeave(VDragEvent drag) {
             ApplicationConnection.getConsole().log("DDWrapper DragLeave");
             deEmphasis(true);
+            dragLeavPostponed = false;
         }
 
         @Override
         public void dragOver(final VDragEvent drag) {
-            updateDropDetails(drag);
-            validate(new VAcceptCallback() {
-                public void accepted(VDragEvent event) {
-                    dragAccepted(drag);
-                }
-            }, drag);
+            boolean detailsChanged = updateDropDetails(drag);
+            if (detailsChanged) {
+                currentlyValid = false;
+                validate(new VAcceptCallback() {
+                    public void accepted(VDragEvent event) {
+                        dragAccepted(drag);
+                    }
+                }, drag);
+            }
         }
 
         @Override
@@ -349,6 +393,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
         @Override
         protected void dragAccepted(VDragEvent drag) {
+            currentlyValid = true;
             emphasis(drag);
         }
 
@@ -392,11 +437,11 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             
             } else {
                 el.attachEvent("ondragenter",  function(ev) {
-                            return me.@com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper::html5DragEnter(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
+                    return me.@com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper::html5DragEnter(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
                 });
                 
                 el.attachEvent("ondragleave",  function(ev) {
-                        return me.@com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper::html5DragLeave(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
+                    return me.@com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper::html5DragLeave(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
                 });
         
                 el.attachEvent("ondragover",  function(ev) {
@@ -410,15 +455,22 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         
     }-*/;
 
-    public void updateDropDetails(VDragEvent drag) {
+    public boolean updateDropDetails(VDragEvent drag) {
+        VerticalDropLocation oldVL = verticalDropLocation;
         verticalDropLocation = DDUtil.getVerticalDropLocation(getElement(),
                 drag.getCurrentGwtEvent().getClientY(), 0.2);
         drag.getDropDetails().put("verticalLocation",
                 verticalDropLocation.toString());
+        HorizontalDropLocation oldHL = horizontalDropLocation;
         horizontalDropLocation = DDUtil.getHorizontalDropLocation(getElement(),
                 drag.getCurrentGwtEvent().getClientX(), 0.2);
         drag.getDropDetails().put("horizontalLocation",
                 horizontalDropLocation.toString());
+        if (oldHL != horizontalDropLocation || oldVL != verticalDropLocation) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     protected void deEmphasis(boolean doLayout) {

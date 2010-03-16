@@ -265,6 +265,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
                 while ((bytesRead = stream.read(buf)) != -1) {
                     receiveUpload.write(buf, 0, bytesRead);
                 }
+                receiveUpload.close();
             } catch (IOException e) {
                 throw new UploadException(e);
             }

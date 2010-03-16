@@ -30,7 +30,7 @@ public class VDragEvent {
 
     private VTransferable transferable;
 
-    NativeEvent currentGwtEvent;
+    private NativeEvent currentGwtEvent;
 
     private NativeEvent startEvent;
 
@@ -62,6 +62,10 @@ public class VDragEvent {
      */
     public NativeEvent getCurrentGwtEvent() {
         return currentGwtEvent;
+    }
+
+    public void setCurrentGwtEvent(NativeEvent event) {
+        currentGwtEvent = event;
     }
 
     int getEventId() {
