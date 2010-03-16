@@ -189,9 +189,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
             }
         }
 
-        if (isRoot(itemId)) {
-            roots.remove(itemId);
-        }
+        roots.remove(itemId);
         final Object p = parent.get(itemId);
         if (p != null) {
             final LinkedList<Object> c = children.get(p);
