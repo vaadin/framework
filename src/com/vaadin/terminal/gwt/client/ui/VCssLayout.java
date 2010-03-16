@@ -55,6 +55,7 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
 
     private boolean hasHeight;
     private boolean hasWidth;
+    private boolean rendering;
 
     public VCssLayout() {
         super();
@@ -74,6 +75,9 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
         super.setWidth(width);
         // panel.setWidth(width);
         hasWidth = width != null && !width.equals("");
+        if (!rendering) {
+            panel.updateRelativeSizes();
+        }
     }
 
     @Override
@@ -81,11 +85,16 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
         super.setHeight(height);
         // panel.setHeight(height);
         hasHeight = height != null && !height.equals("");
+        if (!rendering) {
+            panel.updateRelativeSizes();
+        }
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        rendering = true;
 
         if (client.updateComponent(this, uidl, true)) {
+            rendering = false;
             return;
         }
         clickEventHandler.handleEventHandlerRegistration(client);
@@ -104,6 +113,7 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
         setStyleName(margin, CLASSNAME + "-" + "spacing", uidl
                 .hasAttribute("spacing"));
         panel.updateFromUIDL(uidl, client);
+        rendering = false;
     }
 
     public boolean hasChildComponent(Widget component) {
@@ -126,6 +136,14 @@ public class VCssLayout extends SimplePanel implements Paintable, Container {
         public FlowPane() {
             super();
             setStyleName(CLASSNAME + "-container");
+        }
+
+        public void updateRelativeSizes() {
+            for (Widget w : getChildren()) {
+                if (w instanceof Paintable) {
+                    client.handleComponentRelativeSize(w);
+                }
+            }
         }
 
         public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
