@@ -37,53 +37,29 @@ public class BrowserInfo {
         return instance;
     }
 
-    private boolean isGecko;
-    private boolean isAppleWebKit;
-    private boolean isSafari;
-    private boolean isOpera;
-    private boolean isIE;
-    private float version = -1;
+    private VBrowserDetails browserDetails;
 
     private BrowserInfo() {
         try {
-            String ua = getBrowserString().toLowerCase();
-            // browser engine name
-            isGecko = ua.indexOf("gecko") != -1 && ua.indexOf("webkit") == -1;
-            isAppleWebKit = ua.indexOf("applewebkit") != -1;
-
-            // browser name
-            isSafari = ua.indexOf("safari") != -1;
-            isOpera = ua.indexOf("opera") != -1;
-            isIE = ua.indexOf("msie") != -1 && !isOpera
-                    && (ua.indexOf("webtv") == -1);
-
-            if (isGecko) {
-                String tmp = ua.substring(ua.indexOf("rv:") + 3);
-                tmp = tmp.replaceFirst("(\\.[0-9]+).+", "$1");
-                version = Float.parseFloat(tmp);
-            }
-            if (isAppleWebKit) {
-                String tmp = ua.substring(ua.indexOf("webkit/") + 7);
-                tmp = tmp.replaceFirst("([0-9]+)[^0-9].+", "$1");
-                version = Float.parseFloat(tmp);
-
+            browserDetails = new VBrowserDetails(getBrowserString());
+            if (browserDetails.isIE()
+                    && browserDetails.getBrowserMajorVersion() == 8
+                    && isIE8InIE7CompatibilityMode()) {
+                browserDetails.setIE8InCompatibilityMode();
             }
 
-            if (isIE) {
-                String ieVersionString = ua.substring(ua.indexOf("msie ") + 5);
-                ieVersionString = ieVersionString.substring(0, ieVersionString
-                        .indexOf(";"));
-                version = Float.parseFloat(ieVersionString);
-
-                if (version == 8 && isIE8InIE7CompatibilityMode()) {
-                    version = 7;
-                }
-
-            }
         } catch (Exception e) {
             ClientExceptionHandler.displayError(e);
         }
     }
+
+    private native boolean isIE8InIE7CompatibilityMode()
+    /*-{
+        var mode = $wnd.document.documentMode;
+        if (!mode)
+            return false;
+        return (mode == 7);
+    }-*/;
 
     /**
      * Returns a string representing the browser in use, for use in CSS
@@ -107,36 +83,24 @@ public class BrowserInfo {
         String prefix = "v-";
 
         if (cssClass == null) {
-            String bs = getBrowserString().toLowerCase();
             String b = "";
             String v = "";
-            if (bs.indexOf(" firefox/") != -1) {
+            if (browserDetails.isFirefox()) {
                 b = "ff";
-                int i = bs.indexOf(" firefox/") + 9;
-                v = b + bs.substring(i, i + 1);
-            } else if (bs.indexOf(" chrome/") != -1) {
+                v = "b" + browserDetails.getBrowserMajorVersion();
+            } else if (browserDetails.isChrome()) {
                 // TODO update when Chrome is more stable
                 b = "sa";
                 v = "ch";
-            } else if (bs.indexOf(" safari") != -1) {
+            } else if (browserDetails.isSafari()) {
                 b = "sa";
-                int i = bs.indexOf(" version/") + 9;
-                v = b + bs.substring(i, i + 1);
-            } else if (bs.indexOf(" msie ") != -1) {
+                v = "b" + browserDetails.getBrowserMajorVersion();
+            } else if (browserDetails.isIE()) {
                 b = "ie";
-                int i = bs.indexOf(" msie ") + 6;
-                String ieVersion = bs.substring(i, i + 1);
-
-                if (ieVersion != null && ieVersion.equals("8")
-                        && isIE8InIE7CompatibilityMode()) {
-                    ieVersion = "7";
-                }
-
-                v = b + ieVersion;
-            } else if (bs.indexOf("opera/") != -1) {
+                v = b + browserDetails.getBrowserMajorVersion();
+            } else if (browserDetails.isOpera()) {
                 b = "op";
-                int i = bs.indexOf("opera/") + 6;
-                v = b + bs.substring(i, i + 3).replace(".", "");
+                v = b + browserDetails.getBrowserMajorVersion();
             }
             cssClass = prefix + b + " " + prefix + v;
         }
@@ -144,87 +108,90 @@ public class BrowserInfo {
         return cssClass;
     }
 
-    private native boolean isIE8InIE7CompatibilityMode()
-    /*-{
-        var mode = $wnd.document.documentMode;
-        if (!mode)
-            return false;
-        return (mode == 7);
-    }-*/;
-
     public boolean isIE() {
-        return isIE;
+        return browserDetails.isIE();
     }
 
     public boolean isSafari() {
-        return isSafari;
+        return browserDetails.isSafari();
     }
 
     public boolean isIE6() {
-        return isIE && version == 6;
+        return isIE() && browserDetails.getBrowserMajorVersion() == 6;
     }
 
     public boolean isIE7() {
-        return isIE && version == 7;
+        return isIE() && browserDetails.getBrowserMajorVersion() == 7;
     }
 
     public boolean isIE8() {
-        return isIE && version == 8;
+        return isIE() && browserDetails.getBrowserMajorVersion() == 8;
     }
 
     public boolean isGecko() {
-        return isGecko;
+        return browserDetails.isGecko();
     }
 
     public boolean isWebkit() {
-        return isAppleWebKit;
+        return browserDetails.isWebKit();
     }
 
     public boolean isFF2() {
-        return isGecko && version == 1.8;
+        // FIXME: Should use browserVersion
+        return browserDetails.isFirefox()
+                && browserDetails.getBrowserEngineVersion() == 1.8;
     }
 
     public boolean isFF3() {
-        return isGecko && version == 1.9;
+        // FIXME: Should use browserVersion
+        return browserDetails.isFirefox()
+                && browserDetails.getBrowserEngineVersion() == 1.9;
     }
 
+    /**
+     * Returns the Gecko version if the browser is Gecko based. The Gecko
+     * version for Firefox 2 is 1.8 and 1.9 for Firefox 3.
+     * 
+     * @return The Gecko version or -1 if the browser is not Gecko based
+     */
     public float getGeckoVersion() {
-        return (isGecko ? version : -1);
+        if (!browserDetails.isGecko()) {
+            return -1;
+        }
+
+        return browserDetails.getBrowserEngineVersion();
     }
 
+    /**
+     * Returns the WebKit version if the browser is WebKit based. The WebKit
+     * version returned is the major version e.g., 523.
+     * 
+     * @return The WebKit version or -1 if the browser is not WebKit based
+     */
     public float getWebkitVersion() {
-        return (isAppleWebKit ? version : -1);
+        if (!browserDetails.isWebKit()) {
+            return -1;
+        }
+
+        return browserDetails.getBrowserEngineVersion();
     }
 
     public float getIEVersion() {
-        return (isIE ? version : -1);
+        if (!browserDetails.isIE()) {
+            return -1;
+        }
+
+        return browserDetails.getBrowserMajorVersion();
     }
 
     public boolean isOpera() {
-        return isOpera;
+        return browserDetails.isOpera();
     }
 
     public native static String getBrowserString()
     /*-{
         return $wnd.navigator.userAgent;
     }-*/;
-
-    public static void test() {
-        Console c = ApplicationConnection.getConsole();
-
-        c.log("getBrowserString() " + getBrowserString());
-        c.log("isIE() " + get().isIE());
-        c.log("isIE6() " + get().isIE6());
-        c.log("isIE7() " + get().isIE7());
-        c.log("isIE8() " + get().isIE8());
-        c.log("isFF2() " + get().isFF2());
-        c.log("isSafari() " + get().isSafari());
-        c.log("getGeckoVersion() " + get().getGeckoVersion());
-        c.log("getWebkitVersion() " + get().getWebkitVersion());
-        c.log("getIEVersion() " + get().getIEVersion());
-        c.log("isIE() " + get().isIE());
-        c.log("isIE() " + get().isIE());
-    }
 
     public native int getScreenWidth()
     /*-{ 
