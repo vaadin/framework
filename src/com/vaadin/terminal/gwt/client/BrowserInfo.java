@@ -128,6 +128,10 @@ public class BrowserInfo {
         return isIE() && browserDetails.getBrowserMajorVersion() == 8;
     }
 
+    public boolean isChrome() {
+        return browserDetails.isChrome();
+    }
+
     public boolean isGecko() {
         return browserDetails.isGecko();
     }
