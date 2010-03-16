@@ -1,8 +1,11 @@
 package com.vaadin.terminal.gwt.client;
 
+import com.vaadin.terminal.gwt.server.WebBrowser;
+
 /**
  * Class that parses the user agent string from the browser and provides
- * information about the browser.
+ * information about the browser. Used internally by {@link BrowserInfo} and
+ * {@link WebBrowser}. Should not be used directly.
  * 
  * @author IT Mill Ltd.
  * @version @VERSION@
