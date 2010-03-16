@@ -58,7 +58,7 @@ public class IndexedContainer implements Container.Indexed,
     private ArrayList<Object> itemIds = new ArrayList<Object>();
 
     /** List of item ids that passes the filtering */
-    private LinkedHashSet filteredItemIds = null;
+    private LinkedHashSet<Object> filteredItemIds = null;
 
     /**
      * Linked list of ordered Property IDs.
@@ -329,9 +329,8 @@ public class IndexedContainer implements Container.Indexed,
 
         // this optimization is why some code is duplicated with
         // addItemAtInternalIndex()
-        final Item item = new IndexedContainerItem(itemId);
         if (filteredItemIds != null) {
-            if (passesFilters(item)) {
+            if (passesFilters(itemId)) {
                 filteredItemIds.add(itemId);
             }
         }
@@ -339,7 +338,7 @@ public class IndexedContainer implements Container.Indexed,
         // Sends the event
         fireContentsChange(itemIds.size() - 1);
 
-        return item;
+        return new IndexedContainerItem(itemId);
     }
 
     /**
@@ -1560,18 +1559,42 @@ public class IndexedContainer implements Container.Indexed,
         }
     }
 
-    protected void updateContainerFiltering() {
+    /**
+     * Called when the filters have changed or when another event that effects
+     * filtering has taken place. Updates internal data structures and fires an
+     * item set change if necessary.
+     */
+    private void updateContainerFiltering() {
 
         // Clearing filters?
-        if (filters == null || filters.isEmpty()) {
+        boolean hasFilters = (filters != null && !filters.isEmpty());
+
+        if (doFilterContainer(hasFilters)) {
+            fireContentsChange(-1);
+        }
+    }
+
+    /**
+     * Filters the data in the container and updates internal data structures.
+     * This method should reset any internal data structures and then repopulate
+     * them so {@link #getItemIds()} and other methods only return the filtered
+     * items.
+     * 
+     * @param hasFilters
+     *            true if filters has been set for the container, false
+     *            otherwise
+     * @return true if the item set has changed as a result of the filtering
+     */
+    protected boolean doFilterContainer(boolean hasFilters) {
+        if (!hasFilters) {
             filteredItemIds = null;
             if (filters != null) {
                 filters = null;
-                fireContentsChange(-1);
+                return true;
             }
-            return;
-        }
 
+            return false;
+        }
         // Reset filtered list
         if (filteredItemIds == null) {
             filteredItemIds = new LinkedHashSet();
@@ -1587,14 +1610,22 @@ public class IndexedContainer implements Container.Indexed,
             }
         }
 
-        fireContentsChange(-1);
+        return true;
+
     }
 
-    protected final boolean passesFilters(Object itemId) {
-        return passesFilters(new IndexedContainerItem(itemId));
-    }
-
-    private boolean passesFilters(Item item) {
+    /**
+     * Checks if the given itemId passes the filters set for the container. The
+     * caller should make sure the itemId exists in the container. For
+     * non-existing itemIds the behavior is undefined.
+     * 
+     * @param itemId
+     *            An itemId that exists in the container.
+     * @return true if the itemId passes all filters or no filters are set,
+     *         false otherwise.
+     */
+    protected boolean passesFilters(Object itemId) {
+        IndexedContainerItem item = new IndexedContainerItem(itemId);
         if (filters == null) {
             return true;
         }

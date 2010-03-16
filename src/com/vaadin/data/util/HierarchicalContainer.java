@@ -8,7 +8,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.Set;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
@@ -32,9 +34,15 @@ public class HierarchicalContainer extends IndexedContainer implements
     private final HashSet<Object> noChildrenAllowed = new HashSet<Object>();
 
     /**
-     * Mapping from Item ID to parent Item.
+     * Mapping from Item ID to parent Item ID.
      */
     private final HashMap<Object, Object> parent = new HashMap<Object, Object>();
+
+    /**
+     * Mapping from Item ID to parent Item ID for items included in the filtered
+     * container.
+     */
+    private HashMap<Object, Object> filteredParent = null;
 
     /**
      * Mapping from Item ID to a list of child IDs.
@@ -55,6 +63,11 @@ public class HierarchicalContainer extends IndexedContainer implements
      * List that contains all filtered root elements of the container.
      */
     private LinkedList<Object> filteredRoots = null;
+
+    /**
+     * Determines how filtering of the container is done.
+     */
+    private boolean includeParentsWhenFiltering = true;
 
     /*
      * Can the specified Item have any children? Don't add a JavaDoc comment
@@ -93,6 +106,9 @@ public class HierarchicalContainer extends IndexedContainer implements
      * interface.
      */
     public Object getParent(Object itemId) {
+        if (filteredParent != null) {
+            return filteredParent.get(itemId);
+        }
         return parent.get(itemId);
     }
 
@@ -115,12 +131,17 @@ public class HierarchicalContainer extends IndexedContainer implements
      * interface.
      */
     public boolean isRoot(Object itemId) {
-        if (filteredRoots != null && !filteredRoots.contains(itemId)) {
-            return false;
-        }
-
-        if (parent.containsKey(itemId)) {
-            return false;
+        // If the container is filtered the itemId must be among filteredRoots
+        // to be a root.
+        if (filteredRoots != null) {
+            if (!filteredRoots.contains(itemId)) {
+                return false;
+            }
+        } else {
+            // Container is not filtered
+            if (parent.containsKey(itemId)) {
+                return false;
+            }
         }
 
         return containsId(itemId);
@@ -211,8 +232,7 @@ public class HierarchicalContainer extends IndexedContainer implements
         // Making root?
         if (newParentId == null) {
             // The itemId should become a root so we need to
-            // - Remove it from the old parent's children list (also filtered
-            // list)
+            // - Remove it from the old parent's children list
             // - Add it as a root
             // - Remove it from the item -> parent list (parent is null for
             // roots)
@@ -225,27 +245,20 @@ public class HierarchicalContainer extends IndexedContainer implements
                     children.remove(itemId);
                 }
 
-                if (filteredChildren != null) {
-                    LinkedList<Object> f = filteredChildren.get(itemId);
-                    if (f != null) {
-                        f.remove(itemId);
-                        if (f.isEmpty()) {
-                            filteredChildren.remove(f);
-                        }
-                    }
-                }
             }
 
             // Add to be a root
             roots.add(itemId);
-            if (filteredRoots != null) {
-                if (passesFilters(itemId)) {
-                    filteredRoots.add(itemId);
-                }
-            }
 
             // Updates parent
             parent.remove(itemId);
+
+            if (hasFilters()) {
+                // Refilter the container if setParent is called when filters
+                // are applied. Changing parent can change what is included in
+                // the filtered version (if includeParentsWhenFiltering==true).
+                doFilterContainer(hasFilters());
+            }
 
             fireContentsChange(-1);
 
@@ -286,17 +299,6 @@ public class HierarchicalContainer extends IndexedContainer implements
         }
         pcl.add(itemId);
 
-        // Add children list for filtered case also
-        if (filteredChildren != null) {
-            LinkedList<Object> f = filteredChildren.get(newParentId);
-            if (f == null) {
-                // Create an empty list for holding children if one were not
-                // previously created
-                f = new LinkedList<Object>();
-                filteredChildren.put(newParentId, f);
-            }
-        }
-
         // Removes from old parent or root
         if (oldParentId == null) {
             roots.remove(itemId);
@@ -308,20 +310,22 @@ public class HierarchicalContainer extends IndexedContainer implements
                     children.remove(oldParentId);
                 }
             }
-            if (filteredChildren != null) {
-                LinkedList<Object> f = filteredChildren.get(oldParentId);
-                if (f != null) {
-                    f.remove(itemId);
-                    if (f.isEmpty()) {
-                        filteredChildren.remove(oldParentId);
-                    }
-                }
-            }
+        }
+
+        if (hasFilters()) {
+            // Refilter the container if setParent is called when filters
+            // are applied. Changing parent can change what is included in
+            // the filtered version (if includeParentsWhenFiltering==true).
+            doFilterContainer(hasFilters());
         }
 
         fireContentsChange(-1);
 
         return true;
+    }
+
+    private boolean hasFilters() {
+        return (filteredRoots != null);
     }
 
     /**
@@ -550,6 +554,33 @@ public class HierarchicalContainer extends IndexedContainer implements
         }
     }
 
+    /**
+     * Used to control how filtering works. @see
+     * {@link #setIncludeParentsWhenFiltering(boolean)} for more information.
+     * 
+     * @return true if all parents for items that match the filter are included
+     *         when filtering, false if only the matching items are included
+     */
+    public boolean isIncludeParentsWhenFiltering() {
+        return includeParentsWhenFiltering;
+    }
+
+    /**
+     * Controls how the filtering of the container works. Set this to true to
+     * make filtering include parents for all matched items in addition to the
+     * items themselves. Setting this to false causes the filtering to only
+     * include the matching items and make items with excluded parents into root
+     * items.
+     * 
+     * @param includeParentsWhenFiltering
+     *            true to include all parents for items that match the filter,
+     *            false to only include the matching items
+     */
+    public void setIncludeParentsWhenFiltering(
+            boolean includeParentsWhenFiltering) {
+        this.includeParentsWhenFiltering = includeParentsWhenFiltering;
+    }
+
     /*
      * Overridden to provide filtering for root & children items.
      * 
@@ -558,32 +589,154 @@ public class HierarchicalContainer extends IndexedContainer implements
      * @see com.vaadin.data.util.IndexedContainer#updateContainerFiltering()
      */
     @Override
-    protected void updateContainerFiltering() {
-        super.updateContainerFiltering();
+    protected boolean doFilterContainer(boolean hasFilters) {
+        if (!hasFilters) {
+            // All filters removed
+            filteredRoots = null;
+            filteredChildren = null;
 
+            return super.doFilterContainer(hasFilters);
+        }
+
+        // Reset data structures
         filteredRoots = new LinkedList<Object>();
         filteredChildren = new HashMap<Object, LinkedList<Object>>();
+        filteredParent = new HashMap<Object, Object>();
 
-        // Filter root item ids
-        for (Object rootId : roots) {
-            if (passesFilters(rootId)) {
-                filteredRoots.add(rootId);
-            }
-        }
-
-        // Filter children
-        for (Object parent : children.keySet()) {
-            if (passesFilters(parent)) {
-                LinkedList<Object> filtered = new LinkedList<Object>();
-                filteredChildren.put(parent, filtered);
-                for (Object child : children.get(parent)) {
-                    if (passesFilters(child)) {
-                        filtered.add(child);
-                    }
+        if (includeParentsWhenFiltering) {
+            // Filter so that parents for items that match the filter are also
+            // included
+            HashSet<Object> includedItems = new HashSet<Object>();
+            for (Object rootId : roots) {
+                if (filterIncludingParents(rootId, includedItems)) {
+                    filteredRoots.add(rootId);
+                    addFilteredChildrenRecursively(rootId, includedItems);
                 }
             }
+            // includedItemIds now contains all the item ids that should be
+            // included. Filter IndexedContainer based on this
+            filterOverride = includedItems;
+            super.doFilterContainer(hasFilters);
+            filterOverride = null;
+
+            return true;
+        } else {
+            // Filter by including all items that pass the filter and make items
+            // with no parent new root items
+
+            // Filter IndexedContainer first so getItemIds return the items that
+            // match
+            super.doFilterContainer(hasFilters);
+
+            LinkedHashSet<Object> filteredItemIds = new LinkedHashSet<Object>(
+                    getItemIds());
+
+            for (Object itemId : filteredItemIds) {
+                Object itemParent = parent.get(itemId);
+                if (itemParent == null || !filteredItemIds.contains(itemParent)) {
+                    // Parent is not included or this was a root, in both cases
+                    // this should be a filtered root
+                    filteredRoots.add(itemId);
+                } else {
+                    // Parent is included. Add this to the children list (create
+                    // it first if necessary)
+                    addFilteredChild(itemParent, itemId);
+                }
+            }
+
+            return true;
         }
+    }
+
+    /**
+     * Adds the given childItemId as a filteredChildren for the parentItemId and
+     * sets it filteredParent.
+     * 
+     * @param parentItemId
+     * @param childItemId
+     */
+    private void addFilteredChild(Object parentItemId, Object childItemId) {
+        LinkedList<Object> parentToChildrenList = filteredChildren
+                .get(parentItemId);
+        if (parentToChildrenList == null) {
+            parentToChildrenList = new LinkedList<Object>();
+            filteredChildren.put(parentItemId, parentToChildrenList);
+        }
+        filteredParent.put(childItemId, parentItemId);
+        parentToChildrenList.add(childItemId);
 
     }
 
+    /**
+     * Recursively adds all items in the includedItems list to the
+     * filteredChildren map in the same order as they are in the children map.
+     * Starts from parentItemId and recurses down as long as child items that
+     * should be included are found.
+     * 
+     * @param parentItemId
+     *            The item id to start recurse from. Not added to a
+     *            filteredChildren list
+     * @param includedItems
+     *            Set containing the item ids for the items that should be
+     *            included in the filteredChildren map
+     */
+    private void addFilteredChildrenRecursively(Object parentItemId,
+            HashSet<Object> includedItems) {
+        LinkedList<Object> childList = children.get(parentItemId);
+        if (childList == null) {
+            return;
+        }
+
+        for (Object childItemId : childList) {
+            if (includedItems.contains(childItemId)) {
+                addFilteredChild(parentItemId, childItemId);
+                addFilteredChildrenRecursively(childItemId, includedItems);
+            }
+        }
+    }
+
+    /**
+     * Scans the itemId and all its children for which items should be included
+     * when filtering. All items which passes the filters are included.
+     * Additionally all items that have a child node that should be included are
+     * also themselves included.
+     * 
+     * @param itemId
+     * @param includedItems
+     * @return true if the itemId should be included in the filtered container.
+     */
+    private boolean filterIncludingParents(Object itemId,
+            HashSet<Object> includedItems) {
+        boolean toBeIncluded = passesFilters(itemId);
+
+        LinkedList<Object> childList = children.get(itemId);
+        if (childList != null) {
+            for (Object childItemId : children.get(itemId)) {
+                toBeIncluded |= filterIncludingParents(childItemId,
+                        includedItems);
+            }
+        }
+
+        if (toBeIncluded) {
+            includedItems.add(itemId);
+        }
+        return toBeIncluded;
+    }
+
+    private Set<Object> filterOverride = null;
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.data.util.IndexedContainer#passesFilters(java.lang.Object)
+     */
+    @Override
+    protected boolean passesFilters(Object itemId) {
+        if (filterOverride != null) {
+            return filterOverride.contains(itemId);
+        } else {
+            return super.passesFilters(itemId);
+        }
+    }
 }

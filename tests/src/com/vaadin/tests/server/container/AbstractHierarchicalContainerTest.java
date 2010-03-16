@@ -28,12 +28,14 @@ public class AbstractHierarchicalContainerTest extends AbstractContainerTest {
      *            down to all available nodes.
      * @param expectedRootSize
      *            Expected number of root items
+     * @param rootsHaveChildren
+     *            true if all roots have children, false otherwise (skips some
+     *            asserts)
      */
-    private void validateHierarchicalContainer(Hierarchical container,
+    protected void validateHierarchicalContainer(Hierarchical container,
             Object expectedFirstItemId, Object expectedLastItemId,
-            Object itemIdInSet, Object itemIdNotInSet,
-            boolean rootsHaveChildren, int expectedSize,
-            int expectedTraversalSize, int expectedRootSize) {
+            Object itemIdInSet, Object itemIdNotInSet, int expectedSize,
+            int expectedRootSize, boolean rootsHaveChildren) {
 
         validateContainer(container, expectedFirstItemId, expectedLastItemId,
                 itemIdInSet, itemIdNotInSet, expectedSize);
@@ -52,21 +54,19 @@ public class AbstractHierarchicalContainerTest extends AbstractContainerTest {
             // all roots must be roots
             assertTrue(container.isRoot(rootId));
 
-            // all roots have children allowed in this case
-            assertTrue(container.areChildrenAllowed(rootId));
-
-            // all roots have children in this case
             if (rootsHaveChildren) {
+                // all roots have children allowed in this case
+                assertTrue(container.areChildrenAllowed(rootId));
+
+                // all roots have children in this case
                 Collection<?> children = container.getChildren(rootId);
                 assertNotNull(rootId + " should have children", children);
                 assertTrue(rootId + " should have children",
                         (children.size() > 0));
-
                 // getParent
                 for (Object childId : children) {
                     assertEquals(container.getParent(childId), rootId);
                 }
-            } else {
 
             }
         }
@@ -83,7 +83,7 @@ public class AbstractHierarchicalContainerTest extends AbstractContainerTest {
         // removeItem of unknown items should return false
         assertFalse(container.removeItem(itemIdNotInSet));
 
-        assertEquals(expectedTraversalSize, countNodes(container));
+        assertEquals(expectedSize, countNodes(container));
 
         validateHierarchy(container);
     }
@@ -143,8 +143,8 @@ public class AbstractHierarchicalContainerTest extends AbstractContainerTest {
         int expectedSize = sampleData.length + packages;
         validateHierarchicalContainer(container, "com",
                 "com.vaadin.util.SerializerHelper",
-                "com.vaadin.terminal.ApplicationResource", "blah", true,
-                expectedSize, expectedSize, 1);
+                "com.vaadin.terminal.ApplicationResource", "blah",
+                expectedSize, 1, true);
 
     }
 
@@ -166,8 +166,8 @@ public class AbstractHierarchicalContainerTest extends AbstractContainerTest {
         int expectedSize = sampleData.length + packages;
         validateHierarchicalContainer(container, "com",
                 "com.vaadin.util.SerializerHelper",
-                "com.vaadin.terminal.ApplicationResource", "blah", true,
-                expectedSize, expectedSize, 1);
+                "com.vaadin.terminal.ApplicationResource", "blah",
+                expectedSize, 1, true);
 
         sortable.sort(new Object[] { REVERSE_FULLY_QUALIFIED_NAME },
                 new boolean[] { true });
@@ -175,58 +175,8 @@ public class AbstractHierarchicalContainerTest extends AbstractContainerTest {
         validateHierarchicalContainer(container,
                 "com.vaadin.terminal.gwt.server.ApplicationPortlet2",
                 "com.vaadin.data.util.ObjectProperty",
-                "com.vaadin.terminal.ApplicationResource", "blah", true,
-                expectedSize, expectedSize, 1);
-
-    }
-
-    protected void testHierarchicalFiltering(Container.Hierarchical container) {
-        Container.Filterable filterable = (Container.Filterable) container;
-
-        initializeContainer(container);
-
-        // Filter by "contains ab"
-        filterable.addContainerFilter(FULLY_QUALIFIED_NAME, "ab", false, false);
-
-        // 20 items should remain in the container but the root should be
-        // filtered
-        int expectedSize = 20;
-        int expectedTraversalSize = 0;
-        int expectedRoots = 0;
-
-        validateHierarchicalContainer(container,
-                "com.vaadin.data.BufferedValidatable",
-                "com.vaadin.ui.TabSheet",
-                "com.vaadin.terminal.gwt.client.Focusable", "blah", true,
-                expectedSize, expectedTraversalSize, expectedRoots);
-
-        // filter out every second item except hierarchy items
-        filterable.removeAllContainerFilters();
-        filterable.addContainerFilter(ID_NUMBER, "1", false, false);
-
-        int packages = 21;
-        int other = sampleData.length / 2;
-
-        expectedSize = packages + other;
-        expectedRoots = 1;
-        expectedTraversalSize = expectedSize;
-
-        validateHierarchicalContainer(container, "com", "com.vaadin.util",
-                "com.vaadin.data.util.IndexedContainer", "blah", true,
-                expectedSize, expectedTraversalSize, expectedRoots);
-
-        // Additionally remove all without 'm' in the simple name. Hierarchy is
-        // now one root only.
-        filterable.addContainerFilter(SIMPLE_NAME, "m", false, false);
-
-        expectedSize = 27;
-        expectedRoots = 1;
-        expectedTraversalSize = 1;
-
-        validateHierarchicalContainer(container, "com",
-                "com.vaadin.ui.UriFragmentUtility",
-                "com.vaadin.terminal.gwt.client.ui.TreeImages", "blah", false,
-                expectedSize, expectedTraversalSize, expectedRoots);
+                "com.vaadin.terminal.ApplicationResource", "blah",
+                expectedSize, 1, true);
 
     }
 

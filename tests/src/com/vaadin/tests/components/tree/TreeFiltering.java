@@ -1,9 +1,12 @@
 package com.vaadin.tests.components.tree;
 
 import com.vaadin.data.Item;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -39,6 +42,17 @@ public class TreeFiltering extends TestBase {
             ccTree.expandItem(o);
         }
 
+        final CheckBox filterType = new CheckBox(
+                "Include parent when filtering", true);
+        filterType.addListener(new ValueChangeListener() {
+
+            public void valueChange(ValueChangeEvent event) {
+                cont.setIncludeParentsWhenFiltering(((CheckBox) event
+                        .getProperty()).booleanValue());
+            }
+        });
+        addComponent(filterType);
+
         final Button b = new Button("Add filter 'foo'", new ClickListener() {
             public void buttonClick(final ClickEvent event) {
                 cont.addContainerFilter("caption", "foo", true, false);
@@ -62,7 +76,33 @@ public class TreeFiltering extends TestBase {
         });
 
         addComponent(num);
-        final Button r = new Button("Remove filter", new ClickListener() {
+        final Button num2 = new Button("Add filter '0-'", new ClickListener() {
+            public void buttonClick(final ClickEvent event) {
+                cont.addContainerFilter("caption", "0-", true, false);
+
+            }
+        });
+
+        addComponent(num2);
+        final Button num3 = new Button("Add filter 'Number 4'",
+                new ClickListener() {
+                    public void buttonClick(final ClickEvent event) {
+                        cont.addContainerFilter("caption", "Number 4", true,
+                                false);
+
+                    }
+                });
+
+        addComponent(num3);
+        final Button p1 = new Button("Set Number 3 parent to Number 0",
+                new ClickListener() {
+                    public void buttonClick(final ClickEvent event) {
+                        cont.setParent(3, 0);
+
+                    }
+                });
+        addComponent(p1);
+        final Button r = new Button("Remove filters", new ClickListener() {
             public void buttonClick(final ClickEvent event) {
                 cont.removeAllContainerFilters();
 
