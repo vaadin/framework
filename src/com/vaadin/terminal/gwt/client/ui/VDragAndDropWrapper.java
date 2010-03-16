@@ -204,8 +204,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         for (int i = 0; i < types.length(); i++) {
             String type = types.get(i);
             ApplicationConnection.getConsole().log("Type: " + type);
-            if ("Text".equals(type) || "Url".equals(type)
-                    || "text/html".equals(type)) {
+            if (isAcceptedType(type)) {
                 String data = event.getDataAsText(type);
                 if (data != null) {
                     ApplicationConnection.getConsole().log(type + " : " + data);
@@ -237,6 +236,18 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         event.preventDefault();
         event.stopPropagation();
 
+        return false;
+    }
+
+    protected String[] acceptedTypes = new String[] { "Text", "Url",
+            "text/html", "text/plain", "text/rtf" };
+
+    private boolean isAcceptedType(String type) {
+        for (String t : acceptedTypes) {
+            if (t.equals(type)) {
+                return true;
+            }
+        }
         return false;
     }
 
