@@ -238,7 +238,7 @@ public class HierarchicalContainer extends IndexedContainer implements
             // roots)
 
             // Removes from old parents children list
-            final LinkedList<Object> l = children.get(itemId);
+            final LinkedList<Object> l = children.get(oldParentId);
             if (l != null) {
                 l.remove(itemId);
                 if (l.isEmpty()) {
@@ -329,7 +329,8 @@ public class HierarchicalContainer extends IndexedContainer implements
     }
 
     /**
-     * TODO javadoc
+     * Moves a node in the container immediately after a sibling node. The two
+     * nodes must have the same parent in the container.
      * 
      * @param itemId
      * @param siblingId
