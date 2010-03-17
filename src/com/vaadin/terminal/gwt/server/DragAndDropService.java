@@ -6,8 +6,8 @@ package com.vaadin.terminal.gwt.server;
 import java.io.PrintWriter;
 import java.util.Map;
 
-import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.Transferable;
+import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DragSource;
 import com.vaadin.event.dd.DropHandler;
@@ -23,8 +23,6 @@ import com.vaadin.ui.Component;
 public class DragAndDropService implements VariableOwner {
 
     private static final long serialVersionUID = -4745268869323400203L;
-
-    public static final String DROPTARGET_KEY = "target";
 
     private int lastVisitId;
 
@@ -148,10 +146,8 @@ public class DragAndDropService implements VariableOwner {
 
         if (dropData == null) {
             // Create a default DragDropDetails with all the raw variables
-            dropData = new DropTargetDetailsImpl(rawDragDropDetails);
+            dropData = new DropTargetDetailsImpl(rawDragDropDetails, dropTarget);
         }
-
-        dropData.setData(DROPTARGET_KEY, dropTarget);
 
         return dropData;
     }

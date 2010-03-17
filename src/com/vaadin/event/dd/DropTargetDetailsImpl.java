@@ -6,20 +6,27 @@ package com.vaadin.event.dd;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.vaadin.terminal.gwt.server.DragAndDropService;
-
 /**
- * TODO Javadoc
+ * A HashMap backed implementation of {@link DropTargetDetails} for terminal
+ * implementation and for extension.
  * 
  * @since 6.3
  * 
  */
 public class DropTargetDetailsImpl implements DropTargetDetails {
 
+    private static final long serialVersionUID = -5099462771593036776L;
     private HashMap<String, Object> data = new HashMap<String, Object>();
+    private DropTarget dropTarget;
 
-    public DropTargetDetailsImpl(Map<String, Object> rawDropData) {
+    protected DropTargetDetailsImpl(Map<String, Object> rawDropData) {
         data.putAll(rawDropData);
+    }
+
+    public DropTargetDetailsImpl(Map<String, Object> rawDropData,
+            DropTarget dropTarget) {
+        this(rawDropData);
+        this.dropTarget = dropTarget;
     }
 
     public Object getData(String key) {
@@ -31,7 +38,7 @@ public class DropTargetDetailsImpl implements DropTargetDetails {
     }
 
     public DropTarget getTarget() {
-        return (DropTarget) data.get(DragAndDropService.DROPTARGET_KEY);
+        return dropTarget;
     }
 
 }

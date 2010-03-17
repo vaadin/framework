@@ -34,7 +34,7 @@ public class VTransferable {
      * Sets the component currently being dragged or from which the transferable
      * is created (eg. a tree which node is dragged).
      * <p>
-     * The server side counterpart of the componennt may implement
+     * The server side counterpart of the component may implement
      * {@link DragSource} interface if it wants to translate or complement the
      * server side instance of this Transferable.
      * 

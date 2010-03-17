@@ -2,6 +2,7 @@ package com.vaadin.tests.dd;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
@@ -400,7 +401,12 @@ public class DDTest6 extends TestBase {
                     for (Html5File html5File : files2) {
                         String fileName = html5File.getFileName();
                         // int bytes = html5File.getFileSize();
-                        final ByteArrayOutputStream bas = new ByteArrayOutputStream();
+                        final ByteArrayOutputStream bas = new ByteArrayOutputStream() {
+                            @Override
+                            public void close() throws IOException {
+                                super.close();
+                            }
+                        };
 
                         Receiver receiver = new Receiver() {
                             public OutputStream receiveUpload(String filename,

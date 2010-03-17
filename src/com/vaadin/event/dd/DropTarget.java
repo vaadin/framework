@@ -16,17 +16,24 @@ import com.vaadin.ui.Component;
  */
 public interface DropTarget extends Component {
 
+    /**
+     * @return the drop hanler that will receive the dragged data or null if
+     *         drops are not currently accepted
+     */
     public DropHandler getDropHandler();
 
     /**
-     * Called before a drop operation to translate the drop target details
-     * provided by the client widget (drop target). Should return a DropData
-     * implementation with the new values. If null is returned the terminal
-     * implementation will automatically create a {@link DropTargetDetails} with
-     * all the client variables.
+     * Called before the {@link DragAndDropEvent} is passed to
+     * {@link DropHandler}. Implementation may for exmaple translate the drop
+     * target details provided by the client side (drop target) to meaningful
+     * server side values. If null is returned the terminal implementation will
+     * automatically create a {@link DropTargetDetails} with raw client side
+     * data.
+     * 
+     * @see DragSource#getTransferable(Map)
      * 
      * @param rawVariables
-     *            Parameters passed from the client side widget.
+     *            data passed from the DropTargets client side counterpart.
      * @return A DropTargetDetails object with the translated data or null to
      *         use a default implementation.
      */
