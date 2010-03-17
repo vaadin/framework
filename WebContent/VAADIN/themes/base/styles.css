@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_3_0_dev-20100315";}
-.v-theme-version-6_3_0_dev-20100315 {display: none;}
+.v-theme-version:after {content:"6_3_0_dev-20100317";}
+.v-theme-version-6_3_0_dev-20100317 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -1700,6 +1700,11 @@ div.v-tree-node-leaf {
 	position: relative;
 	margin: 0;
 	overflow: hidden;
+}
+
+.v-ff .v-upload-immediate,
+.v-op .v-upload-immediate {
+	display: inline-block;
 }
 
 .v-upload-immediate input {

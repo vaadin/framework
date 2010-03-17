@@ -16,7 +16,7 @@ public class TestImmediateUploadInFormLayout extends ComponentTestCase implement
 
     @Override
     protected String getDescription() {
-        return "On Firefox 3.6 and Opera 10.10, clicking on an immediate upload in a wide FormLayout has no effect";
+        return "On Firefox 3.5 and Opera 10.10, clicking on an immediate upload in a wide FormLayout has no effect";
     }
 
     @Override

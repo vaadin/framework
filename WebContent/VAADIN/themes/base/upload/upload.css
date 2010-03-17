@@ -4,6 +4,11 @@
 	overflow: hidden;
 }
 
+.v-ff .v-upload-immediate,
+.v-op .v-upload-immediate {
+	display: inline-block;
+}
+
 .v-upload-immediate input {
 	opacity: 0;
 	filter: alpha(opacity=0);
