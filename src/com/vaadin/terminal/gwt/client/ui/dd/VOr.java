@@ -20,7 +20,7 @@ final public class VOr extends VAcceptCriterion implements VAcceptCallback {
         int childCount = configuration.getChildCount();
         accepted = false;
         for (int i = 0; i < childCount; i++) {
-            VAcceptCriterion crit = getCriteria(drag, configuration, i);
+            VAcceptCriterion crit = VAnd.getCriteria(drag, configuration, i);
             crit.accept(drag, configuration.getChildUIDL(i), this);
             if (accepted == true) {
                 callback.accepted(drag);
@@ -29,15 +29,9 @@ final public class VOr extends VAcceptCriterion implements VAcceptCallback {
         }
     }
 
-    private VAcceptCriterion getCriteria(VDragEvent drag, UIDL configuration,
-            int i) {
-        UIDL childUIDL = configuration.getChildUIDL(i);
-        return VAcceptCriteria.get(childUIDL.getStringAttribute("name"));
-    }
-
     @Override
     public boolean needsServerSideCheck(VDragEvent drag, UIDL criterioUIDL) {
-        return false; // TODO enforce on server side
+        return false;
     }
 
     @Override

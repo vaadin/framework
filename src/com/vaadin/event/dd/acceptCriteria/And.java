@@ -11,8 +11,8 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 
 /**
- * Criterion that joins two {@link ClientSideCriterion} together and validates
- * if both sub criterion validate.
+ * Criterion type that joins two or more {@link ClientSideCriterion} together
+ * and validates that all sub criterion validates.
  * 
  * @since 6.3
  * 
@@ -20,23 +20,32 @@ import com.vaadin.terminal.PaintTarget;
 @ClientCriterion(com.vaadin.terminal.gwt.client.ui.dd.VAnd.class)
 public class And extends ClientSideCriterion {
 
-    private AcceptCriterion f1;
-    private AcceptCriterion f2;
+    private ClientSideCriterion[] f1;
 
-    public And(ClientSideCriterion f1, ClientSideCriterion f2) {
+    /**
+     * 
+     * @param f1
+     *            ClientSideCriterion that must match
+     */
+    public And(ClientSideCriterion... f1) {
         this.f1 = f1;
-        this.f2 = f2;
     }
 
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
-        f1.paint(target);
-        f2.paint(target);
+        for (ClientSideCriterion crit : f1) {
+            crit.paint(target);
+        }
     }
 
     public boolean accepts(DragAndDropEvent dragEvent) {
-        return f1.accepts(dragEvent) && f2.accepts(dragEvent);
+        for (ClientSideCriterion crit : f1) {
+            if (!crit.accepts(dragEvent)) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }
