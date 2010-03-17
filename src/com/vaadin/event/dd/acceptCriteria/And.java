@@ -11,8 +11,10 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 
 /**
- * Criterion type that joins two or more {@link ClientSideCriterion} together
- * and validates that all sub criterion validates.
+ * A compound criterion that accepts the drag if all of its criteria accepts the
+ * drag.
+ * 
+ * @see Or
  * 
  * @since 6.3
  * 
@@ -25,7 +27,7 @@ public class And extends ClientSideCriterion {
     /**
      * 
      * @param f1
-     *            ClientSideCriterion that must match
+     *            criteria of which the And criterion will be composed
      */
     public And(ClientSideCriterion... f1) {
         this.f1 = f1;

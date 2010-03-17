@@ -12,19 +12,23 @@ import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.dd.VOr;
 
 /**
- * A compound criterion that returns true if any of criteria returns true.
+ * A compound criterion that accepts the drag if any of its criterion accepts
+ * it.
+ * 
+ * @see And
  * 
  * @since 6.3
  * 
  */
 @ClientCriterion(VOr.class)
 public class Or extends ClientSideCriterion {
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
     private AcceptCriterion criteria[];
 
+    /**
+     * @param criteria
+     *            the criteria of which the Or criteria will be composed
+     */
     public Or(ClientSideCriterion... criteria) {
         this.criteria = criteria;
     }
