@@ -12,7 +12,7 @@ import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.dd.VOr;
 
 /**
- * TODO Javadoc
+ * A compound criterion that returns true if any of criteria returns true.
  * 
  * @since 6.3
  * 
@@ -23,23 +23,27 @@ public class Or extends ClientSideCriterion {
      * 
      */
     private static final long serialVersionUID = 1L;
-    private AcceptCriterion f1;
-    private AcceptCriterion f2;
+    private AcceptCriterion criteria[];
 
-    public Or(ClientSideCriterion f1, ClientSideCriterion f2) {
-        this.f1 = f1;
-        this.f2 = f2;
+    public Or(ClientSideCriterion... criteria) {
+        this.criteria = criteria;
     }
 
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
-        f1.paint(target);
-        f2.paint(target);
+        for (AcceptCriterion crit : criteria) {
+            crit.paint(target);
+        }
     }
 
     public boolean accepts(DragAndDropEvent dragEvent) {
-        return f1.accepts(dragEvent) || f2.accepts(dragEvent);
+        for (AcceptCriterion crit : criteria) {
+            if (crit.accepts(dragEvent)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

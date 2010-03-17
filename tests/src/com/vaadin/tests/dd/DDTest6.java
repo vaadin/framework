@@ -25,6 +25,7 @@ import com.vaadin.event.dd.acceptCriteria.AcceptAll;
 import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptCriteria.IsSameSourceAndTarget;
 import com.vaadin.event.dd.acceptCriteria.Not;
+import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.StreamResource;
 import com.vaadin.terminal.ThemeResource;
@@ -39,6 +40,7 @@ import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.SplitPanel;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
@@ -252,11 +254,37 @@ public class DDTest6 extends TestBase {
 
     private void openFile(File file) {
         // ATM supports only images.
+        if (file.getType().equals("image/png")) {
+            Embedded embedded = new Embedded(file.getName(), file.getResource());
+            Window w = new Window(file.getName());
+            w.addComponent(embedded);
+            w.getContent().setSizeUndefined();
+            getMainWindow().addWindow(w);
+        } else if (file.getType().equals("text/csv")) {
+            showSpreadsheet(file);
+        }
+    }
 
-        Embedded embedded = new Embedded(file.getName(), file.getResource());
+    private void showSpreadsheet(File file) {
+        ApplicationResource resource = (ApplicationResource) file.getResource();
+        String string = new String(file.bas.toByteArray());
+        String[] rows = string.split("\n");
+        String[] cols = rows[0].split(",");
+        Table table = new Table();
+        for (String string2 : cols) {
+            String col = string2.replaceAll("\"", ""); // remove surrounding ""
+            table.addContainerProperty(string2, String.class, "");
+        }
+        for (int i = 1; i < rows.length; i++) {
+            String[] split = rows[i].split(",");
+            table.addItem(split, "" + i);
+        }
         Window w = new Window(file.getName());
-        w.addComponent(embedded);
+        w.getContent().setSizeUndefined();
+        table.setEditable(true);
+        w.addComponent(table);
         getMainWindow().addWindow(w);
+        // TODO saving would be nice demo
 
     }
 
@@ -385,6 +413,10 @@ public class DDTest6 extends TestBase {
 
                         File file = new File(fileName, bas);
                         file.setType(html5File.getType());
+                        // FF don't know csv
+                        if (fileName.endsWith(".csv")) {
+                            file.setType("text/csv");
+                        }
                         DDTest6.get().fs1.addBean(file);
                         DDTest6.get().tree1.setChildrenAllowed(file, false);
                         DDTest6.get().setParent(file, folder);
@@ -426,12 +458,25 @@ public class DDTest6 extends TestBase {
                             get().tree1.setValue(file);
                         } else {
                             String type = file.getType();
-                            if (type != null && type.equals("image/png")) {
+                            if (canDisplay(type)) {
                                 DDTest6.get().openFile(file);
                             }
                         }
                     }
 
+                }
+
+                String[] knownTypes = new String[] { "image/png", "text/csv" };
+
+                private boolean canDisplay(String type) {
+                    if (type != null) {
+                        for (String t : knownTypes) {
+                            if (t.equals(type)) {
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
                 }
             });
 
