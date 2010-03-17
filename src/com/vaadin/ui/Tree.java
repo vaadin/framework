@@ -32,6 +32,7 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DragSource;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
+import com.vaadin.event.dd.DropTargetDetails;
 import com.vaadin.event.dd.acceptCriteria.ClientCriterion;
 import com.vaadin.event.dd.acceptCriteria.ClientSideCriterion;
 import com.vaadin.event.dd.acceptCriteria.ServerSideCriterion;
@@ -103,7 +104,17 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * Supported drag modes for Tree.
      */
     public enum TreeDragMode {
-        NONE, NODE
+        /**
+         * When drag mode is NONE, draggin from Tree is not supported. Browsers
+         * may still support selecting text/icons from Tree which can initiate
+         * HTML 5 style drag and drop operation.
+         */
+        NONE,
+        /**
+         * When drag mode is NODE, users can initiate drag from Tree nodes that
+         * represent {@link Item}s in from the backed {@link Container}.
+         */
+        NODE
         // , SUBTREE
     }
 
@@ -1111,7 +1122,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     /**
-     * TODO Javadoc!
+     * A {@link DropTargetDetails} implementation with Tree specific api.
      * 
      * @since 6.3
      */
@@ -1191,10 +1202,11 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
     }
 
-    /**
-     * TODO Javadoc!
+    /*
+     * (non-Javadoc)
      * 
-     * @since 6.3
+     * @see
+     * com.vaadin.event.dd.DropTarget#translateDropTargetDetails(java.util.Map)
      */
     public TreeDropTargetDetails translateDropTargetDetails(
             Map<String, Object> clientVariables) {
@@ -1202,7 +1214,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     /**
-     * API for {@link TreeDropCriterion}
+     * Helper API for {@link TreeDropCriterion}
      * 
      * @param itemId
      * @return
@@ -1211,10 +1223,22 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         return itemIdMapper.key(itemId);
     }
 
+    /**
+     * Sets the drag mode that controls how Tree behaves as a {@link DragSource}
+     * .
+     * 
+     * @param dragMode
+     */
     public void setDragMode(TreeDragMode dragMode) {
         this.dragMode = dragMode;
     }
 
+    /**
+     * @return the drag mode that controls how Tree behaves as a
+     *         {@link DragSource}.
+     * 
+     * @see TreeDragMode
+     */
     public TreeDragMode getDragMode() {
         return dragMode;
     }

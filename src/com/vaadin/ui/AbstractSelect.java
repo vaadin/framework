@@ -21,6 +21,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.dd.DragAndDropEvent;
+import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.DropTargetDetailsImpl;
 import com.vaadin.event.dd.acceptCriteria.ClientCriterion;
 import com.vaadin.event.dd.acceptCriteria.ClientSideCriterion;
@@ -1769,7 +1770,7 @@ public abstract class AbstractSelect extends AbstractField implements
     }
 
     /**
-     * TODO Javadoc!
+     * Helper implementation for subclasses that implement {@link DropTarget}.
      * 
      * @since 6.3
      */
@@ -1781,11 +1782,13 @@ public abstract class AbstractSelect extends AbstractField implements
         protected Object idOver;
 
         /**
-         * TODO Javadoc!
+         * Constructor that automatically converts itemIdOver key to
+         * corresponding item Id
          * 
          */
-        AbstractSelectDropTargetDetails(Map<String, Object> rawVariables) {
-            super(rawVariables);
+        protected AbstractSelectDropTargetDetails(
+                Map<String, Object> rawVariables) {
+            super(rawVariables, (DropTarget) AbstractSelect.this);
             // eagar fetch itemid, mapper may be emptied
             String keyover = (String) getData("itemIdOver");
             if (keyover != null) {
@@ -1794,8 +1797,8 @@ public abstract class AbstractSelect extends AbstractField implements
         }
 
         /**
-         * If the drag operation is currently over an Item, this method returns
-         * the identifier of the Item.
+         * If the drag operation is currently over an {@link Item}, this method
+         * returns the identifier of that {@link Item}.
          * 
          */
         public Object getItemIdOver() {
@@ -1803,8 +1806,7 @@ public abstract class AbstractSelect extends AbstractField implements
         }
 
         /**
-         * TODO Javadoc!
-         * 
+         * Returns a detailed vertical location where the drop happened on Item.
          */
         public VerticalDropLocation getDropLocation() {
             String detail = (String) getData("detail");
