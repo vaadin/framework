@@ -278,15 +278,16 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
         setClosable(!uidl.getBooleanAttribute("readonly"));
 
         // Initialize the position form UIDL
-        try {
-            final int positionx = uidl.getIntVariable("positionx");
-            final int positiony = uidl.getIntVariable("positiony");
-            if (positionx >= 0 && positiony >= 0) {
-                setPopupPosition(positionx, positiony);
+        int positionx = uidl.getIntVariable("positionx");
+        int positiony = uidl.getIntVariable("positiony");
+        if (positionx >= 0 || positiony >= 0) {
+            if (positionx < 0) {
+                positionx = 0;
             }
-        } catch (final IllegalArgumentException e) {
-            // Silently ignored as positionx and positiony are not required
-            // parameters
+            if (positiony < 0) {
+                positiony = 0;
+            }
+            setPopupPosition(positionx, positiony);
         }
 
         if (uidl.hasAttribute("caption")) {
@@ -733,6 +734,8 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
     @Override
     public void setPopupPosition(int left, int top) {
         if (top < 0) {
+            // ensure window is not moved out of browser window from top of the
+            // screen
             top = 0;
         }
         super.setPopupPosition(left, top);
