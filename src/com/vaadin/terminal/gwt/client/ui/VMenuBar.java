@@ -27,7 +27,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 
 public class VMenuBar extends Widget implements Paintable,
-CloseHandler<PopupPanel>, ContainerResizedListener {
+        CloseHandler<PopupPanel>, ContainerResizedListener {
 
     /** Set the CSS class name to allow styling. */
     public static final String CLASSNAME = "v-menubar";
@@ -542,6 +542,12 @@ CloseHandler<PopupPanel>, ContainerResizedListener {
             popup.getElement().getStyle().setProperty("zoom", "");
             DeferredCommand.addCommand(new Command() {
                 public void execute() {
+                    if (popup == null) {
+                        // The child menu can be hidden before this command has
+                        // time to run.
+                        return;
+                    }
+
                     if (popup.getElement().getStyle().getProperty("width") == null
                             || popup.getElement().getStyle().getProperty(
                                     "width") == "") {
