@@ -30,8 +30,8 @@ import com.vaadin.terminal.gwt.client.ui.VCssLayout;
  * result works properly on each browser)
  * <li>different kind of handling for relative sizes (that are set from server
  * side) (*)
- * <li>noticeable faster rendering time in some situations as we rely more on
- * browsers rendering engine.
+ * <li>noticeably faster rendering time in some situations as we rely more on
+ * the browser's rendering engine.
  * </ul>
  *<p>
  * With {@link CustomLayout} one can often achieve similar results (good looking
