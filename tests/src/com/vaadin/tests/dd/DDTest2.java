@@ -118,7 +118,7 @@ public class DDTest2 extends TestBase {
         /*
          * Make table rows draggable
          */
-        table.setDragMode(Table.DragModes.ROWS);
+        table.setDragMode(Table.TableDragMode.ROWS);
 
         OverFolderNode onNode = new OverFolderNode();
         DragSourceIs fromTable = new DragSourceIs(table);

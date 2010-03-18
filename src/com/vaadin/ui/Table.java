@@ -70,8 +70,16 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Modes that Table support as drag sourse.
      */
-    public enum DragModes {
-        NONE, ROWS
+    public enum TableDragMode {
+        /**
+         * Table does not start drag and drop events. HTM5 style events started
+         * by browser may still happen.
+         */
+        NONE,
+        /**
+         * Table starts drag from rows.
+         */
+        ROWS
     }
 
     private static final int CELL_KEY = 0;
@@ -345,7 +353,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     private double cacheRate = CACHE_RATE_DEFAULT;
 
-    private DragModes dragMode = DragModes.NONE;
+    private TableDragMode dragMode = TableDragMode.NONE;
 
     private DropHandler dropHandler;
 
@@ -2040,7 +2048,7 @@ public class Table extends AbstractSelect implements Action.Container,
             target.addAttribute("tabindex", getTabIndex());
         }
 
-        if (dragMode != DragModes.NONE) {
+        if (dragMode != TableDragMode.NONE) {
             target.addAttribute("dragmode", dragMode.ordinal());
         }
 
@@ -3335,9 +3343,23 @@ public class Table extends AbstractSelect implements Action.Container,
         }
     }
 
-    public void setDragMode(DragModes newDragMode) {
+    /**
+     * Sets the drag start mode of the Table. Drag start mode controls how Table
+     * behaves as a drag source.
+     * 
+     * @param newDragMode
+     */
+    public void setDragMode(TableDragMode newDragMode) {
         dragMode = newDragMode;
         requestRepaint();
+    }
+
+    /**
+     * @return the current start mode of the Table. Drag start mode controls how
+     *         Table behaves as a drag source.
+     */
+    public TableDragMode getDragMode() {
+        return dragMode;
     }
 
     /**

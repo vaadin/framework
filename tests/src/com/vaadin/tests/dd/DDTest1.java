@@ -21,7 +21,7 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Tree;
-import com.vaadin.ui.Table.DragModes;
+import com.vaadin.ui.Table.TableDragMode;
 import com.vaadin.ui.Tree.TreeDragMode;
 import com.vaadin.ui.Tree.TreeDropTargetDetails;
 
@@ -237,7 +237,7 @@ public class DDTest1 extends TestBase {
         ta.addContainerProperty("Bars", String.class, "Bar");
         ta.setRowHeaderMode(Table.ROW_HEADER_MODE_ID);
         ta.setSizeFull();
-        ta.setDragMode(DragModes.ROWS);
+        ta.setDragMode(TableDragMode.ROWS);
 
         main.addComponent(pane1);
         main.addComponent(pane2);

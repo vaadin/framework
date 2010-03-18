@@ -59,7 +59,7 @@ public class DDTest4 extends TestBase {
         /*
          * Make table rows draggable
          */
-        table.setDragMode(Table.DragModes.ROWS);
+        table.setDragMode(Table.TableDragMode.ROWS);
 
         table.setDropHandler(new DropHandler() {
             // accept only drags from this table
