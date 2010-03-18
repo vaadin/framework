@@ -3348,13 +3348,17 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @since 6.3
      */
-    protected class TableTransferable extends DataBoundTransferable {
+    public class TableTransferable extends DataBoundTransferable {
 
-        public TableTransferable(Map<String, Object> rawVariables) {
+        protected TableTransferable(Map<String, Object> rawVariables) {
             super(Table.this, rawVariables);
             Object object = rawVariables.get("itemId");
             if (object != null) {
                 setData("itemId", itemIdMapper.get((String) object));
+            }
+            object = rawVariables.get("propertyId");
+            if (object != null) {
+                setData("propertyId", columnIdMap.get((String) object));
             }
         }
 
@@ -3365,8 +3369,12 @@ public class Table extends AbstractSelect implements Action.Container,
 
         @Override
         public Object getPropertyId() {
-            // FIXME incorrect implementation, drag can also concern a cell
-            return getItemCaptionPropertyId();
+            return getData("propertyId");
+        }
+
+        @Override
+        public Table getSourceComponent() {
+            return (Table) super.getSourceComponent();
         }
 
     }

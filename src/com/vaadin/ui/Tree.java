@@ -1286,12 +1286,15 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     /**
-     * An example of lazy initializing criterion. Initially pretty much no data
-     * is sent to client, on first accepts set (per drag request) the client
-     * side data structure is initialized and no subsequent requests requests
-     * are needed during that drag and drop operation.
+     * Lazy loading accept criterion for Tree. Accepted target nodes are loaded
+     * from server once per drag and drop operation. Developer must override one
+     * method that decides accepted tree nodes for the whole Tree.
+     * 
      * <p>
-     * See client side counterpart
+     * Initially pretty much no data is sent to client. On first required
+     * criterion check (per drag request) the client side data structure is
+     * initialized from server and no subsequent requests requests are needed
+     * during that drag and drop operation.
      */
     @ClientCriterion(VLazyInitItemIdentifiers.class)
     public static abstract class TreeDropCriterion extends ServerSideCriterion {

@@ -1,6 +1,8 @@
 package com.vaadin.tests.dd;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
@@ -16,7 +18,6 @@ import com.vaadin.event.dd.acceptCriteria.And;
 import com.vaadin.event.dd.acceptCriteria.DragSourceIs;
 import com.vaadin.event.dd.acceptCriteria.IsDataBound;
 import com.vaadin.event.dd.acceptCriteria.Or;
-import com.vaadin.event.dd.acceptCriteria.ServerSideCriterion;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.tests.components.TestBase;
@@ -26,9 +27,9 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.AbstractSelect.AbstractSelectDropTargetDetails;
+import com.vaadin.ui.Table.TableTransferable;
 import com.vaadin.ui.Tree.OverFolderNode;
 import com.vaadin.ui.Tree.TreeDragMode;
-import com.vaadin.ui.Tree.TreeDropTargetDetails;
 
 public class DDTest2 extends TestBase {
 
@@ -76,26 +77,27 @@ public class DDTest2 extends TestBase {
          * explicitly defining them here), but demonstrates lazy initialization
          * option if rules are heavy.
          */
-        final AcceptCriterion crit = new ServerSideCriterion() {
-            public boolean accepts(DragAndDropEvent dragEvent) {
+        final AcceptCriterion crit = new Tree.TreeDropCriterion() {
 
-                TreeDropTargetDetails dropTargetData = (TreeDropTargetDetails) dragEvent
-                        .getDropTargetDetails();
-
-                Object itemIdOver = dropTargetData.getItemIdOver();
-
-                int i = r.nextInt();
-                if (i % 2 == 0) {
-                    return true;
-                }
-                return false;
+            @Override
+            protected Set<Object> getAllowedItemIds(DragAndDropEvent dragEvent,
+                    Tree tree) {
+                return new HashSet(tree.getItemIds());
             }
         };
 
         tree3.setDropHandler(new DropHandler() {
             public void drop(DragAndDropEvent dropEvent) {
                 Transferable transferable = dropEvent.getTransferable();
+
                 String data = (String) transferable.getData("Text");
+                if (transferable instanceof TableTransferable) {
+                    TableTransferable tr = (TableTransferable) transferable;
+                    System.out.println("From table row" + tr.getPropertyId());
+                    data = tr.getSourceContainer().getItem(tr.getItemId())
+                            .getItemProperty(tr.getPropertyId()).toString();
+
+                }
                 if (data == null) {
                     data = "-no Text data flawor-";
                 }
