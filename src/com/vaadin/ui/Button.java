@@ -290,7 +290,8 @@ public class Button extends AbstractField {
     }
 
     /**
-     * Button click listener
+     * Interface for listening for a {@link ClickEvent} fired by a
+     * {@link Component}.
      * 
      * @author IT Mill Ltd.
      * @version
@@ -300,10 +301,11 @@ public class Button extends AbstractField {
     public interface ClickListener extends Serializable {
 
         /**
-         * Button has been pressed.
+         * Called when a {@link Button} has been clicked. A reference to the
+         * button is given by {@link ClickEvent#getButton()}.
          * 
          * @param event
-         *            Button click event.
+         *            An event containing information about the click.
          */
         public void buttonClick(ClickEvent event);
     }
