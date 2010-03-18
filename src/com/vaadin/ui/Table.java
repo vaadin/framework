@@ -28,15 +28,19 @@ import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.event.ItemClickEvent.ItemClickSource;
+import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DragSource;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
+import com.vaadin.event.dd.acceptCriteria.ClientCriterion;
+import com.vaadin.event.dd.acceptCriteria.ServerSideCriterion;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VScrollTable;
+import com.vaadin.terminal.gwt.client.ui.dd.VLazyInitItemIdentifiers;
 
 /**
  * <p>
@@ -3418,4 +3422,98 @@ public class Table extends AbstractSelect implements Action.Container,
             Map<String, Object> clientVariables) {
         return new AbstractSelectDropTargetDetails(clientVariables);
     }
+
+    /**
+     * Lazy loading accept criterion for Table. Accepted target rows are loaded
+     * from server once per drag and drop operation. Developer must override one
+     * method that decides on which rows the currently dragged data can be
+     * dropped.
+     * 
+     * <p>
+     * Initially pretty much no data is sent to client. On first required
+     * criterion check (per drag request) the client side data structure is
+     * initialized from server and no subsequent requests requests are needed
+     * during that drag and drop operation.
+     */
+    @ClientCriterion(VLazyInitItemIdentifiers.class)
+    public static abstract class TableDropCriterion extends ServerSideCriterion {
+
+        private Table table;
+
+        private Set<Object> allowedItemIds;
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * com.vaadin.event.dd.acceptCriteria.ServerSideCriterion#getIdentifier
+         * ()
+         */
+        @Override
+        protected String getIdentifier() {
+            return TableDropCriterion.class.getCanonicalName();
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * com.vaadin.event.dd.acceptCriteria.AcceptCriterion#accepts(com.vaadin
+         * .event.dd.DragAndDropEvent)
+         */
+        public boolean accepts(DragAndDropEvent dragEvent) {
+            AbstractSelectDropTargetDetails dropTargetData = (AbstractSelectDropTargetDetails) dragEvent
+                    .getDropTargetDetails();
+            table = (Table) dragEvent.getDropTargetDetails().getTarget();
+            ArrayList<Object> visibleItemIds = new ArrayList<Object>(table
+                    .getPageLength());
+            visibleItemIds.size();
+            Object id = table.getCurrentPageFirstItemId();
+            for (int i = 0; i < table.getPageLength() && id != null; i++) {
+                visibleItemIds.add(id);
+                id = table.nextItemId(id);
+            }
+            allowedItemIds = getAllowedItemIds(dragEvent, table, visibleItemIds);
+
+            return allowedItemIds.contains(dropTargetData.getItemIdOver());
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * com.vaadin.event.dd.acceptCriteria.AcceptCriterion#paintResponse(
+         * com.vaadin.terminal.PaintTarget)
+         */
+        @Override
+        public void paintResponse(PaintTarget target) throws PaintException {
+            /*
+             * send allowed nodes to client so subsequent requests can be
+             * avoided
+             */
+            Object[] array = allowedItemIds.toArray();
+            for (int i = 0; i < array.length; i++) {
+                String key = table.itemIdMapper.key(array[i]);
+                array[i] = key;
+            }
+            target.addAttribute("allowedIds", array);
+        }
+
+        /**
+         * @param dragEvent
+         * @param table
+         *            the table for which the allowed item identifiers are
+         *            defined
+         * @param visibleItemIds
+         *            the list of currently rendered item identifiers, accepted
+         *            item id's need to be detected only for these visible items
+         * @return the set of identifiers for items on which the dragEvent will
+         *         be accepted
+         */
+        protected abstract Set<Object> getAllowedItemIds(
+                DragAndDropEvent dragEvent, Table table,
+                Collection<Object> visibleItemIds);
+
+    }
+
 }
