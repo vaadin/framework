@@ -1167,10 +1167,13 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
         /**
          * If drop is targeted into "folder node" (see {@link #getItemIdInto()}
-         * ), this method returns the item id after the drag was targeted. TODO
-         * could this be said any more difficult :-)
+         * ), this method returns the item id of the node after the drag was
+         * targeted. This method is useful when implementing drop into specific
+         * location (between specific nodes) in tree.
          * 
-         * @return
+         * @return the id of the item after the user targets the drop or null if
+         *         "target" is a first item in node list (or the first in root
+         *         node list)
          */
         public Object getItemIdAfter() {
             Object itemIdOver = getItemIdOver();
