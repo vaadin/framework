@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_3_0_dev-20100317";}
-.v-theme-version-6_3_0_dev-20100317 {display: none;}
+.v-theme-version:after {content:"6_3_0_dev-20100318";}
+.v-theme-version-6_3_0_dev-20100318 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -457,6 +457,7 @@ div.v-app-loading {
 	position:absolute;
     opacity: 0.5;
     filter: alpha(opacity=50);
+    cursor: default;
 }
 
 .v-ddwrapper {
