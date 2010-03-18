@@ -1370,8 +1370,6 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      */
     public static class OverFolderNode extends DropTargetDetailEquals {
 
-        private static final long serialVersionUID = 1L;
-
         public OverFolderNode() {
             super("itemIdOverIsNode", Boolean.TRUE);
         }
@@ -1441,8 +1439,6 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
             this.parentItemId = parentItemId;
             this.depthToCheck = depthToCheck;
         }
-
-        private static final long serialVersionUID = 1L;
 
         public boolean accepts(DragAndDropEvent dragEvent) {
             try {

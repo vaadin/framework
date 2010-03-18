@@ -126,11 +126,6 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
 
     public class WrapperDropDetails extends DropTargetDetailsImpl {
 
-        /**
-         * 
-         */
-        private static final long serialVersionUID = 1L;
-
         public WrapperDropDetails(Map<String, Object> rawDropData) {
             super(rawDropData, DragAndDropWrapper.this);
         }
@@ -207,10 +202,6 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         }
     }
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1L;
     private DropHandler dropHandler;
 
     public DropHandler getDropHandler() {

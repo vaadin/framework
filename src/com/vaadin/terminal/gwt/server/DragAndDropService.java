@@ -22,8 +22,6 @@ import com.vaadin.ui.Component;
 
 public class DragAndDropService implements VariableOwner {
 
-    private static final long serialVersionUID = -4745268869323400203L;
-
     private int lastVisitId;
 
     private int currentEventId;

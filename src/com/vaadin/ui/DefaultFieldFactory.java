@@ -35,8 +35,6 @@ public class DefaultFieldFactory implements FormFieldFactory, TableFieldFactory 
     protected DefaultFieldFactory() {
     }
 
-    private static final long serialVersionUID = -8051489865928478009L;
-
     public Field createField(Item item, Object propertyId, Component uiContext) {
         Class<?> type = item.getItemProperty(propertyId).getType();
         Field field = createFieldByPropertyType(type);

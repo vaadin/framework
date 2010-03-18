@@ -60,8 +60,6 @@ import com.vaadin.terminal.gwt.client.ui.VCssLayout;
 @ClientWidget(VCssLayout.class)
 public class CssLayout extends AbstractLayout {
 
-    private static final long serialVersionUID = -6408703812053460073L;
-
     private static final String CLICK_EVENT = VCssLayout.CLICK_EVENT_IDENTIFIER;
 
     /**

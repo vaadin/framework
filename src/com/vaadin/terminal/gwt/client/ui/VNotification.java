@@ -316,7 +316,6 @@ public class VNotification extends VOverlay {
     }
 
     public class HideEvent extends EventObject {
-        private static final long serialVersionUID = 4428671753988459560L;
 
         public HideEvent(Object source) {
             super(source);

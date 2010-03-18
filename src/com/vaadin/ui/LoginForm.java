@@ -40,13 +40,9 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
  */
 public class LoginForm extends CustomComponent {
 
-    private static final long serialVersionUID = 4081792750778351702L;
-
     private Embedded iframe = new Embedded();
 
     private ApplicationResource loginPage = new ApplicationResource() {
-
-        private static final long serialVersionUID = 1L;
 
         public Application getApplication() {
             return LoginForm.this.getApplication();
@@ -76,8 +72,6 @@ public class LoginForm extends CustomComponent {
 
     private ParameterHandler paramHandler = new ParameterHandler() {
 
-        private static final long serialVersionUID = 1L;
-
         public void handleParameters(Map<String, String[]> parameters) {
             if (parameters.containsKey("username")) {
                 getWindow().addURIHandler(uriHandler);
@@ -97,7 +91,6 @@ public class LoginForm extends CustomComponent {
     };
 
     private URIHandler uriHandler = new URIHandler() {
-        private static final long serialVersionUID = 1L;
         private final String responce = "<html><body>Login form handeled."
                 + "<script type='text/javascript'>top.vaadin.forceSync();"
                 + "</script></body></html>";
@@ -205,7 +198,6 @@ public class LoginForm extends CustomComponent {
      */
     public class LoginEvent extends Event {
 
-        private static final long serialVersionUID = 1L;
         private Map<String, String> params;
 
         private LoginEvent(Map<String, String> params) {

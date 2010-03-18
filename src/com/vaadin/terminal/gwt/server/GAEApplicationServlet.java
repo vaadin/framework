@@ -95,8 +95,6 @@ import com.vaadin.service.ApplicationContext;
  */
 public class GAEApplicationServlet extends ApplicationServlet {
 
-    private static final long serialVersionUID = 2179597952818898526L;
-
     private static final Logger log = Logger
             .getLogger(GAEApplicationServlet.class.getName());
 

@@ -23,7 +23,6 @@ import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
  * 
  */
 public class DragAndDropEvent implements Serializable {
-    private static final long serialVersionUID = -2232591107911385564L;
     private Transferable transferable;
     private DropTargetDetails dropTargetDetails;
 
