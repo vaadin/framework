@@ -545,6 +545,12 @@ public class VMenuBar extends Widget implements Paintable,
             popup.getElement().getStyle().setProperty("zoom", "");
             DeferredCommand.addCommand(new Command() {
                 public void execute() {
+                    if (popup == null) {
+                        // The child menu can be hidden before this command is
+                        // run.
+                        return;
+                    }
+
                     if (popup.getElement().getStyle().getProperty("width") == null
                             || popup.getElement().getStyle().getProperty(
                                     "width") == "") {
