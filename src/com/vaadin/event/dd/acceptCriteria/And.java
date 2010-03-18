@@ -22,27 +22,28 @@ import com.vaadin.terminal.PaintTarget;
 @ClientCriterion(com.vaadin.terminal.gwt.client.ui.dd.VAnd.class)
 public class And extends ClientSideCriterion {
 
-    private ClientSideCriterion[] f1;
+    private static final long serialVersionUID = -5242574480825471748L;
+    protected ClientSideCriterion[] criteria;
 
     /**
      * 
-     * @param f1
+     * @param criteria
      *            criteria of which the And criterion will be composed
      */
-    public And(ClientSideCriterion... f1) {
-        this.f1 = f1;
+    public And(ClientSideCriterion... criteria) {
+        this.criteria = criteria;
     }
 
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
-        for (ClientSideCriterion crit : f1) {
+        for (ClientSideCriterion crit : criteria) {
             crit.paint(target);
         }
     }
 
     public boolean accepts(DragAndDropEvent dragEvent) {
-        for (ClientSideCriterion crit : f1) {
+        for (ClientSideCriterion crit : criteria) {
             if (!crit.accepts(dragEvent)) {
                 return false;
             }

@@ -13,8 +13,20 @@ final public class VDropDetailEquals extends VAcceptCriterion {
     @Override
     public boolean validates(VDragEvent drag, UIDL configuration) {
         String name = configuration.getStringAttribute("p");
-        String value = configuration.getStringAttribute("v");
-        Object object = drag.getDropDetails().get(name);
-        return value.equals(object);
+        String t = configuration.hasAttribute("t") ? configuration
+                .getStringAttribute("t").intern() : "s";
+        Object value = null;
+        if (t == "s") {
+            value = configuration.getStringAttribute("v");
+        } else if (t == "b") {
+            value = configuration.getBooleanAttribute("v");
+        }
+        if (value != null) {
+            Object object = drag.getDropDetails().get(name);
+            return value.equals(object);
+        } else {
+            return false;
+        }
+
     }
 }

@@ -22,10 +22,11 @@ import com.vaadin.terminal.gwt.client.ui.dd.VDropDetailEquals;
  * 
  */
 @ClientCriterion(VDropDetailEquals.class)
-public final class DropTargetDetailEquals extends ClientSideCriterion {
+public class DropTargetDetailEquals extends ClientSideCriterion {
 
+    private static final long serialVersionUID = 763165450054331246L;
     private String propertyName;
-    private String value;
+    private Object value;
 
     /**
      * Constructs a criterion which ensures that the value there is a value in
@@ -42,15 +43,31 @@ public final class DropTargetDetailEquals extends ClientSideCriterion {
         this.value = value;
     }
 
+    public DropTargetDetailEquals(String dataFlavor, Boolean true1) {
+        propertyName = dataFlavor;
+        value = true1;
+    }
+
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
         target.addAttribute("p", propertyName);
-        target.addAttribute("v", value);
+        if (value instanceof Boolean) {
+            target.addAttribute("v", ((Boolean) value).booleanValue());
+            target.addAttribute("t", "b");
+        } else if (value instanceof String) {
+            target.addAttribute("v", (String) value);
+        }
     }
 
     public boolean accepts(DragAndDropEvent dragEvent) {
         Object data = dragEvent.getDropTargetDetails().getData(propertyName);
         return value.equals(data);
+    }
+
+    @Override
+    protected String getIdentifier() {
+        // sub classes by default use VDropDetailEquals a client implementation
+        return DropTargetDetailEquals.class.getCanonicalName();
     }
 }

@@ -35,6 +35,7 @@ import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.DropTargetDetails;
 import com.vaadin.event.dd.acceptCriteria.ClientCriterion;
 import com.vaadin.event.dd.acceptCriteria.ClientSideCriterion;
+import com.vaadin.event.dd.acceptCriteria.DropTargetDetailEquals;
 import com.vaadin.event.dd.acceptCriteria.ServerSideCriterion;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
@@ -43,7 +44,6 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VTree;
 import com.vaadin.terminal.gwt.client.ui.dd.VLazyInitItemIdentifiers;
-import com.vaadin.terminal.gwt.client.ui.dd.VOverTreeNode;
 import com.vaadin.terminal.gwt.client.ui.dd.VTargetNodeIsChildOf;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.tools.ReflectTools;
@@ -1355,18 +1355,25 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     /**
-     * Accepts transferable only on tree Node (middle of the node + can has
-     * child)
+     * A criterion that accepts transferable only directly on a tree node that
+     * can have children.
      * 
-     * TODO replace by composition of itemIdIs + drop property
+     * @see Tree#setChildrenAllowed(Object, boolean)
      * 
      * @since 6.3
      */
-    @ClientCriterion(VOverTreeNode.class)
-    public static class OverFolderNode extends ClientSideCriterion {
+    public static class OverFolderNode extends DropTargetDetailEquals {
 
         private static final long serialVersionUID = 1L;
 
+        public OverFolderNode() {
+            super("itemIdOverIsNode", Boolean.TRUE);
+        }
+
+        /*
+         * Uses enhanced server side check
+         */
+        @Override
         public boolean accepts(DragAndDropEvent dragEvent) {
             try {
                 // must be over tree node and in the middle of it (not top or
@@ -1385,11 +1392,16 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 return false;
             }
         }
+
     }
 
     /**
-     * Checks to parent (or parent hierarchy) for the item identifier given in
-     * constructor. If the parent is found, content is accepted.
+     * An accept criterion that checks the parent node (or parent hierarchy) for
+     * the item identifier given in constructor. If the parent is found, content
+     * is accepted. Criterion can be used to accepts drags on a select sub tree
+     * only.
+     * 
+     * TODO consider renaming and starting traversing from "itemIdInto".
      */
     @ClientCriterion(VTargetNodeIsChildOf.class)
     public class TargetNodeIsChildOf extends ClientSideCriterion {
@@ -1398,16 +1410,22 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         private int depthToCheck = 1;
 
         /**
+         * Constructs a criteria that accepts the drag if the targeted item is a
+         * direct descendant of Item identified by given id
          * 
          * @param parentItemId
+         *            the item identifier of the parent node
          */
         public TargetNodeIsChildOf(Object parentItemId) {
             this.parentItemId = parentItemId;
         }
 
         /**
+         * Constructs a criteria that accepts drops at any level below the item
+         * identified by given id
          * 
          * @param parentItemId
+         *            the item identifier to be sought for
          * @param depthToCheck
          *            the depth that tree is traversed upwards to seek for the
          *            parent, -1 means that the whole structure should be
@@ -1429,7 +1447,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                     Object itemIdOver = eventDetails.getItemIdOver();
                     Object parent2 = getParent(itemIdOver);
                     int i = 0;
-                    while (parent2 != null && i < depthToCheck) {
+                    while (parent2 != null
+                            && (depthToCheck == -1 || i < depthToCheck)) {
                         if (parent2.equals(parentItemId)) {
                             return true;
                         }
