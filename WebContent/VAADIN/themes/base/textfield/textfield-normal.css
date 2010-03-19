@@ -1,0 +1,37 @@
+.v-textfield {
+	text-align: left /* Force default alignment */
+}
+.v-textarea {
+}
+.v-textfield-focus,
+.v-textarea-focus {
+}
+input.v-textfield-prompt,
+textarea.v-textarea-prompt {
+	color: #999;
+	font-style: italic;
+}
+.v-textfield.v-readonly,
+.v-textarea.v-readonly {
+	background: transparent;
+	border: none;
+}
+/* Disabled by default
+.v-textarea-error,
+.v-textfield-error,
+.v-richtextarea-error iframe.gwt-RichTextArea {
+	background: #FFE0E0;	
+}
+*/
+/* Disabled by default
+.v-textarea-required,
+.v-textfield-required,
+.v-richtextarea-required iframe.gwt-RichTextArea {
+	background: #FFE0E0;	
+}
+*/
+/* Safari focus glow fix */
+.v-sa input:focus, 
+.v-sa textarea:focus {
+	outline-width: medium;
+}

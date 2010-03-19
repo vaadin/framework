@@ -88,7 +88,6 @@ public class VRichTextArea extends Composite implements Paintable, Field,
                 fp.remove(rta);
                 fp.add(html);
             }
-
             this.enabled = enabled;
         }
     }

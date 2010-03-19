@@ -51,41 +51,41 @@ public class VRichTextToolbar extends Composite {
      */
     public interface Images extends ClientBundle {
 
-      ImageResource bold();
+        ImageResource bold();
 
-      ImageResource createLink();
+        ImageResource createLink();
 
-      ImageResource hr();
+        ImageResource hr();
 
-      ImageResource indent();
+        ImageResource indent();
 
-      ImageResource insertImage();
+        ImageResource insertImage();
 
-      ImageResource italic();
+        ImageResource italic();
 
-      ImageResource justifyCenter();
+        ImageResource justifyCenter();
 
-      ImageResource justifyLeft();
+        ImageResource justifyLeft();
 
-      ImageResource justifyRight();
+        ImageResource justifyRight();
 
-      ImageResource ol();
+        ImageResource ol();
 
-      ImageResource outdent();
+        ImageResource outdent();
 
-      ImageResource removeFormat();
+        ImageResource removeFormat();
 
-      ImageResource removeLink();
+        ImageResource removeLink();
 
-      ImageResource strikeThrough();
+        ImageResource strikeThrough();
 
-      ImageResource subscript();
+        ImageResource subscript();
 
-      ImageResource superscript();
+        ImageResource superscript();
 
-      ImageResource ul();
+        ImageResource ul();
 
-      ImageResource underline();
+        ImageResource underline();
     }
 
     /**
@@ -312,10 +312,8 @@ public class VRichTextToolbar extends Composite {
 
         outer.add(topPanel);
         outer.add(bottomPanel);
-        topPanel.setWidth("100%");
-        topPanel.setHeight("20px");
-        topPanel.getElement().getStyle().setProperty("overflow", "hidden");
-        bottomPanel.setWidth("100%");
+        topPanel.setStyleName("gwt-RichTextToolbar-top");
+        bottomPanel.setStyleName("gwt-RichTextToolbar-bottom");
 
         initWidget(outer);
         setStyleName("gwt-RichTextToolbar");
@@ -393,7 +391,7 @@ public class VRichTextToolbar extends Composite {
         lb.setVisibleItemCount(1);
 
         lb.addItem(strings.font(), "");
-        lb.addItem(strings.normal(), "");
+        lb.addItem(strings.normal(), "inherit");
         lb.addItem("Times New Roman", "Times New Roman");
         lb.addItem("Arial", "Arial");
         lb.addItem("Courier New", "Courier New");
@@ -426,8 +424,7 @@ public class VRichTextToolbar extends Composite {
         return pb;
     }
 
-    private ToggleButton createToggleButton(ImageResource img,
-            String tip) {
+    private ToggleButton createToggleButton(ImageResource img, String tip) {
         final ToggleButton tb = new ToggleButton(new Image(img));
         tb.addClickHandler(handler);
         tb.setTitle(tip);
