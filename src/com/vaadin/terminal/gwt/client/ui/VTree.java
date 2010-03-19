@@ -163,10 +163,10 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
         currentMouseOverKey = findCurrentMouseOverKey(drag.getElementOver());
 
         if (currentMouseOverKey != null) {
-            VerticalDropLocation detail = getDropDetail(drag
+            TreeNode treeNode = keyToNode.get(currentMouseOverKey);
+            VerticalDropLocation detail = treeNode.getDropDetail(drag
                     .getCurrentGwtEvent());
             Boolean overTreeNode = null;
-            TreeNode treeNode = keyToNode.get(currentMouseOverKey);
             if (treeNode != null && !treeNode.isLeaf()
                     && detail == VerticalDropLocation.MIDDLE) {
                 overTreeNode = true;
@@ -204,8 +204,8 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                             .getDropDetails().get("detail");
 
                     updateTreeRelatedDragData(currentDrag);
-                    final VerticalDropLocation detail = getDropDetail(currentDrag
-                            .getCurrentGwtEvent());
+                    final VerticalDropLocation detail = (VerticalDropLocation) currentDrag
+                            .getDropDetails().get("detail");
                     boolean nodeHasChanged = (currentMouseOverKey != null && currentMouseOverKey != oldIdOver)
                             || (currentMouseOverKey == null && oldIdOver != null);
                     boolean detailHasChanded = (detail != null && detail != oldDetail)
@@ -218,7 +218,7 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                         final String newKey = currentMouseOverKey;
                         TreeNode treeNode = keyToNode.get(oldIdOver);
                         if (treeNode != null) {
-                        	// clear old styles
+                            // clear old styles
                             treeNode.emphasis(null);
                         }
                         validate(new VAcceptCallback() {
@@ -262,17 +262,6 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
             };
         }
         dropHandler.updateAcceptRules(childUidl);
-    }
-
-    public VerticalDropLocation getDropDetail(NativeEvent event) {
-        TreeNode treeNode = keyToNode.get(currentMouseOverKey);
-        if (treeNode == null) {
-            return null;
-        }
-        VerticalDropLocation verticalDropLocation = DDUtil
-                .getVerticalDropLocation(treeNode.nodeCaptionDiv, event
-                        .getClientY(), 0.2);
-        return verticalDropLocation;
     }
 
     private void handleUpdate(UIDL uidl) {
@@ -345,10 +334,26 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
 
         private Event mouseDownEvent;
 
+        private int cachedHeight = -1;
+
         public TreeNode() {
             constructDom();
             sinkEvents(Event.ONCLICK | Event.ONDBLCLICK | Event.MOUSEEVENTS
                     | Event.ONCONTEXTMENU);
+        }
+
+        public VerticalDropLocation getDropDetail(NativeEvent currentGwtEvent) {
+            if (cachedHeight < 0) {
+                /*
+                 * Height is cached to avoid flickering (drop hints may change
+                 * the reported offsetheight -> would change the drop detail)
+                 */
+                cachedHeight = nodeCaptionDiv.getOffsetHeight();
+            }
+            VerticalDropLocation verticalDropLocation = DDUtil
+                    .getVerticalDropLocation(nodeCaptionDiv, cachedHeight,
+                            currentGwtEvent.getClientY(), 0.15);
+            return verticalDropLocation;
         }
 
         protected void emphasis(VerticalDropLocation detail) {

@@ -6,9 +6,15 @@ public class DDUtil {
 
     public static VerticalDropLocation getVerticalDropLocation(Element element,
             int clientY, double topBottomRatio) {
+        int offsetHeight = element.getOffsetHeight();
+        return getVerticalDropLocation(element, offsetHeight, clientY,
+                topBottomRatio);
+    }
+
+    public static VerticalDropLocation getVerticalDropLocation(Element element,
+            int offsetHeight, int clientY, double topBottomRatio) {
 
         int absoluteTop = element.getAbsoluteTop();
-        int offsetHeight = element.getOffsetHeight();
         int fromTop = clientY - absoluteTop;
 
         float percentageFromTop = (fromTop / (float) offsetHeight);
