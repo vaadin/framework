@@ -242,7 +242,7 @@ public class HierarchicalContainer extends IndexedContainer implements
             if (l != null) {
                 l.remove(itemId);
                 if (l.isEmpty()) {
-                    children.remove(itemId);
+                    children.remove(oldParentId);
                 }
 
             }
