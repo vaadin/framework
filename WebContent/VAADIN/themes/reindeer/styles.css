@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_3_0_dev-20100318";}
-.v-theme-version-6_3_0_dev-20100318 {display: none;}
+.v-theme-version:after {content:"6_3_0_dev-20100322";}
+.v-theme-version-6_3_0_dev-20100322 {display: none;}
 
 /* Automatically compiled css file from subdirectories. */
 
@@ -2788,6 +2788,9 @@ td.v-datefield-calendarpanel-nextyear {
 	text-shadow: #3b4651 0 -1px 0;
 	vertical-align: top;
 }
+.v-datefield-calendarpanel-weekdays td.v-week {
+	background-image: none;
+}
 .v-datefield-calendarpanel-weekdays strong {
 	display: block;
 	text-align: right;
@@ -2824,6 +2827,7 @@ td.v-datefield-calendarpanel-nextyear {
 	height: 19px;
 }
 .v-datefield-calendarpanel-day,
+.v-datefield-calendarpanel-weeknumber,
 .v-datefield-calendarpanel-day-today {
 	padding: 2px 5px 2px 0;
 	display: block;
@@ -2841,6 +2845,11 @@ td.v-datefield-calendarpanel-nextyear {
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 }
+
+.v-datefield-calendarpanel-weeknumber {
+	color: #f00;
+}
+
 .v-datefield-calendarpanel-time select {
 	padding: 0;
 	font-size: 11px;
