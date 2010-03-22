@@ -76,6 +76,24 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
             return files;
         }
 
+        public String getText() {
+            String data = (String) getData("Text"); // IE, html5
+            if (data == null) {
+                // check for "text/plain" (webkit)
+                data = (String) getData("text/plain");
+            }
+            return data;
+        }
+
+        public String getHtml() {
+            String data = (String) getData("Html"); // IE, html5
+            if (data == null) {
+                // check for "text/plain" (webkit)
+                data = (String) getData("text/html");
+            }
+            return data;
+        }
+
         /**
          * {@link DragAndDropWrapper} can receive also files from client
          * computer if appropriate HTML 5 features are supported on client side.
