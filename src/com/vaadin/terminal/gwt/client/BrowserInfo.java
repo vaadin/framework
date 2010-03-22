@@ -87,7 +87,7 @@ public class BrowserInfo {
             String v = "";
             if (browserDetails.isFirefox()) {
                 b = "ff";
-                v = "b" + browserDetails.getBrowserMajorVersion();
+                v = b + browserDetails.getBrowserMajorVersion();
             } else if (browserDetails.isChrome()) {
                 // TODO update when Chrome is more stable
                 b = "sa";
