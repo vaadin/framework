@@ -5,6 +5,7 @@
 .v-label-h2,
 .v-caption-h1,
 .v-caption-h2 {
+	font-family: Helvetica, Arial, "Lucida Grande", Geneva, Tahoma, Verdana, sans-serif;
 	font-size: 24px;
 	line-height: 30px;
 	font-weight: bold;

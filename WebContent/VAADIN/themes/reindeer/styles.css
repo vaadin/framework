@@ -1,6 +1,5 @@
-.v-theme-version:after {content:"6_3_0_dev-20100322";}
-.v-theme-version-6_3_0_dev-20100322 {display: none;}
-
+.v-theme-version:after {content:"9_9_9_INTERNAL-DEBUG-BUILD";}
+.v-theme-version-9_9_9_INTERNAL-DEBUG-BUILD {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -2323,46 +2322,11 @@ div.v-window-header {
 
 /* Browser-specific corrections to the standard implementation */
 
-.v-sa .v-button-caption {
-	height: 21px;
-	padding-top: 5px;
-	line-height: 17px;
-	}
-
-.v-sa .v-button-small .v-button-caption {
-	height: 18px;
-	padding-top: 2px;
-	}
-
 .v-ff2 .v-button .v-button-caption {
 	display: -moz-inline-box;
 	padding-top: 6px;
 	height: 20px;
 	}
-
-
-/* Modifications for buttons with icons *
-.v-ff2 .v-button .v-icon,
-.v-ff2 .v-button.v-disabled .v-icon {
-	display: block;
-	float: left;
-	margin-top: 4px;
-	}
-
-.v-ff2 .v-button-link .v-icon,
-.v-ff2 .v-button-link.v-disabled .v-icon {
-	margin: 0;
-	}
-	*/
-
-/*.v-op .v-button:active .v-button-caption {
-	margin-top: -1px;
-	margin-left: -1px;
-}
-.v-op .v-button:active .v-icon + .v-button-caption,
-.v-op .v-button:active .v-icon + .v-errorindicator + .v-button-caption {
-	margin-left: -26px;
-}*/
 
 .v-ie6 .v-nativebutton-link,
 .v-ie7 .v-nativebutton-link,
@@ -2370,10 +2334,6 @@ div.v-window-header {
 	padding: 0;
 	text-align: left;
 }
-
-
-
-
 
 /**
  * IE6 buttons --------------------------
@@ -2444,35 +2404,6 @@ div.v-window-header {
 	height: auto;
 }
 
-
-
-/*
-
-.v-ff .v-button .v-errorindicator,
-.v-sa .v-button .v-errorindicator {
-	top: 2px;
-	left: 16px;
-}
-/* Buttons with explicit size *
-.v-button[style*="width"] .v-button-caption {
-	display: block;
-}
-.v-button[style*="width"] .v-icon + .v-button-caption,
-.v-button[style*="width"] .v-icon + .v-errorindicator + .v-button-caption {
-	margin-left: 0;
-}
-.v-button[style*="width"] .v-icon,
-.v-ie7 .v-button .v-icon {
-	position: absolute;
-	top: 4px;
-}
-.v-ie7 .v-button > .v-button-caption {
-	display: block;
-	margin-left: 0;
-}
-*/
-
-
 .v-generated-body,
 .v-app {
 	background: #f5f5f5;
@@ -2503,30 +2434,6 @@ div.v-window-header {
 	font-size: 12px;
 	line-height: normal;
 	color: #222;
-}
-/* Fonts for Safari, exchange Helvetica for Arial */
-.v-sa .v-app,
-.v-sa .v-window,
-.v-sa .v-popupview-popup,
-.v-sa .v-tooltip,
-.v-sa .v-app input,
-.v-sa .v-app select,
-.v-sa .v-app button,
-.v-sa .v-app textarea,
-.v-sa .v-window input,
-.v-sa .v-window select,
-.v-sa .v-window button,
-.v-sa .v-window textarea,
-.v-sa .v-popupview-popup input,
-.v-sa .v-popupview-popup select,
-.v-sa .v-popupview-popup button,
-.v-sa .v-popupview-popup textarea,
-.v-sa .v-filterselect-suggestpopup,
-.v-sa .v-datefield-popup,
-.v-sa .v-contextmenu,
-.v-Notification,
-.v-menubar-submenu {
-	font-family: Helvetica, Arial, "Lucida Grande", Geneva, Tahoma, Verdana, sans-serif;
 }
 /* Fonts on black background */
 .v-app .black,
@@ -2847,7 +2754,7 @@ td.v-datefield-calendarpanel-nextyear {
 }
 
 .v-datefield-calendarpanel-weeknumber {
-	color: #f00;
+	color: #f66;
 }
 
 .v-datefield-calendarpanel-time select {
@@ -2880,28 +2787,16 @@ td.v-datefield-calendarpanel-nextyear {
 }
 .v-datefield-popupcalendar .v-datefield-textfield {
 	border-right-width: 0;
-	height: 18px;
+	-moz-border-radius-topright: 0;
+	-moz-border-radius-bottomright: 0;
+	-webkit-border-top-right-radius: 0;
+	-webkit-border-bottom-right-radius: 0;
 }
 .v-readonly .v-datefield-textfield {
 	border-right-width: 1px;
-}
-.v-ff .v-datefield-popupcalendar .v-datefield-textfield {
-	border-radius-topright: 0;
-	border-radius-bottomright: 0;
-	-moz-border-radius-topright: 0;
-	-moz-border-radius-bottomright: 0;
-}
-.v-ff .v-readonly .v-datefield-textfield {
 	border-radius: 3px;
 	-moz-border-radius: 3px;
-}
-.v-sa .v-datefield-popupcalendar .v-datefield-textfield,
-.v-ff35 .v-datefield-popupcalendar .v-datefield-textfield {
-	border-width: 0 0 0 3px;
-}
-.v-sa .v-datefield-popupcalendar .v-textfield-readonly,
-.v-ff35 .v-datefield-popupcalendar .v-textfield-readonly {
-	border-width: 0 3px;
+	-webkit-border-radius: 3px;
 }
 .v-datefield-popupcalendar .v-datefield-button {
 	width: 24px;
@@ -3111,6 +3006,7 @@ td.v-datefield-calendarpanel-nextyear {
 .v-label-h2,
 .v-caption-h1,
 .v-caption-h2 {
+	font-family: Helvetica, Arial, "Lucida Grande", Geneva, Tahoma, Verdana, sans-serif;
 	font-size: 24px;
 	line-height: 30px;
 	font-weight: bold;
@@ -3480,13 +3376,13 @@ td.v-datefield-calendarpanel-nextyear {
   -background-image: url(common/img/vertical-sprites-ie6.png);
   background-position: left -495px;
 	border: none;
-	height: 21px;
+	height: 16px;
 }
 /* More specific selector to override padding */
 .v-app input.v-filterselect-input,
 .v-window input.v-filterselect-input,
 .v-popupview-popup input.v-filterselect-input {
-	padding: 3px 0 0 2px;
+	padding: 4px 0 3px 2px;
 }
 .v-filterselect-prompt .v-filterselect-input {
 	font-style: normal;
@@ -4749,8 +4645,6 @@ td.v-datefield-calendarpanel-nextyear {
 
 .v-textfield,
 .v-textarea {
-	line-height: normal;
-	height: 19px;
 	border: 1px solid #bcbdbe;
 	border-top-color: #a2a3a4;
 	border-bottom-color: #d2d3d4;
@@ -4762,6 +4656,8 @@ td.v-datefield-calendarpanel-nextyear {
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	margin: 0;
+	height: 15px;
+	line-height: normal;
 }
 .v-textarea {
 	background-image: none;
@@ -4769,10 +4665,10 @@ td.v-datefield-calendarpanel-nextyear {
 }
 /* Need more specific selector because of #2384 fixes in base/common/common.css */
 .v-app input.v-textfield,
-.v-app textarea.v-textarea,
 .v-window input.v-textfield,
+.v-app textarea.v-textarea,
 .v-window textarea.v-textarea  {
-	padding: 3px 3px 0 3px;
+	padding: 3px;
 }
 /* Textfield on blue background */
 .blue .v-textfield,
@@ -4797,46 +4693,20 @@ textarea.v-textarea-prompt {
 	font-style: normal;
 	color: #999;
 }
-/* Capable browsers get fancier border images */
-.v-sa input.v-textfield,
-.v-ff35 input.v-textfield {
-	border-radius: 0;
-	-moz-border-radius: 0;
-	border: none;
-	background: transparent;
-	border-width: 0 3px 0 3px;
-	padding: 4px 0 0 0;
-	height: 20px;
-	-webkit-border-image: url(textfield/img/bg-border-image.png) 0 3 0 3 stretch stretch;
-	-moz-border-image: url(textfield/img/bg-border-image.png) 0 3 0 3 stretch stretch;
-}
-.v-sa input.v-textfield-focus,
-.v-ff35 input.v-textfield-focus {
-	-webkit-border-image: url(textfield/img/bg-border-image-focus.png) 0 3 0 3 stretch stretch;
-	-moz-border-image: url(textfield/img/bg-border-image-focus.png) 0 3 0 3 stretch stretch;
-}
 /* Small style textfield */
-.v-app input.v-textfield-small,
-.v-sa input.v-textfield-small,
-.v-ff35 input.v-textfield-small {
+.v-app input.v-textfield-small {
 	font-size: 11px;
-	height: 15px;
+	line-height: normal;
+	height: auto;
+	padding: 2px;
 }
 .v-app textarea.v-textarea-small {
 	font-size: 11px;
-}
-.v-sa input.v-textfield-small,
-.v-ff35 input.v-textfield-small {
-	height: 16px;
 }
 .v-table input.v-textfield {
 	padding: 1px 2px;
 	height: auto;
 	line-height: normal;
-}
-.v-sa .v-table  input.v-textfield,
-.v-ff35 .v-table  input.v-textfield {
-	padding: 2px 0;
 }
 .v-table-cell-wrapper > input.v-textfield {
 	margin-top: -2px;
@@ -4870,38 +4740,14 @@ textarea.v-textarea-prompt {
 	border-top-color: #3b5a75;
 	border-bottom-color: #507596;
 }
-/* Capable browsers get fancier border images */
-.v-sa .black input.v-textfield,
-.v-ff35 .black input.v-textfield {
-	-webkit-border-image: url(textfield/img/bg-border-image-black.png) 0 3 0 3 stretch stretch;
-	-moz-border-image: url(textfield/img/bg-border-image-black.png) 0 3 0 3 stretch stretch;
-	height: 19px;
-}
-.v-sa .black input.v-textfield-focus,
-.v-ff35 .black input.v-textfield-focus {
-	-webkit-border-image: url(textfield/img/bg-border-image-black-focus.png) 0 3 0 3 stretch stretch;
-	-moz-border-image: url(textfield/img/bg-border-image-black-focus.png) 0 3 0 3 stretch stretch;
-}
-.v-sa .black input.v-textfield-small,
-.v-ff35 .black input.v-textfield-small {
-	height: 15px;
-}
-
 .black input.v-textfield-prompt {
 	color: #5f6366;
 }
 /* Readonly */
-input.v-textfield-readonly,
-.v-sa input.v-textfield-readonly,
-.v-ff35 input.v-textfield-readonly,
-.black input.v-textfield-readonly,
-.v-sa .black input.v-textfield-readonly,
-.v-ff35 .black input.v-textfield-readonly {
+input.v-textfield-readonly
+.black input.v-textfield-readonly {
 	border: none;
 	background: transparent;
-	-webkit-border-image: none;
-	-moz-border-image: none;
-	border-width: 0;
 }
 
 .v-tree-node {

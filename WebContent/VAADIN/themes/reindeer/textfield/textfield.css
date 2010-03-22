@@ -1,7 +1,5 @@
 .v-textfield,
 .v-textarea {
-	line-height: normal;
-	height: 19px;
 	border: 1px solid #bcbdbe;
 	border-top-color: #a2a3a4;
 	border-bottom-color: #d2d3d4;
@@ -11,6 +9,8 @@
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	margin: 0;
+	height: 15px;
+	line-height: normal;
 }
 .v-textarea {
 	background-image: none;
@@ -18,10 +18,10 @@
 }
 /* Need more specific selector because of #2384 fixes in base/common/common.css */
 .v-app input.v-textfield,
-.v-app textarea.v-textarea,
 .v-window input.v-textfield,
+.v-app textarea.v-textarea,
 .v-window textarea.v-textarea  {
-	padding: 3px 3px 0 3px;
+	padding: 3px;
 }
 /* Textfield on blue background */
 .blue .v-textfield,
@@ -46,46 +46,20 @@ textarea.v-textarea-prompt {
 	font-style: normal;
 	color: #999;
 }
-/* Capable browsers get fancier border images */
-.v-sa input.v-textfield,
-.v-ff35 input.v-textfield {
-	border-radius: 0;
-	-moz-border-radius: 0;
-	border: none;
-	background: transparent;
-	border-width: 0 3px 0 3px;
-	padding: 4px 0 0 0;
-	height: 20px;
-	-webkit-border-image: url(img/bg-border-image.png) 0 3 0 3 stretch stretch;
-	-moz-border-image: url(img/bg-border-image.png) 0 3 0 3 stretch stretch;
-}
-.v-sa input.v-textfield-focus,
-.v-ff35 input.v-textfield-focus {
-	-webkit-border-image: url(img/bg-border-image-focus.png) 0 3 0 3 stretch stretch;
-	-moz-border-image: url(img/bg-border-image-focus.png) 0 3 0 3 stretch stretch;
-}
 /* Small style textfield */
-.v-app input.v-textfield-small,
-.v-sa input.v-textfield-small,
-.v-ff35 input.v-textfield-small {
+.v-app input.v-textfield-small {
 	font-size: 11px;
-	height: 15px;
+	line-height: normal;
+	height: auto;
+	padding: 2px;
 }
 .v-app textarea.v-textarea-small {
 	font-size: 11px;
-}
-.v-sa input.v-textfield-small,
-.v-ff35 input.v-textfield-small {
-	height: 16px;
 }
 .v-table input.v-textfield {
 	padding: 1px 2px;
 	height: auto;
 	line-height: normal;
-}
-.v-sa .v-table  input.v-textfield,
-.v-ff35 .v-table  input.v-textfield {
-	padding: 2px 0;
 }
 .v-table-cell-wrapper > input.v-textfield {
 	margin-top: -2px;
@@ -117,36 +91,12 @@ textarea.v-textarea-prompt {
 	border-top-color: #3b5a75;
 	border-bottom-color: #507596;
 }
-/* Capable browsers get fancier border images */
-.v-sa .black input.v-textfield,
-.v-ff35 .black input.v-textfield {
-	-webkit-border-image: url(img/bg-border-image-black.png) 0 3 0 3 stretch stretch;
-	-moz-border-image: url(img/bg-border-image-black.png) 0 3 0 3 stretch stretch;
-	height: 19px;
-}
-.v-sa .black input.v-textfield-focus,
-.v-ff35 .black input.v-textfield-focus {
-	-webkit-border-image: url(img/bg-border-image-black-focus.png) 0 3 0 3 stretch stretch;
-	-moz-border-image: url(img/bg-border-image-black-focus.png) 0 3 0 3 stretch stretch;
-}
-.v-sa .black input.v-textfield-small,
-.v-ff35 .black input.v-textfield-small {
-	height: 15px;
-}
-
 .black input.v-textfield-prompt {
 	color: #5f6366;
 }
 /* Readonly */
-input.v-textfield-readonly,
-.v-sa input.v-textfield-readonly,
-.v-ff35 input.v-textfield-readonly,
-.black input.v-textfield-readonly,
-.v-sa .black input.v-textfield-readonly,
-.v-ff35 .black input.v-textfield-readonly {
+input.v-textfield-readonly
+.black input.v-textfield-readonly {
 	border: none;
 	background: transparent;
-	-webkit-border-image: none;
-	-moz-border-image: none;
-	border-width: 0;
 }

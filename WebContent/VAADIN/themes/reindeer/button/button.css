@@ -7,36 +7,5 @@
 @import "button-link-style.css";
 
 /* Browser-specific corrections to the standard implementation */
-@import "button-safari.css";
 @import "button-firefox.css";
-@import "button-opera.css";
 @import "button-ie.css";
-
-
-
-/*
-
-.v-ff .v-button .v-errorindicator,
-.v-sa .v-button .v-errorindicator {
-	top: 2px;
-	left: 16px;
-}
-/* Buttons with explicit size *
-.v-button[style*="width"] .v-button-caption {
-	display: block;
-}
-.v-button[style*="width"] .v-icon + .v-button-caption,
-.v-button[style*="width"] .v-icon + .v-errorindicator + .v-button-caption {
-	margin-left: 0;
-}
-.v-button[style*="width"] .v-icon,
-.v-ie7 .v-button .v-icon {
-	position: absolute;
-	top: 4px;
-}
-.v-ie7 .v-button > .v-button-caption {
-	display: block;
-	margin-left: 0;
-}
-*/
-

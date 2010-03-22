@@ -1,6 +1,5 @@
-.v-theme-version:after {content:"6_3_0_dev-20100318";}
-.v-theme-version-6_3_0_dev-20100318 {display: none;}
-
+.v-theme-version:after {content:"9_9_9_INTERNAL-DEBUG-BUILD";}
+.v-theme-version-9_9_9_INTERNAL-DEBUG-BUILD {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -2232,6 +2231,7 @@ div.v-window-header {
 	width: 20px;
 }
 .v-datefield-calendarpanel-day,
+.v-datefield-calendarpanel-weeknumber,
 .v-datefield-calendarpanel-day-today {
 	padding: 1px 3px;
 	width: 14px;
@@ -2261,6 +2261,11 @@ div.v-window-header {
 	background: transparent url(datefield/img/selected-bg.png) no-repeat 50% 50%;
 	border: none;
 }
+
+.v-datefield-calendarpanel-weeknumber {
+	color: #f66;
+}
+
 .v-datefield-time {
 	font-size: 11px;
 }

@@ -29,30 +29,6 @@
 	line-height: normal;
 	color: #222;
 }
-/* Fonts for Safari, exchange Helvetica for Arial */
-.v-sa .v-app,
-.v-sa .v-window,
-.v-sa .v-popupview-popup,
-.v-sa .v-tooltip,
-.v-sa .v-app input,
-.v-sa .v-app select,
-.v-sa .v-app button,
-.v-sa .v-app textarea,
-.v-sa .v-window input,
-.v-sa .v-window select,
-.v-sa .v-window button,
-.v-sa .v-window textarea,
-.v-sa .v-popupview-popup input,
-.v-sa .v-popupview-popup select,
-.v-sa .v-popupview-popup button,
-.v-sa .v-popupview-popup textarea,
-.v-sa .v-filterselect-suggestpopup,
-.v-sa .v-datefield-popup,
-.v-sa .v-contextmenu,
-.v-Notification,
-.v-menubar-submenu {
-	font-family: Helvetica, Arial, "Lucida Grande", Geneva, Tahoma, Verdana, sans-serif;
-}
 /* Fonts on black background */
 .v-app .black,
 .v-window-black,
