@@ -42,9 +42,9 @@ public class And extends ClientSideCriterion {
         }
     }
 
-    public boolean accepts(DragAndDropEvent dragEvent) {
+    public boolean accept(DragAndDropEvent dragEvent) {
         for (ClientSideCriterion crit : criteria) {
-            if (!crit.accepts(dragEvent)) {
+            if (!crit.accept(dragEvent)) {
                 return false;
             }
         }

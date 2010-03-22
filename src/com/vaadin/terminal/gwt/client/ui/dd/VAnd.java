@@ -18,7 +18,7 @@ final public class VAnd extends VAcceptCriterion implements VAcceptCallback {
     }
 
     @Override
-    public boolean validates(VDragEvent drag, UIDL configuration) {
+    protected boolean accept(VDragEvent drag, UIDL configuration) {
         int childCount = configuration.getChildCount();
         for (int i = 0; i < childCount; i++) {
             VAcceptCriterion crit = getCriteria(drag, configuration, i);

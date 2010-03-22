@@ -3461,7 +3461,7 @@ public class Table extends AbstractSelect implements Action.Container,
          * com.vaadin.event.dd.acceptCriteria.AcceptCriterion#accepts(com.vaadin
          * .event.dd.DragAndDropEvent)
          */
-        public boolean accepts(DragAndDropEvent dragEvent) {
+        public boolean accept(DragAndDropEvent dragEvent) {
             AbstractSelectDropTargetDetails dropTargetData = (AbstractSelectDropTargetDetails) dragEvent
                     .getDropTargetDetails();
             table = (Table) dragEvent.getDropTargetDetails().getTarget();

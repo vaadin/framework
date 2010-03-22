@@ -12,7 +12,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 final public class VSourceIsSameAsTarget extends VAcceptCriterion {
 
     @Override
-    public boolean validates(VDragEvent drag, UIDL configuration) {
+    protected boolean accept(VDragEvent drag, UIDL configuration) {
         Paintable dragSource = drag.getTransferable().getDragSource();
         Paintable paintable = VDragAndDropManager.get().getCurrentDropHandler()
                 .getPaintable();

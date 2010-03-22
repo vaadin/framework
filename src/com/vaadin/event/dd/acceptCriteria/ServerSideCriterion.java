@@ -16,7 +16,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VServerAccept;
  * {@link Transferable}).
  * <p>
  * Subclasses should implement the
- * {@link AcceptCriterion#accepts(com.vaadin.event.dd.DragAndDropEvent)} method.
+ * {@link AcceptCriterion#accept(com.vaadin.event.dd.DragAndDropEvent)} method.
  * <p>
  * As all server side state can be used to make a decision, this is more
  * flexible than {@link ClientSideCriterion}. However, this does require

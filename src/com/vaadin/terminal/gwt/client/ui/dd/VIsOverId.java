@@ -13,7 +13,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 final public class VIsOverId extends VAcceptCriterion {
 
     @Override
-    public boolean validates(VDragEvent drag, UIDL configuration) {
+    protected boolean accept(VDragEvent drag, UIDL configuration) {
         try {
             Set<String> stringArrayVariableAsSet = configuration
                     .getStringArrayVariableAsSet("keys");

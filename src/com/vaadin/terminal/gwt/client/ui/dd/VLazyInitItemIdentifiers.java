@@ -59,7 +59,7 @@ final public class VLazyInitItemIdentifiers extends VAcceptCriterion {
     }
 
     @Override
-    public boolean validates(VDragEvent drag, UIDL configuration) {
+    protected boolean accept(VDragEvent drag, UIDL configuration) {
         return false; // not used is this implementation
     }
 }

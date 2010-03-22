@@ -33,8 +33,8 @@ public class Not extends ClientSideCriterion {
         acceptCriterion.paint(target);
     }
 
-    public boolean accepts(DragAndDropEvent dragEvent) {
-        return !acceptCriterion.accepts(dragEvent);
+    public boolean accept(DragAndDropEvent dragEvent) {
+        return !acceptCriterion.accept(dragEvent);
     }
 
 }

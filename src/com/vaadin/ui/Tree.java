@@ -1325,7 +1325,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
          * com.vaadin.event.dd.acceptCriteria.AcceptCriterion#accepts(com.vaadin
          * .event.dd.DragAndDropEvent)
          */
-        public boolean accepts(DragAndDropEvent dragEvent) {
+        public boolean accept(DragAndDropEvent dragEvent) {
             AbstractSelectDropTargetDetails dropTargetData = (AbstractSelectDropTargetDetails) dragEvent
                     .getDropTargetDetails();
             tree = (Tree) dragEvent.getDropTargetDetails().getTarget();
@@ -1378,7 +1378,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
          * Uses enhanced server side check
          */
         @Override
-        public boolean accepts(DragAndDropEvent dragEvent) {
+        public boolean accept(DragAndDropEvent dragEvent) {
             try {
                 // must be over tree node and in the middle of it (not top or
                 // bottom
@@ -1440,7 +1440,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
             this.depthToCheck = depthToCheck;
         }
 
-        public boolean accepts(DragAndDropEvent dragEvent) {
+        public boolean accept(DragAndDropEvent dragEvent) {
             try {
                 TreeDropTargetDetails eventDetails = (TreeDropTargetDetails) dragEvent
                         .getDropTargetDetails();

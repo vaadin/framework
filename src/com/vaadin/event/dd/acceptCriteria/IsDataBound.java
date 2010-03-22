@@ -38,7 +38,7 @@ public final class IsDataBound extends ContainsDataFlavor {
     }
 
     @Override
-    public boolean accepts(DragAndDropEvent dragEvent) {
+    public boolean accept(DragAndDropEvent dragEvent) {
         if (dragEvent.getTransferable() instanceof DataBoundTransferable) {
             return ((DataBoundTransferable) dragEvent.getTransferable())
                     .getItemId() != null;

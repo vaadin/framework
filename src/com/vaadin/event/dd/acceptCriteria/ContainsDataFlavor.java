@@ -41,7 +41,7 @@ public class ContainsDataFlavor extends ClientSideCriterion {
         target.addAttribute("p", dataFlavorId);
     }
 
-    public boolean accepts(DragAndDropEvent dragEvent) {
+    public boolean accept(DragAndDropEvent dragEvent) {
         return dragEvent.getTransferable().getDataFlavors().contains(
                 dataFlavorId);
     }

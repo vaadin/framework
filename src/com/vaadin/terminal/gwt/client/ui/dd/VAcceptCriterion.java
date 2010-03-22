@@ -27,7 +27,7 @@ public abstract class VAcceptCriterion {
             };
             VDragAndDropManager.get().visitServer(acceptCallback);
         } else {
-            boolean validates = validates(drag, configuration);
+            boolean validates = accept(drag, configuration);
             if (validates) {
                 callback.accepted(drag);
             }
@@ -35,7 +35,7 @@ public abstract class VAcceptCriterion {
 
     }
 
-    public abstract boolean validates(VDragEvent drag, UIDL configuration);
+    protected abstract boolean accept(VDragEvent drag, UIDL configuration);
 
     public boolean needsServerSideCheck(VDragEvent drag, UIDL criterioUIDL) {
         return false;

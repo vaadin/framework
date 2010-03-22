@@ -1704,7 +1704,7 @@ public abstract class AbstractSelect extends AbstractField implements
             super(select, itemId);
         }
 
-        public boolean accepts(DragAndDropEvent dragEvent) {
+        public boolean accept(DragAndDropEvent dragEvent) {
             AbstractSelectDropTargetDetails dropTargetData = (AbstractSelectDropTargetDetails) dragEvent
                     .getDropTargetDetails();
             return itemIds.contains(dropTargetData.getItemIdOver());
@@ -1761,7 +1761,7 @@ public abstract class AbstractSelect extends AbstractField implements
             super(select, itemId);
         }
 
-        public boolean accepts(DragAndDropEvent dragEvent) {
+        public boolean accept(DragAndDropEvent dragEvent) {
             DataBoundTransferable transferable = (DataBoundTransferable) dragEvent
                     .getTransferable();
             return itemIds.contains(transferable.getItemId());

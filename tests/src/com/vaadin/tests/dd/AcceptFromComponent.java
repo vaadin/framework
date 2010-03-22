@@ -37,7 +37,7 @@ public class AcceptFromComponent extends Window {
 
         final ServerSideCriterion serverSideCriterion = new ServerSideCriterion() {
 
-            public boolean accepts(DragAndDropEvent dragEvent) {
+            public boolean accept(DragAndDropEvent dragEvent) {
                 Transferable transferable = dragEvent.getTransferable();
                 if (transferable instanceof TransferableImpl) {
                     TransferableImpl componentTransferrable = (TransferableImpl) transferable;

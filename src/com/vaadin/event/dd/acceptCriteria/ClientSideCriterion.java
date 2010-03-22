@@ -15,7 +15,7 @@ import com.vaadin.terminal.PaintTarget;
  * 
  * It is recommended that subclasses of ClientSideCriterion re-validate the
  * condition on the server side in
- * {@link AcceptCriterion#accepts(com.vaadin.event.dd.DragAndDropEvent)} after
+ * {@link AcceptCriterion#accept(com.vaadin.event.dd.DragAndDropEvent)} after
  * the client side validation has accepted a transfer.
  * 
  * @since 6.3

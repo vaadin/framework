@@ -37,7 +37,7 @@ public class DragSourceIs extends ClientSideCriterion {
         }
     }
 
-    public boolean accepts(DragAndDropEvent dragEvent) {
+    public boolean accept(DragAndDropEvent dragEvent) {
         if (dragEvent.getTransferable() instanceof TransferableImpl) {
             Component sourceComponent = ((TransferableImpl) dragEvent
                     .getTransferable()).getSourceComponent();

@@ -63,7 +63,7 @@ public class DDTest1 extends TestBase {
              */
             private static final long serialVersionUID = 1L;
 
-            public boolean accepts(DragAndDropEvent dragEvent) {
+            public boolean accept(DragAndDropEvent dragEvent) {
                 Transferable transferable = dragEvent.getTransferable();
                 // System.out.println("Simulating 500ms processing...");
                 // try {

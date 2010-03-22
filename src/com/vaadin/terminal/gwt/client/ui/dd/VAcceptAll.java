@@ -11,7 +11,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 final public class VAcceptAll extends VAcceptCriterion {
 
     @Override
-    public boolean validates(VDragEvent drag, UIDL configuration) {
+    protected boolean accept(VDragEvent drag, UIDL configuration) {
         return true;
     }
 }

@@ -54,7 +54,7 @@ public interface AcceptCriterion extends Serializable {
      * This needs to be implemented iff criterion does some lazy server side
      * initialization. The UIDL painted in this method will be passed to client
      * side drop handler implementation. Implementation can assume that
-     * {@link #accepts(DragAndDropEvent)} is called before this method.
+     * {@link #accept(DragAndDropEvent)} is called before this method.
      * 
      * @param target
      * @throws PaintException
@@ -71,5 +71,5 @@ public interface AcceptCriterion extends Serializable {
      * @param dragEvent
      * @return
      */
-    public boolean accepts(DragAndDropEvent dragEvent);
+    public boolean accept(DragAndDropEvent dragEvent);
 }

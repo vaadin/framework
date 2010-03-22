@@ -31,7 +31,7 @@ public final class AcceptAll extends ClientSideCriterion {
         return singleton;
     }
 
-    public boolean accepts(DragAndDropEvent dragEvent) {
+    public boolean accept(DragAndDropEvent dragEvent) {
         return true;
     }
 }

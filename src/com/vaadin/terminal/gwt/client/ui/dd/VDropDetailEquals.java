@@ -11,7 +11,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 final public class VDropDetailEquals extends VAcceptCriterion {
 
     @Override
-    public boolean validates(VDragEvent drag, UIDL configuration) {
+    protected boolean accept(VDragEvent drag, UIDL configuration) {
         String name = configuration.getStringAttribute("p");
         String t = configuration.hasAttribute("t") ? configuration
                 .getStringAttribute("t").intern() : "s";

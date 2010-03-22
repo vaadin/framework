@@ -60,7 +60,7 @@ public class DropTargetDetailEquals extends ClientSideCriterion {
         }
     }
 
-    public boolean accepts(DragAndDropEvent dragEvent) {
+    public boolean accept(DragAndDropEvent dragEvent) {
         Object data = dragEvent.getDropTargetDetails().getData(propertyName);
         return value.equals(data);
     }

@@ -14,7 +14,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 final public class VDragSourceIs extends VAcceptCriterion {
 
     @Override
-    public boolean validates(VDragEvent drag, UIDL configuration) {
+    protected boolean accept(VDragEvent drag, UIDL configuration) {
         try {
             Paintable component = drag.getTransferable().getDragSource();
             int c = configuration.getIntAttribute("c");

@@ -93,7 +93,7 @@ public class DragAndDropService implements VariableOwner {
                 variables);
         DragAndDropEvent dropEvent = new DragAndDropEvent(transferable,
                 dropData);
-        if (dropHandler.getAcceptCriterion().accepts(dropEvent)) {
+        if (dropHandler.getAcceptCriterion().accept(dropEvent)) {
             dropHandler.drop(dropEvent);
         }
     }
@@ -121,7 +121,7 @@ public class DragAndDropService implements VariableOwner {
 
         dragEvent = new DragAndDropEvent(transferable, dragDropDetails);
 
-        lastVisitAccepted = acceptCriterion.accepts(dragEvent);
+        lastVisitAccepted = acceptCriterion.accept(dragEvent);
     }
 
     /**

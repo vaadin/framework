@@ -14,7 +14,7 @@ import com.vaadin.terminal.gwt.client.ui.VTree.TreeNode;
 final public class VTargetNodeIsChildOf extends VAcceptCriterion {
 
     @Override
-    public boolean validates(VDragEvent drag, UIDL configuration) {
+    protected boolean accept(VDragEvent drag, UIDL configuration) {
 
         VTree tree = (VTree) VDragAndDropManager.get().getCurrentDropHandler()
                 .getPaintable();
