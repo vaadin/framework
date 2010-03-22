@@ -34,6 +34,8 @@ public class VDateField extends FlowPanel implements Paintable, Field {
     public static final int RESOLUTION_SEC = 5;
     public static final int RESOLUTION_MSEC = 6;
 
+    public static final String WEEK_NUMBERS = "wn";
+
     static String resolutionToString(int res) {
         if (res > RESOLUTION_DAY) {
             return "full";
@@ -55,11 +57,16 @@ public class VDateField extends FlowPanel implements Paintable, Field {
 
     protected boolean enabled;
 
+    /**
+     * The date that is selected in the date field.
+     */
     protected Date date = null;
     // e.g when paging a calendar, before actually selecting
     protected Date showingDate = new Date();
 
     protected DateTimeService dts;
+
+    private boolean showISOWeekNumbers = false;
 
     public VDateField() {
         setStyleName(CLASSNAME);
@@ -102,6 +109,11 @@ public class VDateField extends FlowPanel implements Paintable, Field {
                                 + ").", e);
             }
         }
+
+        // We show week numbers only if the week starts with Monday, as ISO 8601
+        // specifies
+        showISOWeekNumbers = uidl.getBooleanAttribute(WEEK_NUMBERS)
+                && dts.getFirstDayOfWeek() == 1;
 
         int newResolution;
         if (uidl.hasVariable("msec")) {
@@ -246,4 +258,16 @@ public class VDateField extends FlowPanel implements Paintable, Field {
     public ApplicationConnection getClient() {
         return client;
     }
+
+    /**
+     * Returns whether ISO 8601 week numbers should be shown in the date
+     * selector or not. ISO 8601 defines that a week always starts with a Monday
+     * so if the week starts with another day this will return false.
+     * 
+     * @return true if week number should be shown, false otherwise
+     */
+    public boolean isShowISOWeekNumbers() {
+        return showISOWeekNumbers;
+    }
+
 }

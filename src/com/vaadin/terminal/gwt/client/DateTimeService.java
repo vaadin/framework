@@ -234,4 +234,35 @@ public class DateTimeService {
         return ((y + 1900) * 10000 + m * 100 + d) * 1000000000;
     }
 
+    /**
+     * Returns the ISO-8601 week number of the given date.
+     * 
+     * @param date
+     *            The date for which the week number should be resolved
+     * @return The ISO-8601 week number for {@literal date}
+     */
+    public static int getISOWeekNumber(Date date) {
+        final long MILLISECONDS_PER_DAY = 24 * 3600 * 1000;
+        int dayOfWeek = date.getDay(); // 0 == sunday
+
+        // ISO 8601 use weeks that start on monday so we use
+        // mon=1,tue=2,...sun=7;
+        if (dayOfWeek == 0) {
+            dayOfWeek = 7;
+        }
+        // Find nearest thursday (defines the week in ISO 8601). The week number
+        // for the nearest thursday is the same as for the target date.
+        int nearestThursdayDiff = 4 - dayOfWeek; // 4 is thursday
+        Date nearestThursday = new Date(date.getTime() + nearestThursdayDiff
+                * MILLISECONDS_PER_DAY);
+
+        Date firstOfJanuary = new Date(nearestThursday.getYear(), 0, 1);
+        long timeDiff = nearestThursday.getTime() - firstOfJanuary.getTime();
+        int daysSinceFirstOfJanuary = (int) (timeDiff / MILLISECONDS_PER_DAY);
+
+        int weekNumber = (daysSinceFirstOfJanuary) / 7 + 1;
+
+        return weekNumber;
+    }
+
 }

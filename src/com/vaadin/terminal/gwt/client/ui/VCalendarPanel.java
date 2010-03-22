@@ -83,8 +83,12 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
 
     private void clearCalendarBody(boolean remove) {
         if (!remove) {
+            // Leave the cells in place but clear their contents
+
+            // This has the side effect of ensuring that the calendar always
+            // contain 7 rows.
             for (int row = 1; row < 7; row++) {
-                for (int col = 0; col < 7; col++) {
+                for (int col = 0; col < 8; col++) {
                     days.setHTML(row, col, "&nbsp;");
                 }
             }
@@ -157,16 +161,30 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
 
     private void buildCalendarBody() {
 
+        final boolean showISOWeekNumbers = datefield.isShowISOWeekNumbers();
+        final int columns = 1 + 5;
+        final int weekColumn = 0;
+        final int firstWeekdayColumn = 1;
+        final int headerRow = 0;
+
         setWidget(1, 0, days);
         setCellPadding(0);
         setCellSpacing(0);
-        getFlexCellFormatter().setColSpan(1, 0, 5);
+        getFlexCellFormatter().setColSpan(1, 0, columns);
         getFlexCellFormatter().setStyleName(1, 0,
                 VDateField.CLASSNAME + "-calendarpanel-body");
 
-        days.getFlexCellFormatter().setStyleName(0, 0, "v-first");
-        days.getFlexCellFormatter().setStyleName(0, 6, "v-last");
-        days.getRowFormatter().setStyleName(0,
+        days.getFlexCellFormatter().setStyleName(headerRow, weekColumn,
+                "v-week");
+        // Hide the week column if week numbers are not to be displayed.
+        days.getFlexCellFormatter().setVisible(headerRow, weekColumn,
+                showISOWeekNumbers);
+
+        days.getFlexCellFormatter().setStyleName(headerRow, firstWeekdayColumn,
+                "v-first");
+        days.getFlexCellFormatter().setStyleName(headerRow,
+                firstWeekdayColumn + 6, "v-last");
+        days.getRowFormatter().setStyleName(headerRow,
                 VDateField.CLASSNAME + "-calendarpanel-weekdays");
 
         // Print weekday names
@@ -177,78 +195,129 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
                 day = 0;
             }
             if (datefield.getCurrentResolution() > VDateField.RESOLUTION_MONTH) {
-                days.setHTML(0, i, "<strong>"
+                days.setHTML(headerRow, firstWeekdayColumn + i, "<strong>"
                         + datefield.getDateTimeService().getShortDay(day)
                         + "</strong>");
             } else {
-                days.setHTML(0, i, "");
+                days.setHTML(headerRow, firstWeekdayColumn + i, "");
             }
         }
 
         // date actually selected?
-        Date currentDate = datefield.getCurrentDate();
+        Date selectedDate = datefield.getCurrentDate();
+        // Showing is the date (year/month+year) that is currently shown in the
+        // panel
         Date showing = datefield.getShowingDate();
-        boolean selected = (currentDate != null
-                && currentDate.getMonth() == showing.getMonth() && currentDate
-                .getYear() == showing.getYear());
+
+        // The day of month that is selected, -1 if no day of this month is
+        // selected (i.e, showing another month/year than selected or nothing is
+        // selected)
+        int dayOfMonthSelected = -1;
+        // The day of month that is today, -1 if no day of this month is today
+        // (i.e., showing another month/year than current)
+        int dayOfMonthToday = -1;
+
+        // Find out a day this month is selected
+        if (selectedDate != null
+                && selectedDate.getMonth() == showing.getMonth()
+                && selectedDate.getYear() == showing.getYear()) {
+            dayOfMonthSelected = selectedDate.getDate();
+        }
+
+        // Find out if today is in this month
+        final Date today = new Date();
+        if (today.getMonth() == showing.getMonth()
+                && today.getYear() == showing.getYear()) {
+            dayOfMonthToday = today.getDate();
+        }
 
         final int startWeekDay = datefield.getDateTimeService()
-                .getStartWeekDay(datefield.getShowingDate());
-        final int numDays = DateTimeService.getNumberOfDaysInMonth(datefield
-                .getShowingDate());
+                .getStartWeekDay(showing);
+        final int daysInMonth = DateTimeService.getNumberOfDaysInMonth(showing);
+
         int dayCount = 0;
-        final Date today = new Date();
-        final Date curr = new Date(datefield.getShowingDate().getTime());
-        for (int row = 1; row < 7; row++) {
-            for (int col = 0; col < 7; col++) {
-                if (!(row == 1 && col < startWeekDay)) {
-                    if (dayCount < numDays) {
-                        final int selectedDate = ++dayCount;
-                        String title = "";
-                        if (entrySource != null) {
-                            curr.setDate(dayCount);
-                            final List entries = entrySource.getEntries(curr,
-                                    VDateField.RESOLUTION_DAY);
-                            if (entries != null) {
-                                for (final Iterator it = entries.iterator(); it
-                                        .hasNext();) {
-                                    final CalendarEntry entry = (CalendarEntry) it
-                                            .next();
-                                    title += (title.length() > 0 ? ", " : "")
-                                            + entry.getStringForDate(curr);
-                                }
-                            }
-                        }
-                        final String baseclass = VDateField.CLASSNAME
-                                + "-calendarpanel-day";
-                        String cssClass = baseclass;
-                        if (!isEnabledDate(curr)) {
-                            cssClass += " " + baseclass + "-disabled";
-                        }
-                        if (selected
-                                && datefield.getShowingDate().getDate() == dayCount) {
-                            cssClass += " " + baseclass + "-selected";
-                        }
-                        if (today.getDate() == dayCount
-                                && today.getMonth() == datefield
-                                        .getShowingDate().getMonth()
-                                && today.getYear() == datefield
-                                        .getShowingDate().getYear()) {
-                            cssClass += " " + baseclass + "-today";
-                        }
-                        if (title.length() > 0) {
-                            cssClass += " " + baseclass + "-entry";
-                        }
-                        days.setHTML(row, col, "<span title=\"" + title
-                                + "\" class=\"" + cssClass + "\">"
-                                + selectedDate + "</span>");
-                    } else {
+        final Date curr = new Date(showing.getTime());
+
+        // No month has more than 6 weeks so 6 is a safe maximum for rows.
+        for (int weekOfMonth = 1; weekOfMonth < 7; weekOfMonth++) {
+            boolean weekNumberProcessed[] = new boolean[] { false, false,
+                    false, false, false, false, false };
+
+            for (int dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
+                if (!(weekOfMonth == 1 && dayOfWeek < startWeekDay)) {
+
+                    if (dayCount >= daysInMonth) {
+                        // All days printed and we are done
                         break;
                     }
 
+                    final int dayOfMonth = ++dayCount;
+                    final String baseclass = VDateField.CLASSNAME
+                            + "-calendarpanel-day";
+
+                    String title = "";
+                    curr.setDate(dayCount);
+
+                    if (entrySource != null) {
+                        final List entries = entrySource.getEntries(curr,
+                                VDateField.RESOLUTION_DAY);
+                        if (entries != null) {
+                            for (final Iterator it = entries.iterator(); it
+                                    .hasNext();) {
+                                final CalendarEntry entry = (CalendarEntry) it
+                                        .next();
+                                title += (title.length() > 0 ? ", " : "")
+                                        + entry.getStringForDate(curr);
+                            }
+                        }
+                    }
+
+                    // Add CSS classes according to state
+                    String cssClass = baseclass;
+
+                    if (!isEnabledDate(curr)) {
+                        cssClass += " " + baseclass + "-disabled";
+                    }
+
+                    if (dayOfMonthSelected == dayOfMonth) {
+                        cssClass += " " + baseclass + "-selected";
+                    }
+
+                    if (dayOfMonthToday == dayOfMonth) {
+                        cssClass += " " + baseclass + "-today";
+                    }
+                    if (title.length() > 0) {
+                        cssClass += " " + baseclass + "-entry";
+                    }
+
+                    // Actually write the day of month
+                    days.setHTML(weekOfMonth, firstWeekdayColumn + dayOfWeek,
+                            "<span title=\"" + title + "\" class=\"" + cssClass
+                                    + "\">" + dayOfMonth + "</span>");
+
+                    // ISO week numbers if requested
+                    if (!weekNumberProcessed[weekOfMonth]) {
+                        days.getCellFormatter().setVisible(weekOfMonth,
+                                weekColumn, showISOWeekNumbers);
+                        if (showISOWeekNumbers) {
+                            final String baseCssClass = VDateField.CLASSNAME
+                                    + "-calendarpanel-weeknumber";
+                            String weekCssClass = baseCssClass;
+
+                            int weekNumber = DateTimeService
+                                    .getISOWeekNumber(curr);
+
+                            days.setHTML(weekOfMonth, 0, "<span class=\""
+                                    + weekCssClass + "\"" + ">" + weekNumber
+                                    + "</span>");
+                            weekNumberProcessed[weekOfMonth] = true;
+                        }
+
+                    }
                 }
             }
         }
+
     }
 
     private void buildTime(boolean forceRedraw) {

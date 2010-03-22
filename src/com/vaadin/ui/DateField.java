@@ -19,6 +19,7 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.ui.VDateField;
 import com.vaadin.terminal.gwt.client.ui.VPopupCalendar;
 import com.vaadin.terminal.gwt.client.ui.VTextualDate;
 
@@ -122,6 +123,11 @@ public class DateField extends AbstractField implements
 
     private boolean lenient = false;
 
+    /**
+     * Determines if week numbers are shown in the date selector.
+     */
+    private boolean showISOWeekNumbers = false;
+
     /* Constructors */
 
     /**
@@ -213,6 +219,7 @@ public class DateField extends AbstractField implements
         }
 
         target.addAttribute("type", type);
+        target.addAttribute(VDateField.WEEK_NUMBERS, isShowISOWeekNumbers());
 
         // Gets the calendar
         final Calendar calendar = getCalendar();
@@ -557,7 +564,7 @@ public class DateField extends AbstractField implements
     }
 
     /**
-     * Specifies whether or not date/time interpretation is to be lenient.
+     * Returns whether date/time interpretation is to be lenient. Lenient
      * 
      * @see #setLenient(boolean)
      * 
@@ -584,6 +591,28 @@ public class DateField extends AbstractField implements
 
     public void removeListener(BlurListener listener) {
         removeListener(BLUR_EVENT, BlurEvent.class, listener);
+    }
+
+    /**
+     * Checks whether ISO 8601 week numbers are shown in the date selector.
+     * 
+     * @return true if week numbers are shown, false otherwise.
+     */
+    public boolean isShowISOWeekNumbers() {
+        return showISOWeekNumbers;
+    }
+
+    /**
+     * Sets the visibility of ISO 8601 week numbers in the date selector. ISO
+     * 8601 defines that a week always starts with a Monday so the week numbers
+     * are only shown if this is the case.
+     * 
+     * @param showWeekNumbers
+     *            true if week numbers should be shown, false otherwise.
+     */
+    public void setShowISOWeekNumbers(boolean showWeekNumbers) {
+        showISOWeekNumbers = showWeekNumbers;
+        requestRepaint();
     }
 
 }
