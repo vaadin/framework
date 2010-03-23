@@ -2791,6 +2791,7 @@ td.v-datefield-calendarpanel-nextyear {
 	-moz-border-radius-bottomright: 0;
 	-webkit-border-top-right-radius: 0;
 	-webkit-border-bottom-right-radius: 0;
+	height: 14px;
 }
 .v-readonly .v-datefield-textfield {
 	border-right-width: 1px;
@@ -3382,7 +3383,7 @@ td.v-datefield-calendarpanel-nextyear {
 .v-app input.v-filterselect-input,
 .v-window input.v-filterselect-input,
 .v-popupview-popup input.v-filterselect-input {
-	padding: 4px 0 3px 2px;
+	padding: 4px 0 4px 2px;
 }
 .v-filterselect-prompt .v-filterselect-input {
 	font-style: normal;
@@ -4653,8 +4654,9 @@ td.v-datefield-calendarpanel-nextyear {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
   background-position: left -1887px;
-	border-radius: 3px;
 	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
 	margin: 0;
 	height: 15px;
 	line-height: normal;
@@ -4668,7 +4670,7 @@ td.v-datefield-calendarpanel-nextyear {
 .v-window input.v-textfield,
 .v-app textarea.v-textarea,
 .v-window textarea.v-textarea  {
-	padding: 3px;
+	padding: 3px 3px 4px;
 }
 /* Textfield on blue background */
 .blue .v-textfield,

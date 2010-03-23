@@ -6,8 +6,9 @@
 	background: #fff;
 	background-repeat: repeat-x;
 	background-image: url(img/bg.png); /** sprite-ref: verticals; sprite-alignment: repeat; sprite-margin-bottom: 22px */
-	border-radius: 3px;
 	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
 	margin: 0;
 	height: 15px;
 	line-height: normal;
@@ -21,7 +22,7 @@
 .v-window input.v-textfield,
 .v-app textarea.v-textarea,
 .v-window textarea.v-textarea  {
-	padding: 3px;
+	padding: 3px 3px 4px;
 }
 /* Textfield on blue background */
 .blue .v-textfield,
