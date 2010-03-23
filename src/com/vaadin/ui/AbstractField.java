@@ -92,6 +92,13 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     private boolean modified = false;
 
     /**
+     * Should value change event propagation from property data source to
+     * listeners of the field be suppressed. This is used internally while the
+     * field makes changes to the property value.
+     */
+    private boolean suppressValueChangePropagation = false;
+
+    /**
      * Current source exception.
      */
     private Buffered.SourceException currentBufferedSourceException = null;
@@ -220,6 +227,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
                 try {
 
                     // Commits the value to datasource.
+                    suppressValueChangePropagation = true;
                     dataSource.setValue(newValue);
 
                 } catch (final Throwable e) {
@@ -231,6 +239,8 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 
                     // Throws the source exception.
                     throw currentBufferedSourceException;
+                } finally {
+                    suppressValueChangePropagation = false;
                 }
             } else {
                 /* An invalid value and we don't allow them, throw the exception */
@@ -484,6 +494,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
                 try {
 
                     // Commits the value to datasource
+                    suppressValueChangePropagation = true;
                     dataSource.setValue(newValue);
 
                     // The buffer is now unmodified
@@ -498,6 +509,8 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 
                     // Throws the source exception
                     throw currentBufferedSourceException;
+                } finally {
+                    suppressValueChangePropagation = false;
                 }
             }
 
@@ -945,12 +958,16 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * This method listens to data source value changes and passes the changes
      * forwards.
      * 
+     * Changes are not forwarded to the listeners of the field during internal
+     * operations of the field to avoid duplicate notifications.
+     * 
      * @param event
      *            the value change event telling the data source contents have
      *            changed.
      */
     public void valueChange(Property.ValueChangeEvent event) {
-        if (isReadThrough() || !isModified()) {
+        if (!suppressValueChangePropagation
+                && (isReadThrough() || !isModified())) {
             fireValueChange(false);
         }
     }
@@ -1228,7 +1245,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 
         @Override
         public void handleAction(Object sender, Object target) {
-            this.focusable.focus();
+            focusable.focus();
         }
     }
 }
