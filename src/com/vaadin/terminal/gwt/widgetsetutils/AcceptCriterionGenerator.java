@@ -16,8 +16,8 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
-import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
-import com.vaadin.event.dd.acceptCriteria.ClientCriterion;
+import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
+import com.vaadin.event.dd.acceptcriteria.ClientCriterion;
 import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCriterion;
 import com.vaadin.ui.ClientWidget;
 

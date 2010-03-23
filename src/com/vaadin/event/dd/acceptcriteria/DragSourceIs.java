@@ -4,7 +4,7 @@
 /**
  * 
  */
-package com.vaadin.event.dd.acceptCriteria;
+package com.vaadin.event.dd.acceptcriteria;
 
 import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.dd.DragAndDropEvent;

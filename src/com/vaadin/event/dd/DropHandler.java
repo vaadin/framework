@@ -5,9 +5,10 @@ package com.vaadin.event.dd;
 
 import java.io.Serializable;
 
-import com.vaadin.event.dd.acceptCriteria.AcceptAll;
-import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
-import com.vaadin.event.dd.acceptCriteria.ServerSideCriterion;
+import com.vaadin.event.Transferable;
+import com.vaadin.event.dd.acceptcriteria.AcceptAll;
+import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
+import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
 
 /**
  * DropHandlers contain the actual business logic for drag and drop operations.

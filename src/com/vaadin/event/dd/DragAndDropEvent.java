@@ -6,7 +6,7 @@ package com.vaadin.event.dd;
 import java.io.Serializable;
 
 import com.vaadin.event.Transferable;
-import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
+import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 
 /**
  * DragAndDropEvent wraps information related to drag and drop operation. It is

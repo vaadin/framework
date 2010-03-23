@@ -14,7 +14,7 @@ import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.DropTargetDetails;
 import com.vaadin.event.dd.DropTargetDetailsImpl;
-import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
+import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager.DragEventType;

@@ -4,7 +4,7 @@
 /**
  * 
  */
-package com.vaadin.event.dd.acceptCriteria;
+package com.vaadin.event.dd.acceptcriteria;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;

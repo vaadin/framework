@@ -29,8 +29,8 @@ import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
-import com.vaadin.event.dd.acceptCriteria.ClientCriterion;
+import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
+import com.vaadin.event.dd.acceptcriteria.ClientCriterion;
 import com.vaadin.terminal.Paintable;
 import com.vaadin.ui.ClientWidget;
 

@@ -11,7 +11,7 @@ import com.vaadin.demo.tutorial.addressbook.data.PersonContainer;
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
-import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
+import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.TestUtils;

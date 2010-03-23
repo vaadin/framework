@@ -8,7 +8,7 @@ import java.util.Iterator;
 import com.google.gwt.user.client.Command;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DropTarget;
-import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
+import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 

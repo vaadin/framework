@@ -2,14 +2,14 @@ package com.vaadin.tests.dd;
 
 import java.util.Iterator;
 
-import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.Transferable;
+import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.DropTargetDetails;
-import com.vaadin.event.dd.acceptCriteria.AcceptAll;
-import com.vaadin.event.dd.acceptCriteria.AcceptCriterion;
+import com.vaadin.event.dd.acceptcriteria.AcceptAll;
+import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.DragAndDropWrapper;

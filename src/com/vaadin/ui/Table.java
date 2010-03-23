@@ -32,8 +32,8 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DragSource;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
-import com.vaadin.event.dd.acceptCriteria.ClientCriterion;
-import com.vaadin.event.dd.acceptCriteria.ServerSideCriterion;
+import com.vaadin.event.dd.acceptcriteria.ClientCriterion;
+import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
@@ -3446,7 +3446,7 @@ public class Table extends AbstractSelect implements Action.Container,
          * (non-Javadoc)
          * 
          * @see
-         * com.vaadin.event.dd.acceptCriteria.ServerSideCriterion#getIdentifier
+         * com.vaadin.event.dd.acceptcriteria.ServerSideCriterion#getIdentifier
          * ()
          */
         @Override
@@ -3458,7 +3458,7 @@ public class Table extends AbstractSelect implements Action.Container,
          * (non-Javadoc)
          * 
          * @see
-         * com.vaadin.event.dd.acceptCriteria.AcceptCriterion#accepts(com.vaadin
+         * com.vaadin.event.dd.acceptcriteria.AcceptCriterion#accepts(com.vaadin
          * .event.dd.DragAndDropEvent)
          */
         public boolean accept(DragAndDropEvent dragEvent) {
@@ -3482,7 +3482,7 @@ public class Table extends AbstractSelect implements Action.Container,
          * (non-Javadoc)
          * 
          * @see
-         * com.vaadin.event.dd.acceptCriteria.AcceptCriterion#paintResponse(
+         * com.vaadin.event.dd.acceptcriteria.AcceptCriterion#paintResponse(
          * com.vaadin.terminal.PaintTarget)
          */
         @Override

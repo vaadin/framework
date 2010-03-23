@@ -1,7 +1,7 @@
 /*
 @ITMillApache2LicenseForJavaFiles@
  */
-package com.vaadin.event.dd.acceptCriteria;
+package com.vaadin.event.dd.acceptcriteria;
 
 import java.io.Serializable;
 
