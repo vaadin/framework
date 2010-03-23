@@ -26,7 +26,7 @@ public class DDTest7 extends TestBase {
 
     HorizontalLayout hl = new HorizontalLayout();
     Table table = new Table(
-            "Drag and drop sortable table with lazy loading rule. Dragged row can only be accepted after hevier row (weigh column). If starting from topmost row in viewport, hevies will end up on top.");
+            "Drag and drop sortable table with lazy loading rule. Dragged row can only be accepted after hevier row (weigh column). If starting from topmost row in viewport, heviests will end up on top.");
 
     @Override
     protected void setup() {
@@ -151,9 +151,7 @@ public class DDTest7 extends TestBase {
                                 item.getItemProperty(propId).getValue());
                     }
 
-                    // TODO Auto-generated method stub
                 } catch (CloneNotSupportedException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
 

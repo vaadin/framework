@@ -20,6 +20,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.DataBoundTransferable;
+import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.DropTargetDetailsImpl;
@@ -1692,28 +1693,40 @@ public abstract class AbstractSelect extends AbstractField implements
 
     /**
      * Criterion which accepts a drop only if the drop target is (one of) the
-     * given item identifier(s). Meaningful only for drop targets that extends
-     * AbstractSelect.
+     * given item identifier(s). Criterion can be used only on drop targets that
+     * extends AbstractSelect like {@link Table} and {@link Tree}. The target
+     * and identifiers of valid Items are given in constructor.
      * 
      * @since 6.3
      */
     @ClientCriterion(VIsOverId.class)
-    public static class DropTargetItemId extends AbstractItemSetCriterion {
+    public static class OverItem extends AbstractItemSetCriterion {
 
-        public DropTargetItemId(AbstractSelect select, Object... itemId) {
+        /**
+         * @param select
+         *            the select implementation that is used as a drop target
+         * @param itemId
+         *            the identifier(s) that are valid drop locations
+         */
+        public OverItem(AbstractSelect select, Object... itemId) {
             super(select, itemId);
         }
 
         public boolean accept(DragAndDropEvent dragEvent) {
             AbstractSelectDropTargetDetails dropTargetData = (AbstractSelectDropTargetDetails) dragEvent
                     .getDropTargetDetails();
+            if (dropTargetData.getTarget() != select) {
+                return false;
+            }
             return itemIds.contains(dropTargetData.getItemIdOver());
         }
 
     }
 
     /**
-     * TODO Javadoc!
+     * Abstract helper class to implement item id based criterion.
+     * 
+     * Note, inner class used not to open itemIdMapper for public access.
      * 
      * @since 6.3
      * 
@@ -1721,7 +1734,7 @@ public abstract class AbstractSelect extends AbstractField implements
     private static abstract class AbstractItemSetCriterion extends
             ClientSideCriterion {
         protected final Collection<Object> itemIds = new HashSet<Object>();
-        private AbstractSelect select;
+        protected AbstractSelect select;
 
         public AbstractItemSetCriterion(AbstractSelect select, Object... itemId) {
             if (itemIds == null || select == null) {
@@ -1741,43 +1754,53 @@ public abstract class AbstractSelect extends AbstractField implements
                 String key = select.itemIdMapper.key(itemId);
                 keys[i++] = key;
             }
-            target.addVariable(select, "keys", keys);
+            target.addAttribute("keys", keys);
+            target.addAttribute("s", select);
         }
 
     }
 
     /**
-     * Criterion which accepts a drop only if the transferable contains the
-     * given item identifier(s). The item ids relate to the drag source
-     * (AbstractSelect).
+     * Accept criterion which accepts a drop only if the {@link Transferable}
+     * contains the given Item(s) or practically its identifier(s) from a
+     * specific AbstractSelect.
      * 
      * @since 6.3
      */
     @ClientCriterion(VItemIdIs.class)
-    public static class TransferableContainsItemId extends
-            AbstractItemSetCriterion {
-        public TransferableContainsItemId(AbstractSelect select,
-                Object... itemId) {
+    public static class ContainsItem extends AbstractItemSetCriterion {
+
+        /**
+         * @param select
+         *            the select from which the item id's are checked
+         * @param itemId
+         *            the item identifier(s) of the select that are accepted
+         */
+        public ContainsItem(AbstractSelect select, Object... itemId) {
             super(select, itemId);
         }
 
         public boolean accept(DragAndDropEvent dragEvent) {
             DataBoundTransferable transferable = (DataBoundTransferable) dragEvent
                     .getTransferable();
+            if (transferable.getSourceComponent() != select) {
+                return false;
+            }
             return itemIds.contains(transferable.getItemId());
         }
 
     }
 
     /**
-     * Helper implementation for subclasses that implement {@link DropTarget}.
+     * DropTargetDetails implementation for subclasses of {@link AbstractSelect}
+     * that implement {@link DropTarget}.
      * 
      * @since 6.3
      */
     public class AbstractSelectDropTargetDetails extends DropTargetDetailsImpl {
 
         /**
-         * The treenode id over which the drag event happened.
+         * The item id over which the drag event happened.
          */
         protected Object idOver;
 
