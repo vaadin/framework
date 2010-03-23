@@ -1,5 +1,7 @@
 package com.vaadin.terminal.gwt.client;
 
+import java.io.Serializable;
+
 import com.vaadin.terminal.gwt.server.WebBrowser;
 
 /**
@@ -11,7 +13,7 @@ import com.vaadin.terminal.gwt.server.WebBrowser;
  * @version @VERSION@
  * @since 6.3
  */
-public class VBrowserDetails {
+public class VBrowserDetails implements Serializable {
 
     private boolean isGecko;
     private boolean isWebKit;
