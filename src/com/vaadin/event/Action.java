@@ -72,6 +72,24 @@ public class Action implements Serializable {
         return icon;
     }
 
+    public interface Listener {
+        public void handleAction(Object sender, Object target);
+    }
+
+    public interface Notifier extends Container {
+        public <T extends Action & Action.Listener> boolean addAction(T action);
+
+        public <T extends Action & Action.Listener> boolean removeAction(
+                T action);
+    }
+
+    public interface NotifierProxy {
+        public <T extends Action & Action.Listener> boolean addAction(T action);
+
+        public <T extends Action & Action.Listener> boolean removeAction(
+                T action);
+    }
+
     /**
      * Interface implemented by classes who wish to handle actions.
      * 

@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 
 import com.vaadin.data.Buffered;
 import com.vaadin.data.Item;
@@ -17,6 +18,9 @@ import com.vaadin.data.Validatable;
 import com.vaadin.data.Validator;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.event.Action;
+import com.vaadin.event.ActionManager;
+import com.vaadin.event.Action.Handler;
 import com.vaadin.terminal.CompositeErrorMessage;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.PaintException;
@@ -57,7 +61,7 @@ import com.vaadin.terminal.gwt.client.ui.VForm;
 @SuppressWarnings("serial")
 @ClientWidget(VForm.class)
 public class Form extends AbstractField implements Item.Editor, Buffered, Item,
-        Validatable {
+        Validatable, Action.Container {
 
     private Object propertyValue;
 
@@ -133,6 +137,12 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     private int gridlayoutCursorY = -1;
 
     /**
+     * Keeps track of the Actions added to this component, and manages the
+     * painting and handling as well.
+     */
+    ActionManager actionManager = new ActionManager(this);
+
+    /**
      * Contructs a new form with default layout.
      * 
      * <p>
@@ -179,9 +189,24 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
+
         layout.paint(target);
         if (formFooter != null) {
             formFooter.paint(target);
+        }
+
+        if (actionManager != null) {
+            actionManager.paintActions(null, target);
+        }
+    }
+
+    @Override
+    public void changeVariables(Object source, Map<String, Object> variables) {
+        super.changeVariables(source, variables);
+
+        // Actions
+        if (actionManager != null) {
+            actionManager.handleActions(variables, this);
         }
     }
 
@@ -1251,6 +1276,37 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
             return;
         } else {
             getLayout().requestRepaintAll();
+        }
+    }
+
+    /*
+     * ACTIONS
+     */
+
+    protected ActionManager getActionManager() {
+        if (actionManager == null) {
+            actionManager = new ActionManager();
+            actionManager.setViewer(this);
+        }
+        return actionManager;
+    }
+
+    public void addActionHandler(Handler actionHandler) {
+        getActionManager().addActionHandler(actionHandler);
+    }
+
+    public void removeActionHandler(Handler actionHandler) {
+        if (actionManager != null) {
+            actionManager.removeActionHandler(actionHandler);
+        }
+    }
+
+    /**
+     * Removes all action handlers
+     */
+    public void removeAllActionHandlers() {
+        if (actionManager != null) {
+            actionManager.removeAllActionHandlers();
         }
     }
 

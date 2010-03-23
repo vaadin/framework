@@ -5,15 +5,13 @@
 package com.vaadin.ui;
 
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Map;
 
 import com.vaadin.event.Action;
-import com.vaadin.event.ShortcutAction;
+import com.vaadin.event.ActionManager;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
-import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Scrollable;
@@ -34,7 +32,8 @@ import com.vaadin.ui.themes.Runo;
 @ClientWidget(VPanel.class)
 public class Panel extends AbstractComponentContainer implements Scrollable,
         ComponentContainer.ComponentAttachListener,
-        ComponentContainer.ComponentDetachListener, Action.Container {
+        ComponentContainer.ComponentDetachListener, Action.Container,
+        Action.Notifier {
 
     private static final String CLICK_EVENT = VPanel.CLICK_EVENT_IDENTIFIER;
 
@@ -70,11 +69,11 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      */
     private boolean scrollable = false;
 
-    /** List of action handlers */
-    private LinkedList actionHandlers = null;
-
-    /** Action mapper */
-    private KeyMapper actionMapper = null;
+    /**
+     * Keeps track of the Actions added to this component, and manages the
+     * painting and handling as well.
+     */
+    protected ActionManager actionManager;
 
     /**
      * Creates a new empty panel. A VerticalLayout is used as content.
@@ -244,44 +243,9 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
             target.addVariable(this, "scrollTop", getScrollTop());
         }
 
-        target.addVariable(this, "action", "");
-        target.startTag("actions");
-
-        if (actionHandlers != null && !actionHandlers.isEmpty()) {
-            for (final Iterator ahi = actionHandlers.iterator(); ahi.hasNext();) {
-                final Action[] aa = ((Action.Handler) ahi.next()).getActions(
-                        null, this);
-                if (aa != null) {
-                    for (int ai = 0; ai < aa.length; ai++) {
-                        final Action a = aa[ai];
-                        target.startTag("action");
-                        final String akey = actionMapper.key(aa[ai]);
-                        target.addAttribute("key", akey);
-                        if (a.getCaption() != null) {
-                            target.addAttribute("caption", a.getCaption());
-                        }
-                        if (a.getIcon() != null) {
-                            target.addAttribute("icon", a.getIcon());
-                        }
-                        if (a instanceof ShortcutAction) {
-                            final ShortcutAction sa = (ShortcutAction) a;
-                            target.addAttribute("kc", sa.getKeyCode());
-                            final int[] modifiers = sa.getModifiers();
-                            if (modifiers != null) {
-                                final String[] smodifiers = new String[modifiers.length];
-                                for (int i = 0; i < modifiers.length; i++) {
-                                    smodifiers[i] = String
-                                            .valueOf(modifiers[i]);
-                                }
-                                target.addAttribute("mk", smodifiers);
-                            }
-                        }
-                        target.endTag("action");
-                    }
-                }
-            }
+        if (actionManager != null) {
+            actionManager.paintActions(null, target);
         }
-        target.endTag("actions");
     }
 
     @Override
@@ -369,16 +333,8 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         }
 
         // Actions
-        if (variables.containsKey("action")) {
-            final String key = (String) variables.get("action");
-            final Action action = (Action) actionMapper.get(key);
-            if (action != null && actionHandlers != null) {
-                Object[] array = actionHandlers.toArray();
-                for (int i = 0; i < array.length; i++) {
-                    ((Action.Handler) array[i])
-                            .handleAction(action, this, this);
-                }
-            }
+        if (actionManager != null) {
+            actionManager.handleActions(variables, this);
         }
 
     }
@@ -529,39 +485,37 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         content.removeAllComponents();
     }
 
-    public void addActionHandler(Handler actionHandler) {
-        if (actionHandler != null) {
-
-            if (actionHandlers == null) {
-                actionHandlers = new LinkedList();
-                actionMapper = new KeyMapper();
-            }
-
-            if (!actionHandlers.contains(actionHandler)) {
-                actionHandlers.add(actionHandler);
-                requestRepaint();
-            }
+    /*
+     * ACTIONS
+     */
+    protected ActionManager getActionManager() {
+        if (actionManager == null) {
+            actionManager = new ActionManager();
+            actionManager.setViewer(this);
         }
-
+        return actionManager;
     }
 
-    /**
-     * Removes an action handler.
-     * 
-     * @see com.vaadin.event.Action.Container#removeActionHandler(Action.Handler)
-     */
-    public void removeActionHandler(Action.Handler actionHandler) {
+    public <T extends Action & com.vaadin.event.Action.Listener> boolean addAction(
+            T action) {
+        return getActionManager().addAction(action);
+    }
 
-        if (actionHandlers != null && actionHandlers.contains(actionHandler)) {
+    public <T extends Action & com.vaadin.event.Action.Listener> boolean removeAction(
+            T action) {
+        if (actionManager == null) {
+            return actionManager.removeAction(action);
+        }
+        return false;
+    }
 
-            actionHandlers.remove(actionHandler);
+    public void addActionHandler(Handler actionHandler) {
+        getActionManager().addActionHandler(actionHandler);
+    }
 
-            if (actionHandlers.isEmpty()) {
-                actionHandlers = null;
-                actionMapper = null;
-            }
-
-            requestRepaint();
+    public void removeActionHandler(Handler actionHandler) {
+        if (actionManager != null) {
+            actionManager.removeActionHandler(actionHandler);
         }
     }
 
@@ -569,9 +523,9 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * Removes all action handlers
      */
     public void removeAllActionHandlers() {
-        actionHandlers = null;
-        actionMapper = null;
-        requestRepaint();
+        if (actionManager != null) {
+            actionManager.removeAllActionHandlers();
+        }
     }
 
     /**

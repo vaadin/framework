@@ -6,8 +6,11 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.Set;
 
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -21,6 +24,8 @@ import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VErrorMessage;
 
 public class VForm extends ComplexPanel implements Container {
+
+    protected String id;
 
     private String height = "";
 
@@ -52,6 +57,8 @@ public class VForm extends ComplexPanel implements Container {
 
     private boolean rendering = false;
 
+    ShortcutActionHandler shortcutHandler;
+
     public VForm() {
         setElement(DOM.createDiv());
         DOM.appendChild(getElement(), fieldSet);
@@ -69,11 +76,20 @@ public class VForm extends ComplexPanel implements Container {
         errorMessage.setStyleName(CLASSNAME + "-errormessage");
         DOM.appendChild(fieldSet, errorMessage.getElement());
         DOM.appendChild(fieldSet, footerContainer);
+
+        addDomHandler(new KeyDownHandler() {
+            public void onKeyDown(KeyDownEvent event) {
+                shortcutHandler.handleKeyboardEvent(Event.as(event
+                        .getNativeEvent()));
+                return;
+            }
+        }, KeyDownEvent.getType());
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         rendering = true;
         this.client = client;
+        id = uidl.getId();
 
         if (client.updateComponent(this, uidl, false)) {
             rendering = false;
@@ -126,7 +142,8 @@ public class VForm extends ComplexPanel implements Container {
 
         // first render footer so it will be easier to handle relative height of
         // main layout
-        if (uidl.getChildCount() > 1) {
+        if (uidl.getChildCount() > 1
+                && !uidl.getChildUIDL(1).getTag().equals("actions")) {
             // render footer
             Container newFooter = (Container) client.getPaintable(uidl
                     .getChildUIDL(1));
@@ -161,6 +178,20 @@ public class VForm extends ComplexPanel implements Container {
             add((Widget) lo, fieldContainer);
         }
         lo.updateFromUIDL(layoutUidl, client);
+
+        // We may have actions attached to this panel
+        if (uidl.getChildCount() > 1) {
+            final int cnt = uidl.getChildCount();
+            for (int i = 1; i < cnt; i++) {
+                UIDL childUidl = uidl.getChildUIDL(i);
+                if (childUidl.getTag().equals("actions")) {
+                    if (shortcutHandler == null) {
+                        shortcutHandler = new ShortcutActionHandler(id, client);
+                    }
+                    shortcutHandler.updateActionMap(childUidl);
+                }
+            }
+        }
 
         rendering = false;
     }

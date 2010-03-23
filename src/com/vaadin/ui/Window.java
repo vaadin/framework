@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.vaadin.Application;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
@@ -1798,4 +1799,48 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         requestRepaint();
     }
 
+    /*
+     * Actions
+     */
+    protected CloseShortcut closeMnemonic;
+
+    public CloseShortcut setCloseMnemonic(int keyCode, int... modifiers) {
+        CloseShortcut old = closeMnemonic;
+        if (old != null) {
+            removeAction(old);
+        }
+        closeMnemonic = new CloseShortcut(this, keyCode, modifiers);
+        addAction(closeMnemonic);
+        return old;
+    }
+
+    public void removeCloseMnemonic() {
+        if (closeMnemonic != null) {
+            removeAction(closeMnemonic);
+            closeMnemonic = null;
+        }
+    }
+
+    public static class CloseShortcut extends ShortcutListener {
+        protected Window window;
+
+        public CloseShortcut(Window window, String shorthandCaption) {
+            super(shorthandCaption);
+            this.window = window;
+        }
+
+        public CloseShortcut(Window window, int keyCode, int... modifiers) {
+            super(null, keyCode, modifiers);
+            this.window = window;
+        }
+
+        public CloseShortcut(Window window, int keyCode) {
+            this(window, keyCode, null);
+        }
+
+        @Override
+        public void handleAction(Object sender, Object target) {
+            this.window.close();
+        }
+    }
 }

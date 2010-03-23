@@ -19,6 +19,9 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Validatable;
 import com.vaadin.data.Validator;
 import com.vaadin.data.Validator.InvalidValueException;
+import com.vaadin.event.Action;
+import com.vaadin.event.ActionManager;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.terminal.CompositeErrorMessage;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.PaintException;
@@ -52,7 +55,7 @@ import com.vaadin.terminal.PaintTarget;
  */
 @SuppressWarnings("serial")
 public abstract class AbstractField extends AbstractComponent implements Field,
-        Property.ReadOnlyStatusChangeNotifier {
+        Property.ReadOnlyStatusChangeNotifier, Action.NotifierProxy {
 
     /* Private members */
 
@@ -123,6 +126,12 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * Is automatic validation enabled.
      */
     private boolean validationVisible = true;
+
+    /**
+     * Keeps track of the Actions added to this component; the actual
+     * handling/notifying is delegated, usually to the containing window.
+     */
+    protected ActionManager actionManager;
 
     /* Component basics */
 
@@ -1046,6 +1055,21 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         if (delayedFocus) {
             focus();
         }
+        if (actionManager != null && !(this instanceof Action.Container)) {
+            // Only for non Action.Containers because those want to paint
+            // actions themselves - e.g Form
+            actionManager.setViewer(getWindow());
+        }
+    }
+
+    @Override
+    public void detach() {
+        super.detach();
+        if (actionManager != null && !(this instanceof Action.Container)) {
+            // Only for non Action.Containers because those want to paint
+            // actions themselves - e.g Form
+            actionManager.setViewer((Window) null);
+        }
     }
 
     /**
@@ -1161,4 +1185,51 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         requestRepaint();
     }
 
+    /*
+     * Actions
+     */
+
+    protected ActionManager getActionManager() {
+        if (actionManager == null) {
+            actionManager = new ActionManager();
+            if (getWindow() != null) {
+                actionManager.setViewer(getWindow());
+            }
+        }
+        return actionManager;
+    }
+
+    public <T extends Action & Action.Listener> boolean addAction(T action) {
+        return getActionManager().addAction(action);
+    }
+
+    public <T extends Action & Action.Listener> boolean removeAction(T action) {
+        if (actionManager == null) {
+            return actionManager.removeAction(action);
+        }
+        return false;
+    }
+
+    public static class FocusShortcut extends ShortcutListener {
+        protected Focusable focusable;
+
+        public FocusShortcut(Focusable focusable, String shorthandCaption) {
+            super(shorthandCaption);
+            this.focusable = focusable;
+        }
+
+        public FocusShortcut(Focusable focusable, int keyCode, int... modifiers) {
+            super(null, keyCode, modifiers);
+            this.focusable = focusable;
+        }
+
+        public FocusShortcut(Focusable focusable, int keyCode) {
+            this(focusable, keyCode, null);
+        }
+
+        @Override
+        public void handleAction(Object sender, Object target) {
+            this.focusable.focus();
+        }
+    }
 }

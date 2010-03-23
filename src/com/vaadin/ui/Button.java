@@ -10,6 +10,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 import com.vaadin.data.Property;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.VButton;
@@ -345,6 +346,52 @@ public class Button extends AbstractField {
                     + " only accepts Boolean values");
         }
         super.setInternalValue(newValue);
+    }
+
+    /*
+     * Actions
+     */
+
+    protected ClickShortcut clickMnemonic;
+
+    public ClickShortcut setClickMnemonic(int keyCode, int... modifiers) {
+        ClickShortcut old = clickMnemonic;
+        if (old != null) {
+            removeAction(old);
+        }
+        clickMnemonic = new ClickShortcut(this, keyCode, modifiers);
+        addAction(clickMnemonic);
+        return old;
+    }
+
+    public void removeClickMnemonic() {
+        if (clickMnemonic != null) {
+            removeAction(clickMnemonic);
+            clickMnemonic = null;
+        }
+    }
+
+    public static class ClickShortcut extends ShortcutListener {
+        protected Button button;
+
+        public ClickShortcut(Button button, String shorthandCaption) {
+            super(shorthandCaption);
+            this.button = button;
+        }
+
+        public ClickShortcut(Button button, int keyCode, int... modifiers) {
+            super(null, keyCode, modifiers);
+            this.button = button;
+        }
+
+        public ClickShortcut(Button button, int keyCode) {
+            this(button, keyCode, null);
+        }
+
+        @Override
+        public void handleAction(Object sender, Object target) {
+            this.button.fireClick();
+        }
     }
 
 }

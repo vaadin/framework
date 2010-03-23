@@ -15,6 +15,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.KeyboardListenerCollection;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 
 /**
@@ -76,10 +77,16 @@ public class ShortcutActionHandler {
         while (it.hasNext()) {
             final ShortcutAction a = (ShortcutAction) it.next();
             if (a.getShortcutCombination().equals(kc)) {
+                Element et = DOM.eventGetTarget(event);
+                final Paintable target = client.getPaintable(et);
                 DOM.eventPreventDefault(event);
-                shakeTarget(DOM.eventGetTarget(event));
+                shakeTarget(et);
                 DeferredCommand.addCommand(new Command() {
                     public void execute() {
+                        if (target != null) {
+                            client.updateVariable(paintableId, "actiontarget",
+                                    target, false);
+                        }
                         client.updateVariable(paintableId, "action",
                                 a.getKey(), true);
                     }

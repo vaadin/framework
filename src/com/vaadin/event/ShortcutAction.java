@@ -5,6 +5,8 @@
 package com.vaadin.event;
 
 import java.io.Serializable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.vaadin.terminal.Resource;
 
@@ -32,6 +34,125 @@ public class ShortcutAction extends Action {
         super(caption, icon);
         keyCode = kc;
         modifiers = m;
+    }
+
+    /**
+     * Used in the caption shorthand notation to indicate the ALT modifier.
+     */
+    public static final char MNEMONIC_CHAR_ALT = '&';
+    /**
+     * Used in the caption shorthand notation to indicate the SHIFT modifier.
+     */
+    public static final char MNEMONIC_CHAR_SHIFT = '%';
+    /**
+     * Used in the caption shorthand notation to indicate the CTRL modifier.
+     */
+    public static final char MNEMONIC_CHAR_CTRL = '^';
+
+    // regex-quote (escape) the characters
+    private static final String MNEMONIC_ALT = Pattern.quote(Character
+            .toString(MNEMONIC_CHAR_ALT));
+    private static final String MNEMONIC_SHIFT = Pattern.quote(Character
+            .toString(MNEMONIC_CHAR_SHIFT));
+    private static final String MNEMONIC_CTRL = Pattern.quote(Character
+            .toString(MNEMONIC_CHAR_CTRL));
+    // Used for replacing escaped chars, e.g && with &
+    private static final Pattern MNEMONICS_ESCAPE = Pattern.compile("("
+            + MNEMONIC_ALT + "?)" + MNEMONIC_ALT + "|(" + MNEMONIC_SHIFT + "?)"
+            + MNEMONIC_SHIFT + "|(" + MNEMONIC_CTRL + "?)" + MNEMONIC_CTRL);
+    // Used for removing escaped chars, only leaving real mnemonics
+    private static final Pattern MNEMONICS_REMOVE = Pattern.compile("(["
+            + MNEMONIC_ALT + "|" + MNEMONIC_SHIFT + "|" + MNEMONIC_CTRL
+            + "])\\1");
+    // Mnemonic char, optionally followed by another, and optionally a third
+    private static final Pattern MNEMONICS = Pattern.compile("(" + MNEMONIC_ALT
+            + "|" + MNEMONIC_SHIFT + "|" + MNEMONIC_CTRL + ")(?!\\1)(?:("
+            + MNEMONIC_ALT + "|" + MNEMONIC_SHIFT + "|" + MNEMONIC_CTRL
+            + ")(?!\\1|\\2))?(?:(" + MNEMONIC_ALT + "|" + MNEMONIC_SHIFT + "|"
+            + MNEMONIC_CTRL + ")(?!\\1|\\2|\\3))?.");
+
+    /**
+     * Constructs a ShortcutAction using a shorthand notation to encode the
+     * keycode and modifiers in the caption.
+     * <p>
+     * Insert one or more modifier characters before the character to use as
+     * keycode. E.g <code>"&Save"</code> will make a shortcut responding to
+     * ALT-S, <code>"E^xit"</code> will respond to CTRL-X.<br/>
+     * Multiple modifiers can be used, e.g <code>"&^Delete"</code> will respond
+     * to CTRL-ALT-D (the order of the modifier characters is not important).
+     * </p>
+     * <p>
+     * The modifier characters will be removed from the caption. The modifier
+     * character is be escaped by itself: two consecutive characters are turned
+     * into the original character w/o the special meaning. E.g
+     * <code>"Save&&&close"</code> will respond to ALT-C, and the caption will
+     * say "Save&close".
+     * </p>
+     * 
+     * @param shorthandCaption
+     *            the caption in modifier shorthand
+     */
+    public ShortcutAction(String shorthandCaption) {
+        this(shorthandCaption, null);
+    }
+
+    /**
+     * Constructs a ShortcutAction using a shorthand notation to encode the
+     * keycode a in the caption.
+     * <p>
+     * This works the same way as {@link #ShortcutAction(String)}, with the
+     * exception that the modifiers given override those indicated in the
+     * caption. I.e use any of the modifier characters in the caption to
+     * indicate the keycode, but the modifier will be the given set.<br/>
+     * E.g
+     * <code>new ShortcutAction("Do &stuff", new int[]{ShortcutAction.ModifierKey.CTRL}));</code>
+     * will respond to CTRL-S.
+     * </p>
+     * 
+     * @param shorthandCaption
+     * @param modifierKeys
+     */
+    public ShortcutAction(String shorthandCaption, int[] modifierKeys) {
+        // && -> & etc
+        super(MNEMONICS_ESCAPE.matcher(shorthandCaption).replaceAll("$1$2$3"));
+        // replace escaped chars with something that won't accidentally match
+        shorthandCaption = MNEMONICS_REMOVE.matcher(shorthandCaption)
+                .replaceAll("\u001A");
+        Matcher matcher = MNEMONICS.matcher(shorthandCaption);
+        if (matcher.find()) {
+            String match = matcher.group();
+
+            // KeyCode from last char in match, lowercase
+            keyCode = Character.toLowerCase(matcher.group().charAt(
+                    match.length() - 1));
+
+            // Given modifiers override this indicated in the caption
+            if (modifierKeys != null) {
+                modifiers = modifierKeys;
+            } else {
+                // Read modifiers from caption
+                int[] mod = new int[match.length() - 1];
+                for (int i = 0; i < mod.length; i++) {
+                    int kc = match.charAt(i);
+                    switch (kc) {
+                    case MNEMONIC_CHAR_ALT:
+                        mod[i] = ModifierKey.ALT;
+                        break;
+                    case MNEMONIC_CHAR_CTRL:
+                        mod[i] = ModifierKey.CTRL;
+                        break;
+                    case MNEMONIC_CHAR_SHIFT:
+                        mod[i] = ModifierKey.SHIFT;
+                        break;
+                    }
+                }
+                modifiers = mod;
+            }
+
+        } else {
+            keyCode = -1;
+            modifiers = modifierKeys;
+        }
     }
 
     public int getKeyCode() {
