@@ -39,37 +39,38 @@ public class ShortcutAction extends Action {
     /**
      * Used in the caption shorthand notation to indicate the ALT modifier.
      */
-    public static final char MNEMONIC_CHAR_ALT = '&';
+    public static final char SHORTHAND_CHAR_ALT = '&';
     /**
      * Used in the caption shorthand notation to indicate the SHIFT modifier.
      */
-    public static final char MNEMONIC_CHAR_SHIFT = '%';
+    public static final char SHORTHAND_CHAR_SHIFT = '_';
     /**
      * Used in the caption shorthand notation to indicate the CTRL modifier.
      */
-    public static final char MNEMONIC_CHAR_CTRL = '^';
+    public static final char SHORTHAND_CHAR_CTRL = '^';
 
     // regex-quote (escape) the characters
-    private static final String MNEMONIC_ALT = Pattern.quote(Character
-            .toString(MNEMONIC_CHAR_ALT));
-    private static final String MNEMONIC_SHIFT = Pattern.quote(Character
-            .toString(MNEMONIC_CHAR_SHIFT));
-    private static final String MNEMONIC_CTRL = Pattern.quote(Character
-            .toString(MNEMONIC_CHAR_CTRL));
+    private static final String SHORTHAND_ALT = Pattern.quote(Character
+            .toString(SHORTHAND_CHAR_ALT));
+    private static final String SHORTHAND_SHIFT = Pattern.quote(Character
+            .toString(SHORTHAND_CHAR_SHIFT));
+    private static final String SHORTHAND_CTRL = Pattern.quote(Character
+            .toString(SHORTHAND_CHAR_CTRL));
     // Used for replacing escaped chars, e.g && with &
-    private static final Pattern MNEMONICS_ESCAPE = Pattern.compile("("
-            + MNEMONIC_ALT + "?)" + MNEMONIC_ALT + "|(" + MNEMONIC_SHIFT + "?)"
-            + MNEMONIC_SHIFT + "|(" + MNEMONIC_CTRL + "?)" + MNEMONIC_CTRL);
-    // Used for removing escaped chars, only leaving real mnemonics
-    private static final Pattern MNEMONICS_REMOVE = Pattern.compile("(["
-            + MNEMONIC_ALT + "|" + MNEMONIC_SHIFT + "|" + MNEMONIC_CTRL
+    private static final Pattern SHORTHAND_ESCAPE = Pattern.compile("("
+            + SHORTHAND_ALT + "?)" + SHORTHAND_ALT + "|(" + SHORTHAND_SHIFT
+            + "?)" + SHORTHAND_SHIFT + "|(" + SHORTHAND_CTRL + "?)"
+            + SHORTHAND_CTRL);
+    // Used for removing escaped chars, only leaving real shorthands
+    private static final Pattern SHORTHAND_REMOVE = Pattern.compile("(["
+            + SHORTHAND_ALT + "|" + SHORTHAND_SHIFT + "|" + SHORTHAND_CTRL
             + "])\\1");
     // Mnemonic char, optionally followed by another, and optionally a third
-    private static final Pattern MNEMONICS = Pattern.compile("(" + MNEMONIC_ALT
-            + "|" + MNEMONIC_SHIFT + "|" + MNEMONIC_CTRL + ")(?!\\1)(?:("
-            + MNEMONIC_ALT + "|" + MNEMONIC_SHIFT + "|" + MNEMONIC_CTRL
-            + ")(?!\\1|\\2))?(?:(" + MNEMONIC_ALT + "|" + MNEMONIC_SHIFT + "|"
-            + MNEMONIC_CTRL + ")(?!\\1|\\2|\\3))?.");
+    private static final Pattern SHORTHANDS = Pattern.compile("("
+            + SHORTHAND_ALT + "|" + SHORTHAND_SHIFT + "|" + SHORTHAND_CTRL
+            + ")(?!\\1)(?:(" + SHORTHAND_ALT + "|" + SHORTHAND_SHIFT + "|"
+            + SHORTHAND_CTRL + ")(?!\\1|\\2))?(?:(" + SHORTHAND_ALT + "|"
+            + SHORTHAND_SHIFT + "|" + SHORTHAND_CTRL + ")(?!\\1|\\2|\\3))?.");
 
     /**
      * Constructs a ShortcutAction using a shorthand notation to encode the
@@ -114,11 +115,11 @@ public class ShortcutAction extends Action {
      */
     public ShortcutAction(String shorthandCaption, int[] modifierKeys) {
         // && -> & etc
-        super(MNEMONICS_ESCAPE.matcher(shorthandCaption).replaceAll("$1$2$3"));
+        super(SHORTHAND_ESCAPE.matcher(shorthandCaption).replaceAll("$1$2$3"));
         // replace escaped chars with something that won't accidentally match
-        shorthandCaption = MNEMONICS_REMOVE.matcher(shorthandCaption)
+        shorthandCaption = SHORTHAND_REMOVE.matcher(shorthandCaption)
                 .replaceAll("\u001A");
-        Matcher matcher = MNEMONICS.matcher(shorthandCaption);
+        Matcher matcher = SHORTHANDS.matcher(shorthandCaption);
         if (matcher.find()) {
             String match = matcher.group();
 
@@ -135,13 +136,13 @@ public class ShortcutAction extends Action {
                 for (int i = 0; i < mod.length; i++) {
                     int kc = match.charAt(i);
                     switch (kc) {
-                    case MNEMONIC_CHAR_ALT:
+                    case SHORTHAND_CHAR_ALT:
                         mod[i] = ModifierKey.ALT;
                         break;
-                    case MNEMONIC_CHAR_CTRL:
+                    case SHORTHAND_CHAR_CTRL:
                         mod[i] = ModifierKey.CTRL;
                         break;
-                    case MNEMONIC_CHAR_SHIFT:
+                    case SHORTHAND_CHAR_SHIFT:
                         mod[i] = ModifierKey.SHIFT;
                         break;
                     }

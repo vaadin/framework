@@ -67,28 +67,28 @@ public class ActionManager implements Action.Container, Action.Handler,
         requestRepaint(); // this goes to the new viewer
     }
 
-    public <T extends Action & Action.Listener> boolean addAction(T action) {
+    public <T extends Action & Action.Listener> void addAction(T action) {
         if (ownActions == null) {
             ownActions = new HashSet<Action>();
         }
         if (ownActions.add(action)) {
             requestRepaint();
-            return true;
         }
-        return false;
     }
 
-    public <T extends Action & Action.Listener> boolean removeAction(T action) {
+    public <T extends Action & Action.Listener> void removeAction(T action) {
         if (ownActions != null) {
             if (ownActions.remove(action)) {
                 requestRepaint();
-                return true;
             }
         }
-        return false;
     }
 
     public void addActionHandler(Handler actionHandler) {
+        if (actionHandler == this) {
+            // don't add the actionHandler to itself
+            return;
+        }
         if (actionHandler != null) {
 
             if (actionHandlers == null) {
@@ -102,7 +102,6 @@ public class ActionManager implements Action.Container, Action.Handler,
     }
 
     public void removeActionHandler(Action.Handler actionHandler) {
-
         if (actionHandlers != null && actionHandlers.contains(actionHandler)) {
 
             if (actionHandlers.remove(actionHandler)) {

@@ -490,23 +490,21 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      */
     protected ActionManager getActionManager() {
         if (actionManager == null) {
-            actionManager = new ActionManager();
-            actionManager.setViewer(this);
+            actionManager = new ActionManager(this);
         }
         return actionManager;
     }
 
-    public <T extends Action & com.vaadin.event.Action.Listener> boolean addAction(
+    public <T extends Action & com.vaadin.event.Action.Listener> void addAction(
             T action) {
-        return getActionManager().addAction(action);
+        getActionManager().addAction(action);
     }
 
-    public <T extends Action & com.vaadin.event.Action.Listener> boolean removeAction(
+    public <T extends Action & com.vaadin.event.Action.Listener> void removeAction(
             T action) {
         if (actionManager == null) {
-            return actionManager.removeAction(action);
+            actionManager.removeAction(action);
         }
-        return false;
     }
 
     public void addActionHandler(Handler actionHandler) {

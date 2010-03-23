@@ -1285,8 +1285,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
 
     protected ActionManager getActionManager() {
         if (actionManager == null) {
-            actionManager = new ActionManager();
-            actionManager.setViewer(this);
+            actionManager = new ActionManager(this);
         }
         return actionManager;
     }

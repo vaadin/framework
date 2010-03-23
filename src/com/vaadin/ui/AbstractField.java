@@ -1199,15 +1199,14 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         return actionManager;
     }
 
-    public <T extends Action & Action.Listener> boolean addAction(T action) {
-        return getActionManager().addAction(action);
+    public <T extends Action & Action.Listener> void addAction(T action) {
+        getActionManager().addAction(action);
     }
 
-    public <T extends Action & Action.Listener> boolean removeAction(T action) {
+    public <T extends Action & Action.Listener> void removeAction(T action) {
         if (actionManager == null) {
-            return actionManager.removeAction(action);
+            actionManager.removeAction(action);
         }
-        return false;
     }
 
     public static class FocusShortcut extends ShortcutListener {

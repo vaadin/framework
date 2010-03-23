@@ -1802,22 +1802,22 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     /*
      * Actions
      */
-    protected CloseShortcut closeMnemonic;
+    protected CloseShortcut closeShortcut;
 
-    public CloseShortcut setCloseMnemonic(int keyCode, int... modifiers) {
-        CloseShortcut old = closeMnemonic;
+    public CloseShortcut setCloseShortcut(int keyCode, int... modifiers) {
+        CloseShortcut old = closeShortcut;
         if (old != null) {
             removeAction(old);
         }
-        closeMnemonic = new CloseShortcut(this, keyCode, modifiers);
-        addAction(closeMnemonic);
+        closeShortcut = new CloseShortcut(this, keyCode, modifiers);
+        addAction(closeShortcut);
         return old;
     }
 
-    public void removeCloseMnemonic() {
-        if (closeMnemonic != null) {
-            removeAction(closeMnemonic);
-            closeMnemonic = null;
+    public void removeCloseShortcut() {
+        if (closeShortcut != null) {
+            removeAction(closeShortcut);
+            closeShortcut = null;
         }
     }
 

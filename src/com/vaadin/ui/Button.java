@@ -352,22 +352,22 @@ public class Button extends AbstractField {
      * Actions
      */
 
-    protected ClickShortcut clickMnemonic;
+    protected ClickShortcut clickShortcut;
 
-    public ClickShortcut setClickMnemonic(int keyCode, int... modifiers) {
-        ClickShortcut old = clickMnemonic;
+    public ClickShortcut setClickShortcut(int keyCode, int... modifiers) {
+        ClickShortcut old = clickShortcut;
         if (old != null) {
             removeAction(old);
         }
-        clickMnemonic = new ClickShortcut(this, keyCode, modifiers);
-        addAction(clickMnemonic);
+        clickShortcut = new ClickShortcut(this, keyCode, modifiers);
+        addAction(clickShortcut);
         return old;
     }
 
-    public void removeClickMnemonic() {
-        if (clickMnemonic != null) {
-            removeAction(clickMnemonic);
-            clickMnemonic = null;
+    public void removeClickShortcut() {
+        if (clickShortcut != null) {
+            removeAction(clickShortcut);
+            clickShortcut = null;
         }
     }
 

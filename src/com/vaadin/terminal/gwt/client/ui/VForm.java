@@ -179,7 +179,7 @@ public class VForm extends ComplexPanel implements Container {
         }
         lo.updateFromUIDL(layoutUidl, client);
 
-        // We may have actions attached to this panel
+        // We may have actions attached
         if (uidl.getChildCount() > 1) {
             final int cnt = uidl.getChildCount();
             for (int i = 1; i < cnt; i++) {

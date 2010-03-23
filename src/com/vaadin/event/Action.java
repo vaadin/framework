@@ -77,17 +77,15 @@ public class Action implements Serializable {
     }
 
     public interface Notifier extends Container {
-        public <T extends Action & Action.Listener> boolean addAction(T action);
+        public <T extends Action & Action.Listener> void addAction(T action);
 
-        public <T extends Action & Action.Listener> boolean removeAction(
-                T action);
+        public <T extends Action & Action.Listener> void removeAction(T action);
     }
 
     public interface NotifierProxy {
-        public <T extends Action & Action.Listener> boolean addAction(T action);
+        public <T extends Action & Action.Listener> void addAction(T action);
 
-        public <T extends Action & Action.Listener> boolean removeAction(
-                T action);
+        public <T extends Action & Action.Listener> void removeAction(T action);
     }
 
     /**
