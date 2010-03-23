@@ -162,6 +162,7 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
 
         currentMouseOverKey = findCurrentMouseOverKey(drag.getElementOver());
 
+        drag.getDropDetails().put("itemIdOver", currentMouseOverKey);
         if (currentMouseOverKey != null) {
             TreeNode treeNode = keyToNode.get(currentMouseOverKey);
             VerticalDropLocation detail = treeNode.getDropDetail(drag
@@ -171,11 +172,13 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                     && detail == VerticalDropLocation.MIDDLE) {
                 overTreeNode = true;
             }
-            drag.getDropDetails().put("itemIdOver", currentMouseOverKey);
             drag.getDropDetails().put("itemIdOverIsNode", overTreeNode);
             drag.getDropDetails().put("detail", detail);
-
+        } else {
+            drag.getDropDetails().put("itemIdOverIsNode", null);
+            drag.getDropDetails().put("detail", null);
         }
+
     }
 
     private String findCurrentMouseOverKey(Element elementOver) {
@@ -221,13 +224,23 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                             // clear old styles
                             treeNode.emphasis(null);
                         }
-                        validate(new VAcceptCallback() {
-                            public void accepted(VDragEvent event) {
-                                if (newKey != null) {
-                                    keyToNode.get(newKey).emphasis(detail);
+                        if (newKey != null) {
+                            validate(new VAcceptCallback() {
+                                public void accepted(VDragEvent event) {
+                                    VerticalDropLocation curDetail = (VerticalDropLocation) event
+                                            .getDropDetails().get("detail");
+                                    if (curDetail == detail
+                                            && newKey
+                                                    .equals(currentMouseOverKey)) {
+                                        keyToNode.get(newKey).emphasis(detail);
+                                    }
+                                    /* Else drag is already on a different
+                                    * node-detail pair,
+                                    * new criteria check is going on */
                                 }
-                            }
-                        }, currentDrag);
+                            }, currentDrag);
+
+                        }
                     }
 
                 }

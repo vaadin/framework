@@ -3,8 +3,6 @@
  */
 package com.vaadin.terminal.gwt.client.ui.dd;
 
-import java.util.LinkedList;
-
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
@@ -508,6 +506,11 @@ public class VDragAndDropManager {
     }
 
     private void doRequest(DragEventType drop) {
+        if (currentDropHandler == null) {
+            ApplicationConnection.getConsole().log(
+                    "DD request ignored, drop handler is null");
+            return;
+        }
         Paintable paintable = currentDropHandler.getPaintable();
         ApplicationConnection client = currentDropHandler
                 .getApplicationConnection();
@@ -571,8 +574,9 @@ public class VDragAndDropManager {
     }
 
     private void runDeferredCommands() {
-        if (deferredCommands != null && !deferredCommands.isEmpty()) {
-            Command command = deferredCommands.poll();
+        if (deferredCommand != null) {
+            Command command = deferredCommand;
+            deferredCommand = null;
             command.execute();
             if (!isBusy()) {
                 runDeferredCommands();
@@ -622,7 +626,7 @@ public class VDragAndDropManager {
         }
     };
 
-    private LinkedList<Command> deferredCommands;
+    private Command deferredCommand;
 
     private boolean isBusy() {
         return serverCallback != null;
@@ -634,10 +638,7 @@ public class VDragAndDropManager {
      * @param command
      */
     private void defer(Command command) {
-        if (deferredCommands == null) {
-            deferredCommands = new LinkedList<Command>();
-        }
-        deferredCommands.add(command);
+        deferredCommand = command;
     }
 
     /**

@@ -3235,9 +3235,15 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             updateDropDetails(drag);
             if (!oldDetails.equals(dropDetails)) {
                 deEmphasis();
+                final TableDDDetails newDetails = dropDetails;
                 VAcceptCallback cb = new VAcceptCallback() {
                     public void accepted(VDragEvent event) {
-                        dragAccepted(event);
+                        if (newDetails.equals(dropDetails)) {
+                            dragAccepted(event);
+                        }
+                        /*
+                         * Else new target slot already defined, ignore
+                         */
                     }
                 };
                 validate(cb, drag);
