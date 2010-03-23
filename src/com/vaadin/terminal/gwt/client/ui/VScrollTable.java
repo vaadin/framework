@@ -32,6 +32,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
@@ -3263,6 +3264,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
 
         private void deEmphasis() {
+            UIObject.setStyleName(getElement(), CLASSNAME + "-drag", false);
             if (lastEmphasized == null) {
                 return;
             }
@@ -3303,6 +3305,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     return;
                 }
             }
+            UIObject.setStyleName(getElement(), CLASSNAME + "-drag", true);
         }
 
         @Override
