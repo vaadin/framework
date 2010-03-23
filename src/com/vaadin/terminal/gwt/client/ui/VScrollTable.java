@@ -3291,6 +3291,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          */
         private void emphasis(TableDDDetails details) {
             deEmphasis();
+            UIObject.setStyleName(getElement(), CLASSNAME + "-drag", true);
             // iterate old and new emphasized row
             for (Widget w : scrollBody.renderedRows) {
                 VScrollTableRow row = (VScrollTableRow) w;
@@ -3305,7 +3306,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     return;
                 }
             }
-            UIObject.setStyleName(getElement(), CLASSNAME + "-drag", true);
         }
 
         @Override
