@@ -32,8 +32,7 @@ import com.vaadin.ui.themes.Runo;
 @ClientWidget(VPanel.class)
 public class Panel extends AbstractComponentContainer implements Scrollable,
         ComponentContainer.ComponentAttachListener,
-        ComponentContainer.ComponentDetachListener, Action.Container,
-        Action.Notifier {
+        ComponentContainer.ComponentDetachListener, Action.Notifier {
 
     private static final String CLICK_EVENT = VPanel.CLICK_EVENT_IDENTIFIER;
 

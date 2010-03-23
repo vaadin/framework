@@ -72,20 +72,33 @@ public class Action implements Serializable {
         return icon;
     }
 
+    /**
+     * An Action that implements this interface can be added to an
+     * Action.Notifier (or NotifierProxy) via the <code>addAction()</code>
+     * -method, which in many cases is easier than implementing the
+     * Action.Handler interface.<br/>
+     * 
+     */
     public interface Listener {
         public void handleAction(Object sender, Object target);
     }
 
+    /**
+     * Action.Containers implementing this support an easier way of adding
+     * single Actions than the more involved Action.Handler. The added actions
+     * must be Action.Listeners, thus handling the action themselves.
+     * 
+     */
     public interface Notifier extends Container {
         public <T extends Action & Action.Listener> void addAction(T action);
 
         public <T extends Action & Action.Listener> void removeAction(T action);
     }
 
-    public interface NotifierProxy {
-        public <T extends Action & Action.Listener> void addAction(T action);
+    public interface ShortcutNotifier {
+        public void addShortcutListener(ShortcutListener shortcut);
 
-        public <T extends Action & Action.Listener> void removeAction(T action);
+        public void removeShortcutListener(ShortcutListener shortcut);
     }
 
     /**

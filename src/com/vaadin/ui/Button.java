@@ -357,16 +357,16 @@ public class Button extends AbstractField {
     public ClickShortcut setClickShortcut(int keyCode, int... modifiers) {
         ClickShortcut old = clickShortcut;
         if (old != null) {
-            removeAction(old);
+            removeShortcutListener(old);
         }
         clickShortcut = new ClickShortcut(this, keyCode, modifiers);
-        addAction(clickShortcut);
+        addShortcutListener(clickShortcut);
         return old;
     }
 
     public void removeClickShortcut() {
         if (clickShortcut != null) {
-            removeAction(clickShortcut);
+            removeShortcutListener(clickShortcut);
             clickShortcut = null;
         }
     }

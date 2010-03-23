@@ -21,6 +21,7 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.event.Action;
 import com.vaadin.event.ActionManager;
 import com.vaadin.event.Action.Handler;
+import com.vaadin.event.Action.ShortcutNotifier;
 import com.vaadin.terminal.CompositeErrorMessage;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.PaintException;
@@ -61,7 +62,7 @@ import com.vaadin.terminal.gwt.client.ui.VForm;
 @SuppressWarnings("serial")
 @ClientWidget(VForm.class)
 public class Form extends AbstractField implements Item.Editor, Buffered, Item,
-        Validatable, Action.Container {
+        Validatable, Action.Notifier {
 
     private Object propertyValue;
 
@@ -138,9 +139,11 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
 
     /**
      * Keeps track of the Actions added to this component, and manages the
-     * painting and handling as well.
+     * painting and handling as well. Note that the extended AbstractField is a
+     * {@link ShortcutNotifier} and has a actionManager that delegates actions
+     * to the containing window. This one does not delegate.
      */
-    ActionManager actionManager = new ActionManager(this);
+    ActionManager ownActionManager = new ActionManager(this);
 
     /**
      * Contructs a new form with default layout.
@@ -195,8 +198,8 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
             formFooter.paint(target);
         }
 
-        if (actionManager != null) {
-            actionManager.paintActions(null, target);
+        if (ownActionManager != null) {
+            ownActionManager.paintActions(null, target);
         }
     }
 
@@ -205,8 +208,8 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
         super.changeVariables(source, variables);
 
         // Actions
-        if (actionManager != null) {
-            actionManager.handleActions(variables, this);
+        if (ownActionManager != null) {
+            ownActionManager.handleActions(variables, this);
         }
     }
 
@@ -1283,20 +1286,20 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * ACTIONS
      */
 
-    protected ActionManager getActionManager() {
-        if (actionManager == null) {
-            actionManager = new ActionManager(this);
+    protected ActionManager getOwnActionManager() {
+        if (ownActionManager == null) {
+            ownActionManager = new ActionManager(this);
         }
-        return actionManager;
+        return ownActionManager;
     }
 
     public void addActionHandler(Handler actionHandler) {
-        getActionManager().addActionHandler(actionHandler);
+        getOwnActionManager().addActionHandler(actionHandler);
     }
 
     public void removeActionHandler(Handler actionHandler) {
-        if (actionManager != null) {
-            actionManager.removeActionHandler(actionHandler);
+        if (ownActionManager != null) {
+            ownActionManager.removeActionHandler(actionHandler);
         }
     }
 
@@ -1304,8 +1307,20 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * Removes all action handlers
      */
     public void removeAllActionHandlers() {
-        if (actionManager != null) {
-            actionManager.removeAllActionHandlers();
+        if (ownActionManager != null) {
+            ownActionManager.removeAllActionHandlers();
+        }
+    }
+
+    public <T extends Action & com.vaadin.event.Action.Listener> void addAction(
+            T action) {
+        getOwnActionManager().addAction(action);
+    }
+
+    public <T extends Action & com.vaadin.event.Action.Listener> void removeAction(
+            T action) {
+        if (ownActionManager == null) {
+            ownActionManager.removeAction(action);
         }
     }
 

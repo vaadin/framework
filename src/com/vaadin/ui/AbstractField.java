@@ -55,7 +55,7 @@ import com.vaadin.terminal.PaintTarget;
  */
 @SuppressWarnings("serial")
 public abstract class AbstractField extends AbstractComponent implements Field,
-        Property.ReadOnlyStatusChangeNotifier, Action.NotifierProxy {
+        Property.ReadOnlyStatusChangeNotifier, Action.ShortcutNotifier {
 
     /* Private members */
 
@@ -138,7 +138,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * Keeps track of the Actions added to this component; the actual
      * handling/notifying is delegated, usually to the containing window.
      */
-    protected ActionManager actionManager;
+    private ActionManager actionManager;
 
     /* Component basics */
 
@@ -1072,9 +1072,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         if (delayedFocus) {
             focus();
         }
-        if (actionManager != null && !(this instanceof Action.Container)) {
-            // Only for non Action.Containers because those want to paint
-            // actions themselves - e.g Form
+        if (actionManager != null) {
             actionManager.setViewer(getWindow());
         }
     }
@@ -1082,9 +1080,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     @Override
     public void detach() {
         super.detach();
-        if (actionManager != null && !(this instanceof Action.Container)) {
-            // Only for non Action.Containers because those want to paint
-            // actions themselves - e.g Form
+        if (actionManager != null) {
             actionManager.setViewer((Window) null);
         }
     }
@@ -1216,13 +1212,13 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         return actionManager;
     }
 
-    public <T extends Action & Action.Listener> void addAction(T action) {
-        getActionManager().addAction(action);
+    public void addShortcutListener(ShortcutListener shortcut) {
+        getActionManager().addAction(shortcut);
     }
 
-    public <T extends Action & Action.Listener> void removeAction(T action) {
+    public void removeShortcutListener(ShortcutListener shortcut) {
         if (actionManager == null) {
-            actionManager.removeAction(action);
+            actionManager.removeAction(shortcut);
         }
     }
 
