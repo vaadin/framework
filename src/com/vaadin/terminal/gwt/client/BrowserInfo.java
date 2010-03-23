@@ -94,7 +94,7 @@ public class BrowserInfo {
                 v = "ch";
             } else if (browserDetails.isSafari()) {
                 b = "sa";
-                v = "b" + browserDetails.getBrowserMajorVersion();
+                v = b + browserDetails.getBrowserMajorVersion();
             } else if (browserDetails.isIE()) {
                 b = "ie";
                 v = b + browserDetails.getBrowserMajorVersion();
