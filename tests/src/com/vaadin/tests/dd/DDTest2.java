@@ -15,8 +15,8 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.And;
-import com.vaadin.event.dd.acceptcriteria.SourceIs;
 import com.vaadin.event.dd.acceptcriteria.Or;
+import com.vaadin.event.dd.acceptcriteria.SourceIs;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.tests.components.TestBase;
@@ -28,7 +28,7 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.AbstractSelect.AbstractSelectDropTargetDetails;
 import com.vaadin.ui.AbstractSelect.AcceptItem;
 import com.vaadin.ui.Table.TableTransferable;
-import com.vaadin.ui.Tree.OverFolderNode;
+import com.vaadin.ui.Tree.TargetItemAllowsChildren;
 import com.vaadin.ui.Tree.TreeDragMode;
 
 public class DDTest2 extends TestBase {
@@ -120,7 +120,7 @@ public class DDTest2 extends TestBase {
          */
         table.setDragMode(Table.TableDragMode.ROW);
 
-        OverFolderNode onNode = new OverFolderNode();
+        TargetItemAllowsChildren onNode = TargetItemAllowsChildren.get();
         SourceIs fromTable = new SourceIs(table);
 
         SourceIs fromTree = new SourceIs(tree1);

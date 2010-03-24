@@ -10,7 +10,7 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropTargetDetails;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.dd.VDropDetailEquals;
+import com.vaadin.terminal.gwt.client.ui.dd.VTargetDetailIs;
 
 /**
  * Criterion for checking if drop target details contains the specific property
@@ -21,8 +21,8 @@ import com.vaadin.terminal.gwt.client.ui.dd.VDropDetailEquals;
  *        TODO add support for other basic data types that we support in UIDL.
  * 
  */
-@ClientCriterion(VDropDetailEquals.class)
-public class DropTargetDetailEquals extends ClientSideCriterion {
+@ClientCriterion(VTargetDetailIs.class)
+public class TargetDetailIs extends ClientSideCriterion {
 
     private static final long serialVersionUID = 763165450054331246L;
     private String propertyName;
@@ -38,12 +38,12 @@ public class DropTargetDetailEquals extends ClientSideCriterion {
      *            the reference value to which the drop target detail will be
      *            compared
      */
-    public DropTargetDetailEquals(String dataFlavor, String value) {
+    public TargetDetailIs(String dataFlavor, String value) {
         propertyName = dataFlavor;
         this.value = value;
     }
 
-    public DropTargetDetailEquals(String dataFlavor, Boolean true1) {
+    public TargetDetailIs(String dataFlavor, Boolean true1) {
         propertyName = dataFlavor;
         value = true1;
     }
@@ -68,6 +68,6 @@ public class DropTargetDetailEquals extends ClientSideCriterion {
     @Override
     protected String getIdentifier() {
         // sub classes by default use VDropDetailEquals a client implementation
-        return DropTargetDetailEquals.class.getCanonicalName();
+        return TargetDetailIs.class.getCanonicalName();
     }
 }

@@ -8,7 +8,7 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 
 import com.vaadin.terminal.gwt.client.UIDL;
 
-final public class VDropDetailEquals extends VAcceptCriterion {
+final public class VTargetDetailIs extends VAcceptCriterion {
 
     @Override
     protected boolean accept(VDragEvent drag, UIDL configuration) {

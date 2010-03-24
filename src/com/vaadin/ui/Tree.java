@@ -35,8 +35,8 @@ import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.DropTargetDetails;
 import com.vaadin.event.dd.acceptcriteria.ClientCriterion;
 import com.vaadin.event.dd.acceptcriteria.ClientSideCriterion;
-import com.vaadin.event.dd.acceptcriteria.DropTargetDetailEquals;
 import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
+import com.vaadin.event.dd.acceptcriteria.TargetDetailIs;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
@@ -1361,16 +1361,25 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     /**
-     * A criterion that accepts transferable only directly on a tree node that
-     * can have children.
+     * A criterion that accepts {@link Transferable} only directly on a tree
+     * node that can have children.
+     * <p>
+     * Class is singleton, use {@link TargetItemAllowsChildren#get()} to get the
+     * instance.
      * 
      * @see Tree#setChildrenAllowed(Object, boolean)
      * 
      * @since 6.3
      */
-    public static class OverFolderNode extends DropTargetDetailEquals {
+    public static class TargetItemAllowsChildren extends TargetDetailIs {
 
-        public OverFolderNode() {
+        private static TargetItemAllowsChildren instance = new TargetItemAllowsChildren();
+
+        public static TargetItemAllowsChildren get() {
+            return instance;
+        }
+
+        private TargetItemAllowsChildren() {
             super("itemIdOverIsNode", Boolean.TRUE);
         }
 
