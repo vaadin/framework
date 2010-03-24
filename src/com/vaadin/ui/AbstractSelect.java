@@ -1693,14 +1693,14 @@ public abstract class AbstractSelect extends AbstractField implements
 
     /**
      * Criterion which accepts a drop only if the drop target is (one of) the
-     * given item identifier(s). Criterion can be used only on drop targets that
-     * extends AbstractSelect like {@link Table} and {@link Tree}. The target
-     * and identifiers of valid Items are given in constructor.
+     * given Item identifier(s). Criterion can be used only on a drop targets
+     * that extends AbstractSelect like {@link Table} and {@link Tree}. The
+     * target and identifiers of valid Items are given in constructor.
      * 
      * @since 6.3
      */
     @ClientCriterion(VIsOverId.class)
-    public static class OverItem extends AbstractItemSetCriterion {
+    public static class TargetItemIs extends AbstractItemSetCriterion {
 
         /**
          * @param select
@@ -1708,7 +1708,7 @@ public abstract class AbstractSelect extends AbstractField implements
          * @param itemId
          *            the identifier(s) that are valid drop locations
          */
-        public OverItem(AbstractSelect select, Object... itemId) {
+        public TargetItemIs(AbstractSelect select, Object... itemId) {
             super(select, itemId);
         }
 

@@ -148,7 +148,7 @@ public class DDTest8 extends TestBase {
             }
 
             public AcceptCriterion getAcceptCriterion() {
-                return new Or(new AbstractSelect.OverItem(t, "Foo", "Bar"),
+                return new Or(new AbstractSelect.TargetItemIs(t, "Foo", "Bar"),
                         new AbstractSelect.AcceptItem(t, "Foo"));
             }
 
