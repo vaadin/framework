@@ -19,14 +19,15 @@ import com.google.gwt.user.rebind.SourceWriter;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.ClientCriterion;
 import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCriterion;
-import com.vaadin.ui.ClientWidget;
+import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCriterionFactory;
 
 /**
- * GWT generator to build WidgetMapImpl dynamically based on
- * {@link ClientWidget} annotations available in workspace.
+ * GWT generator to build {@link VAcceptCriterionFactory} implementation
+ * dynamically based on {@link ClientCriterion} annotations available in
+ * classpath.
  * 
  */
-public class AcceptCriterionGenerator extends Generator {
+public class AcceptCriteriaFactoryGenerator extends Generator {
 
     private String packageName;
     private String className;

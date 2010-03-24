@@ -33,7 +33,7 @@
 		<when-type-is class="com.vaadin.terminal.gwt.client.WidgetMap"/>
 	</generate-with>
 	
-	<generate-with class="com.vaadin.terminal.gwt.widgetsetutils.AcceptCriterionGenerator">
+	<generate-with class="com.vaadin.terminal.gwt.widgetsetutils.AcceptCriteriaFactoryGenerator">
 		<when-type-is class="com.vaadin.terminal.gwt.client.ui.dd.VAcceptCriterionFactory"/>
 	</generate-with>
 	
