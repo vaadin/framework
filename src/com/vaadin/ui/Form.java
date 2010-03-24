@@ -146,15 +146,11 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     private ActionManager ownActionManager = new ActionManager(this);
 
     /**
-     * Contructs a new form with default layout.
+     * Constructs a new form with default layout.
      * 
      * <p>
-     * By default the form uses <code>OrderedLayout</code> with
-     * <code>form</code>-style.
+     * By default the form uses {@link FormLayout}.
      * </p>
-     * 
-     * @param formLayout
-     *            the layout of the form.
      */
     public Form() {
         this(null);
@@ -162,7 +158,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     }
 
     /**
-     * Contructs a new form with given layout.
+     * Constructs a new form with given {@link Layout}.
      * 
      * @param formLayout
      *            the layout of the form.
@@ -172,7 +168,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     }
 
     /**
-     * Contructs a new form with given {@link Layout} and
+     * Constructs a new form with given {@link Layout} and
      * {@link FormFieldFactory}.
      * 
      * @param formLayout
