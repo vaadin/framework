@@ -530,7 +530,7 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
             Cell cell = cal.days.getCellForEvent(event);
             if (sender != cal.days || cell == null || cell.getRowIndex() < 1
                     || cell.getRowIndex() > 6 || !cal.datefield.isEnabled()
-                    || cal.datefield.isReadonly()) {
+                    || cal.datefield.isReadonly() || cell.getCellIndex() < 1) {
                 return;
             }
 
