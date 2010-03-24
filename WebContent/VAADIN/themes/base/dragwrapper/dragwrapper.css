@@ -129,3 +129,9 @@
 	padding-bottom: 2px;
 	border-bottom: none;
 }
+.no-horizontal-drag-hints .v-ddwrapper-over-left:before,
+.no-horizontal-drag-hints .v-ddwrapper-over-right:before,
+.no-vertical-drag-hints .v-ddwrapper-over-top:before,
+.no-vertical-drag-hints .v-ddwrapper-over-bottom:after {
+	display: none;
+}
