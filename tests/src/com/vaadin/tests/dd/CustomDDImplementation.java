@@ -5,7 +5,7 @@ import java.util.Map;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
-import com.vaadin.event.dd.DropTargetDetails;
+import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.ui.AbstractComponent;
@@ -55,7 +55,7 @@ public class CustomDDImplementation extends CustomComponent {
             };
         }
 
-        public DropTargetDetails translateDropTargetDetails(
+        public TargetDetails translateDropTargetDetails(
                 Map<String, Object> clientVariables) {
             // If component has some special drop details that it needs to
             // translate for server side use, developer must return a

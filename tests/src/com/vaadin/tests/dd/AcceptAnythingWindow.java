@@ -15,7 +15,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
 import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
-import com.vaadin.ui.DragAndDropWrapper.WrapperDropDetails;
+import com.vaadin.ui.DragAndDropWrapper.WrapperTargetDetails;
 import com.vaadin.ui.DragAndDropWrapper.WrapperTransferable;
 
 public class AcceptAnythingWindow extends Window {
@@ -33,7 +33,7 @@ public class AcceptAnythingWindow extends Window {
             }
 
             public void drop(DragAndDropEvent event) {
-                WrapperDropDetails ed = (WrapperDropDetails) event
+                WrapperTargetDetails ed = (WrapperTargetDetails) event
                         .getDropTargetDetails();
                 Transferable transferable = event.getTransferable();
                 TransferableImpl ctr = (TransferableImpl) transferable;

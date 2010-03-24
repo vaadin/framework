@@ -7,7 +7,7 @@
 package com.vaadin.event.dd.acceptcriteria;
 
 import com.vaadin.event.dd.DragAndDropEvent;
-import com.vaadin.event.dd.DropTargetDetails;
+import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.dd.VTargetDetailIs;
@@ -30,7 +30,7 @@ public class TargetDetailIs extends ClientSideCriterion {
 
     /**
      * Constructs a criterion which ensures that the value there is a value in
-     * {@link DropTargetDetails} that equals the reference value.
+     * {@link TargetDetails} that equals the reference value.
      * 
      * @param dataFlavor
      *            the type of data to be checked

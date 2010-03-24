@@ -32,7 +32,7 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DragSource;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
-import com.vaadin.event.dd.DropTargetDetails;
+import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.acceptcriteria.ClientCriterion;
 import com.vaadin.event.dd.acceptcriteria.ClientSideCriterion;
 import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
@@ -1122,13 +1122,13 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     /**
-     * A {@link DropTargetDetails} implementation with Tree specific api.
+     * A {@link TargetDetails} implementation with Tree specific api.
      * 
      * @since 6.3
      */
-    public class TreeDropTargetDetails extends AbstractSelectDropTargetDetails {
+    public class TreeTargetDetails extends AbstractSelectTargetDetails {
 
-        TreeDropTargetDetails(Map<String, Object> rawVariables) {
+        TreeTargetDetails(Map<String, Object> rawVariables) {
             super(rawVariables);
         }
 
@@ -1211,9 +1211,9 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * @see
      * com.vaadin.event.dd.DropTarget#translateDropTargetDetails(java.util.Map)
      */
-    public TreeDropTargetDetails translateDropTargetDetails(
+    public TreeTargetDetails translateDropTargetDetails(
             Map<String, Object> clientVariables) {
-        return new TreeDropTargetDetails(clientVariables);
+        return new TreeTargetDetails(clientVariables);
     }
 
     /**
@@ -1326,7 +1326,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
          * .event.dd.DragAndDropEvent)
          */
         public boolean accept(DragAndDropEvent dragEvent) {
-            AbstractSelectDropTargetDetails dropTargetData = (AbstractSelectDropTargetDetails) dragEvent
+            AbstractSelectTargetDetails dropTargetData = (AbstractSelectTargetDetails) dragEvent
                     .getDropTargetDetails();
             tree = (Tree) dragEvent.getDropTargetDetails().getTarget();
             allowedItemIds = getAllowedItemIds(dragEvent, tree);
@@ -1392,7 +1392,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 // must be over tree node and in the middle of it (not top or
                 // bottom
                 // part)
-                TreeDropTargetDetails eventDetails = (TreeDropTargetDetails) dragEvent
+                TreeTargetDetails eventDetails = (TreeTargetDetails) dragEvent
                         .getDropTargetDetails();
 
                 Object itemIdOver = eventDetails.getItemIdOver();
@@ -1451,7 +1451,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
         public boolean accept(DragAndDropEvent dragEvent) {
             try {
-                TreeDropTargetDetails eventDetails = (TreeDropTargetDetails) dragEvent
+                TreeTargetDetails eventDetails = (TreeTargetDetails) dragEvent
                         .getDropTargetDetails();
 
                 if (eventDetails.getItemIdOver() != null) {

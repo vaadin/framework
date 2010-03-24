@@ -23,7 +23,7 @@ import com.vaadin.ui.Tree;
 import com.vaadin.ui.AbstractSelect.AcceptItem;
 import com.vaadin.ui.Table.TableDragMode;
 import com.vaadin.ui.Tree.TreeDragMode;
-import com.vaadin.ui.Tree.TreeDropTargetDetails;
+import com.vaadin.ui.Tree.TreeTargetDetails;
 
 /**
  * DD playground. Better quality example/prototype codes in {@link DDTest2}.
@@ -187,7 +187,7 @@ public class DDTest1 extends TestBase {
             }
 
             public void drop(DragAndDropEvent event) {
-                TreeDropTargetDetails details = (TreeDropTargetDetails) event
+                TreeTargetDetails details = (TreeTargetDetails) event
                         .getDropTargetDetails();
                 // TODO set properties, so same sorter could be used in Table
                 Transferable transferable = event.getTransferable();

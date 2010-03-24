@@ -47,7 +47,7 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
 import com.vaadin.ui.DragAndDropWrapper.WrapperTransferable.Html5File;
 import com.vaadin.ui.Tree.TreeDragMode;
-import com.vaadin.ui.Tree.TreeDropTargetDetails;
+import com.vaadin.ui.Tree.TreeTargetDetails;
 import com.vaadin.ui.Upload.Receiver;
 
 public class DDTest6 extends TestBase {
@@ -110,7 +110,7 @@ public class DDTest6 extends TestBase {
             public void drop(DragAndDropEvent dropEvent) {
                 File file = null;
                 Folder folder = null;
-                TreeDropTargetDetails dropTargetData = (TreeDropTargetDetails) dropEvent
+                TreeTargetDetails dropTargetData = (TreeTargetDetails) dropEvent
                         .getDropTargetDetails();
                 folder = (Folder) dropTargetData.getItemIdInto();
                 if (dropEvent.getTransferable() instanceof DataBoundTransferable) {
@@ -369,7 +369,7 @@ public class DDTest6 extends TestBase {
                 MouseEventDetails mouseDownEvent = transferable
                         .getMouseDownEvent();
 
-                WrapperDropDetails dropTargetDetails = (WrapperDropDetails) dropEvent
+                WrapperTargetDetails dropTargetDetails = (WrapperTargetDetails) dropEvent
                         .getDropTargetDetails();
                 MouseEventDetails mouseEvent = dropTargetDetails
                         .getMouseEvent();

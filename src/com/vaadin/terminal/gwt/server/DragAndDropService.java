@@ -12,8 +12,8 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DragSource;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
-import com.vaadin.event.dd.DropTargetDetails;
-import com.vaadin.event.dd.DropTargetDetailsImpl;
+import com.vaadin.event.dd.TargetDetails;
+import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.VariableOwner;
@@ -89,7 +89,7 @@ public class DragAndDropService implements VariableOwner {
          * source for Transferable, drop target for DragDropDetails).
          */
         Transferable transferable = constructTransferable(dropTarget, variables);
-        DropTargetDetails dropData = constructDragDropDetails(dropTarget,
+        TargetDetails dropData = constructDragDropDetails(dropTarget,
                 variables);
         DragAndDropEvent dropEvent = new DragAndDropEvent(transferable,
                 dropData);
@@ -116,7 +116,7 @@ public class DragAndDropService implements VariableOwner {
          * source for Transferable, current target for DragDropDetails).
          */
         Transferable transferable = constructTransferable(dropTarget, variables);
-        DropTargetDetails dragDropDetails = constructDragDropDetails(
+        TargetDetails dragDropDetails = constructDragDropDetails(
                 dropTarget, variables);
 
         dragEvent = new DragAndDropEvent(transferable, dragDropDetails);
@@ -134,17 +134,17 @@ public class DragAndDropService implements VariableOwner {
      * @return
      */
     @SuppressWarnings("unchecked")
-    private DropTargetDetails constructDragDropDetails(DropTarget dropTarget,
+    private TargetDetails constructDragDropDetails(DropTarget dropTarget,
             Map<String, Object> variables) {
         Map<String, Object> rawDragDropDetails = (Map<String, Object>) variables
                 .get("evt");
 
-        DropTargetDetails dropData = dropTarget
+        TargetDetails dropData = dropTarget
                 .translateDropTargetDetails(rawDragDropDetails);
 
         if (dropData == null) {
             // Create a default DragDropDetails with all the raw variables
-            dropData = new DropTargetDetailsImpl(rawDragDropDetails, dropTarget);
+            dropData = new TargetDetailsImpl(rawDragDropDetails, dropTarget);
         }
 
         return dropData;

@@ -7,7 +7,7 @@ import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
-import com.vaadin.event.dd.DropTargetDetails;
+import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.And;
 import com.vaadin.event.dd.acceptcriteria.TargetDetailIs;
@@ -69,7 +69,7 @@ public class HorizontalLayoutSortableWithWrappers extends Window {
                     Iterator<Component> componentIterator = layout
                             .getComponentIterator();
                     Component next = componentIterator.next();
-                    DropTargetDetails dropTargetData = dropEvent
+                    TargetDetails dropTargetData = dropEvent
                             .getDropTargetDetails();
                     DropTarget target = dropTargetData.getTarget();
                     while (next != target) {

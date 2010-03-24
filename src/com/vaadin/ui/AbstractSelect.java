@@ -23,7 +23,7 @@ import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropTarget;
-import com.vaadin.event.dd.DropTargetDetailsImpl;
+import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.event.dd.acceptcriteria.ClientCriterion;
 import com.vaadin.event.dd.acceptcriteria.ClientSideCriterion;
 import com.vaadin.event.dd.acceptcriteria.ContainsDataFlavor;
@@ -1714,7 +1714,7 @@ public abstract class AbstractSelect extends AbstractField implements
         }
 
         public boolean accept(DragAndDropEvent dragEvent) {
-            AbstractSelectDropTargetDetails dropTargetData = (AbstractSelectDropTargetDetails) dragEvent
+            AbstractSelectTargetDetails dropTargetData = (AbstractSelectTargetDetails) dragEvent
                     .getDropTargetDetails();
             if (dropTargetData.getTarget() != select) {
                 return false;
@@ -1801,12 +1801,12 @@ public abstract class AbstractSelect extends AbstractField implements
     }
 
     /**
-     * DropTargetDetails implementation for subclasses of {@link AbstractSelect}
+     * TargetDetails implementation for subclasses of {@link AbstractSelect}
      * that implement {@link DropTarget}.
      * 
      * @since 6.3
      */
-    public class AbstractSelectDropTargetDetails extends DropTargetDetailsImpl {
+    public class AbstractSelectTargetDetails extends TargetDetailsImpl {
 
         /**
          * The item id over which the drag event happened.
@@ -1818,8 +1818,7 @@ public abstract class AbstractSelect extends AbstractField implements
          * corresponding item Id
          * 
          */
-        protected AbstractSelectDropTargetDetails(
-                Map<String, Object> rawVariables) {
+        protected AbstractSelectTargetDetails(Map<String, Object> rawVariables) {
             super(rawVariables, (DropTarget) AbstractSelect.this);
             // eagar fetch itemid, mapper may be emptied
             String keyover = (String) getData("itemIdOver");

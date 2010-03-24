@@ -3425,9 +3425,9 @@ public class Table extends AbstractSelect implements Action.Container,
         this.dropHandler = dropHandler;
     }
 
-    public AbstractSelectDropTargetDetails translateDropTargetDetails(
+    public AbstractSelectTargetDetails translateDropTargetDetails(
             Map<String, Object> clientVariables) {
-        return new AbstractSelectDropTargetDetails(clientVariables);
+        return new AbstractSelectTargetDetails(clientVariables);
     }
 
     /**
@@ -3469,7 +3469,7 @@ public class Table extends AbstractSelect implements Action.Container,
          * .event.dd.DragAndDropEvent)
          */
         public boolean accept(DragAndDropEvent dragEvent) {
-            AbstractSelectDropTargetDetails dropTargetData = (AbstractSelectDropTargetDetails) dragEvent
+            AbstractSelectTargetDetails dropTargetData = (AbstractSelectTargetDetails) dragEvent
                     .getDropTargetDetails();
             table = (Table) dragEvent.getDropTargetDetails().getTarget();
             ArrayList<Object> visibleItemIds = new ArrayList<Object>(table

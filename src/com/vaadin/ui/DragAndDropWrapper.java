@@ -14,8 +14,8 @@ import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.dd.DragSource;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
-import com.vaadin.event.dd.DropTargetDetails;
-import com.vaadin.event.dd.DropTargetDetailsImpl;
+import com.vaadin.event.dd.TargetDetails;
+import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.UploadStream;
@@ -28,6 +28,7 @@ import com.vaadin.ui.DragAndDropWrapper.WrapperTransferable.Html5File;
 import com.vaadin.ui.Upload.Receiver;
 import com.vaadin.ui.Upload.UploadException;
 
+@SuppressWarnings("serial")
 @ClientWidget(VDragAndDropWrapper.class)
 public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         DragSource {
@@ -142,9 +143,9 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
 
     private Map<String, Html5File> receivers = new HashMap<String, Html5File>();
 
-    public class WrapperDropDetails extends DropTargetDetailsImpl {
+    public class WrapperTargetDetails extends TargetDetailsImpl {
 
-        public WrapperDropDetails(Map<String, Object> rawDropData) {
+        public WrapperTargetDetails(Map<String, Object> rawDropData) {
             super(rawDropData, DragAndDropWrapper.this);
         }
 
@@ -231,9 +232,9 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         requestRepaint();
     }
 
-    public DropTargetDetails translateDropTargetDetails(
+    public TargetDetails translateDropTargetDetails(
             Map<String, Object> clientVariables) {
-        return new WrapperDropDetails(clientVariables);
+        return new WrapperTargetDetails(clientVariables);
     }
 
     public Transferable getTransferable(final Map<String, Object> rawVariables) {

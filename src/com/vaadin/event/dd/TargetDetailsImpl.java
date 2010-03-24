@@ -7,23 +7,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A HashMap backed implementation of {@link DropTargetDetails} for terminal
+ * A HashMap backed implementation of {@link TargetDetails} for terminal
  * implementation and for extension.
  * 
  * @since 6.3
  * 
  */
-public class DropTargetDetailsImpl implements DropTargetDetails {
+@SuppressWarnings("serial")
+public class TargetDetailsImpl implements TargetDetails {
 
-    private static final long serialVersionUID = -5099462771593036776L;
     private HashMap<String, Object> data = new HashMap<String, Object>();
     private DropTarget dropTarget;
 
-    protected DropTargetDetailsImpl(Map<String, Object> rawDropData) {
+    protected TargetDetailsImpl(Map<String, Object> rawDropData) {
         data.putAll(rawDropData);
     }
 
-    public DropTargetDetailsImpl(Map<String, Object> rawDropData,
+    public TargetDetailsImpl(Map<String, Object> rawDropData,
             DropTarget dropTarget) {
         this(rawDropData);
         this.dropTarget = dropTarget;

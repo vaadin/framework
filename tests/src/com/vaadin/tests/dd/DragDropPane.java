@@ -54,7 +54,7 @@ public class DragDropPane extends DragAndDropWrapper implements DropHandler {
 
     public void drop(DragAndDropEvent event) {
 
-        WrapperDropDetails ed = (WrapperDropDetails) event
+        WrapperTargetDetails ed = (WrapperTargetDetails) event
                 .getDropTargetDetails();
         Transferable ctr = event.getTransferable();
         // use "component" (from DragDropPane) if available, else take

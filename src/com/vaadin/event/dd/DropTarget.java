@@ -27,7 +27,7 @@ public interface DropTarget extends Component {
      * {@link DropHandler}. Implementation may for exmaple translate the drop
      * target details provided by the client side (drop target) to meaningful
      * server side values. If null is returned the terminal implementation will
-     * automatically create a {@link DropTargetDetails} with raw client side
+     * automatically create a {@link TargetDetails} with raw client side
      * data.
      * 
      * @see DragSource#getTransferable(Map)
@@ -37,7 +37,7 @@ public interface DropTarget extends Component {
      * @return A DropTargetDetails object with the translated data or null to
      *         use a default implementation.
      */
-    public DropTargetDetails translateDropTargetDetails(
+    public TargetDetails translateDropTargetDetails(
             Map<String, Object> clientVariables);
 
 }

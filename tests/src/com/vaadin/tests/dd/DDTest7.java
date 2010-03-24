@@ -18,7 +18,7 @@ import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.AbstractSelect.AbstractSelectDropTargetDetails;
+import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 
 public class DDTest7 extends TestBase {
 
@@ -100,7 +100,7 @@ public class DDTest7 extends TestBase {
             }
 
             public void drop(DragAndDropEvent dropEvent) {
-                AbstractSelectDropTargetDetails dropTargetData = (AbstractSelectDropTargetDetails) dropEvent
+                AbstractSelectTargetDetails dropTargetData = (AbstractSelectTargetDetails) dropEvent
                         .getDropTargetDetails();
                 DataBoundTransferable transferable = (DataBoundTransferable) dropEvent
                         .getTransferable();
