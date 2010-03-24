@@ -23,7 +23,8 @@
 .v-datefield-popup,
 .v-contextmenu,
 .v-Notification,
-.v-menubar-submenu {
+.v-menubar-submenu,
+.v-drag-element {
 	font-family: Arial, Helvetica, Tahoma, Verdana, sans-serif;
 	font-size: 12px;
 	line-height: normal;

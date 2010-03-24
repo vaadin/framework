@@ -159,22 +159,39 @@
 .v-off {
 	color: #ddd;
 }
-
+/*************************************
+ * Drag'n'drop styles
+ *************************************/
+.v-table-drag .v-table-body {
+	border-color: #1d9dff;
+}
 .v-table-row-drag-middle .v-table-cell-content {
-	background-color: cyan;
+	background-color: #bcdcff;
 }
 .v-table-row-drag-top .v-table-cell-content {
-	border-top: 1px solid cyan ;
+	border-top: 2px solid #1d9dff;
 }
 .v-table-row-drag-top .v-table-cell-wrapper {
-	margin-top: -1px; /* compensate the space consumed by border hint */
+	margin-top: -2px; /* compensate the space consumed by border hint */
 }
 .v-table-row-drag-bottom .v-table-cell-content {
-	border-bottom: 1px solid cyan;
+	border-bottom: 2px solid #1d9dff;
 }
 .v-table-row-drag-bottom .v-table-cell-wrapper {
-	margin-bottom: -1px; /* compensate the space consumed by border hint */
+	margin-bottom: -2px; /* compensate the space consumed by border hint */
 }
-
-
-
+.v-table-row-drag-top .v-table-cell-content:first-child:before,
+.v-table-row-drag-bottom .v-table-cell-content:first-child:after {
+	display: block;
+	content: "";
+	position: absolute;
+	width: 6px;
+	height: 6px;
+	margin-top: -4px;
+	margin-left: -6px;
+	background: transparent url(../common/img/drag-slot-dot.png);
+}
+.v-ff .v-table-row-drag-bottom .v-table-cell-content:first-child:after,
+.v-ie .v-table-row-drag-bottom .v-table-cell-content:first-child:after {
+	margin-top: -2px;
+}

@@ -24,3 +24,10 @@
 	height: 10px;
 	padding: 1px;
 }
+/***************************************
+ * Drag'n'drop styles
+ ***************************************/
+.v-tree .v-tree-node-drag-top,
+.v-tree .v-tree-node-drag-top.v-tree-node-expanded {
+	background-position: 2px 0;
+}

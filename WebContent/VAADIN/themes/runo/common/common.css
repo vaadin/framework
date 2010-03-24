@@ -9,8 +9,10 @@
 	line-height: 18px;
 }
 /* Global font styles */
+.v-app,
 .v-window,
 .v-popupview-popup,
+.v-tooltip,
 .v-app input,
 .v-app select,
 .v-app button,
@@ -22,7 +24,13 @@
 .v-popupview-popup input,
 .v-popupview-popup select,
 .v-popupview-popup button,
-.v-popupview-popup textarea {
+.v-popupview-popup textarea,
+.v-filterselect-suggestpopup,
+.v-datefield-popup,
+.v-contextmenu,
+.v-Notification,
+.v-menubar-submenu,
+.v-drag-element {
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	color: #464f52;
 	font-size: 13px;

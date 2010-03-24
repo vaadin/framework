@@ -450,35 +450,12 @@ div.v-app-loading {
 	padding: 2px;
 }
 
-/* TODO jouni: replace debug colors */
-
 .v-drag-element {
-	z-index:60000;
-	position:absolute;
+	z-index: 60000;
+	position: absolute;
     opacity: 0.5;
     filter: alpha(opacity=50);
     cursor: default;
-}
-
-.v-ddwrapper {
-	background-color: cyan;
-}
-
-.v-ddwrapper-over-middle,
-.v-ddwrapper-over-center {
-	background-color: LightGreen;
-}
-.v-ddwrapper-over-top {
-	border-top: 2px solid green;
-}
-.v-ddwrapper-over-bottom {
-	border-bottom: 2px solid green;
-}
-.v-ddwrapper-over-left {
-	border-left: 2px solid green;
-}
-.v-ddwrapper-over-right {
-	border-right: 2px solid green;
 }
 
 .v-csslayout {
@@ -532,6 +509,11 @@ div.v-app-loading {
 	text-align: center;
 	white-space: nowrap;
 }
+.v-datefield-calendarpanel-weeknumber {
+	color: #999;
+	border-right: 1px solid #ddd;
+	font-size: 0.9em;
+}
 .v-datefield-calendarpanel-day,
 .v-datefield-calendarpanel-day-today {
 	cursor: pointer;
@@ -581,6 +563,138 @@ div.v-app-loading {
 .v-ie7 .v-disabled .v-datefield-button,
 .v-ie7 .v-disabled .v-datefield-textfield {
 	filter: alpha(opacity=30);
+}
+
+.v-ddwrapper {
+	padding: 2px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+}
+.v-ddwrapper-over {
+	border: 2px solid #1d9dff;
+	background-color: #bcdcff;
+	padding: 0;
+}
+.v-ddwrapper-over {
+	background-color: rgba(169,209,255,.6);
+}
+.no-box-drag-hints .v-ddwrapper-over {
+	border: none;
+	background-color: transparent;
+	padding: 2px;
+}
+.v-app .v-ddwrapper-over-top,
+.v-window .v-ddwrapper-over-top,
+.v-popupview-popup .v-ddwrapper-over-top {
+	border: none;
+	border-top: 2px solid #1d9dff;
+	background-color: transparent;
+	padding: 2px;
+	padding-top: 0;
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+}
+.v-app .v-ddwrapper-over-bottom,
+.v-window .v-ddwrapper-over-bottom,
+.v-popupview-popup .v-ddwrapper-over-bottom {
+	border: none;
+	border-bottom: 2px solid #1d9dff;
+	background-color: transparent;
+	padding: 2px;
+	padding-bottom: 0;
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+}
+.v-app .v-ddwrapper-over-left,
+.v-window .v-ddwrapper-over-left,
+.v-popupview-popup .v-ddwrapper-over-left {
+	border: none;
+	border-left: 2px solid #1d9dff;
+	background-color: transparent;
+	padding: 2px;
+	padding-left: 0;
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+}
+.v-app .v-ddwrapper-over-right,
+.v-window .v-ddwrapper-over-right,
+.v-popupview-popup .v-ddwrapper-over-right {
+	border: none;
+	border-right: 2px solid #1d9dff;
+	background-color: transparent;
+	padding: 2px;
+	padding-right: 0;
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+}
+.v-ddwrapper,
+.v-ddwrapper-over,
+.v-app .v-ddwrapper-over-top,
+.v-window .v-ddwrapper-over-top,
+.v-popupview-popup .v-ddwrapper-over-top,
+.v-app .v-ddwrapper-over-bottom,
+.v-window .v-ddwrapper-over-bottom,
+.v-popupview-popup .v-ddwrapper-over-bottom,
+.v-app .v-ddwrapper-over-left,
+.v-window .v-ddwrapper-over-left,
+.v-popupview-popup .v-ddwrapper-over-left,
+.v-app .v-ddwrapper-over-right,
+.v-window .v-ddwrapper-over-right,
+.v-popupview-popup .v-ddwrapper-over-right {
+	border-color: rgba(0,109,232,.6);
+}
+
+.v-ddwrapper-over-top:before,
+.v-ddwrapper-over-bottom:after,
+.v-ddwrapper-over-left:before,
+.v-ddwrapper-over-right:before {
+	display: block;
+	content: "";
+	position: absolute;
+	width: 6px;
+	height: 6px;
+	margin-top: -4px;
+	margin-left: -2px;
+	background: transparent url(common/img/drag-slot-dot.png) no-repeat;
+}
+.v-ddwrapper-over-bottom:after {
+	margin-top: -2px;
+}
+.v-ddwrapper-over-left:before,
+.v-ddwrapper-over-right:before {
+	background-position: 0 -6px;
+	margin-top: -2px;
+	margin-left: -4px;
+}
+.v-ddwrapper-over-right:before {
+	position: relative;
+	margin-bottom: -4px;
+	margin-right: -4px;
+	margin-left: 0;
+	width: auto;
+	background-position: 100% -6px;
+}
+
+.no-horizontal-drag-hints .v-ddwrapper-over-left {
+	padding-left: 2px;
+	border-left: none;
+}
+.no-horizontal-drag-hints .v-ddwrapper-over-right {
+	padding-right: 2px;
+	border-right: none;
+}
+.no-vertical-drag-hints .v-ddwrapper-over-top {
+	padding-top: 2px;
+	border-top: none;
+}
+.no-vertical-drag-hints .v-ddwrapper-over-bottom {
+	padding-bottom: 2px;
+	border-bottom: none;
 }
 
 .v-formlayout-cell .v-errorindicator {
@@ -1428,25 +1542,42 @@ div.v-progressindicator-indeterminate-disabled {
 .v-off {
 	color: #ddd;
 }
-
+/*************************************
+ * Drag'n'drop styles
+ *************************************/
+.v-table-drag .v-table-body {
+	border-color: #1d9dff;
+}
 .v-table-row-drag-middle .v-table-cell-content {
-	background-color: cyan;
+	background-color: #bcdcff;
 }
 .v-table-row-drag-top .v-table-cell-content {
-	border-top: 1px solid cyan ;
+	border-top: 2px solid #1d9dff;
 }
 .v-table-row-drag-top .v-table-cell-wrapper {
-	margin-top: -1px; /* compensate the space consumed by border hint */
+	margin-top: -2px; /* compensate the space consumed by border hint */
 }
 .v-table-row-drag-bottom .v-table-cell-content {
-	border-bottom: 1px solid cyan;
+	border-bottom: 2px solid #1d9dff;
 }
 .v-table-row-drag-bottom .v-table-cell-wrapper {
-	margin-bottom: -1px; /* compensate the space consumed by border hint */
+	margin-bottom: -2px; /* compensate the space consumed by border hint */
 }
-
-
-
+.v-table-row-drag-top .v-table-cell-content:first-child:before,
+.v-table-row-drag-bottom .v-table-cell-content:first-child:after {
+	display: block;
+	content: "";
+	position: absolute;
+	width: 6px;
+	height: 6px;
+	margin-top: -4px;
+	margin-left: -6px;
+	background: transparent url(common/img/drag-slot-dot.png);
+}
+.v-ff .v-table-row-drag-bottom .v-table-cell-content:first-child:after,
+.v-ie .v-table-row-drag-bottom .v-table-cell-content:first-child:after {
+	margin-top: -2px;
+}
 
 .v-tabsheet,
 .v-tabsheet-content,
@@ -1668,9 +1799,11 @@ textarea.v-textarea-prompt {
 .v-tree {
 	text-align: left; /* Force default alignment */
 	overflow: hidden;
+	padding: 1px 0;
 }
 .v-tree-node {
 	background: transparent url(common/img/sprites.png) no-repeat 5px -37px;
+	padding: 1px 0;
 }
 .v-tree-node-expanded {
 	background-position: -5px -10px;
@@ -1691,24 +1824,10 @@ div.v-tree-node-leaf {
 .v-tree-node-caption .v-icon {
 	vertical-align: middle;
 }
-
 .v-tree-node-selected span {
 	background: #999;
 	color: #fff;
 }
-
-.v-tree-node-caption-drag-top {
-	border-top:2px solid green;
-	margin-top: -2px;
-}
-.v-tree-node-caption-drag-bottom {
-	border-bottom:2px solid green;
-	margin-bottom: -2px;
-}
-.v-tree-node-caption-drag-center {
-	background-color:green;
-}
-
 .v-tree-node-children {
 	padding-left: 1em;
 }
@@ -1732,6 +1851,65 @@ div.v-tree-node-leaf {
 .v-ie6 .v-tree-node,
 .v-ie6 .v-tree-node-children {
 	clear: left;
+}
+/***************************************
+ * Drag'n'drop styles
+ ***************************************/
+.v-tree .v-tree-node-drag-top {
+	border-top: 2px solid #1d9dff;
+	margin-top: -1px;
+	padding-top: 0;
+}
+.v-tree .v-tree-node-drag-bottom {
+	border-bottom: 2px solid #1d9dff;
+	margin-bottom: -1px;
+	padding-bottom: 0;
+}
+.v-tree .v-tree-node-drag-top:before,
+.v-tree .v-tree-node-drag-bottom:after,
+.v-tree .v-tree-node-caption-drag-center:after {
+	display: block;
+	content: "";
+	position: absolute;
+	width: 6px;
+	height: 6px;
+	margin-top: -4px;
+	background: transparent url(common/img/drag-slot-dot.png);
+}
+.v-tree .v-tree-node-drag-bottom:after {
+	margin-top: -2px;
+}
+.v-tree .v-tree-node-caption-drag-center:after {
+	margin-left: 14px;
+}
+.v-ff .v-tree .v-tree-node-caption-drag-center:after,
+.v-ie .v-tree .v-tree-node-caption-drag-center:after {
+	margin-top: -2px;
+}
+.v-tree .v-tree-node-drag-top {
+	background-position: 5px -38px;
+}
+.v-tree .v-tree-node-drag-top.v-tree-node-expanded {
+	background-position: -5px -11px;
+}
+.v-tree .v-tree-node-caption-drag-center div {
+	border: 2px solid #1d9dff;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	margin: -2px 2px -2px -2px;
+	background-color: #bcdcff;
+}
+.v-ie6 .v-tree .v-tree-node-caption-drag-center div {
+	margin: -2px ;
+}
+.v-tree .v-tree-node-caption-drag-center div {
+	background-color: rgba(169,209,255,.6);
+}
+.v-tree .v-tree-node-caption-drag-center div,
+.v-tree .v-tree-node-drag-top,
+.v-tree .v-tree-node-drag-bottom {
+	border-color: rgba(0,109,232,.6);
 }
 
 .v-upload-immediate {

@@ -154,10 +154,10 @@ td.v-datefield-calendarpanel-nextyear {
 	color: #eaeff1;
 	text-shadow: #3b4651 0 -1px 0;
 	vertical-align: top;
-}
-.v-datefield-calendarpanel-weekdays td.v-week {
-	background-image: none;
-}
+}/*
+.v-datefield-calendarpanel-weeknumber td {
+	width: 12.4%;
+}*/
 .v-datefield-calendarpanel-weekdays strong {
 	display: block;
 	text-align: right;
@@ -165,14 +165,14 @@ td.v-datefield-calendarpanel-nextyear {
 	height: 15px;
 	border-top: 1px solid #596775;
 }
-.v-datefield-calendarpanel .v-first {
+.v-datefield-calendarpanel-weekdays .v-first {
 	background-repeat: no-repeat;
 	background-image: url(img/weekday-first.png); /** sprite-ref: verticals; sprite-margin-bottom: 3px */
 }
-.v-datefield-calendarpanel .v-last {
+.v-datefield-calendarpanel-weekdays .v-last {
 	background-repeat: no-repeat;
 	background-position: right top;
-	background-image: url(img/weekday-last.png); /** sprite-ref: verticals; sprite-alignment: right */
+	background-image: url(img/weekday-last.png); /** sprite-ref: verticals; sprite-alignment: right; sprite-margin-bottom: 3px */
 }
 /* IE fails to position backgrounds inside table element */
 .v-ie .v-datefield-calendarpanel-weekdays td {
@@ -208,11 +208,6 @@ td.v-datefield-calendarpanel-nextyear {
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 }
-
-.v-datefield-calendarpanel-weeknumber {
-	color: #f66;
-}
-
 .v-datefield-calendarpanel-time select {
 	padding: 0;
 	font-size: 11px;

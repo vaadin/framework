@@ -118,11 +118,6 @@
 	background: transparent url(img/selected-bg.png) no-repeat 50% 50%;
 	border: none;
 }
-
-.v-datefield-calendarpanel-weeknumber {
-	color: #f66;
-}
-
 .v-datefield-time {
 	font-size: 11px;
 }

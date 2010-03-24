@@ -1,9 +1,11 @@
 .v-tree {
 	text-align: left; /* Force default alignment */
 	overflow: hidden;
+	padding: 1px 0;
 }
 .v-tree-node {
 	background: transparent url(../common/img/sprites.png) no-repeat 5px -37px;
+	padding: 1px 0;
 }
 .v-tree-node-expanded {
 	background-position: -5px -10px;
@@ -24,24 +26,10 @@ div.v-tree-node-leaf {
 .v-tree-node-caption .v-icon {
 	vertical-align: middle;
 }
-
 .v-tree-node-selected span {
 	background: #999;
 	color: #fff;
 }
-
-.v-tree-node-caption-drag-top {
-	border-top:2px solid green;
-	margin-top: -2px;
-}
-.v-tree-node-caption-drag-bottom {
-	border-bottom:2px solid green;
-	margin-bottom: -2px;
-}
-.v-tree-node-caption-drag-center {
-	background-color:green;
-}
-
 .v-tree-node-children {
 	padding-left: 1em;
 }
@@ -65,4 +53,63 @@ div.v-tree-node-leaf {
 .v-ie6 .v-tree-node,
 .v-ie6 .v-tree-node-children {
 	clear: left;
+}
+/***************************************
+ * Drag'n'drop styles
+ ***************************************/
+.v-tree .v-tree-node-drag-top {
+	border-top: 2px solid #1d9dff;
+	margin-top: -1px;
+	padding-top: 0;
+}
+.v-tree .v-tree-node-drag-bottom {
+	border-bottom: 2px solid #1d9dff;
+	margin-bottom: -1px;
+	padding-bottom: 0;
+}
+.v-tree .v-tree-node-drag-top:before,
+.v-tree .v-tree-node-drag-bottom:after,
+.v-tree .v-tree-node-caption-drag-center:after {
+	display: block;
+	content: "";
+	position: absolute;
+	width: 6px;
+	height: 6px;
+	margin-top: -4px;
+	background: transparent url(../common/img/drag-slot-dot.png);
+}
+.v-tree .v-tree-node-drag-bottom:after {
+	margin-top: -2px;
+}
+.v-tree .v-tree-node-caption-drag-center:after {
+	margin-left: 14px;
+}
+.v-ff .v-tree .v-tree-node-caption-drag-center:after,
+.v-ie .v-tree .v-tree-node-caption-drag-center:after {
+	margin-top: -2px;
+}
+.v-tree .v-tree-node-drag-top {
+	background-position: 5px -38px;
+}
+.v-tree .v-tree-node-drag-top.v-tree-node-expanded {
+	background-position: -5px -11px;
+}
+.v-tree .v-tree-node-caption-drag-center div {
+	border: 2px solid #1d9dff;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	margin: -2px 2px -2px -2px;
+	background-color: #bcdcff;
+}
+.v-ie6 .v-tree .v-tree-node-caption-drag-center div {
+	margin: -2px ;
+}
+.v-tree .v-tree-node-caption-drag-center div {
+	background-color: rgba(169,209,255,.6);
+}
+.v-tree .v-tree-node-caption-drag-center div,
+.v-tree .v-tree-node-drag-top,
+.v-tree .v-tree-node-drag-bottom {
+	border-color: rgba(0,109,232,.6);
 }
