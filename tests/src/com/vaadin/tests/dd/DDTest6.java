@@ -24,7 +24,7 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
-import com.vaadin.event.dd.acceptcriteria.IsSameSourceAndTarget;
+import com.vaadin.event.dd.acceptcriteria.SourceIsTarget;
 import com.vaadin.event.dd.acceptcriteria.Not;
 import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.Resource;
@@ -491,7 +491,7 @@ public class DDTest6 extends TestBase {
                 setDropHandler(new DropHandler() {
 
                     public AcceptCriterion getAcceptCriterion() {
-                        return new Not(IsSameSourceAndTarget.get());
+                        return new Not(SourceIsTarget.get());
                     }
 
                     public void drop(DragAndDropEvent dropEvent) {
