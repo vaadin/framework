@@ -143,7 +143,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * {@link ShortcutNotifier} and has a actionManager that delegates actions
      * to the containing window. This one does not delegate.
      */
-    ActionManager ownActionManager = new ActionManager(this);
+    private ActionManager ownActionManager = new ActionManager(this);
 
     /**
      * Contructs a new form with default layout.
