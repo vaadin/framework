@@ -7,8 +7,8 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 
 /**
- * Vaadin Widgets (TODO or Paintables, see {@link VHasDropHandler}) that want to
- * receive something via drag and drop implement this interface.
+ * Vaadin Widgets that want to receive something via drag and drop implement
+ * this interface.
  */
 public interface VDropHandler {
 
