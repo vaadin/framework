@@ -1239,7 +1239,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         return false;
     }
 
-    enum RequestType {
+    protected enum RequestType {
         FILE_UPLOAD, UIDL, OTHER, STATIC_FILE, APPLICATION_RESOURCE;
     }
 
