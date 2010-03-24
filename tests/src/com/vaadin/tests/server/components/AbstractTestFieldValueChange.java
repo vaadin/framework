@@ -22,7 +22,7 @@ import com.vaadin.ui.AbstractField;
  * override {@link #setValue(AbstractField)} to set the field value via
  * <code>changeVariables()</code>.
  */
-public abstract class TestFieldValueChange extends TestCase {
+public abstract class AbstractTestFieldValueChange extends TestCase {
 
     private AbstractField field;
     private ValueChangeListener listener;

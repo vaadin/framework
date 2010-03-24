@@ -12,7 +12,7 @@ import com.vaadin.ui.TextField;
  * 
  * See <a href="http://dev.vaadin.com/ticket/4394">Ticket 4394</a>.
  */
-public class TestTextFieldValueChange extends TestFieldValueChange {
+public class TestTextFieldValueChange extends AbstractTestFieldValueChange {
 
     @Override
     protected void setUp() throws Exception {
