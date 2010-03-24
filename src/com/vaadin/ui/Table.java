@@ -81,9 +81,16 @@ public class Table extends AbstractSelect implements Action.Container,
          */
         NONE,
         /**
-         * Table starts drag from rows.
+         * Table starts drag with a one row only.
          */
-        ROWS
+        ROW,
+        /**
+         * Table drags selected rows, if drag starts on a selected rows. Else it
+         * starts like in ROW mode. Note, that in Transferable there will still
+         * be only the row on which the drag started, other dragged rows need to
+         * be checked from the source Table.
+         */
+        MULTIROW
     }
 
     private static final int CELL_KEY = 0;

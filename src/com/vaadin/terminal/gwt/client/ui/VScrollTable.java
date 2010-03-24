@@ -2259,6 +2259,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         public class VScrollTableRow extends Panel implements ActionOwner,
                 Container {
 
+            private static final int DRAGMODE_MULTIROW = 2;
             ArrayList<Widget> childWidgets = new ArrayList<Widget>();
             private boolean selected = false;
             private final int rowKey;
@@ -2547,7 +2548,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
                                 VDragEvent ev = VDragAndDropManager.get()
                                         .startDrag(transferable, event, true);
-                                if (selectMode == SELECT_MODE_MULTI
+                                if (dragmode == DRAGMODE_MULTIROW
+                                        && selectMode == SELECT_MODE_MULTI
                                         && selectedRowKeys
                                                 .contains("" + rowKey)) {
                                     ev.createDragImage(

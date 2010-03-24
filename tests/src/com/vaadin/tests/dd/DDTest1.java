@@ -237,7 +237,7 @@ public class DDTest1 extends TestBase {
         ta.addContainerProperty("Bars", String.class, "Bar");
         ta.setRowHeaderMode(Table.ROW_HEADER_MODE_ID);
         ta.setSizeFull();
-        ta.setDragMode(TableDragMode.ROWS);
+        ta.setDragMode(TableDragMode.ROW);
 
         main.addComponent(pane1);
         main.addComponent(pane2);
