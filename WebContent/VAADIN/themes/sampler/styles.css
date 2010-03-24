@@ -2,7 +2,11 @@
 
 @import url(dummy/styles.css);
 
-@import url(prominentprimaryaction/styles.css);
+/*
+ * Not in use currently, breaks ShortcutBasics example.
+ *
+ *@import url(prominentprimaryaction/styles.css);
+ */
 
 @import url(layouts/marginexample.css);
 
