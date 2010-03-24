@@ -329,11 +329,14 @@ public class HierarchicalContainer extends IndexedContainer implements
     }
 
     /**
-     * Moves a node in the container immediately after a sibling node. The two
-     * nodes must have the same parent in the container.
+     * Moves a node (an Item) in the container immediately after a sibling node.
+     * The two nodes must have the same parent in the container.
      * 
      * @param itemId
+     *            the identifier of the moved node (Item)
      * @param siblingId
+     *            the identifier of the reference node (Item), after which the
+     *            other node will be located
      */
     public void moveAfterSibling(Object itemId, Object siblingId) {
         Object parent2 = getParent(itemId);
