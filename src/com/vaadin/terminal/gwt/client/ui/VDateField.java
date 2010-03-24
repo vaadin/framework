@@ -262,7 +262,7 @@ public class VDateField extends FlowPanel implements Paintable, Field {
     /**
      * Returns whether ISO 8601 week numbers should be shown in the date
      * selector or not. ISO 8601 defines that a week always starts with a Monday
-     * so if the week starts with another day this will return false.
+     * so the week numbers are only shown if this is the case.
      * 
      * @return true if week number should be shown, false otherwise
      */

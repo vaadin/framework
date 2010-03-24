@@ -564,7 +564,7 @@ public class DateField extends AbstractField implements
     }
 
     /**
-     * Returns whether date/time interpretation is to be lenient. Lenient
+     * Returns whether date/time interpretation is to be lenient.
      * 
      * @see #setLenient(boolean)
      * 
