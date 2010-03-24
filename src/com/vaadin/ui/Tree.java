@@ -44,7 +44,7 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VTree;
 import com.vaadin.terminal.gwt.client.ui.dd.VLazyInitItemIdentifiers;
-import com.vaadin.terminal.gwt.client.ui.dd.VTargetNodeIsChildOf;
+import com.vaadin.terminal.gwt.client.ui.dd.VTargetInSubtree;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.tools.ReflectTools;
 
@@ -1411,41 +1411,41 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * An accept criterion that checks the parent node (or parent hierarchy) for
      * the item identifier given in constructor. If the parent is found, content
-     * is accepted. Criterion can be used to accepts drags on a select sub tree
-     * only.
-     * 
-     * TODO consider renaming and starting traversing from "itemIdInto".
+     * is accepted. Criterion can be used to accepts drags on a specific sub
+     * tree only.
+     * <p>
+     * The root items is also consider to be valid target.
      */
-    @ClientCriterion(VTargetNodeIsChildOf.class)
-    public class TargetNodeIsChildOf extends ClientSideCriterion {
+    @ClientCriterion(VTargetInSubtree.class)
+    public class TargetInSubtree extends ClientSideCriterion {
 
-        private Object parentItemId;
-        private int depthToCheck = 1;
+        private Object rootId;
+        private int depthToCheck = -1;
 
         /**
-         * Constructs a criteria that accepts the drag if the targeted item is a
-         * direct descendant of Item identified by given id
+         * Constructs a criteria that accepts the drag if the targeted Item is a
+         * descendant of Item identified by given id
          * 
          * @param parentItemId
          *            the item identifier of the parent node
          */
-        public TargetNodeIsChildOf(Object parentItemId) {
-            this.parentItemId = parentItemId;
+        public TargetInSubtree(Object parentItemId) {
+            rootId = parentItemId;
         }
 
         /**
-         * Constructs a criteria that accepts drops at any level below the item
-         * identified by given id
+         * Constructs a criteria that accepts drops within given level below the
+         * subtree root identified by given id.
          * 
-         * @param parentItemId
+         * @param rootId
          *            the item identifier to be sought for
          * @param depthToCheck
          *            the depth that tree is traversed upwards to seek for the
          *            parent, -1 means that the whole structure should be
          *            checked
          */
-        public TargetNodeIsChildOf(Object parentItemId, int depthToCheck) {
-            this.parentItemId = parentItemId;
+        public TargetInSubtree(Object rootId, int depthToCheck) {
+            this.rootId = rootId;
             this.depthToCheck = depthToCheck;
         }
 
@@ -1455,14 +1455,14 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                         .getDropTargetDetails();
 
                 if (eventDetails.getItemIdOver() != null) {
-                    Object itemIdOver = eventDetails.getItemIdOver();
-                    Object parent2 = getParent(itemIdOver);
+                    Object itemId = eventDetails.getItemIdOver();
                     int i = 0;
-                    while (parent2 != null
-                            && (depthToCheck == -1 || i < depthToCheck)) {
-                        if (parent2.equals(parentItemId)) {
+                    while (itemId != null
+                            && (depthToCheck == -1 || i <= depthToCheck)) {
+                        if (itemId.equals(rootId)) {
                             return true;
                         }
+                        itemId = getParent(itemId);
                         i++;
                     }
                 }
@@ -1476,7 +1476,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         public void paintContent(PaintTarget target) throws PaintException {
             super.paintContent(target);
             target.addAttribute("depth", depthToCheck);
-            target.addAttribute("key", key(parentItemId));
+            target.addAttribute("key", key(rootId));
         }
 
     }
