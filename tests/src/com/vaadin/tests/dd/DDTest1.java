@@ -9,7 +9,6 @@ import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
-import com.vaadin.event.dd.acceptcriteria.IsDataBound;
 import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
@@ -21,6 +20,7 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Tree;
+import com.vaadin.ui.AbstractSelect.AcceptItem;
 import com.vaadin.ui.Table.TableDragMode;
 import com.vaadin.ui.Tree.TreeDragMode;
 import com.vaadin.ui.Tree.TreeDropTargetDetails;
@@ -224,7 +224,7 @@ public class DDTest1 extends TestBase {
 
             public AcceptCriterion getAcceptCriterion() {
                 // TODO should actually check that source is same as target
-                return IsDataBound.get();
+                return AcceptItem.ALL;
             }
 
         };

@@ -26,6 +26,7 @@ import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.DropTargetDetailsImpl;
 import com.vaadin.event.dd.acceptcriteria.ClientCriterion;
 import com.vaadin.event.dd.acceptcriteria.ClientSideCriterion;
+import com.vaadin.event.dd.acceptcriteria.ContainsDataFlavor;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
@@ -1787,6 +1788,15 @@ public abstract class AbstractSelect extends AbstractField implements
             }
             return itemIds.contains(transferable.getItemId());
         }
+
+        /**
+         * A simple accept criterion which ensures that {@link Transferable}
+         * contains an {@link Item} (or actually its identifier). In other words
+         * the criterion check that drag is coming from a {@link Container} like
+         * {@link Tree} or {@link Table}.
+         */
+        public static final ClientSideCriterion ALL = new ContainsDataFlavor(
+                "itemId");
 
     }
 

@@ -16,7 +16,6 @@ import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.And;
 import com.vaadin.event.dd.acceptcriteria.DragSourceIs;
-import com.vaadin.event.dd.acceptcriteria.IsDataBound;
 import com.vaadin.event.dd.acceptcriteria.Or;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
@@ -27,6 +26,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.AbstractSelect.AbstractSelectDropTargetDetails;
+import com.vaadin.ui.AbstractSelect.AcceptItem;
 import com.vaadin.ui.Table.TableTransferable;
 import com.vaadin.ui.Tree.OverFolderNode;
 import com.vaadin.ui.Tree.TreeDragMode;
@@ -229,7 +229,7 @@ public class DDTest2 extends TestBase {
             }
 
             public AcceptCriterion getAcceptCriterion() {
-                return IsDataBound.get();
+                return AcceptItem.ALL;
             }
         };
 
