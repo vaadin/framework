@@ -1761,14 +1761,13 @@ public abstract class AbstractSelect extends AbstractField implements
     }
 
     /**
-     * Accept criterion which accepts a drop only if the {@link Transferable}
-     * contains the given Item(s) or practically its identifier(s) from a
-     * specific AbstractSelect.
+     * This criterion accepts a only a {@link Transferable} that contains given
+     * Item (practically its identifier) from a specific AbstractSelect.
      * 
      * @since 6.3
      */
     @ClientCriterion(VItemIdIs.class)
-    public static class ContainsItem extends AbstractItemSetCriterion {
+    public static class AcceptItem extends AbstractItemSetCriterion {
 
         /**
          * @param select
@@ -1776,7 +1775,7 @@ public abstract class AbstractSelect extends AbstractField implements
          * @param itemId
          *            the item identifier(s) of the select that are accepted
          */
-        public ContainsItem(AbstractSelect select, Object... itemId) {
+        public AcceptItem(AbstractSelect select, Object... itemId) {
             super(select, itemId);
         }
 
