@@ -176,16 +176,29 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
 
         days.getFlexCellFormatter().setStyleName(headerRow, weekColumn,
                 "v-week");
+        days.setHTML(headerRow, weekColumn, "<strong></strong>");
         // Hide the week column if week numbers are not to be displayed.
         days.getFlexCellFormatter().setVisible(headerRow, weekColumn,
                 showISOWeekNumbers);
 
-        days.getFlexCellFormatter().setStyleName(headerRow, firstWeekdayColumn,
-                "v-first");
-        days.getFlexCellFormatter().setStyleName(headerRow,
-                firstWeekdayColumn + 6, "v-last");
         days.getRowFormatter().setStyleName(headerRow,
                 VDateField.CLASSNAME + "-calendarpanel-weekdays");
+
+        if (showISOWeekNumbers) {
+            days.getFlexCellFormatter().setStyleName(headerRow, weekColumn,
+                    "v-first");
+            days.getFlexCellFormatter().setStyleName(headerRow,
+                    firstWeekdayColumn, "");
+            days.getRowFormatter().addStyleName(headerRow,
+                    VDateField.CLASSNAME + "-calendarpanel-weeknumbers");
+        } else {
+            days.getFlexCellFormatter().setStyleName(headerRow, weekColumn, "");
+            days.getFlexCellFormatter().setStyleName(headerRow,
+                    firstWeekdayColumn, "v-first");
+        }
+
+        days.getFlexCellFormatter().setStyleName(headerRow,
+                firstWeekdayColumn + 6, "v-last");
 
         // Print weekday names
         final int firstDay = datefield.getDateTimeService().getFirstDayOfWeek();

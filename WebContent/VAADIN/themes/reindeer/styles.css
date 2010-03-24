@@ -2873,15 +2873,15 @@ td.v-datefield-calendarpanel-nextyear {
 	color: #eaeff1;
 	text-shadow: #3b4651 0 -1px 0;
 	vertical-align: top;
-}/*
-.v-datefield-calendarpanel-weeknumber td {
+}
+.v-datefield-calendarpanel-weeknumbers td {
 	width: 12.4%;
-}*/
+}
 .v-datefield-calendarpanel-weekdays strong {
 	display: block;
 	text-align: right;
-	padding-right: 5px;
-	height: 15px;
+	padding: 1px 5px 0 0;
+	height: 14px;
 	border-top: 1px solid #596775;
 }
 .v-datefield-calendarpanel-weekdays .v-first {
@@ -2917,7 +2917,12 @@ td.v-datefield-calendarpanel-nextyear {
 .v-datefield-calendarpanel-day-today {
 	padding: 2px 5px 2px 0;
 	display: block;
-	margin: 1px 0 0 6px;
+	margin: 1px 0 0 5px;
+}
+.v-datefield-calendarpanel-weeknumber {
+	margin: 0;
+	padding-top: 4px;
+	padding-bottom: 3px;
 }
 .v-datefield-calendarpanel-day-today {
 	color: #4095d1;
