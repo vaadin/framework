@@ -59,8 +59,10 @@ public class CustomLayout extends AbstractLayout {
     private String templateName = null;
 
     /**
-     * Default constructor only used by subclasses because the subclasses are
-     * responsible for setting the appropriate fields.
+     * Default constructor only used by subclasses. Subclasses are responsible
+     * for setting the appropriate fields. Either
+     * {@link #setTemplateName(String)}, that makes layout fetch the template
+     * from theme, or {@link #setTemplateContents(String)}.
      */
     protected CustomLayout() {
         setWidth(100, UNITS_PERCENTAGE);
