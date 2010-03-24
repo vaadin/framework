@@ -6,6 +6,7 @@ package com.vaadin.event;
 
 import java.lang.reflect.Method;
 
+import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
@@ -97,7 +98,13 @@ public interface FieldEvents {
      * 
      * @since 6.2
      */
+    @SuppressWarnings("serial")
     public class FocusEvent extends Component.Event {
+
+        /**
+         * Identifier for event that can be used in {@link EventRouter}
+         */
+        public static final String EVENT_ID = EventId.FOCUS;
 
         public FocusEvent(Component source) {
             super(source);
@@ -131,7 +138,13 @@ public interface FieldEvents {
      * 
      * @since 6.2
      */
+    @SuppressWarnings("serial")
     public class BlurEvent extends Component.Event {
+
+        /**
+         * Identifier for event that can be used in {@link EventRouter}
+         */
+        public static final String EVENT_ID = EventId.BLUR;
 
         public BlurEvent(Component source) {
             super(source);

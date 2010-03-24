@@ -18,6 +18,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.TextBoxBase;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -54,8 +55,6 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
 
     private static final String CLASSNAME_PROMPT = "prompt";
     private static final String ATTR_INPUTPROMPT = "prompt";
-    public static final String FOCUS_EVENT_IDENTIFIER = "focus";
-    public static final String BLUR_EVENT_IDENTIFIER = "blur";
 
     private String inputPrompt = null;
     private boolean prompting = false;
@@ -185,10 +184,9 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             boolean sendBlurEvent = false;
             boolean sendValueChange = false;
 
-            if (blurred
-                    && client.hasEventListeners(this, BLUR_EVENT_IDENTIFIER)) {
+            if (blurred && client.hasEventListeners(this, EventId.BLUR)) {
                 sendBlurEvent = true;
-                client.updateVariable(id, BLUR_EVENT_IDENTIFIER, "", false);
+                client.updateVariable(id, EventId.BLUR, "", false);
             }
 
             String newText = getText();
@@ -225,9 +223,8 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             }
         }
         focusedTextField = this;
-        if (client.hasEventListeners(this, FOCUS_EVENT_IDENTIFIER)) {
-            client.updateVariable(client.getPid(this), FOCUS_EVENT_IDENTIFIER,
-                    "", true);
+        if (client.hasEventListeners(this, EventId.FOCUS)) {
+            client.updateVariable(client.getPid(this), EventId.FOCUS, "", true);
         }
     }
 

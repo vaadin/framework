@@ -7,20 +7,28 @@ package com.vaadin.terminal.gwt.client.ui;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Accessibility;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.EventHelper;
+import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
-public class VButton extends FocusWidget implements Paintable, ClickHandler {
+public class VButton extends FocusWidget implements Paintable, ClickHandler,
+        FocusHandler, BlurHandler {
 
     public static final String CLASSNAME = "v-button";
     private static final String CLASSNAME_PRESSED = "v-pressed";
@@ -69,6 +77,9 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler {
     private boolean disallowNextClick = false;
     private boolean isHovering;
 
+    private HandlerRegistration focusHandlerRegistration;
+    private HandlerRegistration blurHandlerRegistration;
+
     public VButton() {
         super(DOM.createDiv());
         setTabIndex(0);
@@ -96,6 +107,11 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler {
         if (client.updateComponent(this, uidl, false)) {
             return;
         }
+
+        focusHandlerRegistration = EventHelper.updateFocusHandler(this, client,
+                focusHandlerRegistration);
+        blurHandlerRegistration = EventHelper.updateBlurHandler(this, client,
+                blurHandlerRegistration);
 
         // Save details
         this.client = client;
@@ -454,5 +470,13 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler {
 
     	return ret;
     }-*/;
+
+    public void onFocus(FocusEvent arg0) {
+        client.updateVariable(id, EventId.FOCUS, "", true);
+    }
+
+    public void onBlur(BlurEvent arg0) {
+        client.updateVariable(id, EventId.BLUR, "", true);
+    }
 
 }

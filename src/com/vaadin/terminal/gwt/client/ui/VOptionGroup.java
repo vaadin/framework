@@ -4,20 +4,32 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.UIDL;
 
-public class VOptionGroup extends VOptionGroupBase {
+public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
+        BlurHandler {
 
     public static final String CLASSNAME = "v-select-optiongroup";
 
@@ -25,10 +37,59 @@ public class VOptionGroup extends VOptionGroupBase {
 
     private final Map optionsToKeys;
 
+    private boolean sendFocusEvents = false;
+    private boolean sendBlurEvents = false;
+    private List<HandlerRegistration> focusHandlers = null;
+    private List<HandlerRegistration> blurHandlers = null;
+
+    /**
+     * used to check whether a blur really was a blur of the complete
+     * optiongroup: if a control inside this optiongroup gains focus right after
+     * blur of another control inside this optiongroup (meaning: if onFocus
+     * fires after onBlur has fired), the blur and focus won't be sent to the
+     * server side as only a focus change inside this optiongroup occured
+     */
+    private boolean blurOccured = false;
+
     public VOptionGroup() {
         super(CLASSNAME);
         panel = (Panel) optionsContainer;
         optionsToKeys = new HashMap();
+    }
+
+    @Override
+    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        super.updateFromUIDL(uidl, client);
+
+        sendFocusEvents = client.hasEventListeners(this, EventId.FOCUS);
+        sendBlurEvents = client.hasEventListeners(this, EventId.BLUR);
+
+        if (focusHandlers != null) {
+            for (HandlerRegistration reg : focusHandlers) {
+                reg.removeHandler();
+            }
+            focusHandlers.clear();
+            focusHandlers = null;
+
+            for (HandlerRegistration reg : blurHandlers) {
+                reg.removeHandler();
+            }
+            blurHandlers.clear();
+            blurHandlers = null;
+        }
+
+        if (sendFocusEvents || sendBlurEvents) {
+            focusHandlers = new ArrayList<HandlerRegistration>();
+            blurHandlers = new ArrayList<HandlerRegistration>();
+
+            // add focus and blur handlers to checkboxes / radio buttons
+            for (Widget wid : panel) {
+                if (wid instanceof CheckBox) {
+                    focusHandlers.add(((CheckBox) wid).addFocusHandler(this));
+                    blurHandlers.add(((CheckBox) wid).addBlurHandler(this));
+                }
+            }
+        }
     }
 
     /*
@@ -96,4 +157,37 @@ public class VOptionGroup extends VOptionGroupBase {
         }
     }
 
+    public void onFocus(FocusEvent arg0) {
+        if (!blurOccured) {
+            // no blur occured before this focus event
+            // panel was blurred => fire the event to the server side if
+            // requested by server side
+            if (sendFocusEvents) {
+                client.updateVariable(id, EventId.FOCUS, "", true);
+            }
+        } else {
+            // blur occured before this focus event
+            // another control inside the panel (checkbox / radio box) was
+            // blurred => do not fire the focus and set blurOccured to false, so
+            // blur will not be fired, too
+            blurOccured = false;
+        }
+    }
+
+    public void onBlur(BlurEvent arg0) {
+        blurOccured = true;
+        if (sendBlurEvents) {
+            DeferredCommand.addCommand(new Command() {
+                public void execute() {
+                    // check whether blurOccured still is true and then send the
+                    // event out to the server
+                    if (blurOccured) {
+                        client.updateVariable(id, EventId.BLUR, "",
+                                true);
+                        blurOccured = false;
+                    }
+                }
+            });
+        }
+    }
 }

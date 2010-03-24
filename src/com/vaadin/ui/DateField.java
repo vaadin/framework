@@ -21,7 +21,6 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.VDateField;
 import com.vaadin.terminal.gwt.client.ui.VPopupCalendar;
-import com.vaadin.terminal.gwt.client.ui.VTextualDate;
 
 /**
  * <p>
@@ -92,9 +91,6 @@ public class DateField extends AbstractField implements
      * Inline date selector (calendar).
      */
     protected static final String TYPE_INLINE = "inline";
-
-    private static final String BLUR_EVENT = VTextualDate.BLUR_EVENT_IDENTIFIER;
-    private static final String FOCUS_EVENT = VTextualDate.FOCUS_EVENT_IDENTIFIER;
 
     /**
      * Specified widget type.
@@ -370,11 +366,11 @@ public class DateField extends AbstractField implements
             }
         }
 
-        if (variables.containsKey(FOCUS_EVENT)) {
+        if (variables.containsKey(FocusEvent.EVENT_ID)) {
             fireEvent(new FocusEvent(this));
         }
 
-        if (variables.containsKey(BLUR_EVENT)) {
+        if (variables.containsKey(BlurEvent.EVENT_ID)) {
             fireEvent(new BlurEvent(this));
         }
     }
@@ -576,21 +572,21 @@ public class DateField extends AbstractField implements
     }
 
     public void addListener(FocusListener listener) {
-        addListener(FOCUS_EVENT, FocusEvent.class, listener,
+        addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
     }
 
     public void removeListener(FocusListener listener) {
-        removeListener(FOCUS_EVENT, FocusEvent.class, listener);
+        removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
     }
 
     public void addListener(BlurListener listener) {
-        addListener(BLUR_EVENT, BlurEvent.class, listener,
+        addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
     }
 
     public void removeListener(BlurListener listener) {
-        removeListener(BLUR_EVENT, BlurEvent.class, listener);
+        removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
     }
 
     /**

@@ -11,6 +11,11 @@ import java.util.Map;
 
 import com.vaadin.data.Property;
 import com.vaadin.event.ShortcutListener;
+import com.vaadin.event.FieldEvents;
+import com.vaadin.event.FieldEvents.BlurEvent;
+import com.vaadin.event.FieldEvents.BlurListener;
+import com.vaadin.event.FieldEvents.FocusEvent;
+import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.VButton;
@@ -26,7 +31,8 @@ import com.vaadin.ui.themes.BaseTheme;
  */
 @SuppressWarnings("serial")
 @ClientWidget(VButton.class)
-public class Button extends AbstractField {
+public class Button extends AbstractField implements FieldEvents.BlurNotifier,
+        FieldEvents.FocusNotifier {
 
     /* Private members */
 
@@ -143,7 +149,7 @@ public class Button extends AbstractField {
      * @param variables
      */
     @Override
-    public void changeVariables(Object source, Map variables) {
+    public void changeVariables(Object source, Map<String, Object> variables) {
         super.changeVariables(source, variables);
 
         if (!isReadOnly() && variables.containsKey("state")) {
@@ -172,6 +178,13 @@ public class Button extends AbstractField {
                     setValue(Boolean.FALSE);
                 }
             }
+        }
+
+        if (variables.containsKey(FocusEvent.EVENT_ID)) {
+            fireEvent(new FocusEvent(this));
+        }
+        if (variables.containsKey(BlurEvent.EVENT_ID)) {
+            fireEvent(new BlurEvent(this));
         }
     }
 
@@ -348,6 +361,25 @@ public class Button extends AbstractField {
         super.setInternalValue(newValue);
     }
 
+    public void addListener(BlurListener listener) {
+        addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
+                BlurListener.blurMethod);
+    }
+
+    public void removeListener(BlurListener listener) {
+        removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
+    }
+
+    public void addListener(FocusListener listener) {
+        addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
+                FocusListener.focusMethod);
+    }
+
+    public void removeListener(FocusListener listener) {
+        removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
+
+    }
+    
     /*
      * Actions
      */

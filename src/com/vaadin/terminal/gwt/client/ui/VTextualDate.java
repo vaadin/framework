@@ -19,6 +19,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ClientExceptionHandler;
 import com.vaadin.terminal.gwt.client.ContainerResizedListener;
+import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.LocaleNotLoadedException;
 import com.vaadin.terminal.gwt.client.LocaleService;
@@ -30,8 +31,6 @@ public class VTextualDate extends VDateField implements Paintable, Field,
 
     private static final String PARSE_ERROR_CLASSNAME = CLASSNAME
             + "-parseerror";
-    public static final String FOCUS_EVENT_IDENTIFIER = "focus";
-    public static final String BLUR_EVENT_IDENTIFIER = "blur";
 
     private final TextBox text;
 
@@ -60,8 +59,8 @@ public class VTextualDate extends VDateField implements Paintable, Field,
                         + VTextField.CLASSNAME_FOCUS);
                 if (client != null
                         && client.hasEventListeners(VTextualDate.this,
-                                FOCUS_EVENT_IDENTIFIER)) {
-                    client.updateVariable(id, FOCUS_EVENT_IDENTIFIER, "", true);
+                                EventId.FOCUS)) {
+                    client.updateVariable(id, EventId.FOCUS, "", true);
                 }
             }
         });
@@ -71,8 +70,8 @@ public class VTextualDate extends VDateField implements Paintable, Field,
                         + VTextField.CLASSNAME_FOCUS);
                 if (client != null
                         && client.hasEventListeners(VTextualDate.this,
-                                BLUR_EVENT_IDENTIFIER)) {
-                    client.updateVariable(id, BLUR_EVENT_IDENTIFIER, "", true);
+                                EventId.BLUR)) {
+                    client.updateVariable(id, EventId.BLUR, "", true);
                 }
             }
         });

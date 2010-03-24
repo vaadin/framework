@@ -46,9 +46,6 @@ import com.vaadin.terminal.gwt.client.ui.VFilterSelect;
 public class Select extends AbstractSelect implements AbstractSelect.Filtering,
         FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 
-    private static final String BLUR_EVENT_ID = VFilterSelect.BLUR_EVENT_IDENTIFIER;
-    private static final String FOCUS_EVENT_ID = VFilterSelect.FOCUS_EVENT_IDENTIFIER;
-
     /**
      * Holds value of property pageLength. 0 disables paging.
      */
@@ -432,10 +429,10 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
             }
         }
 
-        if (variables.containsKey(FOCUS_EVENT_ID)) {
+        if (variables.containsKey(FocusEvent.EVENT_ID)) {
             fireEvent(new FocusEvent(this));
         }
-        if (variables.containsKey(BLUR_EVENT_ID)) {
+        if (variables.containsKey(BlurEvent.EVENT_ID)) {
             fireEvent(new BlurEvent(this));
         }
 
@@ -496,21 +493,21 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
     }
 
     public void addListener(BlurListener listener) {
-        addListener(BLUR_EVENT_ID, BlurEvent.class, listener,
+        addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
     }
 
     public void removeListener(BlurListener listener) {
-        removeListener(BLUR_EVENT_ID, BlurEvent.class, listener);
+        removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
     }
 
     public void addListener(FocusListener listener) {
-        addListener(FOCUS_EVENT_ID, FocusEvent.class, listener,
+        addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
     }
 
     public void removeListener(FocusListener listener) {
-        removeListener(FOCUS_EVENT_ID, FocusEvent.class, listener);
+        removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
 
     }
 

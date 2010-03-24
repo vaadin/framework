@@ -89,9 +89,6 @@ public class TextField extends AbstractField implements
      */
     private int maxLength = -1;
 
-    private static final String BLUR_EVENT = VTextField.BLUR_EVENT_IDENTIFIER;
-    private static final String FOCUS_EVENT = VTextField.FOCUS_EVENT_IDENTIFIER;
-
     /* Constructors */
 
     /**
@@ -280,11 +277,11 @@ public class TextField extends AbstractField implements
             }
         }
 
-        if (variables.containsKey(FOCUS_EVENT)) {
-            fireFocus(variables.get(FOCUS_EVENT));
+        if (variables.containsKey(FocusEvent.EVENT_ID)) {
+            fireEvent(new FocusEvent(this));
         }
-        if (variables.containsKey(BLUR_EVENT)) {
-            fireBlur(variables.get(BLUR_EVENT));
+        if (variables.containsKey(BlurEvent.EVENT_ID)) {
+            fireEvent(new BlurEvent(this));
         }
 
     }
@@ -619,30 +616,22 @@ public class TextField extends AbstractField implements
         requestRepaint();
     }
 
-    private void fireFocus(Object object) {
-        fireEvent(new FocusEvent(this));
-    }
-
-    private void fireBlur(Object object) {
-        fireEvent(new BlurEvent(this));
-    }
-
     public void addListener(FocusListener listener) {
-        addListener(FOCUS_EVENT, FocusEvent.class, listener,
+        addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
     }
 
     public void removeListener(FocusListener listener) {
-        removeListener(FOCUS_EVENT, FocusEvent.class, listener);
+        removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
     }
 
     public void addListener(BlurListener listener) {
-        addListener(BLUR_EVENT, BlurEvent.class, listener,
+        addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
     }
 
     public void removeListener(BlurListener listener) {
-        removeListener(BLUR_EVENT, BlurEvent.class, listener);
+        removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
     }
 
 }
