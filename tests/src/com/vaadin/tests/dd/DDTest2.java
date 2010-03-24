@@ -15,7 +15,7 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.And;
-import com.vaadin.event.dd.acceptcriteria.DragSourceIs;
+import com.vaadin.event.dd.acceptcriteria.SourceIs;
 import com.vaadin.event.dd.acceptcriteria.Or;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
@@ -121,13 +121,13 @@ public class DDTest2 extends TestBase {
         table.setDragMode(Table.TableDragMode.ROW);
 
         OverFolderNode onNode = new OverFolderNode();
-        DragSourceIs fromTable = new DragSourceIs(table);
+        SourceIs fromTable = new SourceIs(table);
 
-        DragSourceIs fromTree = new DragSourceIs(tree1);
+        SourceIs fromTree = new SourceIs(tree1);
         final Or fromTree1OrTable = new Or(fromTable, fromTree);
         // Or could in the case be replaced with, keeping here as an example and
         // test
-        DragSourceIs treeOrTable = new DragSourceIs(table, tree1);
+        SourceIs treeOrTable = new SourceIs(table, tree1);
 
         final And and = new And(fromTree1OrTable, onNode);
 

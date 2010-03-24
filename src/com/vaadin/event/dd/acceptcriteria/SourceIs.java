@@ -19,12 +19,13 @@ import com.vaadin.ui.Component;
  * 
  * @since 6.3
  */
+@SuppressWarnings("serial")
 @ClientCriterion(VDragSourceIs.class)
-public class DragSourceIs extends ClientSideCriterion {
+public class SourceIs extends ClientSideCriterion {
 
     private Component[] component;
 
-    public DragSourceIs(Component... component) {
+    public SourceIs(Component... component) {
         this.component = component;
     }
 
