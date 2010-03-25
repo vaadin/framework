@@ -58,7 +58,7 @@ public class AcceptFromComponent extends Window {
             public void drop(DragAndDropEvent event) {
 
                 WrapperTargetDetails ed = (WrapperTargetDetails) event
-                        .getDropTargetDetails();
+                        .getTargetDetails();
                 Transferable ctr = event.getTransferable();
                 if (ctr.getSourceComponent() != null) {
                     // use "component" (from DragDropPane) if available, else

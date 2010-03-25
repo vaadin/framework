@@ -111,7 +111,7 @@ public class DDTest6 extends TestBase {
                 File file = null;
                 Folder folder = null;
                 TreeTargetDetails dropTargetData = (TreeTargetDetails) dropEvent
-                        .getDropTargetDetails();
+                        .getTargetDetails();
                 folder = (Folder) dropTargetData.getItemIdInto();
                 if (dropEvent.getTransferable() instanceof DataBoundTransferable) {
                     DataBoundTransferable transferable = (DataBoundTransferable) dropEvent
@@ -370,7 +370,7 @@ public class DDTest6 extends TestBase {
                         .getMouseDownEvent();
 
                 WrapperTargetDetails dropTargetDetails = (WrapperTargetDetails) dropEvent
-                        .getDropTargetDetails();
+                        .getTargetDetails();
                 MouseEventDetails mouseEvent = dropTargetDetails
                         .getMouseEvent();
 

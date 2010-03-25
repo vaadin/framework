@@ -188,7 +188,7 @@ public class DDTest1 extends TestBase {
 
             public void drop(DragAndDropEvent event) {
                 TreeTargetDetails details = (TreeTargetDetails) event
-                        .getDropTargetDetails();
+                        .getTargetDetails();
                 // TODO set properties, so same sorter could be used in Table
                 Transferable transferable = event.getTransferable();
                 if (transferable instanceof DataBoundTransferable) {

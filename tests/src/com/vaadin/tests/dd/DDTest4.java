@@ -71,7 +71,7 @@ public class DDTest4 extends TestBase {
 
             public void drop(DragAndDropEvent dropEvent) {
                 AbstractSelectTargetDetails dropTargetData = (AbstractSelectTargetDetails) dropEvent
-                        .getDropTargetDetails();
+                        .getTargetDetails();
                 DataBoundTransferable transferable = (DataBoundTransferable) dropEvent
                         .getTransferable();
                 Object itemIdOver = dropTargetData.getItemIdOver();

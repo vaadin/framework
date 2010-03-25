@@ -1327,8 +1327,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
          */
         public boolean accept(DragAndDropEvent dragEvent) {
             AbstractSelectTargetDetails dropTargetData = (AbstractSelectTargetDetails) dragEvent
-                    .getDropTargetDetails();
-            tree = (Tree) dragEvent.getDropTargetDetails().getTarget();
+                    .getTargetDetails();
+            tree = (Tree) dragEvent.getTargetDetails().getTarget();
             allowedItemIds = getAllowedItemIds(dragEvent, tree);
 
             return allowedItemIds.contains(dropTargetData.getItemIdOver());
@@ -1393,7 +1393,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 // bottom
                 // part)
                 TreeTargetDetails eventDetails = (TreeTargetDetails) dragEvent
-                        .getDropTargetDetails();
+                        .getTargetDetails();
 
                 Object itemIdOver = eventDetails.getItemIdOver();
                 if (!eventDetails.getTarget().areChildrenAllowed(itemIdOver)) {
@@ -1452,7 +1452,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         public boolean accept(DragAndDropEvent dragEvent) {
             try {
                 TreeTargetDetails eventDetails = (TreeTargetDetails) dragEvent
-                        .getDropTargetDetails();
+                        .getTargetDetails();
 
                 if (eventDetails.getItemIdOver() != null) {
                     Object itemId = eventDetails.getItemIdOver();

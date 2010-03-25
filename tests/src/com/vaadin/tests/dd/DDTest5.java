@@ -107,7 +107,7 @@ public class DDTest5 extends TestBase {
                     Component draggedComponent = transferable
                             .getDraggedComponent();
 
-                    DropTarget target = dropEvent.getDropTargetDetails()
+                    DropTarget target = dropEvent.getTargetDetails()
                             .getTarget();
 
                     WrappedLabel wrappedLabel = new WrappedLabel(
@@ -130,7 +130,7 @@ public class DDTest5 extends TestBase {
                             cssLayout.removeComponent(sourceComponent);
                             wrappedLabel = (WrappedLabel) sourceComponent;
                         }
-                        if (dropEvent.getDropTargetDetails().getData(
+                        if (dropEvent.getTargetDetails().getData(
                                 "verticalLocation").equals("TOP")) {
                             // before reference if dropped on topmost part
                             i--;

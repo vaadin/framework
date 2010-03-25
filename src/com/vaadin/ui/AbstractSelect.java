@@ -1715,7 +1715,7 @@ public abstract class AbstractSelect extends AbstractField implements
 
         public boolean accept(DragAndDropEvent dragEvent) {
             AbstractSelectTargetDetails dropTargetData = (AbstractSelectTargetDetails) dragEvent
-                    .getDropTargetDetails();
+                    .getTargetDetails();
             if (dropTargetData.getTarget() != select) {
                 return false;
             }

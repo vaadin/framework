@@ -39,7 +39,7 @@ public class SourceIsTarget extends ClientSideCriterion {
         if (dragEvent.getTransferable() instanceof TransferableImpl) {
             Component sourceComponent = ((TransferableImpl) dragEvent
                     .getTransferable()).getSourceComponent();
-            DropTarget target = dragEvent.getDropTargetDetails().getTarget();
+            DropTarget target = dragEvent.getTargetDetails().getTarget();
             return sourceComponent == target;
         }
         return false;

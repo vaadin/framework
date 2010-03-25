@@ -63,7 +63,7 @@ public class HorizontalSortableCssLayoutWithWrappers extends Window {
                             .getComponentIterator();
                     Component next = componentIterator.next();
                     TargetDetails dropTargetData = dropEvent
-                            .getDropTargetDetails();
+                            .getTargetDetails();
                     DropTarget target = dropTargetData.getTarget();
                     while (next != target) {
                         if (next != sourceComponent) {

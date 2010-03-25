@@ -3470,8 +3470,8 @@ public class Table extends AbstractSelect implements Action.Container,
          */
         public boolean accept(DragAndDropEvent dragEvent) {
             AbstractSelectTargetDetails dropTargetData = (AbstractSelectTargetDetails) dragEvent
-                    .getDropTargetDetails();
-            table = (Table) dragEvent.getDropTargetDetails().getTarget();
+                    .getTargetDetails();
+            table = (Table) dragEvent.getTargetDetails().getTarget();
             ArrayList<Object> visibleItemIds = new ArrayList<Object>(table
                     .getPageLength());
             visibleItemIds.size();

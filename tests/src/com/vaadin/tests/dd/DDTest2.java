@@ -103,7 +103,7 @@ public class DDTest2 extends TestBase {
                 }
                 tree3.addItem(data);
                 AbstractSelect.AbstractSelectTargetDetails dropTargetData = (AbstractSelect.AbstractSelectTargetDetails) dropEvent
-                        .getDropTargetDetails();
+                        .getTargetDetails();
                 tree3.setParent(data, dropTargetData.getItemIdOver());
 
             }
@@ -166,7 +166,7 @@ public class DDTest2 extends TestBase {
                  * is from Tree and it contains itemIdOver.
                  */
                 AbstractSelectTargetDetails details = (AbstractSelectTargetDetails) event
-                        .getDropTargetDetails();
+                        .getTargetDetails();
                 Object idOver = details.getItemIdOver();
                 tree1.setParent(itemId, idOver);
 
@@ -191,7 +191,7 @@ public class DDTest2 extends TestBase {
         dropHandler = new DropHandler() {
             public void drop(DragAndDropEvent event) {
                 AbstractSelectTargetDetails details = (AbstractSelectTargetDetails) event
-                        .getDropTargetDetails();
+                        .getTargetDetails();
                 Transferable transferable = event.getTransferable();
 
                 if (transferable instanceof DataBoundTransferable) {
