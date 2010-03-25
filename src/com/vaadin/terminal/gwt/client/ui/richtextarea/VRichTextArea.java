@@ -197,6 +197,9 @@ public class VRichTextArea extends Composite implements Paintable, Field,
         } else {
             int editorHeight = getOffsetHeight() - getExtraVerticalPixels()
                     - formatter.getOffsetHeight();
+            if (editorHeight < 0) {
+                editorHeight = 0;
+            }
             rta.setHeight(editorHeight + "px");
         }
     }
