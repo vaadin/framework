@@ -24,7 +24,7 @@ public class VHtml5File extends JavaScriptObject {
 
     public native final int getSize()
     /*-{
-        return this.size;
+        return this.size ? this.size : 0;
     }-*/;
 
     public native final void readAsBinary(final Callback callback)
