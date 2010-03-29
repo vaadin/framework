@@ -162,7 +162,6 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
     private void buildCalendarBody() {
 
         final boolean showISOWeekNumbers = datefield.isShowISOWeekNumbers();
-        final int columns = 1 + 5;
         final int weekColumn = 0;
         final int firstWeekdayColumn = 1;
         final int headerRow = 0;
@@ -170,7 +169,7 @@ public class VCalendarPanel extends FlexTable implements MouseListener {
         setWidget(1, 0, days);
         setCellPadding(0);
         setCellSpacing(0);
-        getFlexCellFormatter().setColSpan(1, 0, columns);
+        getFlexCellFormatter().setColSpan(1, 0, 5);
         getFlexCellFormatter().setStyleName(1, 0,
                 VDateField.CLASSNAME + "-calendarpanel-body");
 
