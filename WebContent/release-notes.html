@@ -49,30 +49,40 @@ contains a number of significant enhancements.</p>
   
   <li>GWT 2.0</li>
   <ul>
+    <li>Platform independent and a new development mode.</li>
     <li>No more separate OOPHM - the GWT Development Mode uses a browser
 		plugin to allow debugging directly in the supported browsers</li>
-	<li>New customizable <b>RichTextAreaToolbar</b> in <b>RichTextArea</b> (<a href="http://dev.vaadin.com/ticket/4102">#4102</a>)</li>
   </ul>
-
+  
   <li>New protected <tt>attachField()</tt> method in <b>Form</b> allows customizing
       the form layout according to item identifier and object type.
-      For example, you could lay check boxes horizontally. (<a href="http://dev.vaadin.com/ticket/2205">#2205</a></li>
+      For example, you could lay check boxes horizontally. (<a href="http://dev.vaadin.com/ticket/2205">#2205</a>)</li>
       
-  <li>Easier shortcut key binding for field components by adding a <b>FocusShortcut</b> as a shortcut listener to a component with <tt>addShortcutListener()</tt> (<a href="http://dev.vaadin.com/ticket/875">#875</a>)</li>
+  <li><tt>Form</tt> no longer resets the field caption set by the <tt>FormFieldFactory</tt></li>
+      
+  <li>Easier shortcut key binding</li>
   <ul>
-    <li>Shortcuts can be scoped to a <b>Panel</b> by adding them with <tt>addAction()</tt> to the panel</li>
+  	<li>Bind shortcuts to directly to buttons by using <tt>setClickShortcut()</tt></li>
+  	<li>Bind field components by adding a <b>FocusShortcut</b> as a shortcut listener to a component with <tt>addShortcutListener()</tt></li>
+    <li>Shortcuts can be scoped to a <b>Panel,Window</b> or <b>Form</b> by adding them with <tt>addAction()</tt> to the component</li>
   </ul>
 
-  <li>Week numbers in <b>DateField</b>s (<a href="http://dev.vaadin.com/ticket/3492">#3492</a>)</li>
+  <li>ISO-8601 week numbers in <b>DateField</b>s (<a href="http://dev.vaadin.com/ticket/3492">#3492</a>)</li>
 
   <li>Customizable system messages to warn about disabled cookies</li>
   
-  <li>Methods for browser detection (<a href="http://dev.vaadin.com/ticket/3931">#3931</a>)</li>
+  <li>Methods for browser detection on server side (<a href="http://dev.vaadin.com/ticket/3931">#3931</a>)</li>
 
-  <li>Many bug fixes</li>
+  <li>Filtering support for <tt>HierarchicalContainer</tt></li>
+  
+  <li>ApplicationServlet provides timestamps for static resources to improve browser caching support</tt></li>
+  
+  <li>Portlet 2.0 <tt>PortletListener</tt> now includes the active <tt>Window</tt> in all methods for improved multi-window support in portlets (<a href="http://dev.vaadin.com/ticket/4188">#4188</a>)</li> 
+  
+  <li>Many bug fixes including many minor errorneous behavior fixes for containers</li>
 </ul>
 
-<p>See <a href="#changelog">Change Log</a></li> for a full list of closed tickets in this release.</p>
+<p>See <a href="#changelog">Change Log</a></li> for a full list of tickets fixed in this release.</p>
 
 <p>Problem fixes and enhancements planned for upcoming releases can be found from the <a
 href="http://dev.vaadin.com/roadmap">Vaadin Roadmap</a> in Vaadin Trac.</p>
@@ -193,7 +203,7 @@ some name prefixes, and some other details.</p>
 client-side widgets with Google Web Toolkit (GWT).</p>
 
 <ul>
-  <li>GWT 1.7 is required for compiling custom widgets (optional)</li>
+  <li>GWT 2.0 is required for compiling custom widgets (optional)</li>
   <ul>
     <li>You need to upgrade GWT</li>
     <li>The GWT Compiler class name has changed:</li>
@@ -320,8 +330,7 @@ under the Google App Engine.</p>
 
 	<li>Mac OS X Tiger (mac) or Leopard (leopard)</li>
 
-	<li>Other UNIX operating systems, such as Sun Solaris, using the installation package
-	for Linux.</li>
+	<li>Other UNIX operating systems, such as Sun Solaris</li>
 </ul>
 
 <p>Vaadin supports Java Servlet API 2.3 and later versions and should work with
@@ -345,11 +354,11 @@ it:</p>
 	<li>Internet Explorer releases 6, 7, and 8</li>
 	<li>Safari 3 and 4</li>
 	<li>Opera 10</li>
+	<li>Google Chrome (latest version)</li>
 </ul>
 
 <p>The support for browsers follows the support by GWT. The browsers are supported on both
-Windows and Mac, if available. Firefox is supported also on Linux (Opera 10a1 works also
-on Linux). There may be differences between the
+Windows and Mac, if available. Firefox is supported also on Linux. There may be differences between the
 exact versions of the supported browsers that may cause incompatibility with applications
 made with Vaadin.</p>
 
@@ -357,9 +366,9 @@ made with Vaadin.</p>
 work to a large degree:</p>
 
 <ul>
-	<li>Safari 2, and 4 beta</li>
+	<li>Safari 2</li>
 	<li>Firefox 2</li>
-    <li>Google Chrome 1.0.x (available only for Windows)</li>
+    <li>Older versions of Google Chrome</li>
 	<li>iPhone (firmware 2.2)</li>
     <li>Midori (0.1.2)</li>
 	<li>Epiphany (2.22.3), Galeon, and other Gecko-based browsers. Also WebKit-based Epiphany (2.22.3) works.</li>
