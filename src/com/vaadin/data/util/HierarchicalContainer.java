@@ -583,6 +583,10 @@ public class HierarchicalContainer extends IndexedContainer implements
     public void setIncludeParentsWhenFiltering(
             boolean includeParentsWhenFiltering) {
         this.includeParentsWhenFiltering = includeParentsWhenFiltering;
+        if (filteredRoots != null) {
+            // Currently filtered so needs to be re-filtered
+            doFilterContainer(true);
+        }
     }
 
     /*
