@@ -1724,8 +1724,7 @@ textarea.v-textarea-prompt {
 	color: #999;
 	font-style: italic;
 }
-.v-textfield.v-readonly,
-.v-textarea.v-readonly {
+.v-textfield-readonly {
 	background: transparent;
 	border: none;
 }

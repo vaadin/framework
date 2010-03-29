@@ -96,7 +96,7 @@ textarea.v-textarea-prompt {
 	color: #5f6366;
 }
 /* Readonly */
-input.v-textfield-readonly
+input.v-textfield-readonly,
 .black input.v-textfield-readonly {
 	border: none;
 	background: transparent;
