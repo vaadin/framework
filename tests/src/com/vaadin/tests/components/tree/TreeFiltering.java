@@ -44,11 +44,13 @@ public class TreeFiltering extends TestBase {
 
         final CheckBox filterType = new CheckBox(
                 "Include parent when filtering", true);
+        filterType.setImmediate(true);
         filterType.addListener(new ValueChangeListener() {
 
             public void valueChange(ValueChangeEvent event) {
                 cont.setIncludeParentsWhenFiltering(((CheckBox) event
                         .getProperty()).booleanValue());
+                ccTree.requestRepaint();
             }
         });
         addComponent(filterType);
