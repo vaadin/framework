@@ -1724,9 +1724,14 @@ textarea.v-textarea-prompt {
 	color: #999;
 	font-style: italic;
 }
-.v-textfield-readonly {
+input.v-textfield-readonly,
+textarea.v-textarea-readonly {
 	background: transparent;
 	border: none;
+}
+input.v-textfield-readonly:focus,
+textarea.v-textarea-readonly:focus {
+	outline: none;
 }
 /* Disabled by default
 .v-textarea-error,
@@ -4907,7 +4912,8 @@ textarea.v-textarea-prompt {
 	margin-bottom: 0;
 }
 /* Textfield on black background */
-.black .v-textfield {
+.black .v-textfield,
+.black .v-textarea {
 	border-color: #38393a;
 	border-top-color: #2c2d2e;
 	border-bottom-color: #3e3f3f;
@@ -4918,10 +4924,17 @@ textarea.v-textarea-prompt {
 	color: #c9ccce;
 	text-shadow: #000 0 0 1px;
 }
+.black .v-textarea {
+	background-image: none;
+}
 .v-app .black .v-textfield-focus,
 .v-window-black .v-textfield-focus,
 .v-window .black .v-textfield-focus,
-.v-popupview-popup .black .v-textfield-focus {
+.v-popupview-popup .black .v-textfield-focus,
+.v-app .black .v-textarea-focus,
+.v-window-black .v-textarea-focus,
+.v-window .black .v-textarea-focus,
+.v-popupview-popup .black .v-textarea-focus {
 	border-color: #4b7192;
 	border-top-color: #3b5a75;
 	border-bottom-color: #507596;
@@ -4931,7 +4944,9 @@ textarea.v-textarea-prompt {
 }
 /* Readonly */
 input.v-textfield-readonly,
-.black input.v-textfield-readonly {
+.black input.v-textfield-readonly,
+textarea.v-textarea-readonly,
+.black textarea.v-textarea-readonly {
 	border: none;
 	background: transparent;
 }
