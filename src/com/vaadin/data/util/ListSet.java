@@ -177,9 +177,6 @@ public class ListSet<E> extends ArrayList<E> {
             if (get(index) == element) {
                 // At the same position, nothing to be done
                 return element;
-            } else {
-                // At another position, cannot set
-                return null;
             }
         }
 
