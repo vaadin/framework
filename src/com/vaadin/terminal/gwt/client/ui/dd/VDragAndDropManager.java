@@ -9,6 +9,7 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Event;
@@ -41,10 +42,23 @@ public class VDragAndDropManager {
 
         public void onPreviewNativeEvent(NativePreviewEvent event) {
             NativeEvent nativeEvent = event.getNativeEvent();
+
+            int typeInt = event.getTypeInt();
+            if (typeInt == Event.ONKEYDOWN) {
+                int keyCode = event.getNativeEvent().getKeyCode();
+                if (keyCode == KeyCodes.KEY_ESCAPE) {
+                    // end drag if ESC is hit
+                    interruptDrag();
+                    event.cancel();
+                    event.getNativeEvent().preventDefault();
+                }
+                // no use for handling for any key down event
+                return;
+            }
+
             currentDrag.setCurrentGwtEvent(nativeEvent);
             updateDragImagePosition();
 
-            int typeInt = event.getTypeInt();
             Element targetElement = (Element) nativeEvent.getEventTarget()
                     .cast();
             if (dragElement != null && dragElement.isOrHasChild(targetElement)) {
@@ -385,21 +399,6 @@ public class VDragAndDropManager {
         return currentDrag;
     }
 
-    public void interruptDrag() {
-        if (currentDrag != null) {
-            ApplicationConnection.getConsole()
-                    .log("Drag operation interrupted");
-            if (currentDropHandler != null) {
-                currentDrag.setCurrentGwtEvent(null);
-                currentDropHandler.dragLeave(currentDrag);
-                currentDropHandler = null;
-                serverCallback = null;
-                visitId = -1; // ignore possibly on going server check
-            }
-            currentDrag = null;
-        }
-    }
-
     private void updateDragImagePosition() {
         if (currentDrag.getCurrentGwtEvent() != null && dragElement != null) {
             Style style = dragElement.getStyle();
@@ -452,20 +451,43 @@ public class VDragAndDropManager {
 
     }
 
+    /**
+     * Drag is ended (drop happened) on current drop handler. Calls drop method
+     * on current drop handler and does appropriate cleanup.
+     */
     public void endDrag() {
+        endDrag(true);
+    }
+
+    /**
+     * The drag and drop operation is ended, but drop did not happen. If
+     * operation is currently on a drop handler, its dragLeave method is called
+     * and appropriate cleanup happens.
+     */
+    public void interruptDrag() {
+        endDrag(false);
+    }
+
+    private void endDrag(boolean doDrop) {
         if (handlerRegistration != null) {
             handlerRegistration.removeHandler();
             handlerRegistration = null;
         }
         if (currentDropHandler != null) {
-            // we have dropped on a drop target
-            boolean sendTransferableToServer = currentDropHandler
-                    .drop(currentDrag);
-            if (sendTransferableToServer) {
-                doRequest(DragEventType.DROP);
+            if (doDrop) {
+                // we have dropped on a drop target
+                boolean sendTransferableToServer = currentDropHandler
+                        .drop(currentDrag);
+                if (sendTransferableToServer) {
+                    doRequest(DragEventType.DROP);
+                }
+            } else {
+                currentDrag.setCurrentGwtEvent(null);
+                currentDropHandler.dragLeave(currentDrag);
             }
             currentDropHandler = null;
             serverCallback = null;
+            visitId = -1; // ignore possibly on going server check
 
         }
 
