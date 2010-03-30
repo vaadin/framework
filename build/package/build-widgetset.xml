@@ -34,7 +34,7 @@ See configure target to adjust this buildfile.
 		<property name="gwt-location" value="${base}gwt" />
 		
 		<!-- where Vaadin jar is located -->
-		<property name="toolkit-jar-location" value="${base}WebContent/WEB-INF/lib/vaadin-@version@.jar" />
+		<property name="vaadin-jar-location" value="${base}WebContent/WEB-INF/lib/vaadin-@version@.jar" />
 		
 		<!-- where project client-side widgetset source files are located -->
 		<property name="src-location" value="${base}WebContent/WEB-INF/src" />
@@ -86,14 +86,14 @@ See configure target to adjust this buildfile.
 		<echo>Requirements for classpath:</echo>
 		<echo>  ${gwt-location}/gwt-dev.jar</echo>
 		<echo>  ${gwt-location}/gwt-user.jar</echo>
-		<echo>  ${toolkit-jar-location}</echo>
+		<echo>  ${vaadin-jar-location}</echo>
 		<echo>  ${src-location}</echo>
 		<echo>Output will be written into ${client-side-destination}</echo>
 
 		<!-- Check that files exist -->
 		<fail message="Some of the required files (listed above) are missing.">
 			<condition><not><resourcecount count="3">
-				<filelist files="${gwt-location}/gwt-dev.jar,${gwt-location}/gwt-user.jar,${toolkit-jar-location}"/>
+				<filelist files="${gwt-location}/gwt-dev.jar,${gwt-location}/gwt-user.jar,${vaadin-jar-location}"/>
 			</resourcecount></not></condition>
 		</fail>
 
@@ -103,7 +103,7 @@ See configure target to adjust this buildfile.
 			<!-- The source location must be first, as required by generate-widgetset. -->
             <pathelement path="${src-location}" />
 			<pathelement path="${server-side-destination}" />
-			<pathelement path="${toolkit-jar-location}" />
+			<pathelement path="${vaadin-jar-location}" />
 			<pathelement path="${gwt-location}/gwt-user.jar" />
 			<pathelement path="${gwt-location}/gwt-dev.jar" />
 		    <fileset dir="${base}WebContent/WEB-INF/lib/">
