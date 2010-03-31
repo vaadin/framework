@@ -325,9 +325,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     .getIntAttribute("firstrow"), uidl.getIntAttribute("rows"));
             bodyContainer.add(scrollBody);
             initialContentReceived = true;
-            ApplicationConnection.getConsole().log("foo");
             if (isAttached()) {
-                ApplicationConnection.getConsole().log("bar");
                 sizeInit();
             }
             scrollBody.restoreRowVisibility();
@@ -1938,13 +1936,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 reactLastRow = totalRows - 1;
             }
             if (lastRendered < reactLastRow) {
-                ApplicationConnection.getConsole().log("GET BELOW");
                 // get some cache rows below visible area
                 rowRequestHandler.setReqFirstRow(lastRendered + 1);
                 rowRequestHandler.setReqRows(reactLastRow - lastRendered);
                 rowRequestHandler.deferRowFetch(1);
             } else if (scrollBody.getFirstRendered() > reactFirstRow) {
-                ApplicationConnection.getConsole().log("GET ABOVE");
                 /*
                  * Branch for fetching cache above visible area.
                  * 
