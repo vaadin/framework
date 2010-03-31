@@ -476,6 +476,8 @@ public class VSplitPanel extends ComplexPanel implements Container,
                 pos = getOffsetWidth();
             }
             position = pos / getOffsetWidth() * 100 + "%";
+        } else {
+            position = newX + "px";
         }
 
         setSplitPosition(newX + "px");
@@ -502,6 +504,8 @@ public class VSplitPanel extends ComplexPanel implements Container,
                 pos = getOffsetHeight();
             }
             position = pos / getOffsetHeight() * 100 + "%";
+        } else {
+            position = newY + "px";
         }
 
         setSplitPosition(newY + "px");
