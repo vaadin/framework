@@ -311,6 +311,25 @@ public class SplitPanel extends AbstractLayout {
     }
 
     /**
+     * Returns the current position of the splitter, in
+     * {@link #getSplitPositionUnit()} units.
+     * 
+     * @return position of the splitter
+     */
+    public int getSplitPosition() {
+        return pos;
+    }
+
+    /**
+     * Returns the unit of position of the splitter
+     * 
+     * @return unit of position of the splitter
+     */
+    public int getSplitPositionUnit() {
+        return posUnit;
+    }
+
+    /**
      * Moves the position of the splitter.
      * 
      * @param pos
