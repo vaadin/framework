@@ -16,6 +16,8 @@
 
 @import url(layouts/cssexample.css);
 
+@import url(layouts/absoluteexample.css);
+
 @import url(table/styles.css);
 
 @import url(misc/item-styles.css);
