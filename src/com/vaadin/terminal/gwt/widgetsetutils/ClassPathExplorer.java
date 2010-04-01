@@ -310,8 +310,12 @@ public class ClassPathExplorer {
         for (int i = 0; i < dirs.length; i++) {
             try {
                 // add the present directory
-                locations.put(new URL("file://" + dirs[i].getCanonicalPath()),
-                        name + dirs[i].getName());
+                if (!dirs[i].isHidden()
+                        && !dirs[i].getPath().contains(File.separator + ".")) {
+                    locations.put(new URL("file://"
+                            + dirs[i].getCanonicalPath()), name
+                            + dirs[i].getName());
+                }
             } catch (Exception ioe) {
                 return;
             }
