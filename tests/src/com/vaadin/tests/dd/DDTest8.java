@@ -25,11 +25,10 @@ public class DDTest8 extends TestBase {
     @Override
     protected void setup() {
         final Tree t = new Tree(
-                "Tree with criteria from AbstractSelect (OverItem, ContainsItem). Foo can be dragged anywhere, anything can be dropped on Foo or Bar.");
+                "Tree with criteria from AbstractSelect (OverItem, ContainsItem). Foo can be dragged anywhere, anything can be dropped on Foo or Bar. Bar5 subtree is also valid drop target.");
 
         final HierarchicalContainer idx = new HierarchicalContainer();
         t.setContainerDataSource(idx);
-        t.setDebugId("perseys");
         t.addItem("Foo");
         t.addItem("Bar");
         t.addItem("Bar1");
@@ -149,7 +148,9 @@ public class DDTest8 extends TestBase {
 
             public AcceptCriterion getAcceptCriterion() {
                 return new Or(new AbstractSelect.TargetItemIs(t, "Foo", "Bar"),
-                        new AbstractSelect.AcceptItem(t, "Foo"));
+                        new AbstractSelect.AcceptItem(t, "Foo"),
+                        t.new TargetInSubtree("Bar5") //
+                );
             }
 
         };
