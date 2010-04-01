@@ -585,7 +585,7 @@ public class Util {
                         if (scrolltop == 0) {
                             // mysterious are the ways of webkits scrollbar
                             // handling. In some cases webkit reports bad (0)
-                            // scrolltop before hiding the elment temporary,
+                            // scrolltop before hiding the element temporary,
                             // sometimes after.
                             scrollvalue = elem.getScrollTop();
                         }
