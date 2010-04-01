@@ -13,7 +13,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
-import com.vaadin.Application;
 import com.vaadin.data.Buffered;
 import com.vaadin.data.Property;
 import com.vaadin.data.Validatable;
@@ -58,8 +57,6 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         Property.ReadOnlyStatusChangeNotifier, Action.ShortcutNotifier {
 
     /* Private members */
-
-    private boolean delayedFocus;
 
     /**
      * Value of the abstract field.
@@ -978,19 +975,12 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.Component.Focusable#focus()
+    /**
+     * {@inheritDoc}
      */
+    @Override
     public void focus() {
-        final Application app = getApplication();
-        if (app != null) {
-            getWindow().setFocusedComponent(this);
-            delayedFocus = false;
-        } else {
-            delayedFocus = true;
-        }
+        super.focus();
     }
 
     /**
@@ -1069,9 +1059,6 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     @Override
     public void attach() {
         super.attach();
-        if (delayedFocus) {
-            focus();
-        }
         if (actionManager != null) {
             actionManager.setViewer(getWindow());
         }

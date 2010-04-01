@@ -63,8 +63,6 @@ import com.vaadin.terminal.gwt.client.ui.VUpload;
 @ClientWidget(VUpload.class)
 public class Upload extends AbstractComponent implements Component.Focusable {
 
-    private boolean delayedFocus;
-
     /**
      * Upload buffer size.
      */
@@ -859,19 +857,12 @@ public class Upload extends AbstractComponent implements Component.Focusable {
         this.receiver = receiver;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.Component.Focusable#focus()
+    /**
+     * {@inheritDoc}
      */
+    @Override
     public void focus() {
-        final Application app = getApplication();
-        if (app != null) {
-            getWindow().setFocusedComponent(this);
-            delayedFocus = false;
-        } else {
-            delayedFocus = true;
-        }
+        super.focus();
     }
 
     /**
@@ -1022,19 +1013,6 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      */
     public void setButtonCaption(String buttonCaption) {
         this.buttonCaption = buttonCaption;
-    }
-
-    /**
-     * Notifies the component that it is connected to an application.
-     * 
-     * @see com.vaadin.ui.Component#attach()
-     */
-    @Override
-    public void attach() {
-        super.attach();
-        if (delayedFocus) {
-            focus();
-        }
     }
 
 }

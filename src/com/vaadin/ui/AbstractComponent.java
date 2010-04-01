@@ -117,6 +117,11 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     private Locale locale;
 
     /**
+     * The component should receive focus (if {@link Focusable}) when attached.
+     */
+    private boolean delayedFocus;
+
+    /**
      * List of repaint request listeners or null if not listened at all.
      */
     private LinkedList<RepaintRequestListener> repaintRequestListeners = null;
@@ -628,6 +633,9 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      */
     public void attach() {
         requestRepaint();
+        if (delayedFocus) {
+            focus();
+        }
     }
 
     /*
@@ -635,6 +643,21 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * we use the default documentation from implemented interface.
      */
     public void detach() {
+    }
+
+    /**
+     * Sets the focus for this component if the component is {@link Focusable}.
+     */
+    protected void focus() {
+        if (this instanceof Focusable) {
+            final Application app = getApplication();
+            if (app != null) {
+                getWindow().setFocusedComponent((Focusable) this);
+                delayedFocus = false;
+            } else {
+                delayedFocus = true;
+            }
+        }
     }
 
     /*
