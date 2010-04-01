@@ -376,8 +376,7 @@ public class ClassPathExplorer {
                         JarEntry entry = e.nextElement();
                         String entryname = entry.getName();
                         if (!entry.isDirectory()
-                                && entryname.endsWith(".class")
-                                && !entryname.contains("$")) {
+                                && entryname.endsWith(".class")) {
                             String classname = entryname.substring(0, entryname
                                     .length() - 6);
                             if (classname.startsWith("/")) {
