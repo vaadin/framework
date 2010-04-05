@@ -1,35 +1,14 @@
-See documentation on build.xml how product is build.
+How to build Vaadin Framework
+=============================
 
-How to build packages
-=====================
+Building the distribution packages is as easy as running ant without 
+parameters in this directory. While as official packages will be built
+with Java 1.5, you can force build with 1.6 by adding the option 
+-Dignoreversion=1
 
-1. See build/GWT-VERSION.properties file
-- states the GWT version used within this project
+Some of the most common targets to build:
+- Distribution ZIP-file will be built with target package-zip
+- Distribution JAR-file will be built with target package-jar
+- Demo package will be built with target package-war
 
-2. Checkout correct GWT distribution version for your platform from http://dev.vaadin.com/svn/gwt/
-- note, you have to checkout GWT for all platforms when doing release builds
-
-3. Extract or link GWT distribution under build/gwt/<platform> directory / directories
-- <platform> = linux|windows|mac
-
-4. Run ant package-<platform> in build directory
-
-5. Enjoy build/result/vaadin-<platform>-<version>.tar.gz
-
-
-
-Complete example for building from scratch
-==========================================
-This is run in an empty directory on Ubuntu 8.10 to checkout sources from svn and
-to build a complete Vaadin package.
-
-svn co http://dev.vaadin.com/svn/trunk/
-svn co http://dev.vaadin.com/svn/gwt/
-cd gwt
-tar xfj gwt-linux-1.5.3.tar.bz2
-cd ../trunk/build
-mkdir gwt
-cd gwt
-ln -sf ../../../gwt/gwt-linux-1.5.3 linux
-cd ..
-ant package-linux
+For more detailed info, see build.xml

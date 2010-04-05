@@ -5,17 +5,6 @@
          name="Vaadin"
          basedir="../" default="package-all">
 
-    <!-- Package creation - - - - - - - - - - - - - - - - - - - - - - - - -
-
-    When creating release use only "package-*" targets:
-    package-all
-     * creates the release package, a war, and a Liferay war
-     
-    In addition, the OOPHM package has the following target for building:
-    package-oophm
-     * vaadin-oophm-<version>.zip
-    -->
-
     <!--Call one of package-* targets unless you understand what you are doing. -->
     <target name="package-all" depends="clean-all, package-init, init, build, docs, internal-package-zip, internal-package-war, internal-package-liferay" description="Build public packages.">
     </target>
