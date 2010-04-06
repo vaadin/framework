@@ -18,6 +18,8 @@
 
 @import url(layouts/absoluteexample.css);
 
+@import url(layouts/clickableexample.css);
+
 @import url(table/styles.css);
 
 @import url(misc/item-styles.css);
