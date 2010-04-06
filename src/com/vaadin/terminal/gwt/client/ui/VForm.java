@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -23,7 +24,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VErrorMessage;
 
-public class VForm extends ComplexPanel implements Container {
+public class VForm extends ComplexPanel implements Container, KeyDownHandler {
 
     protected String id;
 
@@ -59,6 +60,8 @@ public class VForm extends ComplexPanel implements Container {
 
     ShortcutActionHandler shortcutHandler;
 
+    private HandlerRegistration keyDownRegistration;
+
     public VForm() {
         setElement(DOM.createDiv());
         DOM.appendChild(getElement(), fieldSet);
@@ -76,14 +79,6 @@ public class VForm extends ComplexPanel implements Container {
         errorMessage.setStyleName(CLASSNAME + "-errormessage");
         DOM.appendChild(fieldSet, errorMessage.getElement());
         DOM.appendChild(fieldSet, footerContainer);
-
-        addDomHandler(new KeyDownHandler() {
-            public void onKeyDown(KeyDownEvent event) {
-                shortcutHandler.handleKeyboardEvent(Event.as(event
-                        .getNativeEvent()));
-                return;
-            }
-        }, KeyDownEvent.getType());
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -181,16 +176,19 @@ public class VForm extends ComplexPanel implements Container {
 
         // We may have actions attached
         if (uidl.getChildCount() > 1) {
-            final int cnt = uidl.getChildCount();
-            for (int i = 1; i < cnt; i++) {
-                UIDL childUidl = uidl.getChildUIDL(i);
-                if (childUidl.getTag().equals("actions")) {
-                    if (shortcutHandler == null) {
-                        shortcutHandler = new ShortcutActionHandler(id, client);
-                    }
-                    shortcutHandler.updateActionMap(childUidl);
+            UIDL childUidl = uidl.getChildByTagName("actions");
+            if (childUidl != null) {
+                if (shortcutHandler == null) {
+                    shortcutHandler = new ShortcutActionHandler(id, client);
+                    keyDownRegistration = addDomHandler(this, KeyDownEvent
+                            .getType());
                 }
+                shortcutHandler.updateActionMap(childUidl);
             }
+        } else if (shortcutHandler != null) {
+            keyDownRegistration.removeHandler();
+            shortcutHandler = null;
+            keyDownRegistration = null;
         }
 
         rendering = false;
@@ -314,5 +312,9 @@ public class VForm extends ComplexPanel implements Container {
             // Width might affect height
             Util.updateRelativeChildrenAndSendSizeUpdateEvent(client, this);
         }
+    }
+
+    public void onKeyDown(KeyDownEvent event) {
+        shortcutHandler.handleKeyboardEvent(Event.as(event.getNativeEvent()));
     }
 }
