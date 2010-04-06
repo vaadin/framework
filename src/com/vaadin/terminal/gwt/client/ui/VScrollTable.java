@@ -15,9 +15,13 @@ import java.util.Set;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
+import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
@@ -827,31 +831,24 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private void announceScrollPosition() {
         if (scrollPositionElement == null) {
             scrollPositionElement = DOM.createDiv();
-            DOM.setElementProperty(scrollPositionElement, "className",
-                    CLASSNAME + "-scrollposition");
-            DOM
-                    .setStyleAttribute(scrollPositionElement, "position",
-                            "absolute");
-            DOM.appendChild(getElement(), scrollPositionElement);
+            scrollPositionElement.setClassName(CLASSNAME + "-scrollposition");
+            scrollPositionElement.getStyle().setPosition(Position.ABSOLUTE);
+            scrollPositionElement.getStyle().setDisplay(Display.NONE);
+            getElement().appendChild(scrollPositionElement);
         }
 
-        DOM.setStyleAttribute(scrollPositionElement, "marginLeft", (DOM
-                .getElementPropertyInt(getElement(), "offsetWidth") / 2 - 80)
-                + "px");
-        DOM.setStyleAttribute(scrollPositionElement, "marginTop", -(DOM
-                .getElementPropertyInt(bodyContainer.getElement(),
-                        "offsetHeight"))
-                + "px");
+        Style style = scrollPositionElement.getStyle();
+        style.setMarginLeft(getElement().getOffsetWidth() / 2 - 80, Unit.PX);
+        style.setMarginTop(-bodyContainer.getOffsetHeight(), Unit.PX);
 
         // indexes go from 1-totalRows, as rowheaders in index-mode indicate
         int last = (firstRowInViewPort + pageLength);
         if (last > totalRows) {
             last = totalRows;
         }
-        DOM.setInnerHTML(scrollPositionElement, "<span>"
-                + (firstRowInViewPort + 1) + " &ndash; " + (last) + "..."
-                + "</span>");
-        DOM.setStyleAttribute(scrollPositionElement, "display", "block");
+        scrollPositionElement.setInnerHTML("<span>" + (firstRowInViewPort + 1)
+                + " &ndash; " + (last) + "..." + "</span>");
+        style.setDisplay(Display.BLOCK);
     }
 
     private void hideScrollPositionAnnotation() {
