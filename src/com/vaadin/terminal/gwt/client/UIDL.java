@@ -461,6 +461,7 @@ public final class UIDL extends JavaScriptObject {
     /**
      * @deprecated should not be used anymore
      */
+    @Deprecated
     public final static class XML extends JavaScriptObject {
         protected XML() {
         }
@@ -530,6 +531,20 @@ public final class UIDL extends JavaScriptObject {
     public Paintable getPaintableVariable(String name,
             ApplicationConnection connection) {
         return connection.getPaintable(getStringVariable(name));
+    }
+
+    public UIDL getChildByTagName(String tagName) {
+        Iterator<Object> childIterator = getChildIterator();
+        while (childIterator.hasNext()) {
+            Object next = childIterator.next();
+            if (next instanceof UIDL) {
+                UIDL childUIDL = (UIDL) next;
+                if (childUIDL.getTag().equals(tagName)) {
+                    return childUIDL;
+                }
+            }
+        }
+        return null;
     }
 
 }
