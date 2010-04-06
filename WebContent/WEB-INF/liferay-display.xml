@@ -23,5 +23,6 @@
 				<portlet id="VaadinInterPortletEventPortlet" />
 				-->
                 <portlet id="Portlet Mode Example"/>
+                <portlet id="Portlet HTML Mode Example"/>
         </category>
 </display>

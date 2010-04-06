@@ -206,6 +206,23 @@
 		</portlet-info>
 	</portlet>
 
+    <portlet>
+        <portlet-name>Portlet HTML Mode Example</portlet-name>
+        <display-name>Portlet HTML Mode Example</display-name>
+        <portlet-class>com.vaadin.demo.portlet.HtmlModePortlet</portlet-class>
+
+        <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>view</portlet-mode>
+            <portlet-mode>help</portlet-mode>
+        </supports>
+        
+        <portlet-info>
+            <title>Portlet HTML Mode Example</title>
+            <short-title>Portlet HTML Mode Example</short-title>
+        </portlet-info>
+    </portlet>
+
 	<portlet>
 		<portlet-name>AddressBookPortlet</portlet-name>
 		<display-name>Address Book</display-name>
