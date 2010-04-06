@@ -1,14 +1,14 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.Application;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class TableExtraScrollbars extends Application {
+public class TableExtraScrollbars extends AbstractTestCase {
 
     private static int PROPS = 15;
     private static int ROWS = 1000;
@@ -47,5 +47,15 @@ public class TableExtraScrollbars extends Application {
             }
         }
         return container;
+    }
+
+    @Override
+    protected String getDescription() {
+        return "Scrolling down in the table should not add extra scrollbars";
+    }
+
+    @Override
+    protected Integer getTicketNumber() {
+        return 4489;
     }
 }
