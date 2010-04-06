@@ -182,7 +182,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
     private boolean productionMode = false;
 
-    private String resourcePath = null;
+    private final String resourcePath = null;
+
+    private int resourceCacheTime = 3600;
 
     /**
      * Called by the servlet container to indicate to a servlet that the servlet
@@ -220,6 +222,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         }
         checkProductionMode();
         checkCrossSiteProtection();
+        checkResourceCacheTime();
     }
 
     private void checkCrossSiteProtection() {
@@ -252,6 +255,19 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             System.err.println(NOT_PRODUCTION_MODE_INFO);
         }
 
+    }
+
+    private void checkResourceCacheTime() {
+        // Check if the browser caching time has been set in web.xml
+        try {
+            String rct = getApplicationOrSystemProperty(
+                    SERVLET_PARAMETER_RESOURCE_CACHE_TIME, "3600");
+            resourceCacheTime = Integer.parseInt(rct);
+        } catch (NumberFormatException nfe) {
+            // Default is 1h
+            resourceCacheTime = 3600;
+            System.err.println(WARNING_RESOURCE_CACHING_TIME_NOT_NUMERIC);
+        }
     }
 
     /**
@@ -341,6 +357,16 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      */
     public boolean isProductionMode() {
         return productionMode;
+    }
+
+    /**
+     * Returns the amount of milliseconds the browser should cache a file.
+     * Default is 1 hour (3600 ms).
+     * 
+     * @return The amount of milliseconds files are cached in the browser
+     */
+    public int getResourceCacheTime() {
+        return resourceCacheTime;
     }
 
     /**
@@ -1181,9 +1207,12 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
              * the file has changed. This forces browsers to fetch a new version
              * when the Vaadin version is updated. This will cause more requests
              * to the servlet than without this but for high volume sites the
-             * static files should never be served through the servlet.
+             * static files should never be served through the servlet. The
+             * cache timeout can be configured by setting the resourceCacheTime
+             * parameter in web.xml
              */
-            response.setHeader("Cache-Control", "max-age: 3600");
+            response.setHeader("Cache-Control", "max-age: "
+                    + String.valueOf(resourceCacheTime));
         }
 
         // Write the resource to the client.

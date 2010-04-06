@@ -19,6 +19,11 @@
 		<param-value>false</param-value>
 		<description>Vaadin production mode</description>
 	</context-param>
+	
+	<context-param>
+		<param-name>resourceCacheTime</param-name>
+		<param-value>3600</param-value>	
+	</context-param>
 
 	<servlet>
 		<servlet-name>VaadinApplicationRunner</servlet-name>

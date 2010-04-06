@@ -23,6 +23,12 @@ public interface Constants {
             + "WARNING: Cross-site request forgery protection is disabled!\n"
             + "===========================================================";
 
+    static final String WARNING_RESOURCE_CACHING_TIME_NOT_NUMERIC = ""
+            + "===========================================================\n"
+            + "WARNING: resourceCacheTime has been set to a non integer value "
+            + "in web.xml. The default of 1h will be used.\n"
+            + "===========================================================";
+
     static final String URL_PARAMETER_RESTART_APPLICATION = "restartApplication";
     static final String URL_PARAMETER_CLOSE_APPLICATION = "closeApplication";
     static final String URL_PARAMETER_REPAINT_ALL = "repaintAll";
@@ -31,6 +37,7 @@ public interface Constants {
     static final String SERVLET_PARAMETER_DEBUG = "Debug";
     static final String SERVLET_PARAMETER_PRODUCTION_MODE = "productionMode";
     static final String SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION = "disable-xsrf-protection";
+    static final String SERVLET_PARAMETER_RESOURCE_CACHE_TIME = "resourceCacheTime";
 
     // Configurable parameter names
     static final String PARAMETER_VAADIN_RESOURCES = "Resources";
