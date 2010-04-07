@@ -210,4 +210,19 @@ public class WebBrowser implements Terminal {
 
         return browserDetails.getBrowserMajorVersion();
     }
+
+    /**
+     * Gets the minor version of the browser the user is using.
+     * 
+     * @see #getBrowserMajorVersion()
+     * 
+     * @return The minor version of the browser or -1 if not known.
+     */
+    public int getBrowserMinorVersion() {
+        if (browserDetails == null) {
+            return -1;
+        }
+
+        return browserDetails.getBrowserMinorVersion();
+    }
 }
