@@ -16,7 +16,7 @@ public class BrowserUserAgentParser extends TestCase {
     private static final String IE8_IN_IE7_MODE = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Trident/4.0; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; InfoPath.2)";
 
     // "Version/" was added in 10.00
-    private static final String OPERA960 = "Opera/9.64(Windows NT 5.1; U; en) Presto/2.1.1";
+    private static final String OPERA964 = "Opera/9.64(Windows NT 5.1; U; en) Presto/2.1.1";
     private static final String OPERA1010 = "Opera/9.80 (Windows NT 5.1; U; en) Presto/2.2.15 Version/10.10";
     private static final String OPERA1050 = "Opera/9.80 (Windows NT 5.1; U; en) Presto/2.5.22 Version/10.50";
 
@@ -31,6 +31,7 @@ public class BrowserUserAgentParser extends TestCase {
         assertWebKit(bd);
         assertSafari(bd);
         assertBrowserMajorVersion(bd, 3);
+        assertBrowserMinorVersion(bd, 2);
         assertEngineVersion(bd, 525.0f);
     }
 
@@ -39,6 +40,7 @@ public class BrowserUserAgentParser extends TestCase {
         assertWebKit(bd);
         assertSafari(bd);
         assertBrowserMajorVersion(bd, 4);
+        assertBrowserMinorVersion(bd, 0);
         assertEngineVersion(bd, 531f);
     }
 
@@ -47,6 +49,7 @@ public class BrowserUserAgentParser extends TestCase {
         assertWebKit(bd);
         assertChrome(bd);
         assertBrowserMajorVersion(bd, 3);
+        assertBrowserMinorVersion(bd, 0);
         assertEngineVersion(bd, 532.0f);
     }
 
@@ -55,6 +58,7 @@ public class BrowserUserAgentParser extends TestCase {
         assertWebKit(bd);
         assertChrome(bd);
         assertBrowserMajorVersion(bd, 4);
+        assertBrowserMinorVersion(bd, 0);
         assertEngineVersion(bd, 532f);
     }
 
@@ -63,6 +67,7 @@ public class BrowserUserAgentParser extends TestCase {
         assertGecko(bd);
         assertFirefox(bd);
         assertBrowserMajorVersion(bd, 3);
+        assertBrowserMinorVersion(bd, 0);
         assertEngineVersion(bd, 1.9f);
     }
 
@@ -71,6 +76,7 @@ public class BrowserUserAgentParser extends TestCase {
         assertGecko(bd);
         assertFirefox(bd);
         assertBrowserMajorVersion(bd, 3);
+        assertBrowserMinorVersion(bd, 5);
         assertEngineVersion(bd, 1.9f);
     }
 
@@ -79,14 +85,16 @@ public class BrowserUserAgentParser extends TestCase {
         assertGecko(bd);
         assertFirefox(bd);
         assertBrowserMajorVersion(bd, 3);
+        assertBrowserMinorVersion(bd, 6);
         assertEngineVersion(bd, 1.9f);
     }
 
-    public void testOpera960() {
-        VBrowserDetails bd = new VBrowserDetails(OPERA960);
+    public void testOpera964() {
+        VBrowserDetails bd = new VBrowserDetails(OPERA964);
         assertPresto(bd);
         assertOpera(bd);
         assertBrowserMajorVersion(bd, 9);
+        assertBrowserMinorVersion(bd, 64);
     }
 
     public void testOpera1010() {
@@ -94,6 +102,7 @@ public class BrowserUserAgentParser extends TestCase {
         assertPresto(bd);
         assertOpera(bd);
         assertBrowserMajorVersion(bd, 10);
+        assertBrowserMinorVersion(bd, 10);
     }
 
     public void testOpera1050() {
@@ -101,6 +110,7 @@ public class BrowserUserAgentParser extends TestCase {
         assertPresto(bd);
         assertOpera(bd);
         assertBrowserMajorVersion(bd, 10);
+        assertBrowserMinorVersion(bd, 50);
     }
 
     public void testIE6() {
@@ -108,6 +118,7 @@ public class BrowserUserAgentParser extends TestCase {
         // assertTrident(bd);
         assertIE(bd);
         assertBrowserMajorVersion(bd, 6);
+        assertBrowserMinorVersion(bd, 0);
     }
 
     public void testIE7() {
@@ -115,6 +126,7 @@ public class BrowserUserAgentParser extends TestCase {
         // assertTrident(bd);
         assertIE(bd);
         assertBrowserMajorVersion(bd, 7);
+        assertBrowserMinorVersion(bd, 0);
     }
 
     public void testIE8() {
@@ -122,6 +134,7 @@ public class BrowserUserAgentParser extends TestCase {
         // assertTrident(bd);
         assertIE(bd);
         assertBrowserMajorVersion(bd, 8);
+        assertBrowserMinorVersion(bd, 0);
     }
 
     public void testIE8CompatibilityMode() {
@@ -131,6 +144,7 @@ public class BrowserUserAgentParser extends TestCase {
         // assertTrident(bd);
         assertIE(bd);
         assertBrowserMajorVersion(bd, 7);
+        assertBrowserMinorVersion(bd, 0);
     }
 
     /*
@@ -146,6 +160,12 @@ public class BrowserUserAgentParser extends TestCase {
     private void assertBrowserMajorVersion(VBrowserDetails browserDetails,
             int version) {
         assertEquals(version, browserDetails.getBrowserMajorVersion());
+
+    }
+
+    private void assertBrowserMinorVersion(VBrowserDetails browserDetails,
+            int version) {
+        assertEquals(version, browserDetails.getBrowserMinorVersion());
 
     }
 

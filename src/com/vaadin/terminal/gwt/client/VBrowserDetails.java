@@ -27,6 +27,7 @@ public class VBrowserDetails implements Serializable {
 
     private float browserEngineVersion = -1;
     private int browserMajorVersion = -1;
+    private int browserMinorVersion = -1;
 
     /**
      * Create an instance based on the given user agent.
@@ -68,20 +69,16 @@ public class VBrowserDetails implements Serializable {
                     .indexOf("msie ") + 5);
             ieVersionString = ieVersionString.substring(0, ieVersionString
                     .indexOf(";"));
-            // FIXME parseInt
-            browserMajorVersion = (int) Float.parseFloat(ieVersionString);
+            parseVersionString(ieVersionString);
         } else if (isFirefox) {
             int i = userAgent.indexOf(" firefox/") + 9;
-            browserMajorVersion = Integer.parseInt(userAgent
-                    .substring(i, i + 1));
+            parseVersionString(userAgent.substring(i, i + 5));
         } else if (isChrome) {
             int i = userAgent.indexOf(" chrome/") + 8;
-            browserMajorVersion = Integer.parseInt(userAgent
-                    .substring(i, i + 1));
+            parseVersionString(userAgent.substring(i, i + 5));
         } else if (isSafari) {
             int i = userAgent.indexOf(" version/") + 9;
-            browserMajorVersion = Integer.parseInt(userAgent
-                    .substring(i, i + 1));
+            parseVersionString(userAgent.substring(i, i + 5));
         } else if (isOpera) {
             int i = userAgent.indexOf(" version/");
             if (i != -1) {
@@ -90,11 +87,24 @@ public class VBrowserDetails implements Serializable {
             } else {
                 i = userAgent.indexOf("opera/") + 6;
             }
-
-            browserMajorVersion = Integer.parseInt(userAgent
-                    .substring(i, i + 2).replace(".", ""));
+            parseVersionString(userAgent.substring(i, i + 5));
         }
 
+    }
+
+    private void parseVersionString(String versionString) {
+        int idx = versionString.indexOf('.');
+        int idx2 = versionString.indexOf('.', idx + 1);
+        if (idx2 < 0) {
+            idx2 = versionString.length();
+        }
+        browserMajorVersion = Integer.parseInt(versionString.substring(0, idx));
+        try {
+            browserMinorVersion = Integer.parseInt(versionString.substring(
+                    idx + 1, idx2).replaceAll("[^0-9].*", ""));
+        } catch (NumberFormatException e) {
+            // leave the minor version unmodified (-1 = unknown)
+        }
     }
 
     /**
@@ -194,6 +204,17 @@ public class VBrowserDetails implements Serializable {
     }
 
     /**
+     * Returns the browser minor version e.g., 5 for Firefox 3.5.
+     * 
+     * @see #getBrowserMajorVersion()
+     * 
+     * @return The minor version of the browser, or -1 if not known/parsed.
+     */
+    public final int getBrowserMinorVersion() {
+        return browserMinorVersion;
+    }
+
+    /**
      * Marks that IE8 is used in compatibility mode. This forces the browser
      * version to 7 even if it otherwise was detected as 8.
      * 
@@ -201,7 +222,7 @@ public class VBrowserDetails implements Serializable {
     public void setIE8InCompatibilityMode() {
         if (isIE && browserMajorVersion == 8) {
             browserMajorVersion = 7;
+            browserMinorVersion = 0;
         }
     }
-
 }

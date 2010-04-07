@@ -63,10 +63,10 @@ public class BrowserInfo {
 
     /**
      * Returns a string representing the browser in use, for use in CSS
-     * classnames. The classnames will be space separated abbrevitaions,
+     * classnames. The classnames will be space separated abbreviations,
      * optionally with a version appended.
      * 
-     * Abbreviaions: Firefox: ff Internet Explorer: ie Safari: sa Opera: op
+     * Abbreviations: Firefox: ff Internet Explorer: ie Safari: sa Opera: op
      * 
      * Browsers that CSS-wise behave like each other will get the same
      * abbreviation (this usually depends on the rendering engine).
@@ -74,8 +74,9 @@ public class BrowserInfo {
      * This is quite simple at the moment, more heuristics will be added when
      * needed.
      * 
-     * Examples: Internet Explorer 6: ".v-ie .v-ie6", Firefox 3.0.4:
-     * ".v-ff .v-ff3", Opera 9.60: ".v-op .v-op96"
+     * Examples: Internet Explorer 6: ".v-ie .v-ie6 .v-ie60", Firefox 3.0.4:
+     * ".v-ff .v-ff3 .v-ff30", Opera 9.60: ".v-op .v-op9 .v-op960", Opera 10.10:
+     * ".v-op .v-op10 .v-op1010"
      * 
      * @return
      */
@@ -85,9 +86,11 @@ public class BrowserInfo {
         if (cssClass == null) {
             String b = "";
             String v = "";
+            String vv = "";
             if (browserDetails.isFirefox()) {
                 b = "ff";
                 v = b + browserDetails.getBrowserMajorVersion();
+                vv = v + browserDetails.getBrowserMinorVersion();
             } else if (browserDetails.isChrome()) {
                 // TODO update when Chrome is more stable
                 b = "sa";
@@ -95,14 +98,20 @@ public class BrowserInfo {
             } else if (browserDetails.isSafari()) {
                 b = "sa";
                 v = b + browserDetails.getBrowserMajorVersion();
+                vv = v + browserDetails.getBrowserMinorVersion();
             } else if (browserDetails.isIE()) {
                 b = "ie";
                 v = b + browserDetails.getBrowserMajorVersion();
+                vv = v + browserDetails.getBrowserMinorVersion();
             } else if (browserDetails.isOpera()) {
                 b = "op";
                 v = b + browserDetails.getBrowserMajorVersion();
+                vv = v + browserDetails.getBrowserMinorVersion();
             }
             cssClass = prefix + b + " " + prefix + v;
+            if (!"".equals(vv)) {
+                cssClass = cssClass + " " + prefix + vv;
+            }
         }
 
         return cssClass;
