@@ -67,18 +67,18 @@ public class VBrowserDetails implements Serializable {
         if (isIE) {
             String ieVersionString = userAgent.substring(userAgent
                     .indexOf("msie ") + 5);
-            ieVersionString = ieVersionString.substring(0, ieVersionString
+            ieVersionString = safeSubstring(ieVersionString, 0, ieVersionString
                     .indexOf(";"));
             parseVersionString(ieVersionString);
         } else if (isFirefox) {
             int i = userAgent.indexOf(" firefox/") + 9;
-            parseVersionString(userAgent.substring(i, i + 5));
+            parseVersionString(safeSubstring(userAgent, i, i + 5));
         } else if (isChrome) {
             int i = userAgent.indexOf(" chrome/") + 8;
-            parseVersionString(userAgent.substring(i, i + 5));
+            parseVersionString(safeSubstring(userAgent, i, i + 5));
         } else if (isSafari) {
             int i = userAgent.indexOf(" version/") + 9;
-            parseVersionString(userAgent.substring(i, i + 5));
+            parseVersionString(safeSubstring(userAgent, i, i + 5));
         } else if (isOpera) {
             int i = userAgent.indexOf(" version/");
             if (i != -1) {
@@ -87,24 +87,39 @@ public class VBrowserDetails implements Serializable {
             } else {
                 i = userAgent.indexOf("opera/") + 6;
             }
-            parseVersionString(userAgent.substring(i, i + 5));
+            parseVersionString(safeSubstring(userAgent, i, i + 5));
         }
 
     }
 
     private void parseVersionString(String versionString) {
         int idx = versionString.indexOf('.');
+        if (idx < 0) {
+            idx = versionString.length();
+        }
+        browserMajorVersion = Integer.parseInt(safeSubstring(versionString, 0,
+                idx));
+
         int idx2 = versionString.indexOf('.', idx + 1);
         if (idx2 < 0) {
             idx2 = versionString.length();
         }
-        browserMajorVersion = Integer.parseInt(versionString.substring(0, idx));
         try {
-            browserMinorVersion = Integer.parseInt(versionString.substring(
+            browserMinorVersion = Integer.parseInt(safeSubstring(versionString,
                     idx + 1, idx2).replaceAll("[^0-9].*", ""));
         } catch (NumberFormatException e) {
             // leave the minor version unmodified (-1 = unknown)
         }
+    }
+
+    private String safeSubstring(String string, int beginIndex, int endIndex) {
+        if (beginIndex < 0) {
+            beginIndex = 0;
+        }
+        if (endIndex < 0) {
+            endIndex = string.length();
+        }
+        return string.substring(beginIndex, endIndex);
     }
 
     /**
