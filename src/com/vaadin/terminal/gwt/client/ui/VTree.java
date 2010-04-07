@@ -439,7 +439,7 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
             final int type = DOM.eventGetType(event);
             final Element target = DOM.eventGetTarget(event);
             final boolean inCaption = target == nodeCaptionSpan
-                    || target == icon.getElement();
+                    || (icon != null && target == icon.getElement());
             if (inCaption
                     && client
                             .hasEventListeners(VTree.this, ITEM_CLICK_EVENT_ID)
