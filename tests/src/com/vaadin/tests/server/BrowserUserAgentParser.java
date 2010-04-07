@@ -9,6 +9,7 @@ public class BrowserUserAgentParser extends TestCase {
     private static final String FIREFOX30 = "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-GB; rv:1.9.0.6) Gecko/2009011913 Firefox/3.0.6";
     private static final String FIREFOX35 = "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9.1.8) Gecko/20100202 Firefox/3.5.8 (.NET CLR 3.5.30729) FirePHP/0.4";
     private static final String FIREFOX36 = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.2) Gecko/20100115 Firefox/3.6 (.NET CLR 3.5.30729)";
+    private static final String FIREFOX36B = "UAString mozilla/5.0 (macintosh; u; intel mac os x 10.6; en-us; rv:1.9.2) gecko/20100115 firefox/3.6";
 
     private static final String IE6 = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)";
     private static final String IE7 = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)";
@@ -82,6 +83,15 @@ public class BrowserUserAgentParser extends TestCase {
 
     public void testFirefox36() {
         VBrowserDetails bd = new VBrowserDetails(FIREFOX36);
+        assertGecko(bd);
+        assertFirefox(bd);
+        assertBrowserMajorVersion(bd, 3);
+        assertBrowserMinorVersion(bd, 6);
+        assertEngineVersion(bd, 1.9f);
+    }
+
+    public void testFirefox36b() {
+        VBrowserDetails bd = new VBrowserDetails(FIREFOX36B);
         assertGecko(bd);
         assertFirefox(bd);
         assertBrowserMajorVersion(bd, 3);
