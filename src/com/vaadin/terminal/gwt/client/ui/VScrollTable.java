@@ -448,14 +448,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         boolean cont = true;
         while (cont && scrollBody.getLastRendered() > optimalFirstRow
                 && scrollBody.getFirstRendered() < optimalFirstRow) {
-            // client.console.log("removing row from start");
+            // removing row from start
             cont = scrollBody.unlinkRow(true);
         }
         final int optimalLastRow = (int) (firstRowInViewPort + pageLength + pageLength
                 * cache_rate);
         cont = true;
         while (cont && scrollBody.getLastRendered() > optimalLastRow) {
-            // client.console.log("removing row from the end");
+            // removing row from the end
             cont = scrollBody.unlinkRow(false);
         }
         scrollBody.fixSpacers();

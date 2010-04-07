@@ -215,9 +215,6 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                             || (detail == null && oldDetail != null);
 
                     if (nodeHasChanged || detailHasChanded) {
-                        ApplicationConnection.getConsole().log(
-                                "Change in Transferable " + currentMouseOverKey
-                                        + " " + detail);
                         final String newKey = currentMouseOverKey;
                         TreeNode treeNode = keyToNode.get(oldIdOver);
                         if (treeNode != null) {
@@ -468,9 +465,6 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                     if (nodeCaptionDiv.isOrHasChild(event.getTarget())) {
                         if (dragMode > 0
                                 && event.getButton() == NativeEvent.BUTTON_LEFT) {
-
-                            ApplicationConnection.getConsole().log(
-                                    "TreeNode m down");
                             event.preventDefault(); // prevent text selection
                             mouseDownEvent = event;
                         }
@@ -479,8 +473,6 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                         || type == Event.ONMOUSEOUT) {
 
                     if (mouseDownEvent != null) {
-                        ApplicationConnection.getConsole().log(
-                                "TreeNode drag start " + event.getType());
                         // start actual drag on slight move when mouse is down
                         VTransferable t = new VTransferable();
                         t.setDragSource(VTree.this);

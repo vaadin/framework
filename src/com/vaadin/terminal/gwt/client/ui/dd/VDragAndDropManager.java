@@ -73,8 +73,8 @@ public class VDragAndDropManager {
                     // Util.browserDebugger();
                     targetElement = Util.getElementFromPoint(x, y);
                     if (targetElement == null) {
-                        ApplicationConnection.getConsole().log(
-                                "Event on dragImage, ignored");
+                        // ApplicationConnection.getConsole().log(
+                        // "Event on dragImage, ignored");
                         event.cancel();
                         nativeEvent.stopPropagation();
                         return;
@@ -88,10 +88,10 @@ public class VDragAndDropManager {
                         switch (typeInt) {
                         case Event.ONMOUSEOVER:
                         case Event.ONMOUSEOUT:
-                            ApplicationConnection
-                                    .getConsole()
-                                    .log(
-                                            "IGNORING proxy image event, fired because of hack or not significant");
+                            // ApplicationConnection
+                            // .getConsole()
+                            // .log(
+                            // "IGNORING proxy image event, fired because of hack or not significant");
                             return;
                         case Event.ONMOUSEMOVE:
                             VDropHandler findDragTarget = findDragTarget(targetElement);
@@ -105,10 +105,10 @@ public class VDragAndDropManager {
                                 // dragenter on new
                                 currentDropHandler = findDragTarget;
                                 if (findDragTarget != null) {
-                                    ApplicationConnection.getConsole().log(
-                                            "DropHandler now"
-                                                    + currentDropHandler
-                                                            .getPaintable());
+                                    // ApplicationConnection.getConsole().log(
+                                    // "DropHandler now"
+                                    // + currentDropHandler
+                                    // .getPaintable());
                                 }
 
                                 if (currentDropHandler != null) {
@@ -127,9 +127,9 @@ public class VDragAndDropManager {
                         default:
                             // just update element over and let the actual
                             // handling code do the thing
-                            ApplicationConnection.getConsole().log(
-                                    "Target just modified on "
-                                            + event.getType());
+                            // ApplicationConnection.getConsole().log(
+                            // "Target just modified on "
+                            // + event.getType());
                             currentDrag
                                     .setElementOver((com.google.gwt.user.client.Element) targetElement);
                             break;
@@ -137,8 +137,8 @@ public class VDragAndDropManager {
 
                     }
                 } catch (RuntimeException e) {
-                    ApplicationConnection.getConsole().log(
-                            "ERROR during elementFromPoint hack.");
+                    // ApplicationConnection.getConsole().log(
+                    // "ERROR during elementFromPoint hack.");
                     throw e;
                 } finally {
                     dragElement.getStyle().setProperty("display", display);
@@ -147,8 +147,6 @@ public class VDragAndDropManager {
 
             switch (typeInt) {
             case Event.ONMOUSEOVER:
-                ApplicationConnection.getConsole().log(
-                        event.getNativeEvent().getType());
                 VDropHandler target = findDragTarget(targetElement);
 
                 if (target != null && target != currentDropHandler) {
@@ -158,28 +156,25 @@ public class VDragAndDropManager {
                     }
 
                     currentDropHandler = target;
-                    ApplicationConnection.getConsole().log(
-                            "DropHandler now"
-                                    + currentDropHandler.getPaintable());
+                    // ApplicationConnection.getConsole().log(
+                    // "DropHandler now"
+                    // + currentDropHandler.getPaintable());
                     target.dragEnter(currentDrag);
                 } else if (target == null && currentDropHandler != null) {
-                    ApplicationConnection.getConsole().log("Invalid state!?");
+                    // ApplicationConnection.getConsole().log("Invalid state!?");
                     currentDropHandler.dragLeave(currentDrag);
                     currentDrag.getDropDetails().clear();
                     currentDropHandler = null;
                 }
                 break;
             case Event.ONMOUSEOUT:
-                ApplicationConnection.getConsole().log(
-                        event.getNativeEvent().getType());
-
                 Element relatedTarget = (Element) nativeEvent
                         .getRelatedEventTarget().cast();
                 VDropHandler newDragHanler = findDragTarget(relatedTarget);
                 if (dragElement != null
                         && dragElement.isOrHasChild(relatedTarget)) {
-                    ApplicationConnection.getConsole().log(
-                            "Mouse out of dragImage, ignored");
+                    // ApplicationConnection.getConsole().log(
+                    // "Mouse out of dragImage, ignored");
                     return;
                 }
 
@@ -343,8 +338,6 @@ public class VDragAndDropManager {
                                                         .getCurrentEventTarget()
                                                         .cast())) {
                                     // drag image appeared below, ignore
-                                    ApplicationConnection.getConsole().log(
-                                            "Drag image appeared");
                                     break;
                                 }
                             case Event.ONKEYDOWN:
@@ -362,8 +355,6 @@ public class VDragAndDropManager {
                                                         .getRelatedEventTarget()
                                                         .cast())) {
                                     // drag image appeared below, ignore
-                                    ApplicationConnection.getConsole().log(
-                                            "Drag image appeared");
                                     break;
                                 }
                             case Event.ONMOUSEMOVE:
@@ -376,10 +367,6 @@ public class VDragAndDropManager {
                             default:
                                 // on any other events, clean up the
                                 // deferred drag start
-                                ApplicationConnection.getConsole().log(
-                                        "Drag did not start due event"
-                                                + event.getNativeEvent()
-                                                        .getType());
 
                                 deferredStartRegistration.removeHandler();
                                 deferredStartRegistration = null;
@@ -430,22 +417,16 @@ public class VDragAndDropManager {
                 }
             }
             if (w == null) {
-                ApplicationConnection.getConsole().log(
-                        "No suitable DropHandler found2");
                 return null;
             } else {
                 VDropHandler dh = ((VHasDropHandler) w).getDropHandler();
-                if (dh == null) {
-                    ApplicationConnection.getConsole().log(
-                            "No suitable DropHandler found3");
-                }
                 return dh;
             }
 
         } catch (Exception e) {
-            ApplicationConnection.getConsole().log(
-                    "FIXME: Exception when detecting drop handler");
-            e.printStackTrace();
+            // ApplicationConnection.getConsole().log(
+            // "FIXME: Exception when detecting drop handler");
+            // e.printStackTrace();
             return null;
         }
 
@@ -529,8 +510,6 @@ public class VDragAndDropManager {
 
     private void doRequest(DragEventType drop) {
         if (currentDropHandler == null) {
-            ApplicationConnection.getConsole().log(
-                    "DD request ignored, drop handler is null");
             return;
         }
         Paintable paintable = currentDropHandler.getPaintable();

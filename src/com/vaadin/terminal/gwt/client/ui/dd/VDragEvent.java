@@ -3,7 +3,6 @@
  */
 package com.vaadin.terminal.gwt.client.ui.dd;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,8 +35,6 @@ public class VDragEvent {
 
     private int id;
 
-    private Date start;
-
     private HashMap<String, Object> dropDetails = new HashMap<String, Object>();
 
     private Element elementOver;
@@ -46,7 +43,6 @@ public class VDragEvent {
         transferable = t;
         this.startEvent = startEvent;
         id = eventId++;
-        start = new Date();
     }
 
     public VTransferable getTransferable() {
@@ -70,15 +66,6 @@ public class VDragEvent {
 
     int getEventId() {
         return id;
-    }
-
-    /**
-     * @deprecated will be removed from final implementation, here just to aid
-     *             development.
-     */
-    @Deprecated
-    public long sinceStart() {
-        return new Date().getTime() - start.getTime();
     }
 
     /**

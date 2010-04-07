@@ -127,7 +127,6 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             dragLeavPostponed = false;
             return false;
         }
-        ApplicationConnection.getConsole().log("HTML 5 Drag Enter");
         VTransferable transferable = new VTransferable();
         transferable.setDragSource(this);
 
@@ -144,7 +143,6 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             return true;
         }
 
-        ApplicationConnection.getConsole().log("HTML 5 Drag Leave posponed...");
         dragLeavPostponed = true;
         DeferredCommand.addCommand(new Command() {
             public void execute() {
@@ -155,8 +153,6 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                 if (dragLeavPostponed
                         && vaadinDragEvent != null
                         && VDragAndDropManager.get().getCurrentDropHandler() == getDropHandler()) {
-                    ApplicationConnection.getConsole().log(
-                            "...HTML 5 Drag Leave");
                     VDragAndDropManager.get().interruptDrag();
                 }
                 dragLeavPostponed = false;
@@ -172,7 +168,6 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             return true;
         }
 
-        ApplicationConnection.getConsole().log("HTML 5 Drag Over");
         vaadinDragEvent.setCurrentGwtEvent(event);
         getDropHandler().dragOver(vaadinDragEvent);
         // needed to be set for Safari, otherwise drop will not happen
@@ -182,8 +177,6 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                 event.setDragEffect("copy");
             } else {
                 event.setDragEffect(s);
-                ApplicationConnection.getConsole().log(
-                        "Drag effect set to " + s);
             }
         }
         event.preventDefault();
@@ -196,24 +189,19 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             return true;
         }
 
-        ApplicationConnection.getConsole().log("HTML 5 Drag Drop");
         VTransferable transferable = vaadinDragEvent.getTransferable();
 
         JsArrayString types = event.getTypes();
-        ApplicationConnection.getConsole().log("Types fetched");
         for (int i = 0; i < types.length(); i++) {
             String type = types.get(i);
-            ApplicationConnection.getConsole().log("Type: " + type);
             if (isAcceptedType(type)) {
                 String data = event.getDataAsText(type);
                 if (data != null) {
-                    ApplicationConnection.getConsole().log(type + " : " + data);
                     transferable.setData(type, data);
                 }
             }
         }
 
-        ApplicationConnection.getConsole().log("checking files");
         int fileCount = event.getFileCount();
         if (fileCount > 0) {
             transferable.setData("filecount", fileCount);
@@ -228,8 +216,6 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             }
 
         }
-
-        ApplicationConnection.getConsole().log("Ending drag");
 
         VDragAndDropManager.get().endDrag();
         vaadinDragEvent = null;
@@ -351,14 +337,12 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         @Override
         public void dragEnter(VDragEvent drag) {
             updateDropDetails(drag);
-            ApplicationConnection.getConsole().log("DDWrapper DragEnter");
             currentlyValid = false;
             super.dragEnter(drag);
         }
 
         @Override
         public void dragLeave(VDragEvent drag) {
-            ApplicationConnection.getConsole().log("DDWrapper DragLeave");
             deEmphasis(true);
             dragLeavPostponed = false;
         }
@@ -378,7 +362,6 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
         @Override
         public boolean drop(VDragEvent drag) {
-            ApplicationConnection.getConsole().log("Drop" + drag.sinceStart());
             deEmphasis(true);
 
             Map<String, Object> dd = drag.getDropDetails();
