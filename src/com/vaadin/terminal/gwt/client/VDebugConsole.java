@@ -186,10 +186,10 @@ public final class VDebugConsole extends VOverlay implements Console {
                     + "behavior may occur.");
         }
 
-        log("<div class=\"v-theme-version v-theme-version-"
+        logToDebugWindow("<div class=\"v-theme-version v-theme-version-"
                 + VERSION.replaceAll("\\.", "_")
                 + "\">Warning: widgetset version " + VERSION
-                + " does not seem to match theme version </div>");
+                + " does not seem to match theme version </div>", true);
     }
 
     private EventPreview dragpreview = new EventPreview() {
@@ -309,9 +309,30 @@ public final class VDebugConsole extends VOverlay implements Console {
             msg = "null";
         }
 
-        panel.add(new HTML(msg));
+        logToDebugWindow(msg, false);
         System.out.println(msg);
         consoleLog(msg);
+    }
+
+    /**
+     * Logs the given message to the debug window.
+     * 
+     * @param msg
+     *            The message to log. Must not be null.
+     */
+    private void logToDebugWindow(String msg, boolean error) {
+        if (error) {
+            panel.add(createErrorHtml(msg));
+        } else {
+            panel.add(new HTML(msg));
+        }
+    }
+
+    private HTML createErrorHtml(String msg) {
+        HTML html = new HTML(msg);
+        html.getElement().getStyle().setColor("#f00");
+        html.getElement().getStyle().setFontWeight(FontWeight.BOLD);
+        return html;
     }
 
     /*
@@ -324,10 +345,8 @@ public final class VDebugConsole extends VOverlay implements Console {
             msg = "null";
         }
 
-        HTML html = new HTML(msg);
-        html.getElement().getStyle().setColor("#f00");
-        html.getElement().getStyle().setFontWeight(FontWeight.BOLD);
-        panel.add(html);
+        logToDebugWindow(msg, true);
+
         System.err.println(msg);
         consoleErr(msg);
     }
