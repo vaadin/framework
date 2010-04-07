@@ -234,9 +234,11 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                                                     .equals(currentMouseOverKey)) {
                                         keyToNode.get(newKey).emphasis(detail);
                                     }
-                                    /* Else drag is already on a different
-                                    * node-detail pair,
-                                    * new criteria check is going on */
+                                    /*
+                                     * Else drag is already on a different
+                                     * node-detail pair, new criteria check is
+                                     * going on
+                                     */
                                 }
                             }, currentDrag);
 
@@ -439,8 +441,12 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
             }
             final int type = DOM.eventGetType(event);
             final Element target = DOM.eventGetTarget(event);
-            if (client.hasEventListeners(VTree.this, ITEM_CLICK_EVENT_ID)
-                    && target == nodeCaptionSpan
+            final boolean inCaption = target == nodeCaptionSpan
+                    || target == icon.getElement();
+            if (inCaption
+                    && client
+                            .hasEventListeners(VTree.this, ITEM_CLICK_EVENT_ID)
+
                     && (type == Event.ONDBLCLICK || type == Event.ONMOUSEUP)) {
                 fireClick(event);
             }
@@ -448,7 +454,7 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                 if (getElement() == target || ie6compatnode == target) {
                     // state change
                     toggleState();
-                } else if (!readonly && target == nodeCaptionSpan) {
+                } else if (!readonly && inCaption) {
                     // caption click = selection change && possible click event
                     toggleSelection();
                 }
