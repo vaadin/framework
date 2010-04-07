@@ -1923,10 +1923,12 @@ public class Table extends AbstractSelect implements Action.Container,
                 try {
                     final Object[] ids = (Object[]) variables
                             .get("columnorder");
+                    // need a real Object[], ids can be a String[]
+                    final Object[] idsTemp = new Object[ids.length];
                     for (int i = 0; i < ids.length; i++) {
-                        ids[i] = columnIdMap.get(ids[i].toString());
+                        idsTemp[i] = columnIdMap.get(ids[i].toString());
                     }
-                    setColumnOrder(ids);
+                    setColumnOrder(idsTemp);
                 } catch (final Exception e) {
                     // FIXME: Handle exception
                     e.printStackTrace();
