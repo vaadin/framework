@@ -116,7 +116,7 @@ public class VBrowserDetails implements Serializable {
         if (beginIndex < 0) {
             beginIndex = 0;
         }
-        if (endIndex < 0) {
+        if (endIndex < 0 || endIndex > string.length()) {
             endIndex = string.length();
         }
         return string.substring(beginIndex, endIndex);
