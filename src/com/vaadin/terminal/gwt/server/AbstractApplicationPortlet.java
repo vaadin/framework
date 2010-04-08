@@ -41,8 +41,11 @@ import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 import javax.portlet.ResourceURL;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
+import com.liferay.portal.kernel.util.PortalClassInvoker;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
@@ -764,10 +767,10 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
              * user not specifically requested to close or restart it.
              */
 
-            final boolean restartApplication = (request
-                    .getParameter(URL_PARAMETER_RESTART_APPLICATION) != null);
-            final boolean closeApplication = (request
-                    .getParameter(URL_PARAMETER_CLOSE_APPLICATION) != null);
+            final boolean restartApplication = (getHTTPRequestParameter(
+                    request, URL_PARAMETER_RESTART_APPLICATION) != null);
+            final boolean closeApplication = (getHTTPRequestParameter(request,
+                    URL_PARAMETER_CLOSE_APPLICATION) != null);
 
             if (restartApplication) {
                 closeApplication(application, request.getPortletSession(false));
@@ -1420,6 +1423,67 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             value = null;
         }
         return value;
+    }
+
+    /**
+     * Try to get the value of a HTTP request parameter from a portlet request
+     * using portal specific APIs. It is not possible to get the HTTP request
+     * parameters using the official Portlet 2.0 API.
+     * 
+     * @param name
+     *            HTTP request parameter name
+     * @return the value of the parameter (empty string if parameter defined
+     *         without a value, null if the parameter is not present or
+     *         retrieving it failed)
+     */
+    private static String getHTTPRequestParameter(PortletRequest request,
+            String name) {
+        String value = request.getParameter(name);
+        if (value == null) {
+            String portalInfo = request.getPortalContext().getPortalInfo()
+                    .toLowerCase();
+            if (portalInfo.contains("liferay")) {
+                value = getLiferayHTTPRequestParameter(request, name);
+            } else if (portalInfo.contains("gatein")) {
+                value = getGateInHTTPRequestParameter(request, name);
+            }
+        }
+        return value;
+    }
+
+    private static String getGateInHTTPRequestParameter(PortletRequest request,
+            String name) {
+        String value = null;
+        try {
+            Method getRealReq = request.getClass().getMethod("getRealRequest");
+            HttpServletRequestWrapper origRequest = (HttpServletRequestWrapper) getRealReq
+                    .invoke(request);
+            value = origRequest.getParameter(name);
+        } catch (Exception e) {
+            // do nothing - not on GateIn simple-portal
+        }
+        return value;
+    }
+
+    private static String getLiferayHTTPRequestParameter(PortletRequest request, String name) {
+        try {
+            // httpRequest = PortalUtil.getHttpServletRequest(request);
+            HttpServletRequest httpRequest = (HttpServletRequest) PortalClassInvoker
+                    .invoke("com.liferay.portal.util.PortalUtil",
+                            "getHttpServletRequest", request);
+
+            // httpRequest =
+            // PortalUtil.getOriginalServletRequest(httpRequest);
+            httpRequest = (HttpServletRequest) PortalClassInvoker.invoke(
+                    "com.liferay.portal.util.PortalUtil",
+                    "getOriginalServletRequest", httpRequest);
+            if (httpRequest != null) {
+                return httpRequest.getParameter(name);
+            }
+        } catch (Exception e) {
+            // ignore and return null - unable to get the original request
+        }
+        return null;
     }
 
 }
