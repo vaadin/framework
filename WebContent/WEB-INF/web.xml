@@ -196,19 +196,6 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>Coverflow</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.demo.coverflow.CoverflowApplication</param-value>
-		</init-param>
-		<init-param>
-			<param-name>widgetset</param-name>
-			<param-value>com.vaadin.demo.coverflow.gwt.CoverflowWidgetSet</param-value>
-		</init-param>
-	</servlet>
-	
-	<servlet>
 		<servlet-name>ReindeerThemeStyles</servlet-name>
 		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
@@ -433,11 +420,6 @@
 	<servlet-mapping>
 		<servlet-name>VaadinTunesLayout</servlet-name>
 		<url-pattern>/VaadinTunesLayout/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>Coverflow</servlet-name>
-		<url-pattern>/Coverflow/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

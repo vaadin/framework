@@ -730,11 +730,6 @@
 	    		<param name="widgetset" value="com.vaadin.demo.sampler.gwt.SamplerWidgetSet"/>
 	    	</antcall>
 	    </target>
-	 <target name="compile-widgetset-coverflow" unless="compile.only.default-widgetset">
-	    	<antcall target="compile-widgetset">
-	    		<param name="widgetset" value="com.vaadin.demo.coverflow.gwt.CoverflowWidgetSet"/>
-	    	</antcall>
-	    </target>
 	 <target name="compile-widgetset-colorpicker" unless="compile.only.default-widgetset">
 	    	<antcall target="compile-widgetset">
 	    		<param name="widgetset" value="com.vaadin.demo.colorpicker.gwt.ColorPickerWidgetSet"/>
@@ -750,7 +745,6 @@
         <antcall target="compile-widgetset-portal-default"/>
         <antcall target="compile-widgetset-sampler"/>
         <antcall target="compile-widgetset-colorpicker"/>
-        <antcall target="compile-widgetset-coverflow"/>
     </target>
 
     <!-- Builds the client-side engine, i.e., the widgetsets in parallel. -->
@@ -762,7 +756,6 @@
             <antcall target="compile-widgetset-portal-default"/>
             <antcall target="compile-widgetset-sampler"/>
             <antcall target="compile-widgetset-colorpicker"/>
-            <antcall target="compile-widgetset-coverflow"/>
         </parallel>
     </target>
 
@@ -797,7 +790,6 @@
     <target name="widgetset-default" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-default"/>
     <target name="widgetset-portal-default" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-portal-default"/>
     <target name="widgetset-sampler" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-sampler"/>
-    <target name="widgetset-coverflow" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-coverflow"/>
     <target name="widgetset-reserver" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-reserver"/>
     <target name="widgetset-colorpicker" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-colorpicker"/>
 
