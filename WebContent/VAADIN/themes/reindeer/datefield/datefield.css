@@ -241,7 +241,7 @@ td.v-datefield-calendarpanel-nextyear {
 .v-datefield-full .v-datefield-textfield {
 	width: 12em;
 }
-.v-datefield-popupcalendar .v-datefield-textfield {
+.v-datefield-popupcalendar input.v-datefield-textfield {
 	border-right-width: 0;
 	-moz-border-radius-topright: 0;
 	-moz-border-radius-bottomright: 0;
@@ -249,7 +249,7 @@ td.v-datefield-calendarpanel-nextyear {
 	-webkit-border-bottom-right-radius: 0;
 	height: 14px;
 }
-.v-readonly .v-datefield-textfield {
+.v-readonly input.v-datefield-textfield {
 	border-right-width: 1px;
 	border-radius: 3px;
 	-moz-border-radius: 3px;

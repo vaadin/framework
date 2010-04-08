@@ -851,7 +851,10 @@ div.v-app-loading {
 	height: 1em;
 	font-size: 0.9em;
 }
-.v-menubar-menuitem-disabled {
+.v-menubar-menuitem-disabled,
+.v-menubar span.v-menubar-menuitem-disabled:hover,
+.v-menubar span.v-menubar-menuitem-disabled:focus,
+.v-menubar span.v-menubar-menuitem-disabled:active {
 	color: #999;
 }
 .v-menubar-more-menuitem {
@@ -1364,7 +1367,7 @@ div.v-progressindicator-indeterminate-disabled {
 	top: 0;
 	bottom: 0;
 	background: #ddd;
-	cursor: e-resize;
+	cursor: col-resize;
 }
 .v-splitpanel-vsplitter {
 	height: 6px;
@@ -1374,7 +1377,7 @@ div.v-progressindicator-indeterminate-disabled {
 	height: 6px;
 	font-size: 1px; /* for IE6 */
 	background: #ddd;
-	cursor: n-resize;
+	cursor: row-resize;
 }
 /* IE specific styles */
 .v-ie6 .v-splitpanel-hsplitter div {
@@ -1668,7 +1671,7 @@ div.v-progressindicator-indeterminate-disabled {
 	cursor: default;
 	visibility: hidden;
 }
-.v-tabsheet-tabitemcell:hover .v-tabsheet-caption-close,
+.v-tabsheet-tabitem:hover .v-tabsheet-caption-close,
 .v-ie6 .v-tabsheet-caption-close {
 	visibility: visible;
 }

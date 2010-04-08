@@ -81,7 +81,7 @@
 	cursor: default;
 	visibility: hidden;
 }
-.v-tabsheet-tabitemcell:hover .v-tabsheet-caption-close,
+.v-tabsheet-tabitem:hover .v-tabsheet-caption-close,
 .v-ie6 .v-tabsheet-caption-close {
 	visibility: visible;
 }

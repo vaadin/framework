@@ -48,11 +48,29 @@
 .v-orderedlayout-blue,
 .v-gridlayout-blue,
 .v-csslayout-blue,
-.v-formlayout-blue {
+.v-formlayout-blue,
+.v-splitpanel-vertical-blue,
+.v-splitpanel-horizontal-blue {
 	background-color: #bcd3de;
 }
 .v-panel-content > div.blue {
 	background-color: #bcd3de;
+}
+/* White background */
+.v-verticallayout-white,
+.v-horizontallayout-white,
+.v-orderedlayout-white,
+.v-gridlayout-white,
+.v-csslayout-white,
+.v-formlayout-white,
+.v-splitpanel-vertical-white,
+.v-splitpanel-horizontal-white  {
+	background-color: #fff;
+	color: #222;
+}
+.v-panel-content > div.white {
+	background-color: #fff;
+	color: #222;
 }
 /* Black background */
 .v-verticallayout-black,
@@ -60,9 +78,11 @@
 .v-orderedlayout-black,
 .v-gridlayout-black,
 .v-csslayout-black,
-.v-formlayout-black {
-	background-color: #1e2022;
+.v-formlayout-black,
+.v-splitpanel-vertical-black,
+.v-splitpanel-horizontal-black {
+	background: #1e2022 url(img/black-bg.png) repeat-x;
 }
 .v-panel-content > div.black {
-	background-color: #1e2022;
+	background: #1e2022 url(img/black-bg.png) repeat-x;
 }

@@ -11,6 +11,9 @@
 	height: 17px;
 	line-height: 16px;
 }
+.v-menubar .v-menubar-menuitem:hover {
+	color: #fff;
+}
 .v-menubar-submenu {
 	background: #f8f8f9;
 	border: none;

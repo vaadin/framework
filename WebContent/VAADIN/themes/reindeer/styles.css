@@ -851,7 +851,10 @@ div.v-app-loading {
 	height: 1em;
 	font-size: 0.9em;
 }
-.v-menubar-menuitem-disabled {
+.v-menubar-menuitem-disabled,
+.v-menubar span.v-menubar-menuitem-disabled:hover,
+.v-menubar span.v-menubar-menuitem-disabled:focus,
+.v-menubar span.v-menubar-menuitem-disabled:active {
 	color: #999;
 }
 .v-menubar-more-menuitem {
@@ -1364,7 +1367,7 @@ div.v-progressindicator-indeterminate-disabled {
 	top: 0;
 	bottom: 0;
 	background: #ddd;
-	cursor: e-resize;
+	cursor: col-resize;
 }
 .v-splitpanel-vsplitter {
 	height: 6px;
@@ -1374,7 +1377,7 @@ div.v-progressindicator-indeterminate-disabled {
 	height: 6px;
 	font-size: 1px; /* for IE6 */
 	background: #ddd;
-	cursor: n-resize;
+	cursor: row-resize;
 }
 /* IE specific styles */
 .v-ie6 .v-splitpanel-hsplitter div {
@@ -1668,7 +1671,7 @@ div.v-progressindicator-indeterminate-disabled {
 	cursor: default;
 	visibility: hidden;
 }
-.v-tabsheet-tabitemcell:hover .v-tabsheet-caption-close,
+.v-tabsheet-tabitem:hover .v-tabsheet-caption-close,
 .v-ie6 .v-tabsheet-caption-close {
 	visibility: visible;
 }
@@ -2974,7 +2977,7 @@ td.v-datefield-calendarpanel-nextyear {
 .v-datefield-full .v-datefield-textfield {
 	width: 12em;
 }
-.v-datefield-popupcalendar .v-datefield-textfield {
+.v-datefield-popupcalendar input.v-datefield-textfield {
 	border-right-width: 0;
 	-moz-border-radius-topright: 0;
 	-moz-border-radius-bottomright: 0;
@@ -2982,7 +2985,7 @@ td.v-datefield-calendarpanel-nextyear {
 	-webkit-border-bottom-right-radius: 0;
 	height: 14px;
 }
-.v-readonly .v-datefield-textfield {
+.v-readonly input.v-datefield-textfield {
 	border-right-width: 1px;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
@@ -3192,10 +3195,84 @@ td.v-datefield-calendarpanel-nextyear {
 .v-label {
 	line-height: 18px;
 }
+
+/**********************
+ * Black styles
+ **********************/
+.white .black,
+.blue .black {
+	color: #C9CCCE;
+	text-shadow: 0 0 1px #000;
+}
+.black .v-label-h1,
+.black .v-label-h2,
+.black .v-caption-h1,
+.black .v-caption-h2,
+.white .black .v-label-h1,
+.white .black .v-label-h2,
+.white .black .v-caption-h1,
+.white .black .v-caption-h2,
+.blue .black .v-label-h1,
+.blue .black .v-label-h2,
+.blue .black .v-caption-h1,
+.blue .black .v-caption-h2 {
+	color: #fff;
+	text-shadow: rgba(0,0,0,.8) 0 2px 2px;
+}
+.black .v-label-light,
+.white .black .v-label-light {
+	color: #72787c;
+}
+.black .v-label hr,
+.white .black .v-label hr {
+	background: #0c0d0e;
+	color: #0c0d0e;
+	border-bottom-color: #292b2e;
+}
+
+/**********************
+ * Blue styles
+ **********************/
+.v-app .white,
+.v-window .white,
+.v-app .blue,
+.v-window .blue {
+	color: #222;
+	text-shadow: none;
+}
+.blue .v-label-h1,
+.blue .v-label-h2,
+.blue .v-caption-h1,
+.blue .v-caption-h2,
+.white .blue .v-label-h1,
+.white .blue .v-label-h2,
+.white .blue .v-caption-h1,
+.white .blue .v-caption-h2 {
+	color: #fff;
+	text-shadow: rgba(0,0,0,.3) 0 1px 1px;
+}
+.blue .v-label-light,
+.white .blue .v-label-light {
+	color: #6e7c83;
+}
+.blue .v-label hr,
+.white .blue .v-label hr {
+	background: #a3bcc9;
+	color: #a3bcc9;
+	border-bottom-color: #cfe2eb;
+}
+
+/**********************
+ * Default & white styles
+ **********************/
 .v-label-h1,
 .v-label-h2,
 .v-caption-h1,
-.v-caption-h2 {
+.v-caption-h2,
+.white .v-label-h1,
+.white .v-label-h2,
+.white .v-caption-h1,
+.white .v-caption-h2 {
 	font-family: Helvetica, Arial, "Lucida Grande", Geneva, Tahoma, Verdana, sans-serif;
 	font-size: 24px;
 	line-height: 30px;
@@ -3205,39 +3282,21 @@ td.v-datefield-calendarpanel-nextyear {
 	text-shadow: #fff 0 -1px 1px;
 }
 .v-label-h2,
-.v-caption-h2 {
+.v-caption-h2,
+.white .v-label-h2,
+.white .v-caption-h2 {
 	font-size: 16px;
 	line-height: 22px;
 }
-.v-label-light {
+.v-label-light,
+.white .v-label-light {
 	font-size: 11px;
 	line-height: 13px;
 	color: #707070;
 }
 
-.blue .v-label-h1,
-.blue .v-label-h2,
-.blue .v-caption-h1,
-.blue .v-caption-h2 {
-	color: #fff;
-	text-shadow: rgba(0,0,0,.3) 0 1px 1px;
-}
-.blue .v-label-light {
-	color: #6e7c83;
-}
-
-.black .v-label-h1,
-.black .v-label-h2,
-.black .v-caption-h1,
-.black .v-caption-h2 {
-	color: #fff;
-	text-shadow: rgba(0,0,0,.8) 0 2px 2px;
-}
-.black .v-label-light {
-	color: #72787c;
-}
-
-.v-label hr {
+.v-label hr,
+.white .v-label hr {
 	height: 2px;
 	overflow: hidden;
 	background: #dcdcdc;
@@ -3245,19 +3304,10 @@ td.v-datefield-calendarpanel-nextyear {
 	border: none;
 	border-bottom: 1px solid #fff;
 }
+
 .v-sa .v-label hr,
 .v-ie8 .v-label hr {
 	height: 1px;
-}
-.blue .v-label hr {
-	background: #a3bcc9;
-	color: #a3bcc9;
-	border-bottom-color: #cfe2eb;
-}
-.black .v-label hr {
-	background: #0c0d0e;
-	color: #0c0d0e;
-	border-bottom-color: #292b2e;
 }
 
 /* Labels inside Table don't need a line-height */
@@ -3315,11 +3365,29 @@ td.v-datefield-calendarpanel-nextyear {
 .v-orderedlayout-blue,
 .v-gridlayout-blue,
 .v-csslayout-blue,
-.v-formlayout-blue {
+.v-formlayout-blue,
+.v-splitpanel-vertical-blue,
+.v-splitpanel-horizontal-blue {
 	background-color: #bcd3de;
 }
 .v-panel-content > div.blue {
 	background-color: #bcd3de;
+}
+/* White background */
+.v-verticallayout-white,
+.v-horizontallayout-white,
+.v-orderedlayout-white,
+.v-gridlayout-white,
+.v-csslayout-white,
+.v-formlayout-white,
+.v-splitpanel-vertical-white,
+.v-splitpanel-horizontal-white  {
+	background-color: #fff;
+	color: #222;
+}
+.v-panel-content > div.white {
+	background-color: #fff;
+	color: #222;
 }
 /* Black background */
 .v-verticallayout-black,
@@ -3327,11 +3395,13 @@ td.v-datefield-calendarpanel-nextyear {
 .v-orderedlayout-black,
 .v-gridlayout-black,
 .v-csslayout-black,
-.v-formlayout-black {
-	background-color: #1e2022;
+.v-formlayout-black,
+.v-splitpanel-vertical-black,
+.v-splitpanel-horizontal-black {
+	background: #1e2022 url(layouts/img/black-bg.png) repeat-x;
 }
 .v-panel-content > div.black {
-	background-color: #1e2022;
+	background: #1e2022 url(layouts/img/black-bg.png) repeat-x;
 }
 
 .v-link a:link span {
@@ -3358,6 +3428,9 @@ td.v-datefield-calendarpanel-nextyear {
 	padding: 3px 8px;
 	height: 17px;
 	line-height: 16px;
+}
+.v-menubar .v-menubar-menuitem:hover {
+	color: #fff;
 }
 .v-menubar-submenu {
 	background: #f8f8f9;
@@ -3970,27 +4043,6 @@ td.v-datefield-calendarpanel-nextyear {
   background-position: center -915px;
 }
 
-/* Small style */
-.v-splitpanel-hsplitter-small,
-.v-splitpanel-hsplitter-small-locked {
-	width: 1px;
-	background: #949698;
-}
-.v-splitpanel-vsplitter-small,
-.v-splitpanel-vsplitter-small-locked {
-	height: 1px;
-	background: #949698;
-}
-.v-splitpanel-hsplitter-small div {
-	width: 3px;
-	margin-left: -2px;
-	background: transparent;
-}
-.v-splitpanel-vsplitter-small div {
-	height: 3px;
-	margin-top: -2px;
-	background: transparent;
-}
 
 /* Splitpanels on blue background */
 .blue .v-splitpanel-hsplitter-small,
@@ -4004,7 +4056,44 @@ td.v-datefield-calendarpanel-nextyear {
 	background: #4e5253;
 }
 
-.v-table-header-wrap {
+/* Small style */
+.v-splitpanel-hsplitter-small,
+.v-splitpanel-hsplitter-small-locked,
+.white .v-splitpanel-hsplitter-small,
+.white .v-splitpanel-hsplitter-small-locked {
+	width: 1px;
+	background: #949698;
+}
+.v-splitpanel-vsplitter-small,
+.v-splitpanel-vsplitter-small-locked,
+.white .v-splitpanel-vsplitter-small,
+.white .v-splitpanel-vsplitter-small-locked {
+	height: 1px;
+	background: #949698;
+}
+.v-splitpanel-hsplitter-small div {
+	width: 5px;
+	margin-left: -2px;
+	background: transparent;
+}
+.v-splitpanel-vsplitter-small div {
+	height: 5px;
+	margin-top: -2px;
+	background: transparent;
+}
+
+/* Table on blue background */
+.blue .v-table-header-wrap {
+	border-color: #92a2aa;
+}
+.blue .v-table-body {
+	border-color: #92a2aa;
+	border-top-color: #c2c3c4;
+}
+
+/* Default & white style */
+.v-table-header-wrap,
+.white .v-table-header-wrap {
 	border-color: #c2c3c4;
 	background: transparent repeat-x;
   background-image: url(common/img/vertical-sprites.png);
@@ -4052,7 +4141,8 @@ td.v-datefield-calendarpanel-nextyear {
   -background-image: url(common/img/vertical-sprites-ie6.png);
   background-position: right -962px;
 }
-.v-table-body {
+.v-table-body,
+.white .v-table-body {
 	border-color: #c2c3c4;
 	background: #fff;
 }
@@ -4069,10 +4159,7 @@ td.v-datefield-calendarpanel-nextyear {
 	background: #eff0f1;
 }
 .v-table-cell-content:last-child {
-	border-right-color: #fff;
-}
-.v-table-row-odd .v-table-cell-content:last-child {
-	border-right-color: #eff0f1;
+	border-right-color: transparent;
 }
 .v-table .v-selected,
 .black .v-table .v-selected {
@@ -4176,16 +4263,6 @@ td.v-datefield-calendarpanel-nextyear {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
   background-position: left -1078px;
-}
-
-
-/* Table on blue background */
-.blue .v-table-header-wrap {
-	border-color: #92a2aa;
-}
-.blue .v-table-body {
-	border-color: #92a2aa;
-	border-top-color: #c2c3c4;
 }
 
 
@@ -4372,6 +4449,8 @@ td.v-datefield-calendarpanel-nextyear {
 	cursor: default;
 	text-indent: -999px;
 	overflow: hidden;
+	font-size: 14px;
+	font-weight: normal;
 }
 .v-ff .v-tabsheet-caption-close,
 .v-ie7 .v-tabsheet-caption-close {
@@ -4570,21 +4649,63 @@ td.v-datefield-calendarpanel-nextyear {
 	filter: none;
 }
 
+.v-tabsheet-borderless .v-tabsheet-tabitemcell-first {
+	padding-left: 7px;
+	background: url(tabsheet/img/framed/tab-first-left.png) no-repeat -3px 0;
+}
+.v-tabsheet-borderless .v-tabsheet-tabitemcell-selected-first {
+	background: url(tabsheet/img/framed/tab-first-left-sel.png) no-repeat -3px 0;
+}
+.v-tabsheet-borderless .v-tabsheet-spacertd div {
+	margin-right: 0;
+}
+.v-tabsheet-borderless .v-tabsheet-spacertd {
+	background: transparent;
+}
+.v-tabsheet-borderless .v-tabsheet-content {
+	border: none;
+}
+.v-tabsheet-borderless .v-tabsheet-deco {
+	height: 0;
+	border-top: none;
+}
+
 /**
  * Tabsheet "minimal" style --------------
  */
-.v-tabsheet-minimal .v-tabsheet-spacertd div {
+
+/* Minimal tabsheet on blue background */
+.blue .v-tabsheet-tabs-minimal .v-tabsheet-spacertd div,
+.blue .v-tabsheet-tabs-minimal .v-tabsheet-tabitem,
+.blue .v-tabsheet-tabs-minimal .v-tabsheet-tabitem-selected  {
+	border-color: #7c8a91;
+}
+.blue .v-tabsheet-tabs-minimal .v-tabsheet-caption-close {
+	color: #7c8a91;
+}
+.blue .v-tabsheet-tabs-minimal .v-tabsheet-caption-close:hover {
+	color: #BCD3DE;
+	background: #778d98;
+}
+.blue .v-tabsheet-tabs-minimal .v-tabsheet-caption-close:active {
+	background: #4f6874;
+}
+
+/* Default & white styles */
+.v-tabsheet-tabs-minimal .v-tabsheet-spacertd div,
+.white .v-tabsheet-tabs-minimal .v-tabsheet-spacertd div {
 	border-bottom: 1px solid #bfbfbf;
 	height: auto;
 	background: transparent;
 }
-.v-tabsheet-minimal .v-tabsheet-tabitemcell,
-.v-tabsheet-minimal .v-tabsheet-spacertd {
+.v-tabsheet-tabs-minimal .v-tabsheet-tabitemcell,
+.v-tabsheet-tabs-minimal .v-tabsheet-spacertd {
 	height: auto;
 	background: transparent;
 	padding-left: 0;
 }
-.v-tabsheet-minimal .v-tabsheet-tabitem {
+.v-tabsheet-tabs-minimal .v-tabsheet-tabitem,
+.white .v-tabsheet-tabs-minimal .v-tabsheet-tabitem {
 	border: none;
 	border-bottom: 1px solid #bfbfbf;
 	color: #4d748f;
@@ -4593,26 +4714,27 @@ td.v-datefield-calendarpanel-nextyear {
 	background: transparent;
 	text-shadow: none;
 }
-.v-tabsheet-minimal .v-tabsheet-tabitem .v-caption {
+.v-tabsheet-tabs-minimal .v-tabsheet-tabitem .v-caption {
 	padding: 5px 16px;
 	height: auto;
 	background: transparent;
 }
-.v-tabsheet-minimal .v-tabsheet-tabitemcell-selected {
+.v-tabsheet-tabs-minimal .v-tabsheet-tabitemcell-selected {
 	background: transparent;
 }
-.v-tabsheet-minimal .v-tabsheet-tabitem-selected {
+.v-tabsheet-tabs-minimal .v-tabsheet-tabitem-selected,
+.white .v-tabsheet-tabs-minimal .v-tabsheet-tabitem-selected {
 	background: transparent;
 	border: 1px solid #bfbfbf;
 	border-bottom: none;
 	color: #222;
 }
-.v-tabsheet-minimal .v-tabsheet-tabitem-selected .v-caption {
+.v-tabsheet-tabs-minimal .v-tabsheet-tabitem-selected .v-caption {
 	background: transparent;
 	padding: 4px 15px 6px 15px;
 }
-.v-tabsheet-minimal .v-tabsheet-tabitem .v-caption-closable,
-.v-tabsheet-minimal .v-tabsheet-tabitem-selected .v-caption-closable {
+.v-tabsheet-tabs-minimal .v-tabsheet-tabitem .v-caption-closable,
+.v-tabsheet-tabs-minimal .v-tabsheet-tabitem-selected .v-caption-closable {
 	padding-right: 6px;
 }
 .v-tabsheet-content-minimal {
@@ -4625,69 +4747,56 @@ td.v-datefield-calendarpanel-nextyear {
 	height: 0;
 	border: none;
 }
-.v-tabsheet-minimal .v-tabsheet-scroller {
+.v-tabsheet-tabcontainer-minimal .v-tabsheet-scroller {
 	margin-top: -20px;
 	height: 17px;
 	padding: 0;
 	border: none;
 	background: transparent;
 }
-.v-tabsheet-minimal .v-tabsheet-scroller button {
+.v-tabsheet-tabcontainer-minimal .v-tabsheet-scroller button {
 	margin-top: 0;
 }
-.v-tabsheet-minimal .v-tabsheet-caption-close,
-.v-tabsheet-minimal .v-tabsheet-caption-close:hover,
-.v-tabsheet-minimal .v-tabsheet-caption-close:active {
+.v-tabsheet-tabs-minimal .v-tabsheet-caption-close,
+.v-tabsheet-tabs-minimal .v-tabsheet-caption-close:hover,
+.v-tabsheet-tabs-minimal .v-tabsheet-caption-close:active {
 	text-indent: 0;
 	background: transparent;
 	margin-left: 3px;
 	margin-right: -3px;
 	padding: 0;
 	color: #999;
-	width: 15px;
-	height: 15px;
+	width: 14px;
+	height: 14px;
 	line-height: 14px;
 	-webkit-border-radius: 7px;
 	-moz-border-radius: 7px;
 }
-.v-tabsheet-minimal .v-tabsheet-caption-close {
+.v-tabsheet-tabs-minimal .v-tabsheet-caption-close {
 	margin-top: 1px;
 }
-.v-ff .v-tabsheet-minimal .v-tabsheet-caption-close,
-.v-ie7 .v-tabsheet-minimal .v-tabsheet-caption-close {
+.v-ff .v-tabsheet-tabs-minimal .v-tabsheet-caption-close,
+.v-ie7 .v-tabsheet-tabs-minimal .v-tabsheet-caption-close {
 	margin-top: -15px;
 }
-.v-tabsheet-minimal .v-tabsheet-caption-close:hover {
+.v-tabsheet-tabs-minimal .v-tabsheet-caption-close:hover,
+.white .v-tabsheet-tabs-minimal .v-tabsheet-caption-close:hover {
 	color: #fff;
 	background: #aaa;
 }
-.v-tabsheet-minimal .v-tabsheet-caption-close:active {
+.v-tabsheet-tabs-minimal .v-tabsheet-caption-close:active,
+.white .v-tabsheet-tabs-minimal .v-tabsheet-caption-close:active {
 	background: #777;
 }
-/* Minimal tabsheet on blue background */
-.blue .v-tabsheet-minimal .v-tabsheet-spacertd div,
-.blue .v-tabsheet-minimal .v-tabsheet-tabitem,
-.blue .v-tabsheet-minimal .v-tabsheet-tabitem-selected  {
-	border-color: #7c8a91;
-}
-.blue .v-tabsheet-minimal .v-tabsheet-caption-close {
-	color: #7c8a91;
-}
-.blue .v-tabsheet-minimal .v-tabsheet-caption-close:hover {
-	color: #BCD3DE;
-	background: #778d98;
-}
-.blue .v-tabsheet-minimal .v-tabsheet-caption-close:active {
-	background: #4f6874;
-}
+
 /* Minimal tabsheet on black background */
-.black .v-tabsheet-minimal .v-tabsheet-spacertd div,
-.black .v-tabsheet-minimal .v-tabsheet-tabitem,
-.black .v-tabsheet-minimal .v-tabsheet-tabitem-selected  {
+.black .v-tabsheet-tabs-minimal .v-tabsheet-spacertd div,
+.black .v-tabsheet-tabs-minimal .v-tabsheet-tabitem,
+.black .v-tabsheet-tabs-minimal .v-tabsheet-tabitem-selected  {
 	border-color: #3e4044;
 	color: #6a7f89;
 }
-.black .v-tabsheet-minimal .v-tabsheet-tabitem-selected {
+.black .v-tabsheet-tabs-minimal .v-tabsheet-tabitem-selected {
 	color: #c9ccce;
 }
 .black .v-tabsheet-content-minimal,
@@ -4695,40 +4804,40 @@ td.v-datefield-calendarpanel-nextyear {
 	color: #c9ccce;
 	text-shadow: #000 0 0 1px;
 }
-.black .v-tabsheet-minimal .v-tabsheet-caption-close {
+.black .v-tabsheet-tabs-minimal .v-tabsheet-caption-close {
 	color: #72787c;
 }
-.black .v-tabsheet-minimal .v-tabsheet-caption-close:hover {
+.black .v-tabsheet-tabs-minimal .v-tabsheet-caption-close:hover {
 	color: #1d2021;
 	background: #4d5154;
 }
-.black .v-tabsheet-minimal .v-tabsheet-caption-close:active {
+.black .v-tabsheet-tabs-minimal .v-tabsheet-caption-close:active {
 	background: #626669;
 }
 
 /**
  * Tabsheet bar style ---------------
  */
-.v-tabsheet-bar .v-tabsheet-tabitemcell,
-.v-tabsheet-bar .v-tabsheet-spacertd {
+.v-tabsheet-tabs-bar .v-tabsheet-tabitemcell,
+.v-tabsheet-tabs-bar .v-tabsheet-spacertd {
 	height: 20px;
 }
-.v-tabsheet-bar .v-tabsheet-spacertd {
+.v-tabsheet-tabs-bar .v-tabsheet-spacertd {
 	background: transparent;
 }
-.v-tabsheet-bar .v-tabsheet-tabitemcell {
+.v-tabsheet-tabs-bar .v-tabsheet-tabitemcell {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
   background-position: left -1710px;
 }
-.v-tabsheet-bar .v-tabsheet-tabitemcell-first {
+.v-tabsheet-tabs-bar .v-tabsheet-tabitemcell-first {
 	padding-left: 6px;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
   background-position: left -1730px;
 }
-.v-tabsheet-bar .v-tabsheet-tabitem,
-.v-tabsheet-bar .v-tabsheet-spacertd div {
+.v-tabsheet-tabs-bar .v-tabsheet-tabitem,
+.v-tabsheet-tabs-bar .v-tabsheet-spacertd div {
 	height: 20px;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
@@ -4736,81 +4845,81 @@ td.v-datefield-calendarpanel-nextyear {
 	font-size: 11px;
 	margin: 0;
 }
-.v-tabsheet-bar .v-tabsheet-tabitem .v-caption {
+.v-tabsheet-tabs-bar .v-tabsheet-tabitem .v-caption {
 	height: 18px;
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
   background-position: right -1770px;
 	padding: 2px 12px 0 10px;
 }
-.v-tabsheet-bar .v-tabsheet-tabitem .v-caption-closable,
-.v-tabsheet-bar .v-tabsheet-tabitem-selected .v-caption-closable {
+.v-tabsheet-tabs-bar .v-tabsheet-tabitem .v-caption-closable,
+.v-tabsheet-tabs-bar .v-tabsheet-tabitem-selected .v-caption-closable {
 	padding-right: 8px;
 	padding-left: 14px;
 }
-.v-tabsheet-bar .v-tabsheet-caption-close,
-.v-tabsheet-bar .v-tabsheet-caption-close:hover,
-.v-tabsheet-bar .v-tabsheet-caption-close:active {
+.v-tabsheet-tabs-bar .v-tabsheet-caption-close,
+.v-tabsheet-tabs-bar .v-tabsheet-caption-close:hover,
+.v-tabsheet-tabs-bar .v-tabsheet-caption-close:active {
 	text-indent: 0;
 	background: transparent;
 	margin-left: 3px;
 	margin-right: -3px;
-	padding: 0;
+	padding: 1px 0 0 1px;
 	color: #3c3c3c;
-	width: 14px;
-	height: 14px;
+	width: 13px;
+	height: 13px;
 	line-height: 12px;
 	-webkit-border-radius: 7px;
 	-moz-border-radius: 7px;
 }
-.v-tabsheet-bar .v-tabsheet-caption-close {
-	margin-top: 0;
+.v-tabsheet-tabs-bar .v-tabsheet-caption-close {
+	margin-top: 1px;
 }
-.v-ff .v-tabsheet-bar .v-tabsheet-caption-close,
-.v-ie7 .v-tabsheet-bar .v-tabsheet-caption-close {
-	margin-top: -15px;
+.v-ff .v-tabsheet-tabs-bar .v-tabsheet-caption-close,
+.v-ie7 .v-tabsheet-tabs-bar .v-tabsheet-caption-close {
+	margin-top: -14px;
 }
-.v-tabsheet-bar .v-tabsheet-caption-close:hover {
+.v-tabsheet-tabs-bar .v-tabsheet-caption-close:hover {
 	background: #bfbfbf;
 	-webkit-box-shadow: 0 1px 0 #fff;
 }
-.v-tabsheet-bar .v-tabsheet-caption-close:active {
+.v-tabsheet-tabs-bar .v-tabsheet-caption-close:active {
 	background: #a9a9a9;
 }
-.v-tabsheet-bar .v-tabsheet-tabitem-selected .v-tabsheet-caption-close {
+.v-tabsheet-tabs-bar .v-tabsheet-tabitem-selected .v-tabsheet-caption-close {
 	color: #404142;
 }
-.v-tabsheet-bar .v-tabsheet-tabitem-selected .v-tabsheet-caption-close:hover {
+.v-tabsheet-tabs-bar .v-tabsheet-tabitem-selected .v-tabsheet-caption-close:hover {
 	background: #5e666e;
 	color: #fff;
 	text-shadow: 0 -1px 0 #222;
 }
-.v-tabsheet-bar .v-tabsheet-tabitem-selected .v-tabsheet-caption-close:active {
+.v-tabsheet-tabs-bar .v-tabsheet-tabitem-selected .v-tabsheet-caption-close:active {
 	background: #404142;
 }
 
-.v-tabsheet-bar .v-tabsheet-tabitemcell-selected {
+.v-tabsheet-tabs-bar .v-tabsheet-tabitemcell-selected {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
   background-position: left -1790px;
 }
-.v-tabsheet-bar .v-tabsheet-tabitemcell-selected-first {
+.v-tabsheet-tabs-bar .v-tabsheet-tabitemcell-selected-first {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
   background-position: left -1810px;
 }
-.v-tabsheet-bar .v-tabsheet-tabitem-selected {
+.v-tabsheet-tabs-bar .v-tabsheet-tabitem-selected {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
   background-position: left -1830px;
 	color: #232930;
 }
-.v-tabsheet-bar .v-tabsheet-tabitem-selected .v-caption {
+.v-tabsheet-tabs-bar .v-tabsheet-tabitem-selected .v-caption {
   background-image: url(common/img/vertical-sprites.png);
   -background-image: url(common/img/vertical-sprites-ie6.png);
   background-position: right -1850px;
 }
-.v-tabsheet-bar .v-tabsheet-scroller {
+.v-tabsheet-tabcontainer-bar .v-tabsheet-scroller {
 	margin-top: -20px;
 	height: 19px;
 	border-right: none;
@@ -4818,7 +4927,7 @@ td.v-datefield-calendarpanel-nextyear {
   -background-image: url(common/img/vertical-sprites-ie6.png);
   background-position: left -1870px;
 }
-.v-tabsheet-bar .v-tabsheet-scroller button {
+.v-tabsheet-tabcontainer-bar .v-tabsheet-scroller button {
 	margin-top: 1px;
 }
 .v-tabsheet-content-bar {
@@ -4833,8 +4942,34 @@ td.v-datefield-calendarpanel-nextyear {
 }
 /* Content area font color specified with minimal style (reduces additional selectors) */
 
+.v-tabsheet-tabs-selected-closable .v-tabsheet-tabitem .v-tabsheet-caption-close,
+.v-tabsheet-tabs-selected-closable .v-tabsheet-tabitem:hover .v-tabsheet-caption-close {
+	visibility: hidden;
+}
+.v-tabsheet-tabs-selected-closable .v-tabsheet-tabitem-selected .v-tabsheet-caption-close,
+.v-tabsheet-tabs-selected-closable .v-tabsheet-tabitem-selected:hover .v-tabsheet-caption-close {
+	visibility: visible;
+}
+
+.v-tabsheet-tabs-hover-closable .v-tabsheet-caption-close {
+	visibility: hidden;
+}
+.v-tabsheet-tabs-hover-closable .v-tabsheet-tabitem:hover .v-tabsheet-caption-close {
+	visibility: visible;
+}
+
+/* Textfield on blue background */
+.blue .v-textfield,
+.blue .v-textarea {
+	border-color: #92a2aa;
+	border-top-color: #7c8a90;
+	border-bottom-color: #a1b3bc;
+}
+/* Default & white background */
 .v-textfield,
-.v-textarea {
+.v-textarea,
+.white .v-textfield,
+.white .v-textarea {
 	border: 1px solid #bcbdbe;
 	border-top-color: #a2a3a4;
 	border-bottom-color: #d2d3d4;
@@ -4850,7 +4985,8 @@ td.v-datefield-calendarpanel-nextyear {
 	height: 15px;
 	line-height: normal;
 }
-.v-textarea {
+.v-textarea,
+.white .v-textarea {
 	background-image: none;
 	height: auto;
 }
@@ -4860,13 +4996,6 @@ td.v-datefield-calendarpanel-nextyear {
 .v-app textarea.v-textarea,
 .v-window textarea.v-textarea  {
 	padding: 3px 3px 4px;
-}
-/* Textfield on blue background */
-.blue .v-textfield,
-.blue .v-textarea {
-	border-color: #92a2aa;
-	border-top-color: #7c8a90;
-	border-bottom-color: #a1b3bc;
 }
 .v-app .v-textfield-focus,
 .v-window .v-textfield-focus,

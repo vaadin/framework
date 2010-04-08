@@ -25,27 +25,6 @@
 	background-image: url(img/ver-handle.png); /** sprite-ref: verticals; sprite-alignment: center */
 }
 
-/* Small style */
-.v-splitpanel-hsplitter-small,
-.v-splitpanel-hsplitter-small-locked {
-	width: 1px;
-	background: #949698;
-}
-.v-splitpanel-vsplitter-small,
-.v-splitpanel-vsplitter-small-locked {
-	height: 1px;
-	background: #949698;
-}
-.v-splitpanel-hsplitter-small div {
-	width: 3px;
-	margin-left: -2px;
-	background: transparent;
-}
-.v-splitpanel-vsplitter-small div {
-	height: 3px;
-	margin-top: -2px;
-	background: transparent;
-}
 
 /* Splitpanels on blue background */
 .blue .v-splitpanel-hsplitter-small,
@@ -57,4 +36,30 @@
 .black .v-splitpanel-hsplitter-small,
 .black .v-splitpanel-hsplitter-small-locked {
 	background: #4e5253;
+}
+
+/* Small style */
+.v-splitpanel-hsplitter-small,
+.v-splitpanel-hsplitter-small-locked,
+.white .v-splitpanel-hsplitter-small,
+.white .v-splitpanel-hsplitter-small-locked {
+	width: 1px;
+	background: #949698;
+}
+.v-splitpanel-vsplitter-small,
+.v-splitpanel-vsplitter-small-locked,
+.white .v-splitpanel-vsplitter-small,
+.white .v-splitpanel-vsplitter-small-locked {
+	height: 1px;
+	background: #949698;
+}
+.v-splitpanel-hsplitter-small div {
+	width: 5px;
+	margin-left: -2px;
+	background: transparent;
+}
+.v-splitpanel-vsplitter-small div {
+	height: 5px;
+	margin-top: -2px;
+	background: transparent;
 }

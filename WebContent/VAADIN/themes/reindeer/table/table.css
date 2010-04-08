@@ -1,4 +1,15 @@
-.v-table-header-wrap {
+/* Table on blue background */
+.blue .v-table-header-wrap {
+	border-color: #92a2aa;
+}
+.blue .v-table-body {
+	border-color: #92a2aa;
+	border-top-color: #c2c3c4;
+}
+
+/* Default & white style */
+.v-table-header-wrap,
+.white .v-table-header-wrap {
 	border-color: #c2c3c4;
 	background: transparent repeat-x;
 	background-image: url(img/header-bg-light.png); /** sprite-ref: verticals; sprite-alignment: repeat */
@@ -40,7 +51,8 @@
 	background: transparent no-repeat right 7px;
 	background-image: url(img/desc-light.png); /** sprite-ref: verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
 }
-.v-table-body {
+.v-table-body,
+.white .v-table-body {
 	border-color: #c2c3c4;
 	background: #fff;
 }
@@ -57,10 +69,7 @@
 	background: #eff0f1;
 }
 .v-table-cell-content:last-child {
-	border-right-color: #fff;
-}
-.v-table-row-odd .v-table-cell-content:last-child {
-	border-right-color: #eff0f1;
+	border-right-color: transparent;
 }
 .v-table .v-selected,
 .black .v-table .v-selected {
@@ -152,16 +161,6 @@
 }
 .v-contextmenu .gwt-MenuItem-selected .v-on {
 	background-image: url(../common/icons/bullet-white.png); /** sprite-ref: verticals; sprite-margin-top: 4px; sprite-margin-bottom: 5px */
-}
-
-
-/* Table on blue background */
-.blue .v-table-header-wrap {
-	border-color: #92a2aa;
-}
-.blue .v-table-body {
-	border-color: #92a2aa;
-	border-top-color: #c2c3c4;
 }
 
 

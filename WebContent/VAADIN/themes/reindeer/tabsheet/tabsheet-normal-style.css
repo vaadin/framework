@@ -49,6 +49,8 @@
 	cursor: default;
 	text-indent: -999px;
 	overflow: hidden;
+	font-size: 14px;
+	font-weight: normal;
 }
 .v-ff .v-tabsheet-caption-close,
 .v-ie7 .v-tabsheet-caption-close {

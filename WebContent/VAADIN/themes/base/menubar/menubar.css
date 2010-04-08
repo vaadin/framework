@@ -47,7 +47,10 @@
 	height: 1em;
 	font-size: 0.9em;
 }
-.v-menubar-menuitem-disabled {
+.v-menubar-menuitem-disabled,
+.v-menubar span.v-menubar-menuitem-disabled:hover,
+.v-menubar span.v-menubar-menuitem-disabled:focus,
+.v-menubar span.v-menubar-menuitem-disabled:active {
 	color: #999;
 }
 .v-menubar-more-menuitem {
