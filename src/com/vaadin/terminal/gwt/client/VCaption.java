@@ -73,6 +73,8 @@ public class VCaption extends HTML {
 
         boolean wasPlacedAfterComponent = placedAfterComponent;
 
+        // Caption is placed after component unless there is some part which
+        // moves it above.
         placedAfterComponent = true;
 
         String style = CLASSNAME;
@@ -98,6 +100,7 @@ public class VCaption extends HTML {
                 DOM.insertChild(getElement(), icon.getElement(),
                         getInsertPosition(ATTRIBUTE_ICON));
             }
+            // Icon forces the caption to be above the component
             placedAfterComponent = false;
 
             iconOnloadHandled = false;
@@ -110,6 +113,10 @@ public class VCaption extends HTML {
         }
 
         if (uidl.hasAttribute(ATTRIBUTE_CAPTION)) {
+            // A caption text should be shown if the attribute is set
+            // If the caption is null the ATTRIBUTE_CAPTION should not be set to
+            // avoid ending up here.
+
             if (captionText == null) {
                 captionText = DOM.createDiv();
                 captionText.setClassName("v-captiontext");
@@ -120,12 +127,18 @@ public class VCaption extends HTML {
 
             // Update caption text
             String c = uidl.getStringAttribute(ATTRIBUTE_CAPTION);
-            if (c == null) {
-                c = "";
+            // A text forces the caption to be above the component.
+            placedAfterComponent = false;
+            if (c == null || c.trim().equals("")) {
+                // Not sure if c even can be null. Should not.
+
+                // This is required to ensure that the caption uses space in all
+                // browsers when it is set to the empty string.
+                captionText.setInnerHTML("&nbsp;");
             } else {
-                placedAfterComponent = false;
+                DOM.setInnerText(captionText, c);
             }
-            DOM.setInnerText(captionText, c);
+
         } else if (captionText != null) {
             // Remove existing
             DOM.removeChild(getElement(), captionText);
