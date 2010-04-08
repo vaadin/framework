@@ -7,6 +7,7 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.VerticalLayout;
 
 public class Reindeer extends BaseTheme {
@@ -34,6 +35,12 @@ public class Reindeer extends BaseTheme {
      */
     public static final String LABEL_SMALL = "light";
 
+    /**
+     * @deprecated Use {@link #LABEL_SMALL} instead.
+     */
+    @Deprecated
+    public static final String LABEL_LIGHT = "small";
+
     /***************************************************************************
      * 
      * Button styles
@@ -46,6 +53,12 @@ public class Reindeer extends BaseTheme {
      * per screen should be visible.
      */
     public static final String BUTTON_DEFAULT = "primary";
+
+    /**
+     * @deprecated Use {@link #BUTTON_DEFAULT} instead
+     */
+    @Deprecated
+    public static final String BUTTON_PRIMARY = BUTTON_DEFAULT;
 
     /**
      * Small sized button, use for context specific actions for example
@@ -92,16 +105,38 @@ public class Reindeer extends BaseTheme {
      **************************************************************************/
 
     /**
+     * Removes borders from the default tab sheet style.
+     */
+    public static final String TABSHEET_BORDERLESS = "borderless";
+
+    /**
      * Removes borders and background color from the tab sheet, and shows the
      * tabs as a small bar.
      */
-    public static final String TABSHEET_BAR = "bar";
+    public static final String TABSHEET_SMALL = "bar";
+
+    /**
+     * @deprecated Use {@link #TABSHEET_SMALL} instead.
+     */
+    @Deprecated
+    public static final String TABSHEET_BAR = TABSHEET_SMALL;
 
     /**
      * Removes borders and background color from the tab sheet. The tabs are
      * presented with minimal lines indicating the selected tab.
      */
     public static final String TABSHEET_MINIMAL = "minimal";
+
+    /**
+     * Makes the tab close buttons visible only when the user is hovering over
+     * the tab.
+     */
+    public static final String TABSHEET_HOVER_CLOSABLE = "hover-closable";
+
+    /**
+     * Makes the tab close buttons visible only when the tab is selected.
+     */
+    public static final String TABSHEET_SELECTED_CLOSABLE = "selected-closable";
 
     /***************************************************************************
      * 
@@ -126,9 +161,22 @@ public class Reindeer extends BaseTheme {
      **************************************************************************/
 
     /**
+     * Changes the background of a layout to white. Applies to
+     * {@link VerticalLayout}, {@link HorizontalLayout}, {@link GridLayout},
+     * {@link FormLayout}, {@link CssLayout} and {@link SplitPanel}.
+     * <p>
+     * <em>Does not revert any contained components back to normal if some 
+     * parent layout has style {@link #LAYOUT_BLACK} applied.</em>
+     */
+    public static final String LAYOUT_WHITE = "white";
+
+    /**
      * Changes the background of a layout to a shade of blue. Applies to
      * {@link VerticalLayout}, {@link HorizontalLayout}, {@link GridLayout},
-     * {@link FormLayout} and {@link CssLayout}.
+     * {@link FormLayout}, {@link CssLayout} and {@link SplitPanel}.
+     * <p>
+     * <em>Does not revert any contained components back to normal if some 
+     * parent layout has style {@link #LAYOUT_BLACK} applied.</em>
      */
     public static final String LAYOUT_BLUE = "blue";
 
