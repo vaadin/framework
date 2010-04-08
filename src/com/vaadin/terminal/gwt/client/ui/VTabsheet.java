@@ -540,21 +540,26 @@ public class VTabsheet extends VTabsheetBase {
             if (currentStyle != style) {
                 currentStyle = style;
                 final String[] styles = style.split(" ");
+                final String tabsBaseClass = TABS_CLASSNAME;
+                String tabsClass = tabsBaseClass;
                 final String contentBaseClass = CLASSNAME + "-content";
                 String contentClass = contentBaseClass;
                 final String decoBaseClass = CLASSNAME + "-deco";
                 String decoClass = decoBaseClass;
                 for (int i = 0; i < styles.length; i++) {
                     tb.addStyleDependentName(styles[i]);
+                    tabsClass += " " + tabsBaseClass + "-" + styles[i];
                     contentClass += " " + contentBaseClass + "-" + styles[i];
                     decoClass += " " + decoBaseClass + "-" + styles[i];
                 }
+                DOM.setElementProperty(tabs, "className", tabsClass);
                 DOM.setElementProperty(contentNode, "className", contentClass);
                 DOM.setElementProperty(deco, "className", decoClass);
                 borderW = -1;
             }
         } else {
             tb.setStyleName(CLASSNAME + "-tabs");
+            DOM.setElementProperty(tabs, "className", TABS_CLASSNAME);
             DOM.setElementProperty(contentNode, "className", CLASSNAME
                     + "-content");
             DOM.setElementProperty(deco, "className", CLASSNAME + "-deco");
