@@ -4514,15 +4514,16 @@ td.v-datefield-calendarpanel-nextyear {
   -background-image: url(common/img/vertical-sprites-ie6.png);
   background-position: right -1575px;
 }
-.v-tabsheet-content {
+.blue .v-tabsheet-content {
+	border-color: #a8bcc5;
+}
+.v-tabsheet-content,
+.white .v-tabsheet-content {
 	border: 1px solid #dcdcdc;
 	border-bottom: none;
 	border-top: none;
 	color: #222;
 	text-shadow: none;
-}
-.blue .v-tabsheet-content {
-	border-color: #a8bcc5;
 }
 .v-tabsheet-tabsheetpanel {
 	background: #fff;
@@ -4531,15 +4532,16 @@ td.v-datefield-calendarpanel-nextyear {
 .v-ff3 .v-tabsheet-content {
 	border-color: rgba(0,0,0,.1);
 }
-.v-tabsheet-deco {
+.blue .v-tabsheet-deco {
+	border-color: #92a3ac;
+	background: #adc2cd;
+}
+.v-tabsheet-deco,
+.white .v-tabsheet-deco {
 	height: 1px;
 	border-top: 1px solid #bebebe;
 	background: #e2e2e2;
 	overflow: hidden;
-}
-.blue .v-tabsheet-deco {
-	border-color: #92a3ac;
-	background: #adc2cd;
 }
 .v-sa .v-tabsheet-deco,
 .v-ff3 .v-tabsheet-deco {
