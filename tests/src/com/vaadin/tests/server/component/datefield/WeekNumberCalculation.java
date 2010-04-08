@@ -9,7 +9,6 @@ import junit.framework.TestCase;
 
 import com.vaadin.terminal.gwt.client.DateTimeService;
 
-@SuppressWarnings("deprecation")
 public class WeekNumberCalculation extends TestCase {
 
     final long MILLISECONDS_PER_DAY = 24 * 3600 * 1000;
@@ -74,41 +73,6 @@ public class WeekNumberCalculation extends TestCase {
         }
     }
 
-    //
-    // /**
-    // * Test all dates from 1990-1992 + some more and see that {@link Calendar}
-    // * calculates the US week number like we do.
-    // *
-    // */
-    // public void testUSWeekNumbers() {
-    // testWeekNumbers(new Locale("en", "US"));
-    // }
-
-    // public void testFIWeekNumbers() {
-    // // testWeekNumbers(new Locale("fi", "FI"));
-    // }
-
-    // private void testWeekNumbers(Locale locale) {
-    // Calendar c = Calendar.getInstance(locale);
-    // c.set(1990, 0, 1);
-    // // c.set(1990, 11, 29);
-    // c.get(Calendar.DAY_OF_WEEK);
-    // long start = c.getTimeInMillis();
-    //
-    // for (int i = 0; i < 1000; i++) {
-    // Date d = new Date(start + i * MILLISECONDS_PER_DAY);
-    // System.out.print(d);
-    // int expected = getCalendarWeekNumber(d, locale);
-    // int calculated = DateTimeService.getWeekNumber(d, c
-    // .getMinimalDaysInFirstWeek(), c.getFirstDayOfWeek() - 1);
-    // assertEquals(d + " should be week " + expected, expected,
-    // calculated);
-    // System.out.println(" OK (" + expected + ")");
-    //
-    // }
-    //
-    // }
-
     /**
      * Verify that special cases are handled correctly by us (and
      * {@link Calendar}).
@@ -128,11 +92,6 @@ public class WeekNumberCalculation extends TestCase {
         }
     }
 
-    // public void testUSWeekNumber() {
-    // Date d = new Date();
-    //
-    // }
-
     private int getCalendarISOWeekNr(Date d) {
         Calendar c = Calendar.getInstance();
         c.setFirstDayOfWeek(Calendar.MONDAY);
@@ -141,15 +100,6 @@ public class WeekNumberCalculation extends TestCase {
 
         return c.get(Calendar.WEEK_OF_YEAR);
     }
-
-    // private int getCalendarWeekNumber(Date d, Locale locale) {
-    // Calendar c = Calendar.getInstance(locale);
-    // // c.setFirstDayOfWeek(Calendar.MONDAY);
-    // // c.setMinimalDaysInFirstWeek(4);
-    // c.setTime(d);
-    //
-    // return c.get(Calendar.WEEK_OF_YEAR);
-    // }
 
     private static Date getDate(int year, int month, int date) {
         Calendar c = Calendar.getInstance();
