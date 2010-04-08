@@ -447,9 +447,11 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         }
 
         public void doSelectedItemAction() {
-            final MenuItem item = getSelectedItem();
+            // do not send a value change event if null was and stays selected
             final String enteredItemValue = tb.getText();
-            if (nullSelectionAllowed && "".equals(enteredItemValue)) {
+            if (nullSelectionAllowed && "".equals(enteredItemValue)
+                    && selectedOptionKey != null
+                    && !"".equals(selectedOptionKey)) {
                 if (nullSelectItem) {
                     reset();
                     return;
@@ -484,7 +486,13 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                             .get(i);
                     if (potentialExactMatch.getText().equals(enteredItemValue)) {
                         selectItem(potentialExactMatch);
-                        doItemAction(potentialExactMatch, true);
+                        // do not send a value change event if null was and
+                        // stays selected
+                        if (!"".equals(enteredItemValue)
+                                || (selectedOptionKey != null && !""
+                                        .equals(selectedOptionKey))) {
+                            doItemAction(potentialExactMatch, true);
+                        }
                         suggestionPopup.hide();
                         return;
                     }
@@ -885,7 +893,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             setPromptingOff(text);
         }
         setSelectedItemIcon(suggestion.getIconUri());
-        if (!newKey.equals(selectedOptionKey)) {
+        if (!(newKey.equals(selectedOptionKey) || ("".equals(newKey) && selectedOptionKey == null))) {
             selectedOptionKey = newKey;
             client.updateVariable(paintableId, "selected",
                     new String[] { selectedOptionKey }, immediate);
