@@ -106,7 +106,7 @@
 	</target>
 
 	<target name="run-tests" depends="compile-tests">
-		<foreach maxthreads="10" parallel="true" target="execute-tests" param="target">
+		<foreach maxthreads="20" parallel="true" target="execute-tests" param="target">
 			<path>
 				<fileset dir="${test-output-dir}" includes="**/**.java" />
 			</path>
