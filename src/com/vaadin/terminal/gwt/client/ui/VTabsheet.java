@@ -131,7 +131,7 @@ public class VTabsheet extends VTabsheetBase {
             this.closable = closable;
             if (closable && closeButton == null) {
                 closeButton = DOM.createSpan();
-                closeButton.setInnerText("x");
+                closeButton.setInnerHTML("&times;");
                 closeButton
                         .setClassName(VTabsheet.CLASSNAME + "-caption-close");
                 getElement().insertBefore(closeButton,
