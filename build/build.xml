@@ -1097,7 +1097,13 @@
     <!-- Automated tests.                                                   -->
     <!-- ================================================================== -->
 
-    <target name="tests" depends="ant-tests, server-side-tests, testbench-tests, integration-tests">
+    <target name="tests">
+    	<!-- Run all different types of tests in parallel to decrease testing time -->
+    	<parallel threadcount="3">
+    		<antcall target="server-side-tests"></antcall>
+    		<antcall target="testbench-tests"></antcall>
+    		<antcall target="integration-tests"></antcall>
+    	</parallel>
     </target>
 
     <target name="server-side-tests" depends="compile-java">
@@ -1144,17 +1150,6 @@
         </ant>
     </target>
 
-    <target name="ant-tests">
-        <echo>##teamcity[testSuiteStarted name='com.vaadin.tests.test-framework']</echo>
-
-        <!-- A smoke test for testing the testing framework. -->
-        <echo>##teamcity[testStarted name='testingSmoketest']</echo>
-        <echo>##teamcity[testStdOut name='testingSmoketest' out='Here be some text related to the test.]</echo>
-        <echo>##teamcity[testFinished name='testingSmoketest']</echo>
-
-        <echo>##teamcity[testSuiteFinished name='com.vaadin.tests.test-framework']</echo>
-    </target>
-	
     <target name="integration-tests" depends="internal-package-war">
         <!-- Parameters for the test.xml script. -->
         <fail unless="com.vaadin.testbench.tester.host" message="The 'com.vaadin.testbench.tester.host' property must be defined."/>
