@@ -1,8 +1,0 @@
-@import url(../runo/styles.css);
-
-.v-app, body.v-generated-body {
-	background-color: black;
-}
-.v-panel-content-light {
-	border: none;
-}
