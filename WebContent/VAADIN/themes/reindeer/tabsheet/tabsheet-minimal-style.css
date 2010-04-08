@@ -65,13 +65,15 @@
 .v-tabsheet-tabs-minimal .v-tabsheet-tabitem-selected .v-caption-closable {
 	padding-right: 6px;
 }
-.v-tabsheet-content-minimal {
+.v-tabsheet-content-minimal,
+.white .v-tabsheet-content-minimal {
 	border: none;
 }
 .v-tabsheet-content-minimal .v-tabsheet-tabsheetpanel {
 	background: transparent;
 }
-.v-tabsheet-deco-minimal {
+.v-tabsheet-deco-minimal,
+.white .v-tabsheet-deco-minimal {
 	height: 0;
 	border: none;
 }
