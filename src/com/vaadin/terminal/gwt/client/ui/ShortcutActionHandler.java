@@ -15,6 +15,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.KeyboardListenerCollection;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 
@@ -77,10 +78,15 @@ public class ShortcutActionHandler {
         while (it.hasNext()) {
             final ShortcutAction a = (ShortcutAction) it.next();
             if (a.getShortcutCombination().equals(kc)) {
-                Element et = DOM.eventGetTarget(event);
+                final Element et = DOM.eventGetTarget(event);
                 final Paintable target = client.getPaintable(et);
                 DOM.eventPreventDefault(event);
                 shakeTarget(et);
+                DeferredCommand.addCommand(new Command() {
+                    public void execute() {
+                        shakeTarget(et);
+                    }
+                });
                 DeferredCommand.addCommand(new Command() {
                     public void execute() {
                         if (target != null) {
@@ -96,11 +102,46 @@ public class ShortcutActionHandler {
         }
     }
 
-    public static native void shakeTarget(Element e)
+    /**
+     * We try to fire value change in the component the key combination was
+     * typed. Eg. textfield may contain newly typed text that is expected to be
+     * sent to server. This is done by removing focus and then returning it
+     * immediately back to target element.
+     * <p>
+     * This is practically a hack and should be replaced with an interface via
+     * widgets could be notified when they should fire value change. Big task
+     * for TextFields, DateFields and various selects.
+     * 
+     * <p>
+     * TODO separate opera impl with generator
+     */
+    private static void shakeTarget(final Element e) {
+        blur(e);
+        if (BrowserInfo.get().isOpera()) {
+            // will mess up with focus and blur event if the focus is not
+            // deferred. Will cause a small flickering, so not doing it for all
+            // browsers.
+            DeferredCommand.addCommand(new Command() {
+                public void execute() {
+                    focus(e);
+                }
+            });
+        } else {
+            focus(e);
+        }
+    }
+
+    private static native void blur(Element e)
     /*-{
-            if(e.blur) {
-                e.blur();
-                e.focus();
+        if(e.blur) {
+            e.blur();
+       }
+    }-*/;
+
+    private static native void focus(Element e)
+    /*-{
+        if(e.blur) {
+            e.focus();
        }
     }-*/;
 
