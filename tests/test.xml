@@ -164,7 +164,7 @@
 	<!-- ================================================================== -->
 
 	<!-- The default target. -->
-	<target name="run-and-clean-up" depends="check-parameters,remove-error-screens,run-tests">
+	<target name="run-and-clean-up" depends="check-parameters,remove-error-screens,run-tests,remove-temp-testclasses">
 	</target>
 
 	<!-- Also starts the server. -->
