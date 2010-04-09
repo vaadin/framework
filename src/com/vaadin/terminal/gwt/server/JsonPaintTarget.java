@@ -253,7 +253,16 @@ public class JsonPaintTarget implements PaintTarget {
         return result;
     }
 
+    /**
+     * Escapes the given string so it can safely be used as a JSON string.
+     * 
+     * @param s
+     *            The string to escape
+     * @return Escaped version of the string
+     */
     static public String escapeJSON(String s) {
+        // FIXME: Move this method to another class as other classes use it
+        // also.
         if (s == null) {
             return "";
         }
@@ -1030,7 +1039,9 @@ public class JsonPaintTarget implements PaintTarget {
                     class1 = (Class<? extends Paintable>) superclass;
                 } else {
                     System.out
-                            .append("Warning: no superclass of givent has ClientWidget"
+                            .append("Warning: no superclass of "
+                                    + paintable.getClass().getName()
+                                    + " has a @ClientWidget"
                                     + " annotation. Component will not be mapped correctly on client side.");
                     break;
                 }
