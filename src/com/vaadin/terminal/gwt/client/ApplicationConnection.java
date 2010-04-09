@@ -409,12 +409,18 @@ public class ApplicationConnection {
                                         - requestStartTime.getTime()) + "ms");
 
                         int statusCode = response.getStatusCode();
+                        if ((statusCode / 100) == 4) {
+                            // Handle all 4xx errors the same way as (they are
+                            // all permanent errors)
+                            showCommunicationError("UIDL could not be read from server. Check servlets mappings. Error code: "
+                                    + statusCode);
+                            endRequest();
+                            return;
+                        }
                         switch (statusCode) {
                         case 0:
                             showCommunicationError("Invalid status code 0 (server down?)");
-                            return;
-                        case 404:
-                            showCommunicationError("UIDL could not be read from server. Check servlets mappings.");
+                            endRequest();
                             return;
                         case 503:
                             // We'll assume msec instead of the usual seconds
@@ -429,6 +435,7 @@ public class ApplicationConnection {
                                             forceSync, analyzeLayouts);
                                 }
                             }).schedule(delay);
+                            endRequest();
                             return;
 
                         }
