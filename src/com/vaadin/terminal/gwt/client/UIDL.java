@@ -533,6 +533,13 @@ public final class UIDL extends JavaScriptObject {
         return connection.getPaintable(getStringVariable(name));
     }
 
+    /**
+     * Returns the child UIDL by its name. If several child nodes exist with the
+     * given name, the first child UIDL will be returned.
+     * 
+     * @param tagName
+     * @return the child UIDL or null if child wit given name was not found
+     */
     public UIDL getChildByTagName(String tagName) {
         Iterator<Object> childIterator = getChildIterator();
         while (childIterator.hasNext()) {
