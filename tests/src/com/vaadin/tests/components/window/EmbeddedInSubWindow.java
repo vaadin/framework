@@ -25,7 +25,7 @@ public class EmbeddedInSubWindow extends TestBase {
         zoom.getContent().setSizeUndefined();
 
         String res = "icons/EmbeddedInSubWindow-image.png";
-        Embedded imagePreview = new Embedded("", new ThemeResource(res));
+        Embedded imagePreview = new Embedded(null, new ThemeResource(res));
         imagePreview.setSizeUndefined();
 
         zoom.addComponent(imagePreview);
