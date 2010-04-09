@@ -1282,6 +1282,16 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * ACTIONS
      */
 
+    /**
+     * Gets the {@link ActionManager} responsible for handling {@link Action}s
+     * added to this Form.<br/>
+     * Note that Form has another ActionManager inherited from
+     * {@link AbstractField}. The ownActionManager handles Actions attached to
+     * this Form specifically, while the ActionManager in AbstractField
+     * delegates to the containing Window (i.e global Actions).
+     * 
+     * @return
+     */
     protected ActionManager getOwnActionManager() {
         if (ownActionManager == null) {
             ownActionManager = new ActionManager(this);

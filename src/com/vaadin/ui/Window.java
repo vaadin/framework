@@ -17,7 +17,10 @@ import java.util.Map;
 import java.util.Set;
 
 import com.vaadin.Application;
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
+import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
@@ -1804,16 +1807,31 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      */
     protected CloseShortcut closeShortcut;
 
-    public CloseShortcut setCloseShortcut(int keyCode, int... modifiers) {
-        CloseShortcut old = closeShortcut;
-        if (old != null) {
-            removeAction(old);
+    /**
+     * Makes is possible to close the window by pressing the given
+     * {@link KeyCode} and (optional) {@link ModifierKey}s.<br/>
+     * Note that this shortcut only reacts while the window has focus, closing
+     * itself - if you want to close a subwindow from a parent window, use
+     * {@link #addAction(com.vaadin.event.Action)} of the parent window instead.
+     * 
+     * @param keyCode
+     *            the keycode for invoking the shortcut
+     * @param modifiers
+     *            the (optional) modifiers for invoking the shortcut, null for
+     *            none
+     */
+    public void setCloseShortcut(int keyCode, int... modifiers) {
+        if (closeShortcut != null) {
+            removeAction(closeShortcut);
         }
         closeShortcut = new CloseShortcut(this, keyCode, modifiers);
         addAction(closeShortcut);
-        return old;
     }
 
+    /**
+     * Removes the keyboard shortcut previously set with
+     * {@link #setCloseShortcut(int, int...)}.
+     */
     public void removeCloseShortcut() {
         if (closeShortcut != null) {
             removeAction(closeShortcut);
@@ -1821,19 +1839,63 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         }
     }
 
+    /**
+     * A {@link ShortcutListener} specifically made to define a keyboard
+     * shortcut that closes the window.
+     * 
+     * <pre>
+     * <code>
+     *  // within the window using helper
+     *  subWindow.setCloseShortcut(KeyCode.ESCAPE, null);
+     *  
+     *  // or globally
+     *  getWindow().addAction(new Window.CloseShortcut(subWindow, KeyCode.ESCAPE));
+     * </code>
+     * </pre>
+     * 
+     */
     public static class CloseShortcut extends ShortcutListener {
         protected Window window;
 
+        /**
+         * Creates a keyboard shortcut for closing the given window using the
+         * shorthand notation defined in {@link ShortcutAction}.
+         * 
+         * @param window
+         *            to be closed when the shortcut is invoked
+         * @param shorthandCaption
+         *            the caption with shortcut keycode and modifiers indicated
+         */
         public CloseShortcut(Window window, String shorthandCaption) {
             super(shorthandCaption);
             this.window = window;
         }
 
+        /**
+         * Creates a keyboard shortcut for closing the given window using the
+         * given {@link KeyCode} and {@link ModifierKey}s.
+         * 
+         * @param window
+         *            to be closed when the shortcut is invoked
+         * @param keyCode
+         *            KeyCode to react to
+         * @param modifiers
+         *            optional modifiers for shortcut
+         */
         public CloseShortcut(Window window, int keyCode, int... modifiers) {
             super(null, keyCode, modifiers);
             this.window = window;
         }
 
+        /**
+         * Creates a keyboard shortcut for closing the given window using the
+         * given {@link KeyCode}.
+         * 
+         * @param window
+         *            to be closed when the shortcut is invoked
+         * @param keyCode
+         *            KeyCode to react to
+         */
         public CloseShortcut(Window window, int keyCode) {
             this(window, keyCode, null);
         }

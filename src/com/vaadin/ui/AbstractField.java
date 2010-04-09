@@ -20,6 +20,7 @@ import com.vaadin.data.Validator;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.event.Action;
 import com.vaadin.event.ActionManager;
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.terminal.CompositeErrorMessage;
 import com.vaadin.terminal.ErrorMessage;
@@ -1189,6 +1190,12 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * Actions
      */
 
+    /**
+     * Gets the {@link ActionManager} used to manage the
+     * {@link ShortcutListener}s added to this {@link Field}.
+     * 
+     * @return the ActionManager in use
+     */
     protected ActionManager getActionManager() {
         if (actionManager == null) {
             actionManager = new ActionManager();
@@ -1209,19 +1216,52 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         }
     }
 
+    /**
+     * A ready-made {@link ShortcutListener} that focuses the given
+     * {@link Focusable} (usually a {@link Field}) when the keyboard shortcut is
+     * invoked.
+     * 
+     */
     public static class FocusShortcut extends ShortcutListener {
         protected Focusable focusable;
 
+        /**
+         * Creates a keyboard shortcut for focusing the given {@link Focusable}
+         * using the shorthand notation defined in {@link ShortcutAction}.
+         * 
+         * @param focusable
+         *            to focused when the shortcut is invoked
+         * @param shorthandCaption
+         *            caption with keycode and modifiers indicated
+         */
         public FocusShortcut(Focusable focusable, String shorthandCaption) {
             super(shorthandCaption);
             this.focusable = focusable;
         }
 
+        /**
+         * Creates a keyboard shortcut for focusing the given {@link Focusable}.
+         * 
+         * @param focusable
+         *            to focused when the shortcut is invoked
+         * @param keyCode
+         *            keycode that invokes the shortcut
+         * @param modifiers
+         *            modifiers required to invoke the shortcut
+         */
         public FocusShortcut(Focusable focusable, int keyCode, int... modifiers) {
             super(null, keyCode, modifiers);
             this.focusable = focusable;
         }
 
+        /**
+         * Creates a keyboard shortcut for focusing the given {@link Focusable}.
+         * 
+         * @param focusable
+         *            to focused when the shortcut is invoked
+         * @param keyCode
+         *            keycode that invokes the shortcut
+         */
         public FocusShortcut(Focusable focusable, int keyCode) {
             this(focusable, keyCode, null);
         }

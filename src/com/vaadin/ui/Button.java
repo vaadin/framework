@@ -10,12 +10,15 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 import com.vaadin.data.Property;
-import com.vaadin.event.ShortcutListener;
 import com.vaadin.event.FieldEvents;
+import com.vaadin.event.ShortcutAction;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.VButton;
@@ -379,23 +382,36 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
         removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
 
     }
-    
+
     /*
      * Actions
      */
 
     protected ClickShortcut clickShortcut;
 
-    public ClickShortcut setClickShortcut(int keyCode, int... modifiers) {
-        ClickShortcut old = clickShortcut;
-        if (old != null) {
-            removeShortcutListener(old);
+    /**
+     * Makes it possible to invoke a click on this button by pressing the given
+     * {@link KeyCode} and (optional) {@link ModifierKey}s.<br/>
+     * The shortcut is global (bound to the containing Window).
+     * 
+     * @param keyCode
+     *            the keycode for invoking the shortcut
+     * @param modifiers
+     *            the (optional) modifiers for invoking the shortcut, null for
+     *            none
+     */
+    public void setClickShortcut(int keyCode, int... modifiers) {
+        if (clickShortcut != null) {
+            removeShortcutListener(clickShortcut);
         }
         clickShortcut = new ClickShortcut(this, keyCode, modifiers);
         addShortcutListener(clickShortcut);
-        return old;
     }
 
+    /**
+     * Removes the keyboard shortcut previously set with
+     * {@link #setClickShortcut(int, int...)}.
+     */
     public void removeClickShortcut() {
         if (clickShortcut != null) {
             removeShortcutListener(clickShortcut);
@@ -403,19 +419,53 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
         }
     }
 
+    /**
+     * A {@link ShortcutListener} specifically made to define a keyboard
+     * shortcut that invokes a click on the given button.
+     * 
+     */
     public static class ClickShortcut extends ShortcutListener {
         protected Button button;
 
+        /**
+         * Creates a keyboard shortcut for clicking the given button using the
+         * shorthand notation defined in {@link ShortcutAction}.
+         * 
+         * @param button
+         *            to be clicked when the shortcut is invoked
+         * @param shorthandCaption
+         *            the caption with shortcut keycode and modifiers indicated
+         */
         public ClickShortcut(Button button, String shorthandCaption) {
             super(shorthandCaption);
             this.button = button;
         }
 
+        /**
+         * Creates a keyboard shortcut for clicking the given button using the
+         * given {@link KeyCode} and {@link ModifierKey}s.
+         * 
+         * @param button
+         *            to be clicked when the shortcut is invoked
+         * @param keyCode
+         *            KeyCode to react to
+         * @param modifiers
+         *            optional modifiers for shortcut
+         */
         public ClickShortcut(Button button, int keyCode, int... modifiers) {
             super(null, keyCode, modifiers);
             this.button = button;
         }
 
+        /**
+         * Creates a keyboard shortcut for clicking the given button using the
+         * given {@link KeyCode}.
+         * 
+         * @param button
+         *            to be clicked when the shortcut is invoked
+         * @param keyCode
+         *            KeyCode to react to
+         */
         public ClickShortcut(Button button, int keyCode) {
             this(button, keyCode, null);
         }

@@ -8,10 +8,34 @@ import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.vaadin.event.Action.Handler;
+import com.vaadin.event.Action.Notifier;
 import com.vaadin.terminal.Resource;
+import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.Panel;
+import com.vaadin.ui.Window;
 
 /**
- * Extends Action class with keyboard bindings. TODO: fix documentation.
+ * Shortcuts are a special type of {@link Action}s used to create keyboard
+ * shortcuts.
+ * <p>
+ * The ShortcutAction is triggered when the user presses a given key in
+ * combination with the (optional) given modifier keys.
+ * </p>
+ * <p>
+ * ShortcutActions can be global (by attaching to the {@link Window}), or
+ * attached to different parts of the UI so that a specific shortcut is only
+ * valid in part of the UI. For instance, one can attach shortcuts to a specific
+ * {@link Panel} - look for {@link ComponentContainer}s implementing
+ * {@link Handler Action.Handler} or {@link Notifier Action.Notifier}.
+ * </p>
+ * <p>
+ * ShortcutActions have a caption that may be used to display the shortcut
+ * visually. This allows the ShortcutAction to be used as a plain Action while
+ * still reacting to a keyboard shortcut. Note that this functionality is not
+ * very well supported yet, but it might still be a good idea to give a caption
+ * to the shortcut.
+ * </p>
  * 
  * @author IT Mill Ltd.
  * @version
@@ -24,12 +48,40 @@ public class ShortcutAction extends Action {
 
     private final int[] modifiers;
 
+    /**
+     * Creates a shortcut that reacts to the given {@link KeyCode} and
+     * (optionally) {@link ModifierKey}s. <br/>
+     * The shortcut might be shown in the UI (e.g context menu), in which case
+     * the caption will be used.
+     * 
+     * @param caption
+     *            used when displaying the shortcut visually
+     * @param kc
+     *            KeyCode that the shortcut reacts to
+     * @param m
+     *            optional modifier keys
+     */
     public ShortcutAction(String caption, int kc, int[] m) {
         super(caption);
         keyCode = kc;
         modifiers = m;
     }
 
+    /**
+     * Creates a shortcut that reacts to the given {@link KeyCode} and
+     * (optionally) {@link ModifierKey}s. <br/>
+     * The shortcut might be shown in the UI (e.g context menu), in which case
+     * the caption and icon will be used.
+     * 
+     * @param caption
+     *            used when displaying the shortcut visually
+     * @param icon
+     *            used when displaying the shortcut visually
+     * @param kc
+     *            KeyCode that the shortcut reacts to
+     * @param m
+     *            optional modifier keys
+     */
     public ShortcutAction(String caption, Resource icon, int kc, int[] m) {
         super(caption, icon);
         keyCode = kc;
@@ -156,10 +208,21 @@ public class ShortcutAction extends Action {
         }
     }
 
+    /**
+     * Get the {@link KeyCode} that this shortcut reacts to (in combination with
+     * the {@link ModifierKey}s).
+     * 
+     * @return keycode for this shortcut
+     */
     public int getKeyCode() {
         return keyCode;
     }
 
+    /**
+     * Get the {@link ModifierKey}s required for the shortcut to react.
+     * 
+     * @return modifier keys for this shortcut
+     */
     public int[] getModifiers() {
         return modifiers;
     }
