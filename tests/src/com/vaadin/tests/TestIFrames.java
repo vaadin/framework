@@ -19,13 +19,11 @@ public class TestIFrames extends CustomComponent {
 
     public void createNewView() {
         main.removeAllComponents();
-        main.addComponent(createEmbedded("../Reservr/"));
+        main.addComponent(createEmbedded("../sampler/"));
         main.addComponent(createEmbedded("../colorpicker"));
         // main.addComponent(createEmbedded("../TestForNativeWindowing"));
-        main
-                .addComponent(createEmbedded("http://toolkit.itmill.com/demo/FeaturesApplication"));
-        main
-                .addComponent(createEmbedded("http://toolkit.itmill.com/demo/TableDemo"));
+        main.addComponent(createEmbedded("http://demo.vaadin.com/timeline"));
+        main.addComponent(createEmbedded("http://demo.vaadin.com/colorpicker"));
     }
 
     private Label createEmbedded(String URL) {

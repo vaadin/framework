@@ -14,7 +14,7 @@
 
 		<init-param>
 			<name>widgetset</name>
-			<value>com.vaadin.demo.reservation.gwt.ReservationWidgetSet</value>
+			<value>com.vaadin.demo.sampler.gwt.SamplerWidgetSet</value>
 		</init-param>
 		<supports>
 			<mime-type>text/html</mime-type>
@@ -25,46 +25,6 @@
 		<portlet-info>
 			<title>PortletDemo</title>
 			<short-title>PortletDemo</short-title>
-		</portlet-info>
-
-		<security-role-ref>
-			<role-name>administrator</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>guest</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>power-user</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>user</role-name>
-		</security-role-ref>
-	</portlet>
-	<portlet>
-		<portlet-name>SimpleReserverPortlet</portlet-name>
-		<display-name>Vaadin SimpleReserver</display-name>
-		<portlet-class>com.vaadin.terminal.gwt.server.ApplicationPortlet</portlet-class>
-		<init-param>
-			<name>application</name>
-			<value>SimpleReserver</value>
-		</init-param>
-		<init-param>
-			<name>style</name>
-			<value>height:400px</value>
-		</init-param>
-		<init-param>
-			<name>widgetset</name>
-			<value>com.vaadin.demo.reservation.gwt.ReservationWidgetSet</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-			<portlet-mode>view</portlet-mode>
-			<portlet-mode>edit</portlet-mode>
-			<portlet-mode>help</portlet-mode>
-		</supports>
-		<portlet-info>
-			<title>SimpleReserver</title>
-			<short-title>SimpleReserver</short-title>
 		</portlet-info>
 
 		<security-role-ref>
@@ -94,7 +54,7 @@
 		</init-param>
 		<init-param>
 			<name>widgetset</name>
-			<value>com.vaadin.demo.reservation.gwt.ReservationWidgetSet</value>
+			<value>com.vaadin.demo.sampler.gwt.SamplerWidgetSet</value>
 		</init-param>
 		<supports>
 			<mime-type>text/html</mime-type>
@@ -295,7 +255,7 @@
 
 		<init-param>
 			<name>widgetset</name>
-			<value>com.vaadin.demo.reservation.gwt.ReservationWidgetSet</value>
+			<value>com.vaadin.demo.sampler.gwt.SamplerWidgetSet</value>
 		</init-param>
 		<supports>
 			<mime-type>text/html</mime-type>
@@ -335,7 +295,7 @@
 		</init-param>
 		<init-param>
 			<name>widgetset</name>
-			<value>com.vaadin.demo.reservation.gwt.ReservationWidgetSet</value>
+			<value>com.vaadin.demo.sampler.gwt.SamplerWidgetSet</value>
 		</init-param>
 		<supports>
 			<mime-type>text/html</mime-type>

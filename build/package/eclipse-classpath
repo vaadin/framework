@@ -5,7 +5,6 @@
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/vaadin-@version@.jar"/>
 	<classpathentry kind="lib" path="gwt/gwt-user.jar" />
 	<classpathentry kind="lib" path="gwt/gwt-servlet.jar" />
-	<classpathentry kind="lib" path="WebContent/demo/lib/gwt-maps/gwt-maps.jar" />
 	<classpathentry kind="lib" path="WebContent/demo/lib/jetty/jetty-6.1.7.jar"/>
 	<classpathentry kind="lib" path="WebContent/demo/lib/jetty/jetty-util-6.1.7.jar"/>
 	<classpathentry kind="lib" path="WebContent/demo/lib/jetty/servlet-api-2.5-6.1.7.jar"/>

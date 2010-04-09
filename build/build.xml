@@ -694,37 +694,6 @@
     	</antcall>
     </target>
 
-    <target name="compile-widgetset-reserver" unless="compile.only.default-widgetset">
-        <condition property="googlemaps-jar" value="${output-dir}/WebContent/demo/lib/gwt-maps/gwt-maps.jar">
-            <available file="${output-dir}/WebContent/demo/lib/gwt-maps/gwt-maps.jar" />
-        </condition>
-        <condition property="googlemaps-jar" value="lib/gwt-maps/gwt-maps.jar">
-            <available file="lib/reservr/gwt-maps.jar" />
-        </condition>
-        <java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
-            <arg value="-war" />
-            <arg value="${widgetsets-output-dir}" />
-            <arg value="com.vaadin.demo.reservation.gwt.ReservationWidgetSet" />
-            <arg value="-style" />
-            <arg value="OBF" />
-            <jvmarg value="-Xss8M"/>
-            <jvmarg value="-Djava.awt.headless=true"/>
-            <classpath>
-                <pathelement location="${lib-gwt-user}" />
-                <pathelement location="${lib-gwt-dev}" />
-                <pathelement location="${result-path}/src/core" />
-                <pathelement location="${result-path}/src/demo" />
-                <!-- demo jars -->
-                <pathelement location="${googlemaps-jar}" />
-                <!-- demo widgetset sources -->
-                <pathelement path="${output-dir}/WebContent/WEB-INF/src" />
-                <pathelement location="${result-path}/classes" />
-            </classpath>
-        </java>
-        <antcall target="remove-widgetset-gwt-tmp"/>
-        <echo>Compiled ReservationWidgetSet</echo>
-    </target>
-
 	 <target name="compile-widgetset-sampler" unless="compile.only.default-widgetset">
 	    	<antcall target="compile-widgetset">
 	    		<param name="widgetset" value="com.vaadin.demo.sampler.gwt.SamplerWidgetSet"/>
@@ -790,7 +759,6 @@
     <target name="widgetset-default" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-default"/>
     <target name="widgetset-portal-default" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-portal-default"/>
     <target name="widgetset-sampler" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-sampler"/>
-    <target name="widgetset-reserver" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-reserver"/>
     <target name="widgetset-colorpicker" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-colorpicker"/>
 
     <!-- ================================================================== -->

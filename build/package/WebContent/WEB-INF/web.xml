@@ -64,48 +64,6 @@
 		</init-param>
 	</servlet>
 
-	<!--  Reservr demo application -->
-	<servlet>
-		<servlet-name>Reservr</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.demo.reservation.ReservationApplication</param-value>
-		</init-param>
-		<init-param>
-			<param-name>widgetset</param-name>
-			<param-value>com.vaadin.demo.reservation.gwt.ReservationWidgetSet</param-value>
-		</init-param>
-	</servlet>
-
-	<!-- Version of the Reservr to be run  as a portlet -->
-	<servlet>
-		<servlet-name>SimpleReserver</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.demo.reservation.simple.SimpleReserver</param-value>
-		</init-param>
-		<init-param>
-			<param-name>widgetset</param-name>
-			<param-value>com.vaadin.demo.reservation.gwt.ReservationWidgetSet</param-value>
-		</init-param>
-	</servlet>
-
-	<!-- Calendar demo application (shown in Windowed demos) -->
-	<servlet>
-		<servlet-name>CalendarDemo</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.demo.reservation.CalendarDemo</param-value>
-		</init-param>
-		<init-param>
-			<param-name>widgetset</param-name>
-			<param-value>com.vaadin.demo.reservation.gwt.ReservationWidgetSet</param-value>
-		</init-param>
-	</servlet>
-
 	<!-- Hello world demo application -->
 	<servlet>
 		<servlet-name>HelloWorld</servlet-name>
@@ -183,18 +141,6 @@
 	<servlet-mapping>
 		<servlet-name>VaadinApplicationRunner</servlet-name>
 		<url-pattern>/run/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>Reservr</servlet-name>
-		<url-pattern>/Reservr/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>SimpleReserver</servlet-name>
-		<url-pattern>/SimpleReserver/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>CalendarDemo</servlet-name>
-		<url-pattern>/CalendarDemo/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>FeatureBrowser</servlet-name>

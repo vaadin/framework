@@ -44,9 +44,8 @@ public class TestBench extends com.vaadin.Application implements
 
     // Add here packages which are used for finding testable classes
     String[] testablePackages = { "com.vaadin.tests", "com.vaadin.demo",
-            "com.vaadin.demo.colorpicker", "com.vaadin.demo.reservation",
-            "com.vaadin.demo.features", "com.vaadin.tests.tickets",
-            "com.vaadin.tests.book" };
+            "com.vaadin.demo.colorpicker", "com.vaadin.demo.features",
+            "com.vaadin.tests.tickets", "com.vaadin.tests.book" };
 
     HierarchicalContainer testables = new HierarchicalContainer();
 

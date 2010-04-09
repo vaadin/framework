@@ -4,7 +4,6 @@
 <display>
         <category name="Vaadin">
                 <portlet id="PortletDemoPortlet" />
-                <portlet id="SimpleReserverPortlet" />
                 <portlet id="SelectDemoPortlet" />
                 <portlet id="TableDemoPortlet" />
                 <portlet id="FilterSelectPortlet" />

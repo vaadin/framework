@@ -30,8 +30,3 @@ input[type="text"].v-filterselect-input {
 	padding: 3px 0px 0px 4px;
 }
 	
-.simplereserver div.v-datefield-entrycalendar-hours {
-	height: 200px;
-	overflow: auto;
-}
-

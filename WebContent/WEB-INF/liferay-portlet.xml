@@ -8,11 +8,6 @@
                 <ajaxable>false</ajaxable>
         </portlet>
         <portlet>
-                <portlet-name>SimpleReserverPortlet</portlet-name>
-                <instanceable>true</instanceable>       
-                <ajaxable>false</ajaxable>
-        </portlet>
-        <portlet>
                 <portlet-name>SelectDemoPortlet</portlet-name>
                 <instanceable>true</instanceable>       
                 <ajaxable>false</ajaxable>

@@ -130,45 +130,6 @@
 	</servlet>	
 
 	<servlet>
-		<servlet-name>Reservr</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.demo.reservation.ReservationApplication</param-value>
-		</init-param>
-		<init-param>
-			<param-name>widgetset</param-name>
-			<param-value>com.vaadin.demo.reservation.gwt.ReservationWidgetSet</param-value>
-		</init-param>
-	</servlet>
-
-	<servlet>
-		<servlet-name>SimpleReserver</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.demo.reservation.simple.SimpleReserver</param-value>
-		</init-param>
-		<init-param>
-			<param-name>widgetset</param-name>
-			<param-value>com.vaadin.demo.reservation.gwt.ReservationWidgetSet</param-value>
-		</init-param>
-	</servlet>
-
-	<servlet>
-		<servlet-name>CalendarDemo</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.demo.reservation.CalendarDemo</param-value>
-		</init-param>
-		<init-param>
-			<param-name>widgetset</param-name>
-			<param-value>com.vaadin.demo.reservation.gwt.ReservationWidgetSet</param-value>
-		</init-param>
-	</servlet>
-
-	<servlet>
 		<servlet-name>CustomLayoutDemo</servlet-name>
 		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
@@ -228,15 +189,6 @@
 		<init-param>
 			<param-name>application</param-name>
 			<param-value>com.vaadin.tests.UpgradingSample</param-value>
-		</init-param>
-	</servlet>
-
-	<servlet>
-		<servlet-name>QueryContainerDemo</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.tests.QueryContainerDemo</param-value>
 		</init-param>
 	</servlet>
 
@@ -392,22 +344,6 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
-		<servlet-name>Reservr</servlet-name>
-		<url-pattern>/Reservr/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>SimpleReserver</servlet-name>
-		<url-pattern>/SimpleReserver/*</url-pattern>
-		<!-- portlet style=height:400px -->
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>CalendarDemo</servlet-name>
-		<url-pattern>/CalendarDemo/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
 		<servlet-name>CustomLayoutDemo</servlet-name>
 		<url-pattern>/CustomLayoutDemo/*</url-pattern>
 	</servlet-mapping>
@@ -447,11 +383,6 @@
 	<servlet-mapping>
 		<servlet-name>UpgradingSample</servlet-name>
 		<url-pattern>/UpgradingSample/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>QueryContainerDemo</servlet-name>
-		<url-pattern>/QueryContainerDemo/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
