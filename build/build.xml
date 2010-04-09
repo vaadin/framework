@@ -1099,10 +1099,10 @@
 
     <target name="tests">
     	<!-- Run all different types of tests in parallel to decrease testing time -->
-    	<parallel threadcount="1">
-    		<antcall target="server-side-tests"></antcall>
-    		<antcall target="testbench-tests"></antcall>
+    	<parallel threadcount="3">
     		<antcall target="integration-tests"></antcall>
+    		<antcall target="testbench-tests"></antcall>
+    		<antcall target="server-side-tests"></antcall>
     	</parallel>
     </target>
 
