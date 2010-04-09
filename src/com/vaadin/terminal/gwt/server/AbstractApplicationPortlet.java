@@ -1204,6 +1204,15 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             String classNames, String divStyle) throws IOException {
         writer.write("<div id=\"" + id + "\" class=\""
                 + classNames + "\" " + divStyle + "></div>\n");
+        writer.write("<noscript>" + getNoScriptMessage() + "</noscript>");
+    }
+
+    /**
+     * Returns a message printed for browsers without scripting support or if
+     * browsers scripting support is disabled.
+     */
+    protected String getNoScriptMessage() {
+        return "You have to enable javascript in your browser to use an application built with Vaadin.";
     }
 
     /**
