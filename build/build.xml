@@ -903,22 +903,22 @@
     </target>
 
     <target name="manual-package" depends="manual-init, manual-copy">
-        <tar destfile="${result-path}/${product-file}-docs-${version.full}.zip" compression="gzip" longfile="gnu">
-            <tarfileset prefix="docs" dir="${result-path}/${product-file}-${version.full}/WebContent/docs">
+        <zip destfile="${result-path}/${product-file}-docs-${version.full}.zip">
+            <zipfileset prefix="docs" dir="${result-path}/${product-file}-${version.full}/WebContent/docs">
                 <patternset>
                     <include name="api/**" />
                     <include name="book-of-vaadin.pdf" />
                     <include name="example-source" />
                 </patternset>
-            </tarfileset>
-            <tarfileset prefix="docs" dir="${docdir}/build/result/package/WebContent/docs">
+            </zipfileset>
+            <zipfileset prefix="docs" dir="${docdir}/build/result/package/WebContent/docs">
                 <patternset>
                     <include name="book/**" />
                     <include name="tutorial/**" />
                     <include name="vaadin-tutorial.pdf" />
                 </patternset>
-            </tarfileset>
-        </tar>
+            </zipfileset>
+        </zip>
     </target>
 
     <target name="manual" depends="init, manual-init, manual-checkout, manual-build, manual-copy, manual-package">
