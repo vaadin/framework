@@ -15,6 +15,20 @@ import com.google.gwt.user.client.ui.RootPanel;
  */
 public class BrowserInfo {
 
+    private static final String BROWSER_OPERA = "op";
+    private static final String BROWSER_IE = "ie";
+    private static final String BROWSER_FIREFOX = "ff";
+    private static final String BROWSER_SAFARI = "sa";
+
+    public static final String ENGINE_GECKO = "gecko";
+    public static final String ENGINE_WEBKIT = "webkit";
+    public static final String ENGINE_PRESTO = "presto";
+    public static final String ENGINE_TRIDENT = "trident";
+
+    private static final String OS_WINDOWS = "win";
+    private static final String OS_LINUX = "lin";
+    private static final String OS_MACOSX = "mac";
+
     private static BrowserInfo instance;
 
     private static String cssClass = null;
@@ -84,37 +98,75 @@ public class BrowserInfo {
         String prefix = "v-";
 
         if (cssClass == null) {
-            String b = "";
-            String v = "";
-            String vv = "";
+            String browserIdentifier = "";
+            String majorVersionClass = "";
+            String minorVersionClass = "";
+            String browserEngineClass = "";
+
             if (browserDetails.isFirefox()) {
-                b = "ff";
-                v = b + browserDetails.getBrowserMajorVersion();
-                vv = v + browserDetails.getBrowserMinorVersion();
+                browserIdentifier = BROWSER_FIREFOX;
+                majorVersionClass = browserIdentifier
+                        + browserDetails.getBrowserMajorVersion();
+                minorVersionClass = majorVersionClass
+                        + browserDetails.getBrowserMinorVersion();
+                browserEngineClass = ENGINE_GECKO;
             } else if (browserDetails.isChrome()) {
                 // TODO update when Chrome is more stable
-                b = "sa";
-                v = "ch";
+                browserIdentifier = BROWSER_SAFARI;
+                majorVersionClass = "ch";
+                browserEngineClass = ENGINE_WEBKIT;
             } else if (browserDetails.isSafari()) {
-                b = "sa";
-                v = b + browserDetails.getBrowserMajorVersion();
-                vv = v + browserDetails.getBrowserMinorVersion();
+                browserIdentifier = BROWSER_SAFARI;
+                majorVersionClass = browserIdentifier
+                        + browserDetails.getBrowserMajorVersion();
+                minorVersionClass = majorVersionClass
+                        + browserDetails.getBrowserMinorVersion();
+                browserEngineClass = ENGINE_WEBKIT;
             } else if (browserDetails.isIE()) {
-                b = "ie";
-                v = b + browserDetails.getBrowserMajorVersion();
-                vv = v + browserDetails.getBrowserMinorVersion();
+                browserIdentifier = BROWSER_IE;
+                majorVersionClass = browserIdentifier
+                        + browserDetails.getBrowserMajorVersion();
+                minorVersionClass = majorVersionClass
+                        + browserDetails.getBrowserMinorVersion();
+                browserEngineClass = ENGINE_TRIDENT;
             } else if (browserDetails.isOpera()) {
-                b = "op";
-                v = b + browserDetails.getBrowserMajorVersion();
-                vv = v + browserDetails.getBrowserMinorVersion();
+                browserIdentifier = BROWSER_OPERA;
+                majorVersionClass = browserIdentifier
+                        + browserDetails.getBrowserMajorVersion();
+                minorVersionClass = majorVersionClass
+                        + browserDetails.getBrowserMinorVersion();
+                browserEngineClass = ENGINE_PRESTO;
             }
-            cssClass = prefix + b + " " + prefix + v;
-            if (!"".equals(vv)) {
-                cssClass = cssClass + " " + prefix + vv;
+
+            cssClass = prefix + browserIdentifier;
+            if (!"".equals(majorVersionClass)) {
+                cssClass = cssClass + " " + prefix + majorVersionClass;
+            }
+            if (!"".equals(minorVersionClass)) {
+                cssClass = cssClass + " " + prefix + minorVersionClass;
+            }
+            if (!"".equals(browserEngineClass)) {
+                cssClass = cssClass + " " + prefix + browserEngineClass;
+            }
+            String osClass = getOperatingSystemClass();
+            if (osClass != null) {
+                cssClass = cssClass + " " + prefix + osClass;
             }
         }
 
         return cssClass;
+    }
+
+    private String getOperatingSystemClass() {
+        if (browserDetails.isWindows()) {
+            return OS_WINDOWS;
+        } else if (browserDetails.isLinux()) {
+            return OS_LINUX;
+        } else if (browserDetails.isMacOSX()) {
+            return OS_MACOSX;
+        }
+        // Unknown OS
+        return null;
     }
 
     public boolean isIE() {

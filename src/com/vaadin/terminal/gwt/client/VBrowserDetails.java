@@ -15,15 +15,19 @@ import com.vaadin.terminal.gwt.server.WebBrowser;
  */
 public class VBrowserDetails implements Serializable {
 
-    private boolean isGecko;
-    private boolean isWebKit;
-    private boolean isPresto;
+    private boolean isGecko = false;
+    private boolean isWebKit = false;
+    private boolean isPresto = false;
 
-    private boolean isSafari;
-    private boolean isChrome;
-    private boolean isFirefox;
-    private boolean isOpera;
-    private boolean isIE;
+    private boolean isSafari = false;
+    private boolean isChrome = false;
+    private boolean isFirefox = false;
+    private boolean isOpera = false;
+    private boolean isIE = false;
+
+    private boolean isWindows = false;
+    private boolean isMacOSX = false;
+    private boolean isLinux = false;
 
     private float browserEngineVersion = -1;
     private int browserMajorVersion = -1;
@@ -90,6 +94,16 @@ public class VBrowserDetails implements Serializable {
             parseVersionString(safeSubstring(userAgent, i, i + 5));
         }
 
+        // Operating system
+        if (userAgent.contains("windows ")) {
+            isWindows = true;
+        } else if (userAgent.contains("linux")) {
+            isLinux = true;
+        } else if (userAgent.contains("macintosh")
+                || userAgent.contains("mac osx")
+                || userAgent.contains("mac os x")) {
+            isMacOSX = true;
+        }
     }
 
     private void parseVersionString(String versionString) {
@@ -240,4 +254,32 @@ public class VBrowserDetails implements Serializable {
             browserMinorVersion = 0;
         }
     }
+
+    /**
+     * Tests if the browser is run on Windows.
+     * 
+     * @return true if run on Windows, false otherwise
+     */
+    public boolean isWindows() {
+        return isWindows;
+    }
+
+    /**
+     * Tests if the browser is run on Mac OSX.
+     * 
+     * @return true if run on Mac OSX, false otherwise
+     */
+    public boolean isMacOSX() {
+        return isMacOSX;
+    }
+
+    /**
+     * Tests if the browser is run on Linux.
+     * 
+     * @return true if run on Linux, false otherwise
+     */
+    public boolean isLinux() {
+        return isLinux;
+    }
+
 }

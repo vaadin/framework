@@ -225,4 +225,35 @@ public class WebBrowser implements Terminal {
 
         return browserDetails.getBrowserMinorVersion();
     }
+
+    /**
+     * Tests whether the user is using Linux.
+     * 
+     * @return true if the user is using Linux, false if the user is not using
+     *         Linux or if no information on the browser is present
+     */
+    public boolean isLinux() {
+        return browserDetails.isLinux();
+    }
+
+    /**
+     * Tests whether the user is using Mac OS X.
+     * 
+     * @return true if the user is using Mac OS X, false if the user is not
+     *         using Mac OS X or if no information on the browser is present
+     */
+    public boolean isMacOSX() {
+        return browserDetails.isMacOSX();
+    }
+
+    /**
+     * Tests whether the user is using Windows.
+     * 
+     * @return true if the user is using Windows, false if the user is not using
+     *         Windows or if no information on the browser is present
+     */
+    public boolean isWindows() {
+        return browserDetails.isWindows();
+    }
+
 }
