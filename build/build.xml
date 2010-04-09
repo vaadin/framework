@@ -935,7 +935,7 @@
     </target>
 
     <target name="manual-package" depends="manual-init, manual-copy">
-        <tar destfile="${result-path}/${product-file}-docs-${version.full}.tar.gz" compression="gzip" longfile="gnu">
+        <tar destfile="${result-path}/${product-file}-docs-${version.full}.zip" compression="gzip" longfile="gnu">
             <tarfileset prefix="docs" dir="${result-path}/${product-file}-${version.full}/WebContent/docs">
                 <patternset>
                     <include name="api/**" />
