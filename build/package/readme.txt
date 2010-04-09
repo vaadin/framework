@@ -50,26 +50,26 @@ COPYING
 WebContent/vaadin-@version@.jar
 - Vaadin Library containing Java source and compiled files
 
-WebContent/doc/book-of-vaadin.pdf
+WebContent/docs/book-of-vaadin.pdf
 - Book of Vaadin in PDF format
 
-WebContent/doc/api/index.html
+WebContent/docs/api/index.html
 - Vaadin API Documentation as JavaDoc reference
 
 WebContent/WEB-INF/src
 - Content Browser source code, compiled into WebContent/WEB-INF/classes
  
-WebContent/doc/example-source
+WebContent/docs/example-source
 - example source code in HTML format
 
 WebContent/demo
 - files required by the demos
 
-Vaadin Hosted Mode Browser.launch
 Vaadin Development Server.launch
+GWT Development Mode.launch
 - launch configurations for Eclipse workspace
 
-WebContent/doc/example-source/build-widgetset.xml
+WebContent/docs/example-source/build-widgetset.xml
 - example on how to build GWT widget sets for Vaadin application
 
 WebContent/VAADIN
