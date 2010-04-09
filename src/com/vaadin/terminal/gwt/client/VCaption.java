@@ -91,7 +91,14 @@ public class VCaption extends HTML {
 
         setStyleName(style);
 
-        if (uidl.hasAttribute(ATTRIBUTE_ICON)) {
+        boolean hasIcon = uidl.hasAttribute(ATTRIBUTE_ICON);
+        boolean hasText = uidl.hasAttribute(ATTRIBUTE_CAPTION);
+        boolean hasDescription = uidl.hasAttribute(ATTRIBUTE_DESCRIPTION);
+        boolean showRequired = uidl.getBooleanAttribute(ATTRIBUTE_REQUIRED);
+        boolean showError = uidl.hasAttribute(ATTRIBUTE_ERROR)
+                && !uidl.getBooleanAttribute(ATTRIBUTE_HIDEERRORS);
+
+        if (hasIcon) {
             if (icon == null) {
                 icon = new Icon(client);
                 icon.setWidth("0");
@@ -112,7 +119,7 @@ public class VCaption extends HTML {
             icon = null;
         }
 
-        if (uidl.hasAttribute(ATTRIBUTE_CAPTION)) {
+        if (hasText) {
             // A caption text should be shown if the attribute is set
             // If the caption is null the ATTRIBUTE_CAPTION should not be set to
             // avoid ending up here.
@@ -133,8 +140,12 @@ public class VCaption extends HTML {
                 // Not sure if c even can be null. Should not.
 
                 // This is required to ensure that the caption uses space in all
-                // browsers when it is set to the empty string.
-                captionText.setInnerHTML("&nbsp;");
+                // browsers when it is set to the empty string. If there is an
+                // icon, error indicator or required indicator they will ensure
+                // that space is reserved.
+                if (!hasIcon && !showRequired && !showError) {
+                    captionText.setInnerHTML("&nbsp;");
+                }
             } else {
                 DOM.setInnerText(captionText, c);
             }
@@ -145,7 +156,7 @@ public class VCaption extends HTML {
             captionText = null;
         }
 
-        if (uidl.hasAttribute(ATTRIBUTE_DESCRIPTION)) {
+        if (hasDescription) {
             if (captionText != null) {
                 addStyleDependentName("hasdescription");
             } else {
@@ -153,7 +164,7 @@ public class VCaption extends HTML {
             }
         }
 
-        if (uidl.getBooleanAttribute(ATTRIBUTE_REQUIRED)) {
+        if (showRequired) {
             if (requiredFieldIndicator == null) {
                 requiredFieldIndicator = DOM.createDiv();
                 requiredFieldIndicator
@@ -169,8 +180,7 @@ public class VCaption extends HTML {
             requiredFieldIndicator = null;
         }
 
-        if (uidl.hasAttribute(ATTRIBUTE_ERROR)
-                && !uidl.getBooleanAttribute(ATTRIBUTE_HIDEERRORS)) {
+        if (showError) {
             if (errorIndicatorElement == null) {
                 errorIndicatorElement = DOM.createDiv();
                 DOM.setInnerHTML(errorIndicatorElement, "&nbsp;");
