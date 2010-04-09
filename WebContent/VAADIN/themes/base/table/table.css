@@ -55,8 +55,9 @@
 	display: block;
 	height: 1.2em;
 	float: right;
-	background: #aaa;
-	cursor: col-resize;
+	background: #aaa;	
+	cursor: e-resize;	/* Opera does not support col-resize, so use e-resize instead */
+	cursor: col-resize;	
 	width: 1px;
 	overflow: hidden;
 }
