@@ -435,7 +435,6 @@ public class ApplicationConnection {
                                             forceSync, analyzeLayouts);
                                 }
                             }).schedule(delay);
-                            endRequest();
                             return;
 
                         }
