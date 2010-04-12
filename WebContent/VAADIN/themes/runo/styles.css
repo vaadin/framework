@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_3_0_dev-20100409";}
-.v-theme-version-6_3_0_dev-20100409 {display: none;}
+.v-theme-version:after {content:"9_9_9_INTERNAL-DEBUG-BUILD";}
+.v-theme-version-9_9_9_INTERNAL-DEBUG-BUILD {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -1367,6 +1367,7 @@ div.v-progressindicator-indeterminate-disabled {
 	top: 0;
 	bottom: 0;
 	background: #ddd;
+	cursor: e-resize;
 	cursor: col-resize;
 }
 .v-splitpanel-vsplitter {
@@ -1377,6 +1378,7 @@ div.v-progressindicator-indeterminate-disabled {
 	height: 6px;
 	font-size: 1px; /* for IE6 */
 	background: #ddd;
+	cursor: s-resize;
 	cursor: row-resize;
 }
 /* IE specific styles */
