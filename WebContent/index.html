@@ -135,7 +135,7 @@
 							</a>
 						</div>
 						<div class="col2">
-							<a class="thumb" href="demo/img/runo.png" rel="zoombox" title="Runo theme mockup (actual implementation differs in some parts)" />
+							<a class="thumb" href="demo/img/runo.png" rel="zoombox" title="Runo theme mockup (actual implementation differs in some parts)">
 								<img src="demo/img/icons/runo.png" />
 								<span><strong>Runo</strong>Clean and easy to extend</span>
 							</a>
@@ -457,12 +457,23 @@
 					tab.addClass("selected");
 				}
 				jQuery.data(tab[0], "content", li);
+				tab.click(function() {
+					setTimeout(function() {
+						pageload(li[0].id);
+					},100);
+				});
 			});
 			content.height(height);
 		}
 		
 		function pageload(hash) {
+			hash = hash.replace(/^.*#/, '').toLowerCase();
+			var tab = $("#tab_"+hash);
 			var tabs = $("#tabs");
+			var sel = jQuery.data(tabs[0], "selected")[0];
+			if(sel == tab[0])
+				return;
+			
 			var content = $("#reasons");
 			
 			// Hide previous
@@ -470,8 +481,6 @@
 			//jQuery.data(content[0], "open").fadeOut("fast");
 			jQuery.data(content[0], "open").hide();
 			
-			hash = hash.replace(/^.*#/, '');
-			var tab = $("#tab_"+hash);
 			var tabContent = jQuery.data(tab[0], "content");
 			
 			// Show new
