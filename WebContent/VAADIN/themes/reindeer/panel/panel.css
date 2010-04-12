@@ -1,5 +1,12 @@
+.blue .v-panel-caption,
+.blue .v-panel-nocaption,
+.blue .v-panel-content {
+	border-color: #a8bcc5;
+}
 .v-panel-caption,
-.v-panel-nocaption {
+.v-panel-nocaption,
+.white .v-panel-caption,
+.white .v-panel-nocaption {
 	border-bottom: 1px solid #dcdcdc;
 	line-height: 16px; /* accommodate minimum icon size */
 }
@@ -16,11 +23,6 @@
 	border: 1px solid #dcdcdc;
 	border-bottom: none;
 	border-top: none;
-}
-.blue .v-panel-caption,
-.blue .v-panel-nocaption,
-.blue .v-panel-content {
-	border-color: #a8bcc5;
 }
 .v-sa .v-panel-content,
 .v-ff3 .v-panel-content {
