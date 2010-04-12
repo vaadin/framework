@@ -21,7 +21,7 @@
 	
 		<div id="subheader">
 			<ul id="menu">
-				<li>Foobar (mitä tähän?)</li>
+				<li></li>
 			<!--
 			  <li><a href="#sampler">Sampler</a></li>
 			  <li>&bull;</li>
@@ -175,8 +175,8 @@
 						<p>Vaadin has a unique add-on architecture. Add-ons, such as new components/widgets can be packaged as single JARs, which can then be used in other projects just by adding them to the project's classpath.</p>
 					</div>
 					<div class="col2">
-						<h5>Browse Add-ons</h5>
-						<p>Choose from the dozens of useful add-ons found in the Vaadin Add-on Directory.</p>
+						<h5>Vaadin Directory</h5>
+						<p>Choose from the dozens of useful add-ons found in the Vaadin Add-on Directory. Distribute your own add-on for others to use.</p>
 					</div>
 					<div class="newline col2">
 						<h5>Packaging Add-ons</h5>
@@ -206,7 +206,7 @@
 								<img src="demo/img/book-of-vaadin.png" />
 						</p>
 						
-						 <a href="docs/book-of-vaadin.pdf">Book of Vaadin</a> provides you with all the information you need about Vaadin in a comprehensive form.</p>
+						 <p><a href="docs/book-of-vaadin.pdf">Book of Vaadin</a> provides you with all the information you need about Vaadin in a comprehensive form.</p>
 						<h5>API</h5>
 						<p>When you get down to programming the <a href="docs/api/index.html">Vaadin API Reference Documentation</a> will help you with the classes and the methods.</p>
 					</div>
@@ -214,18 +214,49 @@
 						<h5>DZone Refcard</h5>
 						<p>For a quick introduction to Vaadin, check out the <a href="http://refcardz.dzone.com/refcardz/getting-started-vaadin">DZone Vaadin Refcard</a></p>
 						<h5>Tutorials</h5>
-						<p>Vaadin tutorials provides you with a code-centric introduction to Vaadin.</p>
-						<p><a href="http://vaadin.com/tutorial/-/page/">Building a simple address book</a></p>
-						<p><a href="http://vaadin.com/tutorial/">More tutorials</a></p>
+						<p>Vaadin tutorials provides you with a code-centric introduction to Vaadin.<br/>
+						<a href="http://vaadin.com/tutorial/-/page/">Building a simple address book</a><br/>
+						<a href="http://vaadin.com/tutorial/">More tutorials</a></p>
 					</div>
 				</li>
 				
-				<li id="jar" class="tab">
-					<h4 title="Lightweight">Just One JAR</h4>
+				<li id="deployment" class="tab">
+					<h4 title="Deployment">Easy deployment</h4>
+					<div class="col2">
+						<h5>Single JAR</h5>
+						<p>Vaadin is a single JAR file without external dependencies. Deploy the JAR with your application and you are ready to go.</p>
+						<h5>Servlet deployment</h5>
+						<p>Vaadin provides a single servlet which runs the application. An application can be deployed to any servlet 2.3 container such as Jetty, Tomcat, and more.</p>
+					</div>						
+					<div class="col2">
+						<h5>Portlet support</h5>
+						<p>Vaadin applications can also be deployed as portlets in portals such as Liferay. No code modifications are needed to deploy a Vaadin application to a portal and both portlet standards 1.0 (JSR-168) and 2.0 (JSR-286) are supported.</p>						
+						<h5>Google App Engine</h5>						
+						<p>The same servlet and portlet Vaadin applications can also be deployed to Google App Engine. This requires that all application classes are serializable.</p>
+					</div>
 				</li>
 				
-				<li id="compatibility" class="tab">
-					<h4 title="Compatibility">Compatible With What You Already Know</h4>
+				<li id="development" class="tab">
+					<h4 title="Development">Compatible With Tools You Already Know</h4>
+					<div class="col2">
+						<h5>Eclipse</h5>
+						<p>Vaadin provides an Eclipse plugin which can automatically set up your project, compile your widgetset and more.</p> 
+						<ul><li><a href="http://vaadin.com/eclipse/">Eclipse plugin update site and instructions</a></li></ul>
+						<br/>
+						<h5>NetBeans</h5>
+						<p>A community created Vaadin NetBeans plugin is available for all NetBeans developers.</p>
+						<ul><li><a href="http://vaadin.com/netbeans">NetBeans plugin installation instructions</a></li></ul>
+					</div>
+					<div class="col2">
+						<h5>Maven</h5>
+						<p>Vaadin is also in the central Maven repository, providing archetypes for creating Vaadin projects and a widgetset compilation plugin for Maven.</p>
+						<ul><li><a href="http://dev.vaadin.com/wiki/Articles/MavenIntegration">Using Vaadin with Maven</a></li></ul>
+						<br/>
+						<h5>Ant</h5>
+						<p>Ant integration is also provided for users of other IDEs and for automatic builds.</p>
+						<ul><li><a href="docs/example-source/build-widgetset.xml">Example widgetset build script</a></li></ul>
+						
+					</div>	
 				</li>
 			</ul>
 		</div> <!-- /content -->
