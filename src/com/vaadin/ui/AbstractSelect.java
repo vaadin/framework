@@ -27,6 +27,7 @@ import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.event.dd.acceptcriteria.ClientCriterion;
 import com.vaadin.event.dd.acceptcriteria.ClientSideCriterion;
 import com.vaadin.event.dd.acceptcriteria.ContainsDataFlavor;
+import com.vaadin.event.dd.acceptcriteria.TargetDetailIs;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
@@ -1847,6 +1848,26 @@ public abstract class AbstractSelect extends AbstractField implements
             return VerticalDropLocation.valueOf(detail);
         }
 
+    }
+
+    /**
+     * An accept criterion to accept drops only on a specific vertical location
+     * of an item.
+     * <p>
+     * This accept criterion is currently usable in Tree and Table
+     * implementations.
+     */
+    public static class VerticalLocationIs extends TargetDetailIs {
+        public static VerticalLocationIs TOP = new VerticalLocationIs(
+                VerticalDropLocation.TOP);
+        public static VerticalLocationIs BOTTOM = new VerticalLocationIs(
+                VerticalDropLocation.BOTTOM);
+        public static VerticalLocationIs MIDDLE = new VerticalLocationIs(
+                VerticalDropLocation.MIDDLE);
+
+        private VerticalLocationIs(VerticalDropLocation l) {
+            super("detail", l.name());
+        }
     }
 
 }
