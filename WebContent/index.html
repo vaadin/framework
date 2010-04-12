@@ -102,7 +102,7 @@
 					
 					<div class="col2">
 						<h5>Short Development Example</h5>
-						<p>Watch how to create a document editor in less than 10 minutes using the Eclipse IDE.</p>
+						<p>Watch how to create a document editor in less than 10 minutes using the Eclipse IDE, using the <a href="#development">Vaadin Eclipse Plugin</a>.</p>
 						<a class="thumb video" href="http://www.youtube.com/watch?v=u-a3VQF90kw" rel="zoombox">
 							<img src="demo/img/icons/dev-video.png" />
 							<span>Vaadin step-by-step (10 min)</span>
@@ -178,6 +178,7 @@
 					<div class="col2">
 						<h5>Vaadin Directory</h5>
 						<p>Choose from the dozens of useful add-ons found in the Vaadin Add-on Directory. Distribute your own add-on for others to use.</p>
+						<a href="http://vaadin.com/directory"><img src="demo/img/directory.png" /></a>
 					</div>
 					<div class="newline col2">
 						<h5>Packaging Add-ons</h5>
@@ -201,37 +202,47 @@
 				
 				<li id="documentation" class="tab">
 					<h4 title="Documentation">Best Documentation Around</h4>
-					<div class="col2">
-						<h5>Documentation is the key to understanding</h5>
-						<p>
-								<img src="demo/img/book-of-vaadin.png" />
-						</p>
-						
-						 <p><a href="docs/book-of-vaadin.pdf">Book of Vaadin</a> provides you with all the information you need about Vaadin in a comprehensive form.</p>
+					<div class="col3 book">
+					<img src="demo/img/book-of-vaadin.png" />
+						<h5>Book of Vaadin</h5>
+						<h6>Documentation Is The Key to Understanding</h6>
+						 <p><a href="docs/book-of-vaadin.pdf">The Book of Vaadin</a> provides you with all the information you need about Vaadin in a comprehensive form. It's available as a free PDF download, or alternatively as a physical book from Lulu.com</p>
+					</div>
+					<div class="col"
 						<h5>API</h5>
 						<p>When you get down to programming the <a href="docs/api/index.html">Vaadin API Reference Documentation</a> will help you with the classes and the methods.</p>
 					</div>
-					<div class="col2">
-						<h5>DZone Refcard</h5>
-						<p>For a quick introduction to Vaadin, check out the <a href="http://refcardz.dzone.com/refcardz/getting-started-vaadin">DZone Vaadin Refcard</a></p>
+					<div class="newline col2 tutorial"
 						<h5>Tutorials</h5>
-						<p>Vaadin tutorials provides you with a code-centric introduction to Vaadin.<br/>
-						<a href="http://vaadin.com/tutorial/-/page/">Building a simple address book</a><br/>
-						<a href="http://vaadin.com/tutorial/">More tutorials</a></p>
+						<img src="demo/img/address-book-icon.png" alt="Address Book tutorial" />
+						<p>Vaadin tutorials provides you with a code-centric introduction to Vaadin.</p>
+						<ul><li>
+						<a href="http://vaadin.com/tutorial/-/page/">Building a simple address book</a></li>
+						<li><a href="http://vaadin.com/tutorial/">More tutorials</a></li>
+						</ul>
+					</div>
+					<div class="col2 dzone">
+						<h5>DZone Refcard</h5>
+						<a href="http://refcardz.dzone.com/refcardz/getting-started-vaadin"><img src="demo/img/cheatsheet.png" alt="DZone Ref Card for Vaadin" /></a>
+						<p>For a quick introduction to Vaadin, check out the <a href="http://refcardz.dzone.com/refcardz/getting-started-vaadin">DZone Vaadin Refcard</a></p>
 					</div>
 				</li>
 				
 				<li id="deployment" class="tab">
 					<h4 title="Deployment">Easy Deployment</h4>
-					<div class="col2">
+					<div class="col">
 						<h5>Single JAR</h5>
 						<p>Vaadin is a single JAR file without external dependencies. Deploy the JAR with your application and you are ready to go.</p>
+					</div>
+					<div class="col">
 						<h5>Servlet deployment</h5>
-						<p>Vaadin provides a single servlet which runs the application. An application can be deployed to any servlet 2.3 container such as Jetty, Tomcat, and more.</p>
+						<p>Vaadin provides a single servlet which runs the application. An application can be deployed to any servlet 2.3 container such as Jetty, Tomcat, and others.</p>
 					</div>						
-					<div class="col2">
+					<div class="col">
 						<h5>Portlet support</h5>
-						<p>Vaadin applications can be deployed as portlets in portals such as Liferay. No code modifications are needed to deploy a Vaadin application to a portal and both portlet standards 1.0 (JSR-168) and 2.0 (JSR-286) are supported.</p>						
+						<p>Vaadin applications can be deployed as portlets in portals such as Liferay. No code modifications are needed to deploy a Vaadin application to a portal and both portlet standards 1.0 (JSR-168) and 2.0 (JSR-286) are supported.</p>	
+					</div>
+					<div class="col">					
 						<h5>Google App Engine</h5>						
 						<p>The same servlet and portlet Vaadin applications can be deployed to Google App Engine. This requires that all application classes are serializable.</p>
 					</div>
@@ -269,18 +280,22 @@
 					<div class="col2">
 						<h5>Forums</h5>
 						<p>The forums are very active and a good place to ask questions, help others, discuss your latest ideas or just share what you have done.</p>
-						<ul><li><a href="http://vaadin.com/forum">Start discussing</a></li></ul><br/>
+						<ul><li><a href="http://vaadin.com/forum">Start discussing</a></li></ul>
+					</div>
+					<div class="col2">
 						<h5>Wiki</h5>
 						<p>The Vaadin wiki is a place where you can find out the best way to use Vaadin, how to integrate it with various other systems such as Spring or JEE6. Read what others have done or write down how you do things.</p>
-						<ul><li><a href="http://vaadin.com/wiki">Vaadin wiki</a></li></ul><br/>
+						<ul><li><a href="http://vaadin.com/wiki">Vaadin wiki</a></li></ul>
 					</div>
 					<div class="col2">
 						<h5>Vaadin Directory</h5>
 						<p>Add-ons for Vaadin are distributed through Vaadin Directory. See what others have done, get ideas or create and share your own.</p>
-						<ul><li><a href="http://vaadin.com/directory">Vaadin Directory</a></li></ul><br/>
+						<ul><li><a href="http://vaadin.com/directory">Vaadin Directory</a></li></ul>
+					</div>
+					<div class="col2">
 						<h5>Bug Tracker</h5>
 						<p>Found a problem in Vaadin? Maybe you fixed it yourself already? Report it through the Vaadin bug tracker so everybody else also can benefit from your findings.</p>
-						<ul><li><a href="http://dev.vaadin.com/">Vaadin bug tracker</a></li></ul><br/>
+						<ul><li><a href="http://dev.vaadin.com/">Vaadin bug tracker</a></li></ul>
 					</div>
 				</li>
 				
