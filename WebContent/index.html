@@ -150,7 +150,7 @@
 								<img src="demo/img/icons/chameleon.png" />
 								<span><strong>Chameleon Theme</strong>Create your own theme in seconds</span>
 							</a>
-							<a class="thumb-rel" href="http://vaadin.com/directory#addon/106">Available in Vaadin Directory</a>
+							<a class="thumb-rel" href="http://vaadin.com/directory#addon/106">Available in the Vaadin Directory</a>
 						</div>
 						<div class="col2">
 							<a class="thumb demoapp" href="VaadinTunes">
@@ -216,13 +216,13 @@
 				
 				<li id="documentation" class="tab">
 					<h4 title="Documentation">Best Documentation Around</h4>
-					<div class="col3 book">
+					<div class="col2 book">
 					<img src="demo/img/book-of-vaadin.png" />
 						<h5>Book of Vaadin</h5>
 						<h6>Documentation Is The Key to Understanding</h6>
 						 <p><a href="docs/book-of-vaadin.pdf">The Book of Vaadin</a> provides you with all the information you need about Vaadin in a comprehensive form. It's available as a free PDF download, or alternatively as a physical book from Lulu.com</p>
 					</div>
-					<div class="col"
+					<div class="col2"
 						<h5>API</h5>
 						<p>When you get down to programming the <a href="docs/api/index.html">Vaadin API Reference Documentation</a> will help you with the classes and the methods.</p>
 					</div>
@@ -263,22 +263,28 @@
 					</div>
 				</li>
 				
-				<li id="development" class="tab">
+				<li id="development" class="tab tools">
 					<h4 title="Development">Develop With Tools You Already Know</h4>
 					<div class="col2">
+						<img src="demo/img/eclipse-logo.png" alt="Eclipse IDE" />
 						<h5>Eclipse</h5>
 						<p>Vaadin provides an Eclipse plugin which automatically sets up your project, compiles your widgetset and more.</p> 
 						<ul><li><a href="http://vaadin.com/eclipse/">Eclipse plugin update site and instructions</a></li></ul>
-						<br/>
+					</div>
+					<div class="col2"
+						<img src="demo/img/netbeans-logo.png" alt="NetBeans IDE" />
 						<h5>NetBeans</h5>
 						<p>A community created Vaadin NetBeans plugin is available for all NetBeans developers.</p>
 						<ul><li><a href="http://vaadin.com/netbeans">NetBeans plugin installation instructions</a></li></ul>
 					</div>
-					<div class="col2">
+					<div class="newline col2">
+						<img src="demo/img/maven-logo.png" alt="Maven" />
 						<h5>Maven</h5>
 						<p>Vaadin is in the central Maven repository, providing archetypes for creating Vaadin projects and a widgetset compilation plugin for Maven.</p>
 						<ul><li><a href="http://vaadin.com/wiki/-/wiki/Main/Using%20Vaadin%20with%20Maven">Using Vaadin with Maven</a></li></ul>
-						<br/>
+					</div>
+					<div class="col2"
+						<img src="demo/img/ant-logo.png" alt="Apache Ant" />
 						<h5>Any IDE / automated build system (Ant)</h5>
 						<p>Ant integration is provided for users of any IDE, for automatic build systems and for users preferring to not using an IDE.</p>
 						<ul><li><a href="docs/example-source/build-widgetset.xml">Example widgetset build script</a></li></ul>
@@ -326,6 +332,11 @@
 				
 			</ul>
 		</div> <!-- /content -->
+		
+		
+		<div id="footer">
+			<span class="slogan"><strong>vaadin <em>}></em></strong> thinking of U and I<span> <a href="#top">&uarr; Back to top</a>
+		</div> <!-- /footer -->
 	
 	<div style="height:0px; overflow:hidden;">
 		
@@ -480,10 +491,12 @@
 			var height = 0;
 			$("#reasons .tab").each(function(i, li) {
 				li = $(li);
-				li.css({"position":"absolute"});
 				if(li.height() > height) {
+					console.log(height);
 					height = li.outerHeight();
+					console.log(height);
 				}
+				li.css({"position":"absolute"});
 				if(i>0){
 					li.hide();
 				}
