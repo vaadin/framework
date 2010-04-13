@@ -3,7 +3,6 @@
  */
 package com.vaadin.ui.themes;
 
-
 public class Runo extends BaseTheme {
 
     public static final String THEME_NAME = "Runo";
@@ -29,5 +28,16 @@ public class Runo extends BaseTheme {
      * Removes borders and background color from the panel
      */
     public static final String PANEL_LIGHT = "light";
+
+    /***************************************************************************
+     * 
+     * TabSheet styles
+     * 
+     **************************************************************************/
+
+    /**
+     * Smaller tabs, no border and background for content area
+     */
+    public static final String TABSHEET_SMALL = "light";
 
 }
