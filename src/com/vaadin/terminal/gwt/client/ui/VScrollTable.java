@@ -1136,7 +1136,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         @Override
         public void onBrowserEvent(Event event) {
             if (enabled && event != null) {
-                if (isResizing || event.getTarget() == colResizeWidget) {
+                if (isResizing
+                        || event.getEventTarget().cast() == colResizeWidget) {
                     onResizeEvent(event);
                 } else {
                     handleCaptionEvent(event);
@@ -1668,7 +1669,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         @Override
         public void onBrowserEvent(Event event) {
             if (enabled) {
-                if (event.getTarget() == columnSelector) {
+                if (event.getEventTarget().cast() == columnSelector) {
                     final int left = DOM.getAbsoluteLeft(columnSelector);
                     final int top = DOM.getAbsoluteTop(columnSelector)
                             + DOM.getElementPropertyInt(columnSelector,
@@ -2499,9 +2500,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
              * 
              * @return Returns the JSO preventing text selection
              */
-            private native JavaScriptObject applyDisableTextSelectionIEHack()/*-{
-                                                                             return function(){ return false; };
-                                                                             }-*/;
+            private native JavaScriptObject applyDisableTextSelectionIEHack()
+            /*-{
+                    return function(){ return false; };
+            }-*/;
 
             /*
              * React on click that occur on content cells only
@@ -2521,7 +2523,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                             if (event.getButton() == Event.BUTTON_LEFT
                                     && selectMode > Table.SELECT_MODE_NONE) {
 
-                                if (event.getCtrlKey()
+                                if ((event.getCtrlKey() || event.getMetaKey())
                                         && selectMode == SELECT_MODE_MULTI
                                         && multiselectmode == 0) {
                                     toggleSelection(true);
@@ -2537,8 +2539,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                 }
 
                                 // Remove IE text selection hack
-                                event.getTarget().setPropertyJSO(
-                                        "onselectstart", null);
+                                if (BrowserInfo.get().isIE()) {
+                                    ((Element) event.getEventTarget().cast())
+                                    .setPropertyJSO(
+                                            "onselectstart", null);
+                                }
 
                                 // Note: changing the immediateness of this
                                 // might
@@ -2607,15 +2612,19 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                 event.stopPropagation();
                             } else if (event.getCtrlKey()
                                     || event.getShiftKey()
+                                    || event.getMetaKey()
                                     && selectMode == SELECT_MODE_MULTI
                                     && multiselectmode == 0) {
                                 // Prevent default text selection in Firefox
                                 event.preventDefault();
 
                                 // Prevent default text selection in IE
-                                event.getTarget().setPropertyJSO(
-                                        "onselectstart",
-                                        applyDisableTextSelectionIEHack());
+                                if (BrowserInfo.get().isIE()) {
+                                    ((Element) event.getEventTarget().cast())
+                                    .setPropertyJSO(
+                                            "onselectstart",
+                                            applyDisableTextSelectionIEHack());
+                                }
 
                                 event.stopPropagation();
                             }
@@ -2693,7 +2702,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     left += Window.getScrollLeft();
                     client.getContextMenu().showAt(this, left, top);
                 }
-                event.cancelBubble(true);
+                event.stopPropagation();
                 event.preventDefault();
             }
 
@@ -2760,8 +2769,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
                 // Toggle clicked rows selection
                 toggleSelection(false);
-
-                getElement().focus();
             }
 
             /*
