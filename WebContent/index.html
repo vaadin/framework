@@ -70,11 +70,11 @@
 			<ul id="reasons">
 			
 				<li id="programming-model" class="tab">
-					<h4 title="Pure Java">Programming Model</h4>
+					<h4 title="Pure Java">Efficient Programming Model</h4>
 					
 					<div class="col2">
 						<h5>Server-side Java</h5>
-						<p>Forget about HTML, Javascript, the browser and RPC, you're working with server-side Java code. This separates Vaadin from client oriented Java frameworks such as GWT.</p>
+						<p>Forget about HTML, Javascript, the browser and RPC, you're working with server-side Java code. This separates Vaadin from client-oriented Java frameworks such as GWT.</p>
 					</div>						
 					<div class="col2">
 					<h5>Code Examples</h5>
@@ -124,8 +124,8 @@
 						<p>Vaadin is based on javascript and does not require the end user to install any plugins.</p>
 					</div>
 					
-					<div class="col4">
-						<h5>More?</h5>
+					<div class="col2">
+						<h5>More Resources</h5>
 						<ul>
 							<li><a href="http://vaadin.com/comparison">Framework comparison</a></li>
 							<li><a href="http://vaadin.com/learn">Learn more from vaadin.com</a></li>
@@ -165,7 +165,7 @@
 								<img src="demo/img/icons/chameleon.png" />
 								<span><strong>Chameleon Theme</strong>Create your own theme in seconds</span>
 							</a>
-							<a class="thumb-rel" href="http://vaadin.com/directory#addon/106">Available in Vaadin Directory</a>
+							<a class="thumb-rel" href="http://vaadin.com/directory#addon/106">Available in the Vaadin Directory</a>
 						</div>
 						<div class="col2">
 							<a class="thumb demoapp" href="VaadinTunesLayout/">
@@ -177,7 +177,7 @@
 					</div>
 					
 					<div class="col4">
-						<h5>More?</h5>
+						<h5>More Resources</h5>
 						<ul>
 							<li><a href="http://vaadin.com/directory#browse/type/2">Browse the themes category in Vaadin Directory</a></li>
 						</ul>
@@ -232,14 +232,15 @@
 				<li id="documentation" class="tab">
 					<h4 title="Documentation">Best Documentation Around</h4>
 					<div class="col2 book">
-					<img src="demo/img/book-of-vaadin.png" />
 						<h5>Book of Vaadin</h5>
 						<h6>Documentation Is The Key to Understanding</h6>
+						<a href="docs/book-of-vaadin.pdf" title="Start reading now"><img src="demo/img/book-of-vaadin.png" /></a>
 						 <p>The Book of Vaadin provides you with all the information you need about Vaadin in a comprehensive form. It's available in <a href="docs/book-of-vaadin.pdf">PDF format</a>, <a href="http://vaadin.com/book">as an online version and as a physical book</a>.</p>
 					</div>
-					<div class="col2"
-						<h5>API</h5>
-						<p>When you get down to programming, the <a href="docs/api/index.html">Vaadin API Reference Documentation</a> will help you with the classes and the methods.</p>
+					<div class="col2 dzone">
+						<h5>DZone Refcard</h5>
+						<a href="http://refcardz.dzone.com/refcardz/getting-started-vaadin"><img src="demo/img/cheatsheet.png" alt="DZone Ref Card for Vaadin" /></a>
+						<p>For a quick introduction to Vaadin, check out the <a href="http://refcardz.dzone.com/refcardz/getting-started-vaadin">DZone Vaadin Refcard</a></p>
 					</div>
 					<div class="newline col2 tutorial"
 						<h5>Tutorials</h5>
@@ -250,41 +251,44 @@
 						<li><a href="http://vaadin.com/tutorial/">More tutorials</a></li>
 						</ul>
 					</div>
-					<div class="col2 dzone">
-						<h5>DZone Refcard</h5>
-						<a href="http://refcardz.dzone.com/refcardz/getting-started-vaadin"><img src="demo/img/cheatsheet.png" alt="DZone Ref Card for Vaadin" /></a>
-						<p>For a quick introduction to Vaadin, check out the <a href="http://refcardz.dzone.com/refcardz/getting-started-vaadin">DZone Vaadin Refcard</a></p>
+					<div class="col2"
+						<h5>API</h5>
+						<p>When you get down to programming, the <a href="docs/api/index.html">Vaadin API Reference Documentation</a> will help you with the classes and the methods.</p>
 					</div>
 				</li>
 				
 				<li id="deployment" class="tab">
 					<h4 title="Deployment">Easy Deployment</h4>
-					<div class="col">
+					<div class="col4">
 						<h5>Single JAR</h5>
 						<p>Vaadin is a single JAR file without external dependencies. Add the JAR to your web application project and you are ready to start creating the user interface.</p>
 					</div>
-					<div class="col">
-						<h5>Servlet deployment</h5>
+					<div class="newline col2">
+						<h5>Servlet Deployment</h5>
 						<p>Vaadin provides a single servlet which runs the application. An application can be deployed to any Java application server that supports servlet 2.3 or newer.</p>
-						<h5>Supported application servers</h5>
-						<ul>
-						<li>Apache Tomcat, 4.1+</li>
-						<li>BEA WebLogic, 9.2+</li>
-						<li>IBM WebSphere Application Server 6.1+</li>
-						<li>JBoss Application Server 3.2.8+</li>
-						<li>Jetty 5+</li>
-						<li>Glassfish 2+</li>
-						</ul>
-					</div>						
-					<div class="col">
-						<h5>Portlet support</h5>
+					</div>
+					<div class="col2">
+						<h5>Portlet Support</h5>
 						<p>Vaadin applications can be deployed as portlets in portals such as Liferay. No code modifications are needed to deploy a Vaadin application to a portal and both portlet standards 1.0 (JSR-168) and 2.0 (JSR-286) are supported. Vaadin is included in Liferay 6.0 as a standard feature.</p>
-						<h5>Supported portals</h5>
+					</div>
+					<div class="newline col2"
+						<h5>Supported Application Servers</h5>
 						<ul>
-						<li>Liferay Portal 4.3 or later</li>
+							<li>Apache Tomcat, 4.1+</li>
+							<li>BEA WebLogic, 9.2+</li>
+							<li>IBM WebSphere Application Server 6.1+</li>
+							<li>JBoss Application Server 3.2.8+</li>
+							<li>Jetty 5+</li>
+							<li>Glassfish 2+</li>
+						</ul>
+					</div>
+					<div class="col2">
+						<h5>Supported Portals</h5>
+						<ul>
+							<li>Liferay Portal 4.3 or later</li>
 						</ul>						
 					</div>
-					<div class="col">					
+					<div class="col2">					
 						<h5>Google App Engine</h5>						
 						<p>The same servlet and portlet Vaadin applications can be deployed to Google App Engine, provided they are built to be serializable.</p>
 					</div>
@@ -348,10 +352,10 @@
 						<ul><li><a href="http://dev.vaadin.com/">Vaadin bug tracker</a></li></ul>
 					</div>
 					<div class="col4">
-						<h5>More resources</h5>
+						<h5>More Resources</h5>
 						<ul>
 							<li><a href="http://vaadin.com/blog">Read the Vaadin Blog</a></li>
-							<li><a href="http://vaadin.com/twitter">Follow Vaadin on Twitter</a></li>
+							<li><a href="http://vaadin.com/twitter">Follow Vaadin on twitter</a></li>
 							<li><a href="http://vaadin.com/chat">Chat with other Vaadin users</a></li>
 						</ul>
 					</div>
@@ -516,7 +520,7 @@
 			// Generate tab captions
 			var tabs = content.before('<div id="tabs"></div>').prev();
 			var height = 0;
-			$("#reasons .tab").each(function(i, li) {
+			$("#reasons > li").each(function(i, li) {
 				li = $(li);
 				if(li.height() > height) {
 					height = li.outerHeight();
