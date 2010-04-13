@@ -1075,7 +1075,7 @@
     	</parallel>
     </target>
 
-    <target name="server-side-tests" depends="compile-java">
+    <target name="server-side-tests" depends="compile-java" unless="tests.serverside.skip">
 		<junit printsummary="yes"> 
 			<classpath> 
 				<pathelement path="${result-path}/classes" />
@@ -1087,7 +1087,7 @@
 			</batchtest>
 		</junit>
     </target>
-    <target name="testbench-tests" depends="init">
+    <target name="testbench-tests" depends="init" unless="tests.testbench.skip">
         <fail unless="product-file" message="The 'product-file' property must be defined."/>
         <fail unless="version" message="The 'version' property must be defined."/>
 
@@ -1119,7 +1119,7 @@
         </ant>
     </target>
 
-    <target name="integration-tests" depends="internal-package-war">
+    <target name="integration-tests" depends="internal-package-war" unless="tests.integration.skip">
         <!-- Parameters for the test.xml script. -->
         <fail unless="com.vaadin.testbench.tester.host" message="The 'com.vaadin.testbench.tester.host' property must be defined."/>
         <fail unless="com.vaadin.testbench.lib.dir" message="The 'com.vaadin.testbench.lib.dir' property must be defined."/>
