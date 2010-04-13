@@ -93,6 +93,22 @@ public class Table extends AbstractSelect implements Action.Container,
         MULTIROW
     }
 
+    /**
+     * Multi select modes that controls how multi select behaves.
+     */
+    public enum MultiSelectMode {
+        /**
+         * Simple left clicks only selects one item, CTRL+left click selects
+         * multiple items and SHIFT-left click selects a range of items.
+         */
+        DEFAULT,
+        /**
+         * Uses the old method of selection. CTRL- and SHIFT-clicks are disabled and
+         * clicking on the items selects/deselects them.
+         */
+        SIMPLE
+    }
+
     private static final int CELL_KEY = 0;
 
     private static final int CELL_HEADER = 1;
@@ -367,6 +383,8 @@ public class Table extends AbstractSelect implements Action.Container,
     private TableDragMode dragMode = TableDragMode.NONE;
 
     private DropHandler dropHandler;
+
+    private MultiSelectMode multiSelectMode = MultiSelectMode.DEFAULT;
 
     /* Table constructors */
 
@@ -2065,6 +2083,10 @@ public class Table extends AbstractSelect implements Action.Container,
             target.addAttribute("dragmode", dragMode.ordinal());
         }
 
+        if (multiSelectMode != MultiSelectMode.DEFAULT) {
+            target.addAttribute("multiselectmode", multiSelectMode.ordinal());
+        }
+
         // Initialize temps
         final Object[] colids = getVisibleColumns();
         final int cols = colids.length;
@@ -3430,6 +3452,27 @@ public class Table extends AbstractSelect implements Action.Container,
     public AbstractSelectTargetDetails translateDropTargetDetails(
             Map<String, Object> clientVariables) {
         return new AbstractSelectTargetDetails(clientVariables);
+    }
+
+    /**
+     * Sets the behavior of how the multi-select mode should behave when the
+     * table is both selectable and in multi-select mode.
+     * 
+     * @param mode
+     *            The select mode of the table
+     */
+    public void setMultiSelectMode(MultiSelectMode mode) {
+        multiSelectMode = mode;
+        requestRepaint();
+    }
+
+    /**
+     * Returns the select mode in which multi-select is used.
+     * 
+     * @return The multi select mode
+     */
+    public MultiSelectMode getMultiSelectMode() {
+        return multiSelectMode;
     }
 
     /**

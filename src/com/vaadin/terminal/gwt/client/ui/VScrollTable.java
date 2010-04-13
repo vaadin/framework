@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.NodeList;
@@ -166,6 +167,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private boolean rendering = false;
     private int dragmode;
 
+    private int multiselectmode;
+    private int lastSelectedRowKey = -1;
+
     public VScrollTable() {
         bodyContainer.addScrollHandler(this);
         bodyContainer.setStyleName(CLASSNAME + "-body");
@@ -209,6 +213,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         dragmode = uidl.hasAttribute("dragmode") ? uidl
                 .getIntAttribute("dragmode") : 0;
+
+        multiselectmode = uidl.hasAttribute("multiselectmode") ? uidl
+                .getIntAttribute("multiselectmode") : 0;
 
         setCacheRate(uidl.hasAttribute("cr") ? uidl.getDoubleAttribute("cr")
                 : CACHE_RATE_DEFAULT);
@@ -2353,7 +2360,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     }
                 }
                 if (uidl.hasAttribute("selected") && !isSelected()) {
-                    toggleSelection();
+                    toggleSelection(true);
                 }
             }
 
@@ -2484,6 +2491,18 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 }
             }
 
+            /**
+             * Add this to the element mouse down event by using
+             * element.setPropertyJSO
+             * ("onselectstart",applyDisableTextSelectionIEHack()); Remove it
+             * then again when the mouse is depressed in the mouse up event.
+             * 
+             * @return Returns the JSO preventing text selection
+             */
+            private native JavaScriptObject applyDisableTextSelectionIEHack()/*-{
+                                                                             return function(){ return false; };
+                                                                             }-*/;
+
             /*
              * React on click that occur on content cells only
              */
@@ -2501,7 +2520,26 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                             handleClickEvent(event, targetTdOrTr);
                             if (event.getButton() == Event.BUTTON_LEFT
                                     && selectMode > Table.SELECT_MODE_NONE) {
-                                toggleSelection();
+
+                                if (event.getCtrlKey()
+                                        && selectMode == SELECT_MODE_MULTI
+                                        && multiselectmode == 0) {
+                                    toggleSelection(true);
+                                } else if (event.getShiftKey()
+                                        && selectMode == SELECT_MODE_MULTI
+                                        && multiselectmode == 0) {
+                                    toggleShiftSelection();
+                                } else {
+                                    if (multiselectmode == 0) {
+                                        deselectAll();
+                                    }
+                                    toggleSelection(multiselectmode == 0);
+                                }
+
+                                // Remove IE text selection hack
+                                event.getTarget().setPropertyJSO(
+                                        "onselectstart", null);
+
                                 // Note: changing the immediateness of this
                                 // might
                                 // require changes to "clickEvent" immediateness
@@ -2566,6 +2604,19 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                     ev.createDragImage(getElement(), true);
                                 }
                                 event.preventDefault();
+                                event.stopPropagation();
+                            } else if (event.getCtrlKey()
+                                    || event.getShiftKey()
+                                    && selectMode == SELECT_MODE_MULTI
+                                    && multiselectmode == 0) {
+                                // Prevent default text selection in Firefox
+                                event.preventDefault();
+
+                                // Prevent default text selection in IE
+                                event.getTarget().setPropertyJSO(
+                                        "onselectstart",
+                                        applyDisableTextSelectionIEHack());
+
                                 event.stopPropagation();
                             }
                             break;
@@ -2646,15 +2697,23 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 event.preventDefault();
             }
 
+            /**
+             * Has the row been selected?
+             * 
+             * @return Returns true if selected, else false
+             */
             public boolean isSelected() {
                 return selected;
             }
 
-            private void toggleSelection() {
+            /**
+             * Toggle the selection of the row
+             */
+            public void toggleSelection(boolean ctrlSelect) {
                 selected = !selected;
                 if (selected) {
-                    if (selectMode == Table.SELECT_MODE_SINGLE) {
-                        deselectAll();
+                    if (ctrlSelect) {
+                        lastSelectedRowKey = rowKey;
                     }
                     selectedRowKeys.add(String.valueOf(rowKey));
                     addStyleName("v-selected");
@@ -2662,6 +2721,47 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     selectedRowKeys.remove(String.valueOf(rowKey));
                     removeStyleName("v-selected");
                 }
+            }
+
+            private void toggleShiftSelection() {
+
+                /*
+                 * Ensures that we are in multiselect mode and that we have a
+                 * previous selection which was not a deselection
+                 */
+                if (selectedRowKeys.isEmpty() || lastSelectedRowKey < 0) {
+                    deselectAll();
+                    toggleSelection(true);
+                    return;
+                }
+
+                // Set the selectable range
+                int startKey = lastSelectedRowKey;
+                int endKey = rowKey;
+                if (endKey < startKey) {
+                    // Swap keys if in the wrong order
+                    startKey ^= endKey;
+                    endKey ^= startKey;
+                    startKey ^= endKey;
+                }
+
+                // Select the range (not including this row)
+                deselectAll();
+                for (int r = startKey; r <= endKey; r++) {
+                    if (r != rowKey) {
+                        selectedRowKeys.add(String.valueOf(r));
+                        VScrollTableRow row = getRenderedRowByKey(String
+                                .valueOf(r));
+                        if (!row.isSelected()) {
+                            row.toggleSelection(false);
+                        }
+                    }
+                }
+
+                // Toggle clicked rows selection
+                toggleSelection(false);
+
+                getElement().focus();
             }
 
             /*
@@ -2768,7 +2868,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         for (int i = 0; i < keys.length; i++) {
             final VScrollTableRow row = getRenderedRowByKey((String) keys[i]);
             if (row != null && row.isSelected()) {
-                row.toggleSelection();
+                row.toggleSelection(false);
             }
         }
         // still ensure all selects are removed from (not necessary rendered)
