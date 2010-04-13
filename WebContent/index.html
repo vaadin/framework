@@ -322,14 +322,14 @@
 						
 					</div>	
 				</li>
-				<li id="License" class="tab">
+				<li id="license" class="tab">
 					<h4 title="Open Source">Free for Everybody</h4>
 						<h5>Apache Software License 2.0</h5>
 						<p>Vaadin is licensed under the Apache Software License 2.0 which means you can use it both for non-commercial and commercial projects free of charge.</p>
 						<ul><li><a href="http://vaadin.com/license">License information</a></li></ul>
 						
 				</li>
-				<li id="Community" class="tab">
+				<li id="community" class="tab">
 					<h4 title="Community">Be a Part of the Vaadin Community</h4>
 					<div class="col2">
 						<h5>Forums</h5>
@@ -522,8 +522,8 @@
 			var height = 0;
 			$("#reasons > li").each(function(i, li) {
 				li = $(li);
-				if(li.height() > height) {
-					height = li.outerHeight();
+				if(this.offsetHeight > height) {
+					height = this.offsetHeight;
 				}
 				li.css({"position":"absolute"});
 				if(i>0){
@@ -573,6 +573,19 @@
 			tabContent.show();
 		}
 		
+		function fixTabHeight() {
+			var height = 0;
+			$("#reasons > li").each(function() {
+				var display = this.style.display;
+				this.style.display = "block";
+				if(this.offsetHeight > height) {
+					height = this.offsetHeight;
+				}
+				this.style.display = display;
+			});
+			$("#reasons").height(height);
+		}
+		
 		$(document).ready(function(){
 			doTabs();
 			// Initialize history plugin.
@@ -582,6 +595,7 @@
 		});
 		
 		window.onload = function() {
+			fixTabHeight();
 			try {
 				if(window.location.search && (window.location.search.indexOf('gwt.hosted') != -1 || window.location.search.indexOf('gwt.codesvr') != -1)) {
 					var hostedParam = window.location.search;
