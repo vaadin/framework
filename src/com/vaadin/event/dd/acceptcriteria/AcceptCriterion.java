@@ -62,11 +62,11 @@ public interface AcceptCriterion extends Serializable {
     public void paintResponse(PaintTarget target) throws PaintException;
 
     /**
-     * Validates the data in event to be appropriate for
-     * {@link DropHandler#drop(com.vaadin.event.dd.DropEvent)} method.
+     * Validates the data in event to be appropriate for the
+     * {@link DropHandler#drop(DragAndDropEvent)} method.
      * <p>
-     * Note that even if your criterion is matched on client side, it is a very
-     * good manner to validate the data on server side too.
+     * Note that even if your criterion is validated on client side, you should
+     * always validate the data on server side too.
      * 
      * @param dragEvent
      * @return

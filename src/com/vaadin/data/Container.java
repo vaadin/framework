@@ -573,10 +573,9 @@ public interface Container extends Serializable {
      * visible in the container.
      * </p>
      * <p>
-     * When an {@link com.vaadin.data.Ordered} or
-     * {@link com.vaadin.data.Indexed} container is filtered, all operations of
-     * these interfaces should only use the filtered contents and the filtered
-     * indices to the container.
+     * When an {@link Ordered} or {@link Indexed} container is filtered, all
+     * operations of these interfaces should only use the filtered contents and
+     * the filtered indices to the container.
      * </p>
      * <p>
      * How filtering is performed when a {@link Hierarchical} container
@@ -584,11 +583,11 @@ public interface Container extends Serializable {
      * documented in the implementing class.
      * </p>
      * <p>
-     * Adding items (if supported) to a filtered {@link com.vaadin.data.Ordered}
-     * or {@link com.vaadin.data.Indexed} container should insert them
-     * immediately after the indicated visible item. The unfiltered position of
-     * items added at index 0, at index {@link com.vaadin.data.Container#size()}
-     * or at an undefined position is up to the implementation.
+     * Adding items (if supported) to a filtered {@link Ordered} or
+     * {@link Indexed} container should insert them immediately after the
+     * indicated visible item. The unfiltered position of items added at index
+     * 0, at index {@link com.vaadin.data.Container#size()} or at an undefined
+     * position is up to the implementation.
      * </p>
      * 
      * @since 5.0
