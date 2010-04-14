@@ -85,6 +85,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
     public static final String CLASSNAME = "v-table";
     public static final String ITEM_CLICK_EVENT_ID = "itemClick";
+    public static final String HEADER_CLICK_EVENT_ID = "handleHeaderClick";
 
     private static final double CACHE_RATE_DEFAULT = 2;
 
@@ -1174,6 +1175,18 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             floatingCopyOfHeaderCell = null;
         }
 
+        private void fireHeaderClickedEvent(Event event) {
+            if (client.hasEventListeners(VScrollTable.this,
+                    HEADER_CLICK_EVENT_ID)) {
+                MouseEventDetails details = new MouseEventDetails(event);
+                client.updateVariable(paintableId, "headerClickEvent", details
+                        .toString(), false);
+                client
+                        .updateVariable(paintableId, "headerClickCID", cid,
+                                false);
+            }
+        }
+
         protected void handleCaptionEvent(Event event) {
             switch (DOM.eventGetType(event)) {
             case Event.ONMOUSEDOWN:
@@ -1224,8 +1237,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                 * cache_rate + pageLength));
                         rowRequestHandler.deferRowFetch();
                     }
+                    fireHeaderClickedEvent(event);
                     break;
                 }
+                fireHeaderClickedEvent(event);
                 break;
             case Event.ONMOUSEMOVE:
                 if (dragging) {

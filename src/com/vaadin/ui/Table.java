@@ -5,6 +5,7 @@
 package com.vaadin.ui;
 
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -385,6 +386,8 @@ public class Table extends AbstractSelect implements Action.Container,
     private DropHandler dropHandler;
 
     private MultiSelectMode multiSelectMode = MultiSelectMode.DEFAULT;
+
+    private HeaderClickHandler headerClickHandler;
 
     /* Table constructors */
 
@@ -2035,6 +2038,19 @@ public class Table extends AbstractSelect implements Action.Container,
                         evt));
             }
         }
+
+        else if (variables.containsKey("headerClickEvent")) {
+
+            MouseEventDetails details = MouseEventDetails
+                    .deSerialize((String) variables.get("headerClickEvent"));
+
+            Object cid = variables.get("headerClickCID");
+            Object propertyId = null;
+            if (cid != null) {
+                propertyId = columnIdMap.get(cid.toString());
+            }
+            fireEvent(new HeaderClickEvent(this, propertyId, details));
+        }
     }
 
     /**
@@ -3568,4 +3584,123 @@ public class Table extends AbstractSelect implements Action.Container,
 
     }
 
+    /**
+     * Click event fired when clicking on the Table headers. The event includes
+     * a reference the the Table the event originated from, the property id of
+     * the column which header was pressed and details about the mouse event
+     * itself.
+     */
+    public static class HeaderClickEvent extends Component.Event {
+        public static final Method HEADER_CLICK_METHOD;
+
+        static {
+            try {
+                // Set the header click method
+                HEADER_CLICK_METHOD = HeaderClickHandler.class
+                        .getDeclaredMethod("handleHeaderClick",
+                                new Class[] { HeaderClickEvent.class });
+            } catch (final java.lang.NoSuchMethodException e) {
+                // This should never happen
+                throw new java.lang.RuntimeException();
+            }
+        }
+
+        // The property id of the column which header was pressed
+        private Object columnPropertyId;
+
+        // The mouse details
+        private MouseEventDetails details;
+
+        public HeaderClickEvent(Component source, Object propertyId,
+                MouseEventDetails details) {
+            super(source);
+            this.details = details;
+            columnPropertyId = propertyId;
+        }
+
+        /**
+         * Gets the property id of the column which header was pressed
+         *
+         * @return The column propety id
+         */
+        public Object getPropertyId() {
+            return columnPropertyId;
+        }
+
+        /**
+         * Returns the details of the mouse event like the mouse coordinates,
+         * button pressed etc.
+         *
+         * @return The mouse details
+         */
+        public MouseEventDetails getEventDetails() {
+            return details;
+        }
+    }
+
+    /**
+     * Interface for the handler listening to column change events. The
+     * handleHeaderClick method is called when the user presses a header column
+     * cell.
+     */
+    public interface HeaderClickHandler {
+
+        /**
+         * Called when a user clicks a header column cell
+         *
+         * @param event
+         *            The event which contains information about the column and
+         *            the mouse click event
+         */
+        public void handleHeaderClick(HeaderClickEvent event);
+    }
+
+    /**
+     * Sets the header click handler which handles the click events when the
+     * user clicks on a column header cell in the Table.
+     * <p>
+     * The handler will receive events which contains information about which
+     * column was clicked and some details about the mouse event.
+     * </p>
+     *
+     * @param handler
+     *            The handler which should handle the header click events.
+     */
+    public void setHeaderClickHandler(HeaderClickHandler handler) {
+        if (headerClickHandler != handler) {
+            if (handler == null && headerClickHandler != null) {
+                // Remove header click handler
+                removeListener(VScrollTable.HEADER_CLICK_EVENT_ID,
+                        HeaderClickEvent.class, headerClickHandler);
+
+                headerClickHandler = handler;
+            } else if (headerClickHandler != null) {
+                // Replace header click handler
+                removeListener(VScrollTable.HEADER_CLICK_EVENT_ID,
+                        HeaderClickEvent.class, headerClickHandler);
+
+                headerClickHandler = handler;
+
+                addListener(VScrollTable.HEADER_CLICK_EVENT_ID,
+                        HeaderClickEvent.class, headerClickHandler,
+                        HeaderClickEvent.HEADER_CLICK_METHOD);
+            } else if (handler != null) {
+                // Set a new header click handler
+                headerClickHandler = handler;
+                addListener(VScrollTable.HEADER_CLICK_EVENT_ID,
+                        HeaderClickEvent.class, headerClickHandler,
+                        HeaderClickEvent.HEADER_CLICK_METHOD);
+            }
+        }
+    }
+
+    /**
+     * Returns the header click handler which receives click events from the
+     * columns header cells when they are clicked on.
+     *
+     * @return
+     */
+    public HeaderClickHandler getHeaderClickHandler() {
+        return headerClickHandler;
+    }
 }
