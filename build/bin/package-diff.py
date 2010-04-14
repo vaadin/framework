@@ -134,10 +134,9 @@ latestversion  = latestdata[0].strip()
 latestpath     = latestdata[1].strip()
 latestURL      = downloadsite + "/" + latestpath + "/"
 
-# TODO: Remove "linux" after 6.3.0 is released.
-linuxfilename  = "vaadin-linux-%s.tar.gz" % (latestversion)
-linuxpackage   = latestURL + linuxfilename
-locallinuxpackage = "/tmp/%s" % (linuxfilename)
+filename  = "vaadin-%s.tar.gz" % (latestversion)
+package   = latestURL + filename
+localpackage = "/tmp/%s" % (filename)
 
 print "Latest version:      %s" % (latestversion)
 print "Latest version path: %s" % (latestpath)
@@ -145,17 +144,17 @@ print "Latest version URL:  %s" % (latestURL)
 
 # Check if it already exists
 try:
-	os.stat(locallinuxpackage)
-	print "Latest package already exists in %s" % (locallinuxpackage)
+	os.stat(localpackage)
+	print "Latest package already exists in %s" % (localpackage)
 	# File exists
 except OSError:
 	# File does not exist, get it.
-	print "Downloading Linux package %s to %s" % (linuxpackage, locallinuxpackage)
-	wgetcmd = "wget -q -O %s %s" % (locallinuxpackage, linuxpackage)
+	print "Downloading package %s to %s" % (package, localpackage)
+	wgetcmd = "wget -q -O %s %s" % (localpackage, package)
 	command (wgetcmd)
 
 # List files in latest version.
-latestfiles  = listfiles(locallinuxpackage)
+latestfiles  = listfiles(localpackage)
 
 # List files in built version.
 builtversion = sys.argv[1]
@@ -180,7 +179,7 @@ for item in removed:
 
 print "\n--------------------------------------------------------------------------------\nVaadin JAR differences"
 
-latestJarFiles = listTarVaadinJarFiles(locallinuxpackage, latestversion)
+latestJarFiles = listTarVaadinJarFiles(localpackage, latestversion)
 builtJarFiles  = listZipVaadinJarFiles(builtpackage,      builtversion)
 
 # New files
@@ -196,4 +195,4 @@ for item in removed:
 	print item
 
 # Purge downloaded package
-command("rm %s" % (locallinuxpackage))
+command("rm %s" % (localpackage))
