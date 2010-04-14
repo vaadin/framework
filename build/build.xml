@@ -222,7 +222,8 @@
         </zip>
 
         <!-- Notice that the differences comparison is conditional. -->
-        <antcall target="differences"/>
+    	<!-- It seems antcall does not take into account the if= attribute of the target, disabled temporarily for #4534 -->
+    	<!-- <antcall target="differences"/> -->
     </target>
 
     <target name="internal-package-war">
