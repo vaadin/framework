@@ -5,15 +5,18 @@ package com.vaadin.data.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
 /**
  * ListSet is an internal Vaadin class which implements a combination of a List
- * and a Set. The main purpose of this class is to provide a fast
+ * and a Set. The main purpose of this class is to provide a list with a fast
  * {@link #contains(Object)} method. Each inserted object must by unique (as
- * specified by {@link #equals(Object)}).
+ * specified by {@link #equals(Object)}). The {@link #set(int, Object)} method
+ * allows duplicates because of the way {@link Collections#sort(java.util.List)}
+ * works.
  * 
  * This class is subject to change and should not be used outside Vaadin core.
  */
@@ -192,41 +195,62 @@ public class ListSet<E> extends ArrayList<E> {
                 // unique. This would require finding the index of the old
                 // element (indexOf(element)) which is not a fast operation in a
                 // list. So we instead allow duplicates temporarily.
-
-                Integer nr = duplicates.get(element);
-                if (nr == null) {
-                    nr = 1;
-                } else {
-                    nr++;
-                }
-
-                // Store the number of duplicates of this element so we know
-                // later on if we should remove an element from the set or if it
-                // was a duplicate (see below).
-                duplicates.put(element, nr);
+                addDuplicate(element);
             }
         }
 
         E old = super.set(index, element);
-        Integer dupl = duplicates.get(old);
+        removeFromSet(old);
+        itemSet.add(element);
+
+        return old;
+    }
+
+    /**
+     * Removes "e" from the set if it no longer exists in the list.
+     * 
+     * @param e
+     */
+    private void removeFromSet(E e) {
+        Integer dupl = duplicates.get(e);
         if (dupl != null) {
             // A duplicate was present so we only decrement the duplicate count
             // and continue
             if (dupl == 1) {
-                // This is what always should happen. A sort swaps two items and
-                // temporarily breaks the uniqueness and then restore it
-                // immediately afterwards.
-                duplicates.remove(old);
+                // This is what always should happen. A sort sets the items one
+                // by one, temporarily breaking the uniqueness requirement.
+                duplicates.remove(e);
             } else {
-                duplicates.put(old, dupl - 1);
+                duplicates.put(e, dupl - 1);
             }
         } else {
             // The "old" value is no longer in the list.
-            itemSet.remove(old);
+            itemSet.remove(e);
         }
-        itemSet.add(element);
 
-        return old;
+    }
+
+    /**
+     * Marks the "element" can be found more than once from the list. Allowed in
+     * {@link #set(int, Object)} to make sorting work.
+     * 
+     * @param element
+     */
+    private void addDuplicate(E element) {
+        Integer nr = duplicates.get(element);
+        if (nr == null) {
+            nr = 1;
+        } else {
+            nr++;
+        }
+
+        /*
+         * Store the number of duplicates of this element so we know later on if
+         * we should remove an element from the set or if it was a duplicate (in
+         * removeFromSet)
+         */
+        duplicates.put(element, nr);
+
     }
 
     @SuppressWarnings("unchecked")
