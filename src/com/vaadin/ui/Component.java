@@ -441,7 +441,8 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
      * <pre>
      * RichTextArea area = new RichTextArea();
      * area.setCaption(&quot;You can edit stuff here&quot;);
-     * area.setValue(&quot;&lt;h1&gt;Helpful Heading&lt;/h1&gt;&quot; + &quot;&lt;p&gt;All this is for you to edit.&lt;/p&gt;&quot;);
+     * area.setValue(&quot;&lt;h1&gt;Helpful Heading&lt;/h1&gt;&quot;
+     *         + &quot;&lt;p&gt;All this is for you to edit.&lt;/p&gt;&quot;);
      * </pre>
      * 
      * <p>
@@ -573,7 +574,7 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
      * Gets the application object to which the component is attached.
      * 
      * <p>
-     * The method will return {@code null} if the component has not yet been
+     * The method will return {@code null} if the component is not currently
      * attached to an application. This is often a problem in constructors of
      * regular components and in the initializers of custom composite
      * components. A standard workaround is to move the problematic
@@ -716,7 +717,7 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
      *            as an empty collection.
      */
     public void childRequestedRepaint(
-                                      Collection<RepaintRequestListener> alreadyNotified);
+            Collection<RepaintRequestListener> alreadyNotified);
 
     /* Component event framework */
 
@@ -819,11 +820,13 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
      * 
      *     public void componentEvent(Event event) {
      *         // Act according to the source of the event
-     *         if (event.getSource() == ok &amp;&amp; event.getClass() == Button.ClickEvent.class)
+     *         if (event.getSource() == ok
+     *                 &amp;&amp; event.getClass() == Button.ClickEvent.class)
      *             getWindow().showNotification(&quot;Click!&quot;);
      * 
      *         // Display source component and event class names
-     *         status.setValue(&quot;Event from &quot; + event.getSource().getClass().getName() + &quot;: &quot; + event.getClass().getName());
+     *         status.setValue(&quot;Event from &quot; + event.getSource().getClass().getName()
+     *                 + &quot;: &quot; + event.getClass().getName());
      *     }
      * }
      * 
@@ -851,7 +854,8 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
          *         getWindow().showNotification(&quot;Click!&quot;);
          * 
          *     // Display source component and event class names
-         *     status.setValue(&quot;Event from &quot; + event.getSource().getClass().getName() + &quot;: &quot; + event.getClass().getName());
+         *     status.setValue(&quot;Event from &quot; + event.getSource().getClass().getName()
+         *             + &quot;: &quot; + event.getClass().getName());
          * }
          * </pre>
          * 
@@ -898,7 +902,8 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
      *         if (event.getSource() == ok)
      *             getWindow().showNotification(&quot;Click!&quot;);
      * 
-     *         status.setValue(&quot;Event from &quot; + event.getSource().getClass().getName() + &quot;: &quot; + event.getClass().getName());
+     *         status.setValue(&quot;Event from &quot; + event.getSource().getClass().getName()
+     *                 + &quot;: &quot; + event.getClass().getName());
      *     }
      * }
      * 
