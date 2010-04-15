@@ -5,6 +5,7 @@ package com.vaadin.data.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -18,6 +19,12 @@ import java.util.Iterator;
  */
 public class ListSet<E> extends ArrayList<E> {
     private HashSet<E> itemSet = null;
+
+    /**
+     * Contains a map from an element to the number of duplicates it has. Used
+     * to temporarily allow duplicates in the list.
+     */
+    private HashMap<E, Integer> duplicates = new HashMap<E, Integer>();
 
     public ListSet() {
         super();
@@ -177,11 +184,46 @@ public class ListSet<E> extends ArrayList<E> {
             if (get(index) == element) {
                 // At the same position, nothing to be done
                 return element;
+            } else {
+                // Adding at another position. We assume this is a sort
+                // operation and temporarily allow it.
+
+                // We could just remove (null) the old element and keep the list
+                // unique. This would require finding the index of the old
+                // element (indexOf(element)) which is not a fast operation in a
+                // list. So we instead allow duplicates temporarily.
+
+                Integer nr = duplicates.get(element);
+                if (nr == null) {
+                    nr = 1;
+                } else {
+                    nr++;
+                }
+
+                // Store the number of duplicates of this element so we know
+                // later on if we should remove an element from the set or if it
+                // was a duplicate (see below).
+                duplicates.put(element, nr);
             }
         }
 
         E old = super.set(index, element);
-        itemSet.remove(old);
+        Integer dupl = duplicates.get(old);
+        if (dupl != null) {
+            // A duplicate was present so we only decrement the duplicate count
+            // and continue
+            if (dupl == 1) {
+                // This is what always should happen. A sort swaps two items and
+                // temporarily breaks the uniqueness and then restore it
+                // immediately afterwards.
+                duplicates.remove(old);
+            } else {
+                duplicates.put(old, dupl - 1);
+            }
+        } else {
+            // The "old" value is no longer in the list.
+            itemSet.remove(old);
+        }
         itemSet.add(element);
 
         return old;
