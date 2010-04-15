@@ -2538,14 +2538,27 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                             if (event.getButton() == Event.BUTTON_LEFT
                                     && selectMode > Table.SELECT_MODE_NONE) {
 
+                                // Ctrl+Shift click
                                 if ((event.getCtrlKey() || event.getMetaKey())
+                                        && event.getShiftKey()
+                                        && selectMode == SELECT_MODE_MULTI
+                                        && multiselectmode == 0) {
+                                    toggleShiftSelection(false);
+
+                                    // Ctrl click
+                                } else if ((event.getCtrlKey() || event
+                                        .getMetaKey())
                                         && selectMode == SELECT_MODE_MULTI
                                         && multiselectmode == 0) {
                                     toggleSelection(true);
+
+                                    // Shift click
                                 } else if (event.getShiftKey()
                                         && selectMode == SELECT_MODE_MULTI
                                         && multiselectmode == 0) {
-                                    toggleShiftSelection();
+                                    toggleShiftSelection(true);
+
+                                    // click
                                 } else {
                                     if (multiselectmode == 0) {
                                         deselectAll();
@@ -2747,7 +2760,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 }
             }
 
-            private void toggleShiftSelection() {
+            /**
+             * Is called when a user clicks an item when holding SHIFT key down.
+             * This will select a new range from the last cell clicked
+             * 
+             * @param deselectPrevious
+             *            Should the previous selected range be deselected
+             */
+            private void toggleShiftSelection(boolean deselectPrevious) {
 
                 /*
                  * Ensures that we are in multiselect mode and that we have a
@@ -2769,8 +2789,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     startKey ^= endKey;
                 }
 
+                // Deselect previous items if so desired
+                if (deselectPrevious) {
+                    deselectAll();
+                }
+
                 // Select the range (not including this row)
-                deselectAll();
                 for (int r = startKey; r <= endKey; r++) {
                     if (r != rowKey) {
                         selectedRowKeys.add(String.valueOf(r));
