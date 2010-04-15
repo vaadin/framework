@@ -23,7 +23,8 @@ public class BeanItemContainerSortTest {
         }
     }
 
-    String[] names = new String[] { "Antti", "Ville", "Sirkka", "Jaakko" };
+    String[] names = new String[] { "Antti", "Ville", "Sirkka", "Jaakko",
+            "Pekka", "John" };
 
     public BeanItemContainer<Person> getContainer() {
         BeanItemContainer<Person> bc = new BeanItemContainer<Person>(
@@ -54,6 +55,7 @@ public class BeanItemContainerSortTest {
 
         int i = 0;
         for (String string : asList) {
+            Assert.assertTrue(container.containsId(string));
             Person idByIndex = container.getIdByIndex(i++);
             Assert.assertEquals(string, idByIndex.getName());
         }
