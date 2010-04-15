@@ -55,8 +55,8 @@ public class BeanItemContainerSortTest {
 
         int i = 0;
         for (String string : asList) {
-            Assert.assertTrue(container.containsId(string));
             Person idByIndex = container.getIdByIndex(i++);
+            Assert.assertTrue(container.containsId(idByIndex));
             Assert.assertEquals(string, idByIndex.getName());
         }
     }
