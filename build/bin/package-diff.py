@@ -23,29 +23,6 @@ def command(cmd, dryrun=0):
 ################################################################################
 # List files in an archive.
 ################################################################################
-def listfiles(archive):
-	pin = os.popen("tar ztf %s | sort" % (archive), "r")
-	files = map(lambda x: x.strip(), pin.readlines())
-	pin.close()
-
-	cleanedfiles = []
-	for file in files:
-		# Remove archive file name from the file names
-		slashpos = file.find("/")
-		if slashpos != -1:
-			cleanedname = file[slashpos+1:]
-		else:
-			cleanedname = file
-
-		# Purge GWT compilation files.
-		if cleanedname.find(".cache.html") != -1:
-			continue
-		
-		cleanedfiles.append(cleanedname)
-
-	return cleanedfiles
-
-# For Zip archives in Vaadin 6.3.0
 def listZipFiles(archive):
     pin = os.popen("unzip -l -qq %s | cut -c 29- | sort" % (archive), "r")
     files = map(lambda x: x.strip(), pin.readlines())
@@ -98,24 +75,15 @@ def listJarFiles(jarfile):
 	return files
 
 ################################################################################
-# Lists files inside a Vaadin Jar inside a Tar
+# Lists files inside a Vaadin Jar inside a ZIP
 ################################################################################
-# For Vaadin 6.2 Tar
-def listTarVaadinJarFiles(tarfile, vaadinversion):
-	jarfile = "vaadin-linux-%s/WebContent/vaadin-%s.jar" % (vaadinversion, vaadinversion)
-	extractedjar = "/tmp/vaadinjar-tmp-%d.jar" % (os.getpid())
-	tarcmd = "tar zOxf %s %s > %s " % (tarfile, jarfile, extractedjar)
-	command (tarcmd)
-	files = listJarFiles(extractedjar)
-	command ("rm %s" % (extractedjar))
-	return files
 
 # For Vaadin 6.3 Zip
 def listZipVaadinJarFiles(zipfile, vaadinversion):
     jarfile = "vaadin-%s/WebContent/vaadin-%s.jar" % (vaadinversion, vaadinversion)
     extractedjar = "/tmp/vaadinjar-tmp-%d.jar" % (os.getpid())
-    tarcmd = "unzip -p %s %s > %s " % (zipfile, jarfile, extractedjar)
-    command (tarcmd)
+    zipcmd = "unzip -p %s %s > %s " % (zipfile, jarfile, extractedjar)
+    command (zipcmd)
     files = listJarFiles(extractedjar)
     command ("rm %s" % (extractedjar))
     return files
@@ -134,9 +102,9 @@ latestversion  = latestdata[0].strip()
 latestpath     = latestdata[1].strip()
 latestURL      = downloadsite + "/" + latestpath + "/"
 
-filename  = "vaadin-%s.tar.gz" % (latestversion)
-package   = latestURL + filename
-localpackage = "/tmp/%s" % (filename)
+latestfilename  = "vaadin-%s.zip" % (latestversion)
+latestpackage   = latestURL + latestfilename
+locallatestpackage = "/tmp/%s" % (latestfilename)
 
 print "Latest version:      %s" % (latestversion)
 print "Latest version path: %s" % (latestpath)
@@ -144,17 +112,17 @@ print "Latest version URL:  %s" % (latestURL)
 
 # Check if it already exists
 try:
-	os.stat(localpackage)
-	print "Latest package already exists in %s" % (localpackage)
+	os.stat(locallatestpackage)
+	print "Latest package already exists in %s" % (locallatestpackage)
 	# File exists
 except OSError:
 	# File does not exist, get it.
-	print "Downloading package %s to %s" % (package, localpackage)
-	wgetcmd = "wget -q -O %s %s" % (localpackage, package)
+	print "Downloading latest release package %s to %s" % (latestpackage, locallatestpackage)
+	wgetcmd = "wget -q -O %s %s" % (locallatestpackage, latestpackage)
 	command (wgetcmd)
 
 # List files in latest version.
-latestfiles  = listfiles(localpackage)
+latestfiles  = listZipFiles(locallatestpackage)
 
 # List files in built version.
 builtversion = sys.argv[1]
@@ -163,7 +131,7 @@ builtfiles = listZipFiles(builtpackage)
 
 # Report differences
 
-print "\n--------------------------------------------------------------------------------\nVaadin TAR differences"
+print "\n--------------------------------------------------------------------------------\nVaadin ZIP differences"
 
 # New files
 newfiles = diffFiles(builtfiles, latestfiles)
@@ -179,8 +147,8 @@ for item in removed:
 
 print "\n--------------------------------------------------------------------------------\nVaadin JAR differences"
 
-latestJarFiles = listTarVaadinJarFiles(localpackage, latestversion)
-builtJarFiles  = listZipVaadinJarFiles(builtpackage,      builtversion)
+latestJarFiles = listZipVaadinJarFiles(locallatestpackage, latestversion)
+builtJarFiles  = listZipVaadinJarFiles(builtpackage,       builtversion)
 
 # New files
 newfiles = diffFiles(builtJarFiles, latestJarFiles)
@@ -195,4 +163,4 @@ for item in removed:
 	print item
 
 # Purge downloaded package
-command("rm %s" % (localpackage))
+command("rm %s" % (locallatestpackage))
