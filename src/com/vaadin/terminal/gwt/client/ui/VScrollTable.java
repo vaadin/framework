@@ -90,6 +90,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private static final double CACHE_RATE_DEFAULT = 2;
 
     /**
+     * The default multi select mode where simple left clicks only selects one
+     * item, CTRL+left click selects multiple items and SHIFT-left click selects
+     * a range of items.
+     */
+    private static final int MULTISELECT_MODE_DEFAULT = 0;
+
+    /**
      * multiple of pagelength which component will cache when requesting more
      * rows
      */
@@ -216,7 +223,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 .getIntAttribute("dragmode") : 0;
 
         multiselectmode = uidl.hasAttribute("multiselectmode") ? uidl
-                .getIntAttribute("multiselectmode") : 0;
+                .getIntAttribute("multiselectmode") : MULTISELECT_MODE_DEFAULT;
 
         setCacheRate(uidl.hasAttribute("cr") ? uidl.getDoubleAttribute("cr")
                 : CACHE_RATE_DEFAULT);
@@ -2542,28 +2549,28 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                 if ((event.getCtrlKey() || event.getMetaKey())
                                         && event.getShiftKey()
                                         && selectMode == SELECT_MODE_MULTI
-                                        && multiselectmode == 0) {
+                                        && multiselectmode == MULTISELECT_MODE_DEFAULT) {
                                     toggleShiftSelection(false);
 
                                     // Ctrl click
                                 } else if ((event.getCtrlKey() || event
                                         .getMetaKey())
                                         && selectMode == SELECT_MODE_MULTI
-                                        && multiselectmode == 0) {
+                                        && multiselectmode == MULTISELECT_MODE_DEFAULT) {
                                     toggleSelection(true);
 
                                     // Shift click
                                 } else if (event.getShiftKey()
                                         && selectMode == SELECT_MODE_MULTI
-                                        && multiselectmode == 0) {
+                                        && multiselectmode == MULTISELECT_MODE_DEFAULT) {
                                     toggleShiftSelection(true);
 
                                     // click
                                 } else {
-                                    if (multiselectmode == 0) {
+                                    if (multiselectmode == MULTISELECT_MODE_DEFAULT) {
                                         deselectAll();
                                     }
-                                    toggleSelection(multiselectmode == 0);
+                                    toggleSelection(multiselectmode == MULTISELECT_MODE_DEFAULT);
                                 }
 
                                 // Remove IE text selection hack
@@ -2642,7 +2649,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                     || event.getShiftKey()
                                     || event.getMetaKey()
                                     && selectMode == SELECT_MODE_MULTI
-                                    && multiselectmode == 0) {
+                                    && multiselectmode == MULTISELECT_MODE_DEFAULT) {
                                 // Prevent default text selection in Firefox
                                 event.preventDefault();
 
