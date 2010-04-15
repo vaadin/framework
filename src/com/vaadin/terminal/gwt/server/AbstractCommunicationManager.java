@@ -1672,6 +1672,12 @@ public abstract class AbstractCommunicationManager implements
                     i.remove();
                 } else {
                     Window componentsRoot = component.getWindow();
+                    if (componentsRoot == null) {
+                        // This should not happen unless somebody has overriden
+                        // getApplication or getWindow in an illegal way.
+                        throw new IllegalStateException(
+                                "component.getWindow() returned null for a component attached to the application");
+                    }
                     if (componentsRoot.getParent() != null) {
                         // this is a subwindow
                         componentsRoot = (Window) componentsRoot.getParent();
