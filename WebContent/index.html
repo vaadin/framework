@@ -4,7 +4,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>Vaadin @version@</title>
 		<link rel="stylesheet" type="text/css" href="demo/css/styles.css" />
-		<!--[if IE]>
+		<link rel="stylesheet" type="text/css" href="demo/css/zoombox.css" />
+		<!--[if lte IE 6]>
 		<link rel="stylesheet" type="text/css" href="demo/css/ie.css" />
 		<![endif]--> 
 	</head> <!-- /head -->
@@ -20,6 +21,8 @@
 	
 		<div id="subheader">
 			<ul id="menu">
+				<li></li>
+			<!--
 			  <li><a href="#sampler">Sampler</a></li>
 			  <li>&bull;</li>
 			  <li><a href="#addons">Add-ons</a></li>
@@ -31,6 +34,7 @@
 			  <li><a href="#docs">Documentation</a></li>
 			  <li>&bull;</li>
 			  <li><a href="#support">Support</a></li>
+			  -->
 			</ul>
 			<ul id="links">
               <li><a href="http://vaadin.com/forum" title="Open vaadin.com/forum">Discussion Forum &raquo;</a></li>
@@ -52,7 +56,7 @@
 					<span class="mask"></span>
 				</div>
 				<h2>Sampler</h2>
-				<p>The Sampler contains examples of all Vaadin <strong>core components</strong> and their <strong>features</strong> with example <strong>source code available</strong> for copying.</p>
+				<p>See all Vaadin Framework <strong>core components</strong> and their <strong>features</strong> in action in the Sampler! <strong>Sources for all samples</strong> are available for you to see and use.</p>
 				<strong class="start">Start Sampler &raquo;</strong>
 				<!--<strong class="new"><em>Notable In This Release</em> &bull;&nbsp;Drag'n'drop &bull;&nbsp;Keyboard&nbsp;Shortcuts &bull;&nbsp;AbsoluteLayout &bull;&nbsp;GWT 2.0</strong>-->
 				</a>
@@ -64,32 +68,432 @@
 			<h3 class="reasons">More Reasons to Choose Vaadin</h3>
 			
 			<ul id="reasons">
-				<li id="programming-model">
-					<h4 title="Write Java">Programming Model</h4>
-					<h5>Server side Java Only</h5>
-					<p>Forget about the client and RPC, you're only working with the server-side code. This separates Vaadin from similar client oriented Java frameworks such as GWT.</p>
+			
+				<li id="programming-model" class="tab">
+					<h4 title="Pure Java">Efficient Programming Model</h4>
+					
+					<div class="col2">
+						<h5>Server-side Java</h5>
+						<p>Forget about HTML, Javascript, the browser and RPC, you're working with server-side Java code. This separates Vaadin from client-oriented Java frameworks such as GWT.</p>
+					</div>						
+					<div class="col2">
+					<h5>Code Examples</h5>
+						<ul>
+							<li>
+								<h6>Hello World &ndash; The classic example</h6>
+								<a href="docs/example-source/com/vaadin/demo/HelloWorld.java.html" title="View Source">HelloWorld.java</a> &nbsp;&bull;&nbsp; <a href="HelloWorld" class="demoapp">Run the app &raquo;</a>
+							</li>
+							<li>
+								<h6>Calculator &ndash; Simple logic &amp; event handling</h6>
+								<a href="docs/example-source/com/vaadin/demo/Calc.java.html" title="View Source">Calc.java</a> &nbsp;&bull;&nbsp; <a href="Calc" class="demoapp">Run the app &raquo;</a>
+							</li>
+						</ul>
+					</div>
+					
+					<div class="newline col2">
+						<h5>Architecture Diagram</h5>
+						<p>Learn how Vaadin integrates with different platforms and other frameworks, and where your code fits in.</p>
+						<a class="thumb" href="demo/img/vaadin-overall-architecture.png" rel="zoombox">
+							<img src="demo/img/icons/architecture.png" />
+							<span></span>
+						</a>
+					</div>
+					
+					<div class="col2">
+						<h5>Short Development Example</h5>
+						<p>Watch how to create a document editor application from scratch in less than 10 minutes using Eclipse and the <a href="#development">Vaadin Eclipse Plugin</a>.</p>
+						<a class="thumb video" href="http://www.youtube.com/watch?v=u-a3VQF90kw" rel="zoombox">
+							<img src="demo/img/icons/dev-video.png" />
+							<span>Vaadin step-by-step (10 min)</span>
+						</a>
+					</div>
+					
+					<div class="newline col2">
+						<h5>Browser independent</h5>
+						<p>Leave the browser compatibility issues to Vaadin and focus on developing your application. All components in Vaadin are compatible with</p>
+						<ul>
+						<li>Internet Explorer 6+</li>
+						<li>Mozilla Firefox 3+</li>
+						<li>Safari 3+</li>
+						<li>Opera 10</li>
+						<li>Google Chrome 4</li>
+						</ul>
+					</div>
+					<div class="col2">
+						<h5>No plugins required</h5>
+						<p>Vaadin is based on javascript and does not require the end user to install any plugins.</p>
+					</div>
+					
+					<div class="col2">
+						<h5>More Resources</h5>
+						<ul>
+							<li><a href="http://vaadin.com/comparison">Framework comparison</a></li>
+							<li><a href="http://vaadin.com/learn">Learn more from vaadin.com</a></li>
+						</ul>
+					</div>
 				</li>
-				<li id="theming">
+				
+				<li id="theming" class="tab">
 					<h4 title="Themes">Flexible Theming</h4>
+					
+					<div class="col4">
+						<h5>Looks the Way You Want It To</h5>
+						<p>Vaadin comes with two great themes to get you started. Since individual apps have individual needs, Vaadin makes it easy to customize the look of your application using only CSS.</p>
+					</div>
+					
+					<div class="newline col4">
+						<h5>Built-in Themes</h5>
+						<div class="col2">
+							<a class="thumb demoapp" href="ReindeerTheme">
+								<img src="demo/img/icons/reindeer.png" />
+								<span><strong>Reindeer</strong>One theme &ndash; multiple looks</span>
+							</a>
+						</div>
+						<div class="col2">
+							<a class="thumb" href="demo/img/runo.png" rel="zoombox" title="Runo theme mockup (actual implementation differs in some parts)">
+								<img src="demo/img/icons/runo.png" />
+								<span><strong>Runo</strong>Clean and easy to extend</span>
+							</a>
+							<span class="thumb-rel">(mockup only, demo coming soon)</span>
+						</div>
+					</div>
+					
+					<div class="col4">
+						<h5>Additional Themes &amp; Demos</h5>
+						<div class="col2">
+							<a class="thumb demoapp" href="http://demo.vaadin.com/chameleontheme">
+								<img src="demo/img/icons/chameleon.png" />
+								<span><strong>Chameleon Theme</strong>Create your own theme in seconds</span>
+							</a>
+							<a class="thumb-rel" href="http://vaadin.com/directory#addon/106">Available in Vaadin Directory</a>
+						</div>
+						<div class="col2">
+							<a class="thumb demoapp" href="VaadinTunesLayout/">
+								<img src="demo/img/icons/vaadintunes.png" />
+								<span><strong>VaadinTunes</strong>Advanced layout and theme example</span>
+							</a>
+							<a class="thumb-rel" href="http://demo.vaadin.com/docs/example-source/com/vaadin/demo/VaadinTunesLayout.java.html">Source code</a>
+						</div>
+					</div>
+					
+					<div class="col4">
+						<h5>More Resources</h5>
+						<ul>
+							<li><a href="http://vaadin.com/directory#browse/type/2">Browse the themes category in Vaadin Directory</a></li>
+						</ul>
+						<ul>
+							<li><a href="http://vaadin.com/book/-/page/themes.html">Themes section of Book of Vaadin</a></li>
+						</ul>
+					</div>
 				</li>
-				<li id="add-ons">
+				
+				<li id="add-ons" class="tab">
 					<h4 title="Add-ons">Extending, Packaging and Distributing</h4>
+					<div class="col2">
+						<h5>Extend or Create your Own Components</h5>
+						<p>Extend the existing components or create brand new ones using Java and GWT. Server communication is handled automatically, you only provide the state information to be sent.</p>
+						<ul>
+							<li><a href="http://vaadin.com/book/-/page/gwt.html">More information on developing components</a></li>
+						</ul>
+					</div>
+					<div class="col2">
+						<h5>Add-on Architecture</h5>
+						<p>Vaadin has a unique add-on architecture. Add-ons, such as new components can be packaged as single JARs, which can then be used in other projects just by adding them to the project's classpath.</p>
+					</div>
+					<div class="newline col2">
+						<h5>Vaadin Directory</h5>
+						<p>Vaadin Directory contains dozens of useful add-ons of all kinds. See what others have done or distribute your own add-ons for others to use.</p>
+						<a href="http://vaadin.com/directory"><img src="demo/img/directory.png" /></a>
+					</div>
+					<div class="newline col2">
+						<h5>Integrating Add-ons</h5>
+						<p>Integrating add-ons from Vaadin Directory into your project is as easy as downloading them and recompiling the widgetset. The video below demonstrates the process.</p>
+						<ul>
+							<li><a href="http://vaadin.com/directory/help/using-vaadin-add-ons">Using Vaadin add-ons</a></li>
+						</ul>
+						<a class="thumb video" href="http://www.youtube.com/watch?v=LSXCNL6Q1w0" rel="zoombox">
+							<img src="demo/img/icons/integrating-video.png" />
+							<span>Downloading and integrating an add-on from Vaadin Directory (4 min)</span>
+						</a>
+					</div>
+					<div class="col2">
+						<h5>Packaging Add-ons</h5>
+						<p>Create re-usable add-ons that you can share in Vaadin Directory. Visit the link or see the video for an example on how to package your add-on.</p>
+						<ul>
+							<li><a href="http://vaadin.com/directory/help/creating-vaadin-add-ons">How to create Vaadin add-ons</a></li>
+						</ul>
+						<a class="thumb video" href="http://www.youtube.com/watch?v=0deldJZhydE" rel="zoombox">
+							<img src="demo/img/icons/packaging-video.png" />
+							<span>Creating and packaging a Vaadin component (2 min)</span>
+						</a>
+					</div>
 				</li>
-				<li id="documentation">
+				
+				<li id="documentation" class="tab">
 					<h4 title="Documentation">Best Documentation Around</h4>
+					<div class="col2 book">
+						<h5>Book of Vaadin</h5>
+						<h6>Documentation Is The Key to Understanding</h6>
+						<a href="docs/book-of-vaadin.pdf" title="Start reading now"><img src="demo/img/book-of-vaadin.png" /></a>
+						 <p>The Book of Vaadin provides you with all the information you need about Vaadin in a comprehensive form. It's available in <a href="docs/book-of-vaadin.pdf">PDF format</a>, <a href="http://vaadin.com/book">as an online version and as a physical book</a>.</p>
+					</div>
+					<div class="col2 dzone">
+						<h5>DZone Refcard</h5>
+						<a href="http://refcardz.dzone.com/refcardz/getting-started-vaadin"><img src="demo/img/cheatsheet.png" alt="DZone Ref Card for Vaadin" /></a>
+						<p>For a quick introduction to Vaadin, check out the <a href="http://refcardz.dzone.com/refcardz/getting-started-vaadin">DZone Vaadin Refcard</a></p>
+					</div>
+					<div class="newline col2 tutorial">
+						<h5>Tutorials</h5>
+						<img src="demo/img/address-book-icon.png" alt="Address Book tutorial" />
+						<p>Vaadin tutorials provides you with a code-centric introduction to Vaadin.</p>
+						<ul><li>
+						<a href="http://vaadin.com/tutorial/-/page/">Building a simple address book</a></li>
+						<li><a href="http://vaadin.com/tutorial/">More tutorials</a></li>
+						</ul>
+					</div>
+					<div class="col2">
+						<h5>API</h5>
+						<p>When you get down to programming, the <a href="docs/api/index.html">Vaadin API Reference Documentation</a> will help you with the classes and the methods.</p>
+					</div>
 				</li>
-				<li id="jar">
-					<h4 title="Lightweight">Just One JAR</h4>
+				
+				<li id="deployment" class="tab">
+					<h4 title="Deployment">Easy Deployment</h4>
+					<div class="col4">
+						<h5>Single JAR</h5>
+						<p>Vaadin is a single JAR file without external dependencies. Add the JAR to your web application project and you are ready to start creating the user interface.</p>
+					</div>
+					<div class="newline col2">
+						<h5>Servlet Deployment</h5>
+						<p>Vaadin provides a single servlet which runs the application. An application can be deployed to any Java application server that supports servlet 2.3 or newer.</p>
+					</div>
+					<div class="col2">
+						<h5>Portlet Support</h5>
+						<p>Vaadin applications can be deployed as portlets in portals such as Liferay. No code modifications are needed to deploy a Vaadin application to a portal and both portlet standards 1.0 (JSR-168) and 2.0 (JSR-286) are supported. Vaadin is included in Liferay 6.0 as a standard feature.</p>
+					</div>
+					<div class="newline col2">
+						<h5>Supported Application Servers</h5>
+						<ul>
+							<li>Apache Tomcat, 4.1+</li>
+							<li>BEA WebLogic, 9.2+</li>
+							<li>IBM WebSphere Application Server 6.1+</li>
+							<li>JBoss Application Server 3.2.8+</li>
+							<li>Jetty 5+</li>
+							<li>Glassfish 2+</li>
+						</ul>
+					</div>
+					<div class="col2">
+						<h5>Supported Portals</h5>
+						<ul>
+							<li>Liferay Portal 4.3 or later</li>
+						</ul>						
+					</div>
+					<div class="col2">					
+						<h5>Google App Engine</h5>						
+						<p>The same servlet and portlet Vaadin applications can be deployed to Google App Engine, provided they are built to be serializable.</p>
+					</div>
 				</li>
-				<li id="compatibility">
-					<h4 title="Compatibility">Compatible With What You Already Know</h4>
+				
+				<li id="development" class="tab tools">
+					<h4 title="Development">Develop With Tools You Already Know</h4>
+					<div class="col2">
+						<img src="demo/img/eclipse-logo.png" alt="Eclipse IDE" />
+						<h5>Eclipse</h5>
+						<p>Vaadin provides an Eclipse plugin which automatically sets up your project, compiles your widgetset and more.</p> 
+						<ul><li><a href="http://vaadin.com/eclipse/">Eclipse plugin update site and instructions</a></li></ul>
+					</div>
+					<div class="col2">
+						<img src="demo/img/netbeans-logo.png" alt="NetBeans IDE" />
+						<h5>NetBeans</h5>
+						<p>A community created Vaadin NetBeans plugin is available for all NetBeans developers.</p>
+						<ul><li><a href="http://vaadin.com/netbeans">NetBeans plugin installation instructions</a></li></ul>
+					</div>
+					<div class="newline col2">
+						<img src="demo/img/maven-logo.png" alt="Maven" />
+						<h5>Maven</h5>
+						<p>Vaadin is in the central Maven repository, providing archetypes for creating Vaadin projects and a widgetset compilation plugin for Maven.</p>
+						<ul><li><a href="http://vaadin.com/wiki/-/wiki/Main/Using%20Vaadin%20with%20Maven">Using Vaadin with Maven</a></li></ul>
+					</div>
+					<div class="col2">
+						<img src="demo/img/ant-logo.png" alt="Apache Ant" />
+						<h5>Any IDE / automated build system (Ant)</h5>
+						<p>Ant integration is provided for users of any IDE, for automatic build systems and for users preferring to not using an IDE.</p>
+						<ul><li><a href="docs/example-source/build-widgetset.xml">Example widgetset build script</a></li></ul>
+						
+					</div>	
 				</li>
+				<li id="license" class="tab">
+					<h4 title="Open Source">Free for Everybody</h4>
+						<h5>Apache Software License 2.0</h5>
+						<p>Vaadin is licensed under the Apache Software License 2.0 which means you can use it both for non-commercial and commercial projects free of charge.</p>
+						<ul><li><a href="http://vaadin.com/license">License information</a></li></ul>
+						
+				</li>
+				<li id="community" class="tab">
+					<h4 title="Community">Be a Part of the Vaadin Community</h4>
+					<div class="col2">
+						<h5>Forums</h5>
+						<p>The forums are very active and a good place to ask questions, help others, discuss your latest ideas or just share what you have done.</p>
+						<ul><li><a href="http://vaadin.com/forum">Start discussing</a></li></ul>
+					</div>
+					<div class="col2">
+						<h5>Wiki</h5>
+						<p>The Vaadin wiki is a place where you can find out the best way to use Vaadin, how to integrate it with various other systems such as Spring or JEE6. Read what others have done or write down how you do things.</p>
+						<ul><li><a href="http://vaadin.com/wiki">Vaadin wiki</a></li></ul>
+					</div>
+					<div class="col2">
+						<h5>Vaadin Directory</h5>
+						<p>Add-ons for Vaadin are distributed through Vaadin Directory. See what others have done, get ideas or create and share your own.</p>
+						<ul><li><a href="http://vaadin.com/directory">Vaadin Directory</a></li></ul>
+					</div>
+					<div class="col2">
+						<h5>Bug Tracker</h5>
+						<p>Found a problem in Vaadin? Maybe you fixed it yourself already? Report it through the Vaadin bug tracker so everybody else also can benefit from your findings.</p>
+						<ul><li><a href="http://dev.vaadin.com/">Vaadin bug tracker</a></li></ul>
+					</div>
+					<div class="col4">
+						<h5>More Resources</h5>
+						<ul>
+							<li><a href="http://vaadin.com/blog">Read the Vaadin Blog</a></li>
+							<li><a href="http://vaadin.com/twitter">Follow Vaadin on twitter</a></li>
+							<li><a href="http://vaadin.com/chat">Chat with other Vaadin users</a></li>
+						</ul>
+					</div>
+				</li>
+				
 			</ul>
 		</div> <!-- /content -->
+		
+		
+		<div id="footer">
+			<span class="slogan"><strong>vaadin <em>}></em></strong> thinking of U and I<span> <!-- <a href="#top">&uarr; Back to top</a>-->
+		</div> <!-- /footer -->
+	
+	<div style="height:0px; overflow:hidden;">
+		
+	<!-- start pre caching sampler icons  -->
+	
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-AbsoluteLayoutBasic.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-AccordionDisabled.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-AccordionIcons.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ApplicationLayout.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-BasicMenuBar.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-BrowserInformation.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ButtonLink.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ButtonPush.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-CheckBoxes.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ClickableLayoutBasic.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ComboBoxContains.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ComboBoxInputPrompt.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ComboBoxNewItems.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ComboBoxPlain.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ComboBoxStartsWith.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-CssLayouts.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-CustomLayouts.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-DateInline.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-DateLocale.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-DatePopup.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-DateResolution.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-DragDropHtml5FromDesktop.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-DragDropRearrangeComponents.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-DragDropServerValidation.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-DragDropTableTree.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-DragDropTreeSorting.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-Errors.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ExpandingComponent.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-FlashEmbed.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-FormAdvancedLayout.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-FormBasic.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-FormPojo.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-GridLayoutBasic.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-HorizontalLayoutBasic.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-Icons.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ImageEmbed.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ImmediateUpload.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-JSApi.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-LabelPlain.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-LabelPreformatted.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-LabelRich.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-LayoutAlignment.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-LayoutMargin.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-LayoutSpacing.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-LinkCurrentWindow.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-LinkNoDecorations.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-LinkSizedWindow.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ListSelectMultiple.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ListSelectSingle.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-LoginForm.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-MenuBarCollapsing.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-MenuBarHiddenItems.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-MenuBarItemStyles.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-MenuBarWithIcons.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-NativeSelection.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-NativeWindow.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-NotificationCustom.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-NotificationError.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-NotificationHumanized.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-NotificationTray.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-NotificationWarning.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-OptionGroups.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-PackageIcons.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-PanelBasic.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-PanelLight.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-PopupViewClosing.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-PopupViewContents.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ProgressIndicators.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ProminentPrimaryAction.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-RichTextEditor.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ShortcutBasics.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ShortcutScope.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-SliderHorizontal.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-SliderVertical.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-SplitPanelBasic.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-Subwindow.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-SubwindowAutoSized.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-SubwindowClose.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-SubwindowModal.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-SubwindowPositioned.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-SubwindowSized.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TableActions.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TableCellStyling.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TableColumnAlignment.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TableColumnCollapsing.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TableColumnHeaders.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TableColumnReordering.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TableHeaderIcons.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TableLazyLoading.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TableMouseEvents.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TableRowHeaders.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TableRowStyling.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TableSorting.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TabSheetClosing.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TabSheetDisabled.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TabSheetIcons.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TabSheetScrolling.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TextArea.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TextFieldInputPrompt.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TextFieldSecret.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TextFieldSingle.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-Tooltips.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TreeActions.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TreeMouseEvents.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TreeMultiSelect.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TreeSingleSelect.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TwinColumnSelect.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-UploadBasic.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-UploadWithProgressMonitoring.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-Validation.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-VerticalLayoutBasic.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-WebEmbed.gif"/>
+	<img src="/VAADIN/themes/sampler/icons/sampleicons/75-WebLayout.gif"/>
+		
+	</div>
 	
 	
 	<script type="text/javascript" src="demo/js/jquery.min.js"></script>
+	<script src="demo/js/jquery.history.js" type="text/javascript"></script>
 	<script src="demo/js/fonts.js" type="text/javascript"></script>
+	<script src="demo/js/zoombox.js" type="text/javascript"></script>
 	<script type="text/javascript">
 		function slideSwitch() {
 		    var $active = $('#sampler-slideshow li.active');
@@ -115,15 +519,19 @@
 			
 			// Generate tab captions
 			var tabs = content.before('<div id="tabs"></div>').prev();
-			
-			$("#reasons li").each(function(i, li) {
+			var height = 0;
+			$("#reasons > li").each(function(i, li) {
 				li = $(li);
+				if(this.offsetHeight > height) {
+					height = this.offsetHeight;
+				}
 				li.css({"position":"absolute"});
 				if(i>0){
 					li.hide();
 				}
 				var caption = li.find("h4");
-				var tab = tabs.append('<div class="tab">'+caption[0].title+'</div>').find(".tab:last-child");
+				var hash = li[0].id.toLowerCase();
+				var tab = tabs.append('<div class="tab" id="tab_'+hash+'"><a href="#'+hash+'">'+caption[0].title+'<span>&#9658;</span></a></div>').find(".tab:last-child");
 				if(i==0) {
 					jQuery.data(tabs[0], "selected", tab);
 					jQuery.data(content[0], "open", li);
@@ -132,27 +540,62 @@
 				}
 				jQuery.data(tab[0], "content", li);
 				tab.click(function() {
-					if(jQuery.data(tabs[0], "selected")[0] == this)
-						return;
-						
-					// Hide previous
-					jQuery.data(tabs[0], "selected").removeClass("selected");
-					jQuery.data(content[0], "open").fadeOut("fast");
-					
-					var tab = $(this);
-					var tabContent = jQuery.data(this, "content");
-					// Show new
-					jQuery.data(tabs[0], "selected", tab);
-					tab.addClass("selected");
-					jQuery.data(content[0], "open", tabContent);
-					tabContent.css({"opacity":""});
-					tabContent.fadeIn("fast");
+					setTimeout(function() {
+						pageload(li[0].id);
+					},100);
 				});
 			});
-			
+			content.height(height);
 		}
 		
+		function pageload(hash) {
+			hash = hash.replace(/^.*#/, '').toLowerCase();
+			var tab = $("#tab_"+hash);
+			var tabs = $("#tabs");
+			var sel = jQuery.data(tabs[0], "selected")[0];
+			if(sel == tab[0])
+				return;
+			
+			var content = $("#reasons");
+			
+			// Hide previous
+			jQuery.data(tabs[0], "selected").removeClass("selected");
+			//jQuery.data(content[0], "open").fadeOut("fast");
+			jQuery.data(content[0], "open").hide();
+			
+			var tabContent = jQuery.data(tab[0], "content");
+			
+			// Show new
+			jQuery.data(tabs[0], "selected", tab);
+			tab.addClass("selected");
+			jQuery.data(content[0], "open", tabContent);
+			//tabContent.fadeIn("fast");
+			tabContent.show();
+		}
+		
+		function fixTabHeight() {
+			var height = 0;
+			$("#reasons > li").each(function() {
+				var display = this.style.display;
+				this.style.display = "block";
+				if(this.offsetHeight > height) {
+					height = this.offsetHeight;
+				}
+				this.style.display = display;
+			});
+			$("#reasons").height(height);
+		}
+		
+		$(document).ready(function(){
+			doTabs();
+			// Initialize history plugin.
+			// The callback is called at once by present location.hash. 
+			$.historyInit(pageload, "");
+			setInterval( "slideSwitch()", 2200 );
+		});
+		
 		window.onload = function() {
+			fixTabHeight();
 			try {
 				if(window.location.search && (window.location.search.indexOf('gwt.hosted') != -1 || window.location.search.indexOf('gwt.codesvr') != -1)) {
 					var hostedParam = window.location.search;
@@ -166,134 +609,10 @@
 					}
 				}
 			} catch(e) {}
-			
-			setInterval( "slideSwitch()", 2200 );
-			doTabs();
 		}
 		
 		Cufon.replace(["h2","h4","#sampler .start"], {fontFamily: "HelveticaRounded"});
 		Cufon.replace(["h3"], {fontFamily: "HelveticaLight"});
 	</script>
-	
-	<div style="height:0px; overflow:hidden;">
-	
-<!-- start pre caching sampler icons  -->
-
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-AbsoluteLayoutBasic.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-AccordionDisabled.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-AccordionIcons.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ApplicationLayout.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-BasicMenuBar.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-BrowserInformation.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ButtonLink.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ButtonPush.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-CheckBoxes.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ClickableLayoutBasic.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ComboBoxContains.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ComboBoxInputPrompt.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ComboBoxNewItems.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ComboBoxPlain.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ComboBoxStartsWith.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-CssLayouts.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-CustomLayouts.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-DateInline.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-DateLocale.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-DatePopup.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-DateResolution.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-DragDropHtml5FromDesktop.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-DragDropRearrangeComponents.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-DragDropServerValidation.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-DragDropTableTree.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-DragDropTreeSorting.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-Errors.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ExpandingComponent.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-FlashEmbed.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-FormAdvancedLayout.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-FormBasic.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-FormPojo.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-GridLayoutBasic.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-HorizontalLayoutBasic.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-Icons.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ImageEmbed.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ImmediateUpload.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-JSApi.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-LabelPlain.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-LabelPreformatted.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-LabelRich.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-LayoutAlignment.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-LayoutMargin.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-LayoutSpacing.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-LinkCurrentWindow.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-LinkNoDecorations.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-LinkSizedWindow.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ListSelectMultiple.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ListSelectSingle.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-LoginForm.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-MenuBarCollapsing.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-MenuBarHiddenItems.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-MenuBarItemStyles.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-MenuBarWithIcons.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-NativeSelection.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-NativeWindow.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-NotificationCustom.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-NotificationError.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-NotificationHumanized.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-NotificationTray.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-NotificationWarning.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-OptionGroups.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-PackageIcons.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-PanelBasic.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-PanelLight.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-PopupViewClosing.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-PopupViewContents.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ProgressIndicators.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ProminentPrimaryAction.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-RichTextEditor.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ShortcutBasics.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-ShortcutScope.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-SliderHorizontal.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-SliderVertical.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-SplitPanelBasic.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-Subwindow.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-SubwindowAutoSized.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-SubwindowClose.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-SubwindowModal.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-SubwindowPositioned.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-SubwindowSized.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TableActions.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TableCellStyling.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TableColumnAlignment.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TableColumnCollapsing.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TableColumnHeaders.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TableColumnReordering.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TableHeaderIcons.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TableLazyLoading.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TableMouseEvents.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TableRowHeaders.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TableRowStyling.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TableSorting.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TabSheetClosing.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TabSheetDisabled.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TabSheetIcons.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TabSheetScrolling.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TextArea.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TextFieldInputPrompt.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TextFieldSecret.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TextFieldSingle.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-Tooltips.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TreeActions.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TreeMouseEvents.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TreeMultiSelect.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TreeSingleSelect.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-TwinColumnSelect.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-UploadBasic.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-UploadWithProgressMonitoring.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-Validation.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-VerticalLayoutBasic.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-WebEmbed.gif">
-<img src="/VAADIN/themes/sampler/icons/sampleicons/75-WebLayout.gif">
-	
-	</div>
-	
 	</body>
 </html>
