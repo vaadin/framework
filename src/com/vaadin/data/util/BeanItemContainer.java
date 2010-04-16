@@ -444,7 +444,8 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         LinkedList<Object> sortables = new LinkedList<Object>();
         for (Object propertyId : getContainerPropertyIds()) {
             Class<?> propertyType = getType(propertyId);
-            if (Comparable.class.isAssignableFrom(propertyType)) {
+            if (Comparable.class.isAssignableFrom(propertyType)
+                    || propertyType.isPrimitive()) {
                 sortables.add(propertyId);
             }
         }
