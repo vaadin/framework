@@ -135,6 +135,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
     private final TableHead tHead = new TableHead();
 
+    private final TableFooter tFoot = new TableFooter();
+
     private final ScrollPanel bodyContainer = new ScrollPanel();
 
     private int totalRows;
@@ -158,6 +160,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private Element scrollPositionElement;
     private boolean enabled;
     private boolean showColHeaders;
+    private boolean showColFooters;
 
     /** flag to indicate that table body has changed */
     private boolean isNewBody = true;
@@ -185,14 +188,23 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         setStyleName(CLASSNAME);
         add(tHead);
         add(bodyContainer);
+        add(tFoot);
 
         rowRequestHandler = new RowRequestHandler();
-
     }
 
     @SuppressWarnings("unchecked")
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         rendering = true;
+
+        /*
+         * We need to do this before updateComponent since updateComponent calls
+         * this.setHeight() which will calculate a new body height depending on
+         * the space available.
+         */
+        showColFooters = uidl.getBooleanAttribute("colfooters");
+        tFoot.setVisible(showColFooters);
+
         if (client.updateComponent(this, uidl, true)) {
             rendering = false;
             return;
@@ -211,6 +223,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             if (scrollBody != null) {
                 if (totalRows == 0) {
                     tHead.clear();
+                    tFoot.clear();
                 }
                 initializedAndAttached = false;
                 initialContentReceived = false;
@@ -231,6 +244,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         recalcWidths = uidl.hasAttribute("recalcWidths");
         if (recalcWidths) {
             tHead.clear();
+            tFoot.clear();
         }
 
         if (uidl.hasAttribute("pagelength")) {
@@ -300,6 +314,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 updateActionMap(c);
             } else if (c.getTag().equals("visiblecolumns")) {
                 tHead.updateCellsFromUIDL(c);
+                tFoot.updateCellsFromUIDL(c);
             } else if (c.getTag().equals("-ac")) {
                 ac = c;
             }
@@ -316,6 +331,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             dropHandler.updateAcceptRules(ac);
         }
         updateHeader(uidl.getStringArrayAttribute("vcolorder"));
+
+        updateFooter(uidl.getStringArrayAttribute("vcolorder"));
 
         if (!recalcWidths && initializedAndAttached) {
             updateBody(rowData, uidl.getIntAttribute("firstrow"), uidl
@@ -437,6 +454,30 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     }
 
     /**
+     * Updates footers.
+     * <p>
+     * Update headers whould be called before this method is called!
+     * </p>
+     * 
+     * @param strings
+     */
+    private void updateFooter(String[] strings) {
+        if (strings == null) {
+            return;
+        }
+
+        int i;
+        int colIndex = 0;
+        for (i = 0; i < strings.length; i++) {
+            final String cid = strings[i];
+            tFoot.enableColumn(cid, colIndex);
+            colIndex++;
+        }
+
+        tFoot.setVisible(showColFooters);
+    }
+
+    /**
      * @param uidl
      *            which contains row data
      * @param firstRow
@@ -512,9 +553,18 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     }
 
     private void setColWidth(int colIndex, int w, boolean isDefinedWidth) {
-        final HeaderCell cell = tHead.getHeaderCell(colIndex);
-        cell.setWidth(w, isDefinedWidth);
+        // Set header column width
+        final HeaderCell hcell = tHead.getHeaderCell(colIndex);
+        hcell.setWidth(w, isDefinedWidth);
+
+        // Set body column width
         scrollBody.setColWidth(colIndex, w);
+
+        // Set footer column width
+        final FooterCell fcell = tFoot.getFooterCell(colIndex);
+        if (fcell != null) {
+            fcell.setWidth(w, isDefinedWidth);
+        }
     }
 
     private int getColWidth(String colKey) {
@@ -542,6 +592,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         // Change body order
         scrollBody.moveCol(oldIndex, newIndex);
+
+        // Change footer order
+        tFoot.moveCell(oldIndex, newIndex);
 
         /*
          * Build new columnOrder and update it to server Note that columnOrder
@@ -636,6 +689,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         final int[] widths = new int[tHead.visibleCells.size()];
 
         tHead.enableBrowserIntelligence();
+        tFoot.enableBrowserIntelligence();
+
         // first loop: collect natural widths
         while (headCells.hasNext()) {
             final HeaderCell hCell = (HeaderCell) headCells.next();
@@ -661,6 +716,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
 
         tHead.disableBrowserIntelligence();
+        tFoot.disableBrowserIntelligence();
 
         boolean willHaveScrollbarz = willHaveScrollbars();
 
@@ -1532,8 +1588,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         headerChangedDuringUpdate = true;
                     }
                 }
-
             }
+
             // check for orphaned header cells
             for (Iterator<String> cit = availableCells.keySet().iterator(); cit
                     .hasNext();) {
@@ -1543,7 +1599,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     cit.remove();
                 }
             }
-
         }
 
         public void enableColumn(String cid, int index) {
@@ -1822,6 +1877,425 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             return aligns;
         }
 
+    }
+
+    /**
+     * A cell in the footer
+     */
+    public class FooterCell extends Widget {
+        private Element td = DOM.createTD();
+        private Element captionContainer = DOM.createDiv();
+        private char align = ALIGN_LEFT;
+        private int width = -1;
+        private float expandRatio = 0;
+
+        public FooterCell(String colId, String headerText) {
+            setText(headerText);
+
+            DOM.setElementProperty(captionContainer, "className", CLASSNAME
+                    + "-footer-container");
+
+            // ensure no clipping initially (problem on column additions)
+            DOM.setStyleAttribute(captionContainer, "overflow", "visible");
+
+            DOM.appendChild(td, captionContainer);
+
+            setElement(td);
+        }
+
+        /**
+         * Sets the text of the footer
+         * 
+         * @param footerText
+         *            The text in the footer
+         */
+        public void setText(String footerText) {
+            DOM.setInnerHTML(captionContainer, footerText);
+        }
+
+        /**
+         * Set alignment of the text in the cell
+         * 
+         * @param c
+         *            The alignment which can be ALIGN_CENTER, ALIGN_LEFT,
+         *            ALIGN_RIGHT
+         */
+        public void setAlign(char c) {
+            if (align != c) {
+                switch (c) {
+                case ALIGN_CENTER:
+                    DOM.setStyleAttribute(captionContainer, "textAlign",
+                            "center");
+                    break;
+                case ALIGN_RIGHT:
+                    DOM.setStyleAttribute(captionContainer, "textAlign",
+                            "right");
+                    break;
+                default:
+                    DOM.setStyleAttribute(captionContainer, "textAlign", "");
+                    break;
+                }
+            }
+            align = c;
+        }
+
+        /**
+         * Get the alignment of the text int the cell
+         * 
+         * @return Returns either ALIGN_CENTER, ALIGN_LEFT or ALIGN_RIGHT
+         */
+        public char getAlign() {
+            return align;
+        }
+
+        /**
+         * Sets the width of the cell
+         * 
+         * @param w
+         *            The width of the cell
+         * @param ensureDefinedWidth
+         *            Ensures the the given width is not recalculated
+         */
+        public void setWidth(int w, boolean ensureDefinedWidth) {
+
+            // Account for 1px right border
+            w--;
+
+            if (ensureDefinedWidth) {
+                // on column resize expand ratio becomes zero
+                expandRatio = 0;
+            }
+            if (width == w) {
+                return;
+            }
+            if (width == -1) {
+                // go to default mode, clip content if necessary
+                DOM.setStyleAttribute(captionContainer, "overflow", "");
+            }
+            width = w;
+            if (w == -1) {
+                DOM.setStyleAttribute(captionContainer, "width", "");
+                setWidth("");
+            } else {
+
+                captionContainer.getStyle().setPropertyPx("width", w);
+
+                /*
+                 * if we already have tBody, set the header width properly, if
+                 * not defer it. IE will fail with complex float in table header
+                 * unless TD width is not explicitly set.
+                 */
+                if (scrollBody != null) {
+                    int tdWidth = width + scrollBody.getCellExtraWidth();
+                    setWidth(tdWidth + "px");
+                } else {
+                    DeferredCommand.addCommand(new Command() {
+                        public void execute() {
+                            int tdWidth = width
+                                    + scrollBody.getCellExtraWidth();
+                            setWidth(tdWidth + "px");
+                        }
+                    });
+                }
+            }
+        }
+
+        /**
+         * Sets the width to undefined
+         */
+        public void setUndefinedWidth() {
+            setWidth(-1, false);
+        }
+
+        /**
+         * Sets the expand ratio of the cell
+         * 
+         * @param floatAttribute
+         *            The expand ratio
+         */
+        public void setExpandRatio(float floatAttribute) {
+            expandRatio = floatAttribute;
+        }
+
+        /**
+         * Returns the expand ration of the cell
+         * 
+         * @return The expand ratio
+         */
+        public float getExpandRatio() {
+            return expandRatio;
+        }
+
+        /**
+         * Is the cell enabled?
+         * 
+         * @return True if enabled else False
+         */
+        public boolean isEnabled() {
+            return getParent() != null;
+        }
+
+    }
+
+    /**
+     * The footer of the table which can be seen in the bottom of the Table.
+     */
+    public class TableFooter extends Panel {
+
+        private static final int WRAPPER_WIDTH = 9000;
+
+        ArrayList<Widget> visibleCells = new ArrayList<Widget>();
+        HashMap<String, FooterCell> availableCells = new HashMap<String, FooterCell>();
+
+        Element div = DOM.createDiv();
+        Element hTableWrapper = DOM.createDiv();
+        Element hTableContainer = DOM.createDiv();
+        Element table = DOM.createTable();
+        Element headerTableBody = DOM.createTBody();
+        Element tr = DOM.createTR();
+
+        public TableFooter() {
+
+            DOM.setStyleAttribute(hTableWrapper, "overflow", "hidden");
+            DOM.setElementProperty(hTableWrapper, "className", CLASSNAME
+                    + "-footer");
+
+            DOM.appendChild(table, headerTableBody);
+            DOM.appendChild(headerTableBody, tr);
+            DOM.appendChild(hTableContainer, table);
+            DOM.appendChild(hTableWrapper, hTableContainer);
+            DOM.appendChild(div, hTableWrapper);
+            setElement(div);
+
+            setStyleName(CLASSNAME + "-footer-wrap");
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * com.google.gwt.user.client.ui.Panel#remove(com.google.gwt.user.client
+         * .ui.Widget)
+         */
+        @Override
+        public boolean remove(Widget w) {
+            if (visibleCells.contains(w)) {
+                visibleCells.remove(w);
+                orphan(w);
+                DOM.removeChild(DOM.getParent(w.getElement()), w.getElement());
+                return true;
+            }
+            return false;
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see com.google.gwt.user.client.ui.HasWidgets#iterator()
+         */
+        @Override
+        public Iterator<Widget> iterator() {
+            return visibleCells.iterator();
+        }
+
+        /**
+         * Gets a footer cell which represents the given columnId
+         * 
+         * @param cid
+         *            The columnId
+         * 
+         * @return The cell
+         */
+        public FooterCell getFooterCell(String cid) {
+            return availableCells.get(cid);
+        }
+
+        /**
+         * Gets a footer cell by using a column index
+         * 
+         * @param index
+         *            The index of the column
+         * @return The Cell
+         */
+        public FooterCell getFooterCell(int index) {
+            if (index < visibleCells.size()) {
+                return (FooterCell) visibleCells.get(index);
+            } else {
+                return null;
+            }
+        }
+
+        /**
+         * Updates the cells contents when updateUIDL request is received
+         * 
+         * @param uidl
+         *            The UIDL
+         */
+        public void updateCellsFromUIDL(UIDL uidl) {
+            Iterator<?> columnIterator = uidl.getChildIterator();
+            HashSet<String> updated = new HashSet<String>();
+            updated.add("0");
+            while (columnIterator.hasNext()) {
+                final UIDL col = (UIDL) columnIterator.next();
+                final String cid = col.getStringAttribute("cid");
+                updated.add(cid);
+
+                String caption = col.getStringAttribute("fcaption");
+                FooterCell c = getFooterCell(cid);
+                if (c == null) {
+                    c = new FooterCell(cid, caption);
+                    availableCells.put(cid, c);
+                    if (initializedAndAttached) {
+                        // we will need a column width recalculation
+                        initializedAndAttached = false;
+                        initialContentReceived = false;
+                        isNewBody = true;
+                    }
+                } else {
+                    c.setText(caption);
+                }
+
+                if (col.hasAttribute("align")) {
+                    c.setAlign(col.getStringAttribute("align").charAt(0));
+                }
+                if (col.hasAttribute("width")) {
+                    final String width = col.getStringAttribute("width");
+                    c.setWidth(Integer.parseInt(width), true);
+                } else if (recalcWidths) {
+                    c.setUndefinedWidth();
+                }
+                if (col.hasAttribute("er")) {
+                    c.setExpandRatio(col.getFloatAttribute("er"));
+                }
+                if (col.hasAttribute("collapsed")) {
+                    // ensure header is properly removed from parent (case when
+                    // collapsing happens via servers side api)
+                    if (c.isAttached()) {
+                        c.removeFromParent();
+                        headerChangedDuringUpdate = true;
+                    }
+                }
+            }
+
+            // check for orphaned header cells
+            for (Iterator<String> cit = availableCells.keySet().iterator(); cit
+                    .hasNext();) {
+                String cid = cit.next();
+                if (!updated.contains(cid)) {
+                    removeCell(cid);
+                    cit.remove();
+                }
+            }
+        }
+
+        /**
+         * Set a footer cell for a specified column index
+         * 
+         * @param index
+         *            The index
+         * @param cell
+         *            The footer cell
+         */
+        public void setFooterCell(int index, FooterCell cell) {
+            if (cell.isEnabled()) {
+                // we're moving the cell
+                DOM.removeChild(tr, cell.getElement());
+                orphan(cell);
+            }
+            if (index < visibleCells.size()) {
+                // insert to right slot
+                DOM.insertChild(tr, cell.getElement(), index);
+                adopt(cell);
+                visibleCells.add(index, cell);
+            } else if (index == visibleCells.size()) {
+                // simply append
+                DOM.appendChild(tr, cell.getElement());
+                adopt(cell);
+                visibleCells.add(cell);
+            } else {
+                throw new RuntimeException(
+                        "Header cells must be appended in order");
+            }
+        }
+
+        /**
+         * Remove a cell by using the columnId
+         * 
+         * @param colKey
+         *            The columnId to remove
+         */
+        public void removeCell(String colKey) {
+            final FooterCell c = getFooterCell(colKey);
+            remove(c);
+        }
+
+        /**
+         * Enable a column (Sets the footer cell)
+         * 
+         * @param cid
+         *            The columnId
+         * @param index
+         *            The index of the column
+         */
+        public void enableColumn(String cid, int index) {
+            final FooterCell c = getFooterCell(cid);
+            if (!c.isEnabled() || getFooterCell(index) != c) {
+                setFooterCell(index, c);
+                if (initializedAndAttached) {
+                    headerChangedDuringUpdate = true;
+                }
+            }
+        }
+
+        /**
+         * Disable browser measurement of the table width
+         */
+        public void disableBrowserIntelligence() {
+            DOM.setStyleAttribute(hTableContainer, "width", WRAPPER_WIDTH
+                    + "px");
+        }
+
+        /**
+         * Enable browser measurement of the table width
+         */
+        public void enableBrowserIntelligence() {
+            DOM.setStyleAttribute(hTableContainer, "width", "");
+        }
+
+        /**
+         * Set the horizontal position in the cell in the footer. This is done
+         * when a horizontal scrollbar is present.
+         * 
+         * @param scrollLeft
+         *            The value of the leftScroll
+         */
+        public void setHorizontalScrollPosition(int scrollLeft) {
+            if (BrowserInfo.get().isIE6()) {
+                hTableWrapper.getStyle().setProperty("position", "relative");
+                hTableWrapper.getStyle().setPropertyPx("left", -scrollLeft);
+            } else {
+                hTableWrapper.setScrollLeft(scrollLeft);
+            }
+        }
+
+        /**
+         * Swap cells when the column are dragged
+         * 
+         * @param oldIndex
+         *            The old index of the cell
+         * @param newIndex
+         *            The new index of the cell
+         */
+        public void moveCell(int oldIndex, int newIndex) {
+            final FooterCell hCell = getFooterCell(oldIndex);
+            final Element cell = hCell.getElement();
+
+            visibleCells.remove(oldIndex);
+            DOM.removeChild(tr, cell);
+
+            DOM.insertChild(tr, cell, newIndex);
+            visibleCells.add(newIndex, hCell);
+        }
     }
 
     /**
@@ -3096,6 +3570,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private void setContentWidth(int pixels) {
         tHead.setWidth(pixels + "px");
         bodyContainer.setWidth(pixels + "px");
+        tFoot.setWidth(pixels + "px");
     }
 
     private int borderWidth = -1;
@@ -3120,7 +3595,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      */
     private void setContainerHeight() {
         if (height != null && !"".equals(height)) {
-            int contentH = getOffsetHeight() - tHead.getOffsetHeight();
+            int contentH = getOffsetHeight() - tHead.getOffsetHeight()
+                    - tFoot.getOffsetHeight();
             contentH -= getContentAreaBorderHeight();
             if (contentH < 0) {
                 contentH = 0;
@@ -3247,6 +3723,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         // fix headers horizontal scrolling
         tHead.setHorizontalScrollPosition(scrollLeft);
+
+        // fix footers horizontal scrolling
+        tFoot.setHorizontalScrollPosition(scrollLeft);
 
         firstRowInViewPort = (int) Math.ceil(scrollTop
                 / scrollBody.getRowHeight());

@@ -21,9 +21,23 @@
 	text-shadow: #fff 0 1px 0;
 	line-height: normal;
 }
+
+.v-table-footer-wrap,
+.white .v-table-footer-wrap{
+	border-color: #c2c3c4;
+	background: transparent repeat-x;	
+	background-image: url(img/header-bg-light.png);
+	height: 20px;
+}
+
 .v-table-header {
 	height: 20px;
 }
+.v-table-footer,
+.v-table-footer table {
+	height: 20px;	
+}
+
 .v-table-caption-container {
 	heigth: 16px;
 	padding-top: 4px;
@@ -36,6 +50,9 @@
 }
 .v-ie .v-table-caption-container .v-icon {
 	margin-top: -3px;
+}
+.v-table-footer-container {
+	heigth: 16px;	
 }
 .v-table-resizer {
 	height: 20px;

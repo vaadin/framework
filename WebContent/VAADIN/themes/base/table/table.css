@@ -51,6 +51,35 @@
 .v-table-header-cell-desc {
 	cursor: pointer;
 }
+
+.v-table-footer-wrap {
+	overflow: hidden;
+	border: 1px solid #aaa;
+	border-top: none;
+	background: #efefef;
+}
+.v-table-footer table,
+.v-table-table {
+	border-spacing: 0;
+	border-collapse: separate;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+.v-table-footer td {
+	padding: 0;
+	border-right: 1px solid #aaa;
+}
+.v-table-footer-cell,
+.v-table-footer-cell-asc,
+.v-table-footer-cell-desc {
+	cursor: pointer;
+}
+.v-table-footer-container{
+	padding-left:6px;
+	padding-right:6px;
+	overfow: hidden;	
+}
 .v-table-resizer {
 	display: block;
 	height: 1.2em;

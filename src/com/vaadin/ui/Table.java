@@ -242,6 +242,11 @@ public class Table extends AbstractSelect implements Action.Container,
     private final HashMap<Object, String> columnHeaders = new HashMap<Object, String>();
 
     /**
+     * Holds footers for visible columns (by propertyId).
+     */
+    private final HashMap<Object, String> columnFooters = new HashMap<Object, String>();
+
+    /**
      * Holds icons for visible columns (by propertyId).
      */
     private final HashMap<Object, Resource> columnIcons = new HashMap<Object, Resource>();
@@ -286,6 +291,11 @@ public class Table extends AbstractSelect implements Action.Container,
      * Holds value of property columnHeaderMode.
      */
     private int columnHeaderMode = COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID;
+
+    /**
+     * Should the Table footer be visible?
+     */
+    private boolean columnFootersVisible = false;
 
     /**
      * True iff the row captions are hidden.
@@ -2184,6 +2194,9 @@ public class Table extends AbstractSelect implements Action.Container,
         if (rowheads) {
             target.addAttribute("rowheaders", true);
         }
+        if (columnFootersVisible) {
+            target.addAttribute("colfooters", true);
+        }
 
         // Visible column order
         final Collection sortables = getSortableContainerPropertyIds();
@@ -2418,6 +2431,8 @@ public class Table extends AbstractSelect implements Action.Container,
                 target.addAttribute("cid", columnIdMap.key(columnId));
                 final String head = getColumnHeader(columnId);
                 target.addAttribute("caption", (head != null ? head : ""));
+                final String foot = getColumnFooter(columnId);
+                target.addAttribute("fcaption", (foot != null ? foot : ""));
                 if (isColumnCollapsed(columnId)) {
                     target.addAttribute("collapsed", true);
                 }
@@ -2679,6 +2694,7 @@ public class Table extends AbstractSelect implements Action.Container,
         columnAlignments.remove(propertyId);
         columnIcons.remove(propertyId);
         columnHeaders.remove(propertyId);
+        columnFooters.remove(propertyId);
 
         return super.removeContainerProperty(propertyId);
     }
@@ -3702,5 +3718,62 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public HeaderClickHandler getHeaderClickHandler() {
         return headerClickHandler;
+    }
+
+    /**
+     * Gets the footer caption beneath the rows
+     *
+     * @param propertyId
+     *            The propertyId of the column *
+     * @return The caption of the footer or NULL if not set
+     */
+    public String getColumnFooter(Object propertyId) {
+        return columnFooters.get(propertyId);
+    }
+
+    /**
+     * Sets the column footer caption. The column footer caption is the text
+     * displayed beneath the column if footers have been set visible.
+     *
+     * @param propertyId
+     *            The properyId of the column
+     *
+     * @param footer
+     *            The caption of the footer
+     */
+    public void setColumnFooter(Object propertyId, String footer) {
+        if (footer == null) {
+            columnFooters.remove(propertyId);
+            return;
+        }
+        columnFooters.put(propertyId, footer);
+
+        requestRepaint();
+    }
+
+    /**
+     * Sets the footer visible in the bottom of the table.
+     * <p>
+     * The footer can be used to add column related data like sums to the bottom
+     * of the Table using setColumnFooter(Object propertyId, String footer).
+     * </p>
+     *
+     * @param visible
+     *            Should the footer be visible
+     */
+    public void setFooterVisible(boolean visible){
+        columnFootersVisible = visible;
+
+        // Assures the visual refresh
+        refreshRenderedCells();
+    }
+
+    /**
+     * Is the footer currently visible?
+     *
+     * @return Returns true if visible else false
+     */
+    public boolean isFooterVisible() {
+        return columnFootersVisible;
     }
 }

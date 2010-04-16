@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"9_9_9_INTERNAL-DEBUG-BUILD";}
-.v-theme-version-9_9_9_INTERNAL-DEBUG-BUILD {display: none;}
+.v-theme-version:after {content:"6_4_0_dev-20100416";}
+.v-theme-version-6_4_0_dev-20100416 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -1444,6 +1444,35 @@ div.v-progressindicator-indeterminate-disabled {
 .v-table-header-cell-asc,
 .v-table-header-cell-desc {
 	cursor: pointer;
+}
+
+.v-table-footer-wrap {
+	overflow: hidden;
+	border: 1px solid #aaa;
+	border-top: none;
+	background: #efefef;
+}
+.v-table-footer table,
+.v-table-table {
+	border-spacing: 0;
+	border-collapse: separate;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+.v-table-footer td {
+	padding: 0;
+	border-right: 1px solid #aaa;
+}
+.v-table-footer-cell,
+.v-table-footer-cell-asc,
+.v-table-footer-cell-desc {
+	cursor: pointer;
+}
+.v-table-footer-container{
+	padding-left:6px;
+	padding-right:6px;
+	overfow: hidden;	
 }
 .v-table-resizer {
 	display: block;
