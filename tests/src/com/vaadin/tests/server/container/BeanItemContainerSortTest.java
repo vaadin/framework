@@ -14,6 +14,16 @@ public class BeanItemContainerSortTest {
     public class Person {
         private String name;
 
+        public int getAge() {
+            return age;
+        }
+
+        public void setAge(int age) {
+            this.age = age;
+        }
+
+        private int age;
+
         public void setName(String name) {
             this.name = name;
         }
@@ -25,13 +35,17 @@ public class BeanItemContainerSortTest {
 
     String[] names = new String[] { "Antti", "Ville", "Sirkka", "Jaakko",
             "Pekka", "John" };
+    int[] ages = new int[] { 10, 20, 50, 12, 64, 67 };
+    String[] sortedByAge = new String[] { names[0], names[3], names[1],
+            names[2], names[4], names[5] };
 
     public BeanItemContainer<Person> getContainer() {
         BeanItemContainer<Person> bc = new BeanItemContainer<Person>(
                 Person.class);
-        for (String name : names) {
+        for (int i = 0; i < names.length; i++) {
             Person p = new Person();
-            p.setName(name);
+            p.setName(names[i]);
+            p.setAge(ages[i]);
             bc.addBean(p);
         }
         return bc;
@@ -66,4 +80,17 @@ public class BeanItemContainerSortTest {
         testSort(false);
     }
 
+    @Test
+    public void primitiveSorting() {
+        BeanItemContainer<Person> container = getContainer();
+        container.sort(new Object[] { "age" }, new boolean[] { true });
+
+        int i = 0;
+        for (String string : sortedByAge) {
+            Person idByIndex = container.getIdByIndex(i++);
+            Assert.assertTrue(container.containsId(idByIndex));
+            Assert.assertEquals(string, idByIndex.getName());
+        }
+
+    }
 }
