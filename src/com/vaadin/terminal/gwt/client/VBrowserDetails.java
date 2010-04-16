@@ -57,41 +57,57 @@ public class VBrowserDetails implements Serializable {
         isFirefox = userAgent.indexOf(" firefox/") != -1;
 
         // Rendering engine version
-        if (isGecko) {
-            String tmp = userAgent.substring(userAgent.indexOf("rv:") + 3);
-            tmp = tmp.replaceFirst("(\\.[0-9]+).+", "$1");
-            browserEngineVersion = Float.parseFloat(tmp);
-        } else if (isWebKit) {
-            String tmp = userAgent.substring(userAgent.indexOf("webkit/") + 7);
-            tmp = tmp.replaceFirst("([0-9]+)[^0-9].+", "$1");
-            browserEngineVersion = Float.parseFloat(tmp);
+        try {
+            if (isGecko) {
+                int rvPos = userAgent.indexOf("rv:");
+                if (rvPos >= 0) {
+                    String tmp = userAgent.substring(rvPos + 3);
+                    tmp = tmp.replaceFirst("(\\.[0-9]+).+", "$1");
+                    browserEngineVersion = Float.parseFloat(tmp);
+                }
+            } else if (isWebKit) {
+                String tmp = userAgent
+                        .substring(userAgent.indexOf("webkit/") + 7);
+                tmp = tmp.replaceFirst("([0-9]+)[^0-9].+", "$1");
+                browserEngineVersion = Float.parseFloat(tmp);
+            }
+        } catch (Exception e) {
+            // Browser engine version parsing failed
+            System.err.println("Browser engine version parsing failed for: "
+                    + userAgent);
         }
 
         // Browser version
-        if (isIE) {
-            String ieVersionString = userAgent.substring(userAgent
-                    .indexOf("msie ") + 5);
-            ieVersionString = safeSubstring(ieVersionString, 0, ieVersionString
-                    .indexOf(";"));
-            parseVersionString(ieVersionString);
-        } else if (isFirefox) {
-            int i = userAgent.indexOf(" firefox/") + 9;
-            parseVersionString(safeSubstring(userAgent, i, i + 5));
-        } else if (isChrome) {
-            int i = userAgent.indexOf(" chrome/") + 8;
-            parseVersionString(safeSubstring(userAgent, i, i + 5));
-        } else if (isSafari) {
-            int i = userAgent.indexOf(" version/") + 9;
-            parseVersionString(safeSubstring(userAgent, i, i + 5));
-        } else if (isOpera) {
-            int i = userAgent.indexOf(" version/");
-            if (i != -1) {
-                // Version present in Opera 10 and newer
-                i += 9; // " version/".length
-            } else {
-                i = userAgent.indexOf("opera/") + 6;
+        try {
+            if (isIE) {
+                String ieVersionString = userAgent.substring(userAgent
+                        .indexOf("msie ") + 5);
+                ieVersionString = safeSubstring(ieVersionString, 0,
+                        ieVersionString.indexOf(";"));
+                parseVersionString(ieVersionString);
+            } else if (isFirefox) {
+                int i = userAgent.indexOf(" firefox/") + 9;
+                parseVersionString(safeSubstring(userAgent, i, i + 5));
+            } else if (isChrome) {
+                int i = userAgent.indexOf(" chrome/") + 8;
+                parseVersionString(safeSubstring(userAgent, i, i + 5));
+            } else if (isSafari) {
+                int i = userAgent.indexOf(" version/") + 9;
+                parseVersionString(safeSubstring(userAgent, i, i + 5));
+            } else if (isOpera) {
+                int i = userAgent.indexOf(" version/");
+                if (i != -1) {
+                    // Version present in Opera 10 and newer
+                    i += 9; // " version/".length
+                } else {
+                    i = userAgent.indexOf("opera/") + 6;
+                }
+                parseVersionString(safeSubstring(userAgent, i, i + 5));
             }
-            parseVersionString(safeSubstring(userAgent, i, i + 5));
+        } catch (Exception e) {
+            // Browser version parsing failed
+            System.err.println("Browser version parsing failed for: "
+                    + userAgent);
         }
 
         // Operating system

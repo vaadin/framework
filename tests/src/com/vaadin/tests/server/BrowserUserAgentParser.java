@@ -11,6 +11,8 @@ public class BrowserUserAgentParser extends TestCase {
     private static final String FIREFOX35_WINDOWS = "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9.1.8) Gecko/20100202 Firefox/3.5.8 (.NET CLR 3.5.30729) FirePHP/0.4";
     private static final String FIREFOX36_WINDOWS = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.2) Gecko/20100115 Firefox/3.6 (.NET CLR 3.5.30729)";
     private static final String FIREFOX36B_MAC = "UAString mozilla/5.0 (macintosh; u; intel mac os x 10.6; en-us; rv:1.9.2) gecko/20100115 firefox/3.6";
+    private static final String FIREFOX_30B5_MAC = "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9b5) Gecko/2008032619 Firefox/3.0b5";
+    private static final String KONQUEROR_LINUX = "Mozilla/5.0 (compatible; Konqueror/3.5; Linux) KHTML/3.5.5 (like Gecko) (Exabot-Thumbnails)";
 
     private static final String IE6_WINDOWS = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)";
     private static final String IE7_WINDOWS = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)";
@@ -104,6 +106,22 @@ public class BrowserUserAgentParser extends TestCase {
         assertBrowserMinorVersion(bd, 6);
         assertEngineVersion(bd, 1.9f);
         assertWindows(bd);
+    }
+
+    public void testFirefox30b5() {
+        VBrowserDetails bd = new VBrowserDetails(FIREFOX_30B5_MAC);
+        assertGecko(bd);
+        assertFirefox(bd);
+        assertBrowserMajorVersion(bd, 3);
+        assertBrowserMinorVersion(bd, 0);
+        assertEngineVersion(bd, 1.9f);
+        assertMacOSX(bd);
+    }
+
+    public void testKonquerorLinux() {
+        // Just ensure detection does not crash
+        VBrowserDetails bd = new VBrowserDetails(KONQUEROR_LINUX);
+        assertLinux(bd);
     }
 
     public void testFirefox36b() {
