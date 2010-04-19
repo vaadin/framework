@@ -398,6 +398,8 @@ public class Table extends AbstractSelect implements Action.Container,
     private MultiSelectMode multiSelectMode = MultiSelectMode.DEFAULT;
 
     private HeaderClickHandler headerClickHandler;
+    
+    private FooterClickHandler footerClickHandler;
 
     /* Table constructors */
 
@@ -2031,6 +2033,8 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param variables
      */
     private void handleClickEvent(Map<String, Object> variables) {
+
+        // Item click event
         if (variables.containsKey("clickEvent")) {
             String key = (String) variables.get("clickedKey");
             Object itemId = itemIdMapper.get(key);
@@ -2049,6 +2053,7 @@ public class Table extends AbstractSelect implements Action.Container,
             }
         }
 
+        // Header click event
         else if (variables.containsKey("headerClickEvent")) {
 
             MouseEventDetails details = MouseEventDetails
@@ -2060,6 +2065,19 @@ public class Table extends AbstractSelect implements Action.Container,
                 propertyId = columnIdMap.get(cid.toString());
             }
             fireEvent(new HeaderClickEvent(this, propertyId, details));
+        }
+
+        // Footer click event
+        else if (variables.containsKey("footerClickEvent")) {
+            MouseEventDetails details = MouseEventDetails
+                    .deSerialize((String) variables.get("footerClickEvent"));
+
+            Object cid = variables.get("footerClickCID");
+            Object propertyId = null;
+            if (cid != null) {
+                propertyId = columnIdMap.get(cid.toString());
+            }
+            fireEvent(new FooterClickEvent(this, propertyId, details));
         }
     }
 
@@ -3653,11 +3671,74 @@ public class Table extends AbstractSelect implements Action.Container,
             return details;
         }
     }
+    
+    /**
+     * Click event fired when clicking on the Table footers. The event includes
+     * a reference the the Table the event originated from, the property id of
+     * the column which header was pressed and details about the mouse event
+     * itself.
+     */
+    public static class FooterClickEvent extends Component.Event {
+        public static final Method FOOTER_CLICK_METHOD;
+        
+        static {
+            try {
+                // Set the header click method
+                FOOTER_CLICK_METHOD = FooterClickHandler.class
+                        .getDeclaredMethod("handleFooterClick",
+                                new Class[] { FooterClickEvent.class });
+            } catch (final java.lang.NoSuchMethodException e) {
+                // This should never happen
+                throw new java.lang.RuntimeException();
+            }
+        }
+        
+        // The property id of the column which header was pressed
+        private Object columnPropertyId;
+        
+        // The mouse details
+        private MouseEventDetails details;
+        
+        /**
+         * Constructor
+         * @param source
+         *      The source of the component
+         * @param propertyId
+         *      The propertyId of the column
+         * @param details
+         *      The mouse details of the click
+         */
+        public FooterClickEvent(Component source, Object propertyId,
+                MouseEventDetails details) {
+            super(source);
+            columnPropertyId = propertyId;
+            this.details = details;            
+        }
+        
+        /**
+         * Gets the property id of the column which header was pressed
+         *
+         * @return The column propety id
+         */
+        public Object getPropertyId() {
+            return columnPropertyId;
+        }
+
+        /**
+         * Returns the details of the mouse event like the mouse coordinates,
+         * button pressed etc.
+         *
+         * @return The mouse details
+         */
+        public MouseEventDetails getEventDetails() {
+            return details;
+        }
+    }
 
     /**
-     * Interface for the handler listening to column change events. The
-     * handleHeaderClick method is called when the user presses a header column
-     * cell.
+     * Interface for the handler listening to column header mouse click events.
+     * The handleHeaderClick method is called when the user presses a header
+     * column cell.
      */
     public interface HeaderClickHandler {
 
@@ -3669,6 +3750,23 @@ public class Table extends AbstractSelect implements Action.Container,
          *            the mouse click event
          */
         public void handleHeaderClick(HeaderClickEvent event);
+    }
+
+    /**
+     * Interface for the handler listening to column footer mouse click events.
+     * The handleHeaderClick method is called when the user presses a footer
+     * column cell.
+     */
+    public interface FooterClickHandler {
+        
+        /**
+         * Called when a user clicks a footer column cell
+         * 
+         * @param event
+         *            The event which contains information about the column and
+         *            the mouse click event
+         */
+        public void handleFooterClick(FooterClickEvent event);
     }
 
     /**
@@ -3711,6 +3809,42 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
+     * Sets the footer click handler which handles the click events when the
+     * user clicks on a column footer cell in the Table.
+     * <p>
+     * The handler will recieve events which contains information about which
+     * column was clicked and some details about the mouse event.
+     * </p>
+     * 
+     * @param handler
+     *            The handler which should handle the footer click events
+     */
+    public void setFooterClickHandler(FooterClickHandler handler) {
+        if (footerClickHandler != handler) {
+            if (handler == null && footerClickHandler != null) {
+                // Remove header click handler
+                removeListener(VScrollTable.FOOTER_CLICK_EVENT_ID,
+                        FooterClickEvent.class, footerClickHandler);
+                footerClickHandler = handler;
+            } else if (footerClickHandler != null) {
+                // Replace footer click handler
+                removeListener(VScrollTable.FOOTER_CLICK_EVENT_ID,
+                        FooterClickEvent.class, footerClickHandler);
+                footerClickHandler = handler;
+                addListener(VScrollTable.FOOTER_CLICK_EVENT_ID,
+                        FooterClickEvent.class, footerClickHandler,
+                        FooterClickEvent.FOOTER_CLICK_METHOD);
+            } else if (handler != null) {
+                // Set a new footer click handler
+                footerClickHandler = handler;
+                addListener(VScrollTable.FOOTER_CLICK_EVENT_ID,
+                        FooterClickEvent.class, footerClickHandler,
+                        FooterClickEvent.FOOTER_CLICK_METHOD);
+            }
+        }
+    }
+
+    /**
      * Returns the header click handler which receives click events from the
      * columns header cells when they are clicked on.
      *
@@ -3718,6 +3852,16 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public HeaderClickHandler getHeaderClickHandler() {
         return headerClickHandler;
+    }
+
+    /**
+     * Returns the footer click handler which recieves click events from the
+     * columns footer cells when they are clicked on.
+     * 
+     * @return
+     */
+    public FooterClickHandler getFooterClickHandler() {
+        return footerClickHandler;
     }
 
     /**

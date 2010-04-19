@@ -86,6 +86,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     public static final String CLASSNAME = "v-table";
     public static final String ITEM_CLICK_EVENT_ID = "itemClick";
     public static final String HEADER_CLICK_EVENT_ID = "handleHeaderClick";
+    public static final String FOOTER_CLICK_EVENT_ID = "handleFooterClick";
 
     private static final double CACHE_RATE_DEFAULT = 2;
 
@@ -1238,6 +1239,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             floatingCopyOfHeaderCell = null;
         }
 
+        /**
+         * Fires a header click event after the user has clicked a column header cell
+         * 
+         * @param event
+         *     The click event
+         */
         private void fireHeaderClickedEvent(Event event) {
             if (client.hasEventListeners(VScrollTable.this,
                     HEADER_CLICK_EVENT_ID)) {
@@ -1888,8 +1895,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         private char align = ALIGN_LEFT;
         private int width = -1;
         private float expandRatio = 0;
+        private String cid;
 
         public FooterCell(String colId, String headerText) {
+            cid = colId;
+
             setText(headerText);
 
             DOM.setElementProperty(captionContainer, "className", CLASSNAME
@@ -1898,7 +1908,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             // ensure no clipping initially (problem on column additions)
             DOM.setStyleAttribute(captionContainer, "overflow", "visible");
 
+            DOM.sinkEvents(captionContainer, Event.MOUSEEVENTS);
+
             DOM.appendChild(td, captionContainer);
+
+            DOM.sinkEvents(td, Event.MOUSEEVENTS);
 
             setElement(td);
         }
@@ -2035,6 +2049,54 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             return getParent() != null;
         }
 
+        /**
+         * Handle column clicking
+         */
+
+        @Override
+        public void onBrowserEvent(Event event) {
+            if (enabled && event != null) {
+                handleCaptionEvent(event);
+            }
+        }
+
+        /**
+         * Handles a event on the captions
+         * 
+         * @param event
+         *            The event to handle
+         */
+        protected void handleCaptionEvent(Event event) {
+            if (DOM.eventGetType(event) == Event.ONMOUSEUP) {
+                fireFooterClickedEvent(event);
+            }
+        }
+
+        /**
+         * Fires a footer click event after the user has clicked a column footer
+         * cell
+         * 
+         * @param event
+         *            The click event
+         */
+        private void fireFooterClickedEvent(Event event) {
+            if (client.hasEventListeners(VScrollTable.this,
+                    FOOTER_CLICK_EVENT_ID)) {
+                MouseEventDetails details = new MouseEventDetails(event);
+                client.updateVariable(paintableId, "footerClickEvent", details
+                        .toString(), false);
+                client.updateVariable(paintableId, "footerClickCID", cid, true);
+            }
+        }
+
+        /**
+         * Returns the column key of the column
+         * 
+         * @return The column key
+         */
+        public String getColKey() {
+            return cid;
+        }
     }
 
     /**
@@ -2093,7 +2155,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          * 
          * @see com.google.gwt.user.client.ui.HasWidgets#iterator()
          */
-        @Override
         public Iterator<Widget> iterator() {
             return visibleCells.iterator();
         }
