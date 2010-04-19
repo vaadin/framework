@@ -14,8 +14,9 @@ import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
  * DropHandlers contain the actual business logic for drag and drop operations.
  * <p>
  * The {@link #drop(DragAndDropEvent)} method is used to receive the transferred
- * data and the #getAcceptCriterion()} method contains the (possibly client side
- * verifiable) criterion whether the dragged data will be handled at all.
+ * data and the {@link #getAcceptCriterion()} method contains the (possibly
+ * client side verifiable) criterion whether the dragged data will be handled at
+ * all.
  * 
  * @since 6.3
  * 

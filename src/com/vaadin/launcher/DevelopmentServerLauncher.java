@@ -4,6 +4,7 @@
 
 package com.vaadin.launcher;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -82,9 +83,12 @@ public class DevelopmentServerLauncher {
             server.setConnectors(new Connector[] { connector });
 
             final WebAppContext webappcontext = new WebAppContext();
+            String path = DevelopmentServerLauncher.class.getPackage()
+                    .getName().replace(".", File.separator);
+            webappcontext.setDefaultsDescriptor(path + File.separator
+                    + "jetty-webdefault.xml");
             webappcontext.setContextPath(serverArgs.get("context"));
             webappcontext.setWar(serverArgs.get("webroot"));
-
             server.setHandler(webappcontext);
 
             server.start();

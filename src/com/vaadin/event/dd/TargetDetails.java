@@ -22,10 +22,10 @@ import com.vaadin.ui.Tree.TreeTargetDetails;
 public interface TargetDetails extends Serializable {
 
     /**
-     * Gets target data associated to given string key
+     * Gets target data associated with the given string key
      * 
      * @param key
-     * @return
+     * @return The data associated with the key
      */
     public Object getData(String key);
 
