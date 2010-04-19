@@ -50,7 +50,6 @@ public class Footer extends TestBase {
         final CheckBox visible = new CheckBox("Footers Visible", true);
         visible.setImmediate(true);
         visible.addListener(new Property.ValueChangeListener() {
-            @Override
             public void valueChange(ValueChangeEvent event) {
                 table.setFooterVisible(visible.booleanValue());
 
@@ -62,7 +61,6 @@ public class Footer extends TestBase {
         final TextField footer1Value = new TextField(null, "Footer1");
         footer1Value.setImmediate(true);
         Button footer1Btn = new Button("Change", new Button.ClickListener() {
-            @Override
             public void buttonClick(ClickEvent event) {
                 table.setColumnFooter("col1",
                         footer1Value.getValue() == null ? "" : footer1Value
@@ -77,7 +75,6 @@ public class Footer extends TestBase {
         final TextField footer2Value = new TextField(null, "Footer2");
         footer2Value.setImmediate(true);
         Button footer2Btn = new Button("Change", new Button.ClickListener() {
-            @Override
             public void buttonClick(ClickEvent event) {
                 table.setColumnFooter("col2",
                         footer2Value.getValue() == null ? "" : footer2Value
@@ -92,7 +89,6 @@ public class Footer extends TestBase {
         final TextField footer3Value = new TextField(null, "Footer3");
         footer3Value.setImmediate(true);
         Button footer3Btn = new Button("Change", new Button.ClickListener() {
-            @Override
             public void buttonClick(ClickEvent event) {
                 table.setColumnFooter("col3",
                         footer3Value.getValue() == null ? "" : footer3Value
