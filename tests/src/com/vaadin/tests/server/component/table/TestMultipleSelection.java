@@ -1,10 +1,10 @@
 package com.vaadin.tests.server.component.table;
 
+import java.util.Arrays;
 import java.util.Set;
 
 import junit.framework.TestCase;
 
-import com.google.appengine.repackaged.com.google.common.collect.Lists;
 import com.vaadin.data.Container;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Table;
@@ -24,7 +24,8 @@ public class TestMultipleSelection extends TestCase {
         assertTrue(table.isMultiSelect());
 
         // Test multiselect by setting several items at once
-        table.setValue(Lists.asList("1", new String[] { "3" }));
+
+        table.setValue(Arrays.asList("1", new String[] { "3" }));
         assertEquals(2, ((Set<String>) table.getValue()).size());
     }
 
@@ -49,7 +50,7 @@ public class TestMultipleSelection extends TestCase {
      * @return A new container with test items
      */
     private Container createTestContainer() {
-        IndexedContainer container = new IndexedContainer(Lists.asList("1",
+        IndexedContainer container = new IndexedContainer(Arrays.asList("1",
                 new String[] { "2", "3", "4" }));
         return container;
     }
