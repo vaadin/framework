@@ -127,6 +127,46 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
     private final HashSet<String> selectedRowKeys = new HashSet<String>();
 
+    /**
+     * Represents a select range of rows
+     */
+    private class SelectionRange {
+        /**
+         * The starting key of the range
+         */
+        private int startRowKey;
+
+        /**
+         * The ending key of the range
+         */
+        private int endRowKey;
+
+        /**
+         * Constuctor.
+         * 
+         * @param startRowKey
+         *            The range start. Must be less than endRowKey
+         * @param endRowKey
+         *            The range end. Must be bigger than startRowKey
+         */
+        public SelectionRange(int startRowKey, int endRowKey) {
+            this.startRowKey = startRowKey;
+            this.endRowKey = endRowKey;
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see java.lang.Object#toString()
+         */
+        @Override
+        public String toString() {
+            return startRowKey + "-" + endRowKey;
+        }
+    };
+
+    private final HashSet<SelectionRange> selectedRowRanges = new HashSet<SelectionRange>();
+
     private boolean initializedAndAttached = false;
 
     /**
@@ -275,6 +315,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             final Set<String> selectedKeys = uidl
                     .getStringArrayVariableAsSet("selected");
             selectedRowKeys.clear();
+            selectedRowRanges.clear();
             for (String string : selectedKeys) {
                 selectedRowKeys.add(string);
             }
@@ -3183,6 +3224,21 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                 // might
                                 // require changes to "clickEvent" immediateness
                                 // also.
+                                if (multiselectmode == MULTISELECT_MODE_DEFAULT) {
+                                    Set<String> ranges = new HashSet<String>();
+                                    for (SelectionRange range : selectedRowRanges) {
+                                        ranges.add(range.toString());
+                                    }
+                                    client
+                                            .updateVariable(
+                                                    paintableId,
+                                                    "selectedRanges",
+                                                    ranges
+                                                            .toArray(new String[selectedRowRanges
+                                                                    .size()]),
+                                                    false);
+                                }
+
                                 client
                                         .updateVariable(
                                                 paintableId,
@@ -3380,6 +3436,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                  * previous selection which was not a deselection
                  */
                 if (selectedRowKeys.isEmpty() || lastSelectedRowKey < 0) {
+                    // No previous selection found
                     deselectAll();
                     toggleSelection(true);
                     return;
@@ -3403,17 +3460,19 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 // Select the range (not including this row)
                 for (int r = startKey; r <= endKey; r++) {
                     if (r != rowKey) {
-                        selectedRowKeys.add(String.valueOf(r));
                         VScrollTableRow row = getRenderedRowByKey(String
                                 .valueOf(r));
-                        if (!row.isSelected()) {
+                        if (row != null && !row.isSelected()) {
                             row.toggleSelection(false);
                         }
                     }
                 }
-
+                    
                 // Toggle clicked rows selection
                 toggleSelection(false);
+
+                // Add range
+                selectedRowRanges.add(new SelectionRange(startKey, endKey));
             }
 
             /*
@@ -3515,6 +3574,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
     }
 
+    /**
+     * Deselects all items
+     */
     public void deselectAll() {
         final Object[] keys = selectedRowKeys.toArray();
         for (int i = 0; i < keys.length; i++) {
@@ -3525,7 +3587,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
         // still ensure all selects are removed from (not necessary rendered)
         selectedRowKeys.clear();
-
+        selectedRowRanges.clear();
     }
 
     /**

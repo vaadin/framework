@@ -1863,7 +1863,77 @@ public class Table extends AbstractSelect implements Action.Container,
         resetPageBuffer();
 
         enableContentRefreshing(true);
+    }
 
+    /**
+     * Gets items ids from a range of key values
+     * 
+     * @param startRowKey
+     *            The start key
+     * @param endRowKey
+     *            The end key
+     * @return
+     */
+    private Set<Object> getItemIdsInRange(int startRowKey, int endRowKey) {
+        HashSet<Object> ids = new HashSet<Object>();
+
+        Object startItemId = itemIdMapper.get(String.valueOf(startRowKey));
+        ids.add(startItemId);
+
+        Object endItemId = itemIdMapper.get(String.valueOf(endRowKey));
+        ids.add(endItemId);
+
+        Object currentItemId = startItemId;
+
+        Container.Ordered ordered = (Container.Ordered) items;
+        while (currentItemId != endItemId) {
+            currentItemId = ordered.nextItemId(currentItemId);
+            if (currentItemId != null) {
+                ids.add(currentItemId);
+            }
+        }
+
+        return ids;
+    }
+
+    /**
+     * Handles selection if selection is a multiselection
+     * 
+     * @param variables
+     *            The variables
+     */
+    private void handleSelectedItems(Map<String, Object> variables) {
+        final String[] ka = (String[]) variables.get("selected");
+        final String[] ranges = (String[]) variables.get("selectedRanges");
+
+        // Converts the key-array to id-set
+        final LinkedList s = new LinkedList();
+        for (int i = 0; i < ka.length; i++) {
+            final Object id = itemIdMapper.get(ka[i]);
+            if (!isNullSelectionAllowed()
+                    && (id == null || id == getNullSelectionItemId())) {
+                // skip empty selection if nullselection is not allowed
+                requestRepaint();
+            } else if (id != null && containsId(id)) {
+                s.add(id);
+            }
+        }
+
+        if (!isNullSelectionAllowed() && s.size() < 1) {
+            // empty selection not allowed, keep old value
+            requestRepaint();
+            return;
+        }
+
+        // Add range items
+        for (String range : ranges) {
+            String[] limits = range.split("-");
+            int start = Integer.valueOf(limits[0]);
+            int end = Integer.valueOf(limits[1]);
+            s.addAll(getItemIdsInRange(start, end));
+        }
+
+        setValue(s, true);
     }
 
     /* Component basics */
@@ -1886,6 +1956,18 @@ public class Table extends AbstractSelect implements Action.Container,
         if (!isSelectable() && variables.containsKey("selected")) {
             // Not-selectable is a special case, AbstractSelect does not support
             // TODO could be optimized.
+            variables = new HashMap<String, Object>(variables);
+            variables.remove("selected");
+        }
+
+        /*
+         * The AbstractSelect cannot handle the multiselection properly, instead
+         * we handle it ourself
+         */
+        else if (isSelectable() && isMultiSelect()
+                && variables.containsKey("selected")
+                && multiSelectMode == MultiSelectMode.DEFAULT) {
+            handleSelectedItems(variables);
             variables = new HashMap<String, Object>(variables);
             variables.remove("selected");
         }
@@ -2164,15 +2246,10 @@ public class Table extends AbstractSelect implements Action.Container,
 
         // selection support
         LinkedList<String> selectedKeys = new LinkedList<String>();
-        if (isMultiSelect()) {
-            // only paint selections that are currently visible in the client
+        if (isMultiSelect()) {            
             HashSet sel = new HashSet((Set) getValue());
-            Collection vids = getVisibleItemIds();
-            for (Iterator it = vids.iterator(); it.hasNext();) {
-                Object id = it.next();
-                if (sel.contains(id)) {
-                    selectedKeys.add(itemIdMapper.key(id));
-                }
+            for (Object id : sel) {
+                selectedKeys.add(itemIdMapper.key(id));
             }
         } else {
             Object value = getValue();
