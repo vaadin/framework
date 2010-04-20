@@ -1084,6 +1084,7 @@
             <sysproperty key="repositoryId" value="vaadin-snapshots" />
             <sysproperty key="url" value="http://oss.sonatype.org/content/repositories/vaadin-snapshots" />
             <sysproperty key="classifier" value="javadoc" />
+            <sysproperty key="uniqueVersion" value="false" />
             <sysproperty key="gpg.passphrase" value="${gpg.passphrase}" />
         </artifact:mvn>
 
@@ -1096,6 +1097,7 @@
             <sysproperty key="repositoryId" value="vaadin-snapshots" />
             <sysproperty key="url" value="http://oss.sonatype.org/content/repositories/vaadin-snapshots" />
             <sysproperty key="classifier" value="sources" />
+            <sysproperty key="uniqueVersion" value="false" />
             <sysproperty key="gpg.passphrase" value="${gpg.passphrase}" />
         </artifact:mvn>
 
@@ -1107,6 +1109,7 @@
             <sysproperty key="pomFile" value="maven/pom.xml" />
             <sysproperty key="repositoryId" value="vaadin-snapshots" />
             <sysproperty key="url" value="http://oss.sonatype.org/content/repositories/vaadin-snapshots" />
+            <sysproperty key="uniqueVersion" value="false" />
             <sysproperty key="gpg.passphrase" value="${gpg.passphrase}" />
         </artifact:mvn>
     </target>
