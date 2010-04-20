@@ -12,13 +12,13 @@
     <target name="package-zip" depends="clean-all, package-init, init, build, docs, internal-package-zip">
     </target>
 
-    <target name="package-jar" depends="clean-result, package-init, init, libs" description="Create vaadin-x.y.z.jar file.">
+    <target name="package-jar" depends="clean-result, package-init, init, vaadin.jar" description="Create vaadin-x.y.z.jar file.">
     </target>
 
 	<!-- Compiles only the default widgetset. -->
     <target name="package-jar-quick" depends="clean-result, package-init, init" description="Create vaadin-x.y.z.jar file quick.">
     	<property name="compile.only.default-widgetset" value="1"/>
-    	<antcall target="libs"/>
+    	<antcall target="vaadin.jar"/>
     </target>
 
     <target name="package-war" depends="clean-result, package-init, init, build, docs, internal-package-zip, internal-package-war">
@@ -382,12 +382,12 @@
     </target>
 
     <!-- Build server-side, client-side, libraries, and demos.                   -->
-    <!-- The client-side needs to be built before libs, because the libs         -->
+    <!-- The client-side needs to be built before vaadin.jar, because the vaadin.jar -->
     <!-- require the default widgetset and doing otherwise would build it twice. -->
     <!-- However, since compiling the server-side is required by the client-side -->
     <!-- compilation, the server-side will actually be built before it.          -->
     <target name="build"
-            depends="compile-server-side, compile-client-side, libs, vaadin-sources.jar, demo"
+            depends="compile-server-side, compile-client-side, vaadin.jar, vaadin-sources.jar, demo"
             description="Build package required files, without packing them.">
     </target>
 
@@ -775,7 +775,7 @@
     <!-- specifically on it, because dependence does not see compiled       -->
     <!-- individual widgetsets, because antcall does not fulfill            -->
     <!-- dependencies.                                                      -->
-    <target name="libs" depends="compile-server-side, compile-client-side">
+    <target name="vaadin.jar" depends="compile-server-side, compile-client-side">
         <echo>Creating JAR (server-side) ${lib-jar-name}</echo>
         <!-- Create Vaadin JAR -->
         <mkdir dir="${output-dir}/META-INF"/>
@@ -819,7 +819,7 @@
     </target>
 
 	<target name="vaadin-sources.jar" depends="init">
-        <jar file="${output-dir}/${lib-sources-jar-name}" compress="true">
+        <jar file="${result-path}/${lib-sources-jar-name}" compress="true">
 			<fileset dir="${result-path}/src/core">
 		    	<patternset>
 		        	<exclude name="${toolkit-package}/launcher/**" />
@@ -830,7 +830,7 @@
 	</target>
 	
     <!-- Demos  - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <target name="demo" depends="libs">
+    <target name="demo" depends="vaadin.jar">
         <echo>Building demos</echo>
         <echo>Adding demo class files.</echo>
         <copy todir="${output-dir}/WebContent/WEB-INF/classes">
@@ -958,7 +958,7 @@
         </javadoc>
 
     	<!-- Create a javadoc jar, mainly for Maven -->
-        <jar file="${output-dir}/${lib-javadoc-jar-name}" compress="true">
+        <jar file="${result-path}/${lib-javadoc-jar-name}" compress="true">
 			<fileset dir="${javadoc.destdir}">
 		    	<patternset>
 		    		<include name="**" />
