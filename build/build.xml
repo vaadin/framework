@@ -1075,10 +1075,11 @@
     <target name="nightly-maven-publish" depends="nightly-maven-pom.xml">
         <property file="${gpg.passphrase.file}" />
 
+<!--
+
     	<echo>Publishing ${result-path}/${lib-javadoc-jar-name} to Maven repository</echo>
         <artifact:mvn>
             <arg value="gpg:sign-and-deploy-file"/>
-            <!-- .. is a workaround as maven runs in the build directory -->
             <sysproperty key="file" value="../${result-path}/${lib-javadoc-jar-name}" />
             <sysproperty key="pomFile" value="maven/pom.xml" />
             <sysproperty key="repositoryId" value="vaadin-snapshots" />
@@ -1091,7 +1092,6 @@
     	<echo>Publishing ${result-path}/${lib-sources-jar-name} to Maven repository</echo>
         <artifact:mvn>
             <arg value="gpg:sign-and-deploy-file"/>
-            <!-- .. is a workaround as maven runs in the build directory -->
             <sysproperty key="file" value="../${result-path}/${lib-sources-jar-name}" />
             <sysproperty key="pomFile" value="maven/pom.xml" />
             <sysproperty key="repositoryId" value="vaadin-snapshots" />
@@ -1100,6 +1100,8 @@
             <sysproperty key="uniqueVersion" value="false" />
             <sysproperty key="gpg.passphrase" value="${gpg.passphrase}" />
         </artifact:mvn>
+        
+-->
 
         <echo>Publishing ${output-dir}/WebContent/${lib-jar-name} to Maven repository</echo>
     	<artifact:mvn>
@@ -1109,7 +1111,6 @@
             <sysproperty key="pomFile" value="maven/pom.xml" />
             <sysproperty key="repositoryId" value="vaadin-snapshots" />
             <sysproperty key="url" value="http://oss.sonatype.org/content/repositories/vaadin-snapshots" />
-            <sysproperty key="uniqueVersion" value="false" />
             <sysproperty key="gpg.passphrase" value="${gpg.passphrase}" />
         </artifact:mvn>
     </target>
