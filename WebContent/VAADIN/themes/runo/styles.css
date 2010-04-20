@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_4_0_dev-20100416";}
-.v-theme-version-6_4_0_dev-20100416 {display: none;}
+.v-theme-version:after {content:"6_4_0_dev-20100420";}
+.v-theme-version-6_4_0_dev-20100420 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -1464,15 +1464,14 @@ div.v-progressindicator-indeterminate-disabled {
 	padding: 0;
 	border-right: 1px solid #aaa;
 }
-.v-table-footer-cell,
-.v-table-footer-cell-asc,
-.v-table-footer-cell-desc {
+.v-table-footer-cell{
 	cursor: pointer;
 }
-.v-table-footer-container{
-	padding-left:6px;
+.v-table-footer-container{	
+	float:right;	
 	padding-right:6px;
-	overfow: hidden;	
+	overflow:hidden;
+	white-space:nowrap;
 }
 .v-table-resizer {
 	display: block;

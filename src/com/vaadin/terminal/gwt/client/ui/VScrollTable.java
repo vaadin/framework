@@ -467,8 +467,16 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             return;
         }
 
-        int i;
+        // Add dummy column if row headers are present
         int colIndex = 0;
+        if (showRowHeaders) {
+            tFoot.enableColumn("0", colIndex);
+            colIndex++;
+        } else {
+            tFoot.removeCell("0");
+        }
+
+        int i;
         for (i = 0; i < strings.length; i++) {
             final String cid = strings[i];
             tFoot.enableColumn(cid, colIndex);
@@ -1972,9 +1980,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          */
         public void setWidth(int w, boolean ensureDefinedWidth) {
 
-            // Account for 1px right border
-            w--;
-
             if (ensureDefinedWidth) {
                 // on column resize expand ratio becomes zero
                 expandRatio = 0;
@@ -1982,17 +1987,35 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             if (width == w) {
                 return;
             }
-            if (width == -1) {
+            width = w;
+            if (width <= 0) {
                 // go to default mode, clip content if necessary
                 DOM.setStyleAttribute(captionContainer, "overflow", "");
             }
-            width = w;
             if (w == -1) {
                 DOM.setStyleAttribute(captionContainer, "width", "");
                 setWidth("");
             } else {
 
-                captionContainer.getStyle().setPropertyPx("width", w);
+                /*
+                 * Reduce width with one pixel for the right border since the
+                 * footers does not have any spacers between them.
+                 * 
+                 * IE6 will calculate the footer width wrong by 2 pixels due to
+                 * borders used so add it to border widths.
+                 */
+                int borderWidths = 1;
+                if (BrowserInfo.get().isIE6()) {
+                    borderWidths += 2;
+                }
+
+                // Set the container width (check for negative value)
+                if (w - borderWidths >= 0) {
+                    captionContainer.getStyle().setPropertyPx("width",
+                            w - borderWidths);
+                } else {
+                    captionContainer.getStyle().setPropertyPx("width", 0);
+                }
 
                 /*
                  * if we already have tBody, set the header width properly, if
@@ -2000,13 +2023,25 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                  * unless TD width is not explicitly set.
                  */
                 if (scrollBody != null) {
-                    int tdWidth = width + scrollBody.getCellExtraWidth();
+                    /*
+                     * Reduce with one since footer does not have any spacers,
+                     * instead a 1 pixel border.
+                     */
+                    int tdWidth = width + scrollBody.getCellExtraWidth()
+                            - borderWidths;
                     setWidth(tdWidth + "px");
                 } else {
                     DeferredCommand.addCommand(new Command() {
                         public void execute() {
+
+                            int borderWidths = 1;
+                            if (BrowserInfo.get().isIE6()) {
+                                borderWidths += 2;
+                            }
+
                             int tdWidth = width
-                                    + scrollBody.getCellExtraWidth();
+                                    + scrollBody.getCellExtraWidth()
+                                    - borderWidths;
                             setWidth(tdWidth + "px");
                         }
                     });
@@ -2100,6 +2135,24 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     }
 
     /**
+     * HeaderCell that is header cell for row headers.
+     * 
+     * Reordering disabled and clicking on it resets sorting.
+     */
+    public class RowHeadersFooterCell extends FooterCell {
+
+        RowHeadersFooterCell() {
+            super("0", "");
+        }
+
+        @Override
+        protected void handleCaptionEvent(Event event) {
+            // NOP: RowHeaders cannot be reordered
+            // TODO It'd be nice to reset sorting here
+        }
+    }
+
+    /**
      * The footer of the table which can be seen in the bottom of the Table.
      */
     public class TableFooter extends Panel {
@@ -2130,6 +2183,17 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             setElement(div);
 
             setStyleName(CLASSNAME + "-footer-wrap");
+
+            availableCells.put("0", new RowHeadersFooterCell());
+        }
+
+        @Override
+        public void clear() {
+            for (String cid : availableCells.keySet()) {
+                removeCell(cid);
+            }
+            availableCells.clear();
+            availableCells.put("0", new RowHeadersFooterCell());
         }
 
         /*
