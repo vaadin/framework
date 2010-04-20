@@ -3,7 +3,7 @@
 <project name="Test sampler deployment" basedir="." default="all">
     
 	<!-- Test with these browsers -->
-	<property name="test_browsers" value="winxp-firefox35" />
+	<property name="test_browsers" value="winxp-firefox36" />
 
 	<!-- Target deploying demo.war -->
 	<property name="sshHost" value="rndtestlinux.office.itmill.com" />
