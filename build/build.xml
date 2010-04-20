@@ -150,12 +150,15 @@
         <echo>We are using gwt version ${gwt-version}.</echo>
 
         <!-- Destination files -->
-        <property name="lib-jar-name" value="${product-file}-${version.full}.jar" />
+        <property name="base-name" value="${product-file}-${version.full}" />
+        <property name="lib-jar-name" value="${base-name}.jar" />
+        <property name="lib-sources-jar-name" value="${base-name}-sources.jar" />
+        <property name="lib-javadoc-jar-name" value="${base-name}-javadoc.jar" />
 
         <echo message="Prepared to build ${product-file} version ${version.full} packages" />
 
         <!-- Output directory -->
-        <property name="output-dir" value="${result-path}/${product-file}-${version.full}" />
+        <property name="output-dir" value="${result-path}/${base-name}" />
         <mkdir dir="${output-dir}" />
 
         <!-- Where widgetsets are written to.                             -->
@@ -206,13 +209,13 @@
     <target name="internal-package-zip">
         <antcontrib:var name="eclipse-launch-vmargs" value="-Xms256M -Xmx512M" />
         <antcall target="add-misc-files" inheritAll="true" inheritRefs="true" />
-        <zip zipfile="${result-path}/${product-file}-${version.full}.zip">
-            <zipfileset prefix="${product-file}-${version.full}" dir="${result-path}/${product-file}-${version.full}">
+        <zip zipfile="${result-path}/${base-name}.zip">
+            <zipfileset prefix="${base-name}" dir="${result-path}/${base-name}">
                 <patternset>
                     <include name="**/*" />
                 </patternset>
             </zipfileset>
-            <zipfileset prefix="${product-file}-${version.full}/gwt" dir="${gwt-dir}">
+            <zipfileset prefix="${base-name}/gwt" dir="${gwt-dir}">
                 <patternset>
                     <include name="**/*" />
                     <exclude name="doc**"/>
@@ -251,7 +254,7 @@
         <!-- We assume the needed files are put in place by internal-package-war -->
         <echo>Building Liferay zip</echo>
 
-        <zip zipfile="${result-path}/${product-file}-${version.full}-liferay.zip">
+        <zip zipfile="${result-path}/${base-name}-liferay.zip">
             <zipfileset prefix="VAADIN/widgetsets/com.vaadin.portal.gwt.PortalDefaultWidgetSet" dir="${output-dir}/WebContent/VAADIN/widgetsets/com.vaadin.portal.gwt.PortalDefaultWidgetSet">
                 <patternset>
                     <include name="**/*" />
@@ -269,7 +272,7 @@
             
         </zip>
         
-        <echo>##teamcity[publishArtifacts '${result-path}/${product-file}-${version.full}-liferay.zip']</echo>
+        <echo>##teamcity[publishArtifacts '${result-path}/${base-name}-liferay.zip']</echo>
     </target>
 
     <target name="add-misc-files">
@@ -384,7 +387,7 @@
     <!-- However, since compiling the server-side is required by the client-side -->
     <!-- compilation, the server-side will actually be built before it.          -->
     <target name="build"
-            depends="compile-server-side, compile-client-side, libs, demo"
+            depends="compile-server-side, compile-client-side, libs, vaadin-sources.jar, demo"
             description="Build package required files, without packing them.">
     </target>
 
@@ -773,8 +776,8 @@
     <!-- individual widgetsets, because antcall does not fulfill            -->
     <!-- dependencies.                                                      -->
     <target name="libs" depends="compile-server-side, compile-client-side">
-        <echo>Creating libs (server-side) ${lib-jar-name}</echo>
-        <!-- Create Toolkit JAR -->
+        <echo>Creating JAR (server-side) ${lib-jar-name}</echo>
+        <!-- Create Vaadin JAR -->
         <mkdir dir="${output-dir}/META-INF"/>
         <echo file="${output-dir}/META-INF/VERSION">${version.full}</echo> 
         <echo file="${output-dir}/META-INF/GWT-VERSION">${gwt-version}</echo> 
@@ -815,6 +818,17 @@
         <copy file="${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name}" tofile="${output-dir}/WebContent/${lib-jar-name}" />
     </target>
 
+	<target name="vaadin-sources.jar" depends="init">
+        <jar file="${output-dir}/${lib-sources-jar-name}" compress="true">
+			<fileset dir="${result-path}/src/core">
+		    	<patternset>
+		        	<exclude name="${toolkit-package}/launcher/**" />
+		    		<include name="**/*.java" />
+				</patternset>
+		    </fileset>
+        </jar>
+	</target>
+	
     <!-- Demos  - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <target name="demo" depends="libs">
         <echo>Building demos</echo>
@@ -906,7 +920,7 @@
 
     <target name="manual-package" depends="manual-init, manual-copy">
         <zip destfile="${result-path}/${product-file}-docs-${version.full}.zip">
-            <zipfileset prefix="docs" dir="${result-path}/${product-file}-${version.full}/WebContent/docs">
+            <zipfileset prefix="docs" dir="${result-path}/${base-name}/WebContent/docs">
                 <patternset>
                     <include name="api/**" />
                     <include name="book-of-vaadin.pdf" />
@@ -942,6 +956,15 @@
             <link offline="true" href="http://java.sun.com/j2se/1.5.0/docs/api/" packagelistLoc="build/javadoc/j2se-1.5.0" />
             <link offline="true" href="http://java.sun.com/j2ee/1.4/docs/api/" packagelistLoc="build/javadoc/j2ee-1.4" />
         </javadoc>
+
+    	<!-- Create a javadoc jar, mainly for Maven -->
+        <jar file="${output-dir}/${lib-javadoc-jar-name}" compress="true">
+			<fileset dir="${javadoc.destdir}">
+		    	<patternset>
+		    		<include name="**" />
+				</patternset>
+		    </fileset>
+        </jar>
 
         <!-- Append local style definitions. -->
         <echo>Appending local style definitions</echo>
@@ -1017,7 +1040,7 @@
         <echo>Installing ${output-dir}/WebContent/${lib-jar-name} to ${nightly.publish}</echo>
         <echo>Hopefully you have permissions for the copy operation with SSH.</echo>
 
-        <property name="package.filename" value="${result-path}/${product-file}-${version.full}.zip"/>
+        <property name="package.filename" value="${result-path}/${base-name}.zip"/>
 
         <!-- Copy the linux installation package and the JAR. -->
         <exec executable="scp" searchpath="true" resultproperty="nightly.install.scp.result">
@@ -1099,7 +1122,7 @@
         <fail unless="com.vaadin.testbench.deployment.url" message="The 'com.vaadin.testbench.deployment.url' property must be defined."/>
         <fail unless="com.vaadin.testbench.lib.dir" message="The 'com.vaadin.testbench.lib.dir' property must be defined."/>
 
-        <property name="package.name" value="${product-file}-${version.full}"/>
+        <property name="package.name" value="${base-name}"/>
 
         <!-- Only Linux tests allowed. TODO: Generalize this. -->
         <property name="package.filename" value="${result-path}/${package.name}.zip"/>
