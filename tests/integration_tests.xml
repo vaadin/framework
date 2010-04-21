@@ -3,7 +3,7 @@
 <project name="Test sampler deployment" basedir="." default="all">
     
 	<!-- Test with these browsers -->
-	<property name="test_browsers" value="winxp-firefox35" />
+	<property name="test_browsers" value="winxp-firefox36" />
 
 	<!-- Target deploying demo.war -->
 	<property name="sshHost" value="rndtestlinux.office.itmill.com" />
@@ -179,7 +179,7 @@
 			<property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
 			<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
 			<property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
-			<property name="browsers" value="winxp-firefox35" />
+			<property name="browsers" value="winxp-firefox36" />
 			<property name="testfiles" value="${init-liferay}" />
 	
 			<fileset dir="." includes="test.xml" />
