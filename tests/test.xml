@@ -36,7 +36,7 @@
 	</fileset>
 
 	<!-- This target converts HTML tests files to java junit tests. One test file for each browser is created. -->
-	<target name="create-tests" depends="remove-temp-testclasses">
+	<target name="create-tests" depends="remove-temp-testclasses" if="server.start.succeeded">
 		<fileset id="tests">
 			<include />
 		</fileset>
@@ -105,7 +105,7 @@
 		<fail unless="com.vaadin.testbench.deployment.url" message="The 'com.vaadin.testbench.deployment.url' property must be defined." />
 	</target>
 
-	<target name="run-tests" depends="compile-tests">
+	<target name="run-tests" depends="compile-tests" if="server.start.succeeded">
 		<foreach maxthreads="20" parallel="true" target="execute-tests" param="target">
 			<path>
 				<fileset dir="${test-output-dir}" includes="**/**.java" />
@@ -164,7 +164,9 @@
 	<!-- ================================================================== -->
 
 	<!-- The default target. -->
-	<target name="run-and-clean-up" depends="check-parameters,remove-error-screens,run-tests,remove-temp-testclasses">
+	<target name="run-and-clean-up"
+            depends="check-parameters,remove-error-screens,run-tests,remove-temp-testclasses"
+            if="server.start.succeeded">
 	</target>
 
 	<!-- Also starts the server. -->
