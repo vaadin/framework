@@ -1302,7 +1302,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         .toString(), false);
                 client
                         .updateVariable(paintableId, "headerClickCID", cid,
-                                false);
+                        immediate);
             }
         }
 
@@ -2161,7 +2161,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 MouseEventDetails details = new MouseEventDetails(event);
                 client.updateVariable(paintableId, "footerClickEvent", details
                         .toString(), false);
-                client.updateVariable(paintableId, "footerClickCID", cid, true);
+                client.updateVariable(paintableId, "footerClickCID", cid,
+                        immediate);
             }
         }
 
