@@ -76,63 +76,56 @@ public class MenuBar extends AbstractComponent {
         target.endTag("options");
         target.startTag("items");
 
-        Iterator<MenuItem> itr = menuItems.iterator();
-
         // This generates the tree from the contents of the menu
-        while (itr.hasNext()) {
-
-            MenuItem item = itr.next();
-            if (!item.isVisible()) {
-                continue;
-            }
-
-            target.startTag("item");
-            target.addAttribute("id", item.getId());
-
-            if (item.getStyleName() != null) {
-                target.addAttribute("style", item.getStyleName());
-            }
-
-            if (item.isSeparator()) {
-                target.addAttribute("separator", true);
-                target.endTag("item");
-            } else {
-                target.addAttribute("text", item.getText());
-
-                Command command = item.getCommand();
-                if (command != null) {
-                    target.addAttribute("command", true);
-                }
-
-                Resource icon = item.getIcon();
-                if (icon != null) {
-                    target.addAttribute("icon", icon);
-                }
-
-                if (!item.isEnabled()) {
-                    target.addAttribute("disabled", true);
-                }
-
-                if (item.hasChildren()) {
-                    iteratorStack.push(itr); // For later use
-
-                    // Go through the children
-                    itr = item.getChildren().iterator();
-                } else {
-                    target.endTag("item"); // Item had no children, end
-                    // description
-                }
-
-            }
-
-            // The end submenu. More than one submenu may end at once.
-            while (!itr.hasNext() && !iteratorStack.empty()) {
-                itr = iteratorStack.pop();
-                target.endTag("item");
-            }
+        for (MenuItem item : menuItems) {
+            paintItem(target, item);
         }
 
         target.endTag("items");
+    }
+
+    private void paintItem(PaintTarget target, MenuItem item)
+            throws PaintException {
+        if (!item.isVisible()) {
+            return;
+        }
+
+        target.startTag("item");
+
+        target.addAttribute("id", item.getId());
+
+        if (item.getStyleName() != null) {
+            target.addAttribute("style", item.getStyleName());
+        }
+
+        if (item.isSeparator()) {
+            target.addAttribute("separator", true);
+        } else {
+            target.addAttribute("text", item.getText());
+
+            Command command = item.getCommand();
+            if (command != null) {
+                target.addAttribute("command", true);
+            }
+
+            Resource icon = item.getIcon();
+            if (icon != null) {
+                target.addAttribute("icon", icon);
+            }
+
+            if (!item.isEnabled()) {
+                target.addAttribute("disabled", true);
+            }
+
+            if (item.hasChildren()) {
+                for (MenuItem child : item.getChildren()) {
+                    paintItem(target, child);
+                }
+            }
+
+        }
+
+        target.endTag("item");
     }
 
     /** Deserialize changes received from client. */
