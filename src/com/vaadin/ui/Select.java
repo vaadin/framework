@@ -102,6 +102,8 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
             // multiselect lists anymore (ListSelect instead). This fallbacks to
             // a simpler paint method in super class.
             super.paintContent(target);
+            // Fix for #4553
+            target.addAttribute("type", "legacy-multi");
             return;
         }
 
