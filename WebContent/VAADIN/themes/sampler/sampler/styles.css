@@ -42,7 +42,7 @@
 .v-customcomponent-breadcrumbs {
 	font-family: arial, helvetica, verdana, sans-serif;
 }
-.v-sa .v-customcomponent-breadcrumbs {
+.v-mac .v-customcomponent-breadcrumbs {
 	font-family: helvetica, arial, verdana, sans-serif;
 }
 .v-customcomponent-breadcrumbs .v-horizontallayout-spacing-on {
@@ -288,7 +288,7 @@
 	line-height: 15px;
 	padding: 0 0 13px;
 }
-.v-sa .v-app-SamplerApplication .v-tree-menu {
+.v-mac .v-app-SamplerApplication .v-tree-menu {
 	font-family: helvetica, arial, verdana, sans-serif;
 }
 .v-app-SamplerApplication .v-tree-menu .v-tree-node span {
@@ -327,7 +327,7 @@
 	clear: left;
 }
 
-.v-sa .v-app-SamplerApplication .v-label-root-section {
+.v-mac .v-app-SamplerApplication .v-label-root-section {
 	font-family: helvetica, arial, verdana, sans-serif;
 }
 
@@ -488,7 +488,7 @@
 	overflow: hidden;
 }
 
-.v-sa .v-csslayout-highlight {
+.v-mac .v-csslayout-highlight {
 	font-family: Helvetica, Arial, sans-serif;
 }
 
@@ -639,8 +639,8 @@
 .feature-controls .v-nativebutton-reset {
 	font-family: arial, helvetica, verdana, sans-serif;
 }
-.v-sa .feature-controls .v-link-showcode a,
-.v-sa .feature-controls .v-nativebutton-reset {
+.v-mac .feature-controls .v-link-showcode a,
+.v-mac .feature-controls .v-nativebutton-reset {
 	font-family: helvetica, arial, verdana, sans-serif;
 }
 .feature-controls .v-nativebutton-reset:focus {
@@ -664,7 +664,7 @@
 	font-size: 12px;
 	line-height: 19px;
 }
-.v-sa .v-app-SamplerApplication .feature-info {
+.v-mac .v-app-SamplerApplication .feature-info {
 	font-family: helvetica, arial, verdana, sans-serif;
 }
 .v-app-SamplerApplication .feature-info div.v-link a {

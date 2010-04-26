@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_3_0_dev-20100413";}
-.v-theme-version-6_3_0_dev-20100413 {display: none;}
+.v-theme-version:after {content:"9_9_9_INTERNAL-DEBUG-BUILD";}
+.v-theme-version-9_9_9_INTERNAL-DEBUG-BUILD {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -2711,6 +2711,20 @@ div.v-window-header {
 	cursor: default;
 }
 
+/* Fixes for Liferay 6.0 */
+.portlet .v-app {
+	background: transparent;
+}
+.v-app .v-radiobutton input,
+.v-window .v-radiobutton input,
+.v-popupview-popup .v-radiobutton input,
+.v-app .v-checkbox input,
+.v-window .v-checkbox input,
+.v-popupview-popup .v-checkbox input {
+	margin-right: 3px;
+	background: transparent;
+}
+
 .v-datefield-calendarpanel {
 	border-collapse: collapse;
 	margin: 0;
@@ -5018,6 +5032,7 @@ td.v-datefield-calendarpanel-nextyear {
 	border-top-color: #4f83b4;
 	border-bottom-color: #5ca0df;
 	outline: none;
+	background-color: #fff;
 }
 input.v-textfield-prompt,
 textarea.v-textarea-prompt {
@@ -5078,6 +5093,7 @@ textarea.v-textarea-prompt {
 	border-color: #4b7192;
 	border-top-color: #3b5a75;
 	border-bottom-color: #507596;
+	background-color: #151717;
 }
 .black input.v-textfield-prompt {
 	color: #5f6366;
