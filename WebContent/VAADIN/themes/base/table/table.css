@@ -58,10 +58,9 @@
 	border-top: none;
 	background: #efefef;
 }
-.v-table-footer table,
-.v-table-table {
+.v-table-footer table{
 	border-spacing: 0;
-	border-collapse: separate;
+	border-collapse: collapse;
 	margin: 0;
 	padding: 0;
 	border: 0;

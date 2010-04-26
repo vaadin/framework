@@ -2041,14 +2041,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 /*
                  * Reduce width with one pixel for the right border since the
                  * footers does not have any spacers between them.
-                 * 
-                 * IE6 will calculate the footer width wrong by 2 pixels due to
-                 * borders used so add it to border widths.
                  */
                 int borderWidths = 1;
-                if (BrowserInfo.get().isIE6()) {
-                    borderWidths += 2;
-                }
 
                 // Set the container width (check for negative value)
                 if (w - borderWidths >= 0) {
@@ -2074,12 +2068,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 } else {
                     DeferredCommand.addCommand(new Command() {
                         public void execute() {
-
                             int borderWidths = 1;
-                            if (BrowserInfo.get().isIE6()) {
-                                borderWidths += 2;
-                            }
-
                             int tdWidth = width
                                     + scrollBody.getCellExtraWidth()
                                     - borderWidths;
