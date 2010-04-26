@@ -72,6 +72,9 @@ td.v-datefield-calendarpanel-nextyear {
 	padding: 0;
 	text-indent: -9999px;
 	outline: none;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
 }
 .v-ie .v-datefield-calendarpanel-prevyear button,
 .v-ie .v-datefield-calendarpanel-nextyear button,
@@ -263,6 +266,9 @@ td.v-datefield-calendarpanel-nextyear {
 	padding: 0;
 	background-image: url(img/popup-btn.png); /** sprite-ref: verticals */
 	cursor: default;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
 }
 .v-datefield-popupcalendar .v-datefield-button:active {
 	background-image: url(img/popup-btn-pressed.png); /** sprite-ref: verticals */

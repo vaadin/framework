@@ -55,3 +55,7 @@
 	border-radius: 0;
 	text-shadow: none;
 }
+
+.portlet .v-app .showcode a {
+	vertical-align: baseline;
+}
