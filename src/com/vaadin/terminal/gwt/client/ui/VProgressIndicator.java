@@ -76,8 +76,10 @@ public class VProgressIndicator extends Widget implements Paintable {
     @Override
     protected void onDetach() {
         super.onDetach();
-        poller.cancel();
-        pollerSuspendedDueDetach = true;
+        if (interval > 0) {
+            poller.cancel();
+            pollerSuspendedDueDetach = true;
+        }
     }
 
     @Override
