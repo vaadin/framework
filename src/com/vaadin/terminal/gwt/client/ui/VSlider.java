@@ -10,6 +10,7 @@ import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -428,7 +429,9 @@ public class VSlider extends Widget implements Paintable, Field,
         final double baseSize = Integer.parseInt(DOM.getElementProperty(base,
                 domProperty));
         final double baseOffset = vertical ? DOM.getAbsoluteTop(base)
-                - handleSize / 2 : DOM.getAbsoluteLeft(base) + handleSize / 2;
+                - Window.getScrollTop() - handleSize / 2 : DOM
+                .getAbsoluteLeft(base)
+                - Window.getScrollLeft() + handleSize / 2;
 
         if (vertical) {
             v = ((baseSize - (coord - baseOffset)) / (baseSize - handleSize))
