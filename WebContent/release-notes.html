@@ -29,67 +29,17 @@
   <li><a href="#upgrading">General Upgrade Notes</a></li>
   <li><a href="#upgrading-tk5">Instructions for Upgrading from IT Mill Toolkit 5</a></li>
   <li><a href="#known-problems">Important known problems in Vaadin @version@</a></li>
-  <li><a href="#changelog">Change Log</a></li>
   <li><a href="#requirements">Requirements</a></li>
 </ul>
 
-<p>Vaadin @version@ is an update release for Vaadin 6. In addition to various fixes, it
-contains a number of significant enhancements.</p>
+<p>Vaadin @version@ is a maintenance release for Vaadin 6.3. It contains several important fixes.</p>
 
-<ul>
-  <li>Drag-and-Drop support (<a href="http://dev.vaadin.com/ticket/119">#119</a>)</li>
-  <ul>
-    <li>Dragging <b>Tree</b> and <b>Table</b> items as well as entire components</li>
-    <li>See the Sampler for Drag-and-Drop examples and Book of Vaadin for more detailed instructions</li>
-  </ul>
-  
-  <li>GWT 2.0</li>
-  <ul>
-    <li>Platform independent and a new development mode.</li>
-    <li>No more separate OOPHM - the GWT Development Mode uses a browser
-		plugin to allow debugging directly in the supported browsers</li>
-  </ul>
-  
-  <li>New protected <tt>attachField()</tt> method in <b>Form</b> allows customizing
-      the form layout according to item identifier and object type.
-      For example, you could lay check boxes horizontally. (<a href="http://dev.vaadin.com/ticket/2205">#2205</a>)</li>
-      
-  <li><b>Form</b> no longer resets the field caption set by the <b>FormFieldFactory</b></li>
-      
-  <li>Easier shortcut key binding</li>
-  <ul>
-  	<li>Bind shortcuts to directly to buttons by using <tt>setClickShortcut()</tt></li>
-  	<li>Bind field components by adding a <b>FocusShortcut</b> as a shortcut listener to a component with <tt>addShortcutListener()</tt></li>
-    <li>Shortcuts can be scoped to a <b>Panel,Window</b> or <b>Form</b> by adding them with <tt>addAction()</tt> to the component</li>
-  </ul>
-
-  <li>ISO-8601 week numbers in <b>DateField</b>s (<a href="http://dev.vaadin.com/ticket/3492">#3492</a>)</li>
-
-  <li>Customizable system messages to warn about disabled cookies</li>
-  
-  <li>Methods for browser and operating system detection on the server-side (<a href="http://dev.vaadin.com/ticket/3931">#3931</a>, <a href="http://dev.vaadin.com/ticket/4356">#4356</a>). The <tt>getBrowser()</tt> method in <b>WebApplicationContext</b> returns a <b>WebBrowser</b> info object, which provides the following:</li>
-  <ul>
-    <li>The <tt>isFirefox()</tt>, <tt>isChrome()</tt>, etc. methods allow detecting the browser</li>
-    <li>The <tt>getBrowserMajorVersion()</tt> and <tt>getBrowserMinorVersion()</tt> return the browser version info</li>
-    <li>The <tt>isWindows()</tt>, <tt>isLinux()</tt>, and <tt>isMac()</tt> allow detecting the operating system</li>
-    <li>The &lt;body&gt; element of the application page contains CSS classes for the browser, browser engine, and operating system</li>
-  </ul>
-
-  <li>Filtering support for <b>HierarchicalContainer</b></li>
-  
-  <li><b>ApplicationServlet</b> provides time stamps for static resources to improve browser caching support</li>
-  
-  <li>Portlet 2.0 <b>PortletListener</b> now includes the active <b>Window</b> in all methods for improved multi-window support in portlets (<a href="http://dev.vaadin.com/ticket/4188">#4188</a>)</li> 
-  
-  <li>Focus and blur listeners for <b>Button</b>, <b>NativeButton</b>, <b>CheckBox</b>, and <b>OptionGroup</b></li>
-  
-  <li>Many bug fixes including several minor fixes for invalid behavior in containers</li>
-</ul>
-
-<p>See <a href="#changelog">Change Log</a></li> for a full list of tickets fixed in this release.</p>
-
-<p>Problem fixes and enhancements planned for upcoming releases can be found from the <a
+<p>Please see the <a href="http://dev.vaadin.com/query?status=closed&resolution=fixed&order=id&milestone=Vaadin+@version@&type=!task">list of fixed issues in Vaadin @version@</a>
+for more details. Problem fixes and enhancements planned for upcoming
+releases can be found from the <a
 href="http://dev.vaadin.com/roadmap">Vaadin Roadmap</a> in Vaadin Trac.</p>
+
+<p>An outline of enhancements introduced in Vaadin 6.3 is given in the <a href="http://vaadin.com/download/release/6.3/6.3.0/release-notes.html">Release Notes for Vaadin 6.3.0</a>.</p>
 
 <p>As always, when upgrading from an earlier version, you should recompile any custom
 widget sets and refresh your project in Eclipse. If you are upgrading from earlier than
