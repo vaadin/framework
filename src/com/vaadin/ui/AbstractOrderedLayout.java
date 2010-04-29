@@ -360,4 +360,28 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
         removeListener(CLICK_EVENT, LayoutClickEvent.class, listener);
     }
 
+    /**
+     * Returns the index of the given component.
+     * 
+     * @param component
+     *            The component to look up.
+     * @return The index of the component or -1 if the component is not a child.
+     */
+    public int getComponentIndex(Component component) {
+        return components.indexOf(component);
+    }
+
+    /**
+     * Returns the component at the given position.
+     * 
+     * @param index
+     *            The position of the component.
+     * @return The component at the given index.
+     * @throws IndexOutOfBoundsException
+     *             If the index is out of range.
+     */
+    public Component getComponent(int index) throws IndexOutOfBoundsException {
+        return components.get(index);
+    }
+
 }
