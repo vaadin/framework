@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_4_0_dev-20100420";}
-.v-theme-version-6_4_0_dev-20100420 {display: none;}
+.v-theme-version:after {content:"6_4_0_dev-20100429";}
+.v-theme-version-6_4_0_dev-20100429 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -1452,10 +1452,9 @@ div.v-progressindicator-indeterminate-disabled {
 	border-top: none;
 	background: #efefef;
 }
-.v-table-footer table,
-.v-table-table {
+.v-table-footer table{
 	border-spacing: 0;
-	border-collapse: separate;
+	border-collapse: collapse;
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -1574,6 +1573,10 @@ div.v-progressindicator-indeterminate-disabled {
 .v-table-scrollposition span {
 	display: block;
 	text-align: center;
+}
+.v-table-body:focus,
+.v-table-body-wrapper:focus{
+	outline: none;
 }
 /* row in column selector */
 .v-on {
@@ -3355,6 +3358,13 @@ div.v-window-header {
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../VAADIN/themes/default/table/img/scroll-position-bg.png", sizingMethod="scale");
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="VAADIN/themes/default/table/img/scroll-position-bg.png", sizingMethod="scale");
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="/VAADIN/themes/default/table/img/scroll-position-bg.png", sizingMethod="scale");
+}
+.v-table .v-table-focus .v-table-cell-content{
+	border-top: 1px dotted black;
+	border-bottom: 1px dotted black;
+}
+.v-table .v-table-focus .v-table-cell-content .v-table-cell-wrapper{
+	line-height: 21px;
 }
 
 .v-tabsheet-tabs {

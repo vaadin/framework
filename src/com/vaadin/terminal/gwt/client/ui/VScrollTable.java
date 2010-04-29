@@ -24,6 +24,15 @@ import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.Visibility;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.user.client.Command;
@@ -34,6 +43,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -81,9 +91,12 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
  * TODO implement unregistering for child components in Cells
  */
 public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
-        VHasDropHandler {
+        VHasDropHandler, KeyPressHandler, KeyDownHandler, FocusHandler,
+        BlurHandler {
 
     public static final String CLASSNAME = "v-table";
+    public static final String CLASSNAME_SELECTION_FOCUS = CLASSNAME + "-focus";
+
     public static final String ITEM_CLICK_EVENT_ID = "itemClick";
     public static final String HEADER_CLICK_EVENT_ID = "handleHeaderClick";
     public static final String FOOTER_CLICK_EVENT_ID = "handleFooterClick";
@@ -126,6 +139,17 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private int selectMode = Table.SELECT_MODE_NONE;
 
     private final HashSet<String> selectedRowKeys = new HashSet<String>();
+
+    /*
+     * We need to store the selection head so we now what range to select if we
+     * are selecting a range which is over several pages long
+     */
+    private int lastSelectedRowKey = -1;
+    
+    /*
+     * The currently focused row
+     */
+    private VScrollTableRow focusedRow;
 
     /**
      * Represents a select range of rows
@@ -179,6 +203,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private final TableFooter tFoot = new TableFooter();
 
     private final ScrollPanel bodyContainer = new ScrollPanel();
+    private final FocusPanel bodyContainerFocus = new FocusPanel(bodyContainer);
 
     private int totalRows;
 
@@ -220,18 +245,164 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private int dragmode;
 
     private int multiselectmode;
-    private int lastSelectedRowKey = -1;
+
+    
 
     public VScrollTable() {
+        bodyContainerFocus.setStyleName(CLASSNAME + "-body-wrapper");
+
+        /*
+         * Firefox handler auto-repeat works correctly only if we use a key
+         * press handler, other browsers handle it correctly when using a key
+         * down handler
+         */
+        if (BrowserInfo.get().isGecko()) {
+            bodyContainerFocus.addKeyPressHandler(this);
+        } else {
+            bodyContainerFocus.addKeyDownHandler(this);
+        }
+
+        bodyContainerFocus.addFocusHandler(this);
+        bodyContainerFocus.addBlurHandler(this);
+
         bodyContainer.addScrollHandler(this);
         bodyContainer.setStyleName(CLASSNAME + "-body");
 
         setStyleName(CLASSNAME);
+
         add(tHead);
-        add(bodyContainer);
+        add(bodyContainerFocus);
         add(tFoot);
 
         rowRequestHandler = new RowRequestHandler();
+    }
+
+    /**
+     * Moves the selection head one row downloads
+     * 
+     * @return Returns true if succeeded, else false if the selection could not
+     *         be move downwards
+     */
+    private boolean moveSelectionDown() {
+        if (selectMode > VScrollTable.SELECT_MODE_NONE) {
+            if (focusedRow == null) {
+                setRowFocus((VScrollTableRow) scrollBody.iterator().next());
+                return true;
+            } else {
+                VScrollTableRow next = getNextRow(focusedRow);
+                if (next != null) {
+                    setRowFocus(next);
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Moves the selection head one row upwards
+     * 
+     * @return Returns true if succeeded, else false if the selection could not
+     *         be move upwards
+     * 
+     */
+    private boolean moveSelectionUp() {
+        if (selectMode > VScrollTable.SELECT_MODE_NONE) {
+            if (focusedRow == null) {
+                setRowFocus((VScrollTableRow) scrollBody.iterator().next());
+                return true;
+            } else {
+                VScrollTableRow prev = getPreviousRow(focusedRow);
+                if (prev != null) {
+                    setRowFocus(prev);
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Selects a row where the current selection head is
+     * 
+     * @param ctrlSelect
+     *            Is the selection a ctrl+selection
+     * @param shiftSelect
+     *            Is the selection a shift+selection
+     * @return Returns truw
+     */
+    private void selectFocusedRow(boolean ctrlSelect, boolean shiftSelect) {
+        if (focusedRow != null) {
+            if (ctrlSelect && !shiftSelect && selectMode == SELECT_MODE_MULTI) {
+                focusedRow.toggleSelection(ctrlSelect);
+            } else if (!ctrlSelect && shiftSelect
+                    && selectMode == SELECT_MODE_MULTI) {
+                focusedRow.toggleShiftSelection(true);
+            } else if (ctrlSelect && shiftSelect
+                    && selectMode == SELECT_MODE_MULTI) {
+                focusedRow.toggleShiftSelection(false);
+            } else {
+                deselectAll();
+                focusedRow.toggleSelection(true);
+            }
+        }
+    }
+
+    /**
+     * Get the key that moves the selection head upwards. By default it is the
+     * up arrow key but by overriding this you can change the key to whatever
+     * you want.
+     * 
+     * @return The keycode of the key
+     */
+    protected int getNavigationUpKey() {
+        return KeyCodes.KEY_UP;
+    }
+
+    /**
+     * Get the key that moves the selection head downwards. By default it is the
+     * down arrow key but by overriding this you can change the key to whatever
+     * you want.
+     * 
+     * @return The keycode of the key
+     */
+    protected int getNavigationDownKey() {
+        return KeyCodes.KEY_DOWN;
+    }
+
+    /**
+     * Get the key that scrolls to the left in the table. By default it is the
+     * left arrow key but by overriding this you can change the key to whatever
+     * you want.
+     * 
+     * @return The keycode of the key
+     */
+    protected int getNavigationLeftKey() {
+        return KeyCodes.KEY_LEFT;
+    }
+
+    /**
+     * Get the key that scroll to the right on the table. By default it is the
+     * right arrow key but by overriding this you can change the key to whatever
+     * you want.
+     * 
+     * @return The keycode of the key
+     */
+    protected int getNavigationRightKey() {
+        return KeyCodes.KEY_RIGHT;
+    }
+
+    /**
+     * Get the key that selects an item in the table. By default it is the space
+     * bar key but by overriding this you can change the key to whatever you
+     * want.
+     * 
+     * @return
+     */
+    protected int getNavigationSelectKey() {
+        return 32;
     }
 
     @SuppressWarnings("unchecked")
@@ -314,10 +485,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         if (uidl.hasVariable("selected")) {
             final Set<String> selectedKeys = uidl
                     .getStringArrayVariableAsSet("selected");
-            selectedRowKeys.clear();
-            selectedRowRanges.clear();
+            deselectAll();
             for (String string : selectedKeys) {
-                selectedRowKeys.add(string);
+                VScrollTableRow row = getRenderedRowByKey(string);
+                if (row != null && !row.isSelected()) {
+                    row.toggleSelection(false);
+                }
             }
         }
 
@@ -621,6 +794,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         return tHead.getHeaderCell(colKey).getWidth();
     }
 
+    /**
+     * Get a rendered row by its key
+     * 
+     * @param key
+     *            The key to search with
+     * @return
+     */
     private VScrollTableRow getRenderedRowByKey(String key) {
         final Iterator<Widget> it = scrollBody.iterator();
         VScrollTableRow r = null;
@@ -628,6 +808,52 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             r = (VScrollTableRow) it.next();
             if (r.getKey().equals(key)) {
                 return r;
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Returns the next row to the given row
+     * 
+     * @param row
+     *            The row to calculate from
+     * @return The next row or null if no row exists
+     */
+    private VScrollTableRow getNextRow(VScrollTableRow row){
+        final Iterator<Widget> it = scrollBody.iterator();
+        VScrollTableRow r = null;
+        while (it.hasNext()) {
+            r = (VScrollTableRow) it.next();
+            if(r == row){
+                if (it.hasNext()) {
+                    return (VScrollTableRow) it.next();
+                } else {
+                    break;
+                }
+            }            
+        }
+        
+        return null;
+    }
+
+    /**
+     * Returns the previous row from the given row
+     * 
+     * @param row
+     *            The row to calculate from
+     * @return The previous row or null if no row exists
+     */
+    private VScrollTableRow getPreviousRow(VScrollTableRow row) {
+        final Iterator<Widget> it = scrollBody.iterator();
+        VScrollTableRow r = null;
+        VScrollTableRow prev = null;
+        while (it.hasNext()) {
+            r = (VScrollTableRow) it.next();
+            if (r == row) {
+                return prev;
+            } else {
+                prev = r;
             }
         }
         return null;
@@ -1255,6 +1481,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     onResizeEvent(event);
                 } else {
                     handleCaptionEvent(event);
+                    if (DOM.eventGetType(event) == Event.ONMOUSEUP) {
+                        onFocus(null);
+                    }
                 }
             }
         }
@@ -1289,10 +1518,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
 
         /**
-         * Fires a header click event after the user has clicked a column header cell
+         * Fires a header click event after the user has clicked a column header
+         * cell
          * 
          * @param event
-         *     The click event
+         *            The click event
          */
         private void fireHeaderClickedEvent(Event event) {
             if (client.hasEventListeners(VScrollTable.this,
@@ -1300,8 +1530,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 MouseEventDetails details = new MouseEventDetails(event);
                 client.updateVariable(paintableId, "headerClickEvent", details
                         .toString(), false);
-                client
-                        .updateVariable(paintableId, "headerClickCID", cid,
+                client.updateVariable(paintableId, "headerClickCID", cid,
                         immediate);
             }
         }
@@ -2122,6 +2351,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         public void onBrowserEvent(Event event) {
             if (enabled && event != null) {
                 handleCaptionEvent(event);
+
+                if (DOM.eventGetType(event) == Event.ONMOUSEUP) {
+                    onFocus(null);
+                }
             }
         }
 
@@ -2927,7 +3160,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 rowElement = Document.get().createTRElement();
                 setElement(rowElement);
                 DOM.sinkEvents(getElement(), Event.MOUSEEVENTS
-                        | Event.ONDBLCLICK | Event.ONCONTEXTMENU);
+                        | Event.ONDBLCLICK | Event.ONCONTEXTMENU
+                        | Event.ONKEYDOWN);
             }
 
             private void paintComponent(Paintable p, UIDL uidl) {
@@ -3117,6 +3351,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     client.updateVariable(paintableId, "clickedKey", ""
                             + rowKey, false);
 
+
                     if (getElement() == targetTdOrTr.getParentElement()) {
                         /* A specific column was clicked */
                         int childIndex = DOM.getChildIndex(getElement(),
@@ -3172,6 +3407,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         case Event.ONMOUSEUP:
                             mDown = false;
                             handleClickEvent(event, targetTdOrTr);
+                            onFocus(null);
                             if (event.getButton() == Event.BUTTON_LEFT
                                     && selectMode > Table.SELECT_MODE_NONE) {
 
@@ -3181,6 +3417,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                         && selectMode == SELECT_MODE_MULTI
                                         && multiselectmode == MULTISELECT_MODE_DEFAULT) {
                                     toggleShiftSelection(false);
+                                    setRowFocus(this);
 
                                     // Ctrl click
                                 } else if ((event.getCtrlKey() || event
@@ -3188,6 +3425,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                         && selectMode == SELECT_MODE_MULTI
                                         && multiselectmode == MULTISELECT_MODE_DEFAULT) {
                                     toggleSelection(true);
+                                    setRowFocus(this);
 
                                     // Shift click
                                 } else if (event.getShiftKey()
@@ -3200,14 +3438,16 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                     if (multiselectmode == MULTISELECT_MODE_DEFAULT) {
                                         deselectAll();
                                     }
+
                                     toggleSelection(multiselectmode == MULTISELECT_MODE_DEFAULT);
+                                    setRowFocus(this);
                                 }
 
                                 // Remove IE text selection hack
                                 if (BrowserInfo.get().isIE()) {
                                     ((Element) event.getEventTarget().cast())
-                                    .setPropertyJSO(
-                                            "onselectstart", null);
+                                            .setPropertyJSO("onselectstart",
+                                                    null);
                                 }
 
                                 // Note: changing the immediateness of this
@@ -3229,6 +3469,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                                     false);
                                 }
 
+                                // Send the selected rows
                                 client
                                         .updateVariable(
                                                 paintableId,
@@ -3301,9 +3542,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                 // Prevent default text selection in IE
                                 if (BrowserInfo.get().isIE()) {
                                     ((Element) event.getEventTarget().cast())
-                                    .setPropertyJSO(
-                                            "onselectstart",
-                                            applyDisableTextSelectionIEHack());
+                                            .setPropertyJSO(
+                                                    "onselectstart",
+                                                    applyDisableTextSelectionIEHack());
                                 }
 
                                 event.stopPropagation();
@@ -3407,8 +3648,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     selectedRowKeys.add(String.valueOf(rowKey));
                     addStyleName("v-selected");
                 } else {
-                    selectedRowKeys.remove(String.valueOf(rowKey));
                     removeStyleName("v-selected");
+                    selectedRowKeys.remove(String.valueOf(rowKey));
                 }
             }
 
@@ -3425,7 +3666,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                  * Ensures that we are in multiselect mode and that we have a
                  * previous selection which was not a deselection
                  */
-                if (selectedRowKeys.isEmpty() || lastSelectedRowKey < 0) {
+                if (selectedRowKeys.isEmpty() || lastSelectedRowKey < 0
+                        || selectMode == SELECT_MODE_SINGLE) {
                     // No previous selection found
                     deselectAll();
                     toggleSelection(true);
@@ -3454,10 +3696,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                 .valueOf(r));
                         if (row != null && !row.isSelected()) {
                             row.toggleSelection(false);
+                            selectedRowKeys.add(String.valueOf(r));
                         }
                     }
                 }
-                    
+
                 // Toggle clicked rows selection
                 toggleSelection(false);
 
@@ -4126,6 +4369,162 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             return client;
         }
 
+    }
+
+    /**
+     * Moves the selection head to a specific row
+     * 
+     * @param row
+     *            The row to where the selection head should move
+     */
+    private void setRowFocus(VScrollTableRow row) {
+
+        if (selectMode == SELECT_MODE_NONE) {
+            return;
+        }
+
+        // Remove previous selection
+        if (focusedRow != null) {
+            focusedRow.removeStyleName(CLASSNAME_SELECTION_FOCUS);
+        }
+
+        if (row != null) {
+            // Apply focus style to new selection
+            focusedRow = row;
+            focusedRow.addStyleName(CLASSNAME_SELECTION_FOCUS);
+
+            // Scroll up or down if needed
+            int rowTop = focusedRow.getElement().getAbsoluteTop();
+            int scrollTop = bodyContainer.getElement().getAbsoluteTop();
+            int scrollBottom = scrollTop
+                    + bodyContainer.getElement().getOffsetHeight();
+            if (rowTop > scrollBottom - focusedRow.getOffsetHeight()) {
+                bodyContainer.setScrollPosition(bodyContainer
+                        .getScrollPosition()
+                        + focusedRow.getOffsetHeight());
+            } else if (rowTop < scrollTop) {
+                bodyContainer.setScrollPosition(bodyContainer
+                        .getScrollPosition()
+                        - focusedRow.getOffsetHeight());
+            }
+        }
+    }
+
+    /**
+     * Handles the keyboard events handled by the table
+     * 
+     * @param event
+     *            The keyboard event received
+     */
+    private void handleNavigation(Event event) {
+
+        // Down navigation
+        if (selectMode == SELECT_MODE_NONE
+                && event.getKeyCode() == getNavigationDownKey()) {
+            bodyContainer
+                    .setScrollPosition(bodyContainer.getScrollPosition() + 5);
+            event.preventDefault();
+        } else if (event.getKeyCode() == getNavigationDownKey()) {
+                if (moveSelectionDown()) {
+                    if (event.getShiftKey()) {
+                        selectFocusedRow(false, true);
+                    }
+                    event.preventDefault();
+            }
+        }
+
+        // Up navigation
+        if (selectMode == SELECT_MODE_NONE
+                && event.getKeyCode() == getNavigationUpKey()) {
+            bodyContainer
+                    .setScrollPosition(bodyContainer.getScrollPosition() - 5);
+            event.preventDefault();
+        } else if (event.getKeyCode() == getNavigationUpKey()) {
+                if (moveSelectionUp()) {
+                    if (event.getShiftKey()) {
+                        selectFocusedRow(false, true);
+                    }
+                    event.preventDefault();
+            }
+
+            // Left navigation
+        } else if (event.getKeyCode() == getNavigationLeftKey()) {
+            bodyContainer.setHorizontalScrollPosition(bodyContainer
+                    .getHorizontalScrollPosition() - 5);
+            event.preventDefault();
+
+            // Right navigation
+        } else if (event.getKeyCode() == getNavigationRightKey()) {
+            bodyContainer.setHorizontalScrollPosition(bodyContainer
+                    .getHorizontalScrollPosition() + 5);
+            event.preventDefault();
+        }
+
+        // Select navigation
+        if (selectMode > SELECT_MODE_NONE
+                && event.getKeyCode() == getNavigationSelectKey()) {         
+                selectFocusedRow(event.getCtrlKey() || event.getMetaKey(),
+                        event.getShiftKey());
+
+                event.preventDefault();
+
+                // Send the selected rows
+                client
+                        .updateVariable(paintableId, "selected",
+                                selectedRowKeys
+                                        .toArray(new String[selectedRowKeys
+                                                .size()]), immediate);
+            }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.event.dom.client.KeyPressHandler#onKeyPress(com.google
+     * .gwt.event.dom.client.KeyPressEvent)
+     */
+    public void onKeyPress(KeyPressEvent event) {
+        handleNavigation((Event) event.getNativeEvent().cast());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt
+     * .event.dom.client.KeyDownEvent)
+     */
+    public void onKeyDown(KeyDownEvent event) {
+        handleNavigation((Event) event.getNativeEvent().cast());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.event.dom.client.FocusHandler#onFocus(com.google.gwt.event
+     * .dom.client.FocusEvent)
+     */
+    public void onFocus(FocusEvent event) {
+        // Move focus from wrapper to container in FF, ignored in other browsers
+        if (BrowserInfo.get().isFF3()) {
+            bodyContainer.getElement().focus();
+        }
+        if (focusedRow == null) {
+            setRowFocus((VScrollTableRow) scrollBody.iterator().next());
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.event.dom.client.BlurHandler#onBlur(com.google.gwt.event
+     * .dom.client.BlurEvent)
+     */
+    public void onBlur(BlurEvent event) {
+        setRowFocus(null);
     }
 
 }

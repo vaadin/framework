@@ -97,6 +97,17 @@
 .v-table .v-selected .v-table-cell-content {
 	border-right-color: #466c90;
 }
+.v-table-body:focus{
+	outline: none;
+}
+.v-table .v-table-focus .v-table-cell-content{
+	border-top: 1px dotted black;
+	border-bottom: 1px dotted black;	
+}
+.v-table .v-table-focus .v-table-cell-content .v-table-cell-wrapper{
+	padding-top:2px;
+	padding-bottom:2px;	
+}
 .v-table-column-selector {
 	width: 16px;
 	height: 20px;

@@ -139,3 +139,10 @@
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="VAADIN/themes/default/table/img/scroll-position-bg.png", sizingMethod="scale");
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="/VAADIN/themes/default/table/img/scroll-position-bg.png", sizingMethod="scale");
 }
+.v-table .v-table-focus .v-table-cell-content{
+	border-top: 1px dotted black;
+	border-bottom: 1px dotted black;
+}
+.v-table .v-table-focus .v-table-cell-content .v-table-cell-wrapper{
+	line-height: 21px;
+}

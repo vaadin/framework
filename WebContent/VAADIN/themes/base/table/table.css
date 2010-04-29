@@ -180,6 +180,10 @@
 	display: block;
 	text-align: center;
 }
+.v-table-body:focus,
+.v-table-body-wrapper:focus{
+	outline: none;
+}
 /* row in column selector */
 .v-on {
 	

@@ -1926,11 +1926,13 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Add range items
-        for (String range : ranges) {
-            String[] limits = range.split("-");
-            int start = Integer.valueOf(limits[0]);
-            int end = Integer.valueOf(limits[1]);
-            s.addAll(getItemIdsInRange(start, end));
+        if (ranges != null) {
+            for (String range : ranges) {
+                String[] limits = range.split("-");
+                int start = Integer.valueOf(limits[0]);
+                int end = Integer.valueOf(limits[1]);
+                s.addAll(getItemIdsInRange(start, end));
+            }
         }
 
         setValue(s, true);
