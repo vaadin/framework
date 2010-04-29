@@ -1,14 +1,10 @@
 <module>
 	<!--
-	    
-		This GWT module defines the Vaadin DefaultWidgetSet. This is
-		the module you want to extend when creating an extended widget set, or
+
+		This GWT module defines the Vaadin DefaultWidgetSet. This is the
+		module you want to extend when creating an extended widget set, or
 		when creating a specialized widget set with a subset of the
-		components.
-		
-		
-		WS Compiler: manually edited
-		
+		components. WS Compiler: manually edited
 	-->
 
 	<inherits name="com.google.gwt.user.User" />
@@ -16,28 +12,47 @@
 	<inherits name="com.google.gwt.http.HTTP" />
 
 	<source path="client" />
-	
-	<!-- Use our own history impl for IE to workaround #2931.	--> 
+
+	<!-- Use our own history impl for IE to workaround #2931.	-->
 	<replace-with class="com.vaadin.terminal.gwt.client.HistoryImplIEVaadin">
-		<when-type-is class="com.google.gwt.user.client.impl.HistoryImpl"/>
-		<when-property-is name="user.agent" value="ie6"/>
+		<when-type-is class="com.google.gwt.user.client.impl.HistoryImpl" />
+		<when-property-is name="user.agent" value="ie6" />
 	</replace-with>
 
-	<!-- Safari needs a different implementation due to GWT bug. See #4279 (vaadin trac) -->
-	<replace-with class="com.vaadin.terminal.gwt.client.ui.richtextarea.CustomWebkitRichTextArea">
+	<!--
+		Safari needs a different implementation due to GWT bug. See #4279
+		(vaadin trac)
+	-->
+	<replace-with
+		class="com.vaadin.terminal.gwt.client.ui.richtextarea.CustomWebkitRichTextArea">
 		<when-type-is class="com.google.gwt.user.client.ui.impl.RichTextAreaImpl" />
 		<when-property-is name="user.agent" value="safari" />
 	</replace-with>
 
-	<generate-with class="com.vaadin.terminal.gwt.widgetsetutils.WidgetMapGenerator">
-		<when-type-is class="com.vaadin.terminal.gwt.client.WidgetMap"/>
+	<generate-with
+		class="com.vaadin.terminal.gwt.widgetsetutils.WidgetMapGenerator">
+		<when-type-is class="com.vaadin.terminal.gwt.client.WidgetMap" />
 	</generate-with>
-	
-	<generate-with class="com.vaadin.terminal.gwt.widgetsetutils.AcceptCriteriaFactoryGenerator">
-		<when-type-is class="com.vaadin.terminal.gwt.client.ui.dd.VAcceptCriterionFactory"/>
+
+	<generate-with
+		class="com.vaadin.terminal.gwt.widgetsetutils.AcceptCriteriaFactoryGenerator">
+		<when-type-is
+			class="com.vaadin.terminal.gwt.client.ui.dd.VAcceptCriterionFactory" />
 	</generate-with>
-	
-	
+
+	<!-- Fall through to this rule for everything but IE -->
+	<replace-with class="com.vaadin.terminal.gwt.client.ui.UploadIFrameOnloadStrategy">
+		<when-type-is class="com.vaadin.terminal.gwt.client.ui.UploadIFrameOnloadStrategy" />
+	</replace-with>
+
+	<replace-with class="com.vaadin.terminal.gwt.client.ui.UploadIFrameOnloadStrategyIE">
+		<when-type-is class="com.vaadin.terminal.gwt.client.ui.UploadIFrameOnloadStrategy" />
+		<any>
+			<when-property-is name="user.agent" value="ie6" />
+			<when-property-is name="user.agent" value="ie8" />
+		</any>
+	</replace-with>
+
 	<entry-point class="com.vaadin.terminal.gwt.client.DefaultWidgetSet" />
-	
+
 </module>
