@@ -32,8 +32,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.xml.sax.SAXException;
-
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
 import com.vaadin.external.org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -676,7 +674,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * @param requestType
      * @return
      * @throws MalformedURLException
-     * @throws SAXException
      * @throws IllegalAccessException
      * @throws InstantiationException
      * @throws ServletException
@@ -1958,7 +1955,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * @throws MalformedURLException
      *             if the application is denied access to the persistent data
      *             store represented by the given URL.
-     * @throws SAXException
      * @throws IllegalAccessException
      * @throws InstantiationException
      * @throws SessionExpiredException
