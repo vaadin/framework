@@ -1055,7 +1055,7 @@
     </target>
 
     <!-- Copies the nightly build artifacts to the download server. -->
-    <target name="nightly-demo-publish" if="nightly.demo.publish">
+    <target name="nightly-demo-publish" if="nightly.demo.publish" depends="internal-package-war">
     	<fail unless="version.major" message="Major version must be defined in version.major"/>
     	<fail unless="version.minor" message="Major version must be defined in version.minor"/>
     	
