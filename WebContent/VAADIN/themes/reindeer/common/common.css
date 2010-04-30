@@ -108,3 +108,17 @@
 	background: transparent;
 	cursor: default;
 }
+
+/* Fixes for Liferay 6.0 */
+.portlet .v-app {
+	background: transparent;
+}
+.v-app .v-radiobutton input,
+.v-window .v-radiobutton input,
+.v-popupview-popup .v-radiobutton input,
+.v-app .v-checkbox input,
+.v-window .v-checkbox input,
+.v-popupview-popup .v-checkbox input {
+	margin-right: 3px;
+	background: transparent;
+}

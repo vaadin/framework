@@ -45,6 +45,7 @@
 	border-top-color: #4f83b4;
 	border-bottom-color: #5ca0df;
 	outline: none;
+	background-color: #fff;
 }
 input.v-textfield-prompt,
 textarea.v-textarea-prompt {
@@ -103,6 +104,7 @@ textarea.v-textarea-prompt {
 	border-color: #4b7192;
 	border-top-color: #3b5a75;
 	border-bottom-color: #507596;
+	background-color: #151717;
 }
 .black input.v-textfield-prompt {
 	color: #5f6366;

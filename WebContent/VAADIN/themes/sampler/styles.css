@@ -3,7 +3,8 @@
 @import url(dummy/styles.css);
 
 /*
- * Not in use currently, breaks ShortcutBasics example.
+ * Not in use currently, breaks all Reindeer "primary/default" button styles.
+ * Fix by replacing the "v-button-primary" to some other style name.
  *
  *@import url(prominentprimaryaction/styles.css);
  */
@@ -23,3 +24,38 @@
 @import url(table/styles.css);
 
 @import url(misc/item-styles.css);
+
+/* Fixes for Liferay 6.0 */
+.portlet .v-app-SamplerApplication {
+	background-color: #fff;
+}
+
+.portlet .v-app .topbar .v-nativebutton {
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+}
+
+.portlet .v-app .topbar .v-nativebutton .v-icon {
+	vertical-align: baseline;
+}
+
+.portlet .v-app .v-customcomponent-breadcrumbs {
+	margin: 0;
+}
+
+.portlet .v-app .v-nativebutton-reset,
+.portlet .v-app .v-nativebutton-reset:focus,
+.portlet .v-app .v-nativebutton-reset:hover,
+.portlet .v-app .v-nativebutton-reset:active {
+	border: none;
+	background: transparent;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+	text-shadow: none;
+}
+
+.portlet .v-app .showcode a {
+	vertical-align: baseline;
+}

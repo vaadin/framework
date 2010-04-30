@@ -468,8 +468,7 @@ public class VDragAndDropManager {
             }
             currentDropHandler = null;
             serverCallback = null;
-            visitId = -1; // ignore possibly on going server check
-
+            visitId = 0; // reset to ignore ongoing server check
         }
 
         currentDrag = null;
