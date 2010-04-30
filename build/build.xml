@@ -1015,6 +1015,7 @@
         <echo>Build number: ${build.number}</echo>
         <echo>Build tag: ${build.tag}</echo>
         <echo>Publish target: ${nightly.publish}</echo>
+      	<echo>Demo publish target: ${nightly.demo.publish}</echo>
 
         <!-- Set build number. -->
         <tstamp>
@@ -1053,7 +1054,29 @@
         <echo>Result: ${nightly.install.scp.result}</echo>
     </target>
 
-    <target name="nightly-publish" depends="nightly-teamcity-publish, nightly-download-publish">
+    <!-- Copies the nightly build artifacts to the download server. -->
+    <target name="nightly-demo-publish" if="nightly.demo.publish" depends="internal-package-war">
+    	<fail unless="version.major" message="Major version must be defined in version.major"/>
+    	<fail unless="version.minor" message="Major version must be defined in version.minor"/>
+    	
+    	
+        <!-- Publish to the demo server. -->
+    	<property name="src" value="${result-path}/${product-file}-demo-${version.full}.war"/>
+    	<property name="target" value="${nightly.demo.publish}/${version.major}.${version.minor}-${build.tag}.war"/>
+    	
+        <echo>Installing ${src} to ${target}</echo>
+
+        <!-- Copy the linux installation package and the JAR. -->
+        <exec executable="scp" searchpath="true" resultproperty="nightly.demo.install.scp.result">
+            <arg value="-B"/>
+            <arg value="${src}"/>
+            <arg value="${target}"/>
+        </exec>
+
+        <echo>Result: ${nightly.install.scp.result}</echo>
+    </target>
+
+    <target name="nightly-publish" depends="nightly-teamcity-publish, nightly-download-publish, nightly-demo-publish">
     </target>
 
     
