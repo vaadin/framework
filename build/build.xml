@@ -1015,9 +1015,7 @@
         <echo>Build number: ${build.number}</echo>
         <echo>Build tag: ${build.tag}</echo>
         <echo>Publish target: ${nightly.publish}</echo>
-    	<condition property="nightly.demo.publish">
-        	<echo>Demo publish target: ${nightly.demo.publish}</echo>
-        </condition>
+      	<echo>Demo publish target: ${nightly.demo.publish}</echo>
 
         <!-- Set build number. -->
         <tstamp>
