@@ -4,6 +4,7 @@
 package com.vaadin.terminal.gwt.client.ui.dd;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
@@ -59,8 +60,7 @@ public class VDragAndDropManager {
             currentDrag.setCurrentGwtEvent(nativeEvent);
             updateDragImagePosition();
 
-            Element targetElement = (Element) nativeEvent.getEventTarget()
-                    .cast();
+            Element targetElement = Element.as(nativeEvent.getEventTarget());
             if (dragElement != null && dragElement.isOrHasChild(targetElement)) {
 
                 // to detect the "real" target, hide dragelement temporary and
@@ -168,8 +168,8 @@ public class VDragAndDropManager {
                 }
                 break;
             case Event.ONMOUSEOUT:
-                Element relatedTarget = (Element) nativeEvent
-                        .getRelatedEventTarget().cast();
+                Element relatedTarget = Element.as(nativeEvent
+                        .getRelatedEventTarget());
                 VDropHandler newDragHanler = findDragTarget(relatedTarget);
                 if (dragElement != null
                         && dragElement.isOrHasChild(relatedTarget)) {
@@ -294,8 +294,8 @@ public class VDragAndDropManager {
                 isStarted = true;
                 VDropHandler dh = null;
                 if (startEvent != null) {
-                    dh = findDragTarget((Element) currentDrag
-                            .getCurrentGwtEvent().getEventTarget().cast());
+                    dh = findDragTarget(Element.as(currentDrag
+                            .getCurrentGwtEvent().getEventTarget()));
                 }
                 if (dh != null) {
                     // drag has started on a DropHandler, kind of drag over
@@ -331,12 +331,15 @@ public class VDragAndDropManager {
                             int typeInt = event.getTypeInt();
                             switch (typeInt) {
                             case Event.ONMOUSEOVER:
-                                if (dragElement == null
-                                        || !dragElement
-                                                .isOrHasChild((Node) event
-                                                        .getNativeEvent()
-                                                        .getCurrentEventTarget()
-                                                        .cast())) {
+                                if (dragElement == null) {
+                                    break;
+                                }
+                                EventTarget currentEventTarget = event
+                                        .getNativeEvent()
+                                        .getCurrentEventTarget();
+                                if (Node.is(currentEventTarget)
+                                        && !dragElement.isOrHasChild(Node
+                                                .as(currentEventTarget))) {
                                     // drag image appeared below, ignore
                                     break;
                                 }
@@ -348,12 +351,15 @@ public class VDragAndDropManager {
                                 break;
                             case Event.ONMOUSEOUT:
 
-                                if (dragElement == null
-                                        || !dragElement
-                                                .isOrHasChild((Node) event
-                                                        .getNativeEvent()
-                                                        .getRelatedEventTarget()
-                                                        .cast())) {
+                                if (dragElement == null) {
+                                    break;
+                                }
+                                EventTarget relatedEventTarget = event
+                                        .getNativeEvent()
+                                        .getRelatedEventTarget();
+                                if (Node.is(relatedEventTarget)
+                                        && !dragElement.isOrHasChild(Node
+                                                .as(relatedEventTarget))) {
                                     // drag image appeared below, ignore
                                     break;
                                 }
@@ -374,7 +380,6 @@ public class VDragAndDropManager {
                                 clearDragElement();
                                 break;
                             }
-
                         }
 
                     });
