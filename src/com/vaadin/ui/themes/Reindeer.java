@@ -48,9 +48,9 @@ public class Reindeer extends BaseTheme {
      **************************************************************************/
 
     /**
-     * Default action style for buttons (the button that gets activated when
-     * user presses 'enter' in a form). Use sparingly, only one default button
-     * per screen should be visible.
+     * Default action style for buttons (the button that should get activated
+     * when the user presses 'enter' in a form). Use sparingly, only one default
+     * button per view should be visible.
      */
     public static final String BUTTON_DEFAULT = "primary";
 
