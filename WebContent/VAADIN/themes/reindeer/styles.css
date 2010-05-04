@@ -2750,12 +2750,12 @@ div.v-window-header {
 .portlet .v-app {
 	background: transparent;
 }
-.v-app .v-radiobutton input,
-.v-window .v-radiobutton input,
-.v-popupview-popup .v-radiobutton input,
-.v-app .v-checkbox input,
-.v-window .v-checkbox input,
-.v-popupview-popup .v-checkbox input {
+.portlet .v-app .v-radiobutton input,
+.portlet .v-window .v-radiobutton input,
+.portlet .v-popupview-popup .v-radiobutton input,
+.portlet .v-app .v-checkbox input,
+.portlet .v-window .v-checkbox input,
+.portlet .v-popupview-popup .v-checkbox input {
 	margin-right: 3px;
 	background: transparent;
 }
