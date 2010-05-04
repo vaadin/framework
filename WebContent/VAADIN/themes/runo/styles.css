@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_4_0_dev-20100429";}
-.v-theme-version-6_4_0_dev-20100429 {display: none;}
+.v-theme-version:after {content:"6_4_0_dev-20100504";}
+.v-theme-version-6_4_0_dev-20100504 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -1422,6 +1422,9 @@ div.v-progressindicator-indeterminate-disabled {
 }
 .v-ie7 .v-table {
 	overflow: visible;
+}
+.v-table-body.focused{
+	border-color: #388ddd;
 }
 .v-table-header-wrap {
 	overflow: hidden;

@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_4_0_dev-20100420";}
-.v-theme-version-6_4_0_dev-20100420 {display: none;}
+.v-theme-version:after {content:"6_4_0_dev-20100504";}
+.v-theme-version-6_4_0_dev-20100504 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -1423,6 +1423,9 @@ div.v-progressindicator-indeterminate-disabled {
 .v-ie7 .v-table {
 	overflow: visible;
 }
+.v-table-body.focused{
+	border-color: #388ddd;
+}
 .v-table-header-wrap {
 	overflow: hidden;
 	border: 1px solid #aaa;
@@ -1452,10 +1455,9 @@ div.v-progressindicator-indeterminate-disabled {
 	border-top: none;
 	background: #efefef;
 }
-.v-table-footer table,
-.v-table-table {
+.v-table-footer table{
 	border-spacing: 0;
-	border-collapse: separate;
+	border-collapse: collapse;
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -1574,6 +1576,10 @@ div.v-progressindicator-indeterminate-disabled {
 .v-table-scrollposition span {
 	display: block;
 	text-align: center;
+}
+.v-table-body:focus,
+.v-table-body-wrapper:focus{
+	outline: none;
 }
 /* row in column selector */
 .v-on {

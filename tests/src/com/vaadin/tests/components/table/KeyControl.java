@@ -64,7 +64,8 @@ public class KeyControl extends TestBase {
 
         table2.addListener(new Table.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
-                String value = table2.getValue().toString();
+                String value = table2.getValue() == null ? "No selected items"
+                        : table2.getValue().toString();
                 selected2.setValue(value);
             }
         });
@@ -87,7 +88,8 @@ public class KeyControl extends TestBase {
         table3.addListener(new Table.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
                 Set<String> value = (Set<String>) table3.getValue();
-                selected3.setValue(value);
+                selected3.setValue(value.size() == 0 ? "No selected items"
+                        : value);
             }
         });
 

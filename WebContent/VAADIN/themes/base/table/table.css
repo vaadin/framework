@@ -29,6 +29,9 @@
 .v-ie7 .v-table {
 	overflow: visible;
 }
+.v-table-body.focused{
+	border-color: #388ddd;
+}
 .v-table-header-wrap {
 	overflow: hidden;
 	border: 1px solid #aaa;
