@@ -2,8 +2,8 @@
 	background: #e9eced;
 }
 .v-app {
-	background: #e9eced;
-	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+	background: #e9eced url(img/main-bg.png) repeat-x;
+	font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	color: #464f52;
 	font-size: 13px;
 	line-height: 18px;

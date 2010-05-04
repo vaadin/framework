@@ -25,14 +25,14 @@
 }
 .v-window-contents {
 	background: #fff;
-	border: 2px solid #acb2b3;
+	border: 2px solid #babfc0;
 	border-top: none;
 	border-bottom: none;
 }
 .v-window div.v-window-footer {
 	height: 8px;
 	margin-left: 9px;
-	background: transparent url(img/bottom-right.png) no-repeat right top;
+	background: transparent url(img/bottom-right.png) no-repeat right bottom;
 	overflow: visible;
 }
 .v-ie7 .v-window-footer {
@@ -65,6 +65,33 @@
 }
 .v-window-modalitycurtain {
 	background: #fff;
+}
+/* Dialog style */
+.v-window-dialog {
+	background-image: url(img/dialog/bottom-left.png);
+}
+.v-window-dialog .v-window-outerheader {
+	height: 14px;
+	padding: 13px 30px 5px 8px;
+	background: transparent url(img/top-right.png) no-repeat right top;
+}
+.v-window-dialog .v-window-header {
+	font-size: 12px;
+	line-height: normal;
+	font-weight: bold;
+	letter-spacing: 0;
+	text-shadow: 0 1px 0 #fff;
+}
+.v-window-dialog .v-window-contents {
+	background: #f1f3f3;
+}
+.v-window-dialog div.v-window-footer {
+	background-image: url(img/dialog/bottom-right.png);
+}
+.v-window-dialog .v-window-closebox {
+	top: 14px;
+	right: 16px;
+	background-image: url(img/dialog/close.png);
 }
 /* Shadow for window */
 .v-shadow-window .top-left {

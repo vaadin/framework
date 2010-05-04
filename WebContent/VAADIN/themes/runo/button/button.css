@@ -1,58 +1,156 @@
-.v-button:focus {
-	border-color: #4897dc;
-	outline: none;
-	}
-	
-.v-button:active,
-.v-button.v-pressed {
-	background-position: left bottom;
-	border-color: #babfc0;
-	border-top-color: #a5abac;
+.v-button {
+	padding: 1px;
+	border: none;
+	background: transparent;
 	}
 
-.v-button,
-.v-disabled.v-button {
-	font-size: 13px;
-	border: 1px solid #babfc0;
-	border-bottom-color: #a5abac;
-	background: #fff url(img/bg.png);
+.v-button:focus {
+	outline: none;
+	}
+
+.v-button:focus .v-button-wrap {
+	border-color: #57a7ed;
+	border-top-color: #60aef1;
+	border-bottom-color: #4c9adf;
+	-webkit-box-shadow: 0 0 2px #57a7ed;
+	-moz-box-shadow:  0 0 2px #57a7ed;
+	}
+	
+.v-button:active .v-button-wrap,
+.v-button.v-pressed .v-button-wrap {
+	background-position: 0 -79px;
+	background-color: #e7e9e9;
+	border-color: #b8bdbe;
+	border-top-color: #9da1a2;
+	border-bottom-color: #babfc0;
+	border-color: rgba(146,151,152,.9);
+	border-top-color: rgba(146,151,152,1);
+	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.4) inset;
+	-moz-box-shadow: 0 1px 2px rgba(0,0,0,.4) inset;;
+	text-shadow: none;
+	}
+
+.v-button .v-button-wrap,
+.v-disabled.v-button .v-button-wrap {
+	display: block;
+	font-size: 12px;
+	border: 1px solid #bdc1c2;
+	border-top-color: #cbcfd0;
+	border-bottom-color: #b6bbbb;
+	border-color: rgba(146,151,152,.8);
+	border-top-color: rgba(146,151,152,.6);
+	background: #e6e8e8 url(img/bg.png) repeat-x;
 	-webkit-background-origin: padding;
 	-moz-background-origin: padding;
 	padding: 3px 15px;
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	border-radius: 10px;
-	font-size: 12px;
-	line-height: 16px;
-	min-height: 16px;
+	-webkit-border-radius: 11px;
+	-moz-border-radius: 11px;
+	border-radius: 11px;
+	line-height: 14px;
+	min-height: 14px;
+	-webkit-box-shadow: 0 1px 0 rgba(0,0,0,.15);
+	-moz-box-shadow: 0 1px 0 rgba(0,0,0,.15);
+	text-shadow: 0 1px 0 #fff;
+	color: #464f52;
+	overflow: hidden;
+	text-overflow: ellipsis;
 	}
 
-.v-button-caption {
-	color: #464f52;
-	}
+.v-ie7 .v-button .v-button-wrap {
+	overflow: visible;
+}
+
+
 
 /* Small style */
-
-.v-button-small,
-.v-disabled.v-button-small {
+.v-button-small .v-button-wrap,
+.v-disabled.v-button-small .v-button-wrap {
 	font-size: 11px;
-	line-height: 14px;
-	padding: 1px 15px;
-	min-height: 14px;
+	line-height: 13px;
+	padding: 1px 12px;
+	min-height: 13px;
 	}
+
+
+/* Big style */
+.v-button-big .v-button-wrap,
+.v-disabled.v-button-big .v-button-wrap {
+	font-size: 15px;
+	line-height: 18px;
+	padding: 4px 18px;
+	min-height: 18px;
+	-webkit-border-radius: 14px;
+	-moz-border-radius: 14px;
+	border-radius: 14px;
+	}
+
+
+
+/* Default style */
+.v-button-default:focus .v-button-wrap {
+	background-color: #60839a;
+	background-position: 0 -158px;
+	text-shadow: 0 -1px 0 #657883;
+	}
+
+.v-button-default:active .v-button-wrap,
+.v-button-default.v-pressed .v-button-wrap {
+	background-position: 0 -79px;
+	background-color: #8f9898;
+	border-color: #737e81;
+	border-top-color: #576063;
+	border-bottom-color: #747f82;
+	color: #f0f2f2;
+	text-shadow: 0 -1px 0 #5d6969;
+	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.4) inset;;
+	-moz-box-shadow: 0 1px 2px rgba(0,0,0,.4) inset;;
+	}
+
+.v-button-default .v-button-wrap,
+.v-disabled.v-button-default .v-button-wrap {
+	border-color: #899395;
+	border-top-color: #a4abae;
+	border-bottom-color: #727b7d;
+	background: #869090 url(img/bg-default.png) repeat-x;
+	text-shadow: 0 -1px 0 #797e7e;
+	color: #fff;
+	font-weight: bold;
+	-webkit-box-shadow: 0 1px 0 rgba(0,0,0,.22);
+	-moz-box-shadow: 0 1px 0 rgba(0,0,0,.22);
+	}
+
+
 
 
 /* Link style */
 .v-button-link,
 .v-disabled.v-button-link {
+	padding: 0;
+	}
+
+.v-button-link .v-button-wrap,
+.v-disabled.v-button-link .v-button-wrap,
+.v-button-link:active .v-button-wrap,
+.v-disabled.v-button-pressedv-button-link .v-button-wrap {
 	border: none;
 	background: transparent;
 	padding: 0;
 	font-size: 13px;
+	-webkit-box-shadow: none;
+	-mox-box-shadow: none;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+	text-shadow: none;
 	}
 
 .v-button-link:focus {
 	outline: 1px dotted #4897dc;
+	}
+
+.v-button-link:focus .v-button-wrap {
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
 	}
 
 

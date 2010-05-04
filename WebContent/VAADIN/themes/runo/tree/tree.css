@@ -5,15 +5,24 @@
 	background: transparent url(img/expanded.png) no-repeat 2px 1px;
 }
 .v-tree-node-caption {
-	margin-left: 16px;
+	margin-left: 18px;
 }
-.v-tree-node span {
-	padding: 0 2px;
+.v-tree-node-caption .v-icon {
+	margin: 0 2px 0 -2px;
+}
+.v-tree-node-caption span {
+	padding: 0 1px;
 }
 .v-tree-node-selected span {
-	background: #5daee8;
+	background: #57a7ed;
 	color: #fff;
-	padding: 0 2px;
+	padding: 1px 2px 0;
+	display: inline-block;
+	zoom: 1;
+	margin: -1px -1px 0;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;	
 }
 .v-tree-node-children {
 	padding-left: 16px;

@@ -6,6 +6,7 @@
 }
 .v-accordion-item {
 	position: relative;
+	zoom: 1;
 }
 .v-accordion-item-caption {
 	overflow: hidden;

@@ -10,20 +10,19 @@
 .v-table-resizer {
 	height: 36px;
 	width: 4px;
-	background: transparent url(img/resizer-bg.png) repeat-y 50% 50%;
+	background: transparent url(img/resizer-bg.png) repeat-y 100% 50%;
 }
 .v-table-caption-container {
 	color: #393a3c;
 	font-size: 15px;
-	padding-top: 9px;
+	padding: 9px 2px 9px 0;
 	text-shadow: #ffffff 0 1px 0;
-	padding-right: 2px; /* See themes/base/table.css for explanation */
 }
 .v-table-header-cell-asc .v-table-caption-container {
-	background: transparent url(img/sort-asc.png) no-repeat right 80%;
+	background: transparent url(img/sort-asc.png) no-repeat right 50%;
 }
 .v-table-header-cell-desc .v-table-caption-container {
-	background: transparent url(img/sort-desc.png) no-repeat right 80%;
+	background: transparent url(img/sort-desc.png) no-repeat right 50%;
 }
 .v-table-header-cell:hover,
 .v-table-header-cell-asc:hover,
@@ -34,18 +33,19 @@
 	background: #fff;
 	border: 1px solid #b6bbbc;
 }
-.v-table-row,
-.v-table-row-odd {
-	background-color: #fff;
-}
-.v-table-row-odd {
-	background-color: #f6f7f7;
-}
-.v-table-row:hover,
-.v-table-row-odd:hover {
+tr.v-table-row:hover,
+tr.v-table-row-odd:hover {
 	background-color: #edeeee;
 }
-.v-table .v-selected {
+.v-table-row,
+.v-table-body-noselection .v-table-row:hover {
+	background-color: #fff;
+}
+.v-table-row-odd,
+.v-table-body-noselection .v-table-row-odd:hover {
+	background-color: #f6f7f7;
+}
+.v-table tr.v-selected {
 	background: #57a7ed;
 	color: #fff;
 }
@@ -139,10 +139,54 @@
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="VAADIN/themes/default/table/img/scroll-position-bg.png", sizingMethod="scale");
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="/VAADIN/themes/default/table/img/scroll-position-bg.png", sizingMethod="scale");
 }
-.v-table .v-table-focus .v-table-cell-content{
+
+
+/* Borderless style */
+.v-table-borderless .v-table-header-wrap,
+.v-table-borderless .v-table-body {
+	border: none;
+}
+.v-table-borderless .v-table-header-wrap {
+	border-bottom: 1px solid #b6bbbc;
+}
+.v-table-borderless .v-table-body {
+	background: transparent;
+}
+.v-table-borderless .v-table-row,
+.v-table-borderless .v-table-row-odd,
+.v-table-borderless .v-table-body-noselection .v-table-row:hover,
+.v-table-borderless .v-table-body-noselection .v-table-row-odd:hover {
+	background-color: transparent;
+}
+
+
+/* Small style */
+.v-table-small .v-table-header-wrap,
+.v-table-small .v-table-header {
+	height: 22px;
+}
+.v-table-small .v-table-caption-container {
+	font-size: 13px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+.v-table-small .v-table-column-selector {
+	margin-top: -21px;
+	height: 21px;
+}
+.v-table-small .v-table-body {
+	font-size: 12px;
+}
+.v-table-small .v-table-cell-wrapper {
+	line-height: 18px;
+	padding: 2px 0;
+}
+
+/* Keyboard navigation styles */
+.v-table-focus .v-table-cell-content {
 	border-top: 1px dotted black;
 	border-bottom: 1px dotted black;
 }
-.v-table .v-table-focus .v-table-cell-content .v-table-cell-wrapper{
+.v-table-focus .v-table-cell-wrapper {
 	line-height: 21px;
 }
