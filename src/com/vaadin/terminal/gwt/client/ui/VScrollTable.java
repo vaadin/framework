@@ -426,6 +426,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             // Ctrl+arrows moves selection head
             else if (selectMode > SELECT_MODE_NONE && ctrlSelect
                     && !shiftSelect) {
+                selectionRangeStart = focusedRow;
                 // No selection, only selection head is moved
             }
 
@@ -3692,6 +3693,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                         deselectAll();
                                     }
 
+                                    selectionRangeStart = this;
                                     toggleSelection(multiselectmode == MULTISELECT_MODE_DEFAULT);
                                     setRowFocus(this);
                                 }
