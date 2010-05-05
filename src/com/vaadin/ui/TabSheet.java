@@ -6,7 +6,9 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
@@ -16,8 +18,8 @@ import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.Paintable.RepaintRequestListener;
 import com.vaadin.terminal.gwt.client.ui.VTabsheet;
+import com.vaadin.terminal.gwt.server.CommunicationManager;
 
 /**
  * Tabsheet component.
@@ -29,8 +31,7 @@ import com.vaadin.terminal.gwt.client.ui.VTabsheet;
  */
 @SuppressWarnings("serial")
 @ClientWidget(VTabsheet.class)
-public class TabSheet extends AbstractComponentContainer implements
-        RepaintRequestListener {
+public class TabSheet extends AbstractComponentContainer {
 
     /**
      * Linked list of component tabs.
@@ -54,7 +55,7 @@ public class TabSheet extends AbstractComponentContainer implements
      */
     private boolean tabsHidden;
 
-    private LinkedList<Component> paintedTabs = new LinkedList<Component>();
+    private HashSet<Component> paintedTabs = new HashSet<Component>();
 
     private CloseHandler closeHandler;
 
@@ -207,8 +208,13 @@ public class TabSheet extends AbstractComponentContainer implements
 
         target.startTag("tabs");
 
+        Collection<Component> orphaned = new HashSet<Component>(paintedTabs);
+
         for (final Iterator<Component> i = getComponentIterator(); i.hasNext();) {
             final Component component = i.next();
+
+            orphaned.remove(component);
+
             Tab tab = tabs.get(component);
 
             /*
@@ -284,6 +290,11 @@ public class TabSheet extends AbstractComponentContainer implements
 
         if (selected != null) {
             target.addVariable(this, "selected", keyMapper.key(selected));
+        }
+
+        // clean possibly orphaned entries in paintedTabs
+        for (Component component2 : orphaned) {
+            paintedTabs.remove(component2);
         }
     }
 
@@ -619,20 +630,14 @@ public class TabSheet extends AbstractComponentContainer implements
         fireEvent(new SelectedTabChangeEvent(this));
     }
 
-    /*
-     * If child is not rendered on the client we need to repaint on child
-     * repaint due the way captions and icons are handled.
-     */
-    public void repaintRequested(RepaintRequestEvent event) {
-        if (!paintedTabs.contains(event.getPaintable())) {
-            requestRepaint();
-        }
-    }
-
     @Override
-    public void detach() {
-        super.detach();
-        paintedTabs.clear();
+    public void removeListener(RepaintRequestListener listener) {
+        super.removeListener(listener);
+        if (listener instanceof CommunicationManager) {
+            // clean the paintedTabs here instead of detach to avoid subtree
+            // caching issues when detached-attached without render
+            paintedTabs.clear();
+        }
     }
 
     /**
