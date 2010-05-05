@@ -1936,6 +1936,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         setValue(s, true);
+
     }
 
     /* Component basics */
@@ -2248,10 +2249,14 @@ public class Table extends AbstractSelect implements Action.Container,
 
         // selection support
         LinkedList<String> selectedKeys = new LinkedList<String>();
-        if (isMultiSelect()) {            
+        if (isMultiSelect()) {
             HashSet sel = new HashSet((Set) getValue());
-            for (Object id : sel) {
-                selectedKeys.add(itemIdMapper.key(id));
+            Collection vids = getVisibleItemIds();
+            for (Iterator it = vids.iterator(); it.hasNext();) {
+                Object id = it.next();
+                if (sel.contains(id)) {
+                    selectedKeys.add(itemIdMapper.key(id));
+                }
             }
         } else {
             Object value = getValue();
