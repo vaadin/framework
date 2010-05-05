@@ -4067,6 +4067,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
         // still ensure all selects are removed from (not necessary rendered)
         selectedRowKeys.clear();
+        selectedRowRanges.clear();
     }
 
     /**

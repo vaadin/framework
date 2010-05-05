@@ -89,10 +89,12 @@ public class KeyControl extends TestBase {
             public void valueChange(ValueChangeEvent event) {
                 Set<String> value = (Set<String>) table3.getValue();
                 selected3.setValue(value.size() == 0 ? "No selected items"
-                        : value);
+                        : value + ": Total " + value.size() + " items");
             }
         });
 
+        selected3.setWidth("300px");
+        selected3.setHeight("500px");
         layout3.addComponent(selected3);
         layout.addComponent(layout3);
     }
