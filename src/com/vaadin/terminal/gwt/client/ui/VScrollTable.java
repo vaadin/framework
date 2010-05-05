@@ -799,6 +799,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             focusLastItemInNextRender = false;
         }
 
+        if (focusedRow != null) {
+            setRowFocus(getRenderedRowByKey(focusedRow.getKey()));
+        }
+
         rendering = false;
         headerChangedDuringUpdate = false;
     }
@@ -3931,6 +3935,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 // above
                 if (startRow == null) {
                     startRow = (VScrollTableRow) scrollBody.iterator().next();
+                    setRowFocus(endRow);
+                }
+
+                if (endRow == null) {
+                    setRowFocus(startRow);
                 }
 
                 Iterator<Widget> rows = scrollBody.iterator();
