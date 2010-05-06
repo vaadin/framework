@@ -119,7 +119,9 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     private TreeDragMode dragMode = TreeDragMode.NONE;
-
+    
+    private MultiSelectMode multiSelectMode = MultiSelectMode.DEFAULT;
+    
     /* Tree constructors */
 
     /**
@@ -338,6 +340,29 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
             requestRepaint();
         }
     }
+    
+    /**
+     * Sets the behavior of the multiselect mode
+     * 
+     * @param mode
+     *            The mode to set
+     */
+    public void setMultiselectMode(MultiSelectMode mode) {
+        if (multiSelectMode != mode && mode != null) {
+            multiSelectMode = mode;
+            requestRepaint();
+        }
+    }
+
+    /**
+     * Returns the mode the multiselect is in. The mode controls how
+     * multiselection can be done.
+     * 
+     * @return The mode
+     */
+    public MultiSelectMode getMultiselectMode() {
+        return multiSelectMode;
+    }
 
     /* Component API */
 
@@ -396,6 +421,15 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
             }
         }
 
+        // AbstractSelect cannot handle multiselection so we handle
+        // it ourself
+        if (variables.containsKey("selected") && isMultiSelect()
+                && multiSelectMode == MultiSelectMode.DEFAULT) {
+            handleSelectedItems(variables);
+            variables = new HashMap<String, Object>(variables);
+            variables.remove("selected");
+        }
+
         // Selections are handled by the select component
         super.changeVariables(source, variables);
 
@@ -416,6 +450,37 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 }
             }
         }
+    }
+
+    /**
+     * Handles the selection
+     * 
+     * @param variables
+     *            The variables sent to the server from the client
+     */
+    private void handleSelectedItems(Map<String, Object> variables) {
+        final String[] ka = (String[]) variables.get("selected");
+
+        // Converts the key-array to id-set
+        final LinkedList s = new LinkedList();
+        for (int i = 0; i < ka.length; i++) {
+            final Object id = itemIdMapper.get(ka[i]);
+            if (!isNullSelectionAllowed()
+                    && (id == null || id == getNullSelectionItemId())) {
+                // skip empty selection if nullselection is not allowed
+                requestRepaint();
+            } else if (id != null && containsId(id)) {
+                s.add(id);
+            }
+        }
+
+        if (!isNullSelectionAllowed() && s.size() < 1) {
+            // empty selection not allowed, keep old value
+            requestRepaint();
+            return;
+        }
+
+        setValue(s, true);
     }
 
     /**
@@ -442,6 +507,10 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
             if (isSelectable()) {
                 target.addAttribute("selectmode", (isMultiSelect() ? "multi"
                         : "single"));
+                if (isMultiSelect()) {
+                    target.addAttribute("multiselectmode", multiSelectMode
+                            .ordinal());
+                }
             } else {
                 target.addAttribute("selectmode", "none");
             }

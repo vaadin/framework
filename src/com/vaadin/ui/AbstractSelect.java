@@ -127,6 +127,21 @@ public abstract class AbstractSelect extends AbstractField implements
     }
 
     /**
+     * Multi select modes that controls how multi select behaves.
+     */
+    public enum MultiSelectMode {
+        /**
+         * The default behavior of the multi select mode
+         */
+        DEFAULT,
+
+        /**
+         * The previous more simple behavior of the multselect
+         */
+        SIMPLE
+    }
+
+    /**
      * Is the select in multiselect mode?
      */
     private boolean multiSelect = false;

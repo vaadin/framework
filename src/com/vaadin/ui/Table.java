@@ -94,22 +94,6 @@ public class Table extends AbstractSelect implements Action.Container,
         MULTIROW
     }
 
-    /**
-     * Multi select modes that controls how multi select behaves.
-     */
-    public enum MultiSelectMode {
-        /**
-         * Simple left clicks only selects one item, CTRL+left click selects
-         * multiple items and SHIFT-left click selects a range of items.
-         */
-        DEFAULT,
-        /**
-         * Uses the old method of selection. CTRL- and SHIFT-clicks are disabled and
-         * clicking on the items selects/deselects them.
-         */
-        SIMPLE
-    }
-
     private static final int CELL_KEY = 0;
 
     private static final int CELL_HEADER = 1;

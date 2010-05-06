@@ -8,7 +8,7 @@ import junit.framework.TestCase;
 import com.vaadin.data.Container;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.MultiSelectMode;
+import com.vaadin.ui.AbstractSelect.MultiSelectMode;
 
 public class TestMultipleSelection extends TestCase {
 

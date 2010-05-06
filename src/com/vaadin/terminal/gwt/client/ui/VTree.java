@@ -4,9 +4,12 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.dom.client.NativeEvent;
@@ -43,12 +46,17 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
 
     public static final String ITEM_CLICK_EVENT_ID = "itemClick";
 
+    public static final int MULTISELECT_MODE_DEFAULT = 0;
+    public static final int MULTISELECT_MODE_SIMPLE = 1;
+
     private Set<String> selectedIds = new HashSet<String>();
     private ApplicationConnection client;
     private String paintableId;
     private boolean selectable;
     private boolean isMultiselect;
     private String currentMouseOverKey;
+    private TreeNode lastSelection;
+    private int multiSelectMode = MULTISELECT_MODE_DEFAULT;
 
     private final HashMap<String, TreeNode> keyToNode = new HashMap<String, TreeNode>();
 
@@ -151,6 +159,10 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
         final String selectMode = uidl.getStringAttribute("selectmode");
         selectable = !"none".equals(selectMode);
         isMultiselect = "multi".equals(selectMode);
+
+        if (isMultiselect) {
+            multiSelectMode = uidl.getIntAttribute("multiselectmode");
+        }
 
         selectedIds = uidl.getStringArrayVariableAsSet("selected");
 
@@ -314,6 +326,10 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
             treeNode.setSelected(false);
         }
 
+        sendSelectionToServer();
+    }
+
+    private void sendSelectionToServer() {
         client.updateVariable(paintableId, "selected", selectedIds
                 .toArray(new String[selectedIds.size()]), immediate);
     }
@@ -430,6 +446,47 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
             }
         }
 
+        /**
+         * Handles mouse selection
+         * 
+         * @param ctrl
+         *            Was the ctrl-key pressed
+         * @param shift
+         *            Was the shift-key pressed
+         * @return Returns true if event was handled, else false
+         */
+        private boolean handleClickSelection(boolean ctrl, boolean shift) {
+
+            if (multiSelectMode == MULTISELECT_MODE_SIMPLE || !isMultiselect) {
+                toggleSelection();
+                lastSelection = this;
+            } else if (multiSelectMode == MULTISELECT_MODE_DEFAULT) {
+                // Handle ctrl+click
+                if (isMultiselect && ctrl && !shift) {
+                    toggleSelection();
+                    lastSelection = this;
+
+                    // Handle shift+click
+                } else if (isMultiselect && !ctrl && shift) {
+                    deselectAll();
+                    selectNodeRange(lastSelection.key, key);
+                    sendSelectionToServer();
+
+                    // Handle ctrl+shift click
+                } else if (isMultiselect && ctrl && shift) {
+                    selectNodeRange(lastSelection.key, key);
+
+                    // Handle click
+                } else {
+                    deselectAll();
+                    toggleSelection();
+                    lastSelection = this;
+                }
+            }
+
+            return true;
+        }
+
         @Override
         public void onBrowserEvent(Event event) {
             super.onBrowserEvent(event);
@@ -453,11 +510,18 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                     toggleState();
                 } else if (!readonly && inCaption) {
                     // caption click = selection change && possible click event
-                    toggleSelection();
+                    if (handleClickSelection(event.getCtrlKey()
+                            || event.getMetaKey(), event.getShiftKey())) {
+                        event.preventDefault();
+                    }
                 }
                 DOM.eventCancelBubble(event, true);
             } else if (type == Event.ONCONTEXTMENU) {
                 showContextMenu(event);
+            }
+
+            if (type == Event.ONMOUSEDOWN) {
+                event.preventDefault();
             }
 
             if (dragMode != 0 || dropHandler != null) {
@@ -674,6 +738,24 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
             return childrenLoaded;
         }
 
+        /**
+         * Returns the children of the node
+         * 
+         * @return A set of tree nodes
+         */
+        public List<TreeNode> getChildren() {
+            List<TreeNode> nodes = new LinkedList<TreeNode>();
+
+            if (!isLeaf() && isChildrenLoaded()) {
+                Iterator<Widget> iter = childNodeContainer.iterator();
+                while (iter.hasNext()) {
+                    TreeNode node = (TreeNode) iter.next();
+                    nodes.add(node);
+                }
+            }
+            return nodes;
+        }
+
         public Action[] getActions() {
             if (actionKeys == null) {
                 return new Action[] {};
@@ -711,6 +793,30 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
 
         protected boolean isSelected() {
             return VTree.this.isSelected(this);
+        }
+
+        /**
+         * Travels up the hierarchy looking for this node
+         * 
+         * @param child
+         *            The child which grandparent this is or is not
+         * @return True if this is a grandparent of the child node
+         */
+        public boolean isGrandParentOf(TreeNode child) {
+            TreeNode currentNode = child;
+            boolean isGrandParent = false;
+            while (currentNode != null) {
+                currentNode = currentNode.getParentNode();
+                if (currentNode == this) {
+                    isGrandParent = true;
+                    break;
+                }
+            }
+            return isGrandParent;
+        }
+
+        public boolean isSibling(TreeNode node) {
+            return node.getParentNode() == getParentNode();
         }
 
         public void showContextMenu(Event event) {
@@ -753,6 +859,11 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
             super.onDetach();
             client.getContextMenu().ensureHidden(this);
         }
+
+        @Override
+        public String toString() {
+            return nodeCaptionSpan.getInnerText();
+        }
     }
 
     public VDropHandler getDropHandler() {
@@ -761,5 +872,346 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
 
     public TreeNode getNodeByKey(String key) {
         return keyToNode.get(key);
+    }
+
+    /**
+     * Deselects all items in the tree
+     */
+    public void deselectAll() {
+        for (String key : selectedIds) {
+            TreeNode node = keyToNode.get(key);
+            if (node != null) {
+                node.setSelected(false);
+            }
+        }
+        selectedIds.clear();
+    }
+
+    /**
+     * Selects a range of nodes
+     * 
+     * @param startNodeKey
+     *            The start node key
+     * @param endNodeKey
+     *            The end node key
+     */
+    private void selectNodeRange(String startNodeKey, String endNodeKey){
+        
+        TreeNode startNode = keyToNode.get(startNodeKey);
+        TreeNode endNode = keyToNode.get(endNodeKey);
+
+        // The nodes have the same parent
+        if(startNode.getParent() == endNode.getParent()){
+            doSiblingSelection(startNode, endNode);
+
+            // The start node is a grandparent of the end node
+        } else if (startNode.isGrandParentOf(endNode)) {
+            doRelationSelection(startNode, endNode);
+
+            // The end node is a grandparent of the start node
+        } else if (endNode.isGrandParentOf(startNode)) {
+            doRelationSelection(endNode, startNode);
+
+        } else {
+            doNoRelationSelection(startNode, endNode);
+        }
+    }
+
+    /**
+     * Selects all the open children to a node
+     * 
+     * @param node
+     *            The parent node
+     */
+    private void selectAllChildren(TreeNode node, boolean includeRootNode) {
+        if (includeRootNode) {
+            node.setSelected(true);
+            selectedIds.add(node.key);
+        }
+
+        for (TreeNode child : node.getChildren()) {
+            if (!child.isLeaf() && child.getState()) {
+                selectAllChildren(child, true);
+            } else {
+                child.setSelected(true);
+                selectedIds.add(child.key);
+            }
+        }
+    }
+
+    /**
+     * Selects all children until a stop child is reached
+     * 
+     * @param root
+     *            The root not to start from
+     * @param stopNode
+     *            The node to finish with
+     * @param includeRootNode
+     *            Should the root node be selected
+     * @param includeStopNode
+     *            Should the stop node be selected
+     * 
+     * @return Returns false if the stop child was found, else true if all
+     *         children was selected
+     */
+    private boolean selectAllChildrenUntil(TreeNode root, TreeNode stopNode,
+            boolean includeRootNode, boolean includeStopNode) {
+        if (includeRootNode) {
+            root.setSelected(true);
+            selectedIds.add(root.key);
+        }
+        if (root.getState() && root != stopNode) {
+            for (TreeNode child : root.getChildren()) {
+                if (!child.isLeaf() && child.getState() && child != stopNode) {
+                    if (!selectAllChildrenUntil(child, stopNode, true,
+                            includeStopNode)) {
+                        return false;
+                    }
+                } else if (child == stopNode) {
+                    if (includeStopNode) {
+                        child.setSelected(true);
+                        selectedIds.add(child.key);
+                    }
+                    return false;
+                } else if (child.isLeaf()) {
+                    child.setSelected(true);
+                    selectedIds.add(child.key);
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Select a range between two nodes which have no relation to each other
+     * 
+     * @param startNode
+     *            The start node to start the selection from
+     * @param endNode
+     *            The end node to end the selection to
+     */
+    private void doNoRelationSelection(TreeNode startNode, TreeNode endNode) {
+
+        TreeNode commonParent = getCommonGrandParent(startNode, endNode);
+        TreeNode startBranch = null, endBranch = null;
+        
+        // Find the children of the common parent
+        List<TreeNode> children;
+        if(commonParent != null){
+            children = commonParent.getChildren(); 
+        }else{
+            children = new LinkedList<TreeNode>();
+            for (Widget w : getChildren()) {
+                children.add((TreeNode) w);
+            }
+        }
+            
+        // Find the start and end branches
+        for (TreeNode node : children) {
+            if (nodeIsInBranch(startNode, node)) {
+                startBranch = node;
+            }
+            if (nodeIsInBranch(endNode, node)) {
+                endBranch = node;
+            }
+        }
+
+        // Swap nodes if necessary
+        if (children.indexOf(startBranch) > children.indexOf(endBranch)) {
+            TreeNode temp = startBranch;
+            startBranch = endBranch;
+            endBranch = temp;
+
+            temp = startNode;
+            startNode = endNode;
+            endNode = temp;
+        }
+
+        // Select all children under the start node
+        selectAllChildren(startNode, true);
+        TreeNode startParent = startNode.getParentNode();
+        TreeNode currentNode = startNode;
+        while (startParent != null && startParent != commonParent) {
+            List<TreeNode> startChildren = startParent.getChildren();
+            for (int i = startChildren.indexOf(currentNode) + 1; i < startChildren
+                    .size(); i++) {
+                selectAllChildren(startChildren.get(i), true);
+            }
+
+            currentNode = startParent;
+            startParent = startParent.getParentNode();
+        }
+
+        // Select nodes until the end node is reached
+        for (int i = children.indexOf(startBranch) + 1; i <= children
+                .indexOf(endBranch); i++) {
+            selectAllChildrenUntil(children.get(i), endNode, true, true);
+        }
+
+        // Ensure end node was selected
+        endNode.setSelected(true);
+        selectedIds.add(endNode.key);
+    }
+
+    /**
+     * Examines the children of the branch node and returns true if a node is in
+     * that branch
+     * 
+     * @param node
+     *            The node to search for
+     * @param branch
+     *            The branch to search in
+     * @return True if found, false if not found
+     */
+    private boolean nodeIsInBranch(TreeNode node, TreeNode branch) {
+        if (node == branch) {
+            return true;
+        }
+        for (TreeNode child : branch.getChildren()) {
+            if (child == node) {
+                return true;
+            }
+            if (!child.isLeaf() && child.getState()) {
+                if (nodeIsInBranch(node, child)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Selects a range of items which are in direct relation with each other.<br/>
+     * NOTE: The start node <b>MUST</b> be before the end node!
+     * 
+     * @param startNode
+     * 
+     * @param endNode
+     */
+    private void doRelationSelection(TreeNode startNode, TreeNode endNode) {
+        TreeNode currentNode = endNode;
+        while (currentNode != startNode) {
+            currentNode.setSelected(true);
+            selectedIds.add(currentNode.key);
+
+            // Traverse children above the selection
+            List<TreeNode> subChildren = currentNode.getParentNode()
+                    .getChildren();
+            if (subChildren.size() > 1) {
+                selectNodeRange(subChildren.iterator().next().key,
+                        currentNode.key);
+            } else if (subChildren.size() == 1) {
+                TreeNode n = subChildren.get(0);
+                n.setSelected(true);
+                selectedIds.add(n.key);
+            }
+
+            currentNode = currentNode.getParentNode();
+        }
+        startNode.setSelected(true);
+        selectedIds.add(startNode.key);
+    }
+
+    /**
+     * Selects a range of items which have the same parent.
+     * 
+     * @param startNode
+     *            The start node
+     * @param endNode
+     *            The end node
+     */
+    private void doSiblingSelection(TreeNode startNode, TreeNode endNode) {
+        TreeNode parent = startNode.getParentNode();
+
+        List<TreeNode> children = new LinkedList<TreeNode>();
+        if (parent == null) {
+            // Topmost parent
+            for (Widget w : getChildren()) {
+                TreeNode node = (TreeNode) w;
+                children.add(node);
+            }
+        } else {
+            children = parent.getChildren();
+        }
+
+        // Swap start and end point if needed
+        if (children.indexOf(startNode) > children.indexOf(endNode)) {
+            TreeNode temp = startNode;
+            startNode = endNode;
+            endNode = temp;
+        }
+
+        Iterator<TreeNode> childIter = children.iterator();
+        boolean startFound = false;
+        while (childIter.hasNext()) {
+            TreeNode node = childIter.next();
+            if (node == startNode) {
+                startFound = true;
+            }
+
+            if (startFound && node != endNode && node.getState()) {
+                selectAllChildren(node, true);
+            } else if (startFound && node != endNode) {
+                node.setSelected(true);
+                selectedIds.add(node.key);
+            }
+
+            if (node == endNode) {
+                node.setSelected(true);
+                selectedIds.add(node.key);
+                break;
+            }
+        }
+    }
+
+    /**
+     * Returns the first common parent of two nodes
+     * 
+     * @param node1
+     *            The first node
+     * @param node2
+     *            The second node
+     * @return The common parent or null
+     */
+    public TreeNode getCommonGrandParent(TreeNode node1, TreeNode node2) {
+        // If either one does not have a grand parent then return null
+        if (node1.getParentNode() == null || node2.getParentNode() == null) {
+            return null;
+        }
+
+        // If the nodes are parents of each other then return null
+        if (node1.isGrandParentOf(node2) || node2.isGrandParentOf(node1)) {
+            return null;
+        }
+
+        // Get parents of node1
+        List<TreeNode> parents1 = new ArrayList<TreeNode>();
+        TreeNode parent1 = node1.getParentNode();
+        while (parent1 != null) {
+            parents1.add(parent1);
+            parent1 = parent1.getParentNode();
+        }
+
+        // Get parents of node2
+        List<TreeNode> parents2 = new ArrayList<TreeNode>();
+        TreeNode parent2 = node2.getParentNode();
+        while (parent2 != null) {
+            parents2.add(parent2);
+            parent2 = parent2.getParentNode();
+        }
+
+        // Search the parents for the first common parent
+        for (int i = 0; i < parents1.size(); i++) {
+            parent1 = parents1.get(i);
+            for (int j = 0; j < parents2.size(); j++) {
+                parent2 = parents2.get(j);
+                if (parent1 == parent2) {
+                    return parent1;
+                }
+            }
+        }
+
+        return null;
     }
 }
