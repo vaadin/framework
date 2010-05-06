@@ -205,21 +205,24 @@ public abstract class PropertyFormatter implements Property,
             return;
         }
         if (newValue == null) {
-            dataSource.setValue(null);
-        }
-        try {
-            dataSource.setValue(parse((String) newValue));
-            if (!newValue.equals(toString())) {
+            if (dataSource.getValue() != null) {
+                dataSource.setValue(null);
                 fireValueChange();
             }
-        } catch (Exception e) {
-            if (e instanceof ConversionException) {
-                throw (ConversionException) e;
-            } else {
-                throw new ConversionException(e);
+        } else {
+            try {
+                dataSource.setValue(parse((String) newValue));
+                if (!newValue.equals(toString())) {
+                    fireValueChange();
+                }
+            } catch (Exception e) {
+                if (e instanceof ConversionException) {
+                    throw (ConversionException) e;
+                } else {
+                    throw new ConversionException(e);
+                }
             }
         }
-
     }
 
     /**
