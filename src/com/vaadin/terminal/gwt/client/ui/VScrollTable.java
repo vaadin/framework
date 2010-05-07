@@ -4689,7 +4689,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * @param event
      *            The keyboard event received
      */
-    private boolean handleNavigation(int keycode, boolean ctrl, boolean shift) {
+    protected boolean handleNavigation(int keycode, boolean ctrl, boolean shift) {
         if (keycode == KeyCodes.KEY_TAB) {
             // Do not handle tab key
             return false;
