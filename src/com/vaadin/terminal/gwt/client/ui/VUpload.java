@@ -99,6 +99,8 @@ public class VUpload extends SimplePanel implements Paintable {
 
     private com.google.gwt.dom.client.Element synthesizedFrame;
 
+    private int nextUploadId;
+
     public VUpload() {
         super(com.google.gwt.dom.client.Document.get().createFormElement());
 
@@ -136,9 +138,14 @@ public class VUpload extends SimplePanel implements Paintable {
         if (client.updateComponent(this, uidl, true)) {
             return;
         }
+        if (uidl.hasAttribute("notStarted")) {
+            t.schedule(400);
+            return;
+        }
         setImmediate(uidl.getBooleanAttribute("immediate"));
         this.client = client;
         paintableId = uidl.getId();
+        nextUploadId = uidl.getIntAttribute("nextid");
         element.setAction(client.getAppUri());
         submitButton.setText(uidl.getStringAttribute("buttoncaption"));
         fu.setName(paintableId + "_file");
@@ -265,7 +272,8 @@ public class VUpload extends SimplePanel implements Paintable {
                         .getConsole()
                         .log(
                                 "Visiting server to see if upload started event changed UI.");
-                client.sendPendingVariableChanges();
+                client.updateVariable(paintableId, "pollForStart",
+                        nextUploadId, true);
             }
         };
         t.schedule(800);
