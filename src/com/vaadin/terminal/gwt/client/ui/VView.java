@@ -389,7 +389,27 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
             Util.runWebkitOverflowAutoFix(getElement());
         }
 
+        scrollIntoView(uidl);
+
         rendering = false;
+    }
+
+    /**
+     * Tries to scroll paintable referenced from given UIDL snippet to be
+     * visible.
+     * 
+     * @param uidl
+     */
+    void scrollIntoView(final UIDL uidl) {
+        if (uidl.hasAttribute("scrollTo")) {
+            DeferredCommand.addCommand(new Command() {
+                public void execute() {
+                    final Paintable paintable = uidl.getPaintableAttribute(
+                            "scrollTo", connection);
+                    ((Widget) paintable).getElement().scrollIntoView();
+                }
+            });
+        }
     }
 
     @Override

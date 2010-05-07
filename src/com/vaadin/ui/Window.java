@@ -128,6 +128,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     private ArrayList<String> jsExecQueue = null;
 
+    private Component scrollIntoView;
+
     /* ********************************************************************* */
 
     /**
@@ -515,6 +517,11 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
             centerRequested = false;
         }
 
+        if (scrollIntoView != null) {
+            target.addAttribute("scrollTo", scrollIntoView);
+            scrollIntoView = null;
+        }
+
         // Marks the main window
         if (getApplication() != null
                 && this == getApplication().getMainWindow()) {
@@ -612,6 +619,23 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     }
 
     /* ********************************************************************* */
+
+    /**
+     * Method tries to scroll all scrollable elements up from given component so
+     * that the component becomes visible for end user. The given component is
+     * expected to be inside this window.
+     * 
+     * @param component
+     *            the component where to scroll
+     */
+    public void scrollIntoView(Component component) {
+        if (component.getWindow() != this) {
+            throw new IllegalArgumentException(
+                    "The component where to scroll must be inside this window.");
+        }
+        scrollIntoView = component;
+        requestRepaint();
+    }
 
     /**
      * Opens the given resource in this window.
@@ -1902,7 +1926,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
         @Override
         public void handleAction(Object sender, Object target) {
-            this.window.close();
+            window.close();
         }
     }
 }
