@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.datefield;
 
 import java.util.Date;
+import java.util.Locale;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.DateField;
@@ -20,6 +21,7 @@ public class TestDatefieldYear extends TestBase {
     @Override
     protected void setup() {
         DateField df = new DateField("Year", new Date(2009 - 1900, 4 - 1, 1));
+        df.setLocale(new Locale("en", "US"));
         df.setResolution(DateField.RESOLUTION_YEAR);
         df.setResolution(DateField.RESOLUTION_MONTH);
         addComponent(df);
