@@ -12,12 +12,23 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
@@ -40,7 +51,8 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 /**
  * 
  */
-public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
+public class VTree extends FocusPanel implements Paintable, VHasDropHandler,
+        FocusHandler, BlurHandler, KeyPressHandler, KeyDownHandler {
 
     public static final String CLASSNAME = "v-tree";
 
@@ -49,6 +61,8 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
     public static final int MULTISELECT_MODE_DEFAULT = 0;
     public static final int MULTISELECT_MODE_SIMPLE = 1;
 
+    private FlowPanel body = new FlowPanel();
+
     private Set<String> selectedIds = new HashSet<String>();
     private ApplicationConnection client;
     private String paintableId;
@@ -56,6 +70,7 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
     private boolean isMultiselect;
     private String currentMouseOverKey;
     private TreeNode lastSelection;
+    private TreeNode focusedNode;
     private int multiSelectMode = MULTISELECT_MODE_DEFAULT;
 
     private final HashMap<String, TreeNode> keyToNode = new HashMap<String, TreeNode>();
@@ -80,9 +95,79 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
 
     private int dragMode;
 
+    private boolean selectionHasChanged = false;
+
     public VTree() {
         super();
         setStyleName(CLASSNAME);
+        add(body);
+        
+        addFocusHandler(this);
+        addBlurHandler(this);
+
+        /*
+         * Firefox auto-repeat works correctly only if we use a key press
+         * handler, other browsers handle it correctly when using a key down
+         * handler
+         */
+        if (BrowserInfo.get().isGecko() || BrowserInfo.get().isOpera()) {
+            addKeyPressHandler(this);
+        } else {
+            addKeyDownHandler(this);
+        }
+
+        /*
+         * We need to use the sinkEvents method to catch the keyUp events so we
+         * can cache a single shift. KeyUpHandler cannot do this. At the same
+         * time we catch the mouse down and up events so we can apply the text
+         * selection patch in IE
+         */
+        sinkEvents(Event.ONMOUSEDOWN | Event.ONMOUSEUP | Event.ONKEYUP);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.user.client.ui.Widget#onBrowserEvent(com.google.gwt.user
+     * .client.Event)
+     */
+    @Override
+    public void onBrowserEvent(Event event) {
+        super.onBrowserEvent(event);
+        if (event.getTypeInt() == Event.ONMOUSEDOWN) {
+            setFocus(true);
+            // Prevent default text selection in IE
+            if (BrowserInfo.get().isIE()) {
+                ((Element) event.getEventTarget().cast()).setPropertyJSO(
+                        "onselectstart", applyDisableTextSelectionIEHack());
+            }
+            event.preventDefault();
+        } else if (event.getTypeInt() == Event.ONMOUSEUP) {
+            // Remove IE text selection hack
+            if (BrowserInfo.get().isIE()) {
+                ((Element) event.getEventTarget().cast()).setPropertyJSO(
+                        "onselectstart", null);
+            }
+            event.preventDefault();
+        } else if (event.getTypeInt() == Event.ONKEYUP) {
+            if (selectionHasChanged) {                
+                if(event.getKeyCode() == getNavigationDownKey() && !event.getShiftKey()){
+                    sendSelectionToServer();
+                    event.preventDefault();
+                } else if (event.getKeyCode() == getNavigationUpKey()
+                        && !event.getShiftKey()) {
+                    sendSelectionToServer();
+                    event.preventDefault();
+                } else if (event.getKeyCode() == KeyCodes.KEY_SHIFT) {
+                    sendSelectionToServer();
+                    event.preventDefault();
+                } else if (event.getKeyCode() == getNavigationSelectKey()) {
+                    sendSelectionToServer();
+                    event.preventDefault();
+                }
+            }
+        }
     }
 
     private void updateActionMap(UIDL c) {
@@ -137,7 +222,7 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
 
         isNullSelectionAllowed = uidl.getBooleanAttribute("nullselect");
 
-        clear();
+        body.clear();
         for (final Iterator i = uidl.getChildIterator(); i.hasNext();) {
             final UIDL childUidl = (UIDL) i.next();
             if ("actions".equals(childUidl.getTag())) {
@@ -149,11 +234,11 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
             }
             final TreeNode childTree = new TreeNode();
             if (childTree.ie6compatnode != null) {
-                this.add(childTree);
+                body.add(childTree);
             }
             childTree.updateFromUIDL(childUidl, client);
             if (childTree.ie6compatnode == null) {
-                this.add(childTree);
+                body.add(childTree);
             }
         }
         final String selectMode = uidl.getStringAttribute("selectmode");
@@ -329,11 +414,22 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
         sendSelectionToServer();
     }
 
+    /**
+     * Sends the selection to the server
+     */
     private void sendSelectionToServer() {
         client.updateVariable(paintableId, "selected", selectedIds
                 .toArray(new String[selectedIds.size()]), immediate);
+        selectionHasChanged = false;
     }
 
+    /**
+     * Is a node selected in the tree
+     * 
+     * @param treeNode
+     *            The node to check
+     * @return
+     */
     public boolean isSelected(TreeNode treeNode) {
         return selectedIds.contains(treeNode.key);
     }
@@ -341,6 +437,7 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
     public class TreeNode extends SimplePanel implements ActionOwner {
 
         public static final String CLASSNAME = "v-tree-node";
+        public static final String CLASSNAME_FOCUSED = CLASSNAME + "-focused";
 
         public String key;
 
@@ -363,6 +460,8 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
         private Event mouseDownEvent;
 
         private int cachedHeight = -1;
+
+        private boolean focused = false;
 
         public TreeNode() {
             constructDom();
@@ -459,11 +558,13 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
 
             if (multiSelectMode == MULTISELECT_MODE_SIMPLE || !isMultiselect) {
                 toggleSelection();
+                setFocusedNode(this);
                 lastSelection = this;
             } else if (multiSelectMode == MULTISELECT_MODE_DEFAULT) {
                 // Handle ctrl+click
                 if (isMultiselect && ctrl && !shift) {
                     toggleSelection();
+                    setFocusedNode(this);
                     lastSelection = this;
 
                     // Handle shift+click
@@ -480,6 +581,7 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                 } else {
                     deselectAll();
                     toggleSelection();
+                    setFocusedNode(this);
                     lastSelection = this;
                 }
             }
@@ -487,6 +589,13 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
             return true;
         }
 
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * com.google.gwt.user.client.ui.Widget#onBrowserEvent(com.google.gwt
+         * .user.client.Event)
+         */
         @Override
         public void onBrowserEvent(Event event) {
             super.onBrowserEvent(event);
@@ -846,6 +955,11 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
             setWidth(captionWidth + "px");
         }
 
+        /*
+         * (non-Javadoc)
+         * 
+         * @see com.google.gwt.user.client.ui.Widget#onAttach()
+         */
         @Override
         public void onAttach() {
             super.onAttach();
@@ -854,16 +968,49 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
             }
         }
 
+        /*
+         * (non-Javadoc)
+         * 
+         * @see com.google.gwt.user.client.ui.Widget#onDetach()
+         */
         @Override
         protected void onDetach() {
             super.onDetach();
             client.getContextMenu().ensureHidden(this);
         }
 
+        /*
+         * (non-Javadoc)
+         * 
+         * @see com.google.gwt.user.client.ui.UIObject#toString()
+         */
         @Override
         public String toString() {
             return nodeCaptionSpan.getInnerText();
         }
+
+        /**
+         * Is the node focused?
+         * 
+         * @param focused
+         *            True if focused, false if not
+         */
+        public void setFocused(boolean focused) {
+            if (!this.focused && focused) {
+                nodeCaptionDiv.addClassName(CLASSNAME_FOCUSED);
+                if (BrowserInfo.get().isIE6()) {
+                    ie6compatnode.addClassName(CLASSNAME_FOCUSED);
+                }
+                this.focused = focused;
+            } else if (this.focused && !focused) {
+                nodeCaptionDiv.removeClassName(CLASSNAME_FOCUSED);
+                if (BrowserInfo.get().isIE6()) {
+                    ie6compatnode.removeClassName(CLASSNAME_FOCUSED);
+                }
+                this.focused = focused;
+            }
+        }
+
     }
 
     public VDropHandler getDropHandler() {
@@ -885,6 +1032,7 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
             }
         }
         selectedIds.clear();
+        selectionHasChanged = true;
     }
 
     /**
@@ -918,6 +1066,37 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
     }
 
     /**
+     * Selects a node and deselect all other nodes
+     * 
+     * @param node
+     *            The node to select
+     */
+    private void selectNode(TreeNode node, boolean deselectPrevious) {
+        if (deselectPrevious) {
+            deselectAll();
+        }
+
+        if (node != null) {
+            node.setSelected(true);
+            selectedIds.add(node.key);
+            lastSelection = node;
+        }
+        selectionHasChanged = true;
+    }
+
+    /**
+     * Deselects a node
+     * 
+     * @param node
+     *            The node to deselect
+     */
+    private void deselectNode(TreeNode node) {
+        node.setSelected(false);
+        selectedIds.remove(node.key);
+        selectionHasChanged = true;
+    }
+
+    /**
      * Selects all the open children to a node
      * 
      * @param node
@@ -937,6 +1116,7 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                 selectedIds.add(child.key);
             }
         }
+        selectionHasChanged = true;
     }
 
     /**
@@ -979,6 +1159,7 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                 }
             }
         }
+        selectionHasChanged = true;
 
         return true;
     }
@@ -1002,8 +1183,8 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
             children = commonParent.getChildren(); 
         }else{
             children = new LinkedList<TreeNode>();
-            for (Widget w : getChildren()) {
-                children.add((TreeNode) w);
+            for (int w = 0; w < body.getWidgetCount(); w++) {
+                children.add((TreeNode) body.getWidget(w));
             }
         }
             
@@ -1052,6 +1233,7 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
         // Ensure end node was selected
         endNode.setSelected(true);
         selectedIds.add(endNode.key);
+        selectionHasChanged = true;
     }
 
     /**
@@ -1111,6 +1293,7 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
         }
         startNode.setSelected(true);
         selectedIds.add(startNode.key);
+        selectionHasChanged = true;
     }
 
     /**
@@ -1127,9 +1310,8 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
         List<TreeNode> children = new LinkedList<TreeNode>();
         if (parent == null) {
             // Topmost parent
-            for (Widget w : getChildren()) {
-                TreeNode node = (TreeNode) w;
-                children.add(node);
+            for (int w = 0; w < body.getWidgetCount(); w++) {
+                children.add((TreeNode) body.getWidget(w));
             }
         } else {
             children = parent.getChildren();
@@ -1163,6 +1345,7 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
                 break;
             }
         }
+        selectionHasChanged = true;
     }
 
     /**
@@ -1214,4 +1397,396 @@ public class VTree extends FlowPanel implements Paintable, VHasDropHandler {
 
         return null;
     }
+
+    /**
+     * Sets the node currently in focus
+     * 
+     * @param node
+     *            The node to focus or null to remove the focus completely
+     */
+    public void setFocusedNode(TreeNode node) {
+        // Unfocus previously focused node
+        if (focusedNode != null) {
+            focusedNode.setFocused(false);
+        }
+
+        if (node != null) {
+            node.setFocused(true);
+        }
+
+        focusedNode = node;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.event.dom.client.FocusHandler#onFocus(com.google.gwt.event
+     * .dom.client.FocusEvent)
+     */
+    public void onFocus(FocusEvent event) {
+        // If no node has focus, focus the first item in the tree
+        if (focusedNode == null) {
+            setFocusedNode((TreeNode) body.getWidget(0));
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.event.dom.client.BlurHandler#onBlur(com.google.gwt.event
+     * .dom.client.BlurEvent)
+     */
+    public void onBlur(BlurEvent event) {
+        setFocusedNode(null);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.event.dom.client.KeyPressHandler#onKeyPress(com.google
+     * .gwt.event.dom.client.KeyPressEvent)
+     */
+    public void onKeyPress(KeyPressEvent event) {
+        if (handleKeyNavigation(event.getNativeEvent().getKeyCode(), event
+                .isControlKeyDown()
+                || event.isMetaKeyDown(), event.isShiftKeyDown())) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt
+     * .event.dom.client.KeyDownEvent)
+     */
+    public void onKeyDown(KeyDownEvent event) {
+        if (handleKeyNavigation(event.getNativeEvent().getKeyCode(), event
+                .isControlKeyDown()
+                || event.isMetaKeyDown(), event.isShiftKeyDown())) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    }
+
+    /**
+     * Handles the keyboard navigation
+     * 
+     * @param keycode
+     *            The keycode of the pressed key
+     * @param ctrl
+     *            Was ctrl pressed
+     * @param shift
+     *            Was shift pressed
+     * @return Returns true if the key was handled, else false
+     */
+    protected boolean handleKeyNavigation(int keycode, boolean ctrl,
+            boolean shift) {
+
+        // Navigate down
+        if (keycode == getNavigationDownKey()) {
+            TreeNode node = null;
+            // If node is open and has children then move in to the children
+            if (!focusedNode.isLeaf() && focusedNode.getState()
+                    && focusedNode.getChildren().size() > 0) {
+                node = focusedNode.getChildren().get(0);
+            }
+
+            // Else move down to the next sibling
+            else {
+                node = getNextSibling(focusedNode);
+                if (node == null) {
+                    // Else jump to the parent and try to select the next
+                    // sibling there
+                    TreeNode current = focusedNode;
+                    while (node == null && current.getParentNode() != null) {
+                        node = getNextSibling(current.getParentNode());
+                        current = current.getParentNode();
+                    }
+                }
+            }
+
+            if (node != null) {
+                setFocusedNode(node);
+                if (!ctrl && !shift) {
+                    selectNode(node, true);
+                } else if (shift) {
+                    deselectAll();
+                    selectNodeRange(lastSelection.key, node.key);
+                }
+            }
+            return true;
+        }
+
+        // Navigate up
+        if (keycode == getNavigationUpKey()) {
+            TreeNode prev = getPreviousSibling(focusedNode);
+            TreeNode node = null;
+            if (prev != null) {
+                node = getLastVisibleChildInTree(prev);
+            } else if (focusedNode.getParentNode() != null) {
+                node = focusedNode.getParentNode();
+            }
+            if (node != null) {
+                setFocusedNode(node);
+                if (!ctrl && !shift) {
+                    selectNode(node, true);
+                } else if (shift) {
+                    deselectAll();
+                    selectNodeRange(lastSelection.key, node.key);
+                }
+            }
+            return true;
+        }
+
+
+        // Navigate left (close branch)
+        if (keycode == getNavigationLeftKey()) {
+            if (!focusedNode.isLeaf() && focusedNode.getState()) {
+                focusedNode.setState(false, true);
+            }
+            return true;
+        }
+
+        // Navigate right (open branch)
+        if (keycode == getNavigationRightKey()) {
+            if (!focusedNode.isLeaf() && !focusedNode.getState()) {
+                focusedNode.setState(true, true);
+            }
+            return true;
+        }
+
+        // Selection
+        if (keycode == getNavigationSelectKey()) {
+            if (!focusedNode.isSelected()) {
+                selectNode(focusedNode, !isMultiselect
+                    || multiSelectMode == MULTISELECT_MODE_SIMPLE);
+            } else {
+                deselectNode(focusedNode);
+            }
+            return true;
+        }
+
+        // Home selection
+        if (keycode == getNavigationStartKey()) {
+            TreeNode node = (TreeNode) body.getWidget(0);
+            if (!ctrl && !shift) {
+                selectNode(node, true);
+            } else if (ctrl) {
+                setFocusedNode(node);
+            } else if (shift) {
+                deselectAll();
+                selectNodeRange(focusedNode.key, node.key);
+            }
+            sendSelectionToServer();
+            return true;
+        }
+
+        // End selection
+        if (keycode == getNavigationEndKey()) {
+            TreeNode lastNode = (TreeNode) body
+                    .getWidget(body.getWidgetCount() - 1);
+            TreeNode node = getLastVisibleChildInTree(lastNode);
+            if (!ctrl && !shift) {
+                selectNode(node, true);
+            } else if (ctrl) {
+                setFocusedNode(node);
+            } else if (shift) {
+                deselectAll();
+                selectNodeRange(focusedNode.key, node.key);
+            }
+            sendSelectionToServer();
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Traverses the tree to the bottom most child
+     * 
+     * @param root
+     *            The root of the tree
+     * @return The bottom most child
+     */
+    private TreeNode getLastVisibleChildInTree(TreeNode root) {
+        if (root.isLeaf() || !root.getState() || root.getChildren().size() == 0) {
+            return root;
+        }
+        List<TreeNode> children = root.getChildren();
+        return getLastVisibleChildInTree(children.get(children.size() - 1));
+    }
+
+    /**
+     * Gets the next sibling in the tree
+     * 
+     * @param node
+     *            The node to get the sibling for
+     * @return The sibling node or null if the node is the last sibling
+     */
+    private TreeNode getNextSibling(TreeNode node) {
+        TreeNode parent = node.getParentNode();
+        List<TreeNode> children;
+        if (parent == null) {
+            children = new LinkedList<TreeNode>();
+            for (int w = 0; w < body.getWidgetCount(); w++) {
+                children.add((TreeNode) body.getWidget(w));
+            }
+        } else {
+            children = parent.getChildren();
+        }
+
+        int idx = children.indexOf(node);
+        if (idx < children.size() - 1) {
+            return children.get(idx + 1);
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the previous sibling in the tree
+     * 
+     * @param node
+     *            The node to get the sibling for
+     * @return The sibling node or null if the node is the first sibling
+     */
+    private TreeNode getPreviousSibling(TreeNode node) {
+        TreeNode parent = node.getParentNode();
+        List<TreeNode> children;
+        if (parent == null) {
+            children = new LinkedList<TreeNode>();
+            for (int w = 0; w < body.getWidgetCount(); w++) {
+                children.add((TreeNode) body.getWidget(w));
+            }
+        } else {
+            children = parent.getChildren();
+        }
+
+        int idx = children.indexOf(node);
+        if (idx > 0) {
+            return children.get(idx - 1);
+        }
+
+        return null;
+    }
+
+    /**
+     * Add this to the element mouse down event by using element.setPropertyJSO
+     * ("onselectstart",applyDisableTextSelectionIEHack()); Remove it then again
+     * when the mouse is depressed in the mouse up event.
+     * 
+     * @return Returns the JSO preventing text selection
+     */
+    private native JavaScriptObject applyDisableTextSelectionIEHack()
+    /*-{
+            return function(){ return false; };
+    }-*/;
+
+    /**
+     * Get the key that moves the selection head upwards. By default it is the
+     * up arrow key but by overriding this you can change the key to whatever
+     * you want.
+     * 
+     * @return The keycode of the key
+     */
+    protected int getNavigationUpKey() {
+        return KeyCodes.KEY_UP;
+    }
+
+    /**
+     * Get the key that moves the selection head downwards. By default it is the
+     * down arrow key but by overriding this you can change the key to whatever
+     * you want.
+     * 
+     * @return The keycode of the key
+     */
+    protected int getNavigationDownKey() {
+        return KeyCodes.KEY_DOWN;
+    }
+
+    /**
+     * Get the key that scrolls to the left in the table. By default it is the
+     * left arrow key but by overriding this you can change the key to whatever
+     * you want.
+     * 
+     * @return The keycode of the key
+     */
+    protected int getNavigationLeftKey() {
+        return KeyCodes.KEY_LEFT;
+    }
+
+    /**
+     * Get the key that scroll to the right on the table. By default it is the
+     * right arrow key but by overriding this you can change the key to whatever
+     * you want.
+     * 
+     * @return The keycode of the key
+     */
+    protected int getNavigationRightKey() {
+        return KeyCodes.KEY_RIGHT;
+    }
+
+    /**
+     * Get the key that selects an item in the table. By default it is the space
+     * bar key but by overriding this you can change the key to whatever you
+     * want.
+     * 
+     * @return
+     */
+    protected int getNavigationSelectKey() {
+        return 32;
+    }
+
+    /**
+     * Get the key the moves the selection one page up in the table. By default
+     * this is the Page Up key but by overriding this you can change the key to
+     * whatever you want.
+     * 
+     * @return
+     */
+    protected int getNavigationPageUpKey() {
+        return KeyCodes.KEY_PAGEUP;
+    }
+
+    /**
+     * Get the key the moves the selection one page down in the table. By
+     * default this is the Page Down key but by overriding this you can change
+     * the key to whatever you want.
+     * 
+     * @return
+     */
+    protected int getNavigationPageDownKey() {
+        return KeyCodes.KEY_PAGEDOWN;
+    }
+
+    /**
+     * Get the key the moves the selection to the beginning of the table. By
+     * default this is the Home key but by overriding this you can change the
+     * key to whatever you want.
+     * 
+     * @return
+     */
+    protected int getNavigationStartKey() {
+        return KeyCodes.KEY_HOME;
+    }
+
+    /**
+     * Get the key the moves the selection to the end of the table. By default
+     * this is the End key but by overriding this you can change the key to
+     * whatever you want.
+     * 
+     * @return
+     */
+    protected int getNavigationEndKey() {
+        return KeyCodes.KEY_END;
+    }
+
+
+    
 }
