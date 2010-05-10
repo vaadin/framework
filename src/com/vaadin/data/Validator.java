@@ -222,6 +222,18 @@ public interface Validator extends Serializable {
                     "InvalidValueException cannot have a debug id");
         }
 
+        /**
+         * Returns the {@code InvalidValueExceptions} that caused this
+         * exception.
+         * 
+         * @return An array containing the {@code InvalidValueExceptions} that
+         *         caused this exception. Returns an empty array if this
+         *         exception was not caused by other exceptions.
+         */
+        public InvalidValueException[] getCauses() {
+            return causes;
+        }
+
     }
 
     /**
