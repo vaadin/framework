@@ -8,8 +8,10 @@ package com.vaadin.data.validator;
  * {@link com.vaadin.data.validator.AbstractValidator} for more information.
  * 
  * <p>
- * If the validation fails, the exception thrown contains the error message with
- * its argument 0 replaced with the string being validated.
+ * To include the value that failed validation in the exception message you can
+ * use "{0}" in the error message. This will be replaced with the failed value
+ * (converted to string using {@link #toString()}) or "null" if the value is
+ * null.
  * </p>
  * 
  * @author IT Mill Ltd.
@@ -22,20 +24,32 @@ public abstract class AbstractStringValidator extends AbstractValidator {
 
     /**
      * Constructs a validator for strings.
+     * 
      * <p>
-     * Null and empty string values are always accepted. To disallow empty
-     * values, set the field being validated as required.
+     * Null and empty string values are always accepted. To reject empty values,
+     * set the field being validated as required.
      * </p>
      * 
      * @param errorMessage
-     *            the message included in the exception (with its parameter {0}
-     *            replaced by the string to be validated) in case the validation
-     *            fails
-     */
+     *            the message to be included in an {@link InvalidValueException}
+     *            (with "{0}" replaced by the value that failed validation).
+     * */
     public AbstractStringValidator(String errorMessage) {
         super(errorMessage);
     }
 
+    /**
+     * Tests if the given value is a valid string.
+     * <p>
+     * Null values are always accepted. Values that are not {@link String}s are
+     * always rejected. Uses {@link #isValidString(String)} to validate the
+     * value.
+     * </p>
+     * 
+     * @param value
+     *            the value to check
+     * @return true if the value is a valid string, false otherwise
+     */
     public boolean isValid(Object value) {
         if (value == null) {
             return true;
