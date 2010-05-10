@@ -11,16 +11,23 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 
 /**
- * Object validator interface. Implementors of this class can be added to any
- * {@link com.vaadin.data.Validatable} object to verify its value. The
- * <code>Validatable#isValid(Object)</code> iterates all registered
- * <code>Validator</code>s, calling their {@link #validate(Object)} methods.
- * <code>validate(Object)</code> should throw the
- * {@link Validator.InvalidValueException} if the given value is not valid by
- * its standards.
- * 
- * Validators should not have side effects on other objects as they can be
- * called from Paintable.paint().
+ * Interface that implements a method for validating if an {@link Object} is
+ * valid or not.
+ * <p>
+ * Implementors of this class can be added to any
+ * {@link com.vaadin.data.Validatable Validatable} implementor to verify its
+ * value.
+ * </p>
+ * <p>
+ * {@link #isValid(Object)} and {@link #validate(Object)} can be used to check
+ * if a value is valid. {@link #isValid(Object)} and {@link #validate(Object)}
+ * must use the same validation logic so that iff {@link #isValid(Object)}
+ * returns false, {@link #validate(Object)} throws an
+ * {@link InvalidValueException}.
+ * </p>
+ * <p>
+ * Validators must not have any side effects.
+ * </p>
  * 
  * @author IT Mill Ltd.
  * @version
@@ -30,29 +37,31 @@ import com.vaadin.terminal.PaintTarget;
 public interface Validator extends Serializable {
 
     /**
-     * Checks the given value against this validator. If the value is valid this
-     * method should do nothing, and if it's not valid, it should throw
-     * <code>Validator.InvalidValueException</code>
+     * Checks the given value against this validator. If the value is valid the
+     * method does nothing. If the value is invalid, an
+     * {@link InvalidValueException} is thrown.
      * 
      * @param value
      *            the value to check
      * @throws Validator.InvalidValueException
-     *             if the value is not valid
+     *             if the value is invalid
      */
     public void validate(Object value) throws Validator.InvalidValueException;
 
     /**
-     * Tests if the given value is valid.
+     * Tests if the given value is valid. This method must be symmetric with
+     * {@link #validate(Object)} so that {@link #validate(Object)} throws an
+     * error iff this method returns false.
      * 
      * @param value
      *            the value to check
-     * @return <code>true</code> for valid value, otherwise <code>false</code>.
+     * @return <code>true</code> if the value is valid, <code>false</code>
+     *         otherwise.
      */
     public boolean isValid(Object value);
 
     /**
-     * Invalid value exception can be thrown by {@link Validator} when a given
-     * value is not valid.
+     * Exception that is thrown by a {@link Validator} when a value is invalid.
      * 
      * @author IT Mill Ltd.
      * @version
@@ -63,12 +72,15 @@ public interface Validator extends Serializable {
     public class InvalidValueException extends RuntimeException implements
             ErrorMessage {
 
-        /** Array of validation errors that are causing the problem. */
+        /**
+         * Array of one or more validation errors that are causing this
+         * validation error.
+         */
         private InvalidValueException[] causes = null;
 
         /**
-         * Constructs a new <code>InvalidValueException</code> with the
-         * specified detail message.
+         * Constructs a new {@code InvalidValueException} with the specified
+         * message.
          * 
          * @param message
          *            The detail message of the problem.
@@ -78,16 +90,15 @@ public interface Validator extends Serializable {
         }
 
         /**
-         * Constructs a new <code>InvalidValueException</code> with a set of
-         * causing validation exceptions. The error message contains first the
-         * given message and then a list of validation errors in the given
-         * validatables.
+         * Constructs a new {@code InvalidValueException} with a set of causing
+         * validation exceptions. The causing validation exceptions are included
+         * when the exception is painted to the client.
          * 
          * @param message
          *            The detail message of the problem.
          * @param causes
-         *            Array of validatables whos invalidities are possiblity
-         *            causing the invalidity.
+         *            One or more {@code InvalidValueException}s that caused
+         *            this exception.
          */
         public InvalidValueException(String message,
                 InvalidValueException[] causes) {
@@ -101,9 +112,12 @@ public interface Validator extends Serializable {
         }
 
         /**
-         * See if the error message doesn't paint anything visible.
+         * Check if the error message should be hidden.
          * 
-         * @return True iff the paint method does not paint anything visible.
+         * An empty (null or "") message is invisible unless it contains nested
+         * exceptions that are visible.
+         * 
+         * @return true if the error message should be hidden, false otherwise
          */
         public boolean isInvisible() {
             String msg = getMessage();
@@ -120,10 +134,21 @@ public interface Validator extends Serializable {
             return true;
         }
 
+        /*
+         * (non-Javadoc)
+         * 
+         * @see com.vaadin.terminal.ErrorMessage#getErrorLevel()
+         */
         public final int getErrorLevel() {
             return ErrorMessage.ERROR;
         }
 
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * com.vaadin.terminal.Paintable#paint(com.vaadin.terminal.PaintTarget)
+         */
         public void paint(PaintTarget target) throws PaintException {
             target.startTag("error");
             target.addAttribute("level", "error");
@@ -142,33 +167,73 @@ public interface Validator extends Serializable {
             target.endTag("error");
         }
 
-        /* Documented in super interface */
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * com.vaadin.terminal.ErrorMessage#addListener(com.vaadin.terminal.
+         * Paintable.RepaintRequestListener)
+         */
         public void addListener(RepaintRequestListener listener) {
         }
 
-        /* Documented in super interface */
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * com.vaadin.terminal.ErrorMessage#removeListener(com.vaadin.terminal
+         * .Paintable.RepaintRequestListener)
+         */
         public void removeListener(RepaintRequestListener listener) {
         }
 
-        /* Documented in super interface */
+        /*
+         * (non-Javadoc)
+         * 
+         * @see com.vaadin.terminal.ErrorMessage#requestRepaint()
+         */
         public void requestRepaint() {
         }
 
-        /* Documented in super interface */
+        /*
+         * (non-Javadoc)
+         * 
+         * @see com.vaadin.terminal.Paintable#requestRepaintRequests()
+         */
         public void requestRepaintRequests() {
         }
 
+        /*
+         * (non-Javadoc)
+         * 
+         * @see com.vaadin.terminal.Paintable#getDebugId()
+         */
         public String getDebugId() {
             return null;
         }
 
+        /*
+         * (non-Javadoc)
+         * 
+         * @see com.vaadin.terminal.Paintable#setDebugId(java.lang.String)
+         */
         public void setDebugId(String id) {
             throw new UnsupportedOperationException(
-                    "Setting testing id for this Paintable is not implemented");
+                    "InvalidValueException cannot have a debug id");
         }
 
     }
 
+    /**
+     * A specific type of {@link InvalidValueException} that indicates that
+     * validation failed because the value was empty. What empty means is up to
+     * the thrower.
+     * 
+     * @author IT Mill Ltd.
+     * @version
+     * @VERSION@
+     * @since 5.3.0
+     */
     @SuppressWarnings("serial")
     public class EmptyValueException extends Validator.InvalidValueException {
 
