@@ -5,34 +5,23 @@
 
 <body bgcolor="white">
 
-<p>This package is the base of Vaadin. The base package 
-contains the Application class, the starting point of any aplication that uses Vaadin.
-The sub-packages from this point contain application components and utilities.
-</p>
+<p>The Vaadin base package. Contains the Application class, the
+starting point of any application that uses Vaadin.</p>
 
-<h2>Package Specification</h2>
+<p>Contains all Vaadin core classes. A Vaadin application is based
+on the {@link com.vaadin.Application} class and deployed as a servlet
+using {@link com.vaadin.terminal.gwt.server.ApplicationServlet} or
+{@link com.vaadin.terminal.gwt.server.GAEApplicationServlet} (for Google
+App Engine).</p>
 
-	<b>Vaadin is composed of the following packages:</b>
-	<dl>
-		<dt>com.vaadin.data</dt>
-		 <dd>A library of interfaces for transparently binding UI components to datasources.</dd>
-		<dt>com.vaadin.data.util</dt>
-		 <dd>Basic implementations of data-intfaces and utidtties for working with data-bound components.</dd>
-		<dt>com.vaadin.data.validator</dt>
-		 <dd>Classes providing data-validation for Properties.</dd>
-		<dt>com.vaadin.event</dt>
-		 <dd>Interfaces defining how to send and recieve events.</dd>
-		<dt>com.vaadin.service</dt>
-		 <dd>Classes provding miscelaneous utidtty services.</dd>
-		<dt>com.vaadin.terminal</dt>
-		 <dd>Classes and interfaces for implementing the terminal specific adapters.</dd>
-		<dt>com.vaadin.terminal.web</dt>
-		 <dd>Classes that implement support both for AJAX-based and more limited web browsers.</dd>
-		<dt>com.vaadin.ui</dt>
-		 <dd>UI components.</dd>
-	</dl>
+<p>Vaadin applications can also be deployed as portlets using {@link
+com.vaadin.terminal.gwt.server.ApplicationPortlet] (JSR-168) or {@link
+com.vaadin.terminal.gwt.server.ApplicationPortlet2} (JSR-286).</p>
 
-<!-- Put @see and @since tags down here. -->
+<p>All classes in Vaadin are serializable unless otherwise noted.
+This allows Vaadin applications to run in cluster and cloud
+environments.</p>
+
 
 </body>
 </html>
