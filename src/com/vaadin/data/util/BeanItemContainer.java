@@ -5,7 +5,7 @@ package com.vaadin.data.util;
 
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,13 +28,29 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.Property.ValueChangeNotifier;
 
 /**
- * An {@link ArrayList} backed container for {@link BeanItem}s.
+ * An in-memory container for JavaBeans.
+ * 
  * <p>
- * Bean objects act as identifiers. For this reason, they should implement
- * Object.equals(Object) and Object.hashCode().
+ * The properties of the container are determined automatically by introspecting
+ * the used JavaBean class. Only beans of the same type can be added to the
+ * container.
+ * </p>
+ * 
+ * <p>
+ * BeanItemContainer uses the beans themselves as identifiers. For this reason,
+ * they should implement {@link Object#equals(Object)} and
+ * {@link Object#hashCode()}. The {@link Object#equals(Object)} implementation
+ * should be stable and not depend on the contents of the bean as this may cause
+ * problems when the bean is updated.
+ * </p>
+ * 
+ * <p>
+ * It is not possible to add additional properties to the container and nested
+ * bean properties are not supported.
  * </p>
  * 
  * @param <BT>
+ *            The type of the Bean
  * 
  * @since 5.4
  */
@@ -55,17 +71,32 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     private ListSet<BT> allItems = new ListSet<BT>();
 
     /**
-     * Maps all pojos (item ids) in the container (including filtered) to their
-     * corresponding BeanItem.
+     * Maps all beans (item ids) in the container (including filtered) to their
+     * corresponding BeanItem. This requires the beans to implement
+     * {@link Object#equals(Object)} and {@link Object#hashCode()} so it is not
+     * affected by the contents of the bean.
      */
     private final Map<BT, BeanItem<BT>> beanToItem = new HashMap<BT, BeanItem<BT>>();
 
-    // internal data model to obtain property IDs etc.
+    /**
+     * The type of the beans in the container.
+     */
     private final Class<? extends BT> type;
+
+    /**
+     * A description of the properties found in beans of type {@link #type}.
+     * Determines the property ids that are present in the container.
+     */
     private transient LinkedHashMap<String, PropertyDescriptor> model;
 
+    /**
+     * Collection of listeners interested in {@link ItemSetChangeEvent} events.
+     */
     private List<ItemSetChangeListener> itemSetChangeListeners;
 
+    /**
+     * Filters currently applied to the container.
+     */
     private Set<Filter> filters = new HashSet<Filter>();
 
     /**
@@ -73,7 +104,10 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
      */
     private ItemSorter itemSorter = new DefaultItemSorter();
 
-    /* Special serialization to handle method references */
+    /**
+     * A special deserialization method that resolves {@link #model} is needed
+     * as PropertyDescriptor is not {@link Serializable}.
+     */
     private void readObject(java.io.ObjectInputStream in) throws IOException,
             ClassNotFoundException {
         in.defaultReadObject();
@@ -81,12 +115,12 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     }
 
     /**
-     * Constructs BeanItemContainer for beans of a given type.
+     * Constructs a {@code BeanItemContainer} for beans of the given type.
      * 
      * @param type
-     *            the class of beans to be used with this containers.
+     *            the type of the beans that will be added to the container.
      * @throws IllegalArgumentException
-     *             If the type is null
+     *             If {@code type} is null
      */
     public BeanItemContainer(Class<? extends BT> type) {
         if (type == null) {
@@ -98,11 +132,13 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     }
 
     /**
-     * Constructs BeanItemContainer with given collection of beans in it. The
-     * collection must not be empty or an IllegalArgument is thrown.
+     * Constructs a {@code BeanItemContainer} and adds the given beans to it.
+     * The collection must not be empty.
+     * {@link BeanItemContainer#BeanItemContainer(Class)} can be used for
+     * creating an initially empty {@code BeanItemContainer}.
      * 
      * @param collection
-     *            non empty {@link Collection} of beans.
+     *            a non empty {@link Collection} of beans.
      * @throws IllegalArgumentException
      *             If the collection is null or empty.
      */
@@ -119,6 +155,13 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         addAll(collection);
     }
 
+    /**
+     * Adds all the beans in {@code collection} in one go. More efficient than
+     * adding them one by one.
+     * 
+     * @param collection
+     *            The collection of beans to add. Must not be null.
+     */
     private void addAll(Collection<BT> collection) {
         // Pre-allocate space for the collection
         allItems.ensureCapacity(allItems.size() + collection.size());
@@ -135,20 +178,23 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     }
 
     /**
-     * Unsupported operation.
-     * 
-     * @see com.vaadin.data.Container.Indexed#addItemAt(int)
+     * Unsupported operation. Beans should be added through
+     * {@link #addItemAt(int, Object)}.
      */
     public Object addItemAt(int index) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
     /**
-     * Adds new item at given index.
+     * Adds a new bean at the given index.
      * 
      * The bean is used both as the item contents and as the item identifier.
      * 
-     * @see com.vaadin.data.Container.Indexed#addItemAt(int, Object)
+     * @param index
+     *            Index at which the bean should be added.
+     * @param newItemId
+     *            The bean to add to the container.
+     * @return Returns the new BeanItem or null if the operation fails.
      */
     public BeanItem<BT> addItemAt(int index, Object newItemId)
             throws UnsupportedOperationException {
@@ -164,7 +210,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     }
 
     /**
-     * Adds new item at given index of the internal (unfiltered) list.
+     * Adds a bean at the given index of the internal (unfiltered) list.
      * <p>
      * The item is also added in the visible part of the list if it passes the
      * filters.
@@ -188,8 +234,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     /**
      * Adds the bean to all internal data structures at the given position.
      * Fails if the bean is already in the container or is not assignable to the
-     * correct type. Returns the new BeanItem if the bean was added
-     * successfully.
+     * correct type. Returns a new BeanItem if the bean was added successfully.
      * 
      * <p>
      * Caller should call {@link #filterAll()} after calling this method to
@@ -229,19 +274,26 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         return beanItem;
     }
 
-    @SuppressWarnings("unchecked")
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.Container.Indexed#getIdByIndex(int)
+     */
     public BT getIdByIndex(int index) {
         return filteredItems.get(index);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.Container.Indexed#indexOfId(java.lang.Object)
+     */
     public int indexOfId(Object itemId) {
         return filteredItems.indexOf(itemId);
     }
 
     /**
-     * Unsupported operation.
-     * 
-     * @see com.vaadin.data.Container.Ordered#addItemAfter(Object)
+     * Unsupported operation. Use {@link #addItemAfter(Object, Object)}.
      */
     public Object addItemAfter(Object previousItemId)
             throws UnsupportedOperationException {
@@ -249,7 +301,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     }
 
     /**
-     * Adds new item after the given item.
+     * Adds the bean after the given bean.
      * 
      * The bean is used both as the item contents and as the item identifier.
      * 
@@ -268,6 +320,11 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.Container.Ordered#firstItemId()
+     */
     public BT firstItemId() {
         if (size() > 0) {
             return getIdByIndex(0);
@@ -276,14 +333,29 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.Container.Ordered#isFirstId(java.lang.Object)
+     */
     public boolean isFirstId(Object itemId) {
         return firstItemId() == itemId;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.Container.Ordered#isLastId(java.lang.Object)
+     */
     public boolean isLastId(Object itemId) {
         return lastItemId() == itemId;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.Container.Ordered#lastItemId()
+     */
     public BT lastItemId() {
         if (size() > 0) {
             return getIdByIndex(size() - 1);
@@ -292,6 +364,11 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.Container.Ordered#nextItemId(java.lang.Object)
+     */
     public BT nextItemId(Object itemId) {
         int index = indexOfId(itemId);
         if (index >= 0 && index < size() - 1) {
@@ -302,6 +379,11 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.Container.Ordered#prevItemId(java.lang.Object)
+     */
     public BT prevItemId(Object itemId) {
         int index = indexOfId(itemId);
         if (index > 0) {
@@ -312,13 +394,17 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         }
     }
 
+    /**
+     * Unsupported operation. Properties are determined by the introspecting the
+     * bean class.
+     */
     public boolean addContainerProperty(Object propertyId, Class<?> type,
             Object defaultValue) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
     /**
-     * Unsupported operation.
+     * Unsupported operation. Use {@link #addBean(Object)}.
      * 
      * @see com.vaadin.data.Container#addItem()
      */
@@ -327,7 +413,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     }
 
     /**
-     * Creates a new Item with the bean into the Container.
+     * Adds the bean to the Container.
      * 
      * The bean is used both as the item contents and as the item identifier.
      * 
@@ -338,7 +424,7 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     }
 
     /**
-     * Creates a new Item with the bean into the Container.
+     * Adds the bean to the Container.
      * 
      * The bean is used both as the item contents and as the item identifier.
      * 
@@ -355,32 +441,68 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.Container#containsId(java.lang.Object)
+     */
     public boolean containsId(Object itemId) {
         // only look at visible items after filtering
         return filteredItems.contains(itemId);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.Container#getContainerProperty(java.lang.Object,
+     * java.lang.Object)
+     */
     public Property getContainerProperty(Object itemId, Object propertyId) {
         return getItem(itemId).getItemProperty(propertyId);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.Container#getContainerPropertyIds()
+     */
     public Collection<String> getContainerPropertyIds() {
         return model.keySet();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.Container#getItem(java.lang.Object)
+     */
     public BeanItem<BT> getItem(Object itemId) {
         return beanToItem.get(itemId);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.Container#getItemIds()
+     */
     @SuppressWarnings("unchecked")
     public Collection<BT> getItemIds() {
         return (Collection<BT>) filteredItems.clone();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.Container#getType(java.lang.Object)
+     */
     public Class<?> getType(Object propertyId) {
         return model.get(propertyId).getPropertyType();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.Container#removeAllItems()
+     */
     public boolean removeAllItems() throws UnsupportedOperationException {
         allItems.clear();
         filteredItems.clear();
@@ -393,11 +515,20 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         return true;
     }
 
+    /**
+     * Unsupported operation. Properties are determined by the introspecting the
+     * bean class.
+     */
     public boolean removeContainerProperty(Object propertyId)
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.Container#removeItem(java.lang.Object)
+     */
     public boolean removeItem(Object itemId)
             throws UnsupportedOperationException {
         if (!allItems.remove(itemId)) {
@@ -412,6 +543,15 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         return true;
     }
 
+    /**
+     * Make this container listen to the given property provided it notifies
+     * when its value changes.
+     * 
+     * @param beanItem
+     *            The BeanItem that contains the property
+     * @param propertyId
+     *            The id of the property
+     */
     private void addValueChangeListener(BeanItem<BT> beanItem, Object propertyId) {
         Property property = beanItem.getItemProperty(propertyId);
         if (property instanceof ValueChangeNotifier) {
@@ -423,6 +563,14 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         }
     }
 
+    /**
+     * Remove this container as a listener for the given property.
+     * 
+     * @param item
+     *            The BeanItem that contains the property
+     * @param propertyId
+     *            The id of the property
+     */
     private void removeValueChangeListener(BeanItem<BT> item, Object propertyId) {
         Property property = item.getItemProperty(propertyId);
         if (property instanceof ValueChangeNotifier) {
@@ -430,16 +578,33 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         }
     }
 
+    /**
+     * Remove this contains as a listener for all the properties in the given
+     * BeanItem.
+     * 
+     * @param item
+     *            The BeanItem that contains the properties
+     */
     private void removeAllValueChangeListeners(BeanItem<BT> item) {
         for (Object propertyId : item.getItemPropertyIds()) {
             removeValueChangeListener(item, propertyId);
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.Container#size()
+     */
     public int size() {
         return filteredItems.size();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.Container.Sortable#getSortableContainerPropertyIds()
+     */
     public Collection<Object> getSortableContainerPropertyIds() {
         LinkedList<Object> sortables = new LinkedList<Object>();
         for (Object propertyId : getContainerPropertyIds()) {
@@ -479,6 +644,13 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         Collections.sort(allItems, getItemSorter());
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.data.Container.ItemSetChangeNotifier#addListener(com.vaadin
+     * .data.Container.ItemSetChangeListener)
+     */
     public void addListener(ItemSetChangeListener listener) {
         if (itemSetChangeListeners == null) {
             itemSetChangeListeners = new LinkedList<ItemSetChangeListener>();
@@ -486,12 +658,22 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         itemSetChangeListeners.add(listener);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.data.Container.ItemSetChangeNotifier#removeListener(com.vaadin
+     * .data.Container.ItemSetChangeListener)
+     */
     public void removeListener(ItemSetChangeListener listener) {
         if (itemSetChangeListeners != null) {
             itemSetChangeListeners.remove(listener);
         }
     }
 
+    /**
+     * Send an ItemSetChange event to all listeners.
+     */
     private void fireItemSetChange() {
         if (itemSetChangeListeners != null) {
             final Container.ItemSetChangeEvent event = new Container.ItemSetChangeEvent() {
@@ -505,6 +687,13 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.data.Container.Filterable#addContainerFilter(java.lang.Object,
+     * java.lang.String, boolean, boolean)
+     */
     public void addContainerFilter(Object propertyId, String filterString,
             boolean ignoreCase, boolean onlyMatchPrefix) {
         if (filters.isEmpty()) {
@@ -542,6 +731,13 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         }
     }
 
+    /**
+     * Remove (from the filtered list) any items that do not match the given
+     * filter.
+     * 
+     * @param f
+     *            The filter used to determine if items should be removed
+     */
     protected void filter(Filter f) {
         Iterator<BT> iterator = filteredItems.iterator();
         while (iterator.hasNext()) {
@@ -552,6 +748,11 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.Container.Filterable#removeAllContainerFilters()
+     */
     public void removeAllContainerFilters() {
         if (!filters.isEmpty()) {
             filters = new HashSet<Filter>();
@@ -563,6 +764,13 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.data.Container.Filterable#removeContainerFilters(java.lang
+     * .Object)
+     */
     public void removeContainerFilters(Object propertyId) {
         if (!filters.isEmpty()) {
             for (Iterator<Filter> iterator = filters.iterator(); iterator
@@ -580,15 +788,37 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.data.Property.ValueChangeListener#valueChange(com.vaadin.data
+     * .Property.ValueChangeEvent)
+     */
     public void valueChange(ValueChangeEvent event) {
         // if a property that is used in a filter is changed, refresh filtering
         filterAll();
     }
 
+    /**
+     * Returns the ItemSorter that is used for sorting the container.
+     * 
+     * @see #setItemSorter(ItemSorter)
+     * 
+     * @return The ItemSorter that is used for sorting the container
+     */
     public ItemSorter getItemSorter() {
         return itemSorter;
     }
 
+    /**
+     * Sets the ItemSorter that is used for sorting the container. The
+     * {@link ItemSorter#compare(Object, Object)} method is called to compare
+     * two beans (item ids).
+     * 
+     * @param itemSorter
+     *            The ItemSorter to use when sorting the container
+     */
     public void setItemSorter(ItemSorter itemSorter) {
         this.itemSorter = itemSorter;
     }
