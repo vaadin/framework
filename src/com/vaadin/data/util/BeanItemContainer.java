@@ -37,11 +37,13 @@ import com.vaadin.data.Property.ValueChangeNotifier;
  * </p>
  * 
  * <p>
- * BeanItemContainer uses the beans themselves as identifiers. For this reason,
- * they should implement {@link Object#equals(Object)} and
- * {@link Object#hashCode()}. The {@link Object#equals(Object)} implementation
- * should be stable and not depend on the contents of the bean as this may cause
- * problems when the bean is updated.
+ * BeanItemContainer uses the beans themselves as identifiers. The
+ * {@link Object#hashCode()} of a bean is used when storing and looking up beans
+ * so it must not change during the lifetime of the bean. Typically this
+ * restricts the implementation of {@link Object#equals(Object)} as well so it
+ * does not depend on the contents of the bean. This is not strictly needed but
+ * the contract between {@code equals()} and {@code hashCode()} must be
+ * fulfilled.
  * </p>
  * 
  * <p>
