@@ -621,6 +621,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     // selected value has changed on the server-side. See #2119
     private boolean popupOpenerClicked;
     private String width = null;
+    private String initialMeasuredWidth = null;
     private int textboxPadding = -1;
     private int componentPadding = -1;
     private int suggestionPopupMinWidth = 0;
@@ -1143,7 +1144,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     }
 
     private void updateRootWidth() {
-        if (width == null) {
+        if (width == null && initialMeasuredWidth == null) {
             /*
              * When the width is not specified we must specify width for root
              * div so the popupopener won't wrap to the next line and also so
@@ -1171,6 +1172,10 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             // Freeze the initial width, so that it won't change even if the
             // icon size changes
             width = w + "px";
+            initialMeasuredWidth = width;
+
+        } else if (initialMeasuredWidth != null) {
+            width = initialMeasuredWidth;
 
         } else {
             /*
