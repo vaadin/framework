@@ -762,6 +762,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         lastNewItemString = null;
 
         currentSuggestions.clear();
+        currentSuggestion = null;
         final UIDL options = uidl.getChildUIDL(0);
         totalMatches = uidl.getIntAttribute("totalMatches");
 
