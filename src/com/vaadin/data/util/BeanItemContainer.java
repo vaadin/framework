@@ -91,7 +91,8 @@ public class BeanItemContainer<BT> implements Indexed, Sortable, Filterable,
     private transient LinkedHashMap<String, PropertyDescriptor> model;
 
     /**
-     * Collection of listeners interested in {@link ItemSetChangeEvent} events.
+     * Collection of listeners interested in
+     * {@link Container.ItemSetChangeEvent ItemSetChangeEvent} events.
      */
     private List<ItemSetChangeListener> itemSetChangeListeners;
 
