@@ -1157,10 +1157,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                     - Util.measureMarginLeft(selectedItemIcon.getElement()) : 0;
 
             int w = tbWidth + openerWidth + iconWidth;
-            if (suggestionPopupMinWidth > w) {
-                setTextboxWidth(suggestionPopupMinWidth);
-                w = suggestionPopupMinWidth;
-            } else {
+            if (suggestionPopupMinWidth <= w) {
                 /*
                  * Firefox3 has its own way of doing rendering so we need to
                  * specify the width for the TextField to make sure it actually
