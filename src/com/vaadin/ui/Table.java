@@ -889,7 +889,7 @@ public class Table extends AbstractSelect implements Action.Container,
             final int index = getCurrentPageFirstItemIndex();
             Object id = null;
             if (index >= 0 && index < size()) {
-                id = ((Container.Indexed) items).getIdByIndex(index);
+                id = getIdByIndex(index);
             }
             if (id != null && !id.equals(currentPageFirstItemId)) {
                 currentPageFirstItemId = id;
@@ -898,10 +898,14 @@ public class Table extends AbstractSelect implements Action.Container,
 
         // If there is no item id at all, use the first one
         if (currentPageFirstItemId == null) {
-            currentPageFirstItemId = ((Container.Ordered) items).firstItemId();
+            currentPageFirstItemId = firstItemId();
         }
 
         return currentPageFirstItemId;
+    }
+
+    protected Object getIdByIndex(int index) {
+        return ((Container.Indexed) items).getIdByIndex(index);
     }
 
     /**
@@ -915,15 +919,14 @@ public class Table extends AbstractSelect implements Action.Container,
         // Gets the corresponding index
         int index = -1;
         if (items instanceof Container.Indexed) {
-            index = ((Container.Indexed) items)
-                    .indexOfId(currentPageFirstItemId);
+            index = indexOfId(currentPageFirstItemId);
         } else {
             // If the table item container does not have index, we have to
             // calculates the index by hand
-            Object id = ((Container.Ordered) items).firstItemId();
+            Object id = firstItemId();
             while (id != null && !id.equals(currentPageFirstItemId)) {
                 index++;
-                id = ((Container.Ordered) items).nextItemId(id);
+                id = nextItemId(id);
             }
             if (id == null) {
                 index = -1;
@@ -955,6 +958,10 @@ public class Table extends AbstractSelect implements Action.Container,
         resetPageBuffer();
         refreshRenderedCells();
 
+    }
+
+    protected int indexOfId(Object itemId) {
+        return ((Container.Indexed) items).indexOfId(itemId);
     }
 
     /**
@@ -1241,8 +1248,7 @@ public class Table extends AbstractSelect implements Action.Container,
         // Refresh first item id
         if (items instanceof Container.Indexed) {
             try {
-                currentPageFirstItemId = ((Container.Indexed) items)
-                        .getIdByIndex(newIndex);
+                currentPageFirstItemId = getIdByIndex(newIndex);
             } catch (final IndexOutOfBoundsException e) {
                 currentPageFirstItemId = null;
             }
@@ -1253,48 +1259,42 @@ public class Table extends AbstractSelect implements Action.Container,
             // container forwards / backwards
             // next available item forward or backward
 
-            currentPageFirstItemId = ((Container.Ordered) items).firstItemId();
+            currentPageFirstItemId = firstItemId();
 
             // Go forwards in the middle of the list (respect borders)
             while (currentPageFirstItemIndex < newIndex
-                    && !((Container.Ordered) items)
-                            .isLastId(currentPageFirstItemId)) {
+                    && !isLastId(currentPageFirstItemId)) {
                 currentPageFirstItemIndex++;
-                currentPageFirstItemId = ((Container.Ordered) items)
-                        .nextItemId(currentPageFirstItemId);
+                currentPageFirstItemId = nextItemId(currentPageFirstItemId);
             }
 
             // If we did hit the border
-            if (((Container.Ordered) items).isLastId(currentPageFirstItemId)) {
+            if (isLastId(currentPageFirstItemId)) {
                 currentPageFirstItemIndex = size - 1;
             }
 
             // Go backwards in the middle of the list (respect borders)
             while (currentPageFirstItemIndex > newIndex
-                    && !((Container.Ordered) items)
-                            .isFirstId(currentPageFirstItemId)) {
+                    && !isFirstId(currentPageFirstItemId)) {
                 currentPageFirstItemIndex--;
-                currentPageFirstItemId = ((Container.Ordered) items)
-                        .prevItemId(currentPageFirstItemId);
+                currentPageFirstItemId = prevItemId(currentPageFirstItemId);
             }
 
             // If we did hit the border
-            if (((Container.Ordered) items).isFirstId(currentPageFirstItemId)) {
+            if (isFirstId(currentPageFirstItemId)) {
                 currentPageFirstItemIndex = 0;
             }
 
             // Go forwards once more
             while (currentPageFirstItemIndex < newIndex
-                    && !((Container.Ordered) items)
-                            .isLastId(currentPageFirstItemId)) {
+                    && !isLastId(currentPageFirstItemId)) {
                 currentPageFirstItemIndex++;
-                currentPageFirstItemId = ((Container.Ordered) items)
-                        .nextItemId(currentPageFirstItemId);
+                currentPageFirstItemId = nextItemId(currentPageFirstItemId);
             }
 
             // If for some reason we do hit border again, override
             // the user index request
-            if (((Container.Ordered) items).isLastId(currentPageFirstItemId)) {
+            if (isLastId(currentPageFirstItemId)) {
                 newIndex = currentPageFirstItemIndex = size - 1;
             }
         }
@@ -1398,7 +1398,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Refreshes rendered rows
      */
-    private void refreshRenderedCells() {
+    protected void refreshRenderedCells() {
         if (getParent() == null) {
             return;
         }
@@ -1459,11 +1459,11 @@ public class Table extends AbstractSelect implements Action.Container,
 
             // Gets the first item id
             if (items instanceof Container.Indexed) {
-                id = ((Container.Indexed) items).getIdByIndex(firstIndex);
+                id = getIdByIndex(firstIndex);
             } else {
-                id = ((Container.Ordered) items).firstItemId();
+                id = firstItemId();
                 for (int i = 0; i < firstIndex; i++) {
-                    id = ((Container.Ordered) items).nextItemId(id);
+                    id = nextItemId(id);
                 }
             }
 
@@ -1571,15 +1571,14 @@ public class Table extends AbstractSelect implements Action.Container,
 
                 // Gets the next item id
                 if (items instanceof Container.Indexed) {
-                    Container.Indexed indexed = (Container.Indexed) items;
                     int index = firstIndex + i + 1;
-                    if (index < indexed.size()) {
-                        id = indexed.getIdByIndex(index);
+                    if (index < totalRows) {
+                        id = getIdByIndex(index);
                     } else {
                         id = null;
                     }
                 } else {
-                    id = ((Container.Ordered) items).nextItemId(id);
+                    id = nextItemId(id);
                 }
 
                 filledRows++;
@@ -2332,8 +2331,8 @@ public class Table extends AbstractSelect implements Action.Container,
             start = 0;
         }
 
-        for (int i = start; i < end; i++) {
-            final Object itemId = cells[CELL_ITEMID][i];
+        for (int indexInRowbuffer = start; indexInRowbuffer < end; indexInRowbuffer++) {
+            final Object itemId = cells[CELL_ITEMID][indexInRowbuffer];
 
             if (!isNullSelectionAllowed() && getNullSelectionItemId() != null
                     && itemId == getNullSelectionItemId()) {
@@ -2341,93 +2340,8 @@ public class Table extends AbstractSelect implements Action.Container,
                 continue;
             }
 
-            target.startTag("tr");
-
-            // tr attributes
-            if (rowheads) {
-                if (cells[CELL_ICON][i] != null) {
-                    target.addAttribute("icon", (Resource) cells[CELL_ICON][i]);
-                }
-                if (cells[CELL_HEADER][i] != null) {
-                    target.addAttribute("caption",
-                            (String) cells[CELL_HEADER][i]);
-                }
-            }
-            target.addAttribute("key", Integer.parseInt(cells[CELL_KEY][i]
-                    .toString()));
-
-            if (isSelected(itemId)) {
-                target.addAttribute("selected", true);
-            }
-
-            // Actions
-            if (actionHandlers != null) {
-                final ArrayList<String> keys = new ArrayList<String>();
-                for (final Iterator<Handler> ahi = actionHandlers.iterator(); ahi
-                        .hasNext();) {
-                    final Action[] aa = (ahi.next()).getActions(itemId, this);
-                    if (aa != null) {
-                        for (int ai = 0; ai < aa.length; ai++) {
-                            final String key = actionMapper.key(aa[ai]);
-                            actionSet.add(aa[ai]);
-                            keys.add(key);
-                        }
-                    }
-                }
-                target.addAttribute("al", keys.toArray());
-            }
-
-            /*
-             * For each row, if a cellStyleGenerator is specified, get the
-             * specific style for the cell, using null as propertyId. If there
-             * is any, add it to the target.
-             */
-            if (cellStyleGenerator != null) {
-                String rowStyle = cellStyleGenerator.getStyle(itemId, null);
-                if (rowStyle != null && !rowStyle.equals("")) {
-                    target.addAttribute("rowstyle", rowStyle);
-                }
-            }
-
-            // cells
-            int currentColumn = 0;
-            for (final Iterator<Object> it = visibleColumns.iterator(); it
-                    .hasNext(); currentColumn++) {
-                final Object columnId = it.next();
-                if (columnId == null || isColumnCollapsed(columnId)) {
-                    continue;
-                }
-                /*
-                 * For each cell, if a cellStyleGenerator is specified, get the
-                 * specific style for the cell. If there is any, add it to the
-                 * target.
-                 */
-                if (cellStyleGenerator != null) {
-                    String cellStyle = cellStyleGenerator.getStyle(itemId,
-                            columnId);
-                    if (cellStyle != null && !cellStyle.equals("")) {
-                        target.addAttribute("style-"
-                                + columnIdMap.key(columnId), cellStyle);
-                    }
-                }
-                if ((iscomponent[currentColumn] || iseditable)
-                        && Component.class.isInstance(cells[CELL_FIRSTCOL
-                                + currentColumn][i])) {
-                    final Component c = (Component) cells[CELL_FIRSTCOL
-                            + currentColumn][i];
-                    if (c == null) {
-                        target.addText("");
-                    } else {
-                        c.paint(target);
-                    }
-                } else {
-                    target
-                            .addText((String) cells[CELL_FIRSTCOL
-                                    + currentColumn][i]);
-                }
-            }
-
-            target.endTag("tr");
+            paintRow(target, rowheads, cells, iseditable, actionSet,
+                    iscomponent, indexInRowbuffer, itemId);
         }
         target.endTag("rows");
 
@@ -2550,6 +2464,120 @@ public class Table extends AbstractSelect implements Action.Container,
         if (dropHandler != null) {
             dropHandler.getAcceptCriterion().paint(target);
         }
+    }
+
+    private void paintRow(PaintTarget target, final boolean rowheads,
+            final Object[][] cells, final boolean iseditable,
+            final Set<Action> actionSet, final boolean[] iscomponent,
+            int indexInRowbuffer, final Object itemId) throws PaintException {
+        target.startTag("tr");
+
+        renderRowAttributes(target, rowheads, cells, actionSet,
+                indexInRowbuffer, itemId);
+
+        // cells
+        int currentColumn = 0;
+        for (final Iterator<Object> it = visibleColumns.iterator(); it
+                .hasNext(); currentColumn++) {
+            final Object columnId = it.next();
+            if (columnId == null || isColumnCollapsed(columnId)) {
+                continue;
+            }
+            /*
+             * For each cell, if a cellStyleGenerator is specified, get the
+             * specific style for the cell. If there is any, add it to the
+             * target.
+             */
+            if (cellStyleGenerator != null) {
+                String cellStyle = cellStyleGenerator
+                        .getStyle(itemId, columnId);
+                if (cellStyle != null && !cellStyle.equals("")) {
+                    target.addAttribute("style-" + columnIdMap.key(columnId),
+                            cellStyle);
+                }
+            }
+            if ((iscomponent[currentColumn] || iseditable)
+                    && Component.class.isInstance(cells[CELL_FIRSTCOL
+                            + currentColumn][indexInRowbuffer])) {
+                final Component c = (Component) cells[CELL_FIRSTCOL
+                        + currentColumn][indexInRowbuffer];
+                if (c == null) {
+                    target.addText("");
+                } else {
+                    c.paint(target);
+                }
+            } else {
+                target
+                        .addText((String) cells[CELL_FIRSTCOL + currentColumn][indexInRowbuffer]);
+            }
+        }
+
+        target.endTag("tr");
+    }
+
+    private void renderRowAttributes(PaintTarget target,
+            final boolean rowheads, final Object[][] cells,
+            final Set<Action> actionSet, int indexInRowbuffer,
+            final Object itemId) throws PaintException {
+        // tr attributes
+        if (rowheads) {
+            if (cells[CELL_ICON][indexInRowbuffer] != null) {
+                target.addAttribute("icon",
+                        (Resource) cells[CELL_ICON][indexInRowbuffer]);
+            }
+            if (cells[CELL_HEADER][indexInRowbuffer] != null) {
+                target.addAttribute("caption",
+                        (String) cells[CELL_HEADER][indexInRowbuffer]);
+            }
+        }
+        target.addAttribute("key", Integer
+                .parseInt(cells[CELL_KEY][indexInRowbuffer].toString()));
+
+        if (isSelected(itemId)) {
+            target.addAttribute("selected", true);
+        }
+
+        // Actions
+        if (actionHandlers != null) {
+            final ArrayList<String> keys = new ArrayList<String>();
+            for (final Iterator<Handler> ahi = actionHandlers.iterator(); ahi
+                    .hasNext();) {
+                final Action[] aa = (ahi.next()).getActions(itemId, this);
+                if (aa != null) {
+                    for (int ai = 0; ai < aa.length; ai++) {
+                        final String key = actionMapper.key(aa[ai]);
+                        actionSet.add(aa[ai]);
+                        keys.add(key);
+                    }
+                }
+            }
+            target.addAttribute("al", keys.toArray());
+        }
+
+        /*
+         * For each row, if a cellStyleGenerator is specified, get the specific
+         * style for the cell, using null as propertyId. If there is any, add it
+         * to the target.
+         */
+        if (cellStyleGenerator != null) {
+            String rowStyle = cellStyleGenerator.getStyle(itemId, null);
+            if (rowStyle != null && !rowStyle.equals("")) {
+                target.addAttribute("rowstyle", rowStyle);
+            }
+        }
+        renderRowAttributes(target, itemId);
+    }
+
+    /**
+     * A method where extended Table implementations may add their custom
+     * attributes for rows.
+     * 
+     * @param target
+     * @param itemId
+     */
+    protected void renderRowAttributes(PaintTarget target, Object itemId)
+            throws PaintException {
+
     }
 
     /**
@@ -2690,7 +2718,7 @@ public class Table extends AbstractSelect implements Action.Container,
         requestRepaint();
     }
 
-    private void resetPageBuffer() {
+    protected void resetPageBuffer() {
         firstToBeRenderedInClient = -1;
         lastToBeRenderedInClient = -1;
         reqFirstRowToPaint = -1;
@@ -2753,8 +2781,7 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     @Override
     public boolean removeItem(Object itemId) {
-        final Object nextItemId = ((Container.Ordered) items)
-                .nextItemId(itemId);
+        final Object nextItemId = nextItemId(itemId);
         final boolean ret = super.removeItem(itemId);
         if (ret && (itemId != null) && (itemId.equals(currentPageFirstItemId))) {
             currentPageFirstItemId = nextItemId;

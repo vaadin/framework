@@ -131,8 +131,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
     private String[] columnOrder;
 
-    private ApplicationConnection client;
-    private String paintableId;
+    protected ApplicationConnection client;
+    protected String paintableId;
 
     private boolean immediate;
 
@@ -441,7 +441,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     /**
      * Sends the selection to the server
      */
-    private void sendSelectedRows(){
+    private void sendSelectedRows() {
         // Don't send anything if selection has not changed
         if (!selectionChanged) {
             return;
@@ -462,25 +462,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             }
 
             // Send the selected row ranges
-            client
-                    .updateVariable(
-                            paintableId,
-                            "selectedRanges",
-                            ranges
-                                    .toArray(new String[selectedRowRanges
-                                            .size()]),
-                            false);
+            client.updateVariable(paintableId, "selectedRanges", ranges
+                    .toArray(new String[selectedRowRanges.size()]), false);
         }
 
         // Send the selected rows
-        client
-                .updateVariable(
-                        paintableId,
-                        "selected",
-                        selectedRowKeys
-                                .toArray(new String[selectedRowKeys
-                                        .size()]),
-                        immediate);
+        client.updateVariable(paintableId, "selected", selectedRowKeys
+                .toArray(new String[selectedRowKeys.size()]), immediate);
 
     }
 
@@ -754,7 +742,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 scrollBody.removeFromParent();
                 lazyUnregistryBag.add(scrollBody);
             }
-            scrollBody = new VScrollTableBody();
+            scrollBody = createScrollBody();
 
             scrollBody.renderInitialRows(rowData, uidl
                     .getIntAttribute("firstrow"), uidl.getIntAttribute("rows"));
@@ -805,6 +793,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         rendering = false;
         headerChangedDuringUpdate = false;
+    }
+
+    protected VScrollTableBody createScrollBody() {
+        return new VScrollTableBody();
     }
 
     /**
@@ -1078,16 +1070,16 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         VScrollTableRow r = null;
         while (it.hasNext()) {
             r = (VScrollTableRow) it.next();
-            if(r == row){
+            if (r == row) {
                 r = null;
                 while (offset >= 0 && it.hasNext()) {
                     r = (VScrollTableRow) it.next();
                     offset--;
                 }
                 return r;
-            }            
+            }
         }
-        
+
         return null;
     }
 
@@ -2980,9 +2972,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         private char[] aligns;
 
-        VScrollTableBody() {
+        protected VScrollTableBody() {
             constructDOM();
-
             setElement(container);
         }
 
@@ -3022,8 +3013,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             final Iterator<?> it = rowData.getChildIterator();
             aligns = tHead.getColumnAlignments();
             while (it.hasNext()) {
-                final VScrollTableRow row = new VScrollTableRow((UIDL) it
-                        .next(), aligns);
+                final VScrollTableRow row = createRow((UIDL) it.next(), aligns);
                 addRow(row);
             }
             if (isAttached()) {
@@ -3037,7 +3027,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             final Iterator<?> it = rowData.getChildIterator();
             if (firstIndex == lastRendered + 1) {
                 while (it.hasNext()) {
-                    final VScrollTableRow row = createRow((UIDL) it.next());
+                    final VScrollTableRow row = prepareRow((UIDL) it.next());
                     addRow(row);
                     lastRendered++;
                 }
@@ -3047,7 +3037,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 int i = rows;
                 while (it.hasNext()) {
                     i--;
-                    rowArray[i] = createRow((UIDL) it.next());
+                    rowArray[i] = prepareRow((UIDL) it.next());
                 }
                 for (i = 0; i < rows; i++) {
                     addRowBeforeFirstRendered(rowArray[i]);
@@ -3058,7 +3048,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 while (lastRendered + 1 > firstRendered) {
                     unlinkRow(false);
                 }
-                final VScrollTableRow row = createRow((UIDL) it.next());
+                final VScrollTableRow row = prepareRow((UIDL) it.next());
                 firstRendered = firstIndex;
                 lastRendered = firstIndex - 1;
                 addRow(row);
@@ -3066,7 +3056,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 setContainerHeight();
                 fixSpacers();
                 while (it.hasNext()) {
-                    addRow(createRow((UIDL) it.next()));
+                    addRow(prepareRow((UIDL) it.next()));
                     lastRendered++;
                 }
                 fixSpacers();
@@ -3112,8 +3102,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          * 
          * @param uidl
          */
-        private VScrollTableRow createRow(UIDL uidl) {
-            final VScrollTableRow row = new VScrollTableRow(uidl, aligns);
+        private VScrollTableRow prepareRow(UIDL uidl) {
+            final VScrollTableRow row = createRow(uidl, aligns);
             final int cells = DOM.getChildCount(row.getElement());
             for (int i = 0; i < cells; i++) {
                 final Element cell = DOM.getChild(row.getElement(), i);
@@ -3126,6 +3116,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 cell.getStyle().setPropertyPx("width", w);
             }
             return row;
+        }
+
+        protected VScrollTableRow createRow(UIDL uidl, char[] aligns2) {
+            return new VScrollTableRow(uidl, aligns);
         }
 
         private void addRowBeforeFirstRendered(VScrollTableRow row) {
@@ -3344,7 +3338,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     // for measuring
                     noCells = true;
                     VScrollTableRow next = (VScrollTableRow) iterator().next();
-                    next.addCell("", ALIGN_LEFT, "", true);
+                    next.addCell(null, "", ALIGN_LEFT, "", true);
                     firstTD = item.getCells().getItem(0);
                 }
                 com.google.gwt.dom.client.Element wrapper = firstTD
@@ -3404,9 +3398,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 Container {
 
             private static final int DRAGMODE_MULTIROW = 2;
-            ArrayList<Widget> childWidgets = new ArrayList<Widget>();
+            protected ArrayList<Widget> childWidgets = new ArrayList<Widget>();
             private boolean selected = false;
-            private final int rowKey;
+            protected final int rowKey;
             private List<UIDL> pendingComponentPaints;
 
             private String[] actionKeys = null;
@@ -3474,8 +3468,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
                 // row header
                 if (showRowHeaders) {
-                    addCell(buildCaptionHtmlSnippet(uidl), aligns[col++], "",
-                            true);
+                    addCell(uidl, buildCaptionHtmlSnippet(uidl), aligns[col++],
+                            "", true);
                 }
 
                 if (uidl.hasAttribute("al")) {
@@ -3495,12 +3489,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     }
 
                     if (cell instanceof String) {
-                        addCell(cell.toString(), aligns[col++], style, false);
+                        addCell(uidl, cell.toString(), aligns[col++], style,
+                                false);
                     } else {
                         final Paintable cellContent = client
                                 .getPaintable((UIDL) cell);
 
-                        addCell((Widget) cellContent, aligns[col++], style);
+                        addCell(uidl, (Widget) cellContent, aligns[col++],
+                                style);
                         paintComponent(cellContent, (UIDL) cell);
                     }
                 }
@@ -3515,11 +3511,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             public VScrollTableRow() {
                 this(0);
                 addStyleName(CLASSNAME + "-row");
-                addCell("_", 'b', "", true);
+                addCell(null, "_", 'b', "", true);
             }
 
-            public void addCell(String text, char align, String style,
-                    boolean textIsHTML) {
+            public void addCell(UIDL rowUidl, String text, char align,
+                    String style, boolean textIsHTML) {
                 // String only content is optimized by not using Label widget
                 final Element td = DOM.createTD();
                 final Element container = DOM.createDiv();
@@ -3549,7 +3545,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 getElement().appendChild(td);
             }
 
-            public void addCell(Widget w, char align, String style) {
+            public void addCell(UIDL rowUidl, Widget w, char align, String style) {
                 final Element td = DOM.createTD();
                 final Element container = DOM.createDiv();
                 String className = CLASSNAME + "-cell-content";
@@ -3608,7 +3604,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     /* This row was clicked */
                     client.updateVariable(paintableId, "clickedKey", ""
                             + rowKey, false);
-
 
                     if (getElement() == targetTdOrTr.getParentElement()) {
                         /* A specific column was clicked */
@@ -3882,8 +3877,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 }
                 removeKeyFromSelectedRange(rowKey);
             }
-
-
 
             /**
              * Is called when a user clicks an item when holding SHIFT key down.
@@ -4696,8 +4689,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
 
         // Down navigation
-        if (selectMode == SELECT_MODE_NONE
- && keycode == getNavigationDownKey()) {
+        if (selectMode == SELECT_MODE_NONE && keycode == getNavigationDownKey()) {
             bodyContainer.setScrollPosition(bodyContainer.getScrollPosition()
                     + scrollingVelocity);
         } else if (keycode == getNavigationDownKey()) {
@@ -4711,8 +4703,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
 
         // Up navigation
-        if (selectMode == SELECT_MODE_NONE
- && keycode == getNavigationUpKey()) {
+        if (selectMode == SELECT_MODE_NONE && keycode == getNavigationUpKey()) {
             bodyContainer.setScrollPosition(bodyContainer.getScrollPosition()
                     - scrollingVelocity);
         } else if (keycode == getNavigationUpKey()) {
