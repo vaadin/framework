@@ -418,6 +418,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
 
         tHead.setVisible(showColHeaders);
+        setContainerHeight();
 
     }
 
@@ -2967,7 +2968,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      */
     private void setContainerHeight() {
         if (height != null && !"".equals(height)) {
-            int contentH = getOffsetHeight() - tHead.getOffsetHeight();
+            int contentH = getOffsetHeight();
+            contentH -= showColHeaders ? tHead.getOffsetHeight() : 0;
             contentH -= getContentAreaBorderHeight();
             if (contentH < 0) {
                 contentH = 0;
