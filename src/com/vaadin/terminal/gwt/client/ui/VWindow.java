@@ -473,6 +473,8 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
 
         Util.runWebkitOverflowAutoFix(contentPanel.getElement());
 
+        client.getView().scrollIntoView(uidl);
+
     }
 
     private void setDraggable(boolean draggable) {

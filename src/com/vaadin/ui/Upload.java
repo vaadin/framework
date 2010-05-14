@@ -100,6 +100,10 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 
     private boolean interrupted = false;
 
+    private boolean notStarted;
+
+    private int nextid;
+
     /* TODO: Add a default constructor, receive to temp file. */
 
     /**
@@ -219,8 +223,14 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      */
     @Override
     public void changeVariables(Object source, Map variables) {
-        // NOP
-
+        if (variables.containsKey("pollForStart")) {
+            int id = (Integer) variables.get("pollForStart");
+            if (!isUploading && id == nextid) {
+                notStarted = true;
+                requestRepaint();
+            } else {
+            }
+        }
     }
 
     /**
@@ -233,6 +243,11 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
+        if (notStarted) {
+            target.addAttribute("notStarted", true);
+            notStarted = false;
+            return;
+        }
         // The field should be focused
         if (focus) {
             target.addAttribute("focus", true);
@@ -247,7 +262,8 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 
         target.addAttribute("buttoncaption", buttonCaption);
 
-        target.addUploadStreamVariable(this, "stream");
+        target.addAttribute("nextid", nextid);
+
     }
 
     /**
@@ -906,6 +922,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
             throw new IllegalStateException("uploading already started");
         }
         isUploading = true;
+        nextid++;
     }
 
     /**

@@ -187,7 +187,7 @@ public interface Property extends Serializable {
          *            The cause of the the conversion failure
          */
         public ConversionException(Throwable cause) {
-            super(cause.toString());
+            super(cause);
         }
     }
 

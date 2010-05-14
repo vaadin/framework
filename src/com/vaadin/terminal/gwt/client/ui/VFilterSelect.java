@@ -595,6 +595,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     private boolean filtering = false;
     private boolean selecting = false;
     private boolean tabPressed = false;
+    private boolean initDone = false;
 
     private String lastFilter = "";
     private int lastIndex = -1; // last selected index when using arrows
@@ -761,6 +762,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         lastNewItemString = null;
 
         currentSuggestions.clear();
+        currentSuggestion = null;
         final UIDL options = uidl.getChildUIDL(0);
         totalMatches = uidl.getIntAttribute("totalMatches");
 
@@ -855,6 +857,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         popupOpenerClicked = false;
 
         updateRootWidth();
+
+        initDone = true;
     }
 
     private void setPromptingOn() {
@@ -1133,7 +1137,10 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         }
         horizPaddingAndBorder = Util.setWidthExcludingPaddingAndBorder(this,
                 width, horizPaddingAndBorder);
-        updateRootWidth();
+
+        if (initDone) {
+            updateRootWidth();
+        }
     }
 
     @Override
@@ -1156,7 +1163,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                     - Util.measureMarginLeft(selectedItemIcon.getElement()) : 0;
 
             int w = tbWidth + openerWidth + iconWidth;
-            if (suggestionPopupMinWidth > w) {
+            if ((!initDone || currentPage + 1 <= 0)
+                    && suggestionPopupMinWidth > w) {
                 setTextboxWidth(suggestionPopupMinWidth);
                 w = suggestionPopupMinWidth;
             } else {

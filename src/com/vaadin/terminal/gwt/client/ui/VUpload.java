@@ -4,8 +4,14 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.FormElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
@@ -14,14 +20,18 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
-import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 
-public class VUpload extends FormPanel implements Paintable,
-        SubmitCompleteHandler, SubmitHandler {
+/**
+ * 
+ * Note, we are not using GWT FormPanel as we want to listen submitcomplete
+ * events even though the upload component is already detached.
+ * 
+ */
+public class VUpload extends SimplePanel implements Paintable {
 
     private final class MyFileUpload extends FileUpload {
         @Override
@@ -53,6 +63,9 @@ public class VUpload extends FormPanel implements Paintable,
 
     Panel panel = new FlowPanel();
 
+    UploadIFrameOnloadStrategy onloadstrategy = GWT
+            .create(UploadIFrameOnloadStrategy.class);
+
     ApplicationConnection client;
 
     private String paintableId;
@@ -82,10 +95,18 @@ public class VUpload extends FormPanel implements Paintable,
 
     private Hidden maxfilesize = new Hidden();
 
+    private FormElement element;
+
+    private com.google.gwt.dom.client.Element synthesizedFrame;
+
+    private int nextUploadId;
+
     public VUpload() {
-        super();
-        setEncoding(FormPanel.ENCODING_MULTIPART);
-        setMethod(FormPanel.METHOD_POST);
+        super(com.google.gwt.dom.client.Document.get().createFormElement());
+
+        element = getElement().cast();
+        setEncoding(getElement(), FormPanel.ENCODING_MULTIPART);
+        element.setMethod(FormPanel.METHOD_POST);
 
         setWidget(panel);
         panel.add(maxfilesize);
@@ -103,20 +124,29 @@ public class VUpload extends FormPanel implements Paintable,
         });
         panel.add(submitButton);
 
-        addSubmitCompleteHandler(this);
-        addSubmitHandler(this);
-
         setStyleName(CLASSNAME);
     }
+
+    private static native void setEncoding(Element form, String encoding)
+    /*-{
+      form.enctype = encoding;
+      // For IE6
+      form.encoding = encoding;
+    }-*/;
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         if (client.updateComponent(this, uidl, true)) {
             return;
         }
+        if (uidl.hasAttribute("notStarted")) {
+            t.schedule(400);
+            return;
+        }
         setImmediate(uidl.getBooleanAttribute("immediate"));
         this.client = client;
         paintableId = uidl.getId();
-        setAction(client.getAppUri());
+        nextUploadId = uidl.getIntAttribute("nextid");
+        element.setAction(client.getAppUri());
         submitButton.setText(uidl.getStringAttribute("buttoncaption"));
         fu.setName(paintableId + "_file");
 
@@ -125,6 +155,7 @@ public class VUpload extends FormPanel implements Paintable,
         } else if (!uidl.getBooleanAttribute("state")) {
             // Enable the button only if an upload is not in progress
             enableUpload();
+            ensureTargetFrame();
         }
     }
 
@@ -182,24 +213,38 @@ public class VUpload extends FormPanel implements Paintable,
         }
     }
 
-    public void onSubmitComplete(SubmitCompleteEvent event) {
-        if (client != null) {
-            if (t != null) {
-                t.cancel();
+    /**
+     * Called by JSNI (hooked via {@link #onloadstrategy})
+     */
+    @SuppressWarnings("unused")
+    private void onSubmitComplete() {
+        /* Needs to be run dereferred to avoid various browser issues. */
+        DeferredCommand.addCommand(new Command() {
+            public void execute() {
+                if (client != null) {
+                    if (t != null) {
+                        t.cancel();
+                    }
+                    ApplicationConnection.getConsole().log("Submit complete");
+                    client.sendPendingVariableChanges();
+                }
+
+                rebuildPanel();
+
+                submitted = false;
+                enableUpload();
+                if (!isAttached()) {
+                    /*
+                     * Upload is complete when upload is already abandoned.
+                     */
+                    cleanTargetFrame();
+                }
             }
-            ApplicationConnection.getConsole().log("Submit complete");
-            client.sendPendingVariableChanges();
-        }
-
-        rebuildPanel();
-
-        submitted = false;
-        enableUpload();
+        });
     }
 
-    public void onSubmit(SubmitEvent event) {
+    private void submit() {
         if (fu.getFilename().length() == 0 || submitted || !enabled) {
-            event.cancel();
             ApplicationConnection
                     .getConsole()
                     .log(
@@ -210,6 +255,7 @@ public class VUpload extends FormPanel implements Paintable,
         // before upload
         client.sendPendingVariableChanges();
 
+        element.submit();
         submitted = true;
         ApplicationConnection.getConsole().log("Submitted form");
 
@@ -222,10 +268,63 @@ public class VUpload extends FormPanel implements Paintable,
         t = new Timer() {
             @Override
             public void run() {
-                client.sendPendingVariableChanges();
+                ApplicationConnection
+                        .getConsole()
+                        .log(
+                                "Visiting server to see if upload started event changed UI.");
+                client.updateVariable(paintableId, "pollForStart",
+                        nextUploadId, true);
             }
         };
         t.schedule(800);
+    }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+        if (client != null) {
+            ensureTargetFrame();
+        }
+    }
+
+    private void ensureTargetFrame() {
+        if (synthesizedFrame == null) {
+            // Attach a hidden IFrame to the form. This is the target iframe to
+            // which
+            // the form will be submitted. We have to create the iframe using
+            // innerHTML,
+            // because setting an iframe's 'name' property dynamically doesn't
+            // work on
+            // most browsers.
+            DivElement dummy = Document.get().createDivElement();
+            dummy.setInnerHTML("<iframe src=\"javascript:''\" name='"
+                    + getFrameName()
+                    + "' style='position:absolute;width:0;height:0;border:0'>");
+            synthesizedFrame = dummy.getFirstChildElement();
+            Document.get().getBody().appendChild(synthesizedFrame);
+            element.setTarget(getFrameName());
+            onloadstrategy.hookEvents(synthesizedFrame, this);
+        }
+    }
+
+    private String getFrameName() {
+        return paintableId + "_TGT_FRAME";
+    }
+
+    @Override
+    protected void onDetach() {
+        super.onDetach();
+        if (!submitted) {
+            cleanTargetFrame();
+        }
+    }
+
+    private void cleanTargetFrame() {
+        if (synthesizedFrame != null) {
+            Document.get().getBody().removeChild(synthesizedFrame);
+            onloadstrategy.unHookEvents(synthesizedFrame);
+            synthesizedFrame = null;
+        }
     }
 
 }
