@@ -94,15 +94,15 @@ public class Table extends AbstractSelect implements Action.Container,
         MULTIROW
     }
 
-    private static final int CELL_KEY = 0;
+    protected static final int CELL_KEY = 0;
 
-    private static final int CELL_HEADER = 1;
+    protected static final int CELL_HEADER = 1;
 
-    private static final int CELL_ICON = 2;
+    protected static final int CELL_ICON = 2;
 
-    private static final int CELL_ITEMID = 3;
+    protected static final int CELL_ITEMID = 3;
 
-    private static final int CELL_FIRSTCOL = 4;
+    protected static final int CELL_FIRSTCOL = 4;
 
     /**
      * Left column alignment. <b>This is the default behaviour. </b>
@@ -382,7 +382,7 @@ public class Table extends AbstractSelect implements Action.Container,
     private MultiSelectMode multiSelectMode = MultiSelectMode.DEFAULT;
 
     private HeaderClickHandler headerClickHandler;
-    
+
     private FooterClickHandler footerClickHandler;
 
     /* Table constructors */
@@ -2207,7 +2207,6 @@ public class Table extends AbstractSelect implements Action.Container,
         final int pagelen = getPageLength();
         final int colHeadMode = getColumnHeaderMode();
         final boolean colheads = colHeadMode != COLUMN_HEADER_MODE_HIDDEN;
-        final boolean rowheads = getRowHeaderMode() != ROW_HEADER_MODE_HIDDEN;
         final Object[][] cells = getVisibleCells();
         final boolean iseditable = isEditable();
         int rows;
@@ -2276,7 +2275,7 @@ public class Table extends AbstractSelect implements Action.Container,
         if (colheads) {
             target.addAttribute("colheaders", true);
         }
-        if (rowheads) {
+        if (getRowHeaderMode() != ROW_HEADER_MODE_HIDDEN) {
             target.addAttribute("rowheaders", true);
         }
         if (columnFootersVisible) {
@@ -2340,8 +2339,8 @@ public class Table extends AbstractSelect implements Action.Container,
                 continue;
             }
 
-            paintRow(target, rowheads, cells, iseditable, actionSet,
-                    iscomponent, indexInRowbuffer, itemId);
+            paintRow(target, cells, iseditable, actionSet, iscomponent,
+                    indexInRowbuffer, itemId);
         }
         target.endTag("rows");
 
@@ -2466,14 +2465,13 @@ public class Table extends AbstractSelect implements Action.Container,
         }
     }
 
-    private void paintRow(PaintTarget target, final boolean rowheads,
-            final Object[][] cells, final boolean iseditable,
-            final Set<Action> actionSet, final boolean[] iscomponent,
-            int indexInRowbuffer, final Object itemId) throws PaintException {
+    private void paintRow(PaintTarget target, final Object[][] cells,
+            final boolean iseditable, final Set<Action> actionSet,
+            final boolean[] iscomponent, int indexInRowbuffer,
+            final Object itemId) throws PaintException {
         target.startTag("tr");
 
-        renderRowAttributes(target, rowheads, cells, actionSet,
-                indexInRowbuffer, itemId);
+        paintRowAttributes(target, cells, actionSet, indexInRowbuffer, itemId);
 
         // cells
         int currentColumn = 0;
@@ -2515,21 +2513,13 @@ public class Table extends AbstractSelect implements Action.Container,
         target.endTag("tr");
     }
 
-    private void renderRowAttributes(PaintTarget target,
-            final boolean rowheads, final Object[][] cells,
+    private void paintRowAttributes(PaintTarget target, final Object[][] cells,
             final Set<Action> actionSet, int indexInRowbuffer,
             final Object itemId) throws PaintException {
         // tr attributes
-        if (rowheads) {
-            if (cells[CELL_ICON][indexInRowbuffer] != null) {
-                target.addAttribute("icon",
-                        (Resource) cells[CELL_ICON][indexInRowbuffer]);
-            }
-            if (cells[CELL_HEADER][indexInRowbuffer] != null) {
-                target.addAttribute("caption",
-                        (String) cells[CELL_HEADER][indexInRowbuffer]);
-            }
-        }
+
+        paintRowIcon(target, cells, indexInRowbuffer);
+        paintRowHeader(target, cells, indexInRowbuffer);
         target.addAttribute("key", Integer
                 .parseInt(cells[CELL_KEY][indexInRowbuffer].toString()));
 
@@ -2565,7 +2555,27 @@ public class Table extends AbstractSelect implements Action.Container,
                 target.addAttribute("rowstyle", rowStyle);
             }
         }
-        renderRowAttributes(target, itemId);
+        paintRowAttributes(target, itemId);
+    }
+
+    protected void paintRowHeader(PaintTarget target, Object[][] cells,
+            int indexInRowbuffer) throws PaintException {
+        if (getRowHeaderMode() != ROW_HEADER_MODE_HIDDEN) {
+            if (cells[CELL_HEADER][indexInRowbuffer] != null) {
+                target.addAttribute("caption",
+                        (String) cells[CELL_HEADER][indexInRowbuffer]);
+            }
+        }
+
+    }
+
+    protected void paintRowIcon(PaintTarget target, final Object[][] cells,
+            int indexInRowbuffer) throws PaintException {
+        if (getRowHeaderMode() != ROW_HEADER_MODE_HIDDEN
+                && cells[CELL_ICON][indexInRowbuffer] != null) {
+            target.addAttribute("icon",
+                    (Resource) cells[CELL_ICON][indexInRowbuffer]);
+        }
     }
 
     /**
@@ -2575,7 +2585,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param target
      * @param itemId
      */
-    protected void renderRowAttributes(PaintTarget target, Object itemId)
+    protected void paintRowAttributes(PaintTarget target, Object itemId)
             throws PaintException {
 
     }
@@ -3749,7 +3759,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         /**
          * Gets the property id of the column which header was pressed
-         *
+         * 
          * @return The column propety id
          */
         public Object getPropertyId() {
@@ -3759,14 +3769,14 @@ public class Table extends AbstractSelect implements Action.Container,
         /**
          * Returns the details of the mouse event like the mouse coordinates,
          * button pressed etc.
-         *
+         * 
          * @return The mouse details
          */
         public MouseEventDetails getEventDetails() {
             return details;
         }
     }
-    
+
     /**
      * Click event fired when clicking on the Table footers. The event includes
      * a reference the the Table the event originated from, the property id of
@@ -3775,7 +3785,7 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public static class FooterClickEvent extends Component.Event {
         public static final Method FOOTER_CLICK_METHOD;
-        
+
         static {
             try {
                 // Set the header click method
@@ -3787,32 +3797,33 @@ public class Table extends AbstractSelect implements Action.Container,
                 throw new java.lang.RuntimeException();
             }
         }
-        
+
         // The property id of the column which header was pressed
         private Object columnPropertyId;
-        
+
         // The mouse details
         private MouseEventDetails details;
-        
+
         /**
          * Constructor
+         * 
          * @param source
-         *      The source of the component
+         *            The source of the component
          * @param propertyId
-         *      The propertyId of the column
+         *            The propertyId of the column
          * @param details
-         *      The mouse details of the click
+         *            The mouse details of the click
          */
         public FooterClickEvent(Component source, Object propertyId,
                 MouseEventDetails details) {
             super(source);
             columnPropertyId = propertyId;
-            this.details = details;            
+            this.details = details;
         }
-        
+
         /**
          * Gets the property id of the column which header was pressed
-         *
+         * 
          * @return The column propety id
          */
         public Object getPropertyId() {
@@ -3822,7 +3833,7 @@ public class Table extends AbstractSelect implements Action.Container,
         /**
          * Returns the details of the mouse event like the mouse coordinates,
          * button pressed etc.
-         *
+         * 
          * @return The mouse details
          */
         public MouseEventDetails getEventDetails() {
@@ -3839,7 +3850,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         /**
          * Called when a user clicks a header column cell
-         *
+         * 
          * @param event
          *            The event which contains information about the column and
          *            the mouse click event
@@ -3853,7 +3864,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * column cell.
      */
     public interface FooterClickHandler {
-        
+
         /**
          * Called when a user clicks a footer column cell
          * 
@@ -3871,7 +3882,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * The handler will receive events which contains information about which
      * column was clicked and some details about the mouse event.
      * </p>
-     *
+     * 
      * @param handler
      *            The handler which should handle the header click events.
      */
@@ -3942,7 +3953,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Returns the header click handler which receives click events from the
      * columns header cells when they are clicked on.
-     *
+     * 
      * @return
      */
     public HeaderClickHandler getHeaderClickHandler() {
@@ -3961,7 +3972,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Gets the footer caption beneath the rows
-     *
+     * 
      * @param propertyId
      *            The propertyId of the column *
      * @return The caption of the footer or NULL if not set
@@ -3973,10 +3984,10 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Sets the column footer caption. The column footer caption is the text
      * displayed beneath the column if footers have been set visible.
-     *
+     * 
      * @param propertyId
      *            The properyId of the column
-     *
+     * 
      * @param footer
      *            The caption of the footer
      */
@@ -3996,11 +4007,11 @@ public class Table extends AbstractSelect implements Action.Container,
      * The footer can be used to add column related data like sums to the bottom
      * of the Table using setColumnFooter(Object propertyId, String footer).
      * </p>
-     *
+     * 
      * @param visible
      *            Should the footer be visible
      */
-    public void setFooterVisible(boolean visible){
+    public void setFooterVisible(boolean visible) {
         columnFootersVisible = visible;
 
         // Assures the visual refresh
@@ -4009,7 +4020,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Is the footer currently visible?
-     *
+     * 
      * @return Returns true if visible else false
      */
     public boolean isFooterVisible() {

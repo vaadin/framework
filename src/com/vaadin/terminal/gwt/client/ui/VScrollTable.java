@@ -127,7 +127,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private int pageLength = 15;
     private int lastRequestedFirstvisible = 0; // to detect "serverside scroll"
 
-    private boolean showRowHeaders = false;
+    protected boolean showRowHeaders = false;
 
     private String[] columnOrder;
 
@@ -4351,7 +4351,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      *            possibly with values caption and icon
      * @return html snippet containing possibly an icon + caption text
      */
-    private String buildCaptionHtmlSnippet(UIDL uidl) {
+    protected String buildCaptionHtmlSnippet(UIDL uidl) {
         String s = uidl.getStringAttribute("caption");
         if (uidl.hasAttribute("icon")) {
             s = "<img src=\""
@@ -4624,6 +4624,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
     }
 
+    protected VScrollTableRow getFocusedRow() {
+        return focusedRow;
+    }
+
     /**
      * Moves the selection head to a specific row
      * 
@@ -4683,6 +4687,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * 
      * @param event
      *            The keyboard event received
+     * @return true iff the navigation event was handled
      */
     protected boolean handleNavigation(int keycode, boolean ctrl, boolean shift) {
         if (keycode == KeyCodes.KEY_TAB) {
