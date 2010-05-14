@@ -33,7 +33,7 @@ public class FileTypeResolver implements Serializable {
      * Default icon given if no icon is specified for a mime-type.
      */
     static public Resource DEFAULT_ICON = new ThemeResource(
-            "icon/files/file.gif");
+            "../runo/icons/16/document.png");
 
     /**
      * Default mime-type.
@@ -195,12 +195,12 @@ public class FileTypeResolver implements Serializable {
     /**
      * File extension to MIME type mapping.
      */
-    static private Hashtable extToMIMEMap = new Hashtable();
+    static private Hashtable<String, String> extToMIMEMap = new Hashtable<String, String>();
 
     /**
      * MIME type to Icon mapping.
      */
-    static private Hashtable MIMEToIconMap = new Hashtable();
+    static private Hashtable<String, Resource> MIMEToIconMap = new Hashtable<String, Resource>();
 
     static {
 
@@ -218,8 +218,9 @@ public class FileTypeResolver implements Serializable {
         }
 
         // Initialize Icons
-        addIcon("inode/drive", new ThemeResource("icon/files/drive.gif"));
-        addIcon("inode/directory", new ThemeResource("icon/files/folder.gif"));
+        ThemeResource folder = new ThemeResource("../runo/icons/16/folder.png");
+        addIcon("inode/drive", folder);
+        addIcon("inode/directory", folder);
     }
 
     /**
@@ -254,7 +255,7 @@ public class FileTypeResolver implements Serializable {
             }
 
             // Return type from extension map, if found
-            final String type = (String) extToMIMEMap.get(ext);
+            final String type = extToMIMEMap.get(ext);
             if (type != null) {
                 return type;
             }
@@ -274,9 +275,11 @@ public class FileTypeResolver implements Serializable {
      * @return the icon corresponding to the given file
      */
     public static Resource getIcon(String fileName) {
+        return getIconByMineType(getMIMEType(fileName));
+    }
 
-        final String mimeType = getMIMEType(fileName);
-        final Resource icon = (Resource) MIMEToIconMap.get(mimeType);
+    private static Resource getIconByMineType(String mimeType) {
+        final Resource icon = MIMEToIconMap.get(mimeType);
         if (icon != null) {
             return icon;
         }
@@ -297,16 +300,7 @@ public class FileTypeResolver implements Serializable {
      * @return the icon corresponding to the given file
      */
     public static Resource getIcon(File file) {
-
-        final String mimeType = getMIMEType(file);
-        final Resource icon = (Resource) MIMEToIconMap.get(mimeType);
-        if (icon != null) {
-            return icon;
-        }
-
-        // If nothing is known about the file-type, general file
-        // icon is used
-        return DEFAULT_ICON;
+        return getIconByMineType(getMIMEType(file));
     }
 
     /**
@@ -371,7 +365,7 @@ public class FileTypeResolver implements Serializable {
      * @return unmodifiable map containing the current file extension to
      *         mime-type mapping
      */
-    public static Map getExtensionToMIMETypeMapping() {
+    public static Map<String, String> getExtensionToMIMETypeMapping() {
         return Collections.unmodifiableMap(extToMIMEMap);
     }
 
@@ -380,7 +374,7 @@ public class FileTypeResolver implements Serializable {
      * 
      * @return unmodifiable map containing the current mime-type to icon mapping
      */
-    public static Map getMIMETypeToIconMapping() {
+    public static Map<String, Resource> getMIMETypeToIconMapping() {
         return Collections.unmodifiableMap(MIMEToIconMap);
     }
 }
