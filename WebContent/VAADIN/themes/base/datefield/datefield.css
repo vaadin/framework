@@ -8,7 +8,11 @@
 .v-datefield-button {
 	cursor: pointer;
 }
-.v-readonly .v-datefield-button {
+/* We need to limit the scope of the .v-readonly to the date field 
+ * class so the Window:s readonly value is not inherited to the
+ * datefield button. See ticket #4582 for details.
+ */
+.v-datefield.v-readonly .v-datefield-button {
 	display: none;
 }
 .v-datefield-calendarpanel table {
