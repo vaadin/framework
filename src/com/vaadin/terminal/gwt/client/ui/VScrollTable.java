@@ -1047,12 +1047,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * @return
      */
     private VScrollTableRow getRenderedRowByKey(String key) {
-        final Iterator<Widget> it = scrollBody.iterator();
-        VScrollTableRow r = null;
-        while (it.hasNext()) {
-            r = (VScrollTableRow) it.next();
-            if (r.getKey().equals(key)) {
-                return r;
+        if (scrollBody != null) {
+            final Iterator<Widget> it = scrollBody.iterator();
+            VScrollTableRow r = null;
+            while (it.hasNext()) {
+                r = (VScrollTableRow) it.next();
+                if (r.getKey().equals(key)) {
+                    return r;
+                }
             }
         }
         return null;
