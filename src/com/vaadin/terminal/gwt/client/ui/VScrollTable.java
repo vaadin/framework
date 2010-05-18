@@ -4699,6 +4699,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         if (selectMode == SELECT_MODE_NONE && keycode == getNavigationDownKey()) {
             bodyContainer.setScrollPosition(bodyContainer.getScrollPosition()
                     + scrollingVelocity);
+            return true;
         } else if (keycode == getNavigationDownKey()) {
             if (selectMode == SELECT_MODE_MULTI && moveFocusDown()) {
                 selectFocusedRow(ctrl, shift);
@@ -4707,12 +4708,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     && moveFocusDown()) {
                 selectFocusedRow(ctrl, shift);
             }
+            return true;
         }
 
         // Up navigation
         if (selectMode == SELECT_MODE_NONE && keycode == getNavigationUpKey()) {
             bodyContainer.setScrollPosition(bodyContainer.getScrollPosition()
                     - scrollingVelocity);
+            return true;
         } else if (keycode == getNavigationUpKey()) {
             if (selectMode == SELECT_MODE_MULTI && moveFocusUp()) {
                 selectFocusedRow(ctrl, shift);
@@ -4720,16 +4723,18 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     && moveFocusUp()) {
                 selectFocusedRow(ctrl, shift);
             }
+            return true;
         }
 
-        // Left navigation
         if (keycode == getNavigationLeftKey()) {
+            // Left navigation
             bodyContainer.setHorizontalScrollPosition(bodyContainer
                     .getHorizontalScrollPosition()
                     - scrollingVelocity);
+            return true;
 
-            // Right navigation
         } else if (keycode == getNavigationRightKey()) {
+            // Right navigation
             bodyContainer.setHorizontalScrollPosition(bodyContainer
                     .getHorizontalScrollPosition()
                     + scrollingVelocity);
@@ -4750,6 +4755,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             }
 
             sendSelectedRows();
+            return true;
         }
 
         // Page Down navigation
@@ -4771,6 +4777,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     sendSelectedRows();
                 }
             }
+            return true;
         }
 
         // Page Up navigation
@@ -4792,6 +4799,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     sendSelectedRows();
                 }
             }
+            return true;
         }
 
         // Goto start navigation
@@ -4808,6 +4816,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 }
             }
             bodyContainer.setScrollPosition(0);
+            return true;
         }
 
         // Goto end navigation
@@ -4824,9 +4833,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 }
             }
             bodyContainer.setScrollPosition(scrollBody.getOffsetHeight());
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     /*
