@@ -159,6 +159,10 @@ public class AbsoluteLayout extends AbstractLayout {
          * @param css
          */
         public void setCSSString(String css) {
+            if (css == null) {
+                return;
+            }
+
             String[] cssProperties = css.split(";");
             for (int i = 0; i < cssProperties.length; i++) {
                 String[] keyValuePair = cssProperties[i].split(":");
