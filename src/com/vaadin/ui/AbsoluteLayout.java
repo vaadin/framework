@@ -83,10 +83,10 @@ public class AbsoluteLayout extends AbstractLayout {
     public class ComponentPosition implements Serializable {
 
         private int zIndex = -1;
-        private float topValue = -1;
-        private float rightValue = -1;
-        private float bottomValue = -1;
-        private float leftValue = -1;
+        private Float topValue = null;
+        private Float rightValue = null;
+        private Float bottomValue = null;
+        private Float leftValue = null;
 
         private int topUnits;
         private int rightUnits;
@@ -119,7 +119,7 @@ public class AbsoluteLayout extends AbstractLayout {
                     } else {
                         value = "";
                     }
-                    String unit = value.replaceAll("[0-9\\.]+", "");
+                    String unit = value.replaceAll("[0-9\\.\\-]+", "");
                     if (!unit.equals("")) {
                         value = value.substring(0, value.indexOf(unit)).trim();
                     }
@@ -154,16 +154,16 @@ public class AbsoluteLayout extends AbstractLayout {
 
         public String getCSSString() {
             String s = "";
-            if (topValue >= 0) {
+            if (topValue != null) {
                 s += "top:" + topValue + UNIT_SYMBOLS[topUnits] + ";";
             }
-            if (rightValue >= 0) {
+            if (rightValue != null) {
                 s += "right:" + rightValue + UNIT_SYMBOLS[rightUnits] + ";";
             }
-            if (bottomValue >= 0) {
+            if (bottomValue != null) {
                 s += "bottom:" + bottomValue + UNIT_SYMBOLS[bottomUnits] + ";";
             }
-            if (leftValue >= 0) {
+            if (leftValue != null) {
                 s += "left:" + leftValue + UNIT_SYMBOLS[leftUnits] + ";";
             }
             if (zIndex >= 0) {
@@ -212,14 +212,14 @@ public class AbsoluteLayout extends AbstractLayout {
         }
 
         public float getTopValue() {
-            return topValue;
+            return topValue == null ? 0 : rightValue.floatValue();
         }
 
         /**
          * @return the rightValue
          */
         public float getRightValue() {
-            return rightValue;
+            return rightValue == null ? 0 : rightValue.floatValue();
         }
 
         /**
@@ -236,7 +236,7 @@ public class AbsoluteLayout extends AbstractLayout {
          * @return the bottomValue
          */
         public float getBottomValue() {
-            return bottomValue;
+            return bottomValue == null ? 0 : bottomValue.floatValue();
         }
 
         /**
@@ -253,7 +253,7 @@ public class AbsoluteLayout extends AbstractLayout {
          * @return the leftValue
          */
         public float getLeftValue() {
-            return leftValue;
+            return leftValue == null ? 0 : leftValue.floatValue();
         }
 
         /**
