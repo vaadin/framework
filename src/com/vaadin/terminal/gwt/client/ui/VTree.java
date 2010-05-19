@@ -136,20 +136,20 @@ public class VTree extends FocusPanel implements Paintable, VHasDropHandler,
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         if (event.getTypeInt() == Event.ONMOUSEDOWN) {
-            setFocus(true);
             // Prevent default text selection in IE
             if (BrowserInfo.get().isIE()) {
                 ((Element) event.getEventTarget().cast()).setPropertyJSO(
                         "onselectstart", applyDisableTextSelectionIEHack());
+            } else {
+                setFocus(true);
             }
-            event.preventDefault();
+
         } else if (event.getTypeInt() == Event.ONMOUSEUP) {
             // Remove IE text selection hack
             if (BrowserInfo.get().isIE()) {
                 ((Element) event.getEventTarget().cast()).setPropertyJSO(
                         "onselectstart", null);
             }
-            event.preventDefault();
         } else if (event.getTypeInt() == Event.ONKEYUP) {
             if (selectionHasChanged) {                
                 if(event.getKeyCode() == getNavigationDownKey() && !event.getShiftKey()){
@@ -617,7 +617,7 @@ public class VTree extends FocusPanel implements Paintable, VHasDropHandler,
                 if (getElement() == target || ie6compatnode == target) {
                     // state change
                     toggleState();
-                } else if (!readonly && inCaption) {
+                } else if (!readonly && inCaption && selectable) {
                     // caption click = selection change && possible click event
                     if (handleClickSelection(event.getCtrlKey()
                             || event.getMetaKey(), event.getShiftKey())) {
@@ -1426,7 +1426,7 @@ public class VTree extends FocusPanel implements Paintable, VHasDropHandler,
      */
     public void onFocus(FocusEvent event) {
         // If no node has focus, focus the first item in the tree
-        if (focusedNode == null) {
+        if (focusedNode == null && selectable) {
             setFocusedNode((TreeNode) body.getWidget(0));
         }
     }
@@ -1511,13 +1511,15 @@ public class VTree extends FocusPanel implements Paintable, VHasDropHandler,
                 }
             }
 
-            if (node != null) {
+            if (node != null && selectable) {
                 setFocusedNode(node);
                 if (!ctrl && !shift) {
                     selectNode(node, true);
-                } else if (shift) {
+                } else if (shift && isMultiselect) {
                     deselectAll();
                     selectNodeRange(lastSelection.key, node.key);
+                } else if (shift) {
+                    selectNode(node, true);
                 }
             }
             return true;
@@ -1532,13 +1534,16 @@ public class VTree extends FocusPanel implements Paintable, VHasDropHandler,
             } else if (focusedNode.getParentNode() != null) {
                 node = focusedNode.getParentNode();
             }
-            if (node != null) {
+            if (node != null && selectable) {
                 setFocusedNode(node);
+
                 if (!ctrl && !shift) {
                     selectNode(node, true);
-                } else if (shift) {
+                } else if (shift && isMultiselect) {
                     deselectAll();
                     selectNodeRange(lastSelection.key, node.key);
+                } else if (shift) {
+                    selectNode(node, true);
                 }
             }
             return true;
