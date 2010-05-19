@@ -1112,7 +1112,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         return null;
     }
 
-    private void reOrderColumn(String columnKey, int newIndex) {
+    protected void reOrderColumn(String columnKey, int newIndex) {
 
         final int oldIndex = getColIndexByKey(columnKey);
 
