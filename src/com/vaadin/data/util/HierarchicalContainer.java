@@ -69,6 +69,10 @@ public class HierarchicalContainer extends IndexedContainer implements
      */
     private boolean includeParentsWhenFiltering = true;
 
+    private boolean contentChangedEventsDisabled = false;
+
+    private boolean contentsChangedEventPending;
+
     /*
      * Can the specified Item have any children? Don't add a JavaDoc comment
      * here, we use the default documentation from implemented interface.
@@ -378,6 +382,7 @@ public class HierarchicalContainer extends IndexedContainer implements
      */
     @Override
     public Object addItem() {
+        disableContentsChangeEvents();
         final Object itemId = super.addItem();
         if (itemId == null) {
             return null;
@@ -391,8 +396,33 @@ public class HierarchicalContainer extends IndexedContainer implements
                 }
             }
         }
-
+        enableAndFireContentsChangeEvents();
         return itemId;
+    }
+
+    @Override
+    protected void fireContentsChange(int addedItemIndex) {
+        if (contentsChangeEventsOn()) {
+            super.fireContentsChange(addedItemIndex);
+        } else {
+            contentsChangedEventPending = true;
+        }
+    }
+
+    private boolean contentsChangeEventsOn() {
+        return !contentChangedEventsDisabled;
+    }
+
+    private void disableContentsChangeEvents() {
+        contentChangedEventsDisabled = true;
+    }
+
+    private void enableAndFireContentsChangeEvents() {
+        contentChangedEventsDisabled = false;
+        if (contentsChangedEventPending) {
+            fireContentsChange(-1);
+        }
+        contentsChangedEventPending = false;
     }
 
     /*
@@ -402,6 +432,7 @@ public class HierarchicalContainer extends IndexedContainer implements
      */
     @Override
     public Item addItem(Object itemId) {
+        disableContentsChangeEvents();
         final Item item = super.addItem(itemId);
         if (item == null) {
             return null;
@@ -414,7 +445,7 @@ public class HierarchicalContainer extends IndexedContainer implements
                 filteredRoots.add(itemId);
             }
         }
-
+        enableAndFireContentsChangeEvents();
         return item;
     }
 
@@ -425,6 +456,7 @@ public class HierarchicalContainer extends IndexedContainer implements
      */
     @Override
     public boolean removeAllItems() {
+        disableContentsChangeEvents();
         final boolean success = super.removeAllItems();
 
         if (success) {
@@ -439,6 +471,7 @@ public class HierarchicalContainer extends IndexedContainer implements
                 filteredChildren = null;
             }
         }
+        enableAndFireContentsChangeEvents();
         return success;
     }
 
@@ -449,6 +482,7 @@ public class HierarchicalContainer extends IndexedContainer implements
      */
     @Override
     public boolean removeItem(Object itemId) {
+        disableContentsChangeEvents();
         final boolean success = super.removeItem(itemId);
 
         if (success) {
@@ -496,6 +530,8 @@ public class HierarchicalContainer extends IndexedContainer implements
             noChildrenAllowed.remove(itemId);
         }
 
+        enableAndFireContentsChangeEvents();
+
         return success;
     }
 
@@ -508,7 +544,10 @@ public class HierarchicalContainer extends IndexedContainer implements
      * @return true if the operation succeeded
      */
     public boolean removeItemRecursively(Object itemId) {
-        return removeItemRecursively(this, itemId);
+        disableContentsChangeEvents();
+        boolean removeItemRecursively = removeItemRecursively(this, itemId);
+        enableAndFireContentsChangeEvents();
+        return removeItemRecursively;
     }
 
     /**
