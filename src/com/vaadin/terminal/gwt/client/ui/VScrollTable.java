@@ -1732,7 +1732,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 } else {
                     handleCaptionEvent(event);
                     if (DOM.eventGetType(event) == Event.ONMOUSEUP) {
-                        onFocus(null);
+                        scrollBodyPanel.setFocus(true);
                     }
                 }
             }
@@ -2603,7 +2603,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 handleCaptionEvent(event);
 
                 if (DOM.eventGetType(event) == Event.ONMOUSEUP) {
-                    onFocus(null);
+                    scrollBodyPanel.setFocus(true);
                 }
             }
         }
@@ -3660,7 +3660,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         case Event.ONMOUSEUP:
                             mDown = false;
                             handleClickEvent(event, targetTdOrTr);
-                            onFocus(null);
+                            scrollBodyPanel.setFocus(true);
                             if (event.getButton() == Event.BUTTON_LEFT
                                     && selectMode > Table.SELECT_MODE_NONE) {
 

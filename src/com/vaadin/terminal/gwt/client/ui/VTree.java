@@ -31,7 +31,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
@@ -169,14 +168,6 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
                     event.preventDefault();
                 }
             }
-        }
-    }
-
-    private void setFocus(boolean focus) {
-        if (focus) {
-            FocusImpl.getFocusImplForPanel().focus(getElement());
-        } else {
-            FocusImpl.getFocusImplForPanel().blur(getElement());
         }
     }
 

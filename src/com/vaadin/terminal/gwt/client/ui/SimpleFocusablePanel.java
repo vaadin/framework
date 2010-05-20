@@ -14,6 +14,7 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.impl.FocusImpl;
 
 /**
  * Compared to FocusPanel in GWT this panel does not support eg. accesskeys, but
@@ -45,4 +46,11 @@ public class SimpleFocusablePanel extends SimplePanel implements
         return addDomHandler(handler, KeyPressEvent.getType());
     }
 
+    public void setFocus(boolean focus) {
+        if (focus) {
+            FocusImpl.getFocusImplForPanel().focus(getElement());
+        } else {
+            FocusImpl.getFocusImplForPanel().blur(getElement());
+        }
+    }
 }
