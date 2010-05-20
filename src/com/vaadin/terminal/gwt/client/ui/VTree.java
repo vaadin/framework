@@ -28,10 +28,10 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
@@ -51,8 +51,9 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 /**
  * 
  */
-public class VTree extends FocusPanel implements Paintable, VHasDropHandler,
-        FocusHandler, BlurHandler, KeyPressHandler, KeyDownHandler {
+public class VTree extends SimpleFocusablePanel implements Paintable,
+        VHasDropHandler, FocusHandler, BlurHandler, KeyPressHandler,
+        KeyDownHandler {
 
     public static final String CLASSNAME = "v-tree";
 
@@ -101,7 +102,7 @@ public class VTree extends FocusPanel implements Paintable, VHasDropHandler,
         super();
         setStyleName(CLASSNAME);
         add(body);
-        
+
         addFocusHandler(this);
         addBlurHandler(this);
 
@@ -151,8 +152,9 @@ public class VTree extends FocusPanel implements Paintable, VHasDropHandler,
                         "onselectstart", null);
             }
         } else if (event.getTypeInt() == Event.ONKEYUP) {
-            if (selectionHasChanged) {                
-                if(event.getKeyCode() == getNavigationDownKey() && !event.getShiftKey()){
+            if (selectionHasChanged) {
+                if (event.getKeyCode() == getNavigationDownKey()
+                        && !event.getShiftKey()) {
                     sendSelectionToServer();
                     event.preventDefault();
                 } else if (event.getKeyCode() == getNavigationUpKey()
@@ -167,6 +169,14 @@ public class VTree extends FocusPanel implements Paintable, VHasDropHandler,
                     event.preventDefault();
                 }
             }
+        }
+    }
+
+    private void setFocus(boolean focus) {
+        if (focus) {
+            FocusImpl.getFocusImplForPanel().focus(getElement());
+        } else {
+            FocusImpl.getFocusImplForPanel().blur(getElement());
         }
     }
 
@@ -1043,13 +1053,13 @@ public class VTree extends FocusPanel implements Paintable, VHasDropHandler,
      * @param endNodeKey
      *            The end node key
      */
-    private void selectNodeRange(String startNodeKey, String endNodeKey){
-        
+    private void selectNodeRange(String startNodeKey, String endNodeKey) {
+
         TreeNode startNode = keyToNode.get(startNodeKey);
         TreeNode endNode = keyToNode.get(endNodeKey);
 
         // The nodes have the same parent
-        if(startNode.getParent() == endNode.getParent()){
+        if (startNode.getParent() == endNode.getParent()) {
             doSiblingSelection(startNode, endNode);
 
             // The start node is a grandparent of the end node
@@ -1176,18 +1186,18 @@ public class VTree extends FocusPanel implements Paintable, VHasDropHandler,
 
         TreeNode commonParent = getCommonGrandParent(startNode, endNode);
         TreeNode startBranch = null, endBranch = null;
-        
+
         // Find the children of the common parent
         List<TreeNode> children;
-        if(commonParent != null){
-            children = commonParent.getChildren(); 
-        }else{
+        if (commonParent != null) {
+            children = commonParent.getChildren();
+        } else {
             children = new LinkedList<TreeNode>();
             for (int w = 0; w < body.getWidgetCount(); w++) {
                 children.add((TreeNode) body.getWidget(w));
             }
         }
-            
+
         // Find the start and end branches
         for (TreeNode node : children) {
             if (nodeIsInBranch(startNode, node)) {
@@ -1549,7 +1559,6 @@ public class VTree extends FocusPanel implements Paintable, VHasDropHandler,
             return true;
         }
 
-
         // Navigate left (close branch)
         if (keycode == getNavigationLeftKey()) {
             if (!focusedNode.isLeaf() && focusedNode.getState()) {
@@ -1570,7 +1579,7 @@ public class VTree extends FocusPanel implements Paintable, VHasDropHandler,
         if (keycode == getNavigationSelectKey()) {
             if (!focusedNode.isSelected()) {
                 selectNode(focusedNode, !isMultiselect
-                    || multiSelectMode == MULTISELECT_MODE_SIMPLE);
+                        || multiSelectMode == MULTISELECT_MODE_SIMPLE);
             } else {
                 deselectNode(focusedNode);
             }
@@ -1792,6 +1801,4 @@ public class VTree extends FocusPanel implements Paintable, VHasDropHandler,
         return KeyCodes.KEY_END;
     }
 
-
-    
 }
