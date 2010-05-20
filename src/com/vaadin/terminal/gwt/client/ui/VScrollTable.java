@@ -1393,7 +1393,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
     public class TableHead extends Panel implements ActionOwner {
 
-        private static final int WRAPPER_WIDTH = 9000;
+        private static final int WRAPPER_WIDTH = 900000;
 
         ArrayList<Widget> visibleCells = new ArrayList<Widget>();
 
@@ -2969,8 +2969,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private void setContainerHeight() {
         if (height != null && !"".equals(height)) {
             int contentH = getOffsetHeight();
-            contentH -= showColHeaders ? tHead.getOffsetHeight() : 0;
-            contentH -= getContentAreaBorderHeight();
+            // contentH -= showColHeaders ? tHead.getOffsetHeight() : 0;
+            contentH -= getContentAreaBorderHeight() + tHead.getOffsetHeight();
             if (contentH < 0) {
                 contentH = 0;
             }
