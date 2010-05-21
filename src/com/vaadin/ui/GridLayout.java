@@ -1183,6 +1183,10 @@ public class GridLayout extends AbstractLayout implements
      * Removes row and all components in the row. Components which span over
      * several rows are removed if the selected row is the component's first
      * row.
+     * <p>
+     * If the last row is removed then all remaining components will be removed
+     * and the grid will be reduced to one row and one column.
+     * </p>
      * 
      * @param row
      *            The row number to remove
@@ -1210,9 +1214,18 @@ public class GridLayout extends AbstractLayout implements
             }
         }
 
-        setRows(rows - 1);
-        if (cursorY > row) {
-            cursorY--;
+        if (rows == 1) {
+            /*
+             * Removing the last row means that the dimensions of the Grid
+             * layout will be truncated to 1x1 and all components removed.
+             */
+            setColumns(1);
+            cursorY = 0;
+        } else {
+            setRows(rows - 1);
+            if (cursorY > row) {
+                cursorY--;
+            }
         }
 
         structuralChange = true;

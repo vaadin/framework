@@ -71,6 +71,12 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
             updateWidth();
         }
 
+        calendarToggle.setEnabled(true);
+        if (readonly) {
+            calendarToggle.addStyleName(CLASSNAME + "-button-readonly");
+        } else {
+            calendarToggle.removeStyleName(CLASSNAME + "-button-readonly");
+        }
     }
 
     @Override

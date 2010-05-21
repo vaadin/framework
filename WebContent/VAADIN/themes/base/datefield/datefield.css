@@ -8,7 +8,7 @@
 .v-datefield-button {
 	cursor: pointer;
 }
-.v-readonly .v-datefield-button {
+.v-datefield .v-datefield-button-readonly {
 	display: none;
 }
 .v-datefield-calendarpanel table {

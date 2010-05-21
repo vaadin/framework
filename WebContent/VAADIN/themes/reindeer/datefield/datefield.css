@@ -252,7 +252,7 @@ td.v-datefield-calendarpanel-nextyear {
 	-webkit-border-bottom-right-radius: 0;
 	height: 14px;
 }
-.v-readonly input.v-datefield-textfield {
+.v-datefield.v-readonly input.v-datefield-textfield {
 	border-right-width: 1px;
 	border-radius: 3px;
 	-moz-border-radius: 3px;

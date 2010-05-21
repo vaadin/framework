@@ -2013,7 +2013,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
     public class TableHead extends Panel implements ActionOwner {
 
-        private static final int WRAPPER_WIDTH = 9000;
+        private static final int WRAPPER_WIDTH = 900000;
 
         ArrayList<Widget> visibleCells = new ArrayList<Widget>();
 

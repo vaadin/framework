@@ -118,7 +118,7 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
 
         final String fieldValue;
         if (prompting) {
-            fieldValue = inputPrompt;
+            fieldValue = isReadOnly() ? "" : inputPrompt;
             addStyleDependentName(CLASSNAME_PROMPT);
         } else {
             fieldValue = text;
@@ -234,7 +234,7 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         String text = getText();
         setPrompting(inputPrompt != null && (text == null || "".equals(text)));
         if (prompting) {
-            setText(inputPrompt);
+            setText(isReadOnly() ? "" : inputPrompt);
             addStyleDependentName(CLASSNAME_PROMPT);
         }
 

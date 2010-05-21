@@ -271,3 +271,9 @@
 	padding-left: 12px;
 	padding-right: 12px;
 }
+
+/* IE6 needs some help identifying when the input is readonly */
+.v-ie6 .v-filterselect.v-readonly,
+.v-ie6 .v-filterselect .v-filterselect-input-readonly {
+	background: transparent;
+}
