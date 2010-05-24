@@ -21,12 +21,20 @@ public class TestGridLayoutLastRowRemoval extends TestCase {
             fail("removeRow(0) threw an IllegalArgumentExcetion when removing the last row");
         }
 
-        // The grid should now be empty with one row and one column
-        assertEquals(1, grid.getColumns());
+        // The column amount should be preserved
+        assertEquals(2, grid.getColumns());
+
+        // There should be one row left
         assertEquals(1, grid.getRows());
 
         // There should be no component left in the grid layout
         assertNull("A component should not be left in the layout", grid
                 .getComponent(0, 0));
+        assertNull("A component should not be left in the layout", grid
+                .getComponent(1, 0));
+
+        // The cursor should be in the first cell
+        assertEquals(0, grid.getCursorX());
+        assertEquals(0, grid.getCursorY());
     }
 }
