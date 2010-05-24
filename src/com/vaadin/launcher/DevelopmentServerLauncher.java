@@ -21,7 +21,7 @@ import com.vaadin.launcher.util.BrowserLauncher;
  */
 public class DevelopmentServerLauncher {
 
-    private final static String serverPort = "8888";
+    private final static int serverPort = 8888;
 
     /**
      * Main function for running Jetty.
@@ -59,6 +59,18 @@ public class DevelopmentServerLauncher {
     protected static String runServer(Map<String, String> serverArgs,
             String mode) {
 
+        // Assign default values for some arguments
+        assignDefault(serverArgs, "webroot", "WebContent");
+        assignDefault(serverArgs, "httpPort", "" + serverPort);
+        assignDefault(serverArgs, "context", "");
+
+        int port = serverPort;
+        try {
+            port = Integer.parseInt(serverArgs.get("httpPort"));
+        } catch (NumberFormatException e) {
+            // keep default value for port
+        }
+
         // Add help for System.out
         System.out
                 .println("-------------------------------------------------\n"
@@ -69,17 +81,12 @@ public class DevelopmentServerLauncher {
                         + serverPort
                         + "\n-------------------------------------------------\n");
 
-        // Assign default values for some arguments
-        assignDefault(serverArgs, "webroot", "WebContent");
-        assignDefault(serverArgs, "httpPort", serverPort);
-        assignDefault(serverArgs, "context", "");
-
         try {
             final Server server = new Server();
 
             final Connector connector = new SelectChannelConnector();
 
-            connector.setPort(8888);
+            connector.setPort(port);
             server.setConnectors(new Connector[] { connector });
 
             final WebAppContext webappcontext = new WebAppContext();
@@ -97,8 +104,7 @@ public class DevelopmentServerLauncher {
             return null;
         }
 
-        return "http://localhost:" + serverArgs.get("httpPort")
-                + serverArgs.get("context");
+        return "http://localhost:" + port + serverArgs.get("context");
     }
 
     /**
