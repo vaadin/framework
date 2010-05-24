@@ -161,8 +161,8 @@
 }
 .v-window-black .v-window-wrap2 {
 	background-color: #1d2021;
-	-moz-border-radius: 8px;
-	-webkit-border-radius: 8px;
+	-moz-border-radius: 7px;
+	-webkit-border-radius: 7px;
 }
 .v-sa .v-window-black .v-window-wrap2,
 .v-ff3 .v-window-black .v-window-wrap2,
@@ -176,10 +176,10 @@
 	background: transparent repeat-x;
 	background-image: url(img/black/header-bg.png); /** sprite-ref: black-verticals; sprite-alignment: repeat */
 	text-align: center;
-	-moz-border-radius-topright: 8px;
-	-moz-border-radius-topleft: 8px;
-	-webkit-border-top-right-radius: 8px;
-	-webkit-border-top-left-radius: 8px;
+	-moz-border-radius-topright: 7px;
+	-moz-border-radius-topleft: 7px;
+	-webkit-border-top-right-radius: 7px;
+	-webkit-border-top-left-radius: 7px;
 	overflow: hidden;
 	border: none;
 }
