@@ -1795,7 +1795,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         page.write(VERSION);
         page.write("\",applicationVersion:\"");
         page.write(application.getVersion());
-        page.write("\"},");
+        page.write("\"}");
         if (systemMessages != null) {
             // Write the CommunicationError -message to client
             String caption = systemMessages.getCommunicationErrorCaption();
@@ -1811,7 +1811,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 url = "\"" + url + "\"";
             }
 
-            page.write("\"comErrMsg\": {" + "\"caption\":" + caption + ","
+            page.write(",\"comErrMsg\": {" + "\"caption\":" + caption + ","
                     + "\"message\" : " + message + "," + "\"url\" : " + url
                     + "}");
         }
