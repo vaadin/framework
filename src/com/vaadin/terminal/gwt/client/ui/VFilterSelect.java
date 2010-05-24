@@ -48,6 +48,7 @@ import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
 /**
+ * Client side implementation of the Select component.
  * 
  * TODO needs major refactoring (to be extensible etc)
  */
@@ -55,12 +56,21 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         KeyDownHandler, KeyUpHandler, ClickHandler, FocusHandler, BlurHandler,
         Focusable {
 
+    /**
+     * Represents a suggestion in the suggestion popup box
+     */
     public class FilterSelectSuggestion implements Suggestion, Command {
 
         private final String key;
         private final String caption;
         private String iconUri;
 
+        /**
+         * Constructor
+         * 
+         * @param uidl
+         *            The UIDL recieved from the server
+         */
         public FilterSelectSuggestion(UIDL uidl) {
             key = uidl.getStringAttribute("key");
             caption = uidl.getStringAttribute("caption");
@@ -70,6 +80,11 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             }
         }
 
+        /**
+         * Gets the visible row in the popup as a HTML string. The string
+         * contains an image tag with the rows icon (if an icon has been
+         * specified) and the caption of the item
+         */
         public String getDisplayString() {
             final StringBuffer sb = new StringBuffer();
             if (iconUri != null) {
@@ -81,23 +96,43 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             return sb.toString();
         }
 
+        /**
+         * Get a string that represents this item. This is used in the text box.
+         */
         public String getReplacementString() {
             return caption;
         }
 
+        /**
+         * Get the option key which represents the item on the server side.
+         * 
+         * @return The key of the item
+         */
         public int getOptionKey() {
             return Integer.parseInt(key);
         }
 
+        /**
+         * Get the URI of the icon. Used when constructing the displayed option.
+         * 
+         * @return
+         */
         public String getIconUri() {
             return iconUri;
         }
 
+        /**
+         * Executes a selection of this item.
+         */
         public void execute() {
             onSuggestionSelected(this);
         }
     }
 
+    /**
+     * Represents the popup box with the selection options. Wraps a suggestion
+     * menu.
+     */
     public class SuggestionPopup extends VOverlay implements PositionCallback,
             CloseHandler<PopupPanel> {
 
@@ -117,6 +152,9 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
         private int topPosition;
 
+        /**
+         * Default constructor
+         */
         SuggestionPopup() {
             super(true, false, true);
             menu = new SuggestionMenu();
@@ -138,6 +176,16 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             addCloseHandler(this);
         }
 
+        /**
+         * Shows the popup where the user can see the filtered options
+         * 
+         * @param currentSuggestions
+         *            The filtered suggestions
+         * @param currentPage
+         *            The current page number
+         * @param totalSuggestions
+         *            The total amount of suggestions
+         */
         public void showSuggestions(
                 Collection<FilterSelectSuggestion> currentSuggestions,
                 int currentPage, int totalSuggestions) {
@@ -186,8 +234,13 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
         }
 
-        private void setNextButtonActive(boolean b) {
-            if (b) {
+        /**
+         * Should the next page button be visible to the user?
+         * 
+         * @param active
+         */
+        private void setNextButtonActive(boolean active) {
+            if (active) {
                 DOM.sinkEvents(down, Event.ONCLICK);
                 DOM.setElementProperty(down, "className", CLASSNAME
                         + "-nextpage");
@@ -198,8 +251,13 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             }
         }
 
-        private void setPrevButtonActive(boolean b) {
-            if (b) {
+        /**
+         * Should the previous page button be visible to the user
+         * 
+         * @param active
+         */
+        private void setPrevButtonActive(boolean active) {
+            if (active) {
                 DOM.sinkEvents(up, Event.ONCLICK);
                 DOM
                         .setElementProperty(up, "className", CLASSNAME
@@ -212,6 +270,9 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
         }
 
+        /**
+         * Selects the next item in the filtered selections
+         */
         public void selectNextItem() {
             final MenuItem cur = menu.getSelectedItem();
             final int index = 1 + menu.getItems().indexOf(cur);
@@ -230,6 +291,9 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             }
         }
 
+        /**
+         * Selects the previous item in the filtered selections
+         */
         public void selectPrevItem() {
             final MenuItem cur = menu.getSelectedItem();
             final int index = -1 + menu.getItems().indexOf(cur);
@@ -257,6 +321,13 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             }
         }
 
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * com.google.gwt.user.client.ui.Widget#onBrowserEvent(com.google.gwt
+         * .user.client.Event)
+         */
         @Override
         public void onBrowserEvent(Event event) {
             final Element target = DOM.eventGetTarget(event);
@@ -270,6 +341,15 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             tb.setFocus(true);
         }
 
+        /**
+         * Should paging be enabled. If paging is enabled then only a certain
+         * amount of items are visible at a time and a scrollbar or buttons are
+         * visible to change page. If paging is turned of then all options are
+         * rendered into the popup menu.
+         * 
+         * @param paging
+         *            Should the paging be turned on?
+         */
         public void setPagingEnabled(boolean paging) {
             if (isPagingEnabled == paging) {
                 return;
@@ -370,6 +450,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         }
 
         /**
+         * Was the popup just closed?
+         * 
          * @return true if popup was just closed
          */
         public boolean isJustClosed() {
@@ -377,6 +459,13 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             return (lastAutoClosed > 0 && (now - lastAutoClosed) < 200);
         }
 
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * com.google.gwt.event.logical.shared.CloseHandler#onClose(com.google
+         * .gwt.event.logical.shared.CloseEvent)
+         */
         public void onClose(CloseEvent<PopupPanel> event) {
             if (event.isAutoClosed()) {
                 lastAutoClosed = (new Date()).getTime();
@@ -399,8 +488,14 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
     }
 
+    /**
+     * The menu where the suggestions are rendered
+     */
     public class SuggestionMenu extends MenuBar {
 
+        /**
+         * Default constructor
+         */
         SuggestionMenu() {
             super(true);
             setStyleName(CLASSNAME + "-suggestmenu");
@@ -418,6 +513,12 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             }
         }
 
+        /**
+         * Sets the suggestions rendered in the menu
+         * 
+         * @param suggestions
+         *            The suggestions to be rendered in the menu
+         */
         public void setSuggestions(
                 Collection<FilterSelectSuggestion> suggestions) {
             clearItems();
@@ -446,6 +547,10 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             }
         }
 
+        /**
+         * Send the current selection to the server. Triggered when a selection
+         * is made or on a blur event.
+         */
         public void doSelectedItemAction() {
             // do not send a value change event if null was and stays selected
             final String enteredItemValue = tb.getText();
@@ -472,6 +577,9 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             }
         }
 
+        /**
+         * Triggered after a selection has been made
+         */
         public void doPostFilterSelectedItemAction() {
             final MenuItem item = getSelectedItem();
             final String enteredItemValue = tb.getText();
@@ -532,6 +640,13 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             suggestionPopup.hide();
         }
 
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * com.vaadin.terminal.gwt.client.ui.MenuBar#onBrowserEvent(com.google
+         * .gwt.user.client.Event)
+         */
         @Override
         public void onBrowserEvent(Event event) {
             if (event.getTypeInt() == Event.ONLOAD) {
@@ -556,7 +671,17 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
     private final FlowPanel panel = new FlowPanel();
 
+    /**
+     * The text box where the filter is written
+     */
     private final TextBox tb = new TextBox() {
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * com.google.gwt.user.client.ui.TextBoxBase#onBrowserEvent(com.google
+         * .gwt.user.client.Event)
+         */
         @Override
         public void onBrowserEvent(Event event) {
             super.onBrowserEvent(event);
@@ -568,7 +693,17 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
     private final SuggestionPopup suggestionPopup = new SuggestionPopup();
 
+    /**
+     * Used when measuring the width of the popup
+     */
     private final HTML popupOpener = new HTML("") {
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * com.google.gwt.user.client.ui.Widget#onBrowserEvent(com.google.gwt
+         * .user.client.Event)
+         */
         @Override
         public void onBrowserEvent(Event event) {
             super.onBrowserEvent(event);
@@ -633,6 +768,9 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     private boolean focused = false;
     private int horizPaddingAndBorder = 2;
 
+    /**
+     * Default constructor
+     */
     public VFilterSelect() {
         selectedItemIcon.setStyleName("v-icon");
         selectedItemIcon.addLoadHandler(new LoadHandler() {
@@ -674,6 +812,12 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         popupOpener.addClickHandler(this);
     }
 
+    /**
+     * Does the Select have more pages?
+     * 
+     * @return true if a next page exists, else false if the current page is the
+     *         last page
+     */
     public boolean hasNextPage() {
         if (totalMatches > (currentPage + 1) * pageLength) {
             return true;
@@ -682,10 +826,25 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         }
     }
 
+    /**
+     * Filters the options at a certain page. Uses the text box input as a
+     * filter
+     * 
+     * @param page
+     *            The page which items are to be filtered
+     */
     public void filterOptions(int page) {
         filterOptions(page, tb.getText());
     }
 
+    /**
+     * Filters the options at certain page using the given filter
+     * 
+     * @param page
+     *            The page to filter
+     * @param filter
+     *            The filter to apply to the components
+     */
     public void filterOptions(int page, String filter) {
         if (filter.equals(lastFilter) && currentPage == page) {
             if (!suggestionPopup.isAttached()) {
@@ -711,6 +870,13 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         currentPage = page;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.terminal.gwt.client.Paintable#updateFromUIDL(com.vaadin.terminal
+     * .gwt.client.UIDL, com.vaadin.terminal.gwt.client.ApplicationConnection)
+     */
     @SuppressWarnings("deprecation")
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         paintableId = uidl.getId();
@@ -861,6 +1027,10 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         initDone = true;
     }
 
+    /**
+     * Turns prompting on. When prompting is turned on a command prompt is shown
+     * in the text box if nothing has been entered.
+     */
     private void setPromptingOn() {
         if (!prompting) {
             prompting = true;
@@ -869,6 +1039,13 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         tb.setText(inputPrompt);
     }
 
+    /**
+     * Turns prompting off. When prompting is turned on a command prompt is
+     * shown in the text box if nothing has been entered.
+     * 
+     * @param text
+     *            The text the text box should contain.
+     */
     private void setPromptingOff(String text) {
         tb.setText(text);
         if (prompting) {
@@ -877,6 +1054,12 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         }
     }
 
+    /**
+     * Triggered when a suggestion is selected
+     * 
+     * @param suggestion
+     *            The suggestion that just got selected.
+     */
     public void onSuggestionSelected(FilterSelectSuggestion suggestion) {
         selecting = false;
 
@@ -906,6 +1089,13 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         suggestionPopup.hide();
     }
 
+    /**
+     * Sets the icon URI of the selected item. The icon is shown on the left
+     * side of the item caption text. Set the URI to null to remove the icon.
+     * 
+     * @param iconUri
+     *            The URI of the icon
+     */
     private void setSelectedItemIcon(String iconUri) {
         if (iconUri == null || iconUri == "") {
             panel.remove(selectedItemIcon);
@@ -918,6 +1108,10 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         }
     }
 
+    /**
+     * Positions the icon vertically in the middle. Should be called after the
+     * icon has loaded
+     */
     private void updateSelectedIconPosition() {
         // Position icon vertically to middle
         int availableHeight = getOffsetHeight();
@@ -927,6 +1121,13 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 marginTop + "px");
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt
+     * .event.dom.client.KeyDownEvent)
+     */
     public void onKeyDown(KeyDownEvent event) {
         if (enabled && !readonly) {
             if (suggestionPopup.isAttached()) {
@@ -937,6 +1138,12 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         }
     }
 
+    /**
+     * Triggered when a key is pressed in the text box
+     * 
+     * @param event
+     *            The KeyDownEvent
+     */
     private void inputFieldKeyDown(KeyDownEvent event) {
         switch (event.getNativeKeyCode()) {
         case KeyCodes.KEY_DOWN:
@@ -959,6 +1166,12 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
     }
 
+    /**
+     * Triggered when a key was pressed in the suggestion popup
+     * 
+     * @param event
+     *            The KeyDownEvent of the key
+     */
     private void popupKeyDown(KeyDownEvent event) {
         switch (event.getNativeKeyCode()) {
         case KeyCodes.KEY_DOWN:
@@ -1001,6 +1214,12 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
     }
 
+    /**
+     * Triggered when a key was depressed
+     * 
+     * @param event
+     *            The KeyUpEvent of the key depressed
+     */
     public void onKeyUp(KeyUpEvent event) {
         if (enabled && !readonly) {
             switch (event.getNativeKeyCode()) {
@@ -1025,6 +1244,9 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         }
     }
 
+    /**
+     * Resets the Select to its initial state
+     */
     private void reset() {
         if (currentSuggestion != null) {
             String text = currentSuggestion.getReplacementString();
@@ -1060,8 +1282,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         }
     }
 
-    /*
-     * Calculate minumum width for FilterSelect textarea
+    /**
+     * Calculate minimum width for FilterSelect textarea
      */
     private native int minWidth(String captions)
     /*-{
@@ -1085,6 +1307,13 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         return w;
     }-*/;
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.event.dom.client.FocusHandler#onFocus(com.google.gwt.event
+     * .dom.client.FocusEvent)
+     */
     public void onFocus(FocusEvent event) {
         focused = true;
         if (prompting && !readonly) {
@@ -1097,6 +1326,13 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.event.dom.client.BlurHandler#onBlur(com.google.gwt.event
+     * .dom.client.BlurEvent)
+     */
     public void onBlur(BlurEvent event) {
         focused = false;
         if (!readonly) {
@@ -1120,6 +1356,11 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.terminal.gwt.client.Focusable#focus()
+     */
     public void focus() {
         focused = true;
         if (prompting && !readonly) {
@@ -1128,6 +1369,11 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         tb.setFocus(true);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.gwt.user.client.ui.UIObject#setWidth(java.lang.String)
+     */
     @Override
     public void setWidth(String width) {
         if (width == null || width.equals("")) {
@@ -1143,12 +1389,21 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.gwt.user.client.ui.UIObject#setHeight(java.lang.String)
+     */
     @Override
     public void setHeight(String height) {
         super.setHeight(height);
         Util.setHeightExcludingPaddingAndBorder(tb, height, 3);
     }
 
+    /**
+     * Calculates the width of the select if the select has undefined width.
+     * Should be called when the width changes or when the icon changes.
+     */
     private void updateRootWidth() {
         if (width == null) {
             /*
@@ -1190,6 +1445,12 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         }
     }
 
+    /**
+     * Get the width of the select in pixels where the text area and icon has
+     * been included.
+     * 
+     * @return The width in pixels
+     */
     private int getMainWidth() {
         int componentWidth;
         if (BrowserInfo.get().isIE6()) {
@@ -1203,6 +1464,12 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         return componentWidth;
     }
 
+    /**
+     * Sets the text box width in pixels.
+     * 
+     * @param componentWidth
+     *            The width of the text box in pixels
+     */
     private void setTextboxWidth(int componentWidth) {
         int padding = getTextboxPadding();
         int popupOpenerWidth = Util.getRequiredWidth(popupOpener);
@@ -1216,6 +1483,12 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         tb.setWidth(textboxWidth + "px");
     }
 
+    /**
+     * Gets the horizontal padding of the text box in pixels. The measurement
+     * includes the border width.
+     * 
+     * @return The padding in pixels
+     */
     private int getTextboxPadding() {
         if (textboxPadding < 0) {
             textboxPadding = Util.measureHorizontalPaddingAndBorder(tb
@@ -1224,6 +1497,12 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         return textboxPadding;
     }
 
+    /**
+     * Gets the horizontal padding of the select. The measurement includes the
+     * border width.
+     * 
+     * @return The padding in pixels
+     */
     private int getComponentPadding() {
         if (componentPadding < 0) {
             componentPadding = Util.measureHorizontalPaddingAndBorder(
