@@ -10,7 +10,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Button.ClickEvent;
 
-public class NativeSelects extends ComponentTestCase {
+public class NativeSelects extends ComponentTestCase<NativeSelect> {
 
     private static final Object CAPTION = "caption";
     NativeSelect label[] = new NativeSelect[20];
@@ -95,7 +95,7 @@ public class NativeSelects extends ComponentTestCase {
         s.addContainerProperty(CAPTION, String.class, "");
         s.setItemCaptionPropertyId(CAPTION);
         s.setCaption(caption);
-
+        s.setNullSelectionAllowed(false);
         return s;
     }
 
@@ -135,19 +135,41 @@ public class NativeSelects extends ComponentTestCase {
                     }
                 });
 
+        CheckBox nullSelect = new CheckBox("Null selection allowed",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        boolean nullAllowed = event.getButton().booleanValue();
+                        setNullAllowed(nullAllowed);
+                    }
+                });
+
         errorIndicators.setValue(new Boolean(false));
         readonly.setValue(new Boolean(false));
         enabled.setValue(new Boolean(true));
+        nullSelect.setValue(new Boolean(false));
 
         errorIndicators.setImmediate(true);
         readonly.setImmediate(true);
         enabled.setImmediate(true);
+        nullSelect.setImmediate(true);
 
         actions.add(errorIndicators);
         actions.add(readonly);
         actions.add(enabled);
+        actions.add(nullSelect);
 
         return actions;
+    }
+
+    protected void setNullAllowed(boolean on) {
+        for (NativeSelect c : getTestComponents()) {
+            if (c == null) {
+                continue;
+            }
+
+            c.setNullSelectionAllowed(on);
+        }
+
     }
 
 }
