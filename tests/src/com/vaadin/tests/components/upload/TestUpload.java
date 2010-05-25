@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.tests.components.ComponentTestCase;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Upload;
@@ -15,7 +14,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Upload.FinishedEvent;
 import com.vaadin.ui.Upload.Receiver;
 
-public class TestUpload extends ComponentTestCase implements Receiver {
+public class TestUpload extends ComponentTestCase<Upload> implements Receiver {
 
     @Override
     protected String getDescription() {
@@ -47,8 +46,6 @@ public class TestUpload extends ComponentTestCase implements Receiver {
         u.setWidth("300px");
         addTestComponent(u);
 
-        addTestComponent(new Button("blah"));
-
     }
 
     @Override
@@ -58,7 +55,7 @@ public class TestUpload extends ComponentTestCase implements Receiver {
         CheckBox enabled = new CheckBox("Enabled", new ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-                for (Component c : getTestComponents()) {
+                for (Upload c : getTestComponents()) {
                     c.setEnabled(event.getButton().booleanValue());
                 }
 
