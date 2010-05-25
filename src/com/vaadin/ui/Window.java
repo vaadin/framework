@@ -32,7 +32,44 @@ import com.vaadin.terminal.URIHandler;
 import com.vaadin.terminal.gwt.client.ui.VView;
 
 /**
- * Application window component.
+ * A component that represents an application (browser native) window or a sub
+ * window.
+ * <p>
+ * If the window is a application window or a sub window depends on how it is
+ * added to the application. Adding a {@code Window} to a {@code Window} using
+ * {@link Window#addWindow(Window)} makes it a sub window and adding a {@code
+ * Window} to the {@code Application} using
+ * {@link Application#addWindow(Window)} makes it an application window.
+ * </p>
+ * <p>
+ * An application window is the base of any view in a Vaadin application. All
+ * applications contain a main application window (set using
+ * {@link Application#setMainWindow(Window)} which is what is initially shown to
+ * the user. The contents of a window is set using
+ * {@link #setContent(ComponentContainer)}. The contents can in turn contain
+ * other components. For multi-tab applications there is one window instance per
+ * opened tab.
+ * </p>
+ * <p>
+ * A sub window is floating popup style window that can be added to an
+ * application window. Like the application window its content is set using
+ * {@link #setContent(ComponentContainer)}. A sub window can be positioned on
+ * the screen using absolute coordinates (pixels). The default content of the
+ * Window is set to be suitable for application windows. For sub windows it
+ * might be necessary to set the size of the content to work as expected.
+ * </p>
+ * <p>
+ * Window caption is displayed in the browser title bar for application level
+ * windows and in the window header for sub windows.
+ * </p>
+ * <p>
+ * Certain methods in this class are only meaningful for sub windows and other
+ * parts only for application windows. These are marked using <b>Sub window
+ * only</b> and <b>Application window only</b> respectively in the javadoc.
+ * </p>
+ * <p>
+ * Sub window is to be split into a separate component in Vaadin 7.
+ * </p>
  * 
  * @author IT Mill Ltd.
  * @version
@@ -44,148 +81,159 @@ import com.vaadin.terminal.gwt.client.ui.VView;
 public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
-     * Window with no border.
+     * <b>Application window only</b>. A border style used for opening resources
+     * in a window without a border.
      */
     public static final int BORDER_NONE = 0;
 
     /**
-     * Window with only minimal border.
+     * <b>Application window only</b>. A border style used for opening resources
+     * in a window with a minimal border.
      */
     public static final int BORDER_MINIMAL = 1;
 
     /**
-     * Window with default borders.
+     * <b>Application window only</b>. A border style that indicates that the
+     * default border style should be used when opening resources.
      */
     public static final int BORDER_DEFAULT = 2;
 
     /**
-     * The terminal this window is attached to.
+     * <b>Application window only</b>. The terminal this window is attached to.
      */
     private Terminal terminal = null;
 
     /**
-     * The application this window is attached to.
+     * <b>Application window only</b>. The application this window is attached
+     * to or null.
      */
     private Application application = null;
 
     /**
-     * List of URI handlers for this window.
+     * <b>Application window only</b>. List of URI handlers for this window.
      */
     private LinkedList<URIHandler> uriHandlerList = null;
 
     /**
-     * List of parameter handlers for this window.
+     * <b>Application window only</b>. List of parameter handlers for this
+     * window.
      */
     private LinkedList<ParameterHandler> parameterHandlerList = null;
 
-    /** Set of subwindows */
+    /**
+     * <b>Application window only</b>. List of sub windows in this window. A sub
+     * window cannot have other sub windows.
+     */
     private final LinkedHashSet<Window> subwindows = new LinkedHashSet<Window>();
 
     /**
-     * Explicitly specified theme of this window. If null, application theme is
-     * used.
+     * <b>Application window only</b>. Explicitly specified theme of this window
+     * or null if the application theme should be used.
      */
     private String theme = null;
 
     /**
-     * Resources to be opened automatically on next repaint.
+     * <b>Application window only</b>. Resources to be opened automatically on
+     * next repaint. The list is automatically cleared when it has been sent to
+     * the client.
      */
     private final LinkedList<OpenResource> openList = new LinkedList<OpenResource>();
 
     /**
-     * The name of the window.
+     * <b>Application window only</b>. Unique name of the window used to
+     * identify it.
      */
     private String name = null;
 
     /**
-     * Window border mode.
+     * <b>Application window only.</b> Border mode of the Window.
      */
     private int border = BORDER_DEFAULT;
 
     /**
-     * Distance of Window top border in pixels from top border of the containing
-     * (main window) or -1 if unspecified.
+     * <b>Sub window only</b>. Top offset in pixels for the sub window (relative
+     * to the parent application window) or -1 if unspecified.
      */
     private int positionY = -1;
 
     /**
-     * Distance of Window left border in pixels from left border of the
-     * containing (main window) or -1 if unspecified .
+     * <b>Sub window only</b>. Left offset in pixels for the sub window
+     * (relative to the parent application window) or -1 if unspecified.
      */
     private int positionX = -1;
 
+    /**
+     * <b>Application window only</b>. A list of notifications that are waiting
+     * to be sent to the client. Cleared (set to null) when the notifications
+     * have been sent.
+     */
     private LinkedList<Notification> notifications;
 
+    /**
+     * <b>Sub window only</b>. Modality flag for sub window.
+     */
     private boolean modal = false;
 
+    /**
+     * <b>Sub window only</b>. Controls if the end user can resize the window.
+     */
     private boolean resizable = true;
 
+    /**
+     * <b>Sub window only</b>. Controls if the end user can move the window by
+     * dragging.
+     */
     private boolean draggable = true;
 
+    /**
+     * <b>Sub window only</b>. Flag which is true if the window is centered on
+     * the screen.
+     */
     private boolean centerRequested = false;
 
+    /**
+     * Component that should be focused after the next repaint. Null if no focus
+     * change should take place.
+     */
     private Focusable pendingFocus;
 
+    /**
+     * <b>Application window only</b>. A list of javascript commands that are
+     * waiting to be sent to the client. Cleared (set to null) when the commands
+     * have been sent.
+     */
     private ArrayList<String> jsExecQueue = null;
 
+    /**
+     * The component that should be scrolled into view after the next repaint.
+     * Null if nothing should be scrolled into view.
+     */
     private Component scrollIntoView;
 
-    /* ********************************************************************* */
-
     /**
-     * Creates a new empty unnamed window with default layout.
-     * 
-     * <p>
-     * To show the window in application, it must be added to application with
-     * <code>Application.addWindow</code> method.
-     * </p>
-     * 
-     * <p>
-     * The windows are scrollable by default.
-     * </p>
-     * 
-     * @param caption
-     *            the Title of the window.
+     * Creates a new unnamed window with a default layout.
      */
     public Window() {
         this("", null);
     }
 
     /**
-     * Creates a new empty window with default layout.
-     * 
-     * <p>
-     * To show the window in application, it must be added to application with
-     * <code>Application.addWindow</code> method.
-     * </p>
-     * 
-     * <p>
-     * The windows are scrollable by default.
-     * </p>
+     * Creates a new unnamed window with a default layout and given title.
      * 
      * @param caption
-     *            the Title of the window.
+     *            the title of the window.
      */
     public Window(String caption) {
         this(caption, null);
     }
 
     /**
-     * Creates a new window.
-     * 
-     * <p>
-     * To show the window in application, it must be added to application with
-     * <code>Application.addWindow</code> method.
-     * </p>
-     * 
-     * <p>
-     * The windows are scrollable by default.
-     * </p>
+     * Creates a new unnamed window with the given content and title.
      * 
      * @param caption
-     *            the Title of the window.
-     * @param layout
-     *            the Layout of the window.
+     *            the title of the window.
+     * @param content
+     *            the contents of the window
      */
     public Window(String caption, ComponentContainer content) {
         super(caption, content);
@@ -461,14 +509,13 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     }
 
     /**
-     * Sets the theme for this window.
-     * 
-     * Setting theme for subwindows is not supported.
+     * <b>Application window only</b>. Sets the theme for this window.
      * 
      * The terminal will reload its host page on theme changes.
      * 
      * @param theme
-     *            the New theme for this window. Null implies the default theme.
+     *            the new theme for this window or null to use the application
+     *            theme.
      */
     public void setTheme(String theme) {
         if (getParent() != null) {
@@ -480,7 +527,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     }
 
     /**
-     * Paints the content of this component.
+     * Paints the contents of this component.
      * 
      * @param event
      *            the Paint Event.
@@ -750,16 +797,23 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     }
 
     /**
-     * Returns the border.
+     * Returns the border style of the window.
      * 
-     * @return the border.
+     * @see #setBorder(int)
+     * @return the border style for the window
      */
     public int getBorder() {
         return border;
     }
 
     /**
-     * Sets the border.
+     * Sets the border style for this window. Valid values are
+     * {@link Window#BORDER_NONE}, {@link Window#BORDER_MINIMAL},
+     * {@link Window#BORDER_DEFAULT}.
+     * <p>
+     * <b>Note!</b> Setting this seems to currently have no effect whatsoever on
+     * the window.
+     * </p>
      * 
      * @param border
      *            the border to set.
