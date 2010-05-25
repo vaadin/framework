@@ -11,6 +11,9 @@ import com.vaadin.terminal.gwt.client.ui.VAccordion;
  * 
  * Closable tabs are not supported by the accordion.
  * 
+ * The {@link Accordion} can be styled with the .v-accordion, .v-accordion-item,
+ * .v-accordion-item-first and .v-accordion-item-caption styles.
+ * 
  * @see TabSheet
  */
 @SuppressWarnings("serial")
