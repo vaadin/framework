@@ -6,11 +6,12 @@ import java.util.List;
 import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.Button.ClickEvent;
 
-public class Comboboxes extends ComponentTestCase {
+public class Comboboxes extends ComponentTestCase<ComboBox> {
 
     private static final Object CAPTION = "caption";
     Select label[] = new Select[20];
@@ -19,7 +20,7 @@ public class Comboboxes extends ComponentTestCase {
     protected void setup() {
         super.setup();
 
-        Select s;
+        ComboBox s;
 
         s = createSelect(null);
         s.setWidth(null);
@@ -89,14 +90,14 @@ public class Comboboxes extends ComponentTestCase {
 
     }
 
-    private Select createSelect(String caption) {
-        Select s = new Select();
+    private ComboBox createSelect(String caption) {
+        ComboBox cb = new ComboBox();
+        cb.setImmediate(true);
+        cb.addContainerProperty(CAPTION, String.class, "");
+        cb.setItemCaptionPropertyId(CAPTION);
+        cb.setCaption(caption);
 
-        s.addContainerProperty(CAPTION, String.class, "");
-        s.setItemCaptionPropertyId(CAPTION);
-        s.setCaption(caption);
-
-        return s;
+        return cb;
     }
 
     @Override

@@ -11,7 +11,7 @@ import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.MenuBar.MenuItem;
 
-public class Menubars extends ComponentTestCase {
+public class Menubars extends ComponentTestCase<MenuBar> {
 
     MenuBar menubar[] = new MenuBar[20];
 

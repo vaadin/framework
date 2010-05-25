@@ -10,9 +10,10 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout.SpacingHandler;
 
-public abstract class ComponentTestCase extends TestBase {
+public abstract class ComponentTestCase<T extends AbstractComponent> extends
+        TestBase {
 
-    private List<AbstractComponent> testComponents = new ArrayList<AbstractComponent>();
+    private List<T> testComponents = new ArrayList<T>();
 
     @Override
     protected void setup() {
@@ -45,17 +46,17 @@ public abstract class ComponentTestCase extends TestBase {
         return actionLayout;
     }
 
-    protected void addTestComponent(AbstractComponent c) {
+    protected void addTestComponent(T c) {
         testComponents.add(c);
         addComponent(c);
     }
 
-    protected List<AbstractComponent> getTestComponents() {
+    protected List<T> getTestComponents() {
         return testComponents;
     }
 
     protected void setErrorIndicators(boolean on) {
-        for (AbstractComponent c : getTestComponents()) {
+        for (T c : getTestComponents()) {
             if (c == null) {
                 continue;
             }
@@ -72,7 +73,7 @@ public abstract class ComponentTestCase extends TestBase {
 
     protected void setRequired(boolean on) {
 
-        for (AbstractComponent c : getTestComponents()) {
+        for (T c : getTestComponents()) {
             if (c == null) {
                 continue;
             }
@@ -86,7 +87,7 @@ public abstract class ComponentTestCase extends TestBase {
     }
 
     protected void setEnabled(boolean on) {
-        for (AbstractComponent c : getTestComponents()) {
+        for (T c : getTestComponents()) {
             if (c == null) {
                 continue;
             }
@@ -97,7 +98,7 @@ public abstract class ComponentTestCase extends TestBase {
     }
 
     protected void setReadOnly(boolean on) {
-        for (AbstractComponent c : getTestComponents()) {
+        for (T c : getTestComponents()) {
             if (c == null) {
                 continue;
             }

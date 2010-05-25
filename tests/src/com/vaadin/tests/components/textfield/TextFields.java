@@ -10,7 +10,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Button.ClickEvent;
 
-public class TextFields extends ComponentTestCase {
+public class TextFields extends ComponentTestCase<TextField> {
 
     @Override
     protected void setup() {

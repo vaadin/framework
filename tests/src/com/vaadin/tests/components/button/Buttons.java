@@ -11,7 +11,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.Button.ClickEvent;
 
-public class Buttons extends ComponentTestCase {
+public class Buttons extends ComponentTestCase<Button> {
 
     Button button[] = new Button[20];
 

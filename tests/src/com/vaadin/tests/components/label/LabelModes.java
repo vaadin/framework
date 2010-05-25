@@ -10,7 +10,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Button.ClickEvent;
 
-public class LabelModes extends ComponentTestCase {
+public class LabelModes extends ComponentTestCase<Label> {
 
     Label label[] = new Label[20];
 
