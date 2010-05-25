@@ -12,6 +12,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.vaadin.data.Property;
+import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
@@ -19,6 +20,7 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.UserError;
 import com.vaadin.terminal.gwt.client.ui.VDateField;
 import com.vaadin.terminal.gwt.client.ui.VPopupCalendar;
 
@@ -119,6 +121,13 @@ public class DateField extends AbstractField implements
 
     private boolean lenient = false;
 
+    private String dateString = null;
+
+    /**
+     * Was the last entered string parsable?
+     */
+    private boolean parsingSucceeded = true;
+
     /**
      * Determines if week numbers are shown in the date selector.
      */
@@ -130,6 +139,7 @@ public class DateField extends AbstractField implements
      * Constructs an empty <code>DateField</code> with no caption.
      */
     public DateField() {
+        setInvalidAllowed(false);
     }
 
     /**
@@ -140,6 +150,7 @@ public class DateField extends AbstractField implements
      */
     public DateField(String caption) {
         setCaption(caption);
+        setInvalidAllowed(false);
     }
 
     /**
@@ -164,6 +175,7 @@ public class DateField extends AbstractField implements
      *            the Property to be edited with this editor.
      */
     public DateField(Property dataSource) throws IllegalArgumentException {
+        setInvalidAllowed(false);
         if (!Date.class.isAssignableFrom(dataSource.getType())) {
             throw new IllegalArgumentException("Can't use "
                     + dataSource.getType().getName()
@@ -186,6 +198,7 @@ public class DateField extends AbstractField implements
      *            the Date value.
      */
     public DateField(String caption, Date value) {
+        setInvalidAllowed(false);
         setValue(value);
         setCaption(caption);
     }
@@ -216,6 +229,7 @@ public class DateField extends AbstractField implements
 
         target.addAttribute("type", type);
         target.addAttribute(VDateField.WEEK_NUMBERS, isShowISOWeekNumbers());
+        target.addAttribute("parsable", parsingSucceeded);
 
         // Gets the calendar
         final Calendar calendar = getCalendar();
@@ -264,6 +278,7 @@ public class DateField extends AbstractField implements
     @Override
     public void changeVariables(Object source, Map variables) {
         super.changeVariables(source, variables);
+        setComponentError(null);
 
         if (!isReadOnly()
                 && (variables.containsKey("year")
@@ -281,7 +296,7 @@ public class DateField extends AbstractField implements
 
             // this enables analyzing invalid input on the server
             Object o = variables.get("dateString");
-            String dateString = null;
+            dateString = null;
             if (o != null) {
                 dateString = o.toString();
             }
@@ -345,7 +360,10 @@ public class DateField extends AbstractField implements
 
             if (newDate == null && dateString != null && !"".equals(dateString)) {
                 try {
-                    setValue(handleUnparsableDateString(dateString));
+                    Date parsedDate = handleUnparsableDateString(dateString);
+                    parsingSucceeded = true;
+                    setValue(parsedDate, true);
+
                     /*
                      * Ensure the value is sent to the client if the value is
                      * set to the same as the previous (#4304). Does not repaint
@@ -354,13 +372,25 @@ public class DateField extends AbstractField implements
                      */
                     requestRepaint();
                 } catch (ConversionException e) {
-                    // FIXME: Should not throw the exception but set an error
-                    // message for the field. And should retain the entered
-                    // value.
-                    throw e;
+                    /*
+                     * Sets the component error to the Conversion Exceptions
+                     * message. This can be overriden in
+                     * handleUnparsableDateString.
+                     */
+                    setComponentError(new UserError(e.getLocalizedMessage()));
+
+                    /*
+                     * The value of the DateField should be null if an invalid
+                     * value has been given. Not using setValue() since we do
+                     * not want to cause the client side value to change.
+                     */
+                    parsingSucceeded = false;
+                    setInternalValue(null);
+                    fireValueChange(true);
                 }
             } else if (newDate != oldDate
                     && (newDate == null || !newDate.equals(oldDate))) {
+                parsingSucceeded = true;
                 setValue(newDate, true); // Don't require a repaint, client
                 // updates itself
             }
@@ -392,7 +422,7 @@ public class DateField extends AbstractField implements
      */
     protected Date handleUnparsableDateString(String dateString)
             throws Property.ConversionException {
-        throw new Property.ConversionException();
+        throw new Property.ConversionException("Date format not recognized");
     }
 
     /* Property features */
@@ -430,13 +460,25 @@ public class DateField extends AbstractField implements
         setValue(newValue, false);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractField#setValue(java.lang.Object, boolean)
+     */
     @Override
     public void setValue(Object newValue, boolean repaintIsNotNeeded)
             throws Property.ReadOnlyException, Property.ConversionException {
 
         // Allows setting dates directly
         if (newValue == null || newValue instanceof Date) {
-            super.setValue(newValue, repaintIsNotNeeded);
+            try {
+                super.setValue(newValue, repaintIsNotNeeded);
+                parsingSucceeded = true;
+            } catch (InvalidValueException ive) {
+                // Thrown if validator fails
+                parsingSucceeded = false;
+                throw ive;
+            }
         } else {
 
             // Try to parse as string
@@ -444,8 +486,11 @@ public class DateField extends AbstractField implements
                 final SimpleDateFormat parser = new SimpleDateFormat();
                 final Date val = parser.parse(newValue.toString());
                 super.setValue(val, repaintIsNotNeeded);
+                parsingSucceeded = true;
             } catch (final ParseException e) {
-                throw new Property.ConversionException(e.getMessage());
+                parsingSucceeded = false;
+                throw new Property.ConversionException(
+                        "Date format not recognized");
             }
         }
     }
@@ -611,4 +656,31 @@ public class DateField extends AbstractField implements
         requestRepaint();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractField#isEmpty()
+     */
+    @Override
+    protected boolean isEmpty() {
+        /*
+         * Logically isEmpty() should return false also in the case that the
+         * entered value is invalid.
+         */
+        return dateString == null || dateString.equals("");
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractField#isValid()
+     */
+    @Override
+    public boolean isValid() {
+        /*
+         * For the DateField to be valid it has to be parsable also
+         */
+        boolean parsable = isEmpty() || (!isEmpty() && getValue() != null);
+        return parsable && super.isValid();
+    }
 }

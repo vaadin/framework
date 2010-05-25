@@ -356,4 +356,12 @@ public class VTextualDate extends VDateField implements Paintable, Field,
         text.setFocus(true);
     }
 
+    protected String getText() {
+        return text.getText();
+    }
+
+    protected void setText(String text) {
+        this.text.setText(text);
+    }
+
 }

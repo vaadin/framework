@@ -2,20 +2,28 @@ package com.vaadin.tests.components.datefield;
 
 import java.util.Date;
 
+import com.vaadin.data.Property;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.DateField;
 
 public class DateFieldUnparsableDate extends TestBase {
 
     public class MyDateField extends DateField {
+        Date oldDate = null;
         public MyDateField(String caption) {
             super(caption);
+            addListener(new Property.ValueChangeListener() {
+                public void valueChange(
+                        com.vaadin.data.Property.ValueChangeEvent event) {
+                    oldDate = (Date) getValue();
+                }
+            });
         }
 
         @Override
         protected Date handleUnparsableDateString(String dateString)
                 throws ConversionException {
-            return (Date) getValue();
+            return oldDate;
         }
     }
 

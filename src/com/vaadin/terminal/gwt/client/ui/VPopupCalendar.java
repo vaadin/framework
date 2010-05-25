@@ -27,6 +27,7 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
 
     private final VOverlay popup;
     private boolean open = false;
+    private boolean parsable = true;
 
     public VPopupCalendar() {
         super();
@@ -51,7 +52,10 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         boolean lastReadOnlyState = readonly;
+        parsable = uidl.getBooleanAttribute("parsable");
+
         super.updateFromUIDL(uidl, client);
+
         popup.setStyleName(VDateField.CLASSNAME + "-popup "
                 + VDateField.CLASSNAME + "-"
                 + resolutionToString(currentResolution));
@@ -174,4 +178,15 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
         return fieldExtraWidth;
     }
 
+    @Override
+    protected void buildDate() {
+        // Save previous value
+        String previousValue = getText();
+        super.buildDate();
+
+        // Restore previous value if the input could not be parsed
+        if (!parsable) {
+            setText(previousValue);
+        }
+    }
 }
