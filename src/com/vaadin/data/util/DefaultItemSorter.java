@@ -113,7 +113,10 @@ public class DefaultItemSorter implements ItemSorter {
      *            The first item to compare.
      * @param item2
      *            The second item to compare.
-     * @return
+     * @return a negative, zero, or positive integer if the property value in
+     *         the first item is less than, equal to, or greater than the
+     *         property value in the second item. Negated if {@code
+     *         sortDirection} is false.
      */
     protected int compareProperty(Object propertyId, boolean sortDirection,
             Item item1, Item item2) {
