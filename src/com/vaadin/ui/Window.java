@@ -941,12 +941,16 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         final Integer positionx = (Integer) variables.get("positionx");
         if (positionx != null) {
             final int x = positionx.intValue();
-            setPositionX(x < 0 ? -1 : x);
+            // This is information from the client so it is already using the
+            // position. No need to repaint.
+            setPositionX(x < 0 ? -1 : x, false);
         }
         final Integer positiony = (Integer) variables.get("positiony");
         if (positiony != null) {
             final int y = positiony.intValue();
-            setPositionY(y < 0 ? -1 : y);
+            // This is information from the client so it is already using the
+            // position. No need to repaint.
+            setPositionY(y < 0 ? -1 : y, false);
         }
 
         if (isClosable()) {
@@ -1015,9 +1019,26 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * @since 4.0.0
      */
     public void setPositionX(int positionX) {
+        setPositionX(positionX, true);
+    }
+
+    /**
+     * Sets the distance of Window left border in pixels from left border of the
+     * containing (main window).
+     * 
+     * @param positionX
+     *            the Distance of Window left border in pixels from left border
+     *            of the containing (main window). or -1 if unspecified.
+     * @param repaintRequired
+     *            true if the window needs to be repainted, false otherwise
+     * @since 6.3.4
+     */
+    private void setPositionX(int positionX, boolean repaintRequired) {
         this.positionX = positionX;
         centerRequested = false;
-        requestRepaint();
+        if (repaintRequired) {
+            requestRepaint();
+        }
     }
 
     /**
@@ -1044,9 +1065,27 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * @since 4.0.0
      */
     public void setPositionY(int positionY) {
+        setPositionY(positionY, true);
+    }
+
+    /**
+     * Sets the distance of Window top border in pixels from top border of the
+     * containing (main window).
+     * 
+     * @param positionY
+     *            the Distance of Window top border in pixels from top border of
+     *            the containing (main window). or -1 if unspecified
+     * @param repaintRequired
+     *            true if the window needs to be repainted, false otherwise
+     * 
+     * @since 6.3.4
+     */
+    private void setPositionY(int positionY, boolean repaintRequired) {
         this.positionY = positionY;
         centerRequested = false;
-        requestRepaint();
+        if (repaintRequired) {
+            requestRepaint();
+        }
     }
 
     private static final Method WINDOW_CLOSE_METHOD;
