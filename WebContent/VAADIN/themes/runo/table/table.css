@@ -2,10 +2,19 @@
 	height: 36px;
 	border: 1px solid #b6bbbc;
 	border-bottom: none;
-	background: #e7edf3 url(img/header-bg.png) repeat-x;
+	background: #e7e9ea url(img/header-bg.png) repeat-x;
 }
 .v-table-header {
 	height: 36px;
+}
+.v-table-footer-wrap {
+	border-color: #b6bbbc;
+	background: #e7e9ea url(img/header-bg.png) repeat-x;
+}
+.v-table-footer td {
+	border-right-color: #e8eaec;
+	padding-top: 3px;
+	padding-bottom: 3px;
 }
 .v-table-resizer {
 	height: 36px;

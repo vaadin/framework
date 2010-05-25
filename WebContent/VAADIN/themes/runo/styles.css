@@ -493,7 +493,7 @@ div.v-app-loading {
 .v-datefield-button {
 	cursor: pointer;
 }
-.v-readonly .v-datefield-button {
+.v-datefield .v-datefield-button-readonly {
 	display: none;
 }
 .v-datefield-calendarpanel table {
@@ -1851,6 +1851,7 @@ textarea.v-textarea-readonly:focus {
 	text-align: left; /* Force default alignment */
 	overflow: hidden;
 	padding: 1px 0;
+	outline: none;
 }
 .v-tree-node {
 	background: transparent url(../base/common/img/sprites.png) no-repeat 5px -37px;
@@ -3279,6 +3280,12 @@ div.v-csslayout-box-shadow {
 	border-top: 1px solid #b6bbbc;
 }
 
+/* IE6 needs some help identifying when the input is readonly */
+.v-ie6 .v-filterselect.v-readonly,
+.v-ie6 .v-filterselect .v-filterselect-input-readonly {
+	background: transparent;
+}
+
 
 /* Error styles (disabled by default)
    ----------------------------------
@@ -3578,10 +3585,19 @@ div.v-csslayout-box-shadow {
 	height: 36px;
 	border: 1px solid #b6bbbc;
 	border-bottom: none;
-	background: #e7edf3 url(table/img/header-bg.png) repeat-x;
+	background: #e7e9ea url(table/img/header-bg.png) repeat-x;
 }
 .v-table-header {
 	height: 36px;
+}
+.v-table-footer-wrap {
+	border-color: #b6bbbc;
+	background: #e7e9ea url(table/img/header-bg.png) repeat-x;
+}
+.v-table-footer td {
+	border-right-color: #e8eaec;
+	padding-top: 3px;
+	padding-bottom: 3px;
 }
 .v-table-resizer {
 	height: 36px;
@@ -4143,6 +4159,20 @@ textarea.v-textarea-small {
 	width: 14px;
 	height: 10px;
 	padding: 1px;
+}
+.v-tree{
+	outline:none;	
+}
+.v-tree-node-caption.v-tree-node-focused span{
+	padding-left: 1px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+.v-tree-node-focused span{
+	border: 1px dotted black;	
+}
+.v-ie6 .v-tree-node-ie6compatnode.v-tree-node-focused{
+	padding-left: 0px;
 }
 /***************************************
  * Drag'n'drop styles

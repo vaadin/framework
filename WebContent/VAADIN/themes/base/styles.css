@@ -493,7 +493,7 @@ div.v-app-loading {
 .v-datefield-button {
 	cursor: pointer;
 }
-.v-readonly .v-datefield-button {
+.v-datefield .v-datefield-button-readonly {
 	display: none;
 }
 .v-datefield-calendarpanel table {
@@ -1851,6 +1851,7 @@ textarea.v-textarea-readonly:focus {
 	text-align: left; /* Force default alignment */
 	overflow: hidden;
 	padding: 1px 0;
+	outline: none;
 }
 .v-tree-node {
 	background: transparent url(common/img/sprites.png) no-repeat 5px -37px;
