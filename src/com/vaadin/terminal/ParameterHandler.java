@@ -7,17 +7,21 @@ package com.vaadin.terminal;
 import java.io.Serializable;
 import java.util.Map;
 
+import com.vaadin.ui.Window;
+
 /**
- * Interface implemented by all the classes capable of handling external
- * parameters.
+ * {@code ParameterHandler} is implemented by classes capable of handling
+ * external parameters.
  * 
  * <p>
- * Some terminals can provide external parameters for application. For example
- * GET and POST parameters are passed to application as external parameters on
- * Web Adapter. The parameters can be received at any time during the
- * application lifecycle. All the parameter handlers implementing this interface
- * and registered to {@link com.vaadin.ui.Window} receive all the parameters got
- * from the terminal in the given window.
+ * What parameters are provided depend on what the {@link Terminal} provides and
+ * if the application is deployed as a servlet or portlet. URL GET parameters
+ * are typically provided to the {@link #handleParameters(Map)} method.
+ * </p>
+ * <p>
+ * A {@code ParameterHandler} must be registered to a {@code Window} using
+ * {@link Window#addParameterHandler(ParameterHandler)} to be called when
+ * parameters are available.
  * </p>
  * 
  * @author IT Mill Ltd.
@@ -28,27 +32,25 @@ import java.util.Map;
 public interface ParameterHandler extends Serializable {
 
     /**
-     * <p>
-     * Handles the given parameters. The parameters are given as inmodifieable
-     * name to value map. All parameters names are of type:
-     * {@link java.lang.String}. All the parameter values are arrays of strings.
-     * </p>
+     * Handles the given parameters. All parameters names are of type
+     * {@link String} and the values are {@link String} arrays.
      * 
      * @param parameters
-     *            the Inmodifiable name to value[] mapping.
+     *            an unmodifiable map which contains the parameter names and
+     *            values
      * 
      */
     public void handleParameters(Map<String, String[]> parameters);
 
     /**
-     * ParameterHandler error event.
+     * An ErrorEvent implementation for ParameterHandler.
      */
     public interface ErrorEvent extends Terminal.ErrorEvent {
 
         /**
-         * Gets the source ParameterHandler.
+         * Gets the ParameterHandler that caused the error.
          * 
-         * @return the source Parameter Handler.
+         * @return the ParameterHandler that caused the error
          */
         public ParameterHandler getParameterHandler();
 
