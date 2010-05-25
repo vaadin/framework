@@ -628,41 +628,81 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             HttpServletResponse response, String caption, String message,
             String details, String url) throws IOException {
 
-        if (!isUIDLRequest(request)) {
-            throw new RuntimeException(
-                    "criticalNotification can only be used in UIDL requests");
-        }
+        if (isUIDLRequest(request)) {
 
-        if (caption != null) {
-            caption = "\"" + JsonPaintTarget.escapeJSON(caption) + "\"";
-        }
-        if (details != null) {
-            if (message == null) {
-                message = details;
-            } else {
-                message += "<br/><br/>" + details;
+            if (caption != null) {
+                caption = "\"" + JsonPaintTarget.escapeJSON(caption) + "\"";
             }
+            if (details != null) {
+                if (message == null) {
+                    message = details;
+                } else {
+                    message += "<br/><br/>" + details;
+                }
+            }
+
+            if (message != null) {
+                message = "\"" + JsonPaintTarget.escapeJSON(message) + "\"";
+            }
+            if (url != null) {
+                url = "\"" + JsonPaintTarget.escapeJSON(url) + "\"";
+            }
+
+            String output = "for(;;);[{\"changes\":[], \"meta\" : {"
+                    + "\"appError\": {" + "\"caption\":" + caption + ","
+                    + "\"message\" : " + message + "," + "\"url\" : " + url
+                    + "}}, \"resources\": {}, \"locales\":[]}]";
+            writeResponse(response, "application/json; charset=UTF-8", output);
+        } else {
+            // Create an HTML reponse with the error
+            String output = "";
+
+            if (url != null) {
+                output += "<a href=\"" + url + "\">";
+            }
+            if (caption != null) {
+                output += "<b>" + caption + "</b><br/>";
+            }
+            if (message != null) {
+                output += message;
+                output += "<br/><br/>";
+            }
+
+            if (details != null) {
+                output += details;
+                output += "<br/><br/>";
+            }
+            if (url != null) {
+                output += "</a>";
+            }
+            writeResponse(response, "text/html; charset=UTF-8", output);
+
         }
 
-        if (message != null) {
-            message = "\"" + JsonPaintTarget.escapeJSON(message) + "\"";
-        }
-        if (url != null) {
-            url = "\"" + JsonPaintTarget.escapeJSON(url) + "\"";
-        }
+    }
 
-        // Set the response type
-        response.setContentType("application/json; charset=UTF-8");
+    /**
+     * Writes the response in {@code output} using the contentType given in
+     * {@code contentType} to the provided {@link HttpServletResponse}
+     * 
+     * @param response
+     * @param contentType
+     * @param output
+     *            Output to write (UTF-8 encoded)
+     * @throws IOException
+     */
+    private void writeResponse(HttpServletResponse response,
+            String contentType, String output) throws IOException {
+        response.setContentType(contentType);
         final ServletOutputStream out = response.getOutputStream();
+        // Set the response type
         final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
                 new OutputStreamWriter(out, "UTF-8")));
-        outWriter.print("for(;;);[{\"changes\":[], \"meta\" : {"
-                + "\"appError\": {" + "\"caption\":" + caption + ","
-                + "\"message\" : " + message + "," + "\"url\" : " + url
-                + "}}, \"resources\": {}, \"locales\":[]}]");
+        outWriter.print(output);
         outWriter.flush();
         outWriter.close();
         out.flush();
+
     }
 
     /**
@@ -1755,7 +1795,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         page.write(VERSION);
         page.write("\",applicationVersion:\"");
         page.write(application.getVersion());
-        page.write("\"},");
+        page.write("\"}");
         if (systemMessages != null) {
             // Write the CommunicationError -message to client
             String caption = systemMessages.getCommunicationErrorCaption();
@@ -1771,7 +1811,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 url = "\"" + url + "\"";
             }
 
-            page.write("\"comErrMsg\": {" + "\"caption\":" + caption + ","
+            page.write(",\"comErrMsg\": {" + "\"caption\":" + caption + ","
                     + "\"message\" : " + message + "," + "\"url\" : " + url
                     + "}");
         }

@@ -258,13 +258,15 @@ public class GAEApplicationServlet extends ApplicationServlet {
             log.severe("DeadlineExceeded for " + session.getId());
             sendDeadlineExceededNotification(request, response);
         } catch (NotSerializableException e) {
+            log.severe("NotSerializableException: " + getStackTraceAsString(e));
+
             // TODO this notification is usually not shown - should we redirect
             // in some other way - can we?
             sendNotSerializableNotification(request, response);
-            log.severe("NotSerializableException: " + getStackTraceAsString(e));
         } catch (Exception e) {
-            sendCriticalErrorNotification(request, response);
             log.severe(e + ": " + getStackTraceAsString(e));
+
+            sendCriticalErrorNotification(request, response);
         } finally {
             // "Next, please!"
             if (locked) {

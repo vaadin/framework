@@ -101,7 +101,8 @@ public class TabSheet extends AbstractComponentContainer {
                 if (components.isEmpty()) {
                     selected = null;
                 } else {
-                    selected = components.getFirst();
+                    // select the first enabled and visible tab, if any
+                    updateSelection();
                     fireSelectedTabChange();
                 }
             }
@@ -217,30 +218,6 @@ public class TabSheet extends AbstractComponentContainer {
 
             Tab tab = tabs.get(component);
 
-            /*
-             * If we have no selection, if the current selection is invisible or
-             * if the current selection is disabled (but the whole component is
-             * not) we select this tab instead
-             */
-            Tab selectedTabInfo = null;
-            if (selected != null) {
-                selectedTabInfo = tabs.get(selected);
-            }
-            if (selected == null || selectedTabInfo == null
-                    || !selectedTabInfo.isVisible()
-                    || !selectedTabInfo.isEnabled()) {
-
-                // The current selection is not valid so we need to change it
-                if (tab.isEnabled() && tab.isVisible()) {
-                    selected = component;
-                } else {
-                    /*
-                     * The current selection is not valid but this tab cannot be
-                     * selected either.
-                     */
-                    selected = null;
-                }
-            }
             target.startTag("tab");
             if (!tab.isEnabled() && tab.isVisible()) {
                 target.addAttribute("disabled", true);
@@ -414,9 +391,55 @@ public class TabSheet extends AbstractComponentContainer {
     public void setSelectedTab(Component c) {
         if (c != null && components.contains(c) && !c.equals(selected)) {
             selected = c;
+            updateSelection();
             fireSelectedTabChange();
             requestRepaint();
         }
+    }
+
+    /**
+     * Checks if the current selection is valid, and updates the selection if
+     * the previously selected component is not visible and enabled.
+     * 
+     * This method does not fire tab change events, but the caller should do so
+     * if appropriate.
+     * 
+     * @return true if selection was changed, false otherwise
+     */
+    private boolean updateSelection() {
+        Component originalSelection = selected;
+        for (final Iterator<Component> i = getComponentIterator(); i.hasNext();) {
+            final Component component = i.next();
+
+            Tab tab = tabs.get(component);
+
+            /*
+             * If we have no selection, if the current selection is invisible or
+             * if the current selection is disabled (but the whole component is
+             * not) we select this tab instead
+             */
+            Tab selectedTabInfo = null;
+            if (selected != null) {
+                selectedTabInfo = tabs.get(selected);
+            }
+            if (selected == null || selectedTabInfo == null
+                    || !selectedTabInfo.isVisible()
+                    || !selectedTabInfo.isEnabled()) {
+
+                // The current selection is not valid so we need to change
+                // it
+                if (tab.isEnabled() && tab.isVisible()) {
+                    selected = component;
+                } else {
+                    /*
+                     * The current selection is not valid but this tab cannot be
+                     * selected either.
+                     */
+                    selected = null;
+                }
+            }
+        }
+        return originalSelection != selected;
     }
 
     /**
@@ -795,6 +818,9 @@ public class TabSheet extends AbstractComponentContainer {
 
         public void setEnabled(boolean enabled) {
             this.enabled = enabled;
+            if (updateSelection()) {
+                fireSelectedTabChange();
+            }
             requestRepaint();
         }
 
@@ -804,6 +830,9 @@ public class TabSheet extends AbstractComponentContainer {
 
         public void setVisible(boolean visible) {
             this.visible = visible;
+            if (updateSelection()) {
+                fireSelectedTabChange();
+            }
             requestRepaint();
         }
 

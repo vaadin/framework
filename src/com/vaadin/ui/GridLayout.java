@@ -1185,7 +1185,8 @@ public class GridLayout extends AbstractLayout implements
      * row.
      * <p>
      * If the last row is removed then all remaining components will be removed
-     * and the grid will be reduced to one row and one column.
+     * and the grid will be reduced to one row. The cursor will be moved to the
+     * upper left cell of the grid.
      * </p>
      * 
      * @param row
@@ -1217,9 +1218,10 @@ public class GridLayout extends AbstractLayout implements
         if (rows == 1) {
             /*
              * Removing the last row means that the dimensions of the Grid
-             * layout will be truncated to 1x1 and all components removed.
+             * layout will be truncated to 1 empty row and the cursor is moved
+             * to the first cell
              */
-            setColumns(1);
+            cursorX = 0;
             cursorY = 0;
         } else {
             setRows(rows - 1);
