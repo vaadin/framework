@@ -32,23 +32,26 @@ public class DevelopmentServerLauncher {
      * @param args
      * @throws Exception
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
         // Pass-through of arguments for Jetty
         final Map<String, String> serverArgs = parseArguments(args);
 
         // Start Jetty
         System.out.println("Starting Jetty servlet container.");
-        final String url = runServer(serverArgs, "Development Server Mode");
+        String url;
+        try {
+            url = runServer(serverArgs, "Development Server Mode");
+            // Start Browser
+            if (!serverArgs.containsKey("nogui") && url != null) {
+                System.out.println("Starting Web Browser.");
 
-        // Start Browser
-        if (!serverArgs.containsKey("nogui") && url != null) {
-            System.out.println("Starting Web Browser.");
-
-            // Open browser into application URL
-            BrowserLauncher.openBrowser(url);
+                // Open browser into application URL
+                BrowserLauncher.openBrowser(url);
+            }
+        } catch (Exception e) {
+            // NOP exception already on console by jetty
         }
-
     }
 
     /**
