@@ -1937,6 +1937,8 @@ public class Table extends AbstractSelect implements Action.Container,
 
         handleClickEvent(variables);
 
+        handleColumnResizeEvent(variables);
+
         disableContentRefreshing();
 
         if (!isSelectable() && variables.containsKey("selected")) {
@@ -2146,6 +2148,43 @@ public class Table extends AbstractSelect implements Action.Container,
                 propertyId = columnIdMap.get(cid.toString());
             }
             fireEvent(new FooterClickEvent(this, propertyId, details));
+        }
+    }
+
+    /**
+     * Handles the column resize event sent by the client.
+     * 
+     * @param variables
+     */
+    private void handleColumnResizeEvent(Map<String, Object> variables) {
+        if (variables.containsKey("columnResizeEventColumn")) {
+            Object cid = variables.get("columnResizeEventColumn");
+            Object propertyId = null;
+            if (cid != null) {
+                propertyId = columnIdMap.get(cid.toString());
+            }
+
+            Object prev = variables.get("columnResizeEventPrev");
+            int previousWidth = -1;
+            if (prev != null) {
+                previousWidth = Integer.valueOf(prev.toString());
+            }
+
+            Object curr = variables.get("columnResizeEventCurr");
+            int currentWidth = -1;
+            if (curr != null) {
+                currentWidth = Integer.valueOf(curr.toString());
+            }
+
+            /*
+             * Update the sizes on the server side. If a column previously had a
+             * expand ratio and the user resized the column then the expand
+             * ratio will be turned into a static pixel size.
+             */
+            setColumnWidth(propertyId, currentWidth);
+
+            fireEvent(new ColumnResizeEvent(this, propertyId, previousWidth,
+                    currentWidth));
         }
     }
 
@@ -4025,5 +4064,116 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public boolean isFooterVisible() {
         return columnFootersVisible;
+    }
+
+    /**
+     * This event is fired when a column is resized. The event contains the
+     * columns property id which was fired, the previous width of the column and
+     * the width of the column after the resize.
+     */
+    public static class ColumnResizeEvent extends Component.Event{
+        public static final Method COLUMN_RESIZE_METHOD;
+        
+        static {
+            try {
+                COLUMN_RESIZE_METHOD = ColumnResizeListener.class
+                        .getDeclaredMethod("columnResize",
+                                new Class[] { ColumnResizeEvent.class });
+            } catch (final java.lang.NoSuchMethodException e) {
+                // This should never happen
+                throw new java.lang.RuntimeException();
+            }
+        }
+        
+        private final int previousWidth;
+        private final int currentWidth;
+        private final Object columnPropertyId;
+
+        /**
+         * Constructor
+         * 
+         * @param source
+         *            The source of the event
+         * @param propertyId
+         *            The columns property id
+         * @param previous
+         *            The width in pixels of the column before the resize event
+         * @param current
+         *            The width in pixels of the column after the resize event
+         */
+        public ColumnResizeEvent(Component source, Object propertyId,
+                int previous, int current) {
+            super(source);
+            previousWidth = previous;
+            currentWidth = current;
+            columnPropertyId = propertyId;
+        }        
+
+        /**
+         * Get the column property id of the column that was resized.
+         * 
+         * @return The column property id
+         */
+        public Object getPropertyId() {
+            return columnPropertyId;
+        }
+
+        /**
+         * Get the width in pixels of the column before the resize event
+         * 
+         * @return Width in pixels
+         */
+        public int getPreviousWidth() {
+            return previousWidth;
+        }
+
+        /**
+         * Get the width in pixels of the column after the resize event
+         * 
+         * @return Width in pixels
+         */
+        public int getCurrentWidth() {
+            return currentWidth;
+        }
+    }
+    
+    /**
+     * Interface for listening to column resize events.
+     */
+    public interface ColumnResizeListener{
+
+        /**
+         * This method is triggered when the column has been resized
+         * 
+         * @param event
+         *            The event which contains the column property id, the
+         *            previous width of the column and the current width of the
+         *            column
+         */
+        public void columnResize(ColumnResizeEvent event);
+    }
+
+    /**
+     * Adds a column resize listener to the Table. A column resize listener is
+     * called when a user resizes a columns width.
+     * 
+     * @param listener
+     *            The listener to attach to the Table
+     */
+    public void addListener(ColumnResizeListener listener) {
+        addListener(VScrollTable.COLUMN_RESIZE_EVENT_ID,
+                ColumnResizeEvent.class, listener,
+                ColumnResizeEvent.COLUMN_RESIZE_METHOD);
+    }
+    
+    /**
+     * Removes a column resize listener from the Table.
+     * 
+     * @param listener
+     *            The listener to remove
+     */
+    public void removeListener(ColumnResizeListener listener) {
+        removeListener(VScrollTable.COLUMN_RESIZE_EVENT_ID,
+                ColumnResizeEvent.class, listener);
     }
 }

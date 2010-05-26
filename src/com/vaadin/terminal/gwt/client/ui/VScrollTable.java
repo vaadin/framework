@@ -98,6 +98,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     public static final String ITEM_CLICK_EVENT_ID = "itemClick";
     public static final String HEADER_CLICK_EVENT_ID = "handleHeaderClick";
     public static final String FOOTER_CLICK_EVENT_ID = "handleFooterClick";
+    public static final String COLUMN_RESIZE_EVENT_ID = "columnResize";
 
     private static final double CACHE_RATE_DEFAULT = 2;
 
@@ -337,6 +338,28 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 }
             }
         }
+    }
+
+    /**
+     * Fires a column resize event which sends the resize information to the
+     * server.
+     * 
+     * @param columnId
+     *            The columnId of the column which was resized
+     * @param originalWidth
+     *            The width in pixels of the column before the resize event
+     * @param newWidth
+     *            The width in pixels of the column after the resize event
+     */
+    private void fireColumnResizeEvent(String columnId, int originalWidth,
+            int newWidth) {
+            client.updateVariable(paintableId, "columnResizeEventColumn",
+                    columnId, false);
+            client.updateVariable(paintableId, "columnResizeEventPrev",
+                    originalWidth, false);
+            client.updateVariable(paintableId, "columnResizeEventCurr",
+                    newWidth, immediate);
+
     }
 
     /**
@@ -1894,6 +1917,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 // readjust undefined width columns
                 lazyAdjustColumnWidths.cancel();
                 lazyAdjustColumnWidths.schedule(1);
+                fireColumnResizeEvent(cid, originalWidth, getColWidth(cid));
                 break;
             case Event.ONMOUSEMOVE:
                 if (isResizing) {
