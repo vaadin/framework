@@ -170,8 +170,12 @@ public class TabSheet extends AbstractComponentContainer {
      * The first tab added to a tab sheet is automatically selected and a tab
      * selection event is fired.
      * 
+     * If the component is already present in the tab sheet, changes its caption
+     * and icon and returns the corresponding (old) tab, preserving other tab
+     * metadata.
+     * 
      * @param c
-     *            the component to be added onto tab.
+     *            the component to be added onto tab - should not be null.
      * @param caption
      *            the caption to be set for the component and used rendered in
      *            tab bar
@@ -181,7 +185,14 @@ public class TabSheet extends AbstractComponentContainer {
      * @return the created {@link Tab}
      */
     public Tab addTab(Component c, String caption, Resource icon) {
-        if (c != null) {
+        if (c == null) {
+            return null;
+        } else if (tabs.containsKey(c)) {
+            Tab tab = tabs.get(c);
+            tab.setCaption(caption);
+            tab.setIcon(icon);
+            return tab;
+        } else {
             components.addLast(c);
             Tab tab = new TabSheetTabImpl(caption, icon);
 
@@ -193,8 +204,6 @@ public class TabSheet extends AbstractComponentContainer {
             super.addComponent(c);
             requestRepaint();
             return tab;
-        } else {
-            return null;
         }
     }
 
@@ -202,15 +211,20 @@ public class TabSheet extends AbstractComponentContainer {
      * Adds a new tab into TabSheet. Component caption and icon are copied to
      * the tab metadata at creation time.
      * 
+     * If the tab sheet already contains the component, its tab is returned.
+     * 
      * @param c
-     *            the component to be added onto tab.
+     *            the component to be added onto tab - should not be null.
      * @return the created {@link Tab}
      */
     public Tab addTab(Component c) {
-        if (c != null) {
+        if (c == null) {
+            return null;
+        } else if (tabs.containsKey(c)) {
+            return tabs.get(c);
+        } else {
             return addTab(c, c.getCaption(), c.getIcon());
         }
-        return null;
     }
 
     /**
