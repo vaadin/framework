@@ -54,7 +54,7 @@ public class CSSRule {
         var allMatches = [];
 
         // IE handles imported sheet differently
-        if(deep && sheet.imports.length > 0) {
+        if(deep && sheet.imports && sheet.imports.length > 0) {
         for(var i=0; i < sheet.imports.length; i++) {
         var imports = @com.vaadin.terminal.gwt.client.CSSRule::searchForRule(Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;Z)(sheet.imports[i], selector, deep);
         allMatches.concat(imports);
@@ -82,7 +82,7 @@ public class CSSRule {
         } else if(deep && r.type == 3) {
         // Search @import stylesheet
         var imports = @com.vaadin.terminal.gwt.client.CSSRule::searchForRule(Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;Z)(r.styleSheet, selector, deep);
-        allMatches.concat(imports);
+        allMatches = allMatches.concat(imports);
         }
         }
 
