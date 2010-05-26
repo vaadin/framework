@@ -29,9 +29,6 @@
 .v-ie7 .v-table {
 	overflow: visible;
 }
-.v-table-body.focused{
-	border-color: #388ddd;
-}
 .v-table-header-wrap {
 	overflow: hidden;
 	border: 1px solid #aaa;
@@ -184,8 +181,15 @@
 	text-align: center;
 }
 .v-table-body:focus,
-.v-table-body-wrapper:focus{
+.v-table-body-wrapper:focus {
 	outline: none;
+}
+.v-table-body.focused {
+	border-color: #388ddd;
+}
+.v-table-focus .v-table-cell-content {
+	border-top: 1px dotted #0066bd;
+	border-bottom: 1px dotted #0066bd;
 }
 /* row in column selector */
 .v-on {

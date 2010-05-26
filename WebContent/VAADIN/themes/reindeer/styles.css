@@ -1424,9 +1424,6 @@ div.v-progressindicator-indeterminate-disabled {
 .v-ie7 .v-table {
 	overflow: visible;
 }
-.v-table-body.focused{
-	border-color: #388ddd;
-}
 .v-table-header-wrap {
 	overflow: hidden;
 	border: 1px solid #aaa;
@@ -1579,8 +1576,15 @@ div.v-progressindicator-indeterminate-disabled {
 	text-align: center;
 }
 .v-table-body:focus,
-.v-table-body-wrapper:focus{
+.v-table-body-wrapper:focus {
 	outline: none;
+}
+.v-table-body.focused {
+	border-color: #388ddd;
+}
+.v-table-focus .v-table-cell-content {
+	border-top: 1px dotted #0066bd;
+	border-bottom: 1px dotted #0066bd;
 }
 /* row in column selector */
 .v-on {
@@ -4266,16 +4270,9 @@ td.v-datefield-calendarpanel-nextyear {
 .v-table .v-selected .v-table-cell-content {
 	border-right-color: #466c90;
 }
-.v-table-body:focus{
-	outline: none;
-}
-.v-table .v-table-focus .v-table-cell-content{
-	border-top: 1px dotted black;
-	border-bottom: 1px dotted black;	
-}
-.v-table .v-table-focus .v-table-cell-content .v-table-cell-wrapper{
-	padding-top:2px;
-	padding-bottom:2px;	
+.v-table-focus .v-table-cell-wrapper {
+	padding-top: 2px;
+	padding-bottom: 2px;	
 }
 .v-table-column-selector {
 	width: 16px;

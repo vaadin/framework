@@ -69,6 +69,9 @@ tr.v-table-row-odd:hover {
 	/* Do not specify horizontal padding here */
 	padding: 3px 0 0 0;
 }
+.v-table-focus .v-table-cell-wrapper {
+	line-height: 21px;
+}
 /* Fix textfield size to correspond label size inside table */
 .v-table-cell-content .v-textfield,
 .v-table-cell-content .v-button {
@@ -189,13 +192,4 @@ tr.v-table-row-odd:hover {
 .v-table-small .v-table-cell-wrapper {
 	line-height: 18px;
 	padding: 2px 0;
-}
-
-/* Keyboard navigation styles */
-.v-table-focus .v-table-cell-content {
-	border-top: 1px dotted black;
-	border-bottom: 1px dotted black;
-}
-.v-table-focus .v-table-cell-wrapper {
-	line-height: 21px;
 }
