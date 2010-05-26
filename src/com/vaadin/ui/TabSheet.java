@@ -495,6 +495,7 @@ public class TabSheet extends AbstractComponentContainer {
                 // it
                 if (tab.isEnabled() && tab.isVisible()) {
                     selected = component;
+                    break;
                 } else {
                     /*
                      * The current selection is not valid but this tab cannot be
