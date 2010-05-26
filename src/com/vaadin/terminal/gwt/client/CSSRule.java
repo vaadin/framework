@@ -13,16 +13,30 @@ public class CSSRule {
     private final String selector;
     private JavaScriptObject rules = null;
 
-    public CSSRule(String selector) {
+    /**
+     * 
+     * @param selector
+     *            the CSS selector to search for in the stylesheets
+     * @param deep
+     *            should the search follow any @import statements?
+     */
+    public CSSRule(final String selector, final boolean deep) {
         this.selector = selector;
-        fetchRule(selector);
+        fetchRule(selector, deep);
     }
 
     // TODO how to find the right LINK-element? We should probably give the
     // stylesheet a name.
-    private native void fetchRule(final String selector)
-    /*-{
-        this.@com.vaadin.terminal.gwt.client.CSSRule::rules = @com.vaadin.terminal.gwt.client.CSSRule::searchForRule(Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;)($doc.styleSheets[1], selector);
+    private native void fetchRule(final String selector, final boolean deep) /*-{
+        var sheets = $doc.styleSheets;
+        for(var i = 0; i < sheets.length; i++) {
+        var sheet = sheets[i];
+        if(sheet.href && sheet.href.indexOf("VAADIN/themes")>-1) {
+        this.@com.vaadin.terminal.gwt.client.CSSRule::rules = @com.vaadin.terminal.gwt.client.CSSRule::searchForRule(Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;Z)(sheet, selector, deep);
+        return;
+        }
+        }
+        this.@com.vaadin.terminal.gwt.client.CSSRule::rules = [];
     }-*/;
 
     /*
@@ -30,38 +44,48 @@ public class CSSRule {
      * 'rules' array. The array is reverse ordered (last one found is first).
      */
     private static native JavaScriptObject searchForRule(
-            JavaScriptObject sheet, final String selector)
-    /*-{
-    if(!$doc.styleSheets)
+            final JavaScriptObject sheet, final String selector,
+            final boolean deep) /*-{
+        if(!$doc.styleSheets)
         return null;
-        
-    selector = selector.toLowerCase();
-    
-    var allMatches = [];
-    
-    var theRules = new Array();
-    if (sheet.cssRules)
+
+        selector = selector.toLowerCase();
+
+        var allMatches = [];
+
+        // IE handles imported sheet differently
+        if(deep && sheet.imports.length > 0) {
+        for(var i=0; i < sheet.imports.length; i++) {
+        var imports = @com.vaadin.terminal.gwt.client.CSSRule::searchForRule(Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;Z)(sheet.imports[i], selector, deep);
+        allMatches.concat(imports);
+        }
+        }
+
+        var theRules = new Array();
+        if (sheet.cssRules)
         theRules = sheet.cssRules
-    else if (sheet.rules)
+        else if (sheet.rules)
         theRules = sheet.rules
-        
+
         var j = theRules.length;
         for(var i=0; i<j; i++) {
-            var r = theRules[i];
-            if(r.type == 3) {
-                allMatches.unshift(@com.vaadin.terminal.gwt.client.CSSRule::searchForRule(Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;)(r.styleSheet, selector));
-            } else if(r.type == 1) {
-                var selectors = r.selectorText.toLowerCase().split(",");
-                var n = selectors.length;
-                for(var m=0; m<n; m++) {
-                    if(selectors[m].replace(/^\s+|\s+$/g, "") == selector) {
-                        allMatches.unshift(r);
-                        break; // No need to loop other selectors for this rule
-                    }
-                }
-            }
+        var r = theRules[i];
+        if(r.type == 1 || sheet.imports) {
+        var selectors = r.selectorText.toLowerCase().split(",");
+        var n = selectors.length;
+        for(var m=0; m<n; m++) {
+        if(selectors[m].replace(/^\s+|\s+$/g, "") == selector) {
+        allMatches.unshift(r);
+        break; // No need to loop other selectors for this rule
         }
-        
+        }
+        } else if(deep && r.type == 3) {
+        // Search @import stylesheet
+        var imports = @com.vaadin.terminal.gwt.client.CSSRule::searchForRule(Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;Z)(r.styleSheet, selector, deep);
+        allMatches.concat(imports);
+        }
+        }
+
         return allMatches;
     }-*/;
 
@@ -69,14 +93,15 @@ public class CSSRule {
      * Returns a specific property value from this CSS rule.
      * 
      * @param propertyName
-     * @return
+     *            camelCase CSS property name
+     * @return the value of the property as a String
      */
-    public native String getPropertyValue(final String propertyName)
-    /*-{  
-        for(var i=0; i<this.@com.vaadin.terminal.gwt.client.CSSRule::rules.length; i++){
-            var value = this.@com.vaadin.terminal.gwt.client.CSSRule::rules[i].style[propertyName];
-            if(value)
-                return value;
+    public native String getPropertyValue(final String propertyName) /*-{
+        var j = this.@com.vaadin.terminal.gwt.client.CSSRule::rules.length;
+        for(var i=0; i<j; i++) {
+        var value = this.@com.vaadin.terminal.gwt.client.CSSRule::rules[i].style[propertyName];
+        if(value)
+        return value;
         }
         return null;
     }-*/;
