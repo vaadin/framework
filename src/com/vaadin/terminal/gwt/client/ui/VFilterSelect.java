@@ -200,11 +200,13 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             topPosition += tb.getOffsetHeight();
             setPopupPosition(x, topPosition);
 
-            final int first = currentPage * pageLength
-                    + (nullSelectionAllowed && currentPage > 0 ? 0 : 1);
-            final int last = first + currentSuggestions.size() - 1;
-            final int matches = totalSuggestions
-                    - (nullSelectionAllowed ? 1 : 0);
+            int nullOffset = (nullSelectionAllowed ? 1 : 0);
+            boolean firstPage = (currentPage == 0);
+            final int first = currentPage * pageLength + 1
+                    - (firstPage ? 0 : nullOffset);
+            final int last = first + currentSuggestions.size() - 1
+                    - (firstPage ? nullOffset : 0);
+            final int matches = totalSuggestions - nullOffset;
             if (last > 0) {
                 // nullsel not counted, as requested by user
                 DOM.setInnerText(status, (matches == 0 ? 0 : first)
@@ -217,7 +219,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             }
             // We don't need to show arrows or statusbar if there is only one
             // page
-            if (matches <= pageLength) {
+            if (totalSuggestions <= pageLength) {
                 setPagingEnabled(false);
             } else {
                 setPagingEnabled(true);
