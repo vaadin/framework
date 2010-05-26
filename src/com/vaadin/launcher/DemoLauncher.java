@@ -34,7 +34,7 @@ import com.vaadin.launcher.util.BrowserLauncher;
  */
 public class DemoLauncher {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
         final Map serverArgs = DevelopmentServerLauncher.parseArguments(args);
         boolean deployed = false;
@@ -59,7 +59,7 @@ public class DemoLauncher {
             }
         }
 
-        // Start the Winstone servlet container
+        // Start the Jetty servlet container
         final String url = DevelopmentServerLauncher.runServer(serverArgs,
                 "Demo Server");
 

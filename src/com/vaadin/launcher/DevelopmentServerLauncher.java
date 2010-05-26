@@ -30,8 +30,9 @@ public class DevelopmentServerLauncher {
      * for options.
      * 
      * @param args
+     * @throws Exception
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
         // Pass-through of arguments for Jetty
         final Map<String, String> serverArgs = parseArguments(args);
@@ -55,9 +56,11 @@ public class DevelopmentServerLauncher {
      * 
      * @param serverArgs
      * @return
+     * @throws Exception
+     * @throws Exception
      */
     protected static String runServer(Map<String, String> serverArgs,
-            String mode) {
+            String mode) throws Exception {
 
         // Assign default values for some arguments
         assignDefault(serverArgs, "webroot", "WebContent");
@@ -81,27 +84,27 @@ public class DevelopmentServerLauncher {
                         + serverPort
                         + "\n-------------------------------------------------\n");
 
+        final Server server = new Server();
+
+        final Connector connector = new SelectChannelConnector();
+
+        connector.setPort(port);
+        server.setConnectors(new Connector[] { connector });
+
+        final WebAppContext webappcontext = new WebAppContext();
+        String path = DevelopmentServerLauncher.class.getPackage().getName()
+                .replace(".", File.separator);
+        webappcontext.setDefaultsDescriptor(path + File.separator
+                + "jetty-webdefault.xml");
+        webappcontext.setContextPath(serverArgs.get("context"));
+        webappcontext.setWar(serverArgs.get("webroot"));
+        server.setHandler(webappcontext);
+
         try {
-            final Server server = new Server();
-
-            final Connector connector = new SelectChannelConnector();
-
-            connector.setPort(port);
-            server.setConnectors(new Connector[] { connector });
-
-            final WebAppContext webappcontext = new WebAppContext();
-            String path = DevelopmentServerLauncher.class.getPackage()
-                    .getName().replace(".", File.separator);
-            webappcontext.setDefaultsDescriptor(path + File.separator
-                    + "jetty-webdefault.xml");
-            webappcontext.setContextPath(serverArgs.get("context"));
-            webappcontext.setWar(serverArgs.get("webroot"));
-            server.setHandler(webappcontext);
-
             server.start();
-        } catch (final Exception e) {
-            e.printStackTrace();
-            return null;
+        } catch (Exception e) {
+            server.stop();
+            throw e;
         }
 
         return "http://localhost:" + port + serverArgs.get("context");
