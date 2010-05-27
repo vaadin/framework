@@ -9,6 +9,15 @@ import java.util.List;
 import java.util.Stack;
 
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Command;
@@ -21,7 +30,6 @@ import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.UIObject;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ContainerResizedListener;
@@ -29,8 +37,9 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 
-public class VMenuBar extends Widget implements Paintable,
-        CloseHandler<PopupPanel>, ContainerResizedListener {
+public class VMenuBar extends SimpleFocusablePanel implements Paintable,
+        CloseHandler<PopupPanel>, ContainerResizedListener, KeyPressHandler,
+        KeyDownHandler, BlurHandler, FocusHandler {
 
     /** Set the CSS class name to allow styling. */
     public static final String CLASSNAME = "v-menubar";
@@ -65,11 +74,25 @@ public class VMenuBar extends Widget implements Paintable,
     public VMenuBar() {
         // Create an empty horizontal menubar
         this(false);
+
+        // Navigation is only handled by the root bar
+        addFocusHandler(this);
+        addBlurHandler(this);
+
+        /*
+         * Firefox auto-repeat works correctly only if we use a key press
+         * handler, other browsers handle it correctly when using a key down
+         * handler
+         */
+        if (BrowserInfo.get().isGecko()) {
+            addKeyPressHandler(this);
+        } else {
+            addKeyDownHandler(this);
+        }
     }
 
     public VMenuBar(boolean subMenu) {
         super();
-        setElement(DOM.createDiv());
 
         items = new ArrayList<CustomMenuItem>();
         popup = null;
@@ -883,5 +906,340 @@ public class VMenuBar extends Widget implements Paintable,
             }
         }
         return w;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.google.gwt.event.dom.client.KeyPressHandler#onKeyPress(com.google.gwt.event.dom.client.KeyPressEvent)
+     */
+    public void onKeyPress(KeyPressEvent event) {
+        if (handleNavigation(event.getNativeEvent().getKeyCode(), event
+                .isControlKeyDown()
+                || event.isMetaKeyDown(), event.isShiftKeyDown())) {
+            event.preventDefault();
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt.event.dom.client.KeyDownEvent)
+     */
+    public void onKeyDown(KeyDownEvent event) {
+        if (handleNavigation(event.getNativeEvent().getKeyCode(), event
+                .isControlKeyDown()
+                || event.isMetaKeyDown(), event.isShiftKeyDown())) {
+            event.preventDefault();
+        }
+    }
+    
+    /**
+     * Get the key that moves the selection upwards. By default it is the
+     * up arrow key but by overriding this you can change the key to whatever
+     * you want.
+     * 
+     * @return The keycode of the key
+     */
+    protected int getNavigationUpKey() {
+        return KeyCodes.KEY_UP;
+    }
+
+    /**
+     * Get the key that moves the selection downwards. By default it is the
+     * down arrow key but by overriding this you can change the key to whatever
+     * you want.
+     * 
+     * @return The keycode of the key
+     */
+    protected int getNavigationDownKey() {
+        return KeyCodes.KEY_DOWN;
+    }
+
+    /**
+     * Get the key that moves the selection left. By default it is the
+     * left arrow key but by overriding this you can change the key to whatever
+     * you want.
+     * 
+     * @return The keycode of the key
+     */
+    protected int getNavigationLeftKey() {
+        return KeyCodes.KEY_LEFT;
+    }
+
+    /**
+     * Get the key that moves the selection right. By default it is the
+     * right arrow key but by overriding this you can change the key to whatever
+     * you want.
+     * 
+     * @return The keycode of the key
+     */
+    protected int getNavigationRightKey() {
+        return KeyCodes.KEY_RIGHT;
+    }
+
+    /**
+     * Get the key that selects a menu item. By default it is the Enter key but
+     * by overriding this you can change the key to whatever you want.
+     * 
+     * @return
+     */
+    protected int getNavigationSelectKey() {
+        return KeyCodes.KEY_ENTER;
+    }
+
+    /**
+     * Get the key that closes the menu. By default it is the escape key but by
+     * overriding this yoy can change the key to whatever you want.
+     * 
+     * @return
+     */
+    protected int getCloseMenuKey() {
+        return KeyCodes.KEY_ESCAPE;
+    }
+
+    /**
+     * Handles the keyboard events handled by the MenuBar
+     * 
+     * @param event
+     *            The keyboard event received
+     * @return true iff the navigation event was handled
+     */
+    public boolean handleNavigation(int keycode, boolean ctrl, boolean shift) {
+        if (keycode == KeyCodes.KEY_TAB || ctrl || shift || !isEnabled()) {
+            // Do not handle tab key, nor ctrl keys
+            return false;
+        }
+
+        if (keycode == getNavigationLeftKey()) {
+            if (getSelected() == null) {
+                // If nothing is selected then select the last item
+                setSelected(items.get(items.size() - 1));
+                if (getSelected().isSeparator() || !getSelected().isEnabled()) {
+                    handleNavigation(keycode, ctrl, shift);
+                }
+            } else if (visibleChildMenu == null && getParentMenu() == null) {
+                // If this is the root menu then move to the right
+                int idx = items.indexOf(getSelected());
+                if (idx > 0) {
+                    setSelected(items.get(idx - 1));
+                } else {
+                    setSelected(items.get(items.size() - 1));
+                }
+
+                if (getSelected().isSeparator() || !getSelected().isEnabled()) {
+                    handleNavigation(keycode, ctrl, shift);
+                }
+            } else if (visibleChildMenu != null) {
+                // Redirect all navigation to the submenu
+                visibleChildMenu.handleNavigation(keycode, ctrl, shift);
+
+            } else if (getParentMenu().getParentMenu() == null) {
+
+                // Get the root menu
+                VMenuBar root = getParentMenu();
+
+                root.getSelected().getSubMenu().setSelected(null);
+                root.hideChildren();
+
+                // Get the root menus items and select the previous one
+                int idx = root.getItems().indexOf(root.getSelected());
+                idx = idx > 0 ? idx : root.getItems().size();
+                CustomMenuItem selected = root.getItems().get(--idx);
+
+                while (selected.isSeparator() || !selected.isEnabled()) {
+                    idx = idx > 0 ? idx : root.getItems().size();
+                    selected = root.getItems().get(--idx);
+                }
+
+                root.setSelected(selected);
+                root.showChildMenu(selected);
+                VMenuBar submenu = selected.getSubMenu();
+
+                // Select the first item in the newly open submenu
+                submenu.setSelected(submenu.getItems().get(0));
+
+            } else {
+                getParentMenu().getSelected().getSubMenu().setSelected(null);
+                getParentMenu().hideChildren();
+            }
+            
+            return true;
+
+        } else if (keycode == getNavigationRightKey()) {
+            
+            if (getSelected() == null) {
+                // If nothing is selected then select the first item
+                setSelected(items.get(0));
+                if (getSelected().isSeparator() || !getSelected().isEnabled()) {
+                    handleNavigation(keycode, ctrl, shift);
+                }
+            } else if (visibleChildMenu == null && getParentMenu() == null) {
+                // If this is the root menu then move to the right
+                int idx = items.indexOf(getSelected());
+
+                if (idx < items.size() - 1) {
+                    setSelected(items.get(idx + 1));
+                } else {
+                    setSelected(items.get(0));
+                }
+
+                if (getSelected().isSeparator() || !getSelected().isEnabled()) {
+                    handleNavigation(keycode, ctrl, shift);
+                }
+            } else if (visibleChildMenu == null
+                    && getSelected().getSubMenu() != null) {
+                // If the item has a submenu then show it and move the selection
+                // there
+                showChildMenu(getSelected());
+                menuVisible = true;
+                visibleChildMenu.handleNavigation(keycode, ctrl, shift);
+            } else if (visibleChildMenu == null) {
+
+                // Get the root menu
+                VMenuBar root = getParentMenu();
+                while(root.getParentMenu() != null){
+                    root = root.getParentMenu();
+                }
+
+                // Hide the submenu
+                root.hideChildren();
+
+                // Get the root menus items and select the next one
+                int idx = root.getItems().indexOf(root.getSelected());
+                idx = idx < root.getItems().size()-1 ? idx : -1;
+                CustomMenuItem selected = root.getItems().get(++idx);
+                
+                while (selected.isSeparator() || !selected.isEnabled()) {
+                    idx = idx < root.getItems().size() - 1 ? idx : -1;
+                    selected = root.getItems().get(++idx);
+                }
+
+                root.setSelected(selected);
+                root.showChildMenu(selected);
+                VMenuBar submenu = selected.getSubMenu();
+
+                // Select the first item in the newly open submenu
+                submenu.setSelected(submenu.getItems().get(0));               
+
+            } else if (visibleChildMenu != null) {
+                // Redirect all navigation to the submenu
+                visibleChildMenu.handleNavigation(keycode, ctrl, shift);
+            }
+
+            return true;
+
+        } else if (keycode == getNavigationUpKey()) {
+
+            if (getSelected() == null) {
+                // If nothing is selected then select the last item
+                setSelected(items.get(items.size() - 1));
+                if (getSelected().isSeparator() || !getSelected().isEnabled()) {
+                    handleNavigation(keycode, ctrl, shift);
+                }
+            } else if (visibleChildMenu != null) {
+                // Redirect all navigation to the submenu
+                visibleChildMenu.handleNavigation(keycode, ctrl, shift);
+            } else {
+                // Select the previous item if possible or loop to the last item
+                int idx = items.indexOf(getSelected());
+                if (idx > 0) {
+                    setSelected(items.get(idx - 1));
+                } else {
+                    setSelected(items.get(items.size() - 1));
+                }
+
+                if (getSelected().isSeparator() || !getSelected().isEnabled()) {
+                    handleNavigation(keycode, ctrl, shift);
+                }
+            } 
+
+            return true;
+
+        } else if (keycode == getNavigationDownKey()) {
+
+            if (getSelected() == null) {
+                // If nothing is selected then select the first item
+                setSelected(items.get(0));
+                if (getSelected().isSeparator() || !getSelected().isEnabled()) {
+                    handleNavigation(keycode, ctrl, shift);
+                }
+            } else if (visibleChildMenu == null && getParentMenu() == null) {
+                // If this is the root menu the show the child menu with arrow
+                // down
+                showChildMenu(getSelected());
+                menuVisible = true;
+                visibleChildMenu.handleNavigation(keycode, ctrl, shift);
+            } else if (visibleChildMenu != null) {
+                // Redirect all navigation to the submenu
+                visibleChildMenu.handleNavigation(keycode, ctrl, shift);
+            } else {
+                // Select the next item if possible or loop to the first item
+                int idx = items.indexOf(getSelected());
+                if (idx < items.size() - 1) {
+                    setSelected(items.get(idx + 1));
+                } else {
+                    setSelected(items.get(0));
+                }
+
+                if (getSelected().isSeparator() || !getSelected().isEnabled()) {
+                    handleNavigation(keycode, ctrl, shift);
+                }
+            }
+            return true;
+
+        } else if (keycode == getCloseMenuKey()) {
+            setSelected(null);
+            hideChildren();
+            menuVisible = false;
+
+        } else if (keycode == getNavigationSelectKey()) {
+            if (visibleChildMenu != null) {
+                // Redirect all navigation to the submenu
+                visibleChildMenu.handleNavigation(keycode, ctrl, shift);
+                menuVisible = false;
+            } else if (visibleChildMenu == null
+                    && getSelected().getSubMenu() != null) {
+                // If the item has a submenu then show it and move the selection
+                // there
+                showChildMenu(getSelected());
+                menuVisible = true;
+                visibleChildMenu.handleNavigation(keycode, ctrl, shift);
+            } else {
+                Command command = getSelected().getCommand();
+                if (command != null) {
+                    command.execute();
+                }
+
+                hideParents(true);
+            }
+        }
+
+        return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.event.dom.client.BlurHandler#onBlur(com.google.gwt.event
+     * .dom.client.BlurEvent)
+     */
+    public void onBlur(BlurEvent event) {
+        setSelected(null);
+        hideChildren();
+        menuVisible = false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.event.dom.client.FocusHandler#onFocus(com.google.gwt.event
+     * .dom.client.FocusEvent)
+     */
+    public void onFocus(FocusEvent event) {
+        if (getSelected() == null) {
+            // If nothing is selected then select the first item
+            setSelected(items.get(0));
+        }
     }
 }
