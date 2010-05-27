@@ -55,6 +55,7 @@ import com.vaadin.terminal.PaintTarget;
  */
 @SuppressWarnings("serial")
 public abstract class AbstractField extends AbstractComponent implements Field,
+        Property.ReadOnlyStatusChangeListener,
         Property.ReadOnlyStatusChangeNotifier, Action.ShortcutNotifier {
 
     /* Private members */
@@ -571,6 +572,12 @@ public abstract class AbstractField extends AbstractComponent implements Field,
                         .isAssignableFrom(dataSource.getClass())) {
             ((Property.ValueChangeNotifier) dataSource).removeListener(this);
         }
+        if (dataSource != null
+                && Property.ReadOnlyStatusChangeNotifier.class
+                        .isAssignableFrom(dataSource.getClass())) {
+            ((Property.ReadOnlyStatusChangeNotifier) dataSource)
+                    .removeListener(this);
+        }
 
         // Sets the new data source
         dataSource = newDataSource;
@@ -591,6 +598,10 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         // Listens the new data source if possible
         if (dataSource instanceof Property.ValueChangeNotifier) {
             ((Property.ValueChangeNotifier) dataSource).addListener(this);
+        }
+        if (dataSource instanceof Property.ReadOnlyStatusChangeNotifier) {
+            ((Property.ReadOnlyStatusChangeNotifier) dataSource)
+                    .addListener(this);
         }
 
         // Copy the validators from the data source
@@ -890,6 +901,16 @@ public abstract class AbstractField extends AbstractComponent implements Field,
             throw new java.lang.RuntimeException(
                     "Internal error finding methods in AbstractField");
         }
+    }
+
+    /**
+     * React to read only status changes of the property by requesting a
+     * repaint.
+     * 
+     * @see Property.ReadOnlyStatusChangeListener
+     */
+    public void readOnlyStatusChange(Property.ReadOnlyStatusChangeEvent event) {
+        requestRepaint();
     }
 
     /**
