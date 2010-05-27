@@ -165,11 +165,14 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
         }
 
         List options = getFilteredOptions();
-        options = sanitetizeList(options, needNullSelectOption);
+        boolean nullFilteredOut = filterstring != null
+                && !"".equals(filterstring)
+                && filteringMode != FILTERINGMODE_OFF;
+        options = sanitetizeList(options, needNullSelectOption
+                && !nullFilteredOut);
 
         final boolean paintNullSelection = needNullSelectOption
-                && (currentPage == 0 && (getFilteringMode() == FILTERINGMODE_OFF
-                        || filterstring == null || filterstring.equals("")));
+                && currentPage == 0 && !nullFilteredOut;
 
         if (paintNullSelection) {
             target.startTag("so");
@@ -218,7 +221,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
                 + (needNullSelectOption ? 1 : 0));
         if (filteredOptions != null) {
             target.addAttribute("totalMatches", filteredOptions.size()
-                    + (needNullSelectOption ? 1 : 0));
+                    + (needNullSelectOption && !nullFilteredOut ? 1 : 0));
         }
 
         // Paint variables

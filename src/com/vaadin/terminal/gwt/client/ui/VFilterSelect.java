@@ -200,20 +200,18 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             topPosition += tb.getOffsetHeight();
             setPopupPosition(x, topPosition);
 
-            int nullOffset = (nullSelectionAllowed ? 1 : 0);
+            int nullOffset = (nullSelectionAllowed && "".equals(lastFilter) ? 1
+                    : 0);
             boolean firstPage = (currentPage == 0);
             final int first = currentPage * pageLength + 1
                     - (firstPage ? 0 : nullOffset);
             final int last = first + currentSuggestions.size() - 1
-                    - (firstPage ? nullOffset : 0);
+                    - (firstPage && "".equals(lastFilter) ? nullOffset : 0);
             final int matches = totalSuggestions - nullOffset;
             if (last > 0) {
                 // nullsel not counted, as requested by user
-                DOM.setInnerText(status, (matches == 0 ? 0 : first)
-                        + "-"
-                        + ("".equals(lastFilter) && nullSelectionAllowed
-                                && currentPage == 0 ? last - 1 : last) + "/"
-                        + matches);
+                DOM.setInnerText(status, (matches == 0 ? 0 : first) + "-"
+                        + last + "/" + matches);
             } else {
                 DOM.setInnerText(status, "");
             }
