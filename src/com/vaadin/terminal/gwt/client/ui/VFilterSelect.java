@@ -219,7 +219,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             }
             // We don't need to show arrows or statusbar if there is only one
             // page
-            if (totalSuggestions <= pageLength) {
+            if (totalSuggestions <= pageLength || pageLength == 0) {
                 setPagingEnabled(false);
             } else {
                 setPagingEnabled(true);

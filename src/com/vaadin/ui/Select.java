@@ -258,7 +258,9 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
      */
     private List sanitetizeList(List options, boolean needNullSelectOption) {
 
-        if (options.size() > pageLength) {
+        if (pageLength != 0 && options.size() > pageLength) {
+            // Not all options are visible, find out which ones are on the
+            // current "page".
             int first = currentPage * pageLength;
             int last = first + pageLength;
             if (needNullSelectOption) {
