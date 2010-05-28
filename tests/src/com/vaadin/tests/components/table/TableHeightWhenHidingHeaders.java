@@ -1,6 +1,6 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.Application;
+import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Window;
@@ -13,7 +13,7 @@ import com.vaadin.ui.Button.ClickEvent;
  * 
  */
 @SuppressWarnings("serial")
-public class Ticket4507 extends Application {
+public class TableHeightWhenHidingHeaders extends AbstractTestCase {
 
     @Override
     public void init() {
@@ -55,5 +55,16 @@ public class Ticket4507 extends Application {
 
         mainWindow.addComponent(showHeaders);
         mainWindow.addComponent(table);
+    }
+
+    @Override
+    protected String getDescription() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected Integer getTicketNumber() {
+        return 4507;
     }
 }
