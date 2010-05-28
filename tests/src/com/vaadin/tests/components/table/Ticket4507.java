@@ -1,4 +1,4 @@
-package com.vaadin.tests.tickets;
+package com.vaadin.tests.components.table;
 
 import com.vaadin.Application;
 import com.vaadin.ui.CheckBox;

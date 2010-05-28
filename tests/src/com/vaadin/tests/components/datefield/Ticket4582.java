@@ -1,4 +1,4 @@
-package com.vaadin.tests.tickets;
+package com.vaadin.tests.components.datefield;
 
 import java.util.Date;
 
