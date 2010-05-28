@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"6_3_0_dev-20100413";}
-.v-theme-version-6_3_0_dev-20100413 {display: none;}
+.v-theme-version:after {content:"6_3_4_dev-20100528";}
+.v-theme-version-6_3_4_dev-20100528 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -492,7 +492,7 @@ div.v-app-loading {
 .v-datefield-button {
 	cursor: pointer;
 }
-.v-readonly .v-datefield-button {
+.v-datefield .v-datefield-button-readonly {
 	display: none;
 }
 .v-datefield-calendarpanel table {
@@ -2946,6 +2946,12 @@ div.v-window-header {
 	padding: 4px 0px;
 	height: 11px;
 	border-top: 1px solid #b6bbbc;
+}
+
+/* IE6 needs some help identifying when the input is readonly */
+.v-ie6 .v-filterselect.v-readonly,
+.v-ie6 .v-filterselect .v-filterselect-input-readonly {
+	background: transparent;
 }
 
 

@@ -1,5 +1,5 @@
-.v-theme-version:after {content:"9_9_9_INTERNAL-DEBUG-BUILD";}
-.v-theme-version-9_9_9_INTERNAL-DEBUG-BUILD {display: none;}
+.v-theme-version:after {content:"6_3_4_dev-20100528";}
+.v-theme-version-6_3_4_dev-20100528 {display: none;}
 /* Automatically compiled css file from subdirectories. */
 
 .v-absolutelayout-wrapper {
@@ -492,7 +492,7 @@ div.v-app-loading {
 .v-datefield-button {
 	cursor: pointer;
 }
-.v-readonly .v-datefield-button {
+.v-datefield .v-datefield-button-readonly {
 	display: none;
 }
 .v-datefield-calendarpanel table {
@@ -3005,7 +3005,7 @@ td.v-datefield-calendarpanel-nextyear {
 	-webkit-border-bottom-right-radius: 0;
 	height: 14px;
 }
-.v-readonly input.v-datefield-textfield {
+.v-datefield.v-readonly input.v-datefield-textfield {
 	border-right-width: 1px;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
@@ -3987,6 +3987,12 @@ td.v-datefield-calendarpanel-nextyear {
 .v-ie6 .v-select-twincol-buttons .v-button {
 	padding-left: 12px;
 	padding-right: 12px;
+}
+
+/* IE6 needs some help identifying when the input is readonly */
+.v-ie6 .v-filterselect.v-readonly,
+.v-ie6 .v-filterselect .v-filterselect-input-readonly {
+	background: transparent;
 }
 
 .v-slider {
