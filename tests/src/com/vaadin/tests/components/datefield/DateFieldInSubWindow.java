@@ -2,9 +2,9 @@ package com.vaadin.tests.components.datefield;
 
 import java.util.Date;
 
-import com.vaadin.Application;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
@@ -16,33 +16,33 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 
-public class Ticket4582 extends Application{
+public class DateFieldInSubWindow extends AbstractTestCase {
 
     @SuppressWarnings("serial")
     public class TestCaseWindow extends Window {
 
-            public class MyBean{
-                    private Date myDate;
-                    private String myString;
+        public class MyBean {
+            private Date myDate;
+            private String myString;
 
-                    public Date getMyDate() {
-                            return myDate;
-                    }
-
-                    public void setMyDate(Date myDate) {
-                            this.myDate = myDate;
-                    }
-
-                    public String getMyString() {
-                            return myString;
-                    }
-
-                    public void setMyString(String myString) {
-                            this.myString = myString;
-                    }
-                    
-                    
+            public Date getMyDate() {
+                return myDate;
             }
+
+            public void setMyDate(Date myDate) {
+                this.myDate = myDate;
+            }
+
+            public String getMyString() {
+                return myString;
+            }
+
+            public void setMyString(String myString) {
+                this.myString = myString;
+            }
+
+        }
+
         private MyBean myBean;
 
         public TestCaseWindow() {
@@ -50,7 +50,6 @@ public class Ticket4582 extends Application{
             setModal(true);
             setWidth("400px");
             myBean = new MyBean();
-
 
             initWindow();
         }
@@ -60,7 +59,8 @@ public class Ticket4582 extends Application{
             public static final String COMMON_FIELD_WIDTH = "12em";
 
             @Override
-            public Field createField(Item item, Object propertyId, Component uiContext) {
+            public Field createField(Item item, Object propertyId,
+                    Component uiContext) {
                 Field f = super.createField(item, propertyId, uiContext);
 
                 if ("myDate".equals(propertyId)) {
@@ -73,7 +73,7 @@ public class Ticket4582 extends Application{
             }
         }
 
-            protected void initWindow() {
+        protected void initWindow() {
             VerticalLayout layout = (VerticalLayout) getContent();
             layout.setMargin(true);
             layout.setSpacing(true);
@@ -89,25 +89,25 @@ public class Ticket4582 extends Application{
                 generalForm.setCaption("My form");
                 generalForm.setWriteThrough(true);
                 generalForm.setFormFieldFactory(fieldFactory);
-                
-                    BeanItem<MyBean> myBeanItem = new BeanItem<MyBean>(myBean);
-                    generalForm.setItemDataSource(myBeanItem);
-                
-                generalForm.setVisibleItemProperties(new String[]{"myDate","myString"});
+
+                BeanItem<MyBean> myBeanItem = new BeanItem<MyBean>(myBean);
+                generalForm.setItemDataSource(myBeanItem);
+
+                generalForm.setVisibleItemProperties(new String[] { "myDate",
+                        "myString" });
                 generalForm.setValidationVisible(true);
                 addComponent(generalForm);
             }
-
 
             HorizontalLayout buttons = new HorizontalLayout();
             {
                 buttons.setSpacing(true);
 
-
                 Button b = new Button("Close", new Button.ClickListener() {
 
                     public void buttonClick(ClickEvent event) {
-                        ((Window) getParent()).removeWindow(TestCaseWindow.this);
+                        ((Window) getParent())
+                                .removeWindow(TestCaseWindow.this);
                     }
                 });
                 buttons.addComponent(b);
@@ -128,6 +128,17 @@ public class Ticket4582 extends Application{
         });
 
         mainWindow.addComponent(open);
+    }
+
+    @Override
+    protected String getDescription() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected Integer getTicketNumber() {
+        return 4582;
     }
 
 }
