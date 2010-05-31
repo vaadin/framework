@@ -11,7 +11,7 @@
 	<fail unless="com.vaadin.testbench.screenshot.directory" message="The 'com.vaadin.testbench.screenshot.directory' property must be defined." />
 	
 	<!-- Host running Testbench Hub -->
-	<property name="com.vaadin.testbench.tester.host" value="192.168.1.44" />
+	<property name="com.vaadin.testbench.tester.host" value="192.168.1.48" />
 
 	<!-- Temporary output directory, created and removed by this script -->
 	<property name="test-output-dir" value="../build/test-output" />
