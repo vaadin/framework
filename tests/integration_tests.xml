@@ -413,11 +413,4 @@
 	<target name="integration-test-clean">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} clean" />
 	</target>
-	
-	<!-- Remove old screenshots if any -->
-	<target name="clean-old">
-		<subant target="remove-error-screens">
-			<fileset dir="." includes="test.xml" />
-		</subant>
-	</target>
 </project>
