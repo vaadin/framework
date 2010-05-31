@@ -7,6 +7,7 @@ package com.vaadin.ui;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -20,9 +21,32 @@ import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.ui.VTabsheet;
 import com.vaadin.terminal.gwt.server.CommunicationManager;
+import com.vaadin.ui.themes.Reindeer;
+import com.vaadin.ui.themes.Runo;
 
 /**
- * Tabsheet component.
+ * TabSheet component.
+ * 
+ * Tabs are typically identified by the component contained on the tab (see
+ * {@link ComponentContainer}), and tab metadata (including caption, icon,
+ * visibility, enabledness, closability etc.) is kept in separate {@link Tab}
+ * instances.
+ * 
+ * Tabs added with {@link #addComponent(Component)} get the caption and the icon
+ * of the component at the time when the component is created, and these are not
+ * automatically updated after tab creation.
+ * 
+ * A tab sheet can have multiple tab selection listeners and one tab close
+ * handler ({@link CloseHandler}), which by default removes the tab from the
+ * TabSheet.
+ * 
+ * The {@link TabSheet} can be styled with the .v-tabsheet, .v-tabsheet-tabs and
+ * .v-tabsheet-content styles. Themes may also have pre-defined variations of
+ * the tab sheet presentation, such as {@link Reindeer#TABSHEET_BORDERLESS},
+ * {@link Runo#TABSHEET_SMALL} and several other styles in {@link Reindeer}.
+ * 
+ * The current implementation does not load the tabs to the UI before the first
+ * time they are shown, but this may change in future releases.
  * 
  * @author IT Mill Ltd.
  * @version
@@ -34,7 +58,9 @@ import com.vaadin.terminal.gwt.server.CommunicationManager;
 public class TabSheet extends AbstractComponentContainer {
 
     /**
-     * Linked list of component tabs.
+     * List of component tabs (tab contents). In addition to being on this list,
+     * there is a {@link Tab} object in tabs for each tab with meta-data about
+     * the tab.
      */
     private final LinkedList<Component> components = new LinkedList<Component>();
 
@@ -44,23 +70,34 @@ public class TabSheet extends AbstractComponentContainer {
     private final HashMap<Component, Tab> tabs = new HashMap<Component, Tab>();
 
     /**
-     * Selected tab.
+     * Selected tab content component.
      */
     private Component selected = null;
 
+    /**
+     * Mapper between server-side component instances (tab contents) and keys
+     * given to the client that identify tabs.
+     */
     private final KeyMapper keyMapper = new KeyMapper();
 
     /**
-     * Holds the value of property tabsHIdden.
+     * When true, the tab selection area is not displayed to the user.
      */
     private boolean tabsHidden;
 
+    /**
+     * Tabs that have been shown to the user (have been painted as selected).
+     */
     private HashSet<Component> paintedTabs = new HashSet<Component>();
 
+    /**
+     * Handler to be called when a tab is closed.
+     */
     private CloseHandler closeHandler;
 
     /**
-     * Constructs a new Tabsheet. Tabsheet is immediate by default.
+     * Constructs a new Tabsheet. Tabsheet is immediate by default, and the
+     * default close handler removes the tab being closed.
      */
     public TabSheet() {
         super();
@@ -75,17 +112,20 @@ public class TabSheet extends AbstractComponentContainer {
     }
 
     /**
-     * Gets the component container iterator for going trough all the components
-     * in the container.
+     * Gets the component container iterator for going through all the
+     * components (tab contents).
      * 
-     * @return the Iterator of the components inside the container.
+     * @return the unmodifiable Iterator of the tab content components
      */
     public Iterator<Component> getComponentIterator() {
-        return java.util.Collections.unmodifiableList(components).iterator();
+        return Collections.unmodifiableList(components).iterator();
     }
 
     /**
-     * Removes the component from this container.
+     * Removes a component and its corresponding tab.
+     * 
+     * If the tab was selected, the first eligible (visible and enabled)
+     * remaining tab is selected.
      * 
      * @param c
      *            the component to be removed.
@@ -111,8 +151,10 @@ public class TabSheet extends AbstractComponentContainer {
     }
 
     /**
-     * Adds a new tab into TabSheet. Components caption and icon are rendered
-     * into tab.
+     * Adds a new tab into TabSheet. Component caption and icon are copied to
+     * the tab metadata at creation time.
+     * 
+     * @see #addTab(Component)
      * 
      * @param c
      *            the component to be added.
@@ -125,18 +167,32 @@ public class TabSheet extends AbstractComponentContainer {
     /**
      * Adds a new tab into TabSheet.
      * 
+     * The first tab added to a tab sheet is automatically selected and a tab
+     * selection event is fired.
+     * 
+     * If the component is already present in the tab sheet, changes its caption
+     * and icon and returns the corresponding (old) tab, preserving other tab
+     * metadata.
+     * 
      * @param c
-     *            the component to be added onto tab.
+     *            the component to be added onto tab - should not be null.
      * @param caption
      *            the caption to be set for the component and used rendered in
      *            tab bar
      * @param icon
      *            the icon to be set for the component and used rendered in tab
      *            bar
-     * @return the created tab
+     * @return the created {@link Tab}
      */
     public Tab addTab(Component c, String caption, Resource icon) {
-        if (c != null) {
+        if (c == null) {
+            return null;
+        } else if (tabs.containsKey(c)) {
+            Tab tab = tabs.get(c);
+            tab.setCaption(caption);
+            tab.setIcon(icon);
+            return tab;
+        } else {
             components.addLast(c);
             Tab tab = new TabSheetTabImpl(caption, icon);
 
@@ -148,29 +204,35 @@ public class TabSheet extends AbstractComponentContainer {
             super.addComponent(c);
             requestRepaint();
             return tab;
-        } else {
-            return null;
         }
     }
 
     /**
-     * Adds a new tab into TabSheet. Components caption and icon are rendered
-     * into tab.
+     * Adds a new tab into TabSheet. Component caption and icon are copied to
+     * the tab metadata at creation time.
+     * 
+     * If the tab sheet already contains the component, its tab is returned.
      * 
      * @param c
-     *            the component to be added onto tab.
-     * @return the created tab
+     *            the component to be added onto tab - should not be null.
+     * @return the created {@link Tab}
      */
     public Tab addTab(Component c) {
-        if (c != null) {
+        if (c == null) {
+            return null;
+        } else if (tabs.containsKey(c)) {
+            return tabs.get(c);
+        } else {
             return addTab(c, c.getCaption(), c.getIcon());
         }
-        return null;
     }
 
     /**
      * Moves all components from another container to this container. The
      * components are removed from the other container.
+     * 
+     * If the source container is a {@link TabSheet}, component captions and
+     * icons are copied from it.
      * 
      * @param source
      *            the container components are removed from.
@@ -195,8 +257,8 @@ public class TabSheet extends AbstractComponentContainer {
     /**
      * Paints the content of this component.
      * 
-     * @param event
-     *            the Paint Event.
+     * @param target
+     *            the paint target
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -276,19 +338,19 @@ public class TabSheet extends AbstractComponentContainer {
     }
 
     /**
-     * Are tabs hidden.
+     * Are the tab selection parts ("tabs") hidden.
      * 
-     * @return the Property visibility.
+     * @return true if the tabs are hidden in the UI
      */
     public boolean areTabsHidden() {
         return tabsHidden;
     }
 
     /**
-     * Setter for property tabsHidden.
+     * Hides or shows the tab selection parts ("tabs").
      * 
      * @param tabsHidden
-     *            True if the tabs should be hidden.
+     *            true if the tabs should be hidden
      */
     public void hideTabs(boolean tabsHidden) {
         this.tabsHidden = tabsHidden;
@@ -296,10 +358,10 @@ public class TabSheet extends AbstractComponentContainer {
     }
 
     /**
-     * Gets the caption for a component.
+     * Gets tab caption. The tab is identified by the tab content component.
      * 
      * @param c
-     *            the component.
+     *            the component in the tab
      * @deprecated Use {@link #getTab(Component)} and {@link Tab#getCaption()}
      *             instead.
      */
@@ -314,10 +376,10 @@ public class TabSheet extends AbstractComponentContainer {
     }
 
     /**
-     * Sets tabs captions.
+     * Sets tab caption. The tab is identified by the tab content component.
      * 
      * @param c
-     *            the component.
+     *            the component in the tab
      * @param caption
      *            the caption to set.
      * @deprecated Use {@link #getTab(Component)} and
@@ -333,10 +395,11 @@ public class TabSheet extends AbstractComponentContainer {
     }
 
     /**
-     * Gets the icon for a component.
+     * Gets the icon for a tab. The tab is identified by the tab content
+     * component.
      * 
      * @param c
-     *            the component.
+     *            the component in the tab
      * @deprecated Use {@link #getTab(Component)} and {@link Tab#getIcon()}
      *             instead.
      */
@@ -351,12 +414,11 @@ public class TabSheet extends AbstractComponentContainer {
     }
 
     /**
-     * Sets icon for the given component.
-     * 
-     * Normally TabSheet uses icon from component
+     * Sets icon for the given component. The tab is identified by the tab
+     * content component.
      * 
      * @param c
-     *            the component
+     *            the component in the tab
      * @param icon
      *            the icon to set
      * @deprecated Use {@link #getTab(Component)} and
@@ -372,8 +434,8 @@ public class TabSheet extends AbstractComponentContainer {
     }
 
     /**
-     * Returns the Tab for the component. The Tab object can be used for setting
-     * caption,icon, etc for the tab.
+     * Returns the {@link Tab} (metadata) for a component. The {@link Tab}
+     * object can be used for setting caption,icon, etc for the tab.
      * 
      * @param c
      *            the component
@@ -384,7 +446,8 @@ public class TabSheet extends AbstractComponentContainer {
     }
 
     /**
-     * Sets the selected tab.
+     * Sets the selected tab. The tab is identified by the tab content
+     * component.
      * 
      * @param c
      */
@@ -399,7 +462,9 @@ public class TabSheet extends AbstractComponentContainer {
 
     /**
      * Checks if the current selection is valid, and updates the selection if
-     * the previously selected component is not visible and enabled.
+     * the previously selected component is not visible and enabled. The first
+     * visible and enabled tab is selected if the current selection is empty or
+     * invalid.
      * 
      * This method does not fire tab change events, but the caller should do so
      * if appropriate.
@@ -430,6 +495,7 @@ public class TabSheet extends AbstractComponentContainer {
                 // it
                 if (tab.isEnabled() && tab.isVisible()) {
                     selected = component;
+                    break;
                 } else {
                     /*
                      * The current selection is not valid but this tab cannot be
@@ -443,20 +509,15 @@ public class TabSheet extends AbstractComponentContainer {
     }
 
     /**
-     * Gets the selected tab.
+     * Gets the selected tab content component.
      * 
-     * @return the selected tab.
+     * @return the selected tab contents
      */
     public Component getSelectedTab() {
         return selected;
     }
 
-    /**
-     * Invoked when the value of a variable has changed.
-     * 
-     * @see com.vaadin.ui.AbstractComponent#changeVariables(java.lang.Object,
-     *      java.util.Map)
-     */
+    // inherits javadoc
     @Override
     public void changeVariables(Object source, Map variables) {
         if (variables.containsKey("selected")) {
@@ -472,7 +533,23 @@ public class TabSheet extends AbstractComponentContainer {
         }
     }
 
-    /* Documented in superclass */
+    /**
+     * Replaces a component (tab content) with another. This can be used to
+     * change tab contents or to rearrange tabs. The tab position and some
+     * metadata are preserved when moving components within the same
+     * {@link TabSheet}.
+     * 
+     * If the oldComponent is not present in the tab sheet, the new one is added
+     * at the end.
+     * 
+     * If the oldComponent is already in the tab sheet but the newComponent
+     * isn't, the old tab is replaced with a new one, and the caption and icon
+     * of the old one are copied to the new tab.
+     * 
+     * If both old and new components are present, their positions are swapped.
+     * 
+     * {@inheritDoc}
+     */
     public void replaceComponent(Component oldComponent, Component newComponent) {
 
         if (selected == oldComponent) {
@@ -574,8 +651,8 @@ public class TabSheet extends AbstractComponentContainer {
     }
 
     /**
-     * Selected Tab Change event. This event is thrown, when the selected tab in
-     * the tab sheet is changed.
+     * Selected tab change event. This event is sent when the selected (shown)
+     * tab in the tab sheet is changed.
      * 
      * @author IT Mill Ltd.
      * @version
@@ -605,7 +682,9 @@ public class TabSheet extends AbstractComponentContainer {
     }
 
     /**
-     * Selected Tab Change Event listener
+     * Selected tab change event listener. The listener is called whenever
+     * another tab is selected, including when adding the first tab to a
+     * tabsheet.
      * 
      * @author IT Mill Ltd.
      * 
@@ -616,16 +695,16 @@ public class TabSheet extends AbstractComponentContainer {
     public interface SelectedTabChangeListener extends Serializable {
 
         /**
-         * Visible tab in tab sheet has has been changed.
+         * Selected (shown) tab in tab sheet has has been changed.
          * 
          * @param event
-         *            the Selected tab change event.
+         *            the selected tab change event.
          */
         public void selectedTabChange(SelectedTabChangeEvent event);
     }
 
     /**
-     * Adds the selected tab change listener
+     * Adds a tab selection listener
      * 
      * @param listener
      *            the Listener to be added.
@@ -636,7 +715,7 @@ public class TabSheet extends AbstractComponentContainer {
     }
 
     /**
-     * Removes the selected tab change listener
+     * Removes a tab selection listener
      * 
      * @param listener
      *            the Listener to be removed.
@@ -647,7 +726,7 @@ public class TabSheet extends AbstractComponentContainer {
     }
 
     /**
-     * Emits the options change event.
+     * Sends an event that the currently selected tab has changed.
      */
     protected void fireSelectedTabChange() {
         fireEvent(new SelectedTabChangeEvent(this));
@@ -664,18 +743,28 @@ public class TabSheet extends AbstractComponentContainer {
     }
 
     /**
-     *
+     * Tab meta-data for a component in a {@link TabSheet}.
+     * 
+     * The meta-data includes the tab caption, icon, visibility and enabledness,
+     * closability, description (tooltip) and an optional component error shown
+     * in the tab.
+     * 
+     * Tabs are identified by the component contained on them in most cases, and
+     * the meta-data can be obtained with {@link TabSheet#getTab(Component)}.
      */
     public interface Tab extends Serializable {
         /**
-         * Returns the visible status for the tab.
+         * Returns the visible status for the tab. An invisible tab is not shown
+         * in the tab bar and cannot be selected.
          * 
          * @return true for visible, false for hidden
          */
         public boolean isVisible();
 
         /**
-         * Sets the visible status for the tab.
+         * Sets the visible status for the tab. An invisible tab is not shown in
+         * the tab bar and cannot be selected, selection is changed
+         * automatically when there is an attempt to select an invisible tab.
          * 
          * @param visible
          *            true for visible, false for hidden
@@ -705,14 +794,16 @@ public class TabSheet extends AbstractComponentContainer {
         public void setClosable(boolean closable);
 
         /**
-         * Returns the enabled status for the tab.
+         * Returns the enabled status for the tab. A disabled tab is shown as
+         * such in the tab bar and cannot be selected.
          * 
          * @return true for enabled, false for disabled
          */
         public boolean isEnabled();
 
         /**
-         * Sets the enabled status for the tab.
+         * Sets the enabled status for the tab. A disabled tab is shown as such
+         * in the tab bar and cannot be selected.
          * 
          * @param enabled
          *            true for enabled, false for disabled
@@ -729,13 +820,11 @@ public class TabSheet extends AbstractComponentContainer {
 
         /**
          * Gets the caption for the tab.
-         * 
          */
         public String getCaption();
 
         /**
          * Gets the icon for the tab.
-         * 
          */
         public Resource getIcon();
 
@@ -749,29 +838,49 @@ public class TabSheet extends AbstractComponentContainer {
 
         /**
          * Gets the description for the tab. The description can be used to
-         * briefly describe the state of the tab to the user.
+         * briefly describe the state of the tab to the user, and is typically
+         * shown as a tooltip when hovering over the tab.
          * 
          * @return the description for the tab
          */
         public String getDescription();
 
         /**
-         * Sets the description for the tab.
+         * Sets the description for the tab. The description can be used to
+         * briefly describe the state of the tab to the user, and is typically
+         * shown as a tooltip when hovering over the tab.
          * 
          * @param description
          *            the new description string for the tab.
          */
         public void setDescription(String description);
 
+        /**
+         * Sets an error indicator to be shown in the tab. This can be used e.g.
+         * to communicate to the user that there is a problem in the contents of
+         * the tab.
+         * 
+         * @see AbstractComponent#setComponentError(ErrorMessage)
+         * 
+         * @param componentError
+         *            error message or null for none
+         */
         public void setComponentError(ErrorMessage componentError);
 
+        /**
+         * Gets the curent error message shown for the tab.
+         * 
+         * @see AbstractComponent#setComponentError(ErrorMessage)
+         * 
+         * @param error
+         *            message or null if none
+         */
         public ErrorMessage getComponentError();
 
     }
 
     /**
-     * TabSheet's implementation of Tab
-     * 
+     * TabSheet's implementation of {@link Tab} - tab metadata.
      */
     public class TabSheetTabImpl implements Tab {
 

@@ -66,6 +66,20 @@ public class Comboboxes extends ComponentTestCase<ComboBox> {
         populate(s, 50);
         addTestComponent(s);
 
+        s = new PageLength0ComboBox();
+        s.setImmediate(true);
+        s.addContainerProperty(CAPTION, String.class, "");
+        s.setItemCaptionPropertyId(CAPTION);
+        s.setCaption("Pagelength 0");
+        populate(s, 15);
+        addTestComponent(s);
+    }
+
+    public class PageLength0ComboBox extends ComboBox {
+        public PageLength0ComboBox() {
+            super();
+            pageLength = 0;
+        }
     }
 
     private void populate(Select s, int nr) {

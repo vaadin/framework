@@ -1206,7 +1206,7 @@
     	<property name="demo.war" location="${result-path}/${product-file}-demo-${version.full}.war" />
 
         <!-- Run the separate test script. -->
-        <ant antfile="tests/integration_tests.xml" target="all" inheritall="false" inheritrefs="true">
+        <ant antfile="tests/integration_tests.xml" target="integration-test-all" inheritall="false" inheritrefs="true">
               <!-- This is provided so that the test script can copy the -->
               <!-- "tests" classes after unpacking the package.          -->
 		      <property name="output-dir" value="${output-dir}"/>

@@ -459,7 +459,7 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
              */
 
             int h = contents.getOffsetHeight() + getExtraHeight();
-            int w = contents.getOffsetWidth();
+            int w = getElement().getOffsetWidth();
 
             client.updateVariable(id, "height", h, false);
             client.updateVariable(id, "width", w, true);

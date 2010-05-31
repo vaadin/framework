@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="Test sampler deployment" basedir="." default="all">
+<project name="Test sampler deployment" basedir="." default="integration-test-all">
     
 	<!-- Test with these browsers -->
 	<property name="test_browsers" value="winxp-firefox36" />
@@ -33,12 +33,12 @@
 	</taskdef>
 	
 	<!-- Upload war to deploy to ssh host -->
-	<target name="upload-demo">
+	<target name="integration-test-upload-demo">
 		<scp file="${demo.war}" todir="${user}@${sshHost}:demo.war" keyfile="${sshkey.file}" passphrase="${passphrase}" />
 	</target>
 	
 	<!-- Run sampler deployment test -->
-	<target name="test-sampler">
+	<target name="integration-test-sampler">
 		<fileset dir="integration-testscripts" id="html-test-files" includes="integration-test-${server-name}-sampler.html" />
 		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
 		
@@ -55,107 +55,107 @@
 	</target>
 	
 	<!-- Start and stop methods for servers -->
-	<target name="start-tomcat-4">
+	<target name="integration-test-start-tomcat-4">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-tomcat-4.1.40" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-tomcat-4.1.40-sampler.html" overwrite="true" />
 	</target>
 
-	<target name="stop-tomcat-4">
+	<target name="integration-test-stop-tomcat-4">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-tomcat-4.1.40" />
 	</target>
 	
-	<target name="start-tomcat-5">
+	<target name="integration-test-start-tomcat-5">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-tomcat-5.5.28" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-tomcat-5.5.28-sampler.html" overwrite="true" />
 	</target>
 
-	<target name="stop-tomcat-5">
+	<target name="integration-test-stop-tomcat-5">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-tomcat-5.5.28" />
 	</target>
 	
-	<target name="start-tomcat-6">
+	<target name="integration-test-start-tomcat-6">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-tomcat-6.0.20" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-tomcat-6.0.20-sampler.html" overwrite="true" />
 	</target>
 
-	<target name="stop-tomcat-6">
+	<target name="integration-test-stop-tomcat-6">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-tomcat-6.0.20" />
 	</target>
 	
-	<target name="start-jetty-5">
+	<target name="integration-test-start-jetty-5">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jetty-5.1.15" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-jetty-5.1.15-sampler.html" overwrite="true" />
 	</target>
 
-	<target name="stop-jetty-5">
+	<target name="integration-test-stop-jetty-5">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-jetty-5.1.15" />
 	</target>
 
-	<target name="start-jetty-6">
+	<target name="integration-test-start-jetty-6">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jetty-6.1.22" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-jetty-6.1.22-sampler.html" overwrite="true" />
 	</target>
 
-	<target name="stop-jetty-6">
+	<target name="integration-test-stop-jetty-6">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-jetty-6.1.22" />
 	</target>
 	
-	<target name="start-jetty-7">
+	<target name="integration-test-start-jetty-7">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jetty-7.0.0" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-jetty-7.0.0-sampler.html" overwrite="true" />
 	</target>
 
-	<target name="stop-jetty-7">
+	<target name="integration-test-stop-jetty-7">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-jetty-7.0.0" />
 	</target>
 	
-	<target name="start-jboss-3">
+	<target name="integration-test-start-jboss-3">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jboss-3.2.8" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-jboss-3.2.8-sampler.html" overwrite="true" />
 	</target>
 
-	<target name="stop-jboss-3">
+	<target name="integration-test-stop-jboss-3">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-jboss-3.2.8" />
 	</target>
 	
-	<target name="start-jboss-4">
+	<target name="integration-test-start-jboss-4">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jboss-4.2.3" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-jboss-4.2.3-sampler.html" overwrite="true" />
 	</target>
 
-	<target name="stop-jboss-4">
+	<target name="integration-test-stop-jboss-4">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-jboss-4.2.3" />
 	</target>
 	
-	<target name="start-jboss-5">
+	<target name="integration-test-start-jboss-5">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-jboss-5.0.1" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-jboss-5.0.1-sampler.html" overwrite="true" />
 	</target>
 
-	<target name="stop-jboss-5">
+	<target name="integration-test-stop-jboss-5">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-jboss-5.0.1" />
 	</target>
 	
-	<target name="start-glassfish2">
+	<target name="integration-test-start-glassfish2">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-glassfish-2.1.1" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-glassfish-2.1.1-sampler.html" overwrite="true" />
 	</target>
 	
-	<target name="stop-glassfish2">
+	<target name="integration-test-stop-glassfish2">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-glassfish-2.1.1" />
 	</target>
 	
-	<target name="start-glassfish3">
+	<target name="integration-test-start-glassfish3">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-glassfish-3" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-glassfish-3-sampler.html" overwrite="true" />
 	</target>
 	
-	<target name="stop-glassfish3">
+	<target name="integration-test-stop-glassfish3">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-glassfish-3" />
 	</target>
 			
 	<!-- Test liferay sampler -->
-	<target name="test-liferay">
+	<target name="integration-test-test-liferay">
 		<fileset dir="integration-testscripts" id="html-test-files" includes="integration-test-liferay-5.2.3-sampler.html" />
 		<pathconvert pathsep=" " property="test-liferay" refid="html-test-files" />
 		
@@ -171,7 +171,7 @@
 	</target>
 	
 	<!-- "deploy" sampler to liferay -->
-	<target name="init-liferay">
+	<target name="integration-test-init-liferay">
 		<fileset dir="integration-testscripts" id="html-test-files" includes="Add_Sampler_to_Liferay.html" />
 		<pathconvert pathsep=" " property="init-liferay" refid="html-test-files" />
 		
@@ -186,17 +186,17 @@
 		</subant>
 	</target>
 	
-	<target name="start-liferay">
+	<target name="integration-test-start-liferay">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-liferay-5.2.3" />
 		<copy file="integration-testscripts/sampler_deployment_liferay.html" tofile="integration-testscripts/integration-test-liferay-5.2.3-sampler.html" overwrite="true" />
 	</target>
 
-	<target name="stop-liferay">
+	<target name="integration-test-stop-liferay">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-liferay-5.2.3" />
 	</target>
 	
 	<!-- Run sampler deployment test for WebLogic server -->
-	<target name="test-weblogic">
+	<target name="integration-test-test-weblogic">
 		<fileset dir="integration-testscripts" id="html-test-files" includes="integration-test-${server-name}-sampler.html" />
 		<pathconvert pathsep=" " property="test-weblogic" refid="html-test-files" />
 		
@@ -211,26 +211,26 @@
 		</subant>
 	</target>
 	
-	<target name="start-weblogic9">
+	<target name="integration-test-start-weblogic9">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-weblogic-9.2" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-weblogic-9.2-sampler.html" overwrite="true" />
 	</target>
 
-	<target name="stop-weblogic9">
+	<target name="integration-test-stop-weblogic9">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-weblogic-9.2" />
 	</target>
 	
-	<target name="start-weblogic10">
+	<target name="integration-test-start-weblogic10">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} start-weblogic-10.3" />
 		<copy file="integration-testscripts/sampler_deployment.tpl" tofile="integration-testscripts/integration-test-weblogic-10.3-sampler.html" overwrite="true" />
 	</target>
 
-	<target name="stop-weblogic10">
+	<target name="integration-test-stop-weblogic10">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} stop-weblogic-10.3" />
 	</target>
 	
 	<!-- Run sampler deployment test on GAE -->
-	<target name="test-GAE">
+	<target name="integration-test-test-GAE">
 		<fileset dir="integration-testscripts" id="html-test-files" includes="integration-test-GAE-sampler.html" />
 		<pathconvert pathsep=" " property="test-GAE" refid="html-test-files" />
 		
@@ -245,179 +245,172 @@
 		</subant>
 	</target>
 		
-	<target name="deploy-to-GAE">
+	<target name="integration-test-deploy-to-GAE">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} deploy-to-GAE" />
 	</target>
 			
 	<!-- Server setup, test and teardown targets. -->
-	<target name="tomcat4">
-		<antcall target="start-tomcat-4"/>
-		<antcall target="test-sampler">
+	<target name="integration-test-tomcat4">
+		<antcall target="integration-test-start-tomcat-4"/>
+		<antcall target="integration-test-sampler">
 			<param name="server-name" value="tomcat-4.1.40" />
 		</antcall>
-		<antcall target="stop-tomcat-4"/>
+		<antcall target="integration-test-stop-tomcat-4"/>
 	</target>
 	
-	<target name="tomcat5">
-		<antcall target="start-tomcat-5"/>
-		<antcall target="test-sampler">
+	<target name="integration-test-tomcat5">
+		<antcall target="integration-test-start-tomcat-5"/>
+		<antcall target="integration-test-sampler">
 			<param name="server-name" value="tomcat-5.5.28" />
 		</antcall>
-		<antcall target="stop-tomcat-5"/>
+		<antcall target="integration-test-stop-tomcat-5"/>
 	</target>	
 	
-	<target name="tomcat6">
-		<antcall target="start-tomcat-6"/>
-		<antcall target="test-sampler">
+	<target name="integration-test-tomcat6">
+		<antcall target="integration-test-start-tomcat-6"/>
+		<antcall target="integration-test-sampler">
 			<param name="server-name" value="tomcat-6.0.20" />
 		</antcall>
-		<antcall target="stop-tomcat-6"/>
+		<antcall target="integration-test-stop-tomcat-6"/>
 	</target>
 	
-	<target name="jetty5">
-		<antcall target="start-jetty-5"/>
-		<antcall target="test-sampler">
+	<target name="integration-test-jetty5">
+		<antcall target="integration-test-start-jetty-5"/>
+		<antcall target="integration-test-sampler">
 			<param name="server-name" value="jetty-5.1.15" />
 		</antcall>
-		<antcall target="stop-jetty-5"/>
+		<antcall target="integration-test-stop-jetty-5"/>
 	</target>
 	
-	<target name="jetty6">
-		<antcall target="start-jetty-6"/>
-		<antcall target="test-sampler">
+	<target name="integration-test-jetty6">
+		<antcall target="integration-test-start-jetty-6"/>
+		<antcall target="integration-test-sampler">
 			<param name="server-name" value="jetty-6.1.22" />
 		</antcall>
-		<antcall target="stop-jetty-6"/>
+		<antcall target="integration-test-stop-jetty-6"/>
 	</target>
 	
-	<target name="jetty7">
-		<antcall target="start-jetty-7"/>
-		<antcall target="test-sampler">
+	<target name="integration-test-jetty7">
+		<antcall target="integration-test-start-jetty-7"/>
+		<antcall target="integration-test-sampler">
 			<param name="server-name" value="jetty-7.0.0" />
 		</antcall>
-		<antcall target="stop-jetty-7"/>
+		<antcall target="integration-test-stop-jetty-7"/>
 	</target>
 	
-	<target name="jboss3">
-		<antcall target="start-jboss-3"/>
-		<antcall target="test-sampler">
+	<target name="integration-test-jboss3">
+		<antcall target="integration-test-start-jboss-3"/>
+		<antcall target="integration-test-sampler">
 			<param name="server-name" value="jboss-3.2.8" />
 		</antcall>
-		<antcall target="stop-jboss-3"/>
+		<antcall target="integration-test-stop-jboss-3"/>
 	</target>
 	
-	<target name="jboss4">
-		<antcall target="start-jboss-4"/>
-		<antcall target="test-sampler">
+	<target name="integration-test-jboss4">
+		<antcall target="integration-test-start-jboss-4"/>
+		<antcall target="integration-test-sampler">
 			<param name="server-name" value="jboss-4.2.3" />
 		</antcall>
-		<antcall target="stop-jboss-4"/>
+		<antcall target="integration-test-stop-jboss-4"/>
 	</target>
 	
-	<target name="jboss5">
-		<antcall target="start-jboss-5"/>
-		<antcall target="test-sampler">
+	<target name="integration-test-jboss5">
+		<antcall target="integration-test-start-jboss-5"/>
+		<antcall target="integration-test-sampler">
 			<param name="server-name" value="jboss-5.0.1" />
 		</antcall>
-		<antcall target="stop-jboss-5"/>
+		<antcall target="integration-test-stop-jboss-5"/>
 	</target>
 		
-	<target name="glassfish2">
-		<antcall target="start-glassfish2"/>
-		<antcall target="test-sampler">
+	<target name="integration-test-glassfish2">
+		<antcall target="integration-test-start-glassfish2"/>
+		<antcall target="integration-test-sampler">
 			<param name="server-name" value="glassfish-2.1.1" />
 		</antcall>
-		<antcall target="stop-glassfish2"/>
+		<antcall target="integration-test-stop-glassfish2"/>
 	</target>
 	
-	<target name="glassfish3">
-		<antcall target="start-glassfish3"/>
-		<antcall target="test-sampler">
+	<target name="integration-test-glassfish3">
+		<antcall target="integration-test-start-glassfish3"/>
+		<antcall target="integration-test-sampler">
 			<param name="server-name" value="glassfish-3" />
 		</antcall>
-		<antcall target="stop-glassfish3"/>
+		<antcall target="integration-test-stop-glassfish3"/>
 	</target>
 	
-	<target name="liferay">
-		<antcall target="start-liferay" />
-		<antcall target="init-liferay" />
-		<antcall target="test-liferay" />
-		<antcall target="stop-liferay" />
+	<target name="integration-test-liferay">
+		<antcall target="integration-test-start-liferay" />
+		<antcall target="integration-test-init-liferay" />
+		<antcall target="integration-test-test-liferay" />
+		<antcall target="integration-test-stop-liferay" />
 	</target>
 	
-	<target name="weblogic9">
-		<antcall target="start-weblogic9"/>
-		<antcall target="test-weblogic">
+	<target name="integration-test-weblogic9">
+		<antcall target="integration-test-start-weblogic9"/>
+		<antcall target="integration-test-test-weblogic">
 			<param name="server-name" value="weblogic-9.2" />
 		</antcall>
-		<antcall target="stop-weblogic9"/>
+		<antcall target="integration-test-stop-weblogic9"/>
 	</target>
 	
-	<target name="weblogic10">
-		<antcall target="start-weblogic10"/>
-		<antcall target="test-weblogic">
+	<target name="integration-test-weblogic10">
+		<antcall target="integration-test-start-weblogic10"/>
+		<antcall target="integration-test-test-weblogic">
 			<param name="server-name" value="weblogic-10.3" />
 		</antcall>
-		<antcall target="stop-weblogic10"/>
+		<antcall target="integration-test-stop-weblogic10"/>
 	</target>
 	
-	<target name="GAE">
-		<antcall target="deploy-to-GAE"/>
-		<antcall target="test-GAE" />
+	<target name="integration-test-GAE">
+		<antcall target="integration-test-deploy-to-GAE"/>
+		<antcall target="integration-test-test-GAE" />
 	</target>
 			
 	<!-- Upload demo, clean error screenshots and test deployment on all servers -->
-	<target name="all">
-		<antcall target="upload-demo" />
+	<target name="integration-test-all">
+		<antcall target="integration-test-upload-demo" />
 		<echo>Getting lock</echo>
-		<antcall target="get-lock" />
+		<antcall target="integration-test-get-lock" />
 		<echo>Got lock</echo>
 		<trycatch property="tried">
 			<try>
-				<antcall target="tomcat4" />
-				<antcall target="tomcat5" />
-				<antcall target="tomcat6" />
-				<antcall target="jetty5" />
-				<antcall target="jetty6" />
-				<antcall target="jetty7" />
-				<antcall target="jboss3" />
-				<antcall target="jboss4" />
-				<antcall target="jboss5" />
-				<antcall target="glassfish2" />
-				<antcall target="glassfish3" />
-				<antcall target="liferay" />
-				<antcall target="weblogic9" />
-				<antcall target="weblogic10" />
-				<antcall target="GAE" />
+				<antcall target="integration-test-tomcat4" />
+				<antcall target="integration-test-tomcat5" />
+				<antcall target="integration-test-tomcat6" />
+				<antcall target="integration-test-jetty5" />
+				<antcall target="integration-test-jetty6" />
+				<antcall target="integration-test-jetty7" />
+				<antcall target="integration-test-jboss3" />
+				<antcall target="integration-test-jboss4" />
+				<antcall target="integration-test-jboss5" />
+				<antcall target="integration-test-glassfish2" />
+				<antcall target="integration-test-glassfish3" />
+				<antcall target="integration-test-liferay" />
+				<antcall target="integration-test-weblogic9" />
+				<antcall target="integration-test-weblogic10" />
+				<antcall target="integration-test-GAE" />
 			</try>
 			<catch>
 				<echo>${tried}</echo>
-				<echo>Running targets: clean and release-lock</echo>
+				<echo>Running targets: integration-test-clean and integration-test-release-lock</echo>
 			</catch>
 			<finally>
-				<antcall target="clean" />
-				<antcall target="release-lock" />
+				<antcall target="integration-test-clean" />
+				<antcall target="integration-test-release-lock" />
 			</finally>
 		</trycatch>
 	</target>
 	
-	<target name="get-lock">
+	<target name="integration-test-get-lock">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} get-lock" />
 	</target>
 	
-	<target name="release-lock">
+	<target name="integration-test-release-lock">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} release-lock" />
 	</target>
 		
 	<!-- Remove demo.war -->
-	<target name="clean">
+	<target name="integration-test-clean">
 		<sshexec host="${sshHost}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} clean" />
-	</target>
-	
-	<!-- Remove old screenshots if any -->
-	<target name="clean-old">
-		<subant target="remove-error-screens">
-			<fileset dir="." includes="test.xml" />
-		</subant>
 	</target>
 </project>
