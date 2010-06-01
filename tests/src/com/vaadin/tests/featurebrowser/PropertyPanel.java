@@ -272,8 +272,8 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 
         // Customization for Window component
         if (objectToConfigure instanceof Window) {
-            disableField(set.getField("enabled"), new Boolean(true));
-            disableField(set.getField("visible"), new Boolean(true));
+            disableField(set.getField("enabled"), Boolean.TRUE);
+            disableField(set.getField("visible"), Boolean.TRUE);
             disableField(set.getField("componentError"));
             disableField(set.getField("icon"));
         }

@@ -143,10 +143,10 @@ public class NativeSelects extends ComponentTestCase<NativeSelect> {
                     }
                 });
 
-        errorIndicators.setValue(new Boolean(false));
-        readonly.setValue(new Boolean(false));
-        enabled.setValue(new Boolean(true));
-        nullSelect.setValue(new Boolean(false));
+        errorIndicators.setValue(Boolean.FALSE);
+        readonly.setValue(Boolean.FALSE);
+        enabled.setValue(Boolean.TRUE);
+        nullSelect.setValue(Boolean.FALSE);
 
         errorIndicators.setImmediate(true);
         readonly.setImmediate(true);

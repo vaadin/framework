@@ -150,9 +150,9 @@ public class Comboboxes extends ComponentTestCase<ComboBox> {
                     }
                 });
 
-        errorIndicators.setValue(new Boolean(false));
-        readonly.setValue(new Boolean(false));
-        enabled.setValue(new Boolean(true));
+        errorIndicators.setValue(Boolean.FALSE);
+        readonly.setValue(Boolean.FALSE);
+        enabled.setValue(Boolean.TRUE);
 
         errorIndicators.setImmediate(true);
         readonly.setImmediate(true);
