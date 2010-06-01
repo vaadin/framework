@@ -201,21 +201,21 @@ public class DateTimeService {
         if (resolution == RESOLUTION_MONTH) {
             return (start <= target && end >= target);
         }
-        start += s.getDate() * 1000000;
-        end += e.getDate() * 1000000;
-        target += date.getDate() * 1000000;
+        start += s.getDate() * 1000000l;
+        end += e.getDate() * 1000000l;
+        target += date.getDate() * 1000000l;
         if (resolution == RESOLUTION_DAY) {
             return (start <= target && end >= target);
         }
-        start += s.getHours() * 10000;
-        end += e.getHours() * 10000;
-        target += date.getHours() * 10000;
+        start += s.getHours() * 10000l;
+        end += e.getHours() * 10000l;
+        target += date.getHours() * 10000l;
         if (resolution == RESOLUTION_HOUR) {
             return (start <= target && end >= target);
         }
-        start += s.getMinutes() * 100;
-        end += e.getMinutes() * 100;
-        target += date.getMinutes() * 100;
+        start += s.getMinutes() * 100l;
+        end += e.getMinutes() * 100l;
+        target += date.getMinutes() * 100l;
         if (resolution == RESOLUTION_MIN) {
             return (start <= target && end >= target);
         }

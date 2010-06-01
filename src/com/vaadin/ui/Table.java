@@ -712,7 +712,7 @@ public class Table extends AbstractSelect implements Action.Container,
         if (width < 0) {
             columnWidths.remove(columnId);
         } else {
-            columnWidths.put(columnId, new Integer(width));
+            columnWidths.put(columnId, Integer.valueOf(width));
         }
     }
 
