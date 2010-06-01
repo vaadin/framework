@@ -55,9 +55,6 @@ public class MenuBar extends AbstractComponent {
         // Superclass writes any common attributes in the paint target.
         super.paintContent(target);
 
-        // Stack for list iterators
-        Stack<Iterator<MenuItem>> iteratorStack = new Stack<Iterator<MenuItem>>();
-
         target.startTag("options");
 
         if (submenuIcon != null) {

@@ -394,7 +394,7 @@ public class VPanel extends SimplePanel implements Container {
     public void setHeight(String height) {
         this.height = height;
         super.setHeight(height);
-        if (height != null && height != "") {
+        if (height != null && !"".equals(height)) {
             final int targetHeight = getOffsetHeight();
             int containerHeight = targetHeight
                     - captionNode.getParentElement().getOffsetHeight()

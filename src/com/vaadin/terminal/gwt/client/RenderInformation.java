@@ -91,8 +91,16 @@ public class RenderInformation {
 
         @Override
         public boolean equals(Object obj) {
+            if (!(obj instanceof Size)) {
+                return false;
+            }
             Size other = (Size) obj;
             return other.width == width && other.height == height;
+        }
+
+        @Override
+        public int hashCode() {
+            return (width << 8) | height;
         }
 
         public Size() {

@@ -117,10 +117,10 @@ public class TextFields extends ComponentTestCase<TextField> {
                     }
                 });
 
-        errorIndicators.setValue(new Boolean(false));
-        required.setValue(new Boolean(false));
-        readonly.setValue(new Boolean(false));
-        enabled.setValue(new Boolean(true));
+        errorIndicators.setValue(Boolean.FALSE);
+        required.setValue(Boolean.FALSE);
+        readonly.setValue(Boolean.FALSE);
+        enabled.setValue(Boolean.TRUE);
 
         errorIndicators.setImmediate(true);
         required.setImmediate(true);

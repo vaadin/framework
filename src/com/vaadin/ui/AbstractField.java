@@ -1232,7 +1232,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     }
 
     public void removeShortcutListener(ShortcutListener shortcut) {
-        if (actionManager == null) {
+        if (actionManager != null) {
             actionManager.removeAction(shortcut);
         }
     }

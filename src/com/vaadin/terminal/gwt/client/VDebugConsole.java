@@ -365,7 +365,7 @@ public final class VDebugConsole extends VOverlay implements Console {
             str = msg.toString();
         }
         panel.add((new Label(str)));
-        consoleLog(msg.toString());
+        consoleLog(str);
     }
 
     /*

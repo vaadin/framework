@@ -36,9 +36,9 @@ public class TableEditable extends CustomComponent {
             calendar.add(Calendar.DAY_OF_YEAR, i);
 
             // Create the table row.
-            table.addItem(new Object[] { calendar.getTime(),
-                    new Boolean(false), "" }, new Integer(i)); // Item
-            // identifier
+            table.addItem(
+                    new Object[] { calendar.getTime(), Boolean.FALSE, "" },
+                    new Integer(i)); // Item identifier
         }
 
         table.setPageLength(8);

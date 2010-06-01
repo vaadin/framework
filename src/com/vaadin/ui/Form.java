@@ -1325,7 +1325,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
 
     public <T extends Action & com.vaadin.event.Action.Listener> void removeAction(
             T action) {
-        if (ownActionManager == null) {
+        if (ownActionManager != null) {
             ownActionManager.removeAction(action);
         }
     }

@@ -47,10 +47,7 @@ public class DragAndDropService implements VariableOwner {
                     + " must implement DropTarget");
             return;
         }
-        if (owner == null) {
-            System.err.println("DropHandler owner is null");
-            return;
-        }
+        // owner cannot be null here
 
         DropTarget dropTarget = (DropTarget) owner;
         lastVisitId = (Integer) variables.get("visitId");

@@ -30,7 +30,7 @@ public class ColumnExpandWithFixedColumns extends TestBase {
 
     @Override
     protected String getDescription() {
-        return "The second coulmn has expand ratio and should use the maximum available space";
+        return "The second column has expand ratio and should use the maximum available space";
     }
 
     @Override

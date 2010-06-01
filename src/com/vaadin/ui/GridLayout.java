@@ -572,7 +572,7 @@ public class GridLayout extends AbstractLayout implements
 
                             // Removes the cellUsed key as it has become
                             // obsolete
-                            cellUsed.remove(new Integer(curx));
+                            cellUsed.remove(Integer.valueOf(curx));
                         }
                     } else {
 
