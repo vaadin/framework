@@ -501,7 +501,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
 
     public <T extends Action & com.vaadin.event.Action.Listener> void removeAction(
             T action) {
-        if (actionManager == null) {
+        if (actionManager != null) {
             actionManager.removeAction(action);
         }
     }
