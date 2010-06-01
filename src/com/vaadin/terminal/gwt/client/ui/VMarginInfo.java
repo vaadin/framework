@@ -73,4 +73,9 @@ public class VMarginInfo implements Serializable {
         return ((VMarginInfo) obj).bitMask == bitMask;
     }
 
+    @Override
+    public int hashCode() {
+        return bitMask;
+    }
+
 }

@@ -195,9 +195,9 @@ public class DateTimeService {
         if (resolution == RESOLUTION_YEAR) {
             return (start <= target && end >= target);
         }
-        start += s.getMonth() * 100000000;
-        end += e.getMonth() * 100000000;
-        target += date.getMonth() * 100000000;
+        start += s.getMonth() * 100000000l;
+        end += e.getMonth() * 100000000l;
+        target += date.getMonth() * 100000000l;
         if (resolution == RESOLUTION_MONTH) {
             return (start <= target && end >= target);
         }
