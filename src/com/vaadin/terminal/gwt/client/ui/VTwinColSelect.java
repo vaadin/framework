@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -15,7 +18,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.vaadin.terminal.gwt.client.UIDL;
 
-public class VTwinColSelect extends VOptionGroupBase {
+public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler {
 
     private static final String CLASSNAME = "v-select-twincol";
 
@@ -31,9 +34,9 @@ public class VTwinColSelect extends VOptionGroupBase {
 
     private final VButton remove;
 
-    private FlowPanel buttons;
+    private final FlowPanel buttons;
 
-    private Panel panel;
+    private final Panel panel;
 
     private boolean widthSet = false;
 
@@ -64,6 +67,9 @@ public class VTwinColSelect extends VOptionGroupBase {
         buttons.add(remove);
         panel.add(buttons);
         panel.add(selections);
+
+        options.addKeyDownHandler(this);
+        selections.addKeyDownHandler(this);
     }
 
     @Override
@@ -142,47 +148,81 @@ public class VTwinColSelect extends VOptionGroupBase {
         return selectedIndexes;
     }
 
+    private void addItem() {
+        final boolean[] sel = getItemsToAdd();
+        for (int i = 0; i < sel.length; i++) {
+            if (sel[i]) {
+                final int optionIndex = i
+                        - (sel.length - options.getItemCount());
+                selectedKeys.add(options.getValue(optionIndex));
+
+                // Move selection to another column
+                final String text = options.getItemText(optionIndex);
+                final String value = options.getValue(optionIndex);
+                selections.addItem(text, value);
+                selections.setItemSelected(selections.getItemCount() - 1, true);
+                options.removeItem(optionIndex);
+
+                if (options.getItemCount() > 0) {
+                    options.setItemSelected(optionIndex > 0 ? optionIndex - 1
+                            : 0, true);
+                }
+            }
+        }
+
+        // If no items are left move the focus to the selections
+        if (options.getItemCount() == 0) {
+            selections.setFocus(true);
+        } else {
+            options.setFocus(true);
+        }
+
+        client.updateVariable(id, "selected", selectedKeys
+                .toArray(new String[selectedKeys.size()]), isImmediate());
+    }
+
+    private void removeItem() {
+        final boolean[] sel = getItemsToRemove();
+        for (int i = 0; i < sel.length; i++) {
+            if (sel[i]) {
+                final int selectionIndex = i
+                        - (sel.length - selections.getItemCount());
+                selectedKeys.remove(selections.getValue(selectionIndex));
+
+                // Move selection to another column
+                final String text = selections.getItemText(selectionIndex);
+                final String value = selections.getValue(selectionIndex);
+                options.addItem(text, value);
+                options.setItemSelected(options.getItemCount() - 1, true);
+                selections.removeItem(selectionIndex);
+
+                if (selections.getItemCount() > 0) {
+                    selections.setItemSelected(
+                            selectionIndex > 0 ? selectionIndex - 1 : 0, true);
+                }
+            }
+        }
+
+        // If no items are left move the focus to the selections
+        if (selections.getItemCount() == 0) {
+            options.setFocus(true);
+        } else {
+            selections.setFocus(true);
+        }
+
+        client.updateVariable(id, "selected", selectedKeys
+                .toArray(new String[selectedKeys.size()]), isImmediate());
+    }
+
     @Override
     public void onClick(ClickEvent event) {
         super.onClick(event);
         if (event.getSource() == add) {
-            final boolean[] sel = getItemsToAdd();
-            for (int i = 0; i < sel.length; i++) {
-                if (sel[i]) {
-                    final int optionIndex = i
-                            - (sel.length - options.getItemCount());
-                    selectedKeys.add(options.getValue(optionIndex));
-
-                    // Move selection to another column
-                    final String text = options.getItemText(optionIndex);
-                    final String value = options.getValue(optionIndex);
-                    selections.addItem(text, value);
-                    selections.setItemSelected(selections.getItemCount() - 1,
-                            true);
-                    options.removeItem(optionIndex);
-                }
-            }
-            client.updateVariable(id, "selected", selectedKeys
-                    .toArray(new String[selectedKeys.size()]), isImmediate());
+            addItem();
 
         } else if (event.getSource() == remove) {
-            final boolean[] sel = getItemsToRemove();
-            for (int i = 0; i < sel.length; i++) {
-                if (sel[i]) {
-                    final int selectionIndex = i
-                            - (sel.length - selections.getItemCount());
-                    selectedKeys.remove(selections.getValue(selectionIndex));
+            removeItem();
 
-                    // Move selection to another column
-                    final String text = selections.getItemText(selectionIndex);
-                    final String value = selections.getValue(selectionIndex);
-                    options.addItem(text, value);
-                    options.setItemSelected(options.getItemCount() - 1, true);
-                    selections.removeItem(selectionIndex);
-                }
-            }
-            client.updateVariable(id, "selected", selectedKeys
-                    .toArray(new String[selectedKeys.size()]), isImmediate());
         } else if (event.getSource() == options) {
             // unselect all in other list, to avoid mistakes (i.e wrong button)
             final int c = selections.getItemCount();
@@ -241,4 +281,78 @@ public class VTwinColSelect extends VOptionGroupBase {
     public void focus() {
         options.setFocus(true);
     }
+
+    /**
+     * Get the key that selects an item in the table. By default it is the Enter
+     * key but by overriding this you can change the key to whatever you want.
+     *
+     * @return
+     */
+    protected int getNavigationSelectKey() {
+        return KeyCodes.KEY_ENTER;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt
+     * .event.dom.client.KeyDownEvent)
+     */
+    public void onKeyDown(KeyDownEvent event) {
+        int keycode = event.getNativeKeyCode();
+
+        // Catch tab and move between select:s
+        if (keycode == KeyCodes.KEY_TAB && event.getSource() == options) {
+            // Prevent default behavior
+            event.preventDefault();
+
+            // Remove current selections
+            for (int i = 0; i < options.getItemCount(); i++) {
+                options.setItemSelected(i, false);
+            }
+
+            // Focus selections
+            selections.setFocus(true);
+        }
+
+        if (keycode == KeyCodes.KEY_TAB && event.isShiftKeyDown()
+                && event.getSource() == selections) {
+            // Prevent default behavior
+            event.preventDefault();
+
+            // Remove current selections
+            for (int i = 0; i < selections.getItemCount(); i++) {
+                selections.setItemSelected(i, false);
+            }
+
+            // Focus options
+            options.setFocus(true);
+        }
+
+        if (keycode == getNavigationSelectKey()) {
+            // Prevent default behavior
+            event.preventDefault();
+
+            // Decide which select the selection was made in
+            if (event.getSource() == options) {
+                // Prevents the selection to become a single selection when
+                // using Enter key
+                // as the selection key (default)
+                options.setFocus(false);
+
+                addItem();
+
+            } else if (event.getSource() == selections) {
+                // Prevents the selection to become a single selection when
+                // using Enter key
+                // as the selection key (default)
+                selections.setFocus(false);
+
+                removeItem();
+            }
+        }
+
+    }
+
 }
