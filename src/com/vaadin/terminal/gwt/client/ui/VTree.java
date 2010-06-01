@@ -61,7 +61,7 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
     public static final int MULTISELECT_MODE_DEFAULT = 0;
     public static final int MULTISELECT_MODE_SIMPLE = 1;
 
-    private FlowPanel body = new FlowPanel();
+    private final FlowPanel body = new FlowPanel();
 
     private Set<String> selectedIds = new HashSet<String>();
     private ApplicationConnection client;
@@ -1554,6 +1554,20 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
         if (keycode == getNavigationLeftKey()) {
             if (!focusedNode.isLeaf() && focusedNode.getState()) {
                 focusedNode.setState(false, true);
+            } else if (focusedNode.getParentNode() != null
+                    && (focusedNode.isLeaf() || !focusedNode.getState())) {
+
+                if (ctrl) {
+                    setFocusedNode(focusedNode.getParentNode());
+                } else if (shift) {
+                    doRelationSelection(focusedNode.getParentNode(),
+                            focusedNode);
+                    setFocusedNode(focusedNode.getParentNode());
+                } else {
+                    setSelected(focusedNode, false);
+                    setFocusedNode(focusedNode.getParentNode());
+                    setSelected(focusedNode, true);
+                }
             }
             return true;
         }
@@ -1562,6 +1576,18 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
         if (keycode == getNavigationRightKey()) {
             if (!focusedNode.isLeaf() && !focusedNode.getState()) {
                 focusedNode.setState(true, true);
+            } else if (!focusedNode.isLeaf()) {
+                if (ctrl) {
+                    setFocusedNode(focusedNode.getChildren().get(0));
+                } else if (shift) {
+                    setSelected(focusedNode, true);
+                    setFocusedNode(focusedNode.getChildren().get(0));
+                    setSelected(focusedNode, true);
+                } else {
+                    setSelected(focusedNode, false);
+                    setFocusedNode(focusedNode.getChildren().get(0));
+                    setSelected(focusedNode, true);
+                }
             }
             return true;
         }
