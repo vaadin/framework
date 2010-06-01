@@ -319,6 +319,8 @@ public abstract class AbstractCommunicationManager implements
 
     private DragAndDropService dragAndDropService;
 
+    private static int nextUnusedWindowSuffix = 1;
+
     /**
      * TODO New constructor - document me!
      * 
@@ -1543,9 +1545,12 @@ public abstract class AbstractCommunicationManager implements
         // If the requested window is already open, resolve conflict
         if (currentlyOpenWindowsInClient.containsKey(window.getName())) {
             String newWindowName = window.getName();
-            while (currentlyOpenWindowsInClient.containsKey(newWindowName)) {
-                newWindowName = window.getName() + "_"
-                        + ((int) (Math.random() * 100000000));
+
+            synchronized (AbstractCommunicationManager.class) {
+                while (currentlyOpenWindowsInClient.containsKey(newWindowName)) {
+                    newWindowName = window.getName() + "_"
+                            + nextUnusedWindowSuffix++;
+                }
             }
 
             window = application.getWindow(newWindowName);

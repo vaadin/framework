@@ -17,7 +17,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Properties;
-import java.util.Random;
 
 import com.vaadin.service.ApplicationContext;
 import com.vaadin.terminal.ApplicationResource;
@@ -92,9 +91,10 @@ public abstract class Application implements URIHandler,
         Terminal.ErrorListener, Serializable {
 
     /**
-     * Random window name generator.
+     * Id use for the next window that is opened. Access to this must be
+     * synchronized.
      */
-    private static Random nameGenerator = new Random();
+    private int nextWindowId = 1;
 
     /**
      * Application context the application is running in.
@@ -327,7 +327,11 @@ public abstract class Application implements URIHandler,
             while (!accepted) {
 
                 // Try another name
-                name = String.valueOf(Math.abs(nameGenerator.nextInt()));
+                synchronized (this) {
+                    name = String.valueOf(nextWindowId);
+                    nextWindowId++;
+                }
+
                 if (!windows.containsKey(name)) {
                     accepted = true;
                 }
