@@ -68,7 +68,7 @@ public class ClassPathExplorer {
     };
 
     private static List<String> rawClasspathEntries = getRawClasspathEntries();
-    private static Map<URL, String> classpathLocations = getClasspathLocations(rawClasspathEntries);
+    private static Map<String, URL> classpathLocations = getClasspathLocations(rawClasspathEntries);
 
     private ClassPathExplorer() {
     }
@@ -79,9 +79,9 @@ public class ClassPathExplorer {
     public static Collection<Class<? extends Paintable>> getPaintablesHavingWidgetAnnotation() {
 
         Collection<Class<? extends Paintable>> paintables = new HashSet<Class<? extends Paintable>>();
-        Set<URL> keySet = classpathLocations.keySet();
-        for (URL url : keySet) {
-            searchForPaintables(url, classpathLocations.get(url), paintables);
+        Set<String> keySet = classpathLocations.keySet();
+        for (String url : keySet) {
+            searchForPaintables(classpathLocations.get(url), url, paintables);
         }
         return paintables;
 
@@ -103,9 +103,9 @@ public class ClassPathExplorer {
      */
     public static Map<String, URL> getAvailableWidgetSets() {
         Map<String, URL> widgetsets = new HashMap<String, URL>();
-        Set<URL> keySet = classpathLocations.keySet();
-        for (URL url : keySet) {
-            searchForWidgetSets(url, widgetsets);
+        Set<String> keySet = classpathLocations.keySet();
+        for (String location : keySet) {
+            searchForWidgetSets(location, widgetsets);
         }
         StringBuilder sb = new StringBuilder();
         sb.append("Widgetsets found from classpath:\n");
@@ -120,9 +120,10 @@ public class ClassPathExplorer {
         return widgetsets;
     }
 
-    private static void searchForWidgetSets(URL location,
+    private static void searchForWidgetSets(String locationString,
             Map<String, URL> widgetsets) {
 
+        URL location = classpathLocations.get(locationString);
         File directory = new File(location.getFile());
 
         if (directory.exists() && !directory.isHidden()) {
@@ -134,10 +135,9 @@ public class ClassPathExplorer {
                     // remove the extension
                     String classname = files[i].substring(0,
                             files[i].length() - 8);
-                    classname = classpathLocations.get(location) + "."
-                            + classname;
+                    String packageName = locationString;
+                    classname = packageName + "." + classname;
                     if (!widgetsets.containsKey(classname)) {
-                        String packageName = classpathLocations.get(location);
                         String packagePath = packageName.replaceAll("\\.", "/");
                         String basePath = location.getFile().replaceAll(
                                 "/" + packagePath + "$", "");
@@ -225,10 +225,10 @@ public class ClassPathExplorer {
      * Determine every URL location defined by the current classpath, and it's
      * associated package name.
      */
-    private final static Map<URL, String> getClasspathLocations(
+    private final static Map<String, URL> getClasspathLocations(
             List<String> rawClasspathEntries) {
         // try to keep the order of the classpath
-        Map<URL, String> locations = new LinkedHashMap<URL, String>();
+        Map<String, URL> locations = new LinkedHashMap<String, URL>();
         for (String classpathEntry : rawClasspathEntries) {
             File file = new File(classpathEntry);
             include(null, file, locations);
@@ -285,7 +285,7 @@ public class ClassPathExplorer {
      * @param locations
      */
     private final static void include(String name, File file,
-            Map<URL, String> locations) {
+            Map<String, URL> locations) {
         if (!file.exists()) {
             return;
         }
@@ -312,9 +312,8 @@ public class ClassPathExplorer {
                 // add the present directory
                 if (!dirs[i].isHidden()
                         && !dirs[i].getPath().contains(File.separator + ".")) {
-                    locations.put(new URL("file://"
-                            + dirs[i].getCanonicalPath()), name
-                            + dirs[i].getName());
+                    locations.put(name + dirs[i].getName(), new URL("file://"
+                            + dirs[i].getCanonicalPath()));
                 }
             } catch (Exception ioe) {
                 return;
@@ -323,14 +322,15 @@ public class ClassPathExplorer {
         }
     }
 
-    private static void includeJar(File file, Map<URL, String> locations) {
+    private static void includeJar(File file, Map<String, URL> locations) {
         try {
             URL url = new URL("file:" + file.getCanonicalPath());
             url = new URL("jar:" + url.toExternalForm() + "!/");
             JarURLConnection conn = (JarURLConnection) url.openConnection();
             JarFile jarFile = conn.getJarFile();
             if (jarFile != null) {
-                locations.put(url, "");
+                // the key does not matter here as long as it is unique
+                locations.put(url.toString(), url);
             }
         } catch (Exception e) {
             // e.printStackTrace();
@@ -447,11 +447,11 @@ public class ClassPathExplorer {
      */
     public static URL getDefaultSourceDirectory() {
         if (logger.isLoggable(Level.FINE)) {
-            logger.fine("classpathLocations keys:");
-            ArrayList<URL> locations = new ArrayList<URL>(classpathLocations
-                    .keySet());
-            for (URL location : locations) {
-                logger.fine(location.toString());
+            logger.fine("classpathLocations values:");
+            ArrayList<String> locations = new ArrayList<String>(
+                    classpathLocations.keySet());
+            for (String location : locations) {
+                logger.fine(String.valueOf(classpathLocations.get(location)));
             }
         }
 
