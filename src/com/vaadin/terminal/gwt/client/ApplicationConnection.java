@@ -12,7 +12,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayString;
@@ -29,7 +28,6 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.impl.HTTPRequestImpl;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
@@ -483,11 +481,9 @@ public class ApplicationConnection {
                 endRequest();
             }
         } else {
-            // Synchronized call, discarded response
-
-            syncSendForce(((HTTPRequestImpl) GWT.create(HTTPRequestImpl.class))
-                    .createXmlHTTPRequest(), uri + "&" + PARAM_UNLOADBURST
-                    + "=1", rd);
+            // Synchronized call, discarded response (leaving the page)
+            SynchronousXHR syncXHR = (SynchronousXHR) SynchronousXHR.create();
+            syncXHR.synchronousPost(uri + "&" + PARAM_UNLOADBURST + "=1", rd);
         }
     }
 
@@ -520,19 +516,6 @@ public class ApplicationConnection {
             redirect(configuration.getCommunicationErrorUrl());
         }
     }
-
-    private native void syncSendForce(JavaScriptObject xmlHttpRequest,
-            String uri, String requestData)
-    /*-{
-        try {
-            xmlHttpRequest.open("POST", uri, false);
-            xmlHttpRequest.setRequestHeader("Content-Type", "text/plain;charset=utf-8");
-            xmlHttpRequest.send(requestData);
-        } catch (e) {
-           // No errors are managed as this is synchronous forceful send that can just fail
-        }
-        this.@com.vaadin.terminal.gwt.client.ApplicationConnection::endRequest()();
-    }-*/;
 
     private void startRequest() {
         activeRequests++;
