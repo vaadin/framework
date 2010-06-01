@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -15,7 +17,8 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.vaadin.terminal.gwt.client.UIDL;
 
-public class VTwinColSelect extends VOptionGroupBase {
+public class VTwinColSelect extends VOptionGroupBase implements
+        MouseDownHandler {
 
     private static final String CLASSNAME = "v-select-twincol";
 
@@ -31,9 +34,9 @@ public class VTwinColSelect extends VOptionGroupBase {
 
     private final VButton remove;
 
-    private FlowPanel buttons;
+    private final FlowPanel buttons;
 
-    private Panel panel;
+    private final Panel panel;
 
     private boolean widthSet = false;
 
@@ -64,6 +67,9 @@ public class VTwinColSelect extends VOptionGroupBase {
         buttons.add(remove);
         panel.add(buttons);
         panel.add(selections);
+
+        options.addMouseDownHandler(this);
+        selections.addMouseDownHandler(this);
     }
 
     @Override
@@ -240,5 +246,27 @@ public class VTwinColSelect extends VOptionGroupBase {
 
     public void focus() {
         options.setFocus(true);
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * com.google.gwt.event.dom.client.MouseDownHandler#onMouseDown(com.google
+     * .gwt.event.dom.client.MouseDownEvent)
+     */
+    public void onMouseDown(MouseDownEvent event) {
+        // Ensure that items are deselected when selecting
+        // from a different source. See #3699 for details.
+        if (event.getSource() == options) {
+            for (int i = 0; i < selections.getItemCount(); i++) {
+                selections.setItemSelected(i, false);
+            }
+        } else if (event.getSource() == selections) {
+            for (int i = 0; i < options.getItemCount(); i++) {
+                options.setItemSelected(i, false);
+            }
+        }
+
     }
 }
