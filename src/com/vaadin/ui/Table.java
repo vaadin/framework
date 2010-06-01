@@ -2304,6 +2304,10 @@ public class Table extends AbstractSelect implements Action.Container,
         target.addAttribute("cols", cols);
         target.addAttribute("rows", rows);
 
+        if (!isNullSelectionAllowed()) {
+            target.addAttribute("nsa", false);
+        }
+
         target.addAttribute("firstrow",
                 (reqFirstRowToPaint >= 0 ? reqFirstRowToPaint
                         : firstToBeRenderedInClient));

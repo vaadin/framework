@@ -134,6 +134,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     protected String paintableId;
 
     private boolean immediate;
+    private boolean nullSelectionAllowed = true;
 
     private int selectMode = Table.SELECT_MODE_NONE;
 
@@ -669,6 +670,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         showRowHeaders = uidl.getBooleanAttribute("rowheaders");
         showColHeaders = uidl.getBooleanAttribute("colheaders");
+        
+        nullSelectionAllowed = uidl.hasAttribute("nsa") ? uidl
+                .getBooleanAttribute("nsa") : true;
 
         if (uidl.hasVariable("sortascending")) {
             sortAscending = uidl.getBooleanVariable("sortascending");
@@ -3704,6 +3708,21 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                     toggleSelection(true);
                                     setRowFocus(this);
 
+                                    // Ctrl click (Single selection)
+                                } else if ((event.getCtrlKey() || event
+                                        .getMetaKey()
+                                        && selectMode == SELECT_MODE_SINGLE)) {
+                                    if (!isSelected()
+                                            || (isSelected() && nullSelectionAllowed)) {
+
+                                        if (!isSelected()) {
+                                            deselectAll();
+                                        }
+
+                                        toggleSelection(true);
+                                        setRowFocus(this);
+                                    }
+
                                     // Shift click
                                 } else if (event.getShiftKey()
                                         && selectMode == SELECT_MODE_MULTI
@@ -4769,9 +4788,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         if (selectMode > SELECT_MODE_NONE
                 && keycode == getNavigationSelectKey()) {
             if (selectMode == SELECT_MODE_SINGLE) {
-                boolean wasSelected = focusedRow.isSelected();
-                deselectAll();
-                if (!wasSelected) {
+                boolean wasSelected = focusedRow.isSelected();                                
+                deselectAll();                
+                if (!wasSelected || !nullSelectionAllowed ) {
                     focusedRow.toggleSelection(true);
                 }
 
