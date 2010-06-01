@@ -34,6 +34,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.UUID;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
@@ -672,7 +673,7 @@ public abstract class AbstractCommunicationManager implements
             String seckey = (String) request.getSession().getAttribute(
                     ApplicationConnection.UIDL_SECURITY_TOKEN_ID);
             if (seckey == null) {
-                seckey = "" + (int) (Math.random() * 1000000);
+                seckey = UUID.randomUUID().toString();
                 request.getSession().setAttribute(
                         ApplicationConnection.UIDL_SECURITY_TOKEN_ID, seckey);
             }
