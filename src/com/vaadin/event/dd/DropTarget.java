@@ -24,7 +24,7 @@ public interface DropTarget extends Component {
 
     /**
      * Called before the {@link DragAndDropEvent} is passed to
-     * {@link DropHandler}. Implementation may for exmaple translate the drop
+     * {@link DropHandler}. Implementation may for example translate the drop
      * target details provided by the client side (drop target) to meaningful
      * server side values. If null is returned the terminal implementation will
      * automatically create a {@link TargetDetails} with raw client side data.
