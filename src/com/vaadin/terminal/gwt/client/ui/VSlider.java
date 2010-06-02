@@ -4,6 +4,7 @@
 // 
 package com.vaadin.terminal.gwt.client.ui;
 
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
@@ -12,14 +13,13 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ContainerResizedListener;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 
-public class VSlider extends Widget implements Paintable, Field,
+public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
         ContainerResizedListener {
 
     public static final String CLASSNAME = "v-slider";
@@ -39,6 +39,7 @@ public class VSlider extends Widget implements Paintable, Field,
     private boolean readonly;
     private boolean scrollbarStyle;
 
+    private int acceleration = 1;
     private int handleSize;
     private double min;
     private double max;
@@ -76,7 +77,6 @@ public class VSlider extends Widget implements Paintable, Field,
     public VSlider() {
         super();
 
-        setElement(DOM.createDiv());
         base = DOM.createDiv();
         handle = DOM.createDiv();
         smaller = DOM.createDiv();
@@ -98,18 +98,19 @@ public class VSlider extends Widget implements Paintable, Field,
         DOM.setStyleAttribute(bigger, "display", "none");
         DOM.setStyleAttribute(handle, "visibility", "hidden");
 
-        DOM.sinkEvents(getElement(), Event.MOUSEEVENTS | Event.ONMOUSEWHEEL);
+        DOM.sinkEvents(getElement(), Event.MOUSEEVENTS | Event.ONMOUSEWHEEL
+                | Event.KEYEVENTS | Event.FOCUSEVENTS);
         DOM.sinkEvents(base, Event.ONCLICK);
         DOM.sinkEvents(handle, Event.MOUSEEVENTS);
         DOM.sinkEvents(smaller, Event.ONMOUSEDOWN | Event.ONMOUSEUP
                 | Event.ONMOUSEOUT);
         DOM.sinkEvents(bigger, Event.ONMOUSEDOWN | Event.ONMOUSEUP
                 | Event.ONMOUSEOUT);
-
+    
         feedbackPopup.addStyleName(CLASSNAME + "-feedback");
         feedbackPopup.setWidget(feedback);
     }
-
+    
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
         this.client = client;
@@ -332,8 +333,35 @@ public class VSlider extends Widget implements Paintable, Field,
             decreaseValue(true);
         } else if (targ == bigger) {
             increaseValue(true);
-        } else {
+        } else if (DOM.eventGetType(event) == Event.MOUSEEVENTS) {
             processBaseEvent(event);
+        } else if ((BrowserInfo.get().isGecko() && DOM.eventGetType(event) == Event.ONKEYPRESS)
+                || (!BrowserInfo.get().isGecko() && DOM.eventGetType(event) == Event.ONKEYDOWN)) {
+
+            if (handleNavigation(event.getKeyCode(), event.getCtrlKey(), event
+                    .getShiftKey())) {
+
+                feedbackPopup.show();
+
+                if (scrollTimer != null) {
+                    scrollTimer.cancel();
+                }
+                scrollTimer = new Timer() {
+                    @Override
+                    public void run() {
+                        updateValueToServer();
+                        acceleration = 1;
+                    }
+                };
+                scrollTimer.schedule(100);
+
+                DOM.eventPreventDefault(event);
+                DOM.eventCancelBubble(event, true);
+            }
+        } else if (DOM.eventGetType(event) == Event.ONFOCUS) {
+            feedbackPopup.show();
+        } else if (DOM.eventGetType(event) == Event.ONBLUR) {
+            feedbackPopup.hide();
         }
     }
 
@@ -478,4 +506,88 @@ public class VSlider extends Widget implements Paintable, Field,
         client.updateVariable(id, "value", value.doubleValue(), immediate);
     }
 
+    /**
+     * Handles the keyboard events handled by the Slider
+     * 
+     * @param event
+     *            The keyboard event received
+     * @return true iff the navigation event was handled
+     */
+    public boolean handleNavigation(int keycode, boolean ctrl, boolean shift) {
+
+        // No support for ctrl moving
+        if (ctrl) {
+            return false;
+        }
+
+        if ((keycode == getNavigationUpKey() && vertical)
+                || (keycode == getNavigationRightKey() && !vertical)) {
+            if (shift) {
+                for (int a = 0; a < acceleration; a++) {
+                    increaseValue(false);
+                }
+                acceleration++;
+            } else {
+                increaseValue(false);
+            }
+            return true;
+        } else if (keycode == getNavigationDownKey() && vertical
+                || (keycode == getNavigationLeftKey() && !vertical)) {
+            if (shift) {
+                for (int a = 0; a < acceleration; a++) {
+                    decreaseValue(false);
+                }
+                acceleration++;
+            } else {
+                decreaseValue(false);
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get the key that increases the vertical slider. By default it is the up
+     * arrow key but by overriding this you can change the key to whatever you
+     * want.
+     * 
+     * @return The keycode of the key
+     */
+    protected int getNavigationUpKey() {
+        return KeyCodes.KEY_UP;
+    }
+
+    /**
+     * Get the key that decreases the vertical slider. By default it is the down
+     * arrow key but by overriding this you can change the key to whatever you
+     * want.
+     * 
+     * @return The keycode of the key
+     */
+    protected int getNavigationDownKey() {
+        return KeyCodes.KEY_DOWN;
+    }
+
+    /**
+     * Get the key that decreases the horizontal slider. By default it is the
+     * left arrow key but by overriding this you can change the key to whatever
+     * you want.
+     * 
+     * @return The keycode of the key
+     */
+    protected int getNavigationLeftKey() {
+        return KeyCodes.KEY_LEFT;
+    }
+
+    /**
+     * Get the key that increases the horizontal slider. By default it is the
+     * right arrow key but by overriding this you can change the key to whatever
+     * you want.
+     * 
+     * @return The keycode of the key
+     */
+    protected int getNavigationRightKey() {
+        return KeyCodes.KEY_RIGHT;
+    }
 }
