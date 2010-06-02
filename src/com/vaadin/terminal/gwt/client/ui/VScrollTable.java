@@ -815,6 +815,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             setRowFocus(getRenderedRowByKey(focusedRow.getKey()));
         }
 
+        if (!isFocusable()) {
+            scrollBodyPanel.getElement().setTabIndex(-1);
+        } else {
+            scrollBodyPanel.getElement().setTabIndex(0);
+        }
+
         rendering = false;
         headerChangedDuringUpdate = false;
     }
@@ -3818,6 +3824,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
                                 event.stopPropagation();
                             }
+
+                            if (!isFocusable()) {
+                                scrollBodyPanel.getElement().setTabIndex(-1);
+                            } else {
+                                scrollBodyPanel.getElement().setTabIndex(0);
+                            }
+
                             break;
                         case Event.ONMOUSEOUT:
                             mDown = false;
@@ -4179,6 +4192,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             super.setWidth("");
         }
 
+        if (!isFocusable()) {
+            scrollBodyPanel.getElement().setTabIndex(-1);
+        } else {
+            scrollBodyPanel.getElement().setTabIndex(0);
+        }
     }
 
     private static final int LAZY_COLUMN_ADJUST_TIMEOUT = 300;
@@ -4360,6 +4378,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             // between header and body), see bug #3875. Running
             // overflow hack here to shake body element a bit.
             Util.runWebkitOverflowAutoFix(scrollBodyPanel.getElement());
+        }
+
+        if (!isFocusable()) {
+            scrollBodyPanel.getElement().setTabIndex(-1);
+        } else {
+            scrollBodyPanel.getElement().setTabIndex(0);
         }
     }
 
@@ -4945,11 +4969,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * .dom.client.FocusEvent)
      */
     public void onFocus(FocusEvent event) {
-        scrollBodyPanel.addStyleName("focused");
+        if (isFocusable()) {
+            scrollBodyPanel.addStyleName("focused");
 
-        // Focus a row if no row is in focus
-        if (focusedRow == null) {
-            setRowFocus((VScrollTableRow) scrollBody.iterator().next());
+            // Focus a row if no row is in focus
+            if (focusedRow == null) {
+                setRowFocus((VScrollTableRow) scrollBody.iterator().next());
+            }
         }
     }
 
@@ -4993,6 +5019,23 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 break;
             }
         }
+    }
+
+    /**
+     * Can the Table be focused?
+     * 
+     * @return True if the table can be focused, else false
+     */
+    public boolean isFocusable() {
+        if (scrollBody != null) {
+            boolean hasVerticalScrollbars = scrollBody.getOffsetHeight() > scrollBodyPanel
+                    .getOffsetHeight();
+            boolean hasHorizontalScrollbars = scrollBody.getOffsetWidth() > scrollBodyPanel
+                    .getOffsetWidth();
+            return !(!hasHorizontalScrollbars && !hasVerticalScrollbars && selectMode == SELECT_MODE_NONE);
+        }
+
+        return false;
     }
 
 }
