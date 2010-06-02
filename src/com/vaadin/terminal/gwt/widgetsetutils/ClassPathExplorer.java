@@ -135,7 +135,8 @@ public class ClassPathExplorer {
                     // remove the extension
                     String classname = files[i].substring(0,
                             files[i].length() - 8);
-                    String packageName = locationString;
+                    String packageName = locationString
+                            .substring(locationString.lastIndexOf("/") + 1);
                     classname = packageName + "." + classname;
                     if (!widgetsets.containsKey(classname)) {
                         String packagePath = packageName.replaceAll("\\.", "/");
@@ -312,7 +313,9 @@ public class ClassPathExplorer {
                 // add the present directory
                 if (!dirs[i].isHidden()
                         && !dirs[i].getPath().contains(File.separator + ".")) {
-                    locations.put(name + dirs[i].getName(), new URL("file://"
+                    String key = dirs[i].getCanonicalPath() + "/" + name
+                            + dirs[i].getName();
+                    locations.put(key, new URL("file://"
                             + dirs[i].getCanonicalPath()));
                 }
             } catch (Exception ioe) {
@@ -340,7 +343,7 @@ public class ClassPathExplorer {
     }
 
     private final static void searchForPaintables(URL location,
-            String packageName,
+            String locationString,
             Collection<Class<? extends Paintable>> paintables) {
 
         // Get a File object for the package
@@ -355,6 +358,8 @@ public class ClassPathExplorer {
                     // remove the .class extension
                     String classname = files[i].substring(0,
                             files[i].length() - 6);
+                    String packageName = locationString
+                            .substring(locationString.lastIndexOf("/") + 1);
                     classname = packageName + "." + classname;
                     tryToAdd(classname, paintables);
                 }
