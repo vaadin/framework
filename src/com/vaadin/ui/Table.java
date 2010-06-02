@@ -3080,18 +3080,6 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * Focusing to this component is not supported.
-     * 
-     * @throws UnsupportedOperationException
-     *             if invoked.
-     * @see com.vaadin.ui.AbstractField#focus()
-     */
-    @Override
-    public void focus() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
      * Gets the ID of the Item following the Item that corresponds to itemId.
      * 
      * @see com.vaadin.data.Container.Ordered#nextItemId(java.lang.Object)

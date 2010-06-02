@@ -50,6 +50,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Container;
+import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
@@ -90,7 +91,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
  */
 public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         VHasDropHandler, KeyPressHandler, KeyDownHandler, FocusHandler,
-        BlurHandler {
+        BlurHandler, Focusable {
 
     public static final String CLASSNAME = "v-table";
     public static final String CLASSNAME_SELECTION_FOCUS = CLASSNAME + "-focus";
@@ -5038,4 +5039,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         return false;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.terminal.gwt.client.Focusable#focus()
+     */
+    public void focus() {
+        scrollBodyPanel.focus();
+    }
 }
