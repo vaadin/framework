@@ -37,7 +37,9 @@ public abstract class AbstractWebApplicationContext implements
     protected HashMap<Application, AbstractCommunicationManager> applicationToAjaxAppMgrMap = new HashMap<Application, AbstractCommunicationManager>();
 
     public void addTransactionListener(TransactionListener listener) {
-        listeners.add(listener);
+        if (listener != null) {
+            listeners.add(listener);
+        }
     }
 
     public void removeTransactionListener(TransactionListener listener) {
