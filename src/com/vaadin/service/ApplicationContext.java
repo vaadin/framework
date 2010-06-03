@@ -54,6 +54,7 @@ public interface ApplicationContext extends Serializable {
      * called before and after each each request related to this session except
      * when serving static resources.
      * 
+     * The transaction listener must not be null.
      * 
      * @see com.vaadin.service.ApplicationContext#addTransactionListener(com.vaadin.service.ApplicationContext.TransactionListener)
      */
