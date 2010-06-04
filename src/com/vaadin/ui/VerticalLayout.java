@@ -18,7 +18,7 @@ import com.vaadin.terminal.gwt.client.ui.VVerticalLayout;
  * @since 5.3
  */
 @SuppressWarnings("serial")
-@ClientWidget(VVerticalLayout.class)
+@ClientWidget(value = VVerticalLayout.class, lazyLoad = false)
 public class VerticalLayout extends AbstractOrderedLayout {
 
     public VerticalLayout() {

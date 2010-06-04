@@ -26,7 +26,7 @@ import com.vaadin.terminal.gwt.client.ui.VCustomComponent;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(VCustomComponent.class)
+@ClientWidget(value = VCustomComponent.class, lazyLoad = false)
 public class CustomComponent extends AbstractComponentContainer {
 
     /**

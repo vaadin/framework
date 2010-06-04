@@ -38,7 +38,7 @@ import com.vaadin.terminal.gwt.client.ui.VTextField;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(VTextField.class)
+@ClientWidget(value = VTextField.class, lazyLoad = false)
 public class TextField extends AbstractField implements
         FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 

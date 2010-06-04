@@ -30,7 +30,7 @@ import com.vaadin.tools.ReflectTools;
  * @since 5.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(VSplitPanelHorizontal.class)
+@ClientWidget(value = VSplitPanelHorizontal.class, lazyLoad = false)
 public class SplitPanel extends AbstractLayout {
 
     /* Predefined orientations */

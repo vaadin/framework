@@ -42,9 +42,11 @@ public interface WidgetSet extends EntryPoint {
      * qualified name.
      * 
      * @param fullyQualifiedName
+     * @param applicationConfiguration
      * @return
      */
     public Class<? extends Paintable> getImplementationByClassName(
-            String fullyQualifiedName);
+            String fullyQualifiedName,
+            ApplicationConfiguration applicationConfiguration);
 
 }

@@ -20,7 +20,7 @@ import com.vaadin.terminal.gwt.client.ui.VUriFragmentUtility;
  * 
  */
 @SuppressWarnings("serial")
-@ClientWidget(VUriFragmentUtility.class)
+@ClientWidget(value = VUriFragmentUtility.class, lazyLoad = false)
 public class UriFragmentUtility extends AbstractComponent {
 
     /**

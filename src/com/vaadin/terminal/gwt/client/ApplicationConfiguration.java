@@ -6,11 +6,12 @@ package com.vaadin.terminal.gwt.client;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.user.client.Command;
 import com.vaadin.terminal.gwt.client.ui.VUnknownComponent;
 
 public class ApplicationConfiguration {
@@ -36,6 +37,11 @@ public class ApplicationConfiguration {
     private Class<? extends Paintable>[] classes = new Class[1024];
 
     private String windowId;
+
+    // TODO consider to make this hashmap per application
+    LinkedList<Command> callbacks = new LinkedList<Command>();
+
+    private int widgetsLoading;
 
     private static ArrayList<ApplicationConnection> unstartedApplications = new ArrayList<ApplicationConnection>();
     private static ArrayList<ApplicationConnection> runningApplications = new ArrayList<ApplicationConnection>();
@@ -146,11 +152,6 @@ public class ApplicationConfiguration {
      *            the widgetset that is running the apps
      */
     public static void initConfigurations(WidgetSet widgetset) {
-        String wsname = widgetset.getClass().getName();
-        String module = GWT.getModuleName();
-        int lastdot = module.lastIndexOf(".");
-        String base = module.substring(0, lastdot);
-        String simpleName = module.substring(lastdot + 1);
 
         if (initedWidgetSet != null) {
             // Multiple widgetsets inited; can happen with custom WS + entry
@@ -241,7 +242,7 @@ public class ApplicationConfiguration {
         for (int i = 0; i < keyArray.length(); i++) {
             String key = keyArray.get(i).intern();
             int value = valueMap.getInt(key);
-            classes[value] = widgetSet.getImplementationByClassName(key);
+            classes[value] = widgetSet.getImplementationByClassName(key, this);
             if (classes[value] == VUnknownComponent.class) {
                 if (unknownComponents == null) {
                     unknownComponents = new HashMap<String, String>();
@@ -266,5 +267,32 @@ public class ApplicationConfiguration {
             return unknownComponents.get(tag);
         }
         return null;
+    }
+
+    /**
+     * 
+     * @param c
+     */
+    void runWhenWidgetsLoaded(Command c) {
+        if (widgetsLoading == 0) {
+            c.execute();
+        } else {
+            callbacks.add(c);
+        }
+    }
+
+    void widgetLoadStart() {
+        widgetsLoading++;
+    }
+
+    void widgetLoaded() {
+        widgetsLoading--;
+        if (widgetsLoading == 0 && !callbacks.isEmpty()) {
+            for (Command cmd : callbacks) {
+                cmd.execute();
+            }
+            callbacks.clear();
+        }
+
     }
 }

@@ -12,6 +12,7 @@ import com.vaadin.terminal.gwt.client.ui.VWindow;
 public abstract class WidgetMap {
 
     public Paintable instantiate(Class<? extends Paintable> classType) {
+
         /*
          * Yes, this (including the generated) may look very odd code, but due
          * the nature of GWT, we cannot do this with reflect. Luckily this is
@@ -36,6 +37,7 @@ public abstract class WidgetMap {
     }
 
     public abstract Class<? extends Paintable> getImplementationByServerSideClassName(
-            String fullyqualifiedName);
+            String fullyqualifiedName,
+            ApplicationConfiguration applicationConfiguration);
 
 }

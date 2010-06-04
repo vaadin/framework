@@ -24,7 +24,7 @@ import com.vaadin.terminal.gwt.client.ui.VOrderedLayout;
  */
 @SuppressWarnings("serial")
 @Deprecated
-@ClientWidget(VOrderedLayout.class)
+@ClientWidget(value = VOrderedLayout.class, lazyLoad = false)
 public class OrderedLayout extends AbstractOrderedLayout {
     /* Predefined orientations */
 

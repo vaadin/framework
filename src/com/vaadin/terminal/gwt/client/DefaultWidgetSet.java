@@ -9,7 +9,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ui.VButton;
 import com.vaadin.terminal.gwt.client.ui.VCheckBox;
 import com.vaadin.terminal.gwt.client.ui.VDateFieldCalendar;
-import com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper;
 import com.vaadin.terminal.gwt.client.ui.VFilterSelect;
 import com.vaadin.terminal.gwt.client.ui.VListSelect;
 import com.vaadin.terminal.gwt.client.ui.VNativeSelect;
@@ -69,7 +68,7 @@ public class DefaultWidgetSet implements WidgetSet {
         Class<? extends Paintable> widgetClass = conf
                 .getWidgetClassByEncodedTag(tag);
 
-        // TODO add our quirks
+        // add our historical quirks
 
         if (widgetClass == VButton.class && uidl.hasAttribute("type")) {
             return VCheckBox.class;
@@ -119,10 +118,13 @@ public class DefaultWidgetSet implements WidgetSet {
     }
 
     public Class<? extends Paintable> getImplementationByClassName(
-            String fullyqualifiedName) {
+            String fullyqualifiedName,
+            ApplicationConfiguration applicationConfiguration) {
         Class<? extends Paintable> implementationByServerSideClassName = map
-                .getImplementationByServerSideClassName(fullyqualifiedName);
+                .getImplementationByServerSideClassName(fullyqualifiedName,
+                        applicationConfiguration);
         return implementationByServerSideClassName;
 
     }
+
 }

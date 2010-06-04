@@ -33,7 +33,7 @@ import com.vaadin.ui.themes.BaseTheme;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(VButton.class)
+@ClientWidget(value = VButton.class, lazyLoad = false)
 public class Button extends AbstractField implements FieldEvents.BlurNotifier,
         FieldEvents.FocusNotifier {
 
@@ -472,7 +472,7 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
 
         @Override
         public void handleAction(Object sender, Object target) {
-            this.button.fireClick();
+            button.fireClick();
         }
     }
 

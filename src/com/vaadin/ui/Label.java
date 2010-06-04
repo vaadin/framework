@@ -38,7 +38,7 @@ import com.vaadin.terminal.gwt.client.ui.VLabel;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(VLabel.class)
+@ClientWidget(value = VLabel.class, lazyLoad = false)
 public class Label extends AbstractComponent implements Property,
         Property.Viewer, Property.ValueChangeListener,
         Property.ValueChangeNotifier, Comparable {

@@ -670,10 +670,10 @@ public class ApplicationConnection {
 
     private void handleReceivedJSONMessage(Response response) {
         final Date start = new Date();
-        String jsonText = response.getText();
         // for(;;);[realjson]
-        jsonText = jsonText.substring(9, jsonText.length() - 1);
-        ValueMap json;
+        final String jsonText = response.getText().substring(9,
+                response.getText().length() - 1);
+        final ValueMap json;
         try {
             json = parseJSONResponse(jsonText);
         } catch (final Exception e) {
@@ -714,159 +714,181 @@ public class ApplicationConnection {
                     json.getValueMap("typeMappings"), widgetSet);
         }
 
-        if (json.containsKey("locales")) {
-            // Store locale data
-            JsArray<ValueMap> valueMapArray = json
-                    .getJSValueMapArray("locales");
-            LocaleService.addLocales(valueMapArray);
-        }
+        Command c = new Command() {
+            public void execute() {
 
-        ValueMap meta = null;
-        if (json.containsKey("meta")) {
-            meta = json.getValueMap("meta");
-            if (meta.containsKey("repaintAll")) {
-                view.clear();
-                idToPaintableDetail.clear();
-                if (meta.containsKey("invalidLayouts")) {
-                    validatingLayouts = true;
-                    zeroWidthComponents = new HashSet<Paintable>();
-                    zeroHeightComponents = new HashSet<Paintable>();
+                if (json.containsKey("locales")) {
+                    // Store locale data
+                    JsArray<ValueMap> valueMapArray = json
+                            .getJSValueMapArray("locales");
+                    LocaleService.addLocales(valueMapArray);
                 }
-            }
-            if (meta.containsKey("timedRedirect")) {
-                final ValueMap timedRedirect = meta
-                        .getValueMap("timedRedirect");
-                redirectTimer = new Timer() {
-                    @Override
-                    public void run() {
-                        redirect(timedRedirect.getString("url"));
+
+                ValueMap meta = null;
+                if (json.containsKey("meta")) {
+                    meta = json.getValueMap("meta");
+                    if (meta.containsKey("repaintAll")) {
+                        view.clear();
+                        idToPaintableDetail.clear();
+                        if (meta.containsKey("invalidLayouts")) {
+                            validatingLayouts = true;
+                            zeroWidthComponents = new HashSet<Paintable>();
+                            zeroHeightComponents = new HashSet<Paintable>();
+                        }
                     }
-                };
-                sessionExpirationInterval = timedRedirect.getInt("interval");
-            }
-        }
-
-        if (redirectTimer != null) {
-            redirectTimer.schedule(1000 * sessionExpirationInterval);
-        }
-
-        // Process changes
-        JsArray<ValueMap> changes = json.getJSValueMapArray("changes");
-
-        ArrayList<Paintable> updatedWidgets = new ArrayList<Paintable>();
-        relativeSizeChanges.clear();
-        componentCaptionSizeChanges.clear();
-
-        int length = changes.length();
-        for (int i = 0; i < length; i++) {
-            try {
-                final UIDL change = changes.get(i).cast();
-                try {
-                    console.dirUIDL(change);
-                } catch (final Exception e) {
-                    ClientExceptionHandler.displayError(e);
-                    // TODO: dir doesn't work in any browser although it should
-                    // work (works in hosted mode)
-                    // it partially did at some part but now broken.
-                }
-                final UIDL uidl = change.getChildUIDL(0);
-                // TODO optimize
-                final Paintable paintable = getPaintable(uidl.getId());
-                if (paintable != null) {
-                    paintable.updateFromUIDL(uidl, this);
-                    // paintable may have changed during render to another
-                    // implementation, use the new one for updated widgets map
-                    updatedWidgets.add(idToPaintableDetail.get(uidl.getId())
-                            .getComponent());
-                } else {
-                    if (!uidl.getTag().equals(
-                            configuration.getEncodedWindowTag())) {
-                        ClientExceptionHandler
-                                .displayError("Received update for "
-                                        + uidl.getTag()
-                                        + ", but there is no such paintable ("
-                                        + uidl.getId() + ") rendered.");
-                    } else {
-                        view.updateFromUIDL(uidl, this);
+                    if (meta.containsKey("timedRedirect")) {
+                        final ValueMap timedRedirect = meta
+                                .getValueMap("timedRedirect");
+                        redirectTimer = new Timer() {
+                            @Override
+                            public void run() {
+                                redirect(timedRedirect.getString("url"));
+                            }
+                        };
+                        sessionExpirationInterval = timedRedirect
+                                .getInt("interval");
                     }
                 }
-            } catch (final Throwable e) {
-                ClientExceptionHandler.displayError(e);
-            }
-        }
 
-        if (json.containsKey("dd")) {
-            // response contains data for drag and drop service
-            VDragAndDropManager.get().handleServerResponse(
-                    json.getValueMap("dd"));
-        }
-
-        // Check which widgets' size has been updated
-        Set<Paintable> sizeUpdatedWidgets = new HashSet<Paintable>();
-
-        updatedWidgets.addAll(relativeSizeChanges);
-        sizeUpdatedWidgets.addAll(componentCaptionSizeChanges);
-
-        for (Paintable paintable : updatedWidgets) {
-            ComponentDetail detail = idToPaintableDetail.get(getPid(paintable));
-            Widget widget = (Widget) paintable;
-            Size oldSize = detail.getOffsetSize();
-            Size newSize = new Size(widget.getOffsetWidth(), widget
-                    .getOffsetHeight());
-
-            if (oldSize == null || !oldSize.equals(newSize)) {
-                sizeUpdatedWidgets.add(paintable);
-                detail.setOffsetSize(newSize);
-            }
-
-        }
-
-        Util.componentSizeUpdated(sizeUpdatedWidgets);
-
-        if (meta != null) {
-            if (meta.containsKey("appError")) {
-                ValueMap error = meta.getValueMap("appError");
-                String html = "";
-                if (error.containsKey("caption")
-                        && error.getString("caption") != null) {
-                    html += "<h1>" + error.getAsString("caption") + "</h1>";
-                }
-                if (error.containsKey("message")
-                        && error.getString("message") != null) {
-                    html += "<p>" + error.getAsString("message") + "</p>";
-                }
-                String url = null;
-                if (error.containsKey("url")) {
-                    url = error.getString("url");
+                if (redirectTimer != null) {
+                    redirectTimer.schedule(1000 * sessionExpirationInterval);
                 }
 
-                if (html.length() != 0) {
-                    /* 45 min */
-                    VNotification n = new VNotification(1000 * 60 * 45);
-                    n.addEventListener(new NotificationRedirect(url));
-                    n.show(html, VNotification.CENTERED_TOP,
-                            VNotification.STYLE_SYSTEM);
-                } else {
-                    redirect(url);
+                // Process changes
+                JsArray<ValueMap> changes = json.getJSValueMapArray("changes");
+
+                ArrayList<Paintable> updatedWidgets = new ArrayList<Paintable>();
+                relativeSizeChanges.clear();
+                componentCaptionSizeChanges.clear();
+
+                int length = changes.length();
+                for (int i = 0; i < length; i++) {
+                    try {
+                        final UIDL change = changes.get(i).cast();
+                        try {
+                            console.dirUIDL(change);
+                        } catch (final Exception e) {
+                            ClientExceptionHandler.displayError(e);
+                            // TODO: dir doesn't work in any browser although it
+                            // should
+                            // work (works in hosted mode)
+                            // it partially did at some part but now broken.
+                        }
+                        final UIDL uidl = change.getChildUIDL(0);
+                        // TODO optimize
+                        final Paintable paintable = getPaintable(uidl.getId());
+                        if (paintable != null) {
+                            paintable.updateFromUIDL(uidl,
+                                    ApplicationConnection.this);
+                            // paintable may have changed during render to
+                            // another
+                            // implementation, use the new one for updated
+                            // widgets map
+                            updatedWidgets.add(idToPaintableDetail.get(
+                                    uidl.getId()).getComponent());
+                        } else {
+                            if (!uidl.getTag().equals(
+                                    configuration.getEncodedWindowTag())) {
+                                ClientExceptionHandler
+                                        .displayError("Received update for "
+                                                + uidl.getTag()
+                                                + ", but there is no such paintable ("
+                                                + uidl.getId() + ") rendered.");
+                            } else {
+                                view.updateFromUIDL(uidl,
+                                        ApplicationConnection.this);
+                            }
+                        }
+                    } catch (final Throwable e) {
+                        ClientExceptionHandler.displayError(e);
+                    }
                 }
-                applicationRunning = false;
-            }
-            if (validatingLayouts) {
-                getConsole().printLayoutProblems(meta, this,
-                        zeroHeightComponents, zeroWidthComponents);
-                zeroHeightComponents = null;
-                zeroWidthComponents = null;
-                validatingLayouts = false;
+
+                if (json.containsKey("dd")) {
+                    // response contains data for drag and drop service
+                    VDragAndDropManager.get().handleServerResponse(
+                            json.getValueMap("dd"));
+                }
+
+                // Check which widgets' size has been updated
+                Set<Paintable> sizeUpdatedWidgets = new HashSet<Paintable>();
+
+                updatedWidgets.addAll(relativeSizeChanges);
+                sizeUpdatedWidgets.addAll(componentCaptionSizeChanges);
+
+                for (Paintable paintable : updatedWidgets) {
+                    ComponentDetail detail = idToPaintableDetail
+                            .get(getPid(paintable));
+                    Widget widget = (Widget) paintable;
+                    Size oldSize = detail.getOffsetSize();
+                    Size newSize = new Size(widget.getOffsetWidth(), widget
+                            .getOffsetHeight());
+
+                    if (oldSize == null || !oldSize.equals(newSize)) {
+                        sizeUpdatedWidgets.add(paintable);
+                        detail.setOffsetSize(newSize);
+                    }
+
+                }
+
+                Util.componentSizeUpdated(sizeUpdatedWidgets);
+
+                if (meta != null) {
+                    if (meta.containsKey("appError")) {
+                        ValueMap error = meta.getValueMap("appError");
+                        String html = "";
+                        if (error.containsKey("caption")
+                                && error.getString("caption") != null) {
+                            html += "<h1>" + error.getAsString("caption")
+                                    + "</h1>";
+                        }
+                        if (error.containsKey("message")
+                                && error.getString("message") != null) {
+                            html += "<p>" + error.getAsString("message")
+                                    + "</p>";
+                        }
+                        String url = null;
+                        if (error.containsKey("url")) {
+                            url = error.getString("url");
+                        }
+
+                        if (html.length() != 0) {
+                            /* 45 min */
+                            VNotification n = new VNotification(1000 * 60 * 45);
+                            n.addEventListener(new NotificationRedirect(url));
+                            n.show(html, VNotification.CENTERED_TOP,
+                                    VNotification.STYLE_SYSTEM);
+                        } else {
+                            redirect(url);
+                        }
+                        applicationRunning = false;
+                    }
+                    if (validatingLayouts) {
+                        getConsole().printLayoutProblems(meta,
+                                ApplicationConnection.this,
+                                zeroHeightComponents, zeroWidthComponents);
+                        zeroHeightComponents = null;
+                        zeroWidthComponents = null;
+                        validatingLayouts = false;
+
+                    }
+                }
+
+                // TODO build profiling for widget impl loading time
+
+                final long prosessingTime = (new Date().getTime())
+                        - start.getTime();
+                console.log(" Processing time was "
+                        + String.valueOf(prosessingTime) + "ms for "
+                        + jsonText.length() + " characters of JSON");
+                console.log("Referenced paintables: "
+                        + idToPaintableDetail.size());
+
+                endRequest();
 
             }
-        }
-
-        final long prosessingTime = (new Date().getTime()) - start.getTime();
-        console.log(" Processing time was " + String.valueOf(prosessingTime)
-                + "ms for " + jsonText.length() + " characters of JSON");
-        console.log("Referenced paintables: " + idToPaintableDetail.size());
-
-        endRequest();
+        };
+        configuration.runWhenWidgetsLoaded(c);
     }
 
     /**

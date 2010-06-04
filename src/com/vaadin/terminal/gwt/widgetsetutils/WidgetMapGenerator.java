@@ -78,6 +78,8 @@ public class WidgetMapGenerator extends Generator {
         ClassSourceFileComposerFactory composer = null;
         composer = new ClassSourceFileComposerFactory(packageName, className);
         composer.addImport("com.google.gwt.core.client.GWT");
+        composer.addImport("java.util.HashMap");
+        composer.addImport("com.google.gwt.core.client.RunAsyncCallback");
         composer.setSuperclass("com.vaadin.terminal.gwt.client.WidgetMap");
         SourceWriter sourceWriter = composer.createSourceWriter(context,
                 printWriter);
@@ -145,12 +147,10 @@ public class WidgetMapGenerator extends Generator {
     }
 
     /**
-     * This method is protected to allow easy creation of optimized widgetsets.
-     * <p>
-     * TODO we need some sort of mechanism to easily exclude/include components
-     * from widgetset. Properties in gwt.xml is one option. Now only possible by
-     * extending this class, overriding getUsedPaintables() method and
-     * redefining deferred binding rule.
+     * This method is protected to allow creation of optimized widgetsets. The
+     * Widgetset will contain only implementation returned by this function. If
+     * one knows which widgets are needed for the application, returning only
+     * them here will significantly optimize the size of the produced JS.
      * 
      * @return a collections of Vaadin components that will be added to
      *         widgetset
@@ -159,16 +159,42 @@ public class WidgetMapGenerator extends Generator {
         return ClassPathExplorer.getPaintablesHavingWidgetAnnotation();
     }
 
+    /**
+     * Returns true if the widget for given component will be lazy loaded by the
+     * client. The default implementation reads the information from the
+     * {@link ClientWidget} annotation.
+     * <p>
+     * The method can be overridden to optimize the widget loading mechanism. If
+     * the Widgetset is wanted to be optimized for a network with a high latency
+     * or for a one with a very fast throughput, it may be good to return false
+     * for every component.
+     * 
+     * @param paintableType
+     * @return true iff the widget for given component should be lazy loaded by
+     *         the client side engine
+     */
+    protected boolean isLazyLoaded(Class<? extends Paintable> paintableType) {
+        ClientWidget annotation = paintableType
+                .getAnnotation(ClientWidget.class);
+        return annotation.lazyLoad();
+    }
+
     private void generateInstantiatorMethod(
             SourceWriter sourceWriter,
             Collection<Class<? extends Paintable>> paintablesHavingWidgetAnnotation) {
-        sourceWriter
-                .println("public Paintable instantiate(Class<? extends Paintable> classType) {");
-        sourceWriter.indent();
 
         sourceWriter
-                .println("Paintable p = super.instantiate(classType); if(p!= null) return p;");
+                .println("public interface Instantiator { public Paintable get();};");
 
+        // TODO detect if it would be noticably faster to instantiate with a
+        // lookup with index than with the hashmap
+
+        sourceWriter
+                .println("private HashMap<Class,Instantiator> instmap = new HashMap<Class,Instantiator>();");
+
+        sourceWriter
+                .println("public void ensureInstantiator(Class<? extends Paintable> classType, final ApplicationConfiguration c) {");
+        sourceWriter.println("if(!instmap.containsKey(classType)){");
         for (Class<? extends Paintable> class1 : paintablesHavingWidgetAnnotation) {
             ClientWidget annotation = class1.getAnnotation(ClientWidget.class);
             Class<? extends com.vaadin.terminal.gwt.client.Paintable> clientClass = annotation
@@ -177,14 +203,50 @@ public class WidgetMapGenerator extends Generator {
                 // VView's are not instantiated by widgetset
                 continue;
             }
-            sourceWriter.print("if (");
-            sourceWriter.print(clientClass.getName());
-            sourceWriter.print(".class == classType) return GWT.create(");
-            sourceWriter.print(clientClass.getName());
-            sourceWriter.println(".class );");
-            sourceWriter.print("else ");
+            sourceWriter.print("if( classType == " + clientClass.getName()
+                    + ".class) {");
+
+            String instantiator = "new Instantiator() { public Paintable get(){ return GWT.create("
+                    + clientClass.getName() + ".class );}}";
+
+            if (isLazyLoaded(class1)) {
+                sourceWriter
+                        .print("c.widgetLoadStart();GWT.runAsync(new RunAsyncCallback() {\n"
+                                + "            public void onSuccess() {");
+
+                sourceWriter.print("instmap.put(");
+                sourceWriter.print(clientClass.getName());
+                sourceWriter.print(".class, ");
+                sourceWriter.print(instantiator);
+                sourceWriter.println("); c.widgetLoaded();");
+                sourceWriter
+                        .print("            }\n"
+                                + "\n"
+                                + "            public void onFailure(Throwable reason) {c.widgetLoaded();\n"
+                                + "\n" + "            }\n" + "        });\n");
+
+            } else {
+                // widget implementation in initially loaded js script
+                sourceWriter.print("instmap.put(");
+                sourceWriter.print(clientClass.getName());
+                sourceWriter.print(".class, ");
+                sourceWriter.print(instantiator);
+                sourceWriter.print(");");
+            }
+            sourceWriter.print("}");
         }
-        sourceWriter.println("return null;");
+
+        sourceWriter.println("}");
+
+        sourceWriter.println("}");
+
+        sourceWriter
+                .println("public Paintable instantiate(Class<? extends Paintable> classType) {");
+        sourceWriter.indent();
+        sourceWriter
+                .println("Paintable p = super.instantiate(classType); if(p!= null) return p;");
+        sourceWriter.println("return instmap.get(classType).get();");
+
         sourceWriter.outdent();
         sourceWriter.println("}");
     }
@@ -200,7 +262,7 @@ public class WidgetMapGenerator extends Generator {
             Collection<Class<? extends Paintable>> paintablesHavingWidgetAnnotation) {
         sourceWriter
                 .println("public Class<? extends Paintable> "
-                        + "getImplementationByServerSideClassName(String fullyQualifiedName) {");
+                        + "getImplementationByServerSideClassName(String fullyQualifiedName, ApplicationConfiguration c) {");
         sourceWriter.indent();
         sourceWriter
                 .println("fullyQualifiedName = fullyQualifiedName.intern();");
@@ -211,9 +273,10 @@ public class WidgetMapGenerator extends Generator {
                     .value();
             sourceWriter.print("if ( fullyQualifiedName == \"");
             sourceWriter.print(class1.getName());
-            sourceWriter.print("\" ) return ");
+            sourceWriter.print("\" ) { ensureInstantiator("
+                    + clientClass.getName() + ".class, c); return ");
             sourceWriter.print(clientClass.getName());
-            sourceWriter.println(".class;");
+            sourceWriter.println(".class;}");
             sourceWriter.print("else ");
         }
         sourceWriter
@@ -222,5 +285,4 @@ public class WidgetMapGenerator extends Generator {
         sourceWriter.println("}");
 
     }
-
 }

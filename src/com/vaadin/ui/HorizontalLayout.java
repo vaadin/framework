@@ -17,7 +17,7 @@ import com.vaadin.terminal.gwt.client.ui.VHorizontalLayout;
  * @since 5.3
  */
 @SuppressWarnings("serial")
-@ClientWidget(VHorizontalLayout.class)
+@ClientWidget(value = VHorizontalLayout.class, lazyLoad = false)
 public class HorizontalLayout extends AbstractOrderedLayout {
 
     public HorizontalLayout() {
