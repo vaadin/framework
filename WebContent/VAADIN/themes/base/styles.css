@@ -1773,6 +1773,11 @@ input.v-textfield-readonly,
 textarea.v-textarea-readonly {
 	background: transparent;
 	border: none;
+	resize: none;
+}
+input.v-disabled,
+textarea.v-disabled {
+	resize: none;
 }
 input.v-textfield-readonly:focus,
 textarea.v-textarea-readonly:focus {
