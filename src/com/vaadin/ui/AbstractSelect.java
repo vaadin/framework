@@ -1695,6 +1695,7 @@ public abstract class AbstractSelect extends AbstractField implements
                             .removeListener(getCaptionChangeListener());
                 }
             }
+            captionChangeNotifiers.clear();
         }
 
         public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
