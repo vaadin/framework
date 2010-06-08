@@ -9,7 +9,7 @@ public class LargeCaptionIcon extends TestBase {
 
     @Override
     protected String getDescription() {
-        return "The icon should be completetly visible on both initial load and after subsequent refreshes.";
+        return "The icon should be completely visible on both initial load and after subsequent refreshes.";
     }
 
     @Override
