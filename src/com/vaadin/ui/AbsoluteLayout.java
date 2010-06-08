@@ -338,7 +338,7 @@ public class AbsoluteLayout extends AbstractLayout {
          * @return The value of the 'top' CSS-attribute
          */
         public float getTopValue() {
-            return topValue == null ? 0 : rightValue.floatValue();
+            return topValue == null ? 0 : topValue.floatValue();
         }
 
         /**
