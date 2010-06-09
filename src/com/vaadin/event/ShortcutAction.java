@@ -175,8 +175,8 @@ public class ShortcutAction extends Action {
         if (matcher.find()) {
             String match = matcher.group();
 
-            // KeyCode from last char in match, lowercase
-            keyCode = Character.toLowerCase(matcher.group().charAt(
+            // KeyCode from last char in match, uppercase
+            keyCode = Character.toUpperCase(matcher.group().charAt(
                     match.length() - 1));
 
             // Given modifiers override this indicated in the caption

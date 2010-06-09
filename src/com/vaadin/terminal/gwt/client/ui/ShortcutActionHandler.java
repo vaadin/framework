@@ -166,7 +166,6 @@ class ShortcutKeyCombination {
 
     ShortcutKeyCombination(int kc, int[] modifiers) {
         keyCode = (char) kc;
-        keyCode = Character.toUpperCase(keyCode);
 
         modifiersMask = 0;
         if (modifiers != null) {
