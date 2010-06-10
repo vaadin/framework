@@ -484,6 +484,11 @@ public class ApplicationConnection {
             // Synchronized call, discarded response (leaving the page)
             SynchronousXHR syncXHR = (SynchronousXHR) SynchronousXHR.create();
             syncXHR.synchronousPost(uri + "&" + PARAM_UNLOADBURST + "=1", rd);
+            /*
+             * Although we are in theory leaving the page, the page may still
+             * stay open. End request properly here too. See #3289
+             */
+            endRequest();
         }
     }
 
