@@ -44,6 +44,11 @@ public class VTextualDate extends VDateField implements Paintable, Field,
 
     private boolean lenient;
 
+    private static final String CLASSNAME_PROMPT = "prompt";
+    private static final String ATTR_INPUTPROMPT = "prompt";
+    private String inputPrompt = "";
+    private boolean prompting = false;
+
     public VTextualDate() {
 
         super();
@@ -57,6 +62,10 @@ public class VTextualDate extends VDateField implements Paintable, Field,
             public void onFocus(FocusEvent event) {
                 text.addStyleName(VTextField.CLASSNAME + "-"
                         + VTextField.CLASSNAME_FOCUS);
+                if (prompting) {
+                    text.setText("");
+                    setPrompting(false);
+                }
                 if (client != null
                         && client.hasEventListeners(VTextualDate.this,
                                 EventId.FOCUS)) {
@@ -68,6 +77,12 @@ public class VTextualDate extends VDateField implements Paintable, Field,
             public void onBlur(BlurEvent event) {
                 text.removeStyleName(VTextField.CLASSNAME + "-"
                         + VTextField.CLASSNAME_FOCUS);
+                String value = getText();
+                setPrompting(inputPrompt != null
+                        && (value == null || "".equals(value)));
+                if (prompting) {
+                    text.setText(readonly ? "" : inputPrompt);
+                }
                 if (client != null
                         && client.hasEventListeners(VTextualDate.this,
                                 EventId.BLUR)) {
@@ -90,6 +105,8 @@ public class VTextualDate extends VDateField implements Paintable, Field,
         if (uidl.hasAttribute("format")) {
             formatStr = uidl.getStringAttribute("format");
         }
+
+        inputPrompt = uidl.getStringAttribute(ATTR_INPUTPROMPT);
 
         lenient = !uidl.getBooleanAttribute("strict");
 
@@ -163,7 +180,7 @@ public class VTextualDate extends VDateField implements Paintable, Field,
             dateText = "";
         }
 
-        text.setText(dateText);
+        setText(dateText);
         text.setEnabled(enabled);
         text.setReadOnly(readonly);
 
@@ -173,6 +190,15 @@ public class VTextualDate extends VDateField implements Paintable, Field,
             text.removeStyleName("v-readonly");
         }
 
+    }
+
+    protected void setPrompting(boolean prompting) {
+        this.prompting = prompting;
+        if (prompting) {
+            addStyleDependentName(CLASSNAME_PROMPT);
+        } else {
+            removeStyleDependentName(CLASSNAME_PROMPT);
+        }
     }
 
     public void onChange(ChangeEvent event) {
@@ -357,10 +383,20 @@ public class VTextualDate extends VDateField implements Paintable, Field,
     }
 
     protected String getText() {
+        if (prompting) {
+            return "";
+        }
         return text.getText();
     }
 
     protected void setText(String text) {
+        if (inputPrompt != null && (text == null || "".equals(text))) {
+            text = readonly ? "" : inputPrompt;
+            setPrompting(true);
+        } else {
+            setPrompting(false);
+        }
+
         this.text.setText(text);
     }
 

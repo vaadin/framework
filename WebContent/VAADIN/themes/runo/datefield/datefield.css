@@ -139,6 +139,10 @@ td.v-datefield-calendarpanel-month {
 .v-datefield-rendererror .v-textfield {
 	background: #ff9999;
 }
+.v-datefield-prompt .v-datefield-textfield {
+	color: #999;
+	font-style: normal;
+}
 /* IE specific styles */
 .v-ie7 .v-datefield-button {
 	background-position: right 1px;

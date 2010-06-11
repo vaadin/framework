@@ -258,6 +258,10 @@ td.v-datefield-calendarpanel-nextyear {
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 }
+.v-datefield-prompt .v-datefield-textfield {
+	color: #999;
+	font-style: normal;
+}
 .v-datefield-popupcalendar .v-datefield-button {
 	width: 24px;
 	height: 23px;
@@ -361,4 +365,7 @@ td.v-datefield-calendarpanel-nextyear {
 }
 .black .v-datefield-calendarpanel .v-last {
 	background-image: url(img/weekday-last-black.png); /** sprite-ref: black-verticals; sprite-alignment: right */
+}
+.black .v-datefield-prompt .v-datefield-textfield {
+	color: #5f6366;
 }
