@@ -893,7 +893,7 @@ public class ApplicationConnection {
 
             }
         };
-        configuration.runWhenWidgetsLoaded(c);
+        ApplicationConfiguration.runWhenWidgetsLoaded(c);
     }
 
     /**

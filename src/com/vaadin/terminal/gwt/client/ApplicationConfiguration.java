@@ -9,15 +9,17 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Timer;
 import com.vaadin.terminal.gwt.client.ui.VUnknownComponent;
 
-public class ApplicationConfiguration {
+public class ApplicationConfiguration implements EntryPoint {
 
-    // can only be inited once, to avoid multiple-entrypoint-problem
-    private static WidgetSet initedWidgetSet;
+    private static WidgetSet widgetSet = GWT.create(WidgetSet.class);
 
     private String id;
     private String themeUri;
@@ -38,10 +40,10 @@ public class ApplicationConfiguration {
 
     private String windowId;
 
-    // TODO consider to make this hashmap per application
+    static// TODO consider to make this hashmap per application
     LinkedList<Command> callbacks = new LinkedList<Command>();
 
-    private int widgetsLoading;
+    private static int widgetsLoading;
 
     private static ArrayList<ApplicationConnection> unstartedApplications = new ArrayList<ApplicationConnection>();
     private static ArrayList<ApplicationConnection> runningApplications = new ArrayList<ApplicationConnection>();
@@ -151,28 +153,20 @@ public class ApplicationConfiguration {
      * @param widgetset
      *            the widgetset that is running the apps
      */
-    public static void initConfigurations(WidgetSet widgetset) {
+    public static void initConfigurations() {
 
-        if (initedWidgetSet != null) {
-            // Multiple widgetsets inited; can happen with custom WS + entry
-            // point
-            String msg = "Ignoring " + widgetset.getClass().getName()
-                    + ", because " + initedWidgetSet.getClass().getName()
-                    + " was already inited (if this is wrong, your entry point"
-                    + " is probably not first your .gwt.xml).";
-            throw new IllegalStateException(msg);
-        }
-        initedWidgetSet = widgetset;
         ArrayList<String> appIds = new ArrayList<String>();
         loadAppIdListFromDOM(appIds);
 
         for (Iterator<String> it = appIds.iterator(); it.hasNext();) {
             String appId = it.next();
             ApplicationConfiguration appConf = getConfigFromDOM(appId);
-            ApplicationConnection a = new ApplicationConnection(widgetset,
+            ApplicationConnection a = new ApplicationConnection(widgetSet,
                     appConf);
             unstartedApplications.add(a);
         }
+
+        deferredWidgetLoadLoop.scheduleRepeating(100);
     }
 
     /**
@@ -242,7 +236,7 @@ public class ApplicationConfiguration {
         for (int i = 0; i < keyArray.length(); i++) {
             String key = keyArray.get(i).intern();
             int value = valueMap.getInt(key);
-            classes[value] = widgetSet.getImplementationByClassName(key, this);
+            classes[value] = widgetSet.getImplementationByClassName(key);
             if (classes[value] == VUnknownComponent.class) {
                 if (unknownComponents == null) {
                     unknownComponents = new HashMap<String, String>();
@@ -273,7 +267,7 @@ public class ApplicationConfiguration {
      * 
      * @param c
      */
-    void runWhenWidgetsLoaded(Command c) {
+    static void runWhenWidgetsLoaded(Command c) {
         if (widgetsLoading == 0) {
             c.execute();
         } else {
@@ -281,11 +275,11 @@ public class ApplicationConfiguration {
         }
     }
 
-    void widgetLoadStart() {
+    static void startWidgetLoading() {
         widgetsLoading++;
     }
 
-    void widgetLoaded() {
+    static void endWidgetLoading() {
         widgetsLoading--;
         if (widgetsLoading == 0 && !callbacks.isEmpty()) {
             for (Command cmd : callbacks) {
@@ -294,5 +288,60 @@ public class ApplicationConfiguration {
             callbacks.clear();
         }
 
+    }
+
+    /*
+     * This loop loads widget implementation that should be loaded deferred.
+     */
+    private static final Timer deferredWidgetLoadLoop = new Timer() {
+        private static final int FREE_LIMIT = 4;
+
+        int communicationFree = 0;
+        int nextWidgetIndex = 0;
+
+        @Override
+        public void run() {
+            if (!isBusy()) {
+                Class<? extends Paintable> nextType = getNextType();
+                if (nextType == null) {
+                    // ensured that all widgets are loaded
+                    cancel();
+                } else {
+                    widgetSet.loadImplementation(nextType);
+                }
+            }
+        }
+
+        private Class<? extends Paintable> getNextType() {
+            Class<? extends Paintable>[] deferredLoadedWidgets = widgetSet
+                    .getDeferredLoadedWidgets();
+            if (deferredLoadedWidgets.length <= nextWidgetIndex) {
+                return null;
+            } else {
+                return deferredLoadedWidgets[nextWidgetIndex++];
+            }
+        }
+
+        private boolean isBusy() {
+            if (widgetsLoading > 0) {
+                communicationFree = 0;
+                return false;
+            }
+            for (ApplicationConnection app : runningApplications) {
+                if (app.hasActiveRequest()) {
+                    // if an UIDL request or widget loading is active, mark as
+                    // busy
+                    communicationFree = 0;
+                    return false;
+                }
+            }
+            communicationFree++;
+            return communicationFree < FREE_LIMIT;
+        }
+    };
+
+    public void onModuleLoad() {
+        initConfigurations();
+        startNextApplication();
     }
 }

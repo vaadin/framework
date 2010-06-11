@@ -3,41 +3,21 @@
  */
 package com.vaadin.terminal.gwt.client;
 
-import com.vaadin.terminal.gwt.client.ui.VDateFieldCalendar;
-import com.vaadin.terminal.gwt.client.ui.VPasswordField;
-import com.vaadin.terminal.gwt.client.ui.VSplitPanelVertical;
-import com.vaadin.terminal.gwt.client.ui.VTextArea;
-import com.vaadin.terminal.gwt.client.ui.VWindow;
+import java.util.HashMap;
 
-public abstract class WidgetMap {
+abstract class WidgetMap {
+
+    protected static HashMap<Class, WidgetInstantiator> instmap = new HashMap<Class, WidgetInstantiator>();
 
     public Paintable instantiate(Class<? extends Paintable> classType) {
-
-        /*
-         * Yes, this (including the generated) may look very odd code, but due
-         * the nature of GWT, we cannot do this with reflect. Luckily this is
-         * mostly written by WidgetSetGenerator, here are just some hacks. Extra
-         * instantiation code is needed if client side widget has no "native"
-         * counterpart on client side.
-         */
-        if (VSplitPanelVertical.class == classType) {
-            return new VSplitPanelVertical();
-        } else if (VTextArea.class == classType) {
-            return new VTextArea();
-
-        } else if (VDateFieldCalendar.class == classType) {
-            return new VDateFieldCalendar();
-        } else if (VPasswordField.class == classType) {
-            return new VPasswordField();
-        } else if (VWindow.class == classType) {
-            return new VWindow();
-        } else {
-            return null; // let generated type handle this
-        }
+        return instmap.get(classType).get();
     }
 
     public abstract Class<? extends Paintable> getImplementationByServerSideClassName(
-            String fullyqualifiedName,
-            ApplicationConfiguration applicationConfiguration);
+            String fullyqualifiedName);
+
+    public abstract Class<? extends Paintable>[] getDeferredLoadedWidgets();
+
+    public abstract void ensureInstantiator(Class<? extends Paintable> classType);
 
 }
