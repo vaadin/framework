@@ -22,6 +22,9 @@
 	padding: 0;
 	margin: 0;
 }
+.v-datefield-calendarpanel:focus{
+	outline:none;	
+}
 .v-datefield-calendarpanel-header td {
 	text-align: center;
 }

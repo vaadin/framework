@@ -8,12 +8,24 @@ import java.util.Date;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.ListBox;
+import com.vaadin.terminal.gwt.client.BrowserInfo;
 
-public class VTime extends FlowPanel implements ChangeHandler {
+public class VTime extends FocusableFlowPanel implements ChangeHandler,
+        KeyPressHandler, KeyDownHandler, FocusHandler {
 
     private final VDateField datefield;
+
+    private final VCalendarPanel calendar;
 
     private ListBox hours;
 
@@ -23,18 +35,85 @@ public class VTime extends FlowPanel implements ChangeHandler {
 
     private ListBox msec;
 
-    private ListBox ampm;
+    private AMPMListBox ampm;
 
     private int resolution = VDateField.RESOLUTION_HOUR;
 
     private boolean readonly;
 
-    public VTime(VDateField parent) {
-        super();
-        datefield = parent;
-        setStyleName(VDateField.CLASSNAME + "-time");
+    /**
+     * The AM/PM Listbox yields the keyboard focus to the calendar
+     */
+    private class AMPMListBox extends ListBox {
+        public AMPMListBox() {
+            super();
+            sinkEvents(Event.ONKEYDOWN);
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * com.google.gwt.user.client.ui.Widget#onBrowserEvent(com.google.gwt
+         * .user.client.Event)
+         */
+        @Override
+        public void onBrowserEvent(Event event) {
+            super.onBrowserEvent(event);
+
+            if (event.getKeyCode() == KeyCodes.KEY_TAB) {
+                event.preventDefault();
+
+                /*
+                 * Wait until the current event has been processed. If the timer
+                 * is left out the focus will move to the VTime-class not the
+                 * panel itself. Weird.
+                 */
+                Timer t = new Timer() {
+                    @Override
+                    public void run() {
+                        calendar.setFocus(true);
+                    }
+                };
+                t.schedule(1);
+            }
+        }
     }
 
+    /**
+     * Constructor
+     * 
+     * @param parent
+     *            The DateField related to this instance
+     * @param panel
+     *            The panel where this this instance is embedded
+     */
+    public VTime(VDateField parent, VCalendarPanel panel) {
+        super();
+        datefield = parent;
+        calendar = panel;
+        setStyleName(VDateField.CLASSNAME + "-time");
+
+        /*
+         * Firefox auto-repeat works correctly only if we use a key press
+         * handler, other browsers handle it correctly when using a key down
+         * handler
+         */
+        if (BrowserInfo.get().isGecko()) {
+            addKeyPressHandler(this);
+        } else {
+            addKeyDownHandler(this);
+        }
+
+        addFocusHandler(this);
+    }
+
+    /**
+     * Constructs the ListBoxes and updates their value
+     * 
+     * @param redraw
+     *            Should new instances of the listboxes be created
+     */
     private void buildTime(boolean redraw) {
         final boolean thc = datefield.getDateTimeService().isTwelveHourClock();
         if (redraw) {
@@ -47,10 +126,11 @@ public class VTime extends FlowPanel implements ChangeHandler {
             }
             hours.addChangeHandler(this);
             if (thc) {
-                ampm = new ListBox();
+                ampm = new AMPMListBox();
                 ampm.setStyleName(VNativeSelect.CLASSNAME);
                 final String[] ampmText = datefield.getDateTimeService()
                         .getAmPmStrings();
+                calendar.setFocus(true);
                 ampm.addItem(ampmText[0]);
                 ampm.addItem(ampmText[1]);
                 ampm.addChangeHandler(this);
@@ -151,7 +231,7 @@ public class VTime extends FlowPanel implements ChangeHandler {
         }
 
         // Update times
-        Date cdate = datefield.getCurrentDate();
+        Date cdate = datefield.getShowingDate();
         boolean selected = true;
         if (cdate == null) {
             cdate = new Date();
@@ -236,6 +316,12 @@ public class VTime extends FlowPanel implements ChangeHandler {
 
     }
 
+    /**
+     * Update the time ListBoxes
+     * 
+     * @param redraw
+     *            Should new instances of the listboxes be created
+     */
     public void updateTime(boolean redraw) {
         buildTime(redraw || resolution != datefield.getCurrentResolution()
                 || readonly != datefield.isReadonly());
@@ -246,6 +332,13 @@ public class VTime extends FlowPanel implements ChangeHandler {
         readonly = datefield.isReadonly();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.event.dom.client.ChangeHandler#onChange(com.google.gwt
+     * .event.dom.client.ChangeEvent)
+     */
     public void onChange(ChangeEvent event) {
         if (datefield.getCurrentDate() == null) {
             // was null on server, need to set
@@ -257,61 +350,115 @@ public class VTime extends FlowPanel implements ChangeHandler {
             datefield.setCurrentDate(new Date(now.getTime()));
 
             // Init variables with current time
-            datefield.getClient().updateVariable(datefield.getId(), "year",
-                    now.getYear() + 1900, false);
-            datefield.getClient().updateVariable(datefield.getId(), "month",
-                    now.getMonth() + 1, false);
-            datefield.getClient().updateVariable(datefield.getId(), "day",
-                    now.getDate(), false);
-            datefield.getClient().updateVariable(datefield.getId(), "hour",
-                    now.getHours(), false);
-            datefield.getClient().updateVariable(datefield.getId(), "min",
-                    now.getMinutes(), false);
-            datefield.getClient().updateVariable(datefield.getId(), "sec",
-                    now.getSeconds(), false);
-            datefield.getClient().updateVariable(datefield.getId(), "msec",
-                    datefield.getMilliseconds(), false);
+            notifyServerOfChanges();
         }
         if (event.getSource() == hours) {
             int h = hours.getSelectedIndex();
             if (datefield.getDateTimeService().isTwelveHourClock()) {
                 h = h + ampm.getSelectedIndex() * 12;
             }
-            datefield.getCurrentDate().setHours(h);
             datefield.getShowingDate().setHours(h);
-            datefield.getClient().updateVariable(datefield.getId(), "hour", h,
-                    datefield.isImmediate());
             updateTime(false);
         } else if (event.getSource() == mins) {
             final int m = mins.getSelectedIndex();
-            datefield.getCurrentDate().setMinutes(m);
             datefield.getShowingDate().setMinutes(m);
-            datefield.getClient().updateVariable(datefield.getId(), "min", m,
-                    datefield.isImmediate());
             updateTime(false);
         } else if (event.getSource() == sec) {
             final int s = sec.getSelectedIndex();
-            datefield.getCurrentDate().setSeconds(s);
             datefield.getShowingDate().setSeconds(s);
-            datefield.getClient().updateVariable(datefield.getId(), "sec", s,
-                    datefield.isImmediate());
             updateTime(false);
         } else if (event.getSource() == msec) {
             final int ms = msec.getSelectedIndex();
-            datefield.setMilliseconds(ms);
             datefield.setShowingMilliseconds(ms);
-            datefield.getClient().updateVariable(datefield.getId(), "msec", ms,
-                    datefield.isImmediate());
             updateTime(false);
         } else if (event.getSource() == ampm) {
-            final int h = hours.getSelectedIndex() + ampm.getSelectedIndex()
-                    * 12;
-            datefield.getCurrentDate().setHours(h);
+            final int h = hours.getSelectedIndex()
+                    + (ampm.getSelectedIndex() * 12);
             datefield.getShowingDate().setHours(h);
-            datefield.getClient().updateVariable(datefield.getId(), "hour", h,
-                    datefield.isImmediate());
             updateTime(false);
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.event.dom.client.KeyPressHandler#onKeyPress(com.google
+     * .gwt.event.dom.client.KeyPressEvent)
+     */
+    public void onKeyPress(KeyPressEvent event) {
+        int keycode = event.getNativeEvent().getKeyCode();
+
+        if (calendar != null) {
+            if (keycode == calendar.getSelectKey()
+                    || keycode == calendar.getCloseKey()) {
+                if (keycode == calendar.getSelectKey()) {
+                    notifyServerOfChanges();
+                }
+
+                calendar.handleNavigation(keycode, event.getNativeEvent()
+                        .getCtrlKey()
+                        || event.getNativeEvent().getMetaKey(), event
+                        .getNativeEvent().getShiftKey());
+                return;
+            }
+        }
+
+        event.stopPropagation();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt
+     * .event.dom.client.KeyDownEvent)
+     */
+    public void onKeyDown(KeyDownEvent event) {
+        int keycode = event.getNativeEvent().getKeyCode();
+        if (keycode != calendar.getCloseKey()
+                && keycode != calendar.getSelectKey()) {
+            event.stopPropagation();
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.event.dom.client.FocusHandler#onFocus(com.google.gwt.event
+     * .dom.client.FocusEvent)
+     */
+    public void onFocus(FocusEvent event) {
+        event.preventDefault();
+
+        // Delegate focus to the hour select
+        hours.setFocus(true);
+    }
+
+    /**
+     * Update the variables server side
+     */
+    public void notifyServerOfChanges() {
+        /*
+         * Just update the variables, don't send any thing. The calendar panel
+         * will make the request when the panel is closed.
+         */
+        Date now = datefield.getCurrentDate();
+        datefield.getClient().updateVariable(datefield.getId(), "year",
+                now.getYear() + 1900, false);
+        datefield.getClient().updateVariable(datefield.getId(), "month",
+                now.getMonth() + 1, false);
+        datefield.getClient().updateVariable(datefield.getId(), "day",
+                now.getDate(), false);
+        datefield.getClient().updateVariable(datefield.getId(), "hour",
+                now.getHours(), false);
+        datefield.getClient().updateVariable(datefield.getId(), "min",
+                now.getMinutes(), false);
+        datefield.getClient().updateVariable(datefield.getId(), "sec",
+                now.getSeconds(), false);
+        datefield.getClient().updateVariable(datefield.getId(), "msec",
+                datefield.getShowingMilliseconds(), false);
     }
 
 }
