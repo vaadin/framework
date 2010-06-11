@@ -17,6 +17,7 @@ import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VSplitPanel;
 import com.vaadin.terminal.gwt.client.ui.VSplitPanelHorizontal;
 import com.vaadin.tools.ReflectTools;
+import com.vaadin.ui.ClientWidget.LoadStyle;
 
 /**
  * SplitPanel.
@@ -30,7 +31,7 @@ import com.vaadin.tools.ReflectTools;
  * @since 5.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(value = VSplitPanelHorizontal.class, lazyLoad = false)
+@ClientWidget(value = VSplitPanelHorizontal.class, loadStyle = LoadStyle.EAGER)
 public class SplitPanel extends AbstractLayout {
 
     /* Predefined orientations */

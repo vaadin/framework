@@ -26,7 +26,6 @@ import com.vaadin.terminal.gwt.widgetsetutils.WidgetMapGenerator;
  * Note, even though client side implementation is needed during development,
  * one may safely remove them from classpath of the production server.
  * 
- * 
  * @since 6.2
  */
 @Retention(RetentionPolicy.RUNTIME)
@@ -38,6 +37,8 @@ public @interface ClientWidget {
     Class<? extends Paintable> value();
 
     /**
+     * TODO rewrite for EAGER, DEFERRED, LAZY
+     * 
      * The lazy loading of a widget implementation means the client side
      * component is not included in the initial JavaScript application loaded
      * when the application starts. Instead the implementation is loaded to the
@@ -64,6 +65,23 @@ public @interface ClientWidget {
      *         screen slightly increases, but widgets implementation does not
      *         stress the initialization of the client side engine.
      */
-    boolean lazyLoad() default true;
+    LoadStyle loadStyle() default LoadStyle.DEFERRED;
+
+    public enum LoadStyle {
+        /**
+         * The widget is included in the initial JS sent to the client.
+         */
+        EAGER,
+        /**
+         * Not included in the initial set of widgets, but added to queue from
+         * which it will be loaded when network is not busy or the
+         * implementation is required.
+         */
+        DEFERRED,
+        /**
+         * Loaded to the client only if needed.
+         */
+        LAZY
+    }
 
 }

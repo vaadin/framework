@@ -10,6 +10,7 @@ import java.util.Map;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.VUriFragmentUtility;
+import com.vaadin.ui.ClientWidget.LoadStyle;
 
 /**
  * Experimental web browser dependent component for URI fragment (part after
@@ -20,7 +21,7 @@ import com.vaadin.terminal.gwt.client.ui.VUriFragmentUtility;
  * 
  */
 @SuppressWarnings("serial")
-@ClientWidget(value = VUriFragmentUtility.class, lazyLoad = false)
+@ClientWidget(value = VUriFragmentUtility.class, loadStyle = LoadStyle.EAGER)
 public class UriFragmentUtility extends AbstractComponent {
 
     /**

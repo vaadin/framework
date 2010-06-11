@@ -53,6 +53,6 @@
 		</any>
 	</replace-with>
 
-	<entry-point class="com.vaadin.terminal.gwt.client.DefaultWidgetSet" />
+	<entry-point class="com.vaadin.terminal.gwt.client.ApplicationConfiguration" />
 
 </module>

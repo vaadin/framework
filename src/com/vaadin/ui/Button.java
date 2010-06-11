@@ -22,6 +22,7 @@ import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.VButton;
+import com.vaadin.ui.ClientWidget.LoadStyle;
 import com.vaadin.ui.themes.BaseTheme;
 
 /**
@@ -33,7 +34,7 @@ import com.vaadin.ui.themes.BaseTheme;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(value = VButton.class, lazyLoad = false)
+@ClientWidget(value = VButton.class, loadStyle = LoadStyle.EAGER)
 public class Button extends AbstractField implements FieldEvents.BlurNotifier,
         FieldEvents.FocusNotifier {
 

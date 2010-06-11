@@ -11,6 +11,7 @@ import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.VLabel;
+import com.vaadin.ui.ClientWidget.LoadStyle;
 
 /**
  * Label component for showing non-editable short texts.
@@ -38,7 +39,7 @@ import com.vaadin.terminal.gwt.client.ui.VLabel;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(value = VLabel.class, lazyLoad = false)
+@ClientWidget(value = VLabel.class, loadStyle = LoadStyle.EAGER)
 public class Label extends AbstractComponent implements Property,
         Property.Viewer, Property.ValueChangeListener,
         Property.ValueChangeNotifier, Comparable {

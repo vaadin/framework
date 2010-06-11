@@ -16,6 +16,7 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.VTextField;
+import com.vaadin.ui.ClientWidget.LoadStyle;
 
 /**
  * <p>
@@ -38,7 +39,7 @@ import com.vaadin.terminal.gwt.client.ui.VTextField;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(value = VTextField.class, lazyLoad = false)
+@ClientWidget(value = VTextField.class, loadStyle = LoadStyle.EAGER)
 public class TextField extends AbstractField implements
         FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 

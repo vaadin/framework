@@ -333,7 +333,7 @@ public abstract class AbstractContainerTest extends TestCase {
             "com.vaadin.terminal.gwt.client.ContainerResizedListener",
             "com.vaadin.terminal.gwt.client.CSSRule",
             "com.vaadin.terminal.gwt.client.DateTimeService",
-            "com.vaadin.terminal.gwt.client.DefaultWidgetSet",
+            "com.vaadin.terminal.gwt.client.WidgetSet",
             "com.vaadin.terminal.gwt.client.Focusable",
             "com.vaadin.terminal.gwt.client.HistoryImplIEVaadin",
             "com.vaadin.terminal.gwt.client.LocaleNotLoadedException",

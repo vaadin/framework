@@ -6,6 +6,7 @@ package com.vaadin.ui;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.VOrderedLayout;
+import com.vaadin.ui.ClientWidget.LoadStyle;
 
 /**
  * Ordered layout.
@@ -24,7 +25,7 @@ import com.vaadin.terminal.gwt.client.ui.VOrderedLayout;
  */
 @SuppressWarnings("serial")
 @Deprecated
-@ClientWidget(value = VOrderedLayout.class, lazyLoad = false)
+@ClientWidget(value = VOrderedLayout.class, loadStyle = LoadStyle.EAGER)
 public class OrderedLayout extends AbstractOrderedLayout {
     /* Predefined orientations */
 
