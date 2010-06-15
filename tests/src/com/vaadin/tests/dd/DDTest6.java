@@ -24,8 +24,8 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
-import com.vaadin.event.dd.acceptcriteria.SourceIsTarget;
 import com.vaadin.event.dd.acceptcriteria.Not;
+import com.vaadin.event.dd.acceptcriteria.SourceIsTarget;
 import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.StreamResource;
@@ -371,6 +371,7 @@ public class DDTest6 extends TestBase {
 
                 WrapperTargetDetails dropTargetDetails = (WrapperTargetDetails) dropEvent
                         .getTargetDetails();
+
                 MouseEventDetails mouseEvent = dropTargetDetails
                         .getMouseEvent();
 

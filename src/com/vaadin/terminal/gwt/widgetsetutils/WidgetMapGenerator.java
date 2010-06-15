@@ -4,6 +4,7 @@
 package com.vaadin.terminal.gwt.widgetsetutils;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -25,8 +26,43 @@ import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.ClientWidget.LoadStyle;
 
 /**
- * GWT generator to build WidgetMapImpl dynamically based on
- * {@link ClientWidget} annotations available in workspace.
+ * WidgetMapGenerator's are GWT generator to build WidgetMapImpl dynamically
+ * based on {@link ClientWidget} annotations available in workspace. By
+ * modifying the generator it is possible to do some fine tuning for the
+ * generated widgetset (aka client side engine). The components to be included
+ * in the client side engine can modified be overriding
+ * {@link #getUsedPaintables()}.
+ * <p>
+ * The generator also decides how the client side component implementations are
+ * loaded to the browser. The default generator is
+ * {@link EagerWidgetMapGenerator} that builds a monolithic client side engine
+ * that loads all widget implementation on application initialization. This has
+ * been the only option until Vaadin 6.4.
+ * <p>
+ * This generator uses the loadStyle hints from the {@link ClientWidget}
+ * annotations. Depending on the {@link LoadStyle} used, the widget may be
+ * included in the initially loaded JavaScript, loaded when the application has
+ * started and there is no communication to server or lazy loaded when the
+ * implementation is absolutely needed.
+ * <p>
+ * The GWT module description file of the widgetset (
+ * <code>...Widgetset.gwt.xml</code>) can be used to define the
+ * WidgetMapGenarator. An example that defines this generator to be used:
+ * 
+ * <pre>
+ * <code>
+ * &lt;generate-with
+ *           class="com.vaadin.terminal.gwt.widgetsetutils.MyWidgetMapGenerator"&gt;
+ *          &lt;when-type-is class="com.vaadin.terminal.gwt.client.WidgetMap" /&gt;
+ * &lt;/generate-with&gt;
+ * 
+ * </code>
+ * </pre>
+ * 
+ * <p>
+ * Vaadin package also includes {@link LazyWidgetMapGenerator}, which is a good
+ * option if the transferred data should be minimized, and
+ * {@link CustomWidgetMapGenerator} for easy overriding of loading strategies.
  * 
  */
 public class WidgetMapGenerator extends Generator {
@@ -195,6 +231,7 @@ public class WidgetMapGenerator extends Generator {
         sourceWriter.println("if(!instmap.containsKey(classType)){");
         boolean first = true;
 
+        ArrayList<Class<? extends Paintable>> lazyLoadedWidgets = new ArrayList<Class<? extends Paintable>>();
         for (Class<? extends Paintable> class1 : paintablesHavingWidgetAnnotation) {
             ClientWidget annotation = class1.getAnnotation(ClientWidget.class);
             Class<? extends com.vaadin.terminal.gwt.client.Paintable> clientClass = annotation
@@ -224,6 +261,7 @@ public class WidgetMapGenerator extends Generator {
                                 + clientClass.getName()
                                 + ".class,"
                                 + instantiator + ");}});\n");
+                lazyLoadedWidgets.add(class1);
 
                 if (loadStyle == LoadStyle.DEFERRED) {
                     deferredWidgets.add(class1);
@@ -262,6 +300,24 @@ public class WidgetMapGenerator extends Generator {
 
         sourceWriter.println("};");
         sourceWriter.println("}");
+
+        // in constructor add a "thread" that lazyly loads lazy loaded widgets
+        // if communication to server idles
+
+        // TODO an array of lazy loaded widgets
+
+        // TODO an index of last ensured widget in array
+
+        sourceWriter
+                .println("public Paintable instantiate(Class<? extends Paintable> classType) {");
+        sourceWriter.indent();
+        sourceWriter
+                .println("Paintable p = super.instantiate(classType); if(p!= null) return p;");
+        sourceWriter.println("return instmap.get(classType).get();");
+
+        sourceWriter.outdent();
+        sourceWriter.println("}");
+
     }
 
     /**

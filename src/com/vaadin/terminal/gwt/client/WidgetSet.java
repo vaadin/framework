@@ -96,7 +96,7 @@ public class WidgetSet {
             return VWindow.class;
         } else if (widgetClass == VFilterSelect.class) {
             if (uidl.hasAttribute("type")) {
-                // TODO check if all type checks are really neede
+                // TODO check if all type checks are really needed
                 final String type = uidl.getStringAttribute("type").intern();
                 if (type == "twincol") {
                     return VTwinColSelect.class;
