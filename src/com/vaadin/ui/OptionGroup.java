@@ -5,7 +5,9 @@
 package com.vaadin.ui;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.vaadin.data.Container;
 import com.vaadin.event.FieldEvents;
@@ -24,6 +26,8 @@ import com.vaadin.terminal.gwt.client.ui.VOptionGroup;
 @ClientWidget(VOptionGroup.class)
 public class OptionGroup extends AbstractSelect implements
         FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
+
+    private Set<Object> disabledItemIds = new HashSet<Object>();
 
     public OptionGroup() {
         super();
@@ -45,6 +49,15 @@ public class OptionGroup extends AbstractSelect implements
     public void paintContent(PaintTarget target) throws PaintException {
         target.addAttribute("type", "optiongroup");
         super.paintContent(target);
+    }
+
+    @Override
+    protected void paintItem(PaintTarget target, Object itemId)
+            throws PaintException {
+        super.paintItem(target, itemId);
+        if (!isItemEnabled(itemId)) {
+            target.addAttribute("disabled", true);
+        }
     }
 
     @Override
@@ -78,4 +91,79 @@ public class OptionGroup extends AbstractSelect implements
 
     }
 
+    protected void setValue(Object newValue, boolean repaintIsNotNeeded) {
+        if (repaintIsNotNeeded) {
+            /*
+             * Check that value from changeVariables() doesn't contain unallowed
+             * selections: In the multi select mode, the user has selected or
+             * deselected a disabled item. In the single select mode, the user
+             * has selected a disabled item.
+             */
+            if (isMultiSelect()) {
+                Set currentValueSet = (Set) getValue();
+                Set newValueSet = (Set) newValue;
+                for (Object itemId : currentValueSet) {
+                    if (!isItemEnabled(itemId) && !newValueSet.contains(itemId)) {
+                        requestRepaint();
+                        return;
+                    }
+                }
+                for (Object itemId : newValueSet) {
+                    if (!isItemEnabled(itemId)
+                            && !currentValueSet.contains(itemId)) {
+                        requestRepaint();
+                        return;
+                    }
+                }
+            } else {
+                if (newValue == null) {
+                    newValue = getNullSelectionItemId();
+                }
+                if (!isItemEnabled(newValue)) {
+                    requestRepaint();
+                    return;
+                }
+            }
+        }
+        super.setValue(newValue, repaintIsNotNeeded);
+    }
+
+    /**
+     * Sets an item disabled or enabled. In the multiselect mode, a disabled
+     * item cannot be selected or deselected by the user. In the single
+     * selection mode, a disable item cannot be selected.
+     * 
+     * However, programmatical selection or deselection of an disable item is
+     * possible. By default, items are enabled.
+     * 
+     * @param itemId
+     *            the id of the item to be disabled or enabled
+     * @param enabled
+     *            if true the item is enabled, otherwise the item is disabled
+     */
+    public void setItemEnabled(Object itemId, boolean enabled) {
+        if (itemId != null) {
+            if (enabled) {
+                disabledItemIds.remove(itemId);
+            } else {
+                disabledItemIds.add(itemId);
+            }
+            requestRepaint();
+        }
+    }
+
+    /**
+     * Returns true if the item is enabled.
+     * 
+     * @param itemId
+     *            the id of the item to be checked
+     * @return true if the item is enabled, false otherwise
+     * @see #setItemEnabled(Object, boolean)
+     */
+    public boolean isItemEnabled(Object itemId) {
+        if (itemId != null) {
+            return !disabledItemIds.contains(itemId);
+        }
+        return true;
+    }
 }

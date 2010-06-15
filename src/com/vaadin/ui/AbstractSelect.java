@@ -316,22 +316,12 @@ public abstract class AbstractSelect extends AbstractField implements
         final Collection ids = getItemIds();
         if (isNullSelectionAllowed() && getNullSelectionItemId() != null
                 && !ids.contains(getNullSelectionItemId())) {
-            // Gets the option attribute values
             final Object id = getNullSelectionItemId();
-            final String key = itemIdMapper.key(id);
-            final String caption = getItemCaption(id);
-            final Resource icon = getItemIcon(id);
             // Paints option
             target.startTag("so");
-            if (icon != null) {
-                target.addAttribute("icon", icon);
-            }
-            target.addAttribute("caption", caption);
-            target.addAttribute("nullselection", true);
-            target.addAttribute("key", key);
+            paintItem(target, id);
             if (isSelected(id)) {
-                target.addAttribute("selected", true);
-                selectedKeys[keyIndex++] = key;
+                selectedKeys[keyIndex++] = itemIdMapper.key(id);
             }
             target.endTag("so");
         }
@@ -348,21 +338,11 @@ public abstract class AbstractSelect extends AbstractField implements
                 continue;
             }
             final String key = itemIdMapper.key(id);
-            final String caption = getItemCaption(id);
             // add listener for each item, to cause repaint if an item changes
             getCaptionChangeListener().addNotifierForItem(id);
-            final Resource icon = getItemIcon(id); // Paints the option
             target.startTag("so");
-            if (icon != null) {
-                target.addAttribute("icon", icon);
-            }
-            target.addAttribute("caption", caption);
-            if (id != null && id.equals(getNullSelectionItemId())) {
-                target.addAttribute("nullselection", true);
-            }
-            target.addAttribute("key", key);
+            paintItem(target, id);
             if (isSelected(id) && keyIndex < selectedKeys.length) {
-                target.addAttribute("selected", true);
                 selectedKeys[keyIndex++] = key;
             }
             target.endTag("so");
@@ -376,6 +356,24 @@ public abstract class AbstractSelect extends AbstractField implements
             target.addVariable(this, "newitem", "");
         }
 
+    }
+
+    protected void paintItem(PaintTarget target, Object itemId)
+            throws PaintException {
+        final String key = itemIdMapper.key(itemId);
+        final String caption = getItemCaption(itemId);
+        final Resource icon = getItemIcon(itemId);
+        if (icon != null) {
+            target.addAttribute("icon", icon);
+        }
+        target.addAttribute("caption", caption);
+        if (itemId != null && itemId.equals(getNullSelectionItemId())) {
+            target.addAttribute("nullselection", true);
+        }
+        target.addAttribute("key", key);
+        if (isSelected(itemId)) {
+            target.addAttribute("selected", true);
+        }
     }
 
     /**
