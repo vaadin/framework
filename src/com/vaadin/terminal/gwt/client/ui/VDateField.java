@@ -58,7 +58,8 @@ public class VDateField extends FlowPanel implements Paintable, Field {
     protected boolean enabled;
 
     /**
-     * The date that is selected in the date field.
+     * The date that is selected in the date field. Null if an invalid date is
+     * specified.
      */
     protected Date date = null;
     // e.g when paging a calendar, before actually selecting
@@ -188,6 +189,10 @@ public class VDateField extends FlowPanel implements Paintable, Field {
     }-*/;
 
     public int getMilliseconds() {
+        if (date == null) {
+            return 0;
+        }
+
         return (int) (date.getTime() - date.getTime() / 1000 * 1000);
     }
 
