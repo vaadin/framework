@@ -68,6 +68,8 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
     protected CustomMenuItem selected;
 
     private Timer layoutTimer;
+    private Timer blurDelayTimer;
+    private Timer focusDelayTimer;
 
     private boolean enabled = true;
 
@@ -108,6 +110,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         this.subMenu = subMenu;
 
         sinkEvents(Event.ONCLICK | Event.ONMOUSEOVER | Event.ONMOUSEOUT
+                | Event.ONMOUSEDOWN
                 | Event.ONLOAD);
     }
 
@@ -288,6 +291,17 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
      *            id of the item that was clicked
      */
     public void onMenuClick(int clickedItemId) {
+        // Cancel the blur event handling, focus was lost to a submenu
+        if (blurDelayTimer != null) {
+            blurDelayTimer.cancel();
+        }
+
+        // Cancel the focus event handling since focus was gained by
+        // clicking an item.
+        if (focusDelayTimer != null) {
+            focusDelayTimer.cancel();
+        }
+
         // Updating the state to the server can not be done before
         // the server connection is known, i.e., before updateFromUIDL()
         // has been called.
@@ -323,6 +337,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
      * 
      * @return
      */
+    @Override
     public Element getContainerElement() {
         return containerElement;
     }
@@ -408,6 +423,12 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
 
         if (targetItem != null) {
             switch (DOM.eventGetType(e)) {
+
+            case Event.ONMOUSEDOWN:
+                if (isEnabled() && targetItem.isEnabled()) {
+                    selected = targetItem;
+                }
+                break;
 
             case Event.ONCLICK:
                 if (isEnabled() && targetItem.isEnabled()) {
@@ -1224,9 +1245,19 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
      * .dom.client.BlurEvent)
      */
     public void onBlur(BlurEvent event) {
-        setSelected(null);
-        hideChildren();
-        menuVisible = false;
+        /*
+         * Delay the action so a mouse click can cancel the blur event if needed
+         */
+        blurDelayTimer = new Timer() {
+            @Override
+            public void run() {
+                setSelected(null);
+                hideChildren();
+                menuVisible = false;
+            }
+        };
+
+        blurDelayTimer.schedule(100);
     }
 
     /*
@@ -1237,9 +1268,19 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
      * .dom.client.FocusEvent)
      */
     public void onFocus(FocusEvent event) {
-        if (getSelected() == null) {
-            // If nothing is selected then select the first item
-            setSelected(items.get(0));
-        }
+        /*
+         * Delay the action so a mouse click can cancel the blur event if needed
+         */
+        focusDelayTimer = new Timer() {
+            @Override
+            public void run() {
+                if (getSelected() == null) {
+                    // If nothing is selected then select the first item
+                    setSelected(items.get(0));
+                }
+            }
+        };
+
+        focusDelayTimer.schedule(100);
     }
 }
