@@ -138,6 +138,13 @@ public class ApplicationConnection {
 
     private Set<Paintable> zeroHeightComponents = null;
 
+    /**
+     * Keeps track of if there are (potentially) {@link DeferredCommand}s that
+     * are being executed. 0 == no DeferredCommands currently in progress, > 0
+     * otherwise.
+     */
+    private int deferredCommandTrackers = 0;
+
     public ApplicationConnection(WidgetSet widgetSet,
             ApplicationConfiguration cnf) {
         this.widgetSet = widgetSet;
@@ -181,7 +188,7 @@ public class ApplicationConnection {
         var ap = this;
         var client = {};
         client.isActive = function() {
-            return ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::hasActiveRequest()() || ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::isLoadingIndicatorVisible()();
+            return ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::hasActiveRequest()() || ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::isExecutingDeferredCommands()();
         }
         var vi = ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::getVersionInfo()();
         if (vi) {
@@ -560,6 +567,24 @@ public class ApplicationConnection {
                 }
             }
         });
+        addDeferredCommandTracker();
+    }
+
+    /**
+     * Adds a {@link DeferredCommand} tracker. Increments the tracker count when
+     * called and decrements in a DeferredCommand that is executed after all
+     * other DeferredCommands have executed.
+     * 
+     */
+    private void addDeferredCommandTracker() {
+        deferredCommandTrackers++;
+        DeferredCommand.addCommand(new Command() {
+
+            public void execute() {
+                deferredCommandTrackers--;
+            }
+
+        });
     }
 
     /**
@@ -646,6 +671,22 @@ public class ApplicationConnection {
         if (loadElement != null) {
             DOM.setStyleAttribute(loadElement, "display", "none");
         }
+    }
+
+    /**
+     * Checks if {@link DeferredCommand}s are (potentially) still being executed
+     * as a result of an update from the server. Returns true if a
+     * DeferredCommand might still be executing, false otherwise. This will fail
+     * if a DeferredCommand adds another DeferredCommand.
+     * <p>
+     * Called by the native "client.isActive" function.
+     * </p>
+     * 
+     * @return
+     */
+    @SuppressWarnings("unused")
+    private boolean isExecutingDeferredCommands() {
+        return (deferredCommandTrackers > 0);
     }
 
     /**
