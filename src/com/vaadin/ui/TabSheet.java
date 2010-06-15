@@ -151,6 +151,32 @@ public class TabSheet extends AbstractComponentContainer {
     }
 
     /**
+     * Removes a {@link Tab} and the component associated with it, as previously
+     * added with {@link #addTab(Component)},
+     * {@link #addTab(Component, String, Resource)} or
+     * {@link #addComponent(Component)}.
+     * <p>
+     * If the tab was selected, the first eligible (visible and enabled)
+     * remaining tab is selected.
+     * </p>
+     * 
+     * @see #addTab(Component)
+     * @see #addTab(Component, String, Resource)
+     * @see #addComponent(Component)
+     * @see #removeComponent(Component)
+     * @param tab
+     *            the Tab to remove
+     */
+    public void removeTab(Tab tab) {
+        for (Component c : tabs.keySet()) {
+            if (tabs.get(c).equals(tab)) {
+                removeComponent(c);
+                break;
+            }
+        }
+    }
+
+    /**
      * Adds a new tab into TabSheet. Component caption and icon are copied to
      * the tab metadata at creation time.
      * 

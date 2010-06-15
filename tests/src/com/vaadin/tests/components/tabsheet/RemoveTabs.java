@@ -11,6 +11,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.TabSheet.Tab;
 
 public class RemoveTabs extends TestBase {
 
@@ -19,6 +20,7 @@ public class RemoveTabs extends TestBase {
     protected Component[] tab = new Component[5];
 
     private Button closeCurrent;
+    private Button closeCurrentWithTab;
     private Button closeFirst;
     private Button closeLast;
     private Button reorderTabs;
@@ -53,6 +55,14 @@ public class RemoveTabs extends TestBase {
             }
         });
 
+        closeCurrentWithTab = new Button("Close current tab with Tab");
+        closeCurrentWithTab.addListener(new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                closeCurrentTabWithTab();
+
+            }
+        });
+
         closeFirst = new Button("close first tab");
         closeFirst.addListener(new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
@@ -80,6 +90,7 @@ public class RemoveTabs extends TestBase {
         getLayout().addComponent(closeFirst);
         getLayout().addComponent(closeLast);
         getLayout().addComponent(closeCurrent);
+        getLayout().addComponent(closeCurrentWithTab);
         getLayout().addComponent(reorderTabs);
 
     }
@@ -88,6 +99,14 @@ public class RemoveTabs extends TestBase {
         Component c = tabsheet.getSelectedTab();
         if (c != null) {
             tabsheet.removeComponent(c);
+        }
+    }
+
+    private void closeCurrentTabWithTab() {
+        Component c = tabsheet.getSelectedTab();
+        if (c != null) {
+            Tab t = tabsheet.getTab(c);
+            tabsheet.removeTab(t);
         }
     }
 
