@@ -8,48 +8,69 @@ import java.util.Iterator;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ui.SubPartAware;
 import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.terminal.gwt.client.ui.VWindow;
 
 /**
- * ComponentLocator provides methods for uniquely identifying DOM elements using
- * string expressions. This class is EXPERIMENTAL and subject to change.
+ * ComponentLocator provides methods for generating a String locator for a given
+ * DOM element and for locating a DOM element using a String locator.
  */
 public class ComponentLocator {
 
     /**
-     * Separator used in the string expression between a parent and a child
-     * widget.
+     * Separator used in the String locator between a parent and a child widget.
      */
     private static final String PARENTCHILD_SEPARATOR = "/";
 
     /**
-     * Separator used in the string expression between a widget and the widget's
-     * sub part. NOT CURRENTLY IN USE.
+     * Separator used in the String locator between the part identifying the
+     * containing widget and the part identifying the target element within the
+     * widget.
      */
     private static final String SUBPART_SEPARATOR = "#";
 
+    /**
+     * String that identifies the root panel when appearing first in the String
+     * locator.
+     */
+    private static final String ROOT_ID = "Root";
+
+    /**
+     * Reference to ApplicationConnection instance.
+     */
     private ApplicationConnection client;
 
+    /**
+     * Construct a ComponentLocator for the given ApplicationConnection.
+     * 
+     * @param client
+     *            ApplicationConnection instance for the application.
+     */
     public ComponentLocator(ApplicationConnection client) {
         this.client = client;
     }
 
     /**
-     * EXPERIMENTAL.
-     * 
-     * Generates a string expression (path) which uniquely identifies the target
-     * element. The getElementByPath method can be used for the inverse
-     * operation, i.e. locating an element based on the string expression:
-     * getElementByPath(getPathForElement(element)) == element.
+     * Generates a String locator which uniquely identifies the target element.
+     * The {@link #getElementByPath(String)} method can be used for the inverse
+     * operation, i.e. locating an element based on the return value from this
+     * method.
+     *<p>
+     * Note that getElementByPath(getPathForElement(element)) == element is not
+     * always true as {@link #getPathForElement(Element)} can return a path to
+     * another element if the widget determines an action on the other element
+     * will give the same result as the action on the target element.
+     *</p>
      * 
      * @since 5.4
      * @param targetElement
      *            The element to generate a path for.
-     * @return A string expression uniquely identifying the target element or
-     *         null if a string expression could not be created.
+     * @return A String locator that identifies the target element or null if a
+     *         String locator could not be created.
      */
     public String getPathForElement(Element targetElement) {
         String pid = null;
@@ -68,52 +89,102 @@ public class ComponentLocator {
             }
         }
 
-        if (e == null || pid == null) {
-
-            // Still test for context menu option
-            String subPartName = client.getContextMenu().getSubPartName(
-                    targetElement);
-            if (subPartName != null) {
-                // VContextMenu, singleton attached directly to rootpanel
-                return "/VContextMenu[0]" + SUBPART_SEPARATOR + subPartName;
-
-            }
-            return null;
+        Widget w = null;
+        if (pid != null) {
+            w = (Widget) client.getPaintable(pid);
         }
-
-        Widget w = (Widget) client.getPaintable(pid);
         if (w == null) {
+            // Check if the element is part of a widget that is attached
+            // directly to the root panel
+            RootPanel rootPanel = RootPanel.get();
+            int rootWidgetCount = rootPanel.getWidgetCount();
+            for (int i = 0; i < rootWidgetCount; i++) {
+                Widget rootWidget = rootPanel.getWidget(i);
+                if (rootWidget.getElement().isOrHasChild(targetElement)) {
+                    // The target element is contained by this root widget
+                    w = findParentWidget(targetElement, rootWidget);
+                    break;
+                }
+            }
+        }
+
+        if (w == null) {
+            // Containing widget not found
             return null;
         }
-        // ApplicationConnection.getConsole().log(
-        // "First parent widget: " + Util.getSimpleName(w));
 
+        // Determine the path for the target widget
         String path = getPathForWidget(w);
         if (path == null) {
-            // No path could be determined for the widget. Cannot create a
-            // locator string.
+            /*
+             * No path could be determined for the target widget. Cannot create
+             * a locator string.
+             */
             return null;
         }
-        // ApplicationConnection.getConsole().log(
-        // "getPathFromWidget returned " + path);
-        if (w.getElement() == targetElement) {
-            // ApplicationConnection.getConsole().log(
-            // "Path for " + Util.getSimpleName(w) + ": " + path);
 
+        if (w.getElement() == targetElement) {
+            /*
+             * We are done if the target element is the root of the target
+             * widget.
+             */
             return path;
         } else if (w instanceof SubPartAware) {
-            return path + SUBPART_SEPARATOR
-                    + ((SubPartAware) w).getSubPartName(targetElement);
+            /*
+             * If the widget can provide an identifier for the targetElement we
+             * let it do that
+             */
+            String elementLocator = ((SubPartAware) w)
+                    .getSubPartName(targetElement);
+            return path + SUBPART_SEPARATOR + elementLocator;
         } else {
-            path = path + getDOMPathForElement(targetElement, w.getElement());
-            // ApplicationConnection.getConsole().log(
-            // "Path with dom addition for " + Util.getSimpleName(w)
-            // + ": " + path);
-
-            return path;
+            /*
+             * If everything else fails we use the DOM path to identify the
+             * target element
+             */
+            return path + getDOMPathForElement(targetElement, w.getElement());
         }
     }
 
+    /**
+     * Returns the first widget found when going from {@code targetElement}
+     * upwards in the DOM hierarchy, assuming that {@code ancestorWidget} is a
+     * parent of {@code targetElement}.
+     * 
+     * @param targetElement
+     * @param ancestorWidget
+     * @return The widget whose root element is a parent of {@code
+     *         targetElement}.
+     */
+    private Widget findParentWidget(Element targetElement, Widget ancestorWidget) {
+        /*
+         * As we cannot resolve Widgets from the element we start from the
+         * widget and move downwards to the correct child widget, as long as we
+         * find one.
+         */
+        if (ancestorWidget instanceof HasWidgets) {
+            for (Widget w : ((HasWidgets) ancestorWidget)) {
+                if (w.getElement().isOrHasChild(targetElement)) {
+                    return findParentWidget(targetElement, w);
+                }
+            }
+        }
+
+        // No children found, this is it
+        return ancestorWidget;
+    }
+
+    /**
+     * Locates an element based on a DOM path and a base element.
+     * 
+     * @param baseElement
+     *            The base element which the path is relative to
+     * @param path
+     *            String locator (consisting of domChild[x] parts) that
+     *            identifies the element
+     * @return The element identified by path, relative to baseElement or null
+     *         if the element could not be found.
+     */
     private Element getElementByDOMPath(Element baseElement, String path) {
         String parts[] = path.split(PARENTCHILD_SEPARATOR);
         Element element = baseElement;
@@ -126,8 +197,6 @@ public class ComponentLocator {
                     int childIndex = Integer.parseInt(childIndexString);
                     element = DOM.getChild(element, childIndex);
                 } catch (Exception e) {
-                    // ApplicationConnection.getConsole().error(
-                    // "Failed to parse integer in " + childIndexString);
                     return null;
                 }
             }
@@ -136,13 +205,26 @@ public class ComponentLocator {
         return element;
     }
 
+    /**
+     * Generates a String locator using domChild[x] parts for the element
+     * relative to the baseElement.
+     * 
+     * @param element
+     *            The target element
+     * @param baseElement
+     *            The starting point for the locator. The generated path is
+     *            relative to this element.
+     * @return A String locator that can be used to locate the target element
+     *         using {@link #getElementByDOMPath(Element, String)} or null if
+     *         the locator String cannot be created.
+     */
     private String getDOMPathForElement(Element element, Element baseElement) {
         Element e = element;
         String path = "";
         while (true) {
             Element parent = DOM.getParent(e);
             if (parent == null) {
-                return "ERROR, baseElement is not a parent to element";
+                return null;
             }
 
             int childIndex = -1;
@@ -155,7 +237,7 @@ public class ComponentLocator {
                 }
             }
             if (childIndex == -1) {
-                return "ERROR, baseElement is not a parent to element.";
+                return null;
             }
 
             path = PARENTCHILD_SEPARATOR + "domChild[" + childIndex + "]"
@@ -172,25 +254,22 @@ public class ComponentLocator {
     }
 
     /**
-     * EXPERIMENTAL.
-     * 
-     * Locates an element by using a string expression (path) which uniquely
-     * identifies the element. The getPathForElement method can be used for the
-     * inverse operation, i.e. generating a string expression for a target
+     * Locates an element using a String locator (path) which identifies a DOM
+     * element. The {@link #getPathForElement(Element)} method can be used for
+     * the inverse operation, i.e. generating a string expression for a DOM
      * element.
      * 
      * @since 5.4
      * @param path
-     *            The string expression which uniquely identifies the target
-     *            element.
-     * @return The DOM element identified by the path or null if the element
+     *            The String locater which identifies the target element.
+     * @return The DOM element identified by {@code path} or null if the element
      *         could not be located.
      */
     public Element getElementByPath(String path) {
-        // ApplicationConnection.getConsole()
-        // .log("getElementByPath(" + path + ")");
-
-        // Path is of type "PID/componentPart"
+        /*
+         * Path is of type "targetWidgetPath#componentPart" or
+         * "targetWidgetPath".
+         */
         String parts[] = path.split(SUBPART_SEPARATOR, 2);
         String widgetPath = parts[0];
         Widget w = getWidgetFromPath(widgetPath);
@@ -209,15 +288,7 @@ public class ComponentLocator {
             return getElementByDOMPath(w.getElement(), subPath);
         } else if (parts.length == 2) {
             if (w instanceof SubPartAware) {
-                // ApplicationConnection.getConsole().log(
-                // "subPartAware: " + parts[1]);
                 return ((SubPartAware) w).getSubPartElement(parts[1]);
-            } else {
-                // ApplicationConnection.getConsole().error(
-                // "getElementByPath failed because "
-                // + Util.getSimpleName(w)
-                // + " is not SubPartAware");
-                return null;
             }
         }
 
@@ -225,16 +296,15 @@ public class ComponentLocator {
     }
 
     /**
-     * Creates a locator path for the given widget. The path can be used to
-     * uniquely identify the widget in the application. The path is in a form
-     * compatible with getWidgetFromPath so that
-     * getWidgetFromPath(getPathForWidget(widget)).equals(widget).
+     * Creates a locator String for the given widget. The path can be used to
+     * locate the widget using {@link #getWidgetFromPath(String)}.
      * 
      * Returns null if no path can be determined for the widget or if the widget
      * is null.
      * 
      * @param w
-     * @return
+     *            The target widget
+     * @return A String locator for the widget
      */
     private String getPathForWidget(Widget w) {
         if (w == null) {
@@ -254,6 +324,8 @@ public class ComponentLocator {
                     .getSubWindowList();
             int indexOfSubWindow = subWindowList.indexOf(win);
             return PARENTCHILD_SEPARATOR + "VWindow[" + indexOfSubWindow + "]";
+        } else if (w instanceof RootPanel) {
+            return ROOT_ID;
         }
 
         Widget parent = w.getParent();
@@ -264,16 +336,16 @@ public class ComponentLocator {
         }
         String simpleName = Util.getSimpleName(w);
 
-        if (!(parent instanceof Iterable<?>)) {
-            // Parent does not implement Iterable so we cannot find out which
-            // child this is
+        if (!(parent instanceof HasWidgets)) {
+            /*
+             * Parent does not implement HasWidgets so we cannot find out which
+             * child this is.
+             */
             return null;
         }
 
-        Iterator<Widget> i = ((Iterable<Widget>) parent).iterator();
         int pos = 0;
-        while (i.hasNext()) {
-            Object child = i.next();
+        for (Widget child : ((HasWidgets) parent)) {
             if (child == w) {
                 return basePath + PARENTCHILD_SEPARATOR + simpleName + "["
                         + pos + "]";
@@ -287,72 +359,86 @@ public class ComponentLocator {
         return null;
     }
 
+    /**
+     * Locates the widget based on a String locator.
+     * 
+     * @param path
+     *            The String locator that identifies the widget.
+     * @return The Widget identified by the String locator or null if the widget
+     *         could not be identified.
+     */
     private Widget getWidgetFromPath(String path) {
         Widget w = null;
         String parts[] = path.split(PARENTCHILD_SEPARATOR);
 
-        // ApplicationConnection.getConsole().log(
-        // "getWidgetFromPath(" + path + ")");
+        for (int i = 0; i < parts.length; i++) {
+            String part = parts[i];
 
-        for (String part : parts) {
-            // ApplicationConnection.getConsole().log("Part: " + part);
-            // ApplicationConnection.getConsole().log(
-            // "Widget: " + Util.getSimpleName(w));
-            if (part.equals("")) {
+            if (part.equals(ROOT_ID)) {
+                w = RootPanel.get();
+            } else if (part.equals("")) {
                 w = client.getView();
             } else if (w == null) {
+                // Must be static pid (PID_S*)
                 w = (Widget) client.getPaintable(part);
             } else if (part.startsWith("domChild[")) {
+                // The target widget has been found and the rest identifies the
+                // element
                 break;
-            } else if (w instanceof Iterable<?>) {
-                Iterable<Widget> parent = (Iterable<Widget>) w;
+            } else if (w instanceof HasWidgets) {
+                // W identifies a widget that contains other widgets, as it
+                // should. Try to locate the child
+                HasWidgets parent = (HasWidgets) w;
 
-                String[] split = part.split("\\[");
-
-                Iterator<? extends Widget> i;
+                // Part is of type "VVerticalLayout[0]", split this into
+                // VVerticalLayout and 0
+                String[] split = part.split("\\[", 2);
                 String widgetClassName = split[0];
+                String indexString = split[1];
+                int widgetPosition = Integer.parseInt(indexString.substring(0,
+                        indexString.length() - 1));
+
+                // Locate the child
+                Iterator<? extends Widget> iterator;
+
+                /*
+                 * VWindow and VContextMenu workarounds for backwards
+                 * compatibility
+                 */
                 if (widgetClassName.equals("VWindow")) {
-                    i = client.getView().getSubWindowList().iterator();
+                    iterator = client.getView().getSubWindowList().iterator();
                 } else if (widgetClassName.equals("VContextMenu")) {
                     return client.getContextMenu();
                 } else {
-                    i = parent.iterator();
+                    iterator = parent.iterator();
                 }
 
                 boolean ok = false;
-                int pos = Integer.parseInt(split[1].substring(0, split[1]
-                        .length() - 1));
-                // ApplicationConnection.getConsole().log(
-                // "Looking for child " + pos);
-                while (i.hasNext()) {
-                    // ApplicationConnection.getConsole().log("- child found");
 
-                    Widget child = i.next();
+                // Find the widgetPosition:th child of type "widgetClassName"
+                while (iterator.hasNext()) {
+
+                    Widget child = iterator.next();
                     String simpleName2 = Util.getSimpleName(child);
 
                     if (widgetClassName.equals(simpleName2)) {
-                        if (pos == 0) {
+                        if (widgetPosition == 0) {
                             w = child;
                             ok = true;
                             break;
                         }
-                        pos--;
+                        widgetPosition--;
                     }
                 }
 
                 if (!ok) {
                     // Did not find the child
-                    // ApplicationConnection.getConsole().error(
-                    // "getWidgetFromPath(" + path + ") - did not find '"
-                    // + part + "' for "
-                    // + Util.getSimpleName(parent));
-
                     return null;
                 }
             } else {
-                // ApplicationConnection.getConsole().error(
-                // "getWidgetFromPath(" + path + ") - failed for '" + part
-                // + "'");
+                // W identifies something that is not a "HasWidgets". This
+                // should not happen as all widget containers should implement
+                // HasWidgets.
                 return null;
             }
         }
@@ -360,6 +446,13 @@ public class ComponentLocator {
         return w;
     }
 
+    /**
+     * Checks if the given pid is a static pid.
+     * 
+     * @param pid
+     *            The pid to check
+     * @return true if the pid is a static pid, false otherwise
+     */
     private boolean isStaticPid(String pid) {
         if (pid == null) {
             return false;
