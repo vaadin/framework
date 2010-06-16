@@ -99,7 +99,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     public static final int BORDER_DEFAULT = 2;
 
     /**
-     * <b>Application window only</b>. The terminal this window is attached to.
+     * <b>Application window only</b>. The user terminal for this window.
      */
     private Terminal terminal = null;
 
@@ -241,6 +241,11 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         setSizeUndefined();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.Panel#addComponent(com.vaadin.ui.Component)
+     */
     @Override
     public void addComponent(Component c) {
         if (c instanceof Window) {
@@ -252,9 +257,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     }
 
     /**
-     * Gets the terminal type.
+     * <b>Application window only</b>. Gets the user terminal.
      * 
-     * @return the Value of property terminal.
+     * @return the user terminal
      */
     public Terminal getTerminal() {
         return terminal;
@@ -263,23 +268,23 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     /* ********************************************************************* */
 
     /**
-     * Gets the window of the component. Returns the window where this component
-     * belongs to. If the component does not yet belong to a window the returns
-     * null.
+     * Gets the parent window of the component.
+     * <p>
+     * This is always the window itself.
+     * </p>
      * 
-     * @return the parent window of the component.
+     * @see Component#getWindow()
+     * @return the window itself
      */
     @Override
     public final Window getWindow() {
         return this;
     }
 
-    /**
-     * Gets the application instance of the component. Returns the application
-     * where this component belongs to. If the component does not yet belong to
-     * a application the returns null.
+    /*
+     * (non-Javadoc)
      * 
-     * @return the parent application of the component.
+     * @see com.vaadin.ui.AbstractComponent#getApplication()
      */
     @Override
     public final Application getApplication() {
@@ -290,36 +295,25 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     }
 
     /**
-     * Getter for property parent.
+     * Gets the parent component of the window.
      * 
      * <p>
-     * Parent is the visual parent of a component. Each component can belong to
-     * only one ComponentContainer at time.
+     * The parent of an application window is always null. The parent of a sub
+     * window is the application window the sub window is attached to.
      * </p>
      * 
-     * <p>
-     * For windows attached directly to the application, parent is
-     * <code>null</code>. For windows inside other windows, parent is the window
-     * containing this window.
-     * </p>
-     * 
-     * @return the Value of property parent.
+     * @return the parent window
+     * @see Component#getParent()
      */
     @Override
     public final Component getParent() {
         return super.getParent();
     }
 
-    /**
-     * Setter for property parent.
+    /*
+     * (non-Javadoc)
      * 
-     * <p>
-     * Parent is the visual parent of a component. This is mostly called by
-     * containers add method and should not be called directly
-     * </p>
-     * 
-     * @param parent
-     *            the New value of property parent.
+     * @see com.vaadin.ui.AbstractComponent#setParent(com.vaadin.ui.Component)
      */
     @Override
     public void setParent(Component parent) {
@@ -329,8 +323,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     /* ********************************************************************* */
 
     /**
-     * Adds the new URI handler to this window. For sub-windows, URI handlers
-     * are attached to root level window.
+     * <b>Application window only</b>. Adds a new URI handler to this window. If
+     * this is a sub window the URI handler is attached to the parent
+     * application window.
      * 
      * @param handler
      *            the URI handler to add.
@@ -354,7 +349,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     }
 
     /**
-     * Removes the given URI handler from this window.
+     * <b>Application window only</b>. Removes the URI handler from this window.
+     * If this is a sub window the URI handler is removed from the parent
+     * application window.
      * 
      * @param handler
      *            the URI handler to remove.
@@ -378,15 +375,18 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     }
 
     /**
-     * Handles uri recursively. Windows uri handler passes uri to all
-     * {@link URIHandler}s added to it.
-     * <p>
-     * Note, that instead of overriding this method developer should consider
-     * using {@link Window#addURIHandler(URIHandler)} to add uri handler to
-     * Window.
+     * <b>Application window only</b>. Handles an URI by passing the URI to all
+     * URI handlers defined using {@link #addURIHandler(URIHandler)}. All URI
+     * handlers are called for each URI but no more than one handler may return
+     * a {@link DownloadStream}. If more than one stream is returned a {@code
+     * RuntimeException} is thrown.
      * 
      * @param context
+     *            The URL of the application
      * @param relativeUri
+     *            The URI relative to {@code context}
+     * @return A {@code DownloadStream} that one of the URI handlers returned,
+     *         null if no {@code DownloadStream} was returned.
      */
     public DownloadStream handleURI(URL context, String relativeUri) {
 
@@ -415,8 +415,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     /* ********************************************************************* */
 
     /**
-     * Adds the new parameter handler to this window. For sub windows, parameter
-     * handlers are attached to parent windows.
+     * <b>Application window only</b>. Adds a new parameter handler to this
+     * window. If this is a sub window the parameter handler is attached to the
+     * parent application window.
      * 
      * @param handler
      *            the parameter handler to add.
@@ -441,7 +442,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     }
 
     /**
-     * Removes the given URI handler from this window.
+     * <b>Application window only</b>. Removes the parameter handler from this
+     * window. If this is a sub window the parameter handler is removed from the
+     * parent application window.
      * 
      * @param handler
      *            the parameter handler to remove.
@@ -464,7 +467,16 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         }
     }
 
-    /* Documented by the interface */
+    /**
+     * <b>Application window only</b>. Handles parameters by passing the
+     * parameters to all {@code ParameterHandler}s defined using
+     * {@link #addParameterHandler(ParameterHandler)}. All {@code
+     * ParameterHandler}s are called for each set of parameters.
+     * 
+     * @param parameters
+     *            a map containing the parameter names and values
+     * @see ParameterHandler#handleParameters(Map)
+     */
     public void handleParameters(Map<String, String[]> parameters) {
         if (parameterHandlerList != null) {
             Object[] handlers;
@@ -480,17 +492,19 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     /* ********************************************************************* */
 
     /**
-     * Gets the theme for this window.
-     * 
+     * <b>Application window only</b>. Gets the theme for this window.
      * <p>
-     * Subwindows do not support themes and thus return theme used by the parent
+     * If the theme for this window is not explicitly set, the application theme
+     * name is returned. If the window is not attached to an application, the
+     * terminal default theme name is returned. If the theme name cannot be
+     * determined, null is returned
+     * </p>
+     * <p>
+     * Subwindows do not support themes and return the theme used by the parent
+     * window
      * </p>
      * 
-     * @return the Name of the theme used in window. If the theme for this
-     *         individual window is not explicitly set, the application theme is
-     *         used instead. If application is not assigned the
-     *         terminal.getDefaultTheme is used. If terminal is not set, null is
-     *         returned
+     * @return the name of the theme used for the window
      */
     public String getTheme() {
         if (getParent() != null) {
@@ -509,13 +523,12 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     }
 
     /**
-     * <b>Application window only</b>. Sets the theme for this window.
-     * 
-     * The terminal will reload its host page on theme changes.
+     * <b>Application window only</b>. Sets the name of the theme to use for
+     * this window. Changing the theme will cause the page to be reloaded.
      * 
      * @param theme
-     *            the new theme for this window or null to use the application
-     *            theme.
+     *            the name of the new theme for this window or null to use the
+     *            application theme.
      */
     public void setTheme(String theme) {
         if (getParent() != null) {
@@ -526,13 +539,10 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         requestRepaint();
     }
 
-    /**
-     * Paints the contents of this component.
+    /*
+     * (non-Javadoc)
      * 
-     * @param event
-     *            the Paint Event.
-     * @throws PaintException
-     *             if the paint operation failed.
+     * @see com.vaadin.ui.Panel#paintContent(com.vaadin.terminal.PaintTarget)
      */
     @Override
     public synchronized void paintContent(PaintTarget target)
@@ -668,14 +678,17 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     /* ********************************************************************* */
 
     /**
-     * Method tries to scroll all scrollable elements up from given component so
-     * that the component becomes visible for end user. The given component is
-     * expected to be inside this window.
+     * Scrolls any component between the component and window to a suitable
+     * position so the component is visible to the user. The given component
+     * must be inside this window.
      * 
      * @param component
-     *            the component where to scroll
+     *            the component to be scrolled into view
+     * @throws IllegalArgumentException
+     *             if {@code component} is not inside this window
      */
-    public void scrollIntoView(Component component) {
+    public void scrollIntoView(Component component)
+            throws IllegalArgumentException {
         if (component.getWindow() != this) {
             throw new IllegalArgumentException(
                     "The component where to scroll must be inside this window.");
@@ -685,9 +698,11 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     }
 
     /**
-     * Opens the given resource in this window.
+     * Opens the given resource in this window. The contents of this Window is
+     * replaced by the {@code Resource}.
      * 
      * @param resource
+     *            the resource to show in this window
      */
     public void open(Resource resource) {
         synchronized (openList) {
@@ -702,17 +717,36 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     /* ********************************************************************* */
 
     /**
-     * Opens the given resource in named terminal window. Empty or
-     * <code>null</code> window name results the resource to be opened in this
-     * window.
-     * 
+     * Opens the given resource in a window with the given name.
      * <p>
-     * Note! When opening browser window with name "_self", client will skip
-     * rendering rest of the changes as it considers them irrelevant. This may
-     * speed up opening resource, but it may also put client side into an
-     * inconsistent state with server in case nothing is actually opened to
-     * window (like if browser decided to download the resource instead of
-     * displaying it).
+     * The supplied {@code windowName} is used as the target name in a
+     * window.open call in the client. This means that special values such as
+     * "_blank", "_self", "_top", "_parent" have special meaning. An empty or
+     * <code>null</code> window name is also a special case.
+     * </p>
+     * <p>
+     * "", null and "_self" as {@code windowName} all causes the resource to be
+     * opened in the current window, replacing any old contents. For
+     * downloadable content you should avoid "_self" as "_self" causes the
+     * client to skip rendering of any other changes as it considers them
+     * irrelevant (the page will be replaced by the resource). This can speed up
+     * the opening of a resource, but it might also put the client side into an
+     * inconsistent state if the window content is not completely replaced e.g.,
+     * if the resource is downloaded instead of displayed in the browser.
+     * </p>
+     * <p>
+     * "_blank" as {@code windowName} causes the resource to always be opened in
+     * a new window or tab (depends on the browser and browser settings).
+     * </p>
+     * <p>
+     * "_top" and "_parent" as {@code windowName} works as specified by the HTML
+     * standard.
+     * </p>
+     * <p>
+     * Any other {@code windowName} will open the resource in a window with that
+     * name, either by opening a new window/tab in the browser or by replacing
+     * the contents of an existing window with that name.
+     * </p>
      * 
      * @param resource
      *            the resource.
@@ -729,18 +763,22 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         requestRepaint();
     }
 
-    /* ********************************************************************* */
-
     /**
-     * Opens the given resource in named terminal window with given size and
-     * border properties. Empty or <code>null</code> window name results the
-     * resource to be opened in this window.
+     * Opens the given resource in a window with the given size, border and
+     * name. For more information on the meaning of {@code windowName}, see
+     * {@link #open(Resource, String)}.
      * 
      * @param resource
+     *            the resource.
      * @param windowName
+     *            the name of the window.
      * @param width
+     *            the width of the window in pixels
      * @param height
+     *            the height of the window in pixels
      * @param border
+     *            the border style of the window. See {@link #BORDER_NONE
+     *            Window.BORDER_* constants}
      */
     public void open(Resource resource, String windowName, int width,
             int height, int border) {
@@ -756,10 +794,14 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     /* ********************************************************************* */
 
     /**
-     * Returns the full url of the window, this returns window specific url even
-     * for the main window.
+     * Gets the full URL of the window. The returned URL is window specific and
+     * can be used to directly refer to the window.
+     * <p>
+     * Note! This method can not be used for portlets.
+     * </p>
      * 
-     * @return the URL of the window.
+     * @return the URL of the window or null if the window is not attached to an
+     *         application
      */
     public URL getURL() {
 
@@ -776,18 +818,17 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     }
 
     /**
-     * Gets the unique name of the window that indentifies it on the terminal.
-     * 
+     * <b>Application window only</b>. Gets the unique name of the window. The
+     * name of the window is used to uniquely identify it.
      * <p>
-     * Name identifies the URL used to access application-level windows, but is
-     * not used for windows inside other windows. all application-level windows
-     * can be accessed by their names in url
-     * <code>http://host:port/foo/bar/</code> where
-     * <code>http://host:port/foo/</code> is the application url as returned by
-     * getURL() and <code>bar</code> is the name of the window. Also note that
-     * not all windows should be added to application - one can also add windows
-     * inside other windows - these windows show as smaller windows inside those
-     * windows.
+     * The name also determines the URL that can be used for direct access to a
+     * window. All windows can be accessed through {@code
+     * http://host:port/app/win} where {@code http://host:port/app} is the
+     * application URL (as returned by {@link Application#getURL()} and {@code
+     * win} is the window name.
+     * </p>
+     * <p>
+     * Note! Portlets do not support direct window access through URLs.
      * </p>
      * 
      * @return the Name of the Window.
@@ -816,30 +857,29 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * </p>
      * 
      * @param border
-     *            the border to set.
+     *            the border style to set
      */
     public void setBorder(int border) {
         this.border = border;
     }
 
     /**
-     * Sets the application this window is connected to.
+     * Sets the application this window is attached to.
      * 
      * <p>
-     * This method should not be invoked directly. Instead the
-     * {@link com.vaadin.Application#addWindow(Window)} method should be used to
-     * add the window to an application and
-     * {@link com.vaadin.Application#removeWindow(Window)} method for removing
-     * the window from the applicion. These methods call this method implicitly.
+     * This method is called by the framework and should not be called directly
+     * from application code. {@link com.vaadin.Application#addWindow(Window)}
+     * should be used to add the window to an application and
+     * {@link com.vaadin.Application#removeWindow(Window)} to remove the window
+     * from the application.
      * </p>
-     * 
      * <p>
-     * The method invokes {@link Component#attach()} and
+     * This method invokes {@link Component#attach()} and
      * {@link Component#detach()} methods when necessary.
      * <p>
      * 
      * @param application
-     *            the application to set.
+     *            the application the window is attached to
      */
     public void setApplication(Application application) {
 
@@ -863,20 +903,31 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     }
 
     /**
-     * Sets the name.
+     * <b>Application window only</b>. Sets the unique name of the window. The
+     * name of the window is used to uniquely identify it inside the
+     * application.
      * <p>
-     * The name of the window must be unique inside the application.
+     * The name also determines the URL that can be used for direct access to a
+     * window. All windows can be accessed through {@code
+     * http://host:port/app/win} where {@code http://host:port/app} is the
+     * application URL (as returned by {@link Application#getURL()} and {@code
+     * win} is the window name.
      * </p>
-     * 
      * <p>
-     * If the name is null, the the window is given name automatically when it
-     * is added to an application.
+     * This method can only be called before the window is added to an
+     * application.
+     * </p>
+     * <p>
+     * Note! Portlets do not support direct window access through URLs.
      * </p>
      * 
      * @param name
-     *            the name to set.
+     *            the new name for the window or null if the application should
+     *            automatically assign a name to it
+     * @throws IllegalStateException
+     *             if the window is attached to an application
      */
-    public void setName(String name) {
+    public void setName(String name) throws IllegalStateException {
 
         // The name can not be changed in application
         if (getApplication() != null) {
@@ -889,39 +940,59 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     }
 
     /**
-     * Sets the terminal type. The terminal type is set by the the terminal
-     * adapter and may change from time to time.
+     * Sets the user terminal. Used by the terminal adapter, should never be
+     * called from application code.
      * 
      * @param type
-     *            the terminal type to set.
+     *            the terminal to set.
      */
     public void setTerminal(Terminal type) {
         terminal = type;
     }
 
     /**
-     * Private data structure for storing opening window properties.
+     * Private class for storing properties related to opening resources.
      */
     private class OpenResource implements Serializable {
 
+        /**
+         * The resource to open
+         */
         private final Resource resource;
 
+        /**
+         * The name of the target window
+         */
         private final String name;
 
+        /**
+         * The width of the target window
+         */
         private final int width;
 
+        /**
+         * The height of the target window
+         */
         private final int height;
 
+        /**
+         * The border style of the target window
+         */
         private final int border;
 
         /**
          * Creates a new open resource.
          * 
          * @param resource
+         *            The resource to open
          * @param name
+         *            The name of the target window
          * @param width
+         *            The width of the target window
          * @param height
+         *            The height of the target window
          * @param border
+         *            The border style of the target window
          */
         private OpenResource(Resource resource, String name, int width,
                 int height, int border) {
@@ -933,12 +1004,12 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         }
 
         /**
-         * Paints the open-tag inside the window.
+         * Paints the open request. Should be painted inside the window.
          * 
          * @param target
-         *            the Paint Event.
+         *            the paint target
          * @throws PaintException
-         *             if the Paint Operation fails.
+         *             if the paint operation fails
          */
         private void paintContent(PaintTarget target) throws PaintException {
             target.startTag("open");
@@ -965,12 +1036,10 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         }
     }
 
-    /**
-     * Called when one or more variables handled by the implementing class are
-     * changed.
+    /*
+     * (non-Javadoc)
      * 
-     * @see com.vaadin.terminal.VariableOwner#changeVariables(java.lang.Object,
-     *      java.util.Map)
+     * @see com.vaadin.ui.Panel#changeVariables(java.lang.Object, java.util.Map)
      */
     @Override
     public void changeVariables(Object source, Map variables) {
