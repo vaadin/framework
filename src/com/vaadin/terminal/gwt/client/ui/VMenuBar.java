@@ -39,7 +39,7 @@ import com.vaadin.terminal.gwt.client.Util;
 
 public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         CloseHandler<PopupPanel>, ContainerResizedListener, KeyPressHandler,
-        KeyDownHandler, BlurHandler, FocusHandler {
+        KeyDownHandler, BlurHandler, FocusHandler, SubPartAware {
 
     /** Set the CSS class name to allow styling. */
     public static final String CLASSNAME = "v-menubar";
@@ -1287,5 +1287,37 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         };
 
         focusDelayTimer.schedule(100);
+    }
+
+    private final String SUBPART_PREFIX = "item";
+
+    public Element getSubPartElement(String subPart) {
+        int index = Integer
+                .parseInt(subPart.substring(SUBPART_PREFIX.length()));
+        CustomMenuItem item = getItems().get(index);
+
+        return item.getElement();
+    }
+
+    public String getSubPartName(Element subElement) {
+        if (!getElement().isOrHasChild(subElement)) {
+            return null;
+        }
+
+        Element menuItemRoot = subElement;
+        while (menuItemRoot != null && menuItemRoot.getParentElement() != null
+                && menuItemRoot.getParentElement() != getElement()) {
+            menuItemRoot = menuItemRoot.getParentElement().cast();
+        }
+        // "menuItemRoot" is now the root of the menu item
+
+        final int itemCount = getItems().size();
+        for (int i = 0; i < itemCount; i++) {
+            if (getItems().get(i).getElement() == menuItemRoot) {
+                String name = SUBPART_PREFIX + i;
+                return name;
+            }
+        }
+        return null;
     }
 }
