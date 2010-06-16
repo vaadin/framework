@@ -110,8 +110,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         this.subMenu = subMenu;
 
         sinkEvents(Event.ONCLICK | Event.ONMOUSEOVER | Event.ONMOUSEOUT
-                | Event.ONMOUSEDOWN
-                | Event.ONLOAD);
+                | Event.ONMOUSEDOWN | Event.ONLOAD);
     }
 
     @Override
@@ -931,7 +930,10 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
 
     /*
      * (non-Javadoc)
-     * @see com.google.gwt.event.dom.client.KeyPressHandler#onKeyPress(com.google.gwt.event.dom.client.KeyPressEvent)
+     * 
+     * @see
+     * com.google.gwt.event.dom.client.KeyPressHandler#onKeyPress(com.google
+     * .gwt.event.dom.client.KeyPressEvent)
      */
     public void onKeyPress(KeyPressEvent event) {
         if (handleNavigation(event.getNativeEvent().getKeyCode(), event
@@ -943,7 +945,10 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
 
     /*
      * (non-Javadoc)
-     * @see com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt.event.dom.client.KeyDownEvent)
+     * 
+     * @see
+     * com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt
+     * .event.dom.client.KeyDownEvent)
      */
     public void onKeyDown(KeyDownEvent event) {
         if (handleNavigation(event.getNativeEvent().getKeyCode(), event
@@ -952,11 +957,11 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             event.preventDefault();
         }
     }
-    
+
     /**
-     * Get the key that moves the selection upwards. By default it is the
-     * up arrow key but by overriding this you can change the key to whatever
-     * you want.
+     * Get the key that moves the selection upwards. By default it is the up
+     * arrow key but by overriding this you can change the key to whatever you
+     * want.
      * 
      * @return The keycode of the key
      */
@@ -965,9 +970,9 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
     }
 
     /**
-     * Get the key that moves the selection downwards. By default it is the
-     * down arrow key but by overriding this you can change the key to whatever
-     * you want.
+     * Get the key that moves the selection downwards. By default it is the down
+     * arrow key but by overriding this you can change the key to whatever you
+     * want.
      * 
      * @return The keycode of the key
      */
@@ -976,9 +981,9 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
     }
 
     /**
-     * Get the key that moves the selection left. By default it is the
-     * left arrow key but by overriding this you can change the key to whatever
-     * you want.
+     * Get the key that moves the selection left. By default it is the left
+     * arrow key but by overriding this you can change the key to whatever you
+     * want.
      * 
      * @return The keycode of the key
      */
@@ -987,9 +992,9 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
     }
 
     /**
-     * Get the key that moves the selection right. By default it is the
-     * right arrow key but by overriding this you can change the key to whatever
-     * you want.
+     * Get the key that moves the selection right. By default it is the right
+     * arrow key but by overriding this you can change the key to whatever you
+     * want.
      * 
      * @return The keycode of the key
      */
@@ -1082,11 +1087,11 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                 getParentMenu().getSelected().getSubMenu().setSelected(null);
                 getParentMenu().hideChildren();
             }
-            
+
             return true;
 
         } else if (keycode == getNavigationRightKey()) {
-            
+
             if (getSelected() == null) {
                 // If nothing is selected then select the first item
                 setSelected(items.get(0));
@@ -1117,7 +1122,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
 
                 // Get the root menu
                 VMenuBar root = getParentMenu();
-                while(root.getParentMenu() != null){
+                while (root.getParentMenu() != null) {
                     root = root.getParentMenu();
                 }
 
@@ -1126,9 +1131,9 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
 
                 // Get the root menus items and select the next one
                 int idx = root.getItems().indexOf(root.getSelected());
-                idx = idx < root.getItems().size()-1 ? idx : -1;
+                idx = idx < root.getItems().size() - 1 ? idx : -1;
                 CustomMenuItem selected = root.getItems().get(++idx);
-                
+
                 while (selected.isSeparator() || !selected.isEnabled()) {
                     idx = idx < root.getItems().size() - 1 ? idx : -1;
                     selected = root.getItems().get(++idx);
@@ -1139,7 +1144,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                 VMenuBar submenu = selected.getSubMenu();
 
                 // Select the first item in the newly open submenu
-                submenu.setSelected(submenu.getItems().get(0));               
+                submenu.setSelected(submenu.getItems().get(0));
 
             } else if (visibleChildMenu != null) {
                 // Redirect all navigation to the submenu
@@ -1171,7 +1176,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                 if (getSelected().isSeparator() || !getSelected().isEnabled()) {
                     handleNavigation(keycode, ctrl, shift);
                 }
-            } 
+            }
 
             return true;
 
