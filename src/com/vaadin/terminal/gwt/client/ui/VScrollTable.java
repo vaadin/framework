@@ -3688,8 +3688,15 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             public void onBrowserEvent(Event event) {
                 if (enabled) {
                     Element targetTdOrTr = getEventTargetTdOrTr(event);
+                    int type = event.getTypeInt();
+                    if (type == Event.ONCONTEXTMENU) {
+                        showContextMenu(event);
+                        event.stopPropagation();
+                        return;
+                    }
+
                     if (targetTdOrTr != null) {
-                        switch (DOM.eventGetType(event)) {
+                        switch (type) {
                         case Event.ONDBLCLICK:
                             handleClickEvent(event, targetTdOrTr);
                             break;
@@ -3756,9 +3763,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                 }
                                 sendSelectedRows();
                             }
-                            break;
-                        case Event.ONCONTEXTMENU:
-                            showContextMenu(event);
                             break;
                         case Event.ONMOUSEDOWN:
                             if (dragmode != 0
@@ -4573,8 +4577,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             dropDetails = new TableDDDetails();
             Element elementOver = drag.getElementOver();
 
-            VScrollTableRow row = Util.findWidget(elementOver,
-                    VScrollTableRow.class);
+            VScrollTableRow row = Util.findWidget(elementOver, getRowClass());
             if (row != null) {
                 dropDetails.overkey = row.rowKey;
                 Element tr = row.getElement();
@@ -4596,6 +4599,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     dropDetails.dropLocation != null ? dropDetails.dropLocation
                             .toString() : null);
 
+        }
+
+        private Class<? extends Widget> getRowClass() {
+            // get the row type this way to make dd work in derived
+            // implementations
+            return scrollBody.iterator().next().getClass();
         }
 
         @Override
