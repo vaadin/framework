@@ -315,7 +315,7 @@ public class Embedded extends AbstractComponent {
      */
     public void setClassId(String classId) {
         if (classId != this.classId
-                || (classId != null && !classId.equals(classId))) {
+                || (classId != null && !classId.equals(this.classId))) {
             this.classId = classId;
             requestRepaint();
         }
