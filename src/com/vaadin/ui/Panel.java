@@ -225,13 +225,12 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         return layout;
     }
 
-    /**
-     * Paints the content of this component.
+    /*
+     * (non-Javadoc)
      * 
-     * @param target
-     *            the Paint Event.
-     * @throws PaintException
-     *             if the paint operation failed.
+     * @see
+     * com.vaadin.ui.AbstractComponent#paintContent(com.vaadin.terminal.PaintTarget
+     * )
      */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
@@ -340,38 +339,54 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
 
     /* Scrolling functionality */
 
-    /* Documented in interface */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.terminal.Scrollable#setScrollable(boolean)
+     */
     public int getScrollLeft() {
         return scrollOffsetX;
     }
 
     /**
-     * @deprecated use getScrollLeft() instead
+     * @deprecated use {@link #getScrollLeft()} instead
      */
     @Deprecated
     public int getScrollOffsetX() {
         return getScrollLeft();
     }
 
-    /* Documented in interface */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.terminal.Scrollable#setScrollable(boolean)
+     */
     public int getScrollTop() {
         return scrollOffsetY;
     }
 
     /**
-     * @deprecated use getScrollTop() instead
+     * @deprecated use {@link #getScrollTop()} instead
      */
     @Deprecated
     public int getScrollOffsetY() {
         return getScrollTop();
     }
 
-    /* Documented in interface */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.terminal.Scrollable#setScrollable(boolean)
+     */
     public boolean isScrollable() {
         return scrollable;
     }
 
-    /* Documented in interface */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.terminal.Scrollable#setScrollable(boolean)
+     */
     public void setScrollable(boolean isScrollingEnabled) {
         if (scrollable != isScrollingEnabled) {
             scrollable = isScrollingEnabled;
@@ -379,7 +394,11 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         }
     }
 
-    /* Documented in interface */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.terminal.Scrollable#setScrollLeft(int)
+     */
     public void setScrollLeft(int pixelsScrolled) {
         if (pixelsScrolled < 0) {
             throw new IllegalArgumentException(
