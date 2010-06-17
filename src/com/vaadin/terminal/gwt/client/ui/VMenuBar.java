@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Stack;
 
 import com.google.gwt.dom.client.NodeList;
-import com.google.gwt.event.dom.client.BlurEvent;
-import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -39,7 +37,7 @@ import com.vaadin.terminal.gwt.client.Util;
 
 public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         CloseHandler<PopupPanel>, ContainerResizedListener, KeyPressHandler,
-        KeyDownHandler, BlurHandler, FocusHandler, SubPartAware {
+        KeyDownHandler, FocusHandler, SubPartAware {
 
     /** Set the CSS class name to allow styling. */
     public static final String CLASSNAME = "v-menubar";
@@ -68,7 +66,6 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
     protected CustomMenuItem selected;
 
     private Timer layoutTimer;
-    private Timer blurDelayTimer;
     private Timer focusDelayTimer;
 
     private boolean enabled = true;
@@ -79,7 +76,6 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
 
         // Navigation is only handled by the root bar
         addFocusHandler(this);
-        addBlurHandler(this);
 
         /*
          * Firefox auto-repeat works correctly only if we use a key press
@@ -110,7 +106,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         this.subMenu = subMenu;
 
         sinkEvents(Event.ONCLICK | Event.ONMOUSEOVER | Event.ONMOUSEOUT
-                | Event.ONMOUSEDOWN | Event.ONLOAD);
+                | Event.ONLOAD);
     }
 
     @Override
@@ -290,11 +286,6 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
      *            id of the item that was clicked
      */
     public void onMenuClick(int clickedItemId) {
-        // Cancel the blur event handling, focus was lost to a submenu
-        if (blurDelayTimer != null) {
-            blurDelayTimer.cancel();
-        }
-
         // Cancel the focus event handling since focus was gained by
         // clicking an item.
         if (focusDelayTimer != null) {
@@ -422,12 +413,6 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
 
         if (targetItem != null) {
             switch (DOM.eventGetType(e)) {
-
-            case Event.ONMOUSEDOWN:
-                if (isEnabled() && targetItem.isEnabled()) {
-                    selected = targetItem;
-                }
-                break;
 
             case Event.ONCLICK:
                 if (isEnabled() && targetItem.isEnabled()) {
@@ -1030,7 +1015,16 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
      * @return true iff the navigation event was handled
      */
     public boolean handleNavigation(int keycode, boolean ctrl, boolean shift) {
-        if (keycode == KeyCodes.KEY_TAB || ctrl || shift || !isEnabled()) {
+
+        // If tab or shift+tab close menus
+        if (keycode == KeyCodes.KEY_TAB) {
+            setSelected(null);
+            hideChildren();
+            menuVisible = false;
+            return false;
+        }
+
+        if (ctrl || shift || !isEnabled()) {
             // Do not handle tab key, nor ctrl keys
             return false;
         }
@@ -1240,29 +1234,6 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         }
 
         return false;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.google.gwt.event.dom.client.BlurHandler#onBlur(com.google.gwt.event
-     * .dom.client.BlurEvent)
-     */
-    public void onBlur(BlurEvent event) {
-        /*
-         * Delay the action so a mouse click can cancel the blur event if needed
-         */
-        blurDelayTimer = new Timer() {
-            @Override
-            public void run() {
-                setSelected(null);
-                hideChildren();
-                menuVisible = false;
-            }
-        };
-
-        blurDelayTimer.schedule(100);
     }
 
     /*
