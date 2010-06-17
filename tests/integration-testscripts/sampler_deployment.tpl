@@ -39,7 +39,7 @@
 <!--Start scrolling through all samples in order-->
 <tr>
 	<td>mouseClick</td>
-	<td>vaadin=demosampler::/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[6]/VHorizontalLayout[0]/ChildComponentContainer[1]/VNativeButton[0]</td>
+	<td>vaadin=demosampler::/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[5]/VHorizontalLayout[0]/ChildComponentContainer[1]/VNativeButton[0]</td>
 	<td>16,10</td>
 </tr>
 <tr>
@@ -49,7 +49,7 @@
 </tr>
 <tr>
 	<td>mouseClick</td>
-	<td>vaadin=demosampler::/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[7]/VHorizontalLayout[0]/ChildComponentContainer[1]/VNativeButton[0]</td>
+	<td>vaadin=demosampler::/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[6]/VHorizontalLayout[0]/ChildComponentContainer[1]/VNativeButton[0]</td>
 	<td>11,13</td>
 </tr>
 <tr>
@@ -69,7 +69,7 @@
 </tr>
 <tr>
 	<td>mouseClick</td>
-	<td>vaadin=demosampler::/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[7]/VHorizontalLayout[0]/ChildComponentContainer[1]/VNativeButton[0]</td>
+	<td>vaadin=demosampler::/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[6]/VHorizontalLayout[0]/ChildComponentContainer[1]/VNativeButton[0]</td>
 	<td>11,13</td>
 </tr>
 <tr>

@@ -164,6 +164,7 @@
 			<property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
 			<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
 			<property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
+			<property name="server.start.succeeded" value="1" />
 			<property name="browsers" value="${test_browsers}" />
 			<property name="testfiles" value="${test-liferay}" />
 			
@@ -180,6 +181,7 @@
 			<property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
 			<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
 			<property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
+			<property name="server.start.succeeded" value="1" />
 			<property name="browsers" value="winxp-firefox36" />
 			<property name="testfiles" value="${init-liferay}" />
 	
@@ -205,6 +207,7 @@
 			<property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
 			<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
 			<property name="com.vaadin.testbench.deployment.url" value="http://${sshHost}:7001" />
+			<property name="server.start.succeeded" value="1" />
 			<property name="browsers" value="${test_browsers}" />
 			<property name="testfiles" value="${test-weblogic}" />
 			
@@ -239,6 +242,7 @@
 			<property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
 			<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
 			<property name="com.vaadin.testbench.deployment.url" value="http://vaadin-integration-test.appspot.com/" />
+			<property name="server.start.succeeded" value="1" />
 			<property name="browsers" value="${test_browsers}" />
 			<property name="testfiles" value="${test-GAE}" />
 			
@@ -369,36 +373,72 @@
 			
 	<!-- Upload demo, clean error screenshots and test deployment on all servers -->
 	<target name="integration-test-all">
-		<antcall target="integration-test-upload-demo" />
-		<echo>Getting lock</echo>
+		<echo message="Getting lock" />
 		<antcall target="integration-test-get-lock" />
-		<echo>Got lock</echo>
+		<echo message="Got lock" />
+		
+		<antcall target="integration-test-upload-demo" />
+		
+		<antcall target="run-integration-test">
+			<param name="target-server" value="tomcat4"/>
+		</antcall>
+		<antcall target="run-integration-test">
+			<param name="target-server" value="tomcat5"/>
+		</antcall>
+		<antcall target="run-integration-test">
+			<param name="target-server" value="tomcat6"/>
+		</antcall>
+		<antcall target="run-integration-test">
+			<param name="target-server" value="jetty5"/>
+		</antcall>
+		<antcall target="run-integration-test">
+			<param name="target-server" value="jetty6"/>
+		</antcall>
+		<antcall target="run-integration-test">
+			<param name="target-server" value="jetty7"/>
+		</antcall>
+		<antcall target="run-integration-test">
+			<param name="target-server" value="jboss3"/>
+		</antcall>
+		<antcall target="run-integration-test">
+			<param name="target-server" value="jboss4"/>
+		</antcall>
+		<antcall target="run-integration-test">
+			<param name="target-server" value="jboss5"/>
+		</antcall>
+		<antcall target="run-integration-test">
+			<param name="target-server" value="glassfish2"/>
+		</antcall>
+		<antcall target="run-integration-test">
+			<param name="target-server" value="glassfish3"/>
+		</antcall>
+		<antcall target="run-integration-test">
+			<param name="target-server" value="liferay"/>
+		</antcall>
+		<antcall target="run-integration-test">
+			<param name="target-server" value="weblogic9"/>
+		</antcall>
+		<antcall target="run-integration-test">
+			<param name="target-server" value="weblogic10"/>
+		</antcall>
+		<antcall target="run-integration-test">
+			<param name="target-server" value="GAE"/>
+		</antcall>
+
+		<antcall target="integration-test-clean" />
+		<echo message="Getting lock" />
+		<antcall target="integration-test-release-lock" />
+		<echo message="Lock released" />
+	</target>
+	
+	<target name="run-integration-test">
 		<trycatch property="tried">
 			<try>
-				<antcall target="integration-test-tomcat4" />
-				<antcall target="integration-test-tomcat5" />
-				<antcall target="integration-test-tomcat6" />
-				<antcall target="integration-test-jetty5" />
-				<antcall target="integration-test-jetty6" />
-				<antcall target="integration-test-jetty7" />
-				<antcall target="integration-test-jboss3" />
-				<antcall target="integration-test-jboss4" />
-				<antcall target="integration-test-jboss5" />
-				<antcall target="integration-test-glassfish2" />
-				<antcall target="integration-test-glassfish3" />
-				<antcall target="integration-test-liferay" />
-				<antcall target="integration-test-weblogic9" />
-				<antcall target="integration-test-weblogic10" />
-				<antcall target="integration-test-GAE" />
+				<antcall target="integration-test-${target-server}" />
 			</try>
 			<catch>
-				<echo>${tried}</echo>
-				<echo>Running targets: integration-test-clean and integration-test-release-lock</echo>
+				<echo message="##teamcity[testFailed name='${target-server}' message='Integration test for ${target-server} failed.' details='${tried}']" />
 			</catch>
-			<finally>
-				<antcall target="integration-test-clean" />
-				<antcall target="integration-test-release-lock" />
-			</finally>
 		</trycatch>
 	</target>
 	
