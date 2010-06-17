@@ -90,6 +90,10 @@ public class TextField extends AbstractField implements
      */
     private int maxLength = -1;
 
+    private int selectionPosition = -1;
+
+    private int selectionLength;
+
     /* Constructors */
 
     /**
@@ -173,6 +177,11 @@ public class TextField extends AbstractField implements
 
         if (inputPrompt != null) {
             target.addAttribute("prompt", inputPrompt);
+        }
+        if (selectionPosition != -1) {
+            target.addAttribute("selpos", selectionPosition);
+            target.addAttribute("sellen", selectionLength);
+            selectionPosition = -1;
         }
 
         // Adds the number of column and rows
@@ -633,6 +642,48 @@ public class TextField extends AbstractField implements
 
     public void removeListener(BlurListener listener) {
         removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
+    }
+
+    /**
+     * Selects all text in the field.
+     * 
+     * @since 6.4
+     */
+    public void selectAll() {
+        String text = getValue() == null ? "" : getValue().toString();
+        setSelectionRange(0, text.length());
+    }
+
+    /**
+     * Sets the range of text to be selected.
+     * 
+     * As a side effect the field will become focused.
+     * 
+     * @since 6.4
+     * 
+     * @param pos
+     *            the position of the first character to be selected
+     * @param length
+     *            the number of characters to be selected
+     */
+    public void setSelectionRange(int pos, int length) {
+        selectionPosition = pos;
+        selectionLength = length;
+        focus();
+        requestRepaint();
+    }
+
+    /**
+     * Sets the cursor position in the field. As a side effect the field will
+     * become focused.
+     * 
+     * @since 6.4
+     * 
+     * @param pos
+     *            the position for the cursor
+     * */
+    public void setCursorPosition(int pos) {
+        setSelectionRange(pos, 0);
     }
 
 }

@@ -55,9 +55,11 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
 
     private static final String CLASSNAME_PROMPT = "prompt";
     private static final String ATTR_INPUTPROMPT = "prompt";
+    private static final String VAR_CURSOR = "c";
 
     private String inputPrompt = null;
     private boolean prompting = false;
+    private int lastCursorPos = -1;
 
     public VTextField() {
         this(DOM.createInputText());
@@ -142,6 +144,19 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
         }
 
         valueBeforeEdit = uidl.getStringVariable("text");
+
+        if (uidl.hasAttribute("selpos")) {
+            final int pos = uidl.getIntAttribute("selpos");
+            final int length = uidl.getIntAttribute("sellen");
+            /*
+             * Gecko defers setting the text so we need to defer the selection.
+             */
+            DeferredCommand.addCommand(new Command() {
+                public void execute() {
+                    setSelectionRange(pos, length);
+                }
+            });
+        }
     }
 
     private void setMaxLength(int newMaxLength) {
@@ -197,9 +212,32 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
                 valueBeforeEdit = newText;
             }
 
+            /*
+             * also send cursor position, no public api yet but for easier
+             * extension
+             */
+            updateCursorPosition();
+
             if (sendBlurEvent || sendValueChange) {
                 client.sendPendingVariableChanges();
             }
+        }
+    }
+
+    /**
+     * Updates the cursor position variable if it has changed since the last
+     * update.
+     * 
+     * @return true iff the value was updated
+     */
+    protected boolean updateCursorPosition() {
+        int cursorPos = getCursorPos();
+        if (lastCursorPos != cursorPos) {
+            client.updateVariable(id, VAR_CURSOR, cursorPos, false);
+            lastCursorPos = cursorPos;
+            return true;
+        } else {
+            return false;
         }
     }
 
