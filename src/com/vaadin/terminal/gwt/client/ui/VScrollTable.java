@@ -3687,8 +3687,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             @Override
             public void onBrowserEvent(Event event) {
                 if (enabled) {
-                    Element targetTdOrTr = getEventTargetTdOrTr(event);
                     int type = event.getTypeInt();
+                    Element targetTdOrTr = getEventTargetTdOrTr(event);
                     if (type == Event.ONCONTEXTMENU) {
                         showContextMenu(event);
                         event.stopPropagation();
@@ -3881,22 +3881,29 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     targetTdOrTr = eventTargetParent;
                 } else {
                     /*
-                     * This is a workaround to make Labels and Embedded in a
-                     * Table clickable (see #2688). It is really not a fix as it
-                     * does not work for a custom component (not extending
-                     * VLabel/VEmbedded) or for read only textfields etc.
+                     * This is a workaround to make Labels, read only TextFields
+                     * and Embedded in a Table clickable (see #2688). It is
+                     * really not a fix as it does not work with a custom read
+                     * only components (not extending VLabel/VEmbedded).
                      */
-                    Element tdElement = eventTargetParent;
-                    while (DOM.getParent(tdElement) != thisTrElement) {
-                        tdElement = DOM.getParent(tdElement);
-                    }
-
-                    Element componentElement = tdElement.getFirstChildElement()
-                            .getFirstChildElement().cast();
-                    Widget widget = (Widget) client
-                            .getPaintable(componentElement);
-                    if (widget instanceof VLabel || widget instanceof VEmbedded) {
-                        targetTdOrTr = tdElement;
+                    Widget widget = Util.findWidget(eventTarget, null);
+                    if (widget != this) {
+                        while (widget != null && widget.getParent() != this) {
+                            widget = widget.getParent();
+                        }
+                        if (widget != null) {
+                            // widget is now the closest widget to this row
+                            if (widget instanceof VLabel
+                                    || widget instanceof VEmbedded
+                                    || (widget instanceof VTextField && ((VTextField) widget)
+                                            .isReadOnly())) {
+                                Element tdElement = eventTargetParent;
+                                while (DOM.getParent(tdElement) != thisTrElement) {
+                                    tdElement = DOM.getParent(tdElement);
+                                }
+                                targetTdOrTr = tdElement;
+                            }
+                        }
                     }
                 }
 
