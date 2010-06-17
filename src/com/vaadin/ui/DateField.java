@@ -528,6 +528,7 @@ public class DateField extends AbstractField implements
      */
     public void setResolution(int resolution) {
         this.resolution = resolution;
+        requestRepaint();
     }
 
     /**
