@@ -8,11 +8,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -20,7 +24,8 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.vaadin.terminal.gwt.client.UIDL;
 
-public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler, MouseDownHandler {
+public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
+        MouseDownHandler, DoubleClickHandler {
 
     private static final String CLASSNAME = "v-select-twincol";
 
@@ -28,9 +33,9 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler, 
 
     private static final int DEFAULT_COLUMN_COUNT = 10;
 
-    private final ListBox options;
+    private final DoubleClickListBox options;
 
-    private final ListBox selections;
+    private final DoubleClickListBox selections;
 
     private final VButton add;
 
@@ -42,12 +47,34 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler, 
 
     private boolean widthSet = false;
 
+    /**
+     * A ListBox which catches double clicks
+     * 
+     */
+    public class DoubleClickListBox extends ListBox implements
+            HasDoubleClickHandlers {
+        public DoubleClickListBox(boolean isMultipleSelect) {
+            super(isMultipleSelect);
+        }
+
+        public DoubleClickListBox() {
+            super();
+        }
+
+        public HandlerRegistration addDoubleClickHandler(
+                DoubleClickHandler handler) {
+            return addDomHandler(handler, DoubleClickEvent.getType());
+        }
+    }
+
     public VTwinColSelect() {
         super(CLASSNAME);
-        options = new ListBox();
+        options = new DoubleClickListBox();
         options.addClickHandler(this);
-        selections = new ListBox();
+        options.addDoubleClickHandler(this);
+        selections = new DoubleClickListBox();
         selections.addClickHandler(this);
+        selections.addDoubleClickHandler(this);
         options.setVisibleItemCount(VISIBLE_COUNT);
         selections.setVisibleItemCount(VISIBLE_COUNT);
         options.setStyleName(CLASSNAME + "-options");
@@ -290,7 +317,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler, 
     /**
      * Get the key that selects an item in the table. By default it is the Enter
      * key but by overriding this you can change the key to whatever you want.
-     *
+     * 
      * @return
      */
     protected int getNavigationSelectKey() {
@@ -299,7 +326,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler, 
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt
      * .event.dom.client.KeyDownEvent)
@@ -362,7 +389,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler, 
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * com.google.gwt.event.dom.client.MouseDownHandler#onMouseDown(com.google
      * .gwt.event.dom.client.MouseDownEvent)
@@ -378,6 +405,26 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler, 
             for (int i = 0; i < options.getItemCount(); i++) {
                 options.setItemSelected(i, false);
             }
+        }
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.event.dom.client.DoubleClickHandler#onDoubleClick(com.
+     * google.gwt.event.dom.client.DoubleClickEvent)
+     */
+    public void onDoubleClick(DoubleClickEvent event) {
+        if (event.getSource() == options) {
+            addItem();
+            options.setSelectedIndex(-1);
+            options.setFocus(false);
+        } else if (event.getSource() == selections) {
+            removeItem();
+            selections.setSelectedIndex(-1);
+            selections.setFocus(false);
         }
 
     }
