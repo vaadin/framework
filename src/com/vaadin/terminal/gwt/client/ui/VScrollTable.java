@@ -4813,6 +4813,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         if (row != null) {
 
+            // Apply focus style to new selection
+            row.addStyleName(CLASSNAME_SELECTION_FOCUS);
+
             // Trying to set focus on already focused row
             if (row == focusedRow) {
                 return false;
@@ -4820,9 +4823,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
             // Set new focused row
             focusedRow = row;
-
-            // Apply focus style to new selection
-            focusedRow.addStyleName(CLASSNAME_SELECTION_FOCUS);
 
             // Scroll up or down if needed
             int rowTop = focusedRow.getElement().getAbsoluteTop();
@@ -4840,8 +4840,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             }
 
             return true;
-        } else {
-            focusedRow = null;
         }
 
         return false;
@@ -5080,6 +5078,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             // Focus a row if no row is in focus
             if (focusedRow == null) {
                 setRowFocus((VScrollTableRow) scrollBody.iterator().next());
+            } else {
+                setRowFocus(focusedRow);
             }
         }
     }

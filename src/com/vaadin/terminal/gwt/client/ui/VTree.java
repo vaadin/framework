@@ -1429,6 +1429,8 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
         // If no node has focus, focus the first item in the tree
         if (focusedNode == null && selectable) {
             setFocusedNode((TreeNode) body.getWidget(0));
+        } else if (selectable) {
+            setFocusedNode(focusedNode);
         }
     }
 
@@ -1440,7 +1442,7 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
      * .dom.client.BlurEvent)
      */
     public void onBlur(BlurEvent event) {
-        setFocusedNode(null);
+        focusedNode.setFocused(false);
     }
 
     /*
