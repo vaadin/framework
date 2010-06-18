@@ -252,6 +252,11 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
 
         selectedIds = uidl.getStringArrayVariableAsSet("selected");
 
+        if (lastSelection == null && focusedNode == null) {
+            setFocusedNode(keyToNode.get(selectedIds.iterator().next()));
+            focusedNode.setFocused(false);
+        }
+
         rendering = false;
 
     }
@@ -1012,6 +1017,13 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
             }
         }
 
+        /**
+         * Scrolls the caption into view
+         */
+        public void scrollIntoView() {
+            nodeCaptionDiv.scrollIntoView();
+        }
+
     }
 
     public VDropHandler getDropHandler() {
@@ -1413,6 +1425,7 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
 
         if (node != null) {
             node.setFocused(true);
+            node.scrollIntoView();
         }
 
         focusedNode = node;
@@ -1427,10 +1440,12 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
      */
     public void onFocus(FocusEvent event) {
         // If no node has focus, focus the first item in the tree
-        if (focusedNode == null && selectable) {
+        if (focusedNode == null && lastSelection == null && selectable) {
             setFocusedNode((TreeNode) body.getWidget(0));
-        } else if (selectable) {
+        } else if (focusedNode != null && selectable) {
             setFocusedNode(focusedNode);
+        } else if (lastSelection != null && selectable) {
+            setFocusedNode(lastSelection);
         }
     }
 
