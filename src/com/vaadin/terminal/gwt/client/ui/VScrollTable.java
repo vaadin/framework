@@ -1061,10 +1061,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         scrollBody.setColWidth(colIndex, w);
 
         // Set footer column width
-        final FooterCell fcell = tFoot.getFooterCell(colIndex);
-        if (fcell != null) {
-            fcell.setWidth(w, isDefinedWidth);
-        }
+        FooterCell fcell = tFoot.getFooterCell(colIndex);
+        fcell.setWidth(w, isDefinedWidth);
     }
 
     private int getColWidth(String colKey) {
@@ -2543,11 +2541,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             if (width == w) {
                 return;
             }
-            width = w;
-            if (width <= 0) {
+            if (width == -1) {
                 // go to default mode, clip content if necessary
                 DOM.setStyleAttribute(captionContainer, "overflow", "");
             }
+            width = w;
             if (w == -1) {
                 DOM.setStyleAttribute(captionContainer, "width", "");
                 setWidth("");
