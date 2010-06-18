@@ -34,7 +34,7 @@
 	
 	<!-- Upload war to deploy to ssh host -->
 	<target name="integration-test-upload-demo">
-		<scp file="${demo.war}" todir="${user}@${sshHost}:demo.war" keyfile="${sshkey.file}" passphrase="${passphrase}" />
+		<scp file="${demo.war}" todir="${user}@${sshHost}:servers/demo.war" keyfile="${sshkey.file}" passphrase="${passphrase}" />
 	</target>
 	
 	<!-- Run sampler deployment test -->
