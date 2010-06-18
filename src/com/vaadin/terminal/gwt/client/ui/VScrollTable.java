@@ -610,7 +610,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          * this.setHeight() which will calculate a new body height depending on
          * the space available.
          */
-        showColFooters = uidl.getBooleanAttribute("colfooters");
+        if (uidl.hasAttribute("colfooters")) {
+            showColFooters = uidl.getBooleanAttribute("colfooters");
+        }
+
         tFoot.setVisible(showColFooters);
 
         if (client.updateComponent(this, uidl, true)) {
