@@ -2788,7 +2788,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      */
     public class TableFooter extends Panel {
 
-        private static final int WRAPPER_WIDTH = 9000;
+        private static final int WRAPPER_WIDTH = 900000;
 
         ArrayList<Widget> visibleCells = new ArrayList<Widget>();
         HashMap<String, FooterCell> availableCells = new HashMap<String, FooterCell>();
