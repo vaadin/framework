@@ -1240,6 +1240,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          */
 
         Iterator<Widget> headCells = tHead.iterator();
+        Iterator<Widget> footCells = tFoot.iterator();
         int i = 0;
         int totalExplicitColumnsWidths = 0;
         int total = 0;
@@ -1253,6 +1254,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         // first loop: collect natural widths
         while (headCells.hasNext()) {
             final HeaderCell hCell = (HeaderCell) headCells.next();
+            final FooterCell fCell = (FooterCell) footCells.next();
             int w = hCell.getWidth();
             if (hCell.isDefinedWidth()) {
                 // server has defined column width explicitly
@@ -1265,9 +1267,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     // get and store greater of header width and column width,
                     // and
                     // store it as a minimumn natural col width
-                    w = hCell.getNaturalColumnWidth(i);
+                    int headerWidth = hCell.getNaturalColumnWidth(i);
+                    int footerWidth = fCell.getNaturalColumnWidth(i);
+                    w = headerWidth > footerWidth ? headerWidth : footerWidth;
                 }
                 hCell.setNaturalMinimumColumnWidth(w);
+                fCell.setNaturalMinimumColumnWidth(w);
             }
             widths[i] = w;
             total += w;
@@ -1433,6 +1438,17 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 }
             }
         }
+
+        /*
+         * Ensures the column alignments are correct at initial loading. <br/>
+         * (child components widths are correct)
+         */
+        scrollBody.reLayoutComponents();
+        DeferredCommand.addCommand(new Command() {
+            public void execute() {
+                Util.runWebkitOverflowAutoFix(scrollBodyPanel.getElement());
+            }
+        });
     }
 
     /**
@@ -2458,6 +2474,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         private int width = -1;
         private float expandRatio = 0;
         private String cid;
+        boolean definedWidth = false;
+        private int naturalWidth = -1;
 
         public FooterCell(String colId, String headerText) {
             cid = colId;
@@ -2535,6 +2553,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         public void setWidth(int w, boolean ensureDefinedWidth) {
 
             if (ensureDefinedWidth) {
+                definedWidth = true;
                 // on column resize expand ratio becomes zero
                 expandRatio = 0;
             }
@@ -2597,6 +2616,25 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          */
         public void setUndefinedWidth() {
             setWidth(-1, false);
+        }
+
+        /**
+         * Detects if width is fixed by developer on server side or resized to
+         * current width by user.
+         * 
+         * @return true if defined, false if "natural" width
+         */
+        public boolean isDefinedWidth() {
+            return definedWidth;
+        }
+
+        /**
+         * Returns the pixels width of the footer cell
+         * 
+         * @return The width in pixels
+         */
+        public int getWidth() {
+            return width;
         }
 
         /**
@@ -2679,6 +2717,48 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          */
         public String getColKey() {
             return cid;
+        }
+
+        /**
+         * Detects the natural minimum width for the column of this header cell.
+         * If column is resized by user or the width is defined by server the
+         * actual width is returned. Else the natural min width is returned.
+         * 
+         * @param columnIndex
+         *            column index hint, if -1 (unknown) it will be detected
+         * 
+         * @return
+         */
+        public int getNaturalColumnWidth(int columnIndex) {
+            if (isDefinedWidth()) {
+                return width;
+            } else {
+                if (naturalWidth < 0) {
+                    // This is recently revealed column. Try to detect a proper
+                    // value (greater of header and data
+                    // cols)
+
+                    final int hw = ((Element) getElement().getLastChild())
+                            .getOffsetWidth()
+                            + scrollBody.getCellExtraWidth();
+                    if (columnIndex < 0) {
+                        columnIndex = 0;
+                        for (Iterator<Widget> it = tHead.iterator(); it
+                                .hasNext(); columnIndex++) {
+                            if (it.next() == this) {
+                                break;
+                            }
+                        }
+                    }
+                    final int cw = scrollBody.getColWidth(columnIndex);
+                    naturalWidth = (hw > cw ? hw : cw);
+                }
+                return naturalWidth;
+            }
+        }
+
+        public void setNaturalMinimumColumnWidth(int w) {
+            naturalWidth = w;
         }
     }
 
