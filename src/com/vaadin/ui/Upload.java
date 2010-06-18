@@ -18,6 +18,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.UploadStream;
 import com.vaadin.terminal.gwt.client.ui.VUpload;
+import com.vaadin.ui.ClientWidget.LoadStyle;
 
 /**
  * Component for uploading files from client to server.
@@ -60,7 +61,7 @@ import com.vaadin.terminal.gwt.client.ui.VUpload;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(VUpload.class)
+@ClientWidget(value = VUpload.class, loadStyle = LoadStyle.LAZY)
 public class Upload extends AbstractComponent implements Component.Focusable {
 
     /**

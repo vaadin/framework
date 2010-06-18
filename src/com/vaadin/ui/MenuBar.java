@@ -14,6 +14,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.ui.VMenuBar;
+import com.vaadin.ui.ClientWidget.LoadStyle;
 
 /**
  * <p>
@@ -23,7 +24,7 @@ import com.vaadin.terminal.gwt.client.ui.VMenuBar;
  * </p>
  */
 @SuppressWarnings("serial")
-@ClientWidget(VMenuBar.class)
+@ClientWidget(value = VMenuBar.class, loadStyle = LoadStyle.LAZY)
 public class MenuBar extends AbstractComponent {
 
     // Items of the top-level menu
