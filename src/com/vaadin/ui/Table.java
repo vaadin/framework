@@ -2321,9 +2321,8 @@ public class Table extends AbstractSelect implements Action.Container,
         if (getRowHeaderMode() != ROW_HEADER_MODE_HIDDEN) {
             target.addAttribute("rowheaders", true);
         }
-        if (columnFootersVisible) {
-            target.addAttribute("colfooters", true);
-        }
+
+        target.addAttribute("colfooters", columnFootersVisible);
 
         // Visible column order
         final Collection sortables = getSortableContainerPropertyIds();
@@ -4063,9 +4062,9 @@ public class Table extends AbstractSelect implements Action.Container,
      * columns property id which was fired, the previous width of the column and
      * the width of the column after the resize.
      */
-    public static class ColumnResizeEvent extends Component.Event{
+    public static class ColumnResizeEvent extends Component.Event {
         public static final Method COLUMN_RESIZE_METHOD;
-        
+
         static {
             try {
                 COLUMN_RESIZE_METHOD = ColumnResizeListener.class
@@ -4076,7 +4075,7 @@ public class Table extends AbstractSelect implements Action.Container,
                 throw new java.lang.RuntimeException();
             }
         }
-        
+
         private final int previousWidth;
         private final int currentWidth;
         private final Object columnPropertyId;
@@ -4099,7 +4098,7 @@ public class Table extends AbstractSelect implements Action.Container,
             previousWidth = previous;
             currentWidth = current;
             columnPropertyId = propertyId;
-        }        
+        }
 
         /**
          * Get the column property id of the column that was resized.
@@ -4128,11 +4127,11 @@ public class Table extends AbstractSelect implements Action.Container,
             return currentWidth;
         }
     }
-    
+
     /**
      * Interface for listening to column resize events.
      */
-    public interface ColumnResizeListener{
+    public interface ColumnResizeListener {
 
         /**
          * This method is triggered when the column has been resized
@@ -4157,7 +4156,7 @@ public class Table extends AbstractSelect implements Action.Container,
                 ColumnResizeEvent.class, listener,
                 ColumnResizeEvent.COLUMN_RESIZE_METHOD);
     }
-    
+
     /**
      * Removes a column resize listener from the Table.
      * 
