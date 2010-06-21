@@ -80,6 +80,28 @@ public interface MouseEvents {
         }
 
         /**
+         * Returns the relative mouse position (x coordinate) when the click
+         * took place. The position is relative to the clicked component.
+         * 
+         * @return The mouse cursor x position relative to the clicked layout
+         *         component or -1 if no x coordinate available
+         */
+        public int getRelativeX() {
+            return details.getRelativeX();
+        }
+
+        /**
+         * Returns the relative mouse position (y coordinate) when the click
+         * took place. The position is relative to the clicked component.
+         * 
+         * @return The mouse cursor y position relative to the clicked layout
+         *         component or -1 if no y coordinate available
+         */
+        public int getRelativeY() {
+            return details.getRelativeY();
+        }
+
+        /**
          * Checks if the event is a double click event.
          * 
          * @return true if the event is a double click event, false otherwise

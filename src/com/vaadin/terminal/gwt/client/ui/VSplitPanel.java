@@ -65,6 +65,12 @@ public class VSplitPanel extends ComplexPanel implements Container,
                 super.fireClick(event);
             }
         }
+
+        @Override
+        protected Element getRelativeToElement() {
+            return null;
+        }
+
     };
 
     public static final int ORIENTATION_HORIZONTAL = 0;

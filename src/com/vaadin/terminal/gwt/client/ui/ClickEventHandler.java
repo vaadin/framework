@@ -16,6 +16,8 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
@@ -81,7 +83,8 @@ public abstract class ClickEventHandler implements DoubleClickHandler,
         ApplicationConnection client = getApplicationConnection();
         String pid = getApplicationConnection().getPid(paintable);
 
-        MouseEventDetails mouseDetails = new MouseEventDetails(event);
+        MouseEventDetails mouseDetails = new MouseEventDetails(event,
+                getRelativeToElement());
 
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("mouseDetails", mouseDetails.serialize());
@@ -112,6 +115,22 @@ public abstract class ClickEventHandler implements DoubleClickHandler,
         if (hasEventListener()) {
             fireClick(event.getNativeEvent());
         }
+    }
+
+    /**
+     * Click event calculates and returns coordinates relative to the element
+     * returned by this method. Default implementation uses the root element of
+     * the widget. Override to provide a different relative element.
+     * 
+     * @return The Element used for calculating relative coordinates for a click
+     *         or null if no relative coordinates can be calculated.
+     */
+    protected Element getRelativeToElement() {
+        if (paintable instanceof Widget) {
+            return ((Widget) paintable).getElement();
+        }
+
+        return null;
     }
 
 }

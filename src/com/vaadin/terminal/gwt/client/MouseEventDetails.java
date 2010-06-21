@@ -3,6 +3,7 @@
  */
 package com.vaadin.terminal.gwt.client;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.Event;
 
@@ -24,6 +25,8 @@ public class MouseEventDetails {
     private boolean metaKey;
     private boolean shiftKey;
     private int type;
+    private int relativeX = -1;
+    private int relativeY = -1;
 
     public int getButton() {
         return button;
@@ -53,7 +56,19 @@ public class MouseEventDetails {
         return shiftKey;
     }
 
+    public int getRelativeX() {
+        return relativeX;
+    }
+
+    public int getRelativeY() {
+        return relativeY;
+    }
+
     public MouseEventDetails(NativeEvent evt) {
+        this(evt, null);
+    }
+
+    public MouseEventDetails(NativeEvent evt, Element relativeToElement) {
         button = evt.getButton();
         clientX = evt.getClientX();
         clientY = evt.getClientY();
@@ -62,6 +77,10 @@ public class MouseEventDetails {
         metaKey = evt.getMetaKey();
         shiftKey = evt.getShiftKey();
         type = Event.getTypeInt(evt.getType());
+        if (relativeToElement != null) {
+            relativeX = getRelativeX(evt, relativeToElement);
+            relativeY = getRelativeY(evt, relativeToElement);
+        }
     }
 
     private MouseEventDetails() {
@@ -75,7 +94,7 @@ public class MouseEventDetails {
     public String serialize() {
         return "" + button + DELIM + clientX + DELIM + clientY + DELIM + altKey
                 + DELIM + ctrlKey + DELIM + metaKey + DELIM + shiftKey + DELIM
-                + type;
+                + type + DELIM + relativeX + DELIM + relativeY;
     }
 
     public static MouseEventDetails deSerialize(String serializedString) {
@@ -90,6 +109,8 @@ public class MouseEventDetails {
         instance.metaKey = Boolean.valueOf(fields[5]).booleanValue();
         instance.shiftKey = Boolean.valueOf(fields[6]).booleanValue();
         instance.type = Integer.parseInt(fields[7]);
+        instance.relativeX = Integer.parseInt(fields[8]);
+        instance.relativeY = Integer.parseInt(fields[9]);
         return instance;
     }
 
@@ -111,6 +132,18 @@ public class MouseEventDetails {
 
     public boolean isDoubleClick() {
         return type == Event.ONDBLCLICK;
+    }
+
+    private static int getRelativeX(NativeEvent evt, Element target) {
+        return evt.getClientX() - target.getAbsoluteLeft()
+                + target.getScrollLeft()
+                + target.getOwnerDocument().getScrollLeft();
+    }
+
+    private static int getRelativeY(NativeEvent evt, Element target) {
+        return evt.getClientY() - target.getAbsoluteTop()
+                + target.getScrollTop()
+                + target.getOwnerDocument().getScrollTop();
     }
 
 }

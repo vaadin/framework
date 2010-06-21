@@ -150,7 +150,9 @@ public class TestLayoutClickListeners extends AbstractTestCase {
         if (event.isDoubleClick()) {
             type = "double-click";
         }
-        log.log(layout + ": " + button + " " + type + " on " + target);
+        log.log(layout + ": " + button + " " + type + " on " + target
+                + ", coordinates relative to the layout ("
+                + event.getRelativeX() + ", " + event.getRelativeY() + ")");
 
     }
 

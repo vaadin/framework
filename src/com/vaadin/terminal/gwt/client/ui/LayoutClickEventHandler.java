@@ -26,7 +26,8 @@ public abstract class LayoutClickEventHandler extends ClickEventHandler {
         ApplicationConnection client = getApplicationConnection();
         String pid = getApplicationConnection().getPid(paintable);
 
-        MouseEventDetails mouseDetails = new MouseEventDetails(event);
+        MouseEventDetails mouseDetails = new MouseEventDetails(event,
+                getRelativeToElement());
         Paintable childComponent = getChildComponent((Element) event
                 .getEventTarget().cast());
 

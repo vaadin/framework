@@ -29,6 +29,7 @@ import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.event.ItemClickEvent.ItemClickSource;
+import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DragSource;
 import com.vaadin.event.dd.DropHandler;
@@ -3759,7 +3760,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * the column which header was pressed and details about the mouse event
      * itself.
      */
-    public static class HeaderClickEvent extends Component.Event {
+    public static class HeaderClickEvent extends ClickEvent {
         public static final Method HEADER_CLICK_METHOD;
 
         static {
@@ -3777,13 +3778,9 @@ public class Table extends AbstractSelect implements Action.Container,
         // The property id of the column which header was pressed
         private Object columnPropertyId;
 
-        // The mouse details
-        private MouseEventDetails details;
-
         public HeaderClickEvent(Component source, Object propertyId,
                 MouseEventDetails details) {
-            super(source);
-            this.details = details;
+            super(source, details);
             columnPropertyId = propertyId;
         }
 
@@ -3795,16 +3792,6 @@ public class Table extends AbstractSelect implements Action.Container,
         public Object getPropertyId() {
             return columnPropertyId;
         }
-
-        /**
-         * Returns the details of the mouse event like the mouse coordinates,
-         * button pressed etc.
-         * 
-         * @return The mouse details
-         */
-        public MouseEventDetails getEventDetails() {
-            return details;
-        }
     }
 
     /**
@@ -3813,7 +3800,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * the column which header was pressed and details about the mouse event
      * itself.
      */
-    public static class FooterClickEvent extends Component.Event {
+    public static class FooterClickEvent extends ClickEvent {
         public static final Method FOOTER_CLICK_METHOD;
 
         static {
@@ -3831,9 +3818,6 @@ public class Table extends AbstractSelect implements Action.Container,
         // The property id of the column which header was pressed
         private Object columnPropertyId;
 
-        // The mouse details
-        private MouseEventDetails details;
-
         /**
          * Constructor
          * 
@@ -3846,9 +3830,8 @@ public class Table extends AbstractSelect implements Action.Container,
          */
         public FooterClickEvent(Component source, Object propertyId,
                 MouseEventDetails details) {
-            super(source);
+            super(source, details);
             columnPropertyId = propertyId;
-            this.details = details;
         }
 
         /**
@@ -3858,16 +3841,6 @@ public class Table extends AbstractSelect implements Action.Container,
          */
         public Object getPropertyId() {
             return columnPropertyId;
-        }
-
-        /**
-         * Returns the details of the mouse event like the mouse coordinates,
-         * button pressed etc.
-         * 
-         * @return The mouse details
-         */
-        public MouseEventDetails getEventDetails() {
-            return details;
         }
     }
 
