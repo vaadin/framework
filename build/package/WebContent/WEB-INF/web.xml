@@ -135,8 +135,6 @@
 	<servlet-mapping>
 		<servlet-name>PortletDemo</servlet-name>
 		<url-pattern>/PortletDemo/*</url-pattern>
-		<!-- Hint for the automatic deployment descriptor generator -->
-		<!-- portlet style= -->
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>VaadinApplicationRunner</servlet-name>
@@ -149,8 +147,6 @@
 	<servlet-mapping>
 		<servlet-name>Sampler</servlet-name>
 		<url-pattern>/sampler/*</url-pattern>
-		<!-- Hint for the automatic deployment descriptor generator -->
-		<!-- portlet style=height:650px -->
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>AddressBook</servlet-name>
@@ -163,8 +159,6 @@
 	<servlet-mapping>
 		<servlet-name>Calc</servlet-name>
 		<url-pattern>/Calc/*</url-pattern>
-		<!-- Hint for the automatic deployment descriptor generator -->
-		<!-- portlet style= -->
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>ColorPickerApplication</servlet-name>

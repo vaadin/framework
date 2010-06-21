@@ -370,13 +370,11 @@
 	<servlet-mapping>
 		<servlet-name>FeatureBrowser</servlet-name>
 		<url-pattern>/FeatureBrowser/*</url-pattern>
-		<!-- portlet style=height:650px -->
 	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>Sampler</servlet-name>
 		<url-pattern>/sampler/*</url-pattern>
-		<!-- portlet style=height:650px -->
 	</servlet-mapping>
 
 	<servlet-mapping>
@@ -407,7 +405,6 @@
 	<servlet-mapping>
 		<servlet-name>ModalWindow</servlet-name>
 		<url-pattern>/ModalWindow/*</url-pattern>
-		<!-- portlet -->
 	</servlet-mapping>
 
 	<servlet-mapping>
@@ -418,7 +415,6 @@
 	<servlet-mapping>
 		<servlet-name>Calc</servlet-name>
 		<url-pattern>/Calc/*</url-pattern>
-		<!-- portlet -->
 	</servlet-mapping>
 
 	<servlet-mapping>
@@ -437,7 +433,6 @@
 	<servlet-mapping>
 		<servlet-name>ChatServlet</servlet-name>
 		<url-pattern>/chat/*</url-pattern>
-		<!-- portlet -->
 	</servlet-mapping>
 	
 	<servlet-mapping>

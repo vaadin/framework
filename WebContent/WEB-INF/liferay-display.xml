@@ -2,26 +2,16 @@
 <!DOCTYPE display PUBLIC "-//Liferay//DTD Display 4.0.0//EN" "http://www.liferay.com/dtd/liferay-display_4_0_0.dtd">
 
 <display>
-        <category name="Vaadin">
-                <portlet id="PortletDemoPortlet" />
-                <portlet id="SelectDemoPortlet" />
-                <portlet id="TableDemoPortlet" />
-                <portlet id="FilterSelectPortlet" />
-                <portlet id="FeatureBrowserPortlet" />
-                <portlet id="ModalWindowPortlet" />
-                <portlet id="CalcPortlet" />
-                <portlet id="NotificationDemoPortlet" />
-                <portlet id="ChatServletPortlet" />
-                <portlet id="BrowserDemoPortlet" />
-				<portlet id="HelloWorldPortlet" />
-				<portlet id="AddressBookPortlet" />
-				<portlet id="CalcPortlet"/>
-				<portlet id="SamplerPortlet"/>
-				<!--
-				<portlet id="InterPortletEventPortlet" />
-				<portlet id="VaadinInterPortletEventPortlet" />
-				-->
-                <portlet id="Portlet Mode Example"/>
-                <portlet id="Portlet HTML Mode Example"/>
-        </category>
+    <category name="Vaadin">
+        <portlet id="PortletDemoPortlet" />
+        <portlet id="CalcPortlet" />
+        <portlet id="SamplerPortlet" />
+        <portlet id="Portlet Mode Example" />
+        <portlet id="Portlet HTML Mode Example" />
+        <portlet id="AddressBookPortlet" />
+
+        <!-- These should be used together -->
+        <portlet id="InterPortletEventPortlet" />
+        <portlet id="VaadinInterPortletEventPortlet" />
+    </category>
 </display>
