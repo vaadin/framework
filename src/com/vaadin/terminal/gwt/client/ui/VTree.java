@@ -252,7 +252,8 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
 
         selectedIds = uidl.getStringArrayVariableAsSet("selected");
 
-        if (lastSelection == null && focusedNode == null) {
+        if (lastSelection == null && focusedNode == null
+                && !selectedIds.isEmpty()) {
             setFocusedNode(keyToNode.get(selectedIds.iterator().next()));
             focusedNode.setFocused(false);
         }
