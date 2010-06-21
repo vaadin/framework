@@ -1,19 +1,20 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Vaadin 6</title>
-<link rel="stylesheet" type="text/css" href="demo/css/styles.css" />
-<!--[if IE]>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Vaadin @version@</title>
+        <link rel="stylesheet" type="text/css" href="demo/css/styles.css" />
+        <link rel="stylesheet" type="text/css" href="demo/css/zoombox.css" />
+        <!--[if lte IE 6]>
 		<link rel="stylesheet" type="text/css" href="demo/css/ie.css" />
 		<![endif]-->
-</head>
-<body>
+    </head> <!-- /head -->
+    <body>
 
 		<div id="header">
 			<h1>Vaadin &ndash; thinking of U and I</h1>
 			<div id="version">
+                <strong>Version @version@</strong>
 				<a href="javascript:history.go(-1);" title="Back to index page">&laquo; Back</a>
 			</div>
 		</div> <!-- /header -->
@@ -52,7 +53,21 @@ contains a number of significant enhancements.</p>
     </ul>
   </li>
   
-  <li><p>Possibility for lazy loading of client-side components (aka GWT code splitting), which speeds up load times; see <a href="http://dev.vaadin.com/wiki/WidgetSet">more details</a></p></li>
+  <li><p>Possibility for lazy loading of client-side components (aka GWT code splitting), which speeds up load times; see <a href="http://dev.vaadin.com/wiki/WidgetSet">more details</a></p>
+  
+  <ul>
+    <li>In the rare case that you have extended the <b>DefaultWidgetSet</b> class, please notice that earlier, the custom entry point was defined in the <tt>.gwt.xml</tt> file as follows:
+    
+    <pre>    &lt;entry-point class="com.example.MyExtendedWidgetSet" /&gt;</pre>
+    
+    Now you need to write as follows:
+       <pre>    &lt;replace-with class="com.example.MyExtendedWidgetSet"&gt;
+        &lt;when-type-is class="com.vaadin.terminal.gwt.client.WidgetSet" /&gt;
+    &lt;/replace-with&gt;</pre>
+    </li>
+  </ul>
+  
+  </li>
 
   <li><p>HTTP-level tester compatibility (JMeter, etc)</p></li>
 
