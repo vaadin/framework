@@ -693,10 +693,17 @@
     </target>
 
 	 <target name="compile-widgetset-sampler" unless="compile.only.default-widgetset">
-	    	<antcall target="compile-widgetset">
-	    		<param name="widgetset" value="com.vaadin.demo.sampler.gwt.SamplerWidgetSet"/>
-	    	</antcall>
-	    </target>
+    	<antcall target="compile-widgetset">
+    		<param name="widgetset" value="com.vaadin.demo.sampler.gwt.SamplerWidgetSet"/>
+    	</antcall>
+    </target>
+	
+	<target name="compile-widgetset-optimized" unless="compile.only.default-widgetset">
+   		<antcall target="compile-widgetset">
+   			<param name="widgetset" value="com.vaadin.demo.gwt.OptimizedWidgetSet"/>
+   		</antcall>
+   	</target>
+
 	 <target name="compile-widgetset-colorpicker" unless="compile.only.default-widgetset">
 	    	<antcall target="compile-widgetset">
 	    		<param name="widgetset" value="com.vaadin.demo.colorpicker.gwt.ColorPickerWidgetSet"/>
@@ -711,6 +718,7 @@
         <antcall target="compile-widgetset-default"/>
         <antcall target="compile-widgetset-portal-default"/>
         <antcall target="compile-widgetset-sampler"/>
+        <antcall target="compile-widgetset-optimized"/>
         <antcall target="compile-widgetset-colorpicker"/>
     </target>
 
@@ -722,6 +730,7 @@
             <antcall target="compile-widgetset-default"/>
             <antcall target="compile-widgetset-portal-default"/>
             <antcall target="compile-widgetset-sampler"/>
+            <antcall target="compile-widgetset-optimized"/>
             <antcall target="compile-widgetset-colorpicker"/>
         </parallel>
     </target>

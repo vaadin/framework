@@ -72,6 +72,14 @@
 			<param-name>application</param-name>
 			<param-value>com.vaadin.demo.HelloWorld</param-value>
 		</init-param>
+		<!--
+			As an example, we will use an optimized widget set. See
+			SamplerWidgetSet.gwt.xml
+		-->
+		<init-param>
+			<param-name>widgetset</param-name>
+			<param-value>com.vaadin.demo.gwt.OptimizedWidgetSet</param-value>
+		</init-param>
 	</servlet>
 
 	<!-- Calculator demo application -->
@@ -81,6 +89,14 @@
 		<init-param>
 			<param-name>application</param-name>
 			<param-value>com.vaadin.demo.Calc</param-value>
+		</init-param>
+		<init-param>
+		<!--
+			As an example, we will use an optimized widget set. See
+			SamplerWidgetSet.gwt.xml
+		-->
+			<param-name>widgetset</param-name>
+			<param-value>com.vaadin.demo.gwt.OptimizedWidgetSet</param-value>
 		</init-param>
 	</servlet>
 
