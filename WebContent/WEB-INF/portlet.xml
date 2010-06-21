@@ -199,6 +199,10 @@
 			<name>widgetset</name>
 			<value>com.vaadin.portal.gwt.PortalDefaultWidgetSet</value>
 		</init-param>
+		<init-param>
+			<name>style</name>
+			<value>height:650px</value>
+		</init-param>
 		<supports>
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
