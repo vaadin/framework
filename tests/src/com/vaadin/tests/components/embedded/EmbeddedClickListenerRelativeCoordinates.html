@@ -13,12 +13,7 @@
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/run/EmbeddedClickListenerRelativeCoordinates</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForVaadin</td>
-	<td></td>
+	<td>/run/EmbeddedClickListenerRelativeCoordinates?restartApplication</td>
 	<td></td>
 </tr>
 <tr>
@@ -28,7 +23,7 @@
 </tr>
 <tr>
 	<td>mouseClick</td>
-	<td>vaadin=vaadinrunEmbeddedClickListenerRelativeCoordinates::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VEmbedded[0]/domChild[0]</td>
+	<td>vaadin=runEmbeddedClickListenerRelativeCoordinates::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VEmbedded[0]/domChild[0]</td>
 	<td>41,22</td>
 </tr>
 <tr>
@@ -37,11 +32,35 @@
 	<td></td>
 </tr>
 <tr>
-	<td>screenCapture</td>
+	<td>assertText</td>
+	<td>vaadin=runEmbeddedClickListenerRelativeCoordinates::Root/VNotification[0]/HTML[0]/domChild[0]</td>
+	<td>41, 22</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runEmbeddedClickListenerRelativeCoordinates::Root/VNotification[0]</td>
+	<td>0,0</td>
+</tr>
+<tr>
+	<td>waitForVaadin</td>
 	<td></td>
 	<td></td>
 </tr>
-
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runEmbeddedClickListenerRelativeCoordinates::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VEmbedded[0]/domChild[0]</td>
+	<td>0,0</td>
+</tr>
+<tr>
+	<td>waitForVaadin</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runEmbeddedClickListenerRelativeCoordinates::Root/VNotification[0]/HTML[0]/domChild[0]</td>
+	<td>0, 0</td>
+</tr>
 </tbody></table>
 </body>
 </html>
