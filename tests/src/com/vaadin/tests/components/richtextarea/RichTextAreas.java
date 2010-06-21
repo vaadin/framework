@@ -34,15 +34,11 @@ public class RichTextAreas extends ComponentTestCase<RichTextArea> {
     }
 
     private RichTextArea createRichTextArea(String caption, String value) {
-        RichTextArea tf = new RichTextArea();
-        tf.setCaption(caption);
-        tf.setValue(value);
-
-        return tf;
+        return new RichTextArea(caption, value);
     }
 
     private RichTextArea createRichTextArea(String caption) {
-        return createRichTextArea(caption, "");
+        return new RichTextArea(caption);
     }
 
     @Override
