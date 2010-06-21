@@ -13,7 +13,7 @@
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/vaadin/run/PanelClickListenerRelativeCoordinates</td>
+	<td>/run/PanelClickListenerRelativeCoordinates</td>
 	<td></td>
 </tr>
 <tr>
@@ -28,7 +28,7 @@
 </tr>
 <tr>
 	<td>mouseClick</td>
-	<td>vaadin=vaadinrunPanelClickListenerRelativeCoordinates::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VPanel[0]/VVerticalLayout[0]</td>
+	<td>vaadin=runPanelClickListenerRelativeCoordinates::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VPanel[0]</td>
 	<td>287,25</td>
 </tr>
 <tr>
@@ -37,11 +37,31 @@
 	<td></td>
 </tr>
 <tr>
-	<td>screenCapture</td>
+	<td>assertText</td>
+	<td>vaadin=runPanelClickListenerRelativeCoordinates::Root/VNotification[0]/HTML[0]/domChild[0]</td>
+	<td>287, 25</td>
+</tr>
+<!--click on caption-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runPanelClickListenerRelativeCoordinates::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VPanel[0]/domChild[0]/domChild[0]/domChild[0]</td>
+	<td>10,10</td>
+</tr>
+<tr>
+	<td>waitForVaadin</td>
 	<td></td>
 	<td></td>
 </tr>
-
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runPanelClickListenerRelativeCoordinates::Root/VNotification[0]/HTML[0]/domChild[0]</td>
+	<td>10, 10</td>
+</tr>
+<tr>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
 </tbody></table>
 </body>
 </html>
