@@ -37,63 +37,45 @@
 contains a number of significant enhancements.</p>
 
 <ul>
-  <li>Drag-and-Drop support (<a href="http://dev.vaadin.com/ticket/119">#119</a>)</li>
-  <ul>
-    <li>Dragging <b>Tree</b> and <b>Table</b> items as well as entire components</li>
-    <li>See the Sampler for Drag-and-Drop examples and Book of Vaadin for more detailed instructions</li>
-  </ul>
-  
-  <li>GWT 2.0</li>
-  <ul>
-    <li>Platform independent and a new development mode.</li>
-    <li>No more separate OOPHM - the GWT Development Mode uses a browser
-		plugin to allow debugging directly in the supported browsers</li>
-  </ul>
-  
-  <li>New protected <tt>attachField()</tt> method in <b>Form</b> allows customizing
-      the form layout according to item identifier and object type.
-      For example, you could lay check boxes horizontally. (<a href="http://dev.vaadin.com/ticket/2205">#2205</a>)</li>
-      
-  <li><b>Form</b> no longer resets the field caption set by the <b>FormFieldFactory</b></li>
-      
-  <li>Easier shortcut key binding</li>
-  <ul>
-  	<li>Bind shortcuts to directly to buttons by using <tt>setClickShortcut()</tt></li>
-  	<li>Bind field components by adding a <b>FocusShortcut</b> as a shortcut listener to a component with <tt>addShortcutListener()</tt></li>
-    <li>Shortcuts can be scoped to a <b>Panel,Window</b> or <b>Form</b> by adding them with <tt>addAction()</tt> to the component</li>
-  </ul>
+  <li>Enhanced keyboard navigation in <b>Table</b>, <b>Tree</b>, <b>DateField</b>, <b>Slider</b>, and many other components
+    <ul>
+      <li><p>In <b>Table</b> and <b>Tree</b> multiselect mode, selecting multiple items now requires pressing <b>Ctrl</b>. Use <tt>setMultiSelectMode()</tt> with MultiSelectMode.SIMPLE for multiselect without the <b>Ctrl</b> key. (<a href="http://dev.vaadin.com/ticket/3520">#3520</a>, <a href="http://dev.vaadin.com/ticket/4259">#4259</a>)</p></li>
+    </ul>
+  </li>
 
-  <li>ISO-8601 week numbers in <b>DateField</b>s (<a href="http://dev.vaadin.com/ticket/3492">#3492</a>)</li>
+  <li><b>Table</b> enhancements:
 
-  <li>Customizable system messages to warn about disabled cookies</li>
+    <ul>
+      <li>Footer - great for calculating sums, etc. Use <tt>setFooterVisible(true)</tt> to enable the footer and <tt>setColumnFooter()</tt> to set the footer text for a specific column. (<a href="http://dev.vaadin.com/ticket/1553">#1553</a>)</li>
+      <li>Header (<a href="http://dev.vaadin.com/ticket/4515">#4515</a>) and footer (<a href="http://dev.vaadin.com/ticket/4516">#4516</a>) click handlers</li>
+      <li><p>Column resize events (<b>ColumnResizeEvent</b>), which can be handled with <b>ColumnResizeListener</b></p></li>
+    </ul>
+  </li>
   
-  <li>Methods for browser and operating system detection on the server-side (<a href="http://dev.vaadin.com/ticket/3931">#3931</a>, <a href="http://dev.vaadin.com/ticket/4356">#4356</a>). The <tt>getBrowser()</tt> method in <b>WebApplicationContext</b> returns a <b>WebBrowser</b> info object, which provides the following:</li>
-  <ul>
-    <li>The <tt>isFirefox()</tt>, <tt>isChrome()</tt>, etc. methods allow detecting the browser</li>
-    <li>The <tt>getBrowserMajorVersion()</tt> and <tt>getBrowserMinorVersion()</tt> return the browser version info</li>
-    <li>The <tt>isWindows()</tt>, <tt>isLinux()</tt>, and <tt>isMac()</tt> allow detecting the operating system</li>
-    <li>The &lt;body&gt; element of the application page contains CSS classes for the browser, browser engine, and operating system</li>
-  </ul>
+  <li><p>Possibility for lazy loading of client-side components (aka GWT code splitting), which speeds up load times; see <a href="http://dev.vaadin.com/wiki/WidgetSet">more details</a></p></li>
 
-  <li>Filtering support for <b>HierarchicalContainer</b></li>
+  <li><p>HTTP-level tester compatibility (JMeter, etc)</p></li>
+
+  <li><p><b>DateField</b> enhancements: input prompt and tab behavior</p></li>
   
-  <li><b>ApplicationServlet</b> provides time stamps for static resources to improve browser caching support</li>
-  
-  <li>Portlet 2.0 <b>PortletListener</b> now includes the active <b>Window</b> in all methods for improved multi-window support in portlets (<a href="http://dev.vaadin.com/ticket/4188">#4188</a>)</li> 
-  
-  <li>Focus and blur listeners for <b>Button</b>, <b>NativeButton</b>, <b>CheckBox</b>, and <b>OptionGroup</b></li>
-  
-  <li>Many bug fixes including several minor fixes for invalid behavior in containers</li>
+  <li><p>Indexed access to contained components in ordered layouts (<b>VerticalLayout</b>, <b>HorizontalLayout</b>, and <b>FormLayout</b>) with <tt>getComponentIndex()</tt> and <tt>getComponent(int index)</tt> (<a href="http://dev.vaadin.com/ticket/4609">#4609</a>)</p></li>
+
+  <li><p>Programmatic selection of text range in <b>TextField</b> with <tt>selectAll()</tt> and <tt>setSelectionRange()</tt>, and cursor positioning with <tt>setCursorPosition</tt> (<a href="http://dev.vaadin.com/ticket/5217">#5217</a>)</p></li>
+
+  <li><p>Ability to disable items in an <b>OptionGroup</b> with <tt>setItemEnabled()</tt> (<a href="http://dev.vaadin.com/ticket/3720">#3720</a>)</p></li>
+
 </ul>
 
-<p>See <a href="#changelog">Change Log</a></li> for a full list of tickets fixed in this release.</p>
+<p>In addition, there is a new <b>TreeTable</b> component (<a href="http://dev.vaadin.com/ticket/955">#955</a>). It is not yet included in the core library, but is <a href="http://vaadin.com/directory#addon/vaadin-treetable">available for download</a> from the Vaadin Directory.</p>
+
+<p>See <a href="#changelog">Change Log</a> for a full list of tickets fixed in this release.</p>
 
 <p>Problem fixes and enhancements planned for upcoming releases can be found from the <a
 href="http://dev.vaadin.com/roadmap">Vaadin Roadmap</a> in Vaadin Trac.</p>
 
 <p>As always, when upgrading from an earlier version, you should recompile any custom
 widget sets and refresh your project in Eclipse. If you are upgrading from earlier than
-6.3.0, notice that Vaadin 6.3 uses GWT 2.0 (included in the installation package). See
+6.3.0, notice that Vaadin 6.4 uses GWT 2.0 (included in the installation package). See
 <a href="#upgrading">General Upgrade Notes</a> for more details on upgrading.</p>
 
 <h2 id="widgetupgrade">Upgrading from an Earlier Version of Vaadin 6</h2>
@@ -276,84 +258,49 @@ under the Google App Engine.</p>
 <p>The following closed issues have been included in this release:</p>
 	
 <ul>
-  <li><a href="http://dev.vaadin.com/ticket/119">#119</a>: Design drag and drop support API</li>
-  <li><a href="http://dev.vaadin.com/ticket/875">#875</a>: Keybinding for any components should be easier to do</li>
-  <li><a href="http://dev.vaadin.com/ticket/1394">#1394</a>: Focus server-side code needs redesign and implementation (?)</li>
-  <li><a href="http://dev.vaadin.com/ticket/1844">#1844</a>: Form component should implement Action.Container interface</li>
-  <li><a href="http://dev.vaadin.com/ticket/2205">#2205</a>: Make Form layouting more flexible</li>
-  <li><a href="http://dev.vaadin.com/ticket/2586">#2586</a>: Theme should be refreshed when Vaadin version is updated</li>
-  <li><a href="http://dev.vaadin.com/ticket/3226">#3226</a>: Lazy-initialization for PortletAdapter</li>
-  <li><a href="http://dev.vaadin.com/ticket/3467">#3467</a>: Button styles missing? (Button.STYLE_LINK exists, but others not)</li>
-  <li><a href="http://dev.vaadin.com/ticket/3492">#3492</a>: DateField should have an option to show week numbers</li>
-  <li><a href="http://dev.vaadin.com/ticket/3554">#3554</a>: Form.addItemProperty() resets caption created by FieldFactory</li>
-  <li><a href="http://dev.vaadin.com/ticket/3734">#3734</a>: Widgetset fails to load when customized system messages contain special characters</li>
-  <li><a href="http://dev.vaadin.com/ticket/3736">#3736</a>: Split up style and type definitions</li>
-  <li><a href="http://dev.vaadin.com/ticket/3810">#3810</a>: Upgrade GWT to 2.0</li>
-  <li><a href="http://dev.vaadin.com/ticket/3846">#3846</a>: Empty string as a caption in VOrderedLayout uses space in IE6&7 but not in other browsers.</li>
-  <li><a href="http://dev.vaadin.com/ticket/3913">#3913</a>: Focus and BlurEvents for Button/Checkbox and OptionGroup</li>
-  <li><a href="http://dev.vaadin.com/ticket/3931">#3931</a>: Provide methods for browser detection in WebBrowser</li>
-  <li><a href="http://dev.vaadin.com/ticket/3940">#3940</a>: Setter for CustomLayout template contents</li>
-  <li><a href="http://dev.vaadin.com/ticket/3949">#3949</a>: Add a convenience removeItemAndChildren method to HierarchicalContainer and ContainerHierarchicalWrapper</li>
-  <li><a href="http://dev.vaadin.com/ticket/3984">#3984</a>: CustomLayout "not found" debug message should indicate where it looked</li>
-  <li><a href="http://dev.vaadin.com/ticket/3994">#3994</a>: Remove extra dependencies from DefaultWidgetSet</li>
-  <li><a href="http://dev.vaadin.com/ticket/4085">#4085</a>: Table height is miscalculated (IE6)</li>
-  <li><a href="http://dev.vaadin.com/ticket/4102">#4102</a>: RichTextArea should provide feedback on current text format</li>
-  <li><a href="http://dev.vaadin.com/ticket/4106">#4106</a>: BeanItemContainer slow in some instances</li>
-  <li><a href="http://dev.vaadin.com/ticket/4107">#4107</a>: Multi-selectable AbstractSelect considers itself to be non-empty when nothing is selected</li>
-  <li><a href="http://dev.vaadin.com/ticket/4128">#4128</a>: Allow custom servlets to send critical notifications to client</li>
-  <li><a href="http://dev.vaadin.com/ticket/4129">#4129</a>: Show a message if cookie support is disabled in the browser</li>
-  <li><a href="http://dev.vaadin.com/ticket/4139">#4139</a>: Update RichTextAreaToolbar to GWT 2.0</li>
-  <li><a href="http://dev.vaadin.com/ticket/4153">#4153</a>: The noscript tag should be rendered also when running as portlet</li>
-  <li><a href="http://dev.vaadin.com/ticket/4160">#4160</a>: restartApplication flag does not work for portlet 2.0</li>
-  <li><a href="http://dev.vaadin.com/ticket/4170">#4170</a>: IndexedContainer.addItemAfter(null, Object) does not work</li>
-  <li><a href="http://dev.vaadin.com/ticket/4188">#4188</a>: PortletListener cannot know which window the request is using</li>
-  <li><a href="http://dev.vaadin.com/ticket/4192">#4192</a>: HierarchicalContainer implements Container.Filterable but does not allow filtering</li>
-  <li><a href="http://dev.vaadin.com/ticket/4212">#4212</a>: ComboBox mixed behaviour in dropdown.</li>
-  <li><a href="http://dev.vaadin.com/ticket/4240">#4240</a>: Remove URIFragmentUtility workaround (#4099)</li>
-  <li><a href="http://dev.vaadin.com/ticket/4241">#4241</a>: Implement drag'n'drop support for Table</li>
-  <li><a href="http://dev.vaadin.com/ticket/4242">#4242</a>: Implement drag'n'drop support for Tree</li>
-  <li><a href="http://dev.vaadin.com/ticket/4249">#4249</a>: IndexedContainer.addItemAfter(Object) should return item id, not item</li>
-  <li><a href="http://dev.vaadin.com/ticket/4250">#4250</a>: IndexedContainer.nextItemId should return null for item ids not in container</li>
-  <li><a href="http://dev.vaadin.com/ticket/4279">#4279</a>: RichTextEditor does not save contents on Chrome and Safari</li>
-  <li><a href="http://dev.vaadin.com/ticket/4284">#4284</a>: Add Chrome version parsing to BrowserInfo</li>
-  <li><a href="http://dev.vaadin.com/ticket/4286">#4286</a>: RichTextArea IE workaround causes assertion error in GWT development mode</li>
-  <li><a href="http://dev.vaadin.com/ticket/4292">#4292</a>: removeItem in Container.Hierarchical implementations should handle orphaned children</li>
-  <li><a href="http://dev.vaadin.com/ticket/4293">#4293</a>: ContainerHierarchicalWrapper.setParent() creates "duplicates" into the hierarchy</li>
-  <li><a href="http://dev.vaadin.com/ticket/4299">#4299</a>: Suboptimal row cache update in Table</li>
-  <li><a href="http://dev.vaadin.com/ticket/4300">#4300</a>: Fix standard DnD drop hints</li>
-  <li><a href="http://dev.vaadin.com/ticket/4303">#4303</a>: BeanItemContainer.addItemAfter(null, Object) does not work</li>
-  <li><a href="http://dev.vaadin.com/ticket/4313">#4313</a>: ComboBox sends extra value updates to the server</li>
-  <li><a href="http://dev.vaadin.com/ticket/4322">#4322</a>: Tree drop indicator flickers and shows the wrong target</li>
-  <li><a href="http://dev.vaadin.com/ticket/4332">#4332</a>: Add web.xml parameter to control the resource caching</li>
-  <li><a href="http://dev.vaadin.com/ticket/4334">#4334</a>: TextField contents offset in Firefox 3.6</li>
-  <li><a href="http://dev.vaadin.com/ticket/4347">#4347</a>: Mouse cursor should not change during a drag'n'drop operation</li>
-  <li><a href="http://dev.vaadin.com/ticket/4348">#4348</a>: Column resize cursor not shown in Opera 10</li>
-  <li><a href="http://dev.vaadin.com/ticket/4350">#4350</a>: Removing a root recursively puts HierarchicalContainerWrapper in an inconsistent state</li>
-  <li><a href="http://dev.vaadin.com/ticket/4352">#4352</a>: Vaadin application font is ugly in Windows Safari/Chrome</li>
-  <li><a href="http://dev.vaadin.com/ticket/4354">#4354</a>: SplitPanel setComponent methods should check if the component is already set</li>
-  <li><a href="http://dev.vaadin.com/ticket/4356">#4356</a>: Add operating system detection</li>
-  <li><a href="http://dev.vaadin.com/ticket/4359">#4359</a>: Immediate upload in a wide form layout does not work in Firefox 3.5 and Opera</li>
-  <li><a href="http://dev.vaadin.com/ticket/4360">#4360</a>: HierarchicalContainer.setParent() creates "duplicates" into the hierarchy</li>
-  <li><a href="http://dev.vaadin.com/ticket/4362">#4362</a>: Sub windows don't obey setPositionX/Y if only one is set</li>
-  <li><a href="http://dev.vaadin.com/ticket/4365">#4365</a>: When dragging components, drop target is null for WrapperDropDetails</li>
-  <li><a href="http://dev.vaadin.com/ticket/4370">#4370</a>: HierarchicalContainer.setParent() removes node children incorrectly</li>
-  <li><a href="http://dev.vaadin.com/ticket/4380">#4380</a>: Vaadin's client side does not react visibly to HTTP error codes</li>
-  <li><a href="http://dev.vaadin.com/ticket/4392">#4392</a>: Any drag-event should be safely cancelable by pressing the ESC key</li>
-  <li><a href="http://dev.vaadin.com/ticket/4394">#4394</a>: ValueChangeListener is called multiple times for fields</li>
-  <li><a href="http://dev.vaadin.com/ticket/4395">#4395</a>: HTML5 Drag and Drop example gives Internal Error on Safari</li>
-  <li><a href="http://dev.vaadin.com/ticket/4396">#4396</a>: RichTextArea broken in IE</li>
-  <li><a href="http://dev.vaadin.com/ticket/4399">#4399</a>: AbstractApplicationServlet.RequestType enum should have visibility protected</li>
-  <li><a href="http://dev.vaadin.com/ticket/4401">#4401</a>: Clicking on week numbers in VCalendarPanel selects a date</li>
-  <li><a href="http://dev.vaadin.com/ticket/4463">#4463</a>: "widgetset version does not seem to match theme version" should not be output to console</li>
-  <li><a href="http://dev.vaadin.com/ticket/4469">#4469</a>: VScrollTable prints debug on 4 places</li>
-  <li><a href="http://dev.vaadin.com/ticket/4476">#4476</a>: AcceptCriteriaFactoryGenerator does not find criteria classes which are inner classes</li>
-  <li><a href="http://dev.vaadin.com/ticket/4477">#4477</a>: Drag'n'drop partly broken in IE</li>
-  <li><a href="http://dev.vaadin.com/ticket/4489">#4489</a>: Extra scrollbars when scrolling Table (Chrome 4 + Runo)</li>
-  <li><a href="http://dev.vaadin.com/ticket/4491">#4491</a>: Provide methods for browser minor version detection in WebBrowser</li>
-  <li><a href="http://dev.vaadin.com/ticket/4492">#4492</a>: Clicking on tree node icon does not select node or send click events to server</li>
-  <li><a href="http://dev.vaadin.com/ticket/4503">#4503</a>: Keyboard shortcuts and inputpromt don't work together in Opera</li>
-  <li><a href="http://dev.vaadin.com/ticket/4508">#4508</a>: Update "Handling Portlet Mode Changes" to use correct Window</li>
-  <li><a href="http://dev.vaadin.com/ticket/4510">#4510</a>: Add css class names according to browser engine</li>
+  <li><a href="http://dev.vaadin.com/ticket/955">#955</a>: Tree table</li>
+  <li><a href="http://dev.vaadin.com/ticket/1086">#1086</a>: Tree: Keyboard navigation</li>
+  <li><a href="http://dev.vaadin.com/ticket/1553">#1553</a>: Table: add footer element</li>
+  <li><a href="http://dev.vaadin.com/ticket/2228">#2228</a>: Cannot get multiple causes from InvalidValueException</li>
+  <li><a href="http://dev.vaadin.com/ticket/2390">#2390</a>: Keyboard navigation for Table</li>
+  <li><a href="http://dev.vaadin.com/ticket/2497">#2497</a>: Missing icons</li>
+  <li><a href="http://dev.vaadin.com/ticket/2807">#2807</a>: Table should update column size back to server</li>
+  <li><a href="http://dev.vaadin.com/ticket/3161">#3161</a>: Reindeer black window rounded borders look pixelated in Chrome</li>
+  <li><a href="http://dev.vaadin.com/ticket/3520">#3520</a>: Improve Table multiselect to use Ctrl and Shift for selection</li>
+  <li><a href="http://dev.vaadin.com/ticket/3720">#3720</a>: Disable Items for OptionGroup</li>
+  <li><a href="http://dev.vaadin.com/ticket/3723">#3723</a>: ComponentContainerers should have the possibility to give an index of some component.</li>
+  <li><a href="http://dev.vaadin.com/ticket/4259">#4259</a>: Improve Tree multiselect to use Ctrl and Shift for selection</li>
+  <li><a href="http://dev.vaadin.com/ticket/4311">#4311</a>: DateField should not show stacktrace for invalid dates</li>
+  <li><a href="http://dev.vaadin.com/ticket/4315">#4315</a>: Window name generation should be deterministic</li>
+  <li><a href="http://dev.vaadin.com/ticket/4442">#4442</a>: Fix differences script to use zip instead of tar.gz for previous version</li>
+  <li><a href="http://dev.vaadin.com/ticket/4515">#4515</a>: Add support for Table header click handler</li>
+  <li><a href="http://dev.vaadin.com/ticket/4516">#4516</a>: Add support for Table footer click handler</li>
+  <li><a href="http://dev.vaadin.com/ticket/4576">#4576</a>: "Building of 6.4 branch fails with ""An  exception has occurred in the compiler"""</li>
+  <li><a href="http://dev.vaadin.com/ticket/4595">#4595</a>: BeanItemContainer: no warning about use of Bean's hashCode</li>
+  <li><a href="http://dev.vaadin.com/ticket/4609">#4609</a>: Retrieving an index of a component in an AbstractOrderedLayout</li>
+  <li><a href="http://dev.vaadin.com/ticket/4631">#4631</a>: Implement Runo theme demo application</li>
+  <li><a href="http://dev.vaadin.com/ticket/5008">#5008</a>: Tree should ensure that the selected node is visible after navigation with the keyboard</li>
+  <li><a href="http://dev.vaadin.com/ticket/5012">#5012</a>: Self comparison of classId with itself in com.vaadin.ui.Embedded.setClassId(String)</li>
+  <li><a href="http://dev.vaadin.com/ticket/5024">#5024</a>: Table keyboard navigation blocks essential shortcuts</li>
+  <li><a href="http://dev.vaadin.com/ticket/5030">#5030</a>: ItemSetChangeEvent's in HierarchicalContainer are fired too early</li>
+  <li><a href="http://dev.vaadin.com/ticket/5057">#5057</a>: Keyboard support for TwinColSelect</li>
+  <li><a href="http://dev.vaadin.com/ticket/5061">#5061</a>: Keyboard support for MenuBar</li>
+  <li><a href="http://dev.vaadin.com/ticket/5063">#5063</a>: RichTextArea class should have constructors</li>
+  <li><a href="http://dev.vaadin.com/ticket/5065">#5065</a>: Table should not receive focus if it is not in selectable mode and all rows are visible</li>
+  <li><a href="http://dev.vaadin.com/ticket/5068">#5068</a>: When moving focus to Tree or Table keyboard nav focus should be placed to the current selection</li>
+  <li><a href="http://dev.vaadin.com/ticket/5099">#5099</a>: Slider keyboard navigation</li>
+  <li><a href="http://dev.vaadin.com/ticket/5102">#5102</a>: Double click in TwinColSelect should move selected item</li>
+  <li><a href="http://dev.vaadin.com/ticket/5104">#5104</a>: "Table with setNullSelectionAllowed(false) can be visually ""set to null"" using the keyboard"</li>
+  <li><a href="http://dev.vaadin.com/ticket/5112">#5112</a>: Table.focus() should not throw UnsupportedOperationException</li>
+  <li><a href="http://dev.vaadin.com/ticket/5114">#5114</a>: ClassPathExplorer should not use URL instances as map or set keys</li>
+  <li><a href="http://dev.vaadin.com/ticket/5120">#5120</a>: TableClickHandlers sample has extra scrollbar</li>
+  <li><a href="http://dev.vaadin.com/ticket/5144">#5144</a>: Moving the caret inside a textfield which is inside a selectable Table is impossible</li>
+  <li><a href="http://dev.vaadin.com/ticket/5174">#5174</a>: Menu cannot be clicked using mouse</li>
+  <li><a href="http://dev.vaadin.com/ticket/5177">#5177</a>: Popup for DateField with msec resolution fails to open after entering invalid date</li>
+  <li><a href="http://dev.vaadin.com/ticket/5179">#5179</a>: TabSheet should have a removeTab(Tab t)</li>
+  <li><a href="http://dev.vaadin.com/ticket/5182">#5182</a>: ComponentLocator fails to identify widgets attached to RootPanel</li>
+  <li><a href="http://dev.vaadin.com/ticket/5203">#5203</a>: DateField setResolution() should call requestRepaint</li>
+  <li><a href="http://dev.vaadin.com/ticket/5217">#5217</a>: Text selections/cursor position features</li>
 </ul>
 
 <h2 id="requirements">Requirements</h2>
