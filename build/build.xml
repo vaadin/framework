@@ -1214,6 +1214,9 @@
         <property name="passphrase" value="" />
     	<property name="demo.war" location="${result-path}/${product-file}-demo-${version.full}.war" />
 
+    	<!-- Sleep before running integration tests so testbench tests have time to compile and start -->
+    	<sleep minutes="4" />
+    	
         <!-- Run the separate test script. -->
         <ant antfile="tests/integration_tests.xml" target="integration-test-all" inheritall="false" inheritrefs="true">
               <!-- This is provided so that the test script can copy the -->
