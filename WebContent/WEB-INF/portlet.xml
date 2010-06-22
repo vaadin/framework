@@ -43,7 +43,7 @@
 	<portlet>
 		<portlet-name>CalcPortlet</portlet-name>
 		<display-name>Calc</display-name>
-		<portlet-class>com.vaadin.terminal.gwt.server.ApplicationPortlet2</portlet-class>
+		<portlet-class>com.vaadin.terminal.gwt.server.ApplicationPortlet</portlet-class>
 		<init-param>
 			<name>application</name>
 			<value>com.vaadin.demo.Calc</value>
@@ -78,7 +78,7 @@
 	<portlet>
 		<portlet-name>SamplerPortlet</portlet-name>
 		<display-name>Sampler</display-name>
-		<portlet-class>com.vaadin.terminal.gwt.server.ApplicationPortlet2</portlet-class>
+		<portlet-class>com.vaadin.terminal.gwt.server.ApplicationPortlet</portlet-class>
 		<init-param>
 			<name>application</name>
 			<value>com.vaadin.demo.sampler.SamplerApplication</value>
