@@ -500,30 +500,37 @@ public class ApplicationConnection {
     }
 
     /**
-     * Shows the communication error notification. The 'details' only go to the
-     * console for now.
+     * Shows the communication error notification.
      * 
      * @param details
      *            Optional details for debugging.
      */
     private void showCommunicationError(String details) {
         console.error("Communication error: " + details);
-        String html = "";
+        StringBuilder html = new StringBuilder();
         if (configuration.getCommunicationErrorCaption() != null) {
-            html += "<h1>" + configuration.getCommunicationErrorCaption()
-                    + "</h1>";
+            html.append("<h1>");
+            html.append(configuration.getCommunicationErrorCaption());
+            html.append("</h1>");
         }
         if (configuration.getCommunicationErrorMessage() != null) {
-            html += "<p>" + configuration.getCommunicationErrorMessage()
-                    + "</p>";
+            html.append("<p>");
+            html.append(configuration.getCommunicationErrorMessage());
+            html.append("</p>");
         }
+
         if (html.length() > 0) {
+
+            // Add error description
+            html.append("<br/><p><I style=\"font-size:0.7em\">");
+            html.append(details);
+            html.append("</I></p>");
+
             VNotification n = new VNotification(1000 * 60 * 45);
             n.addEventListener(new NotificationRedirect(configuration
                     .getCommunicationErrorUrl()));
-            n
-                    .show(html, VNotification.CENTERED_TOP,
-                            VNotification.STYLE_SYSTEM);
+            n.show(html.toString(), VNotification.CENTERED_TOP,
+                    VNotification.STYLE_SYSTEM);
         } else {
             redirect(configuration.getCommunicationErrorUrl());
         }
