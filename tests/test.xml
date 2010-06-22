@@ -17,7 +17,7 @@
 	<property name="test-output-dir" value="../build/test-output" />
 
 	<property name="class-dir" value="${test-output-dir}/classes" />
-	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+	<taskdef resource="net/sf/antcontrib/antlib.xml">
 		<classpath>
 			<pathelement location="../build/lib/ant-contrib-1.0b3.jar"/>
 		</classpath>
@@ -106,11 +106,16 @@
 	</target>
 
 	<target name="run-tests" depends="compile-tests" if="server.start.succeeded">
-		<foreach maxthreads="20" parallel="true" target="execute-tests" param="target">
+		<for threadCount="20" parallel="true" keepgoing="true" param="target">
 			<path>
 				<fileset dir="${test-output-dir}" includes="**/**.java" />
 			</path>
-		</foreach>
+			<sequential>
+				<antcall target="execute-tests">
+					<param name="target" value="@{target}" />
+				</antcall>
+			</sequential>
+		</for>
 	</target>
 
 	<!-- This target runs the generated and compiled junit tests -->
@@ -136,7 +141,7 @@
 				<filelist dir="${test-output-dir}" files="${target}" />
 			</batchtest>
 		</junit>
-
+		
 	</target>
 
 	<!-- Remove temporary source and compiled java files -->
