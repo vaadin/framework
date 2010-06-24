@@ -82,7 +82,7 @@ public class WidgetSetBuilder {
                             + "     Firefox 2 and safari is used for  webkit based browsers including\n"
                             + "     Google Chrome.\n"
                             + "    -->\n"
-                            + "    <!-- <set-property name=\"user.agent\" value=\"gecko\"/> -->\n");
+                            + "    <!-- <set-property name=\"user.agent\" value=\"gecko1_8\"/> -->\n");
             printStream.print("\n</module>\n");
             printStream.close();
             changed = true;
