@@ -148,6 +148,8 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
 
     private Element wrapper, wrapper2;
 
+    private boolean visibilityChangesDisabled;
+
     public VWindow() {
         super(false, false, true); // no autohide, not modal, shadow
         // Different style of shadow for windows
@@ -260,6 +262,7 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
                 setVaadinModality(!vaadinModality);
             }
             if (!isAttached()) {
+                setVisible(false); // hide until possible centering
                 show();
             }
             if (uidl.getBooleanAttribute("resizable") != resizable) {
@@ -269,9 +272,11 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
             setDraggable(!uidl.hasAttribute("fixedposition"));
         }
 
+        visibilityChangesDisabled = true;
         if (client.updateComponent(this, uidl, false)) {
             return;
         }
+        visibilityChangesDisabled = false;
 
         immediate = uidl.hasAttribute("immediate");
 
@@ -347,17 +352,6 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
              * according to caption)
              */
             setNaturalWidth();
-        }
-
-        if (!dynamicWidth && !dynamicHeight
-                && uidl.getBooleanAttribute("center")) {
-            /*
-             * Iff size is specified we can center the window at this point. By
-             * doing it early we can avoid some flickering in some browsers. see
-             * #5124
-             */
-            centered = true;
-            center();
         }
 
         layout.updateFromUIDL(childUidl, client);
@@ -447,8 +441,8 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
             // don't try to center the window anymore
             centered = false;
         }
-
         updateShadowSizeAndPosition();
+        setVisible(true);
 
         boolean sizeReduced = false;
         // ensure window is not larger than browser window
@@ -486,6 +480,19 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
 
         client.getView().scrollIntoView(uidl);
 
+    }
+
+    @Override
+    public void setVisible(boolean visible) {
+        /*
+         * Visibility with VWindow works differently than with other Paintables
+         * in Vaadin. Invisible VWindows are not attached to DOM at all. Flag is
+         * used to avoid visibility call from
+         * ApplicationConnection.updateComponent();
+         */
+        if (!visibilityChangesDisabled) {
+            super.setVisible(visible);
+        }
     }
 
     private void setDraggable(boolean draggable) {
