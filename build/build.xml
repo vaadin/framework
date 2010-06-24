@@ -1198,6 +1198,7 @@
             <property name="package.filename" value="${package.filename}"/>
             <property name="testing.testarea" value="/tmp/testarea"/>
             <property name="package.name" value="${package.name}"/>
+        	<property name="test-output-dir" value="../build/test-output" />
             <property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}"/>
             <property name="com.vaadin.testbench.deployment.url" value="${com.vaadin.testbench.deployment.url}"/>
             <property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}"/>
