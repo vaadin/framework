@@ -213,8 +213,6 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
         rendering = false;
         sizeChangedDuringRendering = false;
 
-        boolean needsRelativeSizeCheck = false;
-
     }
 
     private static int[] cloneArray(int[] toBeCloned) {
@@ -502,7 +500,9 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
     private void distributeColSpanWidths() {
         for (SpanList list : colSpans) {
             for (Cell cell : list.cells) {
-                int width = cell.getWidth();
+                // cells with relative content may return non 0 here if on
+                // subsequent renders
+                int width = cell.hasRelativeWidth() ? 0 : cell.getWidth();
                 int allocated = columnWidths[cell.col];
                 for (int i = 1; i < cell.colspan; i++) {
                     allocated += spacingPixelsHorizontal
@@ -539,7 +539,9 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
     private void distributeRowSpanHeights() {
         for (SpanList list : rowSpans) {
             for (Cell cell : list.cells) {
-                int height = cell.getHeight();
+                // cells with relative content may return non 0 here if on
+                // subsequent renders
+                int height = cell.hasRelativeHeight() ? 0 : cell.getHeight();
                 int allocated = rowHeights[cell.row];
                 for (int i = 1; i < cell.rowspan; i++) {
                     allocated += spacingPixelsVertical
