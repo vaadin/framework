@@ -9,6 +9,9 @@ from sets import Set
 downloadsite = "http://vaadin.com/download"
 latestfile   = "/LATEST"
 
+JAPIZE     = "japize"
+JAPICOMPAT = "japicompat"
+
 ################################################################################
 # Utility Functions
 ################################################################################
@@ -89,6 +92,26 @@ def listZipVaadinJarFiles(zipfile, vaadinversion):
     return files
 
 ################################################################################
+# JAPI - Java API Differences
+################################################################################
+def japize(version, zipfile):
+    jarfile = "/tmp/vaadin-tmp.jar"
+    packagedjar = "vaadin-%s/WebContent/vaadin-%s.jar" % (version, version)
+    command ("unzip -p %s %s > %s " % (zipfile, packagedjar, jarfile))
+
+    cmd = "%s as %s apis %s +com.vaadin, $JAVA_HOME/jre/lib/rt.jar lib/core/**/*.jar 2>/dev/null" % (JAPIZE, version, jarfile)
+    command (cmd)
+
+    return "%s.japi.gz" % (version)
+
+def japicompat(japi1, japi2):
+    cmd = "%s -q %s %s" % (JAPICOMPAT, japi1, japi2)
+    pin = os.popen(cmd, "r")
+    lines = "".join(pin.readlines())
+    pin.close()
+    return lines
+
+################################################################################
 #
 ################################################################################
 
@@ -161,6 +184,18 @@ removed = diffFiles(latestJarFiles, builtJarFiles)
 print "\n%d removed files:" % (len(removed))
 for item in removed:
 	print item
+
+print "\n--------------------------------------------------------------------------------\nVaadin API differences"
+oldjapi = japize(latestversion, locallatestpackage)
+newjapi = japize(builtversion, builtpackage)
+
+print "\n--------------------------------------------------------------------------------\nLost API features\n"
+japidiff1 = japicompat(oldjapi, newjapi)
+print japidiff1
+
+print "\n--------------------------------------------------------------------------------\nNew API features\n"
+japidiff2 = japicompat(newjapi, oldjapi)
+print japidiff2
 
 # Purge downloaded package
 command("rm %s" % (locallatestpackage))
