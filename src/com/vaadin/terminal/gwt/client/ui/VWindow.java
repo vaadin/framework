@@ -349,6 +349,17 @@ public class VWindow extends VOverlay implements Container, ScrollListener {
             setNaturalWidth();
         }
 
+        if (!dynamicWidth && !dynamicHeight
+                && uidl.getBooleanAttribute("center")) {
+            /*
+             * Iff size is specified we can center the window at this point. By
+             * doing it early we can avoid some flickering in some browsers. see
+             * #5124
+             */
+            centered = true;
+            center();
+        }
+
         layout.updateFromUIDL(childUidl, client);
         if (!dynamicHeight && layoutRelativeWidth) {
             /*
