@@ -15,23 +15,43 @@ public class ComboBoxItemIcon extends TestBase {
 
     @Override
     protected String getDescription() {
-        return "The items in the ComboBox should have icons - also when selected.";
+        return "All items in the ComboBoxes should have icons.";
     }
 
     @Override
     protected void setup() {
-        ComboBox cb = new ComboBox();
-        cb.addContainerProperty("icon", Resource.class, null);
-        cb.setItemIconPropertyId("icon");
-        getLayout().addComponent(cb);
+        {
+            ComboBox cb = new ComboBox();
+            cb.addContainerProperty("icon", Resource.class, null);
+            cb.setItemIconPropertyId("icon");
 
-        Item item = cb.addItem("FI");
-        item.getItemProperty("icon").setValue(
-                new ThemeResource("../sampler/flags/fi.gif"));
-        item = cb.addItem("SE");
-        item.getItemProperty("icon").setValue(
-                new ThemeResource("../sampler/flags/se.gif"));
+            Item item = cb.addItem("FI");
+            item.getItemProperty("icon").setValue(
+                    new ThemeResource("../sampler/flags/fi.gif"));
+            item = cb.addItem("SE");
+            item.getItemProperty("icon").setValue(
+                    new ThemeResource("../sampler/flags/se.gif"));
 
+            addComponent(cb);
+        }
+        {
+            ComboBox cb = new ComboBox();
+            cb.addContainerProperty("icon", Resource.class, null);
+            cb.setItemIconPropertyId("icon");
+
+            Item item = cb.addItem("Finland");
+            item.getItemProperty("icon").setValue(
+                    new ThemeResource("../sampler/flags/fi.gif"));
+            item = cb.addItem("Australia");
+            item.getItemProperty("icon").setValue(
+                    new ThemeResource("../sampler/flags/au.gif"));
+            item = cb.addItem("Hungary");
+            item.getItemProperty("icon").setValue(
+                    new ThemeResource("../sampler/flags/hu.gif"));
+
+            cb.setValue("Hungary");
+            addComponent(cb);
+        }
     }
 
 }
