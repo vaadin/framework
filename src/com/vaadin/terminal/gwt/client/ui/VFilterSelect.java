@@ -491,7 +491,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     /**
      * The menu where the suggestions are rendered
      */
-    public class SuggestionMenu extends MenuBar {
+    public class SuggestionMenu extends MenuBar implements SubPartAware {
 
         /**
          * Default constructor
@@ -658,6 +658,39 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                 }
             }
             super.onBrowserEvent(event);
+        }
+
+        private static final String SUBPART_PREFIX = "item";
+
+        public Element getSubPartElement(String subPart) {
+            int index = Integer.parseInt(subPart.substring(SUBPART_PREFIX
+                    .length()));
+
+            MenuItem item = (MenuItem) getItems().get(index);
+
+            return item.getElement();
+        }
+
+        public String getSubPartName(Element subElement) {
+            if (!getElement().isOrHasChild(subElement)) {
+                return null;
+            }
+
+            Element menuItemRoot = subElement;
+            while (menuItemRoot != null
+                    && !menuItemRoot.getTagName().equalsIgnoreCase("td")) {
+                menuItemRoot = menuItemRoot.getParentElement().cast();
+            }
+            // "menuItemRoot" is now the root of the menu item
+
+            final int itemCount = getItems().size();
+            for (int i = 0; i < itemCount; i++) {
+                if (((MenuItem) getItems().get(i)).getElement() == menuItemRoot) {
+                    String name = SUBPART_PREFIX + i;
+                    return name;
+                }
+            }
+            return null;
         }
     }
 
