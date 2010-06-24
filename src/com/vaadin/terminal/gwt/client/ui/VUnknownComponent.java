@@ -34,7 +34,12 @@ public class VUnknownComponent extends Composite implements Paintable {
         }
         setCaption("Widgetset does not contain implementation for "
                 + serverClassName
-                + ". Check its @ClientWidget mapping, widgetsets GWT module descrioption file and re-compile your widgetset. Unrendered UIDL:");
+                + ". Check its @ClientWidget mapping, widgetsets "
+                + "GWT module description file and re-compile your"
+                + " widgetset. In case you have downloaded a vaadin"
+                + " add-on package, you might want to refer to "
+                + "<a href='http://vaadin.com/using-addons'>add-on "
+                + "instructions</a>. Unrendered UIDL:");
         if (uidlTree != null) {
             uidlTree.removeFromParent();
         }
@@ -44,6 +49,6 @@ public class VUnknownComponent extends Composite implements Paintable {
     }
 
     public void setCaption(String c) {
-        caption.setText(c);
+        caption.getElement().setInnerHTML(c);
     }
 }
