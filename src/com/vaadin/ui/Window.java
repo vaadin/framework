@@ -29,7 +29,7 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.URIHandler;
-import com.vaadin.terminal.gwt.client.ui.VView;
+import com.vaadin.terminal.gwt.client.ui.VWindow;
 
 /**
  * A component that represents an application (browser native) window or a sub
@@ -77,7 +77,7 @@ import com.vaadin.terminal.gwt.client.ui.VView;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(VView.class)
+@ClientWidget(VWindow.class)
 public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
