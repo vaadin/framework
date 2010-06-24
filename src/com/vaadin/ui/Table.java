@@ -3849,7 +3849,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * The handleHeaderClick method is called when the user presses a header
      * column cell.
      */
-    public interface HeaderClickHandler {
+    public interface HeaderClickHandler extends Serializable {
 
         /**
          * Called when a user clicks a header column cell
@@ -3866,7 +3866,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * The handleHeaderClick method is called when the user presses a footer
      * column cell.
      */
-    public interface FooterClickHandler {
+    public interface FooterClickHandler extends Serializable {
 
         /**
          * Called when a user clicks a footer column cell
