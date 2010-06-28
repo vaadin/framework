@@ -1229,6 +1229,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                     command.execute();
                 }
 
+                setSelected(null);
                 hideParents(true);
             }
         }
