@@ -4,8 +4,11 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -49,6 +52,26 @@ public class VFormLayout extends SimplePanel implements Container {
         setWidget(table);
     }
 
+    /**
+     * Parses the stylenames from an uidl
+     * 
+     * @param uidl
+     *            The uidl to get the stylenames from
+     * @return An array of stylenames
+     */
+    private String[] getStylesFromUIDL(UIDL uidl) {
+        List<String> styles = new ArrayList<String>();
+        if (uidl.hasAttribute("style")) {
+            styles = Arrays.asList(uidl.getStringAttribute("style").split(" "));
+        }
+
+        if (uidl.hasAttribute("disabled")) {
+            styles.add("v-disabled");
+        }
+
+        return styles.toArray(new String[styles.size()]);
+    }
+
     public class VFormLayoutTable extends FlexTable implements ClickHandler {
 
         private static final int COLUMN_CAPTION = 0;
@@ -88,7 +111,8 @@ public class VFormLayout extends SimplePanel implements Container {
                 final Paintable p = client.getPaintable(childUidl);
                 Caption caption = componentToCaption.get(p);
                 if (caption == null) {
-                    caption = new Caption(p, client);
+                    caption = new Caption(p, client,
+                            getStylesFromUIDL(childUidl));
                     caption.addClickHandler(this);
                     componentToCaption.put(p, caption);
                 }
@@ -168,9 +192,11 @@ public class VFormLayout extends SimplePanel implements Container {
             for (i = 0; i < getRowCount(); i++) {
                 Widget candidate = getWidget(i, COLUMN_WIDGET);
                 if (oldComponent == candidate) {
+                    Caption oldCap = componentToCaption.get(oldComponent);
                     final Caption newCap = new Caption(
-                            (Paintable) newComponent, client);
+                            (Paintable) newComponent, client, null);
                     newCap.addClickHandler(this);
+                    newCap.setStyleName(oldCap.getStyleName());
                     componentToCaption.put((Paintable) newComponent, newCap);
                     ErrorFlag error = componentToError.get(newComponent);
                     if (error == null) {
@@ -290,11 +316,18 @@ public class VFormLayout extends SimplePanel implements Container {
          *            return null
          * @param client
          */
-        public Caption(Paintable component, ApplicationConnection client) {
+        public Caption(Paintable component, ApplicationConnection client,
+                String[] styles) {
             super();
             this.client = client;
             owner = component;
-            setStyleName(CLASSNAME);
+
+            String style = CLASSNAME;
+            for (int i = 0; i < styles.length; i++) {
+                style += " " + CLASSNAME + "-" + styles[i];
+            }
+            setStyleName(style);
+
             sinkEvents(VTooltip.TOOLTIP_EVENTS);
         }
 
