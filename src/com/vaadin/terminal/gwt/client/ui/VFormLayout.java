@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -17,6 +19,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Container;
+import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.StyleConstants;
@@ -46,7 +49,7 @@ public class VFormLayout extends SimplePanel implements Container {
         setWidget(table);
     }
 
-    public class VFormLayoutTable extends FlexTable {
+    public class VFormLayoutTable extends FlexTable implements ClickHandler {
 
         private static final int COLUMN_CAPTION = 0;
         private static final int COLUMN_ERRORFLAG = 1;
@@ -86,6 +89,7 @@ public class VFormLayout extends SimplePanel implements Container {
                 Caption caption = componentToCaption.get(p);
                 if (caption == null) {
                     caption = new Caption(p, client);
+                    caption.addClickHandler(this);
                     componentToCaption.put(p, caption);
                 }
                 ErrorFlag error = componentToError.get(p);
@@ -166,6 +170,7 @@ public class VFormLayout extends SimplePanel implements Container {
                 if (oldComponent == candidate) {
                     final Caption newCap = new Caption(
                             (Paintable) newComponent, client);
+                    newCap.addClickHandler(this);
                     componentToCaption.put((Paintable) newComponent, newCap);
                     ErrorFlag error = componentToError.get(newComponent);
                     if (error == null) {
@@ -213,6 +218,24 @@ public class VFormLayout extends SimplePanel implements Container {
             return width;
         }
 
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt
+         * .event.dom.client.ClickEvent)
+         */
+        public void onClick(ClickEvent event) {
+            Caption caption = (Caption) event.getSource();
+            if (caption.getOwner() != null) {
+                if (caption.getOwner() instanceof Focusable) {
+                    ((Focusable) caption.getOwner()).focus();
+                } else if (caption.getOwner() instanceof com.google.gwt.user.client.ui.Focusable) {
+                    ((com.google.gwt.user.client.ui.Focusable) caption
+                            .getOwner()).setFocus(true);
+                }
+            }
+        }
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
