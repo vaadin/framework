@@ -31,8 +31,8 @@ final public class VTargetInSubtree extends VAcceptCriterion {
                 if (searchedKey.equals(((TreeNode) parent2).key)) {
                     return true;
                 }
-                parent2 = parent2.getParent().getParent(); // panel -> next
-                                                           // level node
+                // panel -> next level node
+                parent2 = parent2.getParent().getParent();
             }
         }
 
