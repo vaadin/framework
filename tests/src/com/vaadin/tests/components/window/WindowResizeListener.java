@@ -63,6 +63,9 @@ public class WindowResizeListener extends TestBase {
             }
         });
         immediate.setImmediate(true);
+        immediate.setValue(true);
+        getMainWindow().setImmediate(true);
+        subwin.setImmediate(true);
         getLayout().addComponent(immediate);
 
         getLayout().addComponent(new Button("Sync"));
