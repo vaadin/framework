@@ -153,7 +153,7 @@ public class VEmbedded extends HTML implements Paintable {
                 // Add the parameters to the Embed
                 for (String name : parameters.keySet()) {
                     html += escapeAttribute(name) + "=\""
-                    + escapeAttribute(parameters.get(name)) + "\" ";
+                            + escapeAttribute(parameters.get(name)) + "\" ";
                 }
 
                 html += "></embed></object>";

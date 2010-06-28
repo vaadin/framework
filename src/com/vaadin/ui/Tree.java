@@ -119,9 +119,9 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     private TreeDragMode dragMode = TreeDragMode.NONE;
-    
+
     private MultiSelectMode multiSelectMode = MultiSelectMode.DEFAULT;
-    
+
     /* Tree constructors */
 
     /**
@@ -340,7 +340,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
             requestRepaint();
         }
     }
-    
+
     /**
      * Sets the behavior of the multiselect mode
      * 

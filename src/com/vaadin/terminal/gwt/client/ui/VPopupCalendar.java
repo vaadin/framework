@@ -56,7 +56,7 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
         popup = new VOverlay(true, true, true);
         popup.setStyleName(VDateField.CLASSNAME + "-popup");
         popup.setWidget(calendar);
-        popup.addCloseHandler(this);        
+        popup.addCloseHandler(this);
 
         DOM.setElementProperty(calendar.getElement(), "id",
                 "PID_VAADIN_POPUPCAL");
@@ -183,17 +183,17 @@ public class VPopupCalendar extends VTextualDate implements Paintable, Field,
                     popup.setPopupPosition(l, t
                             + calendarToggle.getOffsetHeight() + 2);
 
-                    /* We have to wait a while before focusing
-                     * since the popup needs to be opened before 
-                     * we can focus
+                    /*
+                     * We have to wait a while before focusing since the popup
+                     * needs to be opened before we can focus
                      */
-                    Timer focusTimer = new Timer() {                        
+                    Timer focusTimer = new Timer() {
                         @Override
                         public void run() {
-                            setFocus(true);                            
+                            setFocus(true);
                         }
                     };
-                    
+
                     focusTimer.schedule(100);
                 }
             });

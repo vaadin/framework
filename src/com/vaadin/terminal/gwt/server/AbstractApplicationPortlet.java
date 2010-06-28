@@ -1202,8 +1202,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     protected void writeAjaxPageHtmlMainDiv(RenderRequest request,
             RenderResponse response, final BufferedWriter writer, String id,
             String classNames, String divStyle) throws IOException {
-        writer.write("<div id=\"" + id + "\" class=\""
-                + classNames + "\" " + divStyle + "></div>\n");
+        writer.write("<div id=\"" + id + "\" class=\"" + classNames + "\" "
+                + divStyle + "></div>\n");
         writer.write("<noscript>" + getNoScriptMessage() + "</noscript>");
     }
 
@@ -1474,7 +1474,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         return value;
     }
 
-    private static String getLiferayHTTPRequestParameter(PortletRequest request, String name) {
+    private static String getLiferayHTTPRequestParameter(
+            PortletRequest request, String name) {
         try {
             // httpRequest = PortalUtil.getHttpServletRequest(request);
             HttpServletRequest httpRequest = (HttpServletRequest) PortalClassInvoker

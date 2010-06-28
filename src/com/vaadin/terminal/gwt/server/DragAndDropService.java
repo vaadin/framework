@@ -86,8 +86,7 @@ public class DragAndDropService implements VariableOwner {
          * source for Transferable, drop target for DragDropDetails).
          */
         Transferable transferable = constructTransferable(dropTarget, variables);
-        TargetDetails dropData = constructDragDropDetails(dropTarget,
-                variables);
+        TargetDetails dropData = constructDragDropDetails(dropTarget, variables);
         DragAndDropEvent dropEvent = new DragAndDropEvent(transferable,
                 dropData);
         if (dropHandler.getAcceptCriterion().accept(dropEvent)) {
@@ -113,8 +112,8 @@ public class DragAndDropService implements VariableOwner {
          * source for Transferable, current target for DragDropDetails).
          */
         Transferable transferable = constructTransferable(dropTarget, variables);
-        TargetDetails dragDropDetails = constructDragDropDetails(
-                dropTarget, variables);
+        TargetDetails dragDropDetails = constructDragDropDetails(dropTarget,
+                variables);
 
         dragEvent = new DragAndDropEvent(transferable, dragDropDetails);
 

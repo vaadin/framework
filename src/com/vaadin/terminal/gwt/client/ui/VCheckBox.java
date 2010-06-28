@@ -80,7 +80,8 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
 
         focusHandlerRegistration = EventHelper.updateFocusHandler(this, client,
                 focusHandlerRegistration);
-        blurHandlerRegistration = EventHelper.updateBlurHandler(this, client, blurHandlerRegistration);
+        blurHandlerRegistration = EventHelper.updateBlurHandler(this, client,
+                blurHandlerRegistration);
 
         if (uidl.hasAttribute("error")) {
             if (errorIndicatorElement == null) {

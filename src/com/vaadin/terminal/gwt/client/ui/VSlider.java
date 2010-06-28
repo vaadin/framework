@@ -106,11 +106,11 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
                 | Event.ONMOUSEOUT);
         DOM.sinkEvents(bigger, Event.ONMOUSEDOWN | Event.ONMOUSEUP
                 | Event.ONMOUSEOUT);
-    
+
         feedbackPopup.addStyleName(CLASSNAME + "-feedback");
         feedbackPopup.setWidget(feedback);
     }
-    
+
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
         this.client = client;

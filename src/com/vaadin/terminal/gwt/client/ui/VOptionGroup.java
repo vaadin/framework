@@ -182,8 +182,7 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
                     // check whether blurOccured still is true and then send the
                     // event out to the server
                     if (blurOccured) {
-                        client.updateVariable(id, EventId.BLUR, "",
-                                true);
+                        client.updateVariable(id, EventId.BLUR, "", true);
                         blurOccured = false;
                     }
                 }

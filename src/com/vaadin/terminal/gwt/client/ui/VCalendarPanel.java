@@ -788,7 +788,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
         processClickEvent(sender, true);
     }
 
-
     public void setLimits(Date min, Date max) {
         if (min != null) {
             final Date d = new Date(min.getTime());
@@ -832,8 +831,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     public void onKeyDown(KeyDownEvent event) {
         int keycode = event.getNativeKeyCode();
 
-        if (handleNavigation(keycode, event
-                .isControlKeyDown()
+        if (handleNavigation(keycode, event.isControlKeyDown()
                 || event.isMetaKeyDown(), event.isShiftKeyDown())) {
             event.preventDefault();
         }
@@ -1337,7 +1335,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
             updateCalendar();
             return true;
         }
-        
+
         return false;
     }
 
