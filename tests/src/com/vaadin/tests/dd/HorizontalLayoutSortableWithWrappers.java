@@ -51,9 +51,8 @@ public class HorizontalLayoutSortableWithWrappers extends Window {
     }
 
     private DropHandler dh = new DropHandler() {
-        AcceptCriterion crit = new And(new TargetDetailIs(
-                "horizontalLocation", "LEFT"), new Not(SourceIsTarget
-                .get()));
+        AcceptCriterion crit = new And(new TargetDetailIs("horizontalLocation",
+                "LEFT"), new Not(SourceIsTarget.get()));
 
         public AcceptCriterion getAcceptCriterion() {
             return crit;
@@ -69,8 +68,7 @@ public class HorizontalLayoutSortableWithWrappers extends Window {
                     Iterator<Component> componentIterator = layout
                             .getComponentIterator();
                     Component next = componentIterator.next();
-                    TargetDetails dropTargetData = dropEvent
-                            .getTargetDetails();
+                    TargetDetails dropTargetData = dropEvent.getTargetDetails();
                     DropTarget target = dropTargetData.getTarget();
                     while (next != target) {
                         if (next != sourceComponent) {

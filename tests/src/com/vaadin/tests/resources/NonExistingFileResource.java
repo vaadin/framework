@@ -1,4 +1,5 @@
 package com.vaadin.tests.resources;
+
 import java.io.File;
 
 import com.vaadin.terminal.FileResource;

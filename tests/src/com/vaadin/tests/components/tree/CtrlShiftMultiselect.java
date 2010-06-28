@@ -65,7 +65,7 @@ public class CtrlShiftMultiselect extends TestBase {
     private HierarchicalContainer createContainer() {
         HierarchicalContainer cont = new HierarchicalContainer();
         cont.addContainerProperty("name", String.class, "");
-        
+
         for (int i = 0; i < 20; i++) {
             Item item = cont.addItem("Item " + i);
             item.getItemProperty("name").setValue("Item " + i);

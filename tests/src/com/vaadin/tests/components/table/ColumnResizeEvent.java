@@ -84,8 +84,7 @@ public class ColumnResizeEvent extends TestBase {
         column3Width.setValue(table.getColumnWidth("150pxfixedCol") + "px");
 
         table.addListener(new ColumnResizeListener() {
-            public void columnResize(
-                    com.vaadin.ui.Table.ColumnResizeEvent event) {
+            public void columnResize(com.vaadin.ui.Table.ColumnResizeEvent event) {
 
                 if (event.getPropertyId().equals("firstname")) {
                     column1Width.setValue(event.getCurrentWidth()

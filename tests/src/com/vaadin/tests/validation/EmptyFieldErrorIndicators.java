@@ -91,7 +91,7 @@ public class EmptyFieldErrorIndicators extends TestBase {
                 }
             }
         };
-        
+
         form.addField("Field", new TextField("Text"));
         form.addField("Date", new DateField("Date"));
         // not good for automated testing with screenshots when null

@@ -9,7 +9,7 @@ import com.vaadin.ui.Table;
 
 /**
  * Test case for testing the footer API
- *
+ * 
  */
 public class TestFooter extends TestCase {
 
@@ -73,7 +73,7 @@ public class TestFooter extends TestCase {
 
     /**
      * Creates a container with three properties "col1,col2,col3" with 100 items
-     *
+     * 
      * @return Returns the created table
      */
     private static Container createContainer() {

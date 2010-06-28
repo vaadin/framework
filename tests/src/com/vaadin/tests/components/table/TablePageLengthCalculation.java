@@ -1,4 +1,5 @@
 package com.vaadin.tests.components.table;
+
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;

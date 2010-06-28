@@ -29,7 +29,6 @@ public class HeaderClick extends TestBase {
             }
         });
 
-
         addComponent(table);
         addComponent(columnField);
 

@@ -10,6 +10,7 @@ public class DateFieldUnparsableDate extends TestBase {
 
     public class MyDateField extends DateField {
         Date oldDate = null;
+
         public MyDateField(String caption) {
             super(caption);
             addListener(new Property.ValueChangeListener() {
