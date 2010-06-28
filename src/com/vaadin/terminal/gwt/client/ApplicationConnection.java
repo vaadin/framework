@@ -848,6 +848,10 @@ public class ApplicationConnection {
                                                 + ", but there is no such paintable ("
                                                 + uidl.getId() + ") rendered.");
                             } else {
+                                if (!idToPaintableDetail.containsKey(uidl
+                                        .getId())) {
+                                    registerPaintable(uidl.getId(), view);
+                                }
                                 view.updateFromUIDL(uidl,
                                         ApplicationConnection.this);
                             }
