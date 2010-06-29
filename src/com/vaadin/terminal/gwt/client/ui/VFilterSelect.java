@@ -793,6 +793,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     private int textboxPadding = -1;
     private int componentPadding = -1;
     private int suggestionPopupMinWidth = 0;
+    private int popupWidth = -1;
     /*
      * Stores the last new item string to avoid double submissions. Cleared on
      * uidl updates
@@ -1055,9 +1056,27 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
         popupOpenerClicked = false;
 
-        updateRootWidth();
+        if (!initDone) {
+            updateRootWidth();
+        }
 
         initDone = true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.gwt.user.client.ui.Composite#onAttach()
+     */
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+
+        /*
+         * We need to recalculate the root width when the select is attached, so
+         * #2974 won't happen.
+         */
+        updateRootWidth();
     }
 
     /**
@@ -1445,13 +1464,33 @@ public class VFilterSelect extends Composite implements Paintable, Field,
              * the size of the combobox won't change over time.
              */
             int tbWidth = Util.getRequiredWidth(tb);
-            int openerWidth = Util.getRequiredWidth(popupOpener);
+
+            if (popupWidth < 0) {
+                /*
+                 * Only use the first page popup width so the textbox will not
+                 * get resized whenever the popup is resized.
+                 */
+                popupWidth = Util.getRequiredWidth(popupOpener);
+            }
+
+            /*
+             * Note: iconWidth is here calculated as a negative pixel value so
+             * you should consider this in further calculations.
+             */
             int iconWidth = selectedItemIcon.isAttached() ? Util
                     .measureMarginLeft(tb.getElement())
                     - Util.measureMarginLeft(selectedItemIcon.getElement()) : 0;
 
-            int w = tbWidth + openerWidth + iconWidth;
-            if ((!initDone || currentPage + 1 <= 0)
+            int w = tbWidth + popupWidth + iconWidth;
+
+            /*
+             * When the select has a undefined with we need to check that we are
+             * only setting the text box width relative to the first page width
+             * of the items. If this is not done the text box width will change
+             * when the popup is used to view longer items than the text box is
+             * wide.
+             */
+            if ((!initDone || currentPage + 1 < 0)
                     && suggestionPopupMinWidth > w) {
                 setTextboxWidth(suggestionPopupMinWidth);
                 w = suggestionPopupMinWidth;
