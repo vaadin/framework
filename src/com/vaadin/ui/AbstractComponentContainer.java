@@ -5,8 +5,12 @@
 package com.vaadin.ui;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+
+import com.vaadin.terminal.gwt.server.ComponentSizeValidator;
 
 /**
  * Extension to {@link AbstractComponent} that defines the default
@@ -223,34 +227,130 @@ public abstract class AbstractComponentContainer extends AbstractComponent
 
     @Override
     public void setWidth(float width, int unit) {
-        if (getWidth() < 0 && width >= 0) {
-            // width becoming defined -> relative width children currently
-            // painted undefined may become defined
-            // TODO could be optimized(subtree of only those components
-            // which have undefined height due this component), currently just
-            // repaints whole subtree
-            requestRepaintAll();
-        } else if (getWidth() >= 0 && width < 0) {
-            requestRepaintAll();
+        /*
+         * child tree repaints may be needed, due to our fall back support for
+         * invalid relative sizes
+         */
+        Collection<Component> dirtyChildren = null;
+        boolean childrenMayBecomeUndefined = false;
+        if (getWidth() == SIZE_UNDEFINED && width != SIZE_UNDEFINED) {
+            // children currently in invalid state may need repaint
+            dirtyChildren = getInvalidSizedChildren(false);
+        } else if ((width == SIZE_UNDEFINED && getWidth() != SIZE_UNDEFINED)
+                || (unit == UNITS_PERCENTAGE
+                        && getWidthUnits() != UNITS_PERCENTAGE && !ComponentSizeValidator
+                        .parentCanDefineWidth(this))) {
+            /*
+             * relative width children may get to invalid state if width becomes
+             * invalid. Width may also become invalid if units become percentage
+             * due to the fallback support
+             */
+            childrenMayBecomeUndefined = true;
+            dirtyChildren = getInvalidSizedChildren(false);
         }
         super.setWidth(width, unit);
+        repaintChangedChildTrees(dirtyChildren, childrenMayBecomeUndefined,
+                false);
+    }
+
+    private void repaintChangedChildTrees(
+            Collection<Component> invalidChildren,
+            boolean childrenMayBecomeUndefined, boolean vertical) {
+        if (childrenMayBecomeUndefined) {
+            Collection<Component> previouslyInvalidComponents = invalidChildren;
+            invalidChildren = getInvalidSizedChildren(vertical);
+            if (previouslyInvalidComponents != null) {
+                for (Iterator<Component> iterator = invalidChildren.iterator(); iterator
+                        .hasNext();) {
+                    Component component = iterator.next();
+                    if (previouslyInvalidComponents.contains(component)) {
+                        // still invalid don't repaint
+                        iterator.remove();
+                    }
+                }
+            }
+        } else if (invalidChildren != null) {
+            Collection<Component> stillInvalidChildren = getInvalidSizedChildren(vertical);
+            if (stillInvalidChildren != null) {
+                for (Component component : stillInvalidChildren) {
+                    // didn't become valid
+                    invalidChildren.remove(component);
+                }
+            }
+        }
+        if (invalidChildren != null) {
+            repaintChildTrees(invalidChildren);
+        }
+    }
+
+    private Collection<Component> getInvalidSizedChildren(final boolean vertical) {
+        HashSet<Component> components = null;
+        if (this instanceof Panel) {
+            Panel p = (Panel) this;
+            ComponentContainer content = p.getContent();
+            boolean valid = vertical ? ComponentSizeValidator
+                    .checkHeights(content) : ComponentSizeValidator
+                    .checkWidths(content);
+
+            if (!valid) {
+                components = new HashSet<Component>(1);
+                components.add(content);
+            }
+        } else {
+            for (Iterator<Component> componentIterator = getComponentIterator(); componentIterator
+                    .hasNext();) {
+                Component component = componentIterator.next();
+                boolean valid = vertical ? ComponentSizeValidator
+                        .checkHeights(component) : ComponentSizeValidator
+                        .checkWidths(component);
+                if (!valid) {
+                    if (components == null) {
+                        components = new HashSet<Component>();
+                    }
+                    components.add(component);
+                }
+            }
+        }
+        return components;
+    }
+
+    private void repaintChildTrees(Collection<Component> dirtyChildren) {
+        for (Component c : dirtyChildren) {
+            if (c instanceof ComponentContainer) {
+                ComponentContainer cc = (ComponentContainer) c;
+                cc.requestRepaintAll();
+            } else {
+                c.requestRepaint();
+            }
+        }
     }
 
     @Override
     public void setHeight(float height, int unit) {
-        float currentHeight = getHeight();
-        if (currentHeight < 0.0f && height >= 0.0f) {
-            // height becoming defined -> relative height childs currently
-            // painted undefined may become defined
-            // TODO this could be optimized (subtree of only those components
-            // which have undefined width due this component), currently just
-            // repaints whole
-            // subtree
-            requestRepaintAll();
-        } else if (currentHeight >= 0 && height < 0) {
-            requestRepaintAll();
+        /*
+         * child tree repaints may be needed, due to our fall back support for
+         * invalid relative sizes
+         */
+        Collection<Component> dirtyChildren = null;
+        boolean childrenMayBecomeUndefined = false;
+        if (getHeight() == SIZE_UNDEFINED && height != SIZE_UNDEFINED) {
+            // children currently in invalid state may need repaint
+            dirtyChildren = getInvalidSizedChildren(true);
+        } else if ((height == SIZE_UNDEFINED && getHeight() != SIZE_UNDEFINED)
+                || (unit == UNITS_PERCENTAGE
+                        && getHeightUnits() != UNITS_PERCENTAGE && !ComponentSizeValidator
+                        .parentCanDefineHeight(this))) {
+            /*
+             * relative height children may get to invalid state if height
+             * becomes invalid. Height may also become invalid if units become
+             * percentage due to the fallback support.
+             */
+            childrenMayBecomeUndefined = true;
+            dirtyChildren = getInvalidSizedChildren(true);
         }
         super.setHeight(height, unit);
+        repaintChangedChildTrees(dirtyChildren, childrenMayBecomeUndefined,
+                true);
     }
 
     public void requestRepaintAll() {
