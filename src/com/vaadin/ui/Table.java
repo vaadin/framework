@@ -1455,6 +1455,13 @@ public class Table extends AbstractSelect implements Action.Container,
                 pageBuffer = cells;
                 unregisterPropertiesAndComponents(oldListenedProperties,
                         oldVisibleComponents);
+
+                /*
+                 * We need to repaint so possible header or footer changes are
+                 * sent to the server
+                 */
+                requestRepaint();
+
                 return;
             }
 
