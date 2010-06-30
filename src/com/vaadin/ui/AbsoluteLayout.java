@@ -171,7 +171,7 @@ public class AbsoluteLayout extends AbstractLayout {
                     continue;
                 }
                 if (key.equals("z-index")) {
-                    zIndex = Integer.parseInt(keyValuePair[1]);
+                    zIndex = Integer.parseInt(keyValuePair[1].trim());
                 } else {
                     String value;
                     if (keyValuePair.length > 1) {
