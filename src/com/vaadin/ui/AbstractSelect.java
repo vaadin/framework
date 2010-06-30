@@ -858,7 +858,12 @@ public abstract class AbstractSelect extends AbstractField implements
     /* Container.Viewer methods */
 
     /**
-     * Sets the container as data-source for viewing.
+     * Sets the Container that serves as the data source of the viewer.
+     * 
+     * As a side-effect the fields value (selection) is set to null due old
+     * selection not necessary exists in new Container.
+     * 
+     * @see com.vaadin.data.Container.Viewer#setContainerDataSource(Container)
      * 
      * @param newDataSource
      *            the new data source.

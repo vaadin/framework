@@ -1796,14 +1796,6 @@ public class Table extends AbstractSelect implements Action.Container,
         super.setValue(newValue);
     }
 
-    /**
-     * Sets the Container that serves as the data source of the viewer.
-     * 
-     * As a side-effect Table's value (selection) is set to null due old
-     * selection not necessary exists in new Container.
-     * 
-     * @see com.vaadin.data.Container.Viewer#setContainerDataSource(Container)
-     */
     @Override
     public void setContainerDataSource(Container newDataSource) {
 
