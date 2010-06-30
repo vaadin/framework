@@ -1846,10 +1846,6 @@ public class Table extends AbstractSelect implements Action.Container,
 
         setVisibleColumns(col.toArray());
 
-        // null value as we may not be sure that currently selected identifier
-        // exits in new ds
-        setValue(null);
-
         // Assure visual refresh
         resetPageBuffer();
 

@@ -901,7 +901,14 @@ public abstract class AbstractSelect extends AbstractField implements
                 }
             }
 
+            /*
+             * We expect changing the data source should also clean value. See
+             * #810, #4607, #5281
+             */
+            setValue(null);
+
             requestRepaint();
+
         }
     }
 
