@@ -1159,7 +1159,7 @@
     		<antcall target="server-side-tests"></antcall>
     	</parallel>
     </target>
-
+	
     <target name="server-side-tests" depends="compile-java" unless="tests.serverside.skip">
 		<junit printsummary="yes"> 
 			<classpath> 
@@ -1172,7 +1172,18 @@
 			</batchtest>
 		</junit>
     </target>
-    <target name="testbench-tests" depends="init" unless="tests.testbench.skip">
+
+    <target name="generate-sampler-tests" depends="compile-java" if="build.include.tests">
+        <java classname="com.vaadin.demo.tools.GenerateSamplerTest"
+        	  output="tests/scripts/sampler-all-samples.html">
+            <classpath> 
+                <pathelement path="${result-path}/classes" />
+                <path refid="compile.classpath"/>
+            </classpath>
+        </java>
+    </target>
+    
+    <target name="testbench-tests" depends="init, generate-sampler-tests" unless="tests.testbench.skip">
         <fail unless="product-file" message="The 'product-file' property must be defined."/>
         <fail unless="version" message="The 'version' property must be defined."/>
 
