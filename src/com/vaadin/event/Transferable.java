@@ -3,6 +3,7 @@
  */
 package com.vaadin.event;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 import com.vaadin.ui.Component;
@@ -13,7 +14,7 @@ import com.vaadin.ui.Component;
  * 
  * @since 6.3
  */
-public interface Transferable {
+public interface Transferable extends Serializable {
 
     /**
      * Returns the data from Transferable by its data flavor (aka data type).
