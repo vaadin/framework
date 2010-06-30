@@ -4,6 +4,7 @@
 
 package com.vaadin.data.util;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -57,6 +58,33 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
 
     /** Is the wrapped container hierarchical by itself ? */
     private boolean hierarchical;
+
+    /**
+     * A comparator that sorts the listed items before other items. Otherwise,
+     * the order is undefined.
+     */
+    private static class ListedItemsFirstComparator implements
+            Comparator<Object>, Serializable {
+        private final Collection<?> itemIds;
+
+        private ListedItemsFirstComparator(Collection<?> itemIds) {
+            this.itemIds = itemIds;
+        }
+
+        public int compare(Object o1, Object o2) {
+            if (o1.equals(o2)) {
+                return 0;
+            }
+            for (Object id : itemIds) {
+                if (id == o1) {
+                    return -1;
+                } else if (id == o2) {
+                    return 1;
+                }
+            }
+            return 0;
+        }
+    };
 
     /**
      * Constructs a new hierarchical wrapper for an existing Container. Works
@@ -113,22 +141,9 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
 
                 // ensure order of root and child lists is same as in wrapped
                 // container
-                final Collection<?> itemIds = container.getItemIds();
-                Comparator<Object> basedOnOrderFromWrappedContainer = new Comparator<Object>() {
-                    public int compare(Object o1, Object o2) {
-                        if (o1.equals(o2)) {
-                            return 0;
-                        }
-                        for (Object id : itemIds) {
-                            if (id == o1) {
-                                return -1;
-                            } else if (id == o2) {
-                                return 1;
-                            }
-                        }
-                        return 0;
-                    }
-                };
+                Collection<?> itemIds = container.getItemIds();
+                Comparator<Object> basedOnOrderFromWrappedContainer = new ListedItemsFirstComparator(
+                        itemIds);
 
                 // Calculate the set of all items in the hierarchy
                 final HashSet<Object> s = new HashSet<Object>();
