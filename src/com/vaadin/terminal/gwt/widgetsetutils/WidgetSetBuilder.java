@@ -92,7 +92,7 @@ public class WidgetSetBuilder {
         if (isEditable(content)) {
             String originalContent = content;
 
-            Collection<String> oldInheritedWidgetsets = getCurrentWidgetSets(content);
+            Collection<String> oldInheritedWidgetsets = getCurrentGwtModules(content);
 
             // add widgetsets that do not exist
             for (String ws : availableWidgetSets.keySet()) {
@@ -143,7 +143,7 @@ public class WidgetSetBuilder {
                 + "\" />" + "\n</module>");
     }
 
-    private static Collection<String> getCurrentWidgetSets(String content) {
+    private static Collection<String> getCurrentGwtModules(String content) {
         HashSet<String> hashSet = new HashSet<String>();
         Pattern inheritsPattern = Pattern.compile(" name=\"([^\"]*)\"");
 
@@ -151,9 +151,7 @@ public class WidgetSetBuilder {
 
         while (matcher.find()) {
             String possibleWidgetSet = matcher.group(1);
-            if (possibleWidgetSet.toLowerCase().contains("widgetset")) {
-                hashSet.add(possibleWidgetSet);
-            }
+            hashSet.add(possibleWidgetSet);
         }
         return hashSet;
     }
