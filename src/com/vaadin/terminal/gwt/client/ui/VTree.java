@@ -473,7 +473,7 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
         public TreeNode() {
             constructDom();
             sinkEvents(Event.ONCLICK | Event.ONDBLCLICK | Event.MOUSEEVENTS
-                    | Event.ONCONTEXTMENU);
+                    | Event.ONCONTEXTMENU | Event.ONMOUSEDOWN);
         }
 
         public VerticalDropLocation getDropDetail(NativeEvent currentGwtEvent) {
@@ -565,13 +565,13 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
 
             if (multiSelectMode == MULTISELECT_MODE_SIMPLE || !isMultiselect) {
                 toggleSelection();
-                setFocusedNode(this);
+                setFocusedNode(this, false);
                 lastSelection = this;
             } else if (multiSelectMode == MULTISELECT_MODE_DEFAULT) {
                 // Handle ctrl+click
                 if (isMultiselect && ctrl && !shift) {
                     toggleSelection();
-                    setFocusedNode(this);
+                    setFocusedNode(this, false);
                     lastSelection = this;
 
                     // Handle shift+click
@@ -588,7 +588,7 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
                 } else {
                     deselectAll();
                     toggleSelection();
-                    setFocusedNode(this);
+                    setFocusedNode(this, false);
                     lastSelection = this;
                 }
             }
@@ -626,6 +626,7 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
                     toggleState();
                 } else if (!readonly && inCaption && selectable) {
                     // caption click = selection change && possible click event
+
                     if (handleClickSelection(event.getCtrlKey()
                             || event.getMetaKey(), event.getShiftKey())) {
                         event.preventDefault();
@@ -638,6 +639,25 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
 
             if (type == Event.ONMOUSEDOWN) {
                 event.preventDefault();
+
+                /*
+                 * Ensure that when we are clicking on an item when the tree
+                 * does not have focus that the item is selected and focused.
+                 * #5269
+                 */
+                if (inCaption) {
+                    // Focus node
+                    setFocusedNode(this, false);
+
+                    // Need to cancel bubbling so only the item and not the
+                    // ancestors get the event
+                    event.stopPropagation();
+
+                    if (!BrowserInfo.get().isIE()
+                            && !BrowserInfo.get().isOpera()) {
+                        setFocus(true);
+                    }
+                }
             }
 
             if (dragMode != 0 || dropHandler != null) {
@@ -1417,8 +1437,10 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
      * 
      * @param node
      *            The node to focus or null to remove the focus completely
+     * @param scrollIntoView
+     *            Scroll the node into view
      */
-    public void setFocusedNode(TreeNode node) {
+    public void setFocusedNode(TreeNode node, boolean scrollIntoView) {
         // Unfocus previously focused node
         if (focusedNode != null) {
             focusedNode.setFocused(false);
@@ -1426,10 +1448,23 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
 
         if (node != null) {
             node.setFocused(true);
+        }
+
+        if (node != null && scrollIntoView) {
             node.scrollIntoView();
         }
 
         focusedNode = node;
+    }
+
+    /**
+     * Focuses a node and scrolls it into view
+     * 
+     * @param node
+     *            The node to focus
+     */
+    public void setFocusedNode(TreeNode node) {
+        setFocusedNode(node, true);
     }
 
     /*
@@ -1440,13 +1475,14 @@ public class VTree extends SimpleFocusablePanel implements Paintable,
      * .dom.client.FocusEvent)
      */
     public void onFocus(FocusEvent event) {
+
         // If no node has focus, focus the first item in the tree
         if (focusedNode == null && lastSelection == null && selectable) {
-            setFocusedNode((TreeNode) body.getWidget(0));
+            setFocusedNode((TreeNode) body.getWidget(0), false);
         } else if (focusedNode != null && selectable) {
-            setFocusedNode(focusedNode);
+            setFocusedNode(focusedNode, false);
         } else if (lastSelection != null && selectable) {
-            setFocusedNode(lastSelection);
+            setFocusedNode(lastSelection, false);
         }
     }
 
