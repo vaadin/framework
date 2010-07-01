@@ -53,7 +53,7 @@
 	<!-- This target complies the generated java junit tests. -->
 	<target name="compile-tests" depends="create-tests">
 		<mkdir dir="${class-dir}" />
-		<javac srcdir="${test-output-dir}" destdir="${class-dir}" debug="on" fork="yes">
+		<javac srcdir="${test-output-dir}" destdir="${class-dir}" debug="on" fork="yes" failonerror="false" >
 			<classpath>
 				<path refid="classpath" />
 			</classpath>
