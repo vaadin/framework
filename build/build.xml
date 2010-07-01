@@ -144,8 +144,8 @@
         <mkdir dir="${result-path}" />
 
         <!-- required when compiling WebContent/VAADIN/widgetsets (and also Java server-side classes) -->
-        <property name="lib-gwt-dev" location="${gwt-dir}/gwt-dev.jar" />
-        <property name="lib-gwt-user" location="${gwt-dir}/gwt-user.jar" />
+        <property name="lib-gwt-dev" location="${gwt-dir}/gwt-dev-noservlet.jar" />
+        <property name="lib-gwt-user" location="${gwt-dir}/gwt-user-noservlet.jar" />
 
         <echo>We are using gwt version ${gwt-version}.</echo>
 
@@ -182,8 +182,13 @@
             <pathelement path="build/lib/servlet.jar" />
             <pathelement path="build/external/fileupload/classes" />
         	<fileset dir="lib/core">
-        	        <include name="**/*.jar"/>
+        	    <include name="**/*.jar"/>
+        		
+        		<!-- Exclude these as they contain Servlet API 2.4. -->
+        		<!-- The gwt-*-noservlet.jar are then used instead. -->
      			<exclude name="**/servlet-api*.jar"/>
+                <exclude name="**/gwt-dev.jar"/>
+                <exclude name="**/gwt-user.jar"/>
    	        </fileset>
         	<fileset dir="lib/demo">
         	        <include name="**/*.jar"/>
@@ -217,6 +222,7 @@
                     <include name="**/*" />
                     <exclude name="doc**"/>
                     <exclude name="samples**"/>
+                    <exclude name="**/*-noservlet.jar"/>
                 </patternset>
             </zipfileset>
         </zip>
