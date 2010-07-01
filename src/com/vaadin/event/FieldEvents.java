@@ -4,6 +4,7 @@
 
 package com.vaadin.event;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 
 import com.vaadin.terminal.gwt.client.EventId;
@@ -33,7 +34,7 @@ public interface FieldEvents {
      * @see FocusListener
      * @see FocusEvent
      */
-    public interface FocusNotifier {
+    public interface FocusNotifier extends Serializable {
         /**
          * Adds a <code>FocusListener</code> to the Component which gets fired
          * when a <code>Field</code> receives keyboard focus.
@@ -71,7 +72,7 @@ public interface FieldEvents {
      * @see BlurListener
      * @see BlurEvent
      */
-    public interface BlurNotifier {
+    public interface BlurNotifier extends Serializable {
         /**
          * Adds a <code>BlurListener</code> to the Component which gets fired
          * when a <code>Field</code> loses keyboard focus.

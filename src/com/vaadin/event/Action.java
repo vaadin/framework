@@ -79,7 +79,7 @@ public class Action implements Serializable {
      * Action.Handler interface.<br/>
      * 
      */
-    public interface Listener {
+    public interface Listener extends Serializable {
         public void handleAction(Object sender, Object target);
     }
 
@@ -95,7 +95,7 @@ public class Action implements Serializable {
         public <T extends Action & Action.Listener> void removeAction(T action);
     }
 
-    public interface ShortcutNotifier {
+    public interface ShortcutNotifier extends Serializable {
         public void addShortcutListener(ShortcutListener shortcut);
 
         public void removeShortcutListener(ShortcutListener shortcut);
