@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -1432,8 +1433,17 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         } else {
             this.width = width;
         }
-        horizPaddingAndBorder = Util.setWidthExcludingPaddingAndBorder(this,
-                width, horizPaddingAndBorder);
+
+        if (BrowserInfo.get().isIE6()) {
+            // Required in IE when textfield is wider than this.width
+            getElement().getStyle().setOverflow(Overflow.HIDDEN);
+            horizPaddingAndBorder = Util.setWidthExcludingPaddingAndBorder(
+                    this, width, horizPaddingAndBorder);
+            getElement().getStyle().setProperty("overflow", "");
+        } else {
+            horizPaddingAndBorder = Util.setWidthExcludingPaddingAndBorder(
+                    this, width, horizPaddingAndBorder);
+        }
 
         if (initDone) {
             updateRootWidth();
@@ -1526,9 +1536,9 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         int componentWidth;
         if (BrowserInfo.get().isIE6()) {
             // Required in IE when textfield is wider than this.width
-            DOM.setStyleAttribute(getElement(), "overflow", "hidden");
+            getElement().getStyle().setOverflow(Overflow.HIDDEN);
             componentWidth = getOffsetWidth();
-            DOM.setStyleAttribute(getElement(), "overflow", "");
+            getElement().getStyle().setProperty("overflow", "");
         } else {
             componentWidth = getOffsetWidth();
         }
