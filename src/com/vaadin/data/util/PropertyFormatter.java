@@ -54,7 +54,18 @@ public abstract class PropertyFormatter implements Property,
     Property dataSource;
 
     /**
-     * Construct a new formatter that is connected to given datasource.
+     * Construct a new {@code PropertyFormatter} that is not connected to any
+     * data source. Call {@link #setPropertyDataSource(Property)} later on to
+     * attach it to a property.
+     * 
+     */
+    protected PropertyFormatter() {
+    }
+
+    /**
+     * Construct a new formatter that is connected to given data source. Calls
+     * {@link #format(Object)} which can be a problem if the formatter has not
+     * yet been initialized.
      * 
      * @param propertyDataSource
      *            to connect this property to.
