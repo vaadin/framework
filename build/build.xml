@@ -183,9 +183,7 @@
             <pathelement path="build/external/fileupload/classes" />
         	<fileset dir="lib/core">
         	        <include name="**/*.jar"/>
-        			<exclude name="**/servlet-api*.jar"/>
-        		    <!-- This has to be excluded because it contains Servlet API > 2.3. -->
-        			<exclude name="gwt/**/*"/>
+     			<exclude name="**/servlet-api*.jar"/>
    	        </fileset>
         	<fileset dir="lib/demo">
         	        <include name="**/*.jar"/>
@@ -196,7 +194,6 @@
         </path>
         <path id="compile.classpath.server-side">
             <path refid="compile.classpath"/>
-            <pathelement path="${result-path}/gwt" />
         </path>
         <path id="compile.classpath.client-side">
             <path refid="compile.classpath"/>
@@ -576,15 +573,7 @@
         <ant dir="build/external/fileupload" antfile="build.xml" target="compile" />
     </target>
 
-    <target name="unpack-gwt" depends="init">
-        <!-- Unpack GWT from JARs. This is needed for excluding Servlet API 2.4. -->
-        <delete dir="${result-path}/gwt"/>
-        <unjar src="${lib-gwt-user}" dest="${result-path}/gwt/"/>
-        <unjar src="${lib-gwt-dev}" dest="${result-path}/gwt/"/>
-        <delete dir="${result-path}/gwt/javax/servlet"/>
-    </target>
-
-    <target name="compile-java" depends="init, unpack-gwt, check-servlet-version, compile-fileupload, webcontent">
+    <target name="compile-java" depends="init, check-servlet-version, compile-fileupload, webcontent">
         <echo>Compiling src (server-side)</echo>
     	
         <!-- Compile all sources at the same time as they depend on each other -->
