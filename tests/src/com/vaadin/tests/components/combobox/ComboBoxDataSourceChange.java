@@ -37,6 +37,7 @@ public class ComboBoxDataSourceChange extends TestBase {
         cb2.setImmediate(true);
         hl.addComponent(cb2);
         HorizontalLayout state = new HorizontalLayout();
+        state.setSpacing(true);
         hl.addComponent(state);
 
         final Label currentValue = new Label();
