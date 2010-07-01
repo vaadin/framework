@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>integration-test-liferay-Portlet2</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">integration-test-liferay-Portlet2</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/web/guest/home</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseClickAndWait</td>
+	<td>link=Login as bruno</td>
+	<td>43,14</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>//div[@id='add-page']/a/span</td>
+	<td>51,17</td>
+</tr>
+<tr>
+	<td>pressSpecialKey</td>
+	<td>new_page</td>
+	<td>enter</td>
+</tr>
+<tr>
+	<td>enterCharacter</td>
+	<td>new_page</td>
+	<td>portlet2</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>link=Save</td>
+	<td>35,10</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='navigation']/ul/li[3]/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseClickAndWait</td>
+	<td>//div[@id='navigation']/ul/li[3]/a/span</td>
+	<td>19,8</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>link=Add Application</td>
+	<td>134,16</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='Vaadin']/h2/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseClickAndWait</td>
+	<td>//div[@id='Vaadin-AddressBook']/p/a</td>
+	<td>16,11</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=AddressBookPortlet_WAR_demo_INSTANCE_0SLs_LAYOUT_10784::/VVerticalLayout[0]/ChildComponentContainer[1]/VSplitPanelHorizontal[0]/VSplitPanelVertical[0]/VScrollTable[0]/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[3]/domChild[0]/domChild[0]</td>
+	<td>37,14</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>vaadin=AddressBookPortlet_WAR_demo_INSTANCE_0SLs_LAYOUT_10784::/VVerticalLayout[0]/ChildComponentContainer[1]/VSplitPanelHorizontal[0]/VSplitPanelVertical[0]/VForm[0]/VHorizontalLayout[0]/ChildComponentContainer[2]/VButton[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=AddressBookPortlet_WAR_demo_INSTANCE_0SLs_LAYOUT_10784::/VVerticalLayout[0]/ChildComponentContainer[1]/VSplitPanelHorizontal[0]/VSplitPanelVertical[0]/VForm[0]/VFormLayout[0]/VFormLayout$VFormLayoutTable[0]/VFilterSelect[0]/domChild[0]</td>
+	<td>-11,7</td>
+</tr>
+<tr>
+	<td>enterCharacter</td>
+	<td>vaadin=AddressBookPortlet_WAR_demo_INSTANCE_0SLs_LAYOUT_10784::/VVerticalLayout[0]/ChildComponentContainer[1]/VSplitPanelHorizontal[0]/VSplitPanelVertical[0]/VForm[0]/VFormLayout[0]/VFormLayout$VFormLayoutTable[0]/VFilterSelect[0]/domChild[0]</td>
+	<td>Belfast</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>vaadin=AddressBookPortlet_WAR_demo_INSTANCE_0SLs_LAYOUT_10784::/VVerticalLayout[0]/ChildComponentContainer[1]/VSplitPanelHorizontal[0]/VSplitPanelVertical[0]/VForm[0]/VHorizontalLayout[0]/ChildComponentContainer[0]/VButton[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=AddressBookPortlet_WAR_demo_INSTANCE_0SLs_LAYOUT_10784::/VVerticalLayout[0]/ChildComponentContainer[1]/VSplitPanelHorizontal[0]/VSplitPanelVertical[0]/VScrollTable[0]/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[3]/domChild[6]/domChild[0]</td>
+	<td>Belfast</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
