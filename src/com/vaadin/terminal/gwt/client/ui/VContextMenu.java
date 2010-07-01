@@ -7,11 +7,28 @@ package com.vaadin.terminal.gwt.client.ui;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.HasBlurHandlers;
+import com.google.gwt.event.dom.client.HasFocusHandlers;
+import com.google.gwt.event.dom.client.HasKeyDownHandlers;
+import com.google.gwt.event.dom.client.HasKeyPressHandlers;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.impl.FocusImpl;
+import com.vaadin.terminal.gwt.client.Focusable;
 
 public class VContextMenu extends VOverlay implements SubPartAware {
 
@@ -81,6 +98,22 @@ public class VContextMenu extends VOverlay implements SubPartAware {
                     }
                 }
                 setPopupPosition(left, top);
+
+                /*
+                 * Move keyboard focus to menu, deferring the focus setting so
+                 * the focus is certainly moved to the menu in all browser after
+                 * the positioning has been done.
+                 */
+                DeferredCommand.addCommand(new Command() {
+                    public void execute() {
+                        // Focus the menu.
+                        menu.setFocus(true);
+
+                        // Unselect previously selected items
+                        menu.selectItem(null);
+                    }
+                });
+
             }
         });
     }
@@ -94,7 +127,8 @@ public class VContextMenu extends VOverlay implements SubPartAware {
      * Extend standard Gwt MenuBar to set proper settings and to override
      * onPopupClosed method so that PopupPanel gets closed.
      */
-    class CMenuBar extends MenuBar {
+    class CMenuBar extends MenuBar implements HasFocusHandlers,
+            HasBlurHandlers, HasKeyDownHandlers, HasKeyPressHandlers, Focusable {
         public CMenuBar() {
             super(true);
         }
@@ -102,6 +136,12 @@ public class VContextMenu extends VOverlay implements SubPartAware {
         @Override
         public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
             super.onPopupClosed(sender, autoClosed);
+
+            // make focusable, as we don't need access key magic we don't need
+            // to
+            // use FocusImpl.createFocusable
+            getElement().setTabIndex(0);
+
             hide();
         }
 
@@ -118,6 +158,34 @@ public class VContextMenu extends VOverlay implements SubPartAware {
 
         private MenuItem getItem(int index) {
             return super.getItems().get(index);
+        }
+
+        public HandlerRegistration addFocusHandler(FocusHandler handler) {
+            return addDomHandler(handler, FocusEvent.getType());
+        }
+
+        public HandlerRegistration addBlurHandler(BlurHandler handler) {
+            return addDomHandler(handler, BlurEvent.getType());
+        }
+
+        public HandlerRegistration addKeyDownHandler(KeyDownHandler handler) {
+            return addDomHandler(handler, KeyDownEvent.getType());
+        }
+
+        public HandlerRegistration addKeyPressHandler(KeyPressHandler handler) {
+            return addDomHandler(handler, KeyPressEvent.getType());
+        }
+
+        public void setFocus(boolean focus) {
+            if (focus) {
+                FocusImpl.getFocusImplForPanel().focus(getElement());
+            } else {
+                FocusImpl.getFocusImplForPanel().blur(getElement());
+            }
+        }
+
+        public void focus() {
+            setFocus(true);
         }
     }
 
