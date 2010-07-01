@@ -10,6 +10,7 @@ import java.util.Set;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.DOM;
@@ -25,13 +26,13 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VCaptionWrapper;
 import com.vaadin.terminal.gwt.client.VTooltip;
-import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.ui.richtextarea.VRichTextArea;
 
 public class VPopupView extends HTML implements Container, Iterable<Widget> {
@@ -261,8 +262,17 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
             }
 
             if (!eventTargetsPopup && type == Event.ONMOUSEMOVE) {
-
                 if (hasHadMouseOver && hideOnMouseOut) {
+                    hide();
+                    return true;
+                }
+            }
+
+            // Was the TAB key released outside of our popup?
+            if (!eventTargetsPopup && type == Event.ONKEYUP
+                    && event.getKeyCode() == KeyCodes.KEY_TAB) {
+                // Should we hide on focus out (mouse out)?
+                if (hideOnMouseOut) {
                     hide();
                     return true;
                 }
@@ -350,7 +360,6 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
 
             popupComponentPaintable
                     .updateFromUIDL(uidl.getChildUIDL(0), client);
-
         }
 
         public void unregisterPaintables() {
