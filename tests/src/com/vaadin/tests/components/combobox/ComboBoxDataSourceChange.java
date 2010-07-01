@@ -1,6 +1,5 @@
 package com.vaadin.tests.components.combobox;
 
-import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.IndexedContainer;
@@ -12,6 +11,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Button.ClickEvent;
 
+@SuppressWarnings("serial")
 public class ComboBoxDataSourceChange extends TestBase {
 
     private ComboBox cb2;
@@ -21,13 +21,13 @@ public class ComboBoxDataSourceChange extends TestBase {
         final IndexedContainer ds1 = new IndexedContainer();
         // ds1.addContainerProperty("caption", String.class, "");
         for (int i = 0; i < 32; i++) {
-            Item addItem = ds1.addItem("ds1-" + i);
+            ds1.addItem("ds1-" + i);
         }
 
         final IndexedContainer ds2 = new IndexedContainer();
         // ds2.addContainerProperty("caption", String.class, "");
         for (int i = 0; i < 32; i++) {
-            Item addItem = ds2.addItem("ds2-" + i);
+            ds2.addItem("ds2-" + i);
         }
 
         HorizontalLayout hl = new HorizontalLayout();
@@ -86,12 +86,6 @@ public class ComboBoxDataSourceChange extends TestBase {
                 currentValue.setValue(event.getProperty().getValue());
             }
         });
-    }
-
-    private void populate(ComboBox cb) {
-        for (int i = 1; i < 10; i++) {
-            cb.addItem("Item " + i);
-        }
     }
 
     @Override
