@@ -40,4 +40,9 @@ public class Log extends VerticalLayout {
         return l;
     }
 
+    public void setNumberLogRows(boolean b) {
+        // TODO Auto-generated method stub
+
+    }
+
 }
