@@ -852,25 +852,6 @@ public class JsonPaintTarget implements PaintTarget {
             buf.append("}");
             return buf.toString();
         }
-
-        class TagCounter {
-            int count;
-
-            public TagCounter() {
-                count = 0;
-            }
-
-            public void increment() {
-                count++;
-            }
-
-            public String postfix(String s) {
-                if (count > 0) {
-                    return s + count;
-                }
-                return s;
-            }
-        }
     }
 
     abstract class Variable implements Serializable {
